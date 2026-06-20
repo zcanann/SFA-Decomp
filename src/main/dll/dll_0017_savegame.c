@@ -498,22 +498,24 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         {
             if ((oldStatus & (1 << shift)) == 0)
             {
+                u32* gp = s->groupStatuses;
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                     {
-                        s->groupStatuses[i] |= (u32)(1 << shift);
+                        gp[i] |= (u32)(1 << shift);
                     }
                 }
             }
         }
         else
         {
+            u32* gp = s->groupStatuses;
             for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                 {
-                    s->groupStatuses[i] &= ~(u32)(1 << shift);
+                    gp[i] &= ~(u32)(1 << shift);
                 }
             }
 
