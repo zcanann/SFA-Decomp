@@ -21,9 +21,9 @@ typedef struct RomCurveWalker {
     f32 tangentY; /* 0x78: heading/derivative term (sign tested) */
     f32 tangentZ; /* 0x7C */
     s32 reverse; /* 0x80: walk direction */
-    void *unk84;
-    void *unk88;
-    void *unk8C;
+    void *coeffX; /* 0x84: active hermite coefficient set, X (-> hermX/hermX2) */
+    void *coeffY; /* 0x88: active hermite coefficient set, Y */
+    void *coeffZ; /* 0x8C: active hermite coefficient set, Z */
     s32 moveNetwork; /* 0x90 */
     void *node94; /* curve-node history: oldest.. */
     void *node98;

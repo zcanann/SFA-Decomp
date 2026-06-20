@@ -1102,9 +1102,9 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     state->phase = savedPhase;
@@ -1652,9 +1652,9 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
@@ -1757,9 +1757,9 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
@@ -2082,9 +2082,9 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
