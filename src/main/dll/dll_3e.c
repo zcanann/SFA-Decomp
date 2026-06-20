@@ -99,7 +99,7 @@ void PlayControl(void)
 {
     AttractMovieTextureSet* decodedTexture;
     s32 frame;
-    u32 allowPop;
+    int allowPop;
 
     if (lbl_803DD664 != NULL)
     {
