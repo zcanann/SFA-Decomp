@@ -261,11 +261,8 @@ void drawFn_80125424(void)
             }
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            if (alphaI > 0xff)
-            {
-                alphaI = 0xff;
-            }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i), alphaI & 0xff, 0x100, 0x78, 2, randY, randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
+                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
             alphaI = (int)((f32)alpha * (waveBase2 + wave));
             if (alphaI < 0)
             {
@@ -273,12 +270,8 @@ void drawFn_80125424(void)
             }
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            if (alphaI > 0xff)
-            {
-                alphaI = 0xff;
-            }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), alphaI & 0xff, 0x100, 0x78, 2, randY,
-                               randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2),
+                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
         }
         panelW = width;
         xLeft = panelW - 5;
