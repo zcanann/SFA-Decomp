@@ -6013,20 +6013,15 @@ int fn_8029F108(int obj, int state)
         }
         kind = (*(int (*)(int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x30)))(sub);
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 3);
-        if (kind < 2)
+        switch (kind)
         {
-            if (kind >= 1)
-            {
-                n = 8;
-            }
-            else
-            {
-                n = 9;
-            }
-        }
-        else
-        {
+        case 1:
+            n = 8;
+            break;
+        case 2:
+        default:
             n = 9;
+            break;
         }
         inner->targetYaw = *(s16*)((char*)sub + 0x0);
         inner->yaw = inner->targetYaw;
