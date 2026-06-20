@@ -4110,8 +4110,8 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
     f32 nearDist;
     int objCount;
     s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
-    f32 sc0[3];
-    f32 sc1[3];
+    volatile f32 sc0[3];
+    volatile f32 sc1[3];
     f32 end[3];
     f32 start[3];
     f32 vec[3];
