@@ -870,6 +870,7 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
 {
     char* base = lbl_803A87F0;
     char** objs;
+    s16 sa, sb, sc;
     f32 mA[12];
     f32 mB[12];
     gTrickyHudIconPosX = f1;
@@ -904,6 +905,9 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     objs = lbl_803DD860;
+    sa = a;
+    sb = b;
+    sc = c;
     ((GameObject*)objs[0])->anim.localPosX = gTrickyHudIconPosX;
     ((GameObject*)objs[0])->anim.localPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[0])->anim.localPosZ = gTrickyHudIconPosZ;
@@ -911,9 +915,9 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)objs[0])->anim.worldPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[0])->anim.worldPosZ = gTrickyHudIconPosZ;
     *(f32*)(objs[0] + 0x8) = f4;
-    ((GameObject*)objs[0])->anim.rotZ = a;
-    ((GameObject*)objs[0])->anim.rotY = b;
-    ((GameObject*)objs[0])->anim.rotX = c;
+    ((GameObject*)objs[0])->anim.rotZ = sa;
+    ((GameObject*)objs[0])->anim.rotY = sb;
+    ((GameObject*)objs[0])->anim.rotX = sc;
     ((GameObject*)objs[1])->anim.localPosX = gTrickyHudIconPosX;
     ((GameObject*)objs[1])->anim.localPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[1])->anim.localPosZ = gTrickyHudIconPosZ;
@@ -921,9 +925,9 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
     ((GameObject*)objs[1])->anim.worldPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[1])->anim.worldPosZ = gTrickyHudIconPosZ;
     *(f32*)(objs[1] + 0x8) = f4;
-    ((GameObject*)objs[1])->anim.rotZ = a;
-    ((GameObject*)objs[1])->anim.rotY = b;
-    ((GameObject*)objs[1])->anim.rotX = c;
+    ((GameObject*)objs[1])->anim.rotZ = sa;
+    ((GameObject*)objs[1])->anim.rotY = sb;
+    ((GameObject*)objs[1])->anim.rotX = sc;
 }
 #pragma opt_propagation reset
 
