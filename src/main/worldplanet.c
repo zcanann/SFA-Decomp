@@ -252,8 +252,11 @@ void worldplanet_update(int obj)
     int objId;
     int galleon;
     WorldObjEffectParams pfx;
-    s8 inX[3];
-    u8 inY;
+    struct
+    {
+        u8 inY;
+        s8 inX[3];
+    } in;
 
     tbl = gWorldPlanetObjectIdTable;
     state = ((GameObject*)obj)->extra;
@@ -330,7 +333,7 @@ void worldplanet_update(int obj)
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, 0x6f2, &pfx, 2, -1, NULL);
-        worldplanet_readMapInput(obj, (u8*)inX, &inY);
+        worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
         ((GameObject*)obj)->anim.rotZ -= 10;
         ((GameObject*)obj)->anim.rotY = 0x3448;
         ((GameObject*)obj)->anim.rotX = 0x4000;
@@ -373,7 +376,7 @@ void worldplanet_update(int obj)
         {
             while (!done)
             {
-                state->selectedPlanet = state->selectedPlanet + inX[0];
+                state->selectedPlanet = state->selectedPlanet + in.inX[0];
                 if (state->selectedPlanet < 0)
                 {
                     state->selectedPlanet = 4;
