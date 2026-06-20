@@ -94,7 +94,7 @@ void wcbouncycra_update(int obj)
             }
             else
             {
-                dist = (v - gBouncyCrateNearDistance) / lbl_803E6D34;
+                dist = (v - *(f32*)&gBouncyCrateNearDistance) / lbl_803E6D34;
                 dist = lbl_803E6D38 - dist;
                 dist = dist * lbl_803E6D2C;
             }
