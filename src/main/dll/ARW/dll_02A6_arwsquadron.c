@@ -357,8 +357,9 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             case 1:
                 if (!flags->f80)
                 {
-                    ArwSquadronSetup* setup = (ArwSquadronSetup*)obj->anim.placementData;
+                    ArwSquadronSetup* setup;
                     flags->f80 = 1;
+                    setup = (ArwSquadronSetup*)obj->anim.placementData;
                     if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                     {
                         flags->f20 = 0;
