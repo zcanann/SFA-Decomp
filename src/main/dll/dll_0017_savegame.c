@@ -79,7 +79,6 @@ extern s8 gSaveGameMapActCacheIdx;
 extern u32 pRestartPoint;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
-extern f32 timeDelta;
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
