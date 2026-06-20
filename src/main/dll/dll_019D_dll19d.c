@@ -24,10 +24,10 @@ typedef struct Dll19DState
     u8 pad14[0x2C - 0x14];
     s16 unk2C;
     s16 unk2E;
-    s16 unk30;
-    s16 unk32;
+    s16 effectTimer;
+    s16 despawnTimer;
     u16 unk34;
-    u8 unk36;
+    u8 flags;
     u8 pad37[0x38 - 0x37];
 } Dll19DState;
 
@@ -65,10 +65,10 @@ void dll_19D_free(int obj)
 {
     register int self = obj;
     register int state = *(int*)&((GameObject*)self)->extra;
-    if ((((Dll19DState*)state)->unk36 & 2) == 0)
+    if ((((Dll19DState*)state)->flags & 2) == 0)
     {
         getLActions(self, self, 1, 0, 0, 0);
-        ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 0x2);
+        ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 0x2);
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
@@ -135,7 +135,7 @@ void dll_19D_hitDetect(int obj)
     (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-    ((Dll19DState*)state)->unk32 = 0x32;
+    ((Dll19DState*)state)->despawnTimer = 0x32;
 }
 
 /*
@@ -160,12 +160,12 @@ void dll_19D_update(int obj)
     vec[5] = lbl_803E51B8;
     vec[2] = (float)(int)(s8) * (u8*)(def + 0x19);
 
-    if ((((Dll19DState*)state)->unk36 & 1) == 0)
+    if ((((Dll19DState*)state)->flags & 1) == 0)
     {
         ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.localPosX;
         ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.localPosY;
         ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.localPosZ;
-        ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 1);
+        ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 1);
     }
 
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
@@ -175,23 +175,23 @@ void dll_19D_update(int obj)
         (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
-        ((Dll19DState*)state)->unk32 = 0x32;
+        ((Dll19DState*)state)->despawnTimer = 0x32;
     }
 
-    if (((Dll19DState*)state)->unk32 != 0)
+    if (((Dll19DState*)state)->despawnTimer != 0)
     {
-        if ((((Dll19DState*)state)->unk36 & 2) == 0)
+        if ((((Dll19DState*)state)->flags & 2) == 0)
         {
             getLActions(self, self, 1, 0, 0, 0);
-            ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 2);
+            ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 2);
         }
         zero = lbl_803E51B8;
         ((GameObject*)self)->anim.velocityX = zero;
         ((GameObject*)self)->anim.velocityY = zero;
         ((GameObject*)self)->anim.velocityZ = zero;
         ObjHits_ClearHitVolumes(self);
-        ((Dll19DState*)state)->unk32 -= 1;
-        if (((Dll19DState*)state)->unk32 <= 0)
+        ((Dll19DState*)state)->despawnTimer -= 1;
+        if (((Dll19DState*)state)->despawnTimer <= 0)
         {
             Obj_FreeObject(self);
         }
@@ -206,12 +206,12 @@ void dll_19D_update(int obj)
         ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->unk2C * framesThisStep);
         (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
 
-        if ((((Dll19DState*)state)->unk30 -= framesThisStep) <= 0)
+        if ((((Dll19DState*)state)->effectTimer -= framesThisStep) <= 0)
         {
             (*gPartfxInterface)->spawnObject((void*)self, 0x29e, vec, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)self, 0x29f, vec, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)self, 0x2a1, vec, 4, -1, NULL);
-            ((Dll19DState*)state)->unk30 = 0x32;
+            ((Dll19DState*)state)->effectTimer = 0x32;
         }
 
         ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->unk8;

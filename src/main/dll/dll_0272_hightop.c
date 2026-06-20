@@ -57,7 +57,7 @@ typedef struct HightopPlacement
     u8 pad347[0x354 - 0x347];
     u8 unk354;
     u8 pad355[0x9FD - 0x355];
-    u8 unk9FD;
+    u8 flags;
     u8 pad9FE[0xC16 - 0x9FE];
     s16 unkC16;
     s16 airMeterCapacity;
@@ -77,7 +77,7 @@ typedef struct HighTopRuntime
     BaddieState baddie;
     u8 pad35C[0x3ec - 0x35c];
     u8 lookController[0x9fd - 0x3ec]; /* dll_2E look-controller block */
-    u8 unk9FD;
+    u8 flags;
     u8 pad9FE[0xb18 - 0x9fe];
     f32 pathPointWorldPositions[12];
     u8 padB48[0xb6c - 0xb48];
@@ -112,7 +112,7 @@ typedef struct HighTopRuntime
 } HighTopRuntime;
 
 STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
-STATIC_ASSERT(offsetof(HighTopRuntime, unk9FD) == 0x9FD);
+STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
 STATIC_ASSERT(offsetof(HighTopRuntime, unkC16) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
 
@@ -218,7 +218,7 @@ int hightop_stateHandler06(int obj, u8* p2)
     HighTopRuntime* p = ((GameObject*)obj)->extra;
     if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
-        p->unk9FD |= 1;
+        p->flags |= 1;
     }
     if (GameBit_Get(0x632) != 0)
     {
@@ -306,7 +306,7 @@ int hightop_interactionCallback(int obj)
     HighTopRuntime* p;
     seqFn_800394a0(obj);
     p = ((GameObject*)obj)->extra;
-    p->unk9FD &= ~1;
+    p->flags &= ~1;
     p->flagsC49.b4 = 0;
     p->flagsC49.b6 = 1;
     if ((s8)p->unkC4B == 0)
@@ -461,10 +461,10 @@ void hightop_init(void* obj, u8* arg)
     dll_2E_func05((int)obj, runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((char*)runtime->lookController, 300, 120);
     dll_2E_func09((char*)runtime->lookController, &local2, &local1, 6);
-    runtime->unk9FD |= 2;
-    runtime->unk9FD |= 8;
+    runtime->flags |= 2;
+    runtime->flags |= 8;
     runtime->unkC18 = *(s16*)(arg + 0x1a);
-    runtime->unk9FD |= 1;
+    runtime->flags |= 1;
     ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 127;
     runtime->flagsC49.b4 = 0;
     runtime->flagsC49.b7 = 0;
@@ -578,7 +578,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
         GameBit_Set(0x631, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
         runtime->unkC40 &= ~0x140;
-        runtime->unk9FD &= ~2;
+        runtime->flags &= ~2;
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
         break;
     case 8:
@@ -791,7 +791,7 @@ int hightop_stateHandler07(int obj, int p)
         rt->flagsC49.b1 = 0;
         rt->unkC4B = 5;
         ((BaddieState*)p)->moveSpeed = lbl_803E6AAC;
-        rt->unk9FD &= ~1;
+        rt->flags &= ~1;
         ObjGroup_RemoveObject(obj, 10);
     }
     if ((s8)((BaddieState*)p)->moveDone != 0)
@@ -894,7 +894,7 @@ int hightop_stateHandler04(int obj, int p)
     player = Obj_GetPlayerObject();
     if (player == 0)
     {
-        state->unk9FD &= ~1;
+        state->flags &= ~1;
     }
     else
     {
@@ -902,7 +902,7 @@ int hightop_stateHandler04(int obj, int p)
         if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC ||
             (dy >= lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
-            state->unk9FD |= 1;
+            state->flags |= 1;
             if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
                 f32 c = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
@@ -915,7 +915,7 @@ int hightop_stateHandler04(int obj, int p)
         }
         else
         {
-            state->unk9FD &= ~1;
+            state->flags &= ~1;
         }
     }
     return 0;
@@ -1066,7 +1066,7 @@ int hightop_stateHandler09(int obj, int p)
         {
             state->unkC4B = 9;
         }
-        state->unk9FD &= ~1;
+        state->flags &= ~1;
         state->flagsC49.b1 = 0;
         state->unkC42 = 0;
         state->flagsC49.b6 = 0;
@@ -1183,7 +1183,7 @@ int hightop_stateHandler09(int obj, int p)
                     roll -= gHighTopIdleSequenceWeights[idx++];
                 }
                 state->unkC42 = idx;
-                state->unk9FD |= 1;
+                state->flags |= 1;
                 s16toFloat((char*)state + 0xc2c, 0x14);
             }
         }

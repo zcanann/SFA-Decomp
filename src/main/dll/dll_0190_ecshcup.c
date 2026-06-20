@@ -68,8 +68,8 @@ typedef struct EcshCupState
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    f32 unk1C;
-    f32 unk20;
+    f32 spawnTimer;
+    f32 bobTimer;
     s32 unk24;
     s32 unk28;
     s16 unk2C;
@@ -109,21 +109,21 @@ void ecsh_cup_update(short* obj)
         *obj = *obj + state->unk2C;
         if (mode != 6)
         {
-            state->unk1C -= timeDelta;
-            if (state->unk1C <= lbl_803E5068)
+            state->spawnTimer -= timeDelta;
+            if (state->spawnTimer <= lbl_803E5068)
             {
-                state->unk1C = lbl_803E506C;
+                state->spawnTimer = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7)
                 {
                     (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
                 }
             }
         }
-        state->unk20 -= timeDelta;
-        if (state->unk20 <= lbl_803E5068)
+        state->bobTimer -= timeDelta;
+        if (state->bobTimer <= lbl_803E5068)
         {
             state->unk2E *= -1;
-            state->unk20 = lbl_803E5070;
+            state->bobTimer = lbl_803E5070;
         }
         ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->unk2E + ((GameObject*)obj)->
             anim.localPosY;
@@ -160,10 +160,10 @@ void ecsh_cup_update(short* obj)
                 *(u8*)((char*)obj + 0x37) = (u8)(int)
                 a;
             }
-            state->unk1C -= timeDelta;
-            if (state->unk1C <= lbl_803E5068)
+            state->spawnTimer -= timeDelta;
+            if (state->spawnTimer <= lbl_803E5068)
             {
-                state->unk1C = lbl_803E506C;
+                state->spawnTimer = lbl_803E506C;
                 (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         }
@@ -172,10 +172,10 @@ void ecsh_cup_update(short* obj)
             if (((GameObject*)obj)->anim.localPosY > state->unk18 - lbl_803E5084)
             {
                 ((GameObject*)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject*)obj)->anim.localPosY);
-                state->unk1C -= timeDelta;
-                if (state->unk1C <= lbl_803E5068)
+                state->spawnTimer -= timeDelta;
+                if (state->spawnTimer <= lbl_803E5068)
                 {
-                    state->unk1C = lbl_803E506C;
+                    state->spawnTimer = lbl_803E506C;
                     if (mode != 3)
                     {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
@@ -286,11 +286,11 @@ void ecsh_cup_init(int obj, int def)
     }
     ((EcshCupState*)state)->unk24 = 0;
     ((EcshCupState*)state)->unk28 = *(s16*)(def + 0x1a);
-    ((EcshCupState*)state)->unk20 = randomGetRange(0, 0x258);
+    ((EcshCupState*)state)->bobTimer = randomGetRange(0, 0x258);
     ((EcshCupState*)state)->unk2C = randomGetRange(-0x320, 0x320);
     *(u8*)&((EcshCupState*)state)->unk2E = 1;
     *(u8*)(obj + 0x37) = 0;
-    ((EcshCupState*)state)->unk1C = lbl_803E5068;
+    ((EcshCupState*)state)->spawnTimer = lbl_803E5068;
     if (gEcShCupNearestObject == 0)
     {
         gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);

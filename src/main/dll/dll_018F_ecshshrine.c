@@ -488,7 +488,7 @@ void ecsh_shrine_update(s16* obj)
             ((EcshShrineState*)sub)->unk8 = lbl_803E4FD4;
             ((EcshShrineState*)sub)->unk24 = 8;
             ((EcshShrineState*)sub)->unk4 = lbl_803E4FD8;
-            ((EcshShrineState*)sub)->unk22 = 5;
+            ((EcshShrineState*)sub)->timer = 5;
             gv = randomGetRange(0, 5);
             sub[0x2e] = gv;
             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -533,8 +533,8 @@ void ecsh_shrine_update(s16* obj)
                     ((EcshShrineState*)sub)->unk8 = lbl_803E4FDC;
                     break;
                 case 2:
-                    ((EcshShrineState*)sub)->unk22 -= 1;
-                    if (((EcshShrineState*)sub)->unk22 <= 0)
+                    ((EcshShrineState*)sub)->timer -= 1;
+                    if (((EcshShrineState*)sub)->timer <= 0)
                     {
                         Sfx_PlayFromObject(0, 0x3a8);
                         ((EcshShrineState*)sub)->unk24 = 5;
@@ -681,7 +681,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->unk24 = 9;
                             ((EcshShrineState*)sub)->unk8 = lbl_803E4FEC;
                             ((EcshShrineState*)sub)->unk4 = lbl_803E4FB0;
-                            ((EcshShrineState*)sub)->unk22 = 7;
+                            ((EcshShrineState*)sub)->timer = 7;
                             ((EcshShrineState*)sub)->unk26 = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -694,7 +694,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->unk24 = 9;
                             ((EcshShrineState*)sub)->unk8 = lbl_803E4FEC;
                             ((EcshShrineState*)sub)->unk4 = lbl_803E4FB0;
-                            ((EcshShrineState*)sub)->unk22 = 9;
+                            ((EcshShrineState*)sub)->timer = 9;
                             ((EcshShrineState*)sub)->unk26 = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -753,7 +753,7 @@ void ecsh_shrine_update(s16* obj)
             sub[0x2f] = 0;
             ((EcshShrineState*)sub)->unk4 = z;
             ((EcshShrineState*)sub)->unk20 = 0;
-            ((EcshShrineState*)sub)->unk22 = 0;
+            ((EcshShrineState*)sub)->timer = 0;
             ((EcshShrineState*)sub)->unk24 = 0;
             ((EcshShrineState*)sub)->unk26 = -1;
             sub[0x2e] = 0;
@@ -793,7 +793,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->unk30 = 0;
     ((EcshShrineState*)sub)->unk4 = lbl_803E4FCC;
     ((EcshShrineState*)sub)->unk20 = 0;
-    ((EcshShrineState*)sub)->unk22 = 0;
+    ((EcshShrineState*)sub)->timer = 0;
     ((EcshShrineState*)sub)->unk24 = 0;
     ((EcshShrineState*)sub)->unk26 = -1;
     ((EcshShrineState*)sub)->unk2E = 0;
