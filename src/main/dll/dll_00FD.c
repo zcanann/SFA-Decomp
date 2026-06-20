@@ -202,7 +202,7 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
 
         launchSpeed = (f32)(int)
         randomGetRange(0x27, 0x2c) / lbl_803E3874;
-        angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0x0c),
+        angle = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
                          ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
         randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
