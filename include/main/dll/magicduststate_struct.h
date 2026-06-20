@@ -12,7 +12,7 @@ typedef struct MagicDustState
     u8 unk25C[5];
     s8 unk261;
     u8 unk262[6];
-    f32 unk268;
+    f32 collectRadius; /* added to base radius; squared for the XZ pickup test */
     f32 burstTimer; /* counts down to the next 30-particle burst */
     u16 burstEffectId;
     u16 ambientEffectId; /* partfx effect id */
@@ -23,7 +23,7 @@ typedef struct MagicDustState
     u8 bounceCount;
     u8 mode; /* particle color row */
     u8 unk27D[3];
-    u16 unk280;
+    u16 pickupMsgArg; /* payload word for the 0x7000a pickup message */
 } MagicDustState;
 
 #endif

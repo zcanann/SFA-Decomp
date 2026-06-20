@@ -275,13 +275,13 @@ void magicdust_update(int obj)
         if (fval < lbl_803E34DC)
         {
             dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-            fval = lbl_803E34E0 + ((MagicDustState*)state)->unk268;
+            fval = lbl_803E34E0 + ((MagicDustState*)state)->collectRadius;
             if ((dist < fval * fval) && (fn_8029622C(player) != 0))
             {
                 val = GameBit_Get(0x90d);
                 if (val == 0)
                 {
-                    *(s16*)&((MagicDustState*)state)->unk280 = 0xffff;
+                    *(s16*)&((MagicDustState*)state)->pickupMsgArg = 0xffff;
                     ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x280);
                     ObjHits_DisableObject(obj);
                     GameBit_Set(0x90d, 1);
@@ -427,7 +427,7 @@ void magicdust_init(int obj, int placement)
         *(u8*)&((MagicDustState*)state)->mode = 6;
         break;
     }
-    ((MagicDustState*)state)->unk268 = lbl_803E34F8;
+    ((MagicDustState*)state)->collectRadius = lbl_803E34F8;
     if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         (*gPathControlInterface)->init((void*)state, 0, 0x40007, 0);
