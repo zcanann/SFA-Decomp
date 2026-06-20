@@ -28,12 +28,12 @@ typedef struct DoorlockPlacement
     u8 pad0[0x18 - 0x0];
     s16 unk18;
     s16 unk1A;
-    s16 unk1C; /* 0x1C: lockGameBit */
-    s16 unk1E; /* 0x1E: prerequisite game bit */
-    s16 unk20; /* 0x20: unlock sequence id (s8) */
-    s16 unk22; /* 0x22: prerequisite game bit */
-    s16 unk24; /* 0x24: queued sequence id */
-    s16 unk26; /* 0x26: mode flags */
+    s16 lockGameBit;       /* 0x1C */
+    s16 prereqGameBit0;    /* 0x1E: prerequisite game bit */
+    s16 unlockSequenceId;  /* 0x20: unlock sequence id (s8) */
+    s16 prereqGameBit1;    /* 0x22: prerequisite game bit */
+    s16 queuedSequenceId;  /* 0x24: queued sequence id */
+    s16 modeFlags;         /* 0x26: mode flags */
 } DoorlockPlacement;
 
 /* one-shot global "doors unlocked" game bit gating the bulk unlock sequence */
@@ -81,11 +81,11 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (((*(u8*)(def + 0x1b) & 4) != 0) && (animUpdate->triggerCommand == 1))
         {
-            GameBit_Set(((DoorlockPlacement*)def)->unk1C, 1);
+            GameBit_Set(((DoorlockPlacement*)def)->lockGameBit, 1);
         }
-        if ((animUpdate->triggerCommand == 2) && (((DoorlockPlacement*)def)->unk24 != 0))
+        if ((animUpdate->triggerCommand == 2) && (((DoorlockPlacement*)def)->queuedSequenceId != 0))
         {
-            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((DoorlockPlacement*)def)->unk24);
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, ((DoorlockPlacement*)def)->queuedSequenceId);
         }
         animUpdate->triggerCommand = 0;
     }
@@ -111,7 +111,7 @@ void doorlock_update(int obj)
     }
     else
     {
-        *(u8*)state = GameBit_Get(((DoorlockPlacement*)def)->unk1C);
+        *(u8*)state = GameBit_Get(((DoorlockPlacement*)def)->lockGameBit);
         if ((*(u8*)(def + 0x1b) & 1) != 0)
         {
             if (*(u8*)state != 0)
@@ -119,7 +119,7 @@ void doorlock_update(int obj)
                 ((GameObject*)obj)->anim.alpha = 0;
             }
         }
-        else if ((((DoorlockPlacement*)def)->unk26 & 1) != 0)
+        else if ((((DoorlockPlacement*)def)->modeFlags & 1) != 0)
         {
             if (*(u8*)state != 0)
             {
@@ -134,7 +134,7 @@ void doorlock_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-            if ((((DoorlockPlacement*)def)->unk22 != -1) && (GameBit_Get(((DoorlockPlacement*)def)->unk22) == 0))
+            if ((((DoorlockPlacement*)def)->prereqGameBit1 != -1) && (GameBit_Get(((DoorlockPlacement*)def)->prereqGameBit1) == 0))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
                 if ((*(u8*)(def + 0x1b) & 0x10) != 0)
@@ -142,13 +142,13 @@ void doorlock_update(int obj)
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                 }
             }
-            if ((((DoorlockPlacement*)def)->unk1E != -1) && (GameBit_Get(((DoorlockPlacement*)def)->unk1E) == 0))
+            if ((((DoorlockPlacement*)def)->prereqGameBit0 != -1) && (GameBit_Get(((DoorlockPlacement*)def)->prereqGameBit0) == 0))
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
             }
-            if (((((DoorlockPlacement*)def)->unk1E != -1) && (ObjTrigger_IsSetById(
-                    obj, ((DoorlockPlacement*)def)->unk1E) != 0)) ||
-                ((((DoorlockPlacement*)def)->unk1E == -1) && (ObjTrigger_IsSet(obj) != 0)))
+            if (((((DoorlockPlacement*)def)->prereqGameBit0 != -1) && (ObjTrigger_IsSetById(
+                    obj, ((DoorlockPlacement*)def)->prereqGameBit0) != 0)) ||
+                ((((DoorlockPlacement*)def)->prereqGameBit0 == -1) && (ObjTrigger_IsSet(obj) != 0)))
             {
                 if (*(s8*)(def + 0x20) != -1)
                 {
@@ -156,11 +156,11 @@ void doorlock_update(int obj)
                 }
                 if ((*(u8*)(def + 0x1b) & 4) == 0)
                 {
-                    GameBit_Set(((DoorlockPlacement*)def)->unk1C, 1);
+                    GameBit_Set(((DoorlockPlacement*)def)->lockGameBit, 1);
                 }
                 if ((*(u8*)(def + 0x1b) & 8) != 0)
                 {
-                    GameBit_Set(((DoorlockPlacement*)def)->unk22, 0);
+                    GameBit_Set(((DoorlockPlacement*)def)->prereqGameBit1, 0);
                 }
                 else
                 {
@@ -174,9 +174,9 @@ void doorlock_update(int obj)
         {
             if (((GameObject*)obj)->unkF4 == 0)
             {
-                if ((*(s8*)(def + 0x20) != -1) && (((DoorlockPlacement*)def)->unk24 != 0))
+                if ((*(s8*)(def + 0x20) != -1) && (((DoorlockPlacement*)def)->queuedSequenceId != 0))
                 {
-                    (*gObjectTriggerInterface)->preempt(obj, ((DoorlockPlacement*)def)->unk24);
+                    (*gObjectTriggerInterface)->preempt(obj, ((DoorlockPlacement*)def)->queuedSequenceId);
                     seqFlags = 1;
                     placeFlags = *(u8*)(def + 0x1b);
                     if ((placeFlags & 0x20) != 0)
