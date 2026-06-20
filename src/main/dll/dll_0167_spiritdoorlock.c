@@ -183,7 +183,7 @@ void SpiritDoorLock_update(int obj)
                 }
                 ((GameObject*)obj)->anim.rootMotionScale *= gSpiritDoorLockScaleDecay;
                 ((GameObject*)obj)->anim.rotZ =
-                    (s16)(s32)((f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
+                    (s32)((f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta);
             }
             else
             {
