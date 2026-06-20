@@ -36,8 +36,6 @@ extern f32 gCamClimbDefaultEndMaxHeight;
 extern f32 lbl_803E19C4;
 extern f32 gCamClimbDefaultHeightAdjustRate;
 extern CameraModeClimbState* gCamClimbState;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 void CameraModeClimb_copyToCurrent_nop(void)
 {
