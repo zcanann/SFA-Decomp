@@ -508,14 +508,14 @@ void worldobj_update(int obj)
                     {
                         modelLightStruct_setLightKind(state->light, 2);
                         modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E66AC,
-                                                     lbl_803E665C);
+                                                     *(f32*)&lbl_803E665C);
                         modelLightStruct_setDiffuseColor(state->light, 0xff, 0, 0, 0xff);
                         modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0xff);
                         modelLightStruct_setEnabled(state->light, 1, lbl_803E665C);
                         modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66B0, lbl_803E66B4);
                         modelLightStruct_startColorFade(state->light, 2, 0x3c);
                         modelLightStruct_setDirection(state->light, lbl_803E665C, lbl_803E6644,
-                                                      lbl_803E665C);
+                                                      *(f32*)&lbl_803E665C);
                     }
                 }
             }
