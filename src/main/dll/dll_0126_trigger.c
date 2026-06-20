@@ -973,7 +973,7 @@ void Trigger_hitDetect(int obj)
                     p8 = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0)
+                        if (*(s16*)(p8 + 0x82) != -1 && GameBit_Get(*(s16*)(p8 + 0x82)) == 0u)
                         {
                             ok = 0;
                         }
