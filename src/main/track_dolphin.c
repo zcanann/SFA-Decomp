@@ -5035,11 +5035,12 @@ void trackIntersect(void)
 
     for (layer = 0; layer < 5; layer++)
     {
+        f32 scale = lbl_803DECE0[0];
         u8* idx = mapGetBlockIdx(layer);
         int gz, gx, base;
         for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10)
         {
-            f32 fz0 = lbl_803DECE0[0] * gz;
+            f32 fz0 = scale * gz;
             u8* p = idx + base;
             for (gx = 0; gx < 0x10; gx++, p++)
             {
