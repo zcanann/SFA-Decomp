@@ -10933,8 +10933,8 @@ void fn_802B19F8(int obj, int state, f32 fv)
         ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
         ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
     }
-    ((PlayerState*)state)->unk6DC = (f32) * (int*)((char*)state + 0x6d0);
-    ((PlayerState*)state)->unk6D8 = (f32) * (int*)((char*)state + 0x6d4);
+    ((PlayerState*)state)->stickXf = (f32) * (int*)((char*)state + 0x6d0);
+    ((PlayerState*)state)->stickYf = (f32) * (int*)((char*)state + 0x6d4);
     fn_802B18BC(obj, state, fv);
 }
 
@@ -12323,8 +12323,8 @@ void fn_802B4C18(int obj, int state, f32 fv)
     u8 buf[0x40];
 
     ((PlayerState*)state)->baddie.gravity = lbl_803E7EB4;
-    ((PlayerState*)state)->baddie.moveInputX = ((PlayerState*)state)->unk6DC;
-    ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->unk6D8;
+    ((PlayerState*)state)->baddie.moveInputX = ((PlayerState*)state)->stickXf;
+    ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->stickYf;
     *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
     *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
     Player_GetObjHitsState(obj)->hitVolumePriority = 0;

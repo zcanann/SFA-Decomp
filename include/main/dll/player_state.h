@@ -242,8 +242,8 @@ typedef struct PlayerState {
     u8 pad6CD[0x6D0 - 0x6CD];
     s32 stickX;
     s32 stickY;
-    f32 unk6D8;
-    f32 unk6DC;
+    f32 stickYf;
+    f32 stickXf;
     u16 buttonsHeld;
     u16 buttonsJustPressed;
     u16 buttonsJustPressedIfNotBusy;
