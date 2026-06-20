@@ -41,9 +41,9 @@ typedef struct Dim2iciclePlacement
     u8 unk3;
     u8 unk4;
     u8 pad5[0xC - 0x5];
-    f32 unkC;
+    f32 resetPosY;
     u8 pad10[0x1E - 0x10];
-    s16 unk1E;
+    s16 impactGameBit;
 } Dim2iciclePlacement;
 
 #pragma scheduling on
@@ -165,7 +165,7 @@ void dim2icicle_update(int obj)
             localPosY;
         if (((GameObject*)obj)->anim.localPosY < ((Dim2IcicleState*)sub)->dropY)
         {
-            GameBit_Set(((Dim2iciclePlacement*)state)->unk1E, 1);
+            GameBit_Set(((Dim2iciclePlacement*)state)->impactGameBit, 1);
             ((Dim2IcicleState*)sub)->mode = 2;
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, ((GameObject*)obj)->anim.localPosX,
@@ -193,7 +193,7 @@ void dim2icicle_update(int obj)
             if (v < 0)
             {
                 v = 0;
-                ((GameObject*)obj)->anim.localPosY = ((Dim2iciclePlacement*)state)->unkC;
+                ((GameObject*)obj)->anim.localPosY = ((Dim2iciclePlacement*)state)->resetPosY;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
             }
             ((GameObject*)obj)->anim.alpha = v;
