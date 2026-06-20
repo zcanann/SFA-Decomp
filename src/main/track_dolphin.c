@@ -3904,7 +3904,7 @@ extern void skyBuildSunModelMatrix(f32 * out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
-extern int pauseMenuGetState(void);
+extern u8 pauseMenuGetState(void);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int sSynthFadeUnit;
