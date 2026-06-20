@@ -2635,6 +2635,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             char* p;
             s16* ap;
             int i;
+            f32 prodB;
 
             ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
             if (ang[0] > 0x8000)
@@ -2654,7 +2655,8 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             limA = (s16)(s32)(gObjPrintDegToAngle * a);
             p = p3;
             ap = ang;
-            minB = -(s16)(s32)(gObjPrintDegToAngle * b);
+            prodB = gObjPrintDegToAngle * b;
+            minB = -(s16)(s32)prodB;
             negA = -limA;
             for (i = 0; i < 2; i++)
             {
@@ -2665,9 +2667,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 {
                     v = minB;
                 }
-                else if ((s16)(s32)(gObjPrintDegToAngle * b) < v)
+                else if (v > (s16)(int)(f64)prodB)
                 {
-                    v = (s16)(s32)(gObjPrintDegToAngle * b);
+                    v = (s16)(int)(f64)prodB;
                 }
                 *ap = v;
                 *(s16*)(p + 0x14) += *ap;
