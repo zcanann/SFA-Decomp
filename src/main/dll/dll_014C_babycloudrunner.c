@@ -170,7 +170,7 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
 }
 
 u32
-FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32 param_5,
+FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
              u32 param_6, u32 param_7, u32 param_8, u32 param_9)
 {
     int newAng;
@@ -192,25 +192,25 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u32 uStack_3c;
     s64 local_38;
 
-    if (param_3 == 0x0)
+    if (target == 0x0)
     {
         result = 0;
     }
     else
     {
-        deltaX[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
+        deltaX[0] = *(float*)(target + 6) - *(float*)(self + 6);
         dx = (double)deltaX[0];
-        deltaY = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
-        deltaZ = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
+        deltaY = *(float*)(target + 8) - *(float*)(self + 8);
+        deltaZ = *(float*)(target + 10) - *(float*)(self + 10);
         dist = FUN_80293900((double)(deltaZ * deltaZ + (float)(dx * dx) + deltaY * deltaY
         ));
-        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dist)
+        if ((double)(float)((double)lbl_803E4DBC * dt) <= dist)
         {
             FUN_8006f7a0(deltaX, &deltaY, &deltaZ);
-            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * param_1);
-            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)deltaY * param_1);
-            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)deltaZ * param_1);
-            angDelta = (*param_3 + -0x8000) - *param_2;
+            *(float*)(self + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * dt);
+            *(float*)(self + 0x14) = lbl_803DC074 * (float)((double)deltaY * dt);
+            *(float*)(self + 0x16) = lbl_803DC074 * (float)((double)deltaZ * dt);
+            angDelta = (*target + -0x8000) - *self;
             if (0x8000 < angDelta)
             {
                 angDelta = angDelta + 1;
@@ -219,7 +219,7 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             {
                 angDelta = angDelta + -1;
             }
-            uStack_44 = (int)*param_2 ^ 0x80000000;
+            uStack_44 = (int)*self ^ 0x80000000;
             local_48 = 0x43300000;
             uStack_3c = angDelta ^ 0x80000000;
             local_40 = 0x43300000;
@@ -228,20 +228,20 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
                     (float)((double)(u32)uStack_3c
-                    )) * (float)(param_1 * (double)lbl_803DC074)) / dist)
+                    )) * (float)(dt * (double)lbl_803DC074)) / dist)
             )
             ;
             local_38 = (s64)newAng;
-            *param_2 = newAng;
-            dist = (double)*(float*)(param_2 + 0x14);
-            velZ = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dist, velZ, param_2);
-            if (param_2[0x50] != 0x1a)
+            *self = newAng;
+            dist = (double)*(float*)(self + 0x14);
+            velZ = (double)*(float*)(self + 0x16);
+            FUN_80017a88((double)*(float*)(self + 0x12), dist, velZ, self);
+            if (self[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, self, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
-            FUN_8002f6ac(param_1, param_2, param_4);
+            FUN_8002f6ac(dt, self, param_4);
             result = 0;
         }
         else
