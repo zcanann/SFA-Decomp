@@ -2858,13 +2858,14 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 extern f32 __PADFixBits;
 
 
+#pragma optimization_level 2
 void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 {
-    u8 fmt;
+    u32 fmt;
     u32 w, h;
     int i, j;
     u32 wA, wB;
-    u16 texA, texB;
+    int texA, texB;
     u8 redA, redB;
     int rf, gf, bf;
 
@@ -2899,8 +2900,9 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
                     int i12 = (int)*(u16*)(a + 0xa) * im * 2;
-                    u8* ad = a + i6 + i4 + i5 + i12;
-                    u8* bd = b + i6 + i4 + i5 + i12;
+                    u8 *ad = a + i6 + i4 + i5 + i12;
+                    u8 *bd = b + i6 + i4 + i5 + i12;
+                    u8 *cd = c + i6 + i4 + i5 + i12;
                     texA = *(u16*)(ad + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
                     texB = *(u16*)(bd + 0x60);
@@ -2910,7 +2912,7 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
                         + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
-                    *(u16*)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
+                    *(u16*)(cd + 0x60) = bf | (rf | gf);
                 }
             }
         }
@@ -2948,6 +2950,7 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
         DCStoreRange(c + 0x60, *(int*)(c + 0x44));
     }
 }
+#pragma optimization_level reset
 
 extern void Obj_BuildTransformMatrices(void* obj);
 extern void fn_80296EB4(u8* p1, u8* p2);
