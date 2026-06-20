@@ -194,10 +194,10 @@ typedef struct PlayerState {
     u8 unk608;
     u8 unk609;
     u8 pad60A[0x60C - 0x60A];
-    f32 unk60C;
-    f32 unk610;
-    f32 unk614;
-    f32 unk618;
+    f32 hitNormalX; /* collision-hit surface normal (nx,ny,nz,nw from SweepHit) captured during a wall/slide probe; getAngle(X,Z) sets targetYaw for the slide move */
+    f32 hitNormalY;
+    f32 hitNormalZ;
+    f32 hitNormalW;
     f32 unk61C;
     f32 unk620;
     f32 unk624;

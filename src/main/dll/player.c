@@ -4543,10 +4543,10 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                ((PlayerState*)p2)->unk60C = buf.nx;
-                ((PlayerState*)p2)->unk610 = buf.ny;
-                ((PlayerState*)p2)->unk614 = buf.nz;
-                ((PlayerState*)p2)->unk618 = buf.nw;
+                ((PlayerState*)p2)->hitNormalX = buf.nx;
+                ((PlayerState*)p2)->hitNormalY = buf.ny;
+                ((PlayerState*)p2)->hitNormalZ = buf.nz;
+                ((PlayerState*)p2)->hitNormalW = buf.nw;
                 return 0xb;
             }
         case 11:
@@ -17587,10 +17587,10 @@ int fn_8029E568(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
         (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
         inner->targetYaw =
-            (s16)getAngle(inner->unk60C, inner->unk614);
+            (s16)getAngle(inner->hitNormalX, inner->hitNormalZ);
         inner->yaw = inner->targetYaw;
-        sqrtf(inner->unk60C * inner->unk60C +
-            inner->unk614 * inner->unk614);
+        sqrtf(inner->hitNormalX * inner->hitNormalX +
+            inner->hitNormalZ * inner->hitNormalZ);
         ((GameObject*)obj)->anim.rotY = 0;
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -17614,10 +17614,10 @@ int fn_8029E568(int obj, int state, f32 fv)
                 ((GameObject*)obj)->anim.localPosY = ((ObjHitVolumeRuntimeTransform*)pt)->centerX;
                 ((GameObject*)obj)->anim.localPosZ = ((ObjHitVolumeRuntimeTransform*)pt)->centerY;
                 inner->targetYaw =
-                    (s16)getAngle(inner->unk60C, inner->unk614);
+                    (s16)getAngle(inner->hitNormalX, inner->hitNormalZ);
                 inner->yaw = inner->targetYaw;
-                sqrtf(inner->unk60C * inner->unk60C +
-                    inner->unk614 * inner->unk614);
+                sqrtf(inner->hitNormalX * inner->hitNormalX +
+                    inner->hitNormalZ * inner->hitNormalZ);
                 ((GameObject*)obj)->anim.rotY = 0;
                 found = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(pt, -1);
                 if (found == -1)
