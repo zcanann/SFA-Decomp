@@ -3427,7 +3427,7 @@ extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 8
-#pragma ppc_unroll_instructions_limit 200
+#pragma ppc_unroll_instructions_limit 160
 u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
     f32 initB, initA;
@@ -4605,6 +4605,7 @@ extern f32 PSVECMag(f32 * v);
 extern int lbl_803DCDC8;
 extern int lbl_803DCDCC;
 
+#pragma ppc_unroll_instructions_limit 16
 int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
 int cur;
 int x0;
@@ -4984,6 +4985,7 @@ u8 doEdges;
     }
     return cur;
 }
+#pragma ppc_unroll_instructions_limit 160
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
@@ -5276,8 +5278,9 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         if ((s8)seg != -1)
         {
             u16* segtbl = (u16*)gIntersectSegmentTypeTable;
-            start = segtbl[(s8)seg * 2];
-            end = segtbl[(s8)seg * 2 + 1];
+            int si = (s8)seg * 2;
+            start = segtbl[si];
+            end = segtbl[si + 1];
         }
         else
         {
