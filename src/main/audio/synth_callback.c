@@ -61,7 +61,7 @@ void synthRecycleVoiceCallbacks(SynthVoice* voice)
 
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex)
 {
-    register SynthCallbackLink* callback;
+    SynthCallbackLink* callback;
     SynthCallbackLink* next;
     register SynthCallbackLink* current;
     register SynthCallbackLink* prev;
