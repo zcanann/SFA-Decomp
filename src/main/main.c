@@ -224,12 +224,11 @@ void vfplavastar_release(void)
 
 int fn_801FD4A8(void* obj, int x)
 {
-    u8* extra = ((GameObject*)obj)->extra;
+    s8* extra = (s8*)((GameObject*)obj)->extra;
     if (extra != NULL)
     {
-        s8 v = extra[4] - x;
-        extra[4] = v;
-        return *(s8*)(extra + 4) <= 0 ? 1 : 0;
+        extra[4] -= x;
+        return extra[4] <= 0 ? 1 : 0;
     }
     return 0;
 }
