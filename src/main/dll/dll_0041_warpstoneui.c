@@ -63,7 +63,7 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
     n = 0;
     k = 0;
     idp = ids;
-    for (k = 0; k < count; k++)
+    for (; k < count; k++)
     {
         if ((u32)GameBit_Get(*(s16*)idp) != 0)
         {
