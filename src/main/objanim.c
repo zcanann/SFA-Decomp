@@ -678,6 +678,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     ObjAnimBank* bank;
     ObjAnimState* state;
     ObjAnimEventTable* eventTable;
+    ObjAnimMoveData* moveData;
     ObjAnimRootCurve* curve;
     ObjAnimRootCurve* blendCurve;
     s16* axis;
@@ -897,12 +898,13 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
     }
 
-    curve = ObjAnim_GetMoveRootCurve(bank->animDef, state);
-    if (curve == NULL)
+    moveData = ObjAnim_GetCurrentMoveData(bank->animDef, state);
+    if (moveData->rootCurveOffset == 0)
     {
         events->rootCurveValid = 0;
         return wrapped;
     }
+    curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
     events->rootCurveValid = 1;
     rootScale = curve->scale * objAnim->rootMotionScale;
