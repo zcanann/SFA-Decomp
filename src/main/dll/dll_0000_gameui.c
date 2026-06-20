@@ -2730,7 +2730,7 @@ void pauseMenuFn_80129ee0(void)
     if (player != 0)
     {
         int cell;
-        if (*(int*)(player + 0x30) != 0)
+        if (*(void**)(player + 0x30) != NULL)
         {
             cell = ((GameObject*)*(char**)(player + 0x30))->anim.mapEventSlot;
         }
