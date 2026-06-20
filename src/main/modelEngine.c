@@ -618,7 +618,7 @@ void gameTimerRun(void)
     gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
     if (minutes & 1)
     {
-        gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
-        gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+        gameTextShowStr(&lbl_803DB29C, 0xD, lbl_803DB284, 3);
+        gameTextShowStr(&lbl_803DB2A0, 0xD, lbl_803DB288, 3);
     }
 }
