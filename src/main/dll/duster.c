@@ -279,7 +279,7 @@ void fn_801557D4(int* obj, int state)
     }
     else
     {
-        if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+        if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
             (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
@@ -301,7 +301,7 @@ void fn_80155884(int* obj, int state)
     {
         fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
@@ -329,7 +329,7 @@ void fn_80155948(int* obj, int state)
     {
         fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
