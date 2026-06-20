@@ -30,7 +30,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 /* sibling kaldachompspit descriptor callbacks (code in a neighbouring DLL);
    the remaining callbacks (render/hitDetect/init/release/initialise) are in xyzanimator.h */
 
-extern f32 timeDelta;
 extern f32 lbl_803E3110;
 extern f32 lbl_803E3114;
 extern f32 lbl_803E3118;
