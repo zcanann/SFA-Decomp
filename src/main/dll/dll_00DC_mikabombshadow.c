@@ -1149,7 +1149,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -1557,11 +1556,8 @@ void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void fireball_free(int* obj);
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void mikabombshadow_init(int* obj)
 {
@@ -1584,19 +1580,14 @@ void mikabombshadow_init(int* obj)
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void flamethrowerspe_init(int* obj, int* params);
 
 void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
-void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
-void fireball_init(int* obj);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj);
 
