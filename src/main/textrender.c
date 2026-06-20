@@ -2290,7 +2290,7 @@ typedef struct GameTextCharset
 } GameTextCharset;
 
 #pragma dont_inline off
-#pragma peephole on
+#pragma peephole off
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
@@ -2307,7 +2307,7 @@ void setLanguageFn_8001ad64(void* reqp)
     u16* p;
     u16* texStart;
     int** slot;
-    int kind;
+    u16 kind;
     u32 bpp;
     u32 w;
     u32 h;
@@ -2346,7 +2346,7 @@ void setLanguageFn_8001ad64(void* reqp)
     cs->count = *(u16*)(hdr + 4);
     ofs = *(u16*)(hdr + 6);
     cs->entries = hdr + 8;
-    table = (int*)(cs->entries + cs->count * 12);
+    table = (int*)((hdr + 8) + cs->count * 12);
     numStrings = table[0];
     strs = table + 1;
     for (i = 0; i < cs->count; i++)
@@ -2393,27 +2393,27 @@ void setLanguageFn_8001ad64(void* reqp)
         {
             if (bpp == 4)
             {
-                u8* dst8 = (u8*)slot[4] + 0x60;
                 u8* src8 = (u8*)p;
+                u8* dst8 = (u8*)slot[4] + 0x60;
                 n = (int)(w * h) >> 1;
                 while (n--)
                 {
                     *dst8 = *src8;
-                    dst8++;
                     src8++;
+                    dst8++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
             else
             {
-                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
                 u16* src16 = p;
+                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
                 n = w * h;
                 while (n--)
                 {
                     *dst16 = *src16;
-                    dst16++;
                     src16++;
+                    dst16++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
