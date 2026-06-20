@@ -113,7 +113,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* cstep,
                   u64 tstflag, u32 dirtyFlag)
 {
-    u8 comb;
+    int comb;
     s32 scale;
 
     if (!(MAC_CFLAGS(svoice) & tstflag))
@@ -123,7 +123,7 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
     }
     else
     {
-        comb = cstep->value;
+        comb = cstep->value & 0xff;
     }
 
     scale = (s32)(cstep->flags & 0xffff0000) / 100;
