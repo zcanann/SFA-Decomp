@@ -147,8 +147,8 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     {
         SynthFade* fade = (SynthFade*)(state + 0x5D4);
-        f32 fadeCurrent = lbl_803E77D0;
         f32 auxCurrent = lbl_803E77A8;
+        f32 fadeCurrent = lbl_803E77D0;
         u32 pass;
 
         for (pass = 0; pass < 2; pass++)
