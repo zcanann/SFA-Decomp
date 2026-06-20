@@ -102,8 +102,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = (lbl_803E2EBC - lbl_803E2F00 * ((GameObject*)obj)->anim.currentMoveProgress) *
         (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
@@ -190,8 +189,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
@@ -254,8 +252,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
