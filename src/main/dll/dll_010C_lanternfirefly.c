@@ -14,7 +14,7 @@
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18;
+    s8 wanderRange;
     u8 stateId;
     s16 timer;
     s16 unk1C;
@@ -99,7 +99,7 @@ void LanternFireFly_func0B(int obj)
 
     state = ((GameObject*)obj)->extra;
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    state->wanderRange = ((LanternFireFlyPlacement*)setup)->unk18;
+    state->wanderRange = ((LanternFireFlyPlacement*)setup)->wanderRange;
     state->stateId = ((LanternFireFlyPlacement*)setup)->stateId;
     state->field4C = lbl_803E3AA0;
     state->field50 = (f32)(int)((LanternFireFlyPlacement*)setup)->unk1C;
