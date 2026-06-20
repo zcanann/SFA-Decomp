@@ -136,11 +136,11 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
     {
         spawnPos = (f32*)((char*)spawnArgs + 0xc);
         {
-            f32* modelPos = (f32*)(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks +
-                ((s8)((u8*)obj)[0xad] << 2)) + 0x50) + modelPart * 0x10);
-            spawnPos[0] = playerMapOffsetX + modelPos[1];
-            spawnPos[1] = modelPos[2];
-            spawnPos[2] = playerMapOffsetZ + modelPos[3];
+            f32 (*modelPos)[4] = (f32(*)[4])(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks +
+                ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
+            spawnPos[0] = playerMapOffsetX + modelPos[modelPart][1];
+            spawnPos[1] = modelPos[modelPart][2];
+            spawnPos[2] = playerMapOffsetZ + modelPos[modelPart][3];
         }
         (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
         (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
