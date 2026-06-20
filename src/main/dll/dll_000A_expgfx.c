@@ -489,8 +489,8 @@ void expgfx_initSlotQuad(void* slotPtr)
     }
 
     texT0 = 0;
-    texT1 = 0;
     texS0 = 0;
+    texT1 = 0;
     texS1 = 0;
     if (resource != 0)
     {
