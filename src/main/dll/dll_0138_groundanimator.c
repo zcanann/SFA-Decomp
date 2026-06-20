@@ -69,11 +69,8 @@ extern const f32 lbl_803E3FAC;
 extern const f32 lbl_803E3FB0;
 extern const f32 lbl_803E3FB4;
 extern const f32 lbl_803E3FBC;
-extern f32 timeDelta;
 extern void fn_801A80F0(int* e, int arg);
 extern float fastFloorf(float x);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(void* block, int v);
