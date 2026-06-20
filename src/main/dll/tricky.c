@@ -708,6 +708,7 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
 extern volatile s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
 
+#pragma opt_propagation off
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     s16 z;
@@ -722,10 +723,10 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     y0 -= 0x3c0;
     x1 -= 0x500;
     y1 -= 0x3c0;
-    x0 = (f32)(u32)x0 * lbl_803DBA8C;
-    y0 = (f32)(u32)y0 * lbl_803DBA8C;
-    x1 = (f32)(u32)x1 * lbl_803DBA8C;
-    y1 = (f32)(u32)y1 * lbl_803DBA8C;
+    x0 = (f32)x0 * lbl_803DBA8C;
+    y0 = (f32)y0 * lbl_803DBA8C;
+    x1 = (f32)x1 * lbl_803DBA8C;
+    y1 = (f32)y1 * lbl_803DBA8C;
     GXBegin(0x80, 1, 4);
     z = (s16)(lbl_803DBA8A << 2);
     GXWGFifo.s16 = (s16)(x0 + 0x500);
@@ -752,6 +753,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
+#pragma opt_propagation reset
 
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
