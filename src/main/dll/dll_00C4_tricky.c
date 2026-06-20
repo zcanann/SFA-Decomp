@@ -318,6 +318,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int state;
     int i;
     int j;
+    int k;
     int slot;
     int setup;
     bool playing;
@@ -332,15 +333,15 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
-            i = 0;
+            k = 0;
             slot = state;
             do
             {
                 objSetAnimSpeedTo1(*(int*)(slot + 0x700));
                 slot = slot + 4;
-                i = i + 1;
+                k = k + 1;
             }
-            while (i < 7);
+            while (k < 7);
             Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
@@ -444,7 +445,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
     fn_80138D7C(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
-    objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8, lbl_803E23E8);
+    objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8, *(f32*)&lbl_803E23E8);
     if ((((TrickyState*)state)->stateFlags & 1) != 0)
     {
         animUpdate->hitVolumePair &= ~0x40;
