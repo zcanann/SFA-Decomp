@@ -29,7 +29,7 @@ typedef struct CarryableUpdateHeldState
     s16 unk2;
     u8 pad4[0x5 - 0x4];
     s8 carryState;
-    u8 unk6;
+    u8 isHeld;
     u8 flags;
     u8 unk8;
     u8 pad9[0x10 - 0x9];
@@ -171,7 +171,7 @@ int Carryable_updateHeld(u8* obj)
         if (((CarryableUpdateHeldState*)held)->carryState != 0)
         {
             ((CarryableUpdateHeldState*)held)->flags |= 1;
-            ((CarryableUpdateHeldState*)held)->unk6 = 1;
+            ((CarryableUpdateHeldState*)held)->isHeld = 1;
         }
         if (((GameObject*)obj)->unkF8 == 0)
         {
@@ -246,7 +246,7 @@ int Carryable_updateHeld(u8* obj)
             else
             {
                 buttonDisable(0, 0x100);
-                ((CarryableUpdateHeldState*)held)->unk6 = 0;
+                ((CarryableUpdateHeldState*)held)->isHeld = 0;
             }
         }
         if (((GameObject*)obj)->unkF8 == 1)
@@ -257,7 +257,7 @@ int Carryable_updateHeld(u8* obj)
         {
             u8* h2 = ((GameObject*)obj)->extra;
             *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = 0;
-            ((CarryableUpdateHeldState*)h2)->unk6 = 0;
+            ((CarryableUpdateHeldState*)h2)->isHeld = 0;
             if ((((CarryableUpdateHeldState*)h2)->flags & 8) == 0)
             {
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E06D8;
@@ -265,7 +265,7 @@ int Carryable_updateHeld(u8* obj)
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E06D8;
             }
         }
-        if (*(s8*)&((CarryableUpdateHeldState*)held)->unk6 != 0)
+        if (*(s8*)&((CarryableUpdateHeldState*)held)->isHeld != 0)
         {
             ObjMsg_SendToObject(player, 0x100008, obj,
                                 (((CarryableUpdateHeldState*)held)->unk2 << 16) | (u16) * (s16*)held);
@@ -281,7 +281,7 @@ void Carryable_init(int obj, int state)
     s->unk2 = 0;
     s->carryState = 0;
     s->pad4[0] = 0;
-    s->unk6 = 0;
+    s->isHeld = 0;
     ((GameObject*)obj)->unkF8 = 0;
 }
 
