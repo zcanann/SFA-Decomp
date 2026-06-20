@@ -432,7 +432,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
                   u32 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
     u8 flags;
-    float fVar2;
+    float animRate;
     float fVar3;
     int iVar4;
     short* subObj;
@@ -441,7 +441,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     u8* animTable;
     float* animEntry;
     double dVar10;
-    double dVar11;
+    double rate;
     u64 handle;
 
     handle = FUN_80286840();
@@ -463,13 +463,13 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     {
         animIdx = 0;
     }
-    fVar2 = lbl_803E33E0;
+    animRate = lbl_803E33E0;
     if ((flags & 0x20) != 0)
     {
         animIdx = 0;
-        fVar2 = lbl_803E33DC;
+        animRate = lbl_803E33DC;
     }
-    dVar11 = (double)fVar2;
+    rate = (double)animRate;
     if (((param_11 & 0xff) != 0) &&
         ((((flags != 0 ||
                 (dVar10 = (double)*(float*)(obj + 0x324), dVar10 != (double)lbl_803E33D8)) &&
@@ -507,7 +507,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
             if ((*(u32*)(obj + 0x2dc) & 0x40000000) != 0)
             {
                 iVar4 = (u32) * (u8*)(obj + 0x33c) * 0xc;
-                FUN_8014d4c8((double)*(float*)(animTable + iVar4), dVar10, dVar11, param_4, param_5, param_6,
+                FUN_8014d4c8((double)*(float*)(animTable + iVar4), dVar10, rate, param_4, param_5, param_6,
                              param_7, param_8, (int)subObj, obj, (u32)(u8)animTable[iVar4 + 8], 0,
                              *(u32*)(animTable + iVar4 + 4) & 0xff, param_14, param_15, param_16);
                 FUN_800305c4((double)*(float*)(&DAT_8031e980 +
@@ -531,20 +531,20 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     {
         if ((*(u32*)(obj + 0x2dc) & 0x40000000) != 0)
         {
-            FUN_80151844(dVar10, param_2, dVar11, param_4, param_5, param_6, param_7, param_8, subObj, obj);
+            FUN_80151844(dVar10, param_2, rate, param_4, param_5, param_6, param_7, param_8, subObj, obj);
         }
     }
     else
     {
         animEntry = (float*)(animTable + animIdx * 0xc);
-        fVar3 = lbl_803E33E4 * (float)(dVar11 * (double)*animEntry);
+        fVar3 = lbl_803E33E4 * (float)(rate * (double)*animEntry);
         *(float*)(obj + 0x330) = fVar3;
         *(float*)(obj + 0x32c) = fVar3;
         *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) | 0x40;
         *(u8*)(obj + 0x2f2) = *(u8*)(obj + 0x2f2) | 0x80;
         *(u8*)(obj + 0x2f3) = 0;
         *(u8*)(obj + 0x2f4) = 0;
-        FUN_8014d4c8((double)(float)(dVar11 * (double)*animEntry), param_2, dVar11, param_4, param_5, param_6,
+        FUN_8014d4c8((double)(float)(rate * (double)*animEntry), param_2, rate, param_4, param_5, param_6,
                      param_7, param_8, (int)subObj, obj, (u32) * (u8*)(animEntry + 2), 0,
                      (u32)animEntry[1] & 0xff, param_14, param_15, param_16);
         FUN_800305c4((double)*(float*)(&DAT_8031e980 + (u32) * (u8*)(animEntry + 2) * 4), (int)subObj);
