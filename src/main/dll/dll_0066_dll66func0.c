@@ -285,15 +285,15 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     int actIndex;
     short* actPtr;
     char* name;
-    char cVar8;
-    u64 uVar9;
-    u64 uVar10;
+    char ch;
+    u64 saveHandle;
+    u64 rec;
 
-    uVar10 = FUN_80286840();
+    rec = FUN_80286840();
     savedZ = DAT_802c28f8;
     savedY = DAT_802c28f4;
     savedX = DAT_802c28f0;
-    name = (char*)((u64)uVar10 >> 0x20);
+    name = (char*)((u64)rec >> 0x20);
     FUN_800033a8(-0x7fc5c0f8, 0, 0xf70);
     if ((*(u8*)(DAT_803de110 + 0x21) & 0x80) == 0)
     {
@@ -367,18 +367,18 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
         dst = &DAT_803a3f24;
         do
         {
-            cVar8 = *name;
+            ch = *name;
             name++;
-            *dst = cVar8;
+            *dst = ch;
             dst++;
         }
-        while (cVar8 != '\0');
+        while (ch != '\0');
     }
-    uVar9 = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
-    cVar8 = uVar10;
-    if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, name != 0x0))
+    saveHandle = FUN_80003494(DAT_803de110, 0x803a3f08, 0x6ec);
+    ch = rec;
+    if ((ch != -1) && (DAT_803dc4f0 = ch, name != 0x0))
     {
-        FUN_80072564(uVar9, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar10 & 0xff,
+        FUN_80072564(saveHandle, param_2, param_3, param_4, param_5, param_6, param_7, param_8, rec & 0xff,
                      DAT_803de110, &gGameplayPreviewSettings);
     }
     FUN_8028688c();
