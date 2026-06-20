@@ -239,7 +239,7 @@ void drakormissile_update(int obj)
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
         PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);
-        PSVECAdd((f32*)((char*)obj + 0x24), dir, (f32*)((char*)obj + 0x24));
+        PSVECAdd((f32*)(obj + 0x24), dir, (f32*)(obj + 0x24));
         mag = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
@@ -326,7 +326,7 @@ void drakormissile_update(int obj)
     }
     if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState())
     {
-        modelLightStruct_updateGlowAlpha(*(void**)((int)p + DRAKORMISSILE_FIELD_LIGHT));
+        modelLightStruct_updateGlowAlpha(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
     }
 }
 
