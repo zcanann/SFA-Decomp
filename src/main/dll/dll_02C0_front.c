@@ -1078,11 +1078,12 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
+        xb = (int)mtx[3];
+        yb = *(s16*)(box + 0x16) + (int)mtx[7];
         if ((p2 & 0xff) == 0u)
         {
-            drawTexture(gTitleScreenTextures[5],
-                        (f32)(int)((int)mtx[3] + 0x2f),
-                        (f32)(int)(*(s16*)(box + 0x16) + (int)mtx[7] - 1), p2, 0xff);
+            drawTexture(gTitleScreenTextures[5], (f32)(int)(xb + 0x2f),
+                        (f32)(int)(yb - 1), p2, 0xff);
         }
     }
     drawScaledTexture((char*)gTitleScreenTextures[18],
