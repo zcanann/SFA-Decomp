@@ -27,7 +27,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
 
 extern u32 gPlayerMoveSlowMoveId;
 extern u32 gPlayerMoveFastMoveId;
@@ -849,7 +849,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if ((*(int*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
     {
-        fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
+        fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
         ((BaddieState*)state)->unk32E = (s16)((f32)((BaddieState*)state)->unk32E + dt);
         if ((f32)((BaddieState*)state)->unk32E > lbl_803E05C4)
         {
@@ -1037,7 +1037,7 @@ end:
     if (q != 0) *(u8*)((char*)q + 0x70) = 0;
 }
 
-void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
+void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
 {
     int i;
     s16 startState;
