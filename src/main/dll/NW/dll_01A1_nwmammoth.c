@@ -493,9 +493,9 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                         else
                         {
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
-                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, o2 + 0x18) >= gNwMammothTumbleweedDistSqThreshold)
+                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, o2 + 0x18) >=
+                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, &o2[6]) >=
                                     gNwMammothTumbleweedDistSqThreshold)
                                 {
                                     fn_8014C66C(o2, obj);
