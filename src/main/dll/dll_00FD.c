@@ -206,9 +206,9 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
                          ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
         randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
-        *(f32*)(childObj + 0x24) =
+        ((GameObject*)childObj)->anim.velocityX =
             launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        *(f32*)(childObj + 0x2c) =
+        ((GameObject*)childObj)->anim.velocityZ =
             launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
         Sfx_PlayFromObject(obj, 0x5e);
     }
