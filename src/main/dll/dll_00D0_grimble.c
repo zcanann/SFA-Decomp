@@ -278,7 +278,7 @@ void fn_801627F4(int obj)
     ptr = ObjGroup_GetObjects(0x17, &count);
     if (count != 0)
     {
-        sub = *(char**)(state + 0x40c);
+        sub = (char*)((GroundBaddieState*)state)->control;
         ((GrimbleControl*)sub)->candidatePathObj = 0;
         ((GrimbleControl*)sub)->nearestDist = gGrimblePathSearchMaxDist;
         for (i = 0; i < count; i++)
@@ -458,7 +458,7 @@ void grimble_init(int obj, int p2, int p3)
     (*(void (**)(int, char*, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2EB8;
-    *(int*)(*(int*)(state + 0x40c) + 0x34) = 0;
+    *(int*)((char*)((GroundBaddieState*)state)->control + 0x34) = 0;
 }
 
 void grimble_release(void)
