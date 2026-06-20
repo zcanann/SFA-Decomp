@@ -32,8 +32,6 @@ typedef struct Dll19DState
 } Dll19DState;
 
 extern u32 getLActions();
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803E51B0;
 
 extern f32 lbl_803E51B8;
