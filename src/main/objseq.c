@@ -2210,9 +2210,9 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     (void)out;
 
     cmd = *cmdPtr;
-    noExec = (s8)(flags & 1);
-    doUpdate = (s8)(flags & 2);
-    flag8 = (s8)(flags & 8);
+    noExec = (s8)flags & 1;
+    doUpdate = (s8)((s8)flags & 2);
+    flag8 = (s8)flags & 8;
     if (noExec == 0)
     {
         doUpdate = 1;
