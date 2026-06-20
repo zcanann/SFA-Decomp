@@ -63,8 +63,8 @@ typedef struct ModgfxEffectSlot
     s16 frameDuration;
     u8 pad100[0x106 - 0x100];
     s16 rotOffsetZ;
-    s16 unk108;
-    s16 unk10A;
+    s16 rotOffsetY;
+    s16 rotOffsetX;
     s16 animSlotId;
     u8 pad10E[0x139 - 0x10E];
     s8 emitterCount;
@@ -2992,9 +2992,9 @@ void dll_0B_func05(void)
                 {
                     ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(E9 + emOff +
                         0x4) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->unk108 += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(E9 + emOff +
                         0x8) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->unk10A += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(E9 + emOff +
                         0xc) * gModgfxMotionStep);
                 }
                 if (*(int*)(E9 + emOff) & 0x80)
