@@ -2043,6 +2043,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
+#pragma optimization_level 2
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* dstBuf;
@@ -2054,6 +2055,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     void* viewMatrix;
     ExpgfxCameraViewSlot* cameraSlot;
     ExpgfxSlot* slot;
+    ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
     ExpgfxSourceObject* sourceObject;
     u32 texture;
@@ -2115,10 +2117,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
     slotIndex = 0;
+    tabBase = gExpgfxTableEntries;
     do
     {
         slot = (ExpgfxSlot*)((char*)slot + EXPGFX_SLOT_SIZE);
-        tabEntry = &gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)];
+        tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
@@ -2462,6 +2465,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma optimization_level reset
 
 void renderParticles(void)
 {
