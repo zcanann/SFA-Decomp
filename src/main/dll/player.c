@@ -1292,22 +1292,22 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
         any;
         sumS = sumS / (f32)(int)
         any;
-        inner->unk648 =
-            inner->unk648 - lbl_803E7F6C * sumC;
-        inner->unk64C =
-            inner->unk64C - lbl_803E7F6C * sumS;
-        inner->unk648 = inner->unk648 * lbl_803E7F68;
-        inner->unk64C = inner->unk64C * lbl_803E7F68;
-        mag = sqrtf(inner->unk648 * inner->unk648 +
-            inner->unk64C * inner->unk64C);
+        inner->avoidVelX =
+            inner->avoidVelX - lbl_803E7F6C * sumC;
+        inner->avoidVelZ =
+            inner->avoidVelZ - lbl_803E7F6C * sumS;
+        inner->avoidVelX = inner->avoidVelX * lbl_803E7F68;
+        inner->avoidVelZ = inner->avoidVelZ * lbl_803E7F68;
+        mag = sqrtf(inner->avoidVelX * inner->avoidVelX +
+            inner->avoidVelZ * inner->avoidVelZ);
         if (mag > lbl_803E7F1C)
         {
             f32 s = lbl_803E7F1C / mag;
-            inner->unk648 = inner->unk648 * s;
-            inner->unk64C = inner->unk64C * s;
+            inner->avoidVelX = inner->avoidVelX * s;
+            inner->avoidVelZ = inner->avoidVelZ * s;
         }
-        *outX = inner->unk648 * timeDelta;
-        *outZ = inner->unk64C * timeDelta;
+        *outX = inner->avoidVelX * timeDelta;
+        *outZ = inner->avoidVelZ * timeDelta;
     }
     else
     {

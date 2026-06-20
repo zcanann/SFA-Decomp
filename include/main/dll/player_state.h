@@ -209,8 +209,8 @@ typedef struct PlayerState {
     f32 unk63C;
     f32 traveledDistance;
     f32 travelTargetDistance; /* PSVECMag(start->target); traveledDistance is compared against it */
-    f32 unk648;
-    f32 unk64C;
+    f32 avoidVelX; /* planar steering/separation velocity X: nudged by cos/sin avoidance sums, damped, magnitude-clamped, *= timeDelta -> position delta */
+    f32 avoidVelZ;
     u8 pad650[0x654 - 0x650];
     f32 surfaceNormalX; /* surface normal from the last collision sweep (SweepHit.n*); dotted with movement dir, drives slide angle (getAngle(X,Z)) and position offset */
     f32 surfaceNormalY;
