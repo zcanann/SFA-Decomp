@@ -1154,10 +1154,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                 {
                     return;
                 }
-                if (((GameObject*)hitObj)->anim.seqId == 0x23)
+                if (((GameObject*)hitObj)->anim.seqId != 0x23)
                 {
-                    return;
-                }
                 objAudioFn_800393f8(obj, (void*)((int)((char*)inner + 0x3bc)), 0x28e, 0x1000, -1, 1);
                 {
                     s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
@@ -1180,6 +1178,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                 }
                 inner->sub.unk980 = inner->baddie.controlMode;
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
+                }
             }
         }
         if (*(int*)inner & 0x800000)
