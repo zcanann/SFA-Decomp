@@ -882,17 +882,20 @@ void fireball_init(int* obj)
             if (*(void**)state != NULL)
             {
                 int c;
+                u8* base1;
+                u8* base2;
                 modelLightStruct_setLightKind(*(int*)state, 2);
                 lightSetField4D(*(int*)state, 0);
                 modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int*)state, 1);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(*(int**)state, ((u8*)lbl_80320978)[c],
-                                                 ((u8*)lbl_80320978 + 1)[c], ((u8*)lbl_80320978 + 2)[c], 0);
+                                                 (base1 = (u8*)lbl_80320978 + 1)[c],
+                                                 (base2 = (u8*)lbl_80320978 + 2)[c], 0);
                 modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E3358, lbl_803E3378);
                 c = ((FireballState*)state)->colorIndex * 3;
-                modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], ((u8*)lbl_80320978 + 1)[c],
-                                           ((u8*)lbl_80320978 + 2)[c], 32, lbl_803E337C);
+                modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], base1[c],
+                                           base2[c], 32, lbl_803E337C);
                 modelLightStruct_setGlowProjectionRadius(*(int*)state, lbl_803E337C);
             }
         }
