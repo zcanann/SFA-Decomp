@@ -236,18 +236,18 @@ void magicdust_update(int obj)
                 {
                     Sfx_PlayFromObject(obj, SFXwp_iceywindlp16);
                 }
-                if (((MagicDustState*)state)->unk6C < lbl_803E34D0)
+                if (((MagicDustState*)state)->unk6C >= lbl_803E34D0)
+                {
+                    ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
+                }
+                else
                 {
                     ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
                     fval = lbl_803E34D8;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34D8;
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
-                }
-                else
-                {
-                    ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
                 }
                 flagsByte = *(char*)&((MagicDustState*)state)->bounceCount + 1;
                 ((MagicDustState*)state)->bounceCount = flagsByte;
