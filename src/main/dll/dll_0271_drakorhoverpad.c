@@ -448,10 +448,10 @@ void drakorhoverpad_updateMain(int obj)
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
     RomCurveWalker* curve;
-    int curveArg;
-    f32 curvePos[3];
-    f32 diff[3];
     int evOut;
+    f32 diff[3];
+    f32 curvePos[3];
+    int curveArg;
     f32 phase;
     f32 wobbleY;
     f32 limit;
@@ -543,8 +543,8 @@ void drakorhoverpad_updateMain(int obj)
     if (lbl_803E6A3C != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
-        if ((curve->reverse != 0 && curve->atSegmentEnd == 0) ||
-            (curve->reverse == 0 && curve->atSegmentEnd != 0))
+        if ((curve->reverse == 0 && curve->atSegmentEnd != 0) ||
+            (curve->reverse != 0 && curve->atSegmentEnd == 0))
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),
