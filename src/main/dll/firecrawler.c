@@ -971,7 +971,7 @@ void crawler_update(int* obj, u8* state)
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
     }
 
-    if (*(f32*)(state + 0x328) != lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
+    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
     {
         cap = lbl_803E2BA8;
         *(f32*)(state + 0x328) -= timeDelta;
