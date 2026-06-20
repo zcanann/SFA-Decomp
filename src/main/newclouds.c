@@ -1205,8 +1205,8 @@ void titleScreenDrawFn_80093db4(void)
     int idx;
     f32 zero;
     f32 v[3];
-    f32 mtx2[12];
     f32 mtx1[12];
+    f32 mtx2[12];
 
     GXSetMisc(1, 0);
     testAndSet_onlyUseHeap3(0);
