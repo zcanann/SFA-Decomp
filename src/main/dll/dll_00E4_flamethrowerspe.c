@@ -729,8 +729,8 @@ void FUN_80170048(void)
     double biasC;
     double offsetC;
     u64 packed;
-    u64 local_78;
-    u64 local_70;
+    u64 randOffset;
+    u64 randOffset2;
 
     packed = FUN_80286838();
     objHi = (u32)((u64)packed >> 0x20);
@@ -813,8 +813,8 @@ void FUN_80170048(void)
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(scaleC + cosVal) * phase));
                 state[5] = *colorTbl;
                 rand = randomGetRange(0x78, 0x7f);
-                local_78 = (double)(int)(seqObj * rand);
-                *(short*)(writer + 0xf) = (short)(int)(biasC + (double)(float)(local_78));
+                randOffset = (double)(int)(seqObj * rand);
+                *(short*)(writer + 0xf) = (short)(int)(biasC + (double)(float)(randOffset));
                 writer = (int*)((int)writer + 2);
                 scaleTbl = scaleTbl + 1;
                 state = state + 1;
@@ -914,8 +914,8 @@ void FUN_80170048(void)
             writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + cosVal) * phase));
             writer[5] = *colorTbl;
             rand = randomGetRange(0x78, 0x7f);
-            local_70 = (double)(int)(seqObj * rand);
-            *(short*)(state + 0xf) = (short)(int)(scaleC + (double)(float)(local_70));
+            randOffset2 = (double)(int)(seqObj * rand);
+            *(short*)(state + 0xf) = (short)(int)(scaleC + (double)(float)(randOffset2));
             state = (int*)((int)state + 2);
             scaleTbl = scaleTbl + 1;
             writer = writer + 1;
