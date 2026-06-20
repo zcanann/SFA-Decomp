@@ -468,7 +468,7 @@ void fn_80150910(int* obj, u8* state)
             (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / gSidekickToyAngleWrapFull);
         if (*(f32*)(state + 0x308) < lbl_803E2754)
         {
-            *(f32*)(state + 0x308) = lbl_803E2754;
+            *(f32*)(state + 0x308) = *(f32*)&lbl_803E2754;
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) && state[0x33d] == 0)
         {
