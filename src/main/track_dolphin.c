@@ -5735,7 +5735,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
 
     descEnd = &gTrackBlockDescriptors[gActiveTrackBlockCount];
     descBase = gTrackBlockDescriptors;
-    offX = (f32) * gTrackGridOrigin;
+    offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
     retLo = 0;
