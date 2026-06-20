@@ -746,7 +746,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
                 (ObjAnimComponent*)obj);
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= lbl_803E2740)
+        if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
             ((BaddieState*)state)->controlFlags =
