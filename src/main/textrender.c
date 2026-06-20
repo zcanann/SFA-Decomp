@@ -1330,6 +1330,7 @@ extern void* gSubtitleLineTable[];
 extern int gSubtitleBlockCount;
 
 #pragma peephole on
+#pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
 {
     int i;
@@ -1342,35 +1343,8 @@ void gameTextInitFn_8001bd14(void)
     gGameTextSavedDir = -1;
 
     scratch = (int*)gSubtitleLineTable;
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < 32; i++)
     {
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
         scratch[0] = zero;
         scratch[1] = zero;
         scratch[2] = zero;
@@ -1382,6 +1356,7 @@ void gameTextInitFn_8001bd14(void)
         scratch += 8;
     }
 }
+#pragma opt_unroll_loops on
 #pragma peephole reset
 
 #pragma dont_inline on
