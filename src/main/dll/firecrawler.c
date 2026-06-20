@@ -1011,11 +1011,12 @@ void crawler_update(int* obj, u8* state)
                     ((BaddieState*)state)->seqEntryIndex = 0;
                 }
                 fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, gCrawlerNearbyObjectBuffer);
-                p = t9 + ((BaddieState*)state)->seqEntryIndex * 0xc;
-                if ((((BaddieState*)state)->controlFlags & *(u32*)(p + 4)) == 0
-                    && *(u8*)(p + 9) != 0)
+                if ((((BaddieState*)state)->controlFlags &
+                     *(u32*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 4)) == 0
+                    && *(u8*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 9) != 0)
                 {
-                    ((BaddieState*)state)->seqEntryIndex = *(u8*)(p + 9);
+                    ((BaddieState*)state)->seqEntryIndex =
+                        *(u8*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 9);
                 }
                 i = ((BaddieState*)state)->seqEntryIndex * 0xc;
                 Baddie_SetMove(obj, state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
