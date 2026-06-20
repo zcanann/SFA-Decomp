@@ -904,9 +904,9 @@ int fn_802A36EC(int obj, int state)
                                            (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                            *(int*)&((GameObject*)obj)->anim.parent);
             objHitDetectFn_80062e84(obj, inner->groundObject, 1);
-            inner->unk5B4 = ((GameObject*)obj)->anim.localPosX;
-            inner->unk5B8 = ((GameObject*)obj)->anim.localPosY;
-            inner->unk5BC = ((GameObject*)obj)->anim.localPosZ;
+            inner->moveStartX = ((GameObject*)obj)->anim.localPosX;
+            inner->moveStartY = ((GameObject*)obj)->anim.localPosY;
+            inner->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
             if (*(void**)((char*)inner + 0x4c4) != NULL)
             {
                 Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
@@ -932,16 +932,16 @@ int fn_802A36EC(int obj, int state)
     }
     ((GameObject*)obj)->anim.localPosX =
         ((GameObject*)obj)->anim.currentMoveProgress *
-        (((PlayerState*)inner)->unk5EC - inner->unk5B4) +
-        inner->unk5B4;
+        (((PlayerState*)inner)->moveEndX - inner->moveStartX) +
+        inner->moveStartX;
     ((GameObject*)obj)->anim.localPosY =
         ((GameObject*)obj)->anim.currentMoveProgress *
-        (((PlayerState*)inner)->unk5F0 - inner->unk5B8) +
-        inner->unk5B8;
+        (((PlayerState*)inner)->moveEndY - inner->moveStartY) +
+        inner->moveStartY;
     ((GameObject*)obj)->anim.localPosZ =
         ((GameObject*)obj)->anim.currentMoveProgress *
-        (((PlayerState*)inner)->unk5F4 - inner->unk5BC) +
-        inner->unk5BC;
+        (((PlayerState*)inner)->moveEndZ - inner->moveStartZ) +
+        inner->moveStartZ;
     Object_ObjAnimSetSecondaryBlendMove(
         (ObjAnimComponent*)obj, lbl_80332EF0[gPlayerCurrentMoveId + 2], inner->unk604);
     fn_802AB5A4(obj, (int)inner, 5);
@@ -1000,16 +1000,16 @@ int fn_802A3B04(int obj, int state)
         f32 d = ((GameObject*)obj)->anim.currentMoveProgress / lbl_803E7F44;
         c = (d < lbl_803E7EA4) ? lbl_803E7EA4 : ((d > lbl_803E7EE0) ? lbl_803E7EE0 : d);
         ((GameObject*)obj)->anim.localPosX =
-            c * (((PlayerState*)inner)->unk5F8 - ((PlayerState*)inner)->unk5B4) +
-            ((PlayerState*)inner)->unk5B4;
+            c * (((PlayerState*)inner)->moveEnd2X - ((PlayerState*)inner)->moveStartX) +
+            ((PlayerState*)inner)->moveStartX;
         ((GameObject*)obj)->anim.localPosY =
-            ((PlayerState*)inner)->unk5B8 -
+            ((PlayerState*)inner)->moveStartY -
             ((GameObject*)obj)->anim.currentMoveProgress *
-            (((PlayerState*)inner)->unk5B8 -
+            (((PlayerState*)inner)->moveStartY -
                 (((PlayerState*)inner)->unk5AC - ((PlayerState*)inner)->unk874));
         ((GameObject*)obj)->anim.localPosZ =
-            c * (((PlayerState*)inner)->unk600 - ((PlayerState*)inner)->unk5BC) +
-            ((PlayerState*)inner)->unk5BC;
+            c * (((PlayerState*)inner)->moveEnd2Z - ((PlayerState*)inner)->moveStartZ) +
+            ((PlayerState*)inner)->moveStartZ;
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[6], lbl_803E7EA4, 0);
@@ -1042,9 +1042,9 @@ int fn_802A3B04(int obj, int state)
                                        (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                        *(int*)&((GameObject*)obj)->anim.parent);
         objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
-        ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
-        ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
-        ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
+        ((PlayerState*)inner)->moveStartX = ((GameObject*)obj)->anim.localPosX;
+        ((PlayerState*)inner)->moveStartY = ((GameObject*)obj)->anim.localPosY;
+        ((PlayerState*)inner)->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
         ObjAnim_SetCurrentMove(obj, lbl_80332EF0[m], lbl_803E7EA4, 4);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
         if (((PlayerState*)inner)->curAnimId != 0x48 && ((PlayerState*)inner)->curAnimId != 0x47)
@@ -6565,14 +6565,14 @@ int fn_802A2EE0(int obj, int state, f32 fv)
     switch (gPlayerCurrentMoveId)
     {
     case 0:
-        t = (((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->unk5B8) /
-            (diff - ((PlayerState*)inner)->unk5B8);
+        t = (((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->moveStartY) /
+            (diff - ((PlayerState*)inner)->moveStartY);
         ((GameObject*)obj)->anim.localPosX =
-            t * (((PlayerState*)inner)->unk5F8 - ((PlayerState*)inner)->unk5B4) +
-            ((PlayerState*)inner)->unk5B4;
+            t * (((PlayerState*)inner)->moveEnd2X - ((PlayerState*)inner)->moveStartX) +
+            ((PlayerState*)inner)->moveStartX;
         ((GameObject*)obj)->anim.localPosZ =
-            t * (((PlayerState*)inner)->unk600 - ((PlayerState*)inner)->unk5BC) +
-            ((PlayerState*)inner)->unk5BC;
+            t * (((PlayerState*)inner)->moveEnd2Z - ((PlayerState*)inner)->moveStartZ) +
+            ((PlayerState*)inner)->moveStartZ;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 0x14);
         ((GameObject*)obj)->anim.localPosY =
             *(f32*)((char*)state + 0x2b4) * timeDelta + ((GameObject*)obj)->anim.localPosY;
@@ -6602,28 +6602,28 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             gPlayerCurrentMoveId = 3;
             blend = lbl_803E800C;
             ((GameObject*)obj)->anim.velocityY = z;
-            ((GameObject*)obj)->anim.localPosX = ((PlayerState*)inner)->unk5F8;
+            ((GameObject*)obj)->anim.localPosX = ((PlayerState*)inner)->moveEnd2X;
             ((GameObject*)obj)->anim.localPosY = diff;
-            ((GameObject*)obj)->anim.localPosZ = ((PlayerState*)inner)->unk600;
+            ((GameObject*)obj)->anim.localPosZ = ((PlayerState*)inner)->moveEnd2Z;
         }
         else
         {
             ((GameObject*)obj)->anim.velocityY =
                 lbl_803E7E88 * fv + ((GameObject*)obj)->anim.velocityY;
-            t = (((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->unk5B8) /
-                (diff - ((PlayerState*)inner)->unk5B8);
+            t = (((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->moveStartY) /
+                (diff - ((PlayerState*)inner)->moveStartY);
             ((GameObject*)obj)->anim.localPosX =
-                t * (((PlayerState*)inner)->unk5F8 - ((PlayerState*)inner)->unk5B4) +
-                ((PlayerState*)inner)->unk5B4;
+                t * (((PlayerState*)inner)->moveEnd2X - ((PlayerState*)inner)->moveStartX) +
+                ((PlayerState*)inner)->moveStartX;
             ((GameObject*)obj)->anim.localPosZ =
-                t * (((PlayerState*)inner)->unk600 - ((PlayerState*)inner)->unk5BC) +
-                ((PlayerState*)inner)->unk5BC;
+                t * (((PlayerState*)inner)->moveEnd2Z - ((PlayerState*)inner)->moveStartZ) +
+                ((PlayerState*)inner)->moveStartZ;
         }
         break;
     case 3:
-        ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
-        ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
-        ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
+        ((PlayerState*)inner)->moveStartX = ((GameObject*)obj)->anim.localPosX;
+        ((PlayerState*)inner)->moveStartY = ((GameObject*)obj)->anim.localPosY;
+        ((PlayerState*)inner)->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F48)
         {
             if (((PlayerState*)state)->baddie.moveInputZ > lbl_803E7F10)
@@ -6652,9 +6652,9 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         }
         break;
     case 6:
-        ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
-        ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
-        ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
+        ((PlayerState*)inner)->moveStartX = ((GameObject*)obj)->anim.localPosX;
+        ((PlayerState*)inner)->moveStartY = ((GameObject*)obj)->anim.localPosY;
+        ((PlayerState*)inner)->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
         if (((PlayerState*)state)->baddie.moveInputZ > lbl_803E7F10)
         {
             gPlayerCurrentMoveId = 5;
@@ -6684,11 +6684,11 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.localPosX =
                 ((GameObject*)obj)->anim.currentMoveProgress *
                 ((((PlayerState*)inner)->unk5C4 * k + ((PlayerState*)inner)->unk5D4) -
-                    ((PlayerState*)inner)->unk5B4) +
-                ((PlayerState*)inner)->unk5B4;
+                    ((PlayerState*)inner)->moveStartX) +
+                ((PlayerState*)inner)->moveStartX;
             ((GameObject*)obj)->anim.localPosZ =
-                ((GameObject*)obj)->anim.currentMoveProgress * (y2 - ((PlayerState*)inner)->unk5BC) +
-                ((PlayerState*)inner)->unk5BC;
+                ((GameObject*)obj)->anim.currentMoveProgress * (y2 - ((PlayerState*)inner)->moveStartZ) +
+                ((PlayerState*)inner)->moveStartZ;
             ((GameObject*)obj)->anim.velocityY =
                 -(lbl_803E7F6C * timeDelta - ((GameObject*)obj)->anim.velocityY);
             ang = -(lbl_803E7F98 * ((GameObject*)obj)->anim.currentMoveProgress -
@@ -6740,14 +6740,14 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         t = ((GameObject*)obj)->anim.currentMoveProgress / lbl_803E7F68;
         z = (t < z) ? z : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
         ((GameObject*)obj)->anim.localPosX =
-            z * (((PlayerState*)inner)->unk5EC - ((PlayerState*)inner)->unk5B4) +
-            ((PlayerState*)inner)->unk5B4;
+            z * (((PlayerState*)inner)->moveEndX - ((PlayerState*)inner)->moveStartX) +
+            ((PlayerState*)inner)->moveStartX;
         ((GameObject*)obj)->anim.localPosY =
-            z * (((PlayerState*)inner)->unk5F0 - ((PlayerState*)inner)->unk5B8) +
-            ((PlayerState*)inner)->unk5B8;
+            z * (((PlayerState*)inner)->moveEndY - ((PlayerState*)inner)->moveStartY) +
+            ((PlayerState*)inner)->moveStartY;
         ((GameObject*)obj)->anim.localPosZ =
-            z * (((PlayerState*)inner)->unk5F4 - ((PlayerState*)inner)->unk5BC) +
-            ((PlayerState*)inner)->unk5BC;
+            z * (((PlayerState*)inner)->moveEndZ - ((PlayerState*)inner)->moveStartZ) +
+            ((PlayerState*)inner)->moveStartZ;
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F68)
         {
             *(u32*)((char*)state + 4) &= ~0x100000;
@@ -6775,9 +6775,9 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.worldPosZ, (void*)(obj + 0xc), (void*)(obj + 0x10),
             (void*)(obj + 0x14), *(int*)&((GameObject*)obj)->anim.parent);
         objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
-        ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
-        ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
-        ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
+        ((PlayerState*)inner)->moveStartX = ((GameObject*)obj)->anim.localPosX;
+        ((PlayerState*)inner)->moveStartY = ((GameObject*)obj)->anim.localPosY;
+        ((PlayerState*)inner)->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
         {
             char* xf = *(char**)((char*)inner + 0x4c4);
             if (xf != NULL)
@@ -6787,13 +6787,13 @@ int fn_802A2EE0(int obj, int state, f32 fv)
                     ((PlayerState*)inner)->unk5DC, (void*)(inner + 0x5d4),
                     (void*)(inner + 0x5d8), (void*)(inner + 0x5dc), xf);
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
-                    ((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
-                    ((PlayerState*)inner)->unk5F4, (void*)(inner + 0x5ec),
+                    ((PlayerState*)inner)->moveEndX, ((PlayerState*)inner)->moveEndY,
+                    ((PlayerState*)inner)->moveEndZ, (void*)(inner + 0x5ec),
                     (void*)(inner + 0x5f0), (void*)(inner + 0x5f4),
                     ((PlayerState*)inner)->groundObject);
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
-                    ((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
-                    ((PlayerState*)inner)->unk600, (void*)(inner + 0x5f8),
+                    ((PlayerState*)inner)->moveEnd2X, ((PlayerState*)inner)->moveEnd2Y,
+                    ((PlayerState*)inner)->moveEnd2Z, (void*)(inner + 0x5f8),
                     (void*)(inner + 0x5fc), (void*)(inner + 0x600),
                     ((PlayerState*)inner)->groundObject);
                 ((PlayerState*)inner)->unk5AC =

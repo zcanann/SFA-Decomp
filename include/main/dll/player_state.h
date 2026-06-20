@@ -170,9 +170,9 @@ typedef struct PlayerState {
     f32 unk5A8;
     f32 unk5AC;
     f32 unk5B0;
-    f32 unk5B4;
-    f32 unk5B8;
-    f32 unk5BC;
+    f32 moveStartX; /* local-space start position captured at move begin; localPos = progress*(moveEnd-moveStart)+moveStart */
+    f32 moveStartY;
+    f32 moveStartZ;
     int launchYaw; /* heading captured (*(s16*)obj) when a jump/launch move starts; base angle for the airborne arc yaw (case 7) */
     f32 unk5C4;
     u8 pad5C8[0x5CC - 0x5C8];
@@ -182,12 +182,12 @@ typedef struct PlayerState {
     f32 unk5D8;
     f32 unk5DC;
     u8 pad5E0[0x5EC - 0x5E0];
-    f32 unk5EC;
-    f32 unk5F0;
-    f32 unk5F4;
-    f32 unk5F8;
-    f32 unk5FC;
-    f32 unk600;
+    f32 moveEndX; /* local-space target position for the move lerp (paired with moveStart) */
+    f32 moveEndY;
+    f32 moveEndZ;
+    f32 moveEnd2X; /* secondary local-space target position, also lerped from moveStart */
+    f32 moveEnd2Y;
+    f32 moveEnd2Z;
     s16 unk604;
     u8 unk606;
     u8 unk607;
