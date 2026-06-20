@@ -192,17 +192,18 @@ resolved_initial:
         {
             fadeTime = 5;
         }
+        mixValue1 = fadeTime;
         if ((flags & SYNTH_START_FLAG_VOLUME_MODE2) != 0)
         {
-            synthUpdateHandle(0, fadeTime, handle, 2);
+            synthUpdateHandle(0, mixValue1, handle, 2);
         }
         else if ((flags & SYNTH_START_FLAG_VOLUME_MODE3) != 0)
         {
-            synthUpdateHandle(0, fadeTime, handle, 3);
+            synthUpdateHandle(0, mixValue1, handle, 3);
         }
         else
         {
-            synthUpdateHandle(0, fadeTime, handle, 1);
+            synthUpdateHandle(0, mixValue1, handle, 1);
         }
     }
     else
