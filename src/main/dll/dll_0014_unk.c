@@ -2976,7 +2976,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, u32 maxDist, int* outLink)
     int rem;
     int off;
     char zval;
-    f64 curDist;
+    f32 curDist;
     char visited[ROMCURVE_MAX_CURVES];
     int queueIds[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
     f32 queueDist[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
@@ -3110,8 +3110,8 @@ int RomCurve_func13(u32 curveId, int typeFilter, u32 maxDist, int* outLink)
                                         ((cand = RomCurve_findByIdWithIndex(node->linkIds[k], &idx)) != NULL)) &&
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
-                                    newDist = SQ(node->z - cand->z) + (f32)(curDist + SQ(node->x - cand->x)) +
-                                        SQ(node->y - cand->y);
+                                    newDist = SQ(node->z - cand->z) + ((curDist + SQ(node->x - cand->x)) +
+                                        SQ(node->y - cand->y));
                                     pos = 0;
                                     for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
                                     {
@@ -3193,7 +3193,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     int rem;
     int off;
     char zval;
-    f64 curDist;
+    f32 curDist;
     char visited[ROMCURVE_MAX_CURVES];
     int queueIds[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
     f32 queueDist[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
@@ -3324,7 +3324,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     zd = node->z - cand->z;
                                     xd = node->x - cand->x;
                                     yd = node->y - cand->y;
-                                    newDist = zd * zd + (f32)(curDist + (f64)(xd * xd)) + yd * yd;
+                                    newDist = zd * zd + ((curDist + xd * xd) + yd * yd);
                                     pos = 0;
                                     for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
                                     {

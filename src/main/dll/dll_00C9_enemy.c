@@ -1272,9 +1272,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     }
     else
     {
-        radius = (f32)(f64)
-        radius * (f32)(f64)
-        radius;
+        radius = radius * radius;
         arr = ObjGroup_GetObjects(3, &count);
         if (count != 0)
         {
