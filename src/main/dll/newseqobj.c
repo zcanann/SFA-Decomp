@@ -348,7 +348,7 @@ void fn_80150EDC(void* p1, void* p2)
                 *(f32*)(table + (((BaddieState*)p2)->inWhirlpoolGroup << 2) + 0x1538));
         if (((BaddieState*)p2)->unk308 < lbl_803E27A0)
         {
-            ((BaddieState*)p2)->unk308 = lbl_803E27A0;
+            ((BaddieState*)p2)->unk308 = *(f32*)&lbl_803E27A0;
         }
     }
 
