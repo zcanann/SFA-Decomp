@@ -10,7 +10,7 @@
 #include "main/sky_state.h"
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
-#include "track/intersect.h"
+#include "dolphin/os/OSFastCast.h"
 extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
@@ -93,7 +93,15 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);
-extern void fn_8007C3D0(u32 flag);
+extern void setupReflectionIndirectTev(u8 flag);
+extern void gxSetPeControl_ZCompLoc_(u32 param_1);
+extern void gxSetZMode_(u32 param_1, int param_2, u32 param_3);
+extern void _gxSetFogParams(void);
+extern void fn_80079180(void);
+extern void geomDrawFn_800796f0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void textureSetupFn_800799c0(void);
+extern void fn_8007D670(void);
 extern f32 lbl_803967C0[3][4];
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
@@ -2325,7 +2333,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 if (!((s8)alphaMode == 4 && trackedFlags == (int)(flags & EXPGFX_RENDER_OVERRIDE_COLORS)))
                 {
-                    fn_8007C3D0(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
+                    setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
                     alphaMode = 4;
                     trackedFlags = (int)(slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS);
                 }
@@ -2396,9 +2404,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         GXBegin(0x80, 4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
-            f32 px = scaleFactor * vtxStream[0];
-            f32 py = scaleFactor * vtxStream[1];
-            f32 pz = scaleFactor * vtxStream[2];
+            f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
+            f32 py = scaleFactor * __OSs16tof32(&vtxStream[1]);
+            f32 pz = scaleFactor * __OSs16tof32(&vtxStream[2]);
             f32 outX, outY, outZ;
             f32 ax, ay;
             f32 ay_cosB, pz_sinB;
