@@ -1001,8 +1001,8 @@ void Tricky_update(int obj)
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit7 = 1;
         }
     }
-    if (*(void**)&((TrickyState*)state)->followObj != NULL && (*(u16*)(*(int*)&((TrickyState*)state)->followObj + 0xb0)
-        & 0x40) != 0)
+    if (*(void**)&((TrickyState*)state)->followObj != NULL &&
+        (((GameObject*)((TrickyState*)state)->followObj)->objectFlags & 0x40) != 0)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
@@ -1288,7 +1288,7 @@ void Tricky_update(int obj)
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.worldPosZ;
                     *(int*)&((TrickyState*)state)->followObj = Obj_SetupObject(
                         setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
-                    target = *(int*)&((TrickyState*)state)->followObj + 0x18;
+                    target = (u32)&((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
                     if (*(u32*)&((TrickyState*)state)->unk28 != target)
                     {
                         *(u32*)&((TrickyState*)state)->unk28 = target;
@@ -1501,7 +1501,7 @@ void Tricky_update(int obj)
         }
         p = p - 8;
     }
-    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(((TrickyState*)state)->playerObj + 0x18)) >=
+    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX) >=
         lbl_803E2538 &&
         GameBit_Get(0x4e4) != 0)
     {
@@ -3122,7 +3122,7 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
 
     result = 0;
     objs = ObjGroup_GetObjects(0x4b, count);
-    d = getXZDistance((f32*)((char*)state->playerObj + 0x18), &((GameObject*)obj)->anim.worldPosX);
+    d = getXZDistance(&((GameObject*)state->playerObj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if ((d >= lbl_803E2538) || (state->unk71C > lbl_803E23DC))
     {
         if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX, lbl_803E2500) == 0)
