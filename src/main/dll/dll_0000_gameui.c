@@ -4221,14 +4221,14 @@ void GameUI_update(void)
                                 break;
                             }
                         case 1:
-                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0x10], 0) == 0 &&
-                                trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0)
+                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0x10], 0) != 0 ||
+                                trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) == 0)
                             {
-                                gCMenuButtons |= 0x80000;
+                                gCMenuButtons |= 0x40000;
                             }
                             else
                             {
-                                gCMenuButtons |= 0x40000;
+                                gCMenuButtons |= 0x80000;
                             }
                             break;
                         }
