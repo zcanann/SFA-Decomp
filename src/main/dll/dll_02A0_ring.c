@@ -346,19 +346,17 @@ void ring_update(int obj)
             state->pullTimer -= timeDelta;
             if (state->pullTimer <= lbl_803E70A0)
             {
-                state->pullTimer = lbl_803E70A0;
+                f32 fz = lbl_803E70A0;
+                state->pullTimer = fz;
                 ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
                 ((GameObject*)obj)->anim.rotX = 0;
                 ((GameObject*)obj)->anim.alpha = RING_ALPHA_OPAQUE;
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-                {
-                    f32 fz = lbl_803E70A0;
-                    ((GameObject*)obj)->anim.velocityX = fz;
-                    ((GameObject*)obj)->anim.velocityY = fz;
-                    ((GameObject*)obj)->anim.velocityZ = fz;
-                }
+                ((GameObject*)obj)->anim.velocityX = fz;
+                ((GameObject*)obj)->anim.velocityY = fz;
+                ((GameObject*)obj)->anim.velocityZ = fz;
                 state->phase = RING_PHASE_COLLECTED;
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
             }
