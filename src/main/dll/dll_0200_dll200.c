@@ -40,7 +40,6 @@ void fn_801F20D4(int obj)
     extern void* Obj_GetPlayerObject(void);
     extern int gArwingAttachmentItemSetIdle[];
     extern void buttonDisable(int port, u32 mask);
-    extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 gArwingAttachmentU32ToDoubleBias;
@@ -97,7 +96,6 @@ void fn_801F27E4(int obj)
     extern void* Obj_GetPlayerObject(void);
     extern int fn_80296A14(void);
     extern void buttonDisable(int port, u32 mask);
-    extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     extern f32 gArwingAttachmentU32ToDoubleBias;
@@ -293,7 +291,6 @@ void fn_801F2290(int obj);
 
 void dll_200_update(int obj)
 {
-    extern u8 framesThisStep;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5D9C;
     u8 ev;
@@ -356,8 +353,6 @@ void fn_801F2290(int obj)
     extern int gArwingAttachmentItemSetWander[];
     extern ArwAttachTarget gArwingAttachmentTargets[];
     extern char sArwingAttachmentDiffFormat[];
-    extern u8 framesThisStep;
-    extern f32 timeDelta;
     extern f32 lbl_803E5D98;
     extern f32 lbl_803E5DA8;
     extern f32 lbl_803E5DAC;
