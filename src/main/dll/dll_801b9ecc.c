@@ -99,16 +99,16 @@ int fn_801B9ECC(int a, int obj)
                 switch ((s8)state->hitPoints)
                 {
                 case 3:
-                    DIM2_GetPlayerInterface()->requestControlMode(
-                        a, state, base->group3[lbl_803DDB84++]);
+                    (*(Dim2PlayerInterface**)gPlayerInterface)
+                        ->requestControlMode(a, state, base->group3[lbl_803DDB84++]);
                     break;
                 case 2:
-                    DIM2_GetPlayerInterface()->requestControlMode(
-                        a, state, base->group2[lbl_803DDB84++]);
+                    (*(Dim2PlayerInterface**)gPlayerInterface)
+                        ->requestControlMode(a, state, base->group2[lbl_803DDB84++]);
                     break;
                 case 1:
-                    DIM2_GetPlayerInterface()->requestControlMode(
-                        a, state, base->group1[lbl_803DDB84++]);
+                    (*(Dim2PlayerInterface**)gPlayerInterface)
+                        ->requestControlMode(a, state, base->group1[lbl_803DDB84++]);
                     break;
                 default:
                     DIM2_GetPlayerInterface()->requestControlMode(a, state, 3);
