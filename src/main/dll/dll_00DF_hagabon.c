@@ -406,7 +406,7 @@ void hagabon_update(int obj)
     {
         if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
         {
-            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
+            ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta;
             if (((GameObject*)obj)->anim.alpha <= 6)
             {
                 ((GameObject*)obj)->unkF4 = 1;
@@ -418,7 +418,7 @@ void hagabon_update(int obj)
         }
         if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
         {
-            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
+            ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta;
             if (((GameObject*)obj)->anim.alpha >= 0xf9)
             {
                 ((GameObject*)obj)->anim.alpha = 0xff;
