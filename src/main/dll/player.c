@@ -15054,7 +15054,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     {
         *(f32*)((char*)d + 0x8) = ((GameObject*)a)->anim.previousLocalPosY;
         *(f32*)((char*)d + 0x0) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x8);
-        if ((((PlayerState*)b)->unk3F1 & 1) != 0)
+        if ((((PlayerState*)b)->unk3F1 & 1) != 0u)
         {
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
