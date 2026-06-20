@@ -719,9 +719,9 @@ void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[1].flags = 0x15;
     buf.entries[1].tex = &base[432];
     buf.entries[1].mode = 2;
-    buf.entries[1].x = lbl_803E09CC;
+    buf.entries[1].x = *(f32*)&lbl_803E09CC;
     buf.entries[1].y = lbl_803E09D0;
-    buf.entries[1].z = lbl_803E09CC;
+    buf.entries[1].z = *(f32*)&lbl_803E09CC;
     buf.entries[2].layer = 1;
     buf.entries[2].flags = 7;
     buf.entries[2].tex = &base[372];
