@@ -947,7 +947,7 @@ state_selected:
         }
         ((TrickyState*)state)->speed = v;
         {
-            f32 dx = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x2c);
+            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz)
             {
@@ -1165,7 +1165,7 @@ state_selected:
         ((TrickyState*)state)->unk353 = 0;
         trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
-            f32 dx = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x2c);
+            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz)
             {
