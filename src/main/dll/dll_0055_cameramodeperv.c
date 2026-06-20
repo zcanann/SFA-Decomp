@@ -17,7 +17,6 @@
 #include "main/dll/CAM/camperv_state.h"
 #include "main/game_object.h"
 #include "main/dll/dll_80220608_shared.h"
-extern f32 timeDelta;
 extern CameraModePervState* lbl_803DD5C8;
 extern f32 lbl_803E1B98;
 extern f32 lbl_803E1B9C;
