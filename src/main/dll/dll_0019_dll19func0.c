@@ -365,7 +365,7 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
     {
         *(s8*)(p2 + 0x25f) = b;
     }
-    *(f32*)(p2 + 0x2a4) = fval;
+    ((BaddieState*)p2)->gravity = fval;
     fz = lbl_803E1C2C;
     *(f32*)(p2 + 0x290) = fz;
     *(f32*)(p2 + 0x28c) = fz;
@@ -427,7 +427,7 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
     }
     if (p6 != -1)
     {
-        *(s16*)(p2 + 0x270) = p6;
+        ((BaddieState*)p2)->substate = p6;
         p2[0x27b] = 1;
     }
     if (p7 != -1)
