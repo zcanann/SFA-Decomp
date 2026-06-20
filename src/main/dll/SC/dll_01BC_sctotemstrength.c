@@ -32,7 +32,6 @@ extern void hudFn_8011f38c(u8 x);
 extern void objRenderFn_8003b8f4(f32);
 extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern const f32 lbl_803E5668;
 extern const f32 lbl_803E566C;
