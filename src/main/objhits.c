@@ -18,7 +18,6 @@ extern ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern u8* gObjHitsPriorityHitStates;
 extern f64 lbl_803DE928;
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 gObjHitsSweepSortSentinel;
 extern f32 lbl_803DE91C;
