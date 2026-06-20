@@ -740,14 +740,14 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[3].x = lbl_803E0830;
     e[3].y = lbl_803E0830;
     e[3].z = lbl_803E0830;
+    e[4].z = (f32)(int)
+    randomGetRange(0, 0xfffe);
     e[4].layer = 0;
     e[4].flags = 0;
     e[4].tex = 0;
     e[4].mode = 0x80;
     e[4].x = lbl_803E0830;
     e[4].y = lbl_803E0830;
-    e[4].z = (f32)(int)
-    randomGetRange(0, 0xfffe);
     e[5].layer = 1;
     e[5].flags = 0xa;
     e[5].tex = &base[272];
