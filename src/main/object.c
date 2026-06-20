@@ -1694,7 +1694,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(o);
         }
     }
-    if (((GameObject*)obj)->seqIndex >= 0)
+    if (((GameObject*)obj)->seqIndex > -1)
     {
         if (flag == 0)
         {
@@ -1702,7 +1702,7 @@ void objFreeObjDef(void* objp, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(s16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
