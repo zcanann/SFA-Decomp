@@ -2098,7 +2098,7 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
     if (((*(s8*)&objAState->resetHitboxMode == 0) && (*(s8*)&objBState->resetHitboxMode == 0)) &&
         (objBState->activeHitboxMode == 0))
     {
-        switch ((u32)objAState->activeHitboxMode)
+        switch (objAState->activeHitboxMode)
         {
         case 0:
             hitboxBuf = (int*)ObjHits_GetActiveModel(objA);
@@ -2128,19 +2128,19 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    responseX = (response[0] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[0] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[0]);
-                    response[0] = responseX;
-                    responseY = (response[1] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[1] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[1]);
-                    response[1] = responseY;
-                    responseZ = (response[2] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[2] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[2]);
-                    response[2] = responseZ;
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)responseZ, 0);
+                    responseX = response[0];
+                    response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
+                    responseY = response[1];
+                    response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
+                    responseZ = response[2];
+                    response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
+                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
                 }
             }
             else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)
@@ -2171,19 +2171,19 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    responseX = (response[0] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[0] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[0]);
-                    response[0] = responseX;
-                    responseY = (response[1] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[1] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[1]);
-                    response[1] = responseY;
-                    responseZ = (response[2] < gObjHitsResponseClampMin)
-                                ? gObjHitsResponseClampMin
-                                : ((response[2] > gObjHitsResponseClampMax) ? gObjHitsResponseClampMax : response[2]);
-                    response[2] = responseZ;
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)responseZ, 0);
+                    responseX = response[0];
+                    response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
+                    responseY = response[1];
+                    response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
+                    responseZ = response[2];
+                    response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
+                                ? *(f32*)&gObjHitsResponseClampMin
+                                : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
+                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
                 }
             }
             else if (((shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) && (depth < 1))
