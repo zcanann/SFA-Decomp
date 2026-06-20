@@ -30,7 +30,6 @@ extern u8 lbl_803238D8[];
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern void* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
-extern f32 timeDelta;
 extern f32 lbl_803E47C8;
 
 /* arena music track (also stored in state->music as the active-track marker) */
