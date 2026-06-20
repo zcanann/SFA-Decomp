@@ -22,11 +22,11 @@ typedef struct CfccratePlacement
     s16 id;
     u8 pad2[0x8 - 0x2];
     f32 homeX;
-    f32 unkC;
+    f32 homeY;
     f32 homeZ;
     u8 pad14[0x18 - 0x14];
-    s8 unk18;
-    u8 unk19;
+    s8 rotX;     /* 0x18: spawn pitch byte, <<8 into anim.rotX */
+    u8 bankIndex; /* 0x19: anim bank index */
     s16 param1A;
     s16 param1C;
     u8 pad1E[0x20 - 0x1E];
@@ -35,10 +35,10 @@ typedef struct CfccratePlacement
 
 STATIC_ASSERT(offsetof(CfccratePlacement, id) == 0x0);
 STATIC_ASSERT(offsetof(CfccratePlacement, homeX) == 0x8);
-STATIC_ASSERT(offsetof(CfccratePlacement, unkC) == 0xC);
+STATIC_ASSERT(offsetof(CfccratePlacement, homeY) == 0xC);
 STATIC_ASSERT(offsetof(CfccratePlacement, homeZ) == 0x10);
-STATIC_ASSERT(offsetof(CfccratePlacement, unk18) == 0x18);
-STATIC_ASSERT(offsetof(CfccratePlacement, unk19) == 0x19);
+STATIC_ASSERT(offsetof(CfccratePlacement, rotX) == 0x18);
+STATIC_ASSERT(offsetof(CfccratePlacement, bankIndex) == 0x19);
 STATIC_ASSERT(offsetof(CfccratePlacement, param1A) == 0x1A);
 STATIC_ASSERT(offsetof(CfccratePlacement, param1C) == 0x1C);
 STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
@@ -196,10 +196,10 @@ void cfccrate_update(int obj)
         break;
     case 0x6fc: /* DFP_Water */
         if ((GameBit_Get(state->gameBit) != 0) &&
-            (((GameObject*)obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->unkC))
+            (((GameObject*)obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY))
         {
             ((GameObject*)obj)->anim.localPosY = lbl_803E3DEC * timeDelta + ((GameObject*)obj)->anim.localPosY;
-            if (((GameObject*)obj)->anim.localPosY >= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->unkC)
+            if (((GameObject*)obj)->anim.localPosY >= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY)
             {
                 GameBit_Set(state->gameBit, 0);
             }
@@ -269,7 +269,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x4bf:
-        if ((((GameObject*)obj)->anim.localPosY < lbl_803E3DFC + ((CfccratePlacement*)viewslot)->unkC) &&
+        if ((((GameObject*)obj)->anim.localPosY < lbl_803E3DFC + ((CfccratePlacement*)viewslot)->homeY) &&
             (GameBit_Get(state->gameBit) != 0))
         {
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + timeDelta;
@@ -361,7 +361,7 @@ void cfccrate_init(int obj, int aux)
     switch (id)
     {
     case 0x2bb:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rotY = ((CfccratePlacement*)aux)->param1A;
         ((GameObject*)obj)->anim.rotZ = ((CfccratePlacement*)aux)->param1C;
         ((GameObject*)obj)->anim.rootMotionScale = zeroF;
@@ -375,22 +375,22 @@ void cfccrate_init(int obj, int aux)
     case 0x492:
     case 0x78b:
     case 0x78c:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         break;
     case 0x726:
         ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         break;
     case 0x71b:
         state->lingerTimer = ((CfccratePlacement*)aux)->param1A;
         break;
     case 0x6be:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         state->latch3E = 0;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
         break;
     case 0x828:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         state->latch3E = 0;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
         if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
@@ -400,7 +400,7 @@ void cfccrate_init(int obj, int aux)
         }
         break;
     case 0x6bf:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rotY = ((CfccratePlacement*)aux)->param1A;
         state->gameBit2 = ((CfccratePlacement*)aux)->gameBit;
         break;
@@ -417,29 +417,29 @@ void cfccrate_init(int obj, int aux)
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         break;
     case 0x622:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         break;
     case 0x6b4:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rotY = ((CfccratePlacement*)aux)->param1A;
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
         break;
     case 0x66c:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         break;
     case 0x216:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rotY = ((CfccratePlacement*)aux)->param1A;
         break;
     case 0x4bf:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
-        *(u8*)&objAnim->bankIndex = ((CfccratePlacement*)aux)->unk19;
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
+        *(u8*)&objAnim->bankIndex = ((CfccratePlacement*)aux)->bankIndex;
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         if (GameBit_Get(state->gameBit) != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + ((CfccratePlacement*)aux)->unkC;
+            ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + ((CfccratePlacement*)aux)->homeY;
         }
         break;
     case 0x8e:
@@ -455,7 +455,7 @@ void cfccrate_init(int obj, int aux)
         }
         state->latch3E = 0;
         state->homeX = ((CfccratePlacement*)aux)->homeX;
-        state->homeY = ((CfccratePlacement*)aux)->unkC;
+        state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
         state->oscPosA = state->oscPosB = lbl_803E3E30;
         state->unk28 = lbl_803E3DF4;
@@ -465,7 +465,7 @@ void cfccrate_init(int obj, int aux)
         ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
         break;
     case 0x7de:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rotY = 0;
         if (((CfccratePlacement*)aux)->param1C >= 0x3e8)
         {
@@ -483,11 +483,11 @@ void cfccrate_init(int obj, int aux)
         }
         break;
     case 0xd7:
-        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->unk18 << 8);
+        ((GameObject*)obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         ((GameObject*)obj)->anim.rootMotionScale = zeroF;
         state->latch3E = 0;
         state->homeX = ((CfccratePlacement*)aux)->homeX;
-        state->homeY = ((CfccratePlacement*)aux)->unkC;
+        state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
         state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
         ((GameObject*)obj)->animEventCallback = CFCrate_SeqFn;
