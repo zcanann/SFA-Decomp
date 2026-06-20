@@ -210,10 +210,10 @@ typedef struct ShieldState
     u8 pad30[0x50 - 0x30];
     f32 unk50;
     u8 pad54[0x5C - 0x54];
-    u8 unk5C;
-    u8 unk5D;
-    u8 unk5E;
-    u8 unk5F;
+    u8 flags0;
+    u8 flags1;
+    u8 flags2;
+    u8 flags3;
     u8 pad60[0x6A - 0x60];
     s16 unk6A;
     u8 pad6C[0x6E - 0x6C];
@@ -840,20 +840,20 @@ void shield_update(int* obj)
             {
                 state[1] = state[2];
             }
-            ((ShieldState*)state)->unk5C &= ~1;
-            ((ShieldState*)state)->unk5D &= ~1;
-            ((ShieldState*)state)->unk5E &= ~1;
-            ((ShieldState*)state)->unk5F &= ~1;
+            ((ShieldState*)state)->flags0 &= ~1;
+            ((ShieldState*)state)->flags1 &= ~1;
+            ((ShieldState*)state)->flags2 &= ~1;
+            ((ShieldState*)state)->flags3 &= ~1;
         }
         else
         {
             if (state[1] <= state[2])
             {
                 state[1] = state[2];
-                ((ShieldState*)state)->unk5C |= 1;
-                ((ShieldState*)state)->unk5D |= 1;
-                ((ShieldState*)state)->unk5E |= 1;
-                ((ShieldState*)state)->unk5F |= 1;
+                ((ShieldState*)state)->flags0 |= 1;
+                ((ShieldState*)state)->flags1 |= 1;
+                ((ShieldState*)state)->flags2 |= 1;
+                ((ShieldState*)state)->flags3 |= 1;
             }
         }
     }
@@ -1080,10 +1080,10 @@ void staffFn_80170380(int* obj, int cmd)
             *(f32*)&((ShieldState*)state)->unk10 = v;
             ((ShieldState*)state)->unk4 = v;
         }
-        ((ShieldState*)state)->unk5C |= 1;
-        ((ShieldState*)state)->unk5D |= 1;
-        ((ShieldState*)state)->unk5E |= 1;
-        ((ShieldState*)state)->unk5F |= 1;
+        ((ShieldState*)state)->flags0 |= 1;
+        ((ShieldState*)state)->flags1 |= 1;
+        ((ShieldState*)state)->flags2 |= 1;
+        ((ShieldState*)state)->flags3 |= 1;
         break;
     case 0:
         if (*(int**)state != NULL)
