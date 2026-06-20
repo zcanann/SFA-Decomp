@@ -334,14 +334,14 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetCurrentMtx(0);
         for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
         {
-            if (*(u8*)&((ExplosionDebris*)p)->unk2F != 0)
+            if (*(u8*)&((ExplosionDebris*)p)->active != 0)
             {
                 void** tex;
                 int k;
                 u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
                 PSMTXRotRad(
-                    m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int) * &((ExplosionDebris*)p)->unk28) / lbl_803E4980));
+                    m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int) * &((ExplosionDebris*)p)->spinAngle) / lbl_803E4980));
                 PSMTXRotRad(
                     m3, 0x78, (f32)((lbl_803E4978 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / lbl_803E4980));
                 PSMTXConcat(m3, m1, m3);
@@ -355,7 +355,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
-                ((u8*)&colA)[3] = ((ExplosionDebris*)p)->unk2E;
+                ((u8*)&colA)[3] = ((ExplosionDebris*)p)->alpha;
                 cv = gExplosionDebrisColorScale * (lbl_803E4938 * expf(
                     (lbl_803E4958 * ((f32)(int)((ExplosionDebris*)p)->unk14 - (f32)(int)((ExplosionDebris*)p)->unk10)) /
                     (f32)(int)((ExplosionDebris*)p)->unk14));
@@ -438,7 +438,7 @@ void explosion_update(int obj)
     for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
     {
         ((ExplosionDebris*)p)->unk10 += framesThisStep;
-        if (((ExplosionDebris*)p)->unk2F != 0)
+        if (((ExplosionDebris*)p)->active != 0)
         {
             f32 sp = ((ExplosionDebris*)p)->unk1C;
             f32 ev = expf(
@@ -449,14 +449,14 @@ void explosion_update(int obj)
             ((ExplosionDebris*)p)->scale = sp - gExplosionDebrisSpeedScale * t;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
-            *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
+            *(s8*)&((ExplosionDebris*)p)->alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
             if (((ExplosionDebris*)p)->unk10 >= ((ExplosionDebris*)p)->unk14)
             {
-                ((ExplosionDebris*)p)->unk2F = 0;
+                ((ExplosionDebris*)p)->active = 0;
             }
             else
             {
-                *(s16*)&((ExplosionDebris*)p)->unk28 += framesThisStep * *(s16*)&((ExplosionDebris*)p)->unk2A;
+                *(s16*)&((ExplosionDebris*)p)->spinAngle += framesThisStep * *(s16*)&((ExplosionDebris*)p)->spinSpeed;
                 if (((ExplosionDebris*)p)->unk2C >= 4)
                 {
                     ((ExplosionDebris*)p)->unk2C -= 4;
