@@ -2054,7 +2054,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     u32 renderFlags;
     u32 state;
     int alpha;
-    s16 lifetimeFrame;
     s16 lifetimeFrameLimit;
     f32 lifeFraction;
     f32 scaleSize;
@@ -2119,14 +2118,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID) goto next_slot;
         if ((state & 1) != 0) goto next_slot;
 
-        lifetimeFrame = slot->lifetimeFrame;
         lifetimeFrameLimit = slot->lifetimeFrameLimit;
         lifeFraction = lbl_803DF358 * (f32)(s32)
         lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
             lifetimeFrameLimit;
@@ -2146,7 +2144,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         }
         else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
             lifetimeFrameLimit;
@@ -2166,10 +2164,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         }
         else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
             (f32)(s32)
-                lifetimeFrame <= lifeFraction
+                slot->lifetimeFrame <= lifeFraction
         )
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             lifeFraction;
             if (ratio < lbl_803DF35C)
@@ -2190,16 +2188,16 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
         {
             f32 ratio;
-            if ((f32)(s32)lifetimeFrame <= lifeFraction
+            if ((f32)(s32)slot->lifetimeFrame <= lifeFraction
             )
             {
                 ratio = (f32)(s32)
-                lifetimeFrame / lifeFraction;
+                slot->lifetimeFrame / lifeFraction;
             }
             else
             {
                 ratio = (lifeFraction - ((f32)(s32)
-                lifetimeFrame - lifeFraction
+                slot->lifetimeFrame - lifeFraction
                 )
                 )
                 /
