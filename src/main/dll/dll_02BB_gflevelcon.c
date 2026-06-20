@@ -171,14 +171,14 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk4;
         if (p != NULL)
         {
-            *p += (int)(lbl_803E748C * timeDelta);
+            *p += (s16)(lbl_803E748C * timeDelta);
         }
     }
     {
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk8;
         if (p != NULL)
         {
-            *p -= (int)(lbl_803E748C * timeDelta);
+            *p -= (s16)(lbl_803E748C * timeDelta);
         }
     }
     return 0;
