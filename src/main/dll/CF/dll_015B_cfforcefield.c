@@ -76,7 +76,6 @@ extern void s16toFloat(f32* p, s16 val);
 extern int timerCountDown(f32* p);
 
 extern void storeZeroToFloatParam(f32* p);
-extern f32 timeDelta;
 extern f32 lbl_803DBE90; /* ring radius scale */
 extern int lbl_803DBE94; /* burst position jitter, +/- units */
 extern int lbl_803DBE98; /* collapse rotY rate */
