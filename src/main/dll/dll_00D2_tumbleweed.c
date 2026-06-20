@@ -456,12 +456,12 @@ void tumbleweed_updateStateMachine(int obj)
             vx /= d;
             vy /= d;
             vz /= d;
-            ((BackpackState*)aux)->unk294 = timeDelta * lbl_803E2F98 + ((BackpackState*)aux)->unk294;
+            ((BackpackState*)aux)->speed = timeDelta * lbl_803E2F98 + ((BackpackState*)aux)->speed;
             {
                 f32 k = lbl_803E2FBC;
-                ((GameObject*)obj)->anim.velocityX = (k * vx) * ((BackpackState*)aux)->unk294;
-                ((GameObject*)obj)->anim.velocityY = (k * vy) * ((BackpackState*)aux)->unk294;
-                ((GameObject*)obj)->anim.velocityZ = (k * vz) * ((BackpackState*)aux)->unk294;
+                ((GameObject*)obj)->anim.velocityX = (k * vx) * ((BackpackState*)aux)->speed;
+                ((GameObject*)obj)->anim.velocityY = (k * vy) * ((BackpackState*)aux)->speed;
+                ((GameObject*)obj)->anim.velocityZ = (k * vz) * ((BackpackState*)aux)->speed;
             }
             d = getXZDistance(&((GameObject*)obj)->anim.localPosX, ((BackpackState*)aux)->targetPos);
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
@@ -508,7 +508,7 @@ void tumbleweed_init(int obj, int defData)
 
     ((BackpackState*)aux)->anchorPosX = ((GameObject*)obj)->anim.localPosX;
     ((BackpackState*)aux)->anchorPosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((BackpackState*)aux)->unk26A = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
+    ((BackpackState*)aux)->triggerRange = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
     ((BackpackState*)aux)->unk279 = *(u8*)(defData + 0x1b);
     ((BackpackState*)aux)->targetScale = ((GameObject*)obj)->anim.rootMotionScale;
     ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
@@ -659,7 +659,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             dz = ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
             *(s16*)&((BackpackState*)aux)->distToTarget = d;
-            if (((BackpackState*)aux)->distToTarget < *(u16*)&((BackpackState*)aux)->unk26A)
+            if (((BackpackState*)aux)->distToTarget < *(u16*)&((BackpackState*)aux)->triggerRange)
             {
                 ((BackpackState*)aux)->phase = 2;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
