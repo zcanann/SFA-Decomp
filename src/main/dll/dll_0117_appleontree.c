@@ -589,8 +589,8 @@ void appleontree_update(int objArg)
     f32 fb;
     f32 fd;
     f32 frac;
-    int msg;
     f32 sunTime;
+    int msg;
 
     obj = objArg;
     state = *(int*)&((GameObject*)obj)->extra;
