@@ -234,6 +234,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 {
     u8* keymap;
     KeymapEntry* entry;
+    s32 idx;
     s32 p;
     s32 k;
     u32 handle;
@@ -244,78 +245,82 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
-        entry = (KeymapEntry*)(keymap + (key & 0x7F) * 8);
-        if (entry->id != 0xFFFF && (entry->id & 0xC000) != 0x4000)
+        idx = (key & 0x7F) * 8;
+        if (*(u16*)(keymap + idx) != 0xFFFF)
         {
-            if ((entry->panning & 0x80) == 0)
+            entry = (KeymapEntry*)(keymap + idx);
+            if ((entry->id & 0xC000) != 0x4000)
             {
-                p = keymap[key * 8 + 3] - 0x40;
-                p += pan;
-                if (p < 0)
+                if ((entry->panning & 0x80) == 0)
                 {
-                    pan = 0;
-                }
-                else if (p > 0x7F)
-                {
-                    pan = 0x7F;
-                }
-                else
-                {
-                    pan = p;
-                }
-            }
-            else
-            {
-                pan = 0x80;
-            }
-
-            k = (key & 0x7F) + entry->transpose;
-            if (k > 0x7F)
-            {
-                k = 0x7F;
-            }
-            else if (k < 0)
-            {
-                k = 0;
-            }
-
-            prio += entry->prioOffset;
-            if (prio > 0xFF)
-            {
-                prio = 0xFF;
-            }
-            else if (prio < 0)
-            {
-                prio = 0;
-            }
-
-            if ((entry->id & 0xC000) == 0)
-            {
-                if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
-                {
-                    handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
-                    ok = !rejected;
+                    p = keymap[key * 8 + 3] - 0x40;
+                    p += pan;
+                    if (p < 0)
+                    {
+                        pan = 0;
+                    }
+                    else if (p > 0x7F)
+                    {
+                        pan = 0x7F;
+                    }
+                    else
+                    {
+                        pan = p;
+                    }
                 }
                 else
                 {
-                    handle = -1;
-                    ok = 1;
+                    pan = 0x80;
                 }
-                if (ok == 0)
+
+                k = (key & 0x7F) + *(s8*)(keymap + idx + 2);
+                if (k > 0x7F)
                 {
-                    return -1;
+                    k = 0x7F;
                 }
-                if (handle != 0xFFFFFFFF)
+                else if (k < 0)
                 {
-                    return handle;
+                    k = 0;
                 }
-                return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
-                                pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                studio, itd);
+
+                prio += *(s16*)(keymap + idx + 4);
+                if (prio > 0xFF)
+                {
+                    prio = 0xFF;
+                }
+                else if (prio < 0)
+                {
+                    prio = 0;
+                }
+
+                if ((entry->id & 0xC000) == 0)
+                {
+                    if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
+                    {
+                        handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
+                        ok = !rejected;
+                    }
+                    else
+                    {
+                        handle = -1;
+                        ok = 1;
+                    }
+                    if (ok == 0)
+                    {
+                        return -1;
+                    }
+                    if (handle != 0xFFFFFFFF)
+                    {
+                        return handle;
+                    }
+                    return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                    pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                    studio, itd);
+                }
+                return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                             pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                             studio, itd);
             }
-            return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
-                                         pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                         studio, itd);
         }
     }
     return -1;
