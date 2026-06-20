@@ -356,7 +356,7 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 {
     f32 fz;
     *(u32*)p2 |= 0x8000;
-    *(u16*)(p2 + 0x330) = 0;
+    ((BaddieState*)p2)->cameraYaw = 0;
     if (*(void**)(p1 + 0x54) != NULL)
     {
         ObjHits_SetHitVolumeSlot((void*)p1, 0, 0, -1);
@@ -367,8 +367,8 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
     }
     ((BaddieState*)p2)->gravity = fval;
     fz = lbl_803E1C2C;
-    *(f32*)(p2 + 0x290) = fz;
-    *(f32*)(p2 + 0x28c) = fz;
+    ((BaddieState*)p2)->moveInputX = fz;
+    ((BaddieState*)p2)->moveInputZ = fz;
     *(int*)(p2 + 0x31c) = 0;
     *(int*)(p2 + 0x318) = 0;
 }
