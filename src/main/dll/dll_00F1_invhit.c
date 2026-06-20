@@ -39,12 +39,10 @@ extern void Obj_FreeObject(int* obj);
 extern int ObjList_ContainsObject(int obj);
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-extern f32 timeDelta;
 
 extern void* getTrickyObject(void);
  /* single-precision override for codegen */
 extern f32 lbl_803AC780[];
-extern u8 framesThisStep;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
