@@ -163,19 +163,17 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag)
     if (Obj_IsLoadingLocked() == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
-    {
-        int setup = Obj_AllocObjectSetup(0x20, 0x6ae);
-        ((ArwSquadronProjectileSetup*)setup)->posX = px;
-        ((ArwSquadronProjectileSetup*)setup)->posY = py;
-        ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
-        ((ArwSquadronProjectileSetup*)setup)->rotZ =
-            (((GameObject*)obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
-        ((ArwSquadronProjectileSetup*)setup)->rotY = -((GameObject*)obj)->anim.rotY >> 8;
-        ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
-        ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
-        ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
-    }
-    proj = loadObjectAtObject(obj);
+    setup = Obj_AllocObjectSetup(0x20, 0x6ae);
+    ((ArwSquadronProjectileSetup*)setup)->posX = px;
+    ((ArwSquadronProjectileSetup*)setup)->posY = py;
+    ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
+    ((ArwSquadronProjectileSetup*)setup)->rotZ =
+        (((GameObject*)obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
+    ((ArwSquadronProjectileSetup*)setup)->rotY = -((GameObject*)obj)->anim.rotY >> 8;
+    ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
+    ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
+    ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
+    proj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     if ((u32)proj == 0)
         return;
     if (flag != 0)
