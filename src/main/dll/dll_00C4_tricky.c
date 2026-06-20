@@ -1600,7 +1600,7 @@ void Tricky_update(int obj)
     ((TrickyState*)state)->prevLocalPosX = ((GameObject*)obj)->anim.previousLocalPosX;
     ((TrickyState*)state)->prevLocalPosY = ((GameObject*)obj)->anim.previousLocalPosY;
     ((TrickyState*)state)->prevLocalPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
-    if (*(int*)&((TrickyState*)state)->child != 0)
+    if (*(void**)&((TrickyState*)state)->child != NULL)
     {
         ((TrickyState*)state)->unk7C0 += timeDelta;
         ((TrickyState*)state)->unk7C4 += timeDelta;
@@ -1642,11 +1642,11 @@ void Tricky_update(int obj)
         }
         ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->child, 0);
     }
-    if (*(int*)&((TrickyState*)state)->unk7B0 != 0)
+    if (*(void**)&((TrickyState*)state)->unk7B0 != NULL)
     {
         ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->unk7B0, 0);
     }
-    if (*(int*)&((TrickyState*)state)->unk7A8 != 0)
+    if (*(void**)&((TrickyState*)state)->unk7A8 != NULL)
     {
         ObjAnim_AdvanceCurrentMove(lbl_803E23EC, timeDelta, *(int*)&((TrickyState*)state)->unk7A8, 0);
     }
