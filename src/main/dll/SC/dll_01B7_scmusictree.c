@@ -238,12 +238,12 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 typedef struct ScMusictreeState
 {
     u8 pad0[0x30 - 0x0];
-    f32 unk30;
-    f32 moveStepScale;
+    f32 proximityBurstTimer; /* 0x30 (aliases SCMusicTreeState.proximityBurstTimer) */
+    f32 moveStepScale;       /* 0x34 (aliases SCMusicTreeState.animSpeed) */
     u8 pad38[0x48 - 0x38];
-    u16 unk48;
-    u16 unk4A;
-    u8 unk4C;
+    u16 hearRadius;          /* 0x48 */
+    u16 previousDistance;    /* 0x4A */
+    u8 flags;                /* 0x4C */
     u8 pad4D[0x50 - 0x4D];
 } ScMusictreeState;
 
@@ -261,7 +261,7 @@ void sc_musictree_update(int obj)
 
     ObjAnim_AdvanceCurrentMove(((ScMusictreeState*)inner)->moveStepScale, timeDelta, obj,
                                (ObjAnimEventList*)&stk);
-    if (((ScMusictreeState*)inner)->unk4C == 0)
+    if (((ScMusictreeState*)inner)->flags == 0)
     {
         return;
     }
@@ -273,7 +273,7 @@ void sc_musictree_update(int obj)
     {
         ((ScMusictreeState*)inner)->moveStepScale = ((ScMusictreeState*)inner)->moveStepScale - lbl_803E5598;
     }
-    if ((((ScMusictreeState*)inner)->unk4C & 0x80) && ((GameObject*)obj)->unkF8 != 0)
+    if ((((ScMusictreeState*)inner)->flags & 0x80) && ((GameObject*)obj)->unkF8 != 0)
     {
         for (i = 0, p = (int*)inner, q = (int*)inner; i < 3; i++)
         {
@@ -297,11 +297,11 @@ void sc_musictree_update(int obj)
             q = (int*)((char*)q + 0xc);
         }
     }
-    if ((((ScMusictreeState*)inner)->unk4C & 0x20) == 0)
+    if ((((ScMusictreeState*)inner)->flags & 0x20) == 0)
     {
         goto end;
     }
-    if (((ScMusictreeState*)inner)->unk4C & 0xc0)
+    if (((ScMusictreeState*)inner)->flags & 0xc0)
     {
         rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (u32*)&hr3, &vec[0],
                                                     &vec[1], &vec[2]);
@@ -318,13 +318,13 @@ void sc_musictree_update(int obj)
     if (rcType == 0) goto end;
     if (rcType == 0x11) goto end;
     if (!(((CloudRunnerState*)inner)->baddie.velZ <= lbl_803E5590)) goto end;
-    if (((ScMusictreeState*)inner)->unk4C & 0xc0)
+    if (((ScMusictreeState*)inner)->flags & 0xc0)
     {
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
         objLightFn_8009a1dc((void*)obj, lbl_803E559C, vec2, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-        sc_musictree_handleHitObject(obj, inner, ((ScMusictreeState*)inner)->unk4C & 0xf);
+        sc_musictree_handleHitObject(obj, inner, ((ScMusictreeState*)inner)->flags & 0xf);
     }
     else
     {
@@ -336,12 +336,12 @@ void sc_musictree_update(int obj)
         vec[0] = zero;
         vec[1] = lbl_803E55A0 * ((CloudRunnerState*)inner)->baddie.velX;
         vec[2] = zero;
-        objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->unk4C & 0xf, 0x14, vec2,
+        objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0x14, vec2,
                                lbl_803E55A4 * ((CloudRunnerState*)inner)->baddie.velX, 0);
     }
     ((ScMusictreeState*)inner)->moveStepScale = lbl_803E5588;
     ((CloudRunnerState*)inner)->baddie.velZ = lbl_803E55A8;
-    if (((ScMusictreeState*)inner)->unk4C & 0x80)
+    if (((ScMusictreeState*)inner)->flags & 0x80)
     {
         int* pp;
         int idx;
@@ -366,35 +366,35 @@ end:
         f32 dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
         u16 di = d;
-        if (di < ((ScMusictreeState*)inner)->unk48
+        if (di < ((ScMusictreeState*)inner)->hearRadius
         )
         {
-            if ((((ScMusictreeState*)inner)->unk4C & 0x10)
-                && ((ScMusictreeState*)inner)->unk4A >= ((ScMusictreeState*)inner)->unk48 && ((
+            if ((((ScMusictreeState*)inner)->flags & 0x10)
+                && ((ScMusictreeState*)inner)->previousDistance >= ((ScMusictreeState*)inner)->hearRadius && ((
                 CloudRunnerState*)inner)->baddie.velY <= lbl_803E5590
             )
             {
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55AC * (lbl_803E55A0 * ((CloudRunnerState*)inner)->baddie.velX);
                 vec[2] = lbl_803E5590;
-                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->unk4C & 0xf, 0xa, vec2,
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0xa, vec2,
                                        lbl_803E55A4 * ((CloudRunnerState*)inner)->baddie.velX, 1);
                 ((CloudRunnerState*)inner)->baddie.velY = lbl_803E55B0;
             }
-            ((ScMusictreeState*)inner)->unk30 = ((ScMusictreeState*)inner)->unk30 - timeDelta;
-            if (((ScMusictreeState*)inner)->unk30 <= lbl_803E5590)
+            ((ScMusictreeState*)inner)->proximityBurstTimer = ((ScMusictreeState*)inner)->proximityBurstTimer - timeDelta;
+            if (((ScMusictreeState*)inner)->proximityBurstTimer <= lbl_803E5590)
             {
                 f32* rv;
                 *(rv = &vec[0]) = lbl_803E5590;
                 vec[1] = lbl_803E55A0 * ((CloudRunnerState*)inner)->baddie.velX;
                 vec[2] = lbl_803E5590;
                 vecRotateZXY(obj, rv);
-                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->unk4C & 0xf, 1, vec2,
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
                                        lbl_803E55A4 * ((CloudRunnerState*)inner)->baddie.velX, 0);
-                ((ScMusictreeState*)inner)->unk30 = ((ScMusictreeState*)inner)->unk30 + lbl_803E55B4;
+                ((ScMusictreeState*)inner)->proximityBurstTimer = ((ScMusictreeState*)inner)->proximityBurstTimer + lbl_803E55B4;
             }
         }
-        ((ScMusictreeState*)inner)->unk4A = di;
+        ((ScMusictreeState*)inner)->previousDistance = di;
     }
 }
 
