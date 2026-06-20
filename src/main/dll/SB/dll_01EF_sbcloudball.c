@@ -17,7 +17,6 @@
 #include "main/dll/sbcloudballstate_struct.h"
 
 extern int getAngle(float y, float x);
-extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 #include "main/game_object.h"
