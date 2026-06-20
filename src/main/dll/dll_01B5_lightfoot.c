@@ -418,14 +418,7 @@ void lightfoot_init(int obj, int p2, int p3)
     Lightfoot_ResetScriptedPosition(obj);
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C,
                             (ObjAnimComponent*)obj);
-    if (randomGetRange(0, 1) != 0)
-    {
-        ((LightfootSub*)sub)->unk2A = 0x133;
-    }
-    else
-    {
-        ((LightfootSub*)sub)->unk2A = 0x134;
-    }
+    ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     ((LightfootSub*)sub)->unkC = lbl_803E81C0;
     if (((GameObject*)obj)->unkF4 != 0)
     {
