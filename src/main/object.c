@@ -1433,7 +1433,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     max = lbl_803DE8CC;
     i = 0;
-    for (; i < count; i++)
+    for (; i < *(s8*)((u8*)obj->def + 0x55); i++)
     {
         m = *(int*)((u8*)obj->models + i * 4);
         if (m != 0)
