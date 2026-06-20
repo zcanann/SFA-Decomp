@@ -458,7 +458,7 @@ void groundanimator_update(int* obj)
             near = (void*)g->linkedObj;
             if (near != NULL)
             {
-                switch (*(s16*)((char*)near + 0x46))
+                switch (((GameObject*)g->linkedObj)->anim.seqId)
                 {
                 case 0x519:
                     if ((g->flags & 2) == 0)
