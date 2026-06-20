@@ -21,7 +21,6 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern f32 timeDelta;
 extern int getAngle(float y, float x);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
