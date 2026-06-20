@@ -317,7 +317,7 @@ void fn_802A00C0(int obj)
 void fn_802A49A8(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    inner->unk400 = (int)lbl_80333250;
+    inner->moveParams = (int)lbl_80333250;
     inner->moveAnimTable = (int)gPlayerMoveTableA;
 }
 
@@ -1778,7 +1778,7 @@ int fn_802A5384(int obj, int state)
         }
         if (ok &&
             ((PlayerState*)state)->baddie.animSpeedC >
-            lbl_803E7EAC + *(f32*)(((PlayerState*)inner)->unk400 + 0x14) &&
+            lbl_803E7EAC + *(f32*)(((PlayerState*)inner)->moveParams + 0x14) &&
             (((PlayerState*)inner)->inputMagnitude < lbl_803E8030 ||
                 ((PlayerState*)inner)->yawRateSigned >= 0x96))
         {
@@ -1835,9 +1835,9 @@ int fn_802A5384(int obj, int state)
                 u32 fl3 = *(u8*)((char*)inner + 0x3f0);
                 if ((fl3 >> 3 & 1) == 0 && (fl3 >> 2 & 1) == 0 && (fl3 >> 4 & 1) == 0 &&
                     ((PlayerState*)state)->baddie.animSpeedC <=
-                    *(f32*)(((PlayerState*)inner)->unk400 + 4) &&
+                    *(f32*)(((PlayerState*)inner)->moveParams + 4) &&
                     ((PlayerState*)state)->baddie.animSpeedA <=
-                    *(f32*)(((PlayerState*)inner)->unk400 + 0xc))
+                    *(f32*)(((PlayerState*)inner)->moveParams + 0xc))
                 {
                     ((PlayerState*)inner)->yaw =
                         ((PlayerState*)inner)->yaw +
@@ -2066,7 +2066,7 @@ int fn_802A5384(int obj, int state)
             }
             {
                 f32 v = ((PlayerState*)state)->baddie.animSpeedC;
-                int tb = ((PlayerState*)inner)->unk400;
+                int tb = ((PlayerState*)inner)->moveParams;
                 if (v < *(f32*)(tb + step * 4))
                 {
                     if (((PlayerState*)inner)->gaitLevel == 4)
@@ -7645,7 +7645,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         if (lbl_803E7EE0 != ((PlayerState*)inner)->unk834)
         {
-            f32 base = *(f32*)(((PlayerState*)inner)->unk400 + 0x10);
+            f32 base = *(f32*)(((PlayerState*)inner)->moveParams + 0x10);
             f32 frac = (((PlayerState*)state)->baddie.animSpeedA - base) /
                 (((PlayerState*)inner)->maxSpeed - base);
             f32 v430 = ((PlayerState*)inner)->unk430;
@@ -7768,7 +7768,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     if (*(f32*)&((PlayerState*)state)->baddie.trackedObj >= lbl_803E7FC8 &&
         ((PlayerState*)state)->baddie.inputMagnitude >= lbl_803E7FC8 &&
-        ((PlayerState*)state)->baddie.animSpeedC >= *(f32*)(((PlayerState *)inner)->unk400 + 4))
+        ((PlayerState*)state)->baddie.animSpeedC >= *(f32*)(((PlayerState *)inner)->moveParams + 4))
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 3;
@@ -12785,7 +12785,7 @@ int fn_802AE480(int obj, int inner, int state)
     h = ((GameObject*)obj)->anim.currentMoveProgress;
     if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
         ((PlayerState*)state)->baddie.animSpeedC >
-        *(f32*)((char*)((PlayerState*)inner)->unk400 + 0x1c) - lbl_803E7E9C &&
+        *(f32*)((char*)((PlayerState*)inner)->moveParams + 0x1c) - lbl_803E7E9C &&
         ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7F2C &&
         ((PlayerState*)inner)->yawRateSigned >= 0x96)
     {
@@ -12798,7 +12798,7 @@ int fn_802AE480(int obj, int inner, int state)
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x10);
         ((PlayerState*)inner)->unk858 = ((PlayerState*)inner)->yaw;
         ((PlayerState*)inner)->unk844 =
-        (lbl_803E7F14 + (*(f32*)((char*)((PlayerState*)inner)->unk400 + 0x14) +
+        (lbl_803E7F14 + (*(f32*)((char*)((PlayerState*)inner)->moveParams + 0x14) +
             ((PlayerState*)state)->baddie.animSpeedC)) / lbl_803E7F30;
         ((PlayerState*)inner)->targetYaw = ((PlayerState*)inner)->yaw;
         ((PlayerState*)inner)->yaw += 0x8000;
@@ -12808,7 +12808,7 @@ int fn_802AE480(int obj, int inner, int state)
     if (((ByteFlags*)((char*)inner + 0x3f0))->b80)
     {
         if (((PlayerState*)state)->baddie.animSpeedC <=
-            (lim = *(f32*)((char*)((PlayerState*)inner)->unk400 + 0x10)) &&
+            (lim = *(f32*)((char*)((PlayerState*)inner)->moveParams + 0x10)) &&
             ((PlayerState*)state)->baddie.animSpeedA <= lim)
         {
             ((PlayerState*)inner)->lastInputHeading = ((PlayerState*)inner)->yaw;
@@ -13687,7 +13687,7 @@ int fn_8029C9C8(int obj, int state)
             inner->smoothVelZ * inner->smoothVelZ);
     {
         f32 v = ((PlayerState*)state)->baddie.animSpeedC;
-        f32 lo = *(f32*)inner->unk400;
+        f32 lo = *(f32*)inner->moveParams;
         ((PlayerState*)state)->baddie.animSpeedC =
             (v < lo) ? lo : ((v > inner->maxSpeed) ? inner->maxSpeed : v);
     }
@@ -15780,7 +15780,7 @@ void fn_802AE650(int obj, int state, int p3)
     {
         ((PlayerState*)p3)->baddie.animSpeedA =
             ((PlayerState*)state)->unk844 *
-            ((lbl_803E7F14 + *(f32*)((char*)((PlayerState*)state)->unk400 + 0x14)) -
+            ((lbl_803E7F14 + *(f32*)((char*)((PlayerState*)state)->moveParams + 0x14)) -
                 ((PlayerState*)p3)->baddie.animSpeedA) +
             *(f32*)&((PlayerState*)p3)->baddie.animSpeedA;
         ((PlayerState*)p3)->baddie.animSpeedC = ((PlayerState*)p3)->baddie.animSpeedA;
@@ -16600,7 +16600,7 @@ void fn_802B0920(int obj, int state)
     if (((ByteFlags*)((char*)state + 0x3f0))->b20)
     {
         f31v = inner->baddie.animSpeedC /
-            *(f32*)((char*)(((PlayerState*)state)->unk400) + 0x18);
+            *(f32*)((char*)(((PlayerState*)state)->moveParams) + 0x18);
         f31v = (f31v < lbl_803E7EA4) ? lbl_803E7EA4 : ((f31v > lbl_803E7EE0) ? lbl_803E7EE0 : f31v);
         f30v = lbl_803E7EE0 - f31v;
     }

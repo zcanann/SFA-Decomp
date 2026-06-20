@@ -49,7 +49,7 @@ typedef struct PlayerState {
     int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
-    int unk400;
+    int moveParams; /* ptr to a 0x60 locomotion-parameter block (lbl_80333250); deref'd as f32 speed thresholds/limits at +4/+c/+10/+14/+18/+1c */
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
     u8 unk40C;
