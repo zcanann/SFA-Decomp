@@ -1259,7 +1259,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         tgtA[0] = -(lbl_803E2B38 * sinA - ((GameObject*)obj)->anim.localPosX);
         tgtA[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
-        noHit = !objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
+        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
         ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                        ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
@@ -1274,7 +1274,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         }
         turnRaw = diff;
         {
-            int t = turnRaw;
+            s16 t = turnRaw;
             mag = (u16)(t >= 0 ? t : -t);
         }
         if (fn_80295C88(Obj_GetPlayerObject()) != 0)
@@ -1295,10 +1295,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                 }
                 t = yaw;
                 *(u16*)(state + 0x338) = t;
-                if (t >= 0)
-                {
-                }
-                else
+                if (t < 0)
                 {
                     t = -t;
                 }
