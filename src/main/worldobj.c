@@ -259,13 +259,13 @@ void worldobj_init(int obj, int arg)
         state->lookAtTargetRef = 0x4ab03;
         state->attachChildObjectId = 0x4ab09;
         break;
-    case 0x5d7:
-        state->lookAtTargetRef = 0x4ab05;
-        state->attachChildObjectId = 0x4ab0b;
-        break;
     case 0x5d9:
         state->lookAtTargetRef = 0x4ab04;
         state->attachChildObjectId = 0x4ab0a;
+        break;
+    case 0x5d7:
+        state->lookAtTargetRef = 0x4ab05;
+        state->attachChildObjectId = 0x4ab0b;
         break;
     }
 }
