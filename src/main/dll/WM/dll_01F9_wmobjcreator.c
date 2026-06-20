@@ -15,7 +15,6 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
-extern u8 Obj_IsLoadingLocked(void);
 
 
 extern int lbl_803DDC68; /* live WM_WallCraw population counter */
