@@ -1580,7 +1580,7 @@ void andross_update(int obj)
         }
         for (work = 0; (u8)work < 2; work = work + 1)
         {
-            if ((((((AndrossState*)state)->unk14 == 0) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
+            if (((((void*)((AndrossState*)state)->unk14 == NULL) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
                 &&
                 (delayPair[(u8)work] < (short)ref)) && (bval = Obj_IsLoadingLocked(), bval != 0))
             {
@@ -1593,7 +1593,7 @@ void andross_update(int obj)
                 ((AndrossState*)found)->unk20 = 0xffff;
                 found = ((int(*)(int,int))loadObjectAtObject)(obj, found);
                 ((AndrossState*)state)->unk14 = found;
-                if (((AndrossState*)state)->unk14 != 0)
+                if ((void*)((AndrossState*)state)->unk14 != NULL)
                 {
                     ((GameObject*)((AndrossState*)state)->unk14)->anim.alpha = 0xff;
                     *(u8*)(((AndrossState*)state)->unk14 + 0x37) = 0xff;
