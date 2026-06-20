@@ -145,6 +145,7 @@ void barrelgener_update(int obj)
     }
 }
 
+#pragma optimization_level 2
 void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 c)
 {
     f32 mtx[12];
@@ -152,14 +153,16 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     f32 n2[3];
     f32 cross[3];
     f32 mag1, mag2, t, ang;
+    int gt;
+    f64 gtf;
 
     mag1 = PSVECMag(v1);
     if (mag1 > lbl_803E6C38)
     {
-        t = lbl_803E6C6C / mag1;
-        n1[0] = v1[0] * t;
-        n1[1] = v1[1] * t;
-        n1[2] = v1[2] * t;
+        f32 inv = lbl_803E6C6C / mag1;
+        n1[0] = v1[0] * inv;
+        n1[1] = v1[1] * inv;
+        n1[2] = v1[2] * inv;
         PSVECNormalize(n1, n1);
     }
     else
@@ -171,10 +174,10 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     mag2 = PSVECMag(v2);
     if (mag2 > lbl_803E6C38)
     {
-        t = lbl_803E6C6C / mag2;
-        n2[0] = v2[0] * t;
-        n2[1] = v2[1] * t;
-        n2[2] = v2[2] * t;
+        f32 inv = lbl_803E6C6C / mag2;
+        n2[0] = v2[0] * inv;
+        n2[1] = v2[1] * inv;
+        n2[2] = v2[2] * inv;
     }
     else
     {
@@ -186,7 +189,9 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     if (PSVECMag(cross) > lbl_803E6C38)
     {
         ang = fn_80291FF4(PSVECDotProduct(n1, n2));
-        if ((f32)(ang > c))
+        gt = (ang > c);
+        gtf = __fabs((f32)gt);
+        if (gtf != lbl_803E6C38)
         {
             PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
             PSMTXMultVecSR(mtx, n1, n2);
@@ -203,6 +208,7 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
     *(f32*)(out + 0x28) = n2[1] * t;
     *(f32*)(out + 0x2c) = n2[2] * t;
 }
+#pragma optimization_level reset
 
 int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c, int flag)
 {
