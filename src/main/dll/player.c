@@ -17474,7 +17474,7 @@ int fn_8029E568(int obj, int state, f32 fv)
     }
     {
         int in2 = *(int*)&((GameObject*)obj)->extra;
-        *(u32*)((char*)in2 + 0x360) &= ~2LL;
+        *(int*)((char*)in2 + 0x360) &= ~2LL;
         *(u32*)((char*)in2 + 0x360) |= 0x2000LL;
     }
     *(int*)((char*)state + 0x4) |= 0x100000;
