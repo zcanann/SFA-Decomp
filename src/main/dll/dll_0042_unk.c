@@ -518,14 +518,14 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         camera->probePosX = camera->anim.worldPosX;
         camera->probePosY = camera->anim.worldPosY;
         camera->probePosZ = camera->anim.worldPosZ;
-        (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)camera, &dx,
-                                                 &dz, &dy, &dist, 1);
+        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+            (int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
         dist = dy * dy + (dx * dx + dz * dz);
         if (dist > lbl_803E16AC)
         {
             dist = sqrtf(dist);
         }
-        if (dist < lbl_803E1694)
+        if (dist < *(f32 *)&lbl_803E1694)
         {
             dist = lbl_803E1694;
         }
