@@ -2547,7 +2547,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_2c, -4);
-    GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
 
     ((f32*)mtx_8c)[0] = lbl_803DB6AC;
     ((f32*)mtx_8c)[1] = lbl_803DEEDC;
@@ -2607,14 +2607,15 @@ u32 objCallback_80074d04(int handle, void* model)
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
+    GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(1);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetBlendMode(1, 4, 5, 5);
-    return 0;
+    GXSetCullMode(2);
+    return 1;
 }
 
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
