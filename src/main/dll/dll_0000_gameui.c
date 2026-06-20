@@ -2321,6 +2321,7 @@ void fn_80128A7C(u8 i, int p2, int p3);
 #pragma opt_common_subs off
 void fn_80128470(int p1)
 {
+    int sp1 = (s16)p1;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
@@ -2365,7 +2366,7 @@ void fn_80128470(int p1)
         fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)p1), 4);
     }
     gameTextSetColor(0xff, 0xff, 0xff,
-                     (int)((double)((s16)p1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
+                     (int)((double)(sp1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
     if ((s8)pauseMenuState < 0xb && (s8)pauseMenuState >= 8)
     {
@@ -2379,7 +2380,7 @@ void fn_80128470(int p1)
     {
         s16 tx;
         gameTextSetColor(0xff, 0xff, 0xff,
-                         (int)((double)((s16)p1 * lbl_803DD75C) * lbl_803E2088));
+                         (int)((double)(sp1 * lbl_803DD75C) * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818)
         {
@@ -2423,7 +2424,7 @@ void fn_80128470(int p1)
         {
             ph = (s16)(ph ^ 0x3f);
         }
-        alpha = (s16)(ph * ((s16)p1 * 0xc0 / 0x100 + 0x40) / 31);
+        alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
         w16 = w;
         pauseMenuDrawElement(*(int*)(hudTextures + 0x80), (f32)(s16)x1, (f32)(s16)y1,
                              0x100, (u8)alpha, w16, 0);
