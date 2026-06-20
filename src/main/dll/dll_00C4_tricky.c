@@ -1303,7 +1303,7 @@ void Tricky_update(int obj)
                 if (((TrickyState*)state)->unk08 == 1 && ((TrickyState*)state)->unkD != 0 && (f & 0x20000) == 0)
                 {
                     step = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E24D8, 0);
-                    if (step != 0)
+                    if ((void*)step != NULL)
                     {
                         *(int*)&((TrickyState*)state)->followObj = step;
                         if (*(u32*)&((TrickyState*)state)->unk28 != (u32)(step + 0x18))
