@@ -703,7 +703,8 @@ void pauseMenuDrawStatus(void)
             }
             if (statuses[ji] != 0)
             {
-                bp = base + ji + 0xB64;
+                bp = base + ji;
+                bp += 0xB64;
                 if (*bp == 0)
                 {
                     bit = 0;
