@@ -1349,6 +1349,7 @@ extern const f32 lbl_803DF478;
 
 void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
+    extern int randomGetRange(int min, int max);
     BoneSpawnData data;
     void* cam;
     u8 found;
