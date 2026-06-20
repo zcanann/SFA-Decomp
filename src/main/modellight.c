@@ -743,7 +743,6 @@ typedef struct
 
 extern ModelLightChannelState gModelLightChannelStates[];
 
-void mm_free(void* p);
 
 void modelLightChannel_configure(int i, int a, int b)
 {
@@ -1568,7 +1567,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     light->glowAlpha = v;
 }
 
-int randomGetRange(int lo, int hi);
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
@@ -1629,4 +1627,3 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b
 }
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 
-void* mmAlloc(int size, int type, int flag);
