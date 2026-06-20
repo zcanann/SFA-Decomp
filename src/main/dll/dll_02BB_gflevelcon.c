@@ -105,7 +105,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, lbl_803E7464);
+            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, *(f32*)&lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21d, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
