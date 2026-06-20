@@ -2558,7 +2558,6 @@ extern s32 gObjFuzzStep;
 extern s32 lbl_803DCC44;
 extern u8 lbl_803DCC3D;
 extern f32 gObjFuzzPhase;
-extern f32 timeDelta;
 extern f32 lbl_803DEA60;
 extern f32 lbl_803DEA5C;
 extern f32 lbl_803DEA64;
