@@ -538,7 +538,7 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        *(int*)(control + 0x18) = *(u32*)(param_10 + 0x2d0);
+        *(int*)(control + 0x18) = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
         ((DbStealerwormControl*)control)->unk1C = 0x24;
         ((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
