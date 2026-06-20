@@ -1050,6 +1050,7 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
             Stack_Push(obj, stk.msg7);
         }
         sub->unk34 = 1;
+        return 0;
     }
     else
     {
