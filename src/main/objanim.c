@@ -167,13 +167,19 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
         prevFrameLength = state->prevFrameLength;
         if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (state->prevFramePhase < gObjAnimProgressZero)
+            if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                state->prevFramePhase += prevFrameLength;
+                do
+                {
+                    state->prevFramePhase += prevFrameLength;
+                } while (state->prevFramePhase < gObjAnimProgressZero);
             }
-            while (state->prevFramePhase >= prevFrameLength)
+            if (state->prevFramePhase >= prevFrameLength)
             {
-                state->prevFramePhase -= prevFrameLength;
+                do
+                {
+                    state->prevFramePhase -= prevFrameLength;
+                } while (state->prevFramePhase >= prevFrameLength);
             }
         }
         else
@@ -744,13 +750,19 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         prevFrameLength = state->prevFrameLength;
         if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (state->prevFramePhase < gObjAnimProgressZero)
+            if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                state->prevFramePhase += prevFrameLength;
+                do
+                {
+                    state->prevFramePhase += prevFrameLength;
+                } while (state->prevFramePhase < gObjAnimProgressZero);
             }
-            while (state->prevFramePhase >= prevFrameLength)
+            if (state->prevFramePhase >= prevFrameLength)
             {
-                state->prevFramePhase -= prevFrameLength;
+                do
+                {
+                    state->prevFramePhase -= prevFrameLength;
+                } while (state->prevFramePhase >= prevFrameLength);
             }
         }
         else
