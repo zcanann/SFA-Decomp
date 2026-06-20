@@ -14217,7 +14217,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 }
             }
         }
-        else if (gPlayerHeldObject != 0)
+        else if ((void*)gPlayerHeldObject != NULL)
         {
             *(u32*)((char*)gPlayerHeldObject + 0x3c) &= ~0x100000LL;
             gPlayerHeldObject = 0;
