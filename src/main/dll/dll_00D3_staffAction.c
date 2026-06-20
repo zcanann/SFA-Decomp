@@ -466,7 +466,7 @@ u32 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
-    state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
     *(u8*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
@@ -884,7 +884,7 @@ void dll_D3_update(int* obj)
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    extra = *(LandedArwingState**)((char*)state + 0x40c);
+    extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     player = Obj_GetPlayerObject();
     searchRadius = gStaffActionBoundsSearchRadius;
 
@@ -1043,7 +1043,7 @@ void dll_D3_init(int obj, int def, int flag)
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
     ((GameObject*)obj)->animEventCallback = NULL;
 
-    extra = *(LandedArwingState**)(state + 0x40c);
+    extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     memset((void*)extra, 0, 0x94);
     extra->surfaceMode = 5;
     ((StaffBits*)&extra->flags92)->hi = 3;
