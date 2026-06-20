@@ -12,7 +12,6 @@
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/dll/VF/vf_shared.h"
-extern u8 framesThisStep;
 extern f32 lbl_803E58D8; /* fireball render scale */
 extern f32 timeDelta;
 
