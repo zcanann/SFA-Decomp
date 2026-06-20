@@ -192,7 +192,30 @@ void magicdust_update(int obj)
         }
         else
         {
-            if ((flagsByte & 4) == 0)
+            if ((flagsByte & 4) != 0)
+            {
+                if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+                {
+                    ((MagicDustState*)state)->flags27A = flagsByte & ~4;
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
+                    ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
+                    (*gExpgfxInterface)->freeSource2((u32)obj);
+                    if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
+                    {
+                        for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
+                        {
+                            (*gPartfxInterface)->spawnObject((void*)obj,
+                                                             ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
+                                                             burstArg);
+                        }
+                    }
+                    ((GameObject*)obj)->anim.alpha = 1;
+                    Sfx_PlayFromObject(obj, SFXen_waterblock_wave);
+                }
+                objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+                        ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
+            }
+            else
             {
                 if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
                 {
@@ -200,26 +223,6 @@ void magicdust_update(int obj)
                 }
                 goto LAB_80173f80;
             }
-            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
-            {
-                ((MagicDustState*)state)->flags27A = flagsByte & ~4;
-                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
-                ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
-                (*gExpgfxInterface)->freeSource2((u32)obj);
-                if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
-                {
-                    for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
-                    {
-                        (*gPartfxInterface)->spawnObject((void*)obj,
-                                                         ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
-                                                         burstArg);
-                    }
-                }
-                ((GameObject*)obj)->anim.alpha = 1;
-                Sfx_PlayFromObject(obj, SFXen_waterblock_wave);
-            }
-            objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
         }
         if ((((MagicDustState*)state)->flags27A & 3) == 0)
         {
@@ -232,7 +235,7 @@ void magicdust_update(int obj)
                 float vy = -((GameObject*)obj)->anim.velocityY;
                 float vz = -((GameObject*)obj)->anim.velocityZ;
                 float mag = sqrtf(vx * vx + vy * vy + vz * vz);
-                if (lbl_803E34CC < mag)
+                if (mag > lbl_803E34CC)
                 {
                     Sfx_PlayFromObject(obj, SFXwp_iceywindlp16);
                 }
