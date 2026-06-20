@@ -770,9 +770,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     {
         *(u32*)&((EarthWarriorSub*)q)->unk360 |= 0x1000000LL;
         ((EarthWarriorState*)p2)->baddie.moveSpeed = lbl_803E8300;
-        *(s16*)&((EarthWarriorSub*)q)->unk478 =
-            (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->unk858);
-        ((EarthWarriorSub*)q)->savedYaw = ((EarthWarriorSub*)q)->unk478;
+        {
+            s16 yaw = (lbl_803E8320 * ((GameObject*)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub*)q)->unk858);
+            *(s16*)&((EarthWarriorSub*)q)->unk478 = yaw;
+            ((EarthWarriorSub*)q)->savedYaw = yaw;
+        }
         if (*(s8*)&((EarthWarriorState*)p2)->baddie.moveDone != 0)
         {
             s16 sw;
