@@ -1602,9 +1602,11 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
     {
         f32 angle;
         int gt;
+        f64 gtf;
         angle = fn_80291FF4(PSVECDotProduct(stk_20, stk_14));
         gt = (angle > fc);
-        if (__fabs((f32)gt) != lbl_803E2574)
+        gtf = __fabs((f32)gt);
+        if (gtf != lbl_803E2574)
         {
             f32 rot = fc * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
             PSMTXRotAxisRad(stk_2c, stk_8, rot);
