@@ -5638,14 +5638,15 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         for (i = 0; i != 3; i++)
         {
             int stride = (u32)inner->moveSlotIndex * 0xb0;
-            int ent = inner->moveSlots + stride + off;
+            int base = inner->moveSlots + stride;
+            int ent = base + off;
             if (((GameObject*)obj)->anim.currentMoveProgress >= *(f32*)(ent + 0x30) &&
                 ((GameObject*)obj)->anim.currentMoveProgress <= *(f32*)(ent + 0x3c))
             {
                 if ((s8)Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
                 {
                     int bits;
-                    switch (*(s8*)((char*)(inner->moveSlots + 0x5d) + stride + i))
+                    switch (*(s8*)((char*)(base + 0x5d) + i))
                     {
                     case -1:
                         bits = 0;
@@ -15047,7 +15048,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     {
         return 0;
     }
-    *(f32*)((char*)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((char*)d + 0x48);
+    *(f32*)((int)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((int)d + 0x48);
     if ((s8) * (s8*)((char*)c + 0x50) != 0x10)
     {
         *(f32*)((char*)d + 0x8) = ((GameObject*)a)->anim.previousLocalPosY;
