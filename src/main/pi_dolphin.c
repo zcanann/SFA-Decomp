@@ -1557,22 +1557,22 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     {
     case 0xd:
         s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
+        entryIndex = lbl_803DCC80;
         OSRestoreInterrupts(s);
-        if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0)
+        if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0)
         {
             b = MLDF_PTR(0xe);
         }
-        if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0)
+        if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0)
         {
             a = MLDF_PTR(0x56);
         }
         hi = offsetFlags & 0x80000000;
         if (hi != 0 && b == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
             {
-                if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0)
+                if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0)
                 {
                     b = *(u32*)((char*)&MLDF_PTR(0) + 0x80000000);
                     break;
@@ -1599,9 +1599,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         }
         else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
             {
-                if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0)
+                if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0)
                 {
                     a = MLDF_PTR(0);
                     break;
@@ -1646,22 +1646,22 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         break;
     case 0x1b:
         s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
+        entryIndex = lbl_803DCC80;
         OSRestoreInterrupts(s);
-        if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0)
+        if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0)
         {
             b = MLDF_PTR(0x1a);
         }
-        if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0)
+        if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0)
         {
             a = MLDF_PTR(0x53);
         }
         hi = offsetFlags & 0x80000000;
         if (hi != 0 && b == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
             {
-                if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0)
+                if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0)
                 {
                     b = MLDF_PTR(0x1a);
                     break;
@@ -1688,9 +1688,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         }
         else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
             {
-                if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0)
+                if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0)
                 {
                     a = MLDF_PTR(0x53);
                     break;
@@ -1735,13 +1735,13 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         break;
     case 0x25:
         s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
+        entryIndex = lbl_803DCC80;
         OSRestoreInterrupts(s);
-        if ((flags & 0x20000) == 0 && (flags & 0x10000) == 0)
+        if ((entryIndex & 0x20000) == 0 && (entryIndex & 0x10000) == 0)
         {
             b = MLDF_PTR(0x26);
         }
-        if ((flags & 0x80000) == 0 && (flags & 0x40000) == 0)
+        if ((entryIndex & 0x80000) == 0 && (entryIndex & 0x40000) == 0)
         {
             a = MLDF_PTR(0x48);
         }
