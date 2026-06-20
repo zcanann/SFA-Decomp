@@ -1,5 +1,6 @@
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
+extern asm u32 __cvt_fp2unsigned(register f64 d);
 extern int adsrStartRelease(int state, u32 divisor);
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
@@ -28,7 +29,7 @@ int adsrStartRelease(int state, u32 divisor)
         }
         {
             f32 ci = lbl_803E7848 * (f32)(s32)adsr->currentIndex;
-            adsr->cnt = (u32)(ci * (f32)divisor) >> 12;
+            adsr->cnt = __cvt_fp2unsigned(ci * (f32)(u32)divisor) >> 12;
         }
         adsr->state = 4;
         if (adsr->cnt == 0)
