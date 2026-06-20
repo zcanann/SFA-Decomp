@@ -14687,8 +14687,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     f32 x2;
     f32 dists[4];
     f32 z9c;
-    f32 planes[7];
-    f32 p7c;
+    f32 planes[8];
 
     mode = 0;
     inner = *(int*)&((GameObject*)obj)->extra;
@@ -14749,7 +14748,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         planes[4] = -planes[0];
         planes[5] = lbl_803E7EA4;
         planes[6] = -planes[2];
-        p7c = -(planes[4] * ((GameObject*)cam)->anim.rootMotionScale +
+        planes[7] = -(planes[4] * ((GameObject*)cam)->anim.rootMotionScale +
             planes[6] * ((GameObject*)cam)->anim.worldPosX);
         i = 0;
         pl = planes;
