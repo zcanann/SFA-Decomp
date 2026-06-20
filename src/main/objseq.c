@@ -3219,9 +3219,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
 void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
+    s16 basePitch;
     int baseYaw;
     int baseRoll;
-    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
