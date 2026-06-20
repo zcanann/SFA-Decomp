@@ -787,20 +787,19 @@ void appleontree_update(int objArg)
                 do
                 {
                     f32 t = ((AppleOnTreeState*)state)->unk0C;
-                    if (placement != 0) break;
                     fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
-                    if (((AppleOnTreeState*)state)->unk28 <= fd)
-                    {
-                        placement = FUN_8017e15c(fc, obj, state);
-                    }
-                    else
+                    if (((AppleOnTreeState*)state)->unk28 > fd)
                     {
                         placement = FUN_8017e3c0(fc, obj, state);
                     }
+                    else
+                    {
+                        placement = FUN_8017e15c(fc, obj, state);
+                    }
                     val = val + 1;
                 }
-                while ((val == 100) || (val != 0x66));
+                while (((val == 100) || (val != 0x66)) && placement == 0);
                 if (lbl_803E37D4 != ((AppleOnTreeState*)state)->unk30)
                 {
                     fb = ((AppleOnTreeState*)state)->unk0C / ((AppleOnTreeState*)state)->unk50;
