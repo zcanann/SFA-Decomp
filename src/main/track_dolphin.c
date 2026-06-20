@@ -1291,7 +1291,7 @@ void objFn_80065604(void)
 }
 
 #pragma peephole on
-#pragma optimization_level 2
+#pragma optimization_level 1
 void fn_80063368(int target)
 {
     int zero, idx;
@@ -1361,7 +1361,7 @@ check:
 extern u8 lbl_803DCE98;
 
 #pragma peephole on
-#pragma optimization_level 2
+#pragma optimization_level 1
 void fn_80060BB0(void)
 {
     char* arr;
@@ -2197,7 +2197,7 @@ int fn_800626C8(int* obj, int delta)
     return v & 0xff;
 }
 
-#pragma optimization_level 2
+#pragma optimization_level 3
 void fn_80069EB8(int param)
 {
     u8* cache;
@@ -2227,7 +2227,7 @@ void fn_80069EB8(int param)
     memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
     lbl_803DCF80 = param;
 }
-#pragma optimization_level 2
+#pragma optimization_level 4
 
 typedef struct AngleXf
 {
