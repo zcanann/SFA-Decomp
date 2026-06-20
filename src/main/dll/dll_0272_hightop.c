@@ -248,9 +248,9 @@ int hightop_stateHandler03(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
     f32 zero = lbl_803E6AA8;
-    *(f32*)(p2 + 0x294) = zero;
-    *(f32*)(p2 + 0x284) = zero;
-    *(f32*)(p2 + 0x280) = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedC = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedB = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedA = zero;
     ((GameObject*)obj)->anim.velocityX = zero;
     ((GameObject*)obj)->anim.velocityY = zero;
     ((GameObject*)obj)->anim.velocityZ = zero;
@@ -260,12 +260,12 @@ int hightop_stateHandler03(int obj, u8* p2)
         if (*(u32*)&p->unkC3C == 4)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
         }
         else
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
         }
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6B00)
@@ -489,9 +489,9 @@ int hightop_stateHandler08(int obj, u8* p2)
         f32 zero;
         state->unkC30 = lbl_803E6AB4;
         zero = lbl_803E6AA8;
-        *(f32*)(p2 + 0x294) = zero;
-        *(f32*)(p2 + 0x284) = zero;
-        *(f32*)(p2 + 0x280) = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedC = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedB = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedA = zero;
         ((GameObject*)obj)->anim.velocityX = zero;
         ((GameObject*)obj)->anim.velocityY = zero;
         ((GameObject*)obj)->anim.velocityZ = zero;
@@ -515,12 +515,12 @@ int hightop_stateHandler08(int obj, u8* p2)
             if (state->unkC30 < lbl_803E6AA8)
             {
                 ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AB8, 0);
-                *(f32*)(p2 + 0x2a0) = lbl_803E6ABC;
+                ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6ABC;
             }
             break;
         default:
             ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC0;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC0;
             break;
         }
     }
@@ -531,7 +531,7 @@ int hightop_stateHandler08(int obj, u8* p2)
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E6AC4)
             {
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
-                *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+                ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
                 return 8;
             }
         }
