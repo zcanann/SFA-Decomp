@@ -25,7 +25,6 @@ extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
 extern void* Shader_getLayer(char* base, int idx);
-extern f32 timeDelta;
 
 /* .sdata2 float constants owned by this TU: lbl_803E4000 = 0.0 default;
  * lbl_803E4008 = per-axis offset scale; lbl_803E4018 = per-tick step multiplier;
