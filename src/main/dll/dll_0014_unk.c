@@ -2960,7 +2960,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 
 #define SQ(v) ((v) * (v))
 
-int RomCurve_func13(u32 curveId, int typeFilter, u32 maxDist, int* outLink)
+int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
 {
     int done;
     int found;
@@ -3122,7 +3122,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, u32 maxDist, int* outLink)
                                     newDist = SQ(node->z - cand->z) + ((curDist + SQ(node->x - cand->x)) +
                                         SQ(node->y - cand->y));
                                     pos = 0;
-                                    for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
+                                    for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
                                     {
                                         pos++;
                                     }
