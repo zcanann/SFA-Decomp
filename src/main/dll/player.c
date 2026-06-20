@@ -7745,10 +7745,10 @@ int fn_802A6694(int obj, int state, f32 fv)
         else if (((ByteFlags*)((char*)inner + 0x3f1))->b20 == 0)
         {
             int a = ((PlayerState*)inner)->inputHeading;
-            ((PlayerState *)inner)->bodyLeanRateSigned = a;
+            ((PlayerState *)inner)->lastInputHeading = a;
             ((PlayerState*)inner)->yaw = a;
             ((PlayerState*)inner)->yawRate = 0;
-            ((PlayerState *)inner)->yawRate = 0;
+            ((PlayerState *)inner)->yawRateSigned = 0;
         }
         else
         {
@@ -7782,7 +7782,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     if (*(f32*)&((PlayerState*)state)->baddie.trackedObj >= lbl_803E7FC8 &&
         ((PlayerState*)state)->baddie.inputMagnitude >= lbl_803E7FC8 &&
-        ((PlayerState*)state)->baddie.animSpeedC >= *(f32*)(*(int *)&((PlayerState *)inner)->maxSpeed + 4))
+        ((PlayerState*)state)->baddie.animSpeedC >= *(f32*)(((PlayerState *)inner)->unk400 + 4))
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 3;
@@ -7791,7 +7791,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     if (*(s16**)((char*)inner + 0x3f8) == (s16*)(tbl + 0x190))
     {
         if (((PlayerState*)inner)->unk814 >= lbl_803E7FBC &&
-            **(s8**)&((PlayerState *)inner)->flags360 <= 4)
+            **(s8**)&((PlayerState *)inner)->playerStatus <= 4)
         {
             move = 0x5d;
             fv = lbl_803E7F78;
@@ -7932,9 +7932,9 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        ((PlayerState *)inner)->targetYawRate = 0;
+        ((PlayerState *)inner)->targetYawRateSigned = 0;
         ((PlayerState*)inner)->targetYawRate = 0;
-        ((PlayerState *)inner)->yawRate = 0;
+        ((PlayerState *)inner)->yawRateSigned = 0;
         ((PlayerState*)inner)->yawRate = 0;
         ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A3;
         ((PlayerState*)inner)->unk8B0 = 0;
@@ -7987,7 +7987,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     else if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
         ((ByteFlags*)((char*)inner + 0x3f1))->b20 == 0 &&
-        ((PlayerState *)inner)->targetYawRate > 5)
+        ((PlayerState *)inner)->targetYawRateSigned > 5)
     {
         if (((GameObject*)obj)->anim.currentMove !=
             *(s16*)(((PlayerState*)inner)->unk3F8 + 0x3e) &&
