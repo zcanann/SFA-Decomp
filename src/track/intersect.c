@@ -253,14 +253,14 @@ void timeFn_8006f400(f32 step)
             if ((f32)(u32)a[0x33] - step <= 0.0f) {
                 a[0x33] = 0;
             } else {
-                a[0x33] = (s32)((f32)(u32)a[0x33] - step);
+                a[0x33] = (f32)(u32)a[0x33] - step;
             }
         }
         if (b[0x0E] != 0) {
             if ((f32)(u32)b[0x0E] - step <= 0.0f) {
                 b[0x0E] = 0;
             } else {
-                b[0x0E] = (s32)((f32)(u32)b[0x0E] - step);
+                b[0x0E] = (f32)(u32)b[0x0E] - step;
             }
         }
         a += 0x38;
