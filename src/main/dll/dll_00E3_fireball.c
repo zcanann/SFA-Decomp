@@ -1157,7 +1157,6 @@ void fn_8016F260(int* obj, int* state, int* other)
         s16 targP;
         f32 t1;
         f32 t2;
-        f32 f;
         f32 c;
 
         angY = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
@@ -1206,13 +1205,13 @@ void fn_8016F260(int* obj, int* state, int* other)
         angY += framesThisStep * difY;
         angP += framesThisStep * difP;
 
-        f = gFireballPi * angY / gFireballAngleScale;
-        ((GameObject*)obj)->anim.velocityX = mathSinf(f);
-        ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
-        f = gFireballPi * angP / gFireballAngleScale;
-        c = mathSinf(f);
+        dx = gFireballPi * angY / gFireballAngleScale;
+        ((GameObject*)obj)->anim.velocityX = mathSinf(dx);
+        ((GameObject*)obj)->anim.velocityZ = mathCosf(dx);
+        dx = gFireballPi * angP / gFireballAngleScale;
+        c = mathSinf(dx);
         {
-            f32 cosP = mathCosf(f);
+            f32 cosP = mathCosf(dx);
             if (lbl_803E3330 != cosP)
             {
                 c = c / cosP;
