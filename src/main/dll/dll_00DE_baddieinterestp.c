@@ -178,12 +178,12 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 typedef struct BaddieinterestpPlacement
 {
     u8 pad0[0x14 - 0x0]; /* 0x00 */
-    s32 unk14;           /* 0x14 id (matched against other placements' unk14) */
+    s32 linkId;          /* 0x14 id (matched against other placements' linkId) */
     s16 unk18;           /* 0x18 sun-mode/kind byte; body reads it via raw casts (params+0x18, +0x19) */
-    s16 unk1A;           /* 0x1A id low half */
-    s16 unk1C;           /* 0x1C id high half */
-    s16 unk1E;           /* 0x1E done-gate gamebit */
-    s16 unk20;           /* 0x20 enable-gate gamebit */
+    s16 targetIdLo;      /* 0x1A id low half */
+    s16 targetIdHi;      /* 0x1C id high half */
+    s16 doneGameBit;     /* 0x1E done-gate gamebit */
+    s16 enableGameBit;   /* 0x20 enable-gate gamebit */
     u8 pad22[0x2C - 0x22]; /* 0x22 */
     s16 unk2C;           /* 0x2C layout placeholder; never accessed in this TU */
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
@@ -739,19 +739,19 @@ void baddieinterestp_update(int* obj)
 {
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (((int)((BaddieinterestpPlacement*)params)->unk20 == -1 ||
-            GameBit_Get((int)((BaddieinterestpPlacement*)params)->unk20) != 0) &&
-        ((int)((BaddieinterestpPlacement*)params)->unk1E == -1 ||
-            GameBit_Get((int)((BaddieinterestpPlacement*)params)->unk1E) == 0))
+    if (((int)((BaddieinterestpPlacement*)params)->enableGameBit == -1 ||
+            GameBit_Get((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
+        ((int)((BaddieinterestpPlacement*)params)->doneGameBit == -1 ||
+            GameBit_Get((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
     {
         int count;
         int* objs = ObjGroup_GetObjects(3, &count);
         if (count > 0)
         {
-            u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->unk1C << 16;
+            u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->targetIdHi << 16;
             u16 i;
             u8 found;
-            id |= (u16)((BaddieinterestpPlacement*)params)->unk1A;
+            id |= (u16)((BaddieinterestpPlacement*)params)->targetIdLo;
             for (i = 0; i < count; i++)
             {
                 int* other = (int*)objs[i];
@@ -759,7 +759,7 @@ void baddieinterestp_update(int* obj)
                 if (otherParams != NULL)
                 {
                     found = 0;
-                    if (id == *(u32*)&((BaddieinterestpPlacement*)otherParams)->unk14 || id == 0)
+                    if (id == *(u32*)&((BaddieinterestpPlacement*)otherParams)->linkId || id == 0)
                     {
                         found = 1;
                     }
@@ -786,9 +786,9 @@ void baddieinterestp_update(int* obj)
                                     {
                                         int kind = b & 0xf;
                                         int* target = (int*)objs[i];
-                                        if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
+                                        if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
+                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
@@ -809,9 +809,9 @@ void baddieinterestp_update(int* obj)
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
                                         int* target = (int*)objs[i];
-                                        if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
+                                        if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
+                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
@@ -832,9 +832,9 @@ void baddieinterestp_update(int* obj)
                                         u8 b2 = *(u8*)((char*)params + 0x18);
                                         int kind = b2 & 0xf;
                                         int* target = (int*)objs[i];
-                                        if ((int)((BaddieinterestpPlacement*)params)->unk1E != -1)
+                                        if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
-                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->unk1E, 1);
+                                            GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
                                         }
                                         switch (((GameObject*)target)->anim.seqId)
                                         {
