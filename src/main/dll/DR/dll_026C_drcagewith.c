@@ -4,7 +4,7 @@
  * integrates a damped angular velocity (angularVel) from the object's
  * horizontal motion, driving the rope segments' rotZ and the linked
  * object. The placement supplies setup flags (unk5) and the game bit
- * that marks the cage already opened (unk1E).
+ * that marks the cage already opened (openedGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
@@ -14,7 +14,7 @@ typedef struct DrcagewithPlacement
     u8 pad0[0x5 - 0x0];
     u8 unk5;
     u8 pad6[0x1E - 0x6];
-    s16 unk1E; /* 0x1E: game bit set when this cage is opened */
+    s16 openedGameBit; /* 0x1E: game bit set when this cage is opened */
 } DrcagewithPlacement;
 
 
@@ -159,7 +159,7 @@ void drcagewith_hitDetect(int obj)
             px = ((GameObject*)obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14)
             {
-                GameBit_Set(((DrcagewithPlacement*)placement)->unk1E, 1);
+                GameBit_Set(((DrcagewithPlacement*)placement)->openedGameBit, 1);
             }
             else
             {
