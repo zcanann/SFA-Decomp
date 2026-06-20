@@ -115,9 +115,9 @@ void CameraModeForceBehind_update(u8* obj)
 {
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
-    s16 extra;
-    s16 pitch;
     s16 yaw;
+    s16 pitch;
+    s16 extra;
     f32 pos[3];
     f32 angle;
     f32 cosv, sinv;
