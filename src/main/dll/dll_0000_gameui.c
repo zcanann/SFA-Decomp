@@ -1380,10 +1380,10 @@ void boxDrawFn_8012975c(void)
     int t;
     int a;
     int u;
-    f64 c0;
-    f64 c1;
-    f64 c2;
     f64 scaled;
+    f64 c2;
+    f64 c1;
+    f64 c0;
 
     if (lbl_803DD770 == 0)
     {
