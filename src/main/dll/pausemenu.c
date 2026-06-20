@@ -597,11 +597,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
-        i += GameBit_Get(0x5f4);
-        gbCount = (u8)(j + i);
+        gbCount = (u8)(j + (i + GameBit_Get(0x5f4)));
         {
-            u8* p = lbl_8031BB90;
             s8 k;
+            u8* p = lbl_8031BB90;
             for (k = 0; k < 4; k++)
             {
                 *(s16*)(p + 0xc0) = k < gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
@@ -657,12 +656,16 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            for (i = 0; i < 7; i++)
+            f32 scl = lbl_803E1FAC;
+            f32 bse = lbl_803E1F30;
+            f32 mode = lbl_803E20B8;
+            u16 ii;
+            for (ii = 0; ii < 7; ii++)
             {
-                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i
-                +lbl_803E1F30;
+                f32 fy = scl * (f32)(u32)(u16)ii
+                +bse;
                 pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
-                                     lbl_803E20B8, 0);
+                                     (s32)mode, 0);
             }
         }
         for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
