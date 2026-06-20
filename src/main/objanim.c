@@ -923,11 +923,9 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     {
         blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        blendCurve = ObjAnim_GetBlendMoveRootCurve(bank->animDef, state);
-        if (blendCurve != NULL)
-        {
-            blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
-        }
+        blendCurve = ObjAnim_GetMoveDataRootCurve(
+            ObjAnim_GetCurrentBlendMoveData(bank->animDef, state));
+        blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
     }
     else
     {
