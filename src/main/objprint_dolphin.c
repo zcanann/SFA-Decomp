@@ -247,7 +247,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     u32 shadowParam;
     int shadowStride;
     int shadowTable;
-    u32 savedEnvColor;
+    volatile u32 savedEnvColor;
     float mtx[12];
 
     savedEnvColor = DAT_803df670;
