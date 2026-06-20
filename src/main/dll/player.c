@@ -10644,9 +10644,10 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
     }
     if (*(u8*)((char*)sub + 0x2c) == 0)
     {
-        ((GameObject*)obj)->anim.rotX +=
-            (int)((f32)(s32)((u16) * (u16*)((char*)sub + 0x20) - 0x7fff) *
-                timeDelta * lbl_803E8194);
+        {
+            f32 t = (f32)(s32)((u16) * (u16*)((char*)sub + 0x20) - 0x7fff) * timeDelta;
+            ((GameObject*)obj)->anim.rotX += (int)(t * lbl_803E8194);
+        }
     }
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
     return 0;
