@@ -978,7 +978,7 @@ void fn_8013396C(void)
                     a = getAngle(*(f32*)(lbl_803DD934 + 0xc) - ((GameObject*)player)->anim.localPosX,
                                  *(f32*)(lbl_803DD934 + 0x14) - ((GameObject*)player)->anim.localPosZ);
                     a = *slot + a;
-                    d = a - *(u16*)((char*)lbl_803DBBC8[1] + 4);
+                    d = a - (u16) * (s16*)((char*)lbl_803DBBC8[1] + 4);
                     if (d > 0x8000)
                     {
                         d = (d - 0x10000) + 1;
@@ -987,7 +987,7 @@ void fn_8013396C(void)
                     {
                         d += 0xffff;
                     }
-                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)((char*)lbl_803DBBC8[1] + 4) + d / 5;
+                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + d / 5;
                 }
                 break;
             case 2:
