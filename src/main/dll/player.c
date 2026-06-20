@@ -2205,7 +2205,7 @@ int fn_802A1CA8(int obj, int state)
             gPlayerCurrentMoveId = 9;
         }
     }
-    if (((PlayerState*)inner)->unk4E4 > 3)
+    if (((PlayerState*)inner)->climbStep > 3)
     {
         setAButtonIcon(0x1a);
     }
@@ -2266,10 +2266,10 @@ int fn_802A1CA8(int obj, int state)
     case 9:
     case 12:
     case 13:
-        ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->unk4F4;
+        ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->climbTargetY;
         ((GameObject*)obj)->anim.activeMove = -1;
         ((PlayerState*)inner)->unk4E6 = 0;
-        ((PlayerState*)inner)->unk4F8 = ((PlayerState*)inner)->unk4F4;
+        ((PlayerState*)inner)->climbStartY = ((PlayerState*)inner)->climbTargetY;
         spd = lbl_803E7EA4;
         ph = spd;
         if ((gPlayerCurrentMoveId & 1) != 0)
@@ -2362,7 +2362,7 @@ int fn_802A1CA8(int obj, int state)
         else
         {
             if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0 &&
-                ((PlayerState*)inner)->unk4E4 > 3)
+                ((PlayerState*)inner)->climbStep > 3)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
                 return -0x10;
@@ -2375,7 +2375,7 @@ int fn_802A1CA8(int obj, int state)
             Sfx_PlayFromObject(obj, 0x11);
         }
         if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0 &&
-            ((PlayerState*)inner)->unk4E4 > 3)
+            ((PlayerState*)inner)->climbStep > 3)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
             return -0x10;
@@ -2394,7 +2394,7 @@ int fn_802A1CA8(int obj, int state)
             }
             else
             {
-                *(u8*)&((PlayerState*)inner)->unk4E4 += 1;
+                *(u8*)&((PlayerState*)inner)->climbStep += 1;
                 ((PlayerState*)inner)->unk4E6 = 1;
                 ph = lbl_803E7EA4;
                 if ((s16)gPlayerCurrentMoveId <= 1)
@@ -2402,12 +2402,12 @@ int fn_802A1CA8(int obj, int state)
                     gPlayerCurrentMoveId ^= 1;
                     spd = ph;
                 }
-                ((PlayerState*)inner)->unk4F8 =
+                ((PlayerState*)inner)->climbStartY =
                     ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->unk500;
-                ((PlayerState*)inner)->unk4F4 =
+                ((PlayerState*)inner)->climbTargetY =
                     (f32) * (s8*)((char*)inner + 0x4e4) * ((PlayerState*)inner)->unk4F0 +
                     ((PlayerState*)inner)->unk4EC;
-                ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->unk4F8;
+                ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->climbStartY;
             }
         }
         {
@@ -2417,7 +2417,7 @@ int fn_802A1CA8(int obj, int state)
                 if (((PlayerState*)state)->baddie.moveInputZ > lbl_803E7F10)
                 {
                     ((PlayerState*)inner)->unk4E6 = 1;
-                    if ((int)((PlayerState*)inner)->unk4E4 >=
+                    if ((int)((PlayerState*)inner)->climbStep >=
                         ((PlayerState*)inner)->unk4E5 - 3)
                     {
                         spd = z2;
@@ -2460,9 +2460,9 @@ int fn_802A1CA8(int obj, int state)
                 }
                 else if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
                 {
-                    *(u8*)&((PlayerState*)inner)->unk4E4 -= 1;
+                    *(u8*)&((PlayerState*)inner)->climbStep -= 1;
                     ((PlayerState*)inner)->unk4E6 = 0;
-                    if (((PlayerState*)inner)->unk4E4 < 1)
+                    if (((PlayerState*)inner)->climbStep < 1)
                     {
                         if (((PlayerState*)inner)->curAnimId != 0x48 &&
                             ((PlayerState*)inner)->curAnimId != 0x47 &&
@@ -2550,13 +2550,13 @@ int fn_802A1CA8(int obj, int state)
                             }
                             gPlayerCurrentMoveId = ns;
                         }
-                        ((PlayerState*)inner)->unk4F4 =
+                        ((PlayerState*)inner)->climbTargetY =
                             (f32) * (s8*)((char*)inner + 0x4e4) * ((PlayerState*)inner)->unk4F0 +
                             ((PlayerState*)inner)->unk4EC;
                         {
                             f32 y2 = ((GameObject*)obj)->anim.localPosY -
                                 ((PlayerState*)inner)->unk500;
-                            ((PlayerState*)inner)->unk4F8 = y2;
+                            ((PlayerState*)inner)->climbStartY = y2;
                             ((GameObject*)obj)->anim.localPosY = y2;
                         }
                         goto vel_join;
@@ -2595,15 +2595,15 @@ int fn_802A1CA8(int obj, int state)
         {
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.currentMoveProgress *
-                (((PlayerState*)inner)->unk4F4 - ((PlayerState*)inner)->unk4F8) +
-                ((PlayerState*)inner)->unk4F8;
+                (((PlayerState*)inner)->climbTargetY - ((PlayerState*)inner)->climbStartY) +
+                ((PlayerState*)inner)->climbStartY;
         }
         else
         {
             ((GameObject*)obj)->anim.localPosY =
                 (lbl_803E7EE0 - ((GameObject*)obj)->anim.currentMoveProgress) *
-                (((PlayerState*)inner)->unk4F4 - ((PlayerState*)inner)->unk4F8) +
-                ((PlayerState*)inner)->unk4F8;
+                (((PlayerState*)inner)->climbTargetY - ((PlayerState*)inner)->climbStartY) +
+                ((PlayerState*)inner)->climbStartY;
         }
         break;
     }
@@ -2633,7 +2633,7 @@ finish:
         case 2:
         case 3:
             y = ((GameObject*)obj)->anim.currentMoveProgress *
-                (((f32)(((PlayerState*)inner)->unk4E4 + 1) *
+                (((f32)(((PlayerState*)inner)->climbStep + 1) *
                         ((PlayerState*)inner)->unk4F0 +
                         ((PlayerState*)inner)->unk4EC) -
                     ((GameObject*)obj)->anim.localPosY) +
@@ -2643,7 +2643,7 @@ finish:
         case 11:
             x = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosX - x) + x;
             y = (lbl_803E7EE0 - ((GameObject*)obj)->anim.currentMoveProgress) *
-                (((PlayerState*)inner)->unk4F4 - ((GameObject*)obj)->anim.localPosY) +
+                (((PlayerState*)inner)->climbTargetY - ((GameObject*)obj)->anim.localPosY) +
                 ((GameObject*)obj)->anim.localPosY;
             zz = ((GameObject*)obj)->anim.currentMoveProgress * (((PlayerState*)inner)->savedPosZ - zz) + zz;
             break;
@@ -15128,7 +15128,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         *(int*)((char*)state + 0x4) |= 0x8000000;
         ((GameObject*)obj)->anim.velocityY = z;
     }
-    flag = inner->unk4E4 != 1;
+    flag = inner->climbStep != 1;
     if (flag)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
@@ -15218,18 +15218,18 @@ int fn_802A2918(int obj, int state, f32 fv)
         fn_802A71E0(obj, t[2], t[3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
-        inner->unk4F4 =
+        inner->climbTargetY =
             inner->unk4F0 * (f32)(int)
-        inner->unk4E4 +
+        inner->climbStep +
             inner->unk4EC;
-        inner->unk4F8 = ((GameObject*)obj)->anim.localPosY;
+        inner->climbStartY = ((GameObject*)obj)->anim.localPosY;
         {
             int joint = (int)Player_GetActiveModel(obj);
             f32 a8, ac, jp[3];
             ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
                                           jp, &a8);
             lbl_803DE438 = ((GameObject*)obj)->anim.localPosY + jp[0];
-            lbl_803DE43C = inner->unk4F4 + lbl_803DAF88[1];
+            lbl_803DE43C = inner->climbTargetY + lbl_803DAF88[1];
             a8 = inner->unk4E8;
             ac = inner->unk4EC;
             if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
@@ -15254,7 +15254,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         f32 g = lbl_803E8028 * (lbl_803E802C * ((GameObject*)obj)->anim.currentMoveProgress - lbl_803E7F18);
         f32 c;
         c = (g < lbl_803E7EA4) ? lbl_803E7EA4 : ((g > lbl_803E7EE0) ? lbl_803E7EE0 : g);
-        ((GameObject*)obj)->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->unk4F8;
+        ((GameObject*)obj)->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->climbStartY;
     }
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
         (obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
@@ -15268,7 +15268,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     (*gCameraInterface)->overridePos(
         ((GameObject*)obj)->anim.localPosX,
         ((GameObject*)obj)->anim.currentMoveProgress *
-        (inner->unk4F4 - ((GameObject*)obj)->anim.localPosY) +
+        (inner->climbTargetY - ((GameObject*)obj)->anim.localPosY) +
         ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ);
     fn_802AB5A4(obj, (int)inner, 5);
