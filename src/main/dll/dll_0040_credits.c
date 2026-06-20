@@ -63,14 +63,15 @@ int Credits_frameStart(void)
     f32 t;
     f32 frac;
     CreditsPage* page;
+    CreditsLine* line;
     u8 a;
 
     idx = lbl_803DD970;
     if (idx < 10)
     {
-        t = lbl_803DD968;
-        lbl_803DD968 = t + timeDelta;
-        if (lbl_803DD968 >= gCreditsPages[idx].endTime)
+        t = lbl_803DD968 + timeDelta;
+        lbl_803DD968 = t;
+        if (t >= gCreditsPages[idx].endTime)
         {
             lbl_803DD970 = idx + 1;
         }
@@ -81,14 +82,15 @@ int Credits_frameStart(void)
             page = &gCreditsPages[lbl_803DD970];
             for (; i < page->count; i++)
             {
-                if (cur < page->lines[i].t0)
+                line = &page->lines[i];
+                if (cur < line->t0)
                 {
                     a = 0;
                 }
-                else if (cur < page->lines[i].t1)
+                else if (cur < line->t1)
                 {
-                    frac = (cur - page->lines[i].t0) /
-                        (f32)(page->lines[i].t1 - page->lines[i].t0);
+                    frac = (cur - line->t0) /
+                        (f32)(line->t1 - line->t0);
                     if (frac < lbl_803E22A8)
                     {
                         frac = lbl_803E22A8;
@@ -99,14 +101,14 @@ int Credits_frameStart(void)
                     }
                     a = lbl_803E22B0 * frac;
                 }
-                else if (cur < page->lines[i].t2)
+                else if (cur < line->t2)
                 {
                     a = 0xff;
                 }
-                else if (cur < page->lines[i].t3)
+                else if (cur < line->t3)
                 {
-                    frac = (cur - page->lines[i].t2) /
-                        (f32)(page->lines[i].t3 - page->lines[i].t2);
+                    frac = (cur - line->t2) /
+                        (f32)(line->t3 - line->t2);
                     if (frac < lbl_803E22A8)
                     {
                         frac = lbl_803E22A8;
@@ -121,11 +123,11 @@ int Credits_frameStart(void)
                 {
                     a = 0;
                 }
-                page->lines[i].alpha = a;
-                if (cur >= page->lines[i].t0 && cur <= page->lines[i].t3 &&
+                line->alpha = a;
+                if (cur >= line->t0 && cur <= line->t3 &&
                     cur >= gCreditsPages[lbl_803DD970].scrollStartTime)
                 {
-                    page->lines[i].y = lbl_803E22B4 * (timeDelta / lbl_803E22B8) + page->lines[i].y;
+                    line->y = lbl_803E22B4 * (timeDelta / lbl_803E22B8) + line->y;
                 }
             }
         }
