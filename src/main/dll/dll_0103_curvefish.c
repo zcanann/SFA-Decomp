@@ -105,7 +105,7 @@ void curvefish_update(int obj)
     f32 dy;
     f32 dz;
     f32 mag;
-    s16 targetYaw;
+    int targetYaw;
     int yawDelta;
 
     state = ((GameObject*)obj)->extra;
