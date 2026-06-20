@@ -48,7 +48,6 @@ extern int lbl_803DD700;       /* last highlighted item (for select sfx) */
 extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
-extern u8 framesThisStep;
 
 #pragma scheduling off
 #pragma peephole off
