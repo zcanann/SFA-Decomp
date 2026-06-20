@@ -28,8 +28,6 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 
 extern void vecRotateZXY(void* params, f32* vec);
 extern void Obj_FreeObject(void* obj);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803DC234;
 extern u8 lbl_803DC238;
 extern f32 lbl_803DC23C;
