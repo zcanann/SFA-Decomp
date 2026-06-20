@@ -433,20 +433,16 @@ void saveSelectScreenFree(int runExitCallback)
         lbl_803DD6AC = NULL;
     }
 
-    i = 0;
     p = lbl_803A8680;
     zero = NULL;
-    do
+    for (i = 0; i < 4; i++)
     {
-        if (*p != NULL)
+        if (p[i] != NULL)
         {
-            textureFree(*p);
-            *p = zero;
+            textureFree(p[i]);
+            p[i] = zero;
         }
-        p++;
-        i++;
     }
-    while (i < 4);
 
     textureFree(gSaveSelectTexture);
     if (runExitCallback != 0)
