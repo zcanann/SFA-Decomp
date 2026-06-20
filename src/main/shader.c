@@ -3254,10 +3254,11 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     if (id != -1)
     {
         char* p2 = (char*)gShaderRomListSlots;
-        char* p6 = p2 + 6;
+        char* p6;
         slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
+        p6 = (char*)gShaderRomListSlots + 6;
         *(s8*)(p6 + slot * 8) = 1;
         entry = (char*)*(u32*)(p2 + slot * 8);
         pairs = (s16*)gShaderMapRomBuffers[2];
