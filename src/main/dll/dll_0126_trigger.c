@@ -929,7 +929,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
-                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->timer)
+                    if (((TriggerState*)state)->timer >= (u32)((TriggerPlacement*)def)->unk46)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
