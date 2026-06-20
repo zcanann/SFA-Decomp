@@ -997,7 +997,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     int yb;
     int i;
     int r;
-    u8 a;
+    int a;
     u16 v;
     Texture* tex;
     int box;
@@ -1055,7 +1055,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     gameTextShow(0x3da);
     drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
-    if (gTitleScreenCursorY >= lbl_803E2338 && (p2 & 0xff) == 0)
+    if (gTitleScreenCursorY >= lbl_803E2338 && (p2 & 0xff) == 0u)
     {
         xb = (int)mtx[3];
         yb = (int)mtx[7];
@@ -1078,7 +1078,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
-        if ((p2 & 0xff) == 0)
+        if ((p2 & 0xff) == 0u)
         {
             drawTexture(gTitleScreenTextures[5],
                         (f32)(int)((int)mtx[3] + 0x2f),
@@ -1117,7 +1117,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(gTitleScreenMainTex,
                 (f32)(int)((0x280 - ((int)((u32)((Texture*)gTitleScreenMainTex)->width * 0xbe) >> 8)) / 2),
                 (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
-    if ((p3 & 0xff) != 0)
+    if ((p3 & 0xff) != 0u)
     {
         xb = (int)mtx[3];
         yb = (int)mtx[7];
