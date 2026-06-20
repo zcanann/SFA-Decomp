@@ -486,7 +486,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     int state;
     KaldaChomControl* control;
     int player;
-    u8 initMode;
+    int initMode;
 
     state = *(int*)&((GameObject*)obj)->extra;
     initMode = 6;
@@ -494,7 +494,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     {
         initMode |= 1;
     }
-    (*(VtableFn*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, initMode);
+    (*(VtableFn*)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, data, state, 8, 6, 0, (u8)initMode);
     ((GameObject*)obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
