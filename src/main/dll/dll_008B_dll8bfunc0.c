@@ -133,29 +133,29 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         switch (variant)
         {
         case 0:
-            p[0].x = zero;
+            p[0].x = lbl_803E1074;
             p[0].y = lbl_803E108C;
-            p[0].z = zero;
+            p[0].z = lbl_803E1074;
             break;
         case 1:
-            p[0].x = zero;
+            p[0].x = lbl_803E1074;
             p[0].y = lbl_803E1090;
-            p[0].z = zero;
+            p[0].z = lbl_803E1074;
             break;
         case 2:
             p[0].x = lbl_803E108C;
-            p[0].y = zero;
-            p[0].z = zero;
+            p[0].y = lbl_803E1074;
+            p[0].z = lbl_803E1074;
             break;
         case 3:
             p[0].x = lbl_803E1090;
-            p[0].y = zero;
-            p[0].z = zero;
+            p[0].y = lbl_803E1074;
+            p[0].z = lbl_803E1074;
             break;
         case 4:
-            p[0].x = zero;
-            p[0].y = c94;
-            p[0].z = zero;
+            p[0].x = lbl_803E1074;
+            p[0].y = lbl_803E1094;
+            p[0].z = lbl_803E1074;
             break;
         }
         p[1].layer = 1;
