@@ -295,7 +295,7 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.unk34D = 0x10;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6FD8;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
@@ -333,7 +333,7 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         *(u32*)(state + 0x314) = *(u32*)(state + 0x314) & ~1;
         *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 1;
     }
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
@@ -411,7 +411,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             lbl_803E6FE0;
     }
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
