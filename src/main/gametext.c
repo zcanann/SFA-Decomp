@@ -436,13 +436,13 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             sel = 1;
             switch (ch)
             {
-            case 0xf8f7:
-                langIdx = params[0];
-                sizeEntry = &lbl_802C8680[langIdx];
-                break;
             case 0xf8f4:
                 scale = (f32)(int)
                 params[0] * lbl_803DE708;
+                break;
+            case 0xf8f7:
+                langIdx = params[0];
+                sizeEntry = &lbl_802C8680[langIdx];
                 break;
             default:
                 sel = 0;
