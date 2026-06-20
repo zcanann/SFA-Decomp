@@ -61,7 +61,7 @@ extern u32* gSynthFreeCallbacks;
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u32 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
-extern int sndFXCheck(void);
+extern u32 sndFXCheck(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
 extern f32 lbl_803E7780;
@@ -159,7 +159,7 @@ void fn_8026EC44(u32 dt)
                     for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck() == -1))
+                        if ((node[2] != 0xffffffff) && (sndFXCheck() == 0xffffffff))
                         {
                             synthFreeCallback(node);
                         }
@@ -227,7 +227,7 @@ void fn_8026EC44(u32 dt)
                     for (node = gSynthCurrentVoice->cbList; node != NULL; node = nnode)
                     {
                         nnode = (u32*)*node;
-                        if ((node[2] != 0xffffffff) && (sndFXCheck() == -1))
+                        if ((node[2] != 0xffffffff) && (sndFXCheck() == 0xffffffff))
                         {
                             synthFreeCallback(node);
                         }
@@ -263,9 +263,8 @@ void fn_8026EC44(u32 dt)
                 synthRecycleVoiceCallbacks(song);
                 song->active = 0;
                 song->prev = NULL;
-                hasFree = gSynthFreeVoices != NULL;
                 song->next = gSynthFreeVoices;
-                if (hasFree)
+                if (gSynthFreeVoices != NULL)
                 {
                     gSynthFreeVoices->prev = song;
                 }
@@ -446,7 +445,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                 voice->keyBase = key;
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
-                voice->outputFlags |= 0x20000;
+                voice->outputFlags |= 0x20000LL;
                 vidRemoveVoice((McmdVoiceState*)(synthVoice + i * 0x404));
                 if (result == 0xffffffff)
                 {
@@ -466,16 +465,16 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
         }
     }
 
-    if (result == 0xffffffff)
-    {
-        *outFlags = sawHeldVoice;
-    }
-    else
+    if (result != 0xffffffff)
     {
         voiceRegister(selectedVoice);
         inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent,
                            selectedVoice->key & 0xff);
         *outFlags = 0;
+    }
+    else
+    {
+        *outFlags = sawHeldVoice;
     }
     return result;
 }
