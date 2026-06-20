@@ -64,7 +64,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         t = lbl_803E18AC;
     }
-    lbl_803DD560->elapsed = lbl_803DD560->elapsed + t * timeDelta;
+    lbl_803DD560->elapsed += t * timeDelta;
 
     q = *(f32*)&lbl_803E1888;
     if (q != lbl_803DD560->duration)
