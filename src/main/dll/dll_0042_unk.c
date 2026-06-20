@@ -232,7 +232,7 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
-void camslide_update(CameraObject* camera, GameObject* target)
+void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound)
 {
 
     extern f32 interpolate(f32 a, f32 t, f32 exp);
@@ -750,9 +750,10 @@ void camstatic_update(CameraObject* camera)
                                    camera->anim.localPosZ, &camera->anim.worldPosX,
                                    &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    (u32)camera->anim.parent);
-    camslide_update(camera, target);
-    camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalLowerBound,
-                                    &gCamcontrolModeSettings->verticalUpperBound);
+    camslide_update(camera, target, gCamcontrolModeSettings->verticalUpperBound,
+                    gCamcontrolModeSettings->verticalLowerBound);
+    camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalUpperBound,
+                                    &gCamcontrolModeSettings->verticalLowerBound);
     if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
     {
         gCamcontrolModeSettings->targetActionFlags = *(u8*)((int)camera + 0xa2);
