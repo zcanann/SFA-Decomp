@@ -102,7 +102,6 @@ extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern void objSetAnimSpeedTo1(int* obj);
 extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
 extern char lbl_8031D2E8[];
-extern f32 timeDelta;
 extern int getAngle(float y, float x);
 extern void* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E23EC;
