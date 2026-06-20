@@ -260,8 +260,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 0x20;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     if (((controller - 0x80) & 0xff) <= 1U)
@@ -272,8 +272,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     if (((controller - 0x84) & 0xff) <= 1U)
@@ -284,8 +284,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
