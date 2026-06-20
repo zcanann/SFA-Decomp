@@ -232,12 +232,12 @@ typedef struct PlayerState {
     f32 unk6A8;
     f32 unk6AC;
     f32 unk6B0;
-    f32 unk6B4;
-    f32 unk6B8;
-    f32 unk6BC;
-    f32 unk6C0;
-    f32 unk6C4;
-    f32 unk6C8;
+    f32 warpStartX; /* local-space start position for a scripted warp/teleport move lerp; localPos = progress*warpDelta + warpStart, also drives camera overridePos */
+    f32 warpStartY;
+    f32 warpStartZ;
+    f32 warpDeltaX; /* local-space displacement to the warp target (start->target); paired with warpStart for the move/camera lerp */
+    f32 warpDeltaY;
+    f32 warpDeltaZ;
     u8 unk6CC;
     u8 pad6CD[0x6D0 - 0x6CD];
     s32 stickX;

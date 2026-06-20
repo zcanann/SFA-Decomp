@@ -6018,10 +6018,10 @@ int fn_8029F108(int obj, int state)
         t = (*gPathControlInterface)->sampleHeight((void*)obj, pos2[0],
                                                    ((GameObject*)obj)->anim.localPosY, pos2[2],
                                                    lbl_803E7FA4);
-        inner->unk6B4 = pos2[0];
-        inner->unk6B8 = t;
-        inner->unk6BC = pos2[2];
-        inner->unk6C4 = ((GameObject*)obj)->anim.localPosY - t;
+        inner->warpStartX = pos2[0];
+        inner->warpStartY = t;
+        inner->warpStartZ = pos2[2];
+        inner->warpDeltaY = ((GameObject*)obj)->anim.localPosY - t;
         inner->unk6CC = (u8)kind;
         ((GameObject*)obj)->anim.flags &= ~0x8;
         ((GameObject*)obj)->anim.activeMove = -1;
@@ -6029,7 +6029,7 @@ int fn_8029F108(int obj, int state)
     }
     t = lbl_803E7EE0 - ((GameObject*)obj)->anim.currentMoveProgress;
     ((GameObject*)obj)->anim.localPosY =
-        inner->unk6C4 * t + inner->unk6B8;
+        inner->warpDeltaY * t + inner->warpStartY;
     vec = objModelGetVecFn_800395d8(obj, 5);
     if (vec != NULL)
     {
@@ -6040,9 +6040,9 @@ int fn_8029F108(int obj, int state)
         sub, &cam[0], &cam[1], &cam[2]);
     {
         f32 w = ((GameObject*)obj)->anim.currentMoveProgress;
-        f32 cx = w * (inner->unk6B4 - cam[0]) + cam[0];
-        f32 cy = w * (inner->unk6B8 - cam[1]) + cam[1];
-        f32 cz = w * (inner->unk6BC - cam[2]) + cam[2];
+        f32 cx = w * (inner->warpStartX - cam[0]) + cam[0];
+        f32 cy = w * (inner->warpStartY - cam[1]) + cam[1];
+        f32 cz = w * (inner->warpStartZ - cam[2]) + cam[2];
         (*gCameraInterface)->overridePos(cx, cy, cz);
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0 && *(s8*)&((PlayerState*)state)->baddie.moveDone !=
@@ -15382,12 +15382,12 @@ int fn_8029FA24(int obj, int state, f32 fv)
         wpos[0] = wpos[0] - ((GameObject*)obj)->anim.localPosX;
         wpos[1] = wpos[1] - ((GameObject*)obj)->anim.localPosY;
         wpos[2] = wpos[2] - ((GameObject*)obj)->anim.localPosZ;
-        inner->unk6B4 = ((GameObject*)obj)->anim.localPosX;
-        inner->unk6B8 = ((GameObject*)obj)->anim.localPosY;
-        inner->unk6BC = ((GameObject*)obj)->anim.localPosZ;
-        inner->unk6C0 = wpos[0];
-        inner->unk6C4 = wpos[1] - j1[1];
-        inner->unk6C8 = wpos[2];
+        inner->warpStartX = ((GameObject*)obj)->anim.localPosX;
+        inner->warpStartY = ((GameObject*)obj)->anim.localPosY;
+        inner->warpStartZ = ((GameObject*)obj)->anim.localPosZ;
+        inner->warpDeltaX = wpos[0];
+        inner->warpDeltaY = wpos[1] - j1[1];
+        inner->warpDeltaZ = wpos[2];
         ((GameObject*)obj)->anim.flags |= 8;
         ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
@@ -15395,23 +15395,23 @@ int fn_8029FA24(int obj, int state, f32 fv)
     }
     {
         ((GameObject*)obj)->anim.localPosX =
-            ((GameObject*)obj)->anim.currentMoveProgress * inner->unk6C0 +
-            inner->unk6B4;
+            ((GameObject*)obj)->anim.currentMoveProgress * inner->warpDeltaX +
+            inner->warpStartX;
         ((GameObject*)obj)->anim.localPosY =
-            ((GameObject*)obj)->anim.currentMoveProgress * inner->unk6C4 +
-            inner->unk6B8;
+            ((GameObject*)obj)->anim.currentMoveProgress * inner->warpDeltaY +
+            inner->warpStartY;
         ((GameObject*)obj)->anim.localPosZ =
-            ((GameObject*)obj)->anim.currentMoveProgress * inner->unk6C8 +
-            inner->unk6BC;
+            ((GameObject*)obj)->anim.currentMoveProgress * inner->warpDeltaZ +
+            inner->warpStartZ;
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x34)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         (*gCameraInterface)->overridePos(
-            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[0] - inner->unk6B4) +
-            inner->unk6B4,
-            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[1] - inner->unk6B8) +
-            inner->unk6B8,
-            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[2] - inner->unk6BC) +
-            inner->unk6BC);
+            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[0] - inner->warpStartX) +
+            inner->warpStartX,
+            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[1] - inner->warpStartY) +
+            inner->warpStartY,
+            ((GameObject*)obj)->anim.currentMoveProgress * (wpos[2] - inner->warpStartZ) +
+            inner->warpStartZ);
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0 && *(s8*)&((PlayerState*)state)->baddie.moveDone !=
         0)
