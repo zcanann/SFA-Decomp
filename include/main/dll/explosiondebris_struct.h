@@ -13,8 +13,8 @@ typedef struct ExplosionDebris
     s32 unk14;
     f32 unk18;
     f32 unk1C;
-    s32 unk20;
-    s32 unk24;
+    s32 spawnTimer;    /* 0x20: counts down by framesThisStep; spawns a sub-flame at <= 0 */
+    s32 spawnInterval; /* 0x24: reload value copied into spawnTimer after each spawn */
     s16 unk28;
     u16 unk2A;
     u8 unk2C;

@@ -465,7 +465,7 @@ void explosion_update(int obj)
                 {
                     if ((f32)(int)((ExplosionDebris*)p)->unk10 / (f32)(int)((ExplosionDebris*)p)->unk14 < lbl_803E4998
                         &&
-                        (((ExplosionDebris*)p)->unk20 -= framesThisStep, ((ExplosionDebris*)p)->unk20 <= 0))
+                        (((ExplosionDebris*)p)->spawnTimer -= framesThisStep, ((ExplosionDebris*)p)->spawnTimer <= 0))
                     {
                         int st2;
                         u8 c;
@@ -494,7 +494,7 @@ void explosion_update(int obj)
                         {
                             fn_801B3DE4(obj, (u8)(c + 1), sv, vpos[0], vpos[1], vpos[2]);
                         }
-                        ((ExplosionDebris*)p)->unk20 = ((ExplosionDebris*)p)->unk24;
+                        ((ExplosionDebris*)p)->spawnTimer = ((ExplosionDebris*)p)->spawnInterval;
                     }
                 }
             }
