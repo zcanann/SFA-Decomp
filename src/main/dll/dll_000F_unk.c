@@ -859,7 +859,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     *(u32*)state |= 0x8000;
 
-    if (*(int*)(state + 0x27c) != 0)
+    if (*(void**)(state + 0x27c) != NULL)
     {
         localTransform.rotX = *(s16*)(pos + 0);
         localTransform.rotY = *(s16*)(pos + 2);
