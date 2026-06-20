@@ -929,7 +929,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     arr = lbl_803DCE94;
     for (i = 0; i < lbl_803DCE98; i++)
     {
-        if (*arr == blockId)
+        if (blockId == *arr)
         {
             lbl_803DCE8C[i]++;
             statusArr[slotIdx] = i;
@@ -943,7 +943,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     {
         MapBlock_init(blk);
         i = 0;
-        byteOff = 0;
+        byteOff = i;
         while (i < *(u8*)((char*)blk + 0xa0))
         {
             int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
