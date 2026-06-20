@@ -2247,7 +2247,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         break;
     case 1:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount + step > 255)
+        if ((s16)bs->amount + (s16)step > 255)
         {
             step = (u8)(255 - bs->amount);
             bs->mode = 2;
@@ -2273,7 +2273,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         break;
     case 3:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount - step < 0)
+        if ((s16)bs->amount - (s16)step < 0)
         {
             step = bs->amount;
             bs->mode = 0;
