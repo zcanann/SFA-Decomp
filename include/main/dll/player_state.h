@@ -326,8 +326,8 @@ typedef struct PlayerState {
     u32 unk884;
     f32 unk888;
     f32 unk88C;
-    f32 unk890;
-    f32 unk894;
+    f32 pushVelX; /* planar push/displacement velocity X: eased toward a target push via interpolate, decayed by powfBitEstimate, snapped to 0 near zero; added to the transformed world position */
+    f32 pushVelZ;
     int stateHandler; /* staged state/anim handler fn-ptr (stored as int); copied into baddie.unk304 handler slot on anim change */
     u16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];

@@ -8247,8 +8247,8 @@ void playerDoHitDetection(int obj)
                 }
             }
             if ((*(int*)inner & 0x800000) != 0 &&
-                lbl_803E7EA4 == ((PlayerState*)inner)->unk890 &&
-                lbl_803E7EA4 == ((PlayerState*)inner)->unk894)
+                lbl_803E7EA4 == ((PlayerState*)inner)->pushVelX &&
+                lbl_803E7EA4 == ((PlayerState*)inner)->pushVelZ)
             {
                 spd = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                     ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
@@ -10966,8 +10966,8 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
         v.mat[3] = lbl_803E7EA4;
         setMatrixFromObjectPos(mtx, v.angles);
         Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->x, &oy, &a->z);
-        a->x = a->x + ((PlayerState*)b)->unk890;
-        a->z = a->z + ((PlayerState*)b)->unk894;
+        a->x = a->x + ((PlayerState*)b)->pushVelX;
+        a->z = a->z + ((PlayerState*)b)->pushVelZ;
     }
     else
     {
@@ -11162,26 +11162,26 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(damp, dt);
         }
     }
-    r = interpolate(pushX - ((PlayerState*)state)->unk890, lbl_803E7FCC, timeDelta);
-    ((PlayerState*)state)->unk890 = ((PlayerState*)state)->unk890 + r;
-    r = interpolate(pushZ - ((PlayerState*)state)->unk894, lbl_803E7FCC, timeDelta);
-    ((PlayerState*)state)->unk894 = ((PlayerState*)state)->unk894 + r;
+    r = interpolate(pushX - ((PlayerState*)state)->pushVelX, lbl_803E7FCC, timeDelta);
+    ((PlayerState*)state)->pushVelX = ((PlayerState*)state)->pushVelX + r;
+    r = interpolate(pushZ - ((PlayerState*)state)->pushVelZ, lbl_803E7FCC, timeDelta);
+    ((PlayerState*)state)->pushVelZ = ((PlayerState*)state)->pushVelZ + r;
     if (found == 0)
     {
-        ((PlayerState*)state)->unk890 =
-            ((PlayerState*)state)->unk890 * powfBitEstimate(lbl_803E7FF4, timeDelta);
-        ((PlayerState*)state)->unk894 =
-            ((PlayerState*)state)->unk894 * powfBitEstimate(lbl_803E7FF4, timeDelta);
+        ((PlayerState*)state)->pushVelX =
+            ((PlayerState*)state)->pushVelX * powfBitEstimate(lbl_803E7FF4, timeDelta);
+        ((PlayerState*)state)->pushVelZ =
+            ((PlayerState*)state)->pushVelZ * powfBitEstimate(lbl_803E7FF4, timeDelta);
     }
-    if (((PlayerState*)state)->unk890 > lbl_803E7FEC &&
-        ((PlayerState*)state)->unk890 < lbl_803E7EF8)
+    if (((PlayerState*)state)->pushVelX > lbl_803E7FEC &&
+        ((PlayerState*)state)->pushVelX < lbl_803E7EF8)
     {
-        ((PlayerState*)state)->unk890 = lbl_803E7EA4;
+        ((PlayerState*)state)->pushVelX = lbl_803E7EA4;
     }
-    if (((PlayerState*)state)->unk894 > lbl_803E7FEC &&
-        ((PlayerState*)state)->unk894 < lbl_803E7EF8)
+    if (((PlayerState*)state)->pushVelZ > lbl_803E7FEC &&
+        ((PlayerState*)state)->pushVelZ < lbl_803E7EF8)
     {
-        ((PlayerState*)state)->unk894 = lbl_803E7EA4;
+        ((PlayerState*)state)->pushVelZ = lbl_803E7EA4;
     }
 }
 
