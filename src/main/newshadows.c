@@ -1709,6 +1709,7 @@ extern inline float sqrtf(float x)
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
+extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
 extern f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
@@ -1765,13 +1766,13 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 g = sqrtf(g);
                 acc5 = s0 * g + acc5;
                 acc6 = acc6 + over / depth;
-                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * (&Vdchuff_803DEDC0)[4]) + acc6;
+                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDD0) + acc6;
             }
         }
     }
     if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
     if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
-    *out1 = __GXCurrentThread_803DED40 * acc6 + (&Vdchuff_803DEDC0)[5];
+    *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDD4;
     *out2 = acc5;
 }
 
