@@ -17,7 +17,6 @@ extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 extern f32 lbl_803E3528;
 extern f32 lbl_803E3588;
 extern f32 lbl_803E3598;
-extern f32 timeDelta;
 extern f32 lbl_803E3564;
 extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
