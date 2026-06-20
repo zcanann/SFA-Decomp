@@ -22,7 +22,6 @@ void snd_handle_irq(void)
     u32 offset;
     u32 voiceIndex;
     u32 timeOffset;
-    u32 clearValue;
     u8* entry;
 
     if (gSynthInitialized == 0)
@@ -42,21 +41,20 @@ void snd_handle_irq(void)
     salAuxFrame = (salAuxFrame + 1) % 3;
     salFrame ^= 1;
 
-    clearValue = 0;
     offset = 0;
     voiceIndex = 0;
     while ((u8)voiceIndex < salNumVoices)
     {
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[0] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[0] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[1] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[1] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[2] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[2] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[3] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[3] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[4] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[4] = 0;
         offset += 0xf4;
         voiceIndex++;
     }
@@ -163,10 +161,9 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
     u32 zero;
     u32 valueA;
     u32 valueB;
-    u32* dst;
 
-    zero = 0;
     inputOffset = 0;
+    zero = inputOffset;
     flags = 0;
     i = 0;
     offset = slot * 0xf4;
