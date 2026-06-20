@@ -14,7 +14,6 @@
 #include "main/mm.h"
 #include "main/dll/VF/vf_shared.h"
 extern void getTabEntry(void* dst, int kind, int offset, int size);
-extern u8 framesThisStep;
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
