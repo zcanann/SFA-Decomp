@@ -1496,8 +1496,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     while (i < ((ObjSeqState*)seq)->cmdCount && ((ObjSeqState*)seq)->curFrame <= targetFrame)
     {
         cmd = ((ObjSeqState*)seq)->cmds + i * 4;
-        opcode = (s8)cmd[0];
-        switch (opcode)
+        opcode = cmd[0];
+        switch ((s8)opcode)
         {
         case 3:
             flags = (s8)(flags | 4);
@@ -1517,7 +1517,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
             break;
         default:
-            if ((s8)cmd[0] != 0xf)
+            if ((s8)opcode != 0xf)
             {
                 ((ObjSeqState*)seq)->curFrame += cmd[1];
             }
