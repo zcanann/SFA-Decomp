@@ -512,11 +512,10 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
     {
         return;
     }
-    if (b == 0)
+    if (b == 0 || b >= 5)
     {
         return;
     }
-    if (b < 5)
     {
         if (gExpgfxFrameTimerB != lbl_803DF35C)
         {
