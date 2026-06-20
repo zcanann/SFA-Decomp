@@ -2403,11 +2403,11 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if (tex != NULL && *(u8*)((char*)p[slot] + 0x132) != 0)
         {
-            *(u8*)((char*)p[slot] + 0x133) = *(u8*)((char*)p[slot] + 0x133) - 1;
+            *(u8*)((char*)p[slot] + 0x133) -= 1;
             if (*(u8*)((char*)p[slot] + 0x133) == 0)
             {
                 *(u8*)((char*)p[slot] + 0x133) = 0x3c / *(u8*)((char*)p[slot] + 0x132);
-                *(u8*)((char*)p[slot] + 0x131) = *(u8*)((char*)p[slot] + 0x131) + 1;
+                *(u8*)((char*)p[slot] + 0x131) += 1;
                 if ((u8) * (u8*)((char*)p[slot] + 0x131) >= (u32)texCount)
                 {
                     *(u8*)((char*)p[slot] + 0x131) = 0;
