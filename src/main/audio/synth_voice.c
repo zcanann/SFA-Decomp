@@ -341,6 +341,12 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     s32 p;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
+    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                        u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                        u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
+    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                                     u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                                     u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
     p = prioOffset + prio;
     if ((u8)p > 0xFF)
