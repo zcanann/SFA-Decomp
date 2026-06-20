@@ -1172,10 +1172,11 @@ int hightop_stateHandler09(int obj, int p)
             {
                 int roll = randomGetRange(0, 0x64);
                 int idx = 0;
-                while (gHighTopIdleSequenceWeights[idx] < roll)
+                int* weight = gHighTopIdleSequenceWeights;
+                while (*weight < roll)
                 {
-                    roll -= gHighTopIdleSequenceWeights[idx];
-                    idx++;
+                    weight++;
+                    roll -= gHighTopIdleSequenceWeights[idx++];
                 }
                 state->unkC42 = idx;
                 state->unk9FD |= 1;
