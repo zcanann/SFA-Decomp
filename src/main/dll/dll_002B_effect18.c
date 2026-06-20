@@ -475,7 +475,7 @@ int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         break;
     case 0x723:
         {
-            int base, span;
+            int base;
             cfg.lifetimeFrames = randomGetRange(0x23, 0x2d);
             if (extraArgs != 0) base = *(int*)extraArgs + 5;
             else base = 5;
@@ -485,11 +485,11 @@ int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             randomGetRange(8, 0xc)
             )
             ;
-            span = 0x41 - base;
+            base = 0x41 - base;
             cfg.velocityX = lbl_803E024C * (f32)(s32)
-            randomGetRange(-span, span);
+            randomGetRange(-base, base);
             cfg.velocityZ = lbl_803E024C * (f32)(s32)
-            randomGetRange(-span, span);
+            randomGetRange(-base, base);
             cfg.scale = lbl_803E0240 * (f32)(s32)
             randomGetRange(6, 0xc);
             cfg.initialAlpha = (u8)((int)randomGetRange(0x40, 0x7f) >> 1);
