@@ -998,8 +998,6 @@ void playerVecFn_8005a9b0(void)
     f32* invRotMtx;
     int i;
     f32* outPtr;
-    f32* dirPtr;
-    f32* scalePtr;
     f32 clipDist;
 
     planes = sPlayerFrustumPlaneDirs;
@@ -1023,19 +1021,13 @@ void playerVecFn_8005a9b0(void)
     }
     scales.v[0] = clipDist;
 
-    i = 0;
     outPtr = (f32*)gPlayerRelativeFrustumPlanes;
-    dirPtr = planes.v;
-    scalePtr = scales.v;
-    for (; i < 5; i++)
+    for (i = 0; i < 5; i++)
     {
-        PSMTXMultVec(invRotMtx, (_Vec3*)dirPtr, outPtr);
-        PSVECScale(outPtr, &tmp, *scalePtr);
+        PSMTXMultVec(invRotMtx, (_Vec3*)&planes.v[i * 3], &outPtr[i * 5]);
+        PSVECScale(&outPtr[i * 5], &tmp, scales.v[i]);
         PSVECAdd(&camPos, &tmp, &tmp);
-        outPtr[3] = -PSVECDotProduct(&tmp, outPtr);
-        outPtr += 5;
-        dirPtr += 3;
-        scalePtr++;
+        outPtr[i * 5 + 3] = -PSVECDotProduct(&tmp, &outPtr[i * 5]);
     }
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, 5);
 }
