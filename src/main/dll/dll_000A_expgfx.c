@@ -90,6 +90,7 @@ extern void Camera_ApplyFullViewport(void);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);
 extern void fn_8007C3D0(u32 flag);
@@ -2256,8 +2257,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
                     PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
                     {
-                        f32 absX = __fabs(aimDelta[0]);
-                        f32 absZ = __fabs(aimDelta[2]);
+                        f32 absX = __fabsf(aimDelta[0]);
+                        f32 absZ = __fabsf(aimDelta[2]);
                         if (absX > absZ)
                         {
                             getAngle(absX, aimDelta[1]);
