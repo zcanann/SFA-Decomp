@@ -567,7 +567,7 @@ void ktrex_update(int obj)
     u8 flags;
     int phase;
     int i;
-    f32 dz, dx, frac;
+    f32 dx, dz, frac;
     s16* bitA;
     s16* bitB;
 
