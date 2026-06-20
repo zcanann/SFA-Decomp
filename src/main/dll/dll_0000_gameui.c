@@ -4435,15 +4435,16 @@ void textureFreeFn_8012fcec(void)
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
     {
-        void** tex = (void**)(lbl_803A87F0 + i * 4);
+        int j = i;
+        void** tex = (void**)(lbl_803A87F0 + j * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {
             textureFree(*tex);
             *tex = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + i * 2) = -1;
-        lbl_803A87F0[1096 + i] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
+        lbl_803A87F0[1096 + j] = 1;
     }
     if (lbl_803DD7C8 != NULL)
     {
