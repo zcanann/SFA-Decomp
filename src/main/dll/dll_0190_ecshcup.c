@@ -61,12 +61,12 @@ void gpsh_scene_init(int* obj, int* def);
 
 typedef struct EcshCupState
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 startPosX;
+    f32 startPosY;
+    f32 startPosZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
     f32 spawnPosY;
     f32 spawnTimer;
     f32 bobTimer;
@@ -129,9 +129,9 @@ void ecsh_cup_update(short* obj)
             anim.localPosY;
         if (mode == 1 && state->currentMode == 1)
         {
-            ((GameObject*)obj)->anim.localPosX = state->unkC * timeDelta + ((GameObject*)obj)->anim.
+            ((GameObject*)obj)->anim.localPosX = state->velX * timeDelta + ((GameObject*)obj)->anim.
                 localPosX;
-            ((GameObject*)obj)->anim.localPosZ = state->unk14 * timeDelta + ((GameObject*)obj)->anim.
+            ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.
                 localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
@@ -206,22 +206,22 @@ void ecsh_cup_update(short* obj)
         {
             (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
                 (u8)state->slotId, &v.x, &v.z);
-            state->unkC = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
-            state->unk14 = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
-            state->unk0 = ((GameObject*)obj)->anim.localPosX;
-            state->unk8 = ((GameObject*)obj)->anim.localPosZ;
+            state->velX = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
+            state->velZ = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
+            state->startPosX = ((GameObject*)obj)->anim.localPosX;
+            state->startPosZ = ((GameObject*)obj)->anim.localPosZ;
             state->currentMode = mode;
         }
         else if (mode == 0 && mode != state->currentMode)
         {
-            state->unkC = lbl_803E5068;
-            state->unk14 = lbl_803E5068;
+            state->velX = lbl_803E5068;
+            state->velZ = lbl_803E5068;
             state->currentMode = mode;
         }
         else if (mode == 2 && mode != state->currentMode)
         {
-            state->unkC = lbl_803E5068;
-            state->unk14 = lbl_803E5068;
+            state->velX = lbl_803E5068;
+            state->velZ = lbl_803E5068;
             (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x2c))(
                 (u8)state->slotId, ((GameObject*)obj)->anim.localPosX,
                 ((GameObject*)obj)->anim.localPosZ);
@@ -273,16 +273,16 @@ void ecsh_cup_init(int obj, int def)
     state = *(int*)&((GameObject*)obj)->extra;
     dist = lbl_803E5064;
     gEcShCupNearestObject = 0;
-    ((EcshCupState*)state)->unk0 = ((GameObject*)obj)->anim.localPosX;
-    ((EcshCupState*)state)->unk4 = ((GameObject*)obj)->anim.localPosY;
-    ((EcshCupState*)state)->unk8 = ((GameObject*)obj)->anim.localPosZ;
+    ((EcshCupState*)state)->startPosX = ((GameObject*)obj)->anim.localPosX;
+    ((EcshCupState*)state)->startPosY = ((GameObject*)obj)->anim.localPosY;
+    ((EcshCupState*)state)->startPosZ = ((GameObject*)obj)->anim.localPosZ;
     ((EcshCupState*)state)->spawnPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
-        ((EcshCupState*)state)->unkC = fz;
-        ((EcshCupState*)state)->unk10 = fz;
-        ((EcshCupState*)state)->unk14 = fz;
+        ((EcshCupState*)state)->velX = fz;
+        ((EcshCupState*)state)->velY = fz;
+        ((EcshCupState*)state)->velZ = fz;
     }
     ((EcshCupState*)state)->currentMode = 0;
     ((EcshCupState*)state)->slotId = *(s16*)(def + 0x1a);
