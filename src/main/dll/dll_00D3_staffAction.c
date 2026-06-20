@@ -961,11 +961,11 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        dx = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        dx = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosX -
             ((GameObject*)obj)->anim.worldPosX;
-        dy = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        dy = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosY -
             ((GameObject*)obj)->anim.worldPosY;
-        dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        dz = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosZ -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
             sqrtf(dz * dz + (dx * dx + dy * dy));
