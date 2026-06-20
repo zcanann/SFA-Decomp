@@ -5,10 +5,10 @@
 
 typedef struct ExplosionDebris
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    f32 posX;  /* 0x00 */
+    f32 posY;  /* 0x04 */
+    f32 posZ;  /* 0x08 */
+    f32 scale; /* 0x0C */
     s32 unk10;
     s32 unk14;
     f32 unk18;

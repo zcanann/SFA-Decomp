@@ -348,10 +348,10 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 PSMTXRotRad(
                     m2, 0x79, (f32)((lbl_803E4978 * (f64)(int)(0x10000 - (fn_8000FA90() & 0xffff))) / lbl_803E4980));
                 PSMTXConcat(m2, m3, m2);
-                PSMTXScale(m4, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC, ((ExplosionDebris*)p)->unkC);
+                PSMTXScale(m4, ((ExplosionDebris*)p)->scale, ((ExplosionDebris*)p)->scale, ((ExplosionDebris*)p)->scale);
                 PSMTXConcat(m4, m2, m4);
-                PSMTXTrans(mE, ((ExplosionDebris*)p)->unk0 - playerMapOffsetX, ((ExplosionDebris*)p)->unk4,
-                           ((ExplosionDebris*)p)->unk8 - playerMapOffsetZ);
+                PSMTXTrans(mE, ((ExplosionDebris*)p)->posX - playerMapOffsetX, ((ExplosionDebris*)p)->posY,
+                           ((ExplosionDebris*)p)->posZ - playerMapOffsetZ);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
@@ -446,7 +446,7 @@ void explosion_update(int obj)
                     f32)(int)((ExplosionDebris*)p)->unk14);
             f32 d = sp - ((ExplosionDebris*)p)->unk18;
             f32 t = d * ev;
-            ((ExplosionDebris*)p)->unkC = sp - gExplosionDebrisSpeedScale * t;
+            ((ExplosionDebris*)p)->scale = sp - gExplosionDebrisSpeedScale * t;
             ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris*)p)->unk10) / (f32)(int)((ExplosionDebris*)p)->unk14);
             t = lbl_803E4938 * ev;
             *(s8*)&((ExplosionDebris*)p)->unk2E = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
@@ -474,7 +474,7 @@ void explosion_update(int obj)
                         c = ((ExplosionDebris*)p)->unk2D;
                         sp2 = ((ExplosionDebris*)p)->unk1C;
                         st2 = *(int*)&((GameObject*)obj)->extra;
-                        vpos[0] = ((ExplosionDebris*)p)->unkC * (lbl_803E495C * (f32)(int)
+                        vpos[0] = ((ExplosionDebris*)p)->scale * (lbl_803E495C * (f32)(int)
                         randomGetRange(-5, 3) + lbl_803E492C
                         )
                         ;
@@ -484,9 +484,9 @@ void explosion_update(int obj)
                             m, 0x7a, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
                         PSMTXConcat(Camera_GetInverseViewRotationMatrix(), m, m);
                         PSMTXMultVecSR(m, vpos, vpos);
-                        vpos[0] += ((ExplosionDebris*)p)->unk0;
-                        vpos[1] += ((ExplosionDebris*)p)->unk4;
-                        vpos[2] += ((ExplosionDebris*)p)->unk8;
+                        vpos[0] += ((ExplosionDebris*)p)->posX;
+                        vpos[1] += ((ExplosionDebris*)p)->posY;
+                        vpos[2] += ((ExplosionDebris*)p)->posZ;
                         sv = sp2 * (f32)(int)
                         randomGetRange(0xc0, 0x100);
                         sv = sv * lbl_803E4974;
