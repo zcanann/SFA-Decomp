@@ -1333,13 +1333,15 @@ void hudDrawFn_80121440(void)
         op = lbl_803E1E3C;
     if (op > lbl_803DD844)
     {
-        lbl_803DD844 = lbl_803E1FA0 * timeDelta + lbl_803DD844;
-        if (lbl_803DD844 > hudElementOpacity) lbl_803DD844 = hudElementOpacity;
+        f32 t = lbl_803E1FA0 * timeDelta + lbl_803DD844;
+        lbl_803DD844 = t;
+        if (t > hudElementOpacity) lbl_803DD844 = hudElementOpacity;
     }
     else if (op < lbl_803DD844)
     {
-        lbl_803DD844 = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
-        if (lbl_803DD844 < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
+        f32 t = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
+        lbl_803DD844 = t;
+        if (t < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
     }
     alpha = lbl_803DD83C;
     if ((u8)alpha != 0)
