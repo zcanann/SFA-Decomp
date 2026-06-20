@@ -22,9 +22,7 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 timeDelta;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E597C;
 extern f32 lbl_803E5980;
