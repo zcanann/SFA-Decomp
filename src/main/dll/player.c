@@ -3900,9 +3900,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 gPlayerSubState = 1;
                 break;
             case 0x1a:
-                if (*(u32*)&((PlayerState*)inner)->unk684 != 0)
+                if (*(u32*)&((PlayerState*)inner)->interactObject != 0)
                 {
-                    int p1a = *(int*)(((PlayerState*)inner)->unk684 + 0x50);
+                    int p1a = *(int*)(((PlayerState*)inner)->interactObject + 0x50);
                     int snd = *(s16*)(p1a + 0x7a);
                     if (snd > -1)
                     {
@@ -3917,10 +3917,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 break;
             case 1:
-                if (*(u32*)&((PlayerState*)inner)->unk684 != 0)
+                if (*(u32*)&((PlayerState*)inner)->interactObject != 0)
                 {
-                    ObjMsg_SendToObject(((PlayerState*)inner)->unk684, 0x7000b, obj, 0);
-                    ((PlayerState*)inner)->unk684 = 0;
+                    ObjMsg_SendToObject(((PlayerState*)inner)->interactObject, 0x7000b, obj, 0);
+                    ((PlayerState*)inner)->interactObject = 0;
                 }
                 break;
             case 0x25:
@@ -9035,9 +9035,9 @@ void fn_802B249C(int obj, int inner, int state)
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj,
                                                             -1);
                 }
-                ((PlayerState*)inner)->unk684 = p;
+                ((PlayerState*)inner)->interactObject = p;
                 ((PlayerState*)inner)->unk688 = *(s16*)(((PlayerState*)inner)->unk8DC + 2);
-                t = *(void**)(((PlayerState*)inner)->unk684 + 0x64);
+                t = *(void**)(((PlayerState*)inner)->interactObject + 0x64);
                 if (t != NULL)
                 {
                     *(int*)((char*)t + 0x30) = 0x1000;
@@ -9649,7 +9649,7 @@ void fn_802A93F4(int obj, int p2, int p3)
         gPlayerChildObject = NULL;
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
-    inner->unk684 = 0;
+    inner->interactObject = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;

@@ -225,7 +225,7 @@ typedef struct PlayerState {
     s8 unk681;
     u8 unk682;
     u8 pad683[0x684 - 0x683];
-    int unk684;
+    int interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
     s16 unk688;
     u8 pad68A[0x6A4 - 0x68A];
     f32 unk6A4;
