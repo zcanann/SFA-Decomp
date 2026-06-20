@@ -174,7 +174,7 @@ void worldobj_init(int obj, int arg)
         state->scale = lbl_803E6668 * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4
         )
-        +lbl_803E6668;
+        +*(f32*)&lbl_803E6668;
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * state->scale;
         state->spinXStep = randomGetRange(0xa, 0x19);
         if (randomGetRange(0, 1) != 0)
@@ -189,7 +189,7 @@ void worldobj_init(int obj, int arg)
         state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4
         )
-        +lbl_803E66CC
+        +*(f32*)&lbl_803E66CC
         )
         ;
         state->light = objCreateLight(obj, 1);
@@ -255,13 +255,13 @@ void worldobj_init(int obj, int arg)
         state->lookAtTargetRef = 0x4ab03;
         state->attachChildObjectId = 0x4ab09;
         break;
-    case 0x5d8:
-        state->lookAtTargetRef = 0x4ab04;
-        state->attachChildObjectId = 0x4ab0a;
-        break;
     case 0x5d7:
         state->lookAtTargetRef = 0x4ab05;
         state->attachChildObjectId = 0x4ab0b;
+        break;
+    case 0x5d9:
+        state->lookAtTargetRef = 0x4ab04;
+        state->attachChildObjectId = 0x4ab0a;
         break;
     }
 }
