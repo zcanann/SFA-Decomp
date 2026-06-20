@@ -35,36 +35,36 @@ extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
 {
-    float fVar1;
-    float* pfVar2;
-    int iVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    u64 uVar9;
+    float bias;
+    float* config;
+    int target;
+    double dist;
+    double cosA;
+    double offZ;
+    double dx;
+    double offX;
+    u64 result;
 
-    uVar9 = FUN_8028683c();
-    pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((u64)uVar9 >> 0x20);
-    dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
-    dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
-    dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
+    result = FUN_8028683c();
+    config = DAT_803de1fc;
+    target = (int)((u64)result >> 0x20);
+    dx = (double)(*(float*)(target + 0x18) - *DAT_803de1fc);
+    cosA = (double)(*(float*)(target + 0x20) - DAT_803de1fc[2]);
+    dist = FUN_80293900((double)(float)(dx * dx + (double)(float)(cosA * cosA)));
     FUN_80017730();
-    dVar8 = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *pfVar2);
-    dVar6 = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + pfVar2[2]);
-    dVar5 = (double)FUN_80293f90();
-    dVar7 = (double)FUN_80294964();
-    if (dVar4 < (double)DAT_803de1fc[0x10])
+    offX = (double)((float)(dx * (double)DAT_803de1fc[0x11]) + *config);
+    offZ = (double)((float)(cosA * (double)DAT_803de1fc[0x11]) + config[2]);
+    cosA = (double)FUN_80293f90();
+    dx = (double)FUN_80294964();
+    if (dist < (double)DAT_803de1fc[0x10])
     {
-        dVar4 = (double)DAT_803de1fc[0x10];
+        dist = (double)DAT_803de1fc[0x10];
     }
-    fVar1 = DAT_803de1fc[4];
-    *(float*)uVar9 = (float)(dVar5 * (double)(float)(dVar4 + (double)fVar1) + dVar8);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(iVar3 + 0x1c)) - pfVar2[1]) -
-        (*(float*)(iVar3 + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dVar4 + (double)fVar1) + dVar6);
+    bias = DAT_803de1fc[4];
+    *(float*)result = (float)(cosA * (double)(float)(dist + (double)bias) + offX);
+    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
+        (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
+    *param_4 = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
     FUN_80286888();
     return;
 }
@@ -73,20 +73,20 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
                   int param_9, int param_10)
 {
-    u32 uVar1;
-    u16* puVar2;
-    u32 uVar3;
+    u32 active;
+    u16* model;
+    u32 newChild;
     u32 in_r8;
     u32 in_r9;
     u32 in_r10;
-    u16 uStack_1a;
-    u32 local_18;
-    u32 local_14;
-    u16 local_10;
+    u16 nameTail;
+    u32 name0;
+    u32 name4;
+    u16 name8;
 
-    local_18 = DAT_802c2910;
-    local_14 = DAT_802c2914;
-    local_10 = DAT_802c2918;
+    name0 = DAT_802c2910;
+    name4 = DAT_802c2914;
+    name8 = DAT_802c2918;
     if ((*(char*)(param_10 + 0x407) != *(char*)(param_10 + 0x409)) &&
         (((GameObject*)param_9)->anim.alpha != 0))
     {
@@ -96,8 +96,8 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
                                    *(int*)&((GameObject*)param_9)->childObjs[0]);
             *(u32*)&((GameObject*)param_9)->childObjs[0] = 0;
         }
-        uVar1 = FUN_80017ae8();
-        if ((uVar1 & 0xff) == 0)
+        active = FUN_80017ae8();
+        if ((active & 0xff) == 0)
         {
             *(u8*)(param_10 + 0x409) = 0;
         }
@@ -105,11 +105,11 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
         {
             if (0 < *(char*)(param_10 + 0x407))
             {
-                puVar2 = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(param_10 + 0x407)]);
-                uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
+                model = FUN_80017aa4(0x18, (&nameTail)[*(char*)(param_10 + 0x407)]);
+                newChild = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, model,
                                      4, 0xff, 0xffffffff, *(u32**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
                                      in_r10);
-                *(u32*)&((GameObject*)param_9)->childObjs[0] = uVar3;
+                *(u32*)&((GameObject*)param_9)->childObjs[0] = newChild;
                 *(u16*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
                     7;
             }
