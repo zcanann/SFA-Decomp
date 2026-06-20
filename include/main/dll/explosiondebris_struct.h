@@ -15,7 +15,7 @@ typedef struct ExplosionDebris
     f32 unk1C;
     s32 unk20;
     s32 unk24;
-    u16 unk28;
+    s16 unk28;
     u16 unk2A;
     u8 unk2C;
     u8 unk2D;
