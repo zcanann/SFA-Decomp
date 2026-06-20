@@ -35,7 +35,6 @@ extern void sidekickToy_updateCurveTargetLatch(int* obj);
 
 extern int getAngle(float y, float x);
 
-extern f32 timeDelta;
 extern f32 lbl_803E2740;  /* 0.0f */
 extern f32 lbl_803E274C;
 extern f32 lbl_803E2768;
