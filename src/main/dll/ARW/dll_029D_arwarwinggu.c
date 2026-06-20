@@ -137,9 +137,10 @@ void arwarwinggu_update(int obj)
         {
             ArwingGuState* state = ((GameObject*)obj)->extra;
             f32 minTimer;
-            if (state->visibleTimer > (minTimer = lbl_803E7060))
+            f32 vt = state->visibleTimer;
+            if (vt > (minTimer = lbl_803E7060))
             {
-                state->visibleTimer -= timeDelta;
+                state->visibleTimer = vt - timeDelta;
                 if (state->visibleTimer <= minTimer)
                 {
                     state->visibleTimer = minTimer;
