@@ -58,7 +58,7 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(void* m, void* out);
 extern void OSReport(const char* msg, ...);
-extern void objInterpretSeq(void* obj, int arg2, int legCode, int distanceSquared);
+extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared);
 extern char lbl_8032253C[]; /* OSReport format string (.data) */
 extern f32 lbl_803E40D8;     /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value, address-of spelling matches asm) */
 extern f32 lbl_803E40DC;     /* 0.0625f (1/16) - reach scale per height byte */
