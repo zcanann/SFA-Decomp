@@ -899,14 +899,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     }
 
     moveData = ObjAnim_GetCurrentMoveData(bank->animDef, state);
-    if (moveData->rootCurveOffset == 0)
+    if (moveData->rootCurveOffset != 0)
     {
-        events->rootCurveValid = 0;
-        return wrapped;
-    }
-    curve = ObjAnim_GetMoveDataRootCurve(moveData);
-
     events->rootCurveValid = 1;
+    curve = ObjAnim_GetMoveDataRootCurve(moveData);
     rootScale = curve->scale * objAnim->rootMotionScale;
     sampleCount = curve->sampleCount;
     segmentCount = sampleCount - 1;
@@ -1024,7 +1020,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
         axisIndex++;
     } while (axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT);
+        return wrapped;
+    }
 
+    events->rootCurveValid = 0;
     return wrapped;
 }
 
