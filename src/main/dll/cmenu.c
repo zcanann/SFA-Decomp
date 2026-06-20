@@ -93,7 +93,6 @@ extern void objRender(int a, int b, int c, int d, int obj, int flag);
 
 extern float mathCosf(float x);
 extern s8 cMenuState;
-extern u8 framesThisStep;
 extern s16 gCMenuScrollTimer;
 extern s16 cMenuFadeCounter;
 extern s16 lbl_803DD79A;
