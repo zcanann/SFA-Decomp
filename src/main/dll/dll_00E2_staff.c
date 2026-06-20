@@ -1572,13 +1572,13 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             {
                                 idx[3] = count;
                             }
-                            pidx = idx;
                             pE = arrE;
                             pF = arrF;
                             pG = arrG;
                             pH = arrH;
                             pI = arrI;
                             pJ = arrJ;
+                            pidx = idx;
                             for (n = 4; n != 0; n--)
                             {
                                 f32 a, b, t1, t2;
