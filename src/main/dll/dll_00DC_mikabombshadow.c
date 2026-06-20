@@ -152,7 +152,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern u8 framesThisStep;
 
 /* includes deferred to preserve the pre-include extern declarations for codegen */
 #include "main/game_object.h"
