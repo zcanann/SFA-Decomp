@@ -34,8 +34,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-extern u8 framesThisStep;
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/dll/rom_curve_interface.h"
