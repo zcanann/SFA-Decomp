@@ -1863,6 +1863,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     u32 otherObj;
     int objectIndex;
     int* objects;
+    int* walker;
     int foundObj;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
@@ -1871,37 +1872,37 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     if (defNo != -1)
     {
         objectIndex = startIndex;
-        objects = objects + startIndex;
+        walker = objects + startIndex;
         while (objectIndex < objectCount)
         {
-            otherObj = *objects;
+            otherObj = *walker;
             if (((defNo == ((GameObject*)otherObj)->anim.seqId) && (obj != otherObj)) &&
                 (distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
                                                      &((GameObject*)otherObj)->anim.worldPosX),
                     distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *objects;
+                foundObj = *walker;
             }
-            objects++;
+            walker++;
             objectIndex++;
         }
     }
     else
     {
         objectIndex = startIndex;
-        objects = objects + startIndex;
+        walker = objects + startIndex;
         invalidDistance = lbl_803DE970;
         while (objectIndex < objectCount)
         {
             distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
-                                               &((GameObject*)*objects)->anim.worldPosX);
+                                               &((GameObject*)*walker)->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *objects;
+                foundObj = *walker;
             }
-            objects++;
+            walker++;
             objectIndex++;
         }
     }
