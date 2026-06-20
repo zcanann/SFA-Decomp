@@ -198,8 +198,8 @@ void drakorenergy_update(int obj)
         }
         else
         {
-            spd = gDrakorEnergyChaseSpeed;
-            Obj_PredictInterceptPoint(player, obj + 0xc, v1, spd / lbl_803E6294);
+            v = (spd = gDrakorEnergyChaseSpeed) / lbl_803E6294;
+            Obj_PredictInterceptPoint(player, obj + 0xc, v1, v);
             PSVECSubtract(v1, (f32*)(obj + 0xc), v2);
             PSVECNormalize(v2, v2);
             if (dist < spd)
