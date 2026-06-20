@@ -9,8 +9,8 @@ typedef struct ExplosionDebris
     f32 posY;  /* 0x04 */
     f32 posZ;  /* 0x08 */
     f32 scale; /* 0x0C */
-    s32 unk10;
-    s32 unk14;
+    s32 age;      /* 0x10: elapsed frames, += framesThisStep; deactivates at >= lifetime */
+    s32 lifetime; /* 0x14: total lifetime; age/lifetime drives fade + scale */
     f32 unk18;
     f32 unk1C;
     s32 spawnTimer;    /* 0x20: counts down by framesThisStep; spawns a sub-flame at <= 0 */
