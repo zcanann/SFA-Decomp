@@ -2720,7 +2720,7 @@ int fn_802A0680(int obj, int state)
     }
     {
         int base = *(int*)&((GameObject*)obj)->extra;
-        *(u32*)((char*)base + 0x360) &= ~0x2LL;
+        *(int*)((char*)base + 0x360) &= ~0x2LL;
         *(u32*)((char*)base + 0x360) |= 0x2000LL;
     }
     *(u32*)((char*)state + 4) |= 0x100000;
