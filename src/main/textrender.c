@@ -2812,6 +2812,7 @@ void gameTextInitFn_8001c794(void)
     u16* dst;
     u16* src;
     u8* rowBase;
+    void* tex;
 
     i = 1;
     p = &gGameTextBoxTexAssets + 1;
@@ -2821,8 +2822,9 @@ void gameTextInitFn_8001c794(void)
         *q = textureLoadAsset(*p);
     }
 
-    gGameTextBoxCornerTexture = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16*)((u8*)gGameTextBoxCornerTexture + 0x60);
+    tex = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
+    gGameTextBoxCornerTexture = tex;
+    dst = (u16*)((u8*)tex + 0x60);
     y = 0;
     src = gGameTextBoxCornerTexSrc;
     for (i = 0; i < 4; i++)
@@ -2894,8 +2896,9 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)gGameTextBoxCornerTexture + 0x60, 0x200);
 
-    gGameTextBoxEdgeTexture = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16*)((u8*)gGameTextBoxEdgeTexture + 0x60);
+    tex = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
+    gGameTextBoxEdgeTexture = tex;
+    dst = (u16*)((u8*)tex + 0x60);
     y = 0;
     src = lbl_802CA100;
     for (i = 0; i < 5; i++)
