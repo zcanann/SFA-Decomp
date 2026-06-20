@@ -1603,7 +1603,7 @@ int fn_802A5384(int obj, int state)
     }
     ((PlayerState*)inner)->currentSpeed =
         (((PlayerState*)inner)->maxSpeed - lbl_803E7F6C) *
-        (t * ((PlayerState*)inner)->unk840);
+        (t * ((PlayerState*)inner)->speedScale);
     {
         u32 fl = *(u8*)((char*)inner + 0x3f0);
         if ((fl >> 6 & 1) != 0)
@@ -7675,37 +7675,37 @@ void fn_802B0EA4(int obj, int inner, int state)
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
         ((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
     {
-        ((PlayerState*)inner)->unk840 =
+        ((PlayerState*)inner)->speedScale =
             (((PlayerState*)inner)->waterDepth - lbl_803E7FFC) / lbl_803E8098;
-        v = ((PlayerState*)inner)->unk840;
-        ((PlayerState*)inner)->unk840 = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
-        ((PlayerState*)inner)->unk840 =
-            -(lbl_803E7E98 * ((PlayerState*)inner)->unk840 - lbl_803E7EE0);
+        v = ((PlayerState*)inner)->speedScale;
+        ((PlayerState*)inner)->speedScale = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
+        ((PlayerState*)inner)->speedScale =
+            -(lbl_803E7E98 * ((PlayerState*)inner)->speedScale - lbl_803E7EE0);
     }
     else
     {
         if (((PlayerState*)state)->baddie.spawnRotY > 0)
         {
-            ((PlayerState*)inner)->unk840 =
+            ((PlayerState*)inner)->speedScale =
                 (f32)((PlayerState*)state)->baddie.spawnRotY / lbl_803E7EE8;
-            v = ((PlayerState*)inner)->unk840;
-            ((PlayerState*)inner)->unk840 =
+            v = ((PlayerState*)inner)->speedScale;
+            ((PlayerState*)inner)->speedScale =
                 (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
-            ((PlayerState*)inner)->unk840 =
-                -(lbl_803E7EAC * ((PlayerState*)inner)->unk840 - lbl_803E7EE0);
+            ((PlayerState*)inner)->speedScale =
+                -(lbl_803E7EAC * ((PlayerState*)inner)->speedScale - lbl_803E7EE0);
         }
         else
         {
-            ((PlayerState*)inner)->unk840 = lbl_803E7EE0;
+            ((PlayerState*)inner)->speedScale = lbl_803E7EE0;
         }
     }
     if (*(void**)((char*)inner + 0x7f8) != NULL)
     {
-        ((PlayerState*)inner)->unk840 = ((PlayerState*)inner)->unk840 - lbl_803E7EFC;
+        ((PlayerState*)inner)->speedScale = ((PlayerState*)inner)->speedScale - lbl_803E7EFC;
     }
-    v = ((PlayerState*)inner)->unk840;
+    v = ((PlayerState*)inner)->speedScale;
     t = (v < lbl_803E7E98) ? lbl_803E7E98 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
-    ((PlayerState*)inner)->unk840 = t;
+    ((PlayerState*)inner)->speedScale = t;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x1800000LL;
 }
 
@@ -7887,7 +7887,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     ((PlayerState*)inner)->currentSpeed =
         (((PlayerState*)inner)->maxSpeed - lbl_803E7F6C) *
-        (t * ((PlayerState*)inner)->unk840);
+        (t * ((PlayerState*)inner)->speedScale);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 != 0)
     {
         fn_802ADE80(obj, inner, state);

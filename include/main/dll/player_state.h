@@ -305,7 +305,7 @@ typedef struct PlayerState {
     f32 unk834;
     f32 waterDepth; /* waterSurfaceY - worldPosY; player's submerged depth, drives splash/ripple FX */
     f32 waterSurfaceY; /* water surface world-Y (from cfg+0x1c0); compared against worldPosY */
-    f32 unk840;
+    f32 speedScale; /* 0-1 movement-speed multiplier from terrain (water depth / slope); currentSpeed = (maxSpeed-K) * (t * speedScale) */
     f32 unk844;
     f32 prevWorldPosY;
     f32 unk84C;
