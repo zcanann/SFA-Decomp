@@ -631,7 +631,7 @@ void trickyFn_80142524(u8* obj, u8* state)
     else
     {
         ((TrickyState*)state)->unk71C -= timeDelta;
-        if (((TrickyState*)state)->unk71C < lbl_803E23DC)
+        if (((TrickyState*)state)->unk71C < *(f32*)&lbl_803E23DC)
         {
             ((TrickyState*)state)->unk71C = lbl_803E23DC;
         }
