@@ -2565,7 +2565,7 @@ void expgfx_free(u32 sourceId)
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
         slot = (ExpgfxSlot*)*slotPoolBases;
-        if (*poolSourceIds == sourceId)
+        if (sourceId == *poolSourceIds)
         {
             for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
             {
