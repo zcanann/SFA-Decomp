@@ -8711,14 +8711,14 @@ void fn_802AFB0C(int obj, int inner, int state)
                 {
                     Sfx_PlayFromObject(obj, 0x394);
                 }
-                if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                 {
                     objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 6, 0);
                 }
                 break;
             case 0x1c:
                 Sfx_PlayFromObject(obj, 0x318);
-                if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                 {
                     objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 8, 0);
                 }
@@ -8731,19 +8731,19 @@ void fn_802AFB0C(int obj, int inner, int state)
                     {
                     case 0x33:
                         Sfx_PlayFromObject(obj, 0x36e);
-                        if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                        if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                         {
                             objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 5, 0);
                         }
                         break;
                     case 0x7c8:
-                        if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                        if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                         {
                             objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 8, 0);
                         }
                         break;
                     default:
-                        if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                        if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                         {
                             objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 5, 0);
                         }
@@ -8752,14 +8752,14 @@ void fn_802AFB0C(int obj, int inner, int state)
                 }
                 else
                 {
-                    if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+                    if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
                     {
                         objLightFn_8009a1dc((void*)obj, lbl_803E8024, buf, 5, 0);
                     }
                 }
                 break;
             }
-            if (**(s8**)&((PlayerState *)inner)->flags360 > 0)
+            if (**(s8**)&((PlayerState *)inner)->playerStatus > 0)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0xb4, 200, 0, 0, 1);
             }
@@ -8787,7 +8787,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 ((PlayerState*)inner)->heldObj = 0;
             }
             if (newAnim != -1 && ((PlayerState*)state)->baddie.controlMode != newAnim &&
-                **(s8**)&((PlayerState *)inner)->flags360 > 0)
+                **(s8**)&((PlayerState *)inner)->playerStatus > 0)
             {
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, newAnim);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = ((PlayerState*)inner)->unk898;
