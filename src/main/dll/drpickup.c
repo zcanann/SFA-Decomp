@@ -67,7 +67,7 @@ void fn_801EC1AC(int obj, int state)
     if (flags->b4 != 0)
     {
         f32 vy53c = ((DRPickupState*)state)->unk53C;
-        f32 v49c = ((DRPickupState*)state)->unk49C;
+        f32 v49c = ((DRPickupState*)state)->accumZ;
         if (v49c >= target)
         {
             f32 nv = -vy53c;
@@ -84,15 +84,15 @@ void fn_801EC1AC(int obj, int state)
     }
     {
         f32 fz = *(f32*)&lbl_803E5AE8;
-        ((DRPickupState*)state)->unk4A0 = fz;
-        ((DRPickupState*)state)->unk4A4 = fz;
+        ((DRPickupState*)state)->localOffsetX = fz;
+        ((DRPickupState*)state)->localOffsetY = fz;
     }
-    ((DRPickupState*)state)->unk4A8 = (*(f32*)(state + 0x430) + target) * timeDelta;
+    ((DRPickupState*)state)->localOffsetZ = (*(f32*)(state + 0x430) + target) * timeDelta;
 
     Matrix_TransformPoint((void*)(state + 0x6c),
-                          ((DRPickupState*)state)->unk4A0,
-                          ((DRPickupState*)state)->unk4A4,
-                          ((DRPickupState*)state)->unk4A8,
+                          ((DRPickupState*)state)->localOffsetX,
+                          ((DRPickupState*)state)->localOffsetY,
+                          ((DRPickupState*)state)->localOffsetZ,
                           &out[0], &out[1], &out[2]);
     Matrix_TransformPoint((void*)(state + 0x12c),
                           out[0], out[1], out[2],
@@ -164,7 +164,7 @@ void fn_801EC1AC(int obj, int state)
     if (flags->b1 == 0)
     {
         vec_args[0] = ((DRPickupState*)state)->angVel414;
-        vec_args[1] = ((DRPickupState*)state)->unk49C;
+        vec_args[1] = ((DRPickupState*)state)->accumZ;
         vec_args[2] = (f32)(s32) * (s16*)(obj + 0x4);
         vec_args[3] = (f32)(s32) * (s16*)(obj + 0x2);
         (*gCameraInterface)->releaseAction(vec_args, 0x10);
@@ -173,31 +173,31 @@ void fn_801EC1AC(int obj, int state)
     {
         f32 lim;
         f32 v;
-        v = ((DRPickupState*)state)->unk494;
-        lim = ((DRPickupState*)state)->unk47C;
-        ((DRPickupState*)state)->unk494 = (v < -lim) ? -lim : ((v > lim) ? lim : v);
-        v = ((DRPickupState*)state)->unk494;
+        v = ((DRPickupState*)state)->accumX;
+        lim = ((DRPickupState*)state)->clampLimitX;
+        ((DRPickupState*)state)->accumX = (v < -lim) ? -lim : ((v > lim) ? lim : v);
+        v = ((DRPickupState*)state)->accumX;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                ((DRPickupState*)state)->unk494 = lbl_803E5AE8;
+                ((DRPickupState*)state)->accumX = lbl_803E5AE8;
             }
         }
     }
 
     {
-        f32 v = ((DRPickupState*)state)->unk498;
-        f32 lim = -((DRPickupState*)state)->unk480;
-        ((DRPickupState*)state)->unk498 = (v < lim)
+        f32 v = ((DRPickupState*)state)->accumY;
+        f32 lim = -((DRPickupState*)state)->clampLimitY;
+        ((DRPickupState*)state)->accumY = (v < lim)
                                      ? lim
                                      : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
-        v = ((DRPickupState*)state)->unk498;
+        v = ((DRPickupState*)state)->accumY;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                ((DRPickupState*)state)->unk498 = lbl_803E5AE8;
+                ((DRPickupState*)state)->accumY = lbl_803E5AE8;
             }
         }
     }
@@ -205,15 +205,15 @@ void fn_801EC1AC(int obj, int state)
     {
         f32 lim;
         f32 v;
-        v = ((DRPickupState*)state)->unk49C;
-        lim = ((DRPickupState*)state)->unk484;
-        ((DRPickupState*)state)->unk49C = (v < -lim) ? -lim : ((v > lim) ? lim : v);
-        v = ((DRPickupState*)state)->unk49C;
+        v = ((DRPickupState*)state)->accumZ;
+        lim = ((DRPickupState*)state)->clampLimitZ;
+        ((DRPickupState*)state)->accumZ = (v < -lim) ? -lim : ((v > lim) ? lim : v);
+        v = ((DRPickupState*)state)->accumZ;
         if (v < lbl_803E5B8C)
         {
             if (v > lbl_803E5BA4)
             {
-                ((DRPickupState*)state)->unk49C = lbl_803E5AE8;
+                ((DRPickupState*)state)->accumZ = lbl_803E5AE8;
             }
         }
     }

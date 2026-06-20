@@ -36,16 +36,16 @@ typedef struct DRPickupState {
     u32 flags458; /* bit 0x100 -> b6, 0x200 -> b4 */
     f32 unk45C;
     u8 unk460[0x47C - 0x460];
-    f32 unk47C; /* clamp limit for unk494 */
-    f32 unk480; /* clamp limit for unk498 */
-    f32 unk484; /* clamp limit for unk49C */
+    f32 clampLimitX; /* 0x47C clamp limit for accumX */
+    f32 clampLimitY; /* 0x480 clamp limit for accumY */
+    f32 clampLimitZ; /* 0x484 clamp limit for accumZ */
     u8 unk488[0x494 - 0x488];
-    f32 unk494; /* accumulated vector x (also address-taken, raw) */
-    f32 unk498;
-    f32 unk49C;
-    f32 unk4A0; /* local offset vector, fed to Matrix_TransformPoint */
-    f32 unk4A4;
-    f32 unk4A8;
+    f32 accumX; /* 0x494 accumulated vector x (also address-taken, raw) */
+    f32 accumY; /* 0x498 */
+    f32 accumZ; /* 0x49C */
+    f32 localOffsetX; /* 0x4A0 local offset vector, fed to Matrix_TransformPoint */
+    f32 localOffsetY; /* 0x4A4 */
+    f32 localOffsetZ; /* 0x4A8 */
     u8 unk4AC[0x52C - 0x4AC];
     f32 unk52C;
     f32 unk530;
@@ -66,7 +66,7 @@ typedef struct DRPickupState {
 STATIC_ASSERT(offsetof(DRPickupState, angle40C) == 0x40C);
 STATIC_ASSERT(offsetof(DRPickupState, flags) == 0x428);
 STATIC_ASSERT(offsetof(DRPickupState, flags458) == 0x458);
-STATIC_ASSERT(offsetof(DRPickupState, unk494) == 0x494);
+STATIC_ASSERT(offsetof(DRPickupState, accumX) == 0x494);
 STATIC_ASSERT(offsetof(DRPickupState, unk584) == 0x584);
 
 void fn_801EC1AC(int param_1,int param_2);
