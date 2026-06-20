@@ -1083,7 +1083,7 @@ void babycloudrunner_update(int* obj)
                         sub->runnerState = 2;
                         GameBit_Set(0x66, 0);
                         (*gGameUIInterface)->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex], 0x5d1);
-                        s16toFloat((int)((char*)sub + 0x238), gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
+                        s16toFloat((int)((char*)sub + 0x238), (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;
