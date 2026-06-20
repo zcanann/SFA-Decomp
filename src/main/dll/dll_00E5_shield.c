@@ -892,7 +892,7 @@ void shield_update(int* obj)
         f32* t4 = tbl + 4;
         for (i = 0; i < 4; i++)
         {
-            ps[26] = (s32)((f32)ps[30] * timeDelta + ps[26]);
+            ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == 2102)
             {
                 pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
