@@ -639,7 +639,6 @@ void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
 
 void fn_8015625C(u32 obj, int state)
 {
-    f32 zero;
     u32 randVal;
     int tracked;
     f32 moveSpeed;
@@ -675,10 +674,10 @@ void fn_8015625C(u32 obj, int state)
     {
         ObjAnim_SetCurrentMove(obj, 3, lbl_803E2A98, *(u8*)(state + 0x323));
     }
-    if (*(float*)(state + 0x324) > (zero = lbl_803E2A98))
+    if (*(float*)(state + 0x324) > lbl_803E2A98)
     {
         *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-        if (*(float*)(state + 0x324) <= zero)
+        if (*(float*)(state + 0x324) <= lbl_803E2A98)
         {
             *(float*)(state + 0x324) = lbl_803E2AB0;
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
@@ -735,7 +734,6 @@ void fn_8015625C(u32 obj, int state)
 
 void fn_8015652C(u32 obj, int state)
 {
-    f32 zero;
     u32 randVal;
     RomCurveWalker* route;
     int placement;
@@ -770,12 +768,12 @@ void fn_8015652C(u32 obj, int state)
     {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2A98, *(u8*)(state + 0x323));
     }
-    if (*(float*)(state + 0x324) > (zero = lbl_803E2A98))
+    if (*(float*)(state + 0x324) > lbl_803E2A98)
     {
         *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
-        if (*(float*)(state + 0x324) <= zero)
+        if (*(float*)(state + 0x324) <= lbl_803E2A98)
         {
-            *(float*)(state + 0x324) = zero;
+            *(float*)(state + 0x324) = lbl_803E2A98;
         }
     }
     else
