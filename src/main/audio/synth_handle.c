@@ -165,20 +165,11 @@ resolved_initial:
     flags = request->flags;
     if ((flags & SYNTH_START_FLAG_PENDING_START) != 0)
     {
-        pendingVoice = &runtime->voices[slot];
-        pendingRequest = SYNTH_VOICE_PENDING_START_REQUEST(pendingVoice);
-        pendingRequest->handle = request->handle;
-        *(u32*)&pendingRequest->fadeTime = *(u32*)&request->fadeTime;
-        pendingRequest->reuseHandle = request->reuseHandle;
-        *(u32*)&pendingRequest->volumeTime = *(u32*)&request->volumeTime;
-        pendingRequest->seqId = request->seqId;
-        *(u32*)&pendingRequest->groupId = *(u32*)&request->groupId;
-        *(u32*)&pendingRequest->volume = *(u32*)&request->volume;
-        pendingRequest->mixValue0 = request->mixValue0;
-        pendingRequest->mixValue1 = request->mixValue1;
-        *(u32*)&pendingRequest->value16 = *(u32*)&request->value16;
-        SYNTH_VOICE_PENDING_START_ACTIVE(pendingVoice) = 1;
-        SYNTH_VOICE_PENDING_START_OUT_HANDLE(pendingVoice) = outHandle;
+        pendingVoice = (SynthVoice*)((u8*)runtime + slot * sizeof(SynthVoice));
+        pendingRequest = (SynthStartRequest*)((u8*)pendingVoice + 0x22B4);
+        *pendingRequest = *request;
+        *(u8*)((u8*)pendingVoice + 0x22E0) = 1;
+        *(u32**)((u8*)pendingVoice + 0x22DC) = outHandle;
         pendingRequest->flags &= ~SYNTH_START_FLAG_PENDING_START;
         *outHandle = request->handle | SYNTH_HANDLE_QUEUED_FLAG;
         return;
