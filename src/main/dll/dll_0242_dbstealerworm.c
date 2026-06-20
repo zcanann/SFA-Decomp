@@ -122,7 +122,6 @@ extern u8 lbl_80329514[];
 
 extern int gDBStealerWormStateHandlersA[];
 extern f32 lbl_803E62BC;
-extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerA0E();
@@ -810,7 +809,6 @@ int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
 {
     extern int Obj_GetYawDeltaToObject(int, int, f32*);
     extern f32 lbl_803E6370;
-    extern f32 timeDelta;
     extern f32 lbl_803E634C;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E6374;
@@ -864,7 +862,6 @@ int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4)
 {
     extern int Obj_GetYawDeltaToObject(u8*, u8*, f32*);
     extern f32 lbl_803E6378;
-    extern f32 timeDelta;
     extern f32 lbl_803E634C;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E6374;
@@ -1183,7 +1180,6 @@ void fn_80203144(int obj, int p2, int p3)
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E6354;
     extern f32 lbl_803E6384;
-    extern f32 timeDelta;
     GroundBaddieState* st = (GroundBaddieState*)p2;
     DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     u32 near;
@@ -1987,7 +1983,6 @@ void dbstealerworm_update(u8* objp)
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern MapEventInterface** gMapEventInterface;
     extern void** gBaddieControlInterface;
-    extern f32 timeDelta;
     extern f32 lbl_803E62FC;
     extern f32 lbl_803E6388;
     extern f32 lbl_803E638C;
