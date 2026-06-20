@@ -138,7 +138,7 @@ void updateVisibleGeometry(void)
     f32 negff, negss;
     f32 ratio2;
     u16 fov;
-    f32 oz, oy, ox;
+    f32 ox, oy, oz;
     PosRot st;
     f32 m[17];
 
