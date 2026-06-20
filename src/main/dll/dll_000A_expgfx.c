@@ -1038,8 +1038,7 @@ foundFirst:
                         {
                             slot->velocityX *= lbl_803DF358;
                             slot->velocityZ *= lbl_803DF358;
-                            slot->scaleCurrent =
-                                (int)
+                            *(u16*)&slot->scaleCurrent =
                             ((f32)(u16)
                             slot->scaleCurrent * lbl_803DF3F4
                             )
@@ -1050,8 +1049,7 @@ foundFirst:
                         {
                             slot->velocityX *= lbl_803DF358;
                             slot->velocityZ *= lbl_803DF358;
-                            slot->scaleCurrent =
-                                (int)
+                            *(u16*)&slot->scaleCurrent =
                             ((f32)(u16)
                             slot->scaleCurrent * lbl_803DF3F4
                             )
@@ -1063,8 +1061,7 @@ foundFirst:
                         {
                             slot->velocityX *= lbl_803DF358;
                             slot->velocityZ *= lbl_803DF358;
-                            slot->scaleCurrent =
-                                (int)
+                            *(u16*)&slot->scaleCurrent =
                             ((f32)(u16)
                             slot->scaleCurrent * lbl_803DF3F4
                             )
@@ -1082,8 +1079,7 @@ foundFirst:
                         {
                             slot->velocityX = slot->velocityX * (gExpgfxSlotMotionStep - slot->velocityX);
                             slot->velocityZ = slot->velocityZ * (gExpgfxSlotMotionStep - slot->velocityZ);
-                            slot->scaleCurrent =
-                                (int)
+                            *(u16*)&slot->scaleCurrent =
                             ((f32)(u16)
                             slot->scaleCurrent * lbl_803DF3F4
                             )
@@ -1217,7 +1213,7 @@ foundFirst:
                     slot->posZ.value += slot->velocityZ * timeDelta;
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
                     {
-                        slot->scaleCurrent = (int)
+                        *(u16*)&slot->scaleCurrent =
                         ((f32)(u16)
                         slot->scaleStep * timeDelta +
                             (f32)(u16)
