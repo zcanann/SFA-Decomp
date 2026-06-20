@@ -41,9 +41,9 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 typedef struct DrakorenergyPlacement
 {
     u8 pad_0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     s32 unk14;
     u8 pad_18[0x19 - 0x18];
     u8 unk19;
@@ -104,9 +104,9 @@ void drakorenergy_init(int* obj, u8* init)
     f32 fz;
     sub = ((GameObject*)obj)->extra;
     sub->mode = 5;
-    ((GameObject*)obj)->anim.localPosX = placement->unk8;
-    ((GameObject*)obj)->anim.localPosY = placement->unkC;
-    ((GameObject*)obj)->anim.localPosZ = placement->unk10;
+    ((GameObject*)obj)->anim.localPosX = placement->posX;
+    ((GameObject*)obj)->anim.localPosY = placement->posY;
+    ((GameObject*)obj)->anim.localPosZ = placement->posZ;
     fz = lbl_803E627C;
     ((GameObject*)obj)->anim.velocityZ = fz;
     ((GameObject*)obj)->anim.velocityX = fz;
