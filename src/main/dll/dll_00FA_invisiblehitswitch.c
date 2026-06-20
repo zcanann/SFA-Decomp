@@ -121,10 +121,7 @@ void InvisibleHitSwitch_update(int obj)
                 *(u8*)state = 1;
                 GameBit_Set((int)*(short*)(state2 + 0x18), 1);
             }
-            else if (((InvisibleHitSwitchState*)state)->unk8 > lbl_803E3730)
-            {
-            }
-            else
+            else if (((InvisibleHitSwitchState*)state)->unk8 <= lbl_803E3730)
             {
                 ((InvisibleHitSwitchState*)state)->unk8 = lbl_803E3730;
             }
@@ -152,8 +149,8 @@ void InvisibleHitSwitch_update(int obj)
             if ((((InvisibleHitSwitchPlacement*)state2)->unk1E & 3) == 2)
             {
                 ((InvisibleHitSwitchState*)state)->unk4 =
-                    lbl_803E3734 * lbl_803E373C *
-                    (f32)((InvisibleHitSwitchPlacement*)state2)->unk1A;
+                    lbl_803E3734 * (lbl_803E373C *
+                    (f32)((InvisibleHitSwitchPlacement*)state2)->unk1A);
             }
         }
     }
