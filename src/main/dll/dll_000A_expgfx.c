@@ -2065,7 +2065,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     u32 renderFlags;
     u32 state;
     int alpha;
-    s16 lifetimeFrameLimit;
     f32 lifeFraction;
     f32 scaleSize;
     f32 scaleFactor;
@@ -2131,16 +2130,15 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID) goto next_slot;
         if ((state & 1) != 0) goto next_slot;
 
-        lifetimeFrameLimit = slot->lifetimeFrameLimit;
         lifeFraction = lbl_803DF358 * (f32)(s32)
-        lifetimeFrameLimit;
+        slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
         {
             f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
-            lifetimeFrameLimit;
+            slot->lifetimeFrameLimit;
             if (ratio < lbl_803DF35C)
             {
                 ratio = lbl_803DF35C;
@@ -2160,7 +2158,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
-            lifetimeFrameLimit;
+            slot->lifetimeFrameLimit;
             if (ratio < lbl_803DF35C)
             {
                 ratio = lbl_803DF35C;
