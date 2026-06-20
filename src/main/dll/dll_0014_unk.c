@@ -2782,7 +2782,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     tangentDx = gFloatHalf * (tangentDx + segmentDx);
     tangentDz = gFloatHalf * (tangentDz + segmentDz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
-    if (gFloatZero != tangentLen)
+    if ((*(volatile f32 *)&gFloatZero) != tangentLen)
     {
         tangentDx = tangentDx / tangentLen;
         tangentDz = tangentDz / tangentLen;
@@ -2790,7 +2790,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
     startPhase = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
     startDenom = tangentDx * segmentDx + tangentDz * segmentDz;
-    if (gFloatZero != startDenom)
+    if ((*(volatile f32 *)&gFloatZero) != startDenom)
     {
         startPhase =
             -(startPhase + ((tangentDx * x) + (tangentDz * z))) / startDenom;
@@ -2813,7 +2813,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
     nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
     nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
-    if (gFloatZero != nextTangentLen)
+    if ((*(volatile f32 *)&gFloatZero) != nextTangentLen)
     {
         nextTangentDx = nextTangentDx / nextTangentLen;
         nextTangentDz = nextTangentDz / nextTangentLen;
@@ -2821,7 +2821,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
     endPhase = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
     endDenom = nextTangentDx * segmentDx + nextTangentDz * segmentDz;
-    if (gFloatZero != endDenom)
+    if ((*(volatile f32 *)&gFloatZero) != endDenom)
     {
         endPhase =
             -(endPhase + ((nextTangentDx * x) + (nextTangentDz * z))) / endDenom;
@@ -2832,7 +2832,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     }
 
     phase = -startPhase / (endPhase - startPhase);
-    if ((phase >= gFloatZero) && (phase < gFloatOne))
+    if ((phase >= (*(volatile f32 *)&gFloatZero)) && (phase < gFloatOne))
     {
         f32 projX;
         f32 projY;
@@ -2843,7 +2843,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
             sqrtf(segmentDy * segmentDy + segmentDx * segmentDx + segmentDz * segmentDz);
         lateralX = segmentDx;
         lateralZ = segmentDz;
-        if (gFloatZero < segmentLen)
+        if ((*(volatile f32 *)&gFloatZero) < segmentLen)
         {
             lateralX = -segmentDx * (gFloatOne / segmentLen);
             lateralZ = -segmentDz * (gFloatOne / segmentLen);
