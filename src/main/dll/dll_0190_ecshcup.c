@@ -122,7 +122,7 @@ void ecsh_cup_update(short* obj)
         state->unk20 -= timeDelta;
         if (state->unk20 <= lbl_803E5068)
         {
-            state->unk2E = *(u8*)&state->unk2E * -1LL;
+            state->unk2E *= -1;
             state->unk20 = lbl_803E5070;
         }
         ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->unk2E + ((GameObject*)obj)->
@@ -340,10 +340,12 @@ void fn_801C8B68(int obj)
         mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor));
     angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x10)) / gEcShCupAngleToRadDivisor);
     angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
-    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * (angB + angA));
+    angB = angB + angA;
+    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * angB);
     angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x12)) / gEcShCupAngleToRadDivisor);
     angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
-    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * (angB + angA));
+    angB = angB + angA;
+    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * angB);
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);
@@ -353,15 +355,15 @@ void fn_801C8B68(int obj)
     {
         float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
         float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
-        int ang = getAngle(dx, dz);
-        delta = (int)(u16)ang - (int)(u16)((GameObject*)self)->anim.rotX;
+        int ang = (u16)getAngle(dx, dz);
+        delta = ang - (int)(u16)*(volatile s16*)&((GameObject*)self)->anim.rotX;
         if (delta > 0x8000) delta -= 0xffff;
         if (delta < -0x8000) delta += 0xffff;
         ((GameObject*)self)->anim.rotX = (short)(
             (int)((GameObject*)self)->anim.rotX
             + (int)((f32)delta * timeDelta / lbl_803E50C0));
     }
-    dist = Vec_xzDistance(&((GameObject*)self)->anim.worldPosX, &player->anim.worldPosX);
+    dist = Vec_xzDistance((f32*)((u8*)self + 24), &player->anim.worldPosX);
     if (dist <= lbl_803E50C4)
     {
         ((GameObject*)self)->anim.alpha = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
