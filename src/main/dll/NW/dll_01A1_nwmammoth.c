@@ -488,16 +488,14 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             }
             {
                 int i = 0;
-                int* gb = gNwMammothBushGameBits;
-                int* ids = gNwMammothBushObjectIds;
                 for (; i < n; i++)
                 {
-                    if (GameBit_Get(*gb) != 0)
+                    if (GameBit_Get(gNwMammothBushGameBits[i]) != 0)
                     {
-                        GameBit_Set(*gb, 0);
+                        GameBit_Set(gNwMammothBushGameBits[i], 0);
                     }
                     {
-                        int* o2 = ObjList_FindObjectById(*ids);
+                        int* o2 = ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
                         if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                         {
                             fn_8014C66C(o2, *(int**)&state->playerObject);
@@ -523,8 +521,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             }
                         }
                     }
-                    gb++;
-                    ids++;
                 }
             }
             {
