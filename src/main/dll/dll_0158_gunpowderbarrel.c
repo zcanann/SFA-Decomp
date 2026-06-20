@@ -36,7 +36,7 @@
 typedef struct GunpowderbarrelPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 generatorLinkId;
     s16 unk1C;
     s16 unk1E;
 } GunpowderbarrelPlacement;
@@ -223,13 +223,13 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             int** objs;
             int i;
             int** p;
-            if (((GunpowderbarrelPlacement*)def)->unk1A != 0)
+            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
                 objs = (int**)ObjGroup_GetObjects(0x3a, &count);
                 for (i = 0; i < count; i++)
                 {
                     int id = barrelgener_getLinkId(objs[i]);
-                    if (((GunpowderbarrelPlacement*)def)->unk1A == id)
+                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == id)
                     {
                         best = objs[i];
                         break;
@@ -758,7 +758,7 @@ void gunpowderbarrel_update(int obj)
             /* Find the owning generator: match a placement link id against the
              * group-0x3a generators, otherwise take the nearest one. */
             gen = 0;
-            if (((GunpowderbarrelPlacement*)def)->unk1A != 0)
+            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
             {
                 int cnt;
                 u32* objs = ObjGroup_GetObjects(0x3a, &cnt);
@@ -767,7 +767,7 @@ void gunpowderbarrel_update(int obj)
                 p = objs;
                 for (; i < cnt; i++)
                 {
-                    if (((GunpowderbarrelPlacement*)def)->unk1A == barrelgener_getLinkId(*p))
+                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId(*p))
                     {
                         gen = objs[i];
                         break;
@@ -1060,7 +1060,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
             u32* p;
             for (i = 0, p = barrels; i < count; i++)
             {
-                if (((GunpowderbarrelPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
+                if (((GunpowderbarrelPlacement*)params)->generatorLinkId == barrelgener_getLinkId(*p))
                 {
                     target = barrels[i];
                     break;
