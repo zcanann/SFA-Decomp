@@ -606,21 +606,19 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     sampleIndex = sampleProgress;
     sampleFraction = sampleProgress - sampleIndex;
 
-    if (blendSamples != NULL && blendSamples[segmentCount] < 0)
-    {
-        blendScale = -blendScale;
-    }
-
     if (blendSamples != NULL)
     {
         s16* axisAt = &axis[sampleIndex];
-        s16* blendAt = &blendSamples[sampleIndex];
+        if (blendSamples[segmentCount] < 0)
+        {
+            blendScale = -blendScale;
+        }
         previousDistance =
-            (rootScale * moveWeight * axisAt[1]) +
-            (blendScale * blendWeight * blendAt[0]);
+            (rootScale * (moveWeight * axisAt[1])) +
+            (blendScale * (blendWeight * blendSamples[sampleIndex]));
         nextDistance =
-            (rootScale * moveWeight * axisAt[2]) +
-            (blendScale * blendWeight * blendAt[1]);
+            (rootScale * (moveWeight * axisAt[2])) +
+            (blendScale * (blendWeight * blendSamples[sampleIndex + 1]));
     }
     else
     {
@@ -650,10 +648,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
             s16* axisAt = &axis[sampleIndex];
             s16* blendAt = &blendSamples[sampleIndex];
             nextDistance +=
-                (rootScale * moveWeight *
-                    ((f32)axisAt[2] - axisAt[1])) +
-                (blendScale * blendWeight *
-                    ((f32)blendAt[1] - blendAt[0]));
+                (rootScale * ((f32)axisAt[2] - axisAt[1]) * moveWeight) +
+                (blendScale * ((f32)blendAt[1] - blendAt[0]) * blendWeight);
         }
         else
         {
