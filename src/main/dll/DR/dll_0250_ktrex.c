@@ -909,7 +909,6 @@ void ktrex_init(int obj, char* arg, int flag)
     int* pA;
     int* pB;
     int* pC;
-    int* pD;
     s16 yaw;
     gKTRexRuntime = ((GameObject*)obj)->extra;
     spawnFlags = 0x10;
@@ -940,7 +939,7 @@ void ktrex_init(int obj, char* arg, int flag)
     pA = base + 0x4c / 4;
     pB = base + 0x3c / 4;
     pC = base + 0x6c / 4;
-    pD = base + 0x5c / 4;
+    base = base + 0x5c / 4;
     for (i = 0; i < 4; i++)
     {
         cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pA);
@@ -957,7 +956,7 @@ void ktrex_init(int obj, char* arg, int flag)
             ((KTRexArenaState*)gKTRexState)->laneCX[i] = cp->x;
             ((KTRexArenaState*)gKTRexState)->laneCY[i] = cp->y;
             ((KTRexArenaState*)gKTRexState)->laneCZ[i] = cp->z;
-            cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pD);
+            cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*base);
             ((KTRexArenaState*)gKTRexState)->laneDX[i] = cp->x;
             ((KTRexArenaState*)gKTRexState)->laneDY[i] = cp->y;
             ((KTRexArenaState*)gKTRexState)->laneDZ[i] = cp->z;
@@ -965,7 +964,7 @@ void ktrex_init(int obj, char* arg, int flag)
         pA++;
         pB++;
         pC++;
-        pD++;
+        base++;
     }
     ((KTRexArenaState*)gKTRexState)->rowAX = (char*)gKTRexState + 0x10;
     ((KTRexArenaState*)gKTRexState)->rowAY = (char*)gKTRexState + 0x20;
