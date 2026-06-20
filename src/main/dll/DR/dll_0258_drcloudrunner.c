@@ -716,7 +716,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         vecE.y = ((GameObject*)obj)->anim.previousLocalPosY - inner->lastPosY;
         vecE.z = ((GameObject*)obj)->anim.previousLocalPosZ - inner->lastPosZ;
         dist = sqrtf(vecE.z * vecE.z + (vecE.x * vecE.x + vecE.y * vecE.y));
-        t = (dist < (t = lbl_803E83A4)) ? t : ((dist > (t = lbl_803E83DC)) ? t : dist);
+        t = (dist < lbl_803E83A4) ? lbl_803E83A4 : ((dist > lbl_803E83DC) ? lbl_803E83DC : dist);
         Vec3_Normalize(&vecE);
         {
             f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
