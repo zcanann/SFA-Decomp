@@ -2419,17 +2419,17 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 f32 ny = px * sinC + py * cosC;
                 ay_cosB = ny * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + cosA * ay_cosB + nx * sinA + cosA * pz_sinB;
-                outY = sy + ny * sinB + (-pz) * cosB;
-                outZ = sz + sinA * ay_cosB + (-nx) * cosA + sinA * pz_sinB;
+                outX = sx + (cosA * ay_cosB + nx * sinA + cosA * pz_sinB);
+                outY = sy + (ny * sinB + (-pz) * cosB);
+                outZ = sz + (sinA * ay_cosB + (-nx) * cosA + sinA * pz_sinB);
             }
             else
             {
                 ay_cosB = py * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + cosA * ay_cosB + px * sinA + cosA * pz_sinB;
-                outY = sy + py * sinB + (-pz) * cosB;
-                outZ = sz + sinA * ay_cosB + (-px) * cosA + sinA * pz_sinB;
+                outX = sx + (cosA * ay_cosB + px * sinA + cosA * pz_sinB);
+                outY = sy + (py * sinB + (-pz) * cosB);
+                outZ = sz + (sinA * ay_cosB + (-px) * cosA + sinA * pz_sinB);
             }
             viewProjW = ((f32*)viewMatrix)[8] * outX
                 + ((f32*)viewMatrix)[9] * outY
