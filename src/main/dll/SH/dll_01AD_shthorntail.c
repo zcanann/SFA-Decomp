@@ -545,7 +545,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
         }
-        runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
+        runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
         {
             uval = randomGetRange(1, (u32) * runtime->impactSfxTable);
