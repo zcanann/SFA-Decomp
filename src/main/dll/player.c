@@ -15021,8 +15021,8 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&bx, &by, &bz, (int)hit);
             }
             {
-                f32 dz = bz - az;
                 f32 dx = ax - bx;
+                f32 dz = bz - az;
                 f32 len = sqrtf(dx * dx + dz * dz);
                 f32 scale = lbl_803E7EE0 / len;
                 dx = dx * scale;
