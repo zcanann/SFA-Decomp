@@ -58,7 +58,7 @@ typedef struct MoonSeedPlantingSpotState
     s16 colorPhase;
     u8 padE[0x10 - 0xE];
     f32 growthTimer;
-    f32 unk14;
+    f32 burstTimer;
 } MoonSeedPlantingSpotState;
 
 STATIC_ASSERT(sizeof(MoonSeedPlantingSpotState) == 0x18);
@@ -253,18 +253,18 @@ void MoonSeedPlantingSpot_update(int obj)
                     randomGetRange(-1, 1);
                     (*gPartfxInterface)->spawnObject((void*)obj, 0x70f, NULL, 2, -1, NULL);
                 }
-                ((MoonSeedPlantingSpotState*)ex)->unk14 = ((MoonSeedPlantingSpotState*)ex)->unk14 - timeDelta;
-                if (((MoonSeedPlantingSpotState*)ex)->unk14 <= lbl_803E45F4)
+                ((MoonSeedPlantingSpotState*)ex)->burstTimer = ((MoonSeedPlantingSpotState*)ex)->burstTimer - timeDelta;
+                if (((MoonSeedPlantingSpotState*)ex)->burstTimer <= lbl_803E45F4)
                 {
                     if ((int)randomGetRange(0, 1) != 0)
                     {
-                        ((MoonSeedPlantingSpotState*)ex)->unk14 = lbl_803E45F8;
+                        ((MoonSeedPlantingSpotState*)ex)->burstTimer = lbl_803E45F8;
                         ((MoonSeedPlantingSpotState*)ex)->flags |= MSPLANTING_FLAG_BURST;
                         Sfx_PlayFromObject(obj, 0x438);
                     }
                     else
                     {
-                        ((MoonSeedPlantingSpotState*)ex)->unk14 = (f32)(int)
+                        ((MoonSeedPlantingSpotState*)ex)->burstTimer = (f32)(int)
                         randomGetRange(0x32, 200);
                         ((MoonSeedPlantingSpotState*)ex)->flags &= ~MSPLANTING_FLAG_BURST;
                     }
