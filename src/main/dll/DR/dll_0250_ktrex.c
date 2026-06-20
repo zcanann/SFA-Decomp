@@ -1401,8 +1401,9 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             }
             if (result != 0)
             {
-                int push = 5;
+                int push;
                 ((KTRexArenaState*)gKTRexState)->unk103 = 1;
+                push = 5;
                 if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
                 {
                     Stack_Push(((KTRexArenaState*)gKTRexState)->stack, &push);
