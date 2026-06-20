@@ -112,8 +112,8 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     maxSpeed = lbl_803E50E8;
-    animDiv = lbl_803E5100;
     spdThresh = lbl_803E50F8;
+    animDiv = lbl_803E5100;
     for (i = 0; i < framesThisStep; i++)
     {
         if (isGameTimerDisabled() != 0)
