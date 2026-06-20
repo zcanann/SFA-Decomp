@@ -1330,7 +1330,7 @@ extern void* gSubtitleBoxTextures[];
 extern void* gSubtitleLineTable[];
 extern int gSubtitleBlockCount;
 
-#pragma peephole on
+#pragma peephole off
 #pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
 {
