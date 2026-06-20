@@ -1644,16 +1644,17 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
     u8 mask;
     mask = 0;
     flags = state->flags;
-    if ((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) == 0) return;
-    if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
+    if ((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) == 0 ||
+        (s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) == 0)
     {
-        type = state->subtype;
-        if (type == CURVES_COLLISION_SUBTYPE_OBJECT || type == CURVES_COLLISION_SUBTYPE_POINT)
-        {
-            if ((s32)(flags & 0x00000004) != 0) mask |= 0x1;
-            if ((s32)(flags & 0x01000000) != 0) mask |= 0x20;
-            hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
-        }
+        return;
+    }
+    type = state->subtype;
+    if (type == CURVES_COLLISION_SUBTYPE_OBJECT || type == CURVES_COLLISION_SUBTYPE_POINT)
+    {
+        if ((s32)(flags & 0x00000004) != 0) mask |= 0x1;
+        if ((s32)(flags & 0x01000000) != 0) mask |= 0x20;
+        hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
     }
 }
 
