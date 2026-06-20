@@ -121,7 +121,7 @@ void InvisibleHitSwitch_update(int obj)
                 *(u8*)state = 1;
                 GameBit_Set((int)*(short*)(state2 + 0x18), 1);
             }
-            else if (((InvisibleHitSwitchState*)state)->unk8 <= lbl_803E3730)
+            else if (((InvisibleHitSwitchState*)state)->unk8 <= *(f32*)&lbl_803E3730)
             {
                 ((InvisibleHitSwitchState*)state)->unk8 = lbl_803E3730;
             }
