@@ -2132,10 +2132,10 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     s16 savedX;
     u16 f;
     u8* cur;
-    int hw;
-    int hh;
-    int cx;
     int cy;
+    int cx;
+    int hh;
+    int hw;
     u16 h7;
     u16 w7;
     s16 y7;
