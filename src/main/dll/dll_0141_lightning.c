@@ -7,7 +7,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 
-extern f32 timeDelta;
 extern u32* ObjGroup_GetObjects(int group, int* countOut);
 extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
