@@ -1900,6 +1900,8 @@ extern int textureLoadAsset(int);
 extern void fn_80069EB8();
 extern f32 lbl_803DED10, lbl_803DED34;
 extern const f32 Dev_803DED1C;
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
 {
@@ -2272,6 +2274,8 @@ void allocLotsOfTextures(void)
     GXInvalidateTexAll();
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma opt_propagation reset
+#pragma opt_loop_invariants reset
 #pragma ppc_unroll_speculative on
 #pragma opt_common_subs off
 void shadowCreate(int* obj)
