@@ -75,7 +75,6 @@ extern void fn_80295CF4(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);

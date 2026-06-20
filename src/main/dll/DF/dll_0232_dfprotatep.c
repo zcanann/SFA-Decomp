@@ -37,7 +37,6 @@ extern void Obj_FreeObject(int obj);
 
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 extern u32 lbl_803E6450;
-extern u32 lbl_803E6454;
 typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
 extern f32 timeDelta;
 extern f32 lbl_803E6458;

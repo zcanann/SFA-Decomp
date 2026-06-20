@@ -19,17 +19,8 @@ extern u32 FUN_8003b280();
 extern u32 objAudioFn_8006ef38();
 extern u32 countLeadingZeros();
 extern u32 DAT_803274f4;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
-extern f32 lbl_803E5ECC;
-extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
