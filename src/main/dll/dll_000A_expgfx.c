@@ -2817,21 +2817,21 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if (pi < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
-            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[pi & 1];
-            maskHighWord = m->highWord;
-            maskLowWord = m->lowWord;
+            u8* mb = (u8*)runtime + (pi & 1) * 8;
+            maskHighWord = *(u32*)(mb + 4112);
+            maskLowWord = *(u32*)(mb + 4116);
             bit = 1 << (pi >> 1);
-            m->lowWord = maskLowWord | bit;
-            m->highWord = maskHighWord | (u32)((int)bit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord | bit;
+            *(u32*)(mb + 4112) = maskHighWord | (u32)((int)bit >> 0x1f);
         }
         else
         {
-            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[pi & 1];
-            maskHighWord = m->highWord;
-            maskLowWord = m->lowWord;
+            u8* mb = (u8*)runtime + (pi & 1) * 8;
+            maskHighWord = *(u32*)(mb + 4112);
+            maskLowWord = *(u32*)(mb + 4116);
             inverseBit = ~(u32)(1 << (pi >> 1));
-            m->lowWord = maskLowWord & inverseBit;
-            m->highWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord & inverseBit;
+            *(u32*)(mb + 4112) = maskHighWord & (u32)((int)inverseBit >> 0x1f);
         }
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
