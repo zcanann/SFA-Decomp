@@ -207,7 +207,7 @@ void drbarrelgr_update(int obj)
         if (PSVECDistance((void*)(state + 0x14), (void*)(((DrbarrelgrState*)state)->heldBarrel + 12)) < lbl_803E6CA0 ||
             *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 16) > ((DrbarrelgrState*)state)->grabY)
         {
-            Sfx_PlayFromObject(obj, 960);
+            Sfx_PlayFromObject((int)(GameObject*)obj, 960);
             gunpowderbarrel_setHeldState(((DrbarrelgrState*)state)->heldBarrel);
             newMode = ((DrbarrelgrState*)state)->prevMode;
             flags->bit80 = 1;
