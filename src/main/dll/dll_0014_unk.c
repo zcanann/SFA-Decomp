@@ -1952,12 +1952,12 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
         return 1;
     }
 
-    state->node9C = state->nodeA0;
-    state->nodeA0 = state->nodeA4;
-    state->nodeA4 = targetCurve;
-
     if (state->reverse != 0)
     {
+        state->node9C = state->nodeA0;
+        state->nodeA0 = state->nodeA4;
+        state->nodeA4 = targetCurve;
+
         memcpy(stateBytes + 0xb8, stateBytes + 0xa8, 0x10);
         memcpy(stateBytes + 0xd8, stateBytes + 0xc8, 0x10);
         memcpy(stateBytes + 0xf8, stateBytes + 0xe8, 0x10);
@@ -1988,6 +1988,10 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
     }
     else
     {
+        state->node9C = state->nodeA0;
+        state->nodeA0 = state->nodeA4;
+        state->nodeA4 = targetCurve;
+
         memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
         memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
         memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
