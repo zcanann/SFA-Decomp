@@ -724,7 +724,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                            : ((moveStepScale > gObjAnimProgressOne) ? gObjAnimProgressOne
                                                                     : moveStepScale);
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = objAnim->banks[objAnim->bankIndex];
     if (bank->animDef->moveCount == 0)
     {
         return 0;
