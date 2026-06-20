@@ -454,7 +454,7 @@ int cmbsrc_update(int obj)
                 if (v < 0)
                 {
                     v = 0;
-                    *(u8*)((int)state->light + 0x2fa) = 0;
+                    *(u8*)((int)state->light + 0x2fa) = v;
                 }
                 else if (v > 0xc)
                 {
