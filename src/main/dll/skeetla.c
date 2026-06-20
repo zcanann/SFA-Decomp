@@ -251,7 +251,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        (ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0))
+        ((u32)ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0u))
     {
         state->pathControlFlags &= ~4;
     }
