@@ -2316,8 +2316,6 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
 }
 
 extern int getHudHiddenFrameCount(void);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
 extern u8 isHeavyFogEnabled(void);
