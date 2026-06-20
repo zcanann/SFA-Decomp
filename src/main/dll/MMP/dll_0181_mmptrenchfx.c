@@ -21,7 +21,6 @@
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 
-extern f32 timeDelta;
 extern char lbl_803AC930[];
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45B0;
