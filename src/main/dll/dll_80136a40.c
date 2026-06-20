@@ -189,10 +189,8 @@ s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject*)obj)->extra + 0x
 void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)&((GameObject*)obj)->extra + 0x408); }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
-int titlescreen_getExtraSize(void);
 
 /* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
-void titlescreen_hitDetect(void);
 
 int titlescreen_getObjectTypeId(u8* obj);
 
