@@ -29,7 +29,6 @@ extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
 
 
-extern f32 timeDelta;
 extern char gMmpAsteroidIntensityHeightTable[];
 extern char gMmpAsteroidDustSpawnParams[];
 extern int gMmpAsteroidDustHeightParam;
