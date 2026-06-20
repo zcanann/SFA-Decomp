@@ -107,9 +107,9 @@ void sfxplayerObj_free(u8* obj)
                 } \
             } \
             else { \
-                Sfx_PlayAtPositionFromObject(*(f32 *)(soundObj + 0x0c), \
-                                             *(f32 *)(soundObj + 0x10), \
-                                             *(f32 *)(soundObj + 0x14), soundObj, soundId); \
+                Sfx_PlayAtPositionFromObject(((GameObject*)soundObj)->anim.localPosX, \
+                                             ((GameObject*)soundObj)->anim.localPosY, \
+                                             ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId); \
             } \
         } \
     } while (0)
@@ -156,7 +156,7 @@ void sfxplayerObj_update(u8* obj)
             focusObj = (*gCameraInterface)->getCamera();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
                 7, *(s8*)(data + 0x20),
-                *(f32*)(focusObj + 0x18), *(f32*)(focusObj + 0x1c), *(f32*)(focusObj + 0x20),
+                ((GameObject*)focusObj)->anim.worldPosX, ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ,
                 obj + 0x0c, obj + 0x10, obj + 0x14);
         }
         else
@@ -164,7 +164,7 @@ void sfxplayerObj_update(u8* obj)
             focusObj = Obj_GetPlayerObject();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
                 7, *(s8*)(data + 0x20),
-                *(f32*)(focusObj + 0x18), *(f32*)(focusObj + 0x1c), *(f32*)(focusObj + 0x20),
+                ((GameObject*)focusObj)->anim.worldPosX, ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ,
                 obj + 0x0c, obj + 0x10, obj + 0x14);
         }
     }
