@@ -670,7 +670,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     }
     else if (state == 2)
     {
-        f32 dz, dx, d;
+        f32 dx, dz, d;
         u32 dist;
         player = (GameObject*)((BackpackState*)aux)->unk284;
         player = player ? player : (GameObject*)Obj_GetPlayerObject();
