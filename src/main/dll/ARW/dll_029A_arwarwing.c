@@ -1267,7 +1267,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwArwingProjectileSetup*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 ((ArwArwingProjectileSetup*)setup)->field04 = 1;
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-                o = loadObjectAtObject(obj);
+                o = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
                 if ((void*)o != 0)
                     fn_8022F558(o, 0x12c);
             }
