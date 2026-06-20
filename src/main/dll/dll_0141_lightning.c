@@ -39,7 +39,7 @@ typedef struct LightningPlacement
     u32 unk18;
     u8 pad1C[0x22 - 0x1C];
     u16 unk22;
-    s16 unk24;
+    s16 enableGameBit;
     u8 pad26[0x28 - 0x26];
 } LightningPlacement;
 
@@ -94,11 +94,11 @@ void lightning_update(u8* obj)
 
     state = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((LightningPlacement*)data)->unk24 != -1)
+    if (((LightningPlacement*)data)->enableGameBit != -1)
     {
         if (((LightningFlags*)(state + 0x25))->enabled)
         {
-            if (GameBit_Get(((LightningPlacement*)data)->unk24) == 0)
+            if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) == 0)
             {
                 ((LightningFlags*)(state + 0x25))->enabled = 0;
                 if (*(u32*)state != 0)
@@ -108,7 +108,7 @@ void lightning_update(u8* obj)
                 }
             }
         }
-        else if (GameBit_Get(((LightningPlacement*)data)->unk24) != 0)
+        else if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) != 0)
         {
             ((LightningFlags*)(state + 0x25))->enabled = 1;
         }

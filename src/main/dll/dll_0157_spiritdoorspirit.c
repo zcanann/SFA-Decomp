@@ -4,7 +4,7 @@
  * [8019D578-801A0B14).
  *
  * A spirit-door spirit is a fade-in/fade-out apparition gated on a game
- * bit (placement->unk1E). While the bit is clear the spirit is "active":
+ * bit (placement->gateGameBit). While the bit is clear the spirit is "active":
  * it joins object group 0x4E, runs its idle effect (fn_80098B18), and
  * fades alpha up to 0xFF; once the bit is set it leaves the group and
  * fades alpha back to 0. It only renders while active.
@@ -27,11 +27,11 @@ typedef struct SpiritDoorSpiritState
 typedef struct SpiritdoorspiritPlacement
 {
     u8 pad0[0x1E];
-    s16 unk1E; /* gate game bit */
+    s16 gateGameBit;
     u8 pad20[0x28 - 0x20];
 } SpiritdoorspiritPlacement;
 
-STATIC_ASSERT(offsetof(SpiritdoorspiritPlacement, unk1E) == 0x1E);
+STATIC_ASSERT(offsetof(SpiritdoorspiritPlacement, gateGameBit) == 0x1E);
 
 void spiritdoorspirit_hitDetect(void)
 {
@@ -72,7 +72,7 @@ void spiritdoorspirit_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (state->active == 0)
     {
-        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
+        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active != 0)
         {
             ObjGroup_AddObject(obj, 0x4e);
@@ -85,7 +85,7 @@ void spiritdoorspirit_update(int* obj)
     else
     {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->unk1E) == 0);
+        state->active = active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {
             ObjGroup_RemoveObject(obj, 0x4e);
