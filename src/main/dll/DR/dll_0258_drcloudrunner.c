@@ -729,9 +729,9 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
             vecE.y = lbl_803E83A4;
         }
         vecE.y = vecE.y * lbl_803E83E4;
-        t = (vecE.y >= lbl_803E83A4) ? vecE.y : -vecE.y;
+        t = (vecE.y >= *(f32*)&lbl_803E83A4) ? vecE.y : -vecE.y;
         t = (lbl_803E83E8 - t) / lbl_803E83E8;
-        if (t < lbl_803E83A4)
+        if (t < *(f32*)&lbl_803E83A4)
         {
             t = lbl_803E83A4;
         }
