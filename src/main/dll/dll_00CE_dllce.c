@@ -555,12 +555,12 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
             state->aggroRange;
             dur = lbl_803E2DF8 * t;
             ((GameObject*)o)->anim.velocityX =
-                (*(f32*)(*(int*)&state->baddie.targetObj + 0xc) - ((GameObject*)obj)->anim.localPosX) / dur;
+                (((GameObject*)state->baddie.targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / dur;
             ((GameObject*)o)->anim.velocityY =
-            ((lbl_803E2DFC * t + *(f32*)(*(int*)&state->baddie.targetObj + 0x10)) - ((GameObject*)obj)->anim.
+            ((lbl_803E2DFC * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - ((GameObject*)obj)->anim.
                 localPosY) / dur;
             ((GameObject*)o)->anim.velocityZ =
-                (*(f32*)(*(int*)&state->baddie.targetObj + 0x14) - ((GameObject*)obj)->anim.localPosZ) / dur;
+                (((GameObject*)state->baddie.targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / dur;
             *(int*)&((GameObject*)o)->ownerObj = obj;
         }
     }
