@@ -3223,6 +3223,22 @@ void doPendingMapLoads(void)
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
 
+static inline int mapFindRomListSlot(char* p2, int id)
+{
+    char* q2 = p2;
+    int i2 = 0;
+    int cn = gShaderRomListSlotCount;
+    int k;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
+            return i2;
+        q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
@@ -3239,19 +3255,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     {
         char* p2 = (char*)gShaderRomListSlots;
         char* p6 = p2 + 6;
-        char* q2 = p2;
-        int i2 = 0;
-        int cn = gShaderRomListSlotCount;
-        for (k = 0; k < cn; k++)
-        {
-            if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
-                goto found1;
-            q2 += 8;
-            i2++;
-        }
-        i2 = -1;
-    found1:
-        slot = i2;
+        slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
         *(s8*)(p6 + slot * 8) = 1;
@@ -3264,36 +3268,14 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         out[2] = cv4;
         if (cv3 != -1)
         {
-            char* q3 = p2;
-            int i3 = 0;
-            int cn3 = gShaderRomListSlotCount;
-            for (k = 0; k < cn3; k++)
-            {
-                if (*(void**)q3 != NULL && cv3 == *(s16*)(q3 + 4))
-                    goto found2;
-                q3 += 8;
-                i3++;
-            }
-            i3 = -1;
-        found2:
+            int i3 = mapFindRomListSlot(p2, cv3);
             if (i3 == -1)
                 i3 = mapProcessRomList(cv3);
             *(s8*)(p6 + i3 * 8) = 1;
         }
         if (cv4 != -1)
         {
-            char* q4 = p2;
-            int i4 = 0;
-            int cn4 = gShaderRomListSlotCount;
-            for (k = 0; k < cn4; k++)
-            {
-                if (*(void**)q4 != NULL && cv4 == *(s16*)(q4 + 4))
-                    goto found3;
-                q4 += 8;
-                i4++;
-            }
-            i4 = -1;
-        found3:
+            int i4 = mapFindRomListSlot(p2, cv4);
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
             *(s8*)(p6 + i4 * 8) = 1;
