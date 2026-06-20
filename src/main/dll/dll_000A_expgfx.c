@@ -2915,7 +2915,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        Expgfx_SetSlotTableIndex(slot, expTabIndex);
+        ((struct { u8 tableIndex : 7; u8 lowBit : 1; }*)&slot->encodedTableIndex)->tableIndex = (u8)expTabIndex;
 
         slot->posX.value = config->startPosX.value;
         slot->startPosX.value = config->startPosX.value;
