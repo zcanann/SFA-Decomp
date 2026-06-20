@@ -626,8 +626,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
         while (count-- != 0)
         {
-            ObjGroup_RemoveObject(*objs, 36);
-            objs++;
+            ObjGroup_RemoveObject(*objs++, 36);
         }
         return 4;
     }
