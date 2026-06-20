@@ -2079,7 +2079,7 @@ void cMenuRun(void)
             }
             if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
             {
-                s16 m = gCMenuScrollTimer;
+                int m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
                 if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
@@ -2093,7 +2093,7 @@ void cMenuRun(void)
             }
             if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
             {
-                s16 m = gCMenuScrollTimer;
+                int m = gCMenuScrollTimer;
                 if (m < 0) m = -m;
                 if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
                 {
