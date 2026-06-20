@@ -24,7 +24,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 
 extern void objRenderFn_8003b8f4(f32);
-extern u8 framesThisStep;
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
