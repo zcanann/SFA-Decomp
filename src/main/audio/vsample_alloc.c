@@ -131,7 +131,7 @@ u32 synthClaimVirtualSampleSlot(u8 voiceID)
         if (v->callback != 0)
         {
             v->callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND, &v->streamBuffer[sb].info);
-            return (v->streamBuffer[sb].info.instID << 8) | voiceID;
+            return (v->streamBuffer[sb].info.instID << 8) | (voiceID & 0xff);
         }
         hwSetVirtualSampleLoopBuffer(voiceID, 0, 0);
     }
