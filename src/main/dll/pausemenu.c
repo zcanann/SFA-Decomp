@@ -721,7 +721,7 @@ void fn_80127F24(s32 alpha)
     f32 denom;
     f32 phase;
     f32 brightness;
-    s32 i;
+    s8 i;
 
     phase = lbl_803E1F18 *
         mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
