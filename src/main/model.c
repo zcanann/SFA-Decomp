@@ -3228,8 +3228,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
         nextIdx = (*(int***)(chain + 4))[0][i];
-        prevOff = (i - 1) * 0x54;
-        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + prevOff + 0x18), out);
+        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
         target[0] = lbl_803DCED0 + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
             playerMapOffsetX;
         target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
@@ -3276,7 +3275,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
         work[1] = *(f32*)(*(u8**)chain + i * 0x54 + 0x1c);
         work[2] = *(f32*)(*(u8**)chain + i * 0x54 + 0x20);
         PSMTXMultVec(m, work, work);
-        PSMTXCopy(m, (f32*)(*(u8**)chain + prevOff + 0x24));
+        PSMTXCopy(m, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x24));
         if (i < *(int*)(chain + 8))
         {
             idx = nextIdx;
