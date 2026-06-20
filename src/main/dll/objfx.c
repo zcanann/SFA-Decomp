@@ -973,6 +973,8 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
     ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
     f32 zoff = lbl_803DF394;
     u8* cbuf;
+    u8* cbuf1;
+    u8* cbuf2;
 
     params.f8 = scale;
     params.pad[0] = 0;
@@ -1028,10 +1030,12 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
                                      ((GameObject*)obj)->anim.worldPosY + zoff,
                                      ((GameObject*)obj)->anim.worldPosZ);
         cbuf = (u8*)&colors;
-        modelLightStruct_setDiffuseColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
-                                         cbuf[type * 3 + 2], 0xff);
-        modelLightStruct_setSpecularColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
-                                          cbuf[type * 3 + 2], 0xff);
+        cbuf1 = (u8*)&colors + 1;
+        cbuf2 = (u8*)&colors + 2;
+        modelLightStruct_setDiffuseColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
+                                         cbuf2[(u8)type * 3], 0xff);
+        modelLightStruct_setSpecularColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
+                                          cbuf2[(u8)type * 3], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
