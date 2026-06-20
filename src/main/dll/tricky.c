@@ -791,7 +791,7 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     GXWGFifo.f32 = v1;
 }
 
-void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
+void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 ua, ub, va, vb, tu, tv;
     u32 dx, dy;

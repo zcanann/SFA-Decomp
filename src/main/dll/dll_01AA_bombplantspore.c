@@ -253,7 +253,7 @@ void bombplantspore_update(void* obj)
     int i;
 
     state = ((GameObject*)obj)->extra;
-    if ((state->stateFlags >> 6 & 1) != 0)
+    if ((state->stateFlags >> 6 & 1) != 0u)
     {
         while (ObjMsg_Pop(obj, (u32*)&poppedMessage, &poppedSender, NULL) != 0)
         {
@@ -276,7 +276,7 @@ void bombplantspore_update(void* obj)
                 break;
             }
         }
-        if ((state->stateFlags >> 6 & 1) != 0)
+        if ((state->stateFlags >> 6 & 1) != 0u)
         {
             return;
         }
