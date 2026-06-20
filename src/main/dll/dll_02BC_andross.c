@@ -1600,7 +1600,7 @@ void andross_update(int obj)
                 *(u8*)(found + 4) = 1;
                 *(u8*)(found + 5) = 1;
                 ((AndrossState*)found)->unk20 = 0xffff;
-                found = loadObjectAtObject(obj);
+                found = ((int(*)(int,int))loadObjectAtObject)(obj, found);
                 ((AndrossState*)state)->unk14 = found;
                 if (((AndrossState*)state)->unk14 != 0)
                 {
