@@ -1480,14 +1480,8 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
     int n;
     int k;
 
-    while (!((((ObjfsaRomCurveDef*)curve)->linkIds[0] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 1)
-            != 0) &&
-        (((ObjfsaRomCurveDef*)curve)->linkIds[1] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 2) !=
-            0) &&
-        (((ObjfsaRomCurveDef*)curve)->linkIds[2] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 4) !=
-            0) &&
-        (((ObjfsaRomCurveDef*)curve)->linkIds[3] == -1 || (*(u8*)&((ObjfsaRomCurveDef*)curve)->blockedLinkMask & 8) !=
-            0)))
+    goto loopTest;
+    do
     {
         RomCurve_getAdjacentWindow(curve, adjacentWindow);
         projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
@@ -1504,7 +1498,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
         for (k = 0; k < 4; k++)
         {
             n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
-            if (n > -1 && (((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && n != 0)
+            if (n > -1 && ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && n != 0)
             {
                 candidates[count++] = n;
             }
@@ -1519,7 +1513,18 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
             linkId = -1;
         }
         curve = Objfsa_FindRomCurveById(linkId);
-    }
+    loopTest:
+        for (k = 0; k < 4; k++)
+        {
+            if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
+                ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
+            {
+                goto haveLink;
+            }
+        }
+        break;
+    haveLink:;
+    } while (1);
 
     *outPhase = gFloatZero;
     return curve;
@@ -1760,20 +1765,19 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
+    int directIndex;
     int startIndex;
     int candidateCount;
     u32 cur;
     int directSlot;
     int directLinkId;
     u32 directCurve;
-    int directIndex;
     int queueCount;
     int queueIndex;
     int queueCurve;
     int linkSlot;
     int linkId;
     int linkCurve;
-    int linkIndex;
     int insertIndex;
     int selectedIndex;
     int i;
@@ -1852,8 +1856,8 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                     continue;
                 }
 
-                linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &linkIndex);
-                if (linkCurve == 0 || (s8)visited[linkIndex] != 0 || queueCount >= 0x28)
+                linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
+                if (linkCurve == 0 || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
                 {
                     continue;
                 }
@@ -1877,9 +1881,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                     queueIndices[j] = queueIndices[j - 1];
                     queueDistances[j] = queueDistances[j - 1];
                 }
-                queueIndices[insertIndex] = linkIndex;
+                queueIndices[insertIndex] = directIndex;
                 queueDistances[insertIndex] = linkDistance;
-                visited[linkIndex] = 1;
+                visited[directIndex] = 1;
                 queueCount++;
             }
         }
