@@ -1291,7 +1291,7 @@ void objFn_80065604(void)
 }
 
 #pragma peephole on
-#pragma optimization_level 1
+#pragma optimization_level 2
 void fn_80063368(int target)
 {
     int zero, idx;
@@ -1361,7 +1361,7 @@ check:
 extern u8 lbl_803DCE98;
 
 #pragma peephole on
-#pragma optimization_level 1
+#pragma optimization_level 2
 void fn_80060BB0(void)
 {
     char* arr;
@@ -2197,7 +2197,7 @@ int fn_800626C8(int* obj, int delta)
     return v & 0xff;
 }
 
-#pragma optimization_level 3
+#pragma optimization_level 2
 void fn_80069EB8(int param)
 {
     u8* cache;
@@ -2227,7 +2227,7 @@ void fn_80069EB8(int param)
     memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
     lbl_803DCF80 = param;
 }
-#pragma optimization_level 4
+#pragma optimization_level 2
 
 typedef struct AngleXf
 {
@@ -5228,6 +5228,7 @@ extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 extern const f32 lbl_803DB660;
 
+#pragma optimization_level 2
 int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                  int pmask, int seg, int ytol, int self, f32 radius)
 {
@@ -5278,9 +5279,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         if ((s8)seg != -1)
         {
             u16* segtbl = (u16*)gIntersectSegmentTypeTable;
-            int si = (s8)seg * 2;
-            start = segtbl[si];
-            end = segtbl[si + 1];
+            start = segtbl[(s8)seg * 2];
+            end = segtbl[(s8)seg * 2 + 1];
         }
         else
         {
@@ -5684,6 +5684,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     }
     return count;
 }
+#pragma optimization_level reset
 
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
