@@ -1016,7 +1016,6 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
     int queryMode;
     RomCurvePoint* outPoint;
-    int remaining;
     int pairCount;
     RomCurvePoint** hitPoints;
     RomCurvePoint** hitPointCursor;
@@ -1040,8 +1039,7 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
         }
         hitPointCursor = hitPoints;
         outPoint = sCurvesHitPoints;
-        remaining = sCurvesCachedHitCount;
-        for (pairCount = 0; pairCount < remaining; pairCount++)
+        for (pairCount = 0; pairCount < (int)sCurvesCachedHitCount; pairCount++)
         {
             outPoint[pairCount].x = (*hitPointCursor)->x;
             outPoint[pairCount].y = (*hitPointCursor)->y;
