@@ -55,6 +55,7 @@ void Credits_frameEnd(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_strength_reduction off
 int Credits_frameStart(void)
 {
     u8 idx;
@@ -132,6 +133,7 @@ int Credits_frameStart(void)
     }
     return 0;
 }
+#pragma opt_strength_reduction on
 #pragma scheduling on
 #pragma peephole on
 
