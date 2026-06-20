@@ -3353,7 +3353,7 @@ void pauseMenuFn_80129ee0(void)
                     lbl_803DD784 = 0;
                     break;
                 case 8:
-                    *(u8*)(player + 0x9) = (u8)(*(u8*)(player + 0x9) - 1);
+                    *(u8*)(player + 0x9) -= 1;
                     fn_80296C84(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
