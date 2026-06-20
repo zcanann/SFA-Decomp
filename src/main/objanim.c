@@ -876,7 +876,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
 
                 if (scanMode == OBJANIM_EVENT_SCAN_FORWARD)
                 {
-                    if ((previousFrame <= eventFrame) && (eventFrame < currentFrame))
+                    if ((eventFrame >= previousFrame) && (eventFrame < currentFrame))
                     {
                         events->triggeredIds[events->triggerCount++] = eventId;
                     }
