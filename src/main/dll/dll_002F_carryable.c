@@ -2,7 +2,7 @@
  * carryable (DLL 0x2F) - generic pick-up-and-carry prop object.
  *
  * The object joins object group 0x10 at init and leaves it on free. Its
- * extra state (CarryableUpdateHeldState) tracks a carry phase in unk5
+ * extra state (CarryableUpdateHeldState) tracks a carry phase in carryState
  * (0 = resting, 1 = grabbed/carried, 2 = being put down) plus a small
  * flag byte at offset 7. Carryable_updateHeld drives the per-frame
  * behaviour: while resting it watches for a grab (surface code 6 under the
@@ -28,7 +28,7 @@ typedef struct CarryableUpdateHeldState
     u8 pad0[0x2 - 0x0];
     s16 unk2;
     u8 pad4[0x5 - 0x4];
-    s8 unk5;
+    s8 carryState;
     u8 unk6;
     u8 flags;
     u8 unk8;
@@ -150,7 +150,7 @@ int Carryable_updateHeld(u8* obj)
     ((CarryableUpdateHeldState*)held)->unk8 = 0;
     ((CarryableUpdateHeldState*)held)->flags &= ~1;
     player = Obj_GetPlayerObject();
-    if (((CarryableUpdateHeldState*)held)->unk5 == 0)
+    if (((CarryableUpdateHeldState*)held)->carryState == 0)
     {
         struct
         {
@@ -167,8 +167,8 @@ int Carryable_updateHeld(u8* obj)
             buttonDisable(0, 0x100);
             v = 1;
         }
-        ((CarryableUpdateHeldState*)held)->unk5 = v;
-        if (((CarryableUpdateHeldState*)held)->unk5 != 0)
+        ((CarryableUpdateHeldState*)held)->carryState = v;
+        if (((CarryableUpdateHeldState*)held)->carryState != 0)
         {
             ((CarryableUpdateHeldState*)held)->flags |= 1;
             ((CarryableUpdateHeldState*)held)->unk6 = 1;
@@ -251,12 +251,12 @@ int Carryable_updateHeld(u8* obj)
         }
         if (((GameObject*)obj)->unkF8 == 1)
         {
-            ((CarryableUpdateHeldState*)held)->unk5 = 2;
+            ((CarryableUpdateHeldState*)held)->carryState = 2;
         }
-        if (((CarryableUpdateHeldState*)held)->unk5 == 2 && ((GameObject*)obj)->unkF8 == 0)
+        if (((CarryableUpdateHeldState*)held)->carryState == 2 && ((GameObject*)obj)->unkF8 == 0)
         {
             u8* h2 = ((GameObject*)obj)->extra;
-            *(u8*)&((CarryableUpdateHeldState*)h2)->unk5 = 0;
+            *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = 0;
             ((CarryableUpdateHeldState*)h2)->unk6 = 0;
             if ((((CarryableUpdateHeldState*)h2)->flags & 8) == 0)
             {
@@ -271,7 +271,7 @@ int Carryable_updateHeld(u8* obj)
                                 (((CarryableUpdateHeldState*)held)->unk2 << 16) | (u16) * (s16*)held);
         }
     }
-    return ((CarryableUpdateHeldState*)held)->unk5;
+    return ((CarryableUpdateHeldState*)held)->carryState;
 }
 
 void Carryable_init(int obj, int state)
@@ -279,7 +279,7 @@ void Carryable_init(int obj, int state)
     CarryableUpdateHeldState* s = (CarryableUpdateHeldState*)state;
     ObjGroup_AddObject(obj, 0x10);
     s->unk2 = 0;
-    s->unk5 = 0;
+    s->carryState = 0;
     s->pad4[0] = 0;
     s->unk6 = 0;
     ((GameObject*)obj)->unkF8 = 0;
