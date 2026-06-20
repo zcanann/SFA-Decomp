@@ -153,7 +153,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1138;
+    buf.pos[0] = *(f32*)&lbl_803E1138;
     if (variant == 0)
     {
         buf.pos[1] = lbl_803E1138;
@@ -163,8 +163,8 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
         buf.pos[1] = lbl_803E116C;
     }
     buf.pos[2] = *(f32*)&lbl_803E1138;
-    buf.col[0] = *(f32*)&lbl_803E1138;
-    buf.col[1] = *(f32*)&lbl_803E1138;
+    buf.col[0] = lbl_803E1138;
+    buf.col[1] = lbl_803E1138;
     buf.col[2] = *(f32*)&lbl_803E1138;
     buf.scale = lbl_803E1164;
     buf.v40 = 1;
