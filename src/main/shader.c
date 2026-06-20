@@ -2352,7 +2352,7 @@ void mapLoadUnloadObjects(int flag)
     {
         for (i = 0; i < 80; i++)
         {
-            if (((int*)(base + 0x83A8))[i] != 0)
+            if (((void**)(base + 0x83A8))[i] != NULL)
             {
                 bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
