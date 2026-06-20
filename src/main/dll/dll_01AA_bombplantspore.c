@@ -171,7 +171,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             angleDelta += 0xffff;
         }
-        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
+        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
         {
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
