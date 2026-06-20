@@ -2033,11 +2033,11 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 #pragma peephole on
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
-    state->nodeA0 = fromCurve;
-    state->nodeA4 = toCurve;
-
     if (state->reverse != 0)
     {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
         state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
         state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
         state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
@@ -2055,6 +2055,9 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
     }
     else
     {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
         state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
         state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
         state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
