@@ -87,7 +87,7 @@ typedef struct ProjectileSwitchPlacement
 typedef struct ProjectileSwitchState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 cooldownTimer;
     u8 pad8[0x20 - 0x8];
     u8 unk20;
     u8 unk21;
@@ -177,7 +177,7 @@ void ProjectileSwitch_hitDetect(int obj)
         GameBit_Set((int)*(short*)(state + 2), 1);
         if ((((ProjectileSwitchPlacement*)state2)->triggerMode & 3) == 2)
         {
-            ((ProjectileSwitchState*)state)->unk4 =
+            ((ProjectileSwitchState*)state)->cooldownTimer =
                 lbl_803E3704 * (lbl_803E3708 *
                 (f32)((ProjectileSwitchPlacement*)state2)->cooldownFrames);
         }
@@ -212,14 +212,14 @@ void ProjectileSwitch_update(int obj)
             *(u8*)state2 = 1;
         }
     }
-    if (((ProjectileSwitchState*)state)->unk4 > lbl_803E3718)
+    if (((ProjectileSwitchState*)state)->cooldownTimer > lbl_803E3718)
     {
-        ((ProjectileSwitchState*)state)->unk4 =
-            ((ProjectileSwitchState*)state)->unk4 - (f32)(u32)
+        ((ProjectileSwitchState*)state)->cooldownTimer =
+            ((ProjectileSwitchState*)state)->cooldownTimer - (f32)(u32)
         framesThisStep;
-        if (((ProjectileSwitchState*)state)->unk4 <= lbl_803E3718)
+        if (((ProjectileSwitchState*)state)->cooldownTimer <= lbl_803E3718)
         {
-            ((ProjectileSwitchState*)state)->unk4 = lbl_803E3718;
+            ((ProjectileSwitchState*)state)->cooldownTimer = lbl_803E3718;
             GameBit_Set((int)*(short*)(state + 2), 0);
         }
     }
