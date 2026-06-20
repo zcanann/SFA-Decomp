@@ -488,19 +488,24 @@ void expgfx_initSlotQuad(void* slotPtr)
         return;
     }
 
-    texS0 = EXPGFX_QUAD_TEXCOORD_MAX;
-    texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
-    texS1 = 0;
+    texT0 = 0;
     texT1 = 0;
-    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0)
+    texS0 = 0;
+    texS1 = 0;
+    if (resource != 0)
     {
-        texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
-        texS0 = 0;
-    }
-    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0)
-    {
-        texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
-        texT0 = 0;
+        texS0 = EXPGFX_QUAD_TEXCOORD_MAX;
+        texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0)
+        {
+            texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
+            texS0 = 0;
+        }
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0)
+        {
+            texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
+            texT0 = 0;
+        }
     }
 
     quad = (ExpgfxQuadVertex*)slot;
