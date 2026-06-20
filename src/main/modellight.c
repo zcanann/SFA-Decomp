@@ -1265,9 +1265,9 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     }
 
     combinedClipMask = 0x3f;
-    zero = lbl_803DE75C;
     for (i = 0; i < 8; i++)
     {
+        zero = lbl_803DE75C;
         worldPos[0] = localPos[0] + scaledExtent * cornerBlock.v[i * 3 + 0];
         worldPos[1] = localPos[1] + scaledExtent * cornerBlock.v[i * 3 + 1];
         worldPos[2] = localPos[2] + scaledExtent * cornerBlock.v[i * 3 + 2];
