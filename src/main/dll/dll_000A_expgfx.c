@@ -2117,7 +2117,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
     slotIndex = 0;
-    activeMasks = gExpgfxSlotActiveMasks;
+    activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
     do
     {
@@ -2125,7 +2125,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
-        if ((1U << slotIndex & activeMasks[poolIndex]) == 0) goto next_slot;
+        if ((1U << slotIndex & *activeMasks) == 0) goto next_slot;
         state = slot->stateBits.value;
         if (((state >> 2) & 3) != 0) goto next_slot;
         if (((state >> 1) & 1) == 0) goto next_slot;
