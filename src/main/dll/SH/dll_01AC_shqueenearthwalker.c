@@ -41,7 +41,6 @@ extern u8 gQueenEarthWalkerEventTableSpell;
 extern u8 gQueenEarthWalkerEventTableBerry;
 extern u8 gQueenEarthWalkerEventTableDeparture;
 extern u8 gQueenEarthWalkerEventTableComplete;
-extern f32 timeDelta;
 extern s16 gQueenEarthWalkerMoveTable[];
 extern f32 gQueenEarthWalkerMoveSpeedTable[];
 extern f32 lbl_803E53F8;
