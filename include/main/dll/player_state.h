@@ -297,7 +297,7 @@ typedef struct PlayerState {
     s16 characterId;
     s16 pendingBoneEffectId; /* one-shot bone-particle effect id (set by fn_802960E8); spawned via gBoneParticleEffectInterface->spawnEffect then cleared to 0 */
     s16 unk81E;
-    f32 unk820;
+    f32 cutsceneTimer; /* time-stop/cutscene countdown (-= dt while >0); on expiry calls cutsceneEnterExit(0,0)+sets unk8CF, at threshold lbl_803E7EF0 calls cutsceneEnterExit(1,0)+setTimeStop */
     f32 unk824;
     f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */

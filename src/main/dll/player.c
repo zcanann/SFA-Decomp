@@ -6195,12 +6195,12 @@ void fn_8029A420(int obj)
 void playerUpdateWhileTimeStopped(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    f32 v = inner->unk820;
+    f32 v = inner->cutsceneTimer;
     f32 zero = lbl_803E7EA4;
     if (v > zero)
     {
-        inner->unk820 = v - lbl_803E7EE0;
-        v = inner->unk820;
+        inner->cutsceneTimer = v - lbl_803E7EE0;
+        v = inner->cutsceneTimer;
         if (v <= zero)
         {
             cutsceneEnterExit(0, 0);
@@ -7126,20 +7126,20 @@ void playerUpdate(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     int cam = Camera_GetCurrentViewSlot();
-    f32 cd = ((PlayerState*)inner)->unk820;
+    f32 cd = ((PlayerState*)inner)->cutsceneTimer;
     f32 limit = lbl_803E7EF0;
     if (cd >= limit)
     {
         f32 zero = lbl_803E7EA4;
         if (cd > zero)
         {
-            ((PlayerState*)inner)->unk820 = cd - lbl_803E7EE0;
-            if (((PlayerState*)inner)->unk820 <= zero)
+            ((PlayerState*)inner)->cutsceneTimer = cd - lbl_803E7EE0;
+            if (((PlayerState*)inner)->cutsceneTimer <= zero)
             {
                 cutsceneEnterExit(0, 0);
                 ((PlayerState*)inner)->unk8CF = 1;
             }
-            else if (limit == ((PlayerState*)inner)->unk820)
+            else if (limit == ((PlayerState*)inner)->cutsceneTimer)
             {
                 cutsceneEnterExit(1, 0);
                 setTimeStop(0xfd);
@@ -8102,7 +8102,7 @@ void playerDoHitDetection(int obj)
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);
     ObjModelChain_AdvancePhase((ObjModelChain*)gPlayerModelChain);
-    if (!(((PlayerState*)inner)->unk820 >= lbl_803E7EF0))
+    if (!(((PlayerState*)inner)->cutsceneTimer >= lbl_803E7EF0))
     {
         (*(void (*)(int, int, void*))(*(int*)(*gPlayerInterface + 0xc)))(obj, inner,
                                                                          gPlayerStateHandlers);
@@ -8118,7 +8118,7 @@ void playerDoHitDetection(int obj)
                 if ((((HitDesc*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))->flags & 1) != 0)
                 {
-                    ((PlayerState*)inner)->unk820 = lbl_803E80A8;
+                    ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
                 if ((((HitDesc*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))->flags & 2) != 0)
@@ -8183,7 +8183,7 @@ void playerDoHitDetection(int obj)
                 if ((((u8*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 1) != 0)
                 {
-                    ((PlayerState*)inner)->unk820 = lbl_803E80A8;
+                    ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
                 if ((((u8*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 2) != 0)
@@ -13093,7 +13093,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
         }
         if ((*(u8*)((inner->moveSlots + 0x88) +
                 (u32)inner->moveSlotIndex * 0xb0) & 1) &&
-            inner->unk820 >= lbl_803E7EF0)
+            inner->cutsceneTimer >= lbl_803E7EF0)
         {
             *flags |= 0x80;
         }
