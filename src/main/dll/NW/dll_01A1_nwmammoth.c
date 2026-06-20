@@ -19,7 +19,6 @@ extern u32 FUN_8003b280();
 extern u32 objAudioFn_8006ef38();
 extern u32 countLeadingZeros();
 extern u32 DAT_803274f4;
-extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;

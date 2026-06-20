@@ -172,7 +172,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
 

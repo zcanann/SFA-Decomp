@@ -62,8 +62,6 @@ extern u32 FUN_80286878();
 extern u32 FUN_80292754();
 extern u32 DAT_8031e840;
 extern u32 DAT_8031e860;
-extern f64 DOUBLE_803e3218;
-extern f64 DOUBLE_803e3278;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
 extern f32 lbl_803E3258;

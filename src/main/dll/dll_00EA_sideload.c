@@ -205,7 +205,6 @@ typedef struct SideloadPlacement
     u8 pad2B2[0x2B8 - 0x2B2];
 } SideloadPlacement;
 
-extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

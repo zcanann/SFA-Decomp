@@ -192,7 +192,6 @@ typedef struct BaddieinterestpPlacement
 extern void* ObjGroup_GetObjects();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern void gcbaddieshield_update(int* obj);
 

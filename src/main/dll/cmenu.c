@@ -41,7 +41,6 @@ extern u32 DAT_803aa024;
 extern u32 DAT_803de3b8;
 extern u32 DAT_803e2a90;
 extern u32 DAT_803e2a94;
-extern f64 DOUBLE_803e2b08;
 extern f32 FLOAT_803e2c90;
 extern u8 lbl_803A87F0[];
 extern CMenuItemDef gCMenuStaffAbilities[];

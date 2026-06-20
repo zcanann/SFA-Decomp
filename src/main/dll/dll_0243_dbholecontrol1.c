@@ -82,8 +82,6 @@ extern u32 ObjMsg_SendToObject();
 extern u32 FUN_8003b818();
 extern double FUN_80293900();
 extern u32 DAT_8032a290;
-extern f64 DOUBLE_803e6f78;
-extern f64 DOUBLE_803e7000;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F50;

@@ -234,7 +234,6 @@ typedef struct ShieldState
 } ShieldState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);

@@ -117,7 +117,6 @@ extern u32 DAT_803ddc64;
 extern u32 DAT_803ddc68;
 extern f64 DOUBLE_803df9d8;
 extern f64 DOUBLE_803df9e0;
-extern f64 DOUBLE_803dfa08;
 extern f64 DOUBLE_803dfa48;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC2D0;

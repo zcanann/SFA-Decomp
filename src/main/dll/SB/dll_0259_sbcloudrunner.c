@@ -124,7 +124,6 @@ extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
 extern u32 FUN_80293f90();
 extern u32 FUN_80294964();
 extern u32 *DAT_803dd6e4;
-extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6908;
 extern f32 lbl_803E6924;

@@ -37,7 +37,6 @@ extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern f64 DOUBLE_803e3e88;
 extern f32 lbl_803E3420;
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
