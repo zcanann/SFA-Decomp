@@ -895,8 +895,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         g = &gObjfsaWalkGroups[idx];                                                    \
         y = point[1];                                                              \
         if (y < g->maxY && y > g->minY) {                                \
-            z = point[2];                                                          \
             x = point[0];                                                          \
+            z = point[2];                                                          \
             i = 0;                                                                 \
             j = i;                                                                 \
             for (; i < 4; i++, j += 2) {                                           \
@@ -919,8 +919,8 @@ int mathFn_800dbff0(float* point)
     s16 down;
     ObjfsaWalkGroup* g;
     f32 y;
-    f32 z;
     f32 x;
+    f32 z;
     u8 i;
     u8 j;
 
