@@ -2610,7 +2610,7 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
             if (transformState == NULL) continue;
             if (transformState->resetFrames != 0) continue;
             if (transformState->pad10E != 0) continue;
-            model = (int*)resetObj->banks[hitState->stateIndex];
+            model = (int*)resetObj->banks[(s8)hitState->stateIndex];
             if (model == NULL) continue;
             hdr = *(int*)model;
             if (*(u16*)(hdr + 0xf0) == 0) continue;
