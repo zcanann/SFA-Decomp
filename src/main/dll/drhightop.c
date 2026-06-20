@@ -456,7 +456,7 @@ void fn_801EB634(int obj, int stateRaw)
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
-            fn_8009A8C8((double)lbl_803E5BB0, obj);
+            fn_8009A8C8(obj, (double)lbl_803E5BB0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x552, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x554, NULL, 4, -1, NULL);
