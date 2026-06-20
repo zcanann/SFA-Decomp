@@ -2840,7 +2840,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         slot->sequenceId = gExpgfxSequenceCounter;
         slot->behaviorFlags = config->behaviorFlags;
         slot->renderFlags = config->renderFlags;
-        slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
+        slot->stateBits.bits.initPhase = 0;
 
         resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->texture.parts.textureId);
         if (resourceTableIndex < 0)
