@@ -1784,7 +1784,7 @@ int fn_802A5384(int obj, int state)
         {
             ((PlayerState*)inner)->pendingFxFlags |= 8;
             ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 1;
-            ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A7;
+            ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A7;
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
             ((PlayerState*)inner)->unk844 = ((PlayerState*)state)->baddie.animSpeedA;
             ObjAnim_SetCurrentMove(obj,
@@ -2062,7 +2062,7 @@ int fn_802A5384(int obj, int state)
                 {
                     c = ((PlayerState*)inner)->unk8A3;
                 }
-                ((PlayerState*)inner)->unk8A6 = c;
+                ((PlayerState*)inner)->animSoundId = c;
             }
             {
                 f32 v = ((PlayerState*)state)->baddie.animSpeedC;
@@ -4068,7 +4068,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
-        obj, (int)&seq->animEvents, ((PlayerState*)inner)->unk8A6,
+        obj, (int)&seq->animEvents, ((PlayerState*)inner)->animSoundId,
         (int)((char*)inner + 0x3c4), (int)((char*)inner + 4),
         ((PlayerState*)inner)->baddie.animSpeedA, lbl_803E7EE0);
     return result;
@@ -6944,7 +6944,7 @@ int fn_802AD2F4(int obj, int inner, int state)
     {
         ((ByteFlags*)((char*)inner + 0x3f0))->b01 = 1;
         sfx = audioPickSoundEffect_8006ed24(((PlayerState*)inner)->surfaceType,
-                                            ((PlayerState*)inner)->unk8A5);
+                                            ((PlayerState*)inner)->footstepSoundId);
         if (hdiff > lbl_803E8104)
         {
             s8 hv;
@@ -7410,7 +7410,7 @@ void playerUpdate(int obj)
             ((PlayerState*)inner)->unk8B8 = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
             objAudioFn_8006edcc(obj, *(int*)&((PlayerState*)inner)->baddie.eventFlags,
-                                ((PlayerState*)inner)->unk8A6, (void*)(inner + 0x3c4),
+                                ((PlayerState*)inner)->animSoundId, (void*)(inner + 0x3c4),
                                 (void*)(inner + 4), ((PlayerState*)inner)->baddie.animSpeedA,
                                 lbl_803E7EE0);
         }
@@ -7922,7 +7922,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState*)inner)->targetYawRate = 0;
         ((PlayerState *)inner)->yawRateSigned = 0;
         ((PlayerState*)inner)->yawRate = 0;
-        ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A3;
+        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A3;
         ((PlayerState*)inner)->gaitStepLevel = 0;
         ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E8018;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8084;
@@ -12243,7 +12243,7 @@ int fn_80297854(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F18)
     {
         Sfx_PlayFromObject(obj, audioPickSoundEffect_8006ed24(inner->surfaceType,
-                                                              inner->unk8A5));
+                                                              inner->footstepSoundId));
         ((PlayerState*)state)->baddie.moveEventFlags |= 2;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -12605,9 +12605,9 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->unk880 = lbl_803E7FA4;
     ((PlayerState*)inner)->unk8A3 = 3;
     ((PlayerState*)inner)->unk8A4 = 4;
-    ((PlayerState*)inner)->unk8A5 = 5;
+    ((PlayerState*)inner)->footstepSoundId = 5;
     ((PlayerState*)inner)->unk8A7 = 6;
-    ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A3;
+    ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A3;
     ((PlayerState*)inner)->unk8BF = 0;
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 0x42, 1);
     *(int*)((char*)inner + 0x27c) = inner + 0x6f0;
@@ -12791,7 +12791,7 @@ int fn_802AE480(int obj, int inner, int state)
     {
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 1;
         ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
-        ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A7;
+        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A7;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8070;
         ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((PlayerState*)inner)->moveAnimTable + 0x3a),
                                lbl_803E7EA4, 0);
@@ -16431,7 +16431,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         u16 snd;
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, (u16)audioPickSoundEffect_8006ed24(((PlayerState*)inner)->surfaceType,
-                                                                   ((PlayerState*)inner)->unk8A5));
+                                                                   ((PlayerState*)inner)->footstepSoundId));
         if (((PlayerState*)inner)->characterId == 0)
         {
             snd = 0x2cf;
@@ -16983,7 +16983,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
             int snd = audioPickSoundEffect_8006ed24(inner->surfaceType,
-                                                    inner->unk8A5);
+                                                    inner->footstepSoundId);
             Sfx_PlayFromObject(obj, snd);
             doRumble(lbl_803E7F10);
             if (inner->waterDepth > lbl_803E7EA4)
