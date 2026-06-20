@@ -363,9 +363,9 @@ void magicdust_init(int obj, int placement)
         ref = (int)Obj_GetPlayerObject();
         chaseTime = lbl_803E34F4;
         ((GameObject*)obj)->anim.velocityX =
-            (*(float*)(ref + 0xc) - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
-        ((GameObject*)obj)->anim.velocityY = (*(float*)(ref + 0x10) - ((GameObject*)obj)->anim.localPosY) / chaseTime;
-        ((GameObject*)obj)->anim.velocityZ = (*(float*)(ref + 0x14) - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
+            (((GameObject*)ref)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
+        ((GameObject*)obj)->anim.velocityY = (((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / chaseTime;
+        ((GameObject*)obj)->anim.velocityZ = (((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
     }
     else if (mode == 3)
     {
