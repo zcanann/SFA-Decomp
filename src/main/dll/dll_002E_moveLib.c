@@ -623,9 +623,9 @@ void dll_2E_func03(u16* obj, int state, int unused)
     extern int fn_8003AC14(); /* #57 */
     extern int fn_8003A9C0(); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
-    register int yawDelta;
-    register int seqHandle;
     register u32 target;
+    register int seqHandle;
+    register int yawDelta;
     int bit1;
     int ival;
     u32 hitReact;
