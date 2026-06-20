@@ -2977,11 +2977,11 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     hitReact = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (oldParent != NULL)
     {
-        Obj_TransformLocalPointToWorld(*(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
-                                       (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20), (u32)oldParent);
+        Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+                                       &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ, (u32)oldParent);
         Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
                                        (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(*(f32*)(obj + 0x24), __AR_Callback, *(f32*)(obj + 0x2c),
+        Obj_TransformLocalVectorToWorld(((GameObject*)obj)->anim.velocityX, __AR_Callback, ((GameObject*)obj)->anim.velocityZ,
                                         &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
         yawSum = *(s16*)oldParent + ((GameObject*)obj)->anim.rotX;
     }
@@ -2996,8 +2996,8 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     {
         if (*(u8**)(obj + 0x30) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c), *(f32*)(obj + 0x20),
-                                           (f32*)(obj + 0xc), (f32*)(obj + 0x10), (f32*)(obj + 0x14),
+            Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
+                                           &((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
                                            (u32)*(u8**)(obj + 0x30));
             Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
                                            (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
