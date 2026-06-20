@@ -117,47 +117,47 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
     return 0;
 }
 
-void FUN_801adca0(u16* param_1, u16* param_2, u32 param_3, u32 param_4,
-                  u32 param_5, u32 param_6, char param_7, int param_8, int param_9)
+void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
+                  u32 param_5, u32 param_6, char visible, int alpha, int param_9)
 {
     u8 savedAlpha;
     u32 posZ;
     u32 posY;
     u32 posX[5];
 
-    if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
+    if (((param_9 != 0) && (visible != '\0')) && (0 < alpha))
     {
-        savedAlpha = *(u8*)((int)param_2 + 0x37);
-        *(char*)((int)param_2 + 0x37) = param_8;
-        (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x10))
-            (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
-        *(u8*)((int)param_2 + 0x37) = savedAlpha;
+        savedAlpha = *(u8*)((int)src + 0x37);
+        *(char*)((int)src + 0x37) = alpha;
+        (**(VtableFn**)(**(int**)(src + 0x34) + 0x10))
+            (src, param_3, param_4, param_5, param_6, 0xffffffff);
+        *(u8*)((int)src + 0x37) = savedAlpha;
     }
-    *(u32*)(param_1 + 0x46) = *(u32*)(param_1 + 0xc);
-    *(u32*)(param_1 + 0x48) = *(u32*)(param_1 + 0xe);
-    *(u32*)(param_1 + 0x4a) = *(u32*)(param_1 + 0x10);
-    *(u32*)(param_1 + 0x40) = *(u32*)(param_1 + 6);
-    *(u32*)(param_1 + 0x42) = *(u32*)(param_1 + 8);
-    *(u32*)(param_1 + 0x44) = *(u32*)(param_1 + 10);
-    (**(VtableFn**)(**(int**)(param_2 + 0x34) + 0x28))(param_2, posX, &posY, &posZ);
-    *(u32*)(param_1 + 6) = posX[0];
-    *(u32*)(param_1 + 8) = posY;
-    *(u32*)(param_1 + 10) = posZ;
-    *param_1 = *param_2;
-    param_1[1] = param_2[1];
-    param_1[2] = param_2[2];
-    *(u32*)(param_1 + 0xc) = *(u32*)(param_1 + 6);
-    *(u32*)(param_1 + 0xe) = *(u32*)(param_1 + 8);
-    *(u32*)(param_1 + 0x10) = *(u32*)(param_1 + 10);
-    *(u32*)(param_1 + 0x12) = *(u32*)(param_2 + 0x12);
-    *(u32*)(param_1 + 0x14) = *(u32*)(param_2 + 0x14);
-    *(u32*)(param_1 + 0x16) = *(u32*)(param_2 + 0x16);
+    *(u32*)(dst + 0x46) = *(u32*)(dst + 0xc);
+    *(u32*)(dst + 0x48) = *(u32*)(dst + 0xe);
+    *(u32*)(dst + 0x4a) = *(u32*)(dst + 0x10);
+    *(u32*)(dst + 0x40) = *(u32*)(dst + 6);
+    *(u32*)(dst + 0x42) = *(u32*)(dst + 8);
+    *(u32*)(dst + 0x44) = *(u32*)(dst + 10);
+    (**(VtableFn**)(**(int**)(src + 0x34) + 0x28))(src, posX, &posY, &posZ);
+    *(u32*)(dst + 6) = posX[0];
+    *(u32*)(dst + 8) = posY;
+    *(u32*)(dst + 10) = posZ;
+    *dst = *src;
+    dst[1] = src[1];
+    dst[2] = src[2];
+    *(u32*)(dst + 0xc) = *(u32*)(dst + 6);
+    *(u32*)(dst + 0xe) = *(u32*)(dst + 8);
+    *(u32*)(dst + 0x10) = *(u32*)(dst + 10);
+    *(u32*)(dst + 0x12) = *(u32*)(src + 0x12);
+    *(u32*)(dst + 0x14) = *(u32*)(src + 0x14);
+    *(u32*)(dst + 0x16) = *(u32*)(src + 0x16);
     return;
 }
 
 u32
 FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
              , ObjAnimUpdateState* param_11, u32 param_12, u32* param_13, u32 param_14, u32 param_15
              , u32 param_16)
 {
@@ -172,7 +172,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     u32 local_24;
     u16 local_20;
 
-    extra = ((GameObject*)param_9)->extra;
+    extra = ((GameObject*)obj)->extra;
     *(u8*)(extra + 8) = 0xff;
     linkedObj = *extra;
     if (param_11->triggerCommand == 3)
@@ -185,12 +185,12 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     local_20 = DAT_802c2a90;
     if (*(char*)((int)extra + 0x21) != *(char*)((int)extra + 0x22))
     {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(u32*)(param_9 + 200) = 0;
-            *(u8*)(param_9 + 0xeb) = 0;
+                                   *(int*)&((GameObject*)obj)->childObjs[0]);
+            *(u32*)(obj + 200) = 0;
+            *(u8*)(obj + 0xeb) = 0;
         }
         active = FUN_80017ae8();
         if ((active & 0xff) == 0)
@@ -203,11 +203,11 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             {
                 setup = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
                 param_12 = 0xffffffff;
-                param_13 = *(u32**)&((GameObject*)param_9)->anim.parent;
+                param_13 = *(u32**)&((GameObject*)obj)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                *(u32*)(param_9 + 200) = spawned;
-                *(u8*)(param_9 + 0xeb) = 1;
+                *(u32*)(obj + 200) = spawned;
+                *(u8*)(obj + 0xeb) = 1;
             }
             *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
         }
@@ -229,11 +229,11 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         extra[4] = extra[7];
         (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
         FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
-        modelState = (int)((GameObject*)param_9)->anim.modelState;
+                     obj, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
+        modelState = (int)((GameObject*)obj)->anim.modelState;
         if (modelState != 0)
         {
-            ((GameObject*)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         param_11->hitVolumePair &= ~4;
         param_11->triggerCommand = 0;
