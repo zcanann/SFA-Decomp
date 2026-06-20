@@ -41,9 +41,9 @@ ObjectDescriptor gAreaObjDescriptor = {
 typedef struct InvisibleHitSwitchPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 cooldownFrames;
     u8 pad1C[0x1E - 0x1C];
-    u8 unk1E;
+    u8 triggerMode;
     u8 pad1F[0x20 - 0x1F];
 } InvisibleHitSwitchPlacement;
 
@@ -133,24 +133,24 @@ void InvisibleHitSwitch_update(int obj)
         if ((int)((InvisibleHitSwitchState*)state)->unk1 != hitId) return;
         if (*(u8*)state != 0)
         {
-            if ((((InvisibleHitSwitchPlacement*)state2)->unk1E & 3) != 1) return;
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) != 1) return;
             *(u8*)state = 0;
             GameBit_Set((int)*(short*)(state2 + 0x18), 0);
         }
         else
         {
-            if ((((InvisibleHitSwitchPlacement*)state2)->unk1E & 3) == 3)
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) == 3)
             {
                 ((InvisibleHitSwitchState*)state)->unk8 = lbl_803E3738;
                 return;
             }
             *(u8*)state = 1;
             GameBit_Set((int)*(short*)(state2 + 0x18), 1);
-            if ((((InvisibleHitSwitchPlacement*)state2)->unk1E & 3) == 2)
+            if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & 3) == 2)
             {
                 ((InvisibleHitSwitchState*)state)->unk4 =
                     lbl_803E3734 * (lbl_803E373C *
-                    (f32)((InvisibleHitSwitchPlacement*)state2)->unk1A);
+                    (f32)((InvisibleHitSwitchPlacement*)state2)->cooldownFrames);
             }
         }
     }
