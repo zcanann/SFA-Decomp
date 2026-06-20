@@ -258,7 +258,7 @@ typedef struct PlayerState {
     f32 unk778;
     f32 unk77C;
     u8 pad780[0x784 - 0x780];
-    f32 unk784;
+    f32 verticalVel; /* vertical velocity factor applied as anim.velocityY = verticalVel*fv; has dedicated get/set (fn_80296220), drives climb/descend move progress */
     f32 unk788;
     f32 unk78C;
     u8 pad790[0x79C - 0x790];

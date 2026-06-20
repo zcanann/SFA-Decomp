@@ -64,13 +64,13 @@ int fn_80296118(int obj)
 f32 fn_80296214(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->unk784;
+    return inner->verticalVel;
 }
 
 void fn_80296220(int obj, f32 v)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    inner->unk784 = v;
+    inner->verticalVel = v;
 }
 
 int fn_8029622C(int obj)
@@ -356,7 +356,7 @@ int fn_802974A0(int obj, int state, f32 fv)
     inner->unk778 = lbl_803E7ED8;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
     *(int*)((char*)state + 0) |= 0x200000;
-    if (lbl_803E7EA4 == inner->unk784)
+    if (lbl_803E7EA4 == inner->verticalVel)
     {
         void* sub;
         ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
@@ -394,7 +394,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E7EA4, 1);
     }
     {
-        f32 v = lbl_803E7EE0 + inner->unk784;
+        f32 v = lbl_803E7EE0 + inner->verticalVel;
         f32 clamped;
         v = v * lbl_803E7E98;
         clamped = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
@@ -404,7 +404,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         obj, state, inner->inputHeading, fv, lbl_803E7EE0);
     ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E7EF4;
     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
-    ((GameObject*)obj)->anim.velocityY = inner->unk784 * fv;
+    ((GameObject*)obj)->anim.velocityY = inner->verticalVel * fv;
     if (((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EFC)
     {
         f32 ryaw = (f32)inner->targetYawRate * fv;
@@ -14497,7 +14497,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
         }
         if (!((ByteFlags*)((char*)inner + 0x3f0))->b20 &&
-            lbl_803E7EA4 != ((PlayerState*)inner)->unk784)
+            lbl_803E7EA4 != ((PlayerState*)inner)->verticalVel)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
             return 0x42;
@@ -17857,7 +17857,7 @@ int fn_802985FC(int obj, int state, f32 fv)
         ObjHits_MarkObjectPositionDirty(obj);
     }
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
-        lbl_803E7EA4 != inner->unk784)
+        lbl_803E7EA4 != inner->verticalVel)
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
         return 0x42;
