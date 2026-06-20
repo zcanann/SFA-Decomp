@@ -1326,7 +1326,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         params.vec[2] = z;
     }
 
-    t = type;
+    t = (u8)type;
     switch (t)
     {
     case 3:
