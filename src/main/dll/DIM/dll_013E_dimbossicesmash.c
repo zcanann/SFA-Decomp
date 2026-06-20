@@ -29,12 +29,12 @@ typedef struct DimbossicesmashPlacement
     s16 unk32;  /* rotation gravity X (*10) */
     s16 unk34;  /* rotation gravity Y (*10) */
     s16 unk36;  /* rotation gravity Z (*10) */
-    u16 unk38;  /* lifetime in frames */
-    u16 unk3A;  /* fade start frame */
-    u8 unk3C;   /* flags: bit0=homing, bit1=path-control, bit2=trail particles */
+    u16 lifetime;  /* lifetime in frames */
+    u16 fadeStartFrame;  /* fade start frame */
+    u8 flags;   /* bit0=homing, bit1=path-control, bit2=trail particles */
     u8 pad3D[0x3E - 0x3D];
-    s16 unk3E;  /* gamebit to set on activation */
-    s16 unk40;  /* gamebit to test for activation */
+    s16 activateGameBit;  /* gamebit to set on activation */
+    s16 triggerGameBit;  /* gamebit to test for activation */
     s16 unk42;  /* homing target X */
     s16 unk44;  /* homing target Y */
     s16 unk46;  /* homing target Z */
@@ -130,11 +130,11 @@ void dimbossicesmash_update(u8* obj)
         {
             if (((ObjAnimComponent*)obj)->bankIndex == 0)
             {
-                triggerBit = GameBit_Get(((DimbossicesmashPlacement*)setup)->unk40);
-                if (triggerBit != 0 || ((DimbossicesmashPlacement*)setup)->unk40 == -1)
+                triggerBit = GameBit_Get(((DimbossicesmashPlacement*)setup)->triggerGameBit);
+                if (triggerBit != 0 || ((DimbossicesmashPlacement*)setup)->triggerGameBit == -1)
                 {
                     state[0x29e] = state[0x29e] | 1;
-                    GameBit_Set(((DimbossicesmashPlacement*)setup)->unk3E, 1);
+                    GameBit_Set(((DimbossicesmashPlacement*)setup)->activateGameBit, 1);
                     lbl_803DDB00 = 1;
                 }
             }
@@ -148,17 +148,17 @@ void dimbossicesmash_update(u8* obj)
         {
             ((GameObject*)obj)->anim.alpha = 0xff;
             cnt = (((DimBossIceSmashState*)state)->unk29C += framesThisStep);
-            if (cnt >= ((DimbossicesmashPlacement*)setup)->unk38)
+            if (cnt >= ((DimbossicesmashPlacement*)setup)->lifetime)
             {
                 state[0x29e] = state[0x29e] | 2;
             }
             frameCount = ((DimBossIceSmashState*)state)->unk29C;
-            if (frameCount > ((DimbossicesmashPlacement*)setup)->unk3A &&
-                (fadeDuration = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
+            if (frameCount > ((DimbossicesmashPlacement*)setup)->fadeStartFrame &&
+                (fadeDuration = ((DimbossicesmashPlacement*)setup)->lifetime - ((DimbossicesmashPlacement*)setup)->fadeStartFrame) != 0)
             {
                 alphaVal = (int)(lbl_803E404C *
                     (lbl_803E4048 -
-                        (f32)(frameCount - ((DimbossicesmashPlacement*)setup)->unk3A) / (
+                        (f32)(frameCount - ((DimbossicesmashPlacement*)setup)->fadeStartFrame) / (
                             f32)fadeDuration));
                 if (alphaVal > 0xff)
                 {
@@ -249,7 +249,7 @@ void dimbossicesmash_update(u8* obj)
                 ->anim.rotY;
             ((GameObject*)obj)->anim.rotZ = ((DimBossIceSmashState*)state)->unk280 * timeDelta + (f32)((GameObject*)obj)
                 ->anim.rotZ;
-            if ((((DimbossicesmashPlacement*)setup)->unk3C & 2) != 0)
+            if ((((DimbossicesmashPlacement*)setup)->flags & 2) != 0)
             {
                 (*gPathControlInterface)->update(obj, state, timeDelta);
                 (*gPathControlInterface)->apply(obj, state);
@@ -286,7 +286,7 @@ void dimbossicesmash_update(u8* obj)
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ff;
                 }
             }
-            if ((((DimbossicesmashPlacement*)setup)->unk3C & 4) != 0 && ((GameObject*)obj)->anim.alpha == 0xff)
+            if ((((DimbossicesmashPlacement*)setup)->flags & 4) != 0 && ((GameObject*)obj)->anim.alpha == 0xff)
             {
                 dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
                 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
@@ -324,7 +324,7 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
     ((GameObject*)obj)->anim.rotX = ((DimbossicesmashPlacement*)setup)->unk1A;
     ((GameObject*)obj)->anim.rotY = ((DimbossicesmashPlacement*)setup)->unk1C;
     ((GameObject*)obj)->anim.rotZ = ((DimbossicesmashPlacement*)setup)->unk1E;
-    if ((((DimbossicesmashPlacement*)setup)->unk3C & 1) != 0)
+    if ((((DimbossicesmashPlacement*)setup)->flags & 1) != 0)
     {
         spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
         vx = ((GameObject*)obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
