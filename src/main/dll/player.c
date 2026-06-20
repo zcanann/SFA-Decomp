@@ -17636,7 +17636,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                     found = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(pt, -1);
                 }
                 pt2 = (int)(*gRomCurveInterface)->getById(found);
-                *(f32*)((char*)inner + 0x628) = *(f32*)((char*)pt2 + 0x8);
+                *(f32*)((int)inner + 0x628) = *(f32*)((char*)pt2 + 0x8);
                 inner->unk62C = *(f32*)((char*)pt2 + 0xc);
                 inner->unk630 = *(f32*)((char*)pt2 + 0x10);
                 inner->traveledDistance = lbl_803E7EA4;
