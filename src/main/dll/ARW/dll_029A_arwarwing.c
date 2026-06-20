@@ -631,17 +631,17 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjR, 1, level == 2);
     }
     {
-        int setup = Obj_AllocObjectSetup(0x20, 0x604);
-        ((ArwArwingProjectileSetup*)setup)->posX = px;
-        ((ArwArwingProjectileSetup*)setup)->posY = py;
-        ((ArwArwingProjectileSetup*)setup)->posZ = pz;
-        ((ArwArwingProjectileSetup*)setup)->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
-        ((ArwArwingProjectileSetup*)setup)->rotY = ((GameObject*)obj)->anim.rotY >> 8;
-        ((ArwArwingProjectileSetup*)setup)->rotX = 0;
-        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
-        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
+        ArwArwingProjectileSetup* setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, 0x604);
+        setup->posX = px;
+        setup->posY = py;
+        setup->posZ = pz;
+        setup->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
+        setup->rotY = ((GameObject*)obj)->anim.rotY >> 8;
+        setup->rotX = 0;
+        setup->field04 = 1;
+        setup->field05 = 1;
+        proj = ((int (*)(int, void*))loadObjectAtObject)(obj, setup);
     }
-    proj = loadObjectAtObject(obj);
     if ((void*)proj == NULL)
         return;
     if (level == 0)
