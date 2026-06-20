@@ -317,7 +317,7 @@ typedef struct PlayerState {
     u8 surfaceType;
     s8 stickDirection;
     u8 unk86E;
-    u8 unk86F;
+    u8 stopMoveIndex; /* cycling index into gPlayerStopMoves[], advanced %3 */
     u8 pad870[0x874 - 0x870];
     f32 unk874;
     f32 unk878;

@@ -7797,7 +7797,7 @@ int fn_802A6694(int obj, int state, f32 fv)
             {
                 if (((PlayerState*)inner)->curAnimId != 0x44)
                 {
-                    u32 i = ((PlayerState*)inner)->unk86F;
+                    u32 i = ((PlayerState*)inner)->stopMoveIndex;
                     move = gPlayerStopMoves[i];
                     if (((PlayerState*)inner)->characterId == 0)
                     {
@@ -7807,9 +7807,9 @@ int fn_802A6694(int obj, int state, f32 fv)
                     {
                         fv = *(f32*)((tbl + 0x180) + i * 4);
                     }
-                    ((PlayerState*)inner)->unk86F += 1;
-                    ((PlayerState*)inner)->unk86F =
-                        (u8)(((PlayerState*)inner)->unk86F % 3);
+                    ((PlayerState*)inner)->stopMoveIndex += 1;
+                    ((PlayerState*)inner)->stopMoveIndex =
+                        (u8)(((PlayerState*)inner)->stopMoveIndex % 3);
                 }
                 ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
             }
