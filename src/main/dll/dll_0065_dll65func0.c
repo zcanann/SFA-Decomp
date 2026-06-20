@@ -723,7 +723,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
         GfxCmd entries[32];
     } buf;
     GfxCmd* e = buf.entries;
-    u8* base = lbl_80312E58;
+    u8* base = (u8*)(int)lbl_80312E58;
     u8 cnt;
     if (variant == 1)
     {
@@ -851,7 +851,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.hw[4] = *(s16*)&base[280];
     buf.hw[5] = *(s16*)&base[282];
     buf.hw[6] = *(s16*)&base[284];
-    buf.cmds = buf.entries;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x40000c0;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
@@ -869,7 +869,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &base[0], 0xc, &base[140], 0x40, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312E58, 0xc, &base[140], 0x40, 0);
 }
 
 void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags);
