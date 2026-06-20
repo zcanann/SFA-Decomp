@@ -1339,7 +1339,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (!((Arw339Flags*)(state + 0x339))->scoreFlag)
             {
                 int s2 = *(int*)&((GameObject*)obj)->extra;
-                ((ArwarwingState*)s2)->unk47C = ((ArwarwingState*)s2)->unk47C + 0xc8;
+                ((ArwarwingState*)s2)->unk47C += 0xc8;
                 if (((ArwarwingState*)s2)->unk47C > 0x270f)
                     ((ArwarwingState*)s2)->unk47C = 0x270f;
             }
