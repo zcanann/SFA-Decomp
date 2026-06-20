@@ -29,7 +29,6 @@
 #pragma scheduling on
 #pragma peephole on
 
-extern f32 timeDelta;
 extern CameraModeCrawlState* lbl_803DD598;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
