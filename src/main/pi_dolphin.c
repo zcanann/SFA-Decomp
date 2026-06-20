@@ -1576,7 +1576,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             {
                 if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0)
                 {
-                    b = *(u32*)((char*)t + 0x800195d8);
+                    b = *(u32*)((char*)&MLDF_PTR(0) + 0x80000000);
                     break;
                 }
                 padUpdate();
