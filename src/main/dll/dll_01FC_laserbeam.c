@@ -193,7 +193,7 @@ void LaserBeam_update(int obj2)
     {
         if (b->fireTimer < 0)
         {
-            if (b->unk25 == 0)
+            if (b->sweepDone == 0)
             {
                 c = b->beamKind;
                 if (c == 3 || c == 30)
@@ -238,7 +238,7 @@ void LaserBeam_update(int obj2)
             }
             if (b->fireTimer < 0x28)
             {
-                if (b->sweepPhase >= lbl_803E5D10 && b->unk25 == 0)
+                if (b->sweepPhase >= lbl_803E5D10 && b->sweepDone == 0)
                 {
                     b->sweepPhase = -(lbl_803E5D14 * timeDelta - b->sweepPhase);
                 }
@@ -308,10 +308,10 @@ void LaserBeam_update(int obj2)
     cosv = mathSinf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
     dot = -(((GameObject*)obj2)->anim.localPosX * sinv + ((GameObject*)obj2)->anim.localPosZ * cosv);
     player = Obj_GetPlayerObject();
-    b->unk27 = (s8)(b->unk27 - framesThisStep);
-    if (b->unk27 <= 0)
+    b->fireCooldown = (s8)(b->fireCooldown - framesThisStep);
+    if (b->fireCooldown <= 0)
     {
-        b->unk27 = 0;
+        b->fireCooldown = 0;
     }
     else if (b->beamKind == 0 && b->emitterSlot != -1)
     {
@@ -326,7 +326,7 @@ void LaserBeam_update(int obj2)
         if (b->sweepYaw < 0)
         {
             b->sweepYaw = 0;
-            b->unk25 = 0;
+            b->sweepDone = 0;
         }
     }
     else
@@ -335,28 +335,28 @@ void LaserBeam_update(int obj2)
         if (b->sweepYaw > 60)
         {
             b->sweepYaw = 60;
-            b->unk25 = 1;
+            b->sweepDone = 1;
         }
     }
-    if (b->unk25 == 0)
+    if (b->sweepDone == 0)
     {
-        b->unk24 = (u8)(b->active & 3);
+        b->beamState = (u8)(b->active & 3);
     }
     else
     {
-        b->unk24 = 2;
+        b->beamState = 2;
     }
     if (GameBit_Get(((LaserBeamPlacement*)t)->disableGameBit) != 0)
     {
-        b->unk24 = 0;
+        b->beamState = 0;
     }
-    if (b->unk27 == 0)
+    if (b->fireCooldown == 0)
     {
         b->unk28 = 0;
     }
-    if (player != NULL && b->unk27 == 0 && b->unk24 == 2)
+    if (player != NULL && b->fireCooldown == 0 && b->beamState == 2)
     {
-        range = lbl_803E5D28 + (f32)(int)*(s8*)&b->unk26;
+        range = lbl_803E5D28 + (f32)(int)*(s8*)&b->rangeOffset;
         dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj2)->anim.localPosY;
         if (dy < range && dy > -(lbl_803E5D2C + range))
         {
@@ -428,13 +428,13 @@ void LaserBeam_update(int obj2)
                         {
                             ObjMsg_SendToObject(player, 0x60004, (char*)b + 0x34, 0);
                         }
-                        *(u8*)&b->unk27 = 2;
+                        *(u8*)&b->fireCooldown = 2;
                     }
                 }
             }
         }
     }
-    if (b->unk24 == 0)
+    if (b->beamState == 0)
     {
         if (b->beamKind == 30 && b->emitterSlot != -1)
         {
@@ -453,7 +453,7 @@ void LaserBeam_update(int obj2)
     b->unk08 = b->unk04;
     b->beamX2 = b->beamX;
     b->beamZ2 = b->beamZ + dz;
-    b->unk26 = 8;
+    b->rangeOffset = 8;
     ((GameObject*)obj2)->anim.currentMoveProgress = lbl_803E5D48 * timeDelta + ((GameObject*)obj2)->anim.
         currentMoveProgress;
     if (((GameObject*)obj2)->anim.currentMoveProgress > lbl_803E5D18)
