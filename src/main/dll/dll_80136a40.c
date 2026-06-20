@@ -605,14 +605,14 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
             v1 == 0 &&
             v2 != 0)
         {
-            if (*(s16*)(*objs + 0x46) != 2129)
+            if (((GameObject*)*objs)->anim.seqId != 2129)
             {
                 if ((*gMapEventInterface)->shouldNotSaveTime(
                     *(int*)((char*)data + 0x14)) != 0)
                 {
                     if (p2 == 0)
                     {
-                        s16 m = *(s16*)(*objs + 0x46);
+                        s16 m = ((GameObject*)*objs)->anim.seqId;
                         if (m == 1022 || m == 1239 || m == 636 || m == 593) goto next;
                     }
                     {
