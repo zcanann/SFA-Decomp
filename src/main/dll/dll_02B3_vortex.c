@@ -279,9 +279,9 @@ void vortex_update(int obj)
     active = state->flags.active;
     if (active != 0)
     {
-        f32 hi = lbl_803E73E0;
-        if (state->alpha < hi)
+        if (state->alpha < lbl_803E73E0)
         {
+            f32 hi = lbl_803E73E0;
             state->alpha = gVortexAlphaFadeSpeed * timeDelta + state->alpha;
             if (state->alpha > hi)
             {
@@ -291,9 +291,9 @@ void vortex_update(int obj)
     }
     if (active == 0)
     {
-        f32 lo = lbl_803E73D0;
-        if (state->alpha > lo)
+        if (state->alpha > lbl_803E73D0)
         {
+            f32 lo = lbl_803E73D0;
             state->alpha = state->alpha - gVortexAlphaFadeSpeed * timeDelta;
             if (state->alpha < lo)
             {
