@@ -121,9 +121,9 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
                             *(f32*)(rowsC + state[0x33c] * 12), 0,
                             (u8)row->flags);
             }
-            ObjAnim_SetMoveProgress(
-                *(f32*)(lbl_8031DD30 + rowsC[state[0x33c] * 12 + 8] * 4),
-                (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)obj,
+                *(f32*)(lbl_8031DD30 + rowsC[state[0x33c] * 12 + 8] * 4));
             if (rowsC[state[0x33c] * 12 + 0xa] != 0)
             {
                 state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
@@ -177,10 +177,10 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
                             *(f32*)(rowsB + rowsB[*(u16*)(state + 0x338) * 16 + 0xb] * 16), 0,
                             (u8)row->flags);
             }
-            ObjAnim_SetMoveProgress(
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)obj,
                 *(f32*)(lbl_8031DD30 +
-                    rowsB[rowsB[*(u16*)(state + 0x338) * 16 + 0xb] * 16 + 8] * 4),
-                (ObjAnimComponent*)obj);
+                    rowsB[rowsB[*(u16*)(state + 0x338) * 16 + 0xb] * 16 + 8] * 4));
         }
         else
         {
@@ -191,8 +191,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
                 Baddie_SetMove(obj, state, row->anim, *(f32*)(animRows + off), 0,
                             (u8)row->flags);
             }
-            ObjAnim_SetMoveProgress(*(f32*)(lbl_8031DD30 + animRows[off + 8] * 4),
-                                    (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
+                                    *(f32*)(lbl_8031DD30 + animRows[off + 8] * 4));
             *(u16*)(state + 0x338) = animRows[off + 9];
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
@@ -309,9 +309,9 @@ void fn_80150EDC(void* p1, void* p2)
                         *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
                         (u8)row->flags);
             row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            ObjAnim_SetMoveProgress(
-                *(f32*)(table + (row->anim << 2)),
-                (ObjAnimComponent*)p1);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)p1,
+                *(f32*)(table + (row->anim << 2)));
             row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
             *(u16*)((u8*)p2 + 0x338) = row->next;
         }
@@ -332,9 +332,9 @@ void fn_80150EDC(void* p1, void* p2)
             {
                 Baddie_SetMove(p1, p2, v8,
                             idleRows[*(u16*)((u8*)p2 + 0x2a0)].speed, 0, 0xb);
-                ObjAnim_SetMoveProgress(
-                    *(f32*)(table + (idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim << 2)),
-                    (ObjAnimComponent*)p1);
+                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                    (ObjAnimComponent*)p1,
+                    *(f32*)(table + (idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim << 2)));
             }
         }
     }
@@ -409,8 +409,8 @@ void fn_80150910(int* obj, u8* state)
                             *(f32*)(tbl4 + state[0x33d] * 12), 0,
                             (u8)row->flags);
             }
-            ObjAnim_SetMoveProgress(*(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4),
-                                    (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
+                                    *(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4));
             state[0x33d] = tbl4[state[0x33d] * 12 + 9];
             state[0x33e] = 0;
         }
@@ -478,9 +478,9 @@ void fn_80150910(int* obj, u8* state)
                 Baddie_SetMove(obj, state, row->anim,
                             *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
                             (u8)row->flags);
-                ObjAnim_SetMoveProgress(
-                    *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4),
-                    (ObjAnimComponent*)obj);
+                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 9];
             }
             else if (*(f32*)(state + 0x310) > lbl_803E2794)
@@ -526,9 +526,9 @@ void fn_80150910(int* obj, u8* state)
                                 *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
                                 (u8)row->flags);
                 }
-                ObjAnim_SetMoveProgress(
-                    *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4),
-                    (ObjAnimComponent*)obj);
+                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 9];
             }
             else
@@ -540,8 +540,8 @@ void fn_80150910(int* obj, u8* state)
                     state[0x2f3] = 0;
                     state[0x2f4] = 0;
                     Baddie_SetMove(obj, state, tbl4[off + 8], *(f32*)(tbl4 + off), 0, 3);
-                    ObjAnim_SetMoveProgress(*(f32*)(lbl_8031DD30 + tbl4[off + 8] * 4),
-                                            (ObjAnimComponent*)obj);
+                    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
+                                            *(f32*)(lbl_8031DD30 + tbl4[off + 8] * 4));
                 }
             }
         }
