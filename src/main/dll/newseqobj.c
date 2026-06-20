@@ -187,7 +187,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 
             {
                 IdleRow* row = (IdleRow*)(animRows + off);
-                Baddie_SetMove(obj, state, row->anim, *(f32*)(animRows + off), 0,
+                Baddie_SetMove(obj, state, row->anim,
+                            *(f32*)(animRows + (u8)amount * 12), 0,
                             (u8)row->flags);
             }
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
