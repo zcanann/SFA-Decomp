@@ -1156,6 +1156,8 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 
 u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int neighborId;
     int low;
