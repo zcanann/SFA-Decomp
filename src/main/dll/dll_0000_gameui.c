@@ -2719,7 +2719,7 @@ void pauseMenuFn_80129ee0(void)
     {
         menuMin = 4;
     }
-    if (lbl_803DB424 == 0 || getNextTaskHintText() < 3 ||
+    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
         (player != 0 && coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
             fn_802972A8(player) != 0))
     {
@@ -2742,42 +2742,42 @@ void pauseMenuFn_80129ee0(void)
         {
             if ((*gMapEventInterface)->getMapAct(cell) == 1)
             {
-                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
+                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 5;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 0xc;
                 }
             }
             else if ((*gMapEventInterface)->getMapAct(lbl_803DD8E0) == 2)
             {
-                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
+                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
                 {
                     lbl_803DD8E0 = 0xa;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
                 {
                     lbl_803DD8E0 = 9;
                 }
-                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
+                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
                 {
                     lbl_803DD8E0 = 3;
                 }
