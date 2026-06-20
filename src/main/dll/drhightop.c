@@ -212,7 +212,6 @@ void fn_801EAE4C(short* obj, int stateRaw)
 void fn_801EB0D4(u32 obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
-    f32 cur;
     f32 lim;
     f32 rate;
     f32 td;
@@ -233,18 +232,16 @@ void fn_801EB0D4(u32 obj, int stateRaw)
                     rate * timeDelta + st->airMeterCurrent;
                 st->unk4C4 =
                     st->unk4C4 - (f32)(s32)(rate * timeDelta);
-                cur = st->unk4C4;
                 st->unk4C4 =
-                    (cur < lim)
+                    (st->unk4C4 < lim)
                         ? lim
-                        : ((cur > lbl_803E5B80) ? lbl_803E5B80 : cur);
-                cur = st->airMeterCurrent;
+                        : ((st->unk4C4 > lbl_803E5B80) ? lbl_803E5B80 : st->unk4C4);
                 st->airMeterCurrent =
-                    (cur < lbl_803E5AE8)
+                    (st->airMeterCurrent < lbl_803E5AE8)
                         ? lbl_803E5AE8
-                        : ((cur > st->airMeterMax)
+                        : ((st->airMeterCurrent > st->airMeterMax)
                                ? st->airMeterMax
-                               : cur);
+                               : st->airMeterCurrent);
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
