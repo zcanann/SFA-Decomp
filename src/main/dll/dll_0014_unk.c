@@ -1809,9 +1809,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             continue;
         }
 
-        queueDistances[0] =
-            (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
-                (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) +
+        distance = (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
+                   (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10));
+        queueDistances[0] = distance +
             (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
                 (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
             (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
@@ -1849,13 +1849,14 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                     continue;
                 }
 
-                linkDistance = distance +
+                linkDistance =
                     (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) *
                         (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) +
-                    (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
-                        (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
-                    (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
-                        (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc));
+                    (distance +
+                     (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
+                         (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
+                     (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
+                         (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)));
 
                 insertIndex = 0;
                 while (insertIndex < queueCount && queueDistances[insertIndex] > linkDistance)
