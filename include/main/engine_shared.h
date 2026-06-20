@@ -50,6 +50,44 @@
         }                                                                      \
     }
 
+/* Same as MODEL_DECODE_NIBBLE but the final (odd-count) nibble does not
+   advance the bit cursor by the inter-instruction gap. */
+#define MODEL_DECODE_NIBBLE_TAIL(nibExpr)                                      \
+    {                                                                          \
+        u8 nib = (nibExpr);                                                    \
+        int base = lbl_802C18C0[idx];                                          \
+        int delta = 0;                                                         \
+        if (nib & 1) {                                                         \
+            delta = base >> 2;                                                 \
+        }                                                                      \
+        if (nib & 2) {                                                         \
+            delta += base >> 1;                                                \
+        }                                                                      \
+        if (nib & 4) {                                                         \
+            delta += base;                                                     \
+        }                                                                      \
+        if (nib & 8) {                                                         \
+            delta = -delta;                                                    \
+        }                                                                      \
+        acc += delta;                                                          \
+        idx += lbl_802C1A24[nib];                                              \
+        if (idx < 0) {                                                         \
+            idx = 0;                                                           \
+        } else if (idx > 0x58) {                                               \
+            idx = 0x58;                                                        \
+        }                                                                      \
+        {                                                                      \
+            int v = acc & 0xffff;                                              \
+            int curBit = state->bit;                                           \
+            int bo = curBit >> 3;                                              \
+            u32 packed = (u32)v << ((8 - (curBit & 7)) + sh16);                \
+            ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
+            ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
+            ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
+            state->bit += bitWidth;                                            \
+        }                                                                      \
+    }
+
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
     u16 ids[0x80];

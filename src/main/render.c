@@ -161,8 +161,7 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
     }
     if (count & 1)
     {
-        MODEL_DECODE_NIBBLE(*p & 0xf);
-        p++;
+        MODEL_DECODE_NIBBLE_TAIL(*p++ & 0xf);
     }
     if (gap != 0)
     {
