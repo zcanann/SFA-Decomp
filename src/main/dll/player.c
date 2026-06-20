@@ -9305,6 +9305,7 @@ int Lightfoot_UpdateProximityInteractionState(int obj, int state)
 int fn_802A1114(int obj, int state)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* in0 = ((GameObject*)obj)->extra;
     int flag549;
     f32 fz;
     s16* tbl;
@@ -9314,8 +9315,8 @@ int fn_802A1114(int obj, int state)
     f32 buf1[3];
     f32 buf2[2];
     f32 pos[2];
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&in0->flags360 &= ~2LL;
+    *(u32*)&in0->flags360 |= 0x2000LL;
     *(int*)((char*)state + 0x4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedA = fz;
