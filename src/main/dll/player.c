@@ -5362,7 +5362,6 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     u8 changed;
     int path;
     PlayerState* inner = ((GameObject*)obj)->extra;
-    ObjHitsPriorityState* hitState;
     f32 amt;
 
     r = fn_8029B9FC(obj, state, fv);
@@ -5583,9 +5582,8 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->lastHitObject = 0;
         }
     }
-    hitState = Player_GetObjHitsState(obj);
-    hitState->hitVolumePriority = 0xb;
-    hitState->hitVolumeId = *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
+    Player_GetObjHitsState(obj)->hitVolumePriority = 0xb;
+    Player_GetObjHitsState(obj)->hitVolumeId = *(u8*)((inner->moveSlots + 0x14) + (u32)inner->moveSlotIndex * 0xb0);
     {
         int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
         f32 t = *(f32*)(slot + 0xa0);
@@ -5637,7 +5635,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         int off;
         int i;
         off = 0;
-        hitState->objectHitMask = 0;
+        Player_GetObjHitsState(obj)->objectHitMask = 0;
         for (i = 0; i != 3; i++)
         {
             int stride = (u32)inner->moveSlotIndex * 0xb0;
@@ -5672,7 +5670,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                         bits = 0;
                         break;
                     }
-                    hitState->objectHitMask = bits;
+                    Player_GetObjHitsState(obj)->objectHitMask = bits;
                 }
                 if (i != inner->unk8CD)
                 {
@@ -5699,7 +5697,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     ((PlayerState*)state)->baddie.inputMagnitude > lbl_803E7EAC)
                 {
                     inner->targetYaw =
-                        inner->targetYaw + (s16)inner->targetYawRate * 0xb6;
+                        inner->targetYaw + inner->targetYawRate * 0xb6;
                     inner->yaw = inner->targetYaw;
                     inner->targetYawRateSigned = 0;
                     inner->targetYawRate = 0;
