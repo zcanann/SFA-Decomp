@@ -112,8 +112,8 @@ void trickyDigTunnel(u8* obj, u8* state)
     u8* ptr;
     int gidx;
     int k;
-    int idx;
     int off;
+    int idx;
     int v;
     int inWater;
     u16 id;
