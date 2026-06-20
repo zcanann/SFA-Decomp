@@ -288,8 +288,8 @@ typedef struct PlayerState {
     u16 staffAnimState; /* staff grow/shrink anim state machine (fn_802AEF34): 0/1=shrink,2=grow,3=settle,0xf=variant */
     u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
-    s16 unk80C;
-    s16 unk80E;
+    s16 queuedItemCommand; /* primary queued item/use command id from ObjMsg 0x80002; -1 = none; processed by playerProcessQueuedItemCommand */
+    s16 deferredItemCommand; /* item command (0x2d/0x5ce) deferred while a target object is engaged; -1 = none; consumed/cleared once resolved */
     s16 unk810;
     s16 idleWaitTimer;
     f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */

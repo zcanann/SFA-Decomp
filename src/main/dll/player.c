@@ -4978,7 +4978,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             }
         }
     }
-    else if (inner->unk80E != -1 || (inner->buttonsJustPressed & 0x800) != 0)
+    else if (inner->deferredItemCommand != -1 || (inner->buttonsJustPressed & 0x800) != 0)
     {
         int yitem;
         u16 b28;
@@ -4991,10 +4991,10 @@ int fn_8029ABD8(int obj, int state, f32 fv)
         else
         {
             yitem = 0;
-            item = inner->unk80E;
+            item = inner->deferredItemCommand;
             b28 = 0x100;
         }
-        if (inner->unk80E != -1 ||
+        if (inner->deferredItemCommand != -1 ||
             (yitem == 1 && (item == 0x2d || item == 0x5ce)))
         {
             buttonDisable(0, 0x900);
@@ -8814,12 +8814,12 @@ void fn_802B249C(int obj, int inner, int state)
         switch (msg)
         {
         case 0x80002:
-            ((PlayerState*)inner)->unk80C = (s16)param;
+            ((PlayerState*)inner)->queuedItemCommand = (s16)param;
             if (((PlayerState*)state)->baddie.targetObj != NULL &&
                 (param == 0x2d || param == 0x5ce))
             {
-                ((PlayerState*)inner)->unk80E = (s16)param;
-                ((PlayerState*)inner)->unk80C = -1;
+                ((PlayerState*)inner)->deferredItemCommand = (s16)param;
+                ((PlayerState*)inner)->queuedItemCommand = -1;
             }
             break;
         case 0x60003:
@@ -9846,14 +9846,14 @@ int fn_80299E44(int obj, int state, f32 fv)
             }
         }
     }
-    if (inner->unk80E != -1 || (*(int*)&((PlayerState*)state)->baddie.unk31C & 0x800) != 0)
+    if (inner->deferredItemCommand != -1 || (*(int*)&((PlayerState*)state)->baddie.unk31C & 0x800) != 0)
     {
         int r = fn_8029ABD8(obj, state, fv);
         if (r != 0)
         {
             return r;
         }
-        inner->unk80E = -1;
+        inner->deferredItemCommand = -1;
     }
     if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x400) != 0)
     {
@@ -12599,7 +12599,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->lastInputHeading = ((GameObject*)obj)->anim.rotX;
     fz = lbl_803E7EE0;
     ((PlayerState*)inner)->unk77C = fz;
-    ((PlayerState*)inner)->unk80C = -1;
+    ((PlayerState*)inner)->queuedItemCommand = -1;
     ((PlayerState*)inner)->animState = -1;
     ((PlayerState*)inner)->targetAnimSpeed = fz;
     ((PlayerState*)inner)->unk834 = fz;
@@ -12955,7 +12955,7 @@ void fn_802AF7F8(int obj, int state)
         {
             fn_80295E90(obj, 0);
             ((PlayerState*)state)->animState = -1;
-            ((PlayerState*)state)->unk80C = -1;
+            ((PlayerState*)state)->queuedItemCommand = -1;
             buttonDisable(0, 0x200);
         }
         ((PlayerState*)state)->stateTimer = ((PlayerState*)state)->stateTimer - timeDelta;
@@ -13313,7 +13313,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
         }
         else
         {
-            ((PlayerState*)inner)->unk80E = -1;
+            ((PlayerState*)inner)->deferredItemCommand = -1;
         }
     }
 }
@@ -18322,14 +18322,14 @@ void playerProcessQueuedItemCommand(int obj, int state)
         {
             buttonDisable(0, 0x800);
             ((PlayerState*)state)->buttonsJustPressed &= ~0x800;
-            ((PlayerState*)state)->unk80C = item;
+            ((PlayerState*)state)->queuedItemCommand = item;
         }
     }
 
-    cmd = ((PlayerState*)state)->unk80C;
+    cmd = ((PlayerState*)state)->queuedItemCommand;
     if (cmd != -1 && cmd != ((PlayerState*)state)->animState && getCurSeqNo() == 0)
     {
-        s16 sel = ((PlayerState*)state)->unk80C;
+        s16 sel = ((PlayerState*)state)->queuedItemCommand;
         noMatch = 0;
         switch (sel)
         {
@@ -18379,7 +18379,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
                 ((ByteFlags*)((char*)state + 0x3f6))->b40 = 1;
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0x2a);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_8029A4A8;
-                fn_802AB38C(obj, state, ((PlayerState*)state)->unk80C);
+                fn_802AB38C(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
             else
             {
@@ -18389,7 +18389,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         case 0x957:
             if (fn_802A97D0(obj, state) != 0)
             {
-                fn_802AB38C(obj, state, ((PlayerState*)state)->unk80C);
+                fn_802AB38C(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
             else
             {
@@ -18400,7 +18400,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         case 0xc55:
             if (fn_802A9A0C(obj, state) != 0)
             {
-                fn_802AB38C(obj, state, ((PlayerState*)state)->unk80C);
+                fn_802AB38C(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
             else
             {
@@ -18439,7 +18439,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         case 0x5bd:
             if (fn_802A98FC(obj, state) != 0)
             {
-                fn_802AB38C(obj, state, ((PlayerState*)state)->unk80C);
+                fn_802AB38C(obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
             else
             {
@@ -18456,7 +18456,7 @@ void playerProcessQueuedItemCommand(int obj, int state)
         }
     }
 
-    ((PlayerState*)state)->unk80C = -1;
+    ((PlayerState*)state)->queuedItemCommand = -1;
 }
 
 void fn_802AAD44(int obj)
