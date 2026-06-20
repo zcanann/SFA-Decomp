@@ -13142,6 +13142,7 @@ void fn_802B066C(int obj, int state)
     f32 pz;
     f32 py;
     f32 px;
+    f32 zero;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
     {
@@ -13159,7 +13160,8 @@ void fn_802B066C(int obj, int state)
     }
     ((PlayerState*)state)->unk79C =
         ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;
-    if (((PlayerState*)state)->unk79C <= lbl_803E7EA4)
+    zero = lbl_803E7EA4;
+    if (((PlayerState*)state)->unk79C <= zero)
     {
         if (Sfx_IsPlayingFromObject(obj, 0x394))
         {
@@ -13170,7 +13172,7 @@ void fn_802B066C(int obj, int state)
         return;
     }
     ((PlayerState*)state)->unk7A0 = ((PlayerState*)state)->unk7A0 - timeDelta;
-    if (((PlayerState*)state)->unk7A0 <= lbl_803E7EA4)
+    if (((PlayerState*)state)->unk7A0 <= zero)
     {
         ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
         ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, px, py, pz);
