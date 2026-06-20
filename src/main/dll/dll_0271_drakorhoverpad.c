@@ -44,7 +44,7 @@ void drakorhoverpad_func15(void)
 typedef struct DrakorHoverpadUpdateMainPlacement
 {
     u8 pad0[0x20 - 0x0];
-    s16 unk20;
+    s16 activateGameBit;
     u8 pad22[0x28 - 0x22];
 } DrakorHoverpadUpdateMainPlacement;
 
@@ -468,7 +468,7 @@ void drakorhoverpad_updateMain(int obj)
     }
     if (f->bit20 == 0)
     {
-        f->bit20 = GameBit_Get(((DrakorHoverpadUpdateMainPlacement*)q)->unk20);
+        f->bit20 = GameBit_Get(((DrakorHoverpadUpdateMainPlacement*)q)->activateGameBit);
         ((DrakorHoverpadUpdateMainState*)p)->unk114 = lbl_803E6A3C;
         if (f->bit20 != 0)
         {

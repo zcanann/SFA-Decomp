@@ -109,11 +109,11 @@ typedef struct LaserBeamPlacement
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
     u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
+    s16 disableGameBit;
 } LaserBeamPlacement;
 
 STATIC_ASSERT(offsetof(LaserBeamPlacement, unk1A) == 0x1a);
-STATIC_ASSERT(offsetof(LaserBeamPlacement, unk1E) == 0x1e);
+STATIC_ASSERT(offsetof(LaserBeamPlacement, disableGameBit) == 0x1e);
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
@@ -189,7 +189,7 @@ void LaserBeam_update(int obj2)
     t = *(char**)&((GameObject*)obj2)->anim.placementData;
     b = ((GameObject*)obj2)->extra;
     b->fireTimer -= framesThisStep;
-    if (GameBit_Get(((LaserBeamPlacement*)t)->unk1E) == 0)
+    if (GameBit_Get(((LaserBeamPlacement*)t)->disableGameBit) == 0)
     {
         if (b->fireTimer < 0)
         {
@@ -346,7 +346,7 @@ void LaserBeam_update(int obj2)
     {
         b->unk24 = 2;
     }
-    if (GameBit_Get(((LaserBeamPlacement*)t)->unk1E) != 0)
+    if (GameBit_Get(((LaserBeamPlacement*)t)->disableGameBit) != 0)
     {
         b->unk24 = 0;
     }

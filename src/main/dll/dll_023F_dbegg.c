@@ -108,7 +108,7 @@ typedef struct DbeggPlacement
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
-    s16 unk24;
+    s16 activateGameBit;
     u8 pad26[0x2B - 0x26];
     u8 unk2B;
     s16 unk2C;
@@ -910,7 +910,7 @@ void dbegg_update(int obj)
             }
             break;
         case 0xc:
-            if (GameBit_Get(((DbeggPlacement*)data)->unk24) != 0)
+            if (GameBit_Get(((DbeggPlacement*)data)->activateGameBit) != 0)
             {
                 ObjGroup_AddObject(obj, 0x24);
                 ((DbEggState*)blob)->mode = 5;
