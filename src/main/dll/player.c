@@ -8464,7 +8464,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         case 0xb:
             if (canCounter && ((PlayerState*)state)->baddie.targetObj != NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 2;
+                ((PlayerState*)inner)->moveVariantIndex = 2;
                 newAnim = 0x23;
                 ((PlayerState*)inner)->unk898 = 0;
             }
@@ -8474,7 +8474,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         case 9:
             if (canCounter && ((PlayerState*)state)->baddie.targetObj != NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 3;
+                ((PlayerState*)inner)->moveVariantIndex = 3;
                 newAnim = 0x23;
                 ((PlayerState*)inner)->unk898 = 0;
             }
@@ -8482,7 +8482,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         case 0xc:
             if (canCounter && ((PlayerState*)state)->baddie.targetObj != NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 1;
+                ((PlayerState*)inner)->moveVariantIndex = 1;
                 newAnim = 0x23;
                 ((PlayerState*)inner)->unk898 = 0;
             }
@@ -8490,7 +8490,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         case 0xa:
             if (canCounter && ((PlayerState*)state)->baddie.targetObj != NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 3;
+                ((PlayerState*)inner)->moveVariantIndex = 3;
                 newAnim = 0x23;
                 ((PlayerState*)inner)->unk898 = 0;
             }
@@ -8521,7 +8521,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (canCounter && ((PlayerState*)state)->baddie.targetObj == NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 5;
+                ((PlayerState*)inner)->moveVariantIndex = 5;
             }
             break;
         case 0x19:
@@ -8544,7 +8544,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (canCounter && ((PlayerState*)state)->baddie.targetObj == NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 5;
+                ((PlayerState*)inner)->moveVariantIndex = 5;
             }
             break;
         case 0x1e:
@@ -8559,7 +8559,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (canCounter && ((PlayerState*)state)->baddie.targetObj == NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 5;
+                ((PlayerState*)inner)->moveVariantIndex = 5;
             }
             break;
             return;
@@ -8572,7 +8572,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         default:
             if (canCounter && ((PlayerState*)state)->baddie.targetObj != NULL)
             {
-                ((PlayerState*)inner)->unk8A2 = 0;
+                ((PlayerState*)inner)->moveVariantIndex = 0;
                 newAnim = 0x23;
                 ((PlayerState*)inner)->unk898 = 0;
             }
@@ -9194,7 +9194,7 @@ void fn_80296C84(int obj)
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
     inner->unk79C = lbl_803E7EA4;
-    inner->unk8A2 = 0xff;
+    inner->moveVariantIndex = 0xff;
 }
 
 void fn_8029672C(int obj, int mode)
@@ -12177,9 +12177,9 @@ int fn_8029D250(int obj, int state, f32 fv)
         }
         else
         {
-            ObjAnim_SetCurrentMove(obj, mt->moves[inner->unk8A2],
+            ObjAnim_SetCurrentMove(obj, mt->moves[inner->moveVariantIndex],
                                    lbl_803E7EA4, 0);
-            ((PlayerState*)state)->baddie.moveSpeed = mt->angles[inner->unk8A2];
+            ((PlayerState*)state)->baddie.moveSpeed = mt->angles[inner->moveVariantIndex];
         }
     }
     if (((PlayerState*)state)->baddie.targetObj != NULL)
@@ -18866,7 +18866,7 @@ void fn_802AEF34(int obj, int state)
                     obj, ((GameObject*)obj)->anim.currentMove,
                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
-                    obj, lbl_8033366C[((PlayerState*)state)->unk8A2], lbl_803E7EA4, 0);
+                    obj, lbl_8033366C[((PlayerState*)state)->moveVariantIndex], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0)
@@ -18892,13 +18892,13 @@ void fn_802AEF34(int obj, int state)
                 {
                 set806_3:
                     *(s16*)&((PlayerState*)state)->unk806 = 3;
-                    ((PlayerState*)state)->unk8A2 = 0xff;
+                    ((PlayerState*)state)->moveVariantIndex = 0xff;
                     changed = 1;
                 }
                 else
                 {
                     ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
-                        obj, lbl_8033369C[((PlayerState*)state)->unk8A2], timeDelta, 0);
+                        obj, lbl_8033369C[((PlayerState*)state)->moveVariantIndex], timeDelta, 0);
                 }
             }
             break;
@@ -18936,7 +18936,7 @@ void fn_802AEF34(int obj, int state)
                 *(s16*)&((PlayerState*)state)->unk806 = 2;
                 changed = 1;
             }
-            if (((PlayerState*)state)->unk8A2 == 5 || ((PlayerState*)state)->unk8A2 == 7)
+            if (((PlayerState*)state)->moveVariantIndex == 5 || ((PlayerState*)state)->moveVariantIndex == 7)
             {
                 *(s16*)&((PlayerState*)state)->unk806 = 0xf;
                 changed = 1;

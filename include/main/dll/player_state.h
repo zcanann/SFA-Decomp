@@ -332,7 +332,7 @@ typedef struct PlayerState {
     u16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];
     u16 unk8A0;
-    u8 unk8A2;
+    u8 moveVariantIndex; /* index into moveAnimTable->moves[]/angles[] (0xff = none) */
     u8 unk8A3;
     u8 unk8A4;
     u8 unk8A5;
