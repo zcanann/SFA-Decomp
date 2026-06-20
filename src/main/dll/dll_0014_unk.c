@@ -2773,20 +2773,22 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     tangentDx = gFloatHalf * (tangentDx + segmentDx);
     tangentDz = gFloatHalf * (tangentDz + segmentDz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
-    if (tangentLen != gFloatZero)
+    if (gFloatZero != tangentLen)
     {
         tangentDx = tangentDx / tangentLen;
         tangentDz = tangentDz / tangentLen;
     }
 
+    startPhase = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
     startDenom = tangentDx * segmentDx + tangentDz * segmentDz;
-    startPhase = gFloatZero;
-    if (startDenom != gFloatZero)
+    if (gFloatZero != startDenom)
     {
         startPhase =
-            -(-((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z)) +
-                ((tangentDx * x) + (tangentDz * z))) /
-            startDenom;
+            -(startPhase + ((tangentDx * x) + (tangentDz * z))) / startDenom;
+    }
+    else
+    {
+        startPhase = gFloatZero;
     }
 
     if (curves[3] != NULL)
@@ -2802,44 +2804,52 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
     nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
     nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
-    if (nextTangentLen != gFloatZero)
+    if (gFloatZero != nextTangentLen)
     {
         nextTangentDx = nextTangentDx / nextTangentLen;
         nextTangentDz = nextTangentDz / nextTangentLen;
     }
 
+    endPhase = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
     endDenom = nextTangentDx * segmentDx + nextTangentDz * segmentDz;
-    endPhase = gFloatZero;
-    if (endDenom != gFloatZero)
+    if (gFloatZero != endDenom)
     {
         endPhase =
-            -(-((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z)) +
-                ((nextTangentDx * x) + (nextTangentDz * z))) /
-            endDenom;
+            -(endPhase + ((nextTangentDx * x) + (nextTangentDz * z))) / endDenom;
+    }
+    else
+    {
+        endPhase = gFloatZero;
     }
 
     phase = -startPhase / (endPhase - startPhase);
-    if ((phase < gFloatZero) || (gFloatOne <= phase))
+    if ((phase >= gFloatZero) && (phase < gFloatOne))
     {
-        return 0;
-    }
+        f32 projX;
+        f32 projY;
+        f32 projZ;
 
-    segmentDy = curves[2]->y - curves[1]->y;
-    segmentLen = sqrtf(segmentDz * segmentDz + segmentDx * segmentDx + segmentDy * segmentDy);
-    lateralX = segmentDx;
-    lateralZ = segmentDz;
-    if (gFloatZero < segmentLen)
-    {
-        lateralX = -segmentDx * (gFloatOne / segmentLen);
-        lateralZ = -segmentDz * (gFloatOne / segmentLen);
-    }
+        segmentDy = curves[2]->y - curves[1]->y;
+        segmentLen =
+            sqrtf(segmentDy * segmentDy + segmentDx * segmentDx + segmentDz * segmentDz);
+        lateralX = segmentDx;
+        lateralZ = segmentDz;
+        if (gFloatZero < segmentLen)
+        {
+            lateralX = -segmentDx * (gFloatOne / segmentLen);
+            lateralZ = -segmentDz * (gFloatOne / segmentLen);
+        }
 
-    *outLateralOffset = -(((segmentDx * phase + curves[1]->x) * lateralZ) -
-            ((segmentDz * phase + curves[1]->z) * lateralX)) +
-        (x * lateralZ - z * lateralX);
-    *outVerticalOffset = y - (segmentDy * phase + curves[1]->y);
-    *outPhase = phase;
-    return 1;
+        projX = segmentDx * phase + curves[1]->x;
+        projY = segmentDy * phase + curves[1]->y;
+        projZ = segmentDz * phase + curves[1]->z;
+        *outLateralOffset =
+            -((projX * lateralZ) - (projZ * lateralX)) + (x * lateralZ - z * lateralX);
+        *outVerticalOffset = y - projY;
+        *outPhase = phase;
+        return 1;
+    }
+    return 0;
 }
 
 int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
