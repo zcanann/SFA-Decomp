@@ -4754,7 +4754,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         if (length > lbl_803DF020)
         {
             scale = offset[0] / length;
-            *outAngle = (s16)(getAngle(xTangent, zTangent) - 0x8000);
+            *outAngle = (s16)(getAngle(xTangent, zTangent) + 0x8000);
             xTangent *= scale;
             zTangent *= scale;
             outPos[0] += zTangent;
