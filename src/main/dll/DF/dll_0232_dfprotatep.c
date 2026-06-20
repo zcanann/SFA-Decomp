@@ -525,9 +525,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, buf.rotation, angleStep);
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, buf.rotation, angleStep);
-        handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING], obj, buf.rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], obj, buf.rotation, angleStep);
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
 }
