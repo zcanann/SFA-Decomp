@@ -285,7 +285,7 @@ typedef struct PlayerState {
     f32 unk7FC;
     u8 unk800;
     u8 pad801[0x806 - 0x801];
-    u16 unk806;
+    u16 staffAnimState; /* staff grow/shrink anim state machine (fn_802AEF34): 0/1=shrink,2=grow,3=settle,0xf=variant */
     u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
     s16 unk80C;

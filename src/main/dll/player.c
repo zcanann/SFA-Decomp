@@ -18763,25 +18763,25 @@ void fn_802AEF34(int obj, int state)
     model = *(int*)((char*)Obj_GetActiveModel(obj) + 0x30);
     prevChanged = 0;
 
-    if (*(s16*)&((PlayerState*)state)->unk806 != 3)
+    if (*(s16*)&((PlayerState*)state)->staffAnimState != 3)
     {
         u8 b = ((PlayerState*)state)->staffActionRequest;
         if (b == 1)
         {
             staffDoGrowShrinkAnim(gPlayerPathObject, 0, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
             ((PlayerState*)state)->staffGrown = 0;
-            if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
+            if (*(s16*)&((PlayerState*)state)->staffAnimState != 0 && *(s16*)&((PlayerState*)state)->staffAnimState != 0xf)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 3;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 3;
             }
         }
         else if (b == 4)
         {
             staffDoGrowShrinkAnim(gPlayerPathObject, 1, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
             ((PlayerState*)state)->staffGrown = 1;
-            if (*(s16*)&((PlayerState*)state)->unk806 != 0 && *(s16*)&((PlayerState*)state)->unk806 != 0xf)
+            if (*(s16*)&((PlayerState*)state)->staffAnimState != 0 && *(s16*)&((PlayerState*)state)->staffAnimState != 0xf)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 3;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 3;
             }
         }
     }
@@ -18790,7 +18790,7 @@ void fn_802AEF34(int obj, int state)
     do
     {
         changed = 0;
-        switch (*(s16*)&((PlayerState*)state)->unk806)
+        switch (*(s16*)&((PlayerState*)state)->staffAnimState)
         {
         case 2:
             if (prevChanged != 0)
@@ -18817,7 +18817,7 @@ void fn_802AEF34(int obj, int state)
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7F1C)
             {
                 staffDoGrowShrinkAnim(gPlayerPathObject, 1, 0, 0);
-                *(s16*)&((PlayerState*)state)->unk806 = 3;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 3;
                 changed = 1;
             }
             else
@@ -18850,7 +18850,7 @@ void fn_802AEF34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress <= lbl_803E7EB4)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 3;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 3;
                 changed = 1;
             }
             else
@@ -18891,7 +18891,7 @@ void fn_802AEF34(int obj, int state)
                 if (!ok)
                 {
                 set806_3:
-                    *(s16*)&((PlayerState*)state)->unk806 = 3;
+                    *(s16*)&((PlayerState*)state)->staffAnimState = 3;
                     ((PlayerState*)state)->moveVariantIndex = 0xff;
                     changed = 1;
                 }
@@ -18912,7 +18912,7 @@ void fn_802AEF34(int obj, int state)
             if (*(u16*)((char*)model + 0x58) == 0)
             {
                 ((GameObject*)obj)->anim.activeMove = -1;
-                *(s16*)&((PlayerState*)state)->unk806 = 0;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 0;
             }
             else
             {
@@ -18927,18 +18927,18 @@ void fn_802AEF34(int obj, int state)
                 if (((PlayerState*)state)->staffActionRequest == 0)
                 {
                     staffDoGrowShrinkAnim(gPlayerPathObject, 0, 0, 0);
-                    *(s16*)&((PlayerState*)state)->unk806 = 1;
+                    *(s16*)&((PlayerState*)state)->staffAnimState = 1;
                     changed = 1;
                 }
             }
             else if (((PlayerState*)state)->staffActionRequest == 2)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 2;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 2;
                 changed = 1;
             }
             if (((PlayerState*)state)->moveVariantIndex == 5 || ((PlayerState*)state)->moveVariantIndex == 7)
             {
-                *(s16*)&((PlayerState*)state)->unk806 = 0xf;
+                *(s16*)&((PlayerState*)state)->staffAnimState = 0xf;
                 changed = 1;
             }
             break;
