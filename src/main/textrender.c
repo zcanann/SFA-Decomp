@@ -1734,22 +1734,28 @@ void gameTextRun(void)
 
     zero = lbl_803DE704;
     fadeLimit = gGameTextFadeLimit;
-    for (i = 7; i >= 0; i--)
     {
-        f32* alpha = (f32*)(gameTextBase + 0x20 + i * 4);
-        f32* timer = (f32*)(gameTextBase + 0x40 + i * 4);
-        u8* entry = gameTextBase + 0xa0 + i * 0xc;
-
-        if ((double)*timer > zero)
+        f32* timer = (f32*)(gameTextBase + 0x40);
+        f32* alpha = (f32*)(gameTextBase + 0x20);
+        u8* entry = gameTextBase + 0xa0;
+        i = 8;
+        do
         {
-            *alpha += timeDelta;
-            if ((double)*alpha > fadeLimit)
+            if ((double)*timer > zero)
             {
-                *timer = zero;
-                *alpha = zero;
-                sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                *alpha += timeDelta;
+                if ((double)*alpha > fadeLimit)
+                {
+                    *timer = zero;
+                    *alpha = zero;
+                    sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                }
             }
+            timer--;
+            alpha--;
+            entry -= 0xc;
         }
+        while (i-- != 0);
     }
 
     if (*(int*)(gameTextFonts + 0x1c) == 1)
@@ -1772,7 +1778,7 @@ void gameTextRun(void)
     lbl_803DC9AA = 0;
     lbl_803DC9A8 = 0;
 
-    cmd = lbl_8033A540;
+    cmd = (GameTextSlot*)(gameTextBase + 0xbc0);
     i = lbl_803DC9C8;
     while (i-- != 0)
     {
