@@ -491,9 +491,9 @@ void worldobj_update(int obj)
                 dz /= dist;
             }
             sv = lbl_803E66A8;
-            *(f32*)(state->lookAtTargetRef + 0xc) = sv * dx + ((GameObject*)obj)->anim.localPosX;
-            *(f32*)(state->lookAtTargetRef + 0x10) = sv * dy + ((GameObject*)obj)->anim.localPosY;
-            *(f32*)(state->lookAtTargetRef + 0x14) = sv * dz + ((GameObject*)obj)->anim.localPosZ;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosX = sv * dx + ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosY = sv * dy + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosZ = sv * dz + ((GameObject*)obj)->anim.localPosZ;
         }
         if (state->effectState != 0)
         {
