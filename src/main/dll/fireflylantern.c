@@ -79,7 +79,7 @@ void fn_80154870(int obj, int* state)
     if (((state[0xb7] & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || curve->atSegmentEnd != 0) &&
             ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve(curve, (void*)obj, lbl_803E29B0,
+        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, lbl_803E29B0,
                                           (int*)&lbl_803DBCD0, -1) != 0))
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
