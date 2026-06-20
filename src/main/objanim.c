@@ -866,7 +866,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                  eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
                  eventIndex++)
             {
-                eventEntry = eventTable->entries[eventIndex];
+                eventEntry = objAnim->eventTable->entries[eventIndex];
                 eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
                 eventId = ObjAnim_GetPackedEventId(eventEntry);
                 if (eventId == OBJANIM_EVENT_ID_NONE)
