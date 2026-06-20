@@ -2261,11 +2261,22 @@ void allocLotsOfTextures(void)
         u8* p;
         for (i = 0, p = (u8*)(int)gNewShadowEntries; i < 0x20; i += 0x10)
         {
-            for (j = 0; j < 0x10; j++)
-            {
-                p[j * 0x14 + 0x10] = 0;
-                p[j * 0x14 + 0x11] = 1;
-            }
+            p[0x010] = 0; p[0x011] = 1;
+            p[0x024] = 0; p[0x025] = 1;
+            p[0x038] = 0; p[0x039] = 1;
+            p[0x04c] = 0; p[0x04d] = 1;
+            p[0x060] = 0; p[0x061] = 1;
+            p[0x074] = 0; p[0x075] = 1;
+            p[0x088] = 0; p[0x089] = 1;
+            p[0x09c] = 0; p[0x09d] = 1;
+            p[0x0b0] = 0; p[0x0b1] = 1;
+            p[0x0c4] = 0; p[0x0c5] = 1;
+            p[0x0d8] = 0; p[0x0d9] = 1;
+            p[0x0ec] = 0; p[0x0ed] = 1;
+            p[0x100] = 0; p[0x101] = 1;
+            p[0x114] = 0; p[0x115] = 1;
+            p[0x128] = 0; p[0x129] = 1;
+            p[0x13c] = 0; p[0x13d] = 1;
             p += 0x140;
         }
         p = (u8*)(int)gNewShadowEntries + i * 0x14;
