@@ -124,11 +124,11 @@ void objFn_80198fa4(s16* obj, void* placement)
 
 void objSeqMoveFn_80199188(void* obj, int arg2)
 {
+    f32 distSqA;
+    f32 dyB;
+    f32 dyA;
     f32 speed;
     f32 t;
-    f32 distSqA;
-    f32 dyA;
-    f32 dyB;
     f32 distSqB;
     bool nearEnd;
     char leg;
@@ -147,13 +147,13 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     t = state->nearRadiusSq;
     if (distSqB < t)
     {
-        dyB = (dyB < lbl_803E40D8) ? -dyB : dyB;
+        dyB = (dyB < 0.0f) ? -dyB : dyB;
         if (dyB < speed)
         {
             nearEnd = false;
             if (distSqA < t)
             {
-                dyA = (dyA < lbl_803E40D8) ? -dyA : dyA;
+                dyA = (dyA < 0.0f) ? -dyA : dyA;
                 if (dyA < speed)
                 {
                     nearEnd = true;
@@ -173,7 +173,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     nearEnd = false;
     if (distSqA < t)
     {
-        dyA = (dyA < lbl_803E40D8) ? -dyA : dyA;
+        dyA = (dyA < 0.0f) ? -dyA : dyA;
         if (dyA < speed)
         {
             nearEnd = true;
