@@ -11,7 +11,6 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-extern f32 timeDelta;
 
 extern f32 lbl_803E4EB8;
 extern u8 Obj_IsLoadingLocked(void);
