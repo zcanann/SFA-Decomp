@@ -373,13 +373,13 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
     vxz = gDimLavaVelocityScale * p3;
-    x = *(f32*)(*(char**)&state->targetObj + 0xc);
+    x = ((GameObject*)state->targetObj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosX = x;
     ((GameObject*)obj)->anim.localPosX = x;
-    x = *(f32*)(*(char**)&state->targetObj + 0x10);
+    x = ((GameObject*)state->targetObj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosY = x;
     ((GameObject*)obj)->anim.localPosY = x;
-    x = *(f32*)(*(char**)&state->targetObj + 0x14);
+    x = ((GameObject*)state->targetObj)->anim.localPosZ;
     ((GameObject*)obj)->anim.worldPosZ = x;
     ((GameObject*)obj)->anim.localPosZ = x;
     x = ((GameObject*)obj)->anim.localPosX;
