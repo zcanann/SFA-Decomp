@@ -1330,6 +1330,8 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 #pragma peephole off
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 {
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int nextId;
     int nextCurve;
@@ -1574,6 +1576,8 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
 
 int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 {
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int currentCurve;
     int nextId;
@@ -1649,6 +1653,8 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
 int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
 {
+    extern float mathCosf(float x); /* #57 */
+    extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int curveId;
     int currentCurve;
