@@ -376,7 +376,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         {
             total = -total;
         }
-        return total;
+        goto done_exit;
     }
 
     reachedForward = 0;
@@ -512,6 +512,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     {
         total = -total;
     }
+done_exit:
     return total;
 }
 
