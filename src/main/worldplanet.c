@@ -372,7 +372,7 @@ void worldplanet_update(int obj)
             while (k < 5);
             state->unlockedPlanetMask = m;
         }
-        if (gWorldPlanetSelectConfirmTimer == 0 && state->selectionLocked == 0)
+        if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
         {
             while (!done)
             {
@@ -494,7 +494,7 @@ void worldplanet_update(int obj)
                 if (gWorldPlanetReselectDelayTimer == 0)
                 {
                     if (gWorldPlanetSelectConfirmTimer == 0 &&
-                        ((u32)state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
+                        (state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
                         (buttons & 0x100) != 0)
                     {
                         gWorldPlanetSelectConfirmTimer = 10;
