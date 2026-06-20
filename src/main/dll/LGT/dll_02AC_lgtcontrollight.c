@@ -87,6 +87,7 @@ void controllight_update(int obj)
         {
         case CONTROLLIGHT_MODE_DIRECT:
             {
+                extern void pointlight_setEffectState(int obj, u8 enabled); /* #57 */
                 f32 radius = state->radius;
                 int count;
                 int i;
