@@ -8209,12 +8209,12 @@ void playerDoHitDetection(int obj)
                     {
                         ((PlayerState*)inner)->unk8AD =
                             ((u8*)(((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
-                                ((PlayerState*)inner)->unk8CD))[0xa8];
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
+                                ((PlayerState*)inner)->unk8CD)[0xa8];
                         ((PlayerState*)inner)->unk8AC =
                             ((u8*)(((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
-                                ((PlayerState*)inner)->unk8CD))[0xab];
+                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
+                                ((PlayerState*)inner)->unk8CD)[0xab];
                         ((PlayerState*)inner)->unk828 =
                             (f32)(u32)((PlayerState*)inner)->unk8AD;
                         ((PlayerState*)inner)->unk8AB += 1;
