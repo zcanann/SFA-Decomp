@@ -708,8 +708,8 @@ void Camera_UpdateProjection(void* viewportArg)
     u8 viewIndex = gCameraCurrentViewIndex;
     u8 activeViewIndex;
     u32 resolution = getScreenResolution();
-    u32 screenWidth = resolution >> 16;
     u32 screenHeight = resolution & 0xffff;
+    u32 screenWidth = resolution >> 16;
     u8* viewportEntry = gCameraViewportEntries + viewIndex * 0x34;
 
     if ((*(int*)(viewportEntry + 0x30) & 1) != 0)
