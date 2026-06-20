@@ -564,8 +564,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         {
             Obj_FreeObject(*(int*)&state->trackedObject);
             *(int*)&state->trackedObject = 0;
-            state->uiMessageCount += 1;
-            if (state->uiMessageCount > 3)
+            if (++state->uiMessageCount > 3)
             {
                 state->uiMessageCount = 3;
             }
