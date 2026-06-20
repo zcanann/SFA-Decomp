@@ -1020,7 +1020,7 @@ int fn_80136E00(int p1, u8* p)
     u8 c;
     int w;
     int x2;
-    u16 y;
+    int y;
     int y0;
     int y1;
     u16 x0;
