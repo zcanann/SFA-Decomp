@@ -80,7 +80,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     fz = lbl_803E49D4;
     sub->animSpeed = fz;
     sub->riseSpeed = fz;
-    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
+    if (GameBit_Get(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
     {
         sub->burnState = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
