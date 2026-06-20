@@ -125,9 +125,9 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             *(u16*)(effectObj + 0xb0) |= 0x200;
             memcpy(*(void**)(effectObj + 0x4c), spawnDef, *(u8*)((int)spawnDef + 2));
             *(s16*)(effectObj + 6) &= ~0x4000;
-            *(float*)(effectObj + 0xc) = *(float*)((int)spawnDef + 8);
-            *(float*)(effectObj + 0x10) = *(float*)((int)spawnDef + 0xc);
-            *(float*)(effectObj + 0x14) = *(float*)((int)spawnDef + 0x10);
+            ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
+            ((GameObject*)effectObj)->anim.localPosY = *(float*)((int)spawnDef + 0xc);
+            ((GameObject*)effectObj)->anim.localPosZ = *(float*)((int)spawnDef + 0x10);
             (*(FirePipeEffectInitFn*)(**(int**)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
@@ -387,7 +387,7 @@ sound_update:
             ((GameObject*)effectObj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(s16*)(effectObj + 0) = ((GameObject*)obj)->anim.rotX;
             *(s16*)(effectObj + 2) = ((GameObject*)obj)->anim.rotY;
-            *(f32*)(effectObj + 0x28) = lbl_803DC344;
+            ((GameObject*)effectObj)->anim.velocityY = lbl_803DC344;
         }
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, lbl_803DC350);
