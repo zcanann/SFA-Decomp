@@ -2161,7 +2161,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         s = OSDisableInterrupts();
         flags = lbl_803DCC80;
         OSRestoreInterrupts(s);
-        if ((flags & 0x400) == 0 && (flags & 0x100) == 0)
+        if ((flags & 0x100) == 0 && (flags & 0x100) == 0)
         {
             b = MLDF_PTR(0x24);
         }
@@ -2173,7 +2173,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
-                if ((flags & 0x400) == 0 && (flags & 0x100) == 0)
+                if ((flags & 0x100) == 0 && (flags & 0x100) == 0)
                 {
                     b = MLDF_PTR(0x24);
                     break;
