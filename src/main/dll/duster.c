@@ -46,7 +46,7 @@ extern int getAngle(float y, float x);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
 extern int Obj_IsLoadingLocked(void);
-extern u8 objBboxFn_800640cc();
+extern int objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 
 extern char lbl_803DBCD8;
@@ -58,7 +58,7 @@ extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern u32 fn_80295CBC();
-extern u32 gDusterWallProbeOffsets;
+extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
@@ -198,17 +198,16 @@ void fn_801554B4(int* obj, int state)
     float hit[18];
 
     didHit = 0;
-    probeOffsets = (float*)&gDusterWallProbeOffsets;
-    for (i = 0; didHit == 0 && i < 4; i++)
+    for (i = 0, probeOffsets = gDusterWallProbeOffsets; didHit == 0 && i < 4; i++)
     {
-        maxv[0] = ((GameObject*)obj)->anim.localPosX + *probeOffsets;
+        maxv[0] = ((GameObject*)obj)->anim.localPosX + probeOffsets[0];
         maxv[1] = ((GameObject*)obj)->anim.localPosY;
         maxv[2] = ((GameObject*)obj)->anim.localPosZ + probeOffsets[1];
-        minv[0] = ((GameObject*)obj)->anim.localPosX - *probeOffsets;
+        minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[0];
         minv[1] = ((GameObject*)obj)->anim.localPosY;
         minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[1];
         didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
-        probeOffsets = probeOffsets + 2;
+        probeOffsets += 2;
     }
     if (didHit != 0)
     {
