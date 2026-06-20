@@ -587,6 +587,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 h24;
         s32 mins25;
         f32 playRatio;
+        u8 magicVal;
         info = mapEvents->getCurCharacterState();
         hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
@@ -609,21 +610,22 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         }
         if (GameBit_Get(0x91b) != 0)
         {
-            lbl_803DD734 = 0xc8;
+            magicVal = 0xc8;
         }
         else if (GameBit_Get(0x91a) != 0)
         {
-            lbl_803DD734 = 0x64;
+            magicVal = 0x64;
         }
         else if (GameBit_Get(0x919) != 0)
         {
-            lbl_803DD734 = 0x32;
+            magicVal = 0x32;
         }
         else
         {
-            lbl_803DD734 = 0xa;
+            magicVal = 0xa;
         }
-        *(s16*)(lbl_8031BB90 + 0x160) = lbl_803DD734 != 0 ? 0x4e : 0x25;
+        lbl_803DD734 = magicVal;
+        *(s16*)(lbl_8031BB90 + 0x160) = magicVal != 0 ? 0x4e : 0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
