@@ -196,7 +196,7 @@ extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
 
-void FUN_80144e40(int param_1, int param_2)
+void FUN_80144e40(int obj, int state)
 {
     float heightVal;
     int scratch;
@@ -204,60 +204,60 @@ void FUN_80144e40(int param_1, int param_2)
     u32 bit;
     int hit[3];
 
-    *(float*)(param_2 + 0x720) = *(float*)(param_2 + 0x720) - lbl_803DC074;
-    if (*(float*)(param_2 + 0x720) < lbl_803E306C)
+    *(float*)(state + 0x720) = *(float*)(state + 0x720) - lbl_803DC074;
+    if (*(float*)(state + 0x720) < lbl_803E306C)
     {
-        *(float*)(param_2 + 0x720) = lbl_803E306C;
+        *(float*)(state + 0x720) = lbl_803E306C;
     }
-    scratch = ObjHits_GetPriorityHit(param_1, hit, 0x0, 0x0);
+    scratch = ObjHits_GetPriorityHit(obj, hit, 0x0, 0x0);
     if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
         (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
     {
-        heightVal = *(float*)(param_2 + 0x720);
+        heightVal = *(float*)(state + 0x720);
         if (lbl_803E306C < heightVal)
         {
-            *(float*)(param_2 + 0x720) = heightVal + lbl_803E30D0;
-            if (*(char*)(param_2 + 10) != '\v')
+            *(float*)(state + 0x720) = heightVal + lbl_803E30D0;
+            if (*(char*)(state + 10) != '\v')
             {
-                if ((*(u32*)(param_2 + 0x54) & 0x10) == 0)
+                if ((*(u32*)(state + 0x54) & 0x10) == 0)
                 {
-                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    scratch = *(int*)&((GameObject*)obj)->extra;
                     if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
-                            ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.
+                            ((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.
                                 currentMove < 0x29)))) &&
-                        (cond = FUN_800067f0(param_1, 0x10), !cond))
+                        (cond = FUN_800067f0(obj, 0x10), !cond))
                     {
-                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(obj, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
-                    *(u8*)(param_2 + 10) = 10;
-                    *(u32*)(param_2 + 0x54) = *(u32*)(param_2 + 0x54) | 0x10;
+                    *(u8*)(state + 10) = 10;
+                    *(u32*)(state + 0x54) = *(u32*)(state + 0x54) | 0x10;
                 }
-                else if (*(float*)(param_2 + 0x720) <= lbl_803E31C4)
+                else if (*(float*)(state + 0x720) <= lbl_803E31C4)
                 {
-                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    scratch = *(int*)&((GameObject*)obj)->extra;
                     if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
-                            ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.
+                            ((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.
                                 currentMove < 0x29)))) &&
-                        (cond = FUN_800067f0(param_1, 0x10), !cond))
+                        (cond = FUN_800067f0(obj, 0x10), !cond))
                     {
-                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(obj, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                 }
                 else
                 {
-                    *(float*)(param_2 + 0x720) = *(float*)(param_2 + 0x720) * lbl_803E3138;
+                    *(float*)(state + 0x720) = *(float*)(state + 0x720) * lbl_803E3138;
                     bit = FUN_80017690(0x245);
                     if (bit != 0)
                     {
-                        if (lbl_803E306C == *(float*)(param_2 + 0x2ac))
+                        if (lbl_803E306C == *(float*)(state + 0x2ac))
                         {
                             cond = false;
                         }
-                        else if (lbl_803E30A0 == *(float*)(param_2 + 0x2b0))
+                        else if (lbl_803E30A0 == *(float*)(state + 0x2b0))
                         {
                             cond = true;
                         }
-                        else if (*(float*)(param_2 + 0x2b4) - *(float*)(param_2 + 0x2b0) <= lbl_803E30A4)
+                        else if (*(float*)(state + 0x2b4) - *(float*)(state + 0x2b0) <= lbl_803E30A4)
                         {
                             cond = false;
                         }
@@ -267,31 +267,31 @@ void FUN_80144e40(int param_1, int param_2)
                         }
                         if (!cond)
                         {
-                            *(u8*)(param_2 + 10) = 0xb;
+                            *(u8*)(state + 10) = 0xb;
                             return;
                         }
                     }
-                    scratch = *(int*)&((GameObject*)param_1)->extra;
+                    scratch = *(int*)&((GameObject*)obj)->extra;
                     if (((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
-                        (((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.currentMove
+                        (((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove
                                 < 0x29)) &&
-                            (cond = FUN_800067f0(param_1, 0x10), !cond))))
+                            (cond = FUN_800067f0(obj, 0x10), !cond))))
                     {
-                        FUN_80039468(param_1, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
+                        FUN_80039468(obj, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                 }
             }
         }
         else
         {
-            *(float*)(param_2 + 0x720) = heightVal + lbl_803E317C;
-            scratch = *(int*)&((GameObject*)param_1)->extra;
+            *(float*)(state + 0x720) = heightVal + lbl_803E317C;
+            scratch = *(int*)&((GameObject*)obj)->extra;
             if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
-                    ((0x2f < ((GameObject*)param_1)->anim.currentMove || (((GameObject*)param_1)->anim.currentMove <
+                    ((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove <
                         0x29)))) &&
-                (cond = FUN_800067f0(param_1, 0x10), !cond))
+                (cond = FUN_800067f0(obj, 0x10), !cond))
             {
-                FUN_80039468(param_1, scratch + 0x3a8, 0x34f, 0x500, 0xffffffff, 0);
+                FUN_80039468(obj, scratch + 0x3a8, 0x34f, 0x500, 0xffffffff, 0);
             }
         }
     }
@@ -2849,7 +2849,7 @@ void FUN_80146fa0(void)
 
 void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u32 param_9, u32 param_10, float* param_11, float* param_12)
+                  u32 param_9, u32 param_10, float* pointA, float* pointB)
 {
     short objId;
     bool applyOffset;
@@ -2874,9 +2874,9 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     blocked = '\0';
     if (*(int*)(player + 0x29c) != 0)
     {
-        pointX = *param_11;
-        pointY = param_11[1];
-        pointZ = param_11[2];
+        pointX = *pointA;
+        pointY = pointA[1];
+        pointZ = pointA[2];
         applyOffset = true;
         objId = *(short*)((int)target + 0x46);
         if (((((objId != 0x613) && (objId != 0x642)) && (objId != 0x3fe)) &&
@@ -2886,11 +2886,11 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
             applyOffset = false;
         }
         FUN_80006a68(&pointX, asStack_9c);
-        pointX = *param_12;
-        pointY = lbl_803E3234 + param_12[1];
-        pointZ = param_12[2];
+        pointX = *pointB;
+        pointY = lbl_803E3234 + pointB[1];
+        pointZ = pointB[2];
         FUN_80006a68(&pointX, asStack_94);
-        FUN_80247eb8(param_11, &pointX, afStack_8c);
+        FUN_80247eb8(pointA, &pointX, afStack_8c);
         dist = SeekTwiceBeforeRead(afStack_8c);
         if (dist < (double)lbl_803E3244)
         {
@@ -2907,7 +2907,7 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     }
     if ((blocked != '\0') && ((*(u32*)(player + 0x2e4) & 8) != 0))
     {
-        FUN_800620e8(param_11, &pointX, (float*)0x0, aiStack_74, target, (u32) * (u8*)(player + 0x261),
+        FUN_800620e8(pointA, &pointX, (float*)0x0, aiStack_74, target, (u32) * (u8*)(player + 0x261),
                      0xffffffff, 0, 0);
     }
     FUN_80286888();
