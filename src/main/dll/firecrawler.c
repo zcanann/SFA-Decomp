@@ -1327,7 +1327,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                 return;
             }
         }
-        if (((BaddieState*)state)->trackedObj != NULL && *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xa8) >
+        if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.hitboxScale >
             lbl_803E2B50)
         {
             ((BaddieState*)state)->speedScale = lbl_803DBCE8;
