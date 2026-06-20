@@ -185,7 +185,7 @@ void ecsh_cup_update(short* obj)
             if (*(u8*)((char*)obj + 0x37) != 0)
             {
                 a = (f32)(u32) * (u8*)((char*)obj + 0x37);
-                a = -(lbl_803E507C * timeDelta - a);
+                a = a - lbl_803E507C * timeDelta;
                 if (a <= lbl_803E5068)
                 {
                     a = lbl_803E5068;
