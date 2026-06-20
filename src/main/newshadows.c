@@ -2426,6 +2426,7 @@ void shadowRenderFn_8006b558(int* obj)
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 
+#pragma opt_loop_invariants off
 void fn_8006CB50(void)
 {
     int y, x;
@@ -2460,6 +2461,7 @@ void fn_8006CB50(void)
     }
     DCFlushRange((char*)lbl_803DCFBC + 0x60, *(u32*)((char*)lbl_803DCFBC + 0x44));
 }
+#pragma opt_loop_invariants reset
 
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
