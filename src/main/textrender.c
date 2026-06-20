@@ -2460,6 +2460,7 @@ extern u16 gGameTextSjisGlyphTable[];
 extern int lbl_803DB3C4;
 
 #pragma peephole off
+#pragma ppc_unroll_speculative off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     u8* fontData;
@@ -2631,30 +2632,23 @@ void gameTextLoadGraphicsFn_8001a918(void)
             for (row = ty; row < tyEnd; row++)
             {
                 int off = tx << 5;
-                int j2 = tx;
-                int n;
-                if (j2 < txEnd)
+                int j2;
+                for (j2 = tx; j2 < txEnd; j2++)
                 {
-                    n = cnt;
-                    do
-                    {
-                        u8* dst = *(u8**)(base31 + 0x60) + off;
-                        u32 tmp;
-                        dst += row * lbl_803DB3C4;
-                        *(u32*)(dst + 0x60) = src[0];
-                        *(u32*)(dst + 0x64) = src[1];
-                        *(u32*)(dst + 0x68) = src[2];
-                        *(u32*)(dst + 0x6c) = src[3];
-                        *(u32*)(dst + 0x70) = src[4];
-                        *(u32*)(dst + 0x74) = src[5];
-                        *(u32*)(dst + 0x78) = src[6];
-                        tmp = src[7];
-                        src += 8;
-                        *(u32*)(dst + 0x7c) = tmp;
-                        off += 0x20;
-                        j2++;
-                    }
-                    while (--n != 0);
+                    u8* dst = *(u8**)(base31 + 0x60) + off;
+                    u32 tmp;
+                    dst += row * lbl_803DB3C4;
+                    *(u32*)(dst + 0x60) = src[0];
+                    *(u32*)(dst + 0x64) = src[1];
+                    *(u32*)(dst + 0x68) = src[2];
+                    *(u32*)(dst + 0x6c) = src[3];
+                    *(u32*)(dst + 0x70) = src[4];
+                    *(u32*)(dst + 0x74) = src[5];
+                    *(u32*)(dst + 0x78) = src[6];
+                    tmp = src[7];
+                    src += 8;
+                    *(u32*)(dst + 0x7c) = tmp;
+                    off += 0x20;
                 }
             }
         }
@@ -2668,6 +2662,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int*)(base31 + 0x6c) = 2;
 }
+#pragma ppc_unroll_speculative on
 
 
 extern int gSubtitleLineIndex;
