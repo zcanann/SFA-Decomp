@@ -2526,7 +2526,7 @@ extern void clearSaveGameLoadingFlag(void);
 extern void mapSetupPlayer(void);
 extern void* saveGameGetEnvState(void);
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
-extern void skyFn_80088c94(int flags, int mode);
+extern void skyFn_80088c94(int flags, u8 mode);
 extern void skyFn_80088e54(f32 a, int on);
 
 void beginLoadingMap(void)
