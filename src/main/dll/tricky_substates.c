@@ -1737,7 +1737,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                     }
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                     ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
-                    ((TrickyState*)state)->stateFlags |= 0x40000000;
+                    ((TrickyState*)state)->stateFlags |= 0x40000000LL;
                 }
                 buttonDisable(0, 0x100);
                 return 1;
