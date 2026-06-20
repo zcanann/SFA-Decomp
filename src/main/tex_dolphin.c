@@ -335,9 +335,10 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
     float farY;
     float farZ;
 
-    for (i = 5, plane = gViewFrustumPlanes; i != 0; i--, plane++, planeOffsets++)
+    plane = gViewFrustumPlanes;
+    for (i = 0; i < 5; i++)
     {
-        cornerIndex = plane->aabbCornerIndex;
+        cornerIndex = plane[i].aabbCornerIndex;
         if ((cornerIndex & 1) != 0)
         {
             nearX = maxX;
@@ -368,9 +369,9 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
             nearZ = minZ;
             farZ = maxZ;
         }
-        if ((nearX * plane->normalX + nearY * plane->normalY + nearZ * plane->normalZ + plane->distance + *planeOffsets
+        if ((nearX * plane[i].normalX + nearY * plane[i].normalY + nearZ * plane[i].normalZ + plane[i].distance + planeOffsets[i]
                 < lbl_803DEBCC) &&
-            (farX * plane->normalX + farY * plane->normalY + farZ * plane->normalZ + plane->distance + *planeOffsets <
+            (farX * plane[i].normalX + farY * plane[i].normalY + farZ * plane[i].normalZ + plane[i].distance + planeOffsets[i] <
                 lbl_803DEBCC))
             return 0;
     }
