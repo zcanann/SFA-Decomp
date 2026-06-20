@@ -341,7 +341,7 @@ void fn_8015165C(int obj, u8* state)
             else
             {
                 if (player != NULL && ((((GroundBaddieState*)state)->baddie.controlFlags & 0x800080) != 0 ||
-                    Player_GetTargetObject((int)player) == 0))
+                    (void*)Player_GetTargetObject((int)player) == NULL))
                 {
                     fn_801511E8(obj, state);
                 }
