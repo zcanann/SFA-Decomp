@@ -173,7 +173,7 @@ typedef struct PlayerState {
     f32 unk5B4;
     f32 unk5B8;
     f32 unk5BC;
-    int unk5C0;
+    int launchYaw; /* heading captured (*(s16*)obj) when a jump/launch move starts; base angle for the airborne arc yaw (case 7) */
     f32 unk5C4;
     u8 pad5C8[0x5CC - 0x5C8];
     f32 unk5CC;

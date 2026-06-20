@@ -6642,7 +6642,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             }
             else if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
             {
-                ((PlayerState*)inner)->unk5C0 = *(s16*)obj;
+                ((PlayerState*)inner)->launchYaw = *(s16*)obj;
                 gPlayerCurrentMoveId = 7;
                 blend = lbl_803E8034;
                 ((GameObject*)obj)->anim.velocityY = z;
@@ -6671,7 +6671,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         }
         else if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
         {
-            ((PlayerState*)inner)->unk5C0 = *(s16*)obj;
+            ((PlayerState*)inner)->launchYaw = *(s16*)obj;
             gPlayerCurrentMoveId = 7;
             blend = lbl_803E8034;
             ((GameObject*)obj)->anim.velocityY = z;
@@ -6695,7 +6695,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.velocityY =
                 -(lbl_803E7F6C * timeDelta - ((GameObject*)obj)->anim.velocityY);
             ang = -(lbl_803E7F98 * ((GameObject*)obj)->anim.currentMoveProgress -
-                (f32)((PlayerState*)inner)->unk5C0);
+                (f32)((PlayerState*)inner)->launchYaw);
             ((PlayerState*)inner)->yaw = ang;
             ((PlayerState*)inner)->targetYaw = ang;
             if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
