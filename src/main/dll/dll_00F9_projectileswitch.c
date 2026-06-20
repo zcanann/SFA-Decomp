@@ -73,14 +73,14 @@ ObjectDescriptor gAreaObjDescriptor = {
 typedef struct ProjectileSwitchPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 cooldownFrames;
     u8 pad1C[0x1E - 0x1C];
-    u8 unk1E;
+    u8 triggerMode;
     u8 pad1F[0x20 - 0x1F];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
+    u8 colorR;
+    u8 colorG;
+    u8 colorB;
+    u8 flags;
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchPlacement;
 
@@ -101,10 +101,10 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
     int state = *(int*)&((GameObject*)obj)->anim.placementData;
     if ((int)(signed char)flag != 0)
     {
-        if ((((ProjectileSwitchPlacement*)state)->unk23 & 1) != 0)
+        if ((((ProjectileSwitchPlacement*)state)->flags & 1) != 0)
         {
-            fn_8003B608(((ProjectileSwitchPlacement*)state)->unk20, ((ProjectileSwitchPlacement*)state)->unk21,
-                        ((ProjectileSwitchPlacement*)state)->unk22);
+            fn_8003B608(((ProjectileSwitchPlacement*)state)->colorR, ((ProjectileSwitchPlacement*)state)->colorG,
+                        ((ProjectileSwitchPlacement*)state)->colorB);
         }
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3700);
     }
@@ -139,7 +139,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
     if (*(u8*)state != 0)
     {
-        if (((((ProjectileSwitchPlacement*)state2)->unk1E & 3)) != 1) return;
+        if (((((ProjectileSwitchPlacement*)state2)->triggerMode & 3)) != 1) return;
         stateB = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
@@ -175,11 +175,11 @@ void ProjectileSwitch_hitDetect(int obj)
         }
         *(u8*)stateB = 1;
         GameBit_Set((int)*(short*)(state + 2), 1);
-        if ((((ProjectileSwitchPlacement*)state2)->unk1E & 3) == 2)
+        if ((((ProjectileSwitchPlacement*)state2)->triggerMode & 3) == 2)
         {
             ((ProjectileSwitchState*)state)->unk4 =
                 lbl_803E3704 * (lbl_803E3708 *
-                (f32)((ProjectileSwitchPlacement*)state2)->unk1A);
+                (f32)((ProjectileSwitchPlacement*)state2)->cooldownFrames);
         }
     }
 }
