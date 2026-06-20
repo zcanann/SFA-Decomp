@@ -2230,7 +2230,7 @@ void mapLoadUnloadObjects(int flag)
     s16 count;
     int i;
     int n;
-    s16 list[16];
+    s16 list[8];
     s16* q;
     int k;
     int* tp;
@@ -2257,7 +2257,7 @@ void mapLoadUnloadObjects(int flag)
         for (k = 0; k < 3; k++)
         {
             s16 id = *q;
-            if (id >= 0 && id < 80 && *(void**)(base + 0x83A8 + id * 4) != 0)
+            if (id >= 0 && id < 80 && *(void**)(base + (0x83A8 + id * 4)) != 0)
             {
                 s16 dup = 0;
                 s16* w = list;
@@ -2298,7 +2298,7 @@ void mapLoadUnloadObjects(int flag)
                             unload = 1;
                         }
                         else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
-                            *(void**)(base + 0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4) == 0)
+                            *(void**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4)) == 0)
                         {
                             unload = 1;
                         }
@@ -2319,7 +2319,7 @@ void mapLoadUnloadObjects(int flag)
             }
             if (unload)
             {
-                char* page = *(char**)(base + 0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4);
+                char* page = *(char**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4));
                 if (page != 0)
                 {
                     s16 tbit = *(s16*)(obj + 0xB2);
