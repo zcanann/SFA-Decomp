@@ -189,14 +189,7 @@ void kytesmum_update(int obj)
             moveIdx = 4;
         }
         ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
-        if (moveIdx == 0)
-        {
-            runtime->animSpeed = lbl_803E699C;
-        }
-        else
-        {
-            runtime->animSpeed = lbl_803E69A0;
-        }
+        runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
     }
     kytesmum_playAnimationEventSfx(obj, runtime->animEvents, runtime->eventSfxTable);
     characterDoEyeAnims(obj, runtime->eyeAnimState);
