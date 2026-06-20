@@ -1497,7 +1497,7 @@ void Tricky_update(int obj)
         {
             memmove((void*)(p + 0x748), (void*)(state + (i + 1) * 8 + 0x748),
                     (((TrickyState*)state)->unk798 - i - 1) * 8);
-            ((TrickyState*)state)->unk798 = ((TrickyState*)state)->unk798 - 1;
+            ((TrickyState*)state)->unk798 -= 1;
         }
         p = p - 8;
     }
