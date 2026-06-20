@@ -460,7 +460,10 @@ void warpstone_update(int obj)
         *(int*)state = 0;
     }
 
-    advanceResult = SClantern_advanceAnimEvents(lbl_803E54A4, obj);
+    {
+        extern u32 SClantern_advanceAnimEvents(int obj, f32 moveStepScale);
+        advanceResult = SClantern_advanceAnimEvents(obj, lbl_803E54A4);
+    }
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         if (randFn_80080100(100) != 0)
