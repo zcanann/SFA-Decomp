@@ -333,8 +333,8 @@ void drawFn_8006f500(void)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     i = 0;
-    quad = gWaterSplashQuads;
     for (; i < 0x100; i++) {
+        quad = &gWaterSplashQuads[i * 0x38];
         alpha = quad[0x33];
         if (alpha != 0) {
             if (quad[0x32] == 1) {
@@ -367,7 +367,6 @@ void drawFn_8006f500(void)
             GXPosition3f32(*(f32 *)(quad + 0x24), *(f32 *)(quad + 0x28), *(f32 *)(quad + 0x2c));
             GXTexCoord2f32(Vachuff_803DEE20, tBot);
         }
-        quad += 0x38;
     }
     Camera_ApplyFullViewport();
 }
