@@ -61,7 +61,6 @@ extern void ObjHitbox_SetCapsuleBounds();
 extern void ObjHits_DisableObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern f32 timeDelta;
 
 extern void Obj_RemoveFromUpdateList(int obj);
 
