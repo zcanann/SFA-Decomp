@@ -1857,7 +1857,7 @@ void initFn_8006d020(void)
         {
             for (col = 0; col < 0x40; col++)
             {
-                f32 o2, o1;
+                f32 o1, o2;
                 int hi, lo;
                 char* dst = (char*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
                     + (col & 3) * 8 + (col >> 2) * 0x200);
