@@ -1790,7 +1790,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     {
         return -1;
     }
-    if (RomCurve_findByIdWithIndex(*(s32*)(startCurve + 0x14), &startIndex) == 0)
+    if (RomCurve_findByIdWithIndex(*(s32*)(startCurve + 0x14), &startIndex) == NULL)
     {
         return -1;
     }
@@ -1852,7 +1852,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 }
 
                 linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &linkIndex);
-                if (linkCurve == 0 || visited[linkIndex] != 0 || queueCount >= 0x28)
+                if (linkCurve == 0 || (s8)visited[linkIndex] != 0 || queueCount >= 0x28)
                 {
                     continue;
                 }
