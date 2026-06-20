@@ -55,7 +55,7 @@ void fn_8013351C(void);
 
 
 extern void* Obj_GetPlayerObject(void);
-extern int Camera_GetViewportYOffset(void);
+extern s16 Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
@@ -875,7 +875,7 @@ void fn_8013396C(void)
                 fn_80133818();
             }
             held = getButtonsHeld(0);
-            pressed = getButtonsJustPressed(0);
+            pressed = (u16)getButtonsJustPressed(0);
             if ((held & 0xc) == 0)
             {
                 if ((pressed & 1) != 0)
