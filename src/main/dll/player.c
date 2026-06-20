@@ -14946,6 +14946,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     void* hit;
     int tbl1, tbl2;
     int i;
+    f32* pbx;
+    f32* pby;
+    f32* pbz;
 
     ((PlayerState*)b)->unk4C4 = 0;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
@@ -14976,6 +14979,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     planes[1].d = -(planes[1].nx * *(f32*)((char*)c + 0x8) +
         planes[1].nz * *(f32*)((char*)c + 0x18));
     threshold = lbl_803E7E98;
+    pbx = &bx;
+    pby = &by;
+    pbz = &bz;
     for (i = 0; i < 2; i++)
     {
         f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(&planes[i], (void*)e) + planes[i].d;
@@ -14991,12 +14997,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 face = NULL;
             }
-            if (face == NULL)
-            {
-                return 0;
-            }
-            if (((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 6 &&
-                ((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 0x10)
+            if (face == NULL ||
+                (((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 6 &&
+                 ((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 0x10))
             {
                 return 0;
             }
@@ -15009,7 +15012,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             if (hit != NULL)
             {
                 ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, (int)hit);
-                ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&bx, &by, &bz, (int)hit);
+                ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(pbx, pby, pbz, (int)hit);
             }
             {
                 f32 dx = ax - bx;
