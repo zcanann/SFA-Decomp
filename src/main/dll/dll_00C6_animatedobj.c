@@ -1707,7 +1707,7 @@ void animatedobj_update(int* obj)
                 if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10)
                 {
                     ObjSeqState* otherSeq = *(ObjSeqState**)&((GameObject*)other)->extra;
-                    if (slot == otherSeq->slot)
+                    if (slot == (s8)otherSeq->slot)
                     {
                         cnt++;
                     }
