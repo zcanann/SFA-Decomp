@@ -262,7 +262,7 @@ typedef struct PlayerState {
     f32 unk788;
     f32 unk78C;
     u8 pad790[0x79C - 0x790];
-    f32 unk79C;
+    f32 knockbackTimer; /* knockback/stagger countdown (-= timeDelta*unk7A4); set on knock moves, gates knock FX/sfx (0x394/0x395) while >0, reset to 0 on expiry */
     f32 unk7A0;
     f32 unk7A4;
     u8 unk7A8;

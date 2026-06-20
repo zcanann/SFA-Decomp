@@ -3177,7 +3177,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
         {
             f32 fz = lbl_803E7EA4;
-            ((PlayerState*)inner)->unk79C = fz;
+            ((PlayerState*)inner)->knockbackTimer = fz;
             ((PlayerState*)inner)->unk7A0 = fz;
         }
         if (((u32) * (u8*)((char*)inner + 0x3f2) >> 7 & 1) == 0)
@@ -8396,7 +8396,7 @@ void fn_802AFB0C(int obj, int inner, int state)
     knockKind = 0;
     if (*(f32*)(*(int*)&((GameObject*)obj)->extra + 0x838) > lbl_803E7ED8)
     {
-        ((PlayerState*)inner)->unk79C = lbl_803E7EA4;
+        ((PlayerState*)inner)->knockbackTimer = lbl_803E7EA4;
     }
     if (gPlayerSfxTimerA > 0)
     {
@@ -8534,7 +8534,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         case 0x14:
         case 0x1a:
         case 0x1f:
-            if (((PlayerState*)inner)->unk79C <= lbl_803E7EA4)
+            if (((PlayerState*)inner)->knockbackTimer <= lbl_803E7EA4)
             {
                 knockKind = 1;
             }
@@ -8580,7 +8580,7 @@ void fn_802AFB0C(int obj, int inner, int state)
         }
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x800) == 0 && knockKind != 0)
         {
-            ((PlayerState*)inner)->unk79C = lbl_803E7EDC;
+            ((PlayerState*)inner)->knockbackTimer = lbl_803E7EDC;
             ((PlayerState*)inner)->unk7A0 = lbl_803E8050;
             ((PlayerState*)inner)->unk7A4 = lbl_803E7EE0;
             ((KnockBits*)((char*)inner + 0x7a8))->knock = (u8)knockKind;
@@ -9193,7 +9193,7 @@ void fn_80296C84(int obj)
     *(s8*)((char*)*(int volatile*)((char*)inner + 0x35C)) = (s8)v;
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
-    inner->unk79C = lbl_803E7EA4;
+    inner->knockbackTimer = lbl_803E7EA4;
     inner->moveVariantIndex = 0xff;
 }
 
@@ -13144,17 +13144,17 @@ void fn_802B066C(int obj, int state)
         ((PlayerState*)state)->unk7A4 =
             (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
     }
-    ((PlayerState*)state)->unk79C =
-        ((PlayerState*)state)->unk79C - timeDelta * ((PlayerState*)state)->unk7A4;
+    ((PlayerState*)state)->knockbackTimer =
+        ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->unk7A4;
     zero = lbl_803E7EA4;
-    if (((PlayerState*)state)->unk79C <= zero)
+    if (((PlayerState*)state)->knockbackTimer <= zero)
     {
         if (Sfx_IsPlayingFromObject(obj, 0x394))
         {
             Sfx_StopFromObject(obj, 0x394);
             Sfx_PlayFromObject(obj, 0x395);
         }
-        ((PlayerState*)state)->unk79C = lbl_803E7EA4;
+        ((PlayerState*)state)->knockbackTimer = lbl_803E7EA4;
         return;
     }
     ((PlayerState*)state)->unk7A0 = ((PlayerState*)state)->unk7A0 - timeDelta;
@@ -14256,7 +14256,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     *(int*)((char*)in2 + 0x7f8), 0, 0, 0, 0, -1);
             }
         }
-        if (lbl_803E7EA4 < ((PlayerState*)inner)->unk79C ||
+        if (lbl_803E7EA4 < ((PlayerState*)inner)->knockbackTimer ||
             (((PlayerState*)inner)->pendingFxFlags & 2) != 0)
         {
             tbl[0] = lbl_803E7E68;
