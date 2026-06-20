@@ -4985,7 +4985,7 @@ u8 doEdges;
     }
     return cur;
 }
-#pragma ppc_unroll_instructions_limit 160
+#pragma ppc_unroll_instructions_limit 64
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
@@ -5024,13 +5024,9 @@ void trackIntersect(void)
         lbl_803DCF4D = 2;
     }
 
+    for (i = 0; i < 0x47; i++)
     {
-        s16* cp = counts;
-        for (i = 0; i < 0x47; i++)
-        {
-            *cp = 0;
-            cp++;
-        }
+        counts[i] = 0;
     }
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
