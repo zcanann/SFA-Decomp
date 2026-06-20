@@ -291,8 +291,11 @@ void ring_update(int obj)
                 {
                     ((GameObject*)obj)->anim.rotX =
                         (s16)(((GameObject*)obj)->anim.rotX + lbl_8032B720[state->mode].f10);
-                    ((GameObject*)obj)->anim.rootMotionScale = (state->pullTimer - sixty) / sixty *
-                        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+                    {
+                        f32 frac = (state->pullTimer - sixty) / sixty;
+                        ((GameObject*)obj)->anim.rootMotionScale = frac *
+                            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+                    }
                     if (lbl_803E70C0 != state->pullTimer)
                     {
                         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
