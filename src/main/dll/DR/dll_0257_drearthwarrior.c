@@ -1212,8 +1212,9 @@ void DR_EarthWarrior_hitDetect(int obj)
                     velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
                 {
+                    f32 vv = inner->baddie.animSpeedA;
                     f32 t = lbl_803E8378;
-                    t = (inner->baddie.animSpeedA < t) ? t : ((inner->baddie.animSpeedA > inner->sub.unk404) ? inner->sub.unk404 : inner->baddie.animSpeedA);
+                    t = (vv < t) ? t : ((vv > inner->sub.unk404) ? inner->sub.unk404 : vv);
                     inner->baddie.animSpeedA = t;
                 }
                 {
