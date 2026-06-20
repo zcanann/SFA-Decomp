@@ -887,15 +887,15 @@ foundFirst:
                     {
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0)
                         {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER | 0LL;
                         }
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0)
                         {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY;
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY | 0LL;
                         }
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED) != 0)
                         {
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED | 0LL;
                         }
                         slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
@@ -967,26 +967,26 @@ foundFirst:
                             slot->sourceVecZ = 0;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B | 0LL;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A | 0LL;
                             }
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE | 0LL;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY | 0LL;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | 0LL;
                             }
-                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
+                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
                         }
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) != 0 &&
@@ -1026,7 +1026,7 @@ foundFirst:
                         {
                             slot->velocityX *= gExpgfxSlotMotionStep;
                             slot->velocityZ *= gExpgfxSlotMotionStep;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT | 0LL;
                             if (slot->soundHandle != -1)
                             {
                                 (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001,
@@ -1043,7 +1043,7 @@ foundFirst:
                             slot->scaleCurrent * lbl_803DF3F4
                             )
                             ;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1 | 0LL;
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0)
                         {
@@ -1054,7 +1054,7 @@ foundFirst:
                             slot->scaleCurrent * lbl_803DF3F4
                             )
                             ;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0)
@@ -1066,7 +1066,7 @@ foundFirst:
                             slot->scaleCurrent * lbl_803DF3F4
                             )
                             ;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->soundHandle != -1)
                             {
@@ -1084,7 +1084,7 @@ foundFirst:
                             slot->scaleCurrent * lbl_803DF3F4
                             )
                             ;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->soundHandle != -1)
                             {
@@ -1196,7 +1196,7 @@ foundFirst:
                         if ((f32)slot->lifetimeFrame < lbl_803DF38C * slot->lifetimeFrameLimit)
                         {
                             f32 boost = lbl_803DF404;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH | 0LL;
                             slot->velocityX *= boost;
                             slot->velocityY *= boost;
                             slot->velocityZ *= boost;
