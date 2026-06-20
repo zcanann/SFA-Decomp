@@ -64,9 +64,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     bestDy = lbl_803E2F78;
     hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
-    bestHit = 0;
-    hitEntry = hitList[0];
-    for (i = 0; i < hitCount; i++)
+    for (i = 0, bestHit = 0, hitEntry = hitList[0]; i < hitCount; i++)
     {
         dy = ((GameObject*)obj)->anim.localPosY - *(float*)*hitEntry;
         if (dy < lbl_803E2F68)
