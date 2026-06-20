@@ -1073,8 +1073,9 @@ int fn_80136E00(int p1, u8* p)
             break;
         case 0x87:
             gDebugScaleBiasX = p[0];
-            gDebugScaleBiasY = p[1];
+            c0 = p[1];
             p += 2;
+            gDebugScaleBiasY = c0;
             break;
         case 0x85:
             c0 = p[0];
