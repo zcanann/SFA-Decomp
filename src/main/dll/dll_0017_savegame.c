@@ -454,7 +454,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 bit;
     int i;
     MapBitTransient* transient;
-    u32* groupStatuses;
+    s8 found;
 
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
@@ -490,7 +490,6 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         gSaveGameObjGroupCacheIdx = idx;
         (&gSaveGameObjGroupCacheIdx)[1] = newStatus;
 
-        groupStatuses = s->groupStatuses;
         if (value != 0)
         {
             if ((oldStatus & (1 << shift)) == 0)
@@ -499,7 +498,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                     {
-                        groupStatuses[i] |= (u32)(1 << shift);
+                        s->groupStatuses[i] |= (u32)(1 << shift);
                     }
                 }
             }
@@ -510,30 +509,33 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                 {
-                    groupStatuses[i] &= ~(u32)(1 << shift);
+                    s->groupStatuses[i] &= ~(u32)(1 << shift);
                 }
             }
 
             if (!createTransient)
             {
                 transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                found = -1;
+                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                 {
-                    if (transient->mapId == idx && transient->shift == shift)
+                    if (transient[i].mapId == idx && transient[i].shift == shift)
                     {
-                        return;
+                        found = i;
+                        break;
                     }
                 }
-
-                transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                if (found == -1)
                 {
-                    if (transient->mapId == -1)
+                    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                     {
-                        transient->mapId = idx;
-                        transient->shift = shift;
-                        transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
-                        break;
+                        if (transient[i].mapId == -1)
+                        {
+                            transient[i].mapId = idx;
+                            transient[i].shift = shift;
+                            transient[i].timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
+                            break;
+                        }
                     }
                 }
             }
