@@ -325,9 +325,9 @@ void cfccrate_update(int obj)
 
             ((GameObject*)obj)->anim.rotZ = (s16)(lbl_803E3E18 * (double)-(s32)*(s16*)(cam + 4));
             p = (int)Obj_GetPlayerObject();
-            fx = *(f32*)(p + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-            fz = *(f32*)(p + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
-            fy = *(f32*)(p + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
+            fx = ((GameObject*)p)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+            fz = ((GameObject*)p)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+            fy = ((GameObject*)p)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
             dist = sqrtf(fy * fy + (fx * fx + fz * fz));
             if (dist < lbl_803E3E20 && state->proximityLatch == 1)
             {
