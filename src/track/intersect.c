@@ -5573,7 +5573,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_3c, -4);
-    GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
 
     if (isHeavyFogEnabled() != 0) {
         ((u8*)&lbl_803DB67C)[0] = ((u8*)&gFogColor)[0];
@@ -5587,9 +5587,9 @@ void gxTextureSetupFn_8007cf7c(void)
             (u8*)&lbl_803DB67C + 1,
             (u8*)&lbl_803DB67C + 2,
             &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
-        ((u8*)&lbl_803DB67C)[0] = (u8)((s8)((u8*)&lbl_803DB67C)[0] >> 3);
-        ((u8*)&lbl_803DB67C)[1] = (u8)((s8)((u8*)&lbl_803DB67C)[1] >> 3);
-        ((u8*)&lbl_803DB67C)[2] = (u8)((s8)((u8*)&lbl_803DB67C)[2] >> 3);
+        ((u8*)&lbl_803DB67C)[0] = (u8)(((u8*)&lbl_803DB67C)[0] >> 3);
+        ((u8*)&lbl_803DB67C)[1] = (u8)(((u8*)&lbl_803DB67C)[1] >> 3);
+        ((u8*)&lbl_803DB67C)[2] = (u8)(((u8*)&lbl_803DB67C)[2] >> 3);
         ((u8*)&lbl_803DB67C)[3] = lbl_803DB678;
     }
     *(u32*)&temp = lbl_803DB67C;
@@ -5628,7 +5628,7 @@ void gxTextureSetupFn_8007cf7c(void)
     indMtx_24[5] = lbl_803DEEDC;
     GXSetIndTexMtx(3, (f32(*)[3])indMtx_24, -5);
     GXSetTevIndirect(2, 0, 0, 7, 2, 6, 6, 0, 0, 0);
-    GXSetTevIndirect(3, 1, 0, 7, 3, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(3, 1, 0, 7, 3, 0, 0, 1, 0, 0);
     GXSetTexCoordGen2(3, 0, 0, 0x21, 0, 0x7d);
 
     GXSetTevOrder(2, 0xff, 0xff, 4);
@@ -5646,6 +5646,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
 
     GXSetBlendMode(1, 4, 5, 5);
+    GXSetCullMode(0);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
         GXSetZMode(1, 3, 0);
