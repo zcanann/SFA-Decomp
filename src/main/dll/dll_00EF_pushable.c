@@ -1026,8 +1026,8 @@ void pushable_hitDetect(int* obj)
             vec.pos[3] = lbl_803E3528;
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
-                                  &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
-            objMove(obj, ((GameObject*)obj)->anim.velocityX, lbl_803E3528, ((GameObject*)obj)->anim.velocityZ);
+                                  (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
+            objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, state);
