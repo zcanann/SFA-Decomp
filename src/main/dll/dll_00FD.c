@@ -53,7 +53,7 @@ void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 typedef struct Dll14DState
 {
     u8 pad0[0x4 - 0x0];
-    u32 unk4;
+    u32 anchorObj; /* 0x04: nearest object (ObjGroup_FindNearestObject); this object snaps to its pos/rot */
 } Dll14DState;
 
 typedef struct MagicPlantBridgeState
@@ -177,7 +177,7 @@ void dll_14D_init(int* obj)
 {
     char* p = ((GameObject*)obj)->extra;
     *p = 0;
-    ((Dll14DState*)p)->unk4 = 0;
+    ((Dll14DState*)p)->anchorObj = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 
