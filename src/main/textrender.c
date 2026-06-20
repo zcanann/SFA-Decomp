@@ -70,8 +70,8 @@ extern CtrlCharEntry lbl_802C86F0[];
 int getControlCharLen(u32 c)
 {
     CtrlCharEntry* p = lbl_802C86F0;
-    int i;
-    for (i = 45; i >= 0; i--)
+    int i = 46;
+    while (i--)
     {
         if (p->key == c)
         {
