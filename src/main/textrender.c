@@ -1373,14 +1373,13 @@ void subtitleFn_8001b700(void)
         slot = gSubtitleLineTable;
         while (i < gSubtitleBlockCount)
         {
-            if (*slot != NULL)
+            if (slot[i] != NULL)
             {
                 oldDelay = mmSetFreeDelay(0);
-                mm_free(*slot);
+                mm_free(slot[i]);
                 mmSetFreeDelay(oldDelay);
-                *slot = NULL;
+                slot[i] = NULL;
             }
-            slot++;
             i++;
         }
 
