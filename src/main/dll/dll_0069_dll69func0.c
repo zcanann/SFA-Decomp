@@ -196,11 +196,11 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     buf.flags |= flags | 0x80;
     if (variant == 2)
     {
-        buf.flags ^= 0x40000;
+        buf.flags ^= 0x40000LL;
     }
     else
     {
-        buf.flags |= 0x40000;
+        buf.flags |= 0x40000LL;
     }
     if ((buf.flags & 1) != 0)
     {
