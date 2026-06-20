@@ -265,9 +265,16 @@ void fn_8017D854(int obj, int msg)
         }
         else
         {
-            f32 r1 = (lbl_803E37E4 - q) / t;
-            f32 r2 = (lbl_803E37E4 + q) / t;
-            r = (r1 > 0.0f) ? r1 : r2;
+            f32 r2;
+            r = (lbl_803E37E4 - q) / t;
+            r2 = (lbl_803E37E4 + q) / t;
+            if (r > *(f32*)&lbl_803E37D4)
+            {
+            }
+            else
+            {
+                r = r2;
+            }
         }
         ((AppleOnTreeState*)state)->unk50 = r;
 
