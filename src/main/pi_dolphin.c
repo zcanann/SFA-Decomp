@@ -7581,12 +7581,10 @@ void videoFn_800499e8(void)
     dst = gDepthReadResults;
     for (; i < (int)(u32)gDepthReadPendingCount; i++)
     {
-        dst[0] = src[0];
-        dst[1] = src[1];
-        *(int*)(dst + 4) = *(int*)(src + 4);
-        GXPeekZ(dst[0], dst[1], dst + 2);
-        src += 6;
-        dst += 6;
+        dst[i * 6] = src[i * 6];
+        dst[i * 6 + 1] = src[i * 6 + 1];
+        *(int*)(dst + i * 6 + 4) = *(int*)(src + i * 6 + 4);
+        GXPeekZ(dst[i * 6], dst[i * 6 + 1], dst + i * 6 + 2);
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
