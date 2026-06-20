@@ -2532,11 +2532,10 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             ((GameObject*)c)->anim.localPosZ = vec[2] + playerMapOffsetZ;
             Obj_GetWorldPosition((u32)c, (f32 *)(c + 0x18), (f32 *)(c + 0x1c), (f32 *)(c + 0x20));
         }
-        src = *(u8**)(b + 0x58);
-        vec[0] = *(f32*)(src + (srcOff + 8));
-        vec[1] = *(f32*)(src + (srcOff + 0xc));
-        vec[2] = *(f32*)(src + (srcOff + 0x10));
-        *(f32*)(st->cur + dstOff) = *(f32*)(src + (srcOff + 4)) * ((GameObject*)e)->anim.rootMotionScale;
+        vec[0] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 8);
+        vec[1] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 0xc);
+        vec[2] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 0x10);
+        *(f32*)(st->cur + dstOff) = *(f32*)(*(u8**)(b + 0x58) + srcOff + 4) * ((GameObject*)e)->anim.rootMotionScale;
         PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (dstOff + 4)));
         *(f32*)(prev + 4) = (lbl_803DCED0 + *(f32*)(prev + 4)) - playerMapOffsetX;
         *(f32*)(prev + 0xc) = (lbl_803DCECC + *(f32*)(prev + 0xc)) - playerMapOffsetZ;
