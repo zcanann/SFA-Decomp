@@ -675,8 +675,8 @@ void fn_80095164(WaterParticle* s)
     f32 scale[12];
     f32 mtxB[12];
     f32 mtxC[12];
-    int i;
     int mtxIdx;
+    int i;
     f32 c2FC;
     f32 c2F4;
     f32 c2EC;
