@@ -1121,15 +1121,17 @@ int fn_80136E00(int p1, u8* p)
             debugPrintYpos = p[0];
             debugPrintYpos |= p[1] << 8;
             debugPrintXpos = p[2];
-            debugPrintXpos |= p[3] << 8;
+            c0 = p[3];
             p += 4;
+            debugPrintXpos |= c0 << 8;
             gDebugRectStartY = debugPrintYpos;
             gDebugRectStartX = debugPrintXpos;
             break;
         case 0x86:
             gDebugTabWidth = p[0];
-            gDebugTabWidth |= p[1] << 8;
+            c0 = p[1];
             p += 2;
+            gDebugTabWidth |= c0 << 8;
             break;
         case 0x20:
             w = 6;
