@@ -1267,7 +1267,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
         if ((s32)(state->flags & 0x40000) == 0)
         {
             linked = *(int*)(curveObj + 0x2a);
-            if ((linked == 0) || ((*(u16*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
+            if (((void*)linked == NULL) || ((*(u16*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
             {
                 ((GameObject*)curveObj)->anim.velocityY =
                     invStep * (((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48));
