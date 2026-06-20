@@ -3227,7 +3227,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     }
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
-    fz = lbl_803DCC44 / texCnt;
+    fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3271,7 +3271,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB498);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(2, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(2, 0, 0);
@@ -3285,7 +3285,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
-    GXSetIndTexMtx(2, &mtxB, lbl_803DB49C);
+    GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
@@ -3456,7 +3456,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     }
     else
     {
-        fz = lbl_803DCC44 / texCnt;
+        fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3602,7 +3602,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB48C);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(stage, 0, 0);
@@ -3618,7 +3618,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
-        GXSetIndTexMtx(2, &mtxB, lbl_803DB490);
+        GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     }
     else
