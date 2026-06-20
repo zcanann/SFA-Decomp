@@ -199,18 +199,11 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
             state->eventCountdown - ((f32)state->eventStep * deltaTime)
             )
             ;
-            if (countdown < 0)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if ((f32)countdown > gObjAnimEventStepScale)
-            {
-                value = gObjAnimEventStepScale;
-            }
-            else
-            {
-                value = countdown;
-            }
+            value = (countdown < 0)
+                        ? gObjAnimProgressZero
+                        : (((f32)countdown > gObjAnimEventStepScale)
+                               ? gObjAnimEventStepScale
+                               : (f32)countdown);
             state->eventCountdown = (u16)(int)
             value;
         }
@@ -264,7 +257,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     if (eventTable != NULL)
     {
         events->triggerCount = 0;
-        eventCount = eventTable->byteCount >> 1;
+        eventCount = objAnim->eventTable->byteCount >> 1;
         if (eventCount != 0)
         {
     previousFrame = (int)(gObjAnimEventFrameScale * previousProgress);
@@ -283,7 +276,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
          eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
          eventIndex++)
     {
-        eventEntry = eventTable->entries[eventIndex];
+        eventEntry = objAnim->eventTable->entries[eventIndex];
         eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
         eventId = ObjAnim_GetPackedEventId(eventEntry);
         if (eventId == OBJANIM_EVENT_ID_NONE)
