@@ -3036,7 +3036,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                 }
                 fn_8012C000();
-                if ((b2 & 0x1200) && pauseMenuFrameCounter == 0)
+                if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
                 {
                     Sfx_PlayFromObject(0, 0x100);
                     Sfx_PlayFromObject(0, 0x3f2);
