@@ -104,12 +104,17 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
         params.f8 = 1.0f;
         switch (type)
         {
+        case 9:
         case 0xa:
         case 0xb:
-            (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
-            break;
-        case 9:
-            (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
+            if (type == 0xa || type == 0xb)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
+            }
+            if (type == 9 || type == 0xb)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
+            }
             break;
         default:
             (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
