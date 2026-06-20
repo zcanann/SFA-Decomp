@@ -136,7 +136,7 @@ void updateVisibleGeometry(void)
     f32 xx, yy, zz;
     f32 tt, ff, ss;
     f32 negff, negss;
-    f32 ratio2;
+    f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
     PosRot st;
@@ -171,8 +171,8 @@ void updateVisibleGeometry(void)
     n++;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
-    ratio2 = fn_80293D0C(fov) / tt;
-    ratio2 = ratio2 * ratio2;
+    ratio = fn_80293D0C(fov) / tt;
+    ratio2 = ratio * ratio;
     tt = fn_80292248(sqrtf(changed_803DEC08.lo * (changed_803DEC08.lo * ratio2) + ratio2));
     ff = floor(tt);
     ss = fn_802943F4(tt);
