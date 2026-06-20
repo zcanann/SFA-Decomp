@@ -208,10 +208,9 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
 {
     int result;
     f32 d[3];
-    f32 dist, ang, scale;
+    f32 dist, ang;
 
     result = 0;
-    scale = c;
     d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
     d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
@@ -224,7 +223,7 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
             else
                 result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
         }
-        scale = lbl_803E6C78 * a;
+        c = lbl_803E6C78 * a;
     }
     d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
     d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
@@ -237,12 +236,12 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(d[0], d[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = c * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = c * -mathCosf(ang);
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, scale, scale / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, c, c / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
@@ -252,10 +251,9 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
 {
     int result;
     f32 d[3];
-    f32 dist, ang, scale;
+    f32 dist, ang;
 
     result = 0;
-    scale = c;
     d[0] = ((GameObject*)obj)->anim.localPosX - ((RomCurveWalker*)routePtr)->posX;
     d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
@@ -269,7 +267,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
                 result = *(s8*)((int)((RomCurveWalker*)routePtr)->node9C + 0x18);
             *pickIdx = 0;
         }
-        scale = lbl_803E6C78 * a;
+        c = lbl_803E6C78 * a;
     }
     d[0] = ((RomCurveWalker*)routePtr)->posX - ((GameObject*)obj)->anim.localPosX;
     d[1] = ((RomCurveWalker*)routePtr)->posY - ((GameObject*)obj)->anim.localPosY;
@@ -282,12 +280,12 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(d[0], d[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = scale * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = scale * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = c * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = c * -mathCosf(ang);
     }
     else
     {
-        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, scale, scale / lbl_803E6C7C,
+        Obj_SteerVelocityTowardVector(obj, &((GameObject*)obj)->anim.velocityX, d, c, c / lbl_803E6C7C,
                                       lbl_803E6C80);
     }
     return result;
