@@ -416,19 +416,18 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
             SpecialGlyph* g = lbl_802C86F0;
-            int count;
             int n;
             int sel;
-            for (count = 0, n = 46; n != 0; n--)
+            for (n = 46; n != 0; n--)
             {
                 if (g->key == ch)
                 {
-                    count = g->val;
+                    n = g->val;
                     break;
                 }
                 g++;
             }
-            for (i = 0; i < count; i++)
+            for (i = 0; i < n; i++)
             {
                 int b0 = ((u8*)str)[cursor++];
                 int b1 = ((u8*)str)[cursor++];
