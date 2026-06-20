@@ -2359,7 +2359,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
-                if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0)
+                if ((flags & 0x1000) == 0 && (flags & 0x1000) == 0)
                 {
                     b = MLDF_PTR(0x21);
                     break;
