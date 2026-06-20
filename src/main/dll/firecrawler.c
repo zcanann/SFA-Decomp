@@ -715,10 +715,10 @@ void fn_80157B58(int* obj, u8* state)
         {
             f32 dur = lbl_803E2B84 * ((f32) * (u16*)(state + 0x2a4) / ((BaddieState*)state)->unk2A8);
             ((GameObject*)child)->anim.velocityX =
-                (*(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc) - ((GameObject*)setup)->anim.rootMotionScale)
+                (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX - ((GameObject*)setup)->anim.rootMotionScale)
                 / dur;
             ((GameObject*)child)->anim.velocityY =
-                ((lbl_803E2B88 + *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x10) + (f32)(int)
+                ((lbl_803E2B88 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY + (f32)(int)
             randomGetRange(-10, 10)
             )
             -((GameObject*)setup)->anim.localPosX
@@ -726,7 +726,7 @@ void fn_80157B58(int* obj, u8* state)
             /
             dur;
             ((GameObject*)child)->anim.velocityZ =
-                (*(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14) - ((GameObject*)setup)->anim.localPosY) /
+                (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ - ((GameObject*)setup)->anim.localPosY) /
                 dur;
         }
         Sfx_PlayFromObject((int)obj, 0x4ae);
@@ -792,15 +792,15 @@ void snowworm_update(int* obj, u8* state)
             f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
             ((GameObject*)obj)->anim.localPosX = r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.
                 placementData + 8);
-            ((GameObject*)obj)->anim.localPosZ = r * mathCosf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.
-                placementData + 0x10);
-            fn_8014CF7C(obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                        *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), 1, 0);
+            ((GameObject*)obj)->anim.localPosZ = r * mathCosf(angle) + ((GameObject*)((GameObject*)obj)->anim.
+                placementData)->anim.localPosY;
+            fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         }
     }
 
-    fn_8014CF7C(obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), lbl_803DBD30[*(u16*)(state + 0x338)], 0);
+    fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, lbl_803DBD30[*(u16*)(state + 0x338)], 0);
     crawler_playReactionEffects(obj, (int*)state);
 }
 
@@ -848,8 +848,8 @@ void hoodedZyck_update(s16* obj, u8* state)
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
         ObjHits_SetHitVolumeSlot((int)obj, 9, 1, -1);
-        ang = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                       ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14)) &
+        ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                       ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
         diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
@@ -953,7 +953,7 @@ void crawler_update(int* obj, u8* state)
     int j;
     int n;
 
-    if (((BaddieState*)state)->trackedObj != NULL && *(s16*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1)
+    if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
         fn_8001FE90();
     }
@@ -1060,8 +1060,8 @@ void crawler_update(int* obj, u8* state)
 
     if ((*(u8*)(state + 0x323) & 8) == 0 && (*(u8*)(state + 0x33d) & 0x10) == 0)
     {
-        fn_8014CF7C(obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                    *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), 0x1e, 0);
+        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }
     fn_80157CDC((int)obj, (int)state);
 }
@@ -1129,9 +1129,9 @@ void hagabonMK2_update(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = 3;
         ((BaddieState*)state)->controlFlags |= 0x40000000LL;
     }
-    sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x18),
-                                         lbl_803E2C48 + *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x1c),
-                                         *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x20),
+    sidekickToy_accelerateTowardTarget3D(obj, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
+                                         lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
+                                         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosZ,
                                          lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, ((BaddieState*)state)->unk304);
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
@@ -1260,8 +1260,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         tgtA[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
         noHit = !objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
-        ang = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                       ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14)) &
+        ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                       ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
             0xffff;
         diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
         if (diff > lbl_803E2B2C)
@@ -1830,7 +1830,7 @@ void crawler_updateB(s16* obj, u8* state)
     int i;
     f32 dv[3];
 
-    if (((BaddieState*)state)->trackedObj != NULL && *(s16*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1)
+    if (((BaddieState*)state)->trackedObj != NULL && ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
         fn_8001FE90();
     }
@@ -2027,8 +2027,8 @@ void crawler_updateB(s16* obj, u8* state)
 
     if ((*(u8*)(state + 0x323) & 8) == 0 && (*(u8*)(state + 0x33d) & 0x10) == 0)
     {
-        fn_8014CF7C((int*)obj, state, *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
-                    *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), 0x1e, 0);
+        fn_8014CF7C((int*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }
     fn_80157CDC((int)obj, (int)state);
 }
