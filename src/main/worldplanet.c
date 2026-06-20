@@ -166,6 +166,7 @@ void worldplanet_init(int obj)
     envFxActFn_800887f8(0);
 }
 
+#pragma peephole on
 void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = ((GameObject*)obj)->extra;
@@ -236,6 +237,7 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
         *outY = 0;
     }
 }
+#pragma peephole reset
 
 void worldplanet_update(int obj)
 {
