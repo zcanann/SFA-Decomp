@@ -717,9 +717,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->hitVolumes[hitSlot] = hitVolume;
-                hitState->priorities[hitSlot] = priority;
                 hitState->sphereIndices[hitSlot] = sphereIndex;
+                hitState->priorities[hitSlot] = priority;
+                hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = sourceObj->localPosX;
                 hitState->hitPosY[hitSlot] = sourceObj->localPosY;
                 hitState->hitPosZ[hitSlot] = sourceObj->localPosZ;
@@ -731,9 +731,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     if ((hitSlot == hitState->priorityHitCount) &&
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
-        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
-        hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
+        hitState->priorities[hitState->priorityHitCount] = priority;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
@@ -773,9 +773,9 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->hitVolumes[hitSlot] = hitVolume;
-                hitState->priorities[hitSlot] = priority;
                 hitState->sphereIndices[hitSlot] = sphereIndex;
+                hitState->priorities[hitSlot] = priority;
+                hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = hitPosX;
                 hitState->hitPosY[hitSlot] = hitPosY;
                 hitState->hitPosZ[hitSlot] = hitPosZ;
