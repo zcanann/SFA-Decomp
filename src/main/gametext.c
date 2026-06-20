@@ -459,18 +459,18 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* glyphs = (MeasGlyph*)gameTextFonts->field0;
-            MeasGlyph* found = NULL;
+            MeasGlyph* found = (MeasGlyph*)gameTextFonts->field0;
             int n = gameTextFonts->field8;
-            for (; n != 0; n--)
+            while (n-- != 0)
             {
-                if (glyphs->key == ch && glyphs->lang == langIdx)
+                if (found->key == ch && found->lang == langIdx)
                 {
-                    found = glyphs;
-                    break;
+                    goto gotGlyph;
                 }
-                glyphs++;
+                found++;
             }
+            found = NULL;
+        gotGlyph:
             if (found != NULL)
             {
                 int advance = found->fC + (found->f8 + found->f9);
