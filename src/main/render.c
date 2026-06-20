@@ -185,24 +185,22 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
         u8* sp = (u8*)src->instrs + sByte;
         u32 val;
         int curBit;
-        int bo;
         u32 packed;
-        u32 bits;
         val = sp[0] << 16;
         val = val | (sp[1] << 8);
         val = val | sp[2];
-        src->bit = sbit + bitWidth;
-        bits = mask & (val >> (sbit & 7));
+        src->bit = sbit + bw;
+        packed = mask & (val >> (sbit & 7));
         curBit = dst->bit;
-        bo = curBit >> 3;
-        packed = bits << ((8 - (curBit & 7)) + sh16);
-        ((u8*)dst->instrs)[bo] |= (packed >> 16) & 0xff;
-        ((u8*)dst->instrs)[bo + 1] |= (packed >> 8) & 0xff;
-        ((u8*)dst->instrs)[bo + 2] |= packed & 0xff;
-        dst->bit += bitWidth;
+        packed = packed << ((8 - (curBit & 7)) + sh16);
+        sByte = curBit >> 3;
+        ((u8*)dst->instrs)[sByte] |= (packed >> 16) & 0xff;
+        ((u8*)dst->instrs)[sByte + 1] |= (packed >> 8) & 0xff;
+        ((u8*)dst->instrs)[sByte + 2] |= packed & 0xff;
+        dst->bit += bw;
         dst->bit += gap;
     }
-    modelRenderInstrsState_setBit(dst, startBit + bitWidth);
+    modelRenderInstrsState_setBit(dst, startBit + bw);
     {
         u8* base = (u8*)src->instrs;
         return base[(src->bit >> 3) + 1];
