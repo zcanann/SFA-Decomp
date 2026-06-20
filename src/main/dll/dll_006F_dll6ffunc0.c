@@ -962,17 +962,17 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (ctx == 0)
-        {
-            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posZ;
-        }
-        else
+        if ((void*)ctx != NULL)
         {
             buf.pos[0] = lbl_803E0AF0 + *(f32*)(ctx + 0x18);
             buf.pos[1] = lbl_803E0AF0 + *(f32*)(ctx + 0x1c);
             buf.pos[2] = lbl_803E0AF0 + *(f32*)(ctx + 0x20);
+        }
+        else
+        {
+            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x18, base, 0x10, &base[240], 0x48, 0);
