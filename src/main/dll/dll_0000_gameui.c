@@ -3701,11 +3701,11 @@ void fn_8012C000(void)
     }
     if (delta > 0x8000)
     {
-        delta -= 0xffff;
+        delta = (delta - 0x10000) + 1;
     }
     if (delta < -0x8000)
     {
-        delta += 0xffff;
+        delta = (delta + 0x10000) - 1;
     }
     gPauseMenuSwivelAngle += delta / 7;
     gPauseMenuPodiumSpinFrame += framesThisStep;
