@@ -29,7 +29,6 @@ extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* poi
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
 extern u8 lbl_803268B4[];
-extern f32 timeDelta;
 extern f32 lbl_803E5200;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
