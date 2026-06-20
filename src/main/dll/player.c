@@ -7295,7 +7295,7 @@ void playerUpdate(int obj)
                 {
                     ((PlayerState*)inner)->stepEventTimer =
                         lbl_803DC6A8[((PlayerState*)inner)->gaitStepLevel];
-                    ((PlayerState*)inner)->unk8B1 =
+                    ((PlayerState*)inner)->stepDustCount =
                         lbl_803DC6B0[((PlayerState*)inner)->gaitStepLevel];
                 }
             }
@@ -15696,7 +15696,7 @@ void playerUpdatePathEffectCountdown(int obj, int inner)
         f32 z;
     } buf;
     f32 mtx[12];
-    u8 cnt = ((PlayerState*)inner)->unk8B1;
+    u8 cnt = ((PlayerState*)inner)->stepDustCount;
 
     if (cnt != 0)
     {
@@ -15709,7 +15709,7 @@ void playerUpdatePathEffectCountdown(int obj, int inner)
             mtx[11] = lbl_803E7EA4;
             buf.x = lbl_803E7EA4;
             buf.y = lbl_803E7EA4;
-            t = ((PlayerState*)inner)->unk8B1;
+            t = ((PlayerState*)inner)->stepDustCount;
             buf.z = lbl_803E7EC8 * (f32)(int)
             randomGetRange(t + 4, t + 8);
             PSMTXMultVec(mtx, &buf.x, outvec);
@@ -15720,7 +15720,7 @@ void playerUpdatePathEffectCountdown(int obj, int inner)
             (*gPartfxInterface)->spawnObject(
                 (void*)obj, 0x7e5, &buf, 0x200001, -1, outvec);
         }
-        ((PlayerState*)inner)->unk8B1 -= 1;
+        ((PlayerState*)inner)->stepDustCount -= 1;
     }
 }
 #pragma dont_inline reset

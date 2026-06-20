@@ -290,7 +290,7 @@ typedef struct PlayerState {
     s16 animState;
     s16 queuedItemCommand; /* primary queued item/use command id from ObjMsg 0x80002; -1 = none; processed by playerProcessQueuedItemCommand */
     s16 deferredItemCommand; /* item command (0x2d/0x5ce) deferred while a target object is engaged; -1 = none; consumed/cleared once resolved */
-    s16 stepEventTimer; /* countdown (-= framesThisStep); on expiry reloads interval from lbl_803DC6A8[gaitStepLevel] and advances unk8B1 */
+    s16 stepEventTimer; /* countdown (-= framesThisStep); on expiry reloads interval from lbl_803DC6A8[gaitStepLevel] and advances stepDustCount */
     s16 idleWaitTimer;
     f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */
     u8 pad818[0x81A - 0x818];
@@ -346,7 +346,7 @@ typedef struct PlayerState {
     u8 unk8AD;
     u8 pad8AE[0x8B0 - 0x8AE];
     u8 gaitStepLevel; /* gait/step level 1-4 (capped) derived from gaitLevel; indexes step-interval tables lbl_803DC6A8/lbl_803DC6B0 */
-    u8 unk8B1;
+    u8 stepDustCount; /* footstep dust-particle burst counter loaded from lbl_803DC6B0[gaitStepLevel]; decremented per frame, spawns dust while nonzero */
     u8 pad8B2[0x8B3 - 0x8B2];
     u8 staffGrown; /* 1 when the staff is grown/extended (set by staffDoGrowShrinkAnim grow path) */
     u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
