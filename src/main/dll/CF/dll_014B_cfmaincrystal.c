@@ -59,7 +59,6 @@ extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void objRenderFn_8003b8f4(f32);
 
 
-extern u8 framesThisStep;
 extern f32 lbl_803E4210;
 
 extern int* gCfMainCrystalObj;
