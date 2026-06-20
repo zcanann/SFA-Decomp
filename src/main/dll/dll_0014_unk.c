@@ -1330,6 +1330,52 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 
+static inline int RomCurve_pickRandomControlPointId_2A(int curve)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != -1)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        return candidates[randomGetRange(0, count - 1)];
+    }
+    return -1;
+}
+
+static inline int RomCurve_pickRandomControlPointId_2B(int curve)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != -1)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        return candidates[randomGetRange(0, count - 1)];
+    }
+    return -1;
+}
+
 #pragma scheduling off
 #pragma peephole off
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
@@ -1692,7 +1738,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     {
         currentCurve = Objfsa_FindRomCurveById(curveId);
         *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
         if (nextId == -1)
         {
             return 1;
@@ -1710,11 +1756,11 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2B(currentCurve);
     }
     if (nextId == -1)
     {
