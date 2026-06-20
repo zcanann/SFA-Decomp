@@ -847,8 +847,9 @@ void* gameTextGet(int textId)
             fadeLimit = gGameTextFadeLimit;
             if (zero < fadeLimit)
             {
-                *cachedAlpha = zero + timeDelta;
-                if (*cachedAlpha >= fadeLimit)
+                f32 av = zero + timeDelta;
+                *cachedAlpha = av;
+                if (av >= fadeLimit)
                 {
                     sprintf((char*)*(int*)*(int**)((u8*)cachedEntry + 8), strings + 0xefc, textId,
                             sMapDirectoryNameTable[(int)curGameTextDir]);
