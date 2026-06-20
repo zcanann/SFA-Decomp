@@ -240,8 +240,8 @@ typedef struct PlayerState {
     f32 unk6C8;
     u8 unk6CC;
     u8 pad6CD[0x6D0 - 0x6CD];
-    s32 unk6D0;
-    s32 unk6D4;
+    s32 stickX;
+    s32 stickY;
     f32 unk6D8;
     f32 unk6DC;
     u16 buttonsHeld;

@@ -10918,8 +10918,8 @@ void fn_802B19F8(int obj, int state, f32 fv)
 {
     u8 c;
 
-    ((PlayerState*)state)->unk6D0 = 0;
-    ((PlayerState*)state)->unk6D4 = 0;
+    ((PlayerState*)state)->stickX = 0;
+    ((PlayerState*)state)->stickY = 0;
     ((PlayerState*)state)->buttonsHeld = 0;
     ((PlayerState*)state)->buttonsJustPressed = 0;
     ((PlayerState*)state)->buttonsJustPressedIfNotBusy = 0;
@@ -10927,8 +10927,8 @@ void fn_802B19F8(int obj, int state, f32 fv)
         ((PlayerState*)state)->characterId != -1 &&
         (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
     {
-        ((PlayerState*)state)->unk6D0 = padGetStickX(0);
-        ((PlayerState*)state)->unk6D4 = padGetStickY(0);
+        ((PlayerState*)state)->stickX = padGetStickX(0);
+        ((PlayerState*)state)->stickY = padGetStickY(0);
         ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
         ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
         ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
