@@ -3124,7 +3124,7 @@ void doPendingMapLoads(void)
                                 defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
                                                     sl, 1);
                                 mm_free(*(void**)p4);
-                                *(int*)(base + 0x83A8 + sl * 4) = 0;
+                                ((int*)(base + 0x83A8))[sl] = 0;
                             }
                             *(int*)p4 = 0;
                             *(s16*)(p4 + 4) = -1;
