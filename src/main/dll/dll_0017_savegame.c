@@ -36,7 +36,7 @@ typedef struct SaveGameData
     u8 pad0[0x20 - 0x0];
     u8 currentCharacter;
     u8 pad21[0x55E - 0x21];
-    u8 unk55E;
+    u8 taskCount;
     u8 pad55F[0x560 - 0x55F];
     f32 playTime;
     u8 pad564[0x6A4 - 0x564];
@@ -949,8 +949,8 @@ void SaveGame_updateTimes(void)
             i++;
         }
     }
-    if (((SaveGameData*)gSaveGameData)->unk55E > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
-    if (((SaveGameData*)lbl_803DD498)->unk55E > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
+    if (((SaveGameData*)gSaveGameData)->taskCount > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
+    if (((SaveGameData*)lbl_803DD498)->taskCount > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
 }
 
 f32 SaveGame_gplayGetTime(int id)
