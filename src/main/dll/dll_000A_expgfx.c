@@ -2057,6 +2057,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     ExpgfxTableEntry* tabEntry;
     ExpgfxSourceObject* sourceObject;
     u32 texture;
+    u32 currentTexture;
     int slotIndex;
     u32 behaviorFlags;
     u32 renderFlags;
@@ -2109,6 +2110,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     blendMode = -1;
     zMode = -1;
     zCompLoc = -1;
+    currentTexture = 0;
     cacheQueueWait(0);
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
@@ -2311,10 +2313,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             alpha = (alpha * sourceObject->alpha) >> 8;
         }
 
-        if (slotPoolBase != texture)
+        if (currentTexture != texture)
         {
             selectTexture(texture, 0);
-            slotPoolBase = texture;
+            currentTexture = texture;
         }
 
         {
@@ -2440,9 +2442,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             *(volatile f32*)0xCC008000 = outX;
             *(volatile f32*)0xCC008000 = outY;
             *(volatile f32*)0xCC008000 = outZ;
-            *(volatile u8*)0xCC008000 = slot->colorByte0;
-            *(volatile u8*)0xCC008000 = slot->colorByte1;
-            *(volatile u8*)0xCC008000 = slot->colorByte2;
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[12];
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[13];
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[14];
             *(volatile u8*)0xCC008000 = alpha;
             *(volatile s16*)0xCC008000 = vtxStream[4];
             *(volatile s16*)0xCC008000 = vtxStream[5];
