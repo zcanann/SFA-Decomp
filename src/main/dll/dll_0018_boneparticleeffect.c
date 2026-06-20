@@ -1526,9 +1526,9 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                     s.vx = s.vx + playerMapOffsetX;
                     s.vz = s.vz + playerMapOffsetZ;
                     idx = (k + row) * 0x10;
-                    *(s16*)((u8*)*grp + idx) = (s32)(dx + (s.vx - ((GameObject*)o)->anim.localPosX));
-                    *(s16*)((u8*)*grp + idx + 2) = (s32)(dy + (s.vy - ((GameObject*)o)->anim.localPosY));
-                    *(s16*)((u8*)*grp + idx + 4) = (s32)(dz + (s.vz - ((GameObject*)o)->anim.localPosZ));
+                    *(s16*)((u8*)*grp + idx) = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
+                    *(s16*)((u8*)*grp + idx + 2) = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
+                    *(s16*)((u8*)*grp + idx + 4) = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
                     *(u8*)((u8*)*grp + idx + 0xf) = 0x9b;
                     t = base + idx;
                     *(s16*)((u8*)*grp + idx + 0xa) = (s16)(*(s16*)(t + 0x1ba) - (gBoneParticleScrollOffset << 2));
