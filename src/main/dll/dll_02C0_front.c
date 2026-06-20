@@ -1070,7 +1070,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                               (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x28 +
                                   (i + 1) * -4),
                               (f32)(int)(yb - 0x10 + (i + 1) * -3),
-                              (int)(u32)lbl_803DD9C0 >> ((i + 3) & 0x3f) & 0xff, 0x100,
+                              (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
                               tex->width + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
             i++;
         }
