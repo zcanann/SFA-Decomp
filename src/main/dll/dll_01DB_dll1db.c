@@ -41,7 +41,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 
 extern void objRenderFn_8003b8f4(f32 scale);
-extern f32 timeDelta;
 extern f32 lbl_803E4B08; /* render scale */
 extern f32 lbl_803E4B0C;
 extern f32 lbl_803E4B10;
