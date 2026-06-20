@@ -3326,6 +3326,7 @@ void mapDebugRender(int* state)
 {
     int bx, bz;
     char* blk;
+    s8* tbl;
     int sx, sz;
     int wx, wz;
     int ci;
@@ -3346,13 +3347,14 @@ void mapDebugRender(int* state)
             gMapBlockWorldSize);
         bz = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
             gMapBlockWorldSize);
+        tbl = (s8*)gMapBlockLayerTables[0];
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
             blk = 0;
         }
         else
         {
-            ci = *(s8*)(gMapBlockLayerTables[0] + bx + bz * 16);
+            ci = tbl[bx + bz * 16];
             if (ci < 0 || ci >= lbl_803DCE98)
             {
                 blk = 0;
