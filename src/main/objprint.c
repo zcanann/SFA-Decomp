@@ -2636,7 +2636,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             s16* ap;
             int i;
 
-            ang[0] = getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
+            ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
             if (ang[0] > 0x8000)
             {
                 ang[0] = (s16)(ang[0] - 0xffff);
