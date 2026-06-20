@@ -526,6 +526,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     s32 ty1;
     s32 i;
     s32 j;
+    s8 i8;
     int* info;
 
     pauseMenuDoSave();
@@ -564,9 +565,9 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     fn_80127F24(ty);
     if (lbl_803DD7C4 != 0)
     {
-        for (i = 0x14; i >= 0; i -= 4)
+        for (i8 = 0x14; i8 >= 0; i8 -= 4)
         {
-            s16 px = (s16)((s16)(0xf0 - i) - lbl_803DD75C);
+            s16 px = (s16)((s16)(0xf0 - i8) - lbl_803DD75C);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
                             px, ty, 0x100, 0x190, 4, 0);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
