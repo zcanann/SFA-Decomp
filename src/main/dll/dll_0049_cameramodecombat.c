@@ -136,6 +136,7 @@ void CameraModeCombat_free(CameraObject* camera)
     ((CameraModeCombatFlags*)&camera->smoothingFlags)->b0 = 0;
 }
 
+#pragma opt_common_subs off
 void CameraModeCombat_update(short* cam)
 {
     extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
@@ -477,6 +478,7 @@ void CameraModeCombat_update(short* cam)
         }
     }
 }
+#pragma opt_common_subs reset
 
 void CameraModeCombat_init(CameraObject* camera, u32 arg2, GameObject** targetPtr)
 {
