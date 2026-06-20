@@ -585,7 +585,7 @@ void arwsquadron_followLeader(int p1, int p2)
     ArwSquadronState* leaderState = (ArwSquadronState*)leaderObj->extra;
     ArwSquadronSetup* setup = (ArwSquadronSetup*)objAnim->placementData;
     ArwProjPosSrc src;
-    f32 mtx[12];
+    f32 mtx[16];
     f32 out[3];
 
     *(s16*)&state->swayPhaseX = state->swaySpeedX * timeDelta + state->swayPhaseX;
