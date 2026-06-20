@@ -100,7 +100,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         while (idx < count)
         {
             *(int*)&state->partnerObj = list[idx];
-            if (*(s16*)(*(int*)&state->partnerObj + 0x46) == DBSH_PARTNER_OBJTYPE)
+            if (((GameObject*)state->partnerObj)->anim.seqId == DBSH_PARTNER_OBJTYPE)
             {
                 break;
             }
