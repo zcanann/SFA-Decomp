@@ -62,7 +62,7 @@ typedef struct WarpVec
 extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 gMapBlockWorldSize;
+extern const f32 gMapBlockWorldSize;
 extern float fastFloorf(float x);
 extern void OSReport(const char* msg, ...);
 
