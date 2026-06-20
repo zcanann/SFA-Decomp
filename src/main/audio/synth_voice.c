@@ -337,7 +337,7 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
-    p = prio + prioOffset;
+    p = prioOffset + prio;
     if ((u8)p > 0xFF)
     {
         p = 0xFF;
