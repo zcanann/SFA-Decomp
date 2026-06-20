@@ -57,7 +57,7 @@ typedef struct MoonSeedPlantingSpotState
     s16 harvestedGameBit;
     s16 colorPhase;
     u8 padE[0x10 - 0xE];
-    f32 unk10;
+    f32 growthTimer;
     f32 unk14;
 } MoonSeedPlantingSpotState;
 
@@ -285,7 +285,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 {
                     *(u8*)ex = MSPLANTING_PHASE_CUT;
                     ((MoonSeedPlantingSpotState*)ex)->colorPhase = 0;
-                    ((MoonSeedPlantingSpotState*)ex)->unk10 = lbl_803E4608;
+                    ((MoonSeedPlantingSpotState*)ex)->growthTimer = lbl_803E4608;
                 }
             }
             break;
@@ -303,7 +303,7 @@ void MoonSeedPlantingSpot_update(int obj)
             {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 6, 1, 0x28, lbl_803E4604, 0, 0);
             }
-            if (((MoonSeedPlantingSpotState*)ex)->unk10 <= lbl_803E45F4 && GameBit_Get(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
+            if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= lbl_803E45F4 && GameBit_Get(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&
                 GameBit_Get(((MoonSeedPlantingSpotState*)ex)->harvestedGameBit) == 0)
             {
                 int setup2;
@@ -318,10 +318,10 @@ void MoonSeedPlantingSpot_update(int obj)
                     ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->unkC;
                 }
             }
-            ((MoonSeedPlantingSpotState*)ex)->unk10 = ((MoonSeedPlantingSpotState*)ex)->unk10 - timeDelta;
-            if (((MoonSeedPlantingSpotState*)ex)->unk10 < lbl_803E45F4)
+            ((MoonSeedPlantingSpotState*)ex)->growthTimer = ((MoonSeedPlantingSpotState*)ex)->growthTimer - timeDelta;
+            if (((MoonSeedPlantingSpotState*)ex)->growthTimer < lbl_803E45F4)
             {
-                ((MoonSeedPlantingSpotState*)ex)->unk10 = *(f32*)&lbl_803E45F4;
+                ((MoonSeedPlantingSpotState*)ex)->growthTimer = *(f32*)&lbl_803E45F4;
             }
             break;
         }
