@@ -1934,7 +1934,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
     {
         d = -(lbl_803E6328 * ((BaddieState*)p2)->animSpeedA);
         flag = -(lbl_803E6328 * ((BaddieState*)p2)->animSpeedB);
-        d = d;
+        d = (s16)d;
         if (d < -0x500)
         {
             d = -0x500;
@@ -1944,7 +1944,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
             d = 0x500;
         }
         sa = d;
-        flag = flag;
+        flag = (s16)flag;
         if (flag < -0x500)
         {
             flag = -0x500;
