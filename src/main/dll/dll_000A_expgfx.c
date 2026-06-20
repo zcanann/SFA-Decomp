@@ -186,15 +186,14 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 
         {
             u32 tableIndex = ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
-            ExpgfxTableEntry* entry = &runtime->expTab[tableIndex];
 
-            if (entry->refCount != 0)
+            if (runtime->expTab[tableIndex].refCount != 0)
             {
-                entry->refCount--;
-                if (entry->refCount == 0)
+                runtime->expTab[tableIndex].refCount--;
+                if (runtime->expTab[tableIndex].refCount == 0)
                 {
                     *(u32*)(resBase + tableIndex * 16) = 0;
-                    entry->sourceId = 0;
+                    runtime->expTab[tableIndex].sourceId = 0;
                 }
             }
             else
