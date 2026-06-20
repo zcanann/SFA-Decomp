@@ -32,8 +32,8 @@ int saveCb_8007e77c(u8 idx, int unused, void* dst)
 
 int FUN_8007eb04(u32 slot)
 {
-    u32 uVar1;
-    u32 uVar2;
+    u32 xorEven;
+    u32 xorOdd;
     u32 uVar3;
     u16 i;
     u32 uVar5;
@@ -59,8 +59,8 @@ int FUN_8007eb04(u32 slot)
     bool carry;
 
     uVar7 = DAT_803ddcc4;
-    uVar2 = 0;
-    uVar1 = 0;
+    xorOdd = 0;
+    xorEven = 0;
     uVar6 = 1;
     iVar13 = 0;
     for (i = 0; i < 0x3f7; i = i + 8)
@@ -82,8 +82,8 @@ int FUN_8007eb04(u32 slot)
         uVar20 = wp[0xd];
         uVar11 = uVar10 + uVar20;
         uVar21 = wp[0xf];
-        uVar2 = uVar2 ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
-        uVar1 = uVar1 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
+        xorOdd = xorOdd ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
+        xorEven = xorEven ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
             wp[0xc] ^ wp[0xe];
         uVar6 = uVar11 + uVar21;
         iVar13 = iVar13 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(uVar3, uVar15) +
@@ -96,16 +96,16 @@ int FUN_8007eb04(u32 slot)
         wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
         uVar3 = *wp;
         uVar5 = wp[1];
-        uVar2 = uVar2 ^ uVar5;
-        uVar1 = uVar1 ^ uVar3;
+        xorOdd = xorOdd ^ uVar5;
+        xorEven = xorEven ^ uVar3;
         carry = addCarryOut32(uVar6, uVar5);
         uVar6 = uVar6 + uVar5;
         iVar13 = iVar13 + uVar3 + carry;
     }
-    uVar2 = uVar2 ^ uVar6 + 0xd;
-    uVar1 = uVar1 ^ iVar13 + (u32)(0xfffffff2 < uVar6);
-    *(u32*)(DAT_803ddcc4 + 0x1ffc) = uVar2;
-    *(u32*)(uVar7 + 0x1ff8) = uVar1;
+    xorOdd = xorOdd ^ uVar6 + 0xd;
+    xorEven = xorEven ^ iVar13 + (u32)(0xfffffff2 < uVar6);
+    *(u32*)(DAT_803ddcc4 + 0x1ffc) = xorOdd;
+    *(u32*)(uVar7 + 0x1ff8) = xorEven;
     FUN_802420e0(DAT_803ddcc4, 0x2000);
     uVar7 = (slot & 0xff) << 0xd;
     iVar13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
@@ -170,7 +170,7 @@ int FUN_8007eb04(u32 slot)
             }
             uVar3 = uVar3 ^ uVar7 + 0xd;
             uVar6 = uVar6 ^ sum2 + (u32)(0xfffffff2 < uVar7);
-            if (uVar2 != uVar3 || uVar1 != uVar6)
+            if (xorOdd != uVar3 || xorEven != uVar6)
             {
                 iVar13 = -0x55;
                 DAT_803dc360 = 10;
