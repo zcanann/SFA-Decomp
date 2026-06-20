@@ -2588,7 +2588,7 @@ void beginLoadingMap(void)
     gShaderCurMapEventId = -1;
     gShaderGameTextLoadedMapId = gShaderGameTextLoadedMapId - 1;
     lbl_803DCEC0 = -1;
-    curMapLayer = *((char*)p + 0xd);
+    curMapLayer = *(s8*)((char*)p + 0xd);
     renderFlags &= 0x82008;
     renderFlags |= 0x481F0LL;
     renderFlags |= 0x804;
