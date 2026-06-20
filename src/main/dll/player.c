@@ -5426,7 +5426,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 if (((GameObject*)obj)->anim.currentMoveProgress > *(f32*)(slot + 0x28))
                 {
                     *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 2;
-                    if (*(u8*)((inner->moveSlots + 0x6c) + (u32)inner->moveSlotIndex * 0xb0) != 0)
+                    if (*(u8*)((inner->moveSlots + 0x6c) + (u32)inner->moveSlotIndex * 0xb0) != 0u)
                     {
                         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) | 4;
                         inner->unk8C0 = 0;
@@ -5597,7 +5597,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 }
                 inner->unk7D8 =
                     lbl_803E7ED4 * timeDelta + inner->unk7D8;
-                if (inner->unk7D8 > lbl_803E7FBC)
+                if (inner->unk7D8 > *(f32*)&lbl_803E7FBC)
                 {
                     inner->unk7D8 = lbl_803E7FBC;
                 }
