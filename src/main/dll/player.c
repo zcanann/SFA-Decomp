@@ -10994,7 +10994,6 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     u32 b;
     void* found;
     int iv;
-    s16 sv;
     f32 fv2;
     f32 clamp;
     f32 velMag;
@@ -11053,9 +11052,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         case 6:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
-            sv = (s16)iv;
-            *(s16*)&((PlayerState*)state)->unk808 = sv;
-            if (sv <= 0)
+            *(s16*)&((PlayerState*)state)->unk808 = iv;
+            if (*(s16*)&((PlayerState*)state)->unk808 <= 0)
             {
                 *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
                 ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
@@ -11072,9 +11070,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         case 26:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
-            sv = (s16)iv;
-            *(s16*)&((PlayerState*)state)->unk808 = sv;
-            if (sv <= 0)
+            *(s16*)&((PlayerState*)state)->unk808 = iv;
+            if (*(s16*)&((PlayerState*)state)->unk808 <= 0)
             {
                 *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
                 ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
