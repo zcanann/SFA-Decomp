@@ -1168,8 +1168,8 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 slope;
     f32 intercept;
     f32 perpSlope;
-    f32 dx;
     f32 dz;
+    f32 dx;
     f32 length;
     int useBlendedDistance;
 
@@ -1221,7 +1221,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     dx = end[0] - center[0];
     dz = end[2] - center[2];
     length = sqrtf((dx * dx) + (dz * dz));
-    if (length != lbl_803E23DC)
+    if (lbl_803E23DC != length)
     {
         dx /= length;
         dz /= length;
