@@ -597,7 +597,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
                 dx = dx / dist;
                 dy = dy / dist;
             }
-            dist = lbl_803E170C * gCamcontrolModeSettings->minDistance;
+            dist = *(f32 *)&lbl_803E170C * gCamcontrolModeSettings->minDistance;
             camera->anim.localPosX = dist * dx + target->localPosX;
             camera->anim.localPosZ = dist * dy + target->localPosZ;
         }
