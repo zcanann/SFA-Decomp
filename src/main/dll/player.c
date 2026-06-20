@@ -470,7 +470,7 @@ void fn_802961A4(int obj, int* out1, f32* out2)
     }
     else
     {
-        *out2 = inner->unk7D4;
+        *out2 = inner->chargeLevel;
     }
 }
 
@@ -11243,10 +11243,10 @@ void fn_802B07D8(int obj, int state)
         *(int*)&((GameObject*)gPlayerPathObject)->anim.parent = *(int*)&((GameObject*)obj)->anim.parent;
     }
 
-    ((PlayerState*)state)->unk7D4 -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState*)state)->unk7D4 < *(f32*)&lbl_803E7EA4)
+    ((PlayerState*)state)->chargeLevel -= lbl_803E7E98 * timeDelta;
+    if (((PlayerState*)state)->chargeLevel < *(f32*)&lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk7D4 = lbl_803E7EA4;
+        ((PlayerState*)state)->chargeLevel = lbl_803E7EA4;
     }
     ((PlayerState*)state)->unk7D8 -= lbl_803E7E98 * timeDelta;
     if (((PlayerState*)state)->unk7D8 < *(f32*)&lbl_803E7EA4)
@@ -11254,7 +11254,7 @@ void fn_802B07D8(int obj, int state)
         ((PlayerState*)state)->unk7D8 = lbl_803E7EA4;
     }
 
-    fn_8011F34C((u8)(int)((PlayerState*)state)->unk7D4);
+    fn_8011F34C((u8)(int)((PlayerState*)state)->chargeLevel);
 
     if ((u32)obj != 0)
     {
@@ -17287,7 +17287,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         break;
     case 0x87:
         if ((inner->buttonsHeld & mask) != 0 &&
-            inner->unk7D4 <=
+            inner->chargeLevel <=
             (f32) * (s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4))
         {
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20 * fv + ((PlayerState*)state)->baddie.moveSpeed;
@@ -17295,13 +17295,13 @@ int fn_802994D0(int obj, int state, f32 fv)
             {
                 ((PlayerState*)state)->baddie.moveSpeed = *(f32 *)&lbl_803E7F6C;
             }
-            inner->unk7D4 = lbl_803E7F7C * fv + inner->unk7D4;
-            inner->unk7D4 = lbl_803E7E98 * fv + inner->unk7D4;
-            if (inner->unk7D4 >= lbl_803E7ED8)
+            inner->chargeLevel = lbl_803E7F7C * fv + inner->chargeLevel;
+            inner->chargeLevel = lbl_803E7E98 * fv + inner->chargeLevel;
+            if (inner->chargeLevel >= lbl_803E7ED8)
             {
                 int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                 int v = *(s16*)((char*)sub + 0x4) - 0xa;
-                inner->unk7D4 = lbl_803E7EA4;
+                inner->chargeLevel = lbl_803E7EA4;
                 if (v < 0)
                 {
                     v = 0;
@@ -17432,7 +17432,7 @@ int fn_802994D0(int obj, int state, f32 fv)
                 inner->staffActionRequest = 4;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
-            inner->unk7D4 = lbl_803E7EA4;
+            inner->chargeLevel = lbl_803E7EA4;
             if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
             {
                 struct
@@ -17872,11 +17872,11 @@ int fn_802985FC(int obj, int state, f32 fv)
         }
         break;
     case 0x85:
-        inner->unk7D4 =
-            inner->unk7D4 + lbl_803E7ED4 * fv / lbl_803E7EF0;
-        inner->unk7D4 =
-            lbl_803E7E98 * fv + inner->unk7D4;
-        if (inner->unk7D4 >=
+        inner->chargeLevel =
+            inner->chargeLevel + lbl_803E7ED4 * fv / lbl_803E7EF0;
+        inner->chargeLevel =
+            lbl_803E7E98 * fv + inner->chargeLevel;
+        if (inner->chargeLevel >=
             (f32)(u32) * (u8*)((char*)inner + 0x41c))
         {
             int amt;
@@ -17936,7 +17936,7 @@ int fn_802985FC(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.velocityZ = f;
         ObjAnim_SetCurrentMove(obj, 0x84, f, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
-        inner->unk7D4 = lbl_803E7EA4;
+        inner->chargeLevel = lbl_803E7EA4;
         ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 0;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {

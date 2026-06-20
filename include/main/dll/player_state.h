@@ -273,7 +273,7 @@ typedef struct PlayerState {
     f32 unk7C8;
     f32 unk7CC;
     f32 unk7D0;
-    f32 unk7D4;
+    f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */
     f32 unk7D8;
     f32 unk7DC;
     f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
