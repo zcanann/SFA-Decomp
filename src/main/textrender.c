@@ -1302,6 +1302,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
+#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
@@ -1323,6 +1324,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->fc = y;
     }
 }
+#pragma optimization_level reset
 
 extern void* gSubtitleBoxTextures[];
 extern void* gSubtitleLineTable[];
