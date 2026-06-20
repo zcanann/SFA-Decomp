@@ -50,10 +50,29 @@ typedef union McmdAdsrData
         s32 dtime;
         u16 slevel;
         u16 rtime;
+    } dls;
+} McmdAdsrData;
+
+typedef union McmdAdsrCurve
+{
+    struct
+    {
+        u16 atime;
+        u16 dtime;
+        u16 slevel;
+        u16 rtime;
+    } linear;
+
+    struct
+    {
+        s32 atime;
+        s32 dtime;
+        u16 slevel;
+        u16 rtime;
         s32 ascale;
         s32 dscale;
     } dls;
-} McmdAdsrData;
+} McmdAdsrCurve;
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)
@@ -334,12 +353,11 @@ void DoSetPitch(McmdVoiceState* svoice)
 void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     McmdAdsrData adsr;
-    McmdAdsrData* adsr_ptr;
+    McmdAdsrCurve* adsr_ptr;
     s32 ascale;
     s32 dscale;
-    f32 sScale;
 
-    if ((adsr_ptr = dataGetCurve(cstep->flags >> 8)) != NULL)
+    if ((adsr_ptr = (McmdAdsrCurve*)dataGetCurve(cstep->flags >> 8)) != NULL)
     {
         if (!(u8)(cstep->flags >> 24))
         {
@@ -351,7 +369,7 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
         }
         else
         {
-            sScale = voiceAdsrSustainTable[(u16)(adsr_ptr->dls.slevel >> 8 |
+            f32 sScale = voiceAdsrSustainTable[(u16)(adsr_ptr->dls.slevel >> 8 |
                 adsr_ptr->dls.slevel << 8) >> 5];
             adsr.dls.atime = ((u8*)&adsr_ptr->dls.atime)[0] << 0 |
                 ((u8*)&adsr_ptr->dls.atime)[1] << 8 |
@@ -397,12 +415,12 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     McmdAdsrData adsr;
-    McmdAdsrData* adsr_ptr;
+    McmdAdsrCurve* adsr_ptr;
     u32 sl;
     s32 ascale;
     s32 dscale;
 
-    if ((adsr_ptr = dataGetCurve(cstep->flags >> 8)) == NULL)
+    if ((adsr_ptr = (McmdAdsrCurve*)dataGetCurve(cstep->flags >> 8)) == NULL)
     {
         return;
     }
