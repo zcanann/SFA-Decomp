@@ -3998,7 +3998,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             cfg.velocityX = ftmp2 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
             cfg.velocityZ = ftmp2 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
             cfg.scale = ftmp3;
-            cfg.lifetimeFrames = (u32)(ftmp4 * (f32)(s32)randomGetRange(1, 4));
+            cfg.lifetimeFrames = (s32)(ftmp4 * (f32)(s32)randomGetRange(1, 4));
             cfg.behaviorFlags = 0x100011;
             cfg.textureId = 0x30;
             srcPosX = cfg.sourcePosY;
@@ -4346,7 +4346,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityX = lbl_803DF4E8 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
         cfg.velocityZ = lbl_803DF4E8 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
         cfg.scale = lbl_803DF600;
-        cfg.lifetimeFrames = (u32)(lbl_803DF660 * (f32)(s32)randomGetRange(1, 4));
+        cfg.lifetimeFrames = (s32)(lbl_803DF660 * (f32)(s32)randomGetRange(1, 4));
         cfg.behaviorFlags = 0x100000;
         cfg.textureId = 0x30;
         break;
@@ -4412,7 +4412,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         }
         else
         {
-            cfg.lifetimeFrames = (u32) * extraArgs;
+            cfg.lifetimeFrames = (s32) * extraArgs;
         }
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x100201;
@@ -4462,7 +4462,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityX = lbl_803DF4E4 * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
         cfg.velocityZ = lbl_803DF4E4 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
         cfg.scale = lbl_803DF4E0;
-        cfg.lifetimeFrames = (u32)(lbl_803DF660 * (f32)(s32)(randomGetRange(0, 3) + 1U));
+        cfg.lifetimeFrames = (s32)(lbl_803DF660 * (f32)(s32)(randomGetRange(0, 3) + 1U));
         cfg.behaviorFlags = 0x110214;
         cfg.textureId = 0x30;
         break;
@@ -4472,7 +4472,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0, 0x50);
         cfg.velocityZ = lbl_803DF4E4 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
         cfg.scale = lbl_803DF4E0;
-        cfg.lifetimeFrames = (u32)(lbl_803DF660 * (f32)(s32)(randomGetRange(0, 3) + 1U));
+        cfg.lifetimeFrames = (s32)(lbl_803DF660 * (f32)(s32)(randomGetRange(0, 3) + 1U));
         cfg.behaviorFlags = 0x1110214;
         cfg.textureId = 0x33;
         break;
@@ -4496,7 +4496,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityZ = lbl_803DF4F0 * (f32)(s32)(10U - randomGetRange(0, 0x14));
         cfg.scale = lbl_803DF690 * (f32)(s32)
         randomGetRange(0, 4);
-        cfg.lifetimeFrames = (u32)(lbl_803DF69C * (f32)(s32)(randomGetRange(0, 3) + 1U));
+        cfg.lifetimeFrames = (s32)(lbl_803DF69C * (f32)(s32)(randomGetRange(0, 3) + 1U));
         cfg.behaviorFlags = 0x1000211;
         cfg.textureId = 0x30;
         break;
@@ -4506,7 +4506,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         randomGetRange(0, 0x3c);
         cfg.scale = lbl_803DF690 * (f32)(s32)
         randomGetRange(0, 4);
-        cfg.lifetimeFrames = (u32)(lbl_803DF6A0 * (f32)(s32)(randomGetRange(0, 3) + 1U));
+        cfg.lifetimeFrames = (s32)(lbl_803DF6A0 * (f32)(s32)(randomGetRange(0, 3) + 1U));
         cfg.linkGroup = 5;
         cfg.behaviorFlags = 0x1000211;
         cfg.textureId = 0x30;
@@ -4663,7 +4663,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.velocityX = lbl_803DF4E4 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
         cfg.velocityZ = lbl_803DF4E4 * (f32)(s32)(0x50U - randomGetRange(0, 0xa0));
         cfg.scale = lbl_803DF4E0;
-        cfg.lifetimeFrames = (u32)(lbl_803DF6C4 * (f32)(s32)(randomGetRange(0, 3) + 1U));
+        cfg.lifetimeFrames = (s32)(lbl_803DF6C4 * (f32)(s32)(randomGetRange(0, 3) + 1U));
         cfg.behaviorFlags = 0x110204;
         cfg.textureId = 0x30;
         break;
@@ -4822,7 +4822,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         )
         ;
         cfg.initialAlpha = 0xbe;
-        cfg.lifetimeFrames = (u32)(lbl_803DF6C8 * spawnParams->scale);
+        cfg.lifetimeFrames = (s32)(lbl_803DF6C8 * spawnParams->scale);
         cfg.behaviorFlags = 0x1200000;
         cfg.renderFlags = 0x1000000;
         cfg.textureId = 0x77;
