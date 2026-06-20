@@ -205,8 +205,8 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
     }
     modelRenderInstrsState_setBit(dst, startBit + bitWidth);
     {
-        int byteOff = src->bit >> 3;
-        return ((u8*)src->instrs + byteOff)[1];
+        u8* base = (u8*)src->instrs;
+        return base[(src->bit >> 3) + 1];
     }
 }
 #pragma scheduling reset
