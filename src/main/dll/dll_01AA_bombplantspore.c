@@ -251,6 +251,7 @@ void bombplantspore_update(void* obj)
     u32 poppedSender;
     int detonateMessage;
     int i;
+    f32 detonateZero;
 
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0u)
@@ -282,11 +283,12 @@ void bombplantspore_update(void* obj)
         }
     }
 
-    if (state->detonateTimer != lbl_803E5394)
+    detonateZero = lbl_803E5394;
+    if (state->detonateTimer != detonateZero)
     {
         *(s16*)obj += framesThisStep * 0x40;
         state->detonateTimer -= timeDelta;
-        if (state->detonateTimer <= lbl_803E5394)
+        if (state->detonateTimer <= detonateZero)
         {
             Obj_FreeObject(obj);
         }
