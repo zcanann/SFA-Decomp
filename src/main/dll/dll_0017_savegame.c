@@ -907,8 +907,8 @@ void saveGame_saveObjectPos(int* obj)
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = ((GameObject*)obj)->anim.localPosZ;
         }
         *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
     }
 }
 
