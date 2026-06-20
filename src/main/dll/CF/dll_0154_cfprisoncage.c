@@ -40,8 +40,8 @@ typedef struct CfPrisonCageObjectDef
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
+    s16 openedBit; /* 0x18: game bit set once the cage is opened */
+    s16 rotY;      /* 0x1A: spawn yaw byte, shifted <<8 into anim.rotX */
     u8 pad1C[0x1E - 0x1C];
     s16 unk1E;
     u8 pad20[0x22 - 0x20];
@@ -170,7 +170,7 @@ void cfprisoncage_init(int* obj, u8* def)
        sequence forward when already opened */
     if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH)
     {
-        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->unk18) != 0)
+        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->openedBit) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
         }
@@ -181,7 +181,7 @@ void cfprisoncage_init(int* obj, u8* def)
     }
     else
     {
-        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->unk18) != 0)
+        if (GameBit_Get(((CfPrisonCageObjectDef*)def)->openedBit) != 0)
         {
             (*gObjectTriggerInterface)->preempt((int)obj, 60);
         }
