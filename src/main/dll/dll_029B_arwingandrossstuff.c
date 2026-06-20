@@ -245,26 +245,33 @@ void arwingandrossstuff_update(int obj)
         Obj_FreeObject(obj);
         return;
     }
-    if (state->despawnTimer > lbl_803E7008)
     {
-        state->despawnTimer -= timeDelta;
-        if (state->despawnTimer <= lbl_803E7008)
+        f32 dt = state->despawnTimer;
+        f32 zero = lbl_803E7008;
+        if (dt > zero)
         {
-            Obj_FreeObject(obj);
+            state->despawnTimer = dt - timeDelta;
+            if (state->despawnTimer <= zero)
+            {
+                Obj_FreeObject(obj);
+            }
+            return;
         }
-        return;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xf, state->hitVolumeMode, 0);
     ((GameObject*)obj)->anim.alpha = 0xff;
-    if (state->lifetime > lbl_803E7008)
     {
-        state->lifetime -= timeDelta;
-        if (state->lifetime <= lbl_803E7008)
+        f32 lt = state->lifetime;
+        f32 zero = lbl_803E7008;
+        if (lt > zero)
         {
-            state->lifetime = lbl_803E7008;
-            Obj_FreeObject(obj);
-            return;
-        }
+            state->lifetime = lt - timeDelta;
+            if (state->lifetime <= zero)
+            {
+                state->lifetime = zero;
+                Obj_FreeObject(obj);
+                return;
+            }
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             if (((GameObject*)obj)->anim.seqId != ARW_SEQID_INVINCIBLE)
@@ -291,7 +298,8 @@ void arwingandrossstuff_update(int obj)
         {
             ((GameObject*)obj)->anim.rootMotionScale += lbl_803DC3D0;
             ObjHitbox_SetSphereRadius(obj, (int)(((GameObject*)obj)->anim.rootMotionScale * lbl_803DC3D8));
-            ((GameObject*)obj)->anim.rotZ = (int)((f32)((GameObject*)obj)->anim.rotZ + lbl_803DC3D4);
+            ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + lbl_803DC3D4;
+        }
         }
     }
 }
