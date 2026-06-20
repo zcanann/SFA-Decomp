@@ -2241,21 +2241,7 @@ int fn_802A1CA8(int obj, int state)
             {
                 mag = -mag;
             }
-            t = lbl_803E7EFC;
-            if (mag < t)
-            {
-            }
-            else
-            {
-                t = lbl_803E7EE0;
-                if (mag > t)
-                {
-                }
-                else
-                {
-                    t = mag;
-                }
-            }
+            t = (mag < lbl_803E7EFC) ? lbl_803E7EFC : ((mag > lbl_803E7EE0) ? lbl_803E7EE0 : mag);
         }
     }
     jt = (int)Player_GetActiveModel(obj);
