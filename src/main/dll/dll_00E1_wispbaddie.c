@@ -406,10 +406,10 @@ void FUN_8014fef8(u32 obj, int state, u32 param_3, int code)
 {
     if (code == 0x10)
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         return;
     }
-    ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
+    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
     return;
 }
 

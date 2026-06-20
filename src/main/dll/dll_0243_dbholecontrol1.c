@@ -177,31 +177,31 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     float deltaY;
     float deltaZ;
 
-    ctrl = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    ctrl = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(u8*)(ctrl + 0x14) = *(u8*)(ctrl + 0x14) | 2;
     *(u8*)(ctrl + 0x15) = *(u8*)(ctrl + 0x15) & 0xfb;
     divisor = lbl_803E6F88;
-    *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / divisor;
-    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
+    *(float*)(state + 0x284) = *(float*)(state + 0x284) / divisor;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
-    if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < ((GameObject*)((GroundBaddieState*)param_10)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
+    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
+    if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
+        (((GameObject*)obj)->anim.localPosY < ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
     {
-        iVar3 = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
-        deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        iVar3 = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
+        deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)obj)->anim.localPosX;
+        deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
+        deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)obj)->anim.localPosZ;
         dist = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
         if (dist < (double)lbl_803E6F50)
         {
-            msg1Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+            msg1Data = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
             msgQueue = *(short**)(ctrl + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
@@ -225,7 +225,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             FUN_80006ac4(msgQueue,  & msg2Id);
         }
         *(u8*)(ctrl + 0x34) = 1;
-        msg3Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        msg3Data = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         msgQueue = *(short**)(ctrl + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
