@@ -1065,8 +1065,8 @@ void babycloudrunner_update(int* obj)
         {
             if (randFn_80080100(500) != 0)
             {
-                int r = randomGetRange(0, 3);
-                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)sub->mutterSfxTable)[r]);
+                u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
+                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, sfxId);
             }
             objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
             if (sub->runnerState == 1 || sub->runnerState == 2)
