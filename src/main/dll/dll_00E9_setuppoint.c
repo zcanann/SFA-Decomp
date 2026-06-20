@@ -211,7 +211,6 @@ void flamethrowerspe_free(void);
 void flamethrowerspe_hitDetect(void);
 void flamethrowerspe_release(void);
 void flamethrowerspe_initialise(void);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void shield_hitDetect(void);
