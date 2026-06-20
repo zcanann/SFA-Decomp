@@ -671,7 +671,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
     shifted = Obj_GetYawDeltaToObject(a, b, 0) >> 3;
     *(s16*)a += shifted;
     if (d == 0) return;
-    if ((s16)shifted > -200 && shifted < 200)
+    if ((s16)shifted > -200 && (s16)shifted < 200)
     {
         if (((BabyCloudRunnerState*)c)->turnLatch != 0)
         {
