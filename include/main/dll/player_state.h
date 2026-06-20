@@ -106,7 +106,7 @@ typedef struct PlayerState {
     void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];
     int lastHitObject;
-    int unk4C4;
+    int groundObject; /* object the player stands on/rides; transform parent for relative pos, set from collision hit */
     f32 smoothVelX; /* smoothed planar velocity X; eased toward maxSpeed*sin(heading) */
     f32 smoothVelZ; /* smoothed planar velocity Z; magnitude = sqrt(x^2+z^2) -> animSpeedC */
     s16 headPitch;

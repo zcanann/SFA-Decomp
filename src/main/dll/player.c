@@ -785,25 +785,25 @@ int fn_802A3F24(int obj, int state)
                                        ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
                                        &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
                                        *(int*)&((GameObject*)obj)->anim.parent);
-        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
+        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                            *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                            *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             ((PlayerState*)inner)->unk5AC =
-                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk5B0 =
-                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -903,7 +903,7 @@ int fn_802A36EC(int obj, int state)
                                            ((GameObject*)obj)->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                            (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                            *(int*)&((GameObject*)obj)->anim.parent);
-            objHitDetectFn_80062e84(obj, inner->unk4C4, 1);
+            objHitDetectFn_80062e84(obj, inner->groundObject, 1);
             inner->unk5B4 = ((GameObject*)obj)->anim.localPosX;
             inner->unk5B8 = ((GameObject*)obj)->anim.localPosY;
             inner->unk5BC = ((GameObject*)obj)->anim.localPosZ;
@@ -912,19 +912,19 @@ int fn_802A36EC(int obj, int state)
                 Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                                *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                                (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                               inner->unk4C4);
+                                               inner->groundObject);
                 Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                                *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                                (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                               inner->unk4C4);
+                                               inner->groundObject);
                 Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                                *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                                (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                               inner->unk4C4);
+                                               inner->groundObject);
                 inner->unk5AC =
-                    inner->unk5AC - *(f32*)((char*)inner->unk4C4 + 0x10);
+                    inner->unk5AC - *(f32*)((char*)inner->groundObject + 0x10);
                 inner->unk5B0 =
-                    inner->unk5B0 - *(f32*)((char*)inner->unk4C4 + 0x10);
+                    inner->unk5B0 - *(f32*)((char*)inner->groundObject + 0x10);
                 inner->unk609 = 0;
             }
             break;
@@ -1041,7 +1041,7 @@ int fn_802A3B04(int obj, int state)
                                        ((GameObject*)obj)->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                        (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                        *(int*)&((GameObject*)obj)->anim.parent);
-        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
+        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
         ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
         ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
         ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
@@ -1066,19 +1066,19 @@ int fn_802A3B04(int obj, int state)
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                            *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                            *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                           ((PlayerState*)inner)->unk4C4);
+                                           ((PlayerState*)inner)->groundObject);
             ((PlayerState*)inner)->unk5AC =
-                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                ((PlayerState*)inner)->unk5AC - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk5B0 =
-                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                ((PlayerState*)inner)->unk5B0 - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -6777,7 +6777,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
             ((GameObject*)obj)->anim.worldPosZ, (void*)(obj + 0xc), (void*)(obj + 0x10),
             (void*)(obj + 0x14), *(int*)&((GameObject*)obj)->anim.parent);
-        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->unk4C4, 1);
+        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
         ((PlayerState*)inner)->unk5B4 = ((GameObject*)obj)->anim.localPosX;
         ((PlayerState*)inner)->unk5B8 = ((GameObject*)obj)->anim.localPosY;
         ((PlayerState*)inner)->unk5BC = ((GameObject*)obj)->anim.localPosZ;
@@ -6793,18 +6793,18 @@ int fn_802A2EE0(int obj, int state, f32 fv)
                     ((PlayerState*)inner)->unk5EC, ((PlayerState*)inner)->unk5F0,
                     ((PlayerState*)inner)->unk5F4, (void*)(inner + 0x5ec),
                     (void*)(inner + 0x5f0), (void*)(inner + 0x5f4),
-                    ((PlayerState*)inner)->unk4C4);
+                    ((PlayerState*)inner)->groundObject);
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
                     ((PlayerState*)inner)->unk5F8, ((PlayerState*)inner)->unk5FC,
                     ((PlayerState*)inner)->unk600, (void*)(inner + 0x5f8),
                     (void*)(inner + 0x5fc), (void*)(inner + 0x600),
-                    ((PlayerState*)inner)->unk4C4);
+                    ((PlayerState*)inner)->groundObject);
                 ((PlayerState*)inner)->unk5AC =
                     ((PlayerState*)inner)->unk5AC -
-                    *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                    *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
                 ((PlayerState*)inner)->unk5B0 =
                     ((PlayerState*)inner)->unk5B0 -
-                    *(f32*)((char*)((PlayerState*)inner)->unk4C4 + 0x10);
+                    *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
                 ((PlayerState*)inner)->unk609 = 0;
             }
         }
@@ -14926,12 +14926,12 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         }
         else
         {
-            ((PlayerState*)inner)->unk4C4 = 0;
+            ((PlayerState*)inner)->groundObject = 0;
         }
     }
     else
     {
-        ((PlayerState*)inner)->unk4C4 = 0;
+        ((PlayerState*)inner)->groundObject = 0;
     }
     return mode;
 }
@@ -14949,7 +14949,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     f32* pby;
     f32* pbz;
 
-    ((PlayerState*)b)->unk4C4 = 0;
+    ((PlayerState*)b)->groundObject = 0;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
     *(f32*)((char*)d + 0x20) = *(f32*)((char*)c + 0x20);
     *(f32*)((char*)d + 0x24) = *(f32*)((char*)c + 0x24);
@@ -15060,7 +15060,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         {
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
-                ((PlayerState*)b)->unk4C4 = (int)hit;
+                ((PlayerState*)b)->groundObject = (int)hit;
             }
             if (*(f32*)((char*)d + 0x0) <= lbl_803E80C8)
             {
@@ -15097,7 +15097,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             }
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
-                ((PlayerState*)b)->unk4C4 = (int)hit;
+                ((PlayerState*)b)->groundObject = (int)hit;
             }
             return 6;
         }
@@ -15112,7 +15112,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         }
         if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
         {
-            ((PlayerState*)b)->unk4C4 = (int)hit;
+            ((PlayerState*)b)->groundObject = (int)hit;
         }
         return 3;
     }
