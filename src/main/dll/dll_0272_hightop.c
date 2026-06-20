@@ -66,7 +66,7 @@ typedef struct HightopPlacement
     u8 padC2C[0xC38 - 0xC2C];
     f32 unkC38;
     u8 padC3C[0xC40 - 0xC3C];
-    u16 unkC40;
+    u16 flagsC40;
     u8 padC42[0xC4B - 0xC42];
     u8 unkC4B;
     u8 padC4C[0xC50 - 0xC4C];
@@ -100,7 +100,7 @@ typedef struct HighTopRuntime
     u8 padC34[4];
     f32 unkC38;
     s32 unkC3C;
-    u16 unkC40;
+    u16 flagsC40;
     u8 unkC42;
     u8 unkC43;
     u8 padC44;
@@ -577,7 +577,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
         GameBit_Set(0x634, 0);
         GameBit_Set(0x631, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
-        runtime->unkC40 &= ~0x140;
+        runtime->flagsC40 &= ~0x140;
         runtime->flags &= ~2;
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
         break;
@@ -837,8 +837,8 @@ int hightop_stateHandler04(int obj, int p)
         ObjHits_ClearSourceMask(obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
         *(s8*)&state->unkC4B = -1;
-        state->unkC40 |= 0x40;
-        state->unkC40 |= 0x20;
+        state->flagsC40 |= 0x40;
+        state->flagsC40 |= 0x20;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
             (char*)state + 0xa10, obj, 0x3463a, curve);
