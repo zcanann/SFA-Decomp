@@ -260,6 +260,7 @@ int initControllers(void)
     u32* heldButtons;
     u32* buttonsPressed;
     u32* buttonsReleased;
+    u32* controlStick;
     u16* prevTriggers;
     u16* triggers;
     u16* triggersReleased;
@@ -267,7 +268,6 @@ int initControllers(void)
     PadStatusLite* statuses;
 
     padStateBlock = gPadStateBlock;
-    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
     gPadResetMask = 0xF0000000;
     PADInit();
     PADRecalibrate(gPadResetMask);
@@ -285,11 +285,12 @@ int initControllers(void)
     heldButtons = padStateBlock;
     buttonsPressed = padStateBlock + 4;
     buttonsReleased = padStateBlock + 8;
-    padStateBlock = padStateBlock + 12;
+    controlStick = padStateBlock + 12;
     prevTriggers = &gPadPrevTriggers;
     triggers = &gPadTriggers;
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
+    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
 
     for (i = 0; i < 4; i++)
     {
@@ -302,7 +303,7 @@ int initControllers(void)
         *heldButtons = 0;
         *buttonsPressed = 0;
         *buttonsReleased = 0;
-        *padStateBlock = 0;
+        *controlStick = 0;
         *prevTriggers = 0;
         *triggers = 0;
         *triggersReleased = 0;
@@ -319,7 +320,7 @@ int initControllers(void)
         heldButtons++;
         buttonsPressed++;
         buttonsReleased++;
-        padStateBlock++;
+        controlStick++;
         prevTriggers++;
         triggers++;
         triggersReleased++;
