@@ -1634,7 +1634,7 @@ int fn_802A5384(int obj, int state)
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7EFC &&
                 ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E8074)
             {
-                ((PlayerState*)inner)->unk8D8 |= 8;
+                ((PlayerState*)inner)->pendingFxFlags |= 8;
             }
         }
         else if ((fl >> 4 & 1) != 0)
@@ -1782,7 +1782,7 @@ int fn_802A5384(int obj, int state)
             (((PlayerState*)inner)->inputMagnitude < lbl_803E8030 ||
                 ((PlayerState*)inner)->yawRateSigned >= 0x96))
         {
-            ((PlayerState*)inner)->unk8D8 |= 8;
+            ((PlayerState*)inner)->pendingFxFlags |= 8;
             ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 1;
             ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A7;
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
@@ -3924,10 +3924,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 break;
             case 0x25:
-                ((PlayerState*)inner)->unk8D8 ^= 1;
+                ((PlayerState*)inner)->pendingFxFlags ^= 1;
                 break;
             case 0x26:
-                ((PlayerState*)inner)->unk8D8 ^= 2;
+                ((PlayerState*)inner)->pendingFxFlags ^= 2;
                 break;
             case 0x27:
                 hudFn_8011f38c(1);
@@ -5387,13 +5387,13 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             {
                 doRumble(lbl_803E7F10);
                 Sfx_PlayFromObject(obj, 0x3cd);
-                inner->unk8D8 = inner->unk8D8 | 4;
+                inner->pendingFxFlags = inner->pendingFxFlags | 4;
             }
             if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x400) != 0)
             {
                 doRumble(lbl_803E7F10);
                 Sfx_PlayFromObject(obj, 0x3cd);
-                inner->unk8D8 = inner->unk8D8 | 4;
+                inner->pendingFxFlags = inner->pendingFxFlags | 4;
             }
             if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
                 ((GameObject*)obj)->anim.currentMoveProgress >
@@ -12037,7 +12037,7 @@ int fn_80297D0C(int obj, int state, f32 fv)
     {
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, 0x3cd);
-        inner->unk8D8 |= 4;
+        inner->pendingFxFlags |= 4;
     }
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
@@ -12106,7 +12106,7 @@ int fn_80297F48(int obj, int state, f32 fv)
     {
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, 0x3cd);
-        inner->unk8D8 |= 4;
+        inner->pendingFxFlags |= 4;
     }
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
@@ -12234,7 +12234,7 @@ int fn_80297854(int obj, int state, f32 fv)
     {
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, 0x3cd);
-        inner->unk8D8 |= 4;
+        inner->pendingFxFlags |= 4;
     }
     if ((((PlayerState*)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F14)
@@ -14257,7 +14257,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             }
         }
         if (lbl_803E7EA4 < ((PlayerState*)inner)->unk79C ||
-            (((PlayerState*)inner)->unk8D8 & 2) != 0)
+            (((PlayerState*)inner)->pendingFxFlags & 2) != 0)
         {
             tbl[0] = lbl_803E7E68;
             tbl[1] = lbl_803E7E6C;
@@ -14265,7 +14265,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                                    tbl[((PlayerState*)inner)->unk7A8 >> 5] & 0xff,
                                    lbl_803E7EE0, 0);
         }
-        if ((((PlayerState*)inner)->unk8D8 & 1) != 0)
+        if ((((PlayerState*)inner)->pendingFxFlags & 1) != 0)
         {
             objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
         }
@@ -14274,7 +14274,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             if (gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 6 ||
                 gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 3)
             {
-                if ((((PlayerState*)inner)->unk8D8 & 8) != 0)
+                if ((((PlayerState*)inner)->pendingFxFlags & 8) != 0)
                 {
                     u8 n;
                     vel[0] = lbl_803E7F6C * ((GameObject*)obj)->anim.velocityX;
@@ -14300,9 +14300,9 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                         (*gPartfxInterface)->spawnObject(
                             (void*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
-                    ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x8;
+                    ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x8;
                 }
-                if ((((PlayerState*)inner)->unk8D8 & 4) != 0)
+                if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
                 {
                     u8 n2;
                     vel[0] = lbl_803E7F44 * ((GameObject*)obj)->anim.velocityX;
@@ -14318,14 +14318,14 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                         (*gPartfxInterface)->spawnObject(
                             (void*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
-                    ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x4;
+                    ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
                 }
             }
         }
-        else if ((((PlayerState*)inner)->unk8D8 & 4) != 0)
+        else if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
         {
             ((PlayerState*)inner)->flags360 |= 0x20000;
-            ((PlayerState*)inner)->unk8D8 = ((PlayerState*)inner)->unk8D8 & ~0x4;
+            ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
         }
     }
 }
@@ -15803,7 +15803,7 @@ void fn_802AE650(int obj, int state, int p3)
     {
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, 0x3cd);
-        ((PlayerState*)state)->unk8D8 |= 4;
+        ((PlayerState*)state)->pendingFxFlags |= 4;
     }
     {
         f32 fa4 = lbl_803E7FA4;

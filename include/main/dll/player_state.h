@@ -376,7 +376,7 @@ typedef struct PlayerState {
     u8 unk8D3;
     u8 unk8D4;
     u8 pad8D5[0x8D8 - 0x8D5];
-    u16 unk8D8;
+    u16 pendingFxFlags; /* one-shot particle-effect request bits (1/2/8 spray-splash, 4 landing burst); set on events, cleared after the FX is spawned */
     u8 pad8DA[0x8DC - 0x8DA];
     int unk8DC;
 } PlayerState;
@@ -388,6 +388,6 @@ STATIC_ASSERT(offsetof(PlayerStatus, money) == 0x8);
 STATIC_ASSERT(offsetof(PlayerState, playerStatus) == 0x35C);
 STATIC_ASSERT(offsetof(PlayerState, targetYaw) == 0x478);
 STATIC_ASSERT(offsetof(PlayerState, heldObj) == 0x7F8);
-STATIC_ASSERT(offsetof(PlayerState, unk8D8) == 0x8D8);
+STATIC_ASSERT(offsetof(PlayerState, pendingFxFlags) == 0x8D8);
 
 #endif /* MAIN_DLL_PLAYER_STATE_H_ */
