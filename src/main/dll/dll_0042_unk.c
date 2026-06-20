@@ -237,7 +237,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
 
     extern f32 interpolate(f32 a, f32 t, f32 exp);
 
-    f32 fVar1;
+    f32 baseHeight;
     CamSlideObjectState* state;
     u32 angle;
     int cur;
@@ -404,11 +404,11 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
                     {
                         speed = lbl_803E16A4;
                     }
-                    fVar1 = lbl_803E16F0 + target->anim.worldPosY;
+                    baseHeight = lbl_803E16F0 + target->anim.worldPosY;
                     low = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fVar1;
+                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + baseHeight;
                     high = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fVar1;
+                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + baseHeight;
                 }
             }
             else
