@@ -258,7 +258,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     int ang;
     int count;
     int first;
-    u16 id;
+    int id;
 
     while (i < 8)
     {
@@ -466,7 +466,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0xc:
-                    id = (u16)((p[2] << 8) | p[3]);
+                    id = (p[2] << 8) | p[3];
                     t = ObjList_GetObjects(&first, &count);
                     for (; first < count; first++)
                     {
@@ -532,13 +532,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 1);
                     break;
                 case 0x27:
-                    id = (u16)((p[2] << 8) | p[3]);
+                    id = (p[2] << 8) | p[3];
                     mapLoadDataFiles(id);
                     loadModelAndAnimTabs();
                     OSReport(desc + 0xa8, id);
                     break;
                 case 0x28:
-                    id = (u16)((p[2] << 8) | p[3]);
+                    id = (p[2] << 8) | p[3];
                     mapUnload(id, 0x20000000);
                     OSReport(desc + 0xc4, id);
                     break;
@@ -565,7 +565,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         (int)((GameObject*)obj)->anim.mapEventSlot, (p[2] << 8) | p[3], 0);
                     break;
                 case 0x22:
-                    id = (u16)((p[2] << 8) | p[3]);
+                    id = (p[2] << 8) | p[3];
                     c = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
