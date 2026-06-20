@@ -347,7 +347,6 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 
 
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 
 extern void shield_update(int* obj);
