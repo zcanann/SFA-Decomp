@@ -2266,19 +2266,21 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                         float* startPtr = (float*)((int)startPoints + ptOff);
                         u8* radPtr = (u8*)&hb + rOff;
                         u8* idPtr = (u8*)&hb + pointCount;
+                        f32 offX = playerMapOffsetX;
+                        f32 offZ = playerMapOffsetZ;
                         for (; (u16)bits != 0; bits = (u16)((u16)bits << 4))
                         {
                             sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
                             if (pointCount < 4)
                             {
                                 curEntry = curSpheres + sphereIdx * 4;
-                                *endPtr = playerMapOffsetX + curEntry[1];
+                                *endPtr = offX + curEntry[1];
                                 endPtr[1] = curEntry[2];
-                                endPtr[2] = playerMapOffsetZ + curEntry[3];
+                                endPtr[2] = offZ + curEntry[3];
                                 prevEntry = prevSpheres + sphereIdx * 0x10;
-                                *startPtr = playerMapOffsetX + *(float*)(prevEntry + 4);
+                                *startPtr = offX + *(float*)(prevEntry + 4);
                                 startPtr[1] = *(float*)(prevEntry + 8);
-                                startPtr[2] = playerMapOffsetZ + *(float*)(prevEntry + 0xc);
+                                startPtr[2] = offZ + *(float*)(prevEntry + 0xc);
                                 *(float*)(radPtr + 0x40) = *curEntry;
                                 *(s8*)(idPtr + 0x50) = -1;
                                 *(idPtr + 0x54) = 7;
