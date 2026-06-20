@@ -385,6 +385,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     }
 }
 
+#pragma fp_contract off
 void groundanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
