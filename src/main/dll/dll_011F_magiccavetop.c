@@ -13,9 +13,9 @@ typedef struct MagiccavetopPlacement
 {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
-    s16 unk1C;
+    s16 visibleGameBit;
     s16 unk1E;
-    s8 unk20;
+    s8 warpMapId;
     s8 unk21;
     u8 pad22[0x28 - 0x22];
 } MagiccavetopPlacement;
@@ -24,12 +24,12 @@ typedef struct MagiccavetopObjectDef
 {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
-    s16 unk1C;
+    s16 visibleGameBit;
     s16 unk1E;
-    s8 unk20;
+    s8 warpMapId;
     s8 unk21;
     u8 pad22[0x24 - 0x22];
-    s16 unk24;
+    s16 swapGameBit;
     u8 pad26[0x28 - 0x26];
 } MagiccavetopObjectDef;
 
@@ -84,15 +84,15 @@ void magiccavetop_init(int* obj, s8* def)
     int* state = ((GameObject*)obj)->extra;
     int* refs;
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | 0x6000);
-    if (GameBit_Get(((MagiccavetopObjectDef*)def)->unk1C) != 0)
+    if (GameBit_Get(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
         ((MagiccavetopState*)state)->unk4 = gMagicCaveTopFadeMax;
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
-    if (((MagiccavetopObjectDef*)def)->unk24 > 0)
+    if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
     {
-        if (GameBit_Get(((MagiccavetopObjectDef*)def)->unk24) != 0)
+        if (GameBit_Get(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
         {
             ((MagiccavetopState*)state)->unk1 = (u8)(((MagiccavetopState*)state)->unk1 | 0x0c);
             *(u8*)((char*)refs + 8) = 23;
@@ -168,7 +168,7 @@ void magiccavetop_update(int* obj)
         }
         dirIdx = mapGetDirIdx(def[0x1f]);
         dist = vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-        gb = GameBit_Get(((MagiccavetopPlacement*)def)->unk1C);
+        gb = GameBit_Get(((MagiccavetopPlacement*)def)->visibleGameBit);
         switch (*sub)
         {
         case 0:
@@ -219,7 +219,7 @@ void magiccavetop_update(int* obj)
             {
                 GameBit_Set(0xe05, 0);
             }
-            warpToMap(((MagiccavetopPlacement*)def)->unk20, 0);
+            warpToMap(((MagiccavetopPlacement*)def)->warpMapId, 0);
             break;
         case 3:
             if (dist > lbl_803E3C30)
