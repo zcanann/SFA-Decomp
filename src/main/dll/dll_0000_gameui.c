@@ -218,7 +218,7 @@ extern f32 lbl_803E20BC;
 extern f32 lbl_803E2130;
 extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
-extern char* fn_800E888C(int track, int row);
+extern char* fn_800E888C(u8 track, u8 row);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern u8 gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
@@ -1729,7 +1729,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
         {
             char* e = fn_800E888C(gHighScoreActiveTableId, k);
             char* name = e + 4;
-            u8 starred = *(u8*)(e + 3) & 1;
+            int starred = *(u8*)(e + 3) & 1;
             int rowMul, rowY;
             sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
