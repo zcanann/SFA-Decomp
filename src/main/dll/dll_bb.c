@@ -37,7 +37,6 @@ extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s16 yOffset);
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat;
-extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
