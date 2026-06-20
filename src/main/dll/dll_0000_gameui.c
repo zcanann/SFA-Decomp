@@ -3946,8 +3946,8 @@ void GameUI_release(void)
             textureFree(*tex);
             *tex = NULL;
         }
-        g->itemSlots[k] = -1;
-        g->itemFlags[k] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + k * 2) = -1;
+        lbl_803A87F0[1096 + k] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -3972,8 +3972,8 @@ void GameUI_release(void)
             textureFree(*tex);
             *tex = NULL;
         }
-        g->itemSlots[k] = -1;
-        g->itemFlags[k] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + k * 2) = -1;
+        lbl_803A87F0[1096 + k] = 1;
     }
 
     textureFree(gGameUiBlinkTexture);
