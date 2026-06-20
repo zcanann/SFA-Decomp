@@ -25,7 +25,7 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
     u32 modTime;
 
     trackId = channel;
-    track = SYNTH_TRACK_CURSOR(gSynthCurrentVoice, trackId);
+    track = SYNTH_TRACK_CURSOR(gSynthCurrentVoice, channel);
     pattern = SYNTH_SEQUENCE_STATE(gSynthCurrentVoice, trackId);
 
     if (track->current != 0)
