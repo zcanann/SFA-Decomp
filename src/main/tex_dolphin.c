@@ -215,9 +215,11 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
 int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
     int shader;
-    u32 bitPos;
     u32 shaderIdx;
     volatile int colorWord;
+    int _base;
+    u32 _bits;
+    u32 bitPos;
     u8 colR;
     u8 colG;
     u8 colB;
@@ -226,8 +228,8 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     bitPos = bitReader[4];
     {
         int _off = (int)bitPos >> 3;
-        int _base = *bitReader;
-        u32 _bits = *(u8*)(_base + _off);
+        _base = *bitReader;
+        _bits = *(u8*)(_base + _off);
         _base += _off;
         _bits |= (u32) * (u8*)(_base + 1) << 8;
         _bits |= (u32) * (u8*)(_base + 2) << 16;
