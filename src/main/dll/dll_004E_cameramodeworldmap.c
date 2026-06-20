@@ -127,12 +127,13 @@ void CameraModeWorldMap_free(void)
 #pragma dont_inline on
 #pragma dont_inline reset
 
+#pragma opt_common_subs off
 void CameraModeWorldMap_update(u8* obj)
 {
     GameObject* camera = (GameObject*)obj;
     GameObject* focus;
     GameObject *objA, *objB;
-    int buttons;
+    u16 buttons;
     f32 spd = lbl_803E1A28;
     f32 mdx, mdz;
     s16 e;
@@ -429,3 +430,4 @@ void CameraModeWorldMap_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+#pragma opt_common_subs reset
