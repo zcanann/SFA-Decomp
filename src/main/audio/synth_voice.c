@@ -733,9 +733,10 @@ void ZeroOffsetHandler(int voice)
         Modulation = inpGetModulation((McmdVoiceState*)sv);
         lfoInt = 0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1);
         lfo = lbl_803E77A0 * (f32)lfoInt;
-        scale = lbl_803E77A4 *
-        ((f32)sv->treScale *
-            (lbl_803E77A8 - lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale))));
+        {
+            f32 modScale = lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
+            scale = lbl_803E77A4 * ((f32)sv->treScale * (lbl_803E77A8 - modScale));
+        }
         if (sv->treCurScale < scale)
         {
             if ((sv->treCurScale += lbl_803E77B0) > scale)
@@ -750,7 +751,10 @@ void ZeroOffsetHandler(int voice)
                 sv->treCurScale = scale;
             }
         }
-        voiceVol = voiceVol * (lbl_803E77A8 - lfo * (lbl_803E77A8 - sv->treCurScale));
+        {
+            f32 tmp = lfo * (lbl_803E77A8 - sv->treCurScale);
+            voiceVol = voiceVol * (lbl_803E77A8 - tmp);
+        }
         volUpdate = 1;
     }
 
