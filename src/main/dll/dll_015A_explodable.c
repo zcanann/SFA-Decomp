@@ -83,9 +83,9 @@ void explodable_update(int obj)
             if ((u32)GameBit_Get(((ExplodablePlacement*)def)->activateGameBit) != 0)
             {
                 explodable_buildFragments(obj, def, 0, state);
-                if (((DrExplodableState*)state)->unk6D0 != 0)
+                if (((DrExplodableState*)state)->breakSfx != 0)
                 {
-                    Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->unk6D0 & 0xffff);
+                    Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
                 }
                 ((DrExplodableState*)state)->phase6E4 = 1;
                 ((GameObject*)obj)->anim.alpha = 0;
@@ -174,7 +174,7 @@ void explodable_init(int obj, int setup)
     {
         if (((GameObject*)obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
         {
-            ((DrExplodableState*)state)->unk6E5 = base;
+            ((DrExplodableState*)state)->recipeIndex = base;
             break;
         }
     }
@@ -185,7 +185,7 @@ void explodable_init(int obj, int setup)
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
     e = gExplodableBreakRecipeTable;
-    if ((e[((DrExplodableState*)state)->unk6E5].flags & 1) != 0)
+    if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
     {
         ((GameObject*)obj)->objectFlags |= 0x4000;
     }
@@ -270,9 +270,9 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
     } s;
 
     e = (GasVentTableEntry*)gExplodableBreakRecipeTable;
-    objType = e[((DrExplodableState*)state)->unk6E5].objType;
-    ((DrExplodableState*)state)->unk6D0 = e[((DrExplodableState*)state)->unk6E5].sfx;
-    entMode = e[((DrExplodableState*)state)->unk6E5].mode;
+    objType = e[((DrExplodableState*)state)->recipeIndex].objType;
+    ((DrExplodableState*)state)->breakSfx = e[((DrExplodableState*)state)->recipeIndex].sfx;
+    entMode = e[((DrExplodableState*)state)->recipeIndex].mode;
     if (objType != -1)
     {
         i13 = 0;

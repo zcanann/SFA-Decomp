@@ -91,7 +91,7 @@ typedef struct DbstealerwormPlacement
     u8 pad22[0x24 - 0x22];
     s16 unk24;           /* 0x24: cfg table index */
     u8 pad26[0x2B - 0x26];
-    u8 unk2B;            /* 0x2B: config flag bits OR'd into configFlags */
+    u8 configFlags;      /* 0x2B: config flag bits OR'd into the state's configFlags */
     s16 unk2C;           /* 0x2C */
     s8 seqId;            /* 0x2E: sequence run when activated */
     u8 pad2F[0x30 - 0x2F];
@@ -317,7 +317,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
             (*gMapEventInterface)->
                 addTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId, lbl_803E633C);
         }
-        sub->configFlags |= ((DbstealerwormPlacement*)data)->unk2B;
+        sub->configFlags |= ((DbstealerwormPlacement*)data)->configFlags;
     }
     (**(void (**)(int, int, int, int, int*))((char*)(*gPlayerInterface) + 0x34))(obj, p2, 0, 2, lbl_80329634);
     (**(void (**)(int, int, int, int, int*))((char*)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
@@ -452,7 +452,7 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
         bs->physicsActive = 0;
         bs->hasTarget = 0;
         sub->targetState = 0;
-        sub->configFlags |= ((DbstealerwormPlacement*)placementData)->unk2B;
+        sub->configFlags |= ((DbstealerwormPlacement*)placementData)->configFlags;
         if (*(void**)&sub_40c->linkedObj != NULL)
         {
             ObjMsg_SendToObject(sub_40c->linkedObj, 17, obj, 19);
@@ -1201,7 +1201,7 @@ void fn_80203144(int obj, int p2, int p3)
     {
         near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
     }
-    if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (((DbstealerwormPlacement*)data)->unk2B & 2) != 0)
+    if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 && (((DbstealerwormPlacement*)data)->configFlags & 2) != 0)
     {
         near = ObjGroup_FindNearestObject(0x24, obj, 0);
     }
