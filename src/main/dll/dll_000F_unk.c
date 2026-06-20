@@ -848,8 +848,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     if ((*(int*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
     {
         fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
-        ((BaddieState*)state)->unk32E = (s16)((f32) * (s16*)(state + 0x32e) + dt);
-        if ((f32) * (s16*)(state + 0x32e) > lbl_803E05C4)
+        ((BaddieState*)state)->unk32E = (s16)((f32)((BaddieState*)state)->unk32E + dt);
+        if ((f32)((BaddieState*)state)->unk32E > lbl_803E05C4)
         {
             ((BaddieState*)state)->unk32E = 10000;
         }
