@@ -26,7 +26,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj);
 extern void objRenderFn_8003b8f4(f32);
 
 extern int ObjList_FindObjectById(int id);
-extern u8 framesThisStep;
 #include "main/game_object.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objhits.h"
