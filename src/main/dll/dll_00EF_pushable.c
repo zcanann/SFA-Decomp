@@ -1367,10 +1367,11 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         Obj_BuildTransformMatrices(obj);
         {
             int j;
+            j = 0;
             w = wpos;
             e2 = (f32*)state;
             d = deltas;
-            for (j = 0; j < state->pointCount; j++)
+            for (; j < state->pointCount; j++)
             {
                 Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
                                                *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
@@ -1432,8 +1433,9 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         int j;
         char* mi = *(char**)((char*)obj + 0x58);
         f32* mtx2 = (f32*)(mi + ((*(u8*)(mi + 0x10c) + 2) << 4) * 4);
+        j = 0;
         e2 = (f32*)state;
-        for (j = 0; j < state->pointCount; j++)
+        for (; j < state->pointCount; j++)
         {
             Matrix_TransformPoint(mtx2, *(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
                                   *(f32*)((char*)e2 + 0x20), (f32*)((char*)e2 + 0x78),
