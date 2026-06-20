@@ -240,14 +240,14 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     int obj = (int)objArg;
     int* renderHandle;
     double fade;
-    u32 matColor;
-    u32 envColor;
-    u32 ambColor;
-    u32 tevColor;
-    u32 shadowParam;
-    int shadowStride;
-    int shadowTable;
     volatile u32 savedEnvColor;
+    int shadowTable;
+    int shadowStride;
+    u32 shadowParam;
+    u32 tevColor;
+    u32 ambColor;
+    u32 envColor;
+    u32 matColor;
     float mtx[12];
 
     savedEnvColor = DAT_803df670;
