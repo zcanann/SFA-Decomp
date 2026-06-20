@@ -587,6 +587,7 @@ int SaveSelectScreen_run(void)
     char* data;
     SaveSelectPanel* panel;
     int btn;
+    s8* flagPtr;
 
     timer = lbl_803DD6CF;
     n = framesThisStep;
@@ -629,7 +630,8 @@ int SaveSelectScreen_run(void)
                 {
                     gplayNewGame(&sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
                     ((void (**)(int))gMapEventInterface->vtable)[30](1);
-                    *((u8*)((int (**)(void))gMapEventInterface->vtable)[36]() + 0xe) = 0xff;
+                    flagPtr = (s8*)((int (**)(void))gMapEventInterface->vtable)[36]();
+                    flagPtr[0xe] = -1;
                 }
                 if (lbl_803DD6C4 > 1)
                 {
