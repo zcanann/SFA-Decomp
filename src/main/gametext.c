@@ -507,7 +507,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 
     lineCount++;
     lineOff = lineCount << 2;
-    lineStarts[lineCount] = cursor;
+    *(int*)((char*)lineStarts + lineOff) = cursor;
     *outCount = lineCount;
     if (cursor == 0)
     {
