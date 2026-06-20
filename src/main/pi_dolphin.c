@@ -1873,12 +1873,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= moff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - moff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= moff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
@@ -1920,12 +1919,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= moff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - moff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= moff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
@@ -1967,12 +1965,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= moff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - moff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= moff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
@@ -2014,12 +2011,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= moff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - moff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= moff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
@@ -2250,12 +2246,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2280,12 +2275,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2310,12 +2304,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2340,12 +2333,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2442,12 +2434,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2472,12 +2463,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2502,12 +2492,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(b + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(b + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2532,12 +2521,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(a + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(a + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2565,12 +2553,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 {
                     do
                     {
-                        j = entryIndex + 1;
-                        k = entryIndex * 4;
-                        entryIndex = j;
+                        k = entryIndex;
+                        entryIndex = entryIndex + 1;
                     }
-                    while ((*(int*)(MLDF_PTR(0x50) + k) & 0xffffff) <= entryOff);
-                    *sizeOut = (*(int*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - entryOff;
+                    while ((*(int*)(MLDF_PTR(0x50) + k * 4) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(int*)(MLDF_PTR(0x50) + entryIndex * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
