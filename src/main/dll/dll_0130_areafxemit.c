@@ -25,7 +25,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 
-extern u8 framesThisStep;
 
 enum {
     AREAFXEMIT_SEQEV_EMIT = 1
