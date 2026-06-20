@@ -48,7 +48,7 @@ typedef struct AndrossState {
     s16 unkA0;
     s16 unkA2;
     s16 unkA4;
-    s16 unkA6;
+    s16 timer;
     f32 unkA8;
     u8 actionToggle;
     u8 signalFlags; /* |= signal (the setter param name) */

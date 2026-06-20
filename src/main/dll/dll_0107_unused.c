@@ -401,7 +401,7 @@ void fn_80185B74(int obj)
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    state->unk16 -= framesThisStep;
+    state->timer -= framesThisStep;
     if (*(s8*)&state->rideState != 0)
     {
         if (getXZDistance((void*)&((GameObject*)obj)->anim.worldPosX, (void*)(p4c + 8)) >=
@@ -457,7 +457,7 @@ void fn_801862CC(int obj, int p)
     sub->unk25 = 0;
     lbl_803DDAD0 = Resource_Acquire(91, 1);
     lbl_803DDAD4 = Resource_Acquire(170, 1);
-    sub->unk16 = 100;
+    sub->timer = 100;
     sub->unk18 = 400;
     ((GameObject*)obj)->anim.rotX = (s16)(*(char*)(p + 0x18) << 8);
     sub->unk14 = *(s16*)(p + 0x1e);

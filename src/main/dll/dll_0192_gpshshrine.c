@@ -225,7 +225,7 @@ void fn_801C70F0(s16* obj)
 typedef struct GpshShrineState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 timer;
     f32 unk8;
     u8 padC[0x12 - 0xC];
     u8 unk12;
@@ -315,12 +315,12 @@ void gpsh_shrine_update(int obj)
         SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
         SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
-        if (((GpshShrineState*)data)->unk4 > (k = lbl_803E503C))
+        if (((GpshShrineState*)data)->timer > (k = lbl_803E503C))
         {
-            ((GpshShrineState*)data)->unk4 -= timeDelta;
-            if (((GpshShrineState*)data)->unk4 <= k)
+            ((GpshShrineState*)data)->timer -= timeDelta;
+            if (((GpshShrineState*)data)->timer <= k)
             {
-                ((GpshShrineState*)data)->unk4 = k;
+                ((GpshShrineState*)data)->timer = k;
             }
         }
         else
@@ -348,7 +348,7 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 5:
-                ((GpshShrineState*)data)->unk4 = lbl_803E5040;
+                ((GpshShrineState*)data)->timer = lbl_803E5040;
                 (*gScreenTransitionInterface)->step(0x1e, 1);
                 ((GpshShrineState*)data)->unk14 = 1;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -393,7 +393,7 @@ void gpsh_shrine_update(int obj)
                     ((GpshShrineState*)data)->unk14 = 6;
                     gameTimerStop();
                     GameBit_Set(0xdd2, 0);
-                    ((GpshShrineState*)data)->unk4 = lbl_803E5040;
+                    ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                 }
@@ -405,7 +405,7 @@ void gpsh_shrine_update(int obj)
                     {
                         Obj_FreeObject(objs[count - 1]);
                     }
-                    ((GpshShrineState*)data)->unk4 = lbl_803E5040;
+                    ((GpshShrineState*)data)->timer = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
                 else

@@ -817,16 +817,16 @@ void andross_update(int obj)
         {
             if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
                 goto LAB_8023bb18;
             }
         }
-        ((AndrossState*)state)->unkA6 -= framesThisStep;
-        if (((AndrossState*)state)->unkA6 < 1)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer < 1)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            ((AndrossState*)state)->unkA6 = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
     LAB_8023bb18:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -1067,16 +1067,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023c584;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023c584:
@@ -1243,16 +1243,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023cbdc;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023cbdc:
@@ -1481,16 +1481,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023d59c;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023d59c:
@@ -1537,16 +1537,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023d7cc;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023d7cc:
@@ -1624,16 +1624,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023db24;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023db24:
@@ -1715,16 +1715,16 @@ void andross_update(int obj)
         {
             if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
                 goto LAB_8023de5c;
             }
         }
-        ((AndrossState*)state)->unkA6 -= framesThisStep;
-        if (((AndrossState*)state)->unkA6 < 1)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer < 1)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            ((AndrossState*)state)->unkA6 = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
     LAB_8023de5c:
         ((AndrossState*)state)->actionTimer -= framesThisStep;
