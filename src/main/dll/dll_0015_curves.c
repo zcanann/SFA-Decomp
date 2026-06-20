@@ -1454,11 +1454,11 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     f32 r;
     f32 v;
     f32 maxX;
-    f32 maxZ;
-    f32 maxY;
     f32 minX;
-    f32 minZ;
+    f32 maxY;
     f32 minY;
+    f32 maxZ;
+    f32 minZ;
     f32* pin;
     int idx3;
     int byteOff;
@@ -1539,16 +1539,16 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             idx3 = idx3 + 3;
         }
         maxX = gCurvesBoundsMaxSeed;
-        maxZ = gCurvesBoundsMaxSeed;
-        maxY = gCurvesBoundsMaxSeed;
         minX = gCurvesBoundsMinSeed;
-        minZ = gCurvesBoundsMinSeed;
-        minY = gCurvesBoundsMinSeed;
+        maxY = maxX;
+        minY = minX;
+        maxZ = maxX;
+        minZ = minX;
         for (n = 0; n < ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
             r = *radWrite;
             v = *ptsRead + r;
-            if (maxX < v)
+            if (v > maxX)
             {
                 maxX = v;
             }
@@ -1558,7 +1558,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
                 minX = v;
             }
             v = ptsRead[1] + r;
-            if (maxY < v)
+            if (v > maxY)
             {
                 maxY = v;
             }
@@ -1568,7 +1568,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
                 minY = v;
             }
             v = ptsRead[2] + r;
-            if (maxZ < v)
+            if (v > maxZ)
             {
                 maxZ = v;
             }
@@ -1578,7 +1578,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
                 minZ = v;
             }
             v = collision->traceStart[n][0] + r;
-            if (maxX < v)
+            if (v > maxX)
             {
                 maxX = v;
             }
@@ -1588,7 +1588,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
                 minX = v;
             }
             v = collision->traceStart[n][1] + r;
-            if (maxY < v)
+            if (v > maxY)
             {
                 maxY = v;
             }
@@ -1598,7 +1598,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
                 minY = v;
             }
             v = collision->traceStart[n][2] + r;
-            if (maxZ < v)
+            if (v > maxZ)
             {
                 maxZ = v;
             }
