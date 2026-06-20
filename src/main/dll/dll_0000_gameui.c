@@ -3754,7 +3754,7 @@ void fn_8012C000(void)
         {
             sel = lbl_803E2194;
         }
-        sel = lbl_803DD784 * sel;
+        sel = sel * lbl_803DD784;
         *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * c2190;
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
