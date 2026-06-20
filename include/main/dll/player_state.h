@@ -366,7 +366,7 @@ typedef struct PlayerState {
     u8 unk8C9;
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
-    s8 unk8CC;
+    s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives unk8B0 1-4) */
     s8 unk8CD;
     s8 unk8CE;
     u8 unk8CF;

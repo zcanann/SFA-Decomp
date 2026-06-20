@@ -1531,7 +1531,7 @@ int fn_802A5384(int obj, int state)
         ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f3))->b40 = 0;
-        *(u8*)&((PlayerState*)inner)->unk8CC = 0;
+        *(u8*)&((PlayerState*)inner)->gaitLevel = 0;
         ((PlayerState*)inner)->unk81E = 0;
         ((ByteFlags*)((char*)inner + 0x3f2))->b10 = 1;
     }
@@ -1624,7 +1624,7 @@ int fn_802A5384(int obj, int state)
                     ((PlayerState*)inner)->targetYaw = a;
                     ((PlayerState*)inner)->lastInputHeading = a;
                 }
-                *(u8*)&((PlayerState*)inner)->unk8CC = 0xc;
+                *(u8*)&((PlayerState*)inner)->gaitLevel = 0xc;
                 ((ByteFlags*)((char*)inner + 0x3f1))->b04 = 1;
                 ((ByteFlags*)((char*)inner + 0x3f1))->b08 = 1;
             }
@@ -2046,7 +2046,7 @@ int fn_802A5384(int obj, int state)
             {
                 spd = ((GameObject*)obj)->anim.currentMoveProgress;
             }
-            step = ((PlayerState*)inner)->unk8CC / 4 * 2;
+            step = ((PlayerState*)inner)->gaitLevel / 4 * 2;
             ((PlayerState*)inner)->unk8B0 = (step >> 1) + 1;
             if (((PlayerState*)inner)->unk8B0 > 4)
             {
@@ -2069,7 +2069,7 @@ int fn_802A5384(int obj, int state)
                 int tb = ((PlayerState*)inner)->unk400;
                 if (v < *(f32*)(tb + step * 4))
                 {
-                    if (((PlayerState*)inner)->unk8CC == 4)
+                    if (((PlayerState*)inner)->gaitLevel == 4)
                     {
                         if (((PlayerState*)state)->baddie.animSpeedA < *(f32*)(tb + 0x10) &&
                             ((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F14)
@@ -2080,12 +2080,12 @@ int fn_802A5384(int obj, int state)
                     }
                     else
                     {
-                        *(u8*)&((PlayerState*)inner)->unk8CC -= 4;
+                        *(u8*)&((PlayerState*)inner)->gaitLevel -= 4;
                     }
                 }
                 else if (v >= *(f32*)(tb + step * 4 + 4))
                 {
-                    int cc = ((PlayerState*)inner)->unk8CC;
+                    int cc = ((PlayerState*)inner)->gaitLevel;
                     if (cc < 0x14)
                     {
                         if (cc == 0)
@@ -2094,7 +2094,7 @@ int fn_802A5384(int obj, int state)
                         }
                         if (v < ((PlayerState*)inner)->maxSpeed)
                         {
-                            *(u8*)&((PlayerState*)inner)->unk8CC += 4;
+                            *(u8*)&((PlayerState*)inner)->gaitLevel += 4;
                         }
                     }
                 }
@@ -2103,14 +2103,14 @@ int fn_802A5384(int obj, int state)
                 *(void**)((char*)inner + 0x3fc) != *(void**)((char*)inner + 0x3f8) ||
                 ((GameObject*)obj)->anim.currentMove !=
                 *(s16*)(((PlayerState*)inner)->moveAnimTable +
-                    (((PlayerState*)inner)->unk8CC + dir) * 2))
+                    (((PlayerState*)inner)->gaitLevel + dir) * 2))
             {
                 if (((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
                     ((u32) * (u8*)((char*)inner + 0x3f2) >> 4 & 1) != 0)
                 {
                     ObjAnim_SetCurrentMove(obj,
                                            *(s16*)(((PlayerState*)inner)->moveAnimTable +
-                                               (((PlayerState*)inner)->unk8CC + dir) * 2),
+                                               (((PlayerState*)inner)->gaitLevel + dir) * 2),
                                            spd, 0);
                     if (((u32) * (u8*)((char*)inner + 0x3f1) >> 5 & 1) != 0 &&
                         *(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
@@ -2151,7 +2151,7 @@ int fn_802A5384(int obj, int state)
                     Object_ObjAnimSetSecondaryBlendMove(
                         (ObjAnimComponent*)obj,
                         *(s16*)(((PlayerState*)inner)->moveAnimTable +
-                            (((PlayerState*)inner)->unk8CC + pos) * 2 + 2),
+                            (((PlayerState*)inner)->gaitLevel + pos) * 2 + 2),
                         (int)(lbl_803E7FAC * ad));
                 }
                 {
@@ -13714,7 +13714,7 @@ int fn_8029C9C8(int obj, int state)
     }
     t0 = ((GameObject*)obj)->anim.currentMoveProgress;
     {
-        u8 phase = *(u8*)&((PlayerState*)inner)->unk8CC;
+        u8 phase = *(u8*)&((PlayerState*)inner)->gaitLevel;
         int idx = (u8)((s8)phase >> 1);
         if (((PlayerState*)state)->baddie.animSpeedC<gPlayerAnimSpeedThresholds[idx])
         {
@@ -13728,7 +13728,7 @@ int fn_8029C9C8(int obj, int state)
             }
             else
             {
-                *(u8*)&((PlayerState*)inner)->unk8CC = phase - 4;
+                *(u8*)&((PlayerState*)inner)->gaitLevel = phase - 4;
             }
         }
         else
@@ -13742,7 +13742,7 @@ int fn_8029C9C8(int obj, int state)
                 }
                 if (((PlayerState*)state)->baddie.animSpeedC < inner->maxSpeed)
                 {
-                    *(u8*)&((PlayerState*)inner)->unk8CC += 4;
+                    *(u8*)&((PlayerState*)inner)->gaitLevel += 4;
                 }
             }
         }
@@ -13770,11 +13770,11 @@ int fn_8029C9C8(int obj, int state)
             {
                 ((PlayerState*)state)->baddie.moveSpeed = -((PlayerState*)state)->baddie.moveSpeed;
             }
-            if (((GameObject*)obj)->anim.currentMove != gPlayerMoveTableB[inner->unk8CC])
+            if (((GameObject*)obj)->anim.currentMove != gPlayerMoveTableB[inner->gaitLevel])
             {
                 if (((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
                 {
-                    ObjAnim_SetCurrentMove(obj, gPlayerMoveTableB[inner->unk8CC], t0, 0);
+                    ObjAnim_SetCurrentMove(obj, gPlayerMoveTableB[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
                     {
                         ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0xc);
@@ -13788,11 +13788,11 @@ int fn_8029C9C8(int obj, int state)
             {
                 ((PlayerState*)state)->baddie.moveSpeed = -((PlayerState*)state)->baddie.moveSpeed;
             }
-            if (((GameObject*)obj)->anim.currentMove != (gPlayerMoveTableB + 2)[inner->unk8CC])
+            if (((GameObject*)obj)->anim.currentMove != (gPlayerMoveTableB + 2)[inner->gaitLevel])
             {
                 if (((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
                 {
-                    ObjAnim_SetCurrentMove(obj, (gPlayerMoveTableB + 2)[inner->unk8CC], t0, 0);
+                    ObjAnim_SetCurrentMove(obj, (gPlayerMoveTableB + 2)[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
                     {
                         ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0xc);
@@ -15507,7 +15507,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         inner->maxSpeed = lbl_803E7FC4;
-        *(u8*)&((PlayerState*)inner)->unk8CC = 0;
+        *(u8*)&((PlayerState*)inner)->gaitLevel = 0;
         inner->smoothVelX = zero;
         inner->smoothVelZ = zero;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
@@ -15831,7 +15831,7 @@ void fn_802AE650(int obj, int state, int p3)
         gPlayerSubState = 1;
         ((ByteFlags*)((char*)state + 0x3f1))->b02 = 1;
         ((ByteFlags*)((char*)state + 0x3f1))->b08 = 1;
-        *(u8*)&((PlayerState*)state)->unk8CC = 0xc;
+        *(u8*)&((PlayerState*)state)->gaitLevel = 0xc;
         tmp = ((PlayerState*)state)->yaw;
         ((PlayerState*)state)->targetYaw = tmp;
         ((PlayerState*)state)->lastInputHeading = tmp;
@@ -16799,7 +16799,7 @@ void fn_802ADE80(int obj, int inner, int state)
         {
             s8 c;
             tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
-            c = ((PlayerState*)inner)->unk8CC;
+            c = ((PlayerState*)inner)->gaitLevel;
             if (c <= 8)
             {
                 tz = lbl_803E8124;
