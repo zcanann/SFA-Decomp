@@ -216,7 +216,7 @@ int hightop_stateHandler00(int obj)
 int hightop_stateHandler06(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         p->unk9FD |= 1;
     }
@@ -254,7 +254,7 @@ int hightop_stateHandler03(int obj, u8* p2)
     ((GameObject*)obj)->anim.velocityX = zero;
     ((GameObject*)obj)->anim.velocityY = zero;
     ((GameObject*)obj)->anim.velocityZ = zero;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
         if (*(u32*)&p->unkC3C == 4)
@@ -278,7 +278,7 @@ int hightop_stateHandler03(int obj, u8* p2)
 int hightop_stateHandler05(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         p->flagsC49.b1 = 0;
         p->unkC4B = 0xa;
@@ -484,7 +484,7 @@ void hightop_init(void* obj, u8* arg)
 int hightop_stateHandler08(int obj, u8* p2)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         f32 zero;
         state->unkC30 = lbl_803E6AB4;
@@ -496,7 +496,7 @@ int hightop_stateHandler08(int obj, u8* p2)
         ((GameObject*)obj)->anim.velocityY = zero;
         ((GameObject*)obj)->anim.velocityZ = zero;
     }
-    if ((s8)p2[0x346] != 0)
+    if ((s8)((BaddieState*)p2)->moveDone != 0)
     {
         s16 cur = ((GameObject*)obj)->anim.currentMove;
         switch (cur)
@@ -1191,7 +1191,7 @@ int hightop_stateHandler10(int obj, int p)
     int* weight;
     int r;
     int i;
-    if ((s8) * (u8*)((char*)p + 0x27a) != 0)
+    if ((s8)((BaddieState*)p)->moveJustStartedA != 0)
     {
         rt->unkC4B = 3;
         *(int*)((char*)p + 0) |= 0x1000000;
