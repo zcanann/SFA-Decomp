@@ -258,7 +258,7 @@ void invhit_update(int* obj)
             f32 dx2;
             f32 dz2;
             f32 reach;
-            s8 cnt;
+            int cnt;
             f32 thr;
 
             ((GameObject*)obj)->unkF8 -= framesThisStep;
@@ -302,7 +302,7 @@ void invhit_update(int* obj)
                 (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
                                                  NULL);
             }
-            cnt = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            cnt = (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
             thr = lbl_803E35F4;
             for (i = 0; i < cnt; i++)
