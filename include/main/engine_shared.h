@@ -38,10 +38,10 @@
             idx = 0x58;                                                        \
         }                                                                      \
         {                                                                      \
-            int v = acc & 0xffff;                                              \
+            u32 packed = (u32)(acc & 0xffff);                                 \
             int curBit = state->bit;                                           \
             int bo = curBit >> 3;                                              \
-            u32 packed = (u32)v << ((8 - (curBit & 7)) + sh16);                \
+            packed <<= ((8 - (curBit & 7)) + sh16);                            \
             ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
             ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
             ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
@@ -77,10 +77,10 @@
             idx = 0x58;                                                        \
         }                                                                      \
         {                                                                      \
-            int v = acc & 0xffff;                                              \
+            u32 packed = (u32)(acc & 0xffff);                                 \
             int curBit = state->bit;                                           \
             int bo = curBit >> 3;                                              \
-            u32 packed = (u32)v << ((8 - (curBit & 7)) + sh16);                \
+            packed <<= ((8 - (curBit & 7)) + sh16);                            \
             ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
             ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
             ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
