@@ -1641,7 +1641,7 @@ void objFreeObjDef(void* objp, int flag)
     modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (i = 0; i < modelCount; i++)
     {
-        if (((ObjAnimComponent*)obj)->banks[i] != NULL)
+        if ((int)((ObjAnimComponent*)obj)->banks[i] != 0)
         {
             ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[i]);
         }
