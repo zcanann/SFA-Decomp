@@ -373,7 +373,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             texture->textureId = cv << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         btn = getButtonsJustPressed(0);
-        if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0)
+        if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0u)
         {
             state->flags = state->flags | DR_LASERTURRET_FLAG_CONFIRM_PROMPT;
             (*gScreenTransitionInterface)->start(0x1e, 1);
@@ -381,7 +381,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         }
     }
     btn = getButtonsJustPressed(0);
-    if ((btn & DR_LASERTURRET_BUTTON_ACCEPT) == 0)
+    if ((btn & DR_LASERTURRET_BUTTON_ACCEPT) == 0u)
     {
         return 0;
     }
