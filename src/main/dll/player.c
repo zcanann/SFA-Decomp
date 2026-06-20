@@ -16829,8 +16829,8 @@ void fn_802ADE80(int obj, int inner, int state)
         if (((PlayerState*)inner)->unk838 > lbl_803E8128 &&
             ((PlayerState*)state)->baddie.animSpeedC > lbl_803E7E9C)
         {
-            s16 ang = (s16)(((PlayerState*)inner)->targetYaw -
-                getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA));
+            u16 ang = ((PlayerState*)inner)->targetYaw -
+                getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
             (*gWaterfxInterface)->spawnSimpleRipple(
                 ang, tx, ((PlayerState*)inner)->unk83C, tz, lbl_803E7EA4);
         }
