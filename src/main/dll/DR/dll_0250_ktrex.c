@@ -903,7 +903,7 @@ void ktrex_init(int obj, char* arg, int flag)
 {
     int i;
     ObjfsaRomCurveDef* cp;
-    int spawnFlags;
+    u8 spawnFlags;
     KTRexRuntime* rt;
     int* base = (int*)lbl_8032A510;
     int* pA;
@@ -917,7 +917,7 @@ void ktrex_init(int obj, char* arg, int flag)
     {
         spawnFlags |= 1;
     }
-    (*(void (**)(int, char*, void*, int, int, int, int, f32))((char*)*gBaddieControlInterface + 0x58))(
+    (*(void (**)(int, char*, void*, int, int, int, u8, f32))((char*)*gBaddieControlInterface + 0x58))(
         obj, arg, gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, lbl_803E684C);
     ((GameObject*)obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
