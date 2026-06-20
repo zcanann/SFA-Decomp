@@ -2786,7 +2786,7 @@ void pauseMenuFn_80129ee0(void)
         }
         else
         {
-            int i;
+            u8 i;
             for (i = 0; i < 0x2d; i++)
             {
                 if (cell == tbl->cellMap[i].cell)
@@ -2794,7 +2794,7 @@ void pauseMenuFn_80129ee0(void)
                     break;
                 }
             }
-            if ((u8)i != 0x2d)
+            if (i != 0x2d)
             {
                 int code = tbl->cellMap[i].code;
                 lbl_803DD8E0 = code;
