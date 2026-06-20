@@ -10,7 +10,6 @@ extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
-extern f32 timeDelta;
 extern u32 Camera_GetCurrentViewSlot();
 
 
