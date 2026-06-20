@@ -740,8 +740,9 @@ void appleontree_update(int objArg)
                 fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - fa) /
                 (*(float*)(val + 4) *
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
-                fa = fa * fa * fa * fa;
-                state = 0x100 - (int)((fa * fa) / *(float*)(val + 0x54));
+                fc = fa * fa;
+                fc = fc * fc;
+                state = 0x100 - (int)((fc * fc) / *(float*)(val + 0x54));
                 modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtr = state;
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
