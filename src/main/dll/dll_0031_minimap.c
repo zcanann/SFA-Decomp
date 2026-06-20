@@ -872,7 +872,7 @@ void fn_8013396C(void)
                 gMinimapRadarInited = 1;
                 fn_80133818();
             }
-            held = getButtonsHeld(0);
+            held = (u16)getButtonsHeld(0);
             pressed = (u16)getButtonsJustPressed(0);
             if ((held & 0xc) == 0)
             {
@@ -999,13 +999,14 @@ void fn_8013396C(void)
                 v2 = lbl_803DBA6E;
                 if (v2 != gMinimapPrevAreaNameId)
                 {
-                    if (v2 == -1)
+                    switch (v2)
                     {
+                    case -1:
                         sfx = 0x3ef;
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         sfx = 0x3ee;
+                        break;
                     }
                 }
                 gMinimapPrevAreaNameId = v2;
