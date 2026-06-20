@@ -499,7 +499,7 @@ typedef struct PushableObjectDef
     s16 gameBit;
     s16 unk1A;
     void* unk1C;
-    s16 unk20;
+    u16 unk20;
     u8 unk22;
     u8 unk23;
     u8 pad24[0x28 - 0x24];
