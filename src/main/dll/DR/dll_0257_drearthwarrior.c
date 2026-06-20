@@ -1213,18 +1213,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                 inner->baddie.animSpeedA = -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.
                     velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
-                {
-                    f32 vv = inner->baddie.animSpeedA;
-                    f32 t = lbl_803E8378;
-                    t = (vv < t) ? t : ((vv > inner->sub.unk404) ? inner->sub.unk404 : vv);
-                    inner->baddie.animSpeedA = t;
-                }
-                {
-                    f32 vv = inner->baddie.animSpeedA;
-                    f32 t = lbl_803E8304;
-                    t = (vv < t) ? t : ((vv > spd) ? spd : vv);
-                    inner->baddie.animSpeedA = t;
-                }
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8378) ? lbl_803E8378 : ((inner->baddie.animSpeedA > inner->sub.unk404) ? inner->sub.unk404 : inner->baddie.animSpeedA);
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8304) ? lbl_803E8304 : ((inner->baddie.animSpeedA > spd) ? spd : inner->baddie.animSpeedA);
                 if (!((ByteFlags*)&inner->sub.flags3F0)->b40)
                 {
                     inner->baddie.animSpeedC = inner->baddie.animSpeedA;
