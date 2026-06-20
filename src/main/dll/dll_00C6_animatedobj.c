@@ -772,7 +772,7 @@ void FUN_80170048(void)
     packed = FUN_80286838();
     obj = (u32)((u64)packed >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(obj + 0xb8);
+    state = *(int**)&((GameObject*)obj)->extra;
     iTmp = FUN_80017a98();
     handle = 0;
     if (iTmp != 0)
