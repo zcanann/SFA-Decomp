@@ -30,7 +30,7 @@ typedef struct CarryableUpdateHeldState
     u8 pad4[0x5 - 0x4];
     s8 unk5;
     u8 unk6;
-    u8 unk7;
+    u8 flags;
     u8 unk8;
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
@@ -148,7 +148,7 @@ int Carryable_updateHeld(u8* obj)
     void* player;
     held = ((GameObject*)obj)->extra;
     ((CarryableUpdateHeldState*)held)->unk8 = 0;
-    ((CarryableUpdateHeldState*)held)->unk7 &= ~1;
+    ((CarryableUpdateHeldState*)held)->flags &= ~1;
     player = Obj_GetPlayerObject();
     if (((CarryableUpdateHeldState*)held)->unk5 == 0)
     {
@@ -170,7 +170,7 @@ int Carryable_updateHeld(u8* obj)
         ((CarryableUpdateHeldState*)held)->unk5 = v;
         if (((CarryableUpdateHeldState*)held)->unk5 != 0)
         {
-            ((CarryableUpdateHeldState*)held)->unk7 |= 1;
+            ((CarryableUpdateHeldState*)held)->flags |= 1;
             ((CarryableUpdateHeldState*)held)->unk6 = 1;
         }
         if (((GameObject*)obj)->unkF8 == 0)
@@ -180,7 +180,7 @@ int Carryable_updateHeld(u8* obj)
             u8* hit;
             ObjHits_SyncObjectPositionIfDirty(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-            if ((((CarryableUpdateHeldState*)held)->unk7 & 2) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject*)obj)->anim.velocityY);
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
@@ -239,7 +239,7 @@ int Carryable_updateHeld(u8* obj)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         if ((getButtonsJustPressed(0) & 0x100) != 0)
         {
-            if ((((CarryableUpdateHeldState*)held)->unk7 & 4) != 0 || fn_80295BF0(player) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || fn_80295BF0(player) == 0)
             {
                 Sfx_PlayFromObject(0, 0x10a);
             }
@@ -258,7 +258,7 @@ int Carryable_updateHeld(u8* obj)
             u8* h2 = ((GameObject*)obj)->extra;
             *(u8*)&((CarryableUpdateHeldState*)h2)->unk5 = 0;
             ((CarryableUpdateHeldState*)h2)->unk6 = 0;
-            if ((((CarryableUpdateHeldState*)h2)->unk7 & 8) == 0)
+            if ((((CarryableUpdateHeldState*)h2)->flags & 8) == 0)
             {
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E06D8;
                 saveGame_saveObjectPos((int*)obj);
