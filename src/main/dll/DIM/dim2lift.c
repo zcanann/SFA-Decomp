@@ -130,7 +130,7 @@ int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
     if ((s8)state[634] != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4BD8, 0);
-        state[838] = 0;
+        ((BaddieState*)state)->moveDone = 0;
     }
     ((BaddieState*)state)->moveSpeed = lbl_803E4C24;
     ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
@@ -172,7 +172,7 @@ int DIMbossHitDetect_resetIdleMove(int* obj, u8* state)
         if ((s8)state[634] != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E4BD8, 0);
-            state[838] = 0;
+            ((BaddieState*)state)->moveDone = 0;
         }
         fz = lbl_803E4BD8;
         ((BaddieState*)state)->animSpeedA = fz;
