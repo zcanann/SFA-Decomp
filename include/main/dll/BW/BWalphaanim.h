@@ -41,9 +41,9 @@ typedef struct SnowBikeState {
     u8 pad066[0x2];
     f32 pathProgress;             /* 0x068 */
     u8 pad06C[0x100];       /* 0x178: path-control block lives in here */
-    f32 unk16C;             /* 0x16c */
-    f32 unk170;             /* 0x170 */
-    f32 unk174;             /* 0x174 */
+    f32 refPosX;             /* 0x16c: position reference X */
+    f32 refPosY;             /* 0x170: position reference Y */
+    f32 refPosZ;             /* 0x174: position reference Z */
     u8 pad178[0xB8];
     u8 unk230;              /* 0x230 */
     u8 pad231[0xDF];
@@ -144,7 +144,7 @@ typedef struct SnowBikeState {
     f32 haloPitchDrift;             /* 0x594: halo-light yaw drift */
     f32 unk598;             /* 0x598: halo-light pitch drift */
 } SnowBikeState; /* extends to at least 0x59C (DRhightop/DRhalolight tail) */
-STATIC_ASSERT(offsetof(SnowBikeState, unk16C) == 0x16C);
+STATIC_ASSERT(offsetof(SnowBikeState, refPosX) == 0x16C);
 STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
 STATIC_ASSERT(offsetof(SnowBikeState, collisionFxDamping) == 0x3E0);
 STATIC_ASSERT(offsetof(SnowBikeState, unk424) == 0x424);

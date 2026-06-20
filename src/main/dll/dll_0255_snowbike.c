@@ -676,9 +676,9 @@ clamp:
     {
         state->distanceScale = lbl_803E5AE8;
     }
-    state->unk16C = ((GameObject*)obj)->anim.localPosX;
-    state->unk170 = ((GameObject*)obj)->anim.localPosY;
-    state->unk174 = ((GameObject*)obj)->anim.localPosZ;
+    state->refPosX = ((GameObject*)obj)->anim.localPosX;
+    state->refPosY = ((GameObject*)obj)->anim.localPosY;
+    state->refPosZ = ((GameObject*)obj)->anim.localPosZ;
     state->unk42C = 0;
 }
 

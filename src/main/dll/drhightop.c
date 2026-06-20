@@ -360,11 +360,11 @@ int SnowBike_animEventCallback(short* obj, int arg2, ObjSeqState* seq)
     if (((SnowBikeState*)state)->riderMode == 2)
     {
         xSpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(obj + 6) - ((SnowBikeState*)state)->unk16C));
+            (*(float*)(obj + 6) - ((SnowBikeState*)state)->refPosX));
         ySpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(obj + 8) - ((SnowBikeState*)state)->unk170));
+            (*(float*)(obj + 8) - ((SnowBikeState*)state)->refPosY));
         zSpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(obj + 10) - ((SnowBikeState*)state)->unk174));
+            (*(float*)(obj + 10) - ((SnowBikeState*)state)->refPosZ));
 
         transform.x = lbl_803E5AE8;
         transform.y = lbl_803E5AE8;
