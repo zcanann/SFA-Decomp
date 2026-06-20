@@ -86,18 +86,21 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FEseqobjectEffectParams effect;
     register int self = obj;
+    int controlObj;
     int i;
     int msg;
     u32 sender;
     u32 param;
-    int controlObj;
+    int count;
+    int* objects;
     f32 one;
     f32 zero;
 
+    controlObj = 0;
+    i = 0;
     zero = lbl_803E56B0;
     one = lbl_803E56B4;
-    controlObj = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
+    for (; i < animUpdate->eventCount; i++)
     {
         effect.x = zero;
         effect.y = zero;
@@ -142,22 +145,46 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (msg)
             {
             case FESEQOBJECT_MSG_IN_1:
-                controlObj = FEseqobject_findControlObject();
-                if (controlObj != 0)
+                objects = (int*)ObjGroup_GetObjects(FESEQOBJECT_CONTROL_GROUP, &count);
+                for (i = 0; i < count; i++)
+                {
+                    if (((GameObject*)objects[i])->anim.seqId == FESEQOBJECT_CONTROL_SEQ_ID)
+                    {
+                        controlObj = objects[i];
+                        i = count;
+                    }
+                }
+                if ((void*)controlObj != NULL)
                 {
                     ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_1, self, 0);
                 }
                 break;
             case FESEQOBJECT_MSG_IN_2:
-                controlObj = FEseqobject_findControlObject();
-                if (controlObj != 0)
+                objects = (int*)ObjGroup_GetObjects(FESEQOBJECT_CONTROL_GROUP, &count);
+                for (i = 0; i < count; i++)
+                {
+                    if (((GameObject*)objects[i])->anim.seqId == FESEQOBJECT_CONTROL_SEQ_ID)
+                    {
+                        controlObj = objects[i];
+                        i = count;
+                    }
+                }
+                if ((void*)controlObj != NULL)
                 {
                     ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_2, self, 0);
                 }
                 break;
             case FESEQOBJECT_MSG_IN_3:
-                controlObj = FEseqobject_findControlObject();
-                if (controlObj != 0)
+                objects = (int*)ObjGroup_GetObjects(FESEQOBJECT_CONTROL_GROUP, &count);
+                for (i = 0; i < count; i++)
+                {
+                    if (((GameObject*)objects[i])->anim.seqId == FESEQOBJECT_CONTROL_SEQ_ID)
+                    {
+                        controlObj = objects[i];
+                        i = count;
+                    }
+                }
+                if ((void*)controlObj != NULL)
                 {
                     ObjMsg_SendToObject((void*)controlObj, FESEQOBJECT_MSG_OUT_3, self, 0);
                 }
