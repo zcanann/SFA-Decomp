@@ -5289,8 +5289,8 @@ void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
     int ck1;
     int ck2;
     int ck3;
-    int w2;
     int h2;
+    int w2;
     if (lbl_803DCD6A <= 0xb && lbl_803DCD69 <= 6 && lbl_803DCD8C <= 5 && lbl_803DCD74 <= 1)
     {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, 0x7d);
