@@ -2554,7 +2554,7 @@ void renderShadows(void)
         lod = fn_800626C8(obj, framesThisStep);
         Camera_SetCurrentViewIndex(1);
         if ((u8)lod <= 4) continue;
-        if ((*(int*)&((ObjModelState*)of64)->flags & 0x20) != 0)
+        if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
             memcpy(mc48, obj + 0xc, 0xc);
             memcpy(mc54p, obj + 0x18, 0xc);
@@ -2733,7 +2733,7 @@ void renderShadows(void)
             ((ObjModelState*)of64)->shadowCastSlot = castSlot;
         }
         r24++;
-        if ((*(int*)&((ObjModelState*)of64)->flags & 0x20) != 0)
+        if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
             memcpy((char*)obj + 0xc, mc48, 0xc);
             memcpy((char*)obj + 0x18, mc54p, 0xc);
