@@ -153,7 +153,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
     params = ((GameObject*)obj)->anim.placementData;
     baseAngle = ((BombplantsporeUpdateDriftPlacement*)params)->baseAngle;
 
-    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->unk2a0 <= lbl_803E5394)
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
     {
         ((BombPlantSporeState*)state)->spinAngle = randomGetRange(2000, 4000);
         if (randomGetRange(0, 1) != 0)
@@ -181,10 +181,10 @@ void bombplantspore_updateDrift(void* obj, void* state)
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle - ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread);
         }
-        ((BombPlantSporeState*)state)->unk2a0 = lbl_803E53A8;
+        ((BombPlantSporeState*)state)->spinChangeTimer = lbl_803E53A8;
     }
 
-    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->unk2a0 <= lbl_803E5394)
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
     {
         ((BombPlantSporeState*)state)->randomPhase =
             ((BombPlantSporeState*)state)->unk278 + (f32)(int)
@@ -313,10 +313,10 @@ void bombplantspore_update(void* obj)
         {
             state->driftTimer = lbl_803E5394;
         }
-        state->unk2a0 -= timeDelta;
-        if (state->unk2a0 < *(f32*)&lbl_803E5394)
+        state->spinChangeTimer -= timeDelta;
+        if (state->spinChangeTimer < *(f32*)&lbl_803E5394)
         {
-            state->unk2a0 = lbl_803E5394;
+            state->spinChangeTimer = lbl_803E5394;
         }
         *(s16*)obj += state->yawStep;
         ((GameObject*)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject*)obj)->anim.velocityY;
