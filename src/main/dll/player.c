@@ -1181,9 +1181,9 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
                 f32 sn = mathSinf(fov);
                 cot = lbl_803E7F5C * (sn / mathCosf(fov));
             }
-            fx = cot * -((inner->unk788 - (f32)(int)((res & 0xffff) >> 1)) /
+            fx = cot * -((inner->aimScreenY - (f32)(int)((res & 0xffff) >> 1)) /
                 (f32)(int)((res & 0xffff) >> 1) * Camera_GetAspectRatio());
-            cot = cot * ((inner->unk78C - (f32)half) / (f32)half);
+            cot = cot * ((inner->aimScreenX - (f32)half) / (f32)half);
             mag = sqrtf(lbl_803E80AC + (fx * fx + cot * cot));
             vec[0] = fx / mag;
             vec[1] = cot / mag;
@@ -1424,7 +1424,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             res = getScreenResolution();
             half = res >> 17;
             low = (res & 0xffff) >> 1;
-            inner->unk788 =
+            inner->aimScreenY =
                 lbl_803E7E98 * (b * (f32)(int)
             low
             )
@@ -1432,7 +1432,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             low;
             if (a < lbl_803E7EA4)
             {
-                inner->unk78C =
+                inner->aimScreenX =
                     lbl_803E7E98 * (a * (f32)(int)
                 half
                 )
@@ -1441,7 +1441,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             }
             else
             {
-                inner->unk78C =
+                inner->aimScreenX =
                     lbl_803E7F44 * (a * (f32)(int)
                 half
                 )
@@ -5166,7 +5166,7 @@ int fn_8029AF9C(int obj, int state)
                 half = res >> 17;
                 low = (res & 0xffff) >> 1;
                 k = lbl_803E7E98;
-                inner->unk788 =
+                inner->aimScreenY =
                     k * (bv * (f32)(int)
                 low
                 )
@@ -5174,7 +5174,7 @@ int fn_8029AF9C(int obj, int state)
                 low;
                 if (av < lbl_803E7EA4)
                 {
-                    inner->unk78C =
+                    inner->aimScreenX =
                         k * (av * (f32)(int)
                     half
                     )
@@ -5183,7 +5183,7 @@ int fn_8029AF9C(int obj, int state)
                 }
                 else
                 {
-                    inner->unk78C =
+                    inner->aimScreenX =
                         lbl_803E7F44 * (av * (f32)(int)
                     half
                     )
@@ -5921,14 +5921,14 @@ int fn_8029EBCC(int obj, int state)
     res = getScreenResolution();
     halfW = res >> 17;
     halfH = (int)(u16)res >> 1;
-    inner->unk788 = lbl_803E7E98 * (v7b8 * (f32)halfH) + (f32)halfH;
+    inner->aimScreenY = lbl_803E7E98 * (v7b8 * (f32)halfH) + (f32)halfH;
     if (v7bc < lbl_803E7EA4)
     {
-        inner->unk78C = lbl_803E7E98 * (v7bc * (f32)halfW) + (f32)halfW;
+        inner->aimScreenX = lbl_803E7E98 * (v7bc * (f32)halfW) + (f32)halfW;
     }
     else
     {
-        inner->unk78C = lbl_803E7F44 * (v7bc * (f32)halfW) + (f32)halfW;
+        inner->aimScreenX = lbl_803E7F44 * (v7bc * (f32)halfW) + (f32)halfW;
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x400LL;
     return 0;
@@ -6173,8 +6173,8 @@ int fn_8029605C(int obj, f32* p2, f32* p3)
     }
     if ((((PlayerState*)inner)->flags360 & 0x400) != 0u)
     {
-        *p2 = ((PlayerState*)inner)->unk788;
-        *p3 = ((PlayerState*)inner)->unk78C;
+        *p2 = ((PlayerState*)inner)->aimScreenY;
+        *p3 = ((PlayerState*)inner)->aimScreenX;
         return 1;
     }
     return 0;
@@ -15650,8 +15650,8 @@ void fn_802AA014(int obj)
             cot = lbl_803E7F5C * (cot / mathCosf(fov));
             aspect = Camera_GetAspectRatio();
             h2 = (u16)res >> 1;
-            ycomp = cot * -(((inner->unk788 - (f32)h2) / (f32)h2) * aspect);
-            xcomp = cot * ((inner->unk78C - (f32)hw) / (f32)hw);
+            ycomp = cot * -(((inner->aimScreenY - (f32)h2) / (f32)h2) * aspect);
+            xcomp = cot * ((inner->aimScreenX - (f32)hw) / (f32)hw);
             len = sqrtf(lbl_803E80AC + (ycomp * ycomp + xcomp * xcomp));
             v[0] = ycomp / len;
             v[1] = xcomp / len;
