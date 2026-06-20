@@ -1706,7 +1706,8 @@ extern inline float sqrtf(float x)
     return x;
 }
 
-extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
+extern const f32 CPUFifo_803DED38;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
 extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
@@ -1858,15 +1859,15 @@ void initFn_8006d020(void)
             {
                 f32 o2, o1;
                 int hi, lo;
-                u16* dst = (u16*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
-                    + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+                char* dst = (char*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
+                    + (col & 3) * 8 + (col >> 2) * 0x200);
                 fn_8006CD20(gNewShadowPlacements, placed, &o1, &o2,
                             row * 0.015625f,
                             col * 0.015625f,
                             tex);
                 hi = (int)(padFix * o2);
                 lo = (int)(padFix * o1);
-                *dst = (u16)(((hi & 0xffff) << 8) | lo);
+                *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }
         DCFlushRange((void*)(*th + 0x60), *(u32*)(*th + 0x44));
@@ -1880,8 +1881,8 @@ void initFn_8006d020(void)
         {
             f32 cv, n1, n2, prod, fa, fb;
             int hi, lo;
-            u16* dst = (u16*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
-                + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+            char* dst = (char*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
+                + (col & 3) * 8 + (col >> 2) * 0x200);
             cv = 0.39275f * col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
@@ -1890,7 +1891,7 @@ void initFn_8006d020(void)
             fa = 127.0f * n1 + 127.0f;
             lo = fa;
             hi = fb;
-            *dst = (u16)(lo | ((hi & 0xffff) << 8));
+            *(u16*)(dst + 0x60) = (u16)(lo | ((hi & 0xffff) << 8));
         }
     }
     DCFlushRange((void*)(gNewShadowCausticTexture + 0x60), *(u32*)(gNewShadowCausticTexture + 0x44));
@@ -2510,7 +2511,8 @@ extern void* memcpy(void* d, const void* s, int n);
 extern const f32 lbl_803DED28;
 extern f32 lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
-extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern const f32 CPUFifo_803DED38;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
 extern f32 FinishQueue_803DED64;
 extern u8 lbl_803DB668[8];
