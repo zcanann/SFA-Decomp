@@ -950,13 +950,13 @@ void Trigger_hitDetect(int obj)
                                 objInterpretSeq(obj, target, 2, 0);
                             }
                         }
-                        else if (wasInside == 0)
+                        else if (wasInside != 0)
                         {
-                            objInterpretSeq(obj, target, -2, 0);
+                            objInterpretSeq(obj, target, -1, 0);
                         }
                         else
                         {
-                            objInterpretSeq(obj, target, -1, 0);
+                            objInterpretSeq(obj, target, -2, 0);
                         }
                     }
                     break;
@@ -980,7 +980,7 @@ void Trigger_hitDetect(int obj)
                         p8 += 2;
                         i++;
                     }
-                    if (ok && (s8)state[0x8a] >= 0)
+                    if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
                         objInterpretSeq(obj, t, 1, 0);
