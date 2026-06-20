@@ -3338,11 +3338,13 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
                                     zd = node->z - cand->z;
+                                    zd = zd * zd;
                                     xd = node->x - cand->x;
+                                    xd = curDist + xd * xd;
                                     yd = node->y - cand->y;
-                                    newDist = zd * zd + ((curDist + xd * xd) + yd * yd);
+                                    newDist = zd + (xd + yd * yd);
                                     pos = 0;
-                                    for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
+                                    for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
                                     {
                                         pos++;
                                     }
@@ -3377,40 +3379,33 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
         *outCurveId = curve->id;
         return results[0];
     }
-    if (found < 2)
+    if (found > 1)
     {
-        return -1;
-    }
-    for (j = 0; j < found; j++)
-    {
-        if (*outCurveId == results[j])
+        for (j = 0; j < found; j++)
         {
-            for (; j < found - 1; j++)
+            if (*outCurveId == results[j])
             {
-                results[j] = results[j + 1];
-                bestDists[j] = bestDists[j + 1];
+                for (; j < found - 1; j++)
+                {
+                    results[j] = results[j + 1];
+                    bestDists[j] = bestDists[j + 1];
+                }
+                found--;
             }
-            found--;
         }
-    }
-    *outCurveId = curve->id;
-    best = 0;
-    j = 0;
-    if (0 < found)
-    {
-        do
+        *outCurveId = curve->id;
+        best = 0;
+        for (j = best; j < found; j++)
         {
             if (*distRead < bestDists[best])
             {
                 best = j;
             }
             distRead++;
-            j++;
-            found--;
         }
-        while (found != 0);
+        return results[best];
     }
-    return results[best];
+    return -1;
 }
 #pragma fp_contract reset
 
