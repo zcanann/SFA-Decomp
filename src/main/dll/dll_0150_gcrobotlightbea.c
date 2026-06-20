@@ -543,16 +543,16 @@ void FUN_8019f1dc(void)
         }
         if (otherObj != 0)
         {
-            savedX = (double)*(float*)(obj + 0xc);
-            savedY = (double)*(float*)(obj + 0x10);
-            savedZ = (double)*(float*)(obj + 0x14);
+            savedX = (double)((GameObject*)obj)->anim.localPosX;
+            savedY = (double)((GameObject*)obj)->anim.localPosY;
+            savedZ = (double)((GameObject*)obj)->anim.localPosZ;
             *(u32*)(obj + 0xc) = *(u32*)(otherObj + 0xc);
             *(u32*)(obj + 0x10) = *(u32*)(otherObj + 0x10);
             *(u32*)(obj + 0x14) = *(u32*)(otherObj + 0x14);
             FUN_800e8630(obj);
-            *(float*)(obj + 0xc) = (float)savedX;
-            *(float*)(obj + 0x10) = (float)savedY;
-            *(float*)(obj + 0x14) = (float)savedZ;
+            ((GameObject*)obj)->anim.localPosX = (float)savedX;
+            ((GameObject*)obj)->anim.localPosY = (float)savedY;
+            ((GameObject*)obj)->anim.localPosZ = (float)savedZ;
         }
     }
     FUN_80286888();
