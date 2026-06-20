@@ -3185,7 +3185,7 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
                 u32 hi = ((u8*)str)[off++];
                 u32 lo = ((u8*)str)[off++];
                 *(u16*)q = (hi << 8) | lo;
-                q += 2;
+                q = (u8*)((u16*)q + 1);
             }
         }
     }
