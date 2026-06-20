@@ -2162,6 +2162,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
 extern f32 lbl_803DE850;
 
 #pragma dont_inline on
+#pragma optimization_level 1
 void fn_80026928(int* obj, int b, int* p3)
 {
     int off4;
@@ -2270,6 +2271,7 @@ void fn_80026928(int* obj, int b, int* p3)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + e2 * 0x40), (f32*)(out + 0x18), (f32*)out);
     }
 }
+#pragma optimization_level reset
 
 #pragma opt_common_subs off
 void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
