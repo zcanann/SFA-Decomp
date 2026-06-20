@@ -650,7 +650,14 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
         switch (mode)
         {
         case 1:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
@@ -664,14 +671,28 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             }
             break;
         case 3:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
             }
             break;
         case 4:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
@@ -685,7 +706,14 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             }
             break;
         case 6:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
