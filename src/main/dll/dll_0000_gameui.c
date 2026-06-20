@@ -1902,10 +1902,12 @@ void pauseMenuRunSubmenu(u8 p1)
                 lbl_803DD75E = 0x1e;
                 return;
             }
-            if (pauseMenuState == 5)
+            switch (pauseMenuState)
             {
+            case 5:
                 AudioStream_Play(randomGetRange(0, 1) + 0x2737, AudioStream_StartPrepared);
                 lbl_803DD768 = 0.0f;
+                break;
             }
         }
         if (valid == 0)
