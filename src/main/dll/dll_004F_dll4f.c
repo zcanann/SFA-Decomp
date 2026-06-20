@@ -20,7 +20,6 @@ extern f32 lbl_803E265C;
 extern f32 lbl_803E1A88;
 extern CameraMode4FState* gCameraMode4FState;
 extern f32 Curve_EvalHermite(f32* pts, f32 t, int mode);
-extern f32 timeDelta;
 extern f32 lbl_803E1A8C;
 extern f32 lbl_803E1A90;
 extern f32 gCameraMode4FPi;
