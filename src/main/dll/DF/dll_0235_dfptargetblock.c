@@ -113,7 +113,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
 
     dx = obj->x - gTargetBlockHomeX;
     dz = obj->z - gTargetBlockHomeZ;
-    if (!((lbl_803E648C == dx) && (lbl_803E648C == dz)))
+    if (!((*(const f32*)&lbl_803E648C == dx) && (lbl_803E648C == dz)))
     {
         if (sqrtf(dx * dx + dz * dz) < *threshold)
         {
