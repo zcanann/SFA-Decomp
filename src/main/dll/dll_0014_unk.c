@@ -3156,31 +3156,24 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
             }
         }
     }
-    if (found < 1)
+    if (found > 0)
     {
-        return -1;
-    }
-    best = 0;
-    j = 0;
-    if (found >= 1)
-    {
-        do
+        best = 0;
+        for (j = 0; j < found; j++)
         {
             if (*distRead < bestDists[best])
             {
                 best = j;
             }
             distRead++;
-            j++;
-            found--;
         }
-        while (found != 0);
+        if (outLink != NULL)
+        {
+            *outLink = resultLinks[best];
+        }
+        return resultIds[best];
     }
-    if (outLink != NULL)
-    {
-        *outLink = resultLinks[best];
-    }
-    return resultIds[best];
+    return -1;
 }
 
 #pragma fp_contract off
