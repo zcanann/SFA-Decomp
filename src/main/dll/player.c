@@ -11052,10 +11052,10 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         case 6:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
-            *(s16*)&((PlayerState*)state)->unk808 = iv;
-            if (*(s16*)&((PlayerState*)state)->unk808 <= 0)
+            *(s16*)&((PlayerState*)state)->hitIntervalTimer = iv;
+            if (*(s16*)&((PlayerState*)state)->hitIntervalTimer <= 0)
             {
-                *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
+                *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
                 ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
             }
             break;
@@ -11070,10 +11070,10 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         case 26:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
-            *(s16*)&((PlayerState*)state)->unk808 = iv;
-            if (*(s16*)&((PlayerState*)state)->unk808 <= 0)
+            *(s16*)&((PlayerState*)state)->hitIntervalTimer = iv;
+            if (*(s16*)&((PlayerState*)state)->hitIntervalTimer <= 0)
             {
-                *(s16*)&((PlayerState*)state)->unk808 = 0x3c;
+                *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
                 ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
                 ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
             }
@@ -11144,7 +11144,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             GameBit_Set(0x643, 1);
             break;
         default:
-            *(s16*)&((PlayerState*)state)->unk808 = 0;
+            *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0;
             if (((PlayerState*)state)->unk7C8 < lbl_803E7EA4)
             {
                 fv2 = lbl_803E7EFC * ((PlayerState*)cfg)->baddie.animSpeedA +
