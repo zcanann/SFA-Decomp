@@ -574,7 +574,8 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         dx = dx / dist;
         dy = dy / dist;
     }
-    speed = PSVECMag(&target->velocityX) * (lbl_803E1704 * timeDelta);
+    ratio = PSVECMag(&target->velocityX);
+    speed = ratio * (lbl_803E1704 * timeDelta);
     if (speed < lbl_803E16A4)
     {
         speed = lbl_803E16A4;
