@@ -77,7 +77,7 @@ extern f32 lbl_803E2714;
 extern f32 lbl_803E2718;
 extern f32 lbl_803E271C;
 extern f32 lbl_803E2720;
-extern f32 lbl_803E2740;
+extern const f32 lbl_803E2740;
 extern f32 lbl_803E2744;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E274C;
