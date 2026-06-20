@@ -16802,11 +16802,11 @@ void fn_802ADE80(int obj, int inner, int state)
             s8 c;
             tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
             c = ((PlayerState*)inner)->unk8CC;
-            if (c > 0xc)
+            if (c <= 8)
             {
                 tz = lbl_803E8124;
             }
-            else if (c > 8)
+            else if (c <= 0xc)
             {
                 tz = lbl_803E8124;
             }
