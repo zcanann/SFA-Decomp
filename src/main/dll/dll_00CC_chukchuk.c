@@ -138,7 +138,6 @@ void chukchuk_update(short* obj)
 
     extern void fn_8015F5B0(short* obj);
     extern u8 lbl_8031FF80[];
-    extern f32 timeDelta;
     extern f32 lbl_803E2E30;
     extern f32 lbl_803E2E34;
     extern f32 lbl_803E2E38;
