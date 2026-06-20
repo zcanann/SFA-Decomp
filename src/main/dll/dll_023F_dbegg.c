@@ -26,6 +26,7 @@
  * removed.
  */
 #include "main/game_object.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
@@ -527,14 +528,14 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
     *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
     *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F80;
+    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(u8*)(param_10 + 0x346) = 0;
+        ((GroundBaddieState*)param_10)->baddie.moveDone = 0;
     }
-    *(u8*)(param_10 + 0x34d) = 0x1f;
+    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         *(int*)(control + 0x18) = *(u32*)(param_10 + 0x2d0);
