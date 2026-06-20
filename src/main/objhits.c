@@ -1619,7 +1619,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
     }
     result = 0;
     if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) &&
-        (stateB->suppressOutgoingHits == 0))
+        ((s8)stateB->suppressOutgoingHits == 0))
     {
         if (((GameObject*)objB)->anim.classId == 1)
         {
