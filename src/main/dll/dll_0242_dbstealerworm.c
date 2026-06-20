@@ -89,7 +89,7 @@ typedef struct DbstealerwormPlacement
     s16 unk1E;           /* 0x1E */
     s16 unk20;           /* 0x20 */
     u8 pad22[0x24 - 0x22];
-    s16 unk24;           /* 0x24: cfg table index */
+    s16 cfgTableIndex;   /* 0x24: index into the per-worm config table (entry stride 8) */
     u8 pad26[0x2B - 0x26];
     u8 configFlags;      /* 0x2B: config flag bits OR'd into the state's configFlags */
     s16 unk2C;           /* 0x2C */
@@ -1352,7 +1352,7 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
                 Obj_FreeObject(obj);
                 return 0;
             }
-            entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->unk24 * 8];
+            entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->cfgTableIndex * 8];
             n = *(s16*)(entry + 4);
             off = n * 12;
             for (; n != 0;)
@@ -2012,7 +2012,7 @@ void dbstealerworm_update(u8* objp)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
-        entry = tbl + ((DbstealerwormPlacement*)data)->unk24 * 8;
+        entry = tbl + ((DbstealerwormPlacement*)data)->cfgTableIndex * 8;
         entry = entry + 0x15c;
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
