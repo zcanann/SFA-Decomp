@@ -1961,7 +1961,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && NC_CLOUD[0x144e] != 0)
     {
-        env[*(params + 0x26) + 0x41] = NC_CLOUD[0x144d];
+        env[*(u16*)(params + 0x26) + 0x41] = NC_CLOUD[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
