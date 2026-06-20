@@ -387,7 +387,7 @@ void FUN_8005bdbc(void)
     int local_18c;
     int local_188;
     int local_184;
-    char local_180[256];
+    char visGrid[256];
     u32 local_80;
     u32 uStack_7c;
     u32 local_78;
@@ -417,7 +417,7 @@ void FUN_8005bdbc(void)
         DAT_803ddb08 = *layerDat;
         FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &local_190, &local_1a0, &local_1b0, &local_1c0, layer
                      , 1, DAT_803ddb40);
-        pcVar1 = local_180;
+        pcVar1 = visGrid;
         iVar13 = 8;
         do
         {
@@ -460,7 +460,7 @@ void FUN_8005bdbc(void)
         while (iVar13 != 0);
         for (; iVar13 = local_198, iVar8 <= local_184; iVar8 = iVar8 + 1)
         {
-            pcVar1 = local_180 + (iVar8 + 7) * 0x10 + local_190;
+            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_190;
             uVar10 = (local_18c + 1) - local_190;
             if (local_190 <= local_18c)
             {
@@ -490,7 +490,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar8 = local_1a8, iVar13 <= local_194; iVar13 = iVar13 + 1)
         {
-            pcVar1 = local_180 + (iVar13 + 7) * 0x10 + local_1a0;
+            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1a0;
             uVar10 = (local_19c + 1) - local_1a0;
             if (local_1a0 <= local_19c)
             {
@@ -520,7 +520,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar13 = local_1b8, iVar8 <= local_1a4; iVar8 = iVar8 + 1)
         {
-            pcVar1 = local_180 + (iVar8 + 7) * 0x10 + local_1b0;
+            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_1b0;
             uVar10 = (local_1ac + 1) - local_1b0;
             if (local_1b0 <= local_1ac)
             {
@@ -550,7 +550,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar13 <= local_1b4; iVar13 = iVar13 + 1)
         {
-            pcVar1 = local_180 + (iVar13 + 7) * 0x10 + local_1c0;
+            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1c0;
             uVar10 = (local_1bc + 1) - local_1c0;
             if (local_1c0 <= local_1bc)
             {
@@ -616,7 +616,7 @@ void FUN_8005bdbc(void)
                 {
                     iVar6 = *(int*)(DAT_803ddb1c + iVar2 * 4);
                     *(u16*)(iVar6 + 4) = *(u16*)(iVar6 + 4) ^ 1;
-                    if (local_180[iVar3] != '\0') goto LAB_8005c210;
+                    if (visGrid[iVar3] != '\0') goto LAB_8005c210;
                 }
                 iVar8 = iVar8 + 1;
                 pcVar4 = pcVar4 + 1;
@@ -659,9 +659,9 @@ void fn_8005C8CC(void)
     return;
 }
 
-void FUN_8005cff0(int param_1)
+void FUN_8005cff0(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffdffff;
     }
@@ -672,9 +672,9 @@ void FUN_8005cff0(int param_1)
     return;
 }
 
-u32 FUN_8005d018(char param_1)
+u32 FUN_8005d018(char enable)
 {
-    if (param_1 == '\0')
+    if (enable == '\0')
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffffff7;
         FUN_800069f4((double)lbl_803DC2D0);
@@ -692,12 +692,12 @@ u32 FUN_8005d06c(void)
     return DAT_803dda68 & 8;
 }
 
-void FUN_8005d0ac(int param_1)
+void FUN_8005d0ac(int enable)
 {
     u32* settings;
 
     settings = FUN_800e87a8();
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffbf;
         *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf7;
@@ -710,12 +710,12 @@ void FUN_8005d0ac(int param_1)
     return;
 }
 
-void FUN_8005d17c(int param_1)
+void FUN_8005d17c(int enable)
 {
     u32* settings;
 
     settings = FUN_800e87a8();
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffaf;
         *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf6;
@@ -728,9 +728,9 @@ void FUN_8005d17c(int param_1)
     return;
 }
 
-void FUN_8005d1e8(int param_1)
+void FUN_8005d1e8(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffefff;
     }
