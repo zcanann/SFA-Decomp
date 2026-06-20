@@ -1546,10 +1546,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     int moff;
     int s;
     int i;
-    int j;
     int k;
     int fileBuf;
-    int ok;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
