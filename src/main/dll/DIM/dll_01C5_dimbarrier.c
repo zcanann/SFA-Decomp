@@ -26,8 +26,6 @@ typedef struct DimbarrierState
 
 extern f32 lbl_803E4898;
 
-extern u8 framesThisStep;
-
 void dimbarrier_free(void)
 {
 }
