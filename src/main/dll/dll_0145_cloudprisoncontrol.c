@@ -93,13 +93,14 @@ void cloudprisoncontrol_update(int obj)
         case CPMSG_REGISTER:
             if (((GameObject*)target)->anim.mapEventSlot == ((GameObject*)obj)->anim.mapEventSlot)
             {
+                int tgt = target;
                 found = 0;
                 p = lbl_803AC7D8;
                 dval = data;
                 n = lbl_803DDB09;
                 for (i = 0; i < n; i++)
                 {
-                    if (*(u32*)p == target)
+                    if (*(u32*)p == tgt)
                     {
                         *(s16*)((char*)p + 4) = dval;
                         found = 1;
@@ -111,7 +112,7 @@ void cloudprisoncontrol_update(int obj)
                     char* e;
                     i = lbl_803DDB09;
                     e = (char*)lbl_803AC7D8 + i * 8;
-                    *(int*)e = target;
+                    *(int*)e = tgt;
                     *(u8*)(e + 6) = 0;
                     *(s16*)(e + 4) = data;
                     lbl_803DDB09++;
