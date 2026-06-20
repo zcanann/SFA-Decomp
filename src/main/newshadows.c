@@ -2326,7 +2326,6 @@ extern u8 lbl_803DCF80;
 extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
-extern const f32 Dev_803DED1C;
 extern u16 lbl_803DCFA0;
 #pragma peephole off
 void maybeHudFn_8006c91c(void)
