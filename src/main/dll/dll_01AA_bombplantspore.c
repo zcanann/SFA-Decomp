@@ -305,7 +305,7 @@ void bombplantspore_update(void* obj)
                                     NULL, 0);
     }
     ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
-    hitObj = (void*)hitObject;
+    hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
     if (BOMBPLANTSPORE_FLAGS(state)->hitSurface == 0)
     {
         state->driftTimer -= timeDelta;
