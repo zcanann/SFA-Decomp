@@ -109,7 +109,7 @@ extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E240C;
-extern f32 lbl_803E2418;
+extern const f32 lbl_803E2418;
 extern f32 getXZDistance(f32* a, f32* b);
 extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
 extern int dll_19_func1B(int p);
@@ -304,7 +304,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            ((TrickyState*)state)->stateFlags &= ~0x400LL;
+            ((TrickyState*)state)->stateFlags &= ~0x400;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
