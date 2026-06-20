@@ -433,7 +433,7 @@ void fn_8015383C(int obj, int state)
         vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)p29c)->anim.localPosZ;
     }
     if (PSVECMag(vec) < lbl_803E2900
-        && (*(u16*)(*(int*)&((BaddieState*)state)->trackedObj + 0xb0) & 0x1000) == 0)
+        && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & 0x1000) == 0)
     {
         worldPos[0] = ((GameObject*)obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + ((GameObject*)obj)->anim.localPosY;
