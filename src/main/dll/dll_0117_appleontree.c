@@ -149,7 +149,7 @@ void appleontree_handleCollectableHit(int obj)
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, 0x7000a, obj, (int*)(state + 0x5c));
         GameBit_Set(0x90f, 1);
-        ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 4);
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
     else
     {
@@ -167,7 +167,7 @@ void appleontree_handleCollectableHit(int obj)
             {
                 ObjHits_DisableObject(obj);
             }
-            ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
         }
     }
 }
@@ -189,7 +189,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, f32 scale); /* #57 */
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
-    if ((inner->unk5A & 2) == 0)
+    if ((inner->flags & 2) == 0)
     {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
@@ -239,7 +239,7 @@ void fn_8017D854(int obj, int msg)
             {
                 ObjHits_DisableObject(obj);
             }
-            ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
         }
     }
     else
@@ -302,7 +302,7 @@ void fn_8017D854(int obj, int msg)
                 {
                     ObjHits_DisableObject(obj);
                 }
-                ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+                ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
             }
         }
         else
@@ -372,10 +372,10 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
                 ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
                 ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->unk28;
-                if ((((AppleOnTreeState*)state)->unk5A & 8) == 0)
+                if ((((AppleOnTreeState*)state)->flags & 8) == 0)
                 {
                     Sfx_PlayFromObject(p, 0x407);
-                    ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 8);
+                    ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 8);
                 }
                 return 1;
             }
