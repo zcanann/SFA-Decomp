@@ -22,7 +22,7 @@
 #include "main/dll/rom_curve_interface.h"
 extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
-extern f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz);
+extern f32 fn_8010AC48(f32 px, f32 py, f32 pz, int* obj);
 
 #define PATHCAM_NEAR_THRESHOLD lbl_803E1888
 #define PATHCAM_FAR_THRESHOLD lbl_803E188C
@@ -83,7 +83,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
         settled = 1;
         node = (int)(*gRomCurveInterface)->getById(*p1);
         pathcam_findTaggedNodeWindow((u8*)node, window, tag);
-        dist = fn_8010AC48(window, x, y, z);
+        dist = fn_8010AC48(x, y, z, window);
         if (dist < nearThresh)
         {
             if (window[0] > -1)
