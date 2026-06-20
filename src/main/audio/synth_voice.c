@@ -654,6 +654,7 @@ end:
  */
 void ZeroOffsetHandler(int voice)
 {
+    u8* base = (u8*)(int)lbl_803BCD90;
     SynthHwVoice* sv;
     u32 lowDeltaTime;
     u16 Modulation;
@@ -706,12 +707,13 @@ void ZeroOffsetHandler(int voice)
 
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    f = SYNTH_MASTER_FADERS[sv->vGroup].pauseVol * SYNTH_MASTER_FADERS[sv->vGroup].volume *
-        SYNTH_MASTER_FADERS[sv->fxFlag ? 22 : 21].volume;
+    f = ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].pauseVol *
+            ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].volume *
+        ((SynthMasterFader*)(base + 0x5D4))[sv->fxFlag ? 22 : 21].volume;
 
     if (sv->track != 0xFF)
     {
-        vol = lbl_803E7798 * (f * (f32)SYNTH_TRACK_VOLUME[sv->track]);
+        vol = lbl_803E7798 * (f * (f32)(base + 0xBD4)[sv->track]);
     }
     else
     {
