@@ -98,11 +98,11 @@ void dimlavasmash_free(void);
 typedef struct DimcannonPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 resetGameBit;
+    s16 armGameBit;
+    s16 holdGameBit;
     u8 pad20[0x26 - 0x20];
-    s16 unk26;
+    s16 triggerRange;
     s8 unk28;
     u8 pad29[0x30 - 0x29];
 } DimcannonPlacement;
@@ -243,7 +243,7 @@ void dimcannon_update(int* obj)
         return;
     }
 
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
     }
@@ -264,7 +264,7 @@ void dimcannon_update(int* obj)
     switch (((DimCannonState*)state)->fireState)
     {
     case 0:
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1C))
+        if (GameBit_Get(((DimcannonPlacement*)src)->armGameBit))
         {
             ((DimCannonState*)state)->fireState = 4;
         }
@@ -297,15 +297,15 @@ void dimcannon_update(int* obj)
     case 4:
         DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4, *(f32*)&((DimCannonState*)state)->unk8,
                                    ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+        if (GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
         {
             ((DimCannonState*)state)->fireState = 5;
         }
-        else if (*(void**)(state + 0x0) != 0 && !GameBit_Get(((DimcannonPlacement*)src)->unk1E))
+        else if (*(void**)(state + 0x0) != 0 && !GameBit_Get(((DimcannonPlacement*)src)->holdGameBit))
         {
             f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                   (f32*)(*(char**)(state + 0x0) + 0x18));
-            int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF10;
+            int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF10;
             if (d < v / lbl_803E48EC)
             {
                 ((DimCannonState*)state)->fireState = 1;
@@ -316,12 +316,12 @@ void dimcannon_update(int* obj)
         ((DimCannonState*)state)->aimPitch = 0;
         break;
     case 1:
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+        if (GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
         {
             ((DimCannonState*)state)->fireState = 5;
             break;
         }
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1E))
+        if (GameBit_Get(((DimcannonPlacement*)src)->holdGameBit))
         {
             ((DimCannonState*)state)->fireState = 4;
             break;
@@ -367,7 +367,7 @@ void dimcannon_update(int* obj)
             DIMwooddoor_spawnShard(obj, 0);
             {
                 f32 d2 = ((DimCannonState*)state)->distance;
-                int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF0C;
+                int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF0C;
                 if (d2 > v / lbl_803E48EC)
                 {
                     ((DimCannonState*)state)->fireState = 4;
