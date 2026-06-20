@@ -2130,7 +2130,7 @@ void enemy_update(int obj)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
-    else if ((*(u16*)(*(int*)&((EnemyState*)state)->trackedObj + 0xb0) & 0x40) != 0)
+    else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & 0x40) != 0)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
