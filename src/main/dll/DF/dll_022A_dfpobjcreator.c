@@ -68,7 +68,6 @@ STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk1E) == 0x1E);
 STATIC_ASSERT(offsetof(DfpobjcreatorSetup, unk20) == 0x20);
 STATIC_ASSERT(sizeof(DfpobjcreatorSetup) == 0x24);
 
-extern f32 timeDelta;
 extern int dbstealerworm_stateHandlerA02();
 
 void dfpobjcreator_hitDetect(void)
