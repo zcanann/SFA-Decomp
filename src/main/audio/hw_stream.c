@@ -47,7 +47,7 @@ int hwChangeStudio(int slot)
         {
             return samplePos;
         }
-        samplePos += lowBits;
+        samplePos = lowBits + samplePos;
         return samplePos - 2;
     case 3:
         return (int)((DSPvoice*)voice)->currentAddr - *(int*)&((DSPvoice*)voice)->smp_info.addr;
