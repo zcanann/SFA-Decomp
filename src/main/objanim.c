@@ -638,8 +638,14 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
     phase = phaseStep - (phaseStep * sampleFraction);
-    while (nextDistance <= targetDistance)
+    while (1)
     {
+        if (nextDistance > targetDistance)
+        {
+            phase -= phaseStep *
+                ((nextDistance - targetDistance) / (nextDistance - previousDistance));
+            break;
+        }
         sampleIndex++;
         if (sampleIndex >= segmentCount)
         {
@@ -665,7 +671,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         phase += phaseStep;
     }
 
-    phase -= phaseStep * ((nextDistance - targetDistance) / (nextDistance - previousDistance));
     if (phaseOut != NULL)
     {
         *phaseOut = phase;
