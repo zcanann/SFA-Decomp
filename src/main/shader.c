@@ -2978,7 +2978,7 @@ void doPendingMapLoads(void)
                             {
                                 u8* e = lbl_803DCE78;
                                 getTabEntry(e, 0x1f, m2 << 5, 0x20);
-                                curMapType = *(u8*)(e + 0x1c);
+                                *(u8*)&curMapType = e[0x1c];
                             }
                         }
                         *(s8*)(base + slot * 8 + 0x4192) = 1;
