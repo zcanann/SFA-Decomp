@@ -2801,7 +2801,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     {
         return EXPGFX_INVALID_POOL_INDEX;
     }
-    if (expgfxGetSlot(&poolIndex, &slotIndex, slotType,
+    if (expgfxGetSlot(&poolIndex, &slotIndex, (int)slotType,
                       preferredPoolIndex, (u32)(int)config->attachedSource)
         == EXPGFX_INVALID_POOL_INDEX)
     {
