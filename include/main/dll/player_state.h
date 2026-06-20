@@ -208,7 +208,7 @@ typedef struct PlayerState {
     u8 pad638[0x63C - 0x638];
     f32 unk63C;
     f32 traveledDistance;
-    f32 unk644;
+    f32 travelTargetDistance; /* PSVECMag(start->target); traveledDistance is compared against it */
     f32 unk648;
     f32 unk64C;
     u8 pad650[0x654 - 0x650];

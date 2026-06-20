@@ -17555,7 +17555,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                                                  (f32*)((char*)state + 0x2a0));
                 }
             }
-            if (inner->traveledDistance > inner->unk644 ||
+            if (inner->traveledDistance > inner->travelTargetDistance ||
                 inner->traveledDistance < lbl_803E7EA4)
             {
                 u8 anim;
@@ -17639,7 +17639,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                 inner->unk630 = *(f32*)((char*)pt2 + 0x10);
                 inner->traveledDistance = lbl_803E7EA4;
                 PSVECSubtract((f32*)((char*)inner + 0x628), (f32*)((char*)inner + 0x61c), vec);
-                inner->unk644 = PSVECMag(vec);
+                inner->travelTargetDistance = PSVECMag(vec);
                 PSVECNormalize(vec, (f32*)((char*)inner + 0x634));
             }
             ObjAnim_SetCurrentMove(obj, 0x40e, lbl_803E7EA4, 0);
