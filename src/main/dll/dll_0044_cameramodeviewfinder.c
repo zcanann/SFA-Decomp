@@ -168,6 +168,8 @@ void firstPersonDoControls(s16* obj)
 int firstPersonEnter(u8* cam, s16* p2)
 {
     f32 f2;
+    f32 start;
+    f32 end;
     u8* state;
     int conv;
     int flag;
@@ -215,18 +217,20 @@ int firstPersonEnter(u8* cam, s16* p2)
         lbl_803DD548->viewCurve.dir = 0;
         lbl_803DD548->yawCurve.start = (f32)(s32) * (s16*)cam;
         lbl_803DD548->yawCurve.end = (f32)(s16)(0x8000 - p2[0]);
-        f2 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
+        start = lbl_803DD548->yawCurve.start;
+        end = lbl_803DD548->yawCurve.end;
+        f2 = start - end;
         if (f2 < lbl_803E1818 && f2 > lbl_803E181C)
         {
             lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.start;
         }
         else if (f2 > lbl_803E17C8 || f2 < lbl_803E17CC)
         {
-            if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
+            if (start < lbl_803E17C4)
             {
                 lbl_803DD548->yawCurve.start += lbl_803E17D0;
             }
-            else if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
+            else if (end < lbl_803E17C4)
             {
                 lbl_803DD548->yawCurve.end += lbl_803E17D0;
             }
