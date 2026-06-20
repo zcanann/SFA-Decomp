@@ -537,6 +537,9 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             }
             switch (ch)
             {
+            case 0xf8f4:
+                scale = params[0] * lbl_803DE708;
+                break;
             case 0xf8f7:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
@@ -553,9 +556,6 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
                         *outMaxH = mH;
                     }
                 }
-                break;
-            case 0xf8f4:
-                scale = params[0] * lbl_803DE708;
                 break;
             }
             continue;
