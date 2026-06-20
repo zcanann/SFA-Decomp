@@ -510,7 +510,7 @@ void sh_staff_update(int obj)
         {
             int loadResult;
             fn_80295CF4((int)player, 0);
-            ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E54D0);
             ((GameObject*)obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
             ((GameObject*)obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
             ((GameObject*)obj)->animEventCallback = sh_staff_SeqFn;
