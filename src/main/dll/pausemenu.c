@@ -587,7 +587,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 mins25;
         f32 playRatio;
         info = mapEvents->getCurCharacterState();
-        hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
+        hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
         ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
@@ -599,9 +599,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         gbCount = (u8)(j + i);
         {
             u8* p = lbl_8031BB90;
-            for (i = 0; i < 4; i++)
+            s8 k;
+            for (k = 0; k < 4; k++)
             {
-                *(s16*)(p + 0xc0) = i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
+                *(s16*)(p + 0xc0) = k < gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
                 p += 0x20;
             }
         }
