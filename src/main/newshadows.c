@@ -1724,7 +1724,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
     p = arr;
     for (i = 0; i < n; i++, p += 5)
     {
-        f32 over = lbl_803DED28;
+        f32 over = *(f32*)&lbl_803DED28;
         if (c < p[0])
         {
             f32 mx, mz, t, s0, tmp, p2lo, d2, sq, ratio, frac, depth;
@@ -1771,7 +1771,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
         }
     }
     if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
-    if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
+    if (acc6 > *(f32*)&lbl_803DED2C) acc6 = *(f32*)&lbl_803DED2C;
     *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDD4;
     *out2 = acc5;
 }
