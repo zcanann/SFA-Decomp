@@ -464,8 +464,7 @@ void expgfx_initSlotQuad(void* slotPtr)
 
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
     {
-        slot->scaleCurrent =
-            (int)
+        *(u16*)&slot->scaleCurrent =
         ((f32)(u16)
         slot->scaleStep * step + (f32)(u16)
         slot->scaleCurrent
@@ -474,8 +473,7 @@ void expgfx_initSlotQuad(void* slotPtr)
     }
     else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0)
     {
-        slot->scaleCurrent =
-            (int)
+        *(u16*)&slot->scaleCurrent =
         ((f32)(u16)
         slot->scaleCurrent - (f32)(u16)
         slot->scaleStep * step
