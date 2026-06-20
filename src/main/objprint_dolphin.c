@@ -5971,6 +5971,10 @@ extern int GXFlush_(u8 visible, int unused);
 extern u8 gDvdErrorPauseActive;
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
+#define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx)*4 + 0x20000) + (disp)))
+#define MAPTBLP(idx, disp) (*(int**)((char*)base + ((idx)*4 + 0x20000) + (disp)))
+#define MAPTBL16(idx, disp) (*(s16*)((char*)base + ((idx)*2 + 0x20000) + (disp)))
+
 int mapUnload(int mapId, int flags)
 {
     u8* base;
@@ -6056,23 +6060,23 @@ int mapUnload(int mapId, int flags)
         hi = (char*)base + 0x20000;
         for (; i < 0x38; i += 2)
         {
-            if ((f20 && mapId == ((int*)((char*)base + 0x20000))[e[0] - 0x1bb2])
-                || (f10 && mapId != ((int*)((char*)base + 0x20000))[e[0] - 0x1bb2])
-                || ((flags & e[1]) && mapId == ((int*)((char*)base + 0x20000))[e[0] - 0x1bb2]))
+            if ((f20 && mapId == MAPTBL32(e[0], -0x6EC8))
+                || (f10 && mapId != MAPTBL32(e[0], -0x6EC8))
+                || ((flags & e[1]) && mapId == MAPTBL32(e[0], -0x6EC8)))
             {
-                ((int*)((char*)base + 0x20000))[e[0] - 0x1bb2] = -1;
+                MAPTBL32(e[0], -0x6EC8) = -1;
             }
             {
                 int idx = e[0];
-                if (((int**)hi)[idx - 0x1a8a] != NULL)
+                if (MAPTBLP(idx, -0x6A28) != NULL)
                 {
                     s16 v;
                     if (f80
-                        || ((flags & e[1]) && mapId == ((s16*)hi)[idx - 0x3464])
-                        || (f10 && mapId != ((s16*)((char*)base + 0x20000))[idx - 0x3464])
-                        || (f20 && mapId == ((s16*)((char*)base + 0x20000))[idx - 0x3464]))
+                        || ((flags & e[1]) && mapId == MAPTBL16(idx, -0x68C8))
+                        || (f10 && mapId != MAPTBL16(idx, -0x68C8))
+                        || (f20 && mapId == MAPTBL16(idx, -0x68C8)))
                     {
-                        if (gObjLevelLockSlots != (v = ((s16*)((char*)base + 0x20000))[idx - 0x3464])
+                        if (gObjLevelLockSlots != (v = MAPTBL16(idx, -0x68C8))
                             && lockp[1] != v)
                         {
                             switch (idx)
@@ -6106,25 +6110,24 @@ int mapUnload(int mapId, int flags)
                                 mmSetFreeDelay(0);
                                 for (j = 0; j < 75; j++)
                                 {
-                                    if (sMapFileNameIndexRemapTable[j] == ((s16*)((char*)base + 0x20000))[e[0] -
-                                        0x3464])
+                                    if (sMapFileNameIndexRemapTable[j] == MAPTBL16(e[0], -0x68C8))
                                     {
                                         break;
                                     }
                                 }
                                 if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5)
                                 {
-                                    int* slot = &((int*)((char*)base + 0x20000))[j - 0x1b02];
+                                    int* slot = &MAPTBL32(j, -0x6C08);
                                     mm_free((void*)*slot);
                                     *slot = 0;
                                 }
                                 break;
                             }
-                            mm_free((void*)((int*)((char*)base + 0x20000))[e[0] - 0x1a8a]);
+                            mm_free((void*)MAPTBL32(e[0], -0x6A28));
                             mmSetFreeDelay(2);
-                            ((int*)((char*)base + 0x20000))[e[0] - 0x1a8a] = 0;
-                            ((s16*)((char*)base + 0x20000))[e[0] - 0x3464] = -1;
-                            ((int*)((char*)base + 0x20000))[e[0] - 0x1b5a] = 0;
+                            MAPTBL32(e[0], -0x6A28) = 0;
+                            MAPTBL16(e[0], -0x68C8) = -1;
+                            MAPTBL32(e[0], -0x6D68) = 0;
                             switch (e[0])
                             {
                             case 0x2a:
@@ -6179,21 +6182,20 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     int* p1;
     int* p2;
     int* dst;
-    int** tableBase = (int**)((char*)base + 0x20000);
-    int* src1 = tableBase[id - 0x1a8a];
-    if (src1 == NULL || tableBase[idx - 0x1a8a] == NULL)
+    int* src1 = MAPTBLP(id, -0x6A28);
+    if (src1 == NULL || MAPTBLP(idx, -0x6A28) == NULL)
     {
         if (src1 == NULL)
         {
             e1 = 1;
         }
-        if (tableBase[idx - 0x1a8a] == NULL)
+        if (MAPTBLP(idx, -0x6A28) == NULL)
         {
             e2 = 1;
         }
     }
     p1 = src1;
-    p2 = tableBase[idx - 0x1a8a];
+    p2 = MAPTBLP(idx, -0x6A28);
     if (tbl == (u32*)(base + 0x170e0))
     {
         count = 0x800;
@@ -6444,6 +6446,10 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     tbl[i - 1] = 0xffffffff;
     return 1;
 }
+
+#undef MAPTBL32
+#undef MAPTBLP
+#undef MAPTBL16
 
 extern s32 gObjTableFileRequestFlags;
 
