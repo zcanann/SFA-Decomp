@@ -1046,6 +1046,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     return 0;
 }
 
+#pragma opt_common_subs off
 int hightop_stateHandler09(int obj, int p)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
@@ -1189,6 +1190,7 @@ int hightop_stateHandler09(int obj, int p)
     }
     return 0;
 }
+#pragma opt_common_subs reset
 
 #pragma opt_strength_reduction off
 int hightop_stateHandler10(int obj, int p)
