@@ -1046,7 +1046,7 @@ void fn_80156DA0(int obj, int state)
     bool resetting;
     int groundHit;
     u8 noHit;
-    u16 randBit;
+    int randBit;
     float toPos[3];
     float fromPos[3];
     float cosYaw;
