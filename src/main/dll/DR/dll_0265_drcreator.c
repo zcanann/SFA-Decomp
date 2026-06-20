@@ -38,9 +38,9 @@ STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x20);
 typedef struct DrcreatorSpawnProjectileCallbackState
 {
     u8 pad0[0x4 - 0x0];
-    s16 unk4;
+    s16 spawnGameBit;
     u8 pad6[0xA - 0x6];
-    s16 unkA;
+    s16 velocitySpread;
     u8 padC[0x10 - 0xC];
 } DrcreatorSpawnProjectileCallbackState;
 
@@ -196,7 +196,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
         case 4:
         case 9:
             runtime = ((GameObject*)obj)->extra;
-            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->unk4) != 0)
+            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState*)runtime)->spawnGameBit) != 0)
             {
                 setup = Obj_AllocObjectSetup(36, 1725);
                 ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
@@ -214,13 +214,13 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
                     ((GameObject*)projectile)->anim.rotX = randomGetRange(0, 65535);
                     ((DrcreatorState*)projectile)->velocityX =
                         lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,
-                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA);
+                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
                     ((DrcreatorState*)projectile)->velocityY = lbl_803E69A8 * (f32) * (int*)runtime;
                     ((DrcreatorState*)projectile)->velocityZ =
                         lbl_803E69A8 * (f32)(int)randomGetRange(
-                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA,
-                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->unkA);
+                                                 -((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread,
+                                                 ((DrcreatorSpawnProjectileCallbackState*)runtime)->velocitySpread);
                     ((DrcreatorState*)projectile)->creatorObj = obj;
                 }
             }
