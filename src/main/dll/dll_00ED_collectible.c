@@ -572,14 +572,14 @@ void collectible_func0B(int* obj, int flag)
 int collectible_modelMtxFn(int* obj)
 {
     int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
-    if (((CollectibleState*)inner)->unk18 == -2)
+    if (((CollectibleState*)inner)->hitRegionId == -2)
     {
         f32 f1 = ((GameObject*)obj)->anim.worldPosX;
         f32 f2 = ((GameObject*)obj)->anim.worldPosY;
         f32 f3 = ((GameObject*)obj)->anim.worldPosZ;
-        *(u32*)&((CollectibleState*)inner)->unk18 = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
+        *(u32*)&((CollectibleState*)inner)->hitRegionId = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
     }
-    return ((CollectibleState*)inner)->unk18;
+    return ((CollectibleState*)inner)->hitRegionId;
 }
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
@@ -1166,7 +1166,7 @@ void collectible_init(int obj, int setup)
     ((CollectibleState*)state)->unkC = *(u8*)(setup + 0x19);
     ((CollectibleState*)state)->unkD = *(u8*)(setup + 0x1a);
     ((CollectibleState*)state)->unkF = 0;
-    ((CollectibleState*)state)->unk18 = -2;
+    ((CollectibleState*)state)->hitRegionId = -2;
     ((CollectibleState*)state)->bounceTimer = 0;
     ((CollectibleState*)state)->visibilityGameBit = *(s16*)(setup + 0x24);
     ((CollectibleState*)state)->mapId = ((ObjPlacement*)setup)->mapId;

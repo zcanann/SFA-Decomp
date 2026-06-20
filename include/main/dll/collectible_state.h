@@ -30,7 +30,7 @@ typedef struct CollectibleState {
     u8 unk12[0x14 - 0x12];
     s16 visibilityGameBit; /* 0x14 item is active only while this bit is set (-1 = none) */
     u8 unk16[0x18 - 0x16];
-    s32 unk18;             /* 0x18 */
+    s32 hitRegionId;       /* 0x18 cached ObjHitRegion id (-2 = not yet resolved) */
     u8 unk1C[0x1D - 0x1C];
     u8 bounceTimer;        /* 0x1D loose-motion bounce frames remaining */
     u8 visibilityBitClear; /* 0x1E cached !GameBit_Get(visibilityGameBit) */
