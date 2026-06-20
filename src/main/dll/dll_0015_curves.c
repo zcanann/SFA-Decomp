@@ -399,11 +399,12 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             transform.z = -((GameObject*)obj)->anim.worldPosZ;
             mtxRotateByVec3s(matrix, transform.angles);
 
+            pointIndex = 0;
             outZ = localZ;
             outY = localY;
             outX = localX;
             point = (f32*)collision;
-            for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
+            for (; pointIndex < pointCount; pointIndex++)
             {
                 Matrix_TransformPoint(matrix, point[2], point[3], point[4], outX, outY, outZ);
                 point += 3;
