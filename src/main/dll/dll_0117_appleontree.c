@@ -110,15 +110,15 @@ void appleontree_func0B(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
 
-    if (state->unk3A == 4)
+    if (state->animState == 4)
     {
         return;
     }
-    if (state->unk3A == 5)
+    if (state->animState == 5)
     {
         return;
     }
-    if (state->unk3A == 6)
+    if (state->animState == 6)
     {
         return;
     }
@@ -178,7 +178,7 @@ void appleontree_setScale(void)
 
 int appleontree_getExtraSize(void) { return 0x64; }
 
-u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->unk3A; }
+u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState; }
 
 void appleontree_free(int* obj)
 {
@@ -217,7 +217,7 @@ void fn_8017D854(int obj, int msg)
         break;
     }
     ((AppleOnTreeState*)state)->healthRestore = v;
-    ((AppleOnTreeState*)state)->unk3A = 4;
+    ((AppleOnTreeState*)state)->animState = 4;
     ((AppleOnTreeState*)state)->unk08 = timeDelta;
     ((AppleOnTreeState*)state)->unk0C = timeDelta;
     ((AppleOnTreeState*)state)->rotX = randomGetRange(-0x8000, 0x7fff);
@@ -633,7 +633,7 @@ void appleontree_update(int objArg)
         ((AppleOnTreeState*)state)->unk0C = fa + timeDelta;
         fb = ((AppleOnTreeState*)state)->unk08;
         frac = fb / *(float*)(state + 4);
-        switch (((AppleOnTreeState*)state)->unk3A)
+        switch (((AppleOnTreeState*)state)->animState)
         {
         case 0:
             val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
@@ -655,14 +655,14 @@ void appleontree_update(int objArg)
                 }
                 *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
                 ((AppleOnTreeState*)state)->unk08 = timeDelta;
-                ((AppleOnTreeState*)state)->unk3A = 5;
+                ((AppleOnTreeState*)state)->animState = 5;
             }
             else
             {
                 if (frac > *(float*)(state + 0x10))
                 {
                     ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
-                    ((AppleOnTreeState*)state)->unk3A = 1;
+                    ((AppleOnTreeState*)state)->animState = 1;
                 }
                 else
                 {
@@ -694,7 +694,7 @@ void appleontree_update(int objArg)
                 }
                 *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
                 ((AppleOnTreeState*)state)->unk08 = timeDelta;
-                ((AppleOnTreeState*)state)->unk3A = 5;
+                ((AppleOnTreeState*)state)->animState = 5;
             }
             else
             {
@@ -707,7 +707,7 @@ void appleontree_update(int objArg)
                         i = i + 1;
                     }
                     while (i < 8);
-                    ((AppleOnTreeState*)state)->unk3A = 2;
+                    ((AppleOnTreeState*)state)->animState = 2;
                 }
                 else
                 {
@@ -731,7 +731,7 @@ void appleontree_update(int objArg)
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
                 Obj_SetActiveModelIndex((int)obj, 1);
-                ((AppleOnTreeState*)state)->unk3A = 3;
+                ((AppleOnTreeState*)state)->animState = 3;
             }
             else
             {
@@ -777,7 +777,7 @@ void appleontree_update(int objArg)
         case 4:
             if (frac > *(float*)(state + 0x20))
             {
-                ((AppleOnTreeState*)state)->unk3A = 6;
+                ((AppleOnTreeState*)state)->animState = 6;
                 ((AppleOnTreeState*)state)->unk08 = timeDelta;
             }
             else

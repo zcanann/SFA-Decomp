@@ -15,7 +15,7 @@ typedef struct AppleOnTreeState
     f32 unk30;
     f32 unk34;
     u16 healthRestore;
-    u8 unk3A;
+    u8 animState;
     u8 pad3B;
     f32 unk3C;
     f32 unk40;
