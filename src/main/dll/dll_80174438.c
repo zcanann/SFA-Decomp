@@ -25,7 +25,6 @@ extern u32 fn_80174BFC();
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
-extern void* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
 extern void fn_80175428(int obj, int p2);

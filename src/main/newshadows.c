@@ -1708,7 +1708,6 @@ extern inline float sqrtf(float x)
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
-extern f32 Udchuff_803DEDA0;
 extern f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 

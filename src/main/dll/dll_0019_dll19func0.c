@@ -84,7 +84,6 @@ extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
-extern void* objModelGetVecFn_800395d8(void* obj, int target);
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
