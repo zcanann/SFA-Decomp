@@ -616,10 +616,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     int found;
     if (action < 26)
     {
-    if (action <= -1)
-    {
-    }
-    else
+    if (action > -1)
     {
     switch (action)
     {
