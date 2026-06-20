@@ -2240,7 +2240,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sx = slot->renderX;
         sy = slot->renderY;
         sz = slot->renderZ;
-        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)(u16)
+        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)
         slot->scaleCurrent;
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
         {
