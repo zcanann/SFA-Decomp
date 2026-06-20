@@ -314,7 +314,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     u32* activeMaskPtr;
     u32 currentMask;
     u32 activeBit;
-    int foundPool;
+    short foundPool;
     int foundPoolIndex;
     int poolIndex;
     int slotIndex;
