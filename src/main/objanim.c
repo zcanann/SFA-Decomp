@@ -933,7 +933,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         moveWeight = gObjAnimProgressOne;
     }
 
-    for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT; axisIndex++)
+    axisIndex = 0;
+    do
     {
         if (*axis == 0)
         {
@@ -1021,7 +1022,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                 blendAxis += sampleCount;
             }
         }
-    }
+        axisIndex++;
+    } while (axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT);
 
     return wrapped;
 }
