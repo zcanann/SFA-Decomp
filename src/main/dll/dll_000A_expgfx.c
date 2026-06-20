@@ -297,6 +297,8 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     u32* poolSourceIds;
     u32* poolActiveMasks;
     s16* poolSlotTypeIds;
+    u32* activeMaskPtr;
+    u32 currentMask;
     u32 activeBit;
     int foundPool;
     int foundPoolIndex;
@@ -325,14 +327,16 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     if (foundPool)
     {
         poolIndex = (s16)foundPoolIndex;
+        activeMaskPtr = &runtime->poolActiveMasks[poolIndex];
+        currentMask = *activeMaskPtr;
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
-            if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
+            if ((activeBit & currentMask) == 0)
             {
                 *slotIndexOut = slotIndex;
                 *poolIndexOut = poolIndex;
-                runtime->poolActiveMasks[poolIndex] |= activeBit;
+                *activeMaskPtr |= activeBit;
                 runtime->poolActiveCounts[poolIndex]++;
                 return 1;
             }
@@ -365,14 +369,16 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     }
 
     poolIndex = (s16)foundPoolIndex;
+    activeMaskPtr = &runtime->poolActiveMasks[poolIndex];
+    currentMask = *activeMaskPtr;
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
     {
         activeBit = 1 << slotIndex;
-        if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
+        if ((activeBit & currentMask) == 0)
         {
             *slotIndexOut = slotIndex;
             *poolIndexOut = poolIndex;
-            runtime->poolActiveMasks[poolIndex] |= activeBit;
+            *activeMaskPtr |= activeBit;
             gExpgfxStaticPoolSlotTypeIds[poolIndex] = slotType;
             runtime->poolActiveCounts[poolIndex]++;
             return 1;
