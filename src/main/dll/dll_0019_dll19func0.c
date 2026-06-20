@@ -718,9 +718,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posX;
     f32 posY;
     f32 posZ;
-    f32 zeroV;
 
-    if (((Dll19Placement*)state)->unk3E8 > (zeroV = lbl_803E1C2C))
+    if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C2C)
     {
         ((Dll19Placement*)state)->unk3E8 = timeDelta * ((Dll19Placement*)state)->unk3EC + ((Dll19Placement*)state)->unk3E8;
         if ((((Dll19Placement*)state)->unk400 & 0x20) != 0)
@@ -729,7 +728,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x40;
             if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
             {
-                ((Dll19Placement*)state)->unk3E8 = zeroV;
+                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
                 ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
             }
         }
@@ -738,7 +737,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
             if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
             {
                 int other = *(int*)&((GameObject*)p1)->anim.placementData;
-                ((Dll19Placement*)state)->unk3E8 = zeroV;
+                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
                 ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
                 p2[852] = 0;
                 p1[54] = 0;
@@ -751,9 +750,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
         else
         {
-            if (((Dll19Placement*)state)->unk3E8 < zeroV)
+            if (((Dll19Placement*)state)->unk3E8 < lbl_803E1C2C)
             {
-                ((Dll19Placement*)state)->unk3E8 = zeroV;
+                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
             }
             else if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C44)
             {
