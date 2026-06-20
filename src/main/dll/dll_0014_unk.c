@@ -1819,11 +1819,12 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 
         distance = (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
                    (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10));
-        queueDistances[0] = distance +
+        queueDistances[0] =
             (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
                 (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
             (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
-                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc));
+                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) +
+            distance;
         queueIndices[0] = directIndex;
         visited[directIndex] = 1;
         queueCount = 1;
