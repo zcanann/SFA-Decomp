@@ -7,7 +7,7 @@
  * placement's arming game bit (placement+0x18) is set, it allocates an object
  * setup (type 0x24), copies the spawner's position into it, hands it to
  * Obj_SetupObject, and seeds the new object's first field from placement
- * field unk1A (<< 8).
+ * field yawByte (<< 8).
  *
  * Everything else in this TU is data: ObjectDescriptor tables and constant
  * pools for sibling side-load objects (kaldachompspit, pinponspike, pollen,
@@ -181,7 +181,7 @@ typedef struct SideloadPlacement
     f32 unk10;
     u8 pad14[0x18 - 0x14];
     s16 armGameBit; /* 0x18: arming game bit */
-    u8 unk1A;
+    u8 yawByte; /* 0x1A: spawn yaw, shifted << 8 into the child's s16 rotation */
     u8 pad1B[0x3C - 0x1B];
     s16 unk3C;
     u8 pad3E[0x48 - 0x3E];
@@ -270,7 +270,7 @@ void sideload_update(int self)
         ((GameObject*)obj)->anim.localPosX = ((GameObject*)self)->anim.localPosY;
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)self)->anim.localPosZ;
         p = (short*)Obj_SetupObject(obj, 5, -1, -1, NULL);
-        *p = (short)((u8)((SideloadPlacement*)state)->unk1A << 8);
+        *p = (short)((u8)((SideloadPlacement*)state)->yawByte << 8);
     }
 }
 
