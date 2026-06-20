@@ -17,14 +17,14 @@ extern void objRenderFn_8003b8f4(f32);
 typedef struct GroundanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
+    s16 sunkGameBit;
+    s16 enableGameBit;
     u8 pad1C[0x20 - 0x1C];
-    u8 unk20;
-    u8 unk21;
+    u8 maxSinkDepth;
+    u8 sfxIndex;
     u8 unk22;
     u8 pad23[0x25 - 0x23];
-    u8 unk25;
+    u8 blockId;
     u8 pad26[0x28 - 0x26];
 } GroundanimatorPlacement;
 
@@ -233,7 +233,7 @@ void groundanimator_free(int* obj, int flag)
             for (blkIdx = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, blkIdx);
-                if (((GroundanimatorPlacement*)r21)->unk25 == mapBlockFn_80060678(entry))
+                if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
                 {
                     midoff = off;
                     for (mid = *(u16*)entry; mid < ((MapBlockData*)block)->unk14; mid++)
@@ -290,12 +290,12 @@ f32 groundanimator_setScale(int* obj, int* target)
     {
         return lbl_803E3FB8;
     }
-    if (g->sinkDepth >= lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20)
+    if (g->sinkDepth >= lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth)
     {
         if (*(void**)&g->linkedObj != NULL)
         {
             int* e;
-            g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20;
+            g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth;
             e = (int*)g->linkedObj;
             switch (*(s16*)((char*)e + 0x46))
             {
@@ -311,7 +311,7 @@ f32 groundanimator_setScale(int* obj, int* target)
     g->sinkDepth = lbl_803E3FBC * timeDelta + g->sinkDepth;
     g->flags = g->flags | 4;
     return g->radius *
-        (g->sinkDepth / (lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20));
+        (g->sinkDepth / (lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth));
 }
 
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
@@ -408,7 +408,7 @@ void groundanimator_update(int* obj)
     Obj_GetPlayerObject();
     g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r20 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    if (((GroundanimatorPlacement*)r20)->unk25 == 0)
+    if (((GroundanimatorPlacement*)r20)->blockId == 0)
     {
         return;
     }
@@ -436,7 +436,7 @@ void groundanimator_update(int* obj)
     {
         int p;
         block = mapGetBlock(bi);
-        g->vertCount = (s16)(fn_80060688(block, ((GroundanimatorPlacement*)r20)->unk25) * 3);
+        g->vertCount = (s16)(fn_80060688(block, ((GroundanimatorPlacement*)r20)->blockId) * 3);
         if (g->vertCount > 0)
         {
             p = (int)mmAlloc(g->vertCount * 6, 5, 0);
@@ -503,7 +503,7 @@ void groundanimator_update(int* obj)
             g->flags = g->flags & ~4;
         }
         else if (g->sinkDepth <
-            lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->unk20)
+            lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth)
         {
             g->sinkDepth = g->sinkDepth - timeDelta;
             if (g->sinkDepth < lbl_803E3FB0)
@@ -518,7 +518,7 @@ void groundanimator_update(int* obj)
         }
         if (g->dirtyFrames != 0)
         {
-            f32 lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->unk20;
+            f32 lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth;
             g->dirtyFrames -= 1;
             if (g->lastDepth > lim)
             {
@@ -536,9 +536,9 @@ void groundanimator_update(int* obj)
                         break;
                     }
                 }
-                GameBit_Set(((GroundanimatorPlacement*)r20)->unk18, 1);
+                GameBit_Set(((GroundanimatorPlacement*)r20)->sunkGameBit, 1);
                 g->flags = g->flags | 2;
-                Sfx_PlayFromObject(obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->unk21]);
+                Sfx_PlayFromObject(obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
             }
             foff = 0;
             hoff = 0;
@@ -569,13 +569,13 @@ void groundanimator_update(int* obj)
                                ((MapBlockData*)block)->unk90 * 6);
         }
     }
-    if (((GroundanimatorPlacement*)r20)->unk1A == -1)
+    if (((GroundanimatorPlacement*)r20)->enableGameBit == -1)
     {
         allow = 1;
     }
     else
     {
-        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->unk1A) != 0;
+        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) != 0;
     }
     if ((g->flags & 2) == 0 && allow != 0)
     {
