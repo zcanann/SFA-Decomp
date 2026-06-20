@@ -1567,7 +1567,7 @@ void* textureAlloc512(void)
     return tex;
 }
 
-extern f32 lbl_803DED28;
+extern const f32 lbl_803DED28;
 extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
@@ -1707,7 +1707,7 @@ extern inline float sqrtf(float x)
 }
 
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
-extern f32 Vdchuff_803DEDC0;
+extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
 extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
 extern f32 Uachuff_803DEE00;
@@ -1835,7 +1835,7 @@ void initFn_8006d020(void)
                 tmp = __fabsf((*p2 - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
-                if (d > 0.0f) d = sqrtf(d);
+                d = sqrtf(d);
                 if (d < *p4 + o[3]) collide = 1;
                 o += 5;
                 j++;
@@ -2454,14 +2454,15 @@ void fn_8006CB50(void)
             f32 s;
             if (dist <= Udchuff_803DEDB8)
             {
-                s = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist) * Udchuff_803DEDB4;
+                f32 t = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist);
+                s = t * Udchuff_803DEDB4;
             }
             else
             {
                 s = lbl_803DED28;
             }
             {
-                f32 py = Vdchuff_803DEDC8 * (ny * s) + Udchuff_803DEDBC;
+                f32 py = Vdchuff_803DEDC0 * (ny * s) + Udchuff_803DEDBC;
                 f32 px = Vdchuff_803DEDC0 * (nx * s) + Udchuff_803DEDBC;
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
@@ -2506,7 +2507,8 @@ extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
-extern f32 lbl_803DED28, lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
+extern const f32 lbl_803DED28;
+extern f32 lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
