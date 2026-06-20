@@ -663,7 +663,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         s16 ang;
         s16 diff;
         ang = (s16)(getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) + 0x8000);
-        diff = ang - inner->unkBBA;
+        diff = ang - (u16)inner->unkBBA;
         if (diff > 0x8000)
         {
             diff = diff - 0xffff;
