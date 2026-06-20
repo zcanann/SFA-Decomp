@@ -135,7 +135,7 @@ void dimwooddoor2_update(int* obj)
             sub->animSpeed = lbl_803E49E0;
             sub->riseSpeed = lbl_803E49E4;
             sub->burnState = 0;
-            GameBit_Set(((Dimwooddoor2Placement*)placement)->unk1E, 1);
+            GameBit_Set(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
             Sfx_PlayFromObject((int)obj, 0x3e1);
         }
     }

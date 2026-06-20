@@ -6,7 +6,7 @@
 typedef struct Dimwooddoor2Placement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
+    s16 openedGameBit;
 } Dimwooddoor2Placement;
 
 #endif
