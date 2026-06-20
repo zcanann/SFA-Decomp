@@ -138,7 +138,7 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(u32*)(control + 0x18) = *(u32*)(state + 0x2d0);
+        *(u32*)(control + 0x18) = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         *(u16*)(control + 0x1c) = 0x24;
         *(u32*)(control + 0x2c) = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -192,16 +192,16 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
+        (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)&((GroundBaddieState*)param_10)->baddie.targetObj + 0x10) - lbl_803E6F90))
     {
-        iVar3 = *(int*)(param_10 + 0x2d0);
+        iVar3 = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
         deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
         deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
         deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
         dVar6 = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
         if (dVar6 < (double)lbl_803E6F50)
         {
-            msg1Data = *(u32*)(param_10 + 0x2d0);
+            msg1Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
             psVar4 = *(short**)(iVar5 + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
@@ -225,7 +225,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             FUN_80006ac4(psVar4,  & msg2Id);
         }
         *(u8*)(iVar5 + 0x34) = 1;
-        msg3Data = *(u32*)(param_10 + 0x2d0);
+        msg3Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
         psVar4 = *(short**)(iVar5 + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
