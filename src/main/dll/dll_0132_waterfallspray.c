@@ -1,6 +1,5 @@
 /* DLL 0x132 — waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
 #include "main/dll/MMP/MMP_asteroid.h"
-extern u8 framesThisStep;
 
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/dll_000A_expgfx.h"
