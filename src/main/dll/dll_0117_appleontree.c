@@ -889,8 +889,8 @@ void appleontree_init(int obj, int def)
         timeScale = ((CrackAnimState*)state)->duration * ((CrackAnimState*)state)->stageEnd2;
         timeScale *= timeScale;
         timeScale *= timeScale;
-        timeScale = timeScale * timeScale;
-        ((CrackAnimState*)state)->unk54 = timeScale * lbl_803E3830;
+        zeroScale = timeScale * timeScale;
+        ((CrackAnimState*)state)->unk54 = zeroScale * lbl_803E3830;
 
         ((GameObject*)obj)->anim.rotX = randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
@@ -921,10 +921,10 @@ void appleontree_init(int obj, int def)
             }
             else
             {
-                state = *(int*)&((GameObject*)obj)->extra;
+                int reread = *(int*)&((GameObject*)obj)->extra;
                 texture = objFindTexture((void*)obj, 0, 0);
                 texture->textureId = 0;
-                ((CrackAnimState*)state)->unk24 = lbl_803E37C8;
+                ((CrackAnimState*)reread)->unk24 = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, 1);
