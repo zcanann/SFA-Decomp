@@ -20,7 +20,7 @@ typedef struct BombPlantSporeState {
   /* 0x008 */ u8 pathState[0x270 - 0x08];
   /* 0x270 */ void *light;
   /* 0x274 */ f32 fuseTimer;
-  /* 0x278 */ f32 unk278;
+  /* 0x278 */ f32 driftAmplitude; /* lerps toward randomPhase; scales driftBaseX/Z */
   /* 0x27C */ f32 driftSpeed;
   /* 0x280 */ f32 randomPhase;
   /* 0x284 */ f32 driftTimer;
@@ -32,8 +32,8 @@ typedef struct BombPlantSporeState {
   /* 0x29C */ f32 driftSpeedTarget;
   /* 0x2A0 */ f32 spinChangeTimer;
   /* 0x2A4 */ f32 detonateTimer;
-  /* 0x2A8 */ s16 unk2a8;
-  /* 0x2AA */ s16 unk2aa;
+  /* 0x2A8 */ s16 currentSpinAngle; /* smoothed angle chasing spinAngle; drives drift sin/cos */
+  /* 0x2AA */ s16 burstDriftAngle; /* burst drift heading clamped to baseAngle +/- angleSpread */
   /* 0x2AC */ s16 spinAngle;
   /* 0x2AE */ s16 yawStep;
   /* 0x2B0 */ u8 stateFlags;
