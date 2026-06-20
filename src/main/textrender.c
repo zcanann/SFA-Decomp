@@ -989,7 +989,6 @@ void gameTextInit(void)
     gameTextLoadDir(0x1c);
 }
 
-void mm_free(void* p);
 
 extern void subtitleFn_8001b700(void);
 extern int gSubtitlesEnabled;
@@ -2668,7 +2667,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
     *(int*)(base31 + 0x6c) = 2;
 }
 
-void* mmAlloc(int size, int type, int flag);
 
 extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
