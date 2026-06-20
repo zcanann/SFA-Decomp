@@ -995,9 +995,9 @@ void playerVecFn_8005a9b0(void)
     _PlaneDirPack planes;
     int* player;
     int* viewSlot;
-    f32* invRotMtx;
-    int i;
     f32* outPtr;
+    int i;
+    f32* invRotMtx;
     f32 clipDist;
 
     planes = sPlayerFrustumPlaneDirs;
