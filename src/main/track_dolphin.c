@@ -2197,6 +2197,7 @@ int fn_800626C8(int* obj, int delta)
     return v & 0xff;
 }
 
+#pragma optimization_level 3
 void fn_80069EB8(int param)
 {
     u8* cache;
@@ -2226,6 +2227,7 @@ void fn_80069EB8(int param)
     memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
     lbl_803DCF80 = param;
 }
+#pragma optimization_level 4
 
 typedef struct AngleXf
 {
