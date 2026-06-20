@@ -12,7 +12,7 @@
  */
 typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
-    u32 unk4;
+    u32 flags;
     u8 unk8[0x29C - 0x8];
     u8 *trackedObj;
     u8 unk2A0[0x2A8 - 0x2A0];
