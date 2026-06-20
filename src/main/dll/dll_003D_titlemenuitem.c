@@ -163,8 +163,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         break;
     }
 
-    item->frameDelay--;
-    if (item->frameDelay < 0)
+    if (--item->frameDelay < 0)
     {
         item->frameDelay = 0;
     }
