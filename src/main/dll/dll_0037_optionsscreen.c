@@ -94,11 +94,11 @@ void OptionsScreen_render(int arg)
     }
 
     item = lbl_803A87D0;
-    for (i = 0; i < 8; item++, i++)
+    for (i = 0; i < 8; i++)
     {
-        if (*(void**)item != NULL)
+        if (*(void**)&item[i] != NULL)
         {
-            (*(void (*)(int, int, int))(*(int*)(*gTitleMenuItemInterface + 0x18)))(*item, arg, fade);
+            (*(void (*)(int, int, int))(*(int*)(*gTitleMenuItemInterface + 0x18)))(item[i], arg, fade);
         }
     }
     (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + 0x30)))(fade);
