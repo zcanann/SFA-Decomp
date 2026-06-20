@@ -235,9 +235,9 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
         dxDiff = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
-    targetPos[0] = *(f32*)(targetObj + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(f32*)(targetObj + 0x10);
-    targetPos[2] = *(f32*)(targetObj + 0x14);
+    targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
+    targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
+    targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
     vecB[0] = *(f32*)(state + 0x360);
     vecB[1] = *(f32*)(state + 0x358);
     vecB[2] = *(f32*)(state + 0x364);
@@ -327,9 +327,9 @@ u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
         dxA = (((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x364)) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
-    targetPos[0] = *(f32*)(targetObj + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(f32*)(targetObj + 0x10);
-    targetPos[2] = *(f32*)(targetObj + 0x14);
+    targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
+    targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
+    targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
     vecB[0] = *(f32*)(state + 0x360);
     vecB[1] = *(f32*)(state + 0x358);
     vecB[2] = *(f32*)(state + 0x364);
