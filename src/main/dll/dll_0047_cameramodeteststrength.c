@@ -13,7 +13,6 @@ extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 
 extern CamCannonState* lbl_803DD560;
-extern f32 timeDelta;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
 extern f32 lbl_803E1890;
@@ -31,7 +30,6 @@ extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 extern int getAngle(float y, float x);
 
 
-extern u8 framesThisStep;
 extern f32 lbl_803E18BC;
 
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
