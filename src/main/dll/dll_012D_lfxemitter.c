@@ -42,24 +42,24 @@ void FUN_8018f650(void)
     u16 posBlock1;
     short posBlock2;
     u8 spawnParams[8];
-    float local_58;
+    float velScale;
     float offX;
     float offY;
     float offZ;
-    u32 local_48;
+    u32 scratch0;
     u32 randX;
-    u32 local_40;
+    u32 scratch1;
     u32 randY;
-    u32 local_38;
+    u32 scratch2;
     u32 randZ;
-    float local_8;
-    float fStack_4;
+    float saveHi;
+    float saveLo;
 
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
+    saveHi = (float)in_f31;
+    saveLo = (float)in_ps31_1;
     emitter = FUN_8028683c();
     config = *(int*)(emitter + 0xb8);
-    local_58 = FLOAT_803e4b00;
+    velScale = FLOAT_803e4b00;
     spawnType = *(u8*)(config + 8);
     if (spawnType == 0)
     {
