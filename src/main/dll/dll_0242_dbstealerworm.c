@@ -1261,7 +1261,6 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     f32 scale;
     f32 cosv;
     f32 sinv;
-    f32 neg;
     f32 v;
     struct
     {
@@ -1306,10 +1305,9 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     state->animSpeedB = state->animSpeedB + (accX * sinv - accZ * cosv);
     state->animSpeedA = state->animSpeedA + (-accZ * sinv - accX * cosv);
     v = state->animSpeedA;
-    neg = -limit;
-    if (v < neg)
+    if (v < -limit)
     {
-        v = neg;
+        v = -limit;
     }
     else if (v > limit)
     {
@@ -1317,7 +1315,7 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     }
     state->animSpeedA = v;
     v = state->animSpeedB;
-    state->animSpeedB = (v < neg) ? neg : (v > limit) ? limit : v;
+    state->animSpeedB = (v < -limit) ? -limit : (v > limit) ? limit : v;
     return 0;
 }
 
