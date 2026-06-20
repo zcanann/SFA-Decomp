@@ -2922,17 +2922,17 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
         {
             slot->scaleCurrent = 0;
-            slot->scaleStep = (int)
+            *(u16*)&slot->scaleStep =
             (scaleVal / (f32)(s32)
             slot->lifetimeFrameLimit
             )
             ;
-            slot->scaleTarget = (int)scaleVal;
+            *(u16*)&slot->scaleTarget = scaleVal;
         }
         else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0)
         {
-            slot->scaleCurrent = (int)scaleVal;
-            slot->scaleStep = (int)
+            *(u16*)&slot->scaleCurrent = scaleVal;
+            *(u16*)&slot->scaleStep =
             (scaleVal / (f32)(s32)
             slot->lifetimeFrameLimit
             )
@@ -2941,7 +2941,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         }
         else
         {
-            slot->scaleCurrent = (int)scaleVal;
+            *(u16*)&slot->scaleCurrent = scaleVal;
             slot->scaleTarget = slot->scaleCurrent;
             slot->scaleStep = 0;
         }
