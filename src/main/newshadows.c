@@ -1787,7 +1787,6 @@ void initFn_8006d020(void)
     f32 padFix;
 
     saved = testAndSet_onlyUseHeap3(1);
-    padFix = __PADFixBits;
     placed = 0;
     attempts = 0;
     e = gNewShadowPlacements;
@@ -1838,6 +1837,7 @@ void initFn_8006d020(void)
         placed++;
     }
 
+    padFix = __PADFixBits;
     th = (int*)gNewShadowNoiseTexFrames;
     for (tex = 0; tex < 0x10; tex++, th++)
     {
