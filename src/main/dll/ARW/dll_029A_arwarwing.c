@@ -1299,6 +1299,8 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             switch (((GameObject*)obj)->anim.mapEventSlot)
             {
+            case 0x3a:
+                break;
             case 0x3b:
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0x16, 1);
