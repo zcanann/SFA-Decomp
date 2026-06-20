@@ -107,12 +107,12 @@ void LaserBeam_hitDetect(void)
 typedef struct LaserBeamPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 beamLength; /* 0x1A: beam reach - added to beamZ for the endpoint and squared for the hit radius */
     u8 pad1C[0x1E - 0x1C];
     s16 disableGameBit;
 } LaserBeamPlacement;
 
-STATIC_ASSERT(offsetof(LaserBeamPlacement, unk1A) == 0x1a);
+STATIC_ASSERT(offsetof(LaserBeamPlacement, beamLength) == 0x1a);
 STATIC_ASSERT(offsetof(LaserBeamPlacement, disableGameBit) == 0x1e);
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
@@ -302,7 +302,7 @@ void LaserBeam_update(int obj2)
     {
         (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
-    dz = (f32)(int)((LaserBeamPlacement*)t)->unk1A;
+    dz = (f32)(int)((LaserBeamPlacement*)t)->beamLength;
     dz2 = dz * dz;
     sinv = mathCosf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
     cosv = mathSinf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
