@@ -562,13 +562,14 @@ void GameBit_Set(int eventId, int value)
     end = (gGameBitTable[id * 4 + 2] & 0x1f) + start;
     for (i = start; i < end + 1; i++)
     {
+        int shift = i & 7;
         int byteIdx = i >> 3;
         int mask;
         if (byteIdx >= limit)
         {
             break;
         }
-        mask = 1 << (i & 7);
+        mask = 1 << shift;
         if (value & bit)
         {
             base[byteIdx] |= mask;
@@ -1290,7 +1291,7 @@ extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
 
 #pragma peephole off
-#pragma optimization_level 2
+#pragma optimization_level 3
 void askProgressiveScanMode(void)
 {
     u32 counter;
