@@ -1485,7 +1485,10 @@ void snowReposSnowCloud(int cloudId)
         -
             gNewCloudLightningForwardDist * fwd[2];
         lbl_803DD19C = lightningCreate(from, to, gNewCloudLightningRadius, lbl_803DF1BC, 0xf, 0xc0, 0);
-        Sfx_PlayAtPositionFromObject(from[0], from[1], from[2], 0, 0x2c9);
+        {
+            extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
+            Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], 0x2c9);
+        }
         fl = ((u8*)gNewClouds[cloudId])[0x144b];
         if (fl & 8)
         {
