@@ -27,7 +27,7 @@ typedef struct BackpackState {
     int *unk284;
     f32 unk288;
     f32 unk28C;
-    f32 *unk290;
+    f32 *targetPos;
     f32 unk294;
     s16 unk298;
     s16 unk29A;
@@ -48,7 +48,7 @@ STATIC_ASSERT(offsetof(BackpackState, unk27C) == 0x27C);
 STATIC_ASSERT(offsetof(BackpackState, unk284) == 0x284);
 STATIC_ASSERT(offsetof(BackpackState, unk288) == 0x288);
 STATIC_ASSERT(offsetof(BackpackState, unk28C) == 0x28C);
-STATIC_ASSERT(offsetof(BackpackState, unk290) == 0x290);
+STATIC_ASSERT(offsetof(BackpackState, targetPos) == 0x290);
 STATIC_ASSERT(offsetof(BackpackState, unk294) == 0x294);
 STATIC_ASSERT(offsetof(BackpackState, unk298) == 0x298);
 STATIC_ASSERT(offsetof(BackpackState, unk29A) == 0x29A);

@@ -445,7 +445,7 @@ void tumbleweed_updateStateMachine(int obj)
         }
         else if (state == 6)
         {
-            f32* target = ((BackpackState*)aux)->unk290;
+            f32* target = ((BackpackState*)aux)->targetPos;
             f32 vx, vy, vz, d;
             vx = target[0] - ((GameObject*)obj)->anim.localPosX;
             vy = target[1] - ((GameObject*)obj)->anim.localPosY;
@@ -461,16 +461,16 @@ void tumbleweed_updateStateMachine(int obj)
                 ((GameObject*)obj)->anim.velocityY = (k * vy) * ((BackpackState*)aux)->unk294;
                 ((GameObject*)obj)->anim.velocityZ = (k * vz) * ((BackpackState*)aux)->unk294;
             }
-            d = getXZDistance(&((GameObject*)obj)->anim.localPosX, ((BackpackState*)aux)->unk290);
+            d = getXZDistance(&((GameObject*)obj)->anim.localPosX, ((BackpackState*)aux)->targetPos);
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
-            if (getXZDistance(&((GameObject*)obj)->anim.localPosX, ((BackpackState*)aux)->unk290) > d)
+            if (getXZDistance(&((GameObject*)obj)->anim.localPosX, ((BackpackState*)aux)->targetPos) > d)
             {
-                ((GameObject*)obj)->anim.localPosX += ((((BackpackState*)aux)->unk290)[0] - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.localPosX += ((((BackpackState*)aux)->targetPos)[0] - ((GameObject*)obj)->anim.
                     localPosX) * lbl_803E2F98;
-                ((GameObject*)obj)->anim.localPosY += ((((BackpackState*)aux)->unk290)[1] - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.localPosY += ((((BackpackState*)aux)->targetPos)[1] - ((GameObject*)obj)->anim.
                     localPosY) * lbl_803E2F98;
-                ((GameObject*)obj)->anim.localPosZ += ((((BackpackState*)aux)->unk290)[2] - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.localPosZ += ((((BackpackState*)aux)->targetPos)[2] - ((GameObject*)obj)->anim.
                     localPosZ) * lbl_803E2F98;
             }
         }
@@ -482,9 +482,9 @@ void tumbleweed_updateStateMachine(int obj)
             {
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * k;
             }
-            ((GameObject*)obj)->anim.localPosX = (((BackpackState*)aux)->unk290)[0];
-            ((GameObject*)obj)->anim.localPosY = (((BackpackState*)aux)->unk290)[1];
-            ((GameObject*)obj)->anim.localPosZ = (((BackpackState*)aux)->unk290)[2];
+            ((GameObject*)obj)->anim.localPosX = (((BackpackState*)aux)->targetPos)[0];
+            ((GameObject*)obj)->anim.localPosY = (((BackpackState*)aux)->targetPos)[1];
+            ((GameObject*)obj)->anim.localPosZ = (((BackpackState*)aux)->targetPos)[2];
         }
         else
         {
