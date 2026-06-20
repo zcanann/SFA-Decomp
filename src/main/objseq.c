@@ -5022,7 +5022,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         {
             deltaPrev = -deltaPrev;
         }
-        t = (deltaNext + deltaPrev) * lbl_803DF000;
+        deltaPrev = deltaNext + deltaPrev;
+        t = deltaPrev * lbl_803DF000;
         values[2] = t * (f32)(prev->tangentAndMode >> 2);
     }
 
