@@ -832,9 +832,9 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     }
 
     events->rootCurveValid = 0;
-    events->rootDeltaX = gObjAnimProgressZero;
-    events->rootDeltaY = gObjAnimProgressZero;
     events->rootDeltaZ = gObjAnimProgressZero;
+    events->rootDeltaY = gObjAnimProgressZero;
+    events->rootDeltaX = gObjAnimProgressZero;
     eventTable = objAnim->eventTable;
     if (eventTable != NULL)
     {
