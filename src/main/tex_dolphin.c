@@ -803,21 +803,21 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
 {
     u32 shader;
     u32 shaderIdx;
-    u32 uPos;
-    int colorWord2;
-    int colorWord;
     u8 fogRgba[4];
     u8 ambR;
     u8 ambG;
     u8 ambB;
     int fogColorWord;
+    int _base;
+    u32 _bits;
+    u32 uPos;
 
     fogColorWord = gTexShaderFogColor;
     uPos = bitReader[4];
     {
         int _off = (int)uPos >> 3;
-        int _base = *bitReader;
-        u32 _bits = *(u8*)(_base + _off);
+        _base = *bitReader;
+        _bits = *(u8*)(_base + _off);
         _base += _off;
         _bits |= (u32) * (u8*)(_base + 1) << 8;
         _bits |= (u32) * (u8*)(_base + 2) << 16;
@@ -836,8 +836,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         _gxSetFogParams();
         goto LAB_8005F608;
     }
-    colorWord = fogColorWord;
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
+    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
 LAB_8005F608:
     if ((shader != 0) && ((*(u32*)(shader + 0x3c) & 0x80000000) != 0))
     {
@@ -914,8 +913,7 @@ LAB_8005F7FC:
             }
         }
     }
-    colorWord = gTexShaderAmbColor;
-    GXSetChanAmbColor(0, *(GXColor*)&colorWord);
+    GXSetChanAmbColor(0, *(GXColor*)&gTexShaderAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
@@ -926,8 +924,7 @@ LAB_8005F7FC:
 LAB_8005F89C:
     objGetColor(0, &ambR, &ambG, &ambB);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-    colorWord2 = *(int*)&ambR;
-    GXSetChanAmbColor(0, *(GXColor*)&colorWord2);
+    GXSetChanAmbColor(0, *(GXColor*)&ambR);
 LAB_8005F8E4:
     if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
     {
