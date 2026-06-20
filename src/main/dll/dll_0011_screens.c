@@ -547,7 +547,7 @@ void FUN_800e9e9c(void)
     u32 colorIdx;
     int mode;
     u32 extraout_r4;
-    u32 uVar3;
+    u32 saveSize;
     u32 in_r6;
     u32 in_r7;
     u32 in_r8;
@@ -562,7 +562,7 @@ void FUN_800e9e9c(void)
     DAT_803de10c = 0xff;
     DAT_803de104 = 0xffffffff;
     FUN_80042b9c(0, 0, 1);
-    uVar3 = 0x884;
+    saveSize = 0x884;
     FUN_800033a8(-0x7fc5ba0c, 0, 0x884);
     FUN_800176cc();
     FUN_80006770(7);
@@ -571,7 +571,7 @@ void FUN_800e9e9c(void)
     colorIdx = DAT_803a3f28;
     FUN_800176dc((double)(float)(&DAT_803a458c)[colorIdx * 4], (double)(float)(&DAT_803a4590)[colorIdx * 4],
                  (double)(float)(&DAT_803a4594)[colorIdx * 4], in_f4, in_f5, in_f6, in_f7, in_f8,
-                 (int)(char)(&DAT_803a4599)[colorIdx * 0x10], extraout_r4, uVar3, in_r6, in_r7, in_r8, in_r9,
+                 (int)(char)(&DAT_803a4599)[colorIdx * 0x10], extraout_r4, saveSize, in_r6, in_r7, in_r8, in_r9,
                  in_r10);
     mode = FUN_80006b7c();
     if (mode != 4)
