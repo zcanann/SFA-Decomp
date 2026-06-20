@@ -51,6 +51,11 @@ typedef struct
     s16 v[5];
 } SnowClawAnimTbl;
 
+typedef struct
+{
+    u32 w[4];
+} SnowClawPulse4;
+
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
 extern int fn_802972A8(int obj);
@@ -649,14 +654,8 @@ void snowclaw_update(int obj)
 
     if (*(s8*)&((SnowclawState*)inner)->health < 4)
     {
-        pulseTypes[0] = pulseTable[0];
-        pulseTypes[1] = pulseTable[1];
-        pulseTypes[2] = pulseTable[2];
-        pulseTypes[3] = pulseTable[3];
-        pulseModes[0] = pulseTable[4];
-        pulseModes[1] = pulseTable[5];
-        pulseModes[2] = pulseTable[6];
-        pulseModes[3] = pulseTable[7];
+        *(SnowClawPulse4*)pulseTypes = *(SnowClawPulse4*)&pulseTable[0];
+        *(SnowClawPulse4*)pulseModes = *(SnowClawPulse4*)&pulseTable[4];
         pulseIndex = 3 - *(s8*)&((SnowclawState*)inner)->health;
         i = ((SnowclawState*)inner)->tickCounter++;
         if ((i % lbl_803DC220) != 0)
