@@ -480,8 +480,8 @@ int fn_801605A8(short* out, u8* obj)
     *(f32*)(obj + 0x280) = f;
     *(f32*)(obj + 0x284) = f;
     *(s8*)(obj + 0x25f) = 1;
-    out[2] = *(s16*)(obj + 0x19e);
-    out[1] = *(s16*)(obj + 0x19c);
+    out[2] = ((BaddieState*)obj)->spawnRotZ;
+    out[1] = ((BaddieState*)obj)->spawnRotY;
     return 0;
 }
 
@@ -492,8 +492,8 @@ int fn_80160690(short* out, u8* obj)
     *(f32*)(obj + 0x284) = f;
     *(f32*)(obj + 0x2a0) = f;
     *(s8*)(obj + 0x25f) = 1;
-    out[2] = *(s16*)(obj + 0x19e);
-    out[1] = *(s16*)(obj + 0x19c);
+    out[2] = ((BaddieState*)obj)->spawnRotZ;
+    out[1] = ((BaddieState*)obj)->spawnRotY;
     (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
     return 0;
 }
