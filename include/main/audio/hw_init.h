@@ -6,7 +6,7 @@
 void snd_handle_irq(void);
 int hwInit(u32 *sampleRate, u8 valueA, u8 valueB, u32 flags);
 void hwExit(void);
-void hwSetTimeOffset(u8 value);
+void hwSetTimeOffset(int value);
 u8 hwGetTimeOffset(void);
 u32 hwIsActive(u32 slot);
 void hwSetMesgCallback(u32 value);

@@ -113,7 +113,7 @@ void hwExit(void)
     hwEnableIrq();
 }
 
-void hwSetTimeOffset(u8 value)
+void hwSetTimeOffset(int value)
 {
     salTimeOffset = value;
 }
