@@ -1015,41 +1015,20 @@ void modelLightChannels_applyGXControls(void)
             if (entry->mode == 0)
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 1;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 1 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
                               attnFn);
             }
             else if (entry->mode == 2)
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 1;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 1 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
             else
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 0;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 0 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
             activeMask = (activeMask | (1 << channel)) & 0xff;
@@ -1065,7 +1044,7 @@ void modelLightChannels_applyGXControls(void)
     {
         GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
     }
-    if ((activeMask & 1) == 0 && (activeMask & 4) != 0)
+    else if ((activeMask & 1) == 0 && (activeMask & 4) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
     }
@@ -1074,7 +1053,7 @@ void modelLightChannels_applyGXControls(void)
     {
         GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
     }
-    if ((activeMask & 2) == 0 && (activeMask & 8) != 0)
+    else if ((activeMask & 2) == 0 && (activeMask & 8) != 0)
     {
         GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
     }
