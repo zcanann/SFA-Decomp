@@ -1460,7 +1460,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         {
             ret = 5;
         }
-        state->flags = fl & ~0xf00;
+        state->flags = *(u16*)((u8*)state + 0x100) & ~0xf00;
     }
     return ret;
 }
