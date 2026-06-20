@@ -2488,10 +2488,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
             (*(f32*)(cur2 + 0x78) - *(f32*)(prev + 0x78));
         bl = ((SkyState*)gSkyState)->lightBlendFactor;
         pb = prev[0x58];
-        cb = cur2[0x58];
         r = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x58] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2499,10 +2498,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x59];
-        cb = cur2[0x59];
         g = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x59] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2510,10 +2508,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x5a];
-        cb = cur2[0x5a];
         b = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x5a] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2521,10 +2518,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x60];
-        cb = cur2[0x60];
         c01 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x60] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2532,10 +2528,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x61];
-        cb = cur2[0x61];
         c02 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x61] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2543,10 +2538,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x62];
-        cb = cur2[0x62];
         c03 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x62] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2554,10 +2548,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x68];
-        cb = cur2[0x68];
         c11 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x68] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2565,10 +2558,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x69];
-        cb = cur2[0x69];
         c12 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x69] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2576,10 +2568,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0x6a];
-        cb = cur2[0x6a];
         c13 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0x6a] - (f32)(u32)
         pb
         )
         +(f32)(u32)
@@ -2587,10 +2578,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
         )
         ;
         pb = prev[0xa0];
-        cb = cur2[0xa0];
         c2 = (int)
         (bl * ((f32)(u32)
-        cb - (f32)(u32)
+        cur2[0xa0] - (f32)(u32)
         pb
         )
         +(f32)(u32)
