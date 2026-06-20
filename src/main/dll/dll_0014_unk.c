@@ -2374,11 +2374,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                         gb = *(u8*)(linked + 3);
                         if (ga < gb)
                         {
-                            pairId = ((u16)gb << 8) | ga;
+                            pairId = (gb << 8) | ga;
                         }
                         else
                         {
-                            pairId = ((u16)ga << 8) | gb;
+                            pairId = (ga << 8) | gb;
                         }
 
                         found = 1;
@@ -2399,10 +2399,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                         {
                             back = 0;
                             myId = *(s32*)(curve + 0x14);
-                            if (*(s32*)(linked + 0x1c) != myId &&
-                                (back = 1, *(s32*)(linked + 0x20) != myId) &&
-                                (back = 2, *(s32*)(linked + 0x24) != myId) &&
-                                (back = 3, *(s32*)(linked + 0x28) != myId))
+                            if (*(u32*)(linked + 0x1c) != (u32)myId &&
+                                (back = 1, *(u32*)(linked + 0x20) != (u32)myId) &&
+                                (back = 2, *(u32*)(linked + 0x24) != (u32)myId) &&
+                                (back = 3, *(u32*)(linked + 0x28) != (u32)myId))
                             {
                                 back = 4;
                             }
