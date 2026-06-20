@@ -90,12 +90,12 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 {
     extern u32 mapBlockFn_80060678(int* block); /* #57 */
     extern void* mapBlockFn_800606ec(int* obj, int idx); /* #57 */
-    u16 blockEnd;
+    int blockEnd;
     u16* mapBlock;
     int blockLayer;
     int coordOffset;
     VertexS16* vtx;
-    u32 triangle;
+    int triangle;
     int triangleOffset;
     int edge;
     int edgeOffset;
@@ -114,9 +114,9 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
             *(s16*)(state->unk14 + coordOffset) = ((MapBlockHdr*)mapBlock)->posB;
             coordOffset += 2;
             blockEnd = mapBlock[10];
-            triangle = (u32) * mapBlock;
+            triangle = *mapBlock;
             edgeOffset = triangleOffset;
-            for (; triangle < (int)(u32)blockEnd; triangle++)
+            for (; triangle < blockEnd; triangle++)
             {
                 mapBlock = fn_800606DC((int*)block, triangle);
                 vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32) * mapBlock * 6);
