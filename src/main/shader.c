@@ -2376,7 +2376,7 @@ void mapLoadUnloadObjects(int flag)
     {
         for (i = 0; i < 80; i++)
         {
-            if (*(int*)(base + i * 4 + 0x83A8) != 0)
+            if (((int*)(base + 0x83A8))[i] != 0)
             {
                 bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
@@ -2386,7 +2386,7 @@ void mapLoadUnloadObjects(int flag)
                     {
                         if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, b) == -1)
                         {
-                            mapInstantiateObjects(*(char**)(base + i * 4 + 0x83A8), i, b, 0);
+                            mapInstantiateObjects(((char**)(base + 0x83A8))[i], i, b, 0);
                             mapClearBit(i, b);
                         }
                         bits >>= 1;
