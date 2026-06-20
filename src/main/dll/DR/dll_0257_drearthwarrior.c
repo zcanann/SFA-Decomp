@@ -1040,9 +1040,11 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     *(s16*)((char*)p2 + 0x278) = 0;
     q->unk404 = lbl_803E82E8;
     {
+        f32 a;
         f32 ph = (((BaddieState*)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
-        f32 a = q->unk404 - lbl_803E833C;
-        f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
+        f32 t;
+        a = q->unk404 - lbl_803E833C;
+        t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         q->unk408 = a * (t * q->unk840);
     }
     ((BaddieState*)p2)->animSpeedC += interpolate(q->unk408 - ((BaddieState*)p2)->animSpeedC, q->unk438, timeDelta);
