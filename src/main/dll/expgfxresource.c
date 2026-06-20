@@ -56,7 +56,7 @@ int expgfx_acquireResourceEntry(int resourceId)
         entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->resource != NULL && resourceId == entry->resourceId)
         {
-            resourceHandle = (ExpgfxResourceHandle*)EXPGFX_RUNTIME_DATA->resourceTable[i].resource;
+            resourceHandle = (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout *)(int)gExpgfxRuntimeData)->resourceTable[i].resource;
             if (resourceHandle != NULL &&
                 resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT)
             {
@@ -72,7 +72,7 @@ int expgfx_acquireResourceEntry(int resourceId)
         if (entry->resource == NULL)
         {
             EXPGFX_RUNTIME_DATA->resourceTable[i].resource = textureLoadAsset(resourceId);
-            resourceHandle = (ExpgfxResourceHandle*)EXPGFX_RUNTIME_DATA->resourceTable[i].resource;
+            resourceHandle = (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout *)(int)gExpgfxRuntimeData)->resourceTable[i].resource;
             if (resourceHandle != NULL &&
                 resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT)
             {
