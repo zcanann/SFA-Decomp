@@ -41,7 +41,6 @@ extern void Obj_StartModelFadeIn(int* obj, int frames);
 extern void Obj_ResetModelColorState(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
