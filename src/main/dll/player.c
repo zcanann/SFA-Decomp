@@ -8222,7 +8222,7 @@ void playerDoHitDetection(int obj)
             }
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= 2LL;
-        if (((PlayerState*)inner)->unk7F0 != 0 &&
+        if ((void*)((PlayerState*)inner)->unk7F0 != NULL &&
             ((((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
