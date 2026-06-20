@@ -433,7 +433,7 @@ void pressureswitchfb_update(int obj)
         {
             Sfx_StopObjectChannel(obj, 8);
         }
-        if (((((PressureswitchfbPlacement*)def)->unk1E != 0) && ((tmp = (int)getTrickyObject()) != 0)) &&
+        if (((((PressureswitchfbPlacement*)def)->unk1E != 0) && ((char*)(tmp = (int)getTrickyObject()) != NULL)) &&
             (GameBit_Get(((PressureswitchfbPlacement*)def)->unk1A) == 0))
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
