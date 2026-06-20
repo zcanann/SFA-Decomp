@@ -551,21 +551,21 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     u16 setupId;
     short setupSub1;
     short setupSub2;
-    float local_20;
-    float local_1c;
-    float local_18;
-    float local_14;
+    float vecW;
+    float vecBase;
+    float vec2;
+    float vec3;
 
     src = (short*)FUN_80017a90();
-    local_1c = lbl_803E42B0;
+    vecBase = lbl_803E42B0;
     if ((*(char*)(param_10 + 0x10) == '\0') && (src != 0x0))
     {
         *(float*)(param_9 + 0x24) = lbl_803E42B0;
-        *(float*)(param_9 + 0x28) = local_1c;
+        *(float*)(param_9 + 0x28) = vecBase;
         *(float*)(param_9 + 0x2c) = lbl_803E42B4;
-        local_18 = local_1c;
-        local_14 = local_1c;
-        local_20 = lbl_803E42B8;
+        vec2 = vecBase;
+        vec3 = vecBase;
+        vecW = lbl_803E42B8;
         setupSub2 = src[2];
         setupSub1 = src[1];
         indexBase = FUN_801365ac((int)src);
