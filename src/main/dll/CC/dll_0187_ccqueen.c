@@ -10,7 +10,6 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
-extern f32 timeDelta;
 extern u32 ObjHits_DisableObject();
 extern u32 dll_2E_func03();
 extern void dll_2E_func06(int* obj, void* state, int flags);
