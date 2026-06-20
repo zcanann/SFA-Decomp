@@ -3038,8 +3038,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
         }
         if (found == NULL)
         {
-            int t = ret;
-            t = (t >= 0) ? t : -t;
+            int t = (s16)ret;
+            if (t < 0)
+            {
+                t = -t;
+            }
             return (s16)(t < 0x100);
         }
 
