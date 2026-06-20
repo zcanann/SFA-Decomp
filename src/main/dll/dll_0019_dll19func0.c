@@ -118,36 +118,36 @@ extern u8 framesThisStep;
 
 void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
 {
-    float fVar1;
-    float* pfVar2;
-    int iVar3;
-    double dVar4;
+    float distBias;
+    float* params;
+    int target;
+    double dist;
     double dVar5;
-    double dVar6;
+    double aimZ;
     double dVar7;
-    double dVar8;
-    u64 uVar9;
+    double aimX;
+    u64 ctx;
 
-    uVar9 = FUN_8028683c();
-    pfVar2 = DAT_803de1fc;
-    iVar3 = (int)((u64)uVar9 >> 0x20);
-    dVar7 = (double)(*(float*)(iVar3 + 0x18) - *DAT_803de1fc);
-    dVar5 = (double)(*(float*)(iVar3 + 0x20) - DAT_803de1fc[2]);
-    dVar4 = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
+    ctx = FUN_8028683c();
+    params = DAT_803de1fc;
+    target = (int)((u64)ctx >> 0x20);
+    dVar7 = (double)(*(float*)(target + 0x18) - *DAT_803de1fc);
+    dVar5 = (double)(*(float*)(target + 0x20) - DAT_803de1fc[2]);
+    dist = FUN_80293900((double)(float)(dVar7 * dVar7 + (double)(float)(dVar5 * dVar5)));
     FUN_80017730();
-    dVar8 = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *pfVar2);
-    dVar6 = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + pfVar2[2]);
+    aimX = (double)((float)(dVar7 * (double)DAT_803de1fc[0x11]) + *params);
+    aimZ = (double)((float)(dVar5 * (double)DAT_803de1fc[0x11]) + params[2]);
     dVar5 = (double)FUN_80293f90();
     dVar7 = (double)FUN_80294964();
-    if (dVar4 < (double)DAT_803de1fc[0x10])
+    if (dist < (double)DAT_803de1fc[0x10])
     {
-        dVar4 = (double)DAT_803de1fc[0x10];
+        dist = (double)DAT_803de1fc[0x10];
     }
-    fVar1 = DAT_803de1fc[4];
-    *(float*)uVar9 = (float)(dVar5 * (double)(float)(dVar4 + (double)fVar1) + dVar8);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(iVar3 + 0x1c)) - pfVar2[1]) -
-        (*(float*)(iVar3 + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dVar4 + (double)fVar1) + dVar6);
+    distBias = DAT_803de1fc[4];
+    *(float*)ctx = (float)(dVar5 * (double)(float)(dist + (double)distBias) + aimX);
+    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - params[1]) -
+        (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
+    *param_4 = (float)(dVar7 * (double)(float)(dist + (double)distBias) + aimZ);
     FUN_80286888();
     return;
 }
