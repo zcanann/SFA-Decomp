@@ -813,15 +813,15 @@ void gameBitFn_800ea2e0(u8 id)
     mask = 1 << (id % 32);
     bank = (s16)(((u32)id >> 5) + 0x12f);
     bits = GameBit_Get(bank);
-    if ((bits & mask) == 0)
+    if ((bits & mask) != 0)
+    {
+        wasNew = 0;
+    }
+    else
     {
         bits |= mask;
         GameBit_Set(bank, bits);
         wasNew = 1;
-    }
-    else
-    {
-        wasNew = 0;
     }
 
     if (wasNew)
