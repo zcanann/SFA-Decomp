@@ -259,16 +259,16 @@ typedef struct PlayerState {
     f32 unk77C;
     u8 pad780[0x784 - 0x780];
     f32 verticalVel; /* vertical velocity factor applied as anim.velocityY = verticalVel*fv; has dedicated get/set (fn_80296220), drives climb/descend move progress */
-    f32 aimScreenY; /* aim-cursor screen Y (centered at halfH), driven by stick unk7B8; unprojected to a world aim direction */
-    f32 aimScreenX; /* aim-cursor screen X (centered at halfW), driven by stick unk7BC; unprojected to a world aim direction */
+    f32 aimScreenY; /* aim-cursor screen Y (centered at halfH), driven by stick aimInputX; unprojected to a world aim direction */
+    f32 aimScreenX; /* aim-cursor screen X (centered at halfW), driven by stick aimInputZ; unprojected to a world aim direction */
     u8 pad790[0x79C - 0x790];
     f32 knockbackTimer; /* knockback/stagger countdown (-= timeDelta*knockbackDrainRate); set on knock moves, gates knock FX/sfx (0x394/0x395) while >0, reset to 0 on expiry */
     f32 knockbackHitTimer; /* periodic countdown during knockback drag (-= timeDelta); on expiry fires an ObjHits position-hit and reloads */
     f32 knockbackDrainRate; /* drain multiplier for knockbackTimer (-= timeDelta*this); tracks velocity magnitude, clamped to a range */
     u8 unk7A8;
     u8 pad7A9[0x7B8 - 0x7A9];
-    f32 unk7B8;
-    f32 unk7BC;
+    f32 aimInputX; /* smoothed aim-stick X (eased from baddie.moveInputX, clamped); drives aimScreenY and the world aim direction */
+    f32 aimInputZ; /* smoothed aim-stick Z (eased from baddie.moveInputZ, clamped); drives aimScreenX and the world aim direction */
     u8 pad7C0[0x7C8 - 0x7C0];
     f32 unk7C8;
     f32 unk7CC;
