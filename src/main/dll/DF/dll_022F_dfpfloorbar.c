@@ -18,7 +18,6 @@
 #include "main/audio/sfx.h"
 extern f32 lbl_803E6408;
 
-extern f32 timeDelta;
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
