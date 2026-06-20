@@ -2989,11 +2989,11 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x100)
                 {
-                    ((ModgfxEffectSlot*)eff)->unk106 = ((ModgfxEffectSlot*)eff)->unk106 + (int)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->unk106 += (s16)(*(f32*)(E9 + emOff +
                         0x4) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->unk108 = ((ModgfxEffectSlot*)eff)->unk108 + (int)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->unk108 += (s16)(*(f32*)(E9 + emOff +
                         0x8) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->unk10A = ((ModgfxEffectSlot*)eff)->unk10A + (int)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->unk10A += (s16)(*(f32*)(E9 + emOff +
                         0xc) * gModgfxMotionStep);
                 }
                 if (*(int*)(E9 + emOff) & 0x80)
