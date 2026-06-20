@@ -377,12 +377,12 @@ void shopitem_update(int obj)
 
 void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 {
+    int slot;
     int state = *(int*)&((GameObject*)obj)->extra;
+    u8 i;
     u8 spawned = 0;
     ShopSparkleSpawn v;
     PushcartState97* b = (PushcartState97*)(state + 0xE8);
-    u8 i;
-    int slot;
     f32 scale;
 
     if (b->flag_40)
