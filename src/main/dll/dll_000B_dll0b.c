@@ -2568,24 +2568,28 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
         return;
     }
 animate:
-    ((f32*)((char*)state + 0xac))[k + 1] =
-        ((f32*)((char*)state + 0xac))[k + 1] +
-        ((f32*)((char*)state + 0xac))[k] * gModgfxMotionStep;
-    if (((f32*)((char*)state + 0xac))[k + 1] < lbl_803DF430)
     {
-        ((f32*)((char*)state + 0xac))[k + 1] = lbl_803DF430;
-    }
-    else if (((f32*)((char*)state + 0xac))[k + 1] > gModgfxColorClampMax)
-    {
-        ((f32*)((char*)state + 0xac))[k + 1] = gModgfxColorClampMax;
-    }
-    {
-        int ofs = k * 4 + 0xb0;
-        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+        int k4 = k * 4;
+        char* kb = (char*)state + k4;
+        *(f32*)(kb + 0xb0) =
+            *(f32*)(kb + 0xb0) +
+            *(f32*)(kb + 0xac) * gModgfxMotionStep;
+        if (*(f32*)(kb + 0xb0) < lbl_803DF430)
         {
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + ofs);
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
-                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            *(f32*)(kb + 0xb0) = lbl_803DF430;
+        }
+        else if (*(f32*)(kb + 0xb0) > gModgfxColorClampMax)
+        {
+            *(f32*)(kb + 0xb0) = gModgfxColorClampMax;
+        }
+        {
+            int ofs = k4 + 0xb0;
+            for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+            {
+                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + ofs);
+                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
+                    bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            }
         }
     }
 }
