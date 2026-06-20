@@ -38,6 +38,7 @@ extern void Obj_FreeObject(int obj);
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 extern u32 lbl_803E6450;
 extern u32 lbl_803E6454;
+typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
 extern f32 timeDelta;
 extern f32 lbl_803E6458;
 extern f32 lbl_803E645C;
@@ -540,8 +541,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
     int handleOffset;
     s16* ringIds;
 
-    ringIdWords[0] = lbl_803E6450;
-    ringIdWords[1] = lbl_803E6454;
+    *(RingIdPair*)ringIdWords = *(RingIdPair*)&lbl_803E6450;
 
     if (Obj_IsLoadingLocked() == 0)
     {
