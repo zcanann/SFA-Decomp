@@ -3630,13 +3630,13 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         case 0x38c:
                             Music_Trigger(0x97, 1);
                             GameBit_Set(0xc1f, 0);
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x3f0;
-                            ((PlayerState*)inner)->unk6EC = 3;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x3f0;
+                            ((PlayerState*)inner)->moveSequenceFlags = 3;
                             ObjAnim_SetCurrentMove(obj, 0x17, lbl_803E7EA4, 1);
                             break;
                         case 0x8c:
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x408;
-                            ((PlayerState*)inner)->unk6EC = 4;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x408;
+                            ((PlayerState*)inner)->moveSequenceFlags = 4;
                             ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
                             if ((u32)getSbGalleon() != 0)
                             {
@@ -3647,27 +3647,27 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                             break;
                         case 0x416:
                             Music_Trigger(0xd5, 1);
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x438;
-                            ((PlayerState*)inner)->unk6EC = 8;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x438;
+                            ((PlayerState*)inner)->moveSequenceFlags = 8;
                             ObjAnim_SetCurrentMove(obj, *(s16*)(tbl + 0x438), lbl_803E7EA4, 1);
                             break;
                         case 0x419:
                             Music_Trigger(0xe6, 1);
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x408;
-                            ((PlayerState*)inner)->unk6EC = 4;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x408;
+                            ((PlayerState*)inner)->moveSequenceFlags = 4;
                             ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
                             break;
                         case 0x484:
                             Music_Trigger(0xe6, 1);
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x420;
-                            ((PlayerState*)inner)->unk6EC = 4;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x420;
+                            ((PlayerState*)inner)->moveSequenceFlags = 4;
                             ObjAnim_SetCurrentMove(obj, 0xf8, lbl_803E7EA4, 1);
                             break;
                         default:
                             Music_Trigger(0x1f, 1);
                         case 0x714:
-                            ((PlayerState*)inner)->unk6E8 = tbl + 0x420;
-                            ((PlayerState*)inner)->unk6EC = 4;
+                            ((PlayerState*)inner)->moveSequence = tbl + 0x420;
+                            ((PlayerState*)inner)->moveSequenceFlags = 4;
                             ObjAnim_SetCurrentMove(obj, 0xf8, lbl_803E7EA4, 1);
                         }
                         if (arrayIndexOf((void*)(tbl + 0x160), 4, *(s16*)(va + 0x46)) != -1)
@@ -3695,7 +3695,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 obj2 = ((PlayerState*)inner)->focusObject;
                 (*gCameraInterface)->setFocus((void*)obj2, 0);
                 (*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
-                ((PlayerState*)inner)->unk6E8 = 0;
+                ((PlayerState*)inner)->moveSequence = 0;
                 if ((u32)obj2 != 0 && ((GameObject*)obj2)->anim.seqId == 0x22)
                 {
                     (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner,
@@ -6005,7 +6005,7 @@ int fn_8029F108(int obj, int state)
         inner->yaw = inner->targetYaw;
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotZ = 0;
-        ObjAnim_SetCurrentMove(obj, ((s16*)inner->unk6E8)[n], lbl_803E7EA4, 1);
+        ObjAnim_SetCurrentMove(obj, ((s16*)inner->moveSequence)[n], lbl_803E7EA4, 1);
         joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4,
                                       ((GameObject*)obj)->anim.rootMotionScale, pos1, ang);
@@ -9539,13 +9539,13 @@ int fn_8029F6E4(int obj, int state)
     {
         if (*(void**)((char*)inner + 0x6e8) == NULL)
         {
-            inner->unk6E8 = (int)lbl_803332B0;
+            inner->moveSequence = (int)lbl_803332B0;
         }
-        ObjAnim_SetCurrentMove(obj, *(s16*)(inner->unk6E8 + 0x2),
+        ObjAnim_SetCurrentMove(obj, *(s16*)(inner->moveSequence + 0x2),
                                lbl_803E7EA4, 0);
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7EA4, lbl_803E7EA4, NULL);
     }
-    if ((inner->unk6EC & 0x4) != 0)
+    if ((inner->moveSequenceFlags & 0x4) != 0)
     {
         ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, *(f32*)((char*)sub + 0x98));
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EA4;
@@ -9563,7 +9563,7 @@ int fn_8029F6E4(int obj, int state)
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C * ret + lbl_803E7EF8;
         }
     }
-    if ((inner->unk6EC & 0x1) != 0)
+    if ((inner->moveSequenceFlags & 0x1) != 0)
     {
         (*(void (*)(int, f32*, int*))(*(int*)((char*)*(int*)*(int*)((char*)sub + 0x68) + 0x40)))(
             (int)sub, &a, &b);
@@ -9575,15 +9575,15 @@ int fn_8029F6E4(int obj, int state)
         if (b != 0)
         {
             Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj,
-                                                *(s16*)(inner->unk6E8 + 0xa), blend);
+                                                *(s16*)(inner->moveSequence + 0xa), blend);
         }
         else
         {
             Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj,
-                                                *(s16*)(inner->unk6E8 + 0x8), blend);
+                                                *(s16*)(inner->moveSequence + 0x8), blend);
         }
     }
-    else if ((inner->unk6EC & 0x8) != 0)
+    else if ((inner->moveSequenceFlags & 0x8) != 0)
     {
         (*(void (*)(int, f32*, int*))(*(int*)((char*)*(int*)*(int*)((char*)sub + 0x68) + 0x40)))(
             (int)sub, &c, &d);
@@ -9593,7 +9593,7 @@ int fn_8029F6E4(int obj, int state)
         inner->bodyLeanHalf = inner->bodyLeanAngle / 2;
         inner->headPitch = inner->bodyLeanAngle / 2;
     }
-    if ((inner->unk6EC & 0x1) != 0)
+    if ((inner->moveSequenceFlags & 0x1) != 0)
     {
         ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
                                OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
@@ -15326,8 +15326,8 @@ int fn_8029FA24(int obj, int state, f32 fv)
         switch (*(s16*)((char*)sub + 0x46))
         {
         case 0x72:
-            inner->unk6E8 = (int)(base + 0x3f0);
-            inner->unk6EC = 3;
+            inner->moveSequence = (int)(base + 0x3f0);
+            inner->moveSequenceFlags = 3;
             if (coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0x13)
             {
                 GameBit_Set(0xf0a, 1);
@@ -15336,30 +15336,30 @@ int fn_8029FA24(int obj, int state, f32 fv)
                 0x45, 1, 0, 0, NULL, 0, 0xff);
             break;
         case 0x38c:
-            inner->unk6E8 = (int)(base + 0x3f0);
-            inner->unk6EC = 3;
+            inner->moveSequence = (int)(base + 0x3f0);
+            inner->moveSequenceFlags = 3;
             (*gCameraInterface)->setFocus((void*)sub, 0);
             (*gCameraInterface)->setMode(
                 0x45, 1, 0, 0, NULL, 0, 0xff);
             break;
         case 0x419:
-            inner->unk6E8 = (int)(base + 0x420);
+            inner->moveSequence = (int)(base + 0x420);
             (*gCameraInterface)->setMode(
                 0x53, 1, 0, 0, NULL, 0x2d, 0xff);
             break;
         case 0x416:
-            inner->unk6E8 = (int)(base + 0x438);
-            inner->unk6EC = 8;
+            inner->moveSequence = (int)(base + 0x438);
+            inner->moveSequenceFlags = 8;
             (*gCameraInterface)->setFocus((void*)sub, 0);
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x69, 0);
             break;
         case 0x8c:
-            inner->unk6E8 = (int)(base + 0x408);
-            inner->unk6EC = 4;
+            inner->moveSequence = (int)(base + 0x408);
+            inner->moveSequenceFlags = 4;
             break;
         default:
-            inner->unk6E8 = (int)(base + 0x420);
-            inner->unk6EC = 4;
+            inner->moveSequence = (int)(base + 0x420);
+            inner->moveSequenceFlags = 4;
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x1d, 0);
             break;
         }
@@ -15379,7 +15379,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         }
         inner->targetYaw = *(s16*)((char*)sub + 0x0);
         inner->yaw = inner->targetYaw;
-        ObjAnim_SetCurrentMove(obj, ((s16*)inner->unk6E8)[sel],
+        ObjAnim_SetCurrentMove(obj, ((s16*)inner->moveSequence)[sel],
                                lbl_803E7EA4, 4);
         joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale,
@@ -15425,7 +15425,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0 && *(s8*)&((PlayerState*)state)->baddie.moveDone !=
         0)
     {
-        ObjAnim_SetCurrentMove(obj, *(s16*)inner->unk6E8, lbl_803E7EA4, 1);
+        ObjAnim_SetCurrentMove(obj, *(s16*)inner->moveSequence, lbl_803E7EA4, 1);
         (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 2);
         if (arrayIndexOf((s16*)(base + 0x160), 4, *(s16*)((char*)sub + 0x46)) != -1)
         {

@@ -248,8 +248,8 @@ typedef struct PlayerState {
     u16 buttonsJustPressed;
     u16 buttonsJustPressedIfNotBusy;
     u8 pad6E6[0x6E8 - 0x6E6];
-    int unk6E8;
-    u8 unk6EC;
+    int moveSequence; /* pointer to the active s16 move/anim descriptor (entries at +2/+8/+a) */
+    u8 moveSequenceFlags; /* behavior bits 0x1/0x4/0x8 selecting blend/progress handling */
     u8 pad6ED[0x768 - 0x6ED];
     f32 savedPosX;
     f32 savedPosY;
