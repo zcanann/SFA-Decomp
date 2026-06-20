@@ -230,11 +230,13 @@ void fn_80154328(int obj, int p)
             ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.velocityZ
             * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
         {
-            Sfx_PlayAtPositionFromObject(stk.pos[0], stk.pos[1], stk.pos[2], obj, SFXstaff_proj_putaway);
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(
+                obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
         }
     }
 }
 
+#pragma optimization_level 1
 void fn_801544E8(int obj, u8* state, int p3, int p4)
 {
     if (p4 == 17 || p4 == 16) return;
@@ -251,6 +253,7 @@ void fn_801544E8(int obj, u8* state, int p3, int p4)
         *(int*)&((BaddieState*)state)->reactionFlags |= 16;
     }
 }
+#pragma optimization_level reset
 
 void fn_801542AC(int unused, u8* state)
 {
