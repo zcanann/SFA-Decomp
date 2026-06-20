@@ -694,36 +694,36 @@ u32 FUN_8005d06c(void)
 
 void FUN_8005d0ac(int param_1)
 {
-    u32* puVar1;
+    u32* settings;
 
-    puVar1 = FUN_800e87a8();
+    settings = FUN_800e87a8();
     if (param_1 == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffbf;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf7;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf7;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x40;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 8;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) | 8;
     }
     return;
 }
 
 void FUN_8005d17c(int param_1)
 {
-    u32* puVar1;
+    u32* settings;
 
-    puVar1 = FUN_800e87a8();
+    settings = FUN_800e87a8();
     if (param_1 == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffaf;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf6;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf6;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x50;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 9;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) | 9;
     }
     return;
 }
