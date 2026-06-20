@@ -84,7 +84,7 @@ void magicdust_update(int obj)
     int state;
     double dVar9;
     char fxArg;
-    u8 burstArg[3];
+    u8 burstArg[1];
     int msg[1];
     f32 dist;
 
