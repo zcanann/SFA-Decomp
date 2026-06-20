@@ -108,15 +108,15 @@ void dim2icicle_update(int obj)
         {
             break;
         }
-        ((Dim2IcicleState*)sub)->unk4 = randomGetRange(0x320, 0x4b0);
+        ((Dim2IcicleState*)sub)->wobbleRotY = randomGetRange(0x320, 0x4b0);
         ((Dim2IcicleState*)sub)->mode = 3;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
     case 3:
-        ((GameObject*)obj)->anim.rotY = ((Dim2IcicleState*)sub)->unk4;
-        ((Dim2IcicleState*)sub)->unk4 = (f32)((Dim2IcicleState*)sub)->unk4 * lbl_803E4B6C;
+        ((GameObject*)obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
+        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * lbl_803E4B6C;
         if (((GameObject*)obj)->anim.rotY >= 10)
         {
             break;
@@ -126,7 +126,7 @@ void dim2icicle_update(int obj)
         ((Dim2IcicleState*)sub)->timer = 0x3c;
         break;
     case 1:
-        if (((Dim2IcicleState*)sub)->unk7 == 0)
+        if (((Dim2IcicleState*)sub)->dropTargetFound == 0)
         {
             int n;
             int i;
@@ -145,7 +145,7 @@ void dim2icicle_update(int obj)
             }
             if (lbl_803E4B70 != ((Dim2IcicleState*)sub)->dropY)
             {
-                ((Dim2IcicleState*)sub)->unk7 = 1;
+                ((Dim2IcicleState*)sub)->dropTargetFound = 1;
             }
         }
         if (((Dim2IcicleState*)sub)->timer > 0)
