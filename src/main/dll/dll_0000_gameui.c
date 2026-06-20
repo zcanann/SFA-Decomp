@@ -3253,7 +3253,7 @@ void pauseMenuFn_80129ee0(void)
                 u8 k;
                 for (k = 0; k < 0x28; k++)
                 {
-                    if (hud->textures3A8[k] != 0)
+                    if ((void*)hud->textures3A8[k] != NULL)
                     {
                         textureFree((void*)hud->textures3A8[k]);
                         hud->textures3A8[k] = 0;
