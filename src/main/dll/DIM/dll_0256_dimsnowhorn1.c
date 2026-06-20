@@ -1240,7 +1240,6 @@ void DIMSnowHorn1_update(int obj)
     char* found;
     int inner;
     char* p2;
-    s16 d;
     u32 flip;
     int flags;
 
