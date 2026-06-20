@@ -433,6 +433,8 @@ void tumbleweed_updateStateMachine(int obj)
         }
         else if (state == 4)
         {
+            extern int ObjMsg_Pop(void *obj, u32 *outMessage, u32 *outSender, u32 *outParam);
+
             while (ObjMsg_Pop((void*)obj, &popMsg, 0, 0) != 0)
             {
                 if (popMsg == 0x7000b)
