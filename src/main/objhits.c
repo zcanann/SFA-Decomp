@@ -893,8 +893,8 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
     int maxGap;
     int index;
     int insertIndex;
-    ObjHitsSweepEntry* entry;
     ObjHitsSweepEntry* prevEntry;
+    ObjHitsSweepEntry* entry;
 
     gap = 1;
     maxGap = (entryCount - 1) / 9;
