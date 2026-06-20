@@ -587,9 +587,10 @@ int depthReadRequestPoll(int x, int y, int requestKey)
             p->key = requestKey;
             gDepthReadPendingCount++;
         }
+        i = 0;
         p = (DepthReadRequest*)&gDepthReadResults;
         n = gDepthReadResultCount;
-        for (i = 0; (u32)i < n; i++) {
+        for (; (u32)i < n; i++) {
             if (requestKey == p->key) {
                 return ((DepthReadRequest*)&gDepthReadResults)[i].value;
             }
