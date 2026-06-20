@@ -730,17 +730,18 @@ void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
     } buf;
     GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_803135C8;
+    void* tex = tex;
     int ctx;
     e[0].layer = 0;
     e[0].flags = 0x15;
-    e[0].tex = &base[432];
+    e[0].tex = tex;
     e[0].mode = 4;
     e[0].x = lbl_803E09E0;
     e[0].y = lbl_803E09E0;
     e[0].z = lbl_803E09E0;
     e[1].layer = 0;
     e[1].flags = 0x15;
-    e[1].tex = &base[432];
+    e[1].tex = tex;
     e[1].mode = 2;
     e[1].x = lbl_803E09E4;
     e[1].y = lbl_803E09E8;
@@ -761,7 +762,7 @@ void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[3].z = lbl_803E09E0;
     e[4].layer = 1;
     e[4].flags = 0x15;
-    e[4].tex = &base[432];
+    e[4].tex = tex;
     e[4].mode = 0x4000;
     e[4].x = lbl_803E09E0;
     e[4].y = lbl_803E09F4;
@@ -775,7 +776,7 @@ void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].z = lbl_803E09F8;
     e[6].layer = 2;
     e[6].flags = 0x15;
-    e[6].tex = &base[432];
+    e[6].tex = tex;
     e[6].mode = 0x4000;
     e[6].x = lbl_803E09E0;
     e[6].y = lbl_803E09F4;
@@ -796,7 +797,7 @@ void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[8].z = lbl_803E09E0;
     e[9].layer = 3;
     e[9].flags = 0x15;
-    e[9].tex = &base[432];
+    e[9].tex = tex;
     e[9].mode = 0x4000;
     e[9].x = lbl_803E09E0;
     e[9].y = lbl_803E09F4;
