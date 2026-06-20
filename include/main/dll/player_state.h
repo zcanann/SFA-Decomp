@@ -300,7 +300,7 @@ typedef struct PlayerState {
     f32 unk820;
     f32 unk824;
     f32 unk828;
-    f32 unk82C;
+    f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 unk830;
     f32 unk834;
     f32 unk838;

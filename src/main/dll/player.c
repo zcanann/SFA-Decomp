@@ -1889,11 +1889,11 @@ int fn_802A5384(int obj, int state)
                 ((PlayerState*)state)->baddie.animSpeedA =
                     ((PlayerState*)state)->baddie.animSpeedA +
                     interpolate(nx - ((PlayerState*)state)->baddie.animSpeedA,
-                                ((PlayerState*)inner)->unk82C, timeDelta);
+                                ((PlayerState*)inner)->targetAnimSpeed, timeDelta);
                 ((PlayerState*)state)->baddie.animSpeedB =
                     ((PlayerState*)state)->baddie.animSpeedB +
                     interpolate(ya - ((PlayerState*)state)->baddie.animSpeedB,
-                                ((PlayerState*)inner)->unk82C, timeDelta);
+                                ((PlayerState*)inner)->targetAnimSpeed, timeDelta);
             }
             spd = ((PlayerState*)state)->baddie.animSpeedB;
             spd = (spd < lbl_803E7EA4) ? -spd : spd;
@@ -2023,7 +2023,7 @@ int fn_802A5384(int obj, int state)
                         ((PlayerState*)state)->baddie.animSpeedA +
                         interpolate(((PlayerState*)state)->baddie.animSpeedC -
                                     ((PlayerState*)state)->baddie.animSpeedA,
-                                    ((PlayerState*)inner)->unk82C, timeDelta);
+                                    ((PlayerState*)inner)->targetAnimSpeed, timeDelta);
                 }
             }
             dir = 0;
@@ -7080,7 +7080,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         ((PlayerState*)inner)->unk42C = b;
         ((PlayerState*)inner)->unk430 = a;
         ((PlayerState*)inner)->unk434 = b;
-        ((PlayerState*)inner)->unk82C = c;
+        ((PlayerState*)inner)->targetAnimSpeed = c;
         ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * c;
     }
     else
@@ -7091,7 +7091,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         ((PlayerState*)inner)->unk42C = b;
         ((PlayerState*)inner)->unk430 = a;
         ((PlayerState*)inner)->unk434 = b;
-        ((PlayerState*)inner)->unk82C = b;
+        ((PlayerState*)inner)->targetAnimSpeed = b;
         ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * b;
     }
     {
@@ -7598,7 +7598,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         t = (spd < (t = lbl_803E7EA4))
                 ? t
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
-        if (lbl_803E7EE0 == ((PlayerState*)inner)->unk82C)
+        if (lbl_803E7EE0 == ((PlayerState*)inner)->targetAnimSpeed)
         {
             ((PlayerState*)inner)->unk438 = lbl_803E7F44;
         }
@@ -7750,7 +7750,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     ((PlayerState*)state)->baddie.animSpeedA =
         ((PlayerState*)state)->baddie.animSpeedA -
-        interpolate(((PlayerState*)state)->baddie.animSpeedA, ((PlayerState*)inner)->unk82C,
+        interpolate(((PlayerState*)state)->baddie.animSpeedA, ((PlayerState*)inner)->targetAnimSpeed,
                     timeDelta);
     if (((PlayerState*)state)->baddie.animSpeedA <= *(f32*)(tbl + 0x398))
     {
@@ -11010,7 +11010,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     found = 0;
     {
         f32 z = lbl_803E7EE0;
-        ((PlayerState*)state)->unk82C = z;
+        ((PlayerState*)state)->targetAnimSpeed = z;
         ((PlayerState*)state)->unk834 = z;
     }
     ((PlayerState*)state)->unk830 = lbl_803E8144;
@@ -11041,12 +11041,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         switch (((PlayerState*)state)->surfaceType)
         {
         case 13:
-            ((PlayerState*)state)->unk82C = lbl_803E8148;
+            ((PlayerState*)state)->targetAnimSpeed = lbl_803E8148;
             ((PlayerState*)state)->unk834 = lbl_803E814C;
             ((PlayerState*)state)->unk830 = lbl_803E8118;
             break;
         case 3:
-            ((PlayerState*)state)->unk82C = lbl_803E7EE0;
+            ((PlayerState*)state)->targetAnimSpeed = lbl_803E7EE0;
             ((PlayerState*)state)->unk834 = fv2;
             ((PlayerState*)state)->unk830 = lbl_803E7F6C;
             break;
@@ -12601,7 +12601,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->unk77C = fz;
     ((PlayerState*)inner)->unk80C = -1;
     ((PlayerState*)inner)->animState = -1;
-    ((PlayerState*)inner)->unk82C = fz;
+    ((PlayerState*)inner)->targetAnimSpeed = fz;
     ((PlayerState*)inner)->unk834 = fz;
     ((PlayerState*)inner)->unk830 = lbl_803E8144;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 1;
@@ -13707,10 +13707,10 @@ int fn_8029C9C8(int obj, int state)
         f32 cc = inner->unk4CC;
         ((PlayerState*)state)->baddie.animSpeedA +=
             interpolate(-cc * s - c8 * c - ((PlayerState*)state)->baddie.animSpeedA,
-                        inner->unk82C, timeDelta);
+                        inner->targetAnimSpeed, timeDelta);
         ((PlayerState*)state)->baddie.animSpeedB +=
             interpolate(c8 * s - cc * c - ((PlayerState*)state)->baddie.animSpeedB,
-                        inner->unk82C, timeDelta);
+                        inner->targetAnimSpeed, timeDelta);
     }
     t0 = ((GameObject*)obj)->anim.currentMoveProgress;
     {
@@ -16501,7 +16501,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         ((PlayerState*)inner)->unk430 = c4;
         ((PlayerState*)inner)->unk434 = f4;
     }
-    ((PlayerState*)inner)->unk82C = lbl_803DC684;
+    ((PlayerState*)inner)->targetAnimSpeed = lbl_803DC684;
     {
         ((PlayerState*)inner)->unk408 =
             (((PlayerState*)inner)->unk408 < lbl_803E7EA4)
