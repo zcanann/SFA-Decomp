@@ -275,12 +275,12 @@ void ring_update(int obj)
             if ((void*)arwing != NULL)
             {
                 ((GameObject*)obj)->anim.velocityX =
-                    oneOverTimeDelta * (*(f32*)(arwing + 0xc) - ((GameObject*)obj)->anim.localPosX);
+                    oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
                 ((GameObject*)obj)->anim.velocityY =
                     oneOverTimeDelta *
-                    (state->arwingYOffset + (*(f32*)(arwing + 0x10) - ((GameObject*)obj)->anim.localPosY));
+                    (state->arwingYOffset + (((GameObject*)arwing)->anim.localPosY - ((GameObject*)obj)->anim.localPosY));
                 ((GameObject*)obj)->anim.velocityZ =
-                    oneOverTimeDelta * (*(f32*)(arwing + 0x14) - ((GameObject*)obj)->anim.localPosZ);
+                    oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                         ((GameObject*)obj)->anim.velocityY * timeDelta,
                         ((GameObject*)obj)->anim.velocityZ * timeDelta);
