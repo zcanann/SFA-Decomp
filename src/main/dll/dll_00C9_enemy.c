@@ -1791,9 +1791,9 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 typedef struct EnemyPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     u8 pad14[0x18 - 0x14];
     s16 unk18;
     s16 unk1A;
@@ -2277,9 +2277,9 @@ void enemy_update(int obj)
         if ((((EnemyState*)state)->flags2E4 & 0x20000) != 0)
         {
             s2 = *(u8**)&((GameObject*)obj)->anim.placementData;
-            ((GameObject*)obj)->anim.localPosX = ((EnemyPlacement*)s2)->unk8;
-            ((GameObject*)obj)->anim.localPosY = ((EnemyPlacement*)s2)->unkC;
-            ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->unk10;
+            ((GameObject*)obj)->anim.localPosX = ((EnemyPlacement*)s2)->posX;
+            ((GameObject*)obj)->anim.localPosY = ((EnemyPlacement*)s2)->posY;
+            ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->posZ;
             ((GameObject*)obj)->anim.rotZ = 0;
             ((GameObject*)obj)->anim.rotY = 0;
             ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->unk2A << 8;
