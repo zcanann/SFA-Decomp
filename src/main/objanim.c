@@ -1021,8 +1021,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             else
             {
                 (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] =
-                    (s16)(int)
-                value;
+                    value;
             }
 
             axis += sampleCount;
