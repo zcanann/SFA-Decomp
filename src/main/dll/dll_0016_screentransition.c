@@ -261,7 +261,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         maxAlpha = (int)(lbl_803E0544 * screenTransitionAlpha);
         inset = 0;
     }
-    halfSpan = (span >> 1) & 0xffff;
+    halfSpan = (u16)(span >> 1);
     inset = inset & 0xffff;
     conv = (f32)(int)(inset * halfSpan);
     edge = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
@@ -317,7 +317,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.a = ((int)(fadeAlpha * (halfSpan - cur)) / (int)halfSpan) & 0xff;
         hudDrawRect(vx + (hiEdge & 0xffff), vy, vr, vb, col);
         hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
-        edge = (H >> 1) & 0xffff;
+        edge = (u16)(H >> 1);
         conv = (f32)(int)(inset * edge);
         inset = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
         halfSpan = (edge - inset) & 0xffff;
