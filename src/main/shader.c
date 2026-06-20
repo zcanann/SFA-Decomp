@@ -2684,12 +2684,12 @@ void beginLoadingMap(void)
             if (bo)
             {
                 renderFlags |= 0x50;
-                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
+                *(u8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
             }
             else
             {
                 renderFlags &= ~0x50;
-                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
+                *(u8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
             }
         }
         if (*(u8*)(env + 0x40) & 8)
@@ -2701,12 +2701,12 @@ void beginLoadingMap(void)
             if (bo)
             {
                 renderFlags |= 0x40;
-                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
+                *(u8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
             }
             else
             {
                 renderFlags &= ~0x40;
-                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
+                *(u8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
             }
         }
         if (*(u8*)(env + 0x40) & 0x20)
