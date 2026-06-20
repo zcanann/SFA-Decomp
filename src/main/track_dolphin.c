@@ -5348,7 +5348,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         for (i = start; i < end; i++, ep++, rp += 0x10)
         {
             u8* rec;
-            s16 i0, i1;
+            int i0, i1;
             f32 *va, *vb;
             f32 ax2, ay2, az2, bx2, by2, bz2;
             f32 ylo, yhi, ha, hb;
