@@ -924,7 +924,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, in
     *(float*)(target + 0x2c) = (float)((double)vec2Z * mag2);
     if ((clampToGround != '\0') && (*(float*)(target + 0x28) < lbl_803E31FC))
     {
-        scale = lbl_803E3264 + *(float*)(*(int*)(state + 0x29c) + 0x10);
+        scale = lbl_803E3264 + *(float*)((int)((GroundBaddieState*)state)->baddie.trackedObj + 0x10);
         if (*(float*)(target + 0x10) < scale)
         {
             *(float*)(target + 0x28) =
