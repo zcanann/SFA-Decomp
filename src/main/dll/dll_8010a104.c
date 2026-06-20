@@ -39,6 +39,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     int farSpan;
     int settled;
     f32 dist;
+    f32 nearThresh;
 
     node = (int)(*gRomCurveInterface)->getById(*p1);
     noForwardExit = 1;
@@ -76,9 +77,9 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
         }
     }
     settled = 0;
-    do
+    nearThresh = PATHCAM_NEAR_THRESHOLD;
+    while (settled == 0)
     {
-        f32 nearThresh = PATHCAM_NEAR_THRESHOLD;
         settled = 1;
         node = (int)(*gRomCurveInterface)->getById(*p1);
         pathcam_findTaggedNodeWindow((u8*)node, window, tag);
@@ -100,7 +101,6 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
             }
         }
     }
-    while (settled == 0);
     node = (int)(*gRomCurveInterface)->getById(*p1);
     fn_8010A47C(node, &span, tag);
     node = (int)(*gRomCurveInterface)->getById(*p2);
