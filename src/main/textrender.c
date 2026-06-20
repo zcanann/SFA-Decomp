@@ -776,7 +776,6 @@ void* gameTextGet(int textId)
     int count;
     int slotIndex;
     u16* cachedEntry;
-    u16* prevCachedEntry;
     f32 zero;
     f32 fadeLimit;
     f32* cachedAlpha;
@@ -830,15 +829,8 @@ void* gameTextGet(int textId)
 
     slotIndex = 8;
     cachedEntry = (u16*)(gameTextBase + 0xa0);
-    while (1)
+    while (cachedEntry -= 6, slotIndex-- != 0)
     {
-        prevCachedEntry = cachedEntry;
-        cachedEntry = prevCachedEntry - 6;
-        if (slotIndex == 0)
-        {
-            break;
-        }
-        slotIndex--;
         if (*cachedEntry == textId)
         {
             zero = lbl_803DE704;
