@@ -21,7 +21,6 @@ typedef struct TexframeanimatorPlacement
     s16 unk3E;
 } TexframeanimatorPlacement;
 
-extern u8 framesThisStep;
 extern char sTexFrameAnimDebugFormat[];
 extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
