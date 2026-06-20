@@ -226,34 +226,34 @@ int depthoffieldpoint_getExtraSize(void);
 void restartmarker_init(int* obj, int* state);
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void staticCamera_free(int param_1)
+void staticCamera_free(int obj)
 {
-    ObjGroup_RemoveObject(param_1, 7);
+    ObjGroup_RemoveObject(obj, 7);
 }
 
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
 }
 
-void staticCamera_init(short* param_1, int param_2, int param_3)
+void staticCamera_init(short* obj, int params, int flag)
 {
     u8* colorState;
 
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    colorState = *(u8**)(param_1 + 0x5c);
-    *colorState = *(u8*)(param_2 + 0x19);
+    *obj = -*(short*)(params + 0x1c);
+    obj[1] = -*(short*)(params + 0x1e);
+    obj[2] = -*(short*)(params + 0x20);
+    colorState = *(u8**)(obj + 0x5c);
+    *colorState = *(u8*)(params + 0x19);
     *(float*)(colorState + 4) =
-        (float)((double)(u32) * (u8*)(param_2 + 0x1a));
+        (float)((double)(u32) * (u8*)(params + 0x1a));
     colorState[1] = 0;
-    if (param_3 == 0)
+    if (flag == 0)
     {
-        ObjGroup_AddObject((int)param_1, 7);
+        ObjGroup_AddObject((int)obj, 7);
     }
 }
 
