@@ -565,6 +565,7 @@ void ediblemushroom_hitDetect(u8* obj)
     }
 }
 
+#pragma opt_loop_invariants off
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
@@ -666,6 +667,7 @@ void ediblemushroom_update(u8* self)
 end:
     ;
 }
+#pragma opt_loop_invariants reset
 
 void ediblemushroom_init(int obj, int aux)
 {
