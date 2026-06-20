@@ -446,10 +446,11 @@ void drawArwingHud(void)
         {
             rings = req;
         }
+        i = 0;
         fullPips = shield >> 2;
         partialFrame = (shield & 3) + 0x12;
         maxPips = maxShield >> 2;
-        for (i = 0; (int)(pip = i & 0xff) < maxPips; i++)
+        for (; (int)(pip = i & 0xff) < maxPips; i++)
         {
             if ((int)pip < fullPips)
             {
