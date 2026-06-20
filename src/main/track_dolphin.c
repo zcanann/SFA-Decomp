@@ -5241,8 +5241,9 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     s16 m[2];
     int start, end;
     int vt, vp, lineIdx;
-    s8 flag1, flag2;
-    u8 flag4;
+    s8 flag1;
+    int flag2;
+    int flag4;
     f32 minX, maxX, minZ, maxZ;
     int count, found;
     s16* hitp;
@@ -5370,7 +5371,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             i1 = *(s16*)(rec + 6);
             if ((s8)rec[3] & 0x80)
             {
-                if (flag4 != 0) continue;
+                if ((u8)flag4 != 0) continue;
                 lineType = 0;
             }
             else
