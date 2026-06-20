@@ -2128,7 +2128,8 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     {
         angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
                               ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
-        *(s16*)((char*)p3 + 0x14) = (s16)((s16)angle - ((GameObject*)obj)->anim.rotX);
+        angle = (s16)angle;
+        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit)
         {
@@ -2413,6 +2414,10 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
                 }
             }
         }
+        break;
+    case 2:
+        break;
+    case 3:
         break;
     case 5:
         if (curve[14] > 0)
