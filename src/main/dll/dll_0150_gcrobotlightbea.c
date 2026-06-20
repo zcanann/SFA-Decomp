@@ -248,16 +248,16 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     int moveResult;
     float* state;
     u32* moveTable;
-    u32 local_28;
-    u32 local_24;
-    u32 local_20;
-    u32 local_1c;
+    u32 defaultActionId;
+    u32 defaultActionArg;
+    u32 altActionId;
+    u32 altActionArg;
 
     state = ((GameObject*)param_9)->extra;
-    local_28 = DAT_802c2a58;
-    local_24 = DAT_802c2a5c;
-    local_20 = DAT_802c2a60;
-    local_1c = DAT_802c2a64;
+    defaultActionId = DAT_802c2a58;
+    defaultActionArg = DAT_802c2a5c;
+    altActionId = DAT_802c2a60;
+    altActionArg = DAT_802c2a64;
     if (((GameObject*)param_9)->seqIndex < 0)
     {
         FUN_800e8630(param_9);
@@ -267,11 +267,11 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if (*(char*)(state + 0x2a0) == '\x06')
         {
-            moveTable = &local_20;
+            moveTable = &altActionId;
         }
         else
         {
-            moveTable = &local_28;
+            moveTable = &defaultActionId;
         }
         moveResult = FUN_8007f924((int)animUpdate);
         if ((moveResult == 0x283) ||
