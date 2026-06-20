@@ -1158,7 +1158,8 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         f32 t;
         if (v == 1)
         {
-            t = (gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY) * rate;
+            t = gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY;
+            t = t * rate;
         }
         else
         {
