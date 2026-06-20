@@ -2482,7 +2482,6 @@ void ObjHits_Update(int objectCount)
         {
             ObjHitsSweepEntry** skipSlot;
             ObjHitsSweepEntry** ptrSlot;
-            int scaled;
             candidateIndex = currentIndex;
             skipSlot = &gObjHitsSweepEntryPtrs[currentIndex];
             for (; (entry->minX > (*skipSlot)->maxX) && (candidateIndex < slotCount); candidateIndex++)
@@ -2491,12 +2490,11 @@ void ObjHits_Update(int objectCount)
             }
             currentIndex = candidateIndex;
             ptrSlot = gObjHitsSweepEntryPtrs;
-            scaled = candidateIndex << 2;
             for (; (candidateIndex < slotCount) &&
-                   ((*entrySlot)->maxX > (*(ObjHitsSweepEntry**)((int)ptrSlot + scaled))->minX);
-                   candidateIndex++, scaled += 4)
+                   ((*entrySlot)->maxX > ptrSlot[candidateIndex]->minX);
+                   candidateIndex++)
             {
-                candidateEntry = *(ObjHitsSweepEntry**)((int)ptrSlot + scaled);
+                candidateEntry = ptrSlot[candidateIndex];
                 if ((*entrySlot)->minX > candidateEntry->maxX)
                 {
                     continue;
