@@ -598,7 +598,7 @@ void titlescreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x7a7)
         {
-            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * obj;
+            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * (s16*)obj;
         }
         else if (t != 0x78a)
         {
