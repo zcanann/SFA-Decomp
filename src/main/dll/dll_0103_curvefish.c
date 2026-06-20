@@ -134,8 +134,9 @@ void curvefish_update(int obj)
         ((GameObject*)obj)->anim.localPosZ = setup2->spawnZ;
 
         firstNode = (int)(*gRomCurveInterface)->getById(
-            (*gRomCurveInterface)->find((int*)&curveQuery, 1, -1, ((GameObject*)obj)->anim.localPosX,
-                                        ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ));
+            ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                ((GameObject*)obj)->anim.localPosZ, (int*)&curveQuery, 1, -1));
         secondNode = (int)(*gRomCurveInterface)->getById(
             ((int (*)(int, int))(*gRomCurveInterface)->slot54)(firstNode, 0));
         thirdNode = (int)(*gRomCurveInterface)->getById(
