@@ -68,7 +68,7 @@ extern void padFn_80014b18(int value);
 
 typedef struct LinkMenuItemDB
 {
-    u16 field00;
+    u16 textId;
     u16 itemId;
     s16 field04;
     s16 field06;
@@ -83,7 +83,7 @@ typedef struct LinkMenuItemDB
     };
 
     u16 field14;
-    u16 field16;
+    u16 flags;
     u8 pad18[2];
     u8 field1A;
     u8 pad1B[3];
@@ -186,7 +186,7 @@ void Link_copy(u8* srcArg)
     {
         dst = &gTumbleweedBushItems[i];
         src = &((LinkMenuItemDB*)srcArg)[i];
-        dst->field16 = src->field16;
+        dst->flags = src->flags;
         dst->field1A = src->field1A;
         dst->field04 = src->field04;
         if (src->textureAssetId != -1)
@@ -219,7 +219,7 @@ void Link_func0B(u8* srcArg)
     src = (LinkMenuItemDB*)srcArg;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
-        gTumbleweedBushItems[i].field00 = src[i].field00;
+        gTumbleweedBushItems[i].textId = src[i].textId;
         gTumbleweedBushItems[i].itemId = src[i].itemId;
         gTumbleweedBushItems[i].field38 = 2;
     }
@@ -817,7 +817,7 @@ void linkDrawFn_801302c0(void)
     base = gTumbleweedBushItems;
     sel = &base[linkSelected];
     sel->field38 = four;
-    if (((sel->field16 & 4) != 0) && ((s8)sel->slots[0] != -1))
+    if (((sel->flags & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
         tex = *(void**)(linkTextures + sel->slots[0] * 8);
     }
@@ -848,7 +848,7 @@ void linkDrawFn_801302c0(void)
     {
         if (i != linkSelected)
         {
-            if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
+            if (((p->flags & 4) != 0) && ((s8)p->slots[0] != -1))
             {
                 tex = *(void**)(linkTextures + p->slots[0] * 8);
             }
@@ -902,7 +902,7 @@ void linkDrawFn_80130484(void)
     for (; i < gTumbleweedBushItemCount; i++)
     {
         p = &gTumbleweedBushItems[i];
-        if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1))
+        if (((p->flags & 4) != 0) && ((s8)p->slots[0] != -1))
         {
             tex = *(void**)(linkTextures + p->slots[0] * 8);
         }
