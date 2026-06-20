@@ -10,7 +10,6 @@
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 extern ModgfxInterface** gModgfxInterface;
-extern u8 framesThisStep;
 
 
 
