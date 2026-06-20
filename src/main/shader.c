@@ -3225,8 +3225,8 @@ extern int lbl_803DCE84;
 
 static inline int mapFindRomListSlot(char* p2, int id)
 {
-    char* q2 = p2;
     int i2 = 0;
+    char* q2 = p2;
     int cn = gShaderRomListSlotCount;
     int k;
     for (k = 0; k < cn; k++)
@@ -3255,15 +3255,17 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     {
         char* p2 = (char*)gShaderRomListSlots;
         char* p6;
+        char* base2;
         slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
-        p6 = (char*)gShaderRomListSlots + 6;
+        base2 = (char*)gShaderRomListSlots;
+        p6 = base2 + 6;
         *(s8*)(p6 + slot * 8) = 1;
-        entry = (char*)*(u32*)(p2 + slot * 8);
+        entry = (char*)*(u32*)(base2 + slot * 8);
         pairs = (s16*)gShaderMapRomBuffers[2];
         cv3 = (s8)pairs[id << 1];
-        cv4 = pairs[(id << 1) + 1];
+        cv4 = (s8)pairs[(id << 1) + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
