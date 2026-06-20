@@ -2102,7 +2102,6 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     int j;
     int k;
     int n;
-    int angle;
     s16 limit;
 
     found = NULL;
@@ -2126,9 +2125,11 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     }
     if (found != NULL)
     {
-        angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
-                              ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
-        *(s16*)((char*)p3 + 0x14) = (s16)((s16)angle - ((GameObject*)obj)->anim.rotX);
+        *(s16*)((char*)p3 + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
+                                                            *(f32*)((char*)p2 + 0xc),
+                                                        ((GameObject*)obj)->anim.localPosZ -
+                                                            *(f32*)((char*)p2 + 0x14)) -
+                                          ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit)
         {
