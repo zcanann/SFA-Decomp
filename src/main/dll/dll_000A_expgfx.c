@@ -281,7 +281,7 @@ void expgfxRemoveAll(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = ~activeBit;
+                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
                 *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
             }
 
