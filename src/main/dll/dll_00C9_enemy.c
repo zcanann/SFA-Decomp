@@ -660,95 +660,95 @@ void objAnimFn_8014a9f0(short* obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
+void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
 {
     extern double FUN_80293900();
-    u16 uVar1;
-    u16* puVar2;
-    u32 uVar3;
-    u32* puVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
-    int iVar8;
+    u16 selfAngle;
+    u16* self;
+    u32 angleDiff;
+    u32* objects;
+    int target;
+    int i;
+    int found;
+    int state;
     double extraout_f1;
-    double dVar9;
-    u64 uVar10;
-    float nearestDist;
+    double distSq;
+    u64 ctx;
+    float radius;
     int numObjects;
     float deltaX;
     float deltaY;
     float deltaZ;
     s64 local_30;
 
-    uVar10 = FUN_8028682c();
-    puVar2 = (u16*)(uVar10 >> 0x20);
-    nearestDist = (float)extraout_f1;
-    iVar8 = *(int*)(puVar2 + 0x5c);
+    ctx = FUN_8028682c();
+    self = (u16*)(ctx >> 0x20);
+    radius = (float)extraout_f1;
+    state = *(int*)(self + 0x5c);
     numObjects = 0;
-    iVar7 = 0;
-    if ((uVar10 & 1) == 0)
+    found = 0;
+    if ((ctx & 1) == 0)
     {
-        nearestDist = (float)extraout_f1 * (float)extraout_f1;
-        puVar4 = ObjGroup_GetObjects(3, &numObjects);
+        radius = (float)extraout_f1 * (float)extraout_f1;
+        objects = ObjGroup_GetObjects(3, &numObjects);
         if (numObjects != 0)
         {
-            for (iVar6 = 0; iVar6 < numObjects; iVar6 = iVar6 + 1)
+            for (i = 0; i < numObjects; i = i + 1)
             {
-                dVar9 = FUN_80017714((float*)(puVar2 + 0xc), (float*)(puVar4[iVar6] + 0x18));
-                if ((dVar9 < (double)nearestDist) && ((u16*)puVar4[iVar6] != puVar2))
+                distSq = FUN_80017714((float*)(self + 0xc), (float*)(objects[i] + 0x18));
+                if ((distSq < (double)radius) && ((u16*)objects[i] != self))
                 {
-                    *param_4 = puVar4[iVar6];
-                    dVar9 = FUN_80293900(dVar9);
+                    *out = objects[i];
+                    distSq = FUN_80293900(distSq);
                     local_30 = (s64)(int)
-                    dVar9;
-                    *(short*)(param_4 + 1) = (short)(int)dVar9;
-                    if ((uVar10 & 2) != 0)
+                    distSq;
+                    *(short*)(out + 1) = (short)(int)distSq;
+                    if ((ctx & 2) != 0)
                     {
-                        if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                        if ((*(u32*)(state + 0x2e4) & 0x8000) == 0)
                         {
-                            iVar5 = *param_4;
-                            deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar5 + 0x18);
-                            deltaY = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar5 + 0x1c);
-                            deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar5 + 0x20);
+                            target = *out;
+                            deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(target + 0x18);
+                            deltaY = ((GameObject*)self)->anim.worldPosY - *(float*)(target + 0x1c);
+                            deltaZ = ((GameObject*)self)->anim.worldPosZ - *(float*)(target + 0x20);
                         }
                         else
                         {
-                            deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                            deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(*out + 0x18);
                             deltaY = lbl_803E31FC;
-                            deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                            deltaZ = ((GameObject*)self)->anim.worldPosZ - *(float*)(*out + 0x20);
                         }
-                        uVar3 = FUN_80017730();
-                        if (*(short**)(puVar2 + 0x18) == 0x0)
+                        angleDiff = FUN_80017730();
+                        if (*(short**)(self + 0x18) == 0x0)
                         {
-                            uVar1 = *puVar2;
+                            selfAngle = *self;
                         }
                         else
                         {
-                            uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
+                            selfAngle = *self + **(short**)(self + 0x18);
                         }
-                        uVar3 = (uVar3 & 0xffff) - uVar1;
-                        if (0x8000 < uVar3)
+                        angleDiff = (angleDiff & 0xffff) - selfAngle;
+                        if (0x8000 < angleDiff)
                         {
-                            uVar3 = uVar3 - 0xffff;
+                            angleDiff = angleDiff - 0xffff;
                         }
-                        if ((int)uVar3 < -0x8000)
+                        if ((int)angleDiff < -0x8000)
                         {
-                            uVar3 = uVar3 + 0xffff;
+                            angleDiff = angleDiff + 0xffff;
                         }
-                        iVar5 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                        *(u32*)(iVar8 + 0x2dc) = *(u32*)(iVar8 + 0x2dc) & ~*(u32*)(&DAT_8031e840 + iVar5);
-                        if ((uVar10 & 4) != 0)
+                        target = (short)((angleDiff & 0xffff) >> 0xd) * 4;
+                        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~*(u32*)(&DAT_8031e840 + target);
+                        if ((ctx & 4) != 0)
                         {
-                            *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                                *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + iVar5);
+                            *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) =
+                                *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + target);
                         }
                     }
-                    param_4 = param_4 + 2;
-                    iVar7 = iVar7 + 1;
-                    if (param_3 <= iVar7)
+                    out = out + 2;
+                    found = found + 1;
+                    if (maxCount <= found)
                     {
-                        iVar6 = numObjects;
+                        i = numObjects;
                     }
                 }
             }
@@ -756,52 +756,52 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
     }
     else
     {
-        iVar7 = ObjGroup_FindNearestObject(3, puVar2, &nearestDist);
-        *param_4 = iVar7;
-        if (iVar7 != 0)
+        found = ObjGroup_FindNearestObject(3, self, &radius);
+        *out = found;
+        if (found != 0)
         {
             local_30 = (s64)(int)
-            nearestDist;
-            *(short*)(param_4 + 1) = (short)(int)nearestDist;
-            if ((uVar10 & 2) != 0)
+            radius;
+            *(short*)(out + 1) = (short)(int)radius;
+            if ((ctx & 2) != 0)
             {
-                if ((*(u32*)(iVar8 + 0x2e4) & 0x8000) == 0)
+                if ((*(u32*)(state + 0x2e4) & 0x8000) == 0)
                 {
-                    iVar7 = *param_4;
-                    deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(iVar7 + 0x18);
-                    deltaY = ((GameObject*)puVar2)->anim.worldPosY - *(float*)(iVar7 + 0x1c);
-                    deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(iVar7 + 0x20);
+                    found = *out;
+                    deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(found + 0x18);
+                    deltaY = ((GameObject*)self)->anim.worldPosY - *(float*)(found + 0x1c);
+                    deltaZ = ((GameObject*)self)->anim.worldPosZ - *(float*)(found + 0x20);
                 }
                 else
                 {
-                    deltaX = ((GameObject*)puVar2)->anim.worldPosX - *(float*)(*param_4 + 0x18);
+                    deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(*out + 0x18);
                     deltaY = lbl_803E31FC;
-                    deltaZ = ((GameObject*)puVar2)->anim.worldPosZ - *(float*)(*param_4 + 0x20);
+                    deltaZ = ((GameObject*)self)->anim.worldPosZ - *(float*)(*out + 0x20);
                 }
-                uVar3 = FUN_80017730();
-                if (*(short**)(puVar2 + 0x18) == 0x0)
+                angleDiff = FUN_80017730();
+                if (*(short**)(self + 0x18) == 0x0)
                 {
-                    uVar1 = *puVar2;
+                    selfAngle = *self;
                 }
                 else
                 {
-                    uVar1 = *puVar2 + **(short**)(puVar2 + 0x18);
+                    selfAngle = *self + **(short**)(self + 0x18);
                 }
-                uVar3 = (uVar3 & 0xffff) - uVar1;
-                if (0x8000 < uVar3)
+                angleDiff = (angleDiff & 0xffff) - selfAngle;
+                if (0x8000 < angleDiff)
                 {
-                    uVar3 = uVar3 - 0xffff;
+                    angleDiff = angleDiff - 0xffff;
                 }
-                if ((int)uVar3 < -0x8000)
+                if ((int)angleDiff < -0x8000)
                 {
-                    uVar3 = uVar3 + 0xffff;
+                    angleDiff = angleDiff + 0xffff;
                 }
-                iVar7 = (short)((uVar3 & 0xffff) >> 0xd) * 4;
-                *(u32*)(iVar8 + 0x2dc) = *(u32*)(iVar8 + 0x2dc) & ~*(u32*)(&DAT_8031e840 + iVar7);
-                if ((uVar10 & 4) != 0)
+                found = (short)((angleDiff & 0xffff) >> 0xd) * 4;
+                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~*(u32*)(&DAT_8031e840 + found);
+                if ((ctx & 4) != 0)
                 {
-                    *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) =
-                        *(u32*)(*(int*)(*param_4 + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + iVar7);
+                    *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) =
+                        *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) & ~*(u32*)(&DAT_8031e860 + found);
                 }
             }
         }
@@ -810,45 +810,45 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4)
     return;
 }
 
-double FUN_8014cbcc(int param_1)
+double FUN_8014cbcc(int obj)
 {
-    int iVar1;
-    double dVar2;
+    int state;
+    double ratio;
 
-    iVar1 = *(int*)&((GameObject*)param_1)->extra;
-    if (iVar1 == 0)
+    state = *(int*)&((GameObject*)obj)->extra;
+    if (state == 0)
     {
-        dVar2 = (double)lbl_803E31FC;
+        ratio = (double)lbl_803E31FC;
     }
-    else if ((*(u16*)(iVar1 + 0x2b2) == 0) || (*(u16*)(iVar1 + 0x2b0) == 0))
+    else if ((*(u16*)(state + 0x2b2) == 0) || (*(u16*)(state + 0x2b0) == 0))
     {
-        dVar2 = (double)lbl_803E31FC;
+        ratio = (double)lbl_803E31FC;
     }
     else
     {
-        dVar2 = (double)((float)((double)(u32) * (u16*)(iVar1 + 0x2b0)) /
-            (float)((double)(u32) * (u16*)(iVar1 + 0x2b2)));
+        ratio = (double)((float)((double)(u32) * (u16*)(state + 0x2b0)) /
+            (float)((double)(u32) * (u16*)(state + 0x2b2)));
     }
-    return dVar2;
+    return ratio;
 }
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_8014ccac(int param_1, u32 param_2)
+void FUN_8014ccac(int obj, u32 value)
 {
-    *(u32*)(*(int*)&((GameObject*)param_1)->extra + 0x29c) = param_2;
+    *(u32*)(*(int*)&((GameObject*)obj)->extra + 0x29c) = value;
     return;
 }
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, int param_5,
-                  float* param_6, char param_7)
+void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, int state,
+                  float* dir, char clampToGround)
 {
-    float fVar1;
-    double dVar2;
-    double dVar3;
-    double dVar4;
+    float scale;
+    double mag1;
+    double mag2;
+    double cross;
     float afStack_c8[3];
     float vec2X;
     float vec2Y;
@@ -860,8 +860,8 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     u32 local_70;
     u32 uStack_6c;
 
-    dVar2 = SeekTwiceBeforeRead((float*)(param_5 + 0x2b8));
-    if (dVar2 <= (double)lbl_803E31FC)
+    mag1 = SeekTwiceBeforeRead((float*)(state + 0x2b8));
+    if (mag1 <= (double)lbl_803E31FC)
     {
         vec1X = lbl_803E31FC;
         vec1Y = lbl_803E31FC;
@@ -869,14 +869,14 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     }
     else
     {
-        vec1Z = (float)((double)lbl_803E3200 / dVar2);
-        vec1X = *(float*)(param_5 + 0x2b8) * vec1Z;
-        vec1Y = *(float*)(param_5 + 700) * vec1Z;
-        vec1Z = *(float*)(param_5 + 0x2c0) * vec1Z;
+        vec1Z = (float)((double)lbl_803E3200 / mag1);
+        vec1X = *(float*)(state + 0x2b8) * vec1Z;
+        vec1Y = *(float*)(state + 700) * vec1Z;
+        vec1Z = *(float*)(state + 0x2c0) * vec1Z;
         FUN_80247ef8(&vec1X, &vec1X);
     }
-    dVar3 = SeekTwiceBeforeRead(param_6);
-    if (dVar3 <= (double)lbl_803E31FC)
+    mag2 = SeekTwiceBeforeRead(dir);
+    if (mag2 <= (double)lbl_803E31FC)
     {
         vec2X = lbl_803E31FC;
         vec2Y = lbl_803E31FC;
@@ -884,52 +884,52 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     }
     else
     {
-        vec2Z = (float)((double)lbl_803E3200 / dVar3);
-        vec2X = *param_6 * vec2Z;
-        vec2Y = param_6[1] * vec2Z;
-        vec2Z = param_6[2] * vec2Z;
+        vec2Z = (float)((double)lbl_803E3200 / mag2);
+        vec2X = *dir * vec2Z;
+        vec2Y = dir[1] * vec2Z;
+        vec2Z = dir[2] * vec2Z;
     }
     FUN_80247fb0(&vec1X, &vec2X, afStack_c8);
-    dVar4 = SeekTwiceBeforeRead(afStack_c8);
-    if ((double)lbl_803E31FC < dVar4)
+    cross = SeekTwiceBeforeRead(afStack_c8);
+    if ((double)lbl_803E31FC < cross)
     {
         FUN_80247f90(&vec1X, &vec2X);
-        dVar4 = (double)FUN_80292754();
-        uStack_6c = ((u32)(u8)((param_3 < dVar4) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        cross = (double)FUN_80292754();
+        uStack_6c = ((u32)(u8)((param_3 < cross) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
         if (ABS((double)(float)((double)(u32)uStack_6c)) !=
             (double)lbl_803E31FC)
         {
-            fVar1 = lbl_803E3258;
-            if ((double)lbl_803E31FC < dVar4)
+            scale = lbl_803E3258;
+            if ((double)lbl_803E31FC < cross)
             {
-                fVar1 = lbl_803E3200;
+                scale = lbl_803E3200;
             }
-            FUN_80247944((double)(float)(param_3 * (double)fVar1), afStack_a4, afStack_c8);
+            FUN_80247944((double)(float)(param_3 * (double)scale), afStack_a4, afStack_c8);
             FUN_80247cd8(afStack_a4, &vec1X, &vec2X);
         }
     }
-    dVar4 = (double)(float)(dVar3 * (double)lbl_803E3280);
-    dVar3 = (double)(float)(dVar2 + param_2);
-    if ((dVar4 <= dVar3) && (dVar3 = dVar4, dVar4 < (double)(float)(dVar2 - param_2)))
+    cross = (double)(float)(mag2 * (double)lbl_803E3280);
+    mag2 = (double)(float)(mag1 + param_2);
+    if ((cross <= mag2) && (mag2 = cross, cross < (double)(float)(mag1 - param_2)))
     {
-        dVar3 = (double)(float)(dVar2 - param_2);
+        mag2 = (double)(float)(mag1 - param_2);
     }
-    if (param_1 < dVar3)
+    if (param_1 < mag2)
     {
-        dVar3 = param_1;
+        mag2 = param_1;
     }
-    *(float*)(param_4 + 0x24) = (float)((double)vec2X * dVar3);
-    *(float*)(param_4 + 0x28) = (float)((double)vec2Y * dVar3);
-    *(float*)(param_4 + 0x2c) = (float)((double)vec2Z * dVar3);
-    if ((param_7 != '\0') && (*(float*)(param_4 + 0x28) < lbl_803E31FC))
+    *(float*)(target + 0x24) = (float)((double)vec2X * mag2);
+    *(float*)(target + 0x28) = (float)((double)vec2Y * mag2);
+    *(float*)(target + 0x2c) = (float)((double)vec2Z * mag2);
+    if ((clampToGround != '\0') && (*(float*)(target + 0x28) < lbl_803E31FC))
     {
-        fVar1 = lbl_803E3264 + *(float*)(*(int*)(param_5 + 0x29c) + 0x10);
-        if (*(float*)(param_4 + 0x10) < fVar1)
+        scale = lbl_803E3264 + *(float*)(*(int*)(state + 0x29c) + 0x10);
+        if (*(float*)(target + 0x10) < scale)
         {
-            *(float*)(param_4 + 0x28) =
-                *(float*)(param_4 + 0x28) *
-                (lbl_803E3200 - (fVar1 - *(float*)(param_4 + 0x10)) / lbl_803E3264);
+            *(float*)(target + 0x28) =
+                *(float*)(target + 0x28) *
+                (lbl_803E3200 - (scale - *(float*)(target + 0x10)) / lbl_803E3264);
         }
     }
     return;
@@ -1809,101 +1809,101 @@ typedef struct EnemyPlacement
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
 
-void FUN_8014d164(double param_1, double param_2, u16* param_3, int param_4, u32 param_5,
+void FUN_8014d164(double param_1, double param_2, u16* angles, int state, u32 denom,
                   char param_6)
 {
     extern u32 FUN_80293900();
-    u32 uVar1;
-    double dVar2;
-    double dVar3;
-    double dVar4;
+    u32 targetAngle;
+    double delta;
+    double scaledDelta;
+    double step;
     u64 local_50;
     u64 local_48;
 
-    dVar4 = (double)(lbl_803DC074 /
-        (float)((double)(u32)(param_5 & 0xffff)));
-    if ((double)lbl_803E3200 < dVar4)
+    step = (double)(lbl_803DC074 /
+        (float)((double)(u32)(denom & 0xffff)));
+    if ((double)lbl_803E3200 < step)
     {
-        dVar4 = (double)lbl_803E3200;
+        step = (double)lbl_803E3200;
     }
-    uVar1 = FUN_80017730();
-    local_50 = (double)(int)((uVar1 & 0xffff) - (u32) * param_3);
-    dVar2 = (double)(float)(local_50);
-    if ((double)lbl_803E324C < dVar2)
+    targetAngle = FUN_80017730();
+    local_50 = (double)(int)((targetAngle & 0xffff) - (u32) * angles);
+    delta = (double)(float)(local_50);
+    if ((double)lbl_803E324C < delta)
     {
-        dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
+        delta = (double)(float)((double)lbl_803E3284 + delta);
     }
-    if (dVar2 < (double)lbl_803E328C)
+    if (delta < (double)lbl_803E328C)
     {
-        dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
+        delta = (double)(float)((double)lbl_803E3288 + delta);
     }
-    dVar3 = (double)(float)(dVar2 * dVar4);
-    *param_3 = *param_3 + (short)(int)(dVar2 * dVar4);
+    scaledDelta = (double)(float)(delta * step);
+    *angles = *angles + (short)(int)(delta * step);
     if (param_1 != (double)lbl_803E31FC)
     {
         if (param_6 == '\0')
         {
-            param_3[2] = (u16)(int)(lbl_803DC078 * (float)(dVar3 * param_1));
-            if ((short)param_3[2] < 0x2001)
+            angles[2] = (u16)(int)(lbl_803DC078 * (float)(scaledDelta * param_1));
+            if ((short)angles[2] < 0x2001)
             {
-                if ((short)param_3[2] < -0x2000)
+                if ((short)angles[2] < -0x2000)
                 {
-                    param_3[2] = 0xe000;
+                    angles[2] = 0xe000;
                 }
             }
             else
             {
-                param_3[2] = 0x2000;
+                angles[2] = 0x2000;
             }
         }
         else
         {
-            param_3[2] = param_3[2] + (short)(int)(param_1 * (double)(float)(dVar3 * dVar4));
+            angles[2] = angles[2] + (short)(int)(param_1 * (double)(float)(scaledDelta * step));
         }
     }
     if ((double)lbl_803E31FC != param_2)
     {
-        FUN_80293900((double)(*(float*)(param_4 + 0x2c0) * *(float*)(param_4 + 0x2c0) +
-            *(float*)(param_4 + 0x2b8) * *(float*)(param_4 + 0x2b8)));
-        uVar1 = FUN_80017730();
-        local_48 = (double)(int)((uVar1 & 0xffff) - param_3[1]);
-        dVar2 = (double)(float)(local_48);
-        if ((double)lbl_803E324C < dVar2)
+        FUN_80293900((double)(*(float*)(state + 0x2c0) * *(float*)(state + 0x2c0) +
+            *(float*)(state + 0x2b8) * *(float*)(state + 0x2b8)));
+        targetAngle = FUN_80017730();
+        local_48 = (double)(int)((targetAngle & 0xffff) - angles[1]);
+        delta = (double)(float)(local_48);
+        if ((double)lbl_803E324C < delta)
         {
-            dVar2 = (double)(float)((double)lbl_803E3284 + dVar2);
+            delta = (double)(float)((double)lbl_803E3284 + delta);
         }
-        if (dVar2 < (double)lbl_803E328C)
+        if (delta < (double)lbl_803E328C)
         {
-            dVar2 = (double)(float)((double)lbl_803E3288 + dVar2);
+            delta = (double)(float)((double)lbl_803E3288 + delta);
         }
-        param_3[1] = param_3[1] + (short)(int)(dVar2 * dVar4);
+        angles[1] = angles[1] + (short)(int)(delta * step);
     }
     return;
 }
 
-void FUN_8014d3d0(short* param_1, u32 param_2, u32 param_3, short param_4)
+void FUN_8014d3d0(short* angle, u32 param_2, u32 denom, short bias)
 {
-    float fVar1;
-    short sVar2;
-    int iVar3;
+    float step;
+    short delta;
+    int targetAngle;
 
-    iVar3 = FUN_80017730();
-    sVar2 = iVar3 - *param_1;
-    if (0x8000 < sVar2)
+    targetAngle = FUN_80017730();
+    delta = targetAngle - *angle;
+    if (0x8000 < delta)
     {
-        sVar2 = sVar2 + 1;
+        delta = delta + 1;
     }
-    if (sVar2 < -0x8000)
+    if (delta < -0x8000)
     {
-        sVar2 = sVar2 + -1;
+        delta = delta + -1;
     }
-    fVar1 = lbl_803DC074 / (float)((double)(u32)(param_3 & 0xffff));
-    if (lbl_803E3200 < fVar1)
+    step = lbl_803DC074 / (float)((double)(u32)(denom & 0xffff));
+    if (lbl_803E3200 < step)
     {
-        fVar1 = lbl_803E3200;
+        step = lbl_803E3200;
     }
-    *param_1 = *param_1 +
-        (short)(int)((float)((double)(int)(short)(sVar2 + param_4)) * fVar1);
+    *angle = *angle +
+        (short)(int)((float)((double)(int)(short)(delta + bias)) * step);
     return;
 }
 
@@ -1928,6 +1928,7 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u
     FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                  param_9, param_11 & 0xff, param_12, param_12, param_13, param_14, param_15, param_16);
     hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    /* param_9 = obj, param_10 = state, param_13 = anim flag */
     if (hitState != NULL)
     {
         hitState->suppressOutgoingHits = 0;
