@@ -5495,11 +5495,11 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     {
         if (inner->moveSlotIndex >= 5 && inner->moveSlotIndex <= 9)
         {
-            amt = (f32)inner->unk4A4;
+            amt = (f32)inner->targetObjectBearing;
         }
         else
         {
-            amt = (f32)inner->unk4A4 / lbl_803E7FB8;
+            amt = (f32)inner->targetObjectBearing / lbl_803E7FB8;
         }
         inner->targetYaw = (f32)(int)
         inner->targetYaw + amt;
@@ -5508,9 +5508,9 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0 && inner->cameraTargetObject != NULL &&
         inner->unk4B4 == 1)
     {
-        if (inner->unk4A8 < 0x4000)
+        if (inner->targetObjectBearingAbs < 0x4000)
         {
-            amt = (f32)inner->unk4A4;
+            amt = (f32)inner->targetObjectBearing;
         }
         inner->targetYaw = (f32)(int)
         inner->targetYaw + amt;
@@ -7565,12 +7565,12 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         dx = ((GameObject*)cam)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
         dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-        ((PlayerState*)inner)->unk4AC = getAngle(-dx, -dz) & 0xffff;
-        ((PlayerState*)inner)->unk4B0 = sqrtf(dx * dx + dz * dz);
+        ((PlayerState*)inner)->targetObjectYaw = getAngle(-dx, -dz) & 0xffff;
+        ((PlayerState*)inner)->targetObjectDist = sqrtf(dx * dx + dz * dz);
         ((PlayerState*)inner)->unk4B4 =
             *(u8*)(*(int*)(*(int*)&((GameObject*)cam)->anim.modelInstance + 0x40) + 0x10) & 0xf;
     }
-    d = ((PlayerState*)inner)->unk4AC - (u16)((PlayerState*)inner)->targetYaw;
+    d = ((PlayerState*)inner)->targetObjectYaw - (u16)((PlayerState*)inner)->targetYaw;
     if (d > 0x8000)
     {
         d = d - 0xffff;
@@ -7579,14 +7579,14 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         d = d + 0xffff;
     }
-    ((PlayerState*)inner)->unk4A4 = (int)(f32)d;
+    ((PlayerState*)inner)->targetObjectBearing = (int)(f32)d;
     if (d < 0)
     {
-        ((PlayerState*)inner)->unk4A8 = -((PlayerState*)inner)->unk4A4;
+        ((PlayerState*)inner)->targetObjectBearingAbs = -((PlayerState*)inner)->targetObjectBearing;
     }
     else
     {
-        ((PlayerState*)inner)->unk4A8 = ((PlayerState*)inner)->unk4A4;
+        ((PlayerState*)inner)->targetObjectBearingAbs = ((PlayerState*)inner)->targetObjectBearing;
     }
     if (((ByteFlags*)((char*)inner + 0x3f1))->b20 != 0)
     {
@@ -12182,7 +12182,7 @@ int fn_8029D250(int obj, int state, f32 fv)
     if (((PlayerState*)state)->baddie.targetObj != NULL)
     {
         inner->targetYaw = inner->targetYaw +
-            (int)((f32)inner->unk4A4 / lbl_803E7FC0);
+            (int)((f32)inner->targetObjectBearing / lbl_803E7FC0);
         inner->yaw = inner->targetYaw;
     }
     ((PlayerState*)state)->baddie.animSpeedA =
@@ -13800,7 +13800,7 @@ int fn_8029C9C8(int obj, int state)
     }
     inner->targetYaw =
         (s16)(inner->targetYaw +
-              (int)((f32)(int)inner->unk4A4 / lbl_803E7FC0)
+              (int)((f32)(int)inner->targetObjectBearing / lbl_803E7FC0)
     )
     ;
     inner->yaw = inner->targetYaw;
@@ -14090,8 +14090,8 @@ int fn_802A418C(int obj, int state, f32 fv)
                     {
                         if (((PlayerState*)inner)->staffActionRequest == 2 ||
                             (inner->cameraTargetObject != NULL &&
-                                inner->unk4B0 < lbl_803E8054 &&
-                                inner->unk4A8 < 0x4000 &&
+                                inner->targetObjectDist < lbl_803E8054 &&
+                                inner->targetObjectBearingAbs < 0x4000 &&
                                 ((PlayerState*)inner)->unk4B4 == 1))
                         {
                             if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -15550,7 +15550,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
     }
 
-    inner->targetYaw += (int)((f32)inner->unk4A4 / lbl_803E7FC0);
+    inner->targetYaw += (int)((f32)inner->targetObjectBearing / lbl_803E7FC0);
     inner->yaw = inner->targetYaw;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
     fn_802ABFBC(obj, state, (int)inner);
@@ -16374,7 +16374,7 @@ int fn_802A4D34(int obj, int state)
                 {
                     *(int*)((char*)sub + 0xf8) = 1;
                 }
-                amt = interpolate((f32)inner->unk4A4, lbl_803E805C, timeDelta);
+                amt = interpolate((f32)inner->targetObjectBearing, lbl_803E805C, timeDelta);
                 inner->targetYaw = (f32)inner->targetYaw + amt;
                 inner->yaw = inner->targetYaw;
             }

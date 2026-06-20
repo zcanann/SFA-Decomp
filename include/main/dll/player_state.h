@@ -97,10 +97,10 @@ typedef struct PlayerState {
     int bodyLeanRate;
     u16 unk4A0;
     u16 unk4A2;
-    int unk4A4;
-    int unk4A8;
-    int unk4AC;
-    f32 unk4B0;
+    int targetObjectBearing;    /* signed relative bearing to cameraTargetObject (targetObjectYaw - targetYaw, wrapped to +-0x8000) */
+    int targetObjectBearingAbs; /* abs(targetObjectBearing); compared against 0x4000 (~90deg) to gate facing-target logic */
+    int targetObjectYaw;        /* heading from player toward cameraTargetObject (getAngle(-dx,-dz)) */
+    f32 targetObjectDist;       /* planar distance to cameraTargetObject (sqrt(dx^2+dz^2)) */
     u16 unk4B4;
     u8 pad4B6[0x4B8 - 0x4B6];
     void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
