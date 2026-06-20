@@ -2123,10 +2123,12 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                     {
                         f32* pos = &point.x;
                         f32 rad = objBState->primaryRadius;
+                        ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
                         ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                         int mf = *hitboxBuf;
-                        ObjHits_CalcSkeletonResponse3D(pos, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
-                                                       bestHit,
+                        ObjHitsSkeletonHit* bh = bestHit;
+                        ObjHits_CalcSkeletonResponse3D(pos, rad, objB, hh, jd, mf,
+                                                       bh,
                                                        (ratio < gObjHitsScalarZero)
                                                            ? gObjHitsScalarZero
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
@@ -2167,10 +2169,12 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                     {
                         f32* pos = &point.x;
                         f32 rad = objBState->primaryRadius;
+                        ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
                         ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                         int mf = *hitboxBuf;
-                        ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
-                                                       bestHit,
+                        ObjHitsSkeletonHit* bh = bestHit;
+                        ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, hh, jd, mf,
+                                                       bh,
                                                        (ratio < gObjHitsScalarZero)
                                                            ? gObjHitsScalarZero
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
