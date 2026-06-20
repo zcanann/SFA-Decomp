@@ -134,7 +134,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
     else
     {
         oldVel = ((GameObject*)obj)->anim.velocityX;
-        sum = *(s16*)(*(int*)&((GameObject*)obj)->anim.parent + 0x4) + ((LargeCrateState*)def)->slideOffset;
+        sum = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ + ((LargeCrateState*)def)->slideOffset;
         ((GameObject*)obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
         if ((oldVel <= 0.0f && ((GameObject*)obj)->anim.velocityX >= 0.0f) ||
             (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
