@@ -318,7 +318,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
     if (lbl_803E6C38 == intensity)
     {
         spawned = 0;
-        for (i = 0, p = entries; i < count; p++, i++)
+        for (i = 0, p = entries; i < count; i++, p++)
         {
             if (*p != 0)
             {
@@ -333,7 +333,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
         return 0;
     }
 
-    for (i = 0, p = entries; i < count; p++, i++)
+    for (i = 0, p = entries; i < count; i++, p++)
     {
         if (*p != 0)
         {
