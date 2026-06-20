@@ -886,10 +886,8 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     {
         *turning = 1;
         *turnSpeed = lbl_803E1CC4;
-        return 1;
     }
-
-    if (*turning != 0)
+    else if (*turning != 0)
     {
         if ((0 < (s16)yawDelta) && (objAnim->currentMove != moves[1]))
         {
