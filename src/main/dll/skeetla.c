@@ -132,11 +132,11 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     {
         if (((state->statusFlags >> 5) & 1) == 0u)
         {
-            if (state->waterLevel == lbl_803E23DC)
+            if (lbl_803E23DC == state->waterLevel)
             {
                 doHeightSnap = 0;
             }
-            else if (state->unk2B0 == lbl_803E2410)
+            else if (lbl_803E2410 == state->unk2B0)
             {
                 doHeightSnap = 1;
             }
