@@ -231,7 +231,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     int bboxHit[14];
     int curveIndex;
     int typeIndex;
-    int traceResult;
+    u8 traceResult;
 
     bestDistance = lbl_803E063C;
     bestCurve = NULL;
@@ -270,7 +270,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                         bestCurve = curve;
                     }
                 }
-                typeIndex = typeCount;
                 if ((curve->action == action) && (distance < bestActionDistance))
                 {
                     curvePos[0] = curve->x;
@@ -286,6 +285,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                         bestActionCurve = curve;
                     }
                 }
+                typeIndex = typeCount;
             }
             typeIndex++;
         }
