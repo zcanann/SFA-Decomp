@@ -31,7 +31,6 @@ extern u32 DAT_802c2918;
 extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
-extern f32 timeDelta;
 extern CameraMode54State* gCameraModeNpcSpeakState;
 extern f32 lbl_803E1B5C;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
