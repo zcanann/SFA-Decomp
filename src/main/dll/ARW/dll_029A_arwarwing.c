@@ -128,9 +128,9 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
     if (state->hitShake != 0)
     {
         dx = (int)(lbl_803E6FF4 *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * &state->shakePitch / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakePitch / lbl_803E6F00));
         dy = (int)(lbl_803E6F5C *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * &state->shakeYaw / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakeYaw / lbl_803E6F00));
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + dx);
         ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + dy);
     }
