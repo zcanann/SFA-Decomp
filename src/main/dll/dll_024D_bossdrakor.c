@@ -614,6 +614,13 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     int* tbl = gBossDrakorMoveStateTable;
     f32 t;
     int found;
+    if (action < 26)
+    {
+    if (action <= -1)
+    {
+    }
+    else
+    {
     switch (action)
     {
     case 1:
@@ -721,6 +728,8 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
             drakorhoverpad_resetPendingMotion(found);
         }
         break;
+    }
+    }
     }
 }
 
