@@ -983,7 +983,7 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
     extern f32 lbl_803E2574;
     ObjHitsPriorityState* hitState;
 
-    *(f32*)(p2 + 0x308) = lbl_803E256C / (lbl_803E2570 * mult);
+    ((BaddieState*)p2)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
     *(u8*)(p2 + 0x323) = c;
     ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -1916,12 +1916,12 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u
 
     if ((double)lbl_803E31FC == param_1)
     {
-        *(float*)(param_10 + 0x308) = lbl_803E3208;
+        ((BaddieState*)param_10)->unk308 = lbl_803E3208;
     }
     else
     {
         param_2 = (double)lbl_803E3200;
-        *(float*)(param_10 + 0x308) =
+        ((BaddieState*)param_10)->unk308 =
             (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
     }
     *(char*)(param_10 + 0x323) = param_13;
