@@ -1234,7 +1234,7 @@ void pauseMenuDrawText(void)
     {
         s16 width = (s16)(v[2] - v[3]);
         s16 blit_x = width + 0x28;
-        if (blit_x >= target) blit_x = target;
+        blit_x = (blit_x >= target) ? target : blit_x;
         if (blit_x < 0) blit_x = 0;
         *(s16*)((u8*)sprite + 0x8) = blit_x & 0xFFFE;
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
@@ -4432,10 +4432,12 @@ void textureFreeFn_8012fcec(void)
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
     {
-        if (*(void**)(lbl_803A87F0 + 2504 + i * 4) != NULL)
+        void** tex = (void**)(lbl_803A87F0 + i * 4);
+        tex = (void**)((u8*)tex + 2504);
+        if (*tex != NULL)
         {
-            textureFree(*(void**)(lbl_803A87F0 + 2504 + i * 4));
-            *(void**)(lbl_803A87F0 + 2504 + i * 4) = NULL;
+            textureFree(*tex);
+            *tex = NULL;
         }
         *(s16*)(lbl_803A87F0 + 2376 + i * 2) = -1;
         lbl_803A87F0[1096 + i] = 1;
