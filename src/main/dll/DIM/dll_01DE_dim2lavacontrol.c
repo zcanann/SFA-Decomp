@@ -125,7 +125,7 @@ void dim2lavacontrol_init(int obj, int param2)
     state = *(int*)&((GameObject*)obj)->extra;
     ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
     ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
-    if (GameBit_Get(*(s16*)(param2 + 0x1e)) != 0)
+    if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
     {
         g = 1;
     }
