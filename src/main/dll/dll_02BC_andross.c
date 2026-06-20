@@ -2075,6 +2075,9 @@ void andross_update(int obj)
             ((AndrossState*)state)->fadeAlpha = lbl_803E74D4;
             ((AndrossState*)state)->actionState = 0x1f;
         }
+        break;
+    case 0x1f:
+        break;
     }
     camActionParam = lbl_803E7584 + ((AndrossState*)state)->unkA8;
     (*gCameraInterface)->releaseAction(&camActionParam, 4);
