@@ -431,7 +431,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
 void snowclaw_hitDetect(int obj)
 {
     int* inner;
-    int* sub;
+    int sub;
     int* near;
     int* player;
     f32 dist;
@@ -440,14 +440,14 @@ void snowclaw_hitDetect(int obj)
 
     inner = ((GameObject*)obj)->extra;
     dist = lbl_803E6720;
-    sub = *(int**)inner;
-    if (sub == 0)
+    sub = *(int*)inner;
+    if ((u32)sub == 0)
     {
         return;
     }
-    if (ObjHits_GetPriorityHit((int)sub, &hit, 0, 0) == 0x15 && *(s8*)&((SnowclawState*)inner)->health >= 0)
+    if (ObjHits_GetPriorityHit(sub, &hit, 0, 0) == 0x15 && *(s8*)&((SnowclawState*)inner)->health >= 0)
     {
-        ObjHits_RecordObjectHit((int)sub, hit, 0x15, 1, 0);
+        ObjHits_RecordObjectHit(sub, hit, 0x15, 1, 0);
         if (((SnowclawState*)inner)->hitCooldown < 0)
         {
             *(s8*)&((SnowclawState*)inner)->health -= 1;
