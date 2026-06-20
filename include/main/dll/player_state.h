@@ -290,12 +290,12 @@ typedef struct PlayerState {
     s16 animState;
     s16 queuedItemCommand; /* primary queued item/use command id from ObjMsg 0x80002; -1 = none; processed by playerProcessQueuedItemCommand */
     s16 deferredItemCommand; /* item command (0x2d/0x5ce) deferred while a target object is engaged; -1 = none; consumed/cleared once resolved */
-    s16 unk810;
+    s16 stepEventTimer; /* countdown (-= framesThisStep); on expiry reloads interval from lbl_803DC6A8[unk8B0] and advances unk8B1 */
     s16 idleWaitTimer;
     f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */
     u8 pad818[0x81A - 0x818];
     s16 characterId;
-    s16 unk81C;
+    s16 pendingBoneEffectId; /* one-shot bone-particle effect id (set by fn_802960E8); spawned via gBoneParticleEffectInterface->spawnEffect then cleared to 0 */
     s16 unk81E;
     f32 unk820;
     f32 unk824;

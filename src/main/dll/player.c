@@ -36,7 +36,7 @@ int fn_80295CE4(int obj)
 void fn_802960E8(void* playerObj, s16 p2)
 {
     PlayerState* inner = ((GameObject*)playerObj)->extra;
-    inner->unk81C = p2;
+    inner->pendingBoneEffectId = p2;
 }
 
 void fn_802960F4(int obj, int* out)
@@ -7289,11 +7289,11 @@ void playerUpdate(int obj)
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&m, 6);
             fn_802B0920(obj, inner);
             {
-                s16 nv = ((PlayerState*)inner)->unk810 - framesThisStep;
-                ((PlayerState*)inner)->unk810 = nv;
+                s16 nv = ((PlayerState*)inner)->stepEventTimer - framesThisStep;
+                ((PlayerState*)inner)->stepEventTimer = nv;
                 if (nv < 0)
                 {
-                    ((PlayerState*)inner)->unk810 =
+                    ((PlayerState*)inner)->stepEventTimer =
                         lbl_803DC6A8[((PlayerState*)inner)->unk8B0];
                     ((PlayerState*)inner)->unk8B1 =
                         lbl_803DC6B0[((PlayerState*)inner)->unk8B0];
@@ -15732,12 +15732,12 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     {
         (*gModgfxInterface)->renderEffects((void*)a, b, c, 1, gPlayerPathObject);
     }
-    if (((PlayerState*)inner)->unk81C != 0)
+    if (((PlayerState*)inner)->pendingBoneEffectId != 0)
     {
-        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, ((PlayerState*)inner)->unk81C,
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, ((PlayerState*)inner)->pendingBoneEffectId,
                                                      NULL, 0x64, NULL);
     }
-    ((PlayerState*)inner)->unk81C = 0;
+    ((PlayerState*)inner)->pendingBoneEffectId = 0;
     if (((PlayerState*)inner)->unk8CA == 1)
     {
         fn_802AA8D0(obj);
