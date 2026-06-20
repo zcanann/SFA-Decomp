@@ -1,4 +1,4 @@
-/* DLL 0xEF — pushable object [80174A80-801755CC) */
+/* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -770,9 +770,12 @@ void pushable_init(s16* obj, char* def)
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
-    state->timer_0x14 = lbl_803E3528;
-    state->gameBit = ((PushableObjectDef*)def)->gameBit;
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
+    {
+        f32 z0 = lbl_803E3528;
+        state->timer_0x14 = z0;
+        state->gameBit = ((PushableObjectDef*)def)->gameBit;
+        ObjAnim_SetCurrentMove((int)obj, 0, z0, 0);
+    }
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject((u32)obj);
     {
@@ -792,7 +795,7 @@ void pushable_init(s16* obj, char* def)
             {
                 int found = 0;
                 int j = 0;
-                u8 cnt = *(u8*)&state->pointCount;
+                s8 cnt = *(s8*)&state->pointCount;
                 f32 vx = vtx[0];
                 f32 vz = vtx[2];
 
@@ -1021,9 +1024,9 @@ void pushable_hitDetect(int* obj)
             vec.dir[1] = 0;
             vec.dir[2] = 0;
             vec.pos[0] = lbl_803E3588;
-            vec.pos[1] = lbl_803E3528;
-            vec.pos[2] = lbl_803E3528;
-            vec.pos[3] = lbl_803E3528;
+            vec.pos[1] = 0.0f;
+            vec.pos[2] = 0.0f;
+            vec.pos[3] = 0.0f;
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
                                   (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
