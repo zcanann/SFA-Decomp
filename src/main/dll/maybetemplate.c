@@ -200,6 +200,7 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
     int rem4;
     int w8;
     int tmp;
+    int tex;
 
     total = lbl_803A9364[8];
     t13 = total - 0xd;
@@ -241,89 +242,96 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
         seg4 = 7;
     }
     rem4 = 0x10 - seg4;
+    tex = hudTextures[0x27];
     if (flags & 0xff)
     {
-        pauseMenuDrawElement(hudTextures[0x27], lbl_803DBAD0, lbl_803DBAD4, unk2, alpha, 0x100, 0);
+        pauseMenuDrawElement(tex, lbl_803DBAD0, lbl_803DBAD4, unk2, alpha, 0x100, 0);
     }
     else
     {
-        drawTexture(hudTextures[0x27], lbl_803DBAD8, lbl_803DBADC, alpha, 0x100);
+        drawTexture(tex, lbl_803DBAD8, lbl_803DBADC, alpha, 0x100);
     }
     if (seg1 != 0)
     {
+        tex = hudTextures[0x28];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x28], (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, 0x100, seg1, 0x12,
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, 0x100, seg1, 0x12,
                             0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x28], (f32)(lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, seg1, 0x12,
+            drawScaledTexture(tex, (f32)(lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, seg1, 0x12,
                               0);
         }
     }
     if (rem1 != 0)
     {
+        tex = hudTextures[0x29];
         if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, rem1, 0x12,
+            drawFn_8011e8d8(tex, (f32)(seg1 + lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, rem1, 0x12,
                             seg1, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x29], (f32)(seg1 + lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, rem1,
+            drawPartialTexture(tex, (f32)(seg1 + lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, rem1,
                                0x12, seg1, 0);
         }
     }
     if (seg2 != 0)
     {
+        tex = hudTextures[0x2A];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2A], (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100, seg2, 0x12,
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100, seg2, 0x12,
                             0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2A], (f32)(lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg2, 0x12,
+            drawScaledTexture(tex, (f32)(lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg2, 0x12,
                               0);
         }
     }
     if (seg3 != 0)
     {
+        tex = hudTextures[0x2B];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100,
+            drawFn_8011eb3c(tex, (f32)(seg2 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100,
                             seg3, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2B], (f32)(seg2 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg3,
+            drawScaledTexture(tex, (f32)(seg2 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg3,
                               0x12, 0);
         }
     }
     if (seg4 != 0)
     {
+        tex = hudTextures[0x2C];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100, seg4,
+            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100, seg4,
                             0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x2C], (f32)(t13 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg4,
+            drawScaledTexture(tex, (f32)(t13 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg4,
                               0x12, 0);
         }
     }
     if (rem4 != 0)
     {
+        tex = hudTextures[0x2D];
         if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, rem4,
+            drawFn_8011e8d8(tex, (f32)(t13 + seg4 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, rem4,
                             0x12, seg4, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x2D], (f32)(t13 + seg4 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100,
+            drawPartialTexture(tex, (f32)(t13 + seg4 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100,
                                rem4, 0x12, seg4, 0);
         }
     }
@@ -368,40 +376,43 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
     seg4 = seg4 - current;
     if (seg1 != 0)
     {
+        tex = hudTextures[0x31];
         if (flags & 0xff)
         {
-            drawFn_8011e8d8(hudTextures[0x31], (f32)(w8 + lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, seg1, 0x12,
+            drawFn_8011e8d8(tex, (f32)(w8 + lbl_803DBAD0 + 0x1c), lbl_803DBAD4, unk2, alpha, seg1, 0x12,
                             w8, 0);
         }
         else
         {
-            drawPartialTexture(hudTextures[0x31], (f32)(w8 + lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, seg1,
+            drawPartialTexture(tex, (f32)(w8 + lbl_803DBAD8 + 0x1c), lbl_803DBADC, alpha, 0x100, seg1,
                                0x12, w8, 0);
         }
     }
     if (seg2 != 0)
     {
+        tex = hudTextures[0x32];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100,
+            drawFn_8011eb3c(tex, (f32)(rem1 + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha, 0x100,
                             seg2, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x32], (f32)(rem1 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg2,
+            drawScaledTexture(tex, (f32)(rem1 + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha, 0x100, seg2,
                               0x12, 0);
         }
     }
     if (seg4 != 0)
     {
+        tex = hudTextures[0x33];
         if (flags & 0xff)
         {
-            drawFn_8011eb3c(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha,
+            drawFn_8011eb3c(tex, (f32)(t13 + current + lbl_803DBAD0 + 0x24), lbl_803DBAD4, unk2, alpha,
                             0x100, seg4, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(hudTextures[0x33], (f32)(t13 + current + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha,
+            drawScaledTexture(tex, (f32)(t13 + current + lbl_803DBAD8 + 0x24), lbl_803DBADC, alpha,
                               0x100, seg4, 0x12, 0);
         }
     }
