@@ -2204,7 +2204,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     int** listWalk;
     int listIndex;
     int curve;
-    int linked;
+    u32 linked;
     int slot;
     int back;
     int myId;
@@ -2354,7 +2354,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                 {
                     wg->patchIndices[slot] = 0;
                     if (*(s32*)(slotPtr + 0x1c) > -1 &&
-                        (linked = (int)(*gRomCurveInterface)->getById(*(s32*)(slotPtr + 0x1c))) != 0)
+                        (linked = (u32)(*gRomCurveInterface)->getById(*(s32*)(slotPtr + 0x1c))) != 0)
                     {
                         ga = *(u8*)(curve + 3);
                         gb = *(u8*)(linked + 3);
