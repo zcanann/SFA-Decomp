@@ -149,7 +149,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             {
                 Sfx_PlayFromObject(obj, SFXsc_gethit02);
                 uval = randomGetRange(0, 5);
-                if ((uval == 0) && ((*(u8*)(state + 0x27a) & 8) != 0))
+                if (((int)uval == 0) && ((*(u8*)(state + 0x27a) & 8) != 0))
                 {
                     Sfx_PlayFromObject(obj, SFXsc_gethit03);
                 }
