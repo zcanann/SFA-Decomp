@@ -452,6 +452,7 @@ void explosion_free(int obj);
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
+#pragma opt_strength_reduction off
 void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -517,5 +518,6 @@ void dll_1CE_update(int* obj)
         Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
+#pragma opt_strength_reduction reset
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
