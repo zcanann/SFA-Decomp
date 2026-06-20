@@ -1555,7 +1555,7 @@ void drawWorldMapHud(void)
         }
 
         lv = 0;
-        if ((u16)getNextTaskHintText() > 0xad)
+        if ((int)(u16)getNextTaskHintText() > 0xad)
         {
             lv = 1;
         }
@@ -2534,7 +2534,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 else li_ = -1;
             }
             lv = 0;
-            if ((u16)getNextTaskHintText() > 0xad)
+            if ((int)(u16)getNextTaskHintText() > 0xad)
             {
                 lv = 1;
             }
