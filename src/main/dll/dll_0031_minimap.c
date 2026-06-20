@@ -977,10 +977,11 @@ void fn_8013396C(void)
                     slot = Camera_GetCurrentViewSlot();
                     a = getAngle(*(f32*)(lbl_803DD934 + 0xc) - ((GameObject*)player)->anim.localPosX,
                                  *(f32*)(lbl_803DD934 + 0x14) - ((GameObject*)player)->anim.localPosZ);
-                    d = *slot + a - (u16) * (s16*)((char*)lbl_803DBBC8[1] + 4);
+                    a = *slot + a;
+                    d = a - *(u16*)((char*)lbl_803DBBC8[1] + 4);
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (d - 0x10000) + 1;
                     }
                     if (d < -0x8000)
                     {
