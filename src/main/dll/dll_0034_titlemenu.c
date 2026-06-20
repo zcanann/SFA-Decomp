@@ -288,12 +288,12 @@ void n_attractmode_prepareMovie(void)
     return;
 }
 
-void TitleMenu_render(u8* param_1)
+void TitleMenu_render(u8* obj)
 {
     extern u8 shouldShowCredits(u8 * obj); /* #57 */
     int menuAction;
 
-    if (shouldShowCredits(param_1) != 0)
+    if (shouldShowCredits(obj) != 0)
     {
         creditsStart_();
         return;
@@ -308,7 +308,7 @@ void TitleMenu_render(u8* param_1)
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
         (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
-        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x10))(param_1);
+        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x10))(obj);
         gameTextSetDrawFunc(0);
         titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
     }
