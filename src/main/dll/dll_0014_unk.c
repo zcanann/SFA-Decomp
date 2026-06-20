@@ -3097,8 +3097,8 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                         node = romCurves[queueIds[count]];
                         curDist = queueDist[count];
                         if ((((int)node->type == typeFilter) || (typeFilter == -1)) &&
-                            ((*(u8*)((u8*)node + 0x31) == maxDist ||
-                                ((*(u8*)((u8*)node + 0x32) == maxDist || (*(u8*)((u8*)node + 0x33) == maxDist))))))
+                            ((*(u8*)((u8*)node + 0x31) == (int)maxDist ||
+                                ((*(u8*)((u8*)node + 0x32) == (int)maxDist || (*(u8*)((u8*)node + 0x33) == (int)maxDist))))))
                         {
                             done = 1;
                             *distWrite = queueDist[count];
