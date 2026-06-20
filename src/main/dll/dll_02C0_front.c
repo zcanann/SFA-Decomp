@@ -974,7 +974,7 @@ void creditsStart_(void)
 }
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
-extern s16 fn_80130124(void);
+extern u16 fn_80130124(void);
 extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
@@ -998,7 +998,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     int i;
     int r;
     u8 a;
-    s16 v;
+    u16 v;
     Texture* tex;
     int box;
     u8 idx;
@@ -1073,7 +1073,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         }
         while (i < 4);
     }
-    if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != -1)
+    if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
         if ((p2 & 0xff) == 0)
