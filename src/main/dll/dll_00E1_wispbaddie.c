@@ -645,7 +645,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     {
         return 0;
     }
-    if (*(f32*)(state + 0x328) != lbl_803E2740 && *(u16*)(state + 0x338) != 0)
+    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2740 && *(u16*)(state + 0x338) != 0)
     {
         return 0;
     }
