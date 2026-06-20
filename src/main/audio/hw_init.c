@@ -201,23 +201,22 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
 
     entry = dspVoice;
     entry += offset;
-    dst = (u32*)&((DSPvoice*)entry)->smp_info;
     valueA = values[0];
     valueB = values[1];
-    dst[0] = valueA;
-    dst[1] = valueB;
+    ((u32*)entry)[0x74 / 4 + 0] = valueA;
+    ((u32*)entry)[0x74 / 4 + 1] = valueB;
     valueA = values[2];
     valueB = values[3];
-    dst[2] = valueA;
-    dst[3] = valueB;
+    ((u32*)entry)[0x74 / 4 + 2] = valueA;
+    ((u32*)entry)[0x74 / 4 + 3] = valueB;
     valueA = values[4];
     valueB = values[5];
-    dst[4] = valueA;
-    dst[5] = valueB;
+    ((u32*)entry)[0x74 / 4 + 4] = valueA;
+    ((u32*)entry)[0x74 / 4 + 5] = valueB;
     valueA = values[6];
     valueB = values[7];
-    dst[6] = valueA;
-    dst[7] = valueB;
+    ((u32*)entry)[0x74 / 4 + 6] = valueA;
+    ((u32*)entry)[0x74 / 4 + 7] = valueB;
 
     if (resetAdsr != 0)
     {
