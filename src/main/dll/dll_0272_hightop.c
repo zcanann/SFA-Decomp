@@ -89,19 +89,19 @@ typedef struct HighTopRuntime
     f32 pathPoint0Z;
     u8 padB84[0xc16 - 0xb84];
     s16 unkC16;
-    s16 unkC18;
+    s16 airMeterRemaining; /* seeded from placement airMeterCapacity; -=1 on hit; 0 -> airMeterSetShutdown */
     u8 padC1A[2];
     f32 lookTargetX;
     f32 lookTargetY;
     f32 lookTargetZ;
     f32 unkC28;
     u8 padC2C[4];
-    f32 unkC30;
+    f32 stateTimer; /* per-state countdown; -= framesThisStep, re-armed from random */
     u8 padC34[4];
     f32 unkC38;
     s32 unkC3C;
     u16 flagsC40;
-    u8 unkC42;
+    u8 idleSeqIndex; /* index into gHighTopIdleSequenceIds/Weights */
     u8 unkC43;
     u8 padC44;
     u8 unkC45;
@@ -463,7 +463,7 @@ void hightop_init(void* obj, u8* arg)
     dll_2E_func09((char*)runtime->lookController, &local2, &local1, 6);
     runtime->flags |= 2;
     runtime->flags |= 8;
-    runtime->unkC18 = *(s16*)(arg + 0x1a);
+    runtime->airMeterRemaining = *(s16*)(arg + 0x1a);
     runtime->flags |= 1;
     ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 127;
     runtime->flagsC49.b4 = 0;
@@ -487,7 +487,7 @@ int hightop_stateHandler08(int obj, u8* p2)
     if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         f32 zero;
-        state->unkC30 = lbl_803E6AB4;
+        state->stateTimer = lbl_803E6AB4;
         zero = lbl_803E6AA8;
         ((HighTopRuntime*)p2)->baddie.animSpeedC = zero;
         ((HighTopRuntime*)p2)->baddie.animSpeedB = zero;
@@ -512,7 +512,7 @@ int hightop_stateHandler08(int obj, u8* p2)
             }
             break;
         case 5:
-            if (state->unkC30 < lbl_803E6AA8)
+            if (state->stateTimer < lbl_803E6AA8)
             {
                 ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AB8, 0);
                 ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6ABC;
@@ -536,7 +536,7 @@ int hightop_stateHandler08(int obj, u8* p2)
             }
         }
     }
-    state->unkC30 -= (f32)(u32)framesThisStep;
+    state->stateTimer -= (f32)(u32)framesThisStep;
     return 0;
 }
 
@@ -614,7 +614,7 @@ void hightop_hitDetect(int obj)
             return;
         }
     }
-    if (p->unkC18 == 0)
+    if (p->airMeterRemaining == 0)
     {
         return;
     }
@@ -628,9 +628,9 @@ void hightop_hitDetect(int obj)
     st = p->baddie.controlMode;
     if (st == 2 || st == 8)
     {
-        p->unkC18 -= 1;
+        p->airMeterRemaining -= 1;
         fn_8009A8C8(obj, lbl_803E6B30);
-        if (p->unkC18 <= 0)
+        if (p->airMeterRemaining <= 0)
         {
             (*gGameUIInterface)->airMeterSetShutdown();
             p->flagsC49.b7 = 0;
@@ -818,7 +818,7 @@ int hightop_stateHandler04(int obj, int p)
     if ((s8)((BaddieState*)p)->moveJustStartedA != 0)
     {
         state->flagsC49.b1 = 1;
-        state->unkC30 = (f32)(int)randomGetRange(0x1f4, 0x3e8);
+        state->stateTimer = (f32)(int)randomGetRange(0x1f4, 0x3e8);
         state->unkC4B = 0;
         if (((GameObject*)obj)->anim.currentMove != 2)
         {
@@ -845,7 +845,7 @@ int hightop_stateHandler04(int obj, int p)
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, 0x5ce);
-        (*gGameUIInterface)->runAirMeter(state2->unkC18);
+        (*gGameUIInterface)->runAirMeter(state2->airMeterRemaining);
         fn_80039264((char*)state + 0xb48);
         return 7;
     }
@@ -855,17 +855,17 @@ int hightop_stateHandler04(int obj, int p)
         return 0;
     }
     objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
-    state->unkC30 -= (f32)(u32)framesThisStep;
+    state->stateTimer -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {
         RandomTimer_UpdateRangeTrigger((char*)state + 0xc34, lbl_803E6AD8, lbl_803E6ADC);
         if (count == 0)
         {
-            if (state->unkC30 < lbl_803E6AA8)
+            if (state->stateTimer < lbl_803E6AA8)
             {
                 ((BaddieState*)p)->moveSpeed = lbl_803E6AE0 * count + lbl_803E6AB0;
                 move = 9;
-                state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
+                state->stateTimer = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
         }
         else
@@ -874,7 +874,7 @@ int hightop_stateHandler04(int obj, int p)
             {
                 ((BaddieState*)p)->moveSpeed = lbl_803E6AE8 * count + lbl_803E6AE4;
                 move = 9;
-                state->unkC30 = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
+                state->stateTimer = (f32)(int)(randomGetRange(0x2bc, 0x3e8) - count * 0x12c);
             }
         }
     }
@@ -1068,7 +1068,7 @@ int hightop_stateHandler09(int obj, int p)
         }
         state->flags &= ~1;
         state->flagsC49.b1 = 0;
-        state->unkC42 = 0;
+        state->idleSeqIndex = 0;
         state->flagsC49.b6 = 0;
         *(u32*)p |= 0x1000000;
         storeZeroToFloatParam((char*)state + 0xc2c);
@@ -1164,7 +1164,7 @@ int hightop_stateHandler09(int obj, int p)
         if (timerCountDown((char*)state + 0xc2c) != 0)
         {
             *(s8*)&state->unkC4B = -1;
-            (*gObjectTriggerInterface)->runSequence(gHighTopIdleSequenceIds[state->unkC42], (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(gHighTopIdleSequenceIds[state->idleSeqIndex], (void*)obj, -1);
         }
     }
     else
@@ -1182,7 +1182,7 @@ int hightop_stateHandler09(int obj, int p)
                     weight++;
                     roll -= gHighTopIdleSequenceWeights[idx++];
                 }
-                state->unkC42 = idx;
+                state->idleSeqIndex = idx;
                 state->flags |= 1;
                 s16toFloat((char*)state + 0xc2c, 0x14);
             }
