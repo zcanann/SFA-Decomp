@@ -36,19 +36,19 @@ extern f32 gExplodedGravity;
 
 void FUN_801a4520(int param_1)
 {
-    int iVar1;
+    int placement;
 
     if (((GameObject*)param_1)->unkF4 == 0)
     {
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(iVar1 + 0x1c) != 0) && (**(u8**)&((GameObject*)param_1)->extra >> 5 != 0))
+        placement = *(int*)&((GameObject*)param_1)->anim.placementData;
+        if ((*(short*)(placement + 0x1c) != 0) && (**(u8**)&((GameObject*)param_1)->extra >> 5 != 0))
         {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(iVar1 + 0x1c));
+            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(placement + 0x1c));
         }
-        iVar1 = (int)*(char*)(iVar1 + 0x1e);
-        if (iVar1 != -1)
+        placement = (int)*(char*)(placement + 0x1e);
+        if (placement != -1)
         {
-            (*gObjectTriggerInterface)->runSequence(iVar1, (void*)param_1, -1);
+            (*gObjectTriggerInterface)->runSequence(placement, (void*)param_1, -1);
         }
         ((GameObject*)param_1)->unkF4 = 1;
     }
