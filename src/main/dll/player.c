@@ -5526,14 +5526,13 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     {
         *(int*)&((GameObject*)obj)->anim.weaponDaTable = inner->moveSlots +
             ((u32)inner->moveSlotIndex * 0xb0 + 0x60);
+        if (((GameObject*)obj)->anim.currentMove !=
+            gPlayerMoveSlotTable[*(s16*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0) + 0x2)])
         {
-            int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
-            if (((GameObject*)obj)->anim.currentMove != gPlayerMoveSlotTable[*(s16*)(slot + 0x2)])
-            {
-                ObjAnim_SetCurrentMove(obj, gPlayerMoveSlotTable[*(s16*)(slot + 0x2)],
-                                       *(f32*)(slot + 0x68), 0);
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 2);
-            }
+            ObjAnim_SetCurrentMove(obj,
+                gPlayerMoveSlotTable[*(s16*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0) + 0x2)],
+                *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0) + 0x68), 0);
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 2);
         }
         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) & ~0xef;
         ((PlayerState*)state)->baddie.moveSpeed = *(f32*)((inner->moveSlots + 0x1c) + (u32)inner->moveSlotIndex * 0xb0);
@@ -5611,7 +5610,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     }
     if ((*(u8*)((inner->moveSlots + 0x88) + (u32)inner->moveSlotIndex * 0xb0) &
             2) != 0 &&
-        inner->lastHitObject != 0)
+        *(void**)&inner->lastHitObject != NULL)
     {
         if (inner->unk8AB < inner->unk8AC)
         {
@@ -14934,6 +14933,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 }
 
 #pragma peephole off
+#pragma optimization_level 2
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane planes[2];
@@ -15114,6 +15114,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         return 3;
     }
 }
+#pragma optimization_level reset
 #pragma peephole reset
 
 int fn_802A2918(int obj, int state, f32 fv)
