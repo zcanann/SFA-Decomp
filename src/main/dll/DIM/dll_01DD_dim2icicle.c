@@ -77,7 +77,7 @@ void dim2icicle_initialise(void)
 void dim2icicle_init(int obj, s8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
-    if (GameBit_Get(*(s16*)(p + 0x1e)) != 0)
+    if (GameBit_Get(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
     {
         inner[6] = 2;
         ((GameObject*)obj)->anim.alpha = 0;
