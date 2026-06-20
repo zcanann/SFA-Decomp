@@ -800,13 +800,13 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
                         sumCur = sumNext;
                     }
                 }
-                if (sumCur > 1)
+                if (sumCur <= 1)
                 {
-                    dir = 0;
+                    blocked = 1;
                 }
                 else
                 {
-                    blocked = 1;
+                    dir = 0;
                 }
             }
         }
