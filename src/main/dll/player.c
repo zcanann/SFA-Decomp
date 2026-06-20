@@ -521,7 +521,7 @@ u8 fn_80296414(int obj, int p2, u8* out)
     PlayerState* inner = ((GameObject*)obj)->extra;
     *out = inner->unk682;
     return inner->baddie.controlMode == 0x1c &&
-        *(u32*)&((PlayerState*)inner)->unk67C == (u32)p2;
+        *(u32*)&((PlayerState*)inner)->contactObject == (u32)p2;
 }
 
 int fn_80295C88(int obj)
@@ -4427,14 +4427,14 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(p2 + 0x664), (f32*)(p2 + 0x668),
                                                    (f32*)(p2 + 0x66c), buf.hitObj);
-                    ((PlayerState*)p2)->unk67C = buf.hitObj;
+                    ((PlayerState*)p2)->contactObject = buf.hitObj;
                 }
                 else
                 {
                     *(f32*)(p2 + 0x664) = end[0];
                     *(f32*)(p2 + 0x668) = end[1];
                     *(f32*)(p2 + 0x66c) = end[2];
-                    ((PlayerState*)p2)->unk67C = 0;
+                    ((PlayerState*)p2)->contactObject = 0;
                 }
                 return 6;
             }
@@ -4456,14 +4456,14 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
             {
                 Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(p2 + 0x664), (f32*)(p2 + 0x668),
                                                (f32*)(p2 + 0x66c), buf.hitObj);
-                ((PlayerState*)p2)->unk67C = buf.hitObj;
+                ((PlayerState*)p2)->contactObject = buf.hitObj;
             }
             else
             {
                 *(f32*)(p2 + 0x664) = end[0];
                 *(f32*)(p2 + 0x668) = end[1];
                 *(f32*)(p2 + 0x66c) = end[2];
-                ((PlayerState*)p2)->unk67C = 0;
+                ((PlayerState*)p2)->contactObject = 0;
             }
             return 0xd;
         case 3:
@@ -6317,7 +6317,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.animSpeedA = z;
         ((PlayerState*)state)->baddie.animSpeedB = z;
     }
-    sub = inner->unk67C;
+    sub = inner->contactObject;
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 0x5f:
@@ -13191,7 +13191,7 @@ void playerDie(int obj)
     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
     ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-    inner->unk46C = Obj_SetupObject(setup, 5, -1, -1, 0);
+    inner->spawnedObject = Obj_SetupObject(setup, 5, -1, -1, 0);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 0;
     ((ByteFlags*)((char*)inner + 0x3f3))->b02 = 1;
     lbl_803DE42C = 0;

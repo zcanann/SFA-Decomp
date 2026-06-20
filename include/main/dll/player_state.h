@@ -79,7 +79,7 @@ typedef struct PlayerState {
     int unk460;
     int unk464;
     u8 pad468[0x46C - 0x468];
-    int unk46C;
+    int spawnedObject; /* object handle from Obj_SetupObject (player-spawned, e.g. staff/projectile setup) */
     f32 inputMagnitude;
     int inputHeading;
     s16 targetYaw; /* desired heading; copied into yaw when applied */
@@ -220,7 +220,7 @@ typedef struct PlayerState {
     f32 unk668;
     f32 unk66C;
     u8 pad670[0x67C - 0x670];
-    int unk67C;
+    int contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
     u8 pad680[0x681 - 0x680];
     s8 unk681;
     u8 unk682;
