@@ -615,12 +615,10 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
             blendScale = -blendScale;
         }
         axisAt = &axis[sampleIndex];
-        previousDistance =
-            (rootScale * (moveWeight * axisAt[1])) +
-            (blendScale * (blendWeight * blendSamples[sampleIndex]));
-        nextDistance =
-            (rootScale * (moveWeight * axisAt[2])) +
-            (blendScale * (blendWeight * blendSamples[sampleIndex + 1]));
+        previousDistance = rootScale * (moveWeight * axisAt[1]);
+        previousDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
+        nextDistance = rootScale * (moveWeight * axisAt[2]);
+        nextDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
     }
     else
     {
