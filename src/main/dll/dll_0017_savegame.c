@@ -1183,10 +1183,10 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
                 pRestartPoint = 0;
             }
         }
-    }
-    if (flags & 2)
-    {
-        base[0x22] = 1;
+        if (flags & 2)
+        {
+            base[0x22] = 1;
+        }
     }
 }
 
