@@ -626,8 +626,6 @@ int Minimap_update(void)
 
 u16 getMinimapY(void) { return lbl_803DD938; }
 
-int titlescreen_getExtraSize(void);
-void titlescreen_hitDetect(void);
 int titlescreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
