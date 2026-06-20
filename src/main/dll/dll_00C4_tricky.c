@@ -1095,7 +1095,7 @@ void Tricky_update(int obj)
                 ((TrickyState*)state)->unkD = 1;
                 trickySelectQueuedCommandTarget(state, 1);
                 TRICKY_VOICE(obj, st, 0x13c, 0);
-                switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                 {
                 case 0x1ca:
                     if (**(u8**)state < 4)
@@ -1196,7 +1196,7 @@ void Tricky_update(int obj)
                     ((TrickyState*)state)->unkD = 3;
                     if (trickySelectQueuedCommandTarget(state, 3) != 0)
                     {
-                        switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                        switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                         {
                         case 0x36:
                         case 0x104:
@@ -1239,7 +1239,7 @@ void Tricky_update(int obj)
                     ((TrickyState*)state)->unkD = 4;
                     trickySelectQueuedCommandTarget(state, 4);
                     ((TrickyState*)state)->unk08 = 7;
-                    switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                    switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                     {
                     case 0x1c9:
                         *(void**)&((TrickyState*)state)->unk724 = fn_801B17F4;
@@ -1458,9 +1458,9 @@ void Tricky_update(int obj)
     if (*(void**)&((TrickyState*)state)->followObj != NULL)
     {
         ((TrickyState*)state)->unk378 = 1;
-        ((TrickyState*)state)->unk37C = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x18);
-        ((TrickyState*)state)->unk380 = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x1c);
-        ((TrickyState*)state)->unk384 = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x20);
+        ((TrickyState*)state)->unk37C = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
+        ((TrickyState*)state)->unk380 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosY;
+        ((TrickyState*)state)->unk384 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosZ;
     }
     else
     {
@@ -2743,9 +2743,9 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
             {
                 if (((TrickyState*)state)->substate != 3)
                 {
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0xc) = ((TrickyState*)state)->unk408;
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x10) = ((TrickyState*)state)->unk40C;
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x14) = ((TrickyState*)state)->unk410;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosX = ((TrickyState*)state)->unk408;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->unk40C;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->unk410;
                 }
                 objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, param_2, param_3, param_4, param_5,
                                      lbl_803E23E8);
