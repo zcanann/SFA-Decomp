@@ -138,6 +138,7 @@ void drawFn_80125424(void)
     int ypos;
     int i;
     int alphaI;
+    int alphaTmp;
     int randX;
     int randY;
     s16 panelW;
@@ -254,11 +255,8 @@ void drawFn_80125424(void)
         {
             wave = waveAmp * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
             wave = waveAmp * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
-            alphaI = (int)((f32)alpha * (waveBase1 + wave));
-            if (alphaI < 0)
-            {
-                alphaI = 0;
-            }
+            alphaTmp = (int)((f32)alpha * (waveBase1 + wave));
+            alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
