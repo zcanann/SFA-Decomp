@@ -209,7 +209,7 @@ void fn_80204BF8(int obj)
         h = blob->pauseTimer;
         if (h != 0)
         {
-            blob->pauseTimer = h - (int)timeDelta;
+            blob->pauseTimer -= (s16)timeDelta;
             if (blob->pauseTimer <= 0)
             {
                 blob->pauseTimer = 0;
