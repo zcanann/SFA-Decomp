@@ -2956,7 +2956,7 @@ void doPendingMapLoads(void)
                             int k;
                             for (k = 0; k < cn; k++)
                             {
-                                if (*(int*)p2 != 0 && m == *(s16*)(p2 + 4))
+                                if (*(void**)p2 != NULL && m == *(s16*)(p2 + 4))
                                     goto found;
                                 p2 += 8;
                                 i2++;
