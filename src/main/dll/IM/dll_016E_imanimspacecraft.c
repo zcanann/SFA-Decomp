@@ -15,7 +15,6 @@
 #include "main/objtexture.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
-extern u8 framesThisStep;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
