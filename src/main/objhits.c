@@ -2299,7 +2299,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                             *(float*)((int)endPoints + ptOff + 4) = curWalk[2];
                             *(float*)((int)endPoints + ptOff + 8) = playerMapOffsetZ + curWalk[3];
                             *(float*)((int)startPoints + ptOff) = playerMapOffsetX + *(float*)(prevWalk + 4);
-                            *(u32*)((int)startPoints + ptOff + 4) = *(u32*)(prevWalk + 8);
+                            *(float*)((int)startPoints + ptOff + 4) = *(float*)(prevWalk + 8);
                             *(float*)((int)startPoints + ptOff + 8) = playerMapOffsetZ + *(float*)(prevWalk + 0xc);
                             *(float*)(((u8*)&hb + rOff) + 0x40) = *curWalk;
                             *(s8*)(((u8*)&hb + 0x50) + pointCount) = -1;
