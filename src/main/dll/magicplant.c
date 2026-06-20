@@ -477,7 +477,7 @@ void fn_8015383C(int obj, int state)
         {
             if (((BaddieState*)state)->seqEntryIndex != 0)
             {
-                ((BaddieState*)state)->seqEntryIndex = ((BaddieState*)state)->seqEntryIndex - 1;
+                ((BaddieState*)state)->seqEntryIndex -= 1;
                 mode = (u8)((GameObject*)obj)->anim.currentMove;
             }
             else if (((GameObject*)obj)->anim.currentMove != 5 && losDetected)
