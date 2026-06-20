@@ -1,4 +1,4 @@
-/* DLL 0x199 — NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
+/* DLL 0x199 - NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
 #include "main/dll/dll197state_struct.h"
 #include "main/dll/dll199state_struct.h"
 #include "main/effect_interfaces.h"
