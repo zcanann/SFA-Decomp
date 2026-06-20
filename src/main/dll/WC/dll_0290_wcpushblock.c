@@ -386,7 +386,8 @@ void wcpushblock_update(int obj)
     case WCPUSHBLOCK_PHASE_SLIDING:
         if (lbl_803E6D64 != ((GameObject*)obj)->anim.velocityX || lbl_803E6D64 != ((GameObject*)obj)->anim.velocityZ)
         {
-            f32 speed = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+            f32 vx = ((GameObject*)obj)->anim.velocityX;
+            f32 speed = sqrtf(vx * vx +
                     ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) -
                 lbl_803E6D68;
             if (speed < lbl_803E6D64)
