@@ -493,7 +493,7 @@ void FUN_8019f1dc(void)
     fStack_24 = (float)in_ps29_1;
     context = FUN_8028683c();
     obj = (u32)(context >> 0x20);
-    model = *(int*)(obj + 0xb8);
+    model = *(int*)&((GameObject*)obj)->extra;
     otherObj = FUN_80017a98();
     otherObj = *(int*)(otherObj + 0xb8);
     *(float*)(model + 0x20) = lbl_803E4F58;
