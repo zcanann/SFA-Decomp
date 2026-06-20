@@ -3696,7 +3696,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 (*gCameraInterface)->setFocus((void*)obj2, 0);
                 (*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
                 ((PlayerState*)inner)->unk6E8 = 0;
-                if ((u32)obj2 != 0 && *(s16*)(obj2 + 0x46) == 0x22)
+                if ((u32)obj2 != 0 && ((GameObject*)obj2)->anim.seqId == 0x22)
                 {
                     (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                         0x16);
