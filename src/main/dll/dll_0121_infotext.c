@@ -16,7 +16,7 @@ void infotext_init(int obj, s8* def)
     v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
     ((GameObject*)obj)->objectFlags = v;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
-    objSetHintTextIdx(obj, (int)(u8)def[0x19]);
+    objSetHintTextIdx(obj, (u8)def[0x19]);
 }
 
 void cctestinfot_init(int obj, s8* def);
