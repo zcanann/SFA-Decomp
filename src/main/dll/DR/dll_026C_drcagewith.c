@@ -252,7 +252,7 @@ void drcagewith_init(int obj, char* arg)
     else
     {
         ObjHits_EnableObject(obj);
-        if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
+        if (GameBit_Get(((DrcagewithPlacement*)arg)->openedGameBit) != 0)
         {
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
