@@ -880,7 +880,6 @@ void dll_D3_update(int* obj)
     f32 dy;
     f32 dz;
     int aiStack_80[24];
-    char hitType;
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
@@ -912,7 +911,7 @@ void dll_D3_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->unk10;
-        (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement*)trans)->unk2E, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(s8*)((char*)trans + 0x2e), obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
@@ -950,7 +949,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    if (((TreasureChestState*)state)->targetObj != 0 &&
+    if ((u32)((TreasureChestState*)state)->targetObj != 0 &&
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
@@ -969,7 +968,7 @@ void dll_D3_update(int* obj)
         dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(dx * dx + dy * dy + dz * dz);
+            sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -1007,7 +1006,7 @@ void dll_D3_update(int* obj)
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
-    if ((extra->flags92 & 1) == 0 &&
+    if (((StaffBits*)&extra->flags92)->b0 == 0u &&
         extra->surfaceMode == 6)
     {
         hitCount = objBboxFn_800640cc(
@@ -1015,11 +1014,10 @@ void dll_D3_update(int* obj)
             &((GameObject*)obj)->anim.localPosX,
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
-        if (hitCount != 0 && hitType == 13)
+        if (hitCount != 0 && *(s8*)((char*)aiStack_80 + 0x50) == 13)
         {
-            extra->flags92 =
-                (u8)((extra->flags92 & 0xfe) | 1);
-            *(s16*)&extra->scriptTimer = (s16)(randomGetRange(10, 0xf) * 0x3c);
+            ((StaffBits*)&extra->flags92)->b0 = 1;
+            extra->scriptTimer = (u16)(randomGetRange(10, 0xf) * 0x3c);
         }
     }
 }
