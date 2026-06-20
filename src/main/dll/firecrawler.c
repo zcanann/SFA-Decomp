@@ -1787,7 +1787,7 @@ void crawler_updateC(s16* obj, u8* state)
                             else
                             {
                                 *(u8*)(state + 0x323) = 1;
-                                *(f32*)(state + 0x308) = lbl_803E2BDC;
+                                ((BaddieState*)state)->unk308 = lbl_803E2BDC;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
                                 *(f32*)(state + 0x310) = lbl_803E2BA8;
                             }
