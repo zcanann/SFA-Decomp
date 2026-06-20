@@ -4125,7 +4125,7 @@ void GameUI_update(void)
         {
             if ((s8)shouldCloseCMenu != 0)
             {
-                buttonDisable(0, 0);
+                buttonDisable(0, (s8)shouldCloseCMenu);
                 gCMenuButtons &= ~(s8)shouldCloseCMenu;
                 lbl_803DD898 &= ~(s8)shouldCloseCMenu;
             }
@@ -4207,6 +4207,12 @@ void GameUI_update(void)
                     {
                         switch ((s8)gCMenuCurSection)
                         {
+                        case 2:
+                            if (tricky != 0)
+                            {
+                                gCMenuButtons |= 0x20000;
+                                break;
+                            }
                         case 0:
                             if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0 ||
                                 trickyBitFn_801241cc(*(int*)&gCMenuSections[0x10], 0) == 0)
@@ -4224,9 +4230,6 @@ void GameUI_update(void)
                             {
                                 gCMenuButtons |= 0x40000;
                             }
-                            break;
-                        case 2:
-                            if (tricky != 0) gCMenuButtons |= 0x20000;
                             break;
                         }
                     }
@@ -4309,7 +4312,7 @@ void GameUI_update(void)
                 {
                     int dir = 1;
                     int st = cMenuState;
-                    int next;
+                    u8 next;
                     lbl_803DD79A = -1;
                     if (cx < 0)
                     {
@@ -4318,7 +4321,7 @@ void GameUI_update(void)
                     }
                     next = (u8)(st + dir);
                     if (next > 4) next = 2;
-                    if ((u8)next < 2) next = 4;
+                    if (next < 2) next = 4;
                     switch ((u8)next)
                     {
                     case 4:
@@ -4349,13 +4352,13 @@ void GameUI_update(void)
 
         if ((s8)shouldOpenCMenu != 0)
         {
-            if (*(s8*)&cMenuOpen != 0)
+            if (*(s8*)&cMenuOpen == 0)
             {
-                Sfx_PlayFromObject(0, 0x37b);
+                Sfx_PlayFromObject(0, 0xf5);
             }
             else
             {
-                Sfx_PlayFromObject(0, 0xf5);
+                Sfx_PlayFromObject(0, 0x37b);
             }
             cMenuOpen = 1;
             cMenuState = shouldOpenCMenu;
@@ -4372,7 +4375,7 @@ void GameUI_update(void)
         if (lbl_803DD8A8 > 2) lbl_803DD8A8 = 2;
 
         {
-            int sv = (s16)(*gCameraInterface)->getMinimapInfoText();
+            s16 sv = (*gCameraInterface)->getMinimapInfoText();
             if ((s16)gMinimapInfoTextId > -1)
             {
                 sv = gMinimapInfoTextId;
