@@ -866,6 +866,7 @@ extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
 
 #pragma fp_contract off
+#pragma opt_common_subs off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -875,11 +876,12 @@ void dll_D3_update(int* obj)
     int hitCount;
     int rc;
     int hits;
-    f32 searchRadius;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 vec[4];
     int aiStack_80[24];
+#define searchRadius vec[0]
+#define dx vec[1]
+#define dy vec[2]
+#define dz vec[3]
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
@@ -931,15 +933,16 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetState != 1)
     {
-        rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
+        rc = ((int (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
+            obj, state,
             (f32)(u32)((TreasureChestState*)state)->aggroRange,
-            obj, state, 0x8000);
+            0x8000);
         if (rc != 0u)
         {
             ((void (*)(int*, int*, int, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x28 /
                 4])(
                 obj, state,
-                (int)state + 0x35c,
+                (int)((char*)state + 0x35c),
                 (int)((TreasureChestState*)state)->gameBitB,
                 0, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
@@ -987,7 +990,8 @@ void dll_D3_update(int* obj)
             lbl_803202E8, lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
-            (*(void (**)(void))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))();
+            (*(void (**)(int))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))(
+                *(int*)&((GameObject*)player)->childObjs[0]);
             *(f32*)((char*)gStaffActionHitLightParams + 0xc) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)((char*)gStaffActionHitLightParams + 0x10) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)((char*)gStaffActionHitLightParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
@@ -1001,8 +1005,8 @@ void dll_D3_update(int* obj)
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
 
-    ((void (*)(f32, f32, int*, int*, void**, void*))((void**)*(int*)gPlayerInterface)[8 / 4])(
-        timeDelta, timeDelta, obj, state, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
+    ((void (*)(int*, int*, f32, f32, void**, void*))((void**)*(int*)gPlayerInterface)[8 / 4])(
+        obj, state, timeDelta, timeDelta, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
@@ -1021,6 +1025,11 @@ void dll_D3_update(int* obj)
         }
     }
 }
+#undef searchRadius
+#undef dx
+#undef dy
+#undef dz
+#pragma opt_common_subs reset
 #pragma fp_contract on
 
 void dll_D3_init(int obj, int def, int flag)
