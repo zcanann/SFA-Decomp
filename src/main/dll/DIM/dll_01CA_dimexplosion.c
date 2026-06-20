@@ -406,7 +406,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (((ExplosionState*)state)->frameCounter < ((ExplosionState*)state)->lifeFrames && *(u8*)&((ExplosionState*)
             state)->rayMode != 0)
         {
-            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; i++, p += 4)
+            for (i = 0, p = state; i < ((ExplosionState*)state)->rayMode; p += 4, i++)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)*(u16*)&((ExplosionState*)p)->rayYawA;
                 ((GameObject*)obj)->anim.rotX = (s16)*(u16*)&((ExplosionState*)p)->rayPitchA;
