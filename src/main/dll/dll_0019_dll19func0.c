@@ -29,7 +29,7 @@ typedef struct Dll19Placement
     u8 pad0[0x22 - 0x0];
     s16 unk22;
     u8 pad24[0x32 - 0x24];
-    u8 unk32;
+    u8 progressDenominator;
     u8 pad33[0x3E8 - 0x33];
     f32 unk3E8;
     f32 unk3EC;
@@ -334,7 +334,7 @@ f32 dll_19_func1A(int obj)
 {
     int p_b8 = *(int*)&((GameObject*)obj)->extra;
     int p_4c = *(int*)&((GameObject*)obj)->anim.placementData;
-    u8 denom = ((Dll19Placement*)p_4c)->unk32;
+    u8 denom = ((Dll19Placement*)p_4c)->progressDenominator;
     if (denom != 0)
     {
         s8 numer = ((Dll19State*)p_b8)->progressNumerator;
