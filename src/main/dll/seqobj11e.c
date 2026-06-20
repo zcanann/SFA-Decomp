@@ -546,8 +546,7 @@ void fn_80152040(int* obj, u8* state)
     {
         if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
         {
-            u32 triggered = 0x40000000;
-            ((BaddieState*)state)->controlFlags = flags | triggered;
+            ((BaddieState*)state)->controlFlags = flags | 0x40000000LL;
         }
     }
     flags = ((BaddieState*)state)->controlFlags;
