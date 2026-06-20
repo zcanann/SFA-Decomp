@@ -505,7 +505,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
                             if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, o2 + 0x18) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, o2 + 0x18) >=
+                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, o2 + 0x18) >=
                                     gNwMammothTumbleweedDistSqThreshold)
                                 {
                                     fn_8014C66C(o2, obj);
@@ -600,7 +600,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
+        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -611,7 +611,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0x12:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000))
+        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
