@@ -1087,12 +1087,12 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                         (f32)(int)(yb - 1), p2, 0xff);
         }
     }
+    idx = (int)((u32)lbl_803DD9C0 << 3) / 0x100;
     drawScaledTexture((char*)gTitleScreenTextures[18],
                       (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50),
                       (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
                       ((Texture*)gTitleScreenTextures[18])->width,
                       ((Texture*)gTitleScreenTextures[18])->height, 1);
-    idx = (int)((u32)lbl_803DD9C0 << 3) / 0x100;
     tex = (Texture*)gTitleScreenTextures[8 + idx];
     drawScaledTexture((char*)tex,
                       (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) +
