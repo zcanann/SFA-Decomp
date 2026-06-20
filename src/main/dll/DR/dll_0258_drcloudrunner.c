@@ -446,6 +446,7 @@ void DR_CloudRunner_init(int obj, int p2)
 
 int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {
+    Vec3x* vt = (Vec3x*)gDRCloudRunnerVecTable;
     u8* base = gDRCloudRunnerMoveParamTable;
     u32 idx;
     int needMove = 0;
@@ -473,9 +474,9 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     f32 dist;
     f32 t;
     f32* lim;
-    vecB = ((Vec3x*)gDRCloudRunnerVecTable)[2];
-    vecC = ((Vec3x*)gDRCloudRunnerVecTable)[3];
-    vecD = ((Vec3x*)gDRCloudRunnerVecTable)[4];
+    vecB = vt[2];
+    vecC = vt[3];
+    vecD = vt[4];
     moveId = -1;
     inner = ((GameObject*)obj)->extra;
     *(int*)((char*)p2 + 0) |= 0x200000;
