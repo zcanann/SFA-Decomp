@@ -1612,8 +1612,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
         if ((u32)obj == ObjGroup_FindNearestObject(3, *(int*)&((BaddieState*)p2)->targetObj, 0))
         {
             sub->unk3C = *(int*)&((BaddieState*)p2)->targetObj;
-            tmpA = sub->unk30;
             tmpB = sub->unk2C;
+            tmpA = sub->unk30;
             q = sub->msgStack;
             msgA[0] = sub->unk28;
             msgA[1] = tmpB;
@@ -1664,8 +1664,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
     {
         if (ObjGroup_ContainsObject(*(int*)&((BaddieState*)p2)->targetObj, c30) != 0)
         {
-            tmpA = sub->unk30;
             tmpB = sub->unk2C;
+            tmpA = sub->unk30;
             q = sub->msgStack;
             msgE[0] = sub->unk28;
             msgE[1] = tmpB;
@@ -1727,8 +1727,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
         }
         player = Obj_GetPlayerObject();
         *(int*)&((BaddieState*)p2)->targetObj = player;
-        tmpA = sub->unk30;
         tmpB = sub->unk2C;
+        tmpA = sub->unk30;
         q = sub->msgStack;
         msgH[0] = sub->unk28;
         msgH[1] = tmpB;
