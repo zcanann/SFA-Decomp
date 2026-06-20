@@ -677,8 +677,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
         }
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = idx;
+        q[++state->queueCount].value = idx;
         q[state->queueCount].priority = 0xFFFE;
         heapSiftUp(q, state->queueCount);
     }
