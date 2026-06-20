@@ -2122,11 +2122,12 @@ void initFn_800534f8(void)
         *(void**)(p + i * 0x1c) = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
         p[i * 0x1c + 0x1a] = 0;
     }
-    gRcpDistortSlotIndex = 0;
+    j = 0;
+    gRcpDistortSlotIndex = j;
     q = lbl_8030D028;
     scaleA = gRcpDistortScaleA;
     scaleB = LastReadFinished_803DEB50.lo;
-    for (j = 0; j < 6; j++)
+    for (; j < 6; j++)
     {
         v = *(f32*)(q + j * 8 + 4);
         slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
