@@ -1055,12 +1055,10 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     {
         ObjHits_DisableObject(p1);
         ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
+        return;
     }
-    else
-    {
-        ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags & ~0x4000;
-        ObjHits_EnableObject(p1);
-    }
+    ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags & ~0x4000;
+    ObjHits_EnableObject(p1);
     if ((s8)p2[46] == -1)
     {
         ((GameObject*)p1)->unkF8 = 1;
