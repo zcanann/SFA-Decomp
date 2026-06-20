@@ -1688,6 +1688,7 @@ extern u8 gNewShadowCasterCount;
 extern int* gNewShadowCurrentViewSlot;
 extern char gNewShadowCasterTable[];
 extern f32 Ydchuff_803DED80;
+extern f32 Ydchuff_803DED90;
 extern const double TokenCB_803DED58;
 extern const double DrawDone_803DED60;
 extern inline float sqrtf(float x)
@@ -2292,7 +2293,7 @@ void shadowCreate(int* obj)
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
                 *(u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8) = 2;
-                *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = (&Ydchuff_803DED80)[4];
+                *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = Ydchuff_803DED90;
             }
         }
         else
