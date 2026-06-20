@@ -558,10 +558,10 @@ typedef struct AppleontreeObjectDef
     u32 unk18;
     u16 duration;
     u16 elapsed;
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
+    u8 stage0Frac;
+    u8 stage1Frac;
+    u8 stage2Frac;
+    u8 stage3Frac;
     u8 unk24;
     s8 unk25;
     s16 gameBit;
@@ -876,12 +876,12 @@ void appleontree_init(int obj, int def)
     ((CrackAnimState*)state)->duration = (f32)((AppleontreeObjectDef*)def)->duration;
     ((CrackAnimState*)state)->elapsed = (f32)((AppleontreeObjectDef*)def)->elapsed;
     {
-        ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->unk20 / lbl_803E3828;
-        progress = (f32)((AppleontreeObjectDef*)def)->unk21 / lbl_803E3828;
+        ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->stage0Frac / lbl_803E3828;
+        progress = (f32)((AppleontreeObjectDef*)def)->stage1Frac / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd1 = progress + ((CrackAnimState*)state)->stageEnd0;
-        progress = (f32)((AppleontreeObjectDef*)def)->unk22 / lbl_803E3828;
+        progress = (f32)((AppleontreeObjectDef*)def)->stage2Frac / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd2 = progress + ((CrackAnimState*)state)->stageEnd1;
-        progress = (f32)((AppleontreeObjectDef*)def)->unk23 / lbl_803E3828;
+        progress = (f32)((AppleontreeObjectDef*)def)->stage3Frac / lbl_803E3828;
         ((CrackAnimState*)state)->stageEnd3 = progress + ((CrackAnimState*)state)->stageEnd2;
         ((CrackAnimState*)state)->unk20 = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
         ((CrackAnimState*)state)->unk28 = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
