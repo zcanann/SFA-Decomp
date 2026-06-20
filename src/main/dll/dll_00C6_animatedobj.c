@@ -1689,11 +1689,11 @@ void animatedobj_update(int* obj)
         res = (*gObjectTriggerInterface)->update((u8*)obj, timeDelta);
         if (res != 0 && ((GameObject*)obj)->seqIndex == -2)
         {
-            int slot8 = *(s8*)((char*)seq + 0x57);
             int* match = NULL;
             int* list;
             int cnt;
             int slot;
+            int slot8 = *(s8*)((char*)seq + 0x57);
             list = ObjList_GetObjects(&res, &count);
             cnt = 0;
             slot = slot8;
@@ -1723,7 +1723,9 @@ void animatedobj_update(int* obj)
             ((GameObject*)obj)->objectFlags |= 0x8000;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
-        if (((GameObject*)obj)->anim.seqId == 0x774)
+        switch (((GameObject*)obj)->anim.seqId)
+        {
+        case 0x774:
         {
             int i;
             for (i = 0; i < seq->eventCount; i++)
@@ -1753,6 +1755,8 @@ void animatedobj_update(int* obj)
                     break;
                 }
             }
+        }
+        break;
         }
     }
 }
