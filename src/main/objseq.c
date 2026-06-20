@@ -1010,8 +1010,7 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = gObjSeqCamModeArgB;
-                    code = gObjSeqCamModeArgD;
-                    if (code == 0)
+                    if ((code = gObjSeqCamModeArgD) == 0)
                     {
                         mode48.flag = 1;
                     }
