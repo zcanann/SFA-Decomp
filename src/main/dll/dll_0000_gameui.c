@@ -736,6 +736,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
  * Default tail: store the (clamped) idx into the active-id slot
  * lbl_803DBA5C, ensure the active counter starts at >=1, and
  * latch the s32 fade_target at lbl_803DBA60. */
+#pragma dont_inline on
 void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 {
     if (flags & 0x08)
@@ -786,6 +787,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
     }
     lbl_803DBA60 = fade_target;
 }
+#pragma dont_inline reset
 
 /* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
  * pauseMenuState byte is clear, polls the digital pad via
@@ -2566,16 +2568,9 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                         hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
                     }
                 }
-                else if (cur == 0)
+                else if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                 {
-                    if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
-                    {
-                        hint = 0x568;
-                    }
-                    else
-                    {
-                        hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
-                    }
+                    hint = 0x568;
                 }
                 else
                 {
