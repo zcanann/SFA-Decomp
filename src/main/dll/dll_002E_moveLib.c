@@ -931,10 +931,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
 
         objAnim->yaw += yawDelta;
         ret = (u32)(s16)yawDelta;
-        if ((int)ret < 0)
-        {
-            ret = -ret;
-        }
+        ret = ((int)ret >= 0) ? ret : -ret;
         *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
     }
     return 1;
