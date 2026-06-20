@@ -115,7 +115,7 @@ void CameraModeStatic_update(short* camObj)
             {
                 angle = angle + 0xffff;
             }
-            camObj[1] += (short)((int)(angle * framesThisStep) >> 3);
+            camObj[1] += (int)(angle * framesThisStep) >> 3;
         }
         if ((*(u8*)(placement + 0x1b) & 4) != 0)
         {
@@ -128,7 +128,7 @@ void CameraModeStatic_update(short* camObj)
             {
                 viewObj = viewObj + 0xffff;
             }
-            camObj[2] += (short)((int)(viewObj * framesThisStep) >> 3);
+            camObj[2] += (int)(viewObj * framesThisStep) >> 3;
         }
         Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
                                        *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),
