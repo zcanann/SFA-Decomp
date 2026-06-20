@@ -192,8 +192,8 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
         src->bit = sbit + bw;
         packed = mask & (val >> (sbit & 7));
         curBit = dst->bit;
-        packed = packed << ((8 - (curBit & 7)) + sh16);
         sByte = curBit >> 3;
+        packed = packed << ((8 - (curBit & 7)) + sh16);
         ((u8*)dst->instrs)[sByte] |= (packed >> 16) & 0xff;
         ((u8*)dst->instrs)[sByte + 1] |= (packed >> 8) & 0xff;
         ((u8*)dst->instrs)[sByte + 2] |= packed & 0xff;
