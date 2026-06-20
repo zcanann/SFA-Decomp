@@ -760,9 +760,9 @@ void SnowBike_init(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->checkpointIndexC = -1;
     ((SnowBikeState*)state)->unk05C = params[0x1c];
     ((SnowBikeState*)state)->unk05D = params[0x1d];
-    ((SnowBikeState*)state)->unk00C = ((GameObject*)obj)->anim.localPosX;
-    ((SnowBikeState*)state)->unk010 = ((GameObject*)obj)->anim.localPosY;
-    ((SnowBikeState*)state)->unk014 = ((GameObject*)obj)->anim.localPosZ;
+    ((SnowBikeState*)state)->posSnapshotX = ((GameObject*)obj)->anim.localPosX;
+    ((SnowBikeState*)state)->posSnapshotY = ((GameObject*)obj)->anim.localPosY;
+    ((SnowBikeState*)state)->posSnapshotZ = ((GameObject*)obj)->anim.localPosZ;
     ((GameObject*)obj)->animEventCallback = SnowBike_animEventCallback;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0)
