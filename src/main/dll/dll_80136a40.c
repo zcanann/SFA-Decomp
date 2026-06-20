@@ -1488,6 +1488,7 @@ void fn_80137DF8(void)
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
+#pragma optimization_level 2
 void debugPrintDraw(int ctx)
 {
     u8* p;
@@ -1501,30 +1502,34 @@ void debugPrintDraw(int ctx)
     f32 scale;
     u32 colw;
     u32 colb;
+    u32 sw;
+    u32 sh;
 
     res = getScreenResolution();
     gDebugScreenHeight = (u16)(res >> 0x10);
     gDebugScreenWidth = res;
     GXSetScissor(0, 0, gDebugScreenWidth, gDebugScreenHeight);
-    if (gDebugScreenWidth <= 0x140)
+    sw = gDebugScreenWidth;
+    if (sw <= 0x140)
     {
         gDebugPrintOriginY = 0x10;
-        gDebugMarginRight = gDebugScreenWidth - 0x10;
+        gDebugMarginRight = sw - 0x10;
     }
     else
     {
         gDebugPrintOriginY = 0x20;
-        gDebugMarginRight = gDebugScreenWidth - 0x20;
+        gDebugMarginRight = sw - 0x20;
     }
-    if (gDebugScreenHeight <= 0xf0)
+    sh = gDebugScreenHeight;
+    if (sh <= 0xf0)
     {
         gDebugPrintOriginX = 0x10;
-        gDebugMarginBottom = gDebugScreenHeight - 0x10;
+        gDebugMarginBottom = sh - 0x10;
     }
     else
     {
         gDebugPrintOriginX = 0x20;
-        gDebugMarginBottom = gDebugScreenHeight - 0x20;
+        gDebugMarginBottom = sh - 0x20;
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;
