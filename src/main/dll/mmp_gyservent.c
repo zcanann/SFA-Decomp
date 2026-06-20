@@ -94,7 +94,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     mtx[2] = lbl_803E40D8;
     mtx[3] = lbl_803E40D8;
     setMatrixFromObjectPos(&mtx[4], rot);
-    Matrix_TransformPoint(&mtx[4], lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outZ, &outY, &outX);
+    Matrix_TransformPoint((f32*)((char*)mtx + 16), lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outZ, &outY, &outX);
     ((MmpGyserventState*)state)->planeNormalX = outY;
     ((MmpGyserventState*)state)->planeNormalY = outZ;
     ((MmpGyserventState*)state)->planeNormalZ = outX;
