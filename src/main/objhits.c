@@ -2028,9 +2028,12 @@ void ObjHits_DetectObjectPair(int objA, int objB)
             if ((segSq >= gObjHitsScalarZero) && (segSq <= gObjHitsScalarOne))
             {
                 cz = (segSq * sz + stateA->worldPosZ) - ((GameObject*)objB)->anim.worldPosZ;
+                cz = cz * cz;
                 cx = (segSq * sx + stateA->worldPosX) - ((GameObject*)objB)->anim.worldPosX;
+                cx = cx * cx;
                 cy = (segSq * sy + stateA->worldPosY) - ((GameObject*)objB)->anim.worldPosY;
-                dist = sqrtf(cz * cz + (cx * cx + cy * cy));
+                cy = cy * cy;
+                dist = sqrtf(cz + (cx + cy));
             }
         }
         if ((dist < sumRadius) && (dist > gObjHitsScalarZero))
