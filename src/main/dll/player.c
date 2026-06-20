@@ -15795,7 +15795,7 @@ void fn_802AE650(int obj, int state, int p3)
     u32 b;
     f32 ee0;
 
-    (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
+    (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, p3, timeDelta, 1);
     if (((GameObject*)obj)->anim.currentMoveProgress >=
         (ee0 = lbl_803E7EE0) - lbl_803E7F50 * ((PlayerState*)p3)->baddie.moveSpeed)
     {
