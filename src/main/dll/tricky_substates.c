@@ -1381,6 +1381,7 @@ int trickyFn_80143c04(int obj, int state)
 u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
+    int extra;
     u32 bitVal;
 
     done = trickyFoodFn_8014460c(obj, trickyState);
@@ -1465,12 +1466,12 @@ u32 fn_80143DD4(int obj, int* trickyState)
         {
             if ((u32)trickyState[0x1ec] != 0)
             {
-                done = *(int*)&((GameObject*)obj)->extra;
-                if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
+                extra = *(int*)&((GameObject*)obj)->extra;
+                if ((((*(u8*)(extra + 0x58) >> 6 & 1) == 0U) &&
                     (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)
                     ) && !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
                 {
-                    objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8(obj, (void*)(extra + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
                 objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
                 *(u8*)((int)trickyState + 10) = 5;

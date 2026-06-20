@@ -1150,7 +1150,7 @@ typedef struct LoadedObj
     int fdc;
     u8 pade0[0x11];
     u8 ff1;
-    s8 ff2;
+    u8 ff2;
     u8 padf3[0x15];
     int f108;
 } LoadedObj;
@@ -1244,7 +1244,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.ff2 = n;
     if (n == 0)
     {
-        tmpl.ff2 = *(s8*)(tmpl.def + 0x8e);
+        tmpl.ff2 = *(u8*)(tmpl.def + 0x8e);
     }
     else
     {
@@ -1847,6 +1847,7 @@ void Obj_UpdateAllObjects(u8 flags)
     u8* obj2;
     int child;
     int obj;
+    int obj3;
     int count1;
     int count2;
     u8* t;
@@ -1911,31 +1912,31 @@ void Obj_UpdateAllObjects(u8 flags)
     if (timeStop == 0)
     {
         ObjHits_Update(gObjCount);
-        obj = *(int*)((u8*)&gObjUpdateList + 4);
-        for (; obj != 0; obj = *(int*)(obj + off))
+        obj3 = *(int*)((u8*)&gObjUpdateList + 4);
+        for (; obj3 != 0; obj3 = *(int*)(obj3 + off))
         {
-            if ((((GameObject*)obj)->objectFlags & 0x2000) == 0)
+            if ((((GameObject*)obj3)->objectFlags & 0x2000) == 0)
             {
-                switch (((GameObject*)obj)->anim.seqId)
+                switch (((GameObject*)obj3)->anim.seqId)
                 {
                 case 0:
                 case 0x1f:
-                    playerDoHitDetection(obj);
+                    playerDoHitDetection(obj3);
                     break;
                 default:
-                    if (((GameObject*)obj)->anim.dll == 0)
+                    if (((GameObject*)obj3)->anim.dll == 0)
                     {
                         goto next;
                     }
-                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)obj)->anim.dll + 0xc);
+                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)obj3)->anim.dll + 0xc);
                     if (cb == 0)
                     {
                         goto next;
                     }
-                    cb(obj);
+                    cb(obj3);
                     break;
                 }
-                Obj_GetWorldPosition((u32)obj, &((GameObject *)obj)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosY, &((GameObject *)obj)->anim.worldPosZ);
+                Obj_GetWorldPosition((u32)obj3, &((GameObject *)obj3)->anim.worldPosX, &((GameObject *)obj3)->anim.worldPosY, &((GameObject *)obj3)->anim.worldPosZ);
             }
         next:;
         }
@@ -2156,11 +2157,11 @@ void Obj_UpdateModelBlendStates(void)
 {
     ObjAnimComponent* objAnim;
     ObjAnimComponent* childAnim;
-    u8* obj;
-    int j;
-    int i;
-    int k;
     int ioff;
+    int i;
+    int j;
+    int k;
+    u8* obj;
     u8* walker;
     u8* child;
     u8* m;

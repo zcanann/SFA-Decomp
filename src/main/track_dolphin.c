@@ -4771,34 +4771,24 @@ u8 doEdges;
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
+            int m;
+            for (m = 4; m != 0; m--)
+            {
+                if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+                bit = (s16)(bit << 1);
+                pos += 0x50;
+            }
         }
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
+            int m;
+            for (m = 4; m != 0; m--)
+            {
+                if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+                bit = (s16)(bit << 1);
+                pos += 0x50;
+            }
         }
         tri = *(u8**)(blk + 0x50);
         triEnd = (u32)tri + *(u16*)(blk + 0x9a) * 0x14;
@@ -4932,8 +4922,8 @@ u8 doEdges;
                 {
                     int k22, deg, j2;
                     f32* ep;
-                    f32 eps = __AR_Callback;
                     f32 one = lbl_803DECC4;
+                    f32 eps = __AR_Callback;
                     PSVECSubtract(verts + 3, v0, e2);
                     k22 = 0;
                     deg = 0;

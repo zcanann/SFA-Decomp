@@ -2023,6 +2023,14 @@ typedef struct
     u8 low : 3;
 } FrozenByte2F6;
 
+struct VisBits16
+{
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+};
+
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
@@ -2471,14 +2479,13 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     s16 baseAngle;
     u16 i;
     u8 visible;
-    f32 angle;
-    f32 angleScale;
-    f32 angleDivisor;
     f32 maxDistance;
+    f32 angleDivisor;
+    f32 angleScale;
+    f32 angle;
     s16 setupId;
 
-    *(s64*)&visibilityBits[0] = *(s64*)&gTrickyVisibilityBitsInit[0];
-    *(s64*)&visibilityBits[2] = *(s64*)&gTrickyVisibilityBitsInit[2];
+    *(struct VisBits16*)&visibilityBits[0] = *(struct VisBits16*)&gTrickyVisibilityBitsInit[0];
     probe.x = ((GameObject*)obj)->anim.localPosX;
     probe.y = lbl_803E25A0 + ((GameObject*)obj)->anim.localPosY;
     probe.z = ((GameObject*)obj)->anim.localPosZ;
@@ -2636,12 +2643,11 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     u16 i;
     f32* hit;
     f32 hitY;
-    f32 dy;
-    f32 defaultY;
     f32 zero;
     f32 nearestSpecialDelta;
     f32 nearestFloorDelta;
-    f32 absDy;
+    f32 dy;
+    f32 defaultY;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;

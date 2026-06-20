@@ -1286,11 +1286,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
         }
         sndFXCtrl(objectChannel->handle, 0xa, (u8)pan);
         sndFXCtrl(objectChannel->handle, 0x83, (u8)fx);
-        if (objectChannel->paused)
-        {
-            level = 0;
-        }
-        sndFXCtrl(objectChannel->handle, 7, (u8)level);
+        sndFXCtrl(objectChannel->handle, 7, (u8)(objectChannel->paused ? 0 : level));
     }
     else
     {
@@ -2898,10 +2894,13 @@ int audioInit(void)
         reverbWork = 0;
         sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0,
                                      0xff, reverbWork);
-        if (!sndIsInstalled())
         {
-            OSReport(base + 0x1f8);
-            return 0xff;
+            extern u32 sndIsInstalled(void);
+            if (!sndIsInstalled())
+            {
+                OSReport(base + 0x1f8);
+                return 0xff;
+            }
         }
         sndVolume(0x7f, 0, 0xff);
         sndMasterVolume(0x7f, 0x64, 1, 1);
@@ -2978,6 +2977,7 @@ int audioInit(void)
     }
     if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady)
     {
+        extern u8 musicInitMidiWad(void);
         gAudioReady = musicInitMidiWad();
     }
     if (gAudioReady&& gAudioMusicGroupReady && gAudioSfxGroupsReady &&
