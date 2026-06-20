@@ -527,7 +527,7 @@ void gameTimerRun(void)
     if ((gModelEngineTimerFlags & 1) != 0)
     {
         gModelEngineTimerValue -= dt;
-        if (gModelEngineTimerValue <= lbl_803DE6B8)
+        if (gModelEngineTimerValue <= *(f32*)&lbl_803DE6B8)
         {
             clamped = 1;
             gModelEngineTimerValue = lbl_803DE6B8;
