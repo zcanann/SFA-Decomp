@@ -2372,7 +2372,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                 stateB->contactPosX = endPoints[pointCount * 3];
                 stateB->contactPosY = endPoints[pointCount * 3 + 1];
                 stateB->contactPosZ = endPoints[pointCount * 3 + 2];
-                if (hb.kinds[pointCount] != 0)
+                if (hb.kinds[pointCount] != 0u)
                 {
                     stateB->contactFlags = stateB->contactFlags | 2;
                 }
