@@ -347,7 +347,7 @@ void fn_801FD6B4(int obj)
     }
     gVfpLavaPoolWaveSin = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E617C * *(f32*)(extra + 8) + lbl_803E6180 * *(f32*)(extra + 8) *
-        gVfpLavaPoolWaveSin;
+        *(volatile f32*)&gVfpLavaPoolWaveSin;
     c = *(f32*)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188)
     {
