@@ -2589,7 +2589,9 @@ void beginLoadingMap(void)
     gShaderGameTextLoadedMapId = gShaderGameTextLoadedMapId - 1;
     lbl_803DCEC0 = -1;
     curMapLayer = *((char*)p + 0xd);
-    renderFlags = (renderFlags & 0x82008) | 0x489F4;
+    renderFlags &= 0x82008;
+    renderFlags |= 0x481F0LL;
+    renderFlags |= 0x804;
     lbl_803DCE04 = 0;
     bEnableBlurFilter = 0;
     bEnableMotionBlur = 0;
@@ -2608,7 +2610,7 @@ void beginLoadingMap(void)
         if (renderFlags & 0x800)
             doPendingMapLoads();
     }
-    renderFlags &= ~4;
+    renderFlags &= ~4LL;
     trackIntersect();
     cam = Camera_GetCurrentViewSlot();
     ((GameObject*)cam)->anim.localPosX = p[0];
@@ -2683,7 +2685,7 @@ void beginLoadingMap(void)
             }
             else
             {
-                renderFlags &= ~0x40;
+                renderFlags &= ~0x40LL;
                 *(u8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
             }
         }
