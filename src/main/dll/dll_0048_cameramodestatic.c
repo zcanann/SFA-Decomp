@@ -104,9 +104,8 @@ void CameraModeStatic_update(short* camObj)
         }
         if ((*(u8*)(placement + 0x1b) & 2) != 0)
         {
-            pitch = getAngle(dy, sqrtf(dx * dx + dz * dz));
-            angle = ((pitch & 0xffff) - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (u32)(u16)
-            camObj[1];
+            pitch = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
+            angle = (pitch - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (u32)(u16)camObj[1];
             if (0x8000 < angle)
             {
                 angle = angle + -0xffff;
