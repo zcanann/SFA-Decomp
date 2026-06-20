@@ -98,13 +98,13 @@ void curvefish_update(int obj)
     int nextNode;
     f32 maxHitSpeed;
     f32 speedThreshold;
-    f32 distLimit;
     f32 distance;
     int i;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 mag;
+    f32 distLimit;
     int targetYaw;
     int yawDelta;
 
