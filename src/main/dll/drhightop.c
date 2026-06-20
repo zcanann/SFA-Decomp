@@ -480,7 +480,7 @@ void fn_801EB940(short* obj, int stateRaw)
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     f32 fa;
     f32 fb;
-    s16 rotClamped;
+    int rotClamped;
     int yawDelta;
     int ival;
 
@@ -558,10 +558,10 @@ void fn_801EB940(short* obj, int stateRaw)
     {
         yawDelta = yawDelta + 0xffff;
     }
-    st->yaw = st->yaw + (short)yawDelta;
+    st->yaw = *(s16*)((char*)st + 0x40e) + yawDelta;
     st->unk40C = st->unk40C + yawDelta;
-    obj[1] = obj[1] + (short)((int)st->unk310 >> ival);
-    obj[2] = obj[2] + (short)((int)st->unk312 >> ival);
+    obj[1] = obj[1] + ((int)st->unk310 >> ival);
+    obj[2] = obj[2] + ((int)st->unk312 >> ival);
     rotClamped = obj[1];
     if (rotClamped < -0x2000)
     {
