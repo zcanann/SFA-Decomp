@@ -1854,20 +1854,19 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
                 else if (moff < (*(int*)(a + entryIndex * 4 - 4) & 0xffffff))
                 {
+                    i = 0;
                     do
                     {
-                        k = i * 4;
-                        j = i + 1;
+                        k = i;
                         i = i + 1;
                     }
-                    while (moff != (*(int*)(a + k) & 0xffffff));
+                    while (moff != (*(int*)(a + k * 4) & 0xffffff));
                     do
                     {
-                        i = j + 1;
-                        k = j * 4;
-                        j = i;
+                        k = i;
+                        i = i + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= moff);
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= moff);
                     *sizeOut = (*(int*)(a + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
@@ -1902,20 +1901,19 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
                 else if (moff < (*(int*)(b + entryIndex * 4 - 4) & 0xffffff))
                 {
+                    i = 0;
                     do
                     {
-                        k = i * 4;
-                        j = i + 1;
+                        k = i;
                         i = i + 1;
                     }
-                    while (moff != (*(int*)(b + k) & 0xffffff));
+                    while (moff != (*(int*)(b + k * 4) & 0xffffff));
                     do
                     {
-                        i = j + 1;
-                        k = j * 4;
-                        j = i;
+                        k = i;
+                        i = i + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= moff);
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= moff);
                     *sizeOut = (*(int*)(b + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
@@ -1950,20 +1948,19 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
                 else if (moff < (*(int*)(b + entryIndex * 4 - 4) & 0xffffff))
                 {
+                    i = 0;
                     do
                     {
-                        k = i * 4;
-                        j = i + 1;
+                        k = i;
                         i = i + 1;
                     }
-                    while (moff != (*(int*)(b + k) & 0xffffff));
+                    while (moff != (*(int*)(b + k * 4) & 0xffffff));
                     do
                     {
-                        i = j + 1;
-                        k = j * 4;
-                        j = i;
+                        k = i;
+                        i = i + 1;
                     }
-                    while ((*(int*)(b + k) & 0xffffff) <= moff);
+                    while ((*(int*)(b + k * 4) & 0xffffff) <= moff);
                     *sizeOut = (*(int*)(b + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
@@ -1998,20 +1995,19 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
                 else if (moff < (*(int*)(a + entryIndex * 4 - 4) & 0xffffff))
                 {
+                    i = 0;
                     do
                     {
-                        k = i * 4;
-                        j = i + 1;
+                        k = i;
                         i = i + 1;
                     }
-                    while (moff != (*(int*)(a + k) & 0xffffff));
+                    while (moff != (*(int*)(a + k * 4) & 0xffffff));
                     do
                     {
-                        i = j + 1;
-                        k = j * 4;
-                        j = i;
+                        k = i;
+                        i = i + 1;
                     }
-                    while ((*(int*)(a + k) & 0xffffff) <= moff);
+                    while ((*(int*)(a + k * 4) & 0xffffff) <= moff);
                     *sizeOut = (*(int*)(a + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
