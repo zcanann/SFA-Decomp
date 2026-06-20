@@ -95,7 +95,7 @@ void effectbox_update(int obj)
         extZ = (f32)((EffectboxPlacement*)def)->extentZ;
         switch (((EffectboxPlacement*)def)->targetMode)
         {
-        case 1:
+        case 0:
             single = (int)Obj_GetPlayerObject();
             if (single == 0u)
             {
@@ -104,7 +104,7 @@ void effectbox_update(int obj)
             list = &single;
             count = 1;
             break;
-        case 0:
+        case 1:
             single = (int)getTrickyObject();
             if (single == 0u)
             {
