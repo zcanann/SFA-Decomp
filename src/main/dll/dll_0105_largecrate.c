@@ -352,8 +352,8 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         *(s16*)(setup + 0x24) = -1;
         newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                  *(int*)&((GameObject*)obj)->anim.parent);
-        (**(void (**)(f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
-            lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
+        (**(void (**)(int, f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
+            (int)newObj, lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
     case 7:
     case 8:
