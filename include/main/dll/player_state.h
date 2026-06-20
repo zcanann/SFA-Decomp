@@ -279,7 +279,7 @@ typedef struct PlayerState {
     f32 unk7E0;
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
-    int unk7F0;
+    int focusObject; /* object handle for camera setFocus / sequence-trigger interactions */
     u8 pad7F4[0x7F8 - 0x7F4];
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
