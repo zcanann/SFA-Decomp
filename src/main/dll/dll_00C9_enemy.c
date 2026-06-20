@@ -1557,7 +1557,7 @@ void fn_8014B878(int* arg1, int* sub)
     }
 }
 
-void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 fc)
+void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
     f32 stk_20[3];
