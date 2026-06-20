@@ -1420,7 +1420,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
             {
                 debugPrintf(sObjMsgOverflowInObjectWarning, message,
                             (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                            (int)*(short*)((u8*)sender + 0x46));
+                            (int)((GameObject*)sender)->anim.seqId);
             }
         }
     }
@@ -1466,7 +1466,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message,
                                 (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                                (int)*(short*)((u8*)sender + 0x46));
+                                (int)((GameObject*)sender)->anim.seqId);
                 }
             }
         }
@@ -1496,7 +1496,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message,
                                 (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                                (int)*(short*)((u8*)sender + 0x46));
+                                (int)((GameObject*)sender)->anim.seqId);
                 }
             }
         }
