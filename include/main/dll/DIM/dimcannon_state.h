@@ -28,7 +28,7 @@ typedef struct DimCannonState {
     u8 unkAD;
     u8 unkAE;
     u8 unkAF;
-    s8 unkB0;
+    s8 chargeTimer; /* 0xB0: countdown (framesThisStep) gating air-meter/fire */
     u8 unkB1;
     u8 unkB2;
     u8 padB3;

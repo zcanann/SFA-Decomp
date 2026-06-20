@@ -219,7 +219,7 @@ void dimcannon_init(int* obj, int* arg)
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
         if (GameBit_Get(((DimcannonPlacement*)arg)->resetGameBit))
         {
-            *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
             ((DimCannonState*)state)->fireState = 5;
         }
         ((DimCannonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
@@ -271,10 +271,10 @@ void dimcannon_update(int* obj)
         break;
     case 5:
         {
-            s8 t = ((DimCannonState*)state)->unkB0;
+            s8 t = ((DimCannonState*)state)->chargeTimer;
             if (t > 0)
             {
-                ((DimCannonState*)state)->unkB0 = (s8)(t - framesThisStep);
+                ((DimCannonState*)state)->chargeTimer = (s8)(t - framesThisStep);
             }
             else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1)
             {
@@ -286,7 +286,7 @@ void dimcannon_update(int* obj)
                 buttonDisable(0, 0x100);
                 ((DimCannonState*)state)->fireState = 3;
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+                *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
             }
             ((DimCannonState*)state)->unkAD = 0;
@@ -419,11 +419,11 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             return 0;
         }
         vec = objModelGetVecFn_800395d8(obj, 0);
-        timer = ((DimCannonState*)state)->unkB0;
+        timer = ((DimCannonState*)state)->chargeTimer;
         if (timer > 0)
         {
-            ((DimCannonState*)state)->unkB0 = (s8)(timer - framesThisStep);
-            if (((DimCannonState*)state)->unkB0 <= 0)
+            ((DimCannonState*)state)->chargeTimer = (s8)(timer - framesThisStep);
+            if (((DimCannonState*)state)->chargeTimer <= 0)
             {
                 (*gGameUIInterface)->initAirMeter(gDimCannonMaxCharge, 0x5d5);
             }
@@ -532,7 +532,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gGameUIInterface)->airMeterSetShutdown();
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 ((DimCannonState*)state)->fireState = 5;
-                *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+                *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
