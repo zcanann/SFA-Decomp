@@ -45,7 +45,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 
-extern f32 timeDelta;
 extern f32 lbl_803E3B44; /* respawn timer reset value */
 extern f32 lbl_803E3B48; /* respawn timer threshold */
 extern f32 lbl_803E3B40; /* render alpha/param */
