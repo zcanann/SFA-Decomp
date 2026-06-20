@@ -647,6 +647,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
     int player;
     f32 m;
     f32 absP;
+    f32 cur;
 
     player = (int)Obj_GetPlayerObject();
     *(int*)out = -1;
@@ -863,21 +864,22 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         GameBit_Set(0x788, 1);
         break;
     case 16:
-        if (*(f32*)p >= lbl_803E6A3C)
+        cur = *(f32*)p;
+        if (cur >= lbl_803E6A3C)
         {
-            absP = *(f32*)p;
+            absP = cur;
         }
         else
         {
-            absP = -*(f32*)p;
+            absP = -cur;
         }
         if (lbl_803E6A38 == absP)
         {
-            *(f32*)p = *(f32*)p * lbl_803E6A84;
+            *(f32*)p = cur * lbl_803E6A84;
         }
         else
         {
-            *(f32*)p = lbl_803E6A38 * *(f32*)p;
+            *(f32*)p = lbl_803E6A38 * cur;
         }
         Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
         break;
