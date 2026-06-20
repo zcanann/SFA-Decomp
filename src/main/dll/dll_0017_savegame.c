@@ -554,15 +554,12 @@ int saveSelect_getInfo(void* outPtr)
     info = (SaveSelectInfo*)outPtr;
     do
     {
-        if (loadSaveGame((u8)slot, save) == 0)
+        if (loadSaveGame((u8)slot, save) != 0)
         {
-            return 0;
-        }
-
-        newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
-        info->valid = newFileFlag;
-        if (newFileFlag != 0)
-        {
+            newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+            info->valid = newFileFlag;
+            if (newFileFlag != 0)
+            {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
             info->percentComplete = (u8)((save[0x55d] * 100) / 0xbb);
@@ -635,10 +632,15 @@ int saveSelect_getInfo(void* outPtr)
             }
             info->active = 0;
             info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+            }
+            else
+            {
+                memset(info, 0, sizeof(SaveSelectInfo));
+            }
         }
         else
         {
-            memset(info, 0, sizeof(SaveSelectInfo));
+            return 0;
         }
 
         info++;
