@@ -1344,7 +1344,7 @@ extern f32 lbl_803DFCC4;
 #pragma scheduling off
 #pragma peephole off
 int Effect6_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                   u8 modelId, s16* extraArgs)
+                   u8 modelId, u16* extraArgs)
 {
     int spawnResult;
     PartFxSpawn cfg;
