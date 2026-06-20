@@ -317,8 +317,8 @@ static inline int Objfsa_FindRomCurveById(int curveId)
         return 0;
     }
 
-    lo = 0;
     hi = nRomCurves - 1;
+    lo = 0;
     id = curveId;
     while (hi >= lo)
     {
