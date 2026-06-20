@@ -11084,11 +11084,11 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 28:
             if (GameBit_Get(0x21) == 0)
             {
-                *(s16*)&((PlayerState*)state)->unk8A0 =
+                *(s16*)&((PlayerState*)state)->periodicHitTimer =
                     (s16)(int)((f32) * (u16*)((char*)state + 0x8a0) + dt);
-                if (0x78 < ((PlayerState*)state)->unk8A0)
+                if (0x78 < ((PlayerState*)state)->periodicHitTimer)
                 {
-                    ((PlayerState*)state)->unk8A0 = ((PlayerState*)state)->unk8A0 - 0x78;
+                    ((PlayerState*)state)->periodicHitTimer = ((PlayerState*)state)->periodicHitTimer - 0x78;
                     ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
                     ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
                                               0xffffffff);

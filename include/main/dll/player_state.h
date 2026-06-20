@@ -331,7 +331,7 @@ typedef struct PlayerState {
     int stateHandler; /* staged state/anim handler fn-ptr (stored as int); copied into baddie.unk304 handler slot on anim change */
     u16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];
-    u16 unk8A0;
+    u16 periodicHitTimer; /* accumulates dt; on crossing 0x78 wraps (-=0x78) and fires a periodic ObjHits position-hit */
     u8 moveVariantIndex; /* index into moveAnimTable->moves[]/angles[] (0xff = none) */
     u8 unk8A3;
     u8 unk8A4;
