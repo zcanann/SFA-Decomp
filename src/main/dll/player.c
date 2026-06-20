@@ -5505,7 +5505,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         inner->targetYaw + amt;
         inner->yaw = inner->targetYaw;
     }
-    else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0 && inner->unk4B8 != NULL &&
+    else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0 && inner->cameraTargetObject != NULL &&
         inner->unk4B4 == 1)
     {
         if (inner->unk4A8 < 0x4000)
@@ -7561,7 +7561,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         ((PlayerState*)inner)->bodyLeanRateSigned = ((PlayerState*)inner)->bodyLeanRate;
     }
-    *(int*)&((PlayerState*)inner)->unk4B8 =
+    *(int*)&((PlayerState*)inner)->cameraTargetObject =
         (*gCameraInterface)->getTarget();
     cam = *(char**)((char*)inner + 0x4b8);
     if (cam != NULL)
@@ -10779,7 +10779,7 @@ int fn_802A98FC(int obj, int p2)
 
     if (sel == 1 || sel == 2)
     {
-        void* slot = inner->unk4B8;
+        void* slot = inner->cameraTargetObject;
         u8 af;
         u8 c;
         if (slot == NULL || *(s16*)((char*)slot + 0x46) != 0x414 ||
@@ -10853,7 +10853,7 @@ int fn_802A97D0(int obj, int p2)
 
     if (!((sel != 1 && sel != 2 && sel != 0x26) ||
         !GameBit_Get(0x957) ||
-        (slot = inner->unk4B8) == NULL ||
+        (slot = inner->cameraTargetObject) == NULL ||
         *(s16*)((char*)slot + 0x46) != 0x64f ||
         ((af = *(u8*)((char*)slot + 0xaf)) & 4) == 0 ||
         (af & 0x18) != 0 ||
@@ -14059,7 +14059,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                     if (ok2 != 0)
                     {
                         if (((PlayerState*)inner)->unk8B4 == 2 ||
-                            (inner->unk4B8 != NULL &&
+                            (inner->cameraTargetObject != NULL &&
                                 inner->unk4B0 < lbl_803E8054 &&
                                 inner->unk4A8 < 0x4000 &&
                                 ((PlayerState*)inner)->unk4B4 == 1))
@@ -15447,7 +15447,7 @@ void fn_802ABFBC(int obj, int state, int inner)
 
     ((PlayerState*)inner)->headPitch =
         (f32)((PlayerState*)inner)->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
-    sub = ((PlayerState*)inner)->unk4B8;
+    sub = ((PlayerState*)inner)->cameraTargetObject;
     if (sub != NULL && *(u8*)(*(int*)((char*)sub + 0x50) + 0x58) != 0)
     {
         int d;
@@ -16220,7 +16220,7 @@ void fn_802AB38C(int a, int b, int c)
         gPlayerSelectedItem = 0x5ce;
         break;
     case 0x957:
-        gPlayerInteractTarget = *(int*)&((PlayerState*)b)->unk4B8;
+        gPlayerInteractTarget = *(int*)&((PlayerState*)b)->cameraTargetObject;
         (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(a, b, 0x32);
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802994A4;
         break;

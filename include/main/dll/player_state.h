@@ -103,7 +103,7 @@ typedef struct PlayerState {
     f32 unk4B0;
     u16 unk4B4;
     u8 pad4B6[0x4B8 - 0x4B6];
-    void *unk4B8;
+    void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];
     int lastHitObject;
     int unk4C4;
