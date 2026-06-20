@@ -1495,7 +1495,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
             {
                 tmax = prog;
             }
-            tbl = weaponDaTable->entries;
+            tbl = ((GameObject*)obj)->anim.weaponDaTable->entries;
             if (sw >= lbl_803E32B4)
             {
                 fla = fastFloorf(sw * lbl_803E32A4) / lbl_803E32A4;
