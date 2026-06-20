@@ -416,10 +416,10 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
             SpecialGlyph* g = lbl_802C86F0;
-            int count = 0;
+            int count;
             int n;
             int sel;
-            for (n = 46; n != 0; n--)
+            for (count = 0, n = 46; n != 0; n--)
             {
                 if (g->key == ch)
                 {
@@ -543,32 +543,33 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             for (;;)
             {
                 int k = 6;
-                while (k > 0)
+                while (1)
                 {
                     ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
                     if (k == charLen2)
                     {
+                        if (!isSpace(ch))
+                        {
+                            goto foundBreak;
+                        }
+                        if (charLen2 != 0)
+                        {
+                            int j;
+                            for (j = 0; j < charLen2; j++)
+                            {
+                                *--dst = 0;
+                            }
+                        }
                         break;
                     }
                     k--;
-                }
-                if (k == 0)
-                {
-                    continue;
-                }
-                if (!isSpace(ch))
-                {
-                    break;
-                }
-                if (charLen2 != 0)
-                {
-                    int j;
-                    for (j = 0; j < charLen2; j++)
+                    if (k <= 0)
                     {
-                        *--dst = 0;
+                        break;
                     }
                 }
             }
+        foundBreak:
             q[1] = q[0];
             q[0] = 0;
             dst = q + 1;
