@@ -4249,8 +4249,8 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
             fl = (char*)gMapDynamicSlots;
             do
             {
-                if (*(u8*)(fl + 0x14) != 0 && *(int*)fl == (int)self &&
-                    *(int*)(fl + 4) == (int)o && *(u8*)(fl + 0x15) == slot)
+                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self &&
+                    *(u32*)(fl + 4) == (u32)o && *(u8*)(fl + 0x15) == (u8)slot)
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
