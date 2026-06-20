@@ -518,8 +518,9 @@ void groundanimator_update(int* obj)
         }
         if (g->dirtyFrames != 0)
         {
-            f32 lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth;
+            f32 lim;
             g->dirtyFrames -= 1;
+            lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth;
             if (g->lastDepth > lim)
             {
                 g->lastDepth = lim;
