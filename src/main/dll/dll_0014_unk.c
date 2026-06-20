@@ -1322,7 +1322,8 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     {
         trig = mathSinf(angle);
     }
-    return lbl_803E05D0 * ((f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig);
+    trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
+    return lbl_803E05D0 * trig;
 }
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
