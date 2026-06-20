@@ -162,8 +162,6 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma opt_common_subs off
 void pressureswitch_update(int obj)
 {
-    extern u8 framesThisStep;
-    extern f32 timeDelta;
     extern f32 gPressureSwitchFarCullDist;
     extern f32 lbl_803E5D60;
     extern f32 gPressureSwitchTrickyTriggerDist;
