@@ -284,8 +284,8 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
 {
     int* pts[4];
-    int** dp;
     int* sp;
+    int** dp;
     int i;
     f32 dx1;
     f32 dz1;
@@ -299,8 +299,8 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     f32 t1;
     f32 t2;
     f32 negdot;
-    dp = pts;
     sp = obj;
+    dp = pts;
     for (i = 0; i < 4; i++)
     {
         *dp = (int*)(*gRomCurveInterface)->getById(*sp);
