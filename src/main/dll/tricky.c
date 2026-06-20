@@ -756,18 +756,15 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 u1, u0, v0, sy, sx, v1;
-    u32 w, h;
     pauseMenuMapFn_8011de20(this, p5, p4, 0);
     sx = lbl_803E1E80 * f1;
     sy = lbl_803E1E80 * f2;
-    w = *(u16*)((char*)this + 0xa);
-    h = *(u16*)((char*)this + 0xc);
     u0 = (f32)(u32)
-    p8 / w;
+    p8 / *(u16*)((char*)this + 0xa);
     v0 = (f32)(u32)
-    p9 / h;
-    u1 = (f32)(u32)(p6 + p8) / w;
-    v1 = (f32)(u32)(p7 + p9) / h;
+    p9 / *(u16*)((char*)this + 0xc);
+    u1 = (f32)(u32)(p6 + p8) / *(u16*)((char*)this + 0xa);
+    v1 = (f32)(u32)(p7 + p9) / *(u16*)((char*)this + 0xc);
     GXBegin(0x80, 1, 4);
     GXWGFifo.s16 = sx;
     GXWGFifo.s16 = sy;
