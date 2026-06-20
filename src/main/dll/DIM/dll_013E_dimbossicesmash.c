@@ -394,7 +394,7 @@ void dimbossicesmash_init(GameObject* obj, u8* params)
     ((DimBossIceSmashState*)state)->unk270 = fz;
     ((DimBossIceSmashState*)state)->unk274 = fz;
     fn_80196520((u8*)obj, state, params);
-    t = (GameBit_Get(*(s16*)(params + 0x3e)) != 0) ? 2 : 0;
+    t = (GameBit_Get(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
     state[0x29e] = t;
     lbl_803DDB00 = 0;
     if ((*(u8*)(params + 0x3c) & 2) != 0)
