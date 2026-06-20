@@ -64,8 +64,8 @@ extern f32 lbl_803E5118;
 
 int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
-    f32 maxSpeed;
     f32 spdThresh;
+    f32 maxSpeed;
     f32 animDiv;
     int v;
     int* list;
