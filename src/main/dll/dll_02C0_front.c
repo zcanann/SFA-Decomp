@@ -1016,8 +1016,9 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         lbl_803E2328;
     if (gTitleScreenCursorY > lbl_803E22F8)
     {
-        xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-        yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+        mtx = (f32*)gTitleScreenMtx;
+        xb = (int)mtx[3];
+        yb = (int)mtx[7];
         tex = (Texture*)gTitleScreenTextures[4];
         drawScaledTexture((char*)tex,
                           (f32)(int)(xb - 0x32 + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
