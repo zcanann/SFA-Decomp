@@ -675,7 +675,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xc, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0C8[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[12];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -711,7 +711,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0D0[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[14];
             ((AndrossState*)state)->durationTimer = lbl_803E74F0;
             ((AndrossState*)state)->actionTimer = 0xffff;
         }
@@ -757,7 +757,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0CC[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[13];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1062,7 +1062,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C09C[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[1];
             if (((AndrossState*)state)->fightPhase < 5)
             {
                 androsshand_setState(((AndrossState*)state)->handObjA, 0, 0);
@@ -1167,7 +1167,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0A0[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[2];
             ((AndrossState*)state)->unkB1[0] = 0;
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionTimer = lbl_803DC44C;
@@ -1242,7 +1242,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0A0[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[2];
             if (((AndrossState*)state)->fightPhase < 5)
             {
                 ((AndrossState*)state)->unkB1[0] = 1;
@@ -1362,7 +1362,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x10, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0D8[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[16];
         }
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1433,7 +1433,7 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, 0x468);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0EC[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[21];
             arwarwing_addShield(*state, 0xfffffffc);
         }
         fval = -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
@@ -1469,7 +1469,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0E0[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[18];
             androsshand_setState(((AndrossState*)state)->handObjA, 0, 0);
             androsshand_setState(((AndrossState*)state)->handObjB, 0, 0);
             if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle != 0))
@@ -1533,7 +1533,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0E4[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[19];
             if (((AndrossState*)state)->fightPhase == 5)
             {
                 ((AndrossState*)state)->durationTimer = lbl_803E74A8;
@@ -1630,7 +1630,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0E8[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[20];
         }
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
@@ -1678,7 +1678,7 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, 0x4a6);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0A8[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[4];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
@@ -1894,7 +1894,7 @@ void andross_update(int obj)
             Sfx_PlayFromObject(obj, 0x470);
             work = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
-            *(f32*)(work + 100) = lbl_8032C0F0[0];
+            *(f32*)(work + 100) = lbl_8032C098[22];
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 0;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 0;
         }
@@ -1962,7 +1962,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0A4[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[3];
             ((AndrossState*)state)->unkE4 = lbl_803E74D4;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
@@ -2016,7 +2016,7 @@ void andross_update(int obj)
         {
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E74D4, 0);
-            ((AndrossState*)ref)->animSpeed = lbl_8032C0DC[0];
+            ((AndrossState*)ref)->animSpeed = lbl_8032C098[17];
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803DC4A0)
