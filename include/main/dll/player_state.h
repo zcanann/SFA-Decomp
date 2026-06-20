@@ -283,14 +283,14 @@ typedef struct PlayerState {
     u8 pad7F4[0x7F8 - 0x7F4];
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
-    u8 unk800;
+    u8 isHoldingObject; /* 1 while carrying a held object (set with heldObj on pickup msgs 0x100008/0x100010); cleared to 0 on release/state resets */
     u8 pad801[0x806 - 0x801];
     u16 staffAnimState; /* staff grow/shrink anim state machine (fn_802AEF34): 0/1=shrink,2=grow,3=settle,0xf=variant */
     u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
     s16 queuedItemCommand; /* primary queued item/use command id from ObjMsg 0x80002; -1 = none; processed by playerProcessQueuedItemCommand */
     s16 deferredItemCommand; /* item command (0x2d/0x5ce) deferred while a target object is engaged; -1 = none; consumed/cleared once resolved */
-    s16 stepEventTimer; /* countdown (-= framesThisStep); on expiry reloads interval from lbl_803DC6A8[unk8B0] and advances unk8B1 */
+    s16 stepEventTimer; /* countdown (-= framesThisStep); on expiry reloads interval from lbl_803DC6A8[gaitStepLevel] and advances unk8B1 */
     s16 idleWaitTimer;
     f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */
     u8 pad818[0x81A - 0x818];
@@ -345,7 +345,7 @@ typedef struct PlayerState {
     u8 unk8AC;
     u8 unk8AD;
     u8 pad8AE[0x8B0 - 0x8AE];
-    u8 unk8B0;
+    u8 gaitStepLevel; /* gait/step level 1-4 (capped) derived from gaitLevel; indexes step-interval tables lbl_803DC6A8/lbl_803DC6B0 */
     u8 unk8B1;
     u8 pad8B2[0x8B3 - 0x8B2];
     u8 staffGrown; /* 1 when the staff is grown/extended (set by staffDoGrowShrinkAnim grow path) */
@@ -366,7 +366,7 @@ typedef struct PlayerState {
     u8 unk8C9;
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
-    s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives unk8B0 1-4) */
+    s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */
     s8 unk8CD;
     s8 unk8CE;
     u8 unk8CF;

@@ -369,7 +369,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 0;
-        inner->unk800 = 0;
+        inner->isHoldingObject = 0;
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
@@ -958,7 +958,7 @@ int fn_802A3B04(int obj, int state)
         Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2cb : 0x29));
         *(s16*)((char*)state + 0x278) = 0xa;
         ((PlayerState*)inner)->stateHandler = 0;
-        ((PlayerState*)inner)->unk800 = 0;
+        ((PlayerState*)inner)->isHoldingObject = 0;
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
@@ -2047,14 +2047,14 @@ int fn_802A5384(int obj, int state)
                 spd = ((GameObject*)obj)->anim.currentMoveProgress;
             }
             step = ((PlayerState*)inner)->gaitLevel / 4 * 2;
-            ((PlayerState*)inner)->unk8B0 = (step >> 1) + 1;
-            if (((PlayerState*)inner)->unk8B0 > 4)
+            ((PlayerState*)inner)->gaitStepLevel = (step >> 1) + 1;
+            if (((PlayerState*)inner)->gaitStepLevel > 4)
             {
-                ((PlayerState*)inner)->unk8B0 = 4;
+                ((PlayerState*)inner)->gaitStepLevel = 4;
             }
             {
                 u8 c;
-                if (((PlayerState*)inner)->unk8B0 > 3)
+                if (((PlayerState*)inner)->gaitStepLevel > 3)
                 {
                     c = ((PlayerState*)inner)->unk8A4;
                 }
@@ -2512,7 +2512,7 @@ int fn_802A1CA8(int obj, int state)
                             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
-                            ((PlayerState*)inner)->unk800 = 0;
+                            ((PlayerState*)inner)->isHoldingObject = 0;
                             if (*(void**)((char*)inner + 0x7f8) != NULL)
                             {
                                 if (((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId == 0x3cf ||
@@ -3187,7 +3187,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 ((PlayerState*)inner)->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
-            ((PlayerState*)inner)->unk800 = 0;
+            ((PlayerState*)inner)->isHoldingObject = 0;
             {
                 int p = ((PlayerState*)inner)->heldObj;
                 if ((u32)p != 0)
@@ -6717,7 +6717,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
                 ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                 ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -7294,9 +7294,9 @@ void playerUpdate(int obj)
                 if (nv < 0)
                 {
                     ((PlayerState*)inner)->stepEventTimer =
-                        lbl_803DC6A8[((PlayerState*)inner)->unk8B0];
+                        lbl_803DC6A8[((PlayerState*)inner)->gaitStepLevel];
                     ((PlayerState*)inner)->unk8B1 =
-                        lbl_803DC6B0[((PlayerState*)inner)->unk8B0];
+                        lbl_803DC6B0[((PlayerState*)inner)->gaitStepLevel];
                 }
             }
             fn_802B066C(obj, inner);
@@ -7319,7 +7319,7 @@ void playerUpdate(int obj)
             if (*(void**)((char*)inner + 0x7f8) != NULL &&
                 Obj_IsObjectAlive(((PlayerState*)inner)->heldObj) == 0)
             {
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -7409,7 +7409,7 @@ void playerUpdate(int obj)
                 }
             }
             (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(((PlayerState*)inner)->unk8C9);
-            ((PlayerState*)inner)->unk800 = 0;
+            ((PlayerState*)inner)->isHoldingObject = 0;
             ((PlayerState*)inner)->unk8B8 = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
             objAudioFn_8006edcc(obj, *(int*)&((PlayerState*)inner)->baddie.eventFlags,
@@ -7926,7 +7926,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState *)inner)->yawRateSigned = 0;
         ((PlayerState*)inner)->yawRate = 0;
         ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A3;
-        ((PlayerState*)inner)->unk8B0 = 0;
+        ((PlayerState*)inner)->gaitStepLevel = 0;
         ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E8018;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8084;
         if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
@@ -8767,7 +8767,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
             ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
-            ((PlayerState*)inner)->unk800 = 0;
+            ((PlayerState*)inner)->isHoldingObject = 0;
             if (*(void**)((char*)inner + 0x7f8) != NULL)
             {
                 s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -8858,7 +8858,7 @@ void fn_802B249C(int obj, int inner, int state)
                         playerDie(obj);
                     }
                 }
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -8910,7 +8910,7 @@ void fn_802B249C(int obj, int inner, int state)
                         playerDie(obj);
                     }
                 }
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -8965,7 +8965,7 @@ void fn_802B249C(int obj, int inner, int state)
                         playerDie(obj);
                     }
                 }
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -9050,7 +9050,7 @@ void fn_802B249C(int obj, int inner, int state)
                 break;
             }
         case 0x100008:
-            ((PlayerState*)inner)->unk800 = 1;
+            ((PlayerState*)inner)->isHoldingObject = 1;
             if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
@@ -9072,7 +9072,7 @@ void fn_802B249C(int obj, int inner, int state)
             }
             break;
         case 0x100010:
-            ((PlayerState*)inner)->unk800 = 1;
+            ((PlayerState*)inner)->isHoldingObject = 1;
             if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
@@ -11530,7 +11530,7 @@ int fn_802A49C8(int obj, int state)
     }
     if (*(void**)((char*)inner + 0x7f8) != NULL && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E9C)
     {
-        inner->unk800 = 0;
+        inner->isHoldingObject = 0;
         if (*(void**)((char*)inner + 0x7f8) != NULL)
         {
             int s2 = inner->heldObj;
@@ -11681,7 +11681,7 @@ void fn_802AE83C(int obj, int inner)
         ((PlayerState*)inner)->staffActionRequest = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
     }
-    ((PlayerState*)inner)->unk800 = 0;
+    ((PlayerState*)inner)->isHoldingObject = 0;
     sub = ((PlayerState*)inner)->heldObj;
     if ((void*)sub != NULL)
     {
@@ -11809,7 +11809,7 @@ int fn_802A4B78(int obj, int state)
     }
     if ((void*)sub != NULL && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F48)
     {
-        inner->unk800 = 0;
+        inner->isHoldingObject = 0;
         if (*(void**)((char*)inner + 0x7f8) != NULL)
         {
             int s2 = inner->heldObj;
@@ -11843,7 +11843,7 @@ int playerSetHeldObject(int obj, int held)
     }
     else if ((void*)inner->heldObj != NULL)
     {
-        inner->unk800 = 0;
+        inner->isHoldingObject = 0;
         sub = inner->heldObj;
         if ((void*)sub != NULL)
         {
@@ -13395,7 +13395,7 @@ void fn_80296D20(int obj, void* arg)
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
-            inner->unk800 = 0;
+            inner->isHoldingObject = 0;
             if (*(void**)((char*)inner + 0x7f8) != NULL)
             {
                 short id = ((GameObject*)inner->heldObj)->anim.seqId;
@@ -14478,7 +14478,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                 ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                 ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 0;
-                ((PlayerState*)inner)->unk800 = 0;
+                ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
                     s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -14519,7 +14519,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             ok = 0;
         }
         if (ok != 0 && *(void**)((char*)inner + 0x7f8) != NULL &&
-            ((PlayerState*)inner)->unk800 == 0)
+            ((PlayerState*)inner)->isHoldingObject == 0)
         {
             if ((*(int*)((char*)state + 0x310) & 0x4000) != 0)
             {
@@ -14602,7 +14602,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
                     ((PlayerState*)inner)->unk40D = 0;
                     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 1;
-                    ((PlayerState*)inner)->unk800 = 0;
+                    ((PlayerState*)inner)->isHoldingObject = 0;
                     if (*(void**)((char*)inner + 0x7f8) != NULL)
                     {
                         s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
@@ -15916,7 +15916,7 @@ void fn_802AED2C(int obj, int state, int p3)
     ((PlayerState*)state)->yawRate = 0;
     ((PlayerState*)state)->targetYawRate = 0;
     gPlayerSubState = 4;
-    ((PlayerState*)state)->unk800 = 0;
+    ((PlayerState*)state)->isHoldingObject = 0;
     if (*(void**)((char*)state + 0x7f8) != NULL)
     {
         short id = ((GameObject*)((PlayerState*)state)->heldObj)->anim.seqId;
@@ -16289,7 +16289,7 @@ void fn_802A514C(int obj, int state)
         if (mode != 2 && mode != 1 && mode != 5 && mode != 7 && mode != 6)
         {
             void* sub;
-            inner->unk800 = 0;
+            inner->isHoldingObject = 0;
             sub = *(void**)((char*)inner + 0x7f8);
             if (sub != NULL)
             {
@@ -16469,7 +16469,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 0;
-        ((PlayerState*)inner)->unk800 = 0;
+        ((PlayerState*)inner)->isHoldingObject = 0;
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
@@ -16948,7 +16948,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
                         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
                         ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
-                        inner->unk800 = 0;
+                        inner->isHoldingObject = 0;
                         sub = *(void**)((char*)inner + 0x7f8);
                         if (sub != NULL)
                         {
@@ -18060,7 +18060,7 @@ void fn_802AE9C8(int obj, int inner, int state)
         }
         Sfx_PlayFromObject(obj, sfxId);
     }
-    ((PlayerState*)inner)->unk800 = 0;
+    ((PlayerState*)inner)->isHoldingObject = 0;
     {
         void* sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
