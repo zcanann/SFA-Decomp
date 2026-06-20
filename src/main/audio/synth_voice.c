@@ -249,7 +249,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
         {
             if ((entry->panning & 0x80) == 0)
             {
-                p = (keymap[key * 8 + 3] - 0x40) + pan;
+                p = keymap[key * 8 + 3] - 0x40;
+                p += pan;
                 if (p < 0)
                 {
                     pan = 0;
