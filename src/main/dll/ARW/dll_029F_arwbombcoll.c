@@ -222,13 +222,16 @@ void arwbombcoll_update(int obj)
     state = ((GameObject*)obj)->extra;
     flags = &state->flags;
 
-    if (state->lifetime > (minLifetime = lbl_803E707C))
     {
-        state->lifetime -= timeDelta;
-        if (state->lifetime <= minLifetime)
+        f32 lt = state->lifetime;
+        if (lt > (minLifetime = lbl_803E707C))
         {
-            Obj_FreeObject(obj);
-            return;
+            state->lifetime = lt - timeDelta;
+            if (state->lifetime <= minLifetime)
+            {
+                Obj_FreeObject(obj);
+                return;
+            }
         }
     }
 
