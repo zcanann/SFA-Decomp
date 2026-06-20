@@ -150,9 +150,9 @@ typedef struct PlayerState {
     f32 unk54C;
     f32 unk550;
     u8 pad554[0x560 - 0x554];
-    f32 unk560;
-    f32 unk564;
-    f32 unk568;
+    f32 moveOffsetY; /* local-space root/move displacement vector (offsetX at 0x564, Y at 0x560, Z at 0x568); scaled by moveProgress and added to localPos for camera overridePos; derived from joint-transform samples + groundNormal */
+    f32 moveOffsetX;
+    f32 moveOffsetZ;
     f32 groundNormalX; /* surface normal (nx,ny,nz,nw) from the move-anchor collision query; getAngle(X,Z) drives targetYaw on slopes, used as a slide basis */
     f32 groundNormalY;
     f32 groundNormalZ;

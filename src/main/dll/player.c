@@ -2756,9 +2756,9 @@ int fn_802A0680(int obj, int state)
     case 0x16:
         {
             f32 z = 0.0f;
-            ((PlayerState*)inner)->unk564 = z;
-            ((PlayerState*)inner)->unk560 = z;
-            ((PlayerState*)inner)->unk568 = z;
+            ((PlayerState*)inner)->moveOffsetX = z;
+            ((PlayerState*)inner)->moveOffsetY = z;
+            ((PlayerState*)inner)->moveOffsetZ = z;
         }
         fn_802A13F4(obj, state);
         if (((PlayerState*)state)->baddie.inputMagnitude <= lbl_803E7EFC)
@@ -2896,7 +2896,7 @@ int fn_802A0680(int obj, int state)
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
                         ((PlayerState*)inner)->unk5A4 = (s16)(lbl_803E7FAC * m);
-                        ((PlayerState*)inner)->unk560 = m;
+                        ((PlayerState*)inner)->moveOffsetY = m;
                         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
                         return 0x15;
                     }
@@ -2920,7 +2920,7 @@ int fn_802A0680(int obj, int state)
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
                         ((PlayerState*)inner)->unk5A4 = (s16)(lbl_803E7FAC * m);
-                        ((PlayerState*)inner)->unk560 = m;
+                        ((PlayerState*)inner)->moveOffsetY = m;
                         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
                         return 0x16;
                     }
@@ -2930,18 +2930,18 @@ int fn_802A0680(int obj, int state)
                 ObjModel_SampleJointTransform(jt, 1, 0, 1.0f,
                                               ((GameObject*)obj)->anim.rootMotionScale, out1, tmp);
                 ((GameObject*)obj)->anim.activeMove = -1;
-                ((PlayerState*)inner)->unk564 = ((PlayerState*)inner)->unk57C * -out1[0];
-                ((PlayerState*)inner)->unk560 = out1[1];
-                ((PlayerState*)inner)->unk568 = ((PlayerState*)inner)->unk584 * -out1[0];
+                ((PlayerState*)inner)->moveOffsetX = ((PlayerState*)inner)->unk57C * -out1[0];
+                ((PlayerState*)inner)->moveOffsetY = out1[1];
+                ((PlayerState*)inner)->moveOffsetZ = ((PlayerState*)inner)->unk584 * -out1[0];
                 if (b6 == 0 && b7 == 0)
                 {
-                    ((PlayerState*)inner)->unk560 = 0.0f;
+                    ((PlayerState*)inner)->moveOffsetY = 0.0f;
                 }
                 if (b8 == 0 && b9 == 0)
                 {
                     f32 z = 0.0f;
-                    ((PlayerState*)inner)->unk564 = z;
-                    ((PlayerState*)inner)->unk568 = z;
+                    ((PlayerState*)inner)->moveOffsetX = z;
+                    ((PlayerState*)inner)->moveOffsetZ = z;
                 }
                 mask = 0;
                 if (out1[0] < 0.0f)
@@ -2994,9 +2994,9 @@ int fn_802A0680(int obj, int state)
                 if (b8 != 0 || b9 != 0)
                 {
                     pnt[0] = dx + (((PlayerState*)inner)->savedPosX +
-                        ((PlayerState*)inner)->unk564);
+                        ((PlayerState*)inner)->moveOffsetX);
                     pnt[2] = dy + (((PlayerState*)inner)->savedPosZ +
-                        ((PlayerState*)inner)->unk568);
+                        ((PlayerState*)inner)->moveOffsetZ);
                     for (i = 0, dy = lbl_803E7F30; i < 2; i++)
                     {
                         if (i != 0)
@@ -3026,9 +3026,9 @@ int fn_802A0680(int obj, int state)
                 {
                     {
                         f32 z = 0.0f;
-                        ((PlayerState*)inner)->unk564 = z;
-                        ((PlayerState*)inner)->unk560 = z;
-                        ((PlayerState*)inner)->unk568 = z;
+                        ((PlayerState*)inner)->moveOffsetX = z;
+                        ((PlayerState*)inner)->moveOffsetY = z;
+                        ((PlayerState*)inner)->moveOffsetZ = z;
                     }
                     {
                         int st2 = (s16)gPlayerCurrentMoveId;
@@ -3100,9 +3100,9 @@ store_ph:
     {
         f32 sp = ((GameObject*)obj)->anim.currentMoveProgress;
         (*gCameraInterface)->overridePos(
-            ((PlayerState*)inner)->unk564 * sp + ((GameObject*)obj)->anim.localPosX,
-            ((PlayerState*)inner)->unk560 * sp + ((GameObject*)obj)->anim.localPosY,
-            ((PlayerState*)inner)->unk568 * sp + ((GameObject*)obj)->anim.localPosZ);
+            ((PlayerState*)inner)->moveOffsetX * sp + ((GameObject*)obj)->anim.localPosX,
+            ((PlayerState*)inner)->moveOffsetY * sp + ((GameObject*)obj)->anim.localPosY,
+            ((PlayerState*)inner)->moveOffsetZ * sp + ((GameObject*)obj)->anim.localPosZ);
     }
     fn_802AB5A4(obj, inner, 5);
     return 0;
@@ -9380,9 +9380,9 @@ int fn_802A1114(int obj, int state)
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
         fz = lbl_803E7EA4;
-        inner->unk564 = fz;
-        inner->unk560 = buf1[1];
-        inner->unk568 = fz;
+        inner->moveOffsetX = fz;
+        inner->moveOffsetY = buf1[1];
+        inner->moveOffsetZ = fz;
         pos[0] = inner->unk54C;
         pos[1] = inner->unk550;
         ic = inner->curAnimId;
@@ -9404,7 +9404,7 @@ int fn_802A1114(int obj, int state)
                            OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
     (*gCameraInterface)->overridePos(
         ((GameObject*)obj)->anim.localPosX,
-        inner->unk560 * ((GameObject*)obj)->anim.currentMoveProgress + ((GameObject*)obj)->anim.localPosY,
+        inner->moveOffsetY * ((GameObject*)obj)->anim.currentMoveProgress + ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
@@ -10111,8 +10111,8 @@ int fn_802A00E0(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = inner->groundNormalX * buf1[2];
-        inner->unk568 = inner->groundNormalZ * buf1[2];
+        inner->moveOffsetX = inner->groundNormalX * buf1[2];
+        inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk550;
         *(s16*)((char*)state + 0x278) = 0x15;
         inner->stateHandler = (int)fn_8029FFD0;
@@ -10158,10 +10158,10 @@ int fn_802A00E0(int obj, int state)
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return -1;
     }
-    t1 = inner->unk564 * obj98 + ((GameObject*)obj)->anim.localPosX;
+    t1 = inner->moveOffsetX * obj98 + ((GameObject*)obj)->anim.localPosX;
     t2 = ((GameObject*)obj)->anim.localPosY -
-        inner->unk560 * (lbl_803E7EE0 - obj98);
-    t3 = inner->unk568 * obj98 + ((GameObject*)obj)->anim.localPosZ;
+        inner->moveOffsetY * (lbl_803E7EE0 - obj98);
+    t3 = inner->moveOffsetZ * obj98 + ((GameObject*)obj)->anim.localPosZ;
     (*gCameraInterface)->overridePos(t1, t2, t3);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
@@ -10194,8 +10194,8 @@ int fn_802A03BC(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = inner->groundNormalX * buf1[2];
-        inner->unk568 = inner->groundNormalZ * buf1[2];
+        inner->moveOffsetX = inner->groundNormalX * buf1[2];
+        inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk54C;
         *(s16*)((char*)state + 0x278) = 0x14;
         inner->stateHandler = (int)fn_8029FFD0;
@@ -10237,10 +10237,10 @@ int fn_802A03BC(int obj, int state)
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return -1;
     }
-    t1 = inner->unk564 * obj98 + ((GameObject*)obj)->anim.localPosX;
+    t1 = inner->moveOffsetX * obj98 + ((GameObject*)obj)->anim.localPosX;
     t2 = ((GameObject*)obj)->anim.localPosY -
-        inner->unk560 * (lbl_803E7EE0 - obj98);
-    t3 = inner->unk568 * obj98 + ((GameObject*)obj)->anim.localPosZ;
+        inner->moveOffsetY * (lbl_803E7EE0 - obj98);
+    t3 = inner->moveOffsetZ * obj98 + ((GameObject*)obj)->anim.localPosZ;
     (*gCameraInterface)->overridePos(t1, t2, t3);
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
