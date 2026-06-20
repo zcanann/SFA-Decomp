@@ -861,11 +861,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     {
         return;
     }
-    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount)
-    {
-        return;
-    }
-    if (b >= ((ModelFileHeader*)hdr)->morphTargetCount)
+    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount || b >= ((ModelFileHeader*)hdr)->morphTargetCount)
     {
         return;
     }
