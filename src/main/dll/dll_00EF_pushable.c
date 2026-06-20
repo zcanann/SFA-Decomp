@@ -1235,8 +1235,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     start[0] = ((GameObject*)tgt)->anim.localPosX;
     start[1] = lbl_803E359C + ((GameObject*)tgt)->anim.localPosY;
     start[2] = ((GameObject*)tgt)->anim.localPosZ;
-    pp = &params;
-    pp->r[0] = lbl_803E35A0;
+    (pp = &params)->r[0] = lbl_803E35A0;
     pp->b10 = -1;
     pp->b14 = 3;
     pp->h2c = 0;
