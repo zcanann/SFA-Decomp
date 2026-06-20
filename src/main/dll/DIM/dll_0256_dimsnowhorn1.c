@@ -1239,7 +1239,6 @@ void DIMSnowHorn1_update(int obj)
     char* found;
     int inner;
     char* p2;
-    s16 d;
     u32 flip;
     int flags;
 
@@ -1340,7 +1339,7 @@ void DIMSnowHorn1_update(int obj)
                     (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
                     buttonDisable(0, 0x100);
                     GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 1);
-                    d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
+                    s16 d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
                     if (d > 0x8000)
                     {
                         d = d - 0xffff;
