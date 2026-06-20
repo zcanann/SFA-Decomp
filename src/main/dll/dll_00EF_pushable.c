@@ -1390,9 +1390,12 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         Obj_BuildTransformMatrices(obj);
         if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ)
         {
-            PushableState* st2 = ((GameObject*)obj)->extra;
-            char* def2 = *(char**)&((GameObject*)obj)->anim.placementData;
-            u16 fl2 = st2->flags;
+            PushableState* st2;
+            char* def2;
+            u16 fl2;
+            def2 = *(char**)&((GameObject*)obj)->anim.placementData;
+            st2 = ((GameObject*)obj)->extra;
+            fl2 = st2->flags;
             if ((fl2 & 1) != 0)
             {
                 s16 t;
