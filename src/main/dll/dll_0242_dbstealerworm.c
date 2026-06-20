@@ -2516,7 +2516,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
     {
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
     }
-    d = Vec_xzDistance(obj + 0x18, *(int*)&((BaddieState*)p2)->targetObj + 0x18);
+    d = Vec_xzDistance(obj + 0x18, (int)&((GameObject*)((BaddieState*)p2)->targetObj)->anim.worldPosX);
     ((BaddieState*)p2)->unk34D = 1;
     if (d < lbl_803E62D0)
     {
