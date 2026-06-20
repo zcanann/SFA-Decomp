@@ -177,7 +177,7 @@ void CameraModeCrawl_update(u8* obj)
         delta = (0x8000 - (u16)getAngle(dx, dz)) - (u16)camera->anim.rotX;
         delta = (delta > 0x8000) ? delta - 0xffff : delta;
         delta = (delta < -0x8000) ? delta + 0xffff : delta;
-        camera->anim.rotX = (s32)((f32)(s32)camera->anim.rotX +
+        camera->anim.rotX = (s16)((f32)(s32)camera->anim.rotX +
                                   interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
         camera->anim.rotX = (s16)(0x8000 - getAngle(dx, dz));
         camera->anim.rotY = 2048;
