@@ -1051,7 +1051,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(gTitleScreenTextures[7], (f32)(int)(xb + 0xa1),
                 lbl_803E2304 + lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb, a, 0xff);
     gameTextSetColor(0xff, 0xff, 0xff,
-                     (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - gTitleScreenCursorY)));
+                     (int)((f64)lbl_803DD9C0 * (lbl_803E2308 - gTitleScreenCursorY)));
     gameTextShow(0x3da);
     drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
