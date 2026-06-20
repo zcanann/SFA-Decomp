@@ -158,12 +158,12 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    float fVar1;
+    float divisor;
     u32 uVar2;
     int iVar3;
-    short* psVar4;
-    int iVar5;
-    double dVar6;
+    short* msgQueue;
+    int ctrl;
+    double dist;
     u32 msg1Id;
     u32 msg1Flag;
     u32 msg1Data;
@@ -177,12 +177,12 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     float deltaY;
     float deltaZ;
 
-    iVar5 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    *(u8*)(iVar5 + 0x14) = *(u8*)(iVar5 + 0x14) | 2;
-    *(u8*)(iVar5 + 0x15) = *(u8*)(iVar5 + 0x15) & 0xfb;
-    fVar1 = lbl_803E6F88;
+    ctrl = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    *(u8*)(ctrl + 0x14) = *(u8*)(ctrl + 0x14) | 2;
+    *(u8*)(ctrl + 0x15) = *(u8*)(ctrl + 0x15) & 0xfb;
+    divisor = lbl_803E6F88;
     *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / fVar1;
+    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / divisor;
     ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -198,43 +198,43 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
         deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
         deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
-        dVar6 = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
-        if (dVar6 < (double)lbl_803E6F50)
+        dist = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
+        if (dist < (double)lbl_803E6F50)
         {
             msg1Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
-            psVar4 = *(short**)(iVar5 + 0x24);
+            msgQueue = *(short**)(ctrl + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
-            uVar2 = FUN_80006ab8(psVar4);
+            uVar2 = FUN_80006ab8(msgQueue);
             if (uVar2 == 0)
             {
-                FUN_80006ac4(psVar4,  & msg1Id);
+                FUN_80006ac4(msgQueue,  & msg1Id);
             }
-            *(u8*)(iVar5 + 0x34) = 1;
+            *(u8*)(ctrl + 0x34) = 1;
         }
     }
     else
     {
-        psVar4 = *(short**)(iVar5 + 0x24);
+        msgQueue = *(short**)(ctrl + 0x24);
         msg2Id = 9;
         msg2Flag = 0;
         msg2Data = 0x24;
-        uVar2 = FUN_80006ab8(psVar4);
+        uVar2 = FUN_80006ab8(msgQueue);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4,  & msg2Id);
+            FUN_80006ac4(msgQueue,  & msg2Id);
         }
-        *(u8*)(iVar5 + 0x34) = 1;
+        *(u8*)(ctrl + 0x34) = 1;
         msg3Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
-        psVar4 = *(short**)(iVar5 + 0x24);
+        msgQueue = *(short**)(ctrl + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
-        uVar2 = FUN_80006ab8(psVar4);
+        uVar2 = FUN_80006ab8(msgQueue);
         if (uVar2 == 0)
         {
-            FUN_80006ac4(psVar4,  & msg3Id);
+            FUN_80006ac4(msgQueue,  & msg3Id);
         }
-        *(u8*)(iVar5 + 0x34) = 1;
+        *(u8*)(ctrl + 0x34) = 1;
     }
     return 0;
 }
