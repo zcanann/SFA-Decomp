@@ -2147,7 +2147,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityX = *(f32*)(st + 0x20);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityY = *(f32*)(st + 0x24);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->velocityZ = *(f32*)(st + 0x28);
-    gPartfxSequenceIdCounter = gPartfxSequenceIdCounter + 1;
+    gPartfxSequenceIdCounter += 1;
     if (gPartfxSequenceIdCounter > 0x4e20)
     {
         gPartfxSequenceIdCounter = 0;
