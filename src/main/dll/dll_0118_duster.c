@@ -237,7 +237,7 @@ void duster_update(int obj)
         for (i = 0; i < floorHitCount; i++)
         {
             floorDelta = **(f32**)((int)floorHits + i * 4) - ((GameObject*)obj)->anim.localPosY;
-            if (floorDelta < lbl_803E38C4)
+            if (floorDelta < *(f32*)&lbl_803E38C4)
             {
                 floorDelta = -floorDelta;
             }
