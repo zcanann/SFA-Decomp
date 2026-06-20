@@ -1008,6 +1008,7 @@ int fn_80136A40(int p1, int c)
 }
 
 #pragma peephole off
+#pragma optimization_level 3
 int fn_80136E00(int p1, u8* p)
 {
     u8 c;
@@ -1209,6 +1210,7 @@ int fn_80136E00(int p1, u8* p)
     }
     return p - start;
 }
+#pragma optimization_level reset
 
 /* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
