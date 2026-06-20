@@ -2136,8 +2136,8 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int c3y0;
     int c3x1;
     int c3x0;
-    s16 savedX;
     s16 savedY;
+    s16 savedX;
     u16 f;
     u8* cur;
     int hw;
@@ -2170,10 +2170,12 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     case 7:
         if ((int)getCurGameText() == 3)
         {
+            u16 bh = ((GameTextBox*)box)->height;
+            u16 bw = ((GameTextBox*)box)->width;
+            s16 by = ((GameTextBox*)box)->y;
+            s16 bx = ((GameTextBox*)box)->x;
             colorB = gGameTextBoxFillColor;
-            hudDrawRect(((GameTextBox*)box)->x, ((GameTextBox*)box)->y,
-                        ((GameTextBox*)box)->x + ((GameTextBox*)box)->width,
-                        ((GameTextBox*)box)->y + ((GameTextBox*)box)->height, &colorB);
+            hudDrawRect(bx, by, bx + bw, by + bh, &colorB);
         }
         else
         {
@@ -2186,10 +2188,14 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         break;
     case 1:
-        colorA = gGameTextBoxFillColor;
-        hudDrawRect(((GameTextBox*)box)->x, ((GameTextBox*)box)->y,
-                    ((GameTextBox*)box)->x + ((GameTextBox*)box)->width,
-                    ((GameTextBox*)box)->y + ((GameTextBox*)box)->height, &colorA);
+        {
+            u16 bh = ((GameTextBox*)box)->height;
+            u16 bw = ((GameTextBox*)box)->width;
+            s16 by = ((GameTextBox*)box)->y;
+            s16 bx = ((GameTextBox*)box)->x;
+            colorA = gGameTextBoxFillColor;
+            hudDrawRect(bx, by, bx + bw, by + bh, &colorA);
+        }
         break;
     case 6:
         if (strPtr == NULL)
