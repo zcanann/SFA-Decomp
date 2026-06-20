@@ -586,7 +586,7 @@ void fn_8015EB6C(int obj, int p2, int p3)
     {
         int v = -1;
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, p3, p2 + 0x35c, (s32) * (s16*)(p2 + 0x3f4), 0, 0, 0, 8, v);
+            obj, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, 0, 0, 0, 8, v);
         *(int*)&((GroundBaddieState*)p3)->baddie.targetObj = (int)r;
         ((GroundBaddieState*)p3)->baddie.hasTarget = 0;
         ((GroundBaddieState*)p2)->targetState = 1;
@@ -656,15 +656,15 @@ void fn_8015ED1C(int p1, int p2, int p3)
     if ((((GroundBaddieState*)p2)->configFlags & 0x20) == 0)
     {
         (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            p1, p3, p2 + 0x400, 2, 3, (s32) * (s16*)(p2 + 0x3fa), (s32) * (s16*)(p2 + 0x3fc));
+            p1, p3, p2 + 0x400, 2, 3, (s32)((GroundBaddieState*)p2)->unk3FA, (s32)((GroundBaddieState*)p2)->unk3FC);
     }
 
     (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
-        p1, p3, p2 + 0x35c, (s32) * (s16*)(p2 + 0x3f4), 0, 0, 0, 8);
+        p1, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, 0, 0, 0, 8);
 
     r = (int)
     (**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
-        p1, p3, p2 + 0x35c, (s32) * (s16*)(p2 + 0x3f4), lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
+        p1, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
     if (r != 0)
     {
@@ -909,8 +909,8 @@ void iceball_init(void* obj);
 #pragma peephole off
 int fn_8015E00C(int p1, u8* obj)
 {
-    if ((s8)obj[0x354] < 1) return 3;
-    if ((s8)obj[0x346] != 0) return 6;
+    if ((s8)((GroundBaddieState*)obj)->baddie.hitPoints < 1) return 3;
+    if ((s8)((GroundBaddieState*)obj)->baddie.moveDone != 0) return 6;
     return 0;
 }
 
