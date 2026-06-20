@@ -58,19 +58,19 @@ STATIC_ASSERT(sizeof(XyzAnimatorState) == 0x50);
  * 0x18.. matches the common animator-def header position. */
 typedef struct XyzAnimatorPlacement {
     u8 unk0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s8 unk28;
-    s8 unk29;
-    s8 unk2A;
-    s8 unk2B;
-    u8 unk2C;
+    s16 triggerGameBit;
+    s16 doneGameBit;
+    s16 startX;
+    s16 startY;
+    s16 startZ;
+    s16 targetX;
+    s16 targetY;
+    s16 targetZ;
+    s8 blockLayer;
+    s8 speedX;
+    s8 speedY;
+    s8 speedZ;
+    u8 mode;
     u8 unk2D[0x34 - 0x2D];
 } XyzAnimatorPlacement;
 
