@@ -182,7 +182,7 @@ void magicdust_update(int obj)
                 ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
                 ((GameObject*)obj)->anim.alpha = 0xff;
             }
-            if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+            if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj,
                                                  ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
@@ -206,7 +206,7 @@ void magicdust_update(int obj)
                 ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
                 ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
                 (*gExpgfxInterface)->freeSource2((u32)obj);
-                if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+                if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
                 {
                     for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
                     {
