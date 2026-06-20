@@ -58,7 +58,6 @@ typedef struct WarpPointState
 extern void warpToMap(int idx, s8 transType);
 
 
-extern u8 framesThisStep;
 
 
 extern s16 lbl_803DCEB8;
