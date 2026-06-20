@@ -810,24 +810,24 @@ int iceBaddie_stateHandlerB07(int obj, int state)
             }
             else
             {
-                int control = *(int*)&sub->control;
+                IceBaddieControl* control = (IceBaddieControl*)*(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
+                    int attackIndex = control->attackPatternIndex;
+                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, gIceBaddieAttackMovesAlt[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
+                    int attackIndex = control->attackPatternIndex;
+                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, gIceBaddieAttackMoves[attackIndex]);
                 }
-                if (((IceBaddieControl*)control)->attackPatternIndex >= 7)
+                if (control->attackPatternIndex >= 7)
                 {
-                    ((IceBaddieControl*)control)->attackPatternIndex = 0;
+                    control->attackPatternIndex = 0;
                 }
             }
         }
