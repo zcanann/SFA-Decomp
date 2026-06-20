@@ -1883,7 +1883,7 @@ void sceneDraw(void)
 
 void sceneDrawTransparentPolys(void)
 {
-    int* e;
+    int (*e)[4];
     int i;
     int* block;
     int* player;
@@ -1894,18 +1894,18 @@ void sceneDrawTransparentPolys(void)
 
     lightmap_sortTransparentDrawQueue();
     i = 0;
-    e = (int*)&lbl_8037E0C0;
+    e = (int(*)[4])&lbl_8037E0C0;
     for (; i < lbl_803DCE30; i++)
     {
-        switch (e[3])
+        switch (e[i][3])
         {
         case 0:
-            expgfx_renderSourcePools(*e, 0);
-            objDrawFn_8005da48((int*)*e);
-            expgfx_renderSourcePools(*e, 1);
+            expgfx_renderSourcePools(e[i][0], 0);
+            objDrawFn_8005da48((int*)e[i][0]);
+            expgfx_renderSourcePools(e[i][0], 1);
             break;
         case 1:
-            block = (int*)*e;
+            block = (int*)e[i][0];
             Obj_GetActiveModel(block);
             player = Obj_GetPlayerObject();
             if (block == player)
@@ -1922,16 +1922,16 @@ void sceneDrawTransparentPolys(void)
             break;
         case 2:
             fn_8000F9B4();
-            objShadowFn_80062498((int*)*e, 0, 0, framesThisStep);
+            objShadowFn_80062498((int*)e[i][0], 0, 0, framesThisStep);
             Camera_ApplyFullViewport();
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int*)*e, Obj_GetActiveModel((int*)*e));
+            objDrawFn_80061654((int*)e[i][0], Obj_GetActiveModel((int*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
@@ -1940,10 +1940,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d894((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d894((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 5:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
@@ -1952,10 +1952,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d69c((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d69c((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 6:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
@@ -1964,10 +1964,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d4ec((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d4ec((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 7:
-            drawGlow((u32) * e, e[1]);
+            drawGlow((u32)e[i][0], e[i][1]);
             break;
         case 8:
             drawFn_8006f500();
@@ -1975,7 +1975,6 @@ void sceneDrawTransparentPolys(void)
         case 9:
             (*gWaterfxInterface)->render(0, 0);
         }
-        e = e + 4;
     }
 }
 
