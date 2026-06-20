@@ -96,7 +96,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
     *(LazerwallHeadPair*)head = *(LazerwallHeadPair*)&lbl_803E59D0;
     playerObj = (int)Obj_GetPlayerObject();
-    state = *(int*)(arg1 + 0xb8);
+    state = *(int*)&((GameObject*)arg1)->extra;
 
     if (*(s8*)(arg2 + 0x27a) != 0)
     {
