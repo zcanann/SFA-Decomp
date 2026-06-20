@@ -1648,7 +1648,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
     }
 }
 
-void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
+void fn_8014CD1C(int* node, int* sub, u16 p3, f32 fa, f32 fb, u8 p5)
 {
     f32 dt;
     int angle;
