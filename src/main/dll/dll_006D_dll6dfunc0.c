@@ -596,25 +596,25 @@ u32
 FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    u32 uVar1;
-    u8* puVar2;
+    u32 result;
+    u8* history;
 
-    uVar1 = FUN_80017498();
-    puVar2 = FUN_800e82d8();
+    result = FUN_80017498();
+    history = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)puVar2[5] * 2)
+                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)history[5] * 2)
     ]
     )
     ;
-    return uVar1;
+    return result;
 }
 
 u8 FUN_800ea9ac(void)
 {
-    u8* puVar1;
+    u8* history;
 
-    puVar1 = FUN_800e82d8();
-    return puVar1[5];
+    history = FUN_800e82d8();
+    return history[5];
 }
 
 void FUN_800ea9b8(void)
