@@ -2105,7 +2105,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosY = *(f32*)(st + 0x30);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosZ = *(f32*)(st + 0x34);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->renderScale = *(f32*)(st + 0x38);
-    if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags & 1)
+    if ((int)((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags & 1)
     {
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosX = *(f32*)(st + 0x2c);
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosY = *(f32*)(st + 0x30);
