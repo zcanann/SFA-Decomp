@@ -499,8 +499,8 @@ typedef struct PushableObjectDef
     s16 gameBit;
     s16 unk1A;
     void* unk1C;
-    u16 unk20;
-    u8 unk22;
+    u16 scaleRaw;
+    u8 rotXByte;
     u8 unk23;
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
@@ -756,7 +756,7 @@ void pushable_init(s16* obj, char* def)
     {
         *(s8*)&((PushableObjectDef*)def)->unk23 = -1;
     }
-    *obj = ((PushableObjectDef*)def)->unk22 << 8;
+    *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
@@ -766,7 +766,7 @@ void pushable_init(s16* obj, char* def)
     entry = Transporter_GetActiveModel(obj);
     model = (int*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
-    state->scale = (f32) * &((PushableObjectDef*)def)->unk20 / gPushableU16ScaleDenom;
+    state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / gPushableU16ScaleDenom;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
