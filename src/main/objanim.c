@@ -497,6 +497,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     int sampleIndex;
     int lastSample;
     int hasFirstAxis;
+    int broke;
     s16 axisFirstSample;
 
     bank = ObjAnim_GetActiveBank(objAnim);
@@ -629,36 +630,40 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
     phase = phaseStep - (phaseStep * sampleFraction);
-    while (1)
+    broke = 0;
+    do
     {
         if (nextDistance > targetDistance)
         {
             phase -= (phaseStep * (nextDistance - targetDistance)) /
                 (nextDistance - previousDistance);
-            break;
-        }
-        sampleIndex++;
-        if (sampleIndex >= segmentCount)
-        {
-            sampleIndex = 0;
-        }
-        previousDistance = nextDistance;
-        if (blendSamples != NULL)
-        {
-            s16* axisAt = &axis[sampleIndex];
-            s16* blendAt = &blendSamples[sampleIndex];
-            nextDistance +=
-                (rootScale * ((f32)axisAt[2] - axisAt[1]) * moveWeight) +
-                (blendScale * ((f32)blendAt[1] - blendAt[0]) * blendWeight);
+            broke = 1;
         }
         else
         {
-            s16* axisAt = &axis[sampleIndex];
-            nextDistance +=
-                rootScale * ((f32)axisAt[2] - axisAt[1]);
+            sampleIndex++;
+            if (sampleIndex >= segmentCount)
+            {
+                sampleIndex = 0;
+            }
+            previousDistance = nextDistance;
+            if (blendSamples != NULL)
+            {
+                s16* axisAt = &axis[sampleIndex];
+                s16* blendAt = &blendSamples[sampleIndex];
+                nextDistance +=
+                    (rootScale * ((f32)axisAt[2] - axisAt[1]) * moveWeight) +
+                    (blendScale * ((f32)blendAt[1] - blendAt[0]) * blendWeight);
+            }
+            else
+            {
+                s16* axisAt = &axis[sampleIndex];
+                nextDistance +=
+                    rootScale * ((f32)axisAt[2] - axisAt[1]);
+            }
+            phase += phaseStep;
         }
-        phase += phaseStep;
-    }
+    } while (!broke);
 
     if (phaseOut != NULL)
     {
