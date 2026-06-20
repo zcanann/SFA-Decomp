@@ -35,7 +35,6 @@ typedef struct EcshIntPair
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
 
-extern f32 timeDelta;
 extern f32 gEcShShrineOrbitSpeedA;
 extern f32 gEcShShrineOrbitSpeedB;
 extern f32 gEcShShrineOrbitSpeedC;
