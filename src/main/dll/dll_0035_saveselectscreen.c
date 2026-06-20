@@ -530,12 +530,10 @@ void SaveSelectScreen_render(int param)
             ptrs = gSaveSelectSlotTextIds;
             do
             {
-                sprintf(*arr, &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
+                sprintf(arr[i], &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
-                gameTextAppendStr(*arr, *ptrs);
+                gameTextAppendStr(arr[i], ptrs[i]);
                 off += 0x24;
-                arr++;
-                ptrs++;
                 i++;
             }
             while (i < 3);
