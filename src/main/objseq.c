@@ -3249,15 +3249,15 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
         {
             if ((s8)((ObjSeqState*)seq)->movementState == 2)
             {
-                *(f32*)(seqObj + 0xc) = ((ObjSeqState*)seq)->posOffsetX * ((ObjSeqState*)seq)->posOffsetScale + baseX;
-                *(f32*)(seqObj + 0x10) = ((ObjSeqState*)seq)->posOffsetY * ((ObjSeqState*)seq)->posOffsetScale + baseY;
-                *(f32*)(seqObj + 0x14) = ((ObjSeqState*)seq)->posOffsetZ * ((ObjSeqState*)seq)->posOffsetScale + baseZ;
+                ((GameObject*)seqObj)->anim.localPosX = ((ObjSeqState*)seq)->posOffsetX * ((ObjSeqState*)seq)->posOffsetScale + baseX;
+                ((GameObject*)seqObj)->anim.localPosY = ((ObjSeqState*)seq)->posOffsetY * ((ObjSeqState*)seq)->posOffsetScale + baseY;
+                ((GameObject*)seqObj)->anim.localPosZ = ((ObjSeqState*)seq)->posOffsetZ * ((ObjSeqState*)seq)->posOffsetScale + baseZ;
             }
             else
             {
-                *(f32*)(seqObj + 0xc) = baseX;
-                *(f32*)(seqObj + 0x10) = baseY;
-                *(f32*)(seqObj + 0x14) = baseZ;
+                ((GameObject*)seqObj)->anim.localPosX = baseX;
+                ((GameObject*)seqObj)->anim.localPosY = baseY;
+                ((GameObject*)seqObj)->anim.localPosZ = baseZ;
             }
         }
         if ((((ObjSeqState*)seq)->flags & 2) != 0)
