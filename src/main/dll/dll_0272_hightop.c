@@ -839,7 +839,7 @@ int hightop_stateHandler04(int obj, int p)
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
-            state + 0xa10, obj, 0x3463a, curve);
+            (char*)state + 0xa10, obj, 0x3463a, curve);
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, 0x5ce);
@@ -852,7 +852,7 @@ int hightop_stateHandler04(int obj, int p)
         GameBit_Set(0x62a, 1);
         return 0;
     }
-    objModelAndSoundFn_80039118(obj, state + 0xb48);
+    objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
     state->unkC30 -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {
