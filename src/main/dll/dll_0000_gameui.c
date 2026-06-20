@@ -1729,7 +1729,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
         {
             char* e = fn_800E888C(gHighScoreActiveTableId, k);
             char* name = e + 4;
-            int starred = *(u8*)(e + 3) & 1;
+            u32 starred = *(u8*)(e + 3) & 1;
             int rowMul, rowY;
             sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
