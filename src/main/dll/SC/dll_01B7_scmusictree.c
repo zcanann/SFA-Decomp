@@ -26,19 +26,19 @@
 typedef struct ScMusictreePlacement
 {
     u8 pad0[0x20 - 0x0];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
+    u8 colorR; /* 0x20: render tint red   (passed to fn_8003B608) */
+    u8 colorG; /* 0x21: render tint green */
+    u8 colorB; /* 0x22: render tint blue */
     u8 pad23[0x28 - 0x23];
 } ScMusictreePlacement;
 
 typedef struct ScMusictreeSpawnAmbientEffectPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 colorR; /* 0x4: ambient particle tint red   -> setup head.unk04[0] */
+    u8 colorG; /* 0x5: ambient particle tint green -> setup head.unk04[1] */
+    u8 colorB; /* 0x6: ambient particle tint blue  -> setup head.unk04[2] */
+    u8 colorA; /* 0x7: ambient particle tint alpha -> setup head.unk04[3] */
     u8 pad8[0x20 - 0x8];
     u8 unk20;
     u8 unk21;
@@ -141,8 +141,8 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     SCMusicTreeState* state = ((GameObject*)obj)->extra;
     int i;
     if (visible == 0) return;
-    fn_8003B608((int)((ScMusictreePlacement*)def)->unk20, (int)((ScMusictreePlacement*)def)->unk21,
-                (int)((ScMusictreePlacement*)def)->unk22);
+    fn_8003B608((int)((ScMusictreePlacement*)def)->colorR, (int)((ScMusictreePlacement*)def)->colorG,
+                (int)((ScMusictreePlacement*)def)->colorB);
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
     if ((state->flags & 0x80) != 0)
     {
@@ -169,10 +169,10 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x28, 0x210);
-        ((ScMusictreeSetup*)setup)->head.unk04[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk4;
-        ((ScMusictreeSetup*)setup)->head.unk04[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk6;
-        ((ScMusictreeSetup*)setup)->head.unk04[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk5;
-        ((ScMusictreeSetup*)setup)->head.unk04[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->unk7 - 10;
+        ((ScMusictreeSetup*)setup)->head.unk04[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
+        ((ScMusictreeSetup*)setup)->head.unk04[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
+        ((ScMusictreeSetup*)setup)->head.unk04[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
+        ((ScMusictreeSetup*)setup)->head.unk04[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
         ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
         ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
         ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
