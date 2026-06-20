@@ -14939,12 +14939,12 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     EmitPlane planes[2];
     f32 threshold;
     f32 bx, ax, bz, az, by, ay;
-    void* hit;
-    int tbl1, tbl2;
-    int i;
     f32* pbx;
     f32* pby;
     f32* pbz;
+    void* hit;
+    int tbl1, tbl2;
+    int i;
 
     ((PlayerState*)b)->groundObject = 0;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
@@ -14974,10 +14974,10 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     planes[1].nz = -planes[0].nz;
     planes[1].d = -(planes[1].nx * *(f32*)((char*)c + 0x8) +
         planes[1].nz * *(f32*)((char*)c + 0x18));
-    threshold = lbl_803E7E98;
     pbx = &bx;
     pby = &by;
     pbz = &bz;
+    threshold = lbl_803E7E98;
     for (i = 0; i < 2; i++)
     {
         f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(&planes[i], (void*)e) + planes[i].d;
