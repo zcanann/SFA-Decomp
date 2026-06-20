@@ -2515,8 +2515,8 @@ int fn_802A1CA8(int obj, int state)
                             ((PlayerState*)inner)->unk800 = 0;
                             if (*(void**)((char*)inner + 0x7f8) != NULL)
                             {
-                                if (*(s16*)(((PlayerState*)inner)->heldObj + 0x46) == 0x3cf ||
-                                    *(s16*)(((PlayerState*)inner)->heldObj + 0x46) == 0x662)
+                                if (((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId == 0x3cf ||
+                                    ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId == 0x662)
                                 {
                                     objThrowFn_80182504(((PlayerState*)inner)->heldObj);
                                 }
@@ -6722,7 +6722,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (typ == 0x3cf || typ == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -7324,7 +7324,7 @@ void playerUpdate(int obj)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (typ == 0x3cf || typ == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -8772,7 +8772,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             ((PlayerState*)inner)->unk800 = 0;
             if (*(void**)((char*)inner + 0x7f8) != NULL)
             {
-                s16 t = *(s16*)(((PlayerState*)inner)->heldObj + 0x46);
+                s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                 if (t == 0x3cf || t == 0x662)
                 {
                     objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -8863,7 +8863,7 @@ void fn_802B249C(int obj, int inner, int state)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (typ == 0x3cf || typ == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -8915,7 +8915,7 @@ void fn_802B249C(int obj, int inner, int state)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (typ == 0x3cf || typ == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -8970,7 +8970,7 @@ void fn_802B249C(int obj, int inner, int state)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (typ == 0x3cf || typ == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -13402,7 +13402,7 @@ void fn_80296D20(int obj, void* arg)
             inner->unk800 = 0;
             if (*(void**)((char*)inner + 0x7f8) != NULL)
             {
-                short id = *(s16*)((char*)inner->heldObj + 0x46);
+                short id = ((GameObject*)inner->heldObj)->anim.seqId;
                 if (id == 0x3cf || id == 0x662)
                 {
                     objThrowFn_80182504(inner->heldObj);
@@ -14485,7 +14485,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                 ((PlayerState*)inner)->unk800 = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 t = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                    s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                     if (t == 0x3cf || t == 0x662)
                     {
                         objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -14609,7 +14609,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ((PlayerState*)inner)->unk800 = 0;
                     if (*(void**)((char*)inner + 0x7f8) != NULL)
                     {
-                        s16 t = *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x46);
+                        s16 t = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
                         if (t == 0x3cf || t == 0x662)
                         {
                             objThrowFn_80182504(((PlayerState*)inner)->heldObj);
@@ -15921,7 +15921,7 @@ void fn_802AED2C(int obj, int state, int p3)
     ((PlayerState*)state)->unk800 = 0;
     if (*(void**)((char*)state + 0x7f8) != NULL)
     {
-        short id = *(s16*)((char*)((PlayerState*)state)->heldObj + 0x46);
+        short id = ((GameObject*)((PlayerState*)state)->heldObj)->anim.seqId;
         if (id == 0x3cf || id == 0x662)
         {
             objThrowFn_80182504(((PlayerState*)state)->heldObj);
