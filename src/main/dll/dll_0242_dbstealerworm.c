@@ -679,7 +679,7 @@ int dbstealerworm_func0B(int obj, u8 msg, int* out)
 void fn_80203000(int obj, int param2)
 {
     int i;
-    int state = *(int*)(param2 + 0x40c);
+    int state = *(int*)&((GroundBaddieState*)param2)->control;
     if ((*(u8*)(state + 0x14) & 1) && *(void**)&((GroundBaddieState*)param2)->baddie.targetObj != 0)
     {
         fn_80202EF0(obj, param2);
