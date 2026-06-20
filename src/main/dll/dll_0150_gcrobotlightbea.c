@@ -96,66 +96,66 @@ extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void FUN_8019b1d8(u32 param_1, u32 param_2, u16* param_3)
+void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxIds)
 {
-    u32 uVar1;
-    int iVar2;
-    int iVar3;
-    u64 uVar4;
+    u32 obj;
+    int latchedCmd;
+    int cmdIndex;
+    u64 context;
 
-    uVar4 = FUN_80286840();
-    uVar1 = (u32)((u64)uVar4 >> 0x20);
-    iVar2 = 0;
-    for (iVar3 = 0; iVar3 < *(char*)((int)uVar4 + 0x1b); iVar3 = iVar3 + 1)
+    context = FUN_80286840();
+    obj = (u32)((u64)context >> 0x20);
+    latchedCmd = 0;
+    for (cmdIndex = 0; cmdIndex < *(char*)((int)context + 0x1b); cmdIndex = cmdIndex + 1)
     {
-        switch (*(u8*)((int)uVar4 + iVar3 + 0x13))
+        switch (*(u8*)((int)context + cmdIndex + 0x13))
         {
         case 0:
-            if (param_3 != 0x0)
+            if (sfxIds != 0x0)
             {
-                FUN_80006824(uVar1, *param_3);
+                FUN_80006824(obj, *sfxIds);
             }
             break;
         case 1:
-            iVar2 = 1;
+            latchedCmd = 1;
             break;
         case 2:
-            iVar2 = 2;
+            latchedCmd = 2;
             break;
         case 3:
-            iVar2 = 3;
+            latchedCmd = 3;
             break;
         case 4:
-            iVar2 = 4;
+            latchedCmd = 4;
             break;
         case 7:
-            if (param_3 != 0x0)
+            if (sfxIds != 0x0)
             {
-                FUN_80006824(uVar1, param_3[1]);
+                FUN_80006824(obj, sfxIds[1]);
             }
             break;
         case 9:
-            FUN_80006824(uVar1, SFXsk_trwhin3);
+            FUN_80006824(obj, SFXsk_trwhin3);
         }
     }
-    if ((iVar2 != 0) && (param_3 != 0x0))
+    if ((latchedCmd != 0) && (sfxIds != 0x0))
     {
-        FUN_80006824(uVar1, param_3[2]);
+        FUN_80006824(obj, sfxIds[2]);
     }
     FUN_8028688c();
     return;
 }
 
 u32
-FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32 param_5,
+FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
              u32 param_6, u32 param_7, u32 param_8, u32 param_9)
 {
-    int iVar1;
-    short sVar2;
-    u32 uVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
+    int newYaw;
+    short yawDelta;
+    u32 result;
+    double dirY;
+    double dirZ;
+    double dirX;
     u64 in_f5;
     u64 in_f6;
     u64 in_f7;
@@ -169,64 +169,64 @@ FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, u32
     u32 uStack_3c;
     s64 local_38;
 
-    if (param_3 == 0x0)
+    if (target == 0x0)
     {
-        uVar3 = 0;
+        result = 0;
     }
     else
     {
-        deltaX[0] = *(float*)(param_3 + 6) - *(float*)(param_2 + 6);
-        dVar6 = (double)deltaX[0];
-        deltaY = *(float*)(param_3 + 8) - *(float*)(param_2 + 8);
-        deltaZ = *(float*)(param_3 + 10) - *(float*)(param_2 + 10);
-        dVar4 = FUN_80293900((double)(deltaZ * deltaZ + (float)(dVar6 * dVar6) + deltaY * deltaY
+        deltaX[0] = *(float*)(target + 6) - *(float*)(self + 6);
+        dirX = (double)deltaX[0];
+        deltaY = *(float*)(target + 8) - *(float*)(self + 8);
+        deltaZ = *(float*)(target + 10) - *(float*)(self + 10);
+        dirY = FUN_80293900((double)(deltaZ * deltaZ + (float)(dirX * dirX) + deltaY * deltaY
         ));
-        if ((double)(float)((double)lbl_803E4DBC * param_1) <= dVar4)
+        if ((double)(float)((double)lbl_803E4DBC * dt) <= dirY)
         {
             FUN_8006f7a0(deltaX, &deltaY, &deltaZ);
-            *(float*)(param_2 + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * param_1);
-            *(float*)(param_2 + 0x14) = lbl_803DC074 * (float)((double)deltaY * param_1);
-            *(float*)(param_2 + 0x16) = lbl_803DC074 * (float)((double)deltaZ * param_1);
-            sVar2 = (*param_3 + -0x8000) - *param_2;
-            if (0x8000 < sVar2)
+            *(float*)(self + 0x12) = lbl_803DC074 * (float)((double)deltaX[0] * dt);
+            *(float*)(self + 0x14) = lbl_803DC074 * (float)((double)deltaY * dt);
+            *(float*)(self + 0x16) = lbl_803DC074 * (float)((double)deltaZ * dt);
+            yawDelta = (*target + -0x8000) - *self;
+            if (0x8000 < yawDelta)
             {
-                sVar2 = sVar2 + 1;
+                yawDelta = yawDelta + 1;
             }
-            if (sVar2 < -0x8000)
+            if (yawDelta < -0x8000)
             {
-                sVar2 = sVar2 + -1;
+                yawDelta = yawDelta + -1;
             }
-            uStack_44 = (int)*param_2 ^ 0x80000000;
+            uStack_44 = (int)*self ^ 0x80000000;
             local_48 = 0x43300000;
-            uStack_3c = sVar2 ^ 0x80000000;
+            uStack_3c = yawDelta ^ 0x80000000;
             local_40 = 0x43300000;
-            iVar1 = (int)
+            newYaw = (int)
             ((f32)(s32)
             uStack_44 +
                 (float)((double)((lbl_803E4DC0 +
                     (float)((double)(u32)uStack_3c
-                    )) * (float)(param_1 * (double)lbl_803DC074)) / dVar4)
+                    )) * (float)(dt * (double)lbl_803DC074)) / dirY)
             )
             ;
-            local_38 = (s64)iVar1;
-            *param_2 = iVar1;
-            dVar4 = (double)*(float*)(param_2 + 0x14);
-            dVar5 = (double)*(float*)(param_2 + 0x16);
-            FUN_80017a88((double)*(float*)(param_2 + 0x12), dVar4, dVar5, param_2);
-            if (param_2[0x50] != 0x1a)
+            local_38 = (s64)newYaw;
+            *self = newYaw;
+            dirY = (double)*(float*)(self + 0x14);
+            dirZ = (double)*(float*)(self + 0x16);
+            FUN_80017a88((double)*(float*)(self + 0x12), dirY, dirZ, self);
+            if (self[0x50] != 0x1a)
             {
-                FUN_800305f8((double)lbl_803E4DA8, dVar4, dVar5, dVar6, in_f5, in_f6, in_f7, in_f8, param_2, 0x1a, 0
+                FUN_800305f8((double)lbl_803E4DA8, dirY, dirZ, dirX, in_f5, in_f6, in_f7, in_f8, self, 0x1a, 0
                              , param_5, param_6, param_7, param_8, param_9);
             }
-            FUN_8002f6ac(param_1, param_2, param_4);
-            uVar3 = 0;
+            FUN_8002f6ac(dt, self, param_4);
+            result = 0;
         }
         else
         {
-            uVar3 = 1;
+            result = 1;
         }
     }
-    return uVar3;
+    return result;
 }
 
 u32
@@ -244,16 +244,16 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    u32 uVar1;
-    int iVar2;
-    float* pfVar3;
-    u32* puVar4;
+    u32 result;
+    int moveResult;
+    float* state;
+    u32* moveTable;
     u32 local_28;
     u32 local_24;
     u32 local_20;
     u32 local_1c;
 
-    pfVar3 = ((GameObject*)param_9)->extra;
+    state = ((GameObject*)param_9)->extra;
     local_28 = DAT_802c2a58;
     local_24 = DAT_802c2a5c;
     local_20 = DAT_802c2a60;
@@ -261,37 +261,37 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     if (((GameObject*)param_9)->seqIndex < 0)
     {
         FUN_800e8630(param_9);
-        uVar1 = 0;
+        result = 0;
     }
     else
     {
-        if (*(char*)(pfVar3 + 0x2a0) == '\x06')
+        if (*(char*)(state + 0x2a0) == '\x06')
         {
-            puVar4 = &local_20;
+            moveTable = &local_20;
         }
         else
         {
-            puVar4 = &local_28;
+            moveTable = &local_28;
         }
-        iVar2 = FUN_8007f924((int)animUpdate);
-        if ((iVar2 == 0x283) ||
-            (iVar2 = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
-                                  , animUpdate, pfVar3, (short)*puVar4, puVar4[1], param_14, param_15,
-                                  param_16), iVar2 == 0))
+        moveResult = FUN_8007f924((int)animUpdate);
+        if ((moveResult == 0x283) ||
+            (moveResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
+                                  , animUpdate, state, (short)*moveTable, moveTable[1], param_14, param_15,
+                                  param_16), moveResult == 0))
         {
             if (animUpdate->triggerCommand == 2)
             {
-                iVar2 = FUN_80017a98();
-                FUN_80294d40(iVar2, 10);
+                moveResult = FUN_80017a98();
+                FUN_80294d40(moveResult, 10);
             }
-            uVar1 = 0;
+            result = 0;
         }
         else
         {
-            uVar1 = 1;
+            result = 1;
         }
     }
-    return uVar1;
+    return result;
 }
 
 u32
@@ -300,20 +300,20 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
-    int iVar1;
-    u32 uVar2;
-    short* psVar3;
+    int hasMsg;
+    u32 alive;
+    short* state;
     u32 msgSender;
     u32 msgId;
     u32 msgData[4];
 
-    psVar3 = ((GameObject*)param_9)->extra;
+    state = ((GameObject*)param_9)->extra;
     msgSender = 0;
-    while (iVar1 = ObjMsg_Pop(param_9, &msgId, msgData, &msgSender), iVar1 != 0)
+    while (hasMsg = ObjMsg_Pop(param_9, &msgId, msgData, &msgSender), hasMsg != 0)
     {
         if (msgId == 0x110001)
         {
-            if ((*psVar3 == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*state == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110001, param_9, 0, param_13, param_14, param_15, param_16);
@@ -323,28 +323,28 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             if (msgId == 0xa0005)
             {
-                param_1 = FUN_80017698((int)*psVar3, 1);
+                param_1 = FUN_80017698((int)*state, 1);
             }
         }
         else if (msgId == 0x110003)
         {
-            if ((*psVar3 == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
+            if ((*state == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                     0x110003, param_9, 0, param_13, param_14, param_15, param_16);
             }
         }
-        else if ((((int)msgId < 0x110003) && (*psVar3 == 0x55)) &&
+        else if ((((int)msgId < 0x110003) && (*state == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
                                 0x110002, param_9, 0, param_13, param_14, param_15, param_16);
         }
     }
-    for (iVar1 = 0; iVar1 < (int)(u32)animUpdate->eventCount; iVar1 = iVar1 + 1)
+    for (hasMsg = 0; hasMsg < (int)(u32)animUpdate->eventCount; hasMsg = hasMsg + 1)
     {
-        if (((animUpdate->eventIds[iVar1] == 1) && (uVar2 = FUN_80017690(0x54), uVar2 != 0))
-            && ((uVar2 = FUN_80017690(0x55), uVar2 != 0 && (uVar2 = FUN_80017690(0x56), uVar2 != 0))))
+        if (((animUpdate->eventIds[hasMsg] == 1) && (alive = FUN_80017690(0x54), alive != 0))
+            && ((alive = FUN_80017690(0x55), alive != 0 && (alive = FUN_80017690(0x56), alive != 0))))
         {
             FUN_80017698(0x4e0, 1);
         }
@@ -358,10 +358,10 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_10, u32 param_11, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
-    int iVar1;
-    double dVar2;
+    int state;
+    double clampedSpeed;
 
-    iVar1 = *(int*)&((GameObject*)param_9)->extra;
+    state = *(int*)&((GameObject*)param_9)->extra;
     if ((((GameObject*)param_9)->anim.currentMove != 5) && (((GameObject*)param_9)->anim.currentMove != 0xd))
     {
         FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
@@ -380,28 +380,28 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
-    if (dVar2 < (double)lbl_803E4EB0)
+    clampedSpeed = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
+    if (clampedSpeed < (double)lbl_803E4EB0)
     {
-        dVar2 = (double)lbl_803E4EB0;
+        clampedSpeed = (double)lbl_803E4EB0;
     }
-    if ((double)lbl_803E4ECC < dVar2)
+    if ((double)lbl_803E4ECC < clampedSpeed)
     {
-        dVar2 = (double)lbl_803E4ECC;
+        clampedSpeed = (double)lbl_803E4ECC;
     }
     if (((GameObject*)param_9)->anim.currentMove == 0xd)
     {
         if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
-            *(u8*)(iVar1 + 0x244) = *(u8*)(iVar1 + 0x244) & 0xbf;
+            *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf;
         }
-        else if ((*(u8*)(iVar1 + 0x244) >> 6 & 1) == 0)
+        else if ((*(u8*)(state + 0x244) >> 6 & 1) == 0)
         {
             FUN_80006824(param_9, SFXand_spitout);
-            *(u8*)(iVar1 + 0x244) = *(u8*)(iVar1 + 0x244) & 0xbf | 0x40;
+            *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf | 0x40;
         }
     }
-    FUN_8002fc3c(dVar2, (double)lbl_803DC074);
+    FUN_8002fc3c(clampedSpeed, (double)lbl_803DC074);
     return 1;
 }
 
@@ -455,24 +455,24 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 void FUN_8019f1dc(void)
 {
-    u32 uVar1;
-    int iVar2;
-    int* piVar3;
-    int iVar4;
-    int iVar5;
-    int* piVar6;
-    int iVar7;
+    u32 obj;
+    int otherObj;
+    int* objList;
+    int objId;
+    int model;
+    int* objWalker;
+    int listIndex;
     double in_f29;
-    double dVar8;
+    double savedZ;
     double in_f30;
-    double dVar9;
+    double savedY;
     double in_f31;
-    double dVar10;
+    double savedX;
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    u64 uVar11;
-    int local_68;
+    u64 context;
+    int objCount;
     u16 local_64[4];
     float local_5c;
     float local_58;
@@ -491,21 +491,21 @@ void FUN_8019f1dc(void)
     fStack_14 = (float)in_ps30_1;
     local_28 = (float)in_f29;
     fStack_24 = (float)in_ps29_1;
-    uVar11 = FUN_8028683c();
-    uVar1 = (u32)(uVar11 >> 0x20);
-    iVar5 = *(int*)(uVar1 + 0xb8);
-    iVar2 = FUN_80017a98();
-    iVar2 = *(int*)(iVar2 + 0xb8);
-    *(float*)(iVar5 + 0x20) = lbl_803E4F58;
-    if ((uVar11 & 0xff) == 0)
+    context = FUN_8028683c();
+    obj = (u32)(context >> 0x20);
+    model = *(int*)(obj + 0xb8);
+    otherObj = FUN_80017a98();
+    otherObj = *(int*)(otherObj + 0xb8);
+    *(float*)(model + 0x20) = lbl_803E4F58;
+    if ((context & 0xff) == 0)
     {
-        *(float*)(iVar5 + 0x24) = lbl_803E4F6C;
-        *(float*)(iVar5 + 0x28) = lbl_803E4F70;
+        *(float*)(model + 0x24) = lbl_803E4F6C;
+        *(float*)(model + 0x28) = lbl_803E4F70;
     }
     else
     {
-        *(float*)(iVar5 + 0x24) = lbl_803E4F60 * *(float*)(iVar2 + 0x298) + lbl_803E4F5C;
-        *(float*)(iVar5 + 0x28) = lbl_803E4F68 * *(float*)(iVar2 + 0x298) + lbl_803E4F64;
+        *(float*)(model + 0x24) = lbl_803E4F60 * *(float*)(otherObj + 0x298) + lbl_803E4F5C;
+        *(float*)(model + 0x28) = lbl_803E4F68 * *(float*)(otherObj + 0x298) + lbl_803E4F64;
     }
     local_58 = lbl_803E4F58;
     local_54 = lbl_803E4F58;
@@ -513,46 +513,46 @@ void FUN_8019f1dc(void)
     local_5c = lbl_803E4F74;
     local_64[2] = 0;
     local_64[1] = 0;
-    local_64[0] = *(u16*)(iVar5 + 0x50);
-    FUN_80017748(local_64, (float*)(iVar5 + 0x20));
-    *(u8*)(iVar5 + 0x49) = *(u8*)(iVar5 + 0x49) | 1;
-    FUN_80006824(uVar1, SFXsk_baptr6_c);
-    *(u8*)(iVar5 + 0x49) = *(u8*)(iVar5 + 0x49) | 2;
-    if ((*(u8*)(iVar5 + 0x48) >> 6 & 1) != 0)
+    local_64[0] = *(u16*)(model + 0x50);
+    FUN_80017748(local_64, (float*)(model + 0x20));
+    *(u8*)(model + 0x49) = *(u8*)(model + 0x49) | 1;
+    FUN_80006824(obj, SFXsk_baptr6_c);
+    *(u8*)(model + 0x49) = *(u8*)(model + 0x49) | 2;
+    if ((*(u8*)(model + 0x48) >> 6 & 1) != 0)
     {
-        iVar5 = *(int*)(uVar1 + 0x4c);
-        iVar2 = 0;
-        if (*(short*)(iVar5 + 0x1a) == 0)
+        model = *(int*)(obj + 0x4c);
+        otherObj = 0;
+        if (*(short*)(model + 0x1a) == 0)
         {
-            iVar2 = ObjGroup_FindNearestObject(0x3a, uVar1, (float*)0x0);
+            otherObj = ObjGroup_FindNearestObject(0x3a, obj, (float*)0x0);
         }
         else
         {
-            piVar3 = ObjGroup_GetObjects(0x3a, &local_68);
-            piVar6 = piVar3;
-            for (iVar7 = 0; iVar7 < local_68; iVar7 = iVar7 + 1)
+            objList = ObjGroup_GetObjects(0x3a, &objCount);
+            objWalker = objList;
+            for (listIndex = 0; listIndex < objCount; listIndex = listIndex + 1)
             {
-                iVar4 = FUN_8020a468(*piVar6);
-                if (*(short*)(iVar5 + 0x1a) == iVar4)
+                objId = FUN_8020a468(*objWalker);
+                if (*(short*)(model + 0x1a) == objId)
                 {
-                    iVar2 = piVar3[iVar7];
+                    otherObj = objList[listIndex];
                     break;
                 }
-                piVar6 = piVar6 + 1;
+                objWalker = objWalker + 1;
             }
         }
-        if (iVar2 != 0)
+        if (otherObj != 0)
         {
-            dVar10 = (double)*(float*)(uVar1 + 0xc);
-            dVar9 = (double)*(float*)(uVar1 + 0x10);
-            dVar8 = (double)*(float*)(uVar1 + 0x14);
-            *(u32*)(uVar1 + 0xc) = *(u32*)(iVar2 + 0xc);
-            *(u32*)(uVar1 + 0x10) = *(u32*)(iVar2 + 0x10);
-            *(u32*)(uVar1 + 0x14) = *(u32*)(iVar2 + 0x14);
-            FUN_800e8630(uVar1);
-            *(float*)(uVar1 + 0xc) = (float)dVar10;
-            *(float*)(uVar1 + 0x10) = (float)dVar9;
-            *(float*)(uVar1 + 0x14) = (float)dVar8;
+            savedX = (double)*(float*)(obj + 0xc);
+            savedY = (double)*(float*)(obj + 0x10);
+            savedZ = (double)*(float*)(obj + 0x14);
+            *(u32*)(obj + 0xc) = *(u32*)(otherObj + 0xc);
+            *(u32*)(obj + 0x10) = *(u32*)(otherObj + 0x10);
+            *(u32*)(obj + 0x14) = *(u32*)(otherObj + 0x14);
+            FUN_800e8630(obj);
+            *(float*)(obj + 0xc) = (float)savedX;
+            *(float*)(obj + 0x10) = (float)savedY;
+            *(float*)(obj + 0x14) = (float)savedZ;
         }
     }
     FUN_80286888();
