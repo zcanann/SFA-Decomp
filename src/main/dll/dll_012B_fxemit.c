@@ -30,8 +30,6 @@
 /* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
    (the per-file spelling is load-bearing for codegen). */
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 
 
