@@ -452,12 +452,8 @@ void fn_8002B758(void* v)
 {
     int i;
 
-    for (i = 0; i < gObjPtrTableCount; i++)
+    for (i = 0; i < gObjPtrTableCount && (void*)gObjPtrTable[i] != v; i++)
     {
-        if ((void*)gObjPtrTable[i] == v)
-        {
-            break;
-        }
     }
     if (i == gObjPtrTableCount)
     {
