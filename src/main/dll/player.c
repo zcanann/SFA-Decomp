@@ -14223,7 +14223,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     {
                         Shader_getLayer(op, 1);
                         gPlayerHeldObject = op;
-                        *(int*)((char*)op + 0x3c) |= 0x100000;
+                        *(u32*)((char*)op + 0x3c) |= 0x100000LL;
                         break;
                     }
                 }
@@ -14231,7 +14231,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         else if (gPlayerHeldObject != 0)
         {
-            *(int*)((char*)gPlayerHeldObject + 0x3c) &= ~0x100000;
+            *(u32*)((char*)gPlayerHeldObject + 0x3c) &= ~0x100000LL;
             gPlayerHeldObject = 0;
         }
         {
