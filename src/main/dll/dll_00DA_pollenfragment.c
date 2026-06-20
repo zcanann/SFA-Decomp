@@ -351,7 +351,7 @@ void pollenfragment_update(int obj)
     }
     if (fn_80080150((int)extra + 0x20) != 0)
     {
-        if (timerCountDown((int)extra + 0x20) != 0)
+        if (timerCountDown((int)(extra + 0x20)) != 0)
         {
             Obj_FreeObject(obj);
         }
