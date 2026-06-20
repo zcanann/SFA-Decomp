@@ -2353,7 +2353,7 @@ void setLanguageFn_8001ad64(void* reqp)
     {
         *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
     }
-    txt = (u8*)(table + numStrings + 1);
+    txt = (u8*)(table + numStrings) + 4;
     for (i = 0; i < numStrings; i++)
     {
         strs[i] = strs[i] + (int)txt;
@@ -2396,7 +2396,7 @@ void setLanguageFn_8001ad64(void* reqp)
                 u8* dst8 = (u8*)slot[4] + 0x60;
                 u8* src8 = (u8*)p;
                 n = (int)(w * h) >> 1;
-                for (i = 0; i < n; i++)
+                while (n--)
                 {
                     *dst8 = *src8;
                     dst8++;
@@ -2409,7 +2409,7 @@ void setLanguageFn_8001ad64(void* reqp)
                 u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
                 u16* src16 = p;
                 n = w * h;
-                for (i = 0; i < n; i++)
+                while (n--)
                 {
                     *dst16 = *src16;
                     dst16++;
@@ -2429,7 +2429,7 @@ void setLanguageFn_8001ad64(void* reqp)
     {
         u16* d = newBuf;
         u16* s = old;
-        for (i = 0; i < n; i++)
+        while (n--)
         {
             *d = *s;
             d++;
