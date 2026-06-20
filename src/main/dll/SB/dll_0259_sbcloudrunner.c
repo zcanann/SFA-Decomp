@@ -168,32 +168,32 @@ extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
 void FUN_801ee668(u16 *param_1, int param_2)
 {
-    f32 fVar1;
-    f64 dVar2;
-    f64 dVar3;
-    f64 dVar4;
-    f64 dVar5;
+    f32 target;
+    f64 negTilt;
+    f64 cosA;
+    f64 sinA;
+    f64 height;
 
     (**(VtableFn **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
-    dVar3 = FUN_80294964();
-    dVar4 = FUN_80293f90();
-    fVar1 = lbl_803E6908;
+    cosA = FUN_80294964();
+    sinA = FUN_80293f90();
+    target = lbl_803E6908;
     if (*(int *)(param_2 + 0x10) != 0)
     {
-        fVar1 = (f32)((f64)(int)*(s16 *)(param_2 + 0x2e)) / lbl_803E6924;
+        target = (f32)((f64)(int)*(s16 *)(param_2 + 0x2e)) / lbl_803E6924;
     }
     *(f32 *)(param_2 + 0x60) =
-        lbl_803DC074 * (fVar1 - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
+        lbl_803DC074 * (target - *(f32 *)(param_2 + 0x60)) * lbl_803E6928 +
         *(f32 *)(param_2 + 0x60);
-    fVar1 = lbl_803E692C;
-    dVar5 = lbl_803E692C;
-    dVar2 = -(f64)*(f32 *)(param_2 + 0x60);
+    target = lbl_803E692C;
+    height = lbl_803E692C;
+    negTilt = -(f64)*(f32 *)(param_2 + 0x60);
     *(f32 *)(param_2 + 0x78) = *(f32 *)(param_2 + 0x60);
-    *(f32 *)(param_2 + 0x7c) = fVar1;
+    *(f32 *)(param_2 + 0x7c) = target;
     (**(VtableFn **)(*DAT_803dd6e4 + 0x28))
-    ((f64)(((f32)(dVar4 * dVar2 + (f64)(f32)(dVar5 * -dVar3)) * lbl_803DC074) /
+    ((f64)(((f32)(sinA * negTilt + (f64)(f32)(height * -cosA)) * lbl_803DC074) /
          lbl_803E6930),
-     (f64)(((f32)(dVar3 * dVar2 + (f64)(f32)(dVar5 * dVar4)) * lbl_803DC074) /
+     (f64)(((f32)(cosA * negTilt + (f64)(f32)(height * sinA)) * lbl_803DC074) /
          lbl_803E6930));
     return;
 }
