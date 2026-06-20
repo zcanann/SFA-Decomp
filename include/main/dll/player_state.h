@@ -367,8 +367,8 @@ typedef struct PlayerState {
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
     s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */
-    s8 unk8CD;
-    s8 unk8CE;
+    s8 activeHitWindow; /* index (0-2) of the currently-active hit window in the move's HitDesc list; -1 = none active */
+    s8 hitWindowIndex; /* latched copy of activeHitWindow used to index per-window hit data (offset *4) */
     u8 unk8CF;
     u8 unk8D0;
     u8 unk8D1;

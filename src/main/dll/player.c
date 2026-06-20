@@ -5482,7 +5482,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
-            inner->unk8CD = -1;
+            inner->activeHitWindow = -1;
             ((PlayerState*)state)->baddie.animSpeedC = z;
             ((PlayerState*)state)->baddie.animSpeedB = z;
             ((PlayerState*)state)->baddie.animSpeedA = z;
@@ -5560,7 +5560,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         {
             Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         }
-        inner->unk8CD = -1;
+        inner->activeHitWindow = -1;
         if (*(s16*)((char*)path + 0x44) == 0x2d)
         {
             objSetAnimField48to0((int*)path);
@@ -5672,10 +5672,10 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     }
                     Player_GetObjHitsState(obj)->objectHitMask = bits;
                 }
-                if (i != inner->unk8CD)
+                if (i != inner->activeHitWindow)
                 {
                     Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
-                    inner->unk8CD = (s8)i;
+                    inner->activeHitWindow = (s8)i;
                     inner->hitCount = 0;
                     inner->hitTimer = lbl_803E7EA4;
                     inner->lastHitObject = 0;
@@ -5707,7 +5707,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
-                inner->unk8CD = -1;
+                inner->activeHitWindow = -1;
                 (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x30)))(obj, state, fv, 2);
                 {
                     s16 v = ((GameObject*)obj)->anim.rotX;
@@ -8114,7 +8114,7 @@ void playerDoHitDetection(int obj)
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
-                *(u8*)&((PlayerState*)inner)->unk8CE = *(u8*)&((PlayerState*)inner)->unk8CD;
+                *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 if ((((HitDesc*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))->flags & 1) != 0)
                 {
@@ -8126,11 +8126,11 @@ void playerDoHitDetection(int obj)
                         ((PlayerState*)inner)->hitInterval =
                             ((HitDesc*)(((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
-                                ((PlayerState*)inner)->unk8CD))->valsA[0];
+                                ((PlayerState*)inner)->activeHitWindow))->valsA[0];
                         ((PlayerState*)inner)->hitCountMax =
                             ((HitDesc*)(((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0 +
-                                ((PlayerState*)inner)->unk8CD))->valsB[0];
+                                ((PlayerState*)inner)->activeHitWindow))->valsB[0];
                         ((PlayerState*)inner)->hitTimer =
                             (f32)(u32)((PlayerState*)inner)->hitInterval;
                         ((PlayerState*)inner)->hitCount += 1;
@@ -8179,7 +8179,7 @@ void playerDoHitDetection(int obj)
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
-                *(u8*)&((PlayerState*)inner)->unk8CE = *(u8*)&((PlayerState*)inner)->unk8CD;
+                *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 if ((((u8*)(((PlayerState*)inner)->moveSlots +
                         (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 1) != 0)
                 {
@@ -8191,11 +8191,11 @@ void playerDoHitDetection(int obj)
                         ((PlayerState*)inner)->hitInterval =
                             ((u8*)(((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
-                                ((PlayerState*)inner)->unk8CD)[0xa8];
+                                ((PlayerState*)inner)->activeHitWindow)[0xa8];
                         ((PlayerState*)inner)->hitCountMax =
                             ((u8*)(((PlayerState*)inner)->moveSlots +
                                 (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
-                                ((PlayerState*)inner)->unk8CD)[0xab];
+                                ((PlayerState*)inner)->activeHitWindow)[0xab];
                         ((PlayerState*)inner)->hitTimer =
                             (f32)(u32)((PlayerState*)inner)->hitInterval;
                         ((PlayerState*)inner)->hitCount += 1;
@@ -13071,17 +13071,17 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
     if (inner->baddie.controlMode == 0x26)
     {
         *flags |= 1;
-        idx = inner->unk8CE;
+        idx = inner->hitWindowIndex;
         if (idx != -1)
         {
             *flags |= *(int*)((inner->moveSlots + 8) +
                 (u32)inner->moveSlotIndex * 0xb0 + idx * 4);
             *p6 = *(f32*)((inner->moveSlots + 0x70) +
-                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
+                (u32)inner->moveSlotIndex * 0xb0 + inner->hitWindowIndex * 4);
             *p7 = *(f32*)((inner->moveSlots + 0x7c) +
-                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
+                (u32)inner->moveSlotIndex * 0xb0 + inner->hitWindowIndex * 4);
             *p5 = *(f32*)((inner->moveSlots + 0x94) +
-                (u32)inner->moveSlotIndex * 0xb0 + inner->unk8CE * 4);
+                (u32)inner->moveSlotIndex * 0xb0 + inner->hitWindowIndex * 4);
         }
         if (*(u8*)((inner->moveSlots + 0x88) +
             (u32)inner->moveSlotIndex * 0xb0) & 2)
