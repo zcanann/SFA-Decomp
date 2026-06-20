@@ -688,7 +688,7 @@ void ObjHits_RefreshObjectState(int objPtr)
     return;
 }
 
-int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex)
+int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
@@ -717,9 +717,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->hitVolumes[hitSlot] = hitVolume;
-                hitState->priorities[hitSlot] = priority;
                 hitState->sphereIndices[hitSlot] = sphereIndex;
+                hitState->priorities[hitSlot] = priority;
+                hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = sourceObj->localPosX;
                 hitState->hitPosY[hitSlot] = sourceObj->localPosY;
                 hitState->hitPosZ[hitSlot] = sourceObj->localPosZ;
@@ -731,9 +731,9 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     if ((hitSlot == hitState->priorityHitCount) &&
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
-        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
-        hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
+        hitState->priorities[hitState->priorityHitCount] = priority;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
@@ -743,8 +743,8 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
     return 1;
 }
 
-int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, char priority,
-                              u8 hitVolume, u8 sphereIndex)
+int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, s8 priority,
+                              s8 hitVolume, s8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
@@ -773,9 +773,9 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
         {
             if (hitState->priorities[hitSlot] > priority)
             {
-                hitState->hitVolumes[hitSlot] = hitVolume;
-                hitState->priorities[hitSlot] = priority;
                 hitState->sphereIndices[hitSlot] = sphereIndex;
+                hitState->priorities[hitSlot] = priority;
+                hitState->hitVolumes[hitSlot] = hitVolume;
                 hitState->hitPosX[hitSlot] = hitPosX;
                 hitState->hitPosY[hitSlot] = hitPosY;
                 hitState->hitPosZ[hitSlot] = hitPosZ;
@@ -1420,7 +1420,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
             {
                 debugPrintf(sObjMsgOverflowInObjectWarning, message,
                             (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                            (int)*(short*)((u8*)sender + 0x46));
+                            (int)((GameObject*)sender)->anim.seqId);
             }
         }
     }
@@ -1466,7 +1466,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message,
                                 (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                                (int)*(short*)((u8*)sender + 0x46));
+                                (int)((GameObject*)sender)->anim.seqId);
                 }
             }
         }
@@ -1496,7 +1496,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message,
                                 (int)((GameObject*)obj)->anim.classId, (int)((GameObject*)obj)->anim.seqId,
-                                (int)*(short*)((u8*)sender + 0x46));
+                                (int)((GameObject*)sender)->anim.seqId);
                 }
             }
         }
@@ -1863,6 +1863,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     u32 otherObj;
     int objectIndex;
     int* objects;
+    int* walker;
     int foundObj;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
@@ -1871,37 +1872,37 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     if (defNo != -1)
     {
         objectIndex = startIndex;
-        objects = objects + startIndex;
+        walker = objects + startIndex;
         while (objectIndex < objectCount)
         {
-            otherObj = *objects;
+            otherObj = *walker;
             if (((defNo == ((GameObject*)otherObj)->anim.seqId) && (obj != otherObj)) &&
                 (distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
                                                      &((GameObject*)otherObj)->anim.worldPosX),
                     distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *objects;
+                foundObj = *walker;
             }
-            objects++;
+            walker++;
             objectIndex++;
         }
     }
     else
     {
         objectIndex = startIndex;
-        objects = objects + startIndex;
+        walker = objects + startIndex;
         invalidDistance = lbl_803DE970;
         while (objectIndex < objectCount)
         {
             distanceSq = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
-                                               &((GameObject*)*objects)->anim.worldPosX);
+                                               &((GameObject*)*walker)->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq))
             {
                 *maxDistanceSq = distanceSq;
-                foundObj = *objects;
+                foundObj = *walker;
             }
-            objects++;
+            walker++;
             objectIndex++;
         }
     }
@@ -2247,7 +2248,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         break;
     case 1:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount + step > 255)
+        if ((s16)bs->amount + (s16)step > 255)
         {
             step = (u8)(255 - bs->amount);
             bs->mode = 2;
@@ -2273,7 +2274,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         break;
     case 3:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
-        if ((s16)bs->amount - step < 0)
+        if ((s16)bs->amount - (s16)step < 0)
         {
             step = bs->amount;
             bs->mode = 0;

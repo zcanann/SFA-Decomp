@@ -377,7 +377,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -809,31 +808,22 @@ int* fn_801702D4(int* obj, f32 fv)
 
 void gcbaddieshield_update(int* obj);
 
-void fireball_free(int* obj);
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void flamethrowerspe_init(int* obj, int* params);
 
-void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
-void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
 void baddieinterestp_update(int* obj);
 
-void fireball_init(int* obj);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj)
 {
@@ -892,7 +882,7 @@ void shield_update(int* obj)
         f32* t4 = tbl + 4;
         for (i = 0; i < 4; i++)
         {
-            ps[26] = (s32)((f32)ps[30] * timeDelta + ps[26]);
+            ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == 2102)
             {
                 pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
@@ -913,7 +903,6 @@ void shield_update(int* obj)
     }
 }
 
-void dll_F7_update(int* obj);
 
 typedef struct ShieldFxVec
 {
@@ -997,10 +986,14 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     if (hud == 0)
                     {
                         u8 j;
-                        f32 cA = lbl_803E33D8;
-                        f32 cB = lbl_803E33DC;
-                        f32 cC = lbl_803E33AC;
-                        f32 cD = lbl_803E33C4;
+                        f32 cD;
+                        f32 cC;
+                        f32 cB;
+                        f32 cA;
+                        cA = lbl_803E33D8;
+                        cB = lbl_803E33DC;
+                        cC = lbl_803E33AC;
+                        cD = lbl_803E33C4;
                         for (j = 0; j < 2; j++)
                         {
                             f32 f8v = ((GameObject*)obj)->anim.rootMotionScale;
@@ -1151,16 +1144,12 @@ void staffFn_80170380(int* obj, int cmd)
                 int i;
                 u8* hw;
                 u8* w;
-                f32* t0;
-                f32* t1;
                 f32 k;
                 f32 kc;
                 ((ShieldState*)state)->unkC = amp;
                 i = 0;
                 hw = state;
                 w = state;
-                t0 = tbl;
-                t1 = (f32*)((char*)tbl + 0x10);
                 k = lbl_803E33A8;
                 kc = lbl_803E33C8;
                 for (; i < 4; i++)
@@ -1171,13 +1160,11 @@ void staffFn_80170380(int* obj, int cmd)
                     c = fcos16((u16) * (s16*)(hw + 0x34));
                     sum = amp + c;
                     c = sum * k;
-                    *(f32*)(w + 0x24) = *t0 * c;
-                    *(f32*)(w + 0x14) = *t1;
+                    *(f32*)(w + 0x24) = tbl[i] * c;
+                    *(f32*)(w + 0x14) = tbl[i + 4];
                     *(s16*)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
                     hw += 2;
-                    t0 += 1;
                     w += 4;
-                    t1 += 1;
                 }
             }
             Sfx_PlayFromObject(obj, 0x42c);

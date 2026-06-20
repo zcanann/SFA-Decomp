@@ -731,7 +731,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     char visited[200];
     s32 cur;
     s32 slot;
-    int k, count, i, j;
+    int count, k, i, j;
     CheckpointRouteEntry* cp;
     CheckpointRouteEntry* n;
     CheckpointRouteEntry* e;

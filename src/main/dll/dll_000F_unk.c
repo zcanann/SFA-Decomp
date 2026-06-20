@@ -27,7 +27,7 @@ extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern void fn_800D915C(int pos, int* obj, f32 fval, void* fnTable);
 
 extern u32 gPlayerMoveSlowMoveId;
 extern u32 gPlayerMoveFastMoveId;
@@ -415,6 +415,7 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
             ((GameObject*)p)->anim.velocityZ * t);
 }
 
+#pragma opt_propagation off
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
@@ -466,6 +467,7 @@ void fn_800D8414(int* obj, int* ctx)
         *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs off
 void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
 {
@@ -732,7 +734,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             ((BaddieState*)state)->controlMode = result;
             if (result != currentState)
             {
-                ((BaddieState*)state)->unk276 = currentState;
+                ((BaddieState*)state)->unk276 = (s16)currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
                 if (exitFn != NULL)
                 {
@@ -746,9 +748,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 *(u8*)(state + 0x34c) = 0;
                 ((BaddieState*)state)->moveEventFlags = 0;
                 *(s16*)(state + 0x278) = 0;
-                if (*(int*)(pos + 0x54) != 0)
+                if (*(void**)(pos + 0x54) != NULL)
                 {
-                    *(u8*)(*(int*)(pos + 0x54) + 0x70) = 0;
+                    *(u8*)((char*)*(void**)(pos + 0x54) + 0x70) = 0;
                 }
             }
             done = 1;
@@ -790,7 +792,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         *(u32*)state &= 0xfffeffff;
     }
 
-    if ((*(u32*)state & 0x4000) == 0)
+    if ((*(int*)state & 0x4000) == 0)
     {
         int decay;
         f32 t;
@@ -847,9 +849,9 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if ((*(int*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
     {
-        fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
-        ((BaddieState*)state)->unk32E = (s16)((f32) * (s16*)(state + 0x32e) + dt);
-        if ((f32) * (s16*)(state + 0x32e) > lbl_803E05C4)
+        fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
+        ((BaddieState*)state)->unk32E = (s16)((f32)((BaddieState*)state)->unk32E + dt);
+        if ((f32)((BaddieState*)state)->unk32E > lbl_803E05C4)
         {
             ((BaddieState*)state)->unk32E = 10000;
         }
@@ -857,7 +859,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     *(u32*)state |= 0x8000;
 
-    if (*(int*)(state + 0x27c) != 0)
+    if (*(void**)(state + 0x27c) != NULL)
     {
         localTransform.rotX = *(s16*)(pos + 0);
         localTransform.rotY = *(s16*)(pos + 2);
@@ -1035,7 +1037,7 @@ end:
     if (q != 0) *(u8*)((char*)q + 0x70) = 0;
 }
 
-void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
+void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
 {
     int i;
     s16 startState;

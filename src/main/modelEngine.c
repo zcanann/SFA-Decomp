@@ -527,7 +527,7 @@ void gameTimerRun(void)
     if ((gModelEngineTimerFlags & 1) != 0)
     {
         gModelEngineTimerValue -= dt;
-        if (gModelEngineTimerValue <= lbl_803DE6B8)
+        if (gModelEngineTimerValue <= *(f32*)&lbl_803DE6B8)
         {
             clamped = 1;
             gModelEngineTimerValue = lbl_803DE6B8;
@@ -579,46 +579,44 @@ void gameTimerRun(void)
         Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, volume);
     }
 
-    if ((gModelEngineTimerFlags & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerFlags & 0x10) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
     {
-        return;
-    }
+        totalSecs = gModelEngineTimerValue;
+        mins = totalSecs / 60;
+        hours = mins / 60;
+        minutes = mins - hours * 60;
+        hundredths = (int)(lbl_803DE6D0 * (gModelEngineTimerValue / lbl_803DE6D4));
+        hundredths = hundredths - hundredths / 100 * 100;
 
-    totalSecs = gModelEngineTimerValue;
-    mins = totalSecs / 60;
-    hours = mins / 60;
-    minutes = mins - hours * 60;
-    hundredths = (int)(lbl_803DE6D0 * (gModelEngineTimerValue / lbl_803DE6D4));
-    hundredths = hundredths - hundredths / 100 * 100;
+        boxY = getMinimapY() - 0x28;
+        drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
+        *(s16*)((char*)box + 0x16) = boxY;
 
-    boxY = getMinimapY() - 0x28;
-    drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
-    *(s16*)((char*)box + 0x16) = boxY;
+        if (colorFlag && hundredths < 0x32)
+        {
+            gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
+        }
+        else
+        {
+            gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+        }
 
-    if (colorFlag && hundredths < 0x32)
-    {
-        gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
-    }
-    else
-    {
-        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
-    }
-
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hours / 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hours % 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes / 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, minutes % 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths / 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
-    sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths % 10);
-    gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
-    if (minutes & 1)
-    {
-        gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
-        gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, hours / 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, hours % 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + 5, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes / 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes % 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths / 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
+        sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths % 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
+        if (minutes & 1)
+        {
+            gameTextShowStr(&lbl_803DB29C, 0xD, lbl_803DB284, 3);
+            gameTextShowStr(&lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+        }
     }
 }

@@ -93,7 +93,6 @@ extern void objRender(int a, int b, int c, int d, int obj, int flag);
 
 extern float mathCosf(float x);
 extern s8 cMenuState;
-extern u8 framesThisStep;
 extern s16 gCMenuScrollTimer;
 extern s16 cMenuFadeCounter;
 extern s16 lbl_803DD79A;
@@ -250,15 +249,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
-        if (itemMask == -1)
-        {
-            if (yButtonState == 2)
-            {
-                yButtonState = 0;
-                yButtonItemTextureId = -1;
-            }
-        }
-        else
+        if (itemMask != -1)
         {
             idsW = ids;
             aW = (s16*)(base + 0x5c8);
@@ -301,6 +292,14 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
                     yButtonState = 0;
                     yButtonItemTextureId = -1;
                 }
+            }
+        }
+        else
+        {
+            if (yButtonState == 2)
+            {
+                yButtonState = 0;
+                yButtonItemTextureId = -1;
             }
         }
     }

@@ -41,13 +41,13 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
     u8 initialAlpha;
     u8 textureSetupFlags;
     u8 modelIdByte;
-    u32 local_30;
+    u32 convBias0;
     u32 rngTmp0;
-    u32 local_28;
+    u32 convBias1;
     u32 rngTmp1;
-    u32 local_20;
+    u32 convBias2;
     u32 rngTmp2;
-    u32 local_18;
+    u32 convBias3;
     u32 rngTmp3;
 
     lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
@@ -239,7 +239,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
                 rngTmp1 +
                     lbl_803E0E70;
             }
-            local_28 = 0x43300000;
+            convBias1 = 0x43300000;
             rngTmp3 = randomGetRange(7, 9);
             scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)
@@ -285,7 +285,7 @@ FUN_800c8110(int sourceObj, u32 effectId, u16* spawnParams, u32 spawnFlags, u8 m
                 rngTmp1 +
                     lbl_803E0E70;
             }
-            local_28 = 0x43300000;
+            convBias1 = 0x43300000;
             rngTmp3 = randomGetRange(7, 9);
             scale = lbl_803E0E74 *
                 lbl_803E0E64 * (f32)(s32)

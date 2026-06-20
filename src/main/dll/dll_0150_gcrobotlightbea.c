@@ -248,16 +248,16 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     int moveResult;
     float* state;
     u32* moveTable;
-    u32 local_28;
-    u32 local_24;
-    u32 local_20;
-    u32 local_1c;
+    u32 defaultActionId;
+    u32 defaultActionArg;
+    u32 altActionId;
+    u32 altActionArg;
 
     state = ((GameObject*)param_9)->extra;
-    local_28 = DAT_802c2a58;
-    local_24 = DAT_802c2a5c;
-    local_20 = DAT_802c2a60;
-    local_1c = DAT_802c2a64;
+    defaultActionId = DAT_802c2a58;
+    defaultActionArg = DAT_802c2a5c;
+    altActionId = DAT_802c2a60;
+    altActionArg = DAT_802c2a64;
     if (((GameObject*)param_9)->seqIndex < 0)
     {
         FUN_800e8630(param_9);
@@ -267,11 +267,11 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if (*(char*)(state + 0x2a0) == '\x06')
         {
-            moveTable = &local_20;
+            moveTable = &altActionId;
         }
         else
         {
-            moveTable = &local_28;
+            moveTable = &defaultActionId;
         }
         moveResult = FUN_8007f924((int)animUpdate);
         if ((moveResult == 0x283) ||
@@ -493,7 +493,7 @@ void FUN_8019f1dc(void)
     fStack_24 = (float)in_ps29_1;
     context = FUN_8028683c();
     obj = (u32)(context >> 0x20);
-    model = *(int*)(obj + 0xb8);
+    model = *(int*)&((GameObject*)obj)->extra;
     otherObj = FUN_80017a98();
     otherObj = *(int*)(otherObj + 0xb8);
     *(float*)(model + 0x20) = lbl_803E4F58;
@@ -543,16 +543,16 @@ void FUN_8019f1dc(void)
         }
         if (otherObj != 0)
         {
-            savedX = (double)*(float*)(obj + 0xc);
-            savedY = (double)*(float*)(obj + 0x10);
-            savedZ = (double)*(float*)(obj + 0x14);
+            savedX = (double)((GameObject*)obj)->anim.localPosX;
+            savedY = (double)((GameObject*)obj)->anim.localPosY;
+            savedZ = (double)((GameObject*)obj)->anim.localPosZ;
             *(u32*)(obj + 0xc) = *(u32*)(otherObj + 0xc);
             *(u32*)(obj + 0x10) = *(u32*)(otherObj + 0x10);
             *(u32*)(obj + 0x14) = *(u32*)(otherObj + 0x14);
             FUN_800e8630(obj);
-            *(float*)(obj + 0xc) = (float)savedX;
-            *(float*)(obj + 0x10) = (float)savedY;
-            *(float*)(obj + 0x14) = (float)savedZ;
+            ((GameObject*)obj)->anim.localPosX = (float)savedX;
+            ((GameObject*)obj)->anim.localPosY = (float)savedY;
+            ((GameObject*)obj)->anim.localPosZ = (float)savedZ;
         }
     }
     FUN_80286888();
@@ -669,10 +669,9 @@ void gcrobotlightbea_update(int* obj)
     vec[0] = lbl_80322C38[0];
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
-    Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
+    Obj_TransformLocalVectorByWorldMatrix(obj, lbl_80322C38, vec);
     voxmaps_traceScaledVectorEnd(vec2, obj + 3, vec, lbl_803DBE5C);
-    PSVECDistance((char*)obj + 0xc, vec2);
-    PSVECScale(lbl_80322C38, vec2, 0);
+    PSVECScale(lbl_80322C38, vec2, PSVECDistance((char*)obj + 0xc, vec2));
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {

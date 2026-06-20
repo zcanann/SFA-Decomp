@@ -374,7 +374,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
         {
             result = seqObj;
             *(void**)(seqObj + 0xc0) = obj;
-            *(u16*)(seqObj + 0xb0) |= 0x1000;
+            ((GameObject*)seqObj)->objectFlags |= 0x1000;
             ((ObjSeqState*)seq)->callbackContext = seqObj;
 
             activeObj = *(u8**)seq;
@@ -522,7 +522,7 @@ void ObjSeq_run(void)
         for (; i < objectCount; i++)
         {
             candidate = *objPtr;
-            if (*(s16*)(candidate + 0x44) == 0x10)
+            if (((GameObject*)candidate)->anim.classId == 0x10)
             {
                 model = *(u8**)(candidate + 0x4c);
                 seqp = *(u8**)(candidate + 0xb8);
@@ -770,7 +770,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
             {
                 found = 0;
                 freeSlot = -1;
-                for (j = 0; j < 12; j++)
+                for (j = 0; j < 10; j++)
                 {
                     v = seq[j + 0x12c];
                     if (v == arg10)
@@ -836,7 +836,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                     n = ((ObjSeqState*)seq)->eventCount;
                     if ((u32)n < 10)
                     {
-                        ((ObjSeqState*)seq)->eventCount = n + 1;
+                        ((ObjSeqState*)seq)->eventCount += 1;
                         ((ObjSeqState*)seq)->eventIds[n] = top16;
                     }
                     break;
@@ -1010,8 +1010,7 @@ void ObjSeq_updateCamera(void)
                     break;
                 case 0x48:
                     mode48.mode = gObjSeqCamModeArgB;
-                    code = gObjSeqCamModeArgD;
-                    if (code == 0)
+                    if ((code = gObjSeqCamModeArgD) == 0)
                     {
                         mode48.flag = 1;
                     }
@@ -1203,7 +1202,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             if (((s16*)(base + 0x3a98))[(s8)((ObjSeqState*)seq)->slot] - 1 != 0x45)
             {
@@ -1221,13 +1220,13 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         }
         break;
     case 24:
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             fn_802967E0(sourceObj, cmdArg);
         }
         break;
     case 25:
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             fn_8029672C(sourceObj, cmdArg);
         }
@@ -1347,7 +1346,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             break;
         }
@@ -1435,6 +1434,8 @@ static inline f32 ObjSeq_SampleTrackCurve(u8* seq, int track, int frame)
     return val;
 }
 
+#pragma opt_loop_invariants off
+#pragma opt_propagation off
 void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 {
     struct
@@ -1443,6 +1444,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         f32 y;
         f32 z;
     } pos;
+    f32* posp;
     int out;
     u8* cmd;
     f32 speed;
@@ -1515,7 +1517,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
             break;
         default:
-            if (opcode != 0xf)
+            if ((s8)cmd[0] != 0xf)
             {
                 ((ObjSeqState*)seq)->curFrame += cmd[1];
             }
@@ -1534,6 +1536,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         prevZ = *(f32*)(model + 0x10) + val;
     }
 
+    posp = &pos.x;
     entry = lbl_8039944C;
     while (((ObjSeqState*)seq)->curFrame < targetFrame)
     {
@@ -1553,8 +1556,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
             {
                 if (ObjAnim_SampleRootCurvePhase(
-                    sqrtf((pos.x - prevX) * (pos.x - prevX) +
-                        (pos.z - prevZ) * (pos.z - prevZ)),
+                    sqrtf((posp[0] - prevX) * (posp[0] - prevX) +
+                        (posp[2] - prevZ) * (posp[2] - prevZ)),
                     (ObjAnimComponent*)activeObj, &speed) == 0)
                 {
                     frame = ((ObjSeqState*)seq)->curFrame - 1;
@@ -1621,8 +1624,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
         }
 
-        prevX = pos.x;
-        prevZ = pos.z;
+        prevX = posp[0];
+        prevZ = posp[2];
 
         stop = 0;
         lbl_803DD0C0 = 0;
@@ -1687,6 +1690,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         lbl_803DD0C0 = 0;
     }
 }
+#pragma opt_propagation reset
+#pragma opt_loop_invariants reset
+#pragma reset
 
 void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 {
@@ -1771,7 +1777,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[7] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotX = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotX = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -1787,7 +1793,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[8] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotY = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotY = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -1803,7 +1809,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[6] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotZ = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotZ = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -2035,7 +2041,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[2] = (int)(gObjSeqDegreesToAngle * val);
+                vec[2] = gObjSeqDegreesToAngle * val;
 
                 if ((((ObjSeqState*)seq)->flags & 0x400) != 0)
                 {
@@ -2088,7 +2094,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[0] = (int)(gObjSeqDegreesToAngle * val);
+                vec[0] = gObjSeqDegreesToAngle * val;
             }
         }
 
@@ -2188,14 +2194,14 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     u8* base = lbl_80396918;
     u8* cmd;
     u8* model;
-    u8* seq;
     u8* activeObj;
+    u8* seq;
     u8* animState;
     u8* act2;
     u8* st2;
     u8* entry;
     s8 noExec;
-    int doUpdate;
+    s8 doUpdate;
     s8 flag8;
     int opcode;
     int sub;
@@ -2210,9 +2216,12 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     (void)out;
 
     cmd = *cmdPtr;
-    noExec = (s8)(flags & 1);
-    doUpdate = (s8)(flags & 2);
-    flag8 = (s8)(flags & 8);
+    {
+        s8 f = (s8)flags;
+        noExec = (s8)(f & 1);
+        doUpdate = (s8)(f & 2);
+        flag8 = (s8)(f & 8);
+    }
     if (noExec == 0)
     {
         doUpdate = 1;
@@ -2246,13 +2255,13 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         animState = *(u8**)(action + 0x2c);
         if (((GameObject*)activeObj)->anim.currentMove == ((ObjSeqState*)seq)->unk6C)
         {
-            if ((s8)animState[0x60] == 0)
+            if ((s8)animState[0x60] != 0)
             {
-                restart = 1;
+                restart = 0;
             }
             else
             {
-                restart = 0;
+                restart = 1;
             }
         }
         else
@@ -2318,10 +2327,10 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             ((ObjSeqState*)seq)->unk78 = 0;
             break;
         }
-        ((ObjSeqState*)seq)->unk78 = (s8)(1 - ((ObjSeqState*)seq)->unk78);
+        *(s8*)&((ObjSeqState*)seq)->unk78 = 1 - ((ObjSeqState*)seq)->unk78;
         break;
     case 7:
-        ((ObjSeqState*)seq)->unk7A = (s8)(1 - ((ObjSeqState*)seq)->unk7A);
+        *(s8*)&((ObjSeqState*)seq)->unk7A = 1 - ((ObjSeqState*)seq)->unk7A;
         break;
     case 3:
         if (flag8 != 0)
@@ -2365,25 +2374,25 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
             break;
         }
         blend = (f32)(int)((*(s16*)(cmd + 2) >> 8) & 0xff);
-        if (lbl_803DEFB0 == blend)
+        if (lbl_803DEFB0 != blend)
         {
-            t = lbl_803DEFC8;
+            t = lbl_803DEFC8 / blend;
         }
         else
         {
-            t = lbl_803DEFC8 / blend;
+            t = lbl_803DEFC8;
         }
         sub = *(s16*)(cmd + 2) & 0xff;
         if (sub < 0xf)
         {
             ObjModel_SetBlendChannelTargets(action, 2,
-                                            (s8)(*(u8**)(action + 0x28))[0x2d], sub - 1, 0,
+                                            *(s8*)(*(u8**)(action + 0x28) + 0x2d), sub - 1, 0,
                                             t);
         }
         else
         {
             ObjModel_SetBlendChannelTargets(action, 0,
-                                            (s8)(*(u8**)(action + 0x28))[0xd], sub - 1, 0,
+                                            *(s8*)(*(u8**)(action + 0x28) + 0xd), sub - 1, 0,
                                             t);
         }
         break;
@@ -2413,7 +2422,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
                 val = *(s16*)(cmd + 6);
                 slot = (s8)lbl_803DD113;
                 lbl_803DD113++;
-                *(s16*)(base + slot * 8 + 0x3ca8) = val;
+                *(s16*)(entry + 0x3ca8) = val;
             }
             else
             {
@@ -2458,7 +2467,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             break;
         }
-        if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x10) == 0)
+        if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x20) == 0)
         {
             break;
         }
@@ -2481,7 +2490,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         switch ((*(s16*)(cmd + 2) >> 12) & 0xf)
         {
         case 0:
-            if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x10) != 0)
+            if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x20) != 0)
             {
                 val = (*(s16*)(cmd + 2) & 0xfff) + 1;
                 if (val == 0xd9 || val == 0x92)
@@ -2531,7 +2540,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             break;
         }
-        if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x10) == 0)
+        if ((base[(s8)((ObjSeqState*)seq)->slot + 0x3538] & 0x20) == 0)
         {
             break;
         }
@@ -2577,6 +2586,8 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     return 0;
 }
 
+#pragma opt_propagation off
+#pragma opt_strength_reduction off
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
@@ -2649,7 +2660,7 @@ int ObjSeq_update(u8* obj, f32 t)
     }
     else
     {
-        ((ObjSeqState*)seq)->curFrame = (int)((f32*)(base + 0x3894))[slot];
+        ((ObjSeqState*)seq)->curFrame = ((f32*)(base + 0x3894))[slot];
     }
 
     p = seq + 6;
@@ -2968,7 +2979,12 @@ int ObjSeq_update(u8* obj, f32 t)
             case 0x1a:
                 pressed = isTalkingToNpc() == 0;
                 break;
-            default:
+            case 0x14:
+            case 0x15:
+            case 0x16:
+            case 0x17:
+            case 0x18:
+            case 0x19:
                 cb = ((ObjSeqState*)seq)->conditionCallback;
                 if (cb != NULL)
                 {
@@ -2978,6 +2994,9 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     pressed = 0;
                 }
+                break;
+            default:
+                pressed = 0;
                 break;
             }
             if (pressed != 0)
@@ -3023,7 +3042,7 @@ int ObjSeq_update(u8* obj, f32 t)
         ((ObjSeqState*)seq)->unk80 = 0;
         if (action != NULL && (((ObjSeqState*)seq)->flags & 4) != 0)
         {
-            *(s16*)(*(u8**)(action + 0x2c) + 0x58) =
+            *(u16*)(*(u8**)(action + 0x2c) + 0x58) =
                 (u16)(int)(SendMailData * ((ObjSeqState*)seq)->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
@@ -3116,6 +3135,8 @@ int ObjSeq_update(u8* obj, f32 t)
 
     return 0;
 }
+#pragma opt_strength_reduction reset
+#pragma opt_propagation reset
 
 void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceObj, void** outAction)
 {
@@ -3197,9 +3218,9 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
 void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
+    s16 basePitch;
     int baseYaw;
     int baseRoll;
-    s16 basePitch;
     f32 baseX;
     f32 baseY;
     f32 baseZ;
@@ -3227,15 +3248,15 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
         {
             if ((s8)((ObjSeqState*)seq)->movementState == 2)
             {
-                *(f32*)(seqObj + 0xc) = ((ObjSeqState*)seq)->posOffsetX * ((ObjSeqState*)seq)->posOffsetScale + baseX;
-                *(f32*)(seqObj + 0x10) = ((ObjSeqState*)seq)->posOffsetY * ((ObjSeqState*)seq)->posOffsetScale + baseY;
-                *(f32*)(seqObj + 0x14) = ((ObjSeqState*)seq)->posOffsetZ * ((ObjSeqState*)seq)->posOffsetScale + baseZ;
+                ((GameObject*)seqObj)->anim.localPosX = ((ObjSeqState*)seq)->posOffsetX * ((ObjSeqState*)seq)->posOffsetScale + baseX;
+                ((GameObject*)seqObj)->anim.localPosY = ((ObjSeqState*)seq)->posOffsetY * ((ObjSeqState*)seq)->posOffsetScale + baseY;
+                ((GameObject*)seqObj)->anim.localPosZ = ((ObjSeqState*)seq)->posOffsetZ * ((ObjSeqState*)seq)->posOffsetScale + baseZ;
             }
             else
             {
-                *(f32*)(seqObj + 0xc) = baseX;
-                *(f32*)(seqObj + 0x10) = baseY;
-                *(f32*)(seqObj + 0x14) = baseZ;
+                ((GameObject*)seqObj)->anim.localPosX = baseX;
+                ((GameObject*)seqObj)->anim.localPosY = baseY;
+                ((GameObject*)seqObj)->anim.localPosZ = baseZ;
             }
         }
         if ((((ObjSeqState*)seq)->flags & 2) != 0)
@@ -3243,7 +3264,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
             if ((s8)((ObjSeqState*)seq)->movementState == 2)
             {
                 *(s16*)(seqObj + 0) =
-                    (s16)(basePitch + (s32)(
+                    (s16)((s32)basePitch + (s32)(
                         (f32)((ObjSeqState*)seq)->rotOffsetX * ((ObjSeqState*)seq)->posOffsetScale));
                 *(s16*)(seqObj + 2) =
                     (s16)(baseYaw + (s32)((f32)((ObjSeqState*)seq)->rotOffsetY * ((ObjSeqState*)seq)->posOffsetScale));
@@ -3551,9 +3572,9 @@ void ObjSeq_seqState_init(u8* seq)
     int commandIndex;
     u8* command;
 
-    for (track = 0; track < 0x13; track++)
+    for (animCount = 0; animCount < 0x13; animCount++)
     {
-        ((ObjSeqState*)seq)->trackRunLength[track] = 0;
+        ((ObjSeqState*)seq)->trackRunLength[animCount] = 0;
     }
 
     track = 0;
@@ -3702,10 +3723,12 @@ int objRunSeq(int seqIdx, u8* obj, int flags)
 
     for (i = 0x19; i < 0x55; i++)
     {
-        if (st->modes[i] == 0)
+        p = base + i * 2;
+        p += 0x3a98;
+        if (*(s16*)p == 0)
         {
             slot = i;
-            st->modes[i] = 1;
+            *(s16*)p = 1;
             blk = base + i * 0x80;
             for (j = 0; j < 16; j++)
             {
@@ -4214,9 +4237,9 @@ void* ObjSeq_FindTargetObject(u8* obj)
     int targetId;
     int objectType;
     f32 bestDistSq;
+    u8* candidate;
     void* bestObj;
     int i;
-    u8* candidate;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -4239,10 +4262,10 @@ void* ObjSeq_FindTargetObject(u8* obj)
         return getTrickyObject();
     }
 
-    bestDistSq = lbl_803DEFF0;
-    bestObj = NULL;
     {
     f32 zeroRef = lbl_803DEFB0;
+    bestDistSq = lbl_803DEFF0;
+    bestObj = NULL;
     for (i = 0; i < objectCount; i++)
     {
         candidate = objects[i];
@@ -4324,6 +4347,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 }
 
 #pragma ppc_unroll_speculative off
+#pragma optimization_level 3
 void objSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
@@ -4456,20 +4480,29 @@ void objSeq_onMapSetup(void)
     }
 
     base = lbl_80396918;
-    for (; i < 0x55; i++)
     {
-        base[i + 0x3b9c] = 0;
-        base[i + 0x3b44] = 0;
-        *(s16*)(base + i * 2 + 0x3a98) = 0;
-        base[i + 0x3c4c] = 0;
-        base[i + 0x3bf4] = 0;
-        base[i + 0x3a40] = 0;
-        base[i + 0x39e8] = 0;
-        *(f32*)(base + i * 4 + 0x3894) = lbl_803DEFB0;
-        *(f32*)(base + i * 4 + 0x3740) = lbl_803DEFF0;
-        base[i + 0x3590] = 0;
-        *(int*)(base + i * 4 + 0x33e4) = 0;
-        base[i + 0x338c] = 0;
+        u8* byteBase = base + i;
+        s16* modes2 = (s16*)(base + i * 2 + 0x3a98);
+        int* handles2 = (int*)(base + i * 4 + 0x33e4);
+        u8* marks2 = byteBase + 0x338c;
+        for (; i < 0x55; i++)
+        {
+            *(marks2 + (0x3b9c - 0x338c)) = 0;
+            *(marks2 + (0x3b44 - 0x338c)) = 0;
+            modes2[0] = 0;
+            *(marks2 + (0x3c4c - 0x338c)) = 0;
+            *(marks2 + (0x3bf4 - 0x338c)) = 0;
+            *(marks2 + (0x3a40 - 0x338c)) = 0;
+            *(marks2 + (0x39e8 - 0x338c)) = 0;
+            *(f32*)((u8*)handles2 + (0x3894 - 0x33e4)) = lbl_803DEFB0;
+            *(f32*)((u8*)handles2 + (0x3740 - 0x33e4)) = lbl_803DEFF0;
+            *(marks2 + (0x3590 - 0x338c)) = 0;
+            handles2[0] = 0;
+            marks2[0] = 0;
+            modes2++;
+            handles2++;
+            marks2++;
+        }
     }
 
     lbl_803DD124 = 0;
@@ -4480,6 +4513,7 @@ void objSeq_onMapSetup(void)
     lbl_803DD0F8 = 0;
     gObjSeqBgCmdCount = 0;
 }
+#pragma optimization_level reset
 #pragma ppc_unroll_speculative on
 
 void ObjSeq_release(void)
@@ -4743,12 +4777,15 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         zPoints[1] = to->z;
         zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
-        outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
-        if ((s8)ignoreY == 0)
         {
-            outPos[1] = Curve_EvalHermite(segmentT, yPoints, &yTangent);
+            extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
+            outPos[0] = Curve_EvalHermite(xPoints, segmentT, &xTangent);
+            if ((s8)ignoreY == 0)
+            {
+                outPos[1] = Curve_EvalHermite(yPoints, segmentT, &yTangent);
+            }
+            outPos[2] = Curve_EvalHermite(zPoints, segmentT, &zTangent);
         }
-        outPos[2] = Curve_EvalHermite(segmentT, zPoints, &zTangent);
 
         length = sqrtf(xTangent * xTangent + zTangent * zTangent);
         if (length > lbl_803DF020)
@@ -4764,27 +4801,30 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
                 outPos[1] += offset[1];
             }
         }
-        return 1;
     }
-
-    if (from == NULL)
+    else
     {
-        from = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
+        if (from == NULL)
+        {
+            from = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
+        }
+        if (from != NULL)
+        {
+            outPos[0] = from->x;
+            if ((s8)ignoreY == 0)
+            {
+                outPos[1] = from->y + offset[1];
+            }
+            outPos[2] = from->z;
+            outPos[0] += offset[0] * mathCosf(ROM_CURVE_NODE_ANGLE(from->yaw));
+            outPos[2] += offset[0] * mathSinf(ROM_CURVE_NODE_ANGLE(from->yaw));
+            *outAngle = (s16)(((s32)from->yaw << 8) + 0x8000);
+        }
+        else
+        {
+            return 0;
+        }
     }
-    if (from == NULL)
-    {
-        return 0;
-    }
-    outPos[0] = from->x;
-    if ((s8)ignoreY == 0)
-    {
-        outPos[1] = from->y + offset[1];
-    }
-    outPos[2] = from->z;
-    angle = ROM_CURVE_NODE_ANGLE(from->yaw);
-    outPos[0] += offset[0] * mathCosf(angle);
-    outPos[2] += offset[0] * mathSinf(angle);
-    *outAngle = (s16)(((s32)from->yaw << 8) - 0x8000);
     return 1;
 }
 
@@ -4890,7 +4930,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         if (((ObjSeqState*)seq)->targetObj != NULL)
         {
             *(void**)(seqObj + 0xc0) = NULL;
-            *(u16*)(seqObj + 0xb0) &= ~0x1000;
+            ((GameObject*)seqObj)->objectFlags &= ~0x1000;
             ((ObjSeqState*)seq)->targetObj = NULL;
         }
     }
@@ -4947,14 +4987,13 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     {
         return keys[0].value;
     }
-    key = &keys[index];
-    if (frame == key->frame)
+    if (frame == keys[index].frame)
     {
         t = keys[index].value;
         mode = keys[index].tangentAndMode & 3;
         if (mode > 1 && index < count - 1)
         {
-            t = key[1].value;
+            t = keys[index + 1].value;
         }
         return t;
     }
@@ -4978,12 +5017,13 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         {
             deltaNext = -deltaNext;
         }
-        if (deltaPrev < lbl_803DEFB0)
+        if (deltaPrev < *(f32*)&lbl_803DEFB0)
         {
             deltaPrev = -deltaPrev;
         }
-        values[2] = (deltaNext + deltaPrev) * lbl_803DF000 *
-            (f32)(prev->tangentAndMode >> 2);
+        deltaPrev = deltaNext + deltaPrev;
+        t = deltaPrev * lbl_803DF000;
+        values[2] = t * (f32)(prev->tangentAndMode >> 2);
     }
 
     span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
@@ -5006,14 +5046,14 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
             {
                 deltaPrev = -deltaPrev;
             }
-            values[3] = (deltaNext + deltaPrev) * lbl_803DF000 *
-                (f32)(key->tangentAndMode >> 2);
+            t = (deltaNext + deltaPrev) * lbl_803DF000;
+            values[3] = t * (f32)(key->tangentAndMode >> 2);
         }
     }
 
     if (span > lbl_803DEFB0)
     {
-        t = (f32)(frame - keys[prevIndex].frame) / span;
+        t = (f32)(frame - key[-1].frame) / span;
         if (mode == 0)
         {
             return Curve_EvalHermite(t, values, NULL);
@@ -5022,6 +5062,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         {
             return t * (values[1] - values[0]) + values[0];
         }
+        return values[1];
     }
     return values[1];
 }

@@ -127,7 +127,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 radius;
     f32 rx, ry, rz, rs;
     u8 mxin[24];
-    f32 matrix[12];
+    f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
     curve = (u8*)fn_802972A8((int)target);

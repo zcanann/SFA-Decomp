@@ -191,7 +191,6 @@ extern f32 lbl_803E30A4;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E317C;
-extern f32 lbl_803E3188;
 extern f32 lbl_803E31C4;
 extern f32 lbl_803E3234;
 extern f32 lbl_803E3244;
@@ -318,6 +317,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int state;
     int i;
     int j;
+    int k;
     int slot;
     int setup;
     bool playing;
@@ -332,15 +332,15 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
-            i = 0;
+            k = 0;
             slot = state;
             do
             {
                 objSetAnimSpeedTo1(*(int*)(slot + 0x700));
                 slot = slot + 4;
-                i = i + 1;
+                k = k + 1;
             }
-            while (i < 7);
+            while (k < 7);
             Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
@@ -444,7 +444,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
     fn_80138D7C(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
-    objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8, lbl_803E23E8);
+    objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8, *(f32*)&lbl_803E23E8);
     if ((((TrickyState*)state)->stateFlags & 1) != 0)
     {
         animUpdate->hitVolumePair &= ~0x40;
@@ -1001,8 +1001,8 @@ void Tricky_update(int obj)
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit7 = 1;
         }
     }
-    if (*(void**)&((TrickyState*)state)->followObj != NULL && (*(u16*)(*(int*)&((TrickyState*)state)->followObj + 0xb0)
-        & 0x40) != 0)
+    if (*(void**)&((TrickyState*)state)->followObj != NULL &&
+        (((GameObject*)((TrickyState*)state)->followObj)->objectFlags & 0x40) != 0)
     {
         if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
@@ -1095,7 +1095,7 @@ void Tricky_update(int obj)
                 ((TrickyState*)state)->unkD = 1;
                 trickySelectQueuedCommandTarget(state, 1);
                 TRICKY_VOICE(obj, st, 0x13c, 0);
-                switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                 {
                 case 0x1ca:
                     if (**(u8**)state < 4)
@@ -1196,7 +1196,7 @@ void Tricky_update(int obj)
                     ((TrickyState*)state)->unkD = 3;
                     if (trickySelectQueuedCommandTarget(state, 3) != 0)
                     {
-                        switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                        switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                         {
                         case 0x36:
                         case 0x104:
@@ -1239,7 +1239,7 @@ void Tricky_update(int obj)
                     ((TrickyState*)state)->unkD = 4;
                     trickySelectQueuedCommandTarget(state, 4);
                     ((TrickyState*)state)->unk08 = 7;
-                    switch (*(s16*)(*(int*)&((TrickyState*)state)->followObj + 0x46))
+                    switch (((GameObject*)((TrickyState*)state)->followObj)->anim.seqId)
                     {
                     case 0x1c9:
                         *(void**)&((TrickyState*)state)->unk724 = fn_801B17F4;
@@ -1288,7 +1288,7 @@ void Tricky_update(int obj)
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.worldPosZ;
                     *(int*)&((TrickyState*)state)->followObj = Obj_SetupObject(
                         setup, 5, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
-                    target = *(int*)&((TrickyState*)state)->followObj + 0x18;
+                    target = (u32)&((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
                     if (*(u32*)&((TrickyState*)state)->unk28 != target)
                     {
                         *(u32*)&((TrickyState*)state)->unk28 = target;
@@ -1303,7 +1303,7 @@ void Tricky_update(int obj)
                 if (((TrickyState*)state)->unk08 == 1 && ((TrickyState*)state)->unkD != 0 && (f & 0x20000) == 0)
                 {
                     step = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E24D8, 0);
-                    if (step != 0)
+                    if ((void*)step != NULL)
                     {
                         *(int*)&((TrickyState*)state)->followObj = step;
                         if (*(u32*)&((TrickyState*)state)->unk28 != (u32)(step + 0x18))
@@ -1458,9 +1458,9 @@ void Tricky_update(int obj)
     if (*(void**)&((TrickyState*)state)->followObj != NULL)
     {
         ((TrickyState*)state)->unk378 = 1;
-        ((TrickyState*)state)->unk37C = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x18);
-        ((TrickyState*)state)->unk380 = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x1c);
-        ((TrickyState*)state)->unk384 = *(f32*)(*(int*)&((TrickyState*)state)->followObj + 0x20);
+        ((TrickyState*)state)->unk37C = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
+        ((TrickyState*)state)->unk380 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosY;
+        ((TrickyState*)state)->unk384 = ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosZ;
     }
     else
     {
@@ -1501,7 +1501,7 @@ void Tricky_update(int obj)
         }
         p = p - 8;
     }
-    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(((TrickyState*)state)->playerObj + 0x18)) >=
+    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX) >=
         lbl_803E2538 &&
         GameBit_Get(0x4e4) != 0)
     {
@@ -2023,6 +2023,14 @@ typedef struct
     u8 low : 3;
 } FrozenByte2F6;
 
+struct VisBits16
+{
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+};
+
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
@@ -2471,14 +2479,13 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
     s16 baseAngle;
     u16 i;
     u8 visible;
-    f32 angle;
-    f32 angleScale;
-    f32 angleDivisor;
     f32 maxDistance;
+    f32 angleDivisor;
+    f32 angleScale;
+    f32 angle;
     s16 setupId;
 
-    *(s64*)&visibilityBits[0] = *(s64*)&gTrickyVisibilityBitsInit[0];
-    *(s64*)&visibilityBits[2] = *(s64*)&gTrickyVisibilityBitsInit[2];
+    *(struct VisBits16*)&visibilityBits[0] = *(struct VisBits16*)&gTrickyVisibilityBitsInit[0];
     probe.x = ((GameObject*)obj)->anim.localPosX;
     probe.y = lbl_803E25A0 + ((GameObject*)obj)->anim.localPosY;
     probe.z = ((GameObject*)obj)->anim.localPosZ;
@@ -2636,12 +2643,12 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     u16 i;
     f32* hit;
     f32 hitY;
+    f32 zero;
+    f32 nearestSpecialDelta;
+    f32 nearestFloorDelta;
     f32 dy;
     f32 absDy;
     f32 defaultY;
-    f32 nearestFloorDelta;
-    f32 nearestSpecialDelta;
-    f32 zero;
 
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
@@ -2672,8 +2679,8 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
             {
                 ((TrickyState*)state)->unk1B8 = dy;
                 *(s8*)&((TrickyState*)state)->surfaceFlags |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
-                *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 nearestSpecialDelta = absDy;
+                *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
                 if (((TrickyState*)state)->unk1B8 > lbl_803E25A0)
                 {
                     ((TrickyState*)state)->flags2DC |= 0x10100000LL;
@@ -2736,9 +2743,9 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
             {
                 if (((TrickyState*)state)->substate != 3)
                 {
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0xc) = ((TrickyState*)state)->unk408;
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x10) = ((TrickyState*)state)->unk40C;
-                    *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x14) = ((TrickyState*)state)->unk410;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosX = ((TrickyState*)state)->unk408;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->unk40C;
+                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->unk410;
                 }
                 objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, param_2, param_3, param_4, param_5,
                                      lbl_803E23E8);
@@ -3115,7 +3122,7 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
 
     result = 0;
     objs = ObjGroup_GetObjects(0x4b, count);
-    d = getXZDistance((f32*)((char*)state->playerObj + 0x18), &((GameObject*)obj)->anim.worldPosX);
+    d = getXZDistance(&((GameObject*)state->playerObj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if ((d >= lbl_803E2538) || (state->unk71C > lbl_803E23DC))
     {
         if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX, lbl_803E2500) == 0)

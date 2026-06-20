@@ -62,7 +62,7 @@ typedef struct WarpVec
 extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 gMapBlockWorldSize;
+extern const f32 gMapBlockWorldSize;
 extern float fastFloorf(float x);
 extern void OSReport(const char* msg, ...);
 
@@ -929,7 +929,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     arr = lbl_803DCE94;
     for (i = 0; i < lbl_803DCE98; i++)
     {
-        if (*arr == blockId)
+        if (blockId == *arr)
         {
             lbl_803DCE8C[i]++;
             statusArr[slotIdx] = i;
@@ -943,7 +943,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     {
         MapBlock_init(blk);
         i = 0;
-        byteOff = 0;
+        byteOff = i;
         while (i < *(u8*)((char*)blk + 0xa0))
         {
             int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
@@ -995,11 +995,9 @@ void playerVecFn_8005a9b0(void)
     _PlaneDirPack planes;
     int* player;
     int* viewSlot;
-    f32* invRotMtx;
-    int i;
     f32* outPtr;
-    f32* dirPtr;
-    f32* scalePtr;
+    int i;
+    f32* invRotMtx;
     f32 clipDist;
 
     planes = sPlayerFrustumPlaneDirs;
@@ -1023,19 +1021,13 @@ void playerVecFn_8005a9b0(void)
     }
     scales.v[0] = clipDist;
 
-    i = 0;
     outPtr = (f32*)gPlayerRelativeFrustumPlanes;
-    dirPtr = planes.v;
-    scalePtr = scales.v;
-    for (; i < 5; i++)
+    for (i = 0; i < 5; i++)
     {
-        PSMTXMultVec(invRotMtx, (_Vec3*)dirPtr, outPtr);
-        PSVECScale(outPtr, &tmp, *scalePtr);
+        PSMTXMultVec(invRotMtx, (_Vec3*)&planes.v[i * 3], &outPtr[i * 5]);
+        PSVECScale(&outPtr[i * 5], &tmp, scales.v[i]);
         PSVECAdd(&camPos, &tmp, &tmp);
-        outPtr[3] = -PSVECDotProduct(&tmp, outPtr);
-        outPtr += 5;
-        dirPtr += 3;
-        scalePtr++;
+        outPtr[i * 5 + 3] = -PSVECDotProduct(&tmp, &outPtr[i * 5]);
     }
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, 5);
 }
@@ -1218,7 +1210,7 @@ int mapProcessRomList(int slot)
     int j;
     int step;
     int rl;
-    f32 dz, dx;
+    f32 dx, dz;
     char* base;
 
     base = lbl_8037E0C0;
@@ -2384,7 +2376,7 @@ void mapLoadUnloadObjects(int flag)
     {
         for (i = 0; i < 80; i++)
         {
-            if (*(int*)(base + i * 4 + 0x83A8) != 0)
+            if (((int*)(base + 0x83A8))[i] != 0)
             {
                 bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
@@ -2394,7 +2386,7 @@ void mapLoadUnloadObjects(int flag)
                     {
                         if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, b) == -1)
                         {
-                            mapInstantiateObjects(*(char**)(base + i * 4 + 0x83A8), i, b, 0);
+                            mapInstantiateObjects(((char**)(base + 0x83A8))[i], i, b, 0);
                             mapClearBit(i, b);
                         }
                         bits >>= 1;
@@ -2465,7 +2457,7 @@ void mapLoadUnloadObjects(int flag)
             {
                 char* obj2 = (char*)objs2[i];
                 u32 mid2 = *(u8*)(obj2 + 0x34);
-                char** slot = (char**)(base + mid2 * 4 + 0x83A8);
+                char** slot = &((char**)(base + 0x83A8))[mid2];
                 char* page2 = *slot;
                 if (page2 != 0)
                 {
@@ -2680,9 +2672,9 @@ void beginLoadingMap(void)
             if (v != -1)
                 getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
         }
-        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) != 0);
-        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) != 0);
-        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) != 0);
+        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
+        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
+        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) ? 1 : 0);
         if (*(u8*)(env + 0x40) & 1)
             bo = 1;
         else
@@ -2692,12 +2684,12 @@ void beginLoadingMap(void)
             if (bo)
             {
                 renderFlags |= 0x50;
-                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
+                *(u8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
             }
             else
             {
                 renderFlags &= ~0x50;
-                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
+                *(u8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
             }
         }
         if (*(u8*)(env + 0x40) & 8)
@@ -2709,12 +2701,12 @@ void beginLoadingMap(void)
             if (bo)
             {
                 renderFlags |= 0x40;
-                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
+                *(u8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
             }
             else
             {
                 renderFlags &= ~0x40;
-                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
+                *(u8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
             }
         }
         if (*(u8*)(env + 0x40) & 0x20)
@@ -2828,7 +2820,7 @@ void doPendingMapLoads(void)
             }
             {
                 int ff = getLoadedFileFlags(0);
-                if ((ff & 0xFFEFFFFF) != 0)
+                if ((ff & ~0x100000) != 0)
                 {
                     if (gShaderCurMapEventId != 38 && gShaderCurMapEventId != 58 && gShaderCurMapEventId != 59 &&
                         gShaderCurMapEventId != 60 && gShaderCurMapEventId != 61 && gShaderCurMapEventId != 62 &&
@@ -3231,6 +3223,22 @@ void doPendingMapLoads(void)
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
 
+static inline int mapFindRomListSlot(char* p2, int id)
+{
+    int i2 = 0;
+    char* q2 = p2;
+    int cn = gShaderRomListSlotCount;
+    int k;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
+            return i2;
+        q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
@@ -3246,62 +3254,31 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     if (id != -1)
     {
         char* p2 = (char*)gShaderRomListSlots;
-        char* p6 = p2 + 6;
-        char* q2 = p2;
-        int i2 = 0;
-        int cn = gShaderRomListSlotCount;
-        for (k = 0; k < cn; k++)
-        {
-            if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
-                goto found1;
-            q2 += 8;
-            i2++;
-        }
-        i2 = -1;
-    found1:
-        slot = i2;
+        char* p6;
+        char* base2;
+        slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
+        base2 = (char*)gShaderRomListSlots;
+        p6 = base2 + 6;
         *(s8*)(p6 + slot * 8) = 1;
-        entry = (char*)*(u32*)(p2 + slot * 8);
+        entry = (char*)*(u32*)(base2 + slot * 8);
         pairs = (s16*)gShaderMapRomBuffers[2];
         cv3 = (s8)pairs[id << 1];
-        cv4 = pairs[(id << 1) + 1];
+        cv4 = (s8)pairs[(id << 1) + 1];
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
         if (cv3 != -1)
         {
-            char* q3 = p2;
-            int i3 = 0;
-            int cn3 = gShaderRomListSlotCount;
-            for (k = 0; k < cn3; k++)
-            {
-                if (*(void**)q3 != NULL && cv3 == *(s16*)(q3 + 4))
-                    goto found2;
-                q3 += 8;
-                i3++;
-            }
-            i3 = -1;
-        found2:
+            int i3 = mapFindRomListSlot(p2, cv3);
             if (i3 == -1)
                 i3 = mapProcessRomList(cv3);
             *(s8*)(p6 + i3 * 8) = 1;
         }
         if (cv4 != -1)
         {
-            char* q4 = p2;
-            int i4 = 0;
-            int cn4 = gShaderRomListSlotCount;
-            for (k = 0; k < cn4; k++)
-            {
-                if (*(void**)q4 != NULL && cv4 == *(s16*)(q4 + 4))
-                    goto found3;
-                q4 += 8;
-                i4++;
-            }
-            i4 = -1;
-        found3:
+            int i4 = mapFindRomListSlot(p2, cv4);
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
             *(s8*)(p6 + i4 * 8) = 1;
@@ -3345,10 +3322,12 @@ extern char sTrackCellCoordFormat[];
 extern void fn_80137948(char* fmt, ...);
 extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
+#pragma optimization_level 2
 void mapDebugRender(int* state)
 {
     int bx, bz;
     char* blk;
+    s8* tbl;
     int sx, sz;
     int wx, wz;
     int ci;
@@ -3369,13 +3348,14 @@ void mapDebugRender(int* state)
             gMapBlockWorldSize);
         bz = fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
             gMapBlockWorldSize);
+        tbl = (s8*)gMapBlockLayerTables[0];
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
             blk = 0;
         }
         else
         {
-            ci = *(s8*)(gMapBlockLayerTables[0] + bx + bz * 16);
+            ci = tbl[bx + bz * 16];
             if (ci < 0 || ci >= lbl_803DCE98)
             {
                 blk = 0;
@@ -3421,3 +3401,4 @@ void mapDebugRender(int* state)
         }
     }
 }
+#pragma optimization_level reset

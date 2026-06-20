@@ -35,6 +35,7 @@ extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
 extern f32 gCamDebugOrbitRadiusInit;
 
+#pragma opt_common_subs off
 void CameraModeDebug_update(short* camObj)
 {
     extern u16 getButtonsJustPressed(int port); /* u16 override: & 2 must produce cmplwi, not cmpwi */
@@ -67,11 +68,7 @@ void CameraModeDebug_update(short* camObj)
     absVel = (gCamDebugState->radiusVelocity < lbl_803E1840)
                  ? -gCamDebugState->radiusVelocity
                  : gCamDebugState->radiusVelocity;
-    factor = gCamDebugRadiusDampSlow;
-    if (absMove < absVel)
-    {
-        factor = gCamDebugRadiusDampFast;
-    }
+    factor = (absVel > absMove) ? gCamDebugRadiusDampFast : gCamDebugRadiusDampSlow;
     gCamDebugState->radiusVelocity = factor * (move - gCamDebugState->radiusVelocity) + gCamDebugState->radiusVelocity;
     gCamDebugState->orbitRadius = gCamDebugState->orbitRadius + gCamDebugState->radiusVelocity;
     if (gCamDebugState->orbitRadius < gCamDebugOrbitRadiusMin)
@@ -102,6 +99,7 @@ void CameraModeDebug_update(short* camObj)
                                    (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
                                    *(int*)(cam + 48));
 }
+#pragma opt_common_subs reset
 
 void CameraModeDebug_init(void)
 {

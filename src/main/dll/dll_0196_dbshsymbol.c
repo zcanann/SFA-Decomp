@@ -62,7 +62,7 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5118;
 
-int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
+int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 {
     f32 spdThresh;
     f32 maxSpeed;
@@ -77,8 +77,8 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
-    Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
+    Sfx_SetObjectSfxVolume(obj, 0x3af, 10, lbl_803E50E0);
+    Sfx_KeepAliveLoopedObjectSound(obj, 0x3af);
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -100,7 +100,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         while (idx < count)
         {
             *(int*)&state->partnerObj = list[idx];
-            if (*(s16*)(*(int*)&state->partnerObj + 0x46) == DBSH_PARTNER_OBJTYPE)
+            if (((GameObject*)state->partnerObj)->anim.seqId == DBSH_PARTNER_OBJTYPE)
             {
                 break;
             }
@@ -112,13 +112,13 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     maxSpeed = lbl_803E50E8;
-    spdThresh = lbl_803E50F8;
     animDiv = lbl_803E5100;
+    spdThresh = lbl_803E50F8;
     for (i = 0; i < framesThisStep; i++)
     {
         if (isGameTimerDisabled() != 0)
         {
-            Sfx_PlayFromObject((int)obj, 0x1d4);
+            Sfx_PlayFromObject(obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
@@ -135,7 +135,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         if (state->spinProgress >= DBSH_SPIN_DONE)
         {
             gameTimerStop();
-            Sfx_PlayFromObject((int)obj, 0x1d4);
+            Sfx_PlayFromObject(obj, 0x1d4);
             ObjAnim_SetCurrentMove(player, 0, lbl_803E50EC, 0);
             state->flags.finished = 1;
             state->flags.active = 1;
@@ -216,7 +216,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
             state->sfxTimerB = (f32)(int)
             randomGetRange(0x78, 0xf0);
         }
-        Sfx_PlayFromObject((int)obj, 0x4a3);
+        Sfx_PlayFromObject(obj, 0x4a3);
     }
     {
         f32 vol = lbl_803E5108 * state->spinSpeed;
@@ -232,7 +232,7 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
         {
             v = 100;
         }
-        Sfx_SetObjectSfxVolume((int)obj, 0x3af, (u8)v, lbl_803E50E0);
+        Sfx_SetObjectSfxVolume(obj, 0x3af, (u8)v, lbl_803E50E0);
     }
     return 0;
 }

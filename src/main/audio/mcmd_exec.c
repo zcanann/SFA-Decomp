@@ -60,8 +60,8 @@ extern void fn_802712C8(McmdVoiceState * state); /* synthStartSynthJobHandling *
  */
 void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    int k1;
-    int k2;
+    u8 k1;
+    u8 k2;
     int t;
     s32 i1;
     s32 i2;
@@ -71,7 +71,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     {
         k2 = args->flags >> 0x18;
         k1 = (args->flags >> 8) & 0xff;
-        if ((u32)k1 > (u32)(args->flags >> 0x18))
+        if (k1 > (args->flags >> 0x18))
         {
             t = k1;
             k1 = k2;
@@ -113,7 +113,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* cstep,
                   u64 tstflag, u32 dirtyFlag)
 {
-    u8 comb;
+    int comb;
     s32 scale;
 
     if (!(MAC_CFLAGS(svoice) & tstflag))
@@ -123,7 +123,7 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
     }
     else
     {
-        comb = cstep->value;
+        comb = cstep->value & 0xff;
     }
 
     scale = (s32)(cstep->flags & 0xffff0000) / 100;

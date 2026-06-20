@@ -138,6 +138,7 @@ void drawFn_80125424(void)
     int ypos;
     int i;
     int alphaI;
+    int alphaTmp;
     int randX;
     int randY;
     s16 panelW;
@@ -146,9 +147,9 @@ void drawFn_80125424(void)
     int xLeft;
     f32 wave;
     f32 camPos;
-    f32 waveAmp;
-    f32 waveBase1;
     f32 waveBase2;
+    f32 waveBase1;
+    f32 waveAmp;
 
     if (gHeadDisplayActive != 0)
     {
@@ -254,18 +255,12 @@ void drawFn_80125424(void)
         {
             wave = waveAmp * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
             wave = waveAmp * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
-            alphaI = (int)((f32)alpha * (waveBase1 + wave));
-            if (alphaI < 0)
-            {
-                alphaI = 0;
-            }
+            alphaTmp = (int)((f32)alpha * (waveBase1 + wave));
+            alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            if (alphaI > 0xff)
-            {
-                alphaI = 0xff;
-            }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i), alphaI & 0xff, 0x100, 0x78, 2, randY, randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
+                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
             alphaI = (int)((f32)alpha * (waveBase2 + wave));
             if (alphaI < 0)
             {
@@ -273,12 +268,8 @@ void drawFn_80125424(void)
             }
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            if (alphaI > 0xff)
-            {
-                alphaI = 0xff;
-            }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), alphaI & 0xff, 0x100, 0x78, 2, randY,
-                               randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2),
+                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
         }
         panelW = width;
         xLeft = panelW - 5;
@@ -412,7 +403,7 @@ void drawArwingHud(void)
     int maxPips;
     u32 i;
     u32 pip;
-    int texIdx;
+    u8 texIdx;
     u8 bombSlot;
     int bombX;
 
@@ -446,10 +437,11 @@ void drawArwingHud(void)
         {
             rings = req;
         }
+        i = 0;
         fullPips = shield >> 2;
         partialFrame = (shield & 3) + 0x12;
         maxPips = maxShield >> 2;
-        for (i = 0; (int)(pip = i & 0xff) < maxPips; i++)
+        for (; (int)(pip = i & 0xff) < maxPips; i++)
         {
             if ((int)pip < fullPips)
             {
@@ -463,7 +455,7 @@ void drawArwingHud(void)
             {
                 texIdx = partialFrame;
             }
-            drawTexture(hudTextures[(u8)texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
+            drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
         }
         for (bombSlot = 0; bombSlot < 3; bombSlot++)

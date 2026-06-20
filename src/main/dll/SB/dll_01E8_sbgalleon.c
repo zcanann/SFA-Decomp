@@ -388,7 +388,6 @@ int SB_Galleon_getExtraSize(void) { return sizeof(SBGalleonState); }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 
 u32 getSbGalleon(void) { return gSbGalleon; }
-u32 fn_801E2570(void);
 
 u8 SB_Galleon_getDamagePhase(int* obj) { return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase; }
 

@@ -604,25 +604,25 @@ u32
 FUN_800ea8c8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
-    u32 uVar1;
-    u8* puVar2;
+    u32 result;
+    u8* history;
 
-    uVar1 = FUN_80017498();
-    puVar2 = FUN_800e82d8();
+    result = FUN_80017498();
+    history = FUN_800e82d8();
     FUN_80017488(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)puVar2[5] * 2)
+                 (u32)(u8)(&DAT_803a4e78)[*(short*)(&DAT_80312630 + (u32)(u8)history[5] * 2)
     ]
     )
     ;
-    return uVar1;
+    return result;
 }
 
 u8 FUN_800ea9ac(void)
 {
-    u8* puVar1;
+    u8* history;
 
-    puVar1 = FUN_800e82d8();
-    return puVar1[5];
+    history = FUN_800e82d8();
+    return history[5];
 }
 
 void FUN_800ea9b8(void)
@@ -962,17 +962,17 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (ctx == 0)
-        {
-            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posZ;
-        }
-        else
+        if ((void*)ctx != NULL)
         {
             buf.pos[0] = lbl_803E0AF0 + *(f32*)(ctx + 0x18);
             buf.pos[1] = lbl_803E0AF0 + *(f32*)(ctx + 0x1c);
             buf.pos[2] = lbl_803E0AF0 + *(f32*)(ctx + 0x20);
+        }
+        else
+        {
+            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x18, base, 0x10, &base[240], 0x48, 0);

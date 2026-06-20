@@ -60,9 +60,9 @@ typedef struct Lavaball1bfPlacement
     u8 pad0[0x18 - 0x0];
     s8 unk18;
     u8 pad19[0x1E - 0x19];
-    s16 unk1E;
+    s16 triggerGameBit;
     u8 pad20[0x24 - 0x20];
-    s16 unk24;
+    s16 stateGameBit;
     u8 pad26[0x28 - 0x26];
 } Lavaball1bfPlacement;
 
@@ -197,10 +197,10 @@ void lavaball1bf_update(int* obj)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    state->gbState = GameBit_Get(((Lavaball1bfPlacement*)setup)->unk24);
+    state->gbState = GameBit_Get(((Lavaball1bfPlacement*)setup)->stateGameBit);
     if (state->soloLatch != 0)
     {
-        if (GameBit_Get(((Lavaball1bfPlacement*)setup)->unk1E) != 0)
+        if (GameBit_Get(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0)
         {
             state->gbState = 1;
             state->soloLatch = 0;
@@ -237,7 +237,7 @@ void lavaball1bf_update(int* obj)
         if (state->gbState != 0)
         {
             int a;
-            if (GameBit_Get(((Lavaball1bfPlacement*)setup)->unk1E) != 0 && state->gateB == 0)
+            if (GameBit_Get(((Lavaball1bfPlacement*)setup)->triggerGameBit) != 0 && state->gateB == 0)
             {
                 a = setup[0x20];
                 state->gateB = 1;

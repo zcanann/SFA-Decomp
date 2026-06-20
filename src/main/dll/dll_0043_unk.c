@@ -199,7 +199,7 @@ void camclimb_update(CameraObject* cam)
         {
             yawDelta = yawDelta + 0xffff;
         }
-        cam->anim.rotX = (s16)(cam->anim.rotX + yawDelta);
+        cam->anim.rotX += yawDelta;
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))
             ((double)target->anim.worldPosY, (double)relDistXZ, cam);
         if (needsReset != 0)

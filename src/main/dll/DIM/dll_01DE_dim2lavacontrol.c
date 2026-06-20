@@ -43,7 +43,7 @@ typedef struct Dim2lavacontrolPlacement
     u8 unk1A;
     u8 unk1B;
     s16 unk1C;
-    s16 unk1E;
+    s16 gameBit;
 } Dim2lavacontrolPlacement;
 
 typedef struct Dim2lavacontrolState
@@ -91,7 +91,7 @@ void dim2lavacontrol_setScale(void* obj)
             if (((Dim2lavacontrolState*)sub)->countdown == 0)
             {
                 ((Dim2lavacontrolState*)sub)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)sub)->flags | 1);
-                GameBit_Set(((Dim2lavacontrolPlacement*)p)->unk1E, 1);
+                GameBit_Set(((Dim2lavacontrolPlacement*)p)->gameBit, 1);
             }
         }
     }
@@ -125,7 +125,7 @@ void dim2lavacontrol_init(int obj, int param2)
     state = *(int*)&((GameObject*)obj)->extra;
     ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);
     ((Dim2lavacontrolState*)state)->countdownSave = *(u8*)&((Dim2lavacontrolState*)state)->countdown;
-    if (GameBit_Get(*(s16*)(param2 + 0x1e)) != 0)
+    if (GameBit_Get(((Dim2lavacontrolPlacement*)param2)->gameBit) != 0)
     {
         g = 1;
     }

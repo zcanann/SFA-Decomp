@@ -175,7 +175,7 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
         }
         else if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += *(f32*)(buf.sourceObj + 0x18);
+            buf.pos[0] += *(f32*)(sourceObj + 0x18);
             buf.pos[1] += *(f32*)(buf.sourceObj + 0x1c);
             buf.pos[2] += *(f32*)(buf.sourceObj + 0x20);
         }

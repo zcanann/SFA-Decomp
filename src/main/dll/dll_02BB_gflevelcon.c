@@ -105,7 +105,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, lbl_803E7464);
+            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, *(f32*)&lbl_803E7464);
             getEnvfxAct(obj, obj, 0x21d, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
@@ -171,14 +171,14 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk4;
         if (p != NULL)
         {
-            *p += (int)(lbl_803E748C * timeDelta);
+            *p += (s16)(lbl_803E748C * timeDelta);
         }
     }
     {
         s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk8;
         if (p != NULL)
         {
-            *p -= (int)(lbl_803E748C * timeDelta);
+            *p -= (s16)(lbl_803E748C * timeDelta);
         }
     }
     return 0;
@@ -271,8 +271,8 @@ void fn_80239DD8(int p1, int p2)
         {
             newObj = Obj_AllocObjectSetup(0x24, 0x608);
             *(f32*)(newObj + 8) = *(f32*)(nearObj + 0xc);
-            *(f32*)(newObj + 0xc) = *(f32*)(nearObj + 0x10);
-            *(f32*)(newObj + 0x10) = *(f32*)(nearObj + 0x14);
+            ((GameObject*)newObj)->anim.localPosX = *(f32*)(nearObj + 0x10);
+            ((GameObject*)newObj)->anim.localPosY = *(f32*)(nearObj + 0x14);
             *(u8*)(newObj + 4) = 1;
             *(u8*)(newObj + 5) = 1;
             *(int*)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
@@ -326,8 +326,8 @@ void fn_8023A168(int p1, int p2)
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x80d);
         *(f32*)(newObj + 8) = *(f32*)(p2 + 0xc0);
-        *(f32*)(newObj + 0xc) = *(f32*)(p2 + 0xc4);
-        *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8);
+        ((GameObject*)newObj)->anim.localPosX = *(f32*)(p2 + 0xc4);
+        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8);
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yawRnd) >> 8;
         *(u8*)(newObj + 0x19) = pitchRnd;
         *(u8*)(newObj + 0x18) = 0;
@@ -358,8 +358,8 @@ void fn_8023A268(int p1, int p2, int p3)
         gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(p2 + 0xc4) - *(f32*)(*(int*)p2 + 0x10), dist) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
         *(f32*)(newObj + 8) = *(f32*)(p2 + 0xc0);
-        *(f32*)(newObj + 0xc) = *(f32*)(p2 + 0xc4);
-        *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8);
+        ((GameObject*)newObj)->anim.localPosX = *(f32*)(p2 + 0xc4);
+        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8);
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
         *(u8*)(newObj + 0x19) = gGfLevelConProjectilePitch;
         *(u8*)(newObj + 0x18) = 0;
@@ -392,8 +392,8 @@ void fn_80239FCC(int p1, int p2)
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
         ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
         *(f32*)(newObj + 8) = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)p2 + 0xc);
-        *(f32*)(newObj + 0xc) = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
-        *(f32*)(newObj + 0x10) = *(f32*)(p2 + 0xc8) - lbl_803E74A8;
+        ((GameObject*)newObj)->anim.localPosX = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
+        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8) - lbl_803E74A8;
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
         *(u8*)(newObj + 0x19) = lbl_803DDDC0;
         *(u8*)(newObj + 0x18) = 0;
@@ -424,7 +424,7 @@ void fn_8023A3E4(int p1, int p2)
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
-    got = ObjHits_GetPriorityHit(obj, &hitObj, &hitType, &hitVol);
+    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
     {
         u8 j;
         for (j = 0; j < 4; j++)

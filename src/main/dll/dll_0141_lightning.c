@@ -86,7 +86,6 @@ void lightning_update(u8* obj)
     u8* state;
     u8* data;
     u32* objects;
-    u8* otherState;
     int objectCount;
     int objectIndex;
     int spawnLightning;
@@ -154,10 +153,10 @@ void lightning_update(u8* obj)
             {
                 hitDetectFn_80097070(obj, ((MmpMoonrockState*)state)->baseY2, 1, 7, 0x1e, 0);
             }
-            otherState = *(u8**)(objects[objectIndex] + 0xb8);
-            if ((((LightningMode*)(otherState + 0x24))->mode & 1) != 0)
+            data = *(u8**)(objects[objectIndex] + 0xb8);
+            if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
             {
-                hitDetectFn_80097070((u8*)objects[objectIndex], *(f32*)(otherState + 0x10), 1, 7,
+                hitDetectFn_80097070((u8*)objects[objectIndex], *(f32*)(data + 0x10), 1, 7,
                                      0x1e, 0);
             }
             if ((((LightningMode*)(state + 0x24))->mode & 2) != 0)
@@ -165,9 +164,9 @@ void lightning_update(u8* obj)
                 objfx_spawnDirectionalBurst(obj, 5, ((MmpMoonrockState*)state)->respawnTimer, 1, 1, 100, lbl_803E408C,
                                             0, 0);
             }
-            if ((((LightningMode*)(otherState + 0x24))->mode & 2) != 0)
+            if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst((u8*)objects[objectIndex], 5, *(f32*)(otherState + 0x14),
+                objfx_spawnDirectionalBurst((u8*)objects[objectIndex], 5, *(f32*)(data + 0x14),
                                             1, 1, 100, lbl_803E408C, 0, 0);
             }
         }

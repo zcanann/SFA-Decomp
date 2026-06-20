@@ -232,12 +232,11 @@ STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
 STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
-void camslide_update(CameraObject* camera, GameObject* target)
+void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound)
 {
 
     extern f32 interpolate(f32 a, f32 t, f32 exp);
 
-    f32 fVar1;
     CamSlideObjectState* state;
     u32 angle;
     int cur;
@@ -404,11 +403,12 @@ void camslide_update(CameraObject* camera, GameObject* target)
                     {
                         speed = lbl_803E16A4;
                     }
-                    fVar1 = lbl_803E16F0 + target->anim.worldPosY;
                     low = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fVar1;
+                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) +
+                        (lbl_803E16F0 + target->anim.worldPosY);
                     high = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fVar1;
+                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) +
+                        (lbl_803E16F0 + target->anim.worldPosY);
                 }
             }
             else
@@ -518,14 +518,14 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         camera->probePosX = camera->anim.worldPosX;
         camera->probePosY = camera->anim.worldPosY;
         camera->probePosZ = camera->anim.worldPosZ;
-        (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)camera, &dx,
-                                                 &dz, &dy, &dist, 1);
+        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+            (int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
         dist = dy * dy + (dx * dx + dz * dz);
         if (dist > lbl_803E16AC)
         {
             dist = sqrtf(dist);
         }
-        if (dist < lbl_803E1694)
+        if (dist < *(f32 *)&lbl_803E1694)
         {
             dist = lbl_803E1694;
         }
@@ -574,7 +574,8 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         dx = dx / dist;
         dy = dy / dist;
     }
-    speed = PSVECMag(&target->velocityX) * (lbl_803E1704 * timeDelta);
+    ratio = PSVECMag(&target->velocityX);
+    speed = ratio * (lbl_803E1704 * timeDelta);
     if (speed < lbl_803E16A4)
     {
         speed = lbl_803E16A4;
@@ -596,7 +597,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
                 dx = dx / dist;
                 dy = dy / dist;
             }
-            dist = lbl_803E170C * gCamcontrolModeSettings->minDistance;
+            dist = *(f32 *)&lbl_803E170C * gCamcontrolModeSettings->minDistance;
             camera->anim.localPosX = dist * dx + target->localPosX;
             camera->anim.localPosZ = dist * dy + target->localPosZ;
         }
@@ -750,9 +751,10 @@ void camstatic_update(CameraObject* camera)
                                    camera->anim.localPosZ, &camera->anim.worldPosX,
                                    &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    (u32)camera->anim.parent);
-    camslide_update(camera, target);
-    camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalLowerBound,
-                                    &gCamcontrolModeSettings->verticalUpperBound);
+    camslide_update(camera, target, gCamcontrolModeSettings->verticalUpperBound,
+                    gCamcontrolModeSettings->verticalLowerBound);
+    camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalUpperBound,
+                                    &gCamcontrolModeSettings->verticalLowerBound);
     if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
     {
         gCamcontrolModeSettings->targetActionFlags = *(u8*)((int)camera + 0xa2);
@@ -856,10 +858,10 @@ void camstatic_update(CameraObject* camera)
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
-    angleDelta = getAngle(camera->anim.worldPosY -
+    angleDelta = (u16)getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
-    angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
+    angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if (0x8000 < (int)angleDelta)
     {
         angleDelta = angleDelta - 0xffff;

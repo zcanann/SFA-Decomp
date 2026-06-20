@@ -708,6 +708,7 @@ void pauseMenuMapFn_8011de20(void *this, u8 a, s16 b, int c)
 extern volatile s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
 
+#pragma opt_propagation off
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     s16 z;
@@ -722,10 +723,10 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     y0 -= 0x3c0;
     x1 -= 0x500;
     y1 -= 0x3c0;
-    x0 = (f32)(u32)x0 * lbl_803DBA8C;
-    y0 = (f32)(u32)y0 * lbl_803DBA8C;
-    x1 = (f32)(u32)x1 * lbl_803DBA8C;
-    y1 = (f32)(u32)y1 * lbl_803DBA8C;
+    x0 = (f32)x0 * lbl_803DBA8C;
+    y0 = (f32)y0 * lbl_803DBA8C;
+    x1 = (f32)x1 * lbl_803DBA8C;
+    y1 = (f32)y1 * lbl_803DBA8C;
     GXBegin(0x80, 1, 4);
     z = (s16)(lbl_803DBA8A << 2);
     GXWGFifo.s16 = (s16)(x0 + 0x500);
@@ -752,22 +753,20 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
+#pragma opt_propagation reset
 
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 u1, u0, v0, sy, sx, v1;
-    u32 w, h;
     pauseMenuMapFn_8011de20(this, p5, p4, 0);
     sx = lbl_803E1E80 * f1;
     sy = lbl_803E1E80 * f2;
-    w = *(u16*)((char*)this + 0xa);
-    h = *(u16*)((char*)this + 0xc);
     u0 = (f32)(u32)
-    p8 / w;
+    p8 / *(u16*)((char*)this + 0xa);
     v0 = (f32)(u32)
-    p9 / h;
-    u1 = (f32)(u32)(p6 + p8) / w;
-    v1 = (f32)(u32)(p7 + p9) / h;
+    p9 / *(u16*)((char*)this + 0xc);
+    u1 = (f32)(u32)(p6 + p8) / *(u16*)((char*)this + 0xa);
+    v1 = (f32)(u32)(p7 + p9) / *(u16*)((char*)this + 0xc);
     GXBegin(0x80, 1, 4);
     GXWGFifo.s16 = sx;
     GXWGFifo.s16 = sy;
@@ -1094,7 +1093,7 @@ void hudDrawAirMeter(void)
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
                               ((TrickyAirMeter*)m)->unk18, 0x100, clampedC, 0x1a, 0);
             drawTexture((void*)m[0xd], (f32)(int)(by + m[2]),
-                        (f32)(int)(0x1a4 - ((u32)*(u16*)((char*)m[0xd] + 0xc) >> 1)),
+                        (f32)(int)cy,
                         ((TrickyAirMeter*)m)->unk18, 0x100);
             break;
         }
@@ -1334,13 +1333,15 @@ void hudDrawFn_80121440(void)
         op = lbl_803E1E3C;
     if (op > lbl_803DD844)
     {
-        lbl_803DD844 = lbl_803E1FA0 * timeDelta + lbl_803DD844;
-        if (lbl_803DD844 > hudElementOpacity) lbl_803DD844 = hudElementOpacity;
+        f32 t = lbl_803E1FA0 * timeDelta + lbl_803DD844;
+        lbl_803DD844 = t;
+        if (t > hudElementOpacity) lbl_803DD844 = hudElementOpacity;
     }
     else if (op < lbl_803DD844)
     {
-        lbl_803DD844 = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
-        if (lbl_803DD844 < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
+        f32 t = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
+        lbl_803DD844 = t;
+        if (t < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
     }
     alpha = lbl_803DD83C;
     if ((u8)alpha != 0)

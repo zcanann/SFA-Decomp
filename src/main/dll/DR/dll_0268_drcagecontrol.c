@@ -56,7 +56,7 @@ void cagecontrol_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = cagecontrol_updateTriggerCallback;
-    if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
+    if (GameBit_Get(((CageControlPlacement*)arg)->armGameBit) != 0)
     {
         ((BitFlags8*)(state + 0x4))->b2 = 1;
         *(int*)state = 2;

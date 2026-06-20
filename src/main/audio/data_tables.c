@@ -339,7 +339,7 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     u16 j;
     u16 k;
 
-    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++i, ++p);
+    for (i = 0, p = t->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i);
 
     if (i == dataSmpSDirNum)
     {

@@ -182,11 +182,11 @@ extern f32 timeDelta;
 typedef struct DllF7Placement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapEventId;
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
-    s16 unk1E;
+    s16 completeGameBit;
     s16 unk20;
     u8 pad22[0x2C - 0x22];
     s16 unk2C;
@@ -347,7 +347,6 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 
 
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 
 extern void shield_update(int* obj);
@@ -810,7 +809,7 @@ void dll_F7_update(int* obj)
     {
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
         if (state->byteB == 0 &&
-            (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->unk14) != 0)
+            (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId) != 0)
         {
             state->byte9 = 0;
             state->byte8 = 1;
@@ -849,15 +848,15 @@ void dll_F7_update(int* obj)
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
         if (state->byteB == 0)
         {
-            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->unk14, lbl_803E340C);
+            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->mapEventId, lbl_803E340C);
         }
         state->byte9 = 1;
         state->byte8 = 0;
         Sfx_PlayFromObject(obj, 74);
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        if ((int)((DllF7Placement*)params)->unk1E != -1)
+        if ((int)((DllF7Placement*)params)->completeGameBit != -1)
         {
-            GameBit_Set((int)((DllF7Placement*)params)->unk1E, 1);
+            GameBit_Set((int)((DllF7Placement*)params)->completeGameBit, 1);
         }
         if (state->byteB == 0)
         {

@@ -138,7 +138,7 @@ void updateVisibleGeometry(void)
     f32 negff, negss;
     f32 ratio2;
     u16 fov;
-    f32 oz, oy, ox;
+    f32 ox, oy, oz;
     PosRot st;
     f32 m[17];
 
@@ -387,7 +387,7 @@ void FUN_8005bdbc(void)
     int local_18c;
     int local_188;
     int local_184;
-    char local_180[256];
+    char visGrid[256];
     u32 local_80;
     u32 uStack_7c;
     u32 local_78;
@@ -417,7 +417,7 @@ void FUN_8005bdbc(void)
         DAT_803ddb08 = *layerDat;
         FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &local_190, &local_1a0, &local_1b0, &local_1c0, layer
                      , 1, DAT_803ddb40);
-        pcVar1 = local_180;
+        pcVar1 = visGrid;
         iVar13 = 8;
         do
         {
@@ -460,7 +460,7 @@ void FUN_8005bdbc(void)
         while (iVar13 != 0);
         for (; iVar13 = local_198, iVar8 <= local_184; iVar8 = iVar8 + 1)
         {
-            pcVar1 = local_180 + (iVar8 + 7) * 0x10 + local_190;
+            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_190;
             uVar10 = (local_18c + 1) - local_190;
             if (local_190 <= local_18c)
             {
@@ -490,7 +490,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar8 = local_1a8, iVar13 <= local_194; iVar13 = iVar13 + 1)
         {
-            pcVar1 = local_180 + (iVar13 + 7) * 0x10 + local_1a0;
+            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1a0;
             uVar10 = (local_19c + 1) - local_1a0;
             if (local_1a0 <= local_19c)
             {
@@ -520,7 +520,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar13 = local_1b8, iVar8 <= local_1a4; iVar8 = iVar8 + 1)
         {
-            pcVar1 = local_180 + (iVar8 + 7) * 0x10 + local_1b0;
+            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_1b0;
             uVar10 = (local_1ac + 1) - local_1b0;
             if (local_1b0 <= local_1ac)
             {
@@ -550,7 +550,7 @@ void FUN_8005bdbc(void)
         }
         for (; iVar13 <= local_1b4; iVar13 = iVar13 + 1)
         {
-            pcVar1 = local_180 + (iVar13 + 7) * 0x10 + local_1c0;
+            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1c0;
             uVar10 = (local_1bc + 1) - local_1c0;
             if (local_1c0 <= local_1bc)
             {
@@ -616,7 +616,7 @@ void FUN_8005bdbc(void)
                 {
                     iVar6 = *(int*)(DAT_803ddb1c + iVar2 * 4);
                     *(u16*)(iVar6 + 4) = *(u16*)(iVar6 + 4) ^ 1;
-                    if (local_180[iVar3] != '\0') goto LAB_8005c210;
+                    if (visGrid[iVar3] != '\0') goto LAB_8005c210;
                 }
                 iVar8 = iVar8 + 1;
                 pcVar4 = pcVar4 + 1;
@@ -659,9 +659,9 @@ void fn_8005C8CC(void)
     return;
 }
 
-void FUN_8005cff0(int param_1)
+void FUN_8005cff0(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffdffff;
     }
@@ -672,9 +672,9 @@ void FUN_8005cff0(int param_1)
     return;
 }
 
-u32 FUN_8005d018(char param_1)
+u32 FUN_8005d018(char enable)
 {
-    if (param_1 == '\0')
+    if (enable == '\0')
     {
         DAT_803dda68 = DAT_803dda68 & 0xfffffff7;
         FUN_800069f4((double)lbl_803DC2D0);
@@ -692,45 +692,45 @@ u32 FUN_8005d06c(void)
     return DAT_803dda68 & 8;
 }
 
-void FUN_8005d0ac(int param_1)
+void FUN_8005d0ac(int enable)
 {
-    u32* puVar1;
+    u32* settings;
 
-    puVar1 = FUN_800e87a8();
-    if (param_1 == 0)
+    settings = FUN_800e87a8();
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffbf;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf7;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf7;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x40;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 8;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) | 8;
     }
     return;
 }
 
-void FUN_8005d17c(int param_1)
+void FUN_8005d17c(int enable)
 {
-    u32* puVar1;
+    u32* settings;
 
-    puVar1 = FUN_800e87a8();
-    if (param_1 == 0)
+    settings = FUN_800e87a8();
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffffaf;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) & 0xf6;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) & 0xf6;
     }
     else
     {
         DAT_803dda68 = DAT_803dda68 | 0x50;
-        *(u8*)(puVar1 + 0x10) = *(u8*)(puVar1 + 0x10) | 9;
+        *(u8*)(settings + 0x10) = *(u8*)(settings + 0x10) | 9;
     }
     return;
 }
 
-void FUN_8005d1e8(int param_1)
+void FUN_8005d1e8(int enable)
 {
-    if (param_1 == 0)
+    if (enable == 0)
     {
         DAT_803dda68 = DAT_803dda68 & 0xffffefff;
     }
@@ -1670,7 +1670,7 @@ extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
 extern u8 CameraShake_IsActive(void);
-extern u8 bEnableMotionBlur;
+extern s8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
 extern int getHudHiddenFrameCount(void);
@@ -1761,7 +1761,7 @@ void sceneDraw(void)
         {
             drawSkyStars();
         }
-        (*gSkyInterface)->render();
+        (*gSkyInterface)->render(0, 0, 0, 0, flag);
         if ((renderFlags & 0x10) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
@@ -1769,7 +1769,7 @@ void sceneDraw(void)
     }
     else
     {
-        (*gSkyInterface)->render();
+        (*gSkyInterface)->render(0, 0, 0, 0, flag);
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
@@ -1883,7 +1883,7 @@ void sceneDraw(void)
 
 void sceneDrawTransparentPolys(void)
 {
-    int* e;
+    int (*e)[4];
     int i;
     int* block;
     int* player;
@@ -1894,18 +1894,18 @@ void sceneDrawTransparentPolys(void)
 
     lightmap_sortTransparentDrawQueue();
     i = 0;
-    e = (int*)&lbl_8037E0C0;
+    e = (int(*)[4])&lbl_8037E0C0;
     for (; i < lbl_803DCE30; i++)
     {
-        switch (e[3])
+        switch (e[i][3])
         {
         case 0:
-            expgfx_renderSourcePools(*e, 0);
-            objDrawFn_8005da48((int*)*e);
-            expgfx_renderSourcePools(*e, 1);
+            expgfx_renderSourcePools(e[i][0], 0);
+            objDrawFn_8005da48((int*)e[i][0]);
+            expgfx_renderSourcePools(e[i][0], 1);
             break;
         case 1:
-            block = (int*)*e;
+            block = (int*)e[i][0];
             Obj_GetActiveModel(block);
             player = Obj_GetPlayerObject();
             if (block == player)
@@ -1922,16 +1922,16 @@ void sceneDrawTransparentPolys(void)
             break;
         case 2:
             fn_8000F9B4();
-            objShadowFn_80062498((int*)*e, 0, 0, framesThisStep);
+            objShadowFn_80062498((int*)e[i][0], 0, 0, framesThisStep);
             Camera_ApplyFullViewport();
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int*)*e, Obj_GetActiveModel((int*)*e));
+            objDrawFn_80061654((int*)e[i][0], Obj_GetActiveModel((int*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
@@ -1940,10 +1940,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d894((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d894((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 5:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
@@ -1952,10 +1952,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d69c((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d69c((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 6:
-            block = (int*)e[1];
+            block = (int*)e[i][1];
             GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
             GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
             objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
@@ -1964,10 +1964,10 @@ void sceneDrawTransparentPolys(void)
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d4ec((int*)*e, (int*)e[1], m);
+            modelRenderFn_8005d4ec((int*)e[i][0], (int*)e[i][1], m);
             break;
         case 7:
-            drawGlow((u32) * e, e[1]);
+            drawGlow((u32)e[i][0], e[i][1]);
             break;
         case 8:
             drawFn_8006f500();
@@ -1975,7 +1975,6 @@ void sceneDrawTransparentPolys(void)
         case 9:
             (*gWaterfxInterface)->render(0, 0);
         }
-        e = e + 4;
     }
 }
 

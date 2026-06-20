@@ -167,13 +167,19 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
         prevFrameLength = state->prevFrameLength;
         if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (state->prevFramePhase < gObjAnimProgressZero)
+            if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                state->prevFramePhase += prevFrameLength;
+                do
+                {
+                    state->prevFramePhase += prevFrameLength;
+                } while (state->prevFramePhase < gObjAnimProgressZero);
             }
-            while (state->prevFramePhase >= prevFrameLength)
+            if (state->prevFramePhase >= prevFrameLength)
             {
-                state->prevFramePhase -= prevFrameLength;
+                do
+                {
+                    state->prevFramePhase -= prevFrameLength;
+                } while (state->prevFramePhase >= prevFrameLength);
             }
         }
         else
@@ -193,18 +199,11 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
             state->eventCountdown - ((f32)state->eventStep * deltaTime)
             )
             ;
-            if (countdown < 0)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if ((f32)countdown > gObjAnimEventStepScale)
-            {
-                value = gObjAnimEventStepScale;
-            }
-            else
-            {
-                value = countdown;
-            }
+            value = (countdown < 0)
+                        ? gObjAnimProgressZero
+                        : (((f32)countdown > gObjAnimEventStepScale)
+                               ? gObjAnimEventStepScale
+                               : (f32)countdown);
             state->eventCountdown = (u16)(int)
             value;
         }
@@ -258,7 +257,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     if (eventTable != NULL)
     {
         events->triggerCount = 0;
-        eventCount = eventTable->byteCount >> 1;
+        eventCount = objAnim->eventTable->byteCount >> 1;
         if (eventCount != 0)
         {
     previousFrame = (int)(gObjAnimEventFrameScale * previousProgress);
@@ -277,7 +276,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
          eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
          eventIndex++)
     {
-        eventEntry = eventTable->entries[eventIndex];
+        eventEntry = objAnim->eventTable->entries[eventIndex];
         eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
         eventId = ObjAnim_GetPackedEventId(eventEntry);
         if (eventId == OBJANIM_EVENT_ID_NONE)
@@ -632,8 +631,14 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
     phase = phaseStep - (phaseStep * sampleFraction);
-    while (nextDistance <= targetDistance)
+    while (1)
     {
+        if (nextDistance > targetDistance)
+        {
+            phase -= phaseStep *
+                ((nextDistance - targetDistance) / (nextDistance - previousDistance));
+            break;
+        }
         sampleIndex++;
         if (sampleIndex >= segmentCount)
         {
@@ -659,7 +664,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         phase += phaseStep;
     }
 
-    phase -= phaseStep * ((nextDistance - targetDistance) / (nextDistance - previousDistance));
     if (phaseOut != NULL)
     {
         *phaseOut = phase;
@@ -672,7 +676,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
 {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
-    ObjAnimDef* animDef;
     ObjAnimState* state;
     ObjAnimEventTable* eventTable;
     ObjAnimRootCurve* curve;
@@ -721,8 +724,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                                                                     : moveStepScale);
 
     bank = ObjAnim_GetActiveBank(objAnim);
-    animDef = bank->animDef;
-    if (animDef->moveCount == 0)
+    if (bank->animDef->moveCount == 0)
     {
         return 0;
     }
@@ -744,13 +746,19 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         prevFrameLength = state->prevFrameLength;
         if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (state->prevFramePhase < gObjAnimProgressZero)
+            if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                state->prevFramePhase += prevFrameLength;
+                do
+                {
+                    state->prevFramePhase += prevFrameLength;
+                } while (state->prevFramePhase < gObjAnimProgressZero);
             }
-            while (state->prevFramePhase >= prevFrameLength)
+            if (state->prevFramePhase >= prevFrameLength)
             {
-                state->prevFramePhase -= prevFrameLength;
+                do
+                {
+                    state->prevFramePhase -= prevFrameLength;
+                } while (state->prevFramePhase >= prevFrameLength);
             }
         }
         else
@@ -769,18 +777,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             state->eventCountdown - ((f32)state->eventStep * deltaTime)
             )
             ;
-            if (countdown < 0)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if ((f32)countdown > gObjAnimEventStepScale)
-            {
-                value = gObjAnimEventStepScale;
-            }
-            else
-            {
-                value = countdown;
-            }
+            value = (countdown < 0)
+                        ? gObjAnimProgressZero
+                        : (((f32)countdown > gObjAnimEventStepScale)
+                               ? gObjAnimEventStepScale
+                               : (f32)countdown);
             state->eventCountdown = (u16)(int)
             value;
         }
@@ -856,7 +857,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                  eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
                  eventIndex++)
             {
-                eventEntry = eventTable->entries[eventIndex];
+                eventEntry = objAnim->eventTable->entries[eventIndex];
                 eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
                 eventId = ObjAnim_GetPackedEventId(eventEntry);
                 if (eventId == OBJANIM_EVENT_ID_NONE)
@@ -866,7 +867,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
 
                 if (scanMode == OBJANIM_EVENT_SCAN_FORWARD)
                 {
-                    if ((previousFrame <= eventFrame) && (eventFrame < currentFrame))
+                    if ((eventFrame >= previousFrame) && (eventFrame < currentFrame))
                     {
                         events->triggeredIds[events->triggerCount++] = eventId;
                     }
@@ -896,7 +897,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
     }
 
-    curve = ObjAnim_GetMoveRootCurve(animDef, state);
+    curve = ObjAnim_GetMoveRootCurve(bank->animDef, state);
     if (curve == NULL)
     {
         events->rootCurveValid = 0;
@@ -920,7 +921,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     {
         blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef, state);
+        blendCurve = ObjAnim_GetBlendMoveRootCurve(bank->animDef, state);
         if (blendCurve != NULL)
         {
             blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
@@ -1011,8 +1012,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             else
             {
                 (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] =
-                    (s16)(int)
-                value;
+                    value;
             }
 
             axis += sampleCount;

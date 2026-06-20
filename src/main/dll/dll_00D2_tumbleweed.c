@@ -64,9 +64,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     bestDy = lbl_803E2F78;
     hitCount = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, obj, (int*)hitList, 0, 0);
-    bestHit = 0;
-    hitEntry = hitList[0];
-    for (i = 0; i < hitCount; i++)
+    for (i = 0, bestHit = 0, hitEntry = hitList[0]; i < hitCount; i++)
     {
         dy = ((GameObject*)obj)->anim.localPosY - *(float*)*hitEntry;
         if (dy < lbl_803E2F68)
@@ -303,7 +301,7 @@ void tumbleweed_updateStateMachine(int obj)
             {
                 ObjHits_EnableObject((u32)obj);
                 ((BackpackState*)aux)->phase = 2;
-                ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 3);
+                ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                 if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
                 {
                     ((BackpackState*)aux)->phaseTimer = lbl_803E2F9C;
@@ -343,7 +341,7 @@ void tumbleweed_updateStateMachine(int obj)
                 f32 dpz = ((GameObject*)obj)->anim.localPosZ - ((BackpackState*)aux)->unk28C;
                 int dpdist = sqrtf(dpx * dpx + dpz * dpz);
                 u32 dist;
-                ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A & ~8);
+                ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~8);
                 dist = ((BackpackState*)aux)->unk268;
                 if ((f32)dist < lbl_803E2FA4 && dist != 0)
                 {
@@ -355,7 +353,7 @@ void tumbleweed_updateStateMachine(int obj)
                     k = lbl_803E2FAC;
                     ((BackpackState*)aux)->unk27C = k * ((GameObject*)obj)->anim.velocityX;
                     ((BackpackState*)aux)->unk27E = k * ((GameObject*)obj)->anim.velocityZ;
-                    ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 8);
+                    ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 8);
                 }
                 else
                 {
@@ -373,7 +371,7 @@ void tumbleweed_updateStateMachine(int obj)
             ((BackpackState*)aux)->phaseTimer = ((BackpackState*)aux)->phaseTimer - timeDelta;
             if (((BackpackState*)aux)->phaseTimer < lbl_803E2F68)
             {
-                ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
             }
             else
             {
@@ -382,8 +380,8 @@ void tumbleweed_updateStateMachine(int obj)
                 {
                     if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_3)
                     {
-                        ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 3);
-                        ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A & ~0x10);
+                        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
+                        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~0x10);
                         ((BackpackState*)aux)->phase = 3;
                         ((BackpackState*)aux)->growRate = lbl_803E2FB0;
                         ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4;
@@ -391,7 +389,7 @@ void tumbleweed_updateStateMachine(int obj)
                     }
                     else
                     {
-                        ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                     }
                 }
             }
@@ -415,18 +413,18 @@ void tumbleweed_updateStateMachine(int obj)
                 ((BackpackState*)aux)->phaseTimer = ((BackpackState*)aux)->phaseTimer - timeDelta;
                 if (((BackpackState*)aux)->phaseTimer < lbl_803E2F68)
                 {
-                    ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                    ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
                 else if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
                 {
-                    ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                    ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
                 else
                 {
                     if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
                         ((GameObject*)hitObject)->anim.seqId != ((GameObject*)obj)->anim.seqId)
                     {
-                        ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                     }
                 }
                 fn_80163990(obj, aux);
@@ -441,7 +439,7 @@ void tumbleweed_updateStateMachine(int obj)
                 {
                     gameBitIncrement(0x194);
                     Sfx_PlayFromObject(obj, SFXen_treadlpc);
-                    ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+                    ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
             }
         }
@@ -527,7 +525,7 @@ void tumbleweed_init(int obj, int defData)
     ObjMsg_AllocQueue((void*)obj, 1);
     if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_3)
     {
-        ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 0x10);
+        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 0x10);
     }
 }
 
@@ -670,7 +668,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     }
     else if (state == 2)
     {
-        f32 dz, dx, d;
+        f32 dx, dz, d;
         u32 dist;
         player = (GameObject*)((BackpackState*)aux)->unk284;
         player = player ? player : (GameObject*)Obj_GetPlayerObject();
@@ -700,7 +698,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
         {
             GameBit_Set(0x642, 1);
-            ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 7);
+            ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
         }
     }
     else

@@ -272,7 +272,7 @@ void THPRead_Reader(void)
 {
     char* base = gPicMenuReadThreadArea;
     int i = 0;
-    AttractMoviePlayer* player = (AttractMoviePlayer*)(int)&lbl_803A5D60;
+    AttractMoviePlayer* player = (AttractMoviePlayer*)&lbl_803A5D60;
     AttractMovieReadBuffer* req;
     u32 readOff = player->initOffset;
     u32 readSize = player->initReadSize;

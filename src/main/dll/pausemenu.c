@@ -526,6 +526,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     s32 ty1;
     s32 i;
     s32 j;
+    s8 i8;
     int* info;
 
     pauseMenuDoSave();
@@ -564,9 +565,9 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     fn_80127F24(ty);
     if (lbl_803DD7C4 != 0)
     {
-        for (i = 0x14; i >= 0; i -= 4)
+        for (i8 = 0x14; i8 >= 0; i8 -= 4)
         {
-            s16 px = (s16)((s16)(0xf0 - i) - lbl_803DD75C);
+            s16 px = (s16)((s16)(0xf0 - i8) - lbl_803DD75C);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
                             px, ty, 0x100, 0x190, 4, 0);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
@@ -587,7 +588,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 mins25;
         f32 playRatio;
         info = mapEvents->getCurCharacterState();
-        hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
+        hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
         ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
@@ -599,9 +600,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         gbCount = (u8)(j + i);
         {
             u8* p = lbl_8031BB90;
-            for (i = 0; i < 4; i++)
+            s8 k;
+            for (k = 0; k < 4; k++)
             {
-                *(s16*)(p + 0xc0) = i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
+                *(s16*)(p + 0xc0) = k < gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
                 p += 0x20;
             }
         }
@@ -720,7 +722,7 @@ void fn_80127F24(s32 alpha)
     f32 denom;
     f32 phase;
     f32 brightness;
-    s32 i;
+    s8 i;
 
     phase = lbl_803E1F18 *
         mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /

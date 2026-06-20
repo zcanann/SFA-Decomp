@@ -128,9 +128,9 @@ void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
     if (state->hitShake != 0)
     {
         dx = (int)(lbl_803E6FF4 *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakePitch / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)*(u16*)&state->shakePitch / lbl_803E6F00));
         dy = (int)(lbl_803E6F5C *
-            mathSinf(lbl_803E6EFC * (f32)(u32) * (u16*)&state->shakeYaw / lbl_803E6F00));
+            mathSinf(lbl_803E6EFC * (f32)*(u16*)&state->shakeYaw / lbl_803E6F00));
         ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY + dx);
         ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + dy);
     }
@@ -631,17 +631,17 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
         arwarwinggu_setActiveVisible(((ArwingState*)state)->gunObjR, 1, level == 2);
     }
     {
-        int setup = Obj_AllocObjectSetup(0x20, 0x604);
-        ((ArwArwingProjectileSetup*)setup)->posX = px;
-        ((ArwArwingProjectileSetup*)setup)->posY = py;
-        ((ArwArwingProjectileSetup*)setup)->posZ = pz;
-        ((ArwArwingProjectileSetup*)setup)->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
-        ((ArwArwingProjectileSetup*)setup)->rotY = ((GameObject*)obj)->anim.rotY >> 8;
-        ((ArwArwingProjectileSetup*)setup)->rotX = 0;
-        ((ArwArwingProjectileSetup*)setup)->field04 = 1;
-        ((ArwArwingProjectileSetup*)setup)->field05 = 1;
+        ArwArwingProjectileSetup* setup = (ArwArwingProjectileSetup*)Obj_AllocObjectSetup(0x20, 0x604);
+        setup->posX = px;
+        setup->posY = py;
+        setup->posZ = pz;
+        setup->rotZ = ((GameObject*)obj)->anim.rotX >> 8;
+        setup->rotY = ((GameObject*)obj)->anim.rotY >> 8;
+        setup->rotX = 0;
+        setup->field04 = 1;
+        setup->field05 = 1;
+        proj = ((int (*)(int, void*))loadObjectAtObject)(obj, setup);
     }
-    proj = loadObjectAtObject(obj);
     if ((void*)proj == NULL)
         return;
     if (level == 0)
@@ -1267,7 +1267,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ArwArwingProjectileSetup*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 ((ArwArwingProjectileSetup*)setup)->field04 = 1;
                 ((ArwArwingProjectileSetup*)setup)->field05 = 1;
-                o = loadObjectAtObject(obj);
+                o = ((int(*)(int,int))loadObjectAtObject)(obj, setup);
                 if ((void*)o != 0)
                     fn_8022F558(o, 0x12c);
             }
@@ -1299,6 +1299,8 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             switch (((GameObject*)obj)->anim.mapEventSlot)
             {
+            case 0x3a:
+                break;
             case 0x3b:
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0, 1);
                 (*gMapEventInterface)->setObjGroupStatus(0x13, 0x16, 1);
@@ -1337,9 +1339,12 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (!((Arw339Flags*)(state + 0x339))->scoreFlag)
             {
                 int s2 = *(int*)&((GameObject*)obj)->extra;
-                ((ArwarwingState*)s2)->unk47C = ((ArwarwingState*)s2)->unk47C + 0xc8;
-                if (((ArwarwingState*)s2)->unk47C > 0x270f)
-                    ((ArwarwingState*)s2)->unk47C = 0x270f;
+                int score47C;
+                ((ArwarwingState*)s2)->unk47C += 0xc8;
+                score47C = ((ArwarwingState*)s2)->unk47C;
+                if ((u16)score47C > 0x270f)
+                    score47C = 0x270f;
+                ((ArwarwingState*)s2)->unk47C = score47C;
             }
             registerNewScore((s8)((ArwingState*)state)->scoreSlot, ((ArwingState*)state)->score,
                              ((ArwingState*)state)->collectedRings, 2);

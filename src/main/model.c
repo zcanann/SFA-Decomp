@@ -265,7 +265,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
     }
 }
 
-void mm_free(void* p);
 
 extern void setGQR7(u32 v);
 extern int textureLoad(int id, int flag);
@@ -321,11 +320,7 @@ void ObjModel_SetBlendChannelWeight(u8* model, int channel, f32 weight)
 {
     ObjModelBlendChannel* ch;
 
-    if (channel > 2)
-    {
-        return;
-    }
-    if (((ObjModel*)model)->file->morphTargetPtrs == NULL)
+    if (channel > 2 || ((ObjModel*)model)->file->morphTargetPtrs == NULL)
     {
         return;
     }
@@ -794,7 +789,6 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     }
 }
 
-int randomGetRange(int lo, int hi);
 
 void memcpyToCache(void* dst, void* src, u32 count);
 
@@ -844,12 +838,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
 {
     ObjModelBlendChannel* ch;
     u8* hdr;
-    if (channel > 2)
-    {
-        return;
-    }
-    hdr = *(u8**)model;
-    if (((ModelFileHeader*)hdr)->morphTargetPtrs == NULL)
+    if (channel > 2 || ((ModelFileHeader*)(hdr = *(u8**)model))->morphTargetPtrs == NULL)
     {
         return;
     }
@@ -861,11 +850,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     {
         return;
     }
-    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount)
-    {
-        return;
-    }
-    if (b >= ((ModelFileHeader*)hdr)->morphTargetCount)
+    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount || b >= ((ModelFileHeader*)hdr)->morphTargetCount)
     {
         return;
     }

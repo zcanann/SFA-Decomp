@@ -34,7 +34,7 @@ extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
 extern int randomGetRange(int lo, int hi);
-extern void setMotionBlur(double amount, int p2);
+extern void setMotionBlur(u8 enabled, f32 amount);
 
 
 
@@ -444,7 +444,7 @@ void fn_801EB634(int obj, int stateRaw)
         case 0x1d:
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                setMotionBlur(lbl_803E5BAC, 1);
+                setMotionBlur(1, lbl_803E5BAC);
                 st->collisionFxTimer = (f32)(s32)lbl_803DC0D0;
                 st->collisionFxDamping = lbl_803DC0C8;
                 st->unk4C4 = (f32)(s32)lbl_803DC0CC;
@@ -456,7 +456,7 @@ void fn_801EB634(int obj, int stateRaw)
                 (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
-            fn_8009A8C8((double)lbl_803E5BB0, obj);
+            fn_8009A8C8(obj, (double)lbl_803E5BB0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x552, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x554, NULL, 4, -1, NULL);
@@ -480,7 +480,7 @@ void fn_801EB940(short* obj, int stateRaw)
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     f32 fa;
     f32 fb;
-    s16 rotClamped;
+    int rotClamped;
     int yawDelta;
     int ival;
 
@@ -558,10 +558,10 @@ void fn_801EB940(short* obj, int stateRaw)
     {
         yawDelta = yawDelta + 0xffff;
     }
-    st->yaw = st->yaw + (short)yawDelta;
+    st->yaw = *(s16*)((char*)st + 0x40e) + yawDelta;
     st->unk40C = st->unk40C + yawDelta;
-    obj[1] = obj[1] + (short)((int)st->unk310 >> ival);
-    obj[2] = obj[2] + (short)((int)st->unk312 >> ival);
+    obj[1] = obj[1] + ((int)st->unk310 >> ival);
+    obj[2] = obj[2] + ((int)st->unk312 >> ival);
     rotClamped = obj[1];
     if (rotClamped < -0x2000)
     {

@@ -88,8 +88,8 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     register int self = obj;
     int controlObj;
     int i;
-    int msg;
     u32 sender;
+    int msg;
     u32 param;
     int count;
     int* objects;

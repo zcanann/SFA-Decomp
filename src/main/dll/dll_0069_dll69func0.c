@@ -55,8 +55,8 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* entries;
     GfxCmd* e;
+    GfxCmd* entries;
     u8* base = (u8*)(int)lbl_803137F8;
     int b = 0x30;
     int c = 0x31;
@@ -173,10 +173,10 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     {
         buf.pos[1] = lbl_803E0A00;
     }
-    buf.pos[2] = lbl_803E0A00;
-    buf.col[0] = lbl_803E0A00;
-    buf.col[1] = lbl_803E0A00;
-    buf.col[2] = lbl_803E0A00;
+    buf.pos[2] = *(f32*)&lbl_803E0A00;
+    buf.col[0] = *(f32*)&lbl_803E0A00;
+    buf.col[1] = *(f32*)&lbl_803E0A00;
+    buf.col[2] = *(f32*)&lbl_803E0A00;
     buf.scale = lbl_803E0A10;
     buf.v40 = 1;
     buf.v3c = 0;

@@ -128,8 +128,8 @@ void linkInitTextures(LinkMenuItemDB* item)
     {
         item->slots[i] = -1;
     }
-    item->slots[0] = 0;
     i = 1;
+    item->slots[0] = 0;
     budget -= linkTextures[6] + linkTextures[14];
     while (budget != 0)
     {
@@ -285,9 +285,9 @@ void Link_render(void)
     int y;
     s8 timer;
 
-    item = gTumbleweedBushItems;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
+        item = &gTumbleweedBushItems[i];
         drawItem = item;
 
         if ((item->flags & LINK_FLAG_HIDDEN) == 0)
@@ -422,8 +422,6 @@ void Link_render(void)
                 }
             }
         }
-
-        item++;
     }
 
     MWTRACE(0xff);

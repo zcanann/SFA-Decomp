@@ -1069,6 +1069,7 @@ void dll_06_func09(s32* x, s32* y, s32* z)
     *z = (s32)(fz * blend + oldZ);
 }
 
+#pragma opt_propagation off
 void sky2_run(void)
 {
     SkyRotQ q;
@@ -1481,6 +1482,7 @@ void sky2_run(void)
     }
     while (i < 2);
 }
+#pragma opt_propagation reset
 
 void sky2_onMapSetup(void)
 {
@@ -2245,20 +2247,20 @@ void fn_8008BDA8(void)
     tex0 = *(u8**)gSkyState;
     ((SkyState*)gSkyState)->unk08 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
     ((SkyState*)gSkyState)->unk10 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
-    iofs = 0;
     i = 0;
+    iofs = 0;
     do
     {
         jofs = 0;
         for (j = 0; j < 3; j++)
         {
-            *(f32*)((int)gSkyState + iofs + jofs + 0x20) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x24) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x28) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x2c) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x30) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x34) = lbl_803DF0FC;
-            *(f32*)((int)gSkyState + iofs + jofs + 0x38) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x20) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x24) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x28) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x2c) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x30) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x34) = lbl_803DF0FC;
+            *(f32*)(iofs + (int)gSkyState + jofs + 0x38) = lbl_803DF0FC;
             jofs += 0x1c;
         }
         gSkyState[iofs + 0x74] = 0xff;
@@ -2340,7 +2342,7 @@ void skyFn_8008a04c(void)
     else
     {
         t = ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay;
-        tc = (t < pEXIInputFlag) ? pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
+        tc = (t < *(f32*)&pEXIInputFlag) ? *(f32*)&pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
         if (tc <= lbl_803DF07C)
         {
             frac = tc / lbl_803DF07C;
@@ -2636,15 +2638,15 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
             c13 = b * scale2 >> 8;
         }
     }
-    *(f32*)(gSkyState + slot * 0xa4 + 0x90) = dir[0];
-    *(f32*)(gSkyState + slot * 0xa4 + 0x94) = dir[1];
-    *(f32*)(gSkyState + slot * 0xa4 + 0x98) = dir[2];
+    *(f32*)&gSkyState[slot * 0xa4 + 0x90] = dir[0];
+    *(f32*)&gSkyState[slot * 0xa4 + 0x94] = dir[1];
+    *(f32*)&gSkyState[slot * 0xa4 + 0x98] = dir[2];
     gSkyState[slot * 0xa4 + 0x78] = r;
     gSkyState[slot * 0xa4 + 0x79] = g;
     gSkyState[slot * 0xa4 + 0x7a] = b;
-    *(f32*)(gSkyState + slot * 0xa4 + 0x9c) = -dir[0];
-    *(f32*)(gSkyState + slot * 0xa4 + 0xa0) = -dir[1];
-    *(f32*)(gSkyState + slot * 0xa4 + 0xa4) = -dir[2];
+    *(f32*)&gSkyState[slot * 0xa4 + 0x9c] = -dir[0];
+    *(f32*)&gSkyState[slot * 0xa4 + 0xa0] = -dir[1];
+    *(f32*)&gSkyState[slot * 0xa4 + 0xa4] = -dir[2];
     gSkyState[slot * 0xa4 + 0x80] = (u8)(c01 * (colorScale + 1) >> 8);
     gSkyState[slot * 0xa4 + 0x81] = (u8)(c02 * (colorScale + 1) >> 8);
     gSkyState[slot * 0xa4 + 0x82] = (u8)(c03 * (colorScale + 1) >> 8);
@@ -2673,6 +2675,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     f32 time2;
     u8 vis;
     u8* model;
+    SkyState* sky;
 
     cam = Camera_GetCurrentViewSlot();
     sunDir = *(SkyVec3*)gSkyBaseSunDirection;
@@ -2698,7 +2701,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         far = Camera_GetFarPlane();
         Camera_SetFarPlane(gSkySunMoonFarPlane, 0);
         Camera_RebuildProjectionMatrix();
-        sunT = (((SkyState*)gSkyState)->timeOfDay - gSkyDayStartTime) / gSkySunArcDuration;
+        sky = (SkyState*)gSkyState;
+        sunT = (sky->timeOfDay - gSkyDayStartTime) / gSkySunArcDuration;
         if (sunT < pEXIInputFlag)
         {
             sunT = pEXIInputFlag;
@@ -2737,7 +2741,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             }
         }
         sunT *= lbl_803DF0AC;
-        riseT = (((SkyState*)gSkyState)->timeOfDay - gSkyDayStartTime) / gSkySunRiseDuration;
+        riseT = (sky->timeOfDay - gSkyDayStartTime) / gSkySunRiseDuration;
         if (riseT < pEXIInputFlag)
         {
             riseT = pEXIInputFlag;
@@ -2750,12 +2754,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[0] = lbl_803DF0B8 * sunDir.x;
         vec[1] = lbl_803DF0B8 * sunDir.y;
         vec[2] = lbl_803DF0B8 * sunDir.z;
-        yaw = ((SkyState*)gSkyState)->unk1C;
-        q1.rx = (u16)(int)
+        yaw = sky->unk1C;
+        q1.rx =
         sunT;
         vecRotateZXY(&q1, vec);
         q1.w = EXIInputFlag;
-        q1.rz = (u16)(int)
+        q1.rz =
         yaw;
         q1.ry = 0;
         q1.rx = 0;
@@ -2773,7 +2777,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         *(s16*)gSkySunObject = 0x10000 - cam[0];
         *(s16*)(gSkySunObject + 2) = cam[1];
         *(s16*)(gSkySunObject + 4) = 0;
-        gSkySunObject[0x37] = gSkySunAlpha;
+        gSkySunObject[0x37] = *(s16*)&gSkySunAlpha;
         time2 = ((SkyState*)gSkyState)->timeOfDay;
         if (time2 >= lbl_803DF088)
         {
@@ -2835,11 +2839,11 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[0] = lbl_803DF0B8 * moonDir.x;
         vec[1] = lbl_803DF0B8 * moonDir.y;
         vec[2] = lbl_803DF0B8 * moonDir.z;
-        q2.rx = (u16)(int)
+        q2.rx =
         moonTC;
         vecRotateZXY(&q2, vec);
         q2.w = EXIInputFlag;
-        q2.rz = (u16)(int)
+        q2.rz =
         yaw;
         q2.ry = 0;
         q2.rx = 0;
@@ -2858,7 +2862,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         ((GameObject*)gSkyMoonObject)->anim.rotY = cam[1];
         ((GameObject*)gSkyMoonObject)->anim.rotZ = 0;
         vis = 0;
-        ((u8*)gSkyMoonObject)[0x37] = gSkyMoonAlpha;
+        ((u8*)gSkyMoonObject)[0x37] = *(s16*)&gSkyMoonAlpha;
         if (gSkySunObject[0x37] != 0)
         {
             if (gSkyState != NULL)
@@ -2874,13 +2878,13 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         }
         if (((u8*)gSkyMoonObject)[0x37] != 0)
         {
-            if (gSkyState == NULL)
+            if (gSkyState != NULL)
             {
-                vis = 0;
+                vis = (gSkyState[0x209] >> 7) & 1;
             }
             else
             {
-                vis = (gSkyState[0x209] >> 7) & 1;
+                vis = 0;
             }
             if (vis == 0 && (u8)visible != 0)
             {

@@ -343,7 +343,6 @@ void fn_80153640(int obj, int state)
     u8* fx;
     int newObj;
     u32 rnd;
-    int p29c;
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
@@ -358,18 +357,19 @@ void fn_80153640(int obj, int state)
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
-            p29c = *(int*)&((BaddieState*)state)->trackedObj;
-            ((GameObject*)newObj)->anim.velocityX = 0.02f * (((GameObject*)p29c)->anim.localPosX - ((GameObject*)
-                fx)->anim.rootMotionScale);
+            ((GameObject*)newObj)->anim.velocityX = 0.02f *
+                (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
+                 ((GameObject*)fx)->anim.rootMotionScale);
             rnd = randomGetRange(-10, 10);
             {
-                p29c = *(int*)&((BaddieState*)state)->trackedObj;
                 ((GameObject*)newObj)->anim.velocityY = 0.02f *
-                    ((lbl_803E28F0 + ((GameObject*)p29c)->anim.localPosY + (f32)(s32)rnd) -
+                    ((lbl_803E28F0 +
+                      ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
+                      (f32)(s32)rnd) -
                      ((GameObject*)fx)->anim.localPosX);
-                p29c = *(int*)&((BaddieState*)state)->trackedObj;
-                ((GameObject*)newObj)->anim.velocityZ = 0.02f * (((GameObject*)p29c)->anim.localPosZ -
-                    ((GameObject*)fx)->anim.localPosY);
+                ((GameObject*)newObj)->anim.velocityZ = 0.02f *
+                    (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -
+                     ((GameObject*)fx)->anim.localPosY);
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
@@ -433,7 +433,7 @@ void fn_8015383C(int obj, int state)
         vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)p29c)->anim.localPosZ;
     }
     if (PSVECMag(vec) < lbl_803E2900
-        && (*(u16*)(*(int*)&((BaddieState*)state)->trackedObj + 0xb0) & 0x1000) == 0)
+        && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & 0x1000) == 0)
     {
         worldPos[0] = ((GameObject*)obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + ((GameObject*)obj)->anim.localPosY;
@@ -477,7 +477,7 @@ void fn_8015383C(int obj, int state)
         {
             if (((BaddieState*)state)->seqEntryIndex != 0)
             {
-                ((BaddieState*)state)->seqEntryIndex = ((BaddieState*)state)->seqEntryIndex - 1;
+                ((BaddieState*)state)->seqEntryIndex -= 1;
                 mode = (u8)((GameObject*)obj)->anim.currentMove;
             }
             else if (((GameObject*)obj)->anim.currentMove != 5 && losDetected)

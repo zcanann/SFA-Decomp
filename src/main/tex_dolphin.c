@@ -215,9 +215,11 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
 int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
     int shader;
-    u32 bitPos;
     u32 shaderIdx;
     volatile int colorWord;
+    int _base;
+    u32 _bits;
+    u32 bitPos;
     u8 colR;
     u8 colG;
     u8 colB;
@@ -226,8 +228,8 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     bitPos = bitReader[4];
     {
         int _off = (int)bitPos >> 3;
-        int _base = *bitReader;
-        u32 _bits = *(u8*)(_base + _off);
+        _base = *bitReader;
+        _bits = *(u8*)(_base + _off);
         _base += _off;
         _bits |= (u32) * (u8*)(_base + 1) << 8;
         _bits |= (u32) * (u8*)(_base + 2) << 16;
@@ -282,14 +284,21 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     u8 colorG;
     u8 colorR;
 
-    modelLightStruct_selectBrightestAabbLights(
-        (f32)(*(short*)((int)bounds + 6) >> 3) + *(float*)((int)blockXform + 0x18) + playerMapOffsetX,
-        (f32)(*(short*)((int)bounds + 8) >> 3) + *(float*)((int)blockXform + 0x28),
-        (f32)(*(short*)((int)bounds + 10) >> 3) + *(float*)((int)blockXform + 0x38) + playerMapOffsetZ,
-        (f32)(*(short*)((int)bounds + 0xc) >> 3) + *(float*)((int)blockXform + 0x18) + playerMapOffsetX,
-        (f32)(*(short*)((int)bounds + 0xe) >> 3) + *(float*)((int)blockXform + 0x28),
-        (f32)(*(short*)((int)bounds + 0x10) >> 3) + *(float*)((int)blockXform + 0x38) + playerMapOffsetZ,
-        (u8*)&gTexDimmedLightList, 2, &lightCount);
+    {
+        f32 fz = playerMapOffsetZ;
+        f32 fldZ = *(float*)((int)blockXform + 0x38);
+        f32 fldY = *(float*)((int)blockXform + 0x28);
+        f32 fx = playerMapOffsetX;
+        f32 fldX = *(float*)((int)blockXform + 0x18);
+        modelLightStruct_selectBrightestAabbLights(
+            (f32)(*(short*)((int)bounds + 6) >> 3) + fldX + fx,
+            (f32)(*(short*)((int)bounds + 8) >> 3) + fldY,
+            (f32)(*(short*)((int)bounds + 10) >> 3) + fldZ + fz,
+            (f32)(*(short*)((int)bounds + 0xc) >> 3) + fldX + fx,
+            (f32)(*(short*)((int)bounds + 0xe) >> 3) + fldY,
+            (f32)(*(short*)((int)bounds + 0x10) >> 3) + fldZ + fz,
+            (u8*)&gTexDimmedLightList, 2, &lightCount);
+    }
     resetLotsOfRenderVars();
     fn_8004CE0C(i);
     i = 0;
@@ -335,9 +344,10 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
     float farY;
     float farZ;
 
-    for (i = 5, plane = gViewFrustumPlanes; i != 0; i--, plane++, planeOffsets++)
+    plane = gViewFrustumPlanes;
+    for (i = 0; i < 5; i++)
     {
-        cornerIndex = plane->aabbCornerIndex;
+        cornerIndex = plane[i].aabbCornerIndex;
         if ((cornerIndex & 1) != 0)
         {
             nearX = maxX;
@@ -368,9 +378,9 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
             nearZ = minZ;
             farZ = maxZ;
         }
-        if ((nearX * plane->normalX + nearY * plane->normalY + nearZ * plane->normalZ + plane->distance + *planeOffsets
+        if ((nearX * plane[i].normalX + nearY * plane[i].normalY + nearZ * plane[i].normalZ + plane[i].distance + planeOffsets[i]
                 < lbl_803DEBCC) &&
-            (farX * plane->normalX + farY * plane->normalY + farZ * plane->normalZ + plane->distance + *planeOffsets <
+            (farX * plane[i].normalX + farY * plane[i].normalY + farZ * plane[i].normalZ + plane[i].distance + planeOffsets[i] <
                 lbl_803DEBCC))
             return 0;
     }
@@ -793,21 +803,21 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
 {
     u32 shader;
     u32 shaderIdx;
-    u32 uPos;
-    int colorWord2;
-    int colorWord;
     u8 fogRgba[4];
     u8 ambR;
     u8 ambG;
     u8 ambB;
     int fogColorWord;
+    int _base;
+    u32 _bits;
+    u32 uPos;
 
     fogColorWord = gTexShaderFogColor;
     uPos = bitReader[4];
     {
         int _off = (int)uPos >> 3;
-        int _base = *bitReader;
-        u32 _bits = *(u8*)(_base + _off);
+        _base = *bitReader;
+        _bits = *(u8*)(_base + _off);
         _base += _off;
         _bits |= (u32) * (u8*)(_base + 1) << 8;
         _bits |= (u32) * (u8*)(_base + 2) << 16;
@@ -826,8 +836,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         _gxSetFogParams();
         goto LAB_8005F608;
     }
-    colorWord = fogColorWord;
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
+    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
 LAB_8005F608:
     if ((shader != 0) && ((*(u32*)(shader + 0x3c) & 0x80000000) != 0))
     {
@@ -904,8 +913,7 @@ LAB_8005F7FC:
             }
         }
     }
-    colorWord = gTexShaderAmbColor;
-    GXSetChanAmbColor(0, *(GXColor*)&colorWord);
+    GXSetChanAmbColor(0, *(GXColor*)&gTexShaderAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
@@ -916,8 +924,7 @@ LAB_8005F7FC:
 LAB_8005F89C:
     objGetColor(0, &ambR, &ambG, &ambB);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-    colorWord2 = *(int*)&ambR;
-    GXSetChanAmbColor(0, *(GXColor*)&colorWord2);
+    GXSetChanAmbColor(0, *(GXColor*)&ambR);
 LAB_8005F8E4:
     if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
     {

@@ -102,8 +102,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = (lbl_803E2EBC - lbl_803E2F00 * ((GameObject*)obj)->anim.currentMoveProgress) *
         (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
@@ -190,8 +189,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
@@ -254,8 +252,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     y = y - y2;
     z = z - z2;
     d = sqrtf(x * x + z * z);
-    x = d;
-    angle = getAngle(y, d);
+    angle = getAngle(y, (x = d));
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
@@ -278,7 +275,7 @@ void fn_801627F4(int obj)
     ptr = ObjGroup_GetObjects(0x17, &count);
     if (count != 0)
     {
-        sub = *(char**)(state + 0x40c);
+        sub = (char*)((GroundBaddieState*)state)->control;
         ((GrimbleControl*)sub)->candidatePathObj = 0;
         ((GrimbleControl*)sub)->nearestDist = gGrimblePathSearchMaxDist;
         for (i = 0; i < count; i++)
@@ -458,7 +455,7 @@ void grimble_init(int obj, int p2, int p3)
     (*(void (**)(int, char*, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2EB8;
-    *(int*)(*(int*)(state + 0x40c) + 0x34) = 0;
+    *(int*)((char*)((GroundBaddieState*)state)->control + 0x34) = 0;
 }
 
 void grimble_release(void)

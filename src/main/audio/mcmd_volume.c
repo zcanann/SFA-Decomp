@@ -16,6 +16,7 @@ extern s32 sndConvert2Ms(u32 v);
 u32 TranslateVolume(u32 volume, u16 curve)
 {
     u8* ptr;
+    u32 base;
     u32 vlow;
     u32 vhigh;
     s32 d;
@@ -29,8 +30,10 @@ u32 TranslateVolume(u32 volume, u16 curve)
 
             if (vhigh < 0x7f)
             {
-                d = vlow * (ptr[vhigh + 1] - ptr[vhigh]);
-                volume = d + ((u16)ptr[vhigh] << 16);
+                base = ptr[vhigh];
+                volume = base << 16;
+                d = vlow * (ptr[vhigh + 1] - base);
+                volume = d + volume;
             }
             else
             {

@@ -226,7 +226,7 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 DSError TRKTargetAccessMemory(void* data, u32 start, size_t* length, MemoryAccessOptions accessOptions, BOOL read)
 {
 	DSError error;
-	u32 uVar5;
+	u32 savedMsr;
 	void* addr;
 	u32 param4;
 	TRKExceptionStatus tempExceptionStatus = gTRKExceptionStatus;
@@ -238,13 +238,13 @@ DSError TRKTargetAccessMemory(void* data, u32 start, size_t* length, MemoryAcces
 	if (error != DS_NoError) {
 		*length = 0;
 	} else {
-		uVar5  = __TRK_get_MSR();
-		param4 = uVar5 | gTRKCPUState.Extended1.MSR & 0x10;
+		savedMsr  = __TRK_get_MSR();
+		param4 = savedMsr | gTRKCPUState.Extended1.MSR & 0x10;
 
 		if (read) {
-			TRK_ppc_memcpy(data, addr, *length, uVar5, param4);
+			TRK_ppc_memcpy(data, addr, *length, savedMsr, param4);
 		} else {
-			TRK_ppc_memcpy(addr, data, *length, param4, uVar5);
+			TRK_ppc_memcpy(addr, data, *length, param4, savedMsr);
 			TRK_flush_cache((u32)addr, *length);
 			if ((void*)start != addr) {
 				TRK_flush_cache(start, *length);
@@ -710,7 +710,7 @@ LAB_00010bb0:
 void TRKPostInterruptEvent(void)
 {
 	int eventType;
-	int local_14;
+	int instruction;
 	size_t registerSize;
 	TRKEvent event;
 
@@ -721,9 +721,9 @@ void TRKPostInterruptEvent(void)
 		case 0xd00:
 		case 0x700:
 			registerSize = 4;
-			TRKTargetReadInstruction(&local_14, gTRKCPUState.Default.PC);
+			TRKTargetReadInstruction(&instruction, gTRKCPUState.Default.PC);
 
-			if (local_14 == 0xfe00000) {
+			if (instruction == 0xfe00000) {
 				eventType = NUBEVENT_Support;
 			} else {
 				eventType = NUBEVENT_Breakpoint;

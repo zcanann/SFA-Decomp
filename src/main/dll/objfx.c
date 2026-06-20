@@ -102,18 +102,20 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
         params.pad[1] = partbl.e[type].b;
         params.pad[2] = flagByte;
         params.f8 = 1.0f;
-        switch (type)
+        if (type >= 9 && type <= 0xb)
         {
-        case 0xa:
-        case 0xb:
-            (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
-            break;
-        case 9:
-            (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
-            break;
-        default:
+            if (type == 0xa || type == 0xb)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
+            }
+            if (type == 9 || type == 0xb)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
+            }
+        }
+        else
+        {
             (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
-            break;
         }
     }
 }
@@ -512,11 +514,10 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
     {
         return;
     }
-    if (b == 0)
+    if (b == 0 || b >= 5)
     {
         return;
     }
-    if (b < 5)
     {
         if (gExpgfxFrameTimerB != lbl_803DF35C)
         {
@@ -646,7 +647,14 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
         switch (mode)
         {
         case 1:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
@@ -660,14 +668,28 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             }
             break;
         case 3:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
             }
             break;
         case 4:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
@@ -681,7 +703,14 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             }
             break;
         case 6:
-            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            if (type == 1)
+            {
+                params.f6 = 0xc75;
+            }
+            else
+            {
+                params.f6 = 0xc74;
+            }
             for (i = 0; i < n; i++)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
@@ -941,6 +970,8 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
     ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
     f32 zoff = lbl_803DF394;
     u8* cbuf;
+    u8* cbuf1;
+    u8* cbuf2;
 
     params.f8 = scale;
     params.pad[0] = 0;
@@ -996,10 +1027,12 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
                                      ((GameObject*)obj)->anim.worldPosY + zoff,
                                      ((GameObject*)obj)->anim.worldPosZ);
         cbuf = (u8*)&colors;
-        modelLightStruct_setDiffuseColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
-                                         cbuf[type * 3 + 2], 0xff);
-        modelLightStruct_setSpecularColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
-                                          cbuf[type * 3 + 2], 0xff);
+        cbuf1 = (u8*)&colors + 1;
+        cbuf2 = (u8*)&colors + 2;
+        modelLightStruct_setDiffuseColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
+                                         cbuf2[(u8)type * 3], 0xff);
+        modelLightStruct_setSpecularColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3],
+                                          cbuf2[(u8)type * 3], 0xff);
         modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
@@ -1293,7 +1326,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         params.vec[2] = z;
     }
 
-    t = type;
+    t = (u8)type;
     switch (t)
     {
     case 3:

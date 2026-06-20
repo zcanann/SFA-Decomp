@@ -2117,9 +2117,8 @@ void initFn_800534f8(void)
     p = gRcpDistortSlots;
     for (; i < 6; i++)
     {
-        *(void**)p = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
-        p[0x1a] = 0;
-        p += 0x1c;
+        *(void**)(p + i * 0x1c) = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
+        p[i * 0x1c + 0x1a] = 0;
     }
     gRcpDistortSlotIndex = 0;
     q = lbl_8030D028;
@@ -2127,12 +2126,12 @@ void initFn_800534f8(void)
     scaleB = LastReadFinished_803DEB50.lo;
     for (j = 0; j < 6; j++)
     {
-        v = *(f32*)(q + 4);
+        v = *(f32*)(q + j * 8 + 4);
         slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
         slot[0xc] = 0xff;
         slot[0xd] = 0xff;
         slot[0xe] = 0xff;
-        inv = scaleA / powfCoreHighPrecision(*(f32*)q, gRcpDistortPowExp);
+        inv = scaleA / powfCoreHighPrecision(*(f32*)(q + j * 8), gRcpDistortPowExp);
         slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
         half = j & 1;
         *(f32*)(slot + half * 4 + 0x10) = inv;
@@ -2142,7 +2141,6 @@ void initFn_800534f8(void)
         {
             gRcpDistortSlotIndex = gRcpDistortSlotIndex + 1;
         }
-        q += 8;
     }
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;

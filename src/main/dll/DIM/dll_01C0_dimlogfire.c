@@ -30,15 +30,10 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern int randomGetRange(int lo, int hi);
 
-void imicepillar_hitDetect(void);
 
-void imicepillar_update(void);
 
-void imicepillar_init(void);
 
-void imicepillar_release(void);
 
-void imicepillar_initialise(void);
 
 ObjectDescriptor gIMIcePillarObjDescriptor = {
     0,
@@ -270,7 +265,7 @@ void dimlogfire_update(int obj)
     case 4:
         break;
     default:
-        if (state->unk18 == 0)
+        if (state->initMode == 0)
         {
             state->mode = 1;
             state->dousedLatch = 1;
@@ -320,7 +315,7 @@ void dimlogfire_init(int obj, int def)
     ObjGroup_AddObject(obj, DIMLOGFIRE_GROUP);
     state = ((GameObject*)obj)->extra;
     state->unk20 = 0;
-    state->unk18 = ((DimlogfireObjectDef*)def)->initMode;
+    state->initMode = ((DimlogfireObjectDef*)def)->initMode;
     state->strengthInit = (s8)((DimlogfireObjectDef*)def)->strengthInit;
     *(u8*)&state->strength = *(u8*)&state->strengthInit;
     if (GameBit_Get(((DimlogfireObjectDef*)def)->douseGameBit) != 0)

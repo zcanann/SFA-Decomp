@@ -1,5 +1,6 @@
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
+extern asm u32 __cvt_fp2unsigned(register f64 d);
 extern int adsrStartRelease(int state, u32 divisor);
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
@@ -26,7 +27,10 @@ int adsrStartRelease(int state, u32 divisor)
         {
             adsr->currentIndex = (u32)(193 - voiceAdsrDecayTable[*(int*)&adsr->currentVolume >> 21]) << 16;
         }
-        adsr->cnt = (u32)(lbl_803E7848 * ((f32) * &adsr->currentIndex * divisor)) >> 12;
+        {
+            f32 ci = lbl_803E7848 * (f32)(s32)adsr->currentIndex;
+            adsr->cnt = __cvt_fp2unsigned(ci * (f32)(u32)divisor) >> 12;
+        }
         adsr->state = 4;
         if (adsr->cnt == 0)
         {
@@ -68,46 +72,38 @@ int adsrHandle(int state, u16* out1, u16* out2)
     int idx;
     u16 o;
 
-    if (m != 1)
+    switch (m)
     {
-        if (m < 1)
+    case 0:
+        if (adsr->state != 3)
         {
-            if (m < 0)
+            v8 = *(int*)&adsr->currentVolume;
+            *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
+            o = v8 >> 16;
+            *out1 = o;
+            if (*(int*)&adsr->currentDelta >= 0)
             {
+                o = *(int*)&adsr->currentDelta >> 21;
+                *out2 = o;
             }
             else
             {
-                if (adsr->state != 3)
-                {
-                    v8 = *(int*)&adsr->currentVolume;
-                    *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
-                    o = v8 >> 16;
-                    *out1 = o;
-                    if (*(int*)&adsr->currentDelta >= 0)
-                    {
-                        o = *(int*)&adsr->currentDelta >> 21;
-                        *out2 = o;
-                    }
-                    else
-                    {
-                        o = -(-*(int*)&adsr->currentDelta >> 21);
-                        *out2 = o;
-                    }
-                    if (--*(int*)&adsr->cnt == 0)
-                    {
-                        ret = fn_8027A660(state);
-                    }
-                }
-                else
-                {
-                    o = *(int*)&adsr->currentVolume >> 16;
-                    *out1 = o;
-                    *out2 = 0;
-                }
+                o = -(-*(int*)&adsr->currentDelta >> 21);
+                *out2 = o;
+            }
+            if (--*(int*)&adsr->cnt == 0)
+            {
+                ret = fn_8027A660(state);
             }
         }
-    }
-    else
+        else
+        {
+            o = *(int*)&adsr->currentVolume >> 16;
+            *out1 = o;
+            *out2 = 0;
+        }
+        break;
+    case 1:
     {
         if (adsr->state != 3)
         {
@@ -119,7 +115,8 @@ int adsrHandle(int state, u16* out1, u16* out2)
             else
             {
                 *(int*)&adsr->currentIndex = *(int*)&adsr->currentIndex + *(int*)&adsr->currentDelta;
-                idx = 193 - ((*(int*)&adsr->currentIndex + 0x8000) >> 16);
+                idx = (*(int*)&adsr->currentIndex + 0x8000) >> 16;
+                idx = 193 - idx;
                 if (idx < 0)
                 {
                     idx = 0;
@@ -149,6 +146,8 @@ int adsrHandle(int state, u16* out1, u16* out2)
             *out1 = o;
             *out2 = 0;
         }
+        break;
+    }
     }
     return ret;
 }

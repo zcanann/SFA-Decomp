@@ -166,6 +166,7 @@ void worldplanet_init(int obj)
     envFxActFn_800887f8(0);
 }
 
+#pragma peephole on
 void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = ((GameObject*)obj)->extra;
@@ -236,6 +237,7 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
         *outY = 0;
     }
 }
+#pragma peephole reset
 
 void worldplanet_update(int obj)
 {
@@ -250,8 +252,11 @@ void worldplanet_update(int obj)
     int objId;
     int galleon;
     WorldObjEffectParams pfx;
-    s8 inX[3];
-    u8 inY;
+    struct
+    {
+        u8 inY;
+        s8 inX[3];
+    } in;
 
     tbl = gWorldPlanetObjectIdTable;
     state = ((GameObject*)obj)->extra;
@@ -328,7 +333,7 @@ void worldplanet_update(int obj)
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, 0x6f2, &pfx, 2, -1, NULL);
-        worldplanet_readMapInput(obj, (u8*)inX, &inY);
+        worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
         ((GameObject*)obj)->anim.rotZ -= 10;
         ((GameObject*)obj)->anim.rotY = 0x3448;
         ((GameObject*)obj)->anim.rotX = 0x4000;
@@ -367,11 +372,11 @@ void worldplanet_update(int obj)
             while (k < 5);
             state->unlockedPlanetMask = m;
         }
-        if (gWorldPlanetSelectConfirmTimer == 0 && state->selectionLocked == 0)
+        if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
         {
             while (!done)
             {
-                state->selectedPlanet = state->selectedPlanet + inX[0];
+                state->selectedPlanet = state->selectedPlanet + in.inX[0];
                 if (state->selectedPlanet < 0)
                 {
                     state->selectedPlanet = 4;
@@ -489,7 +494,7 @@ void worldplanet_update(int obj)
                 if (gWorldPlanetReselectDelayTimer == 0)
                 {
                     if (gWorldPlanetSelectConfirmTimer == 0 &&
-                        ((u32)state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
+                        (state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
                         (buttons & 0x100) != 0)
                     {
                         gWorldPlanetSelectConfirmTimer = 10;

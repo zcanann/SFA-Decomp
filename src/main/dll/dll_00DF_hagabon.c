@@ -173,7 +173,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveB + waveA));
 
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) /
         lbl_803E2620
@@ -183,7 +183,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveB + waveA));
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
@@ -214,7 +214,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         )
         ;
         ((GameObject*)obj)->anim.velocityY += lbl_803E2624 *
-        (((lbl_803E262C * (waveA + waveB)) +
+        (((lbl_803E262C * (waveB + waveA)) +
                 *(f32*)(curve + 0x6c)) -
             ((GameObject*)obj)->anim.localPosY);
         ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
@@ -354,15 +354,14 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_getObjectTypeId(void) { return 0xb; }
 
+#pragma fp_contract off
 void hagabon_update(int obj)
 {
     GameObject* player;
     HagabonState* state;
     int oldCurve;
     int data;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 d[3];
     f32 dist;
     int hitObject;
     int hitSphereIndex;
@@ -406,7 +405,7 @@ void hagabon_update(int obj)
     {
         if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
         {
-            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
+            ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta;
             if (((GameObject*)obj)->anim.alpha <= 6)
             {
                 ((GameObject*)obj)->unkF4 = 1;
@@ -418,7 +417,7 @@ void hagabon_update(int obj)
         }
         if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
         {
-            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
+            ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta;
             if (((GameObject*)obj)->anim.alpha >= 0xf9)
             {
                 ((GameObject*)obj)->anim.alpha = 0xff;
@@ -455,19 +454,19 @@ void hagabon_update(int obj)
     player = state->player;
     if (player != 0)
     {
-        dx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        dy = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        dz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        state->playerDistance = sqrtf(dx * dx + dz * dz + dy * dy);
+        d[0] = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        state->playerDistance = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
     }
-    if (oldCurve != 0)
+    if ((void*)oldCurve != NULL)
     {
-        dx = *(f32*)&((GameObject*)oldCurve)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
-        dy = *(f32*)&((GameObject*)oldCurve)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
-        dz = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
-        state->pathDistance = sqrtf(dz * dz + dx * dx + dy * dy);
+        d[0] = *(f32*)&((GameObject*)oldCurve)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
+        d[1] = *(f32*)&((GameObject*)oldCurve)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
+        d[2] = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        state->pathDistance = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
     }
-    if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (lbl_803E2664 < state->pathDistance))
+    if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (state->pathDistance > lbl_803E2664))
     {
         state->flags &= ~HAGABON_FLAG_CHASE;
         state->flags |= HAGABON_FLAG_PATH_RETURN;
@@ -484,6 +483,7 @@ void hagabon_update(int obj)
     }
     fn_8014E1DC(obj, state);
 }
+#pragma fp_contract reset
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,

@@ -13,7 +13,6 @@ void mikabomb_free(int obj, int mode);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-extern void objRenderFn_8003b8f4(f32);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 
@@ -730,8 +729,8 @@ void FUN_80170048(void)
     double biasC;
     double offsetC;
     u64 packed;
-    u64 local_78;
-    u64 local_70;
+    u64 randOffset;
+    u64 randOffset2;
 
     packed = FUN_80286838();
     objHi = (u32)((u64)packed >> 0x20);
@@ -814,8 +813,8 @@ void FUN_80170048(void)
                 state[9] = (int)(*scaleTbl * (float)((double)(float)(scaleC + cosVal) * phase));
                 state[5] = *colorTbl;
                 rand = randomGetRange(0x78, 0x7f);
-                local_78 = (double)(int)(seqObj * rand);
-                *(short*)(writer + 0xf) = (short)(int)(biasC + (double)(float)(local_78));
+                randOffset = (double)(int)(seqObj * rand);
+                *(short*)(writer + 0xf) = (short)(int)(biasC + (double)(float)(randOffset));
                 writer = (int*)((int)writer + 2);
                 scaleTbl = scaleTbl + 1;
                 state = state + 1;
@@ -915,8 +914,8 @@ void FUN_80170048(void)
             writer[9] = (int)(*scaleTbl * (float)((double)(float)(biasC + cosVal) * phase));
             writer[5] = *colorTbl;
             rand = randomGetRange(0x78, 0x7f);
-            local_70 = (double)(int)(seqObj * rand);
-            *(short*)(state + 0xf) = (short)(int)(scaleC + (double)(float)(local_70));
+            randOffset2 = (double)(int)(seqObj * rand);
+            *(short*)(state + 0xf) = (short)(int)(scaleC + (double)(float)(randOffset2));
             state = (int*)((int)state + 2);
             scaleTbl = scaleTbl + 1;
             writer = writer + 1;
@@ -1166,7 +1165,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -1580,11 +1578,8 @@ void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3)
 
 void gcbaddieshield_update(int* obj);
 
-void fireball_free(int* obj);
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void mikabombshadow_init(int* obj);
 
@@ -1608,7 +1603,6 @@ void flamethrowerspe_init(int* obj, int* params)
 
 void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
@@ -1657,9 +1651,7 @@ void flamethrowerspe_update(int* obj)
 
 void mikabomb_init(int* obj);
 
-void fireball_init(int* obj);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj);
 

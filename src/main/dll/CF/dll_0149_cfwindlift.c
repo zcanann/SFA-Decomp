@@ -22,7 +22,7 @@ typedef struct WindliftPlacement
     f32 unk10;
     u8 pad14[0x18 - 0x14];
     s16 unk18;
-    s16 unk1A;
+    s16 pullStrength; /* 0x1A: wind pull strength passed to fn_8019C784 */
     u8 pad1C[0x22 - 0x1C];
     s16 unk22;
     u8 pad24[0x28 - 0x24];
@@ -398,7 +398,7 @@ void windlift_update(int* obj)
             int m = framesThisStep * 0xb6;
             ((GameObject*)obj)->anim.rotX -= m * ((gb2 << 2) + 0xe);
         }
-        pull = (f32)((WindliftPlacement*)def)->unk1A;
+        pull = (f32)((WindliftPlacement*)def)->pullStrength;
         player = Obj_GetPlayerObject();
         if (GameBit_Get(sub->seqId) != 0)
         {

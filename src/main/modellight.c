@@ -741,7 +741,6 @@ typedef struct
 
 extern ModelLightChannelState gModelLightChannelStates[];
 
-void mm_free(void* p);
 
 void modelLightChannel_configure(int i, int a, int b)
 {
@@ -1013,41 +1012,20 @@ void modelLightChannels_applyGXControls(void)
             if (entry->mode == 0)
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 1;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 1 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
                               attnFn);
             }
             else if (entry->mode == 2)
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 1;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 1 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
             else
             {
                 lightMask = entry->lightMask;
-                if (lightMask != 0)
-                {
-                    attnFn = 0;
-                }
-                else
-                {
-                    attnFn = 2;
-                }
+                attnFn = lightMask != 0 ? 0 : 2;
                 GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
             }
             activeMask = (activeMask | (1 << channel)) & 0xff;
@@ -1063,7 +1041,7 @@ void modelLightChannels_applyGXControls(void)
     {
         GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
     }
-    if ((activeMask & 1) == 0 && (activeMask & 4) != 0)
+    else if ((activeMask & 1) == 0 && (activeMask & 4) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
     }
@@ -1072,7 +1050,7 @@ void modelLightChannels_applyGXControls(void)
     {
         GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
     }
-    if ((activeMask & 2) == 0 && (activeMask & 8) != 0)
+    else if ((activeMask & 2) == 0 && (activeMask & 8) != 0)
     {
         GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
     }
@@ -1587,7 +1565,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     light->glowAlpha = v;
 }
 
-int randomGetRange(int lo, int hi);
 
 extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
@@ -1641,11 +1618,11 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b
 
     obj->specularAttenuationScale = a;
     obj->specularBrightness = b;
-    atten = obj->specularAttenuationScale * lbl_803DE790;
     lightObj = (u8*)obj + 0xc0;
+    atten = obj->specularAttenuationScale * lbl_803DE790;
     zero = lbl_803DE75C;
-    GXInitLightAttn(lightObj, zero, zero, (one = lbl_803DE760), atten, zero, *(f32*)&lbl_803DE760 - atten);
+    one = lbl_803DE760;
+    GXInitLightAttn(lightObj, zero, zero, one, atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 
-void* mmAlloc(int size, int type, int flag);

@@ -86,7 +86,7 @@ typedef struct EarthWarriorSub
     f32 unk404;
     f32 unk408;
     u8 pad40C[4];
-    f32 unk410;
+    f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
     u8 pad414[0xc];
     f32 unk420;
     u8 pad424[4];
@@ -1185,10 +1185,10 @@ void DR_EarthWarrior_hitDetect(int obj)
         if (*(int*)inner & 0x800000)
         {
             if ((*(u8*)((char*)(char*)inner + 0x262) != 0 || (*(s8*)((char*)(char*)inner + 0x264) & 0xf0)) &&
-                inner->sub.unk410 <= lbl_803E8304 && inner->baddie.animSpeedA > lbl_803E836C)
+                inner->sub.footstepCooldown <= lbl_803E8304 && inner->baddie.animSpeedA > lbl_803E836C)
             {
                 doRumble((f32)(int)randomGetRange(2, 5));
-                inner->sub.unk410 = lbl_803E8370;
+                inner->sub.footstepCooldown = lbl_803E8370;
                 Sfx_PlayFromObject(obj, 0x404);
             }
             if (*(u8*)((char*)(char*)inner + 0x262) != 0 ||
@@ -1213,18 +1213,8 @@ void DR_EarthWarrior_hitDetect(int obj)
                 inner->baddie.animSpeedA = -((GameObject*)obj)->anim.velocityZ * vsin - ((GameObject*)obj)->anim.
                     velocityX * vcos;
                 inner->baddie.animSpeedA *= lbl_803E8314;
-                {
-                    f32 vv = inner->baddie.animSpeedA;
-                    f32 t = lbl_803E8378;
-                    t = (vv < t) ? t : ((vv > inner->sub.unk404) ? inner->sub.unk404 : vv);
-                    inner->baddie.animSpeedA = t;
-                }
-                {
-                    f32 vv = inner->baddie.animSpeedA;
-                    f32 t = lbl_803E8304;
-                    t = (vv < t) ? t : ((vv > spd) ? spd : vv);
-                    inner->baddie.animSpeedA = t;
-                }
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8378) ? lbl_803E8378 : ((inner->baddie.animSpeedA > inner->sub.unk404) ? inner->sub.unk404 : inner->baddie.animSpeedA);
+                inner->baddie.animSpeedA = (inner->baddie.animSpeedA < lbl_803E8304) ? lbl_803E8304 : ((inner->baddie.animSpeedA > spd) ? spd : inner->baddie.animSpeedA);
                 if (!((ByteFlags*)&inner->sub.flags3F0)->b40)
                 {
                     inner->baddie.animSpeedC = inner->baddie.animSpeedA;
@@ -1232,10 +1222,10 @@ void DR_EarthWarrior_hitDetect(int obj)
             }
             *(int*)inner &= ~0x800000;
         }
-        inner->sub.unk410 -= timeDelta;
-        if (inner->sub.unk410 < lbl_803E8304)
+        inner->sub.footstepCooldown -= timeDelta;
+        if (inner->sub.footstepCooldown < lbl_803E8304)
         {
-            inner->sub.unk410 = *(f32 *)&lbl_803E8304;
+            inner->sub.footstepCooldown = *(f32 *)&lbl_803E8304;
         }
         if ((void*)inner != NULL)
         {
@@ -1316,13 +1306,11 @@ void DR_EarthWarrior_update(int obj)
     *(s8*)((char*)(char*)inner + 0x264) |= 0x10;
     {
         f32 saved = ((GameObject*)obj)->anim.velocityY;
-        u8 mode;
         ((GameObject*)obj)->anim.velocityY = lbl_803E8304;
         *(int*)&inner->baddie.eventFlags &= ~7;
-        mode = inner->sub.unk8A6;
-        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, mode, (int)((char*)inner + 0xb18),
+        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, inner->sub.unk8A6, (int)((char*)inner + 0xb18),
                             (int)((char*)inner + 0x4), inner->baddie.animSpeedA,
-                            (mode == 8) ? lbl_803E837C : lbl_803E8380);
+                            (inner->sub.unk8A6 == 8) ? lbl_803E837C : lbl_803E8380);
         ((GameObject*)obj)->anim.velocityY = saved;
     }
     if (inner->sub.flags8D8 & 8)
@@ -1334,8 +1322,8 @@ void DR_EarthWarrior_update(int obj)
             f32 mat[4];
         } w;
         int p;
-        int i;
         int j;
+        int i;
         f32 c8338;
         f32 c835c;
         vecA[0] = lbl_803E833C * ((GameObject*)obj)->anim.velocityX;

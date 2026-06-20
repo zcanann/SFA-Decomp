@@ -276,6 +276,7 @@ void dll_1D6_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
+#pragma opt_common_subs off
 void dll_1D6_update(int* obj)
 {
     Dll1D6State* extra;
@@ -424,3 +425,4 @@ void dll_1D6_update(int* obj)
         extra->flags1D &= ~2;
     }
 }
+#pragma opt_common_subs reset

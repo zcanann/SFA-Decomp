@@ -5,22 +5,22 @@
 
 typedef struct ExplosionDebris
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s32 unk14;
+    f32 posX;  /* 0x00 */
+    f32 posY;  /* 0x04 */
+    f32 posZ;  /* 0x08 */
+    f32 scale; /* 0x0C */
+    s32 age;      /* 0x10: elapsed frames, += framesThisStep; deactivates at >= lifetime */
+    s32 lifetime; /* 0x14: total lifetime; age/lifetime drives fade + scale */
     f32 unk18;
     f32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s16 unk28;
-    u16 unk2A;
+    s32 spawnTimer;    /* 0x20: counts down by framesThisStep; spawns a sub-flame at <= 0 */
+    s32 spawnInterval; /* 0x24: reload value copied into spawnTimer after each spawn */
+    s16 spinAngle; /* 0x28: rotation accumulator fed to PSMTXRotRad */
+    u16 spinSpeed; /* 0x2A: per-frame rotation increment */
     u8 unk2C;
     u8 unk2D;
-    u8 unk2E;
-    u8 unk2F;
+    u8 alpha;      /* 0x2E: render alpha byte */
+    u8 active;     /* 0x2F: nonzero while this debris slot is live */
 } ExplosionDebris;
 
 #endif

@@ -403,10 +403,10 @@ int warpstone_updateMenuAnimObj(int obj, u32 p2, int animObj)
 typedef struct WarpstoneState
 {
     u8 pad0[0xC - 0x0];
-    u8 unkC;
+    u8 activated;
     u8 padD[0xE - 0xD];
     s16 gameBitE;   /* 0xe: GameBit id stored at init */
-    s16 unk10;
+    s16 gameBit10;
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
 
@@ -460,7 +460,10 @@ void warpstone_update(int obj)
         *(int*)state = 0;
     }
 
-    advanceResult = SClantern_advanceAnimEvents(lbl_803E54A4, obj);
+    {
+        extern u32 SClantern_advanceAnimEvents(int obj, f32 moveStepScale);
+        advanceResult = SClantern_advanceAnimEvents(obj, lbl_803E54A4);
+    }
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         if (randFn_80080100(100) != 0)
@@ -566,7 +569,7 @@ void warpstone_update(int obj)
     characterDoEyeAnims(obj, (void*)(state + 0x44));
     if (GameBit_Get(0x887) == 0)
     {
-        ((WarpstoneState*)state)->unkC = 0;
+        ((WarpstoneState*)state)->activated = 0;
     }
     if (((WarpstoneFlags*)(state + 0xd5))->sfxFired != 0)
     {
@@ -626,16 +629,16 @@ void warpstone_init(int obj, u8* setup)
     ((GameObject*)obj)->anim.rotX = setupYaw;
     ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
     ((WarpstoneState*)state)->gameBitE = 0x15a;
-    ((WarpstoneState*)state)->unk10 = 0x886;
+    ((WarpstoneState*)state)->gameBit10 = 0x886;
     ObjHits_EnableObject((u32)obj);
     if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0)
     {
-        ((WarpstoneState*)state)->unkC = 1;
+        ((WarpstoneState*)state)->activated = 1;
     }
     else
     {
-        ((WarpstoneState*)state)->unkC = 0;
+        ((WarpstoneState*)state)->activated = 0;
     }
-    GameBit_Set(((WarpstoneState*)state)->unk10, 0);
+    GameBit_Set(((WarpstoneState*)state)->gameBit10, 0);
     *(int*)state = 0;
 }

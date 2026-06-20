@@ -414,9 +414,7 @@ int objGetFlagsE5_2(u8* obj)
     return ((GameObject*)obj)->colorFadeFlags & 2;
 }
 
-int roundUpTo4(int x);
 
-int roundUpTo8(int x);
 
 int roundUpTo32(int x);
 
@@ -452,12 +450,8 @@ void fn_8002B758(void* v)
 {
     int i;
 
-    for (i = 0; i < gObjPtrTableCount; i++)
+    for (i = 0; i < gObjPtrTableCount && (void*)gObjPtrTable[i] != v; i++)
     {
-        if ((void*)gObjPtrTable[i] == v)
-        {
-            break;
-        }
     }
     if (i == gObjPtrTableCount)
     {
@@ -478,7 +472,6 @@ void fn_8002B860(void* v)
     gObjPtrTable[i] = (int)v;
 }
 
-void mm_free(void* p);
 
 #pragma peephole off
 void* getTablesBinEntry(int i)
@@ -1150,7 +1143,7 @@ typedef struct LoadedObj
     int fdc;
     u8 pade0[0x11];
     u8 ff1;
-    s8 ff2;
+    u8 ff2;
     u8 padf3[0x15];
     int f108;
 } LoadedObj;
@@ -1244,11 +1237,12 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.ff2 = n;
     if (n == 0)
     {
-        tmpl.ff2 = *(s8*)(tmpl.def + 0x8e);
+        tmpl.ff2 = *(u8*)(tmpl.def + 0x8e);
     }
     else
     {
-        tmpl.ff2 = n - 1;
+        n -= 1;
+        tmpl.ff2 = n;
     }
     tmpl.dll = NULL;
     if ((int)*(s16*)(def + 0x50) != -1)
@@ -1563,7 +1557,7 @@ void objFreeObjDef(void* objp, int flag)
             for (i = 0; i < gObjCount; i++)
             {
                 o = ((u8**)gObjList)[i];
-                if (((GameObject*)o)->anim.parent == obj)
+                if (*(int*)&((GameObject*)o)->anim.parent == (int)obj)
                 {
                     *(int*)&((GameObject*)o)->anim.parent = 0;
                     if (*(void**)&((GameObject*)o)->anim.placementData != NULL)
@@ -1584,7 +1578,7 @@ void objFreeObjDef(void* objp, int flag)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            if (*(u8**)(((u8**)gObjList)[i] + 0xc0) == obj)
+            if (*(int*)(((u8**)gObjList)[i] + 0xc0) == (int)obj)
             {
                 *(int*)(((u8**)gObjList)[i] + 0xc0) = 0;
             }
@@ -1694,7 +1688,7 @@ void objFreeObjDef(void* objp, int flag)
             mm_free(o);
         }
     }
-    if (((GameObject*)obj)->seqIndex >= 0)
+    if (((GameObject*)obj)->seqIndex > -1)
     {
         if (flag == 0)
         {
@@ -1702,7 +1696,7 @@ void objFreeObjDef(void* objp, int flag)
         }
         ((GameObject*)obj)->seqIndex = 0xffff;
     }
-    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
+    if ((*(s16*)&((GameObject*)obj)->anim.flags & 0x2000) && *(void**)&((GameObject*)obj)->anim.placementData != NULL)
     {
         mm_free(((GameObject*)obj)->anim.placementData);
     }
@@ -1847,6 +1841,7 @@ void Obj_UpdateAllObjects(u8 flags)
     u8* obj2;
     int child;
     int obj;
+    int obj3;
     int count1;
     int count2;
     u8* t;
@@ -1911,31 +1906,31 @@ void Obj_UpdateAllObjects(u8 flags)
     if (timeStop == 0)
     {
         ObjHits_Update(gObjCount);
-        obj = *(int*)((u8*)&gObjUpdateList + 4);
-        for (; obj != 0; obj = *(int*)(obj + off))
+        obj3 = *(int*)((u8*)&gObjUpdateList + 4);
+        for (; obj3 != 0; obj3 = *(int*)(obj3 + off))
         {
-            if ((((GameObject*)obj)->objectFlags & 0x2000) == 0)
+            if ((((GameObject*)obj3)->objectFlags & 0x2000) == 0)
             {
-                switch (((GameObject*)obj)->anim.seqId)
+                switch (((GameObject*)obj3)->anim.seqId)
                 {
                 case 0:
                 case 0x1f:
-                    playerDoHitDetection(obj);
+                    playerDoHitDetection(obj3);
                     break;
                 default:
-                    if (((GameObject*)obj)->anim.dll == 0)
+                    if (((GameObject*)obj3)->anim.dll == 0)
                     {
                         goto next;
                     }
-                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)obj)->anim.dll + 0xc);
+                    cb = (void (*)(int))*(int*)((u8*)*((GameObject*)obj3)->anim.dll + 0xc);
                     if (cb == 0)
                     {
                         goto next;
                     }
-                    cb(obj);
+                    cb(obj3);
                     break;
                 }
-                Obj_GetWorldPosition((u32)obj, &((GameObject *)obj)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosY, &((GameObject *)obj)->anim.worldPosZ);
+                Obj_GetWorldPosition((u32)obj3, &((GameObject *)obj3)->anim.worldPosX, &((GameObject *)obj3)->anim.worldPosY, &((GameObject *)obj3)->anim.worldPosZ);
             }
         next:;
         }
@@ -2156,11 +2151,11 @@ void Obj_UpdateModelBlendStates(void)
 {
     ObjAnimComponent* objAnim;
     ObjAnimComponent* childAnim;
-    u8* obj;
-    int j;
-    int i;
-    int k;
     int ioff;
+    int i;
+    int j;
+    int k;
+    u8* obj;
     u8* walker;
     u8* child;
     u8* m;
@@ -2635,7 +2630,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-void* mmAlloc(int size, int type, int flag);
 
 void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
 

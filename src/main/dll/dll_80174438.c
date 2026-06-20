@@ -25,7 +25,6 @@ extern u32 fn_80174BFC();
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
-extern void* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
 extern void fn_80175428(int obj, int p2);
@@ -158,7 +157,7 @@ int fn_80174668(int obj, PushableState* state)
     {
         state->eyeOpenAmount = *(f32 *)&lbl_803E3550;
     }
-    dy = *(f32*)((int)state->nearestObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    dy = ((GameObject*)state->nearestObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
     if (dy < lbl_803E3528)
     {
         dy = dy * lbl_803E3554;
@@ -168,7 +167,7 @@ int fn_80174668(int obj, PushableState* state)
     {
         return 0;
     }
-    dx = *(f32*)((int)state->nearestObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    dx = ((GameObject*)state->nearestObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
     if (dx < *(f32 *)&lbl_803E3528)
     {
         dx = dx * lbl_803E3554;

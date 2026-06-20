@@ -44,7 +44,7 @@ typedef struct ExplodeanimatorPlacement
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
 
-extern f32 lbl_803E4020;
+extern const f32 lbl_803E4020;
 
 void explodeanimator_render(void)
 {
@@ -77,12 +77,11 @@ void explodeanimator_update(int* obj)
     GameBit_Set(((ExplodeanimatorPlacement*)def)->resultGameBit, 1);
     sub[2] = (u8)(sub[2] | 1);
     {
-    f32 mult = lbl_803E4020;
     for (i = 0; i < def[0x2c]; i++)
     {
-        vel[0] = mult * (f32)(s32)
+        vel[0] = lbl_803E4020 * (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->velXMin, ((ExplodeanimatorPlacement*)def)->velXMax);
-        vel[1] = mult * (f32)(s32)
+        vel[1] = lbl_803E4020 * (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->velYMin, ((ExplodeanimatorPlacement*)def)->velYMax);
         buf[3] = (f32)(s32)
         randomGetRange(((ExplodeanimatorPlacement*)def)->posXMin, ((ExplodeanimatorPlacement*)def)->posXMax);

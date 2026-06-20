@@ -212,7 +212,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (k = 0; k < size; k++)
             {
                 blurred[k] = sum / window;
-                sum = sum - row[k] + (row + window)[k];
+                sum -= row[k];
+                sum += (row + window)[k];
             }
             src = (u32*)blurred;
             for (x = 0; x < size; x += 8)
@@ -267,7 +268,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 for (k = 0; k < size; k++)
                 {
                     blurred[k] = sum / window;
-                    sum = sum - row[k] + (row + window)[k];
+                    sum -= row[k];
+                    sum += (row + window)[k];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
@@ -326,7 +328,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (k = 0; k < size; k++)
             {
                 blurred[k] = sum / window;
-                sum = sum - row[k] + (row + window)[k];
+                sum -= row[k];
+                sum += (row + window)[k];
             }
             src = (u16*)blurred;
             for (x = 0; x < size; x += 8)
@@ -383,7 +386,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 for (k = 0; k < size; k++)
                 {
                     blurred[k] = sum / window;
-                    sum = sum - row[k] + (row + window)[k];
+                    sum -= row[k];
+                    sum += (row + window)[k];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
@@ -1704,7 +1708,6 @@ extern inline float sqrtf(float x)
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
-extern f32 Udchuff_803DEDA0;
 extern f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
@@ -1712,9 +1715,10 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 {
     f32* p;
     int i;
-    f32 acc5 = lbl_803DED28;
-    f32 acc6 = lbl_803DED28;
+    f32 acc5;
+    f32 acc6;
 
+    acc5 = acc6 = lbl_803DED28;
     p = arr;
     for (i = 0; i < n; i++, p += 5)
     {
@@ -1787,7 +1791,6 @@ void initFn_8006d020(void)
     f32 padFix;
 
     saved = testAndSet_onlyUseHeap3(1);
-    padFix = __PADFixBits;
     placed = 0;
     attempts = 0;
     e = gNewShadowPlacements;
@@ -1838,6 +1841,7 @@ void initFn_8006d020(void)
         placed++;
     }
 
+    padFix = __PADFixBits;
     th = (int*)gNewShadowNoiseTexFrames;
     for (tex = 0; tex < 0x10; tex++, th++)
     {
@@ -2322,7 +2326,6 @@ extern u8 lbl_803DCF80;
 extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
-extern const f32 Dev_803DED1C;
 extern u16 lbl_803DCFA0;
 #pragma peephole off
 void maybeHudFn_8006c91c(void)
@@ -2502,6 +2505,7 @@ extern int gRenderModeObj;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
+#pragma opt_common_subs off
 void renderShadows(void)
 {
     char* B = (char*)gNewShadowEntries;
@@ -2557,10 +2561,10 @@ void renderShadows(void)
         if ((u8)lod <= 4) continue;
         if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
-            memcpy(mc48, obj + 0xc, 0xc);
-            memcpy(mc54p, obj + 0x18, 0xc);
-            memcpy((char*)obj + 0xc, of64 + 0x20, 0xc);
-            memcpy((char*)obj + 0x18, of64 + 0x20, 0xc);
+            memcpy(mc48, (char*)obj + 0xc, 0xc);
+            memcpy(mc54p, (char*)obj + 0x18, 0xc);
+            memcpy((char*)obj + 0xc, (char*)of64 + 0x20, 0xc);
+            memcpy((char*)obj + 0x18, (char*)of64 + 0x20, 0xc);
         }
         castSlot = B + (u8)r24 * 0x68 + 0x1170;
         *(u8*)(castSlot + 0x64) = lod;
@@ -2784,3 +2788,4 @@ void renderShadows(void)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
+#pragma opt_common_subs reset

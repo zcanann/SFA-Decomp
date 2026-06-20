@@ -36,6 +36,7 @@ void dll_9C_func03(int a, int b, int p, u32 flags)
     ScreenFxPart* pp = (ScreenFxPart*)(int)parts;
     ScreenFxPart* cur;
     int idx;
+    u8* q;
 
     parts[0].state = 0;
     parts[0].id = 0x15;
@@ -160,13 +161,20 @@ void dll_9C_func03(int a, int b, int p, u32 flags)
     hdr.v3 = 0x1e;
     hdr.count = (s8)(((u8*)(cur + 3) - (u8*)pp) / 0x18);
     idx = b * 7;
-    hdr.anim[0] = *(s16*)(base + 0x1f8 + idx * 2);
-    hdr.anim[1] = *(s16*)(base + 0x1f8 + (idx + 1) * 2);
-    hdr.anim[2] = *(s16*)(base + 0x1f8 + (idx + 2) * 2);
-    hdr.anim[3] = *(s16*)(base + 0x1f8 + (idx + 3) * 2);
-    hdr.anim[4] = *(s16*)(base + 0x1f8 + (idx + 4) * 2);
-    hdr.anim[5] = *(s16*)(base + 0x1f8 + (idx + 5) * 2);
-    hdr.anim[6] = *(s16*)(base + 0x1f8 + (idx + 6) * 2);
+    q = base + idx * 2;
+    hdr.anim[0] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 1) * 2;
+    hdr.anim[1] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 2) * 2;
+    hdr.anim[2] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 3) * 2;
+    hdr.anim[3] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 4) * 2;
+    hdr.anim[4] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 5) * 2;
+    hdr.anim[5] = *(s16*)(q + 0x1f8);
+    q = base + (idx + 6) * 2;
+    hdr.anim[6] = *(s16*)(q + 0x1f8);
     hdr.parts = parts;
     hdr.flags = 0xc010480;
     hdr.flags |= flags;

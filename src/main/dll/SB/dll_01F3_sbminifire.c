@@ -13,7 +13,6 @@
 #include "main/dll/sbcloudballstate_struct.h"
 
 extern void objRenderFn_8003b8f4(int* obj);
-extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"

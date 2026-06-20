@@ -221,10 +221,10 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     {
         if (object->objectId == ((SaveGameObjectPosition*)(walker + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId)
         {
-            u8* slot = gSaveGameData + i * sizeof(SaveGameObjectPosition);
-            object->x = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 4);
-            object->y = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 8);
-            object->z = *(f32*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET + 12);
+            SaveGameObjectPosition* slot = (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET) + i;
+            object->x = slot->x;
+            object->y = slot->y;
+            object->z = slot->z;
             return 1;
         }
     }
@@ -312,8 +312,10 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
     int rank;
     int i;
     SaveScoreFile* file;
+    int off;
 
-    file = (SaveScoreFile*)(saveData + slot * SAVE_SCORE_FILE_STRIDE);
+    off = slot * SAVE_SCORE_FILE_STRIDE;
+    file = (SaveScoreFile*)(saveData + off);
     for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
     {
         if (score > file->entries[rank].score)
@@ -330,10 +332,10 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 
             file->entries[rank].score = score;
             file->entries[rank].flag = flag;
-            file->entries[rank].initials[0] = initials[0];
-            file->entries[rank].initials[1] = initials[1];
-            file->entries[rank].initials[2] = initials[2];
-            file->entries[rank].initials[3] = initials[3];
+            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[0] = initials[0];
+            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[1] = initials[1];
+            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[2] = initials[2];
+            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[3] = initials[3];
             return rank;
         }
     }
@@ -420,7 +422,8 @@ int gplayNewGame(char* name, int slot)
         dst = gSaveGameData + SAVEGAME_PLAYER_NAME_OFFSET;
         do
         {
-            c = (u8) * name++;
+            c = *(u8*)name;
+            name++;
             *dst++ = c;
         }
         while (c != '\0');
@@ -454,7 +457,8 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 bit;
     int i;
     MapBitTransient* transient;
-    u32* groupStatuses;
+    MapBitTransient* slot;
+    s8 found;
 
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
     {
@@ -490,7 +494,6 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         gSaveGameObjGroupCacheIdx = idx;
         (&gSaveGameObjGroupCacheIdx)[1] = newStatus;
 
-        groupStatuses = s->groupStatuses;
         if (value != 0)
         {
             if ((oldStatus & (1 << shift)) == 0)
@@ -499,7 +502,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                     {
-                        groupStatuses[i] |= (u32)(1 << shift);
+                        s->groupStatuses[i] |= (u32)(1 << shift);
                     }
                 }
             }
@@ -510,30 +513,34 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                 {
-                    groupStatuses[i] &= ~(u32)(1 << shift);
+                    s->groupStatuses[i] &= ~(u32)(1 << shift);
                 }
             }
 
             if (!createTransient)
             {
                 transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                found = -1;
+                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                 {
-                    if (transient->mapId == idx && transient->shift == shift)
+                    if (transient[i].mapId == idx && transient[i].shift == shift)
                     {
-                        return;
+                        found = i;
+                        break;
                     }
                 }
-
-                transient = s->transient;
-                for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
+                if (found == -1)
                 {
-                    if (transient->mapId == -1)
+                    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                     {
-                        transient->mapId = idx;
-                        transient->shift = shift;
-                        transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
-                        break;
+                        if (transient[i].mapId == -1)
+                        {
+                            slot = &transient[i];
+                            slot->mapId = idx;
+                            slot->shift = shift;
+                            slot->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
+                            break;
+                        }
                     }
                 }
             }
@@ -554,15 +561,12 @@ int saveSelect_getInfo(void* outPtr)
     info = (SaveSelectInfo*)outPtr;
     do
     {
-        if (loadSaveGame((u8)slot, save) == 0)
+        if (loadSaveGame((u8)slot, save) != 0)
         {
-            return 0;
-        }
-
-        newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
-        info->valid = newFileFlag;
-        if (newFileFlag != 0)
-        {
+            newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+            info->valid = newFileFlag;
+            if (newFileFlag != 0)
+            {
             memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
 
             info->percentComplete = (u8)((save[0x55d] * 100) / 0xbb);
@@ -635,10 +639,15 @@ int saveSelect_getInfo(void* outPtr)
             }
             info->active = 0;
             info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+            }
+            else
+            {
+                memset(info, 0, sizeof(SaveSelectInfo));
+            }
         }
         else
         {
-            memset(info, 0, sizeof(SaveSelectInfo));
+            return 0;
         }
 
         info++;
@@ -905,8 +914,8 @@ void saveGame_saveObjectPos(int* obj)
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = ((GameObject*)obj)->anim.localPosZ;
         }
         *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
     }
 }
 

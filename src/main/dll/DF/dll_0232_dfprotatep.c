@@ -37,7 +37,6 @@ extern void Obj_FreeObject(int obj);
 
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 extern u32 lbl_803E6450;
-extern u32 lbl_803E6454;
 typedef struct RingIdPair { u32 a; u32 b; } RingIdPair;
 extern f32 timeDelta;
 extern f32 lbl_803E6458;
@@ -191,19 +190,19 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
     float fdz;
     u32 convHi0;
     u32 convLo0;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    float savedF29Lo;
+    float savedF29Hi;
+    float savedF30Lo;
+    float savedF30Hi;
+    float savedF31Lo;
+    float savedF31Hi;
 
-    local_8 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
-    local_18 = (float)savedF30;
-    fStack_14 = (float)savedPs30;
-    local_28 = (float)savedF29;
-    fStack_24 = (float)savedPs29;
+    savedF31Lo = (float)savedF31;
+    savedF31Hi = (float)savedPs31;
+    savedF30Lo = (float)savedF30;
+    savedF30Hi = (float)savedPs30;
+    savedF29Lo = (float)savedF29;
+    savedF29Hi = (float)savedPs29;
     obj = FUN_80286838();
     state = ((GameObject *)obj)->extra;
     ref = FUN_80017a98();
@@ -525,9 +524,8 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
     {
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[0], obj, buf.rotation, angleStep);
-        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[1], obj, buf.rotation, angleStep);
-        handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING], obj, buf.rotation, angleStep);
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], obj, buf.rotation, angleStep);
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
 }
@@ -643,20 +641,20 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
-        for (i = 0, handles = (u32*)gSfxplayerEffectHandles; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        handles = (u32*)gSfxplayerEffectHandles;
+        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
-            if (handles[0] != 0)
+            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
             {
-                Obj_FreeObject(handles[0]);
+                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
             }
-            handles[0] = 0;
-            if (handles[1] != 0)
+            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
+            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
             {
-                Obj_FreeObject(handles[1]);
+                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
             }
-            handles[1] = 0;
+            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
             Sfx_PlayFromObject(obj, SFXPLAYER_TIMEOUT_RESET_SFX);
-            handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         }
     }
     gameTimerStop();

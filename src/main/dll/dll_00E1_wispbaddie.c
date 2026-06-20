@@ -77,7 +77,7 @@ extern f32 lbl_803E2714;
 extern f32 lbl_803E2718;
 extern f32 lbl_803E271C;
 extern f32 lbl_803E2720;
-extern f32 lbl_803E2740;
+extern const f32 lbl_803E2740;
 extern f32 lbl_803E2744;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E274C;
@@ -406,10 +406,10 @@ void FUN_8014fef8(u32 obj, int state, u32 param_3, int code)
 {
     if (code == 0x10)
     {
-        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
+        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
         return;
     }
-    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 8;
+    ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
     return;
 }
 
@@ -431,124 +431,124 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
                   u32 param_9, u32 param_10, u32 param_11, u32 param_12,
                   u32 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
-    u8 eventFlags;
-    float blendScale;
-    float blendTimer;
-    int eventTableIndex;
-    short* obj;
-    u32 eventIndex;
-    int state;
-    u8* eventRows;
-    float* row;
-    double scratch;
-    double blendScaleD;
-    u64 context;
+    u8 flags;
+    float animRate;
+    float fVar3;
+    int iVar4;
+    short* subObj;
+    u32 animIdx;
+    int obj;
+    u8* animTable;
+    float* animEntry;
+    double dVar10;
+    double rate;
+    u64 handle;
 
-    context = FUN_80286840();
-    blendTimer = lbl_803E33D8;
-    obj = (short*)((u64)context >> 0x20);
-    state = (int)context;
-    eventRows = (&PTR_DAT_8031fdc4)[(u32) * (u8*)(state + 0x33b) * 10];
-    if (((*(u32*)(state + 0x2dc) & 0x4000) != 0) ||
-        ((scratch = (double)*(float*)(state + 0x328), scratch != (double)lbl_803E33D8 &&
-            (*(short*)(state + 0x338) != 0))))
+    handle = FUN_80286840();
+    fVar3 = lbl_803E33D8;
+    subObj = (short*)((u64)handle >> 0x20);
+    obj = (int)handle;
+    animTable = (&PTR_DAT_8031fdc4)[(u32) * (u8*)(obj + 0x33b) * 10];
+    if (((*(u32*)(obj + 0x2dc) & 0x4000) != 0) ||
+        ((dVar10 = (double)*(float*)(obj + 0x328), dVar10 != (double)lbl_803E33D8 &&
+            (*(short*)(obj + 0x338) != 0))))
         goto LAB_80150818;
-    eventFlags = *(u8*)(state + 0x2f1);
-    eventIndex = eventFlags & 0x1f;
-    if ((eventFlags & 0x10) != 0)
+    flags = *(u8*)(obj + 0x2f1);
+    animIdx = flags & 0x1f;
+    if ((flags & 0x10) != 0)
     {
-        eventIndex = eventFlags & 0x17;
+        animIdx = flags & 0x17;
     }
-    if (0x18 < eventIndex)
+    if (0x18 < animIdx)
     {
-        eventIndex = 0;
+        animIdx = 0;
     }
-    blendScale = lbl_803E33E0;
-    if ((eventFlags & 0x20) != 0)
+    animRate = lbl_803E33E0;
+    if ((flags & 0x20) != 0)
     {
-        eventIndex = 0;
-        blendScale = lbl_803E33DC;
+        animIdx = 0;
+        animRate = lbl_803E33DC;
     }
-    blendScaleD = (double)blendScale;
+    rate = (double)animRate;
     if (((param_11 & 0xff) != 0) &&
-        ((((eventFlags != 0 ||
-                (scratch = (double)*(float*)(state + 0x324), scratch != (double)lbl_803E33D8)) &&
-            ((*(u32*)(state + 0x2dc) & 0x40) == 0)) && ((eventFlags & 0x20) == 0))))
+        ((((flags != 0 ||
+                (dVar10 = (double)*(float*)(obj + 0x324), dVar10 != (double)lbl_803E33D8)) &&
+            ((*(u32*)(obj + 0x2dc) & 0x40) == 0)) && ((flags & 0x20) == 0))))
     {
-        param_2 = (double)*(float*)(state + 0x324);
-        scratch = (double)lbl_803E33D8;
-        if (param_2 == scratch)
+        param_2 = (double)*(float*)(obj + 0x324);
+        dVar10 = (double)lbl_803E33D8;
+        if (param_2 == dVar10)
         {
-            eventTableIndex = (u32) * (u8*)(state + 0x33b) * 2;
-            eventIndex = randomGetRange((u32)(u8)(&DAT_8031feac)[eventTableIndex], (u32)(u8)(&DAT_8031fead)[eventTableIndex]);
-            *(float*)(state + 0x324) =
-                *(float*)(state + 0x334) +
-                (f32)(s32)(eventIndex);
-            *(float*)(state + 0x334) = lbl_803E33D8;
+            iVar4 = (u32) * (u8*)(obj + 0x33b) * 2;
+            animIdx = randomGetRange((u32)(u8)(&DAT_8031feac)[iVar4], (u32)(u8)(&DAT_8031fead)[iVar4]);
+            *(float*)(obj + 0x324) =
+                *(float*)(obj + 0x334) +
+                (f32)(s32)(animIdx);
+            *(float*)(obj + 0x334) = lbl_803E33D8;
             goto LAB_80150818;
         }
-        *(float*)(state + 0x324) = (float)(param_2 - (double)lbl_803DC074);
-        if (scratch < (double)*(float*)(state + 0x324)) goto LAB_80150818;
-        *(float*)(state + 0x324) = blendTimer;
+        *(float*)(obj + 0x324) = (float)(param_2 - (double)lbl_803DC074);
+        if (dVar10 < (double)*(float*)(obj + 0x324)) goto LAB_80150818;
+        *(float*)(obj + 0x324) = fVar3;
     }
-    if ((((((param_11 & 0xff) == 0) || (*(char*)(state + 0x2f1) == '\0')) ||
-            (eventRows[eventIndex * 0xc + 8] == '\0')) && ((*(u8*)(state + 0x2f1) & 0x20) == 0)) ||
-        ((*(u8*)(state + 0x33c) == eventIndex &&
-            (scratch = (double)lbl_803E33D8, scratch != (double)*(float*)(state + 0x32c)))))
+    if ((((((param_11 & 0xff) == 0) || (*(char*)(obj + 0x2f1) == '\0')) ||
+            (animTable[animIdx * 0xc + 8] == '\0')) && ((*(u8*)(obj + 0x2f1) & 0x20) == 0)) ||
+        ((*(u8*)(obj + 0x33c) == animIdx &&
+            (dVar10 = (double)lbl_803E33D8, dVar10 != (double)*(float*)(obj + 0x32c)))))
     {
-        if (*(float*)(state + 0x32c) != lbl_803E33D8)
+        if (*(float*)(obj + 0x32c) != lbl_803E33D8)
         {
-            scratch = (double)*(float*)(*(int*)(state + 0x29c) + 0x14);
-            FUN_8014d3d0(obj, state, 0xf, 0);
-            if (lbl_803E33E8 < *(float*)(state + 0x308))
+            dVar10 = (double)*(float*)(*(int*)(obj + 0x29c) + 0x14);
+            FUN_8014d3d0(subObj, obj, 0xf, 0);
+            if (lbl_803E33E8 < *(float*)(obj + 0x308))
             {
-                *(float*)(state + 0x308) = *(float*)(state + 0x308) - lbl_803E33EC;
+                *(float*)(obj + 0x308) = *(float*)(obj + 0x308) - lbl_803E33EC;
             }
-            if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0)
+            if ((*(u32*)(obj + 0x2dc) & 0x40000000) != 0)
             {
-                eventTableIndex = (u32) * (u8*)(state + 0x33c) * 0xc;
-                FUN_8014d4c8((double)*(float*)(eventRows + eventTableIndex), scratch, blendScaleD, param_4, param_5, param_6,
-                             param_7, param_8, (int)obj, state, (u32)(u8)eventRows[eventTableIndex + 8], 0,
-                             *(u32*)(eventRows + eventTableIndex + 4) & 0xff, param_14, param_15, param_16);
+                iVar4 = (u32) * (u8*)(obj + 0x33c) * 0xc;
+                FUN_8014d4c8((double)*(float*)(animTable + iVar4), dVar10, rate, param_4, param_5, param_6,
+                             param_7, param_8, (int)subObj, obj, (u32)(u8)animTable[iVar4 + 8], 0,
+                             *(u32*)(animTable + iVar4 + 4) & 0xff, param_14, param_15, param_16);
                 FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                                 (u32)(u8)eventRows[(u32) * (u8*)(state + 0x33c) * 0xc + 8]
-                             * 4), (int)obj
+                                 (u32)(u8)animTable[(u32) * (u8*)(obj + 0x33c) * 0xc + 8]
+                             * 4), (int)subObj
                 )
                 ;
             }
-            *(float*)(state + 0x32c) = *(float*)(state + 0x32c) - lbl_803DC074;
-            if (*(float*)(state + 0x32c) <= lbl_803E33D8)
+            *(float*)(obj + 0x32c) = *(float*)(obj + 0x32c) - lbl_803DC074;
+            if (*(float*)(obj + 0x32c) <= lbl_803E33D8)
             {
-                *(float*)(state + 0x32c) = lbl_803E33D8;
-                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & 0xffffffbf;
-                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
-                *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & 0x7f;
-                *(u8*)(state + 0x33c) = 0;
+                *(float*)(obj + 0x32c) = lbl_803E33D8;
+                *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) & 0xffffffbf;
+                *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) | 0x40000000;
+                *(u8*)(obj + 0x2f2) = *(u8*)(obj + 0x2f2) & 0x7f;
+                *(u8*)(obj + 0x33c) = 0;
             }
         }
     }
-    else if (((*(u32*)(state + 0x2dc) & 0x800080) == 0) && ((*(u8*)(state + 0x2f1) & 0x20) == 0))
+    else if (((*(u32*)(obj + 0x2dc) & 0x800080) == 0) && ((*(u8*)(obj + 0x2f1) & 0x20) == 0))
     {
-        if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0)
+        if ((*(u32*)(obj + 0x2dc) & 0x40000000) != 0)
         {
-            FUN_80151844(scratch, param_2, blendScaleD, param_4, param_5, param_6, param_7, param_8, obj, state);
+            FUN_80151844(dVar10, param_2, rate, param_4, param_5, param_6, param_7, param_8, subObj, obj);
         }
     }
     else
     {
-        row = (float*)(eventRows + eventIndex * 0xc);
-        blendTimer = lbl_803E33E4 * (float)(blendScaleD * (double)*row);
-        *(float*)(state + 0x330) = blendTimer;
-        *(float*)(state + 0x32c) = blendTimer;
-        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40;
-        *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) | 0x80;
-        *(u8*)(state + 0x2f3) = 0;
-        *(u8*)(state + 0x2f4) = 0;
-        FUN_8014d4c8((double)(float)(blendScaleD * (double)*row), param_2, blendScaleD, param_4, param_5, param_6,
-                     param_7, param_8, (int)obj, state, (u32) * (u8*)(row + 2), 0,
-                     (u32)row[1] & 0xff, param_14, param_15, param_16);
-        FUN_800305c4((double)*(float*)(&DAT_8031e980 + (u32) * (u8*)(row + 2) * 4), (int)obj);
-        *(char*)(state + 0x33c) = (char)eventIndex;
+        animEntry = (float*)(animTable + animIdx * 0xc);
+        fVar3 = lbl_803E33E4 * (float)(rate * (double)*animEntry);
+        *(float*)(obj + 0x330) = fVar3;
+        *(float*)(obj + 0x32c) = fVar3;
+        *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) | 0x40;
+        *(u8*)(obj + 0x2f2) = *(u8*)(obj + 0x2f2) | 0x80;
+        *(u8*)(obj + 0x2f3) = 0;
+        *(u8*)(obj + 0x2f4) = 0;
+        FUN_8014d4c8((double)(float)(rate * (double)*animEntry), param_2, rate, param_4, param_5, param_6,
+                     param_7, param_8, (int)subObj, obj, (u32) * (u8*)(animEntry + 2), 0,
+                     (u32)animEntry[1] & 0xff, param_14, param_15, param_16);
+        FUN_800305c4((double)*(float*)(&DAT_8031e980 + (u32) * (u8*)(animEntry + 2) * 4), (int)subObj);
+        *(char*)(obj + 0x33c) = (char)animIdx;
     }
 LAB_80150818:
     FUN_8028688c();
@@ -590,11 +590,11 @@ void fn_8014FEF8(int p1, int* p2, int p3, int code)
 {
     if (code == 0x10)
     {
-        *(u32*)((char*)p2 + 0x2e8) |= 0x20;
+        ((BaddieState*)p2)->reactionFlags |= 0x20;
     }
     else
     {
-        *(u32*)((char*)p2 + 0x2e8) |= 0x8;
+        ((BaddieState*)p2)->reactionFlags |= 0x8;
     }
 }
 
@@ -608,8 +608,8 @@ void fn_8014FF58(int unused, char* p)
 {
     f32 v1c;
     ((BaddieState*)p)->speedScale = lbl_803E2728;
-    *(u32*)(p + 0x2e4) = 1;
-    *(u32*)(p + 0x2e4) |= 0x80;
+    ((BaddieState*)p)->unk2E4 = 1;
+    ((BaddieState*)p)->unk2E4 |= 0x80;
     ((BaddieState*)p)->unk308 = lbl_803E272C;
     ((BaddieState*)p)->unk300 = lbl_803E2730;
     ((BaddieState*)p)->unk304 = lbl_803E2734;
@@ -645,7 +645,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     {
         return 0;
     }
-    if (*(f32*)(state + 0x328) != lbl_803E2740 && *(u16*)(state + 0x338) != 0)
+    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2740 && *(u16*)(state + 0x338) != 0)
     {
         return 0;
     }
@@ -746,7 +746,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
                 (ObjAnimComponent*)obj);
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= lbl_803E2740)
+        if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
             ((BaddieState*)state)->controlFlags =

@@ -19,7 +19,7 @@ typedef struct BackpackState {
     u8 unk274[0x278 - 0x274];
     u8 phase;
     u8 unk279;
-    u8 unk27A;
+    u8 flags;
     u8 unk27B[0x27C - 0x27B];
     s16 unk27C;
     s16 unk27E;
@@ -43,7 +43,7 @@ STATIC_ASSERT(offsetof(BackpackState, targetScale) == 0x26C);
 STATIC_ASSERT(offsetof(BackpackState, growRate) == 0x270);
 STATIC_ASSERT(offsetof(BackpackState, phase) == 0x278);
 STATIC_ASSERT(offsetof(BackpackState, unk279) == 0x279);
-STATIC_ASSERT(offsetof(BackpackState, unk27A) == 0x27A);
+STATIC_ASSERT(offsetof(BackpackState, flags) == 0x27A);
 STATIC_ASSERT(offsetof(BackpackState, unk27C) == 0x27C);
 STATIC_ASSERT(offsetof(BackpackState, unk284) == 0x284);
 STATIC_ASSERT(offsetof(BackpackState, unk288) == 0x288);

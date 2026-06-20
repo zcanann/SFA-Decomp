@@ -92,8 +92,9 @@ void fn_801923F8(int* cfgArg)
     int colorSrcIdx;
     int colorIdx;
     int phaseIdx;
-    f32 waveScale;
+    f32 a;
     f32 waveDivisor;
+    f32 waveScale;
     f32 z;
     WaveAnimatorState* cfg = (WaveAnimatorState*)cfgArg;
 
@@ -118,8 +119,9 @@ void fn_801923F8(int* cfgArg)
         for (j = 0; j < cfg->period; j++)
         {
             f32 s1 = mathSinf((waveScale * y) / waveDivisor);
-            f32 a = cfg->ampY * s1;
-            f32 s2 = mathSinf(xv / waveDivisor);
+            f32 s2;
+            a = cfg->ampY * s1;
+            s2 = mathSinf(xv / waveDivisor);
             ((f32*)lbl_803DDAF4)[heightIdx] = cfg->ampX * s2 + a;
             if (((f32*)lbl_803DDAF4)[heightIdx] < cfg->minHeight)
             {
@@ -136,8 +138,8 @@ void fn_801923F8(int* cfgArg)
     }
 
     {
-        f32 negMin = -cfg->minHeight;
         f32 colorSplitZero;
+        f32 negMin = -cfg->minHeight;
         colorSrcIdx = 0;
         colorIdx = 0;
         colorSplitZero = lbl_803E3F44;

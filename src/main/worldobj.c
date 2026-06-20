@@ -174,7 +174,7 @@ void worldobj_init(int obj, int arg)
         state->scale = lbl_803E6668 * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4
         )
-        +lbl_803E6668;
+        +*(f32*)&lbl_803E6668;
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * state->scale;
         state->spinXStep = randomGetRange(0xa, 0x19);
         if (randomGetRange(0, 1) != 0)
@@ -189,7 +189,7 @@ void worldobj_init(int obj, int arg)
         state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)
         randomGetRange(0, 0x64) / lbl_803E66B4
         )
-        +lbl_803E66CC
+        +*(f32*)&lbl_803E66CC
         )
         ;
         state->light = objCreateLight(obj, 1);
@@ -209,6 +209,10 @@ void worldobj_init(int obj, int arg)
     case 0x5e3:
         state->controlByte = 0;
         state->spinZStep = 0;
+        break;
+    case 0x5dc:
+        break;
+    case 0x5f4:
         break;
     case 0x5e2:
         idx = setup->variant;
@@ -255,7 +259,7 @@ void worldobj_init(int obj, int arg)
         state->lookAtTargetRef = 0x4ab03;
         state->attachChildObjectId = 0x4ab09;
         break;
-    case 0x5d8:
+    case 0x5d9:
         state->lookAtTargetRef = 0x4ab04;
         state->attachChildObjectId = 0x4ab0a;
         break;
@@ -491,9 +495,9 @@ void worldobj_update(int obj)
                 dz /= dist;
             }
             sv = lbl_803E66A8;
-            *(f32*)(state->lookAtTargetRef + 0xc) = sv * dx + ((GameObject*)obj)->anim.localPosX;
-            *(f32*)(state->lookAtTargetRef + 0x10) = sv * dy + ((GameObject*)obj)->anim.localPosY;
-            *(f32*)(state->lookAtTargetRef + 0x14) = sv * dz + ((GameObject*)obj)->anim.localPosZ;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosX = sv * dx + ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosY = sv * dy + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)state->lookAtTargetRef)->anim.localPosZ = sv * dz + ((GameObject*)obj)->anim.localPosZ;
         }
         if (state->effectState != 0)
         {

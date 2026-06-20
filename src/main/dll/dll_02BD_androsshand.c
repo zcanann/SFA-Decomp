@@ -147,14 +147,14 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[0];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_EXIT:
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[4];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[4];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -166,7 +166,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[5];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[5];
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -178,7 +178,7 @@ void androsshand_update(int obj)
         {
             state->soundGate = 0;
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[1];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[1];
         }
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -218,7 +218,7 @@ void androsshand_update(int obj)
         {
             state->soundGate = 0;
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[2];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[2];
         }
         if (state->sideFlag != 0 && ((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -272,7 +272,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[3];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[3];
             state->shotTimer = -1;
         }
         state->shotTimer -= framesThisStep;
@@ -301,7 +301,7 @@ void androsshand_update(int obj)
         if (changed)
         {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E75AC, 0);
-            *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = gAndrossHandMoveAnimSpeeds[0];
+            ((GameObject*)((GameObject*)obj)->extra)->anim.localPosZ = gAndrossHandMoveAnimSpeeds[0];
         }
         break;
     case ANDROSSHAND_STATE_DEAD:

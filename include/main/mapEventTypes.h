@@ -15,7 +15,7 @@ typedef struct MapEventInterface {
     u8 (*getMapAct)(s32 mapId);
     void (*setMapAct)(int mapId, int act);
     void (*setMapActLut)(int value, int idx);
-    int (*getObjGroupStatus)(int mapId, int shift);
+    u8 (*getObjGroupStatus)(int mapId, int shift);
     void (*setObjGroupStatus)(int mapId, int shift, int value);
     u16 (*getMapObjGroupBit)(int mapId);
     void (*updateObjGroups)(int mapId);

@@ -289,7 +289,6 @@ int mmCreateMemoryStore(int size)
 {
     char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
     MmStore* store;
-    void** p;
     int i = 0;
     if (size <= 0)
     {
@@ -326,15 +325,13 @@ int mmCreateMemoryStore(int size)
         return 0;
     }
     store->bufCur = store->buf;
-    p = gMmStoreArray;
     while (i < 0x20)
     {
-        if (*p == NULL)
+        if (gMmStoreArray[i] == NULL)
         {
             gMmStoreArray[i] = store;
             break;
         }
-        p++;
         if (++i == 0x20)
         {
             void* buf;
@@ -573,13 +570,12 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     int* found;
     int i;
     int avail;
+    p = gMmStoreArray;
     found = NULL;
     i = 0;
-    p = gMmStoreArray;
     while (i < 0x20)
     {
-        int* store = (int*)*p;
-        if (store != NULL && handle == store[3])
+        if (*p != NULL && handle == ((int*)*p)[3])
         {
             found = gMmStoreArray[i];
             break;

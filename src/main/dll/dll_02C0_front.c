@@ -551,6 +551,7 @@ void titlescreen_update(u8* obj)
 
 
     u8* state = ((GameObject*)obj)->extra;
+    int objHandle = (int)obj;
     s16 t;
     u8 c;
     int evt;
@@ -572,13 +573,13 @@ void titlescreen_update(u8* obj)
             if (((GameObject*)obj)->anim.seqId == 0x77d || ((GameObject*)obj)->anim.seqId == 0x780)
             {
                 state[0x30] = 3;
-                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2318, 0);
+                ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E2318, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[3];
             }
             else
             {
                 state[0x30] = 0;
-                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
@@ -586,7 +587,7 @@ void titlescreen_update(u8* obj)
             (c = state[0x30]) != 1 && c != 2 && c != 5)
         {
             state[0x30] = 1;
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E22F8, 0);
             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1];
             if (((GameObject*)obj)->anim.seqId == 0x77e)
             {
@@ -598,7 +599,7 @@ void titlescreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x7a7)
         {
-            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * obj;
+            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * (s16*)obj;
         }
         else if (t != 0x78a)
         {
@@ -619,19 +620,19 @@ void titlescreen_update(u8* obj)
             {
                 f = ((TrickyState*)state)->moveProgress;
             }
-            evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, (int)obj, (ObjAnimEventList*)buf);
+            evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, objHandle, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
                 if ((s8)state[0x31] == lbl_803DD990 && state[0x30] == 1)
                 {
                     state[0x30] = 2;
-                    ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[2];
                 }
                 else if (state[0x30] == 3)
                 {
                     state[0x30] = 0;
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                    ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
                 }
                 else if (((GameObject*)obj)->anim.seqId >= 0x77d && ((GameObject*)obj)->anim.seqId < 0x781)
@@ -641,7 +642,7 @@ void titlescreen_update(u8* obj)
                         if ((c = state[0x30]) == 0 || c == 4)
                         {
                             state[0x30] = 4;
-                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(3, 4), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(objHandle, randomGetRange(3, 4), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
                                     currentMove];
@@ -649,7 +650,7 @@ void titlescreen_update(u8* obj)
                         else
                         {
                             state[0x30] = 5;
-                            ObjAnim_SetCurrentMove((int)obj, randomGetRange(5, 6), lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(objHandle, randomGetRange(5, 6), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
                                     currentMove];
@@ -661,14 +662,14 @@ void titlescreen_update(u8* obj)
                         if (c == 4)
                         {
                             state[0x30] = 0;
-                            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[0];
                         }
                         else if (c == 5)
                         {
                             state[0x30] = 2;
-                            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
+                            ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[2];
                         }
@@ -973,7 +974,7 @@ void creditsStart_(void)
 }
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
-extern s16 fn_80130124(void);
+extern u16 fn_80130124(void);
 extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
@@ -997,7 +998,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     int i;
     int r;
     u8 a;
-    s16 v;
+    u16 v;
     Texture* tex;
     int box;
     u8 idx;
@@ -1072,7 +1073,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         }
         while (i < 4);
     }
-    if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != -1)
+    if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
         if ((p2 & 0xff) == 0)

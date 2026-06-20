@@ -55,7 +55,7 @@ void fn_8013351C(void);
 
 
 extern void* Obj_GetPlayerObject(void);
-extern int Camera_GetViewportYOffset(void);
+extern s16 Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
@@ -626,8 +626,6 @@ int Minimap_update(void)
 
 u16 getMinimapY(void) { return lbl_803DD938; }
 
-int titlescreen_getExtraSize(void);
-void titlescreen_hitDetect(void);
 int titlescreen_getObjectTypeId(u8* obj);
 
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
@@ -874,8 +872,8 @@ void fn_8013396C(void)
                 gMinimapRadarInited = 1;
                 fn_80133818();
             }
-            held = getButtonsHeld(0);
-            pressed = getButtonsJustPressed(0);
+            held = (u16)getButtonsHeld(0);
+            pressed = (u16)getButtonsJustPressed(0);
             if ((held & 0xc) == 0)
             {
                 if ((pressed & 1) != 0)
@@ -979,16 +977,17 @@ void fn_8013396C(void)
                     slot = Camera_GetCurrentViewSlot();
                     a = getAngle(*(f32*)(lbl_803DD934 + 0xc) - ((GameObject*)player)->anim.localPosX,
                                  *(f32*)(lbl_803DD934 + 0x14) - ((GameObject*)player)->anim.localPosZ);
-                    d = *slot + a - (u16) * (s16*)((char*)lbl_803DBBC8[1] + 4);
+                    a = *slot + a;
+                    d = a - (u16) * (s16*)((char*)lbl_803DBBC8[1] + 4);
                     if (d > 0x8000)
                     {
-                        d -= 0xffff;
+                        d = (d - 0x10000) + 1;
                     }
                     if (d < -0x8000)
                     {
                         d += 0xffff;
                     }
-                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)((char*)lbl_803DBBC8[1] + 4) + d / 5;
+                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + d / 5;
                 }
                 break;
             case 2:
@@ -1000,13 +999,14 @@ void fn_8013396C(void)
                 v2 = lbl_803DBA6E;
                 if (v2 != gMinimapPrevAreaNameId)
                 {
-                    if (v2 == -1)
+                    switch (v2)
                     {
+                    case -1:
                         sfx = 0x3ef;
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         sfx = 0x3ee;
+                        break;
                     }
                 }
                 gMinimapPrevAreaNameId = v2;

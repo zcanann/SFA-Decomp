@@ -49,12 +49,12 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     int count;
     int index;
     s8 groupIndex;
-    s8 matchCount;
     int linkedEventPending;
+    s8 matchCount;
 
-    linkedEventPending = 0;
-    groupIndex = -1;
     matchCount = 0;
+    groupIndex = -1;
+    linkedEventPending = 0;
     linkedConfigRow = gSHthorntailDataTables[0];
     if (obj->config->configToken == linkedConfigRow[0])
     {

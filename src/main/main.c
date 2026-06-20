@@ -224,12 +224,11 @@ void vfplavastar_release(void)
 
 int fn_801FD4A8(void* obj, int x)
 {
-    u8* extra = ((GameObject*)obj)->extra;
+    s8* extra = (s8*)((GameObject*)obj)->extra;
     if (extra != NULL)
     {
-        s8 v = extra[4] - x;
-        extra[4] = v;
-        return *(s8*)(extra + 4) <= 0 ? 1 : 0;
+        extra[4] -= x;
+        return extra[4] <= 0 ? 1 : 0;
     }
     return 0;
 }
@@ -348,7 +347,7 @@ void fn_801FD6B4(int obj)
     }
     gVfpLavaPoolWaveSin = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E617C * *(f32*)(extra + 8) + lbl_803E6180 * *(f32*)(extra + 8) *
-        gVfpLavaPoolWaveSin;
+        *(volatile f32*)&gVfpLavaPoolWaveSin;
     c = *(f32*)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188)
     {

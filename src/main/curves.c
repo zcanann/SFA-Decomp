@@ -249,9 +249,9 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                     {
                         curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
                     }
-                    curve->t = lbl_803DE658;
+                    curve->t = zero;
                     curve->segmentDistance = -lengths[1];
-                    curve->pathDistance = lbl_803DE658;
+                    curve->pathDistance = zero;
                     curve->idx = 0;
                     return 1;
                 }

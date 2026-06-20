@@ -96,7 +96,7 @@ void fn_801540A0(int obj, void* pp)
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
     {
-        fn_8014CF7C(obj, p, *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0xc), *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0x14), 0x3c, 0);
+        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 0x3c, 0);
     }
     else
     {
@@ -122,7 +122,7 @@ void fn_801540A0(int obj, void* pp)
         (Baddie_SetMove(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(p + 0x328)))
     {
         *(f32*)(p + 0x328) = lbl_803E2974;
-        fn_8014CF7C(obj, p, *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0xc), *(f32*)(*(int*)&((BaddieState*)p)->trackedObj + 0x14), 1, 0);
+        fn_8014CF7C(obj, p, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosX, ((GameObject*)((BaddieState*)p)->trackedObj)->anim.localPosZ, 1, 0);
         Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)p)->spawnRotY;
@@ -230,11 +230,13 @@ void fn_80154328(int obj, int p)
             ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.velocityZ
             * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
         {
-            Sfx_PlayAtPositionFromObject(stk.pos[0], stk.pos[1], stk.pos[2], obj, SFXstaff_proj_putaway);
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(
+                obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
         }
     }
 }
 
+#pragma optimization_level 1
 void fn_801544E8(int obj, u8* state, int p3, int p4)
 {
     if (p4 == 17 || p4 == 16) return;
@@ -251,6 +253,7 @@ void fn_801544E8(int obj, u8* state, int p3, int p4)
         *(int*)&((BaddieState*)state)->reactionFlags |= 16;
     }
 }
+#pragma optimization_level reset
 
 void fn_801542AC(int unused, u8* state)
 {

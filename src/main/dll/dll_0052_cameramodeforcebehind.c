@@ -84,7 +84,7 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
     f32 dx, dz;
 
     {
-        int a = target->anim.rotX;
+        s16 a = target->anim.rotX;
         angle = gCamForceBehindPi * a / gCamForceBehindBamsToRadDivisor;
     }
     cosv = mathSinf(angle);

@@ -134,7 +134,7 @@ void largecrate_updateConveyorSlide(int obj, int def)
     else
     {
         oldVel = ((GameObject*)obj)->anim.velocityX;
-        sum = *(s16*)(*(int*)&((GameObject*)obj)->anim.parent + 0x4) + ((LargeCrateState*)def)->slideOffset;
+        sum = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ + ((LargeCrateState*)def)->slideOffset;
         ((GameObject*)obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
         if ((oldVel <= 0.0f && ((GameObject*)obj)->anim.velocityX >= 0.0f) ||
             (oldVel >= 0.0f && ((GameObject*)obj)->anim.velocityX <= 0.0f))
@@ -352,8 +352,8 @@ int largecrate_spawnDropContents(int obj, int player, int state)
         *(s16*)(setup + 0x24) = -1;
         newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                  *(int*)&((GameObject*)obj)->anim.parent);
-        (**(void (**)(f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
-            lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
+        (**(void (**)(int, f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
+            (int)newObj, lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
     case 7:
     case 8:

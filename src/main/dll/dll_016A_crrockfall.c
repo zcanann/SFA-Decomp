@@ -266,9 +266,7 @@ void crrockfall_update(int* obj)
                     }
                     if (cond != 0)
                     {
-                        s16 timer = state->fallDelay - framesThisStep;
-                        state->fallDelay = timer;
-                        if (timer <= 0)
+                        if ((state->fallDelay -= framesThisStep) <= 0)
                         {
                             state->mode = 1;
                         }

@@ -63,7 +63,7 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
-extern f32 lbl_803E23E8;
+extern const f32 lbl_803E23E8;
 extern void Obj_FreeObject(u8* obj);
 extern f32 gDebugInitialScale;
 extern f32 gDebugScaleX;
@@ -109,7 +109,7 @@ extern f32 lbl_803E23F0;
 extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E240C;
-extern f32 lbl_803E2418;
+extern const f32 lbl_803E2418;
 extern f32 getXZDistance(f32* a, f32* b);
 extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
 extern int dll_19_func1B(int p);
@@ -189,10 +189,8 @@ s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject*)obj)->extra + 0x
 void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)&((GameObject*)obj)->extra + 0x408); }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
-int titlescreen_getExtraSize(void);
 
 /* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
-void titlescreen_hitDetect(void);
 
 int titlescreen_getObjectTypeId(u8* obj);
 
@@ -306,7 +304,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            ((TrickyState*)state)->stateFlags &= ~0x400LL;
+            ((TrickyState*)state)->stateFlags &= ~0x400;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
@@ -605,14 +603,14 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
             v1 == 0 &&
             v2 != 0)
         {
-            if (*(s16*)(*objs + 0x46) != 2129)
+            if (((GameObject*)*objs)->anim.seqId != 2129)
             {
                 if ((*gMapEventInterface)->shouldNotSaveTime(
                     *(int*)((char*)data + 0x14)) != 0)
                 {
                     if (p2 == 0)
                     {
-                        s16 m = *(s16*)(*objs + 0x46);
+                        s16 m = ((GameObject*)*objs)->anim.seqId;
                         if (m == 1022 || m == 1239 || m == 636 || m == 593) goto next;
                     }
                     {
@@ -743,7 +741,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
             *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
                 *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
-            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < lbl_803E23DC)
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < *(f32*)&lbl_803E23DC)
             {
                 *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
                     *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
@@ -1217,6 +1215,7 @@ int fn_80136E00(int p1, u8* p)
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
 #pragma ppc_unroll_speculative off
+#pragma opt_strength_reduction off
 void fn_80137DF8(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
@@ -1448,9 +1447,18 @@ void fn_80137DF8(void)
             col = x;
             for (; x < 0x280; x++)
             {
-                for (row = 0; row < 0x96000; row += 0x500)
+                row = 0;
+                for (n = 0; n < 60; n++)
                 {
-                    *(u16*)(col + debugDrawFrameBuffer + row) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
+                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                    row += 0x2800;
                 }
                 col += 2;
             }
@@ -1466,6 +1474,7 @@ void fn_80137DF8(void)
         }
     }
 }
+#pragma opt_strength_reduction on
 #pragma ppc_unroll_speculative on
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log

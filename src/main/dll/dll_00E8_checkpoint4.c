@@ -235,6 +235,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     Checkpoint4State* state;
     Checkpoint4MatrixBuildTransform transform;
     f32 matrix[16];
+    extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ); /* #57 */
 
     state = checkpoint->state;
     radius = (f32)(int)placement->radius;
@@ -253,7 +254,7 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     transform.y = lbl_803E342C;
     transform.z = lbl_803E342C;
     setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(matrix, (double)lbl_803E342C, (double)lbl_803E342C, (double)lbl_803E3420,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 1.0f,
                           &state->planeNormalX, &state->planeNormalY, &state->planeNormalZ);
     yy = checkpoint->objAnim.localPosY * state->planeNormalY;
     state->planeDistance =
@@ -348,7 +349,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 

@@ -180,7 +180,7 @@ typedef struct SideloadPlacement
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    s16 unk18; /* 0x18: arming game bit */
+    s16 armGameBit; /* 0x18: arming game bit */
     u8 unk1A;
     u8 pad1B[0x3C - 0x1B];
     s16 unk3C;
@@ -260,7 +260,7 @@ void sideload_update(int self)
 
     state = *(int*)&((GameObject*)self)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
-        (getTrickyObject() == 0) && (GameBit_Get((int)((SideloadPlacement*)state)->unk18) != 0))
+        (getTrickyObject() == 0) && (GameBit_Get((int)((SideloadPlacement*)state)->armGameBit) != 0))
     {
         obj = Obj_AllocObjectSetup(0x18, 0x24);
         *(u8*)((char*)obj + 4) = 2;
@@ -325,7 +325,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 

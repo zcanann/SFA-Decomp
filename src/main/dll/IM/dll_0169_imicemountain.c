@@ -143,7 +143,8 @@ void imicemountain_init(int* obj)
         GameBit_Set(0x37c, 0);
         MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
         break;
-    case 5:
+    case 3:
+    case 4:
         break;
     }
 }
@@ -314,7 +315,8 @@ void imicemountain_update(int* obj)
             fn_801AC01C(obj);
         }
         break;
-    case 5:
+    case 3:
+    case 4:
         break;
     }
     extra->latchFlags &= ~1;

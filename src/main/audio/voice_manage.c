@@ -65,8 +65,8 @@ void voiceInitPriorityTables(void)
         voicePriorityGroupHeads[i] = 0xff;
     }
     voicePrioSortRootListRoot = 0xffff;
-    voiceMusicRunning = 0;
     voiceFxRunning = 0;
+    voiceMusicRunning = 0;
 }
 
 /*

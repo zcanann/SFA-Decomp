@@ -11,11 +11,11 @@
  */
 typedef struct TrickyCurveObjState {
     u8 unk0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
+    s16 rangeZ;
+    s16 rangeY;
     s16 unk6;
-    s16 unk8;
-    s16 unkA;
+    s16 gateGameBit;
+    s16 triggerGameBit;
     u8 unkC[0x10 - 0xC];
 } TrickyCurveObjState;
 

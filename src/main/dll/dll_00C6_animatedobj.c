@@ -772,7 +772,7 @@ void FUN_80170048(void)
     packed = FUN_80286838();
     obj = (u32)((u64)packed >> 0x20);
     scaleTbl = (float*)&DAT_80321678;
-    state = *(int**)(obj + 0xb8);
+    state = *(int**)&((GameObject*)obj)->extra;
     iTmp = FUN_80017a98();
     handle = 0;
     if (iTmp != 0)
@@ -1707,7 +1707,7 @@ void animatedobj_update(int* obj)
                 if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10)
                 {
                     ObjSeqState* otherSeq = *(ObjSeqState**)&((GameObject*)other)->extra;
-                    if (slot == otherSeq->slot)
+                    if (slot == (s8)otherSeq->slot)
                     {
                         cnt++;
                     }

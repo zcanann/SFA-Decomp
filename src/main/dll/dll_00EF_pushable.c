@@ -1,4 +1,4 @@
-/* DLL 0xEF — pushable object [80174A80-801755CC) */
+/* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -499,7 +499,7 @@ typedef struct PushableObjectDef
     s16 gameBit;
     s16 unk1A;
     void* unk1C;
-    s16 unk20;
+    u16 unk20;
     u8 unk22;
     u8 unk23;
     u8 pad24[0x28 - 0x24];
@@ -519,13 +519,13 @@ FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    int iVar1;
+    int actionId;
 
     if (((*(char*)(*(int*)(param_9 + 0x4c) + 0x1d) != '\x02') &&
             (animUpdate->triggerCommand == 1)) &&
-        (iVar1 = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < iVar1))
+        (actionId = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < actionId))
     {
-        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
+        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, actionId, '\x01',
                      animUpdate, param_12, param_13, param_14, param_15, param_16);
         animUpdate->triggerCommand = 0;
     }
@@ -543,11 +543,11 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9,
              int param_10)
 {
-    float fVar1;
-    short* psVar2;
-    u32 uVar3;
-    int iVar4;
-    float* pfVar5;
+    float scale;
+    short* src;
+    u32 result;
+    int indexBase;
+    float* srcPos;
     u16 setupId;
     short setupSub1;
     short setupSub2;
@@ -556,9 +556,9 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     float local_18;
     float local_14;
 
-    psVar2 = (short*)FUN_80017a90();
+    src = (short*)FUN_80017a90();
     local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != 0x0))
+    if ((*(char*)(param_10 + 0x10) == '\0') && (src != 0x0))
     {
         *(float*)(param_9 + 0x24) = lbl_803E42B0;
         *(float*)(param_9 + 0x28) = local_1c;
@@ -566,23 +566,23 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         local_18 = local_1c;
         local_14 = local_1c;
         local_20 = lbl_803E42B8;
-        setupSub2 = psVar2[2];
-        setupSub1 = psVar2[1];
-        iVar4 = FUN_801365ac((int)psVar2);
-        setupId = *psVar2 + iVar4;
+        setupSub2 = src[2];
+        setupSub1 = src[1];
+        indexBase = FUN_801365ac((int)src);
+        setupId = *src + indexBase;
         FUN_80017748(&setupId, (float*)(param_9 + 0x24));
-        if ((psVar2[0x58] & 0x800U) == 0)
+        if ((src[0x58] & 0x800U) == 0)
         {
-            pfVar5 = (float*)(psVar2 + 6);
+            srcPos = (float*)(src + 6);
         }
         else
         {
-            pfVar5 = (float*)FUN_801365b8((int)psVar2);
+            srcPos = (float*)FUN_801365b8((int)src);
         }
-        fVar1 = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *pfVar5);
-        *(float*)(param_10 + 8) = -(fVar1 * *(float*)(param_9 + 0x28) - pfVar5[1]);
-        *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
+        scale = lbl_803E42BC;
+        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *srcPos);
+        *(float*)(param_10 + 8) = -(scale * *(float*)(param_9 + 0x28) - srcPos[1]);
+        *(float*)(param_10 + 0xc) = -(scale * *(float*)(param_9 + 0x2c) - srcPos[2]);
         if (*(char*)(param_10 + 0x11) == '\0')
         {
             ObjHits_ClearHitVolumes((int)param_9);
@@ -591,14 +591,14 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             *(char*)(param_10 + 0x11) = *(char*)(param_10 + 0x11) + -1;
         }
-        uVar3 = 1;
+        result = 1;
     }
     else
     {
         FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-        uVar3 = 0;
+        result = 0;
     }
-    return uVar3;
+    return result;
 }
 
 #pragma scheduling off
@@ -770,9 +770,12 @@ void pushable_init(s16* obj, char* def)
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
-    state->timer_0x14 = lbl_803E3528;
-    state->gameBit = ((PushableObjectDef*)def)->gameBit;
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
+    {
+        f32 z0 = lbl_803E3528;
+        state->timer_0x14 = z0;
+        state->gameBit = ((PushableObjectDef*)def)->gameBit;
+        ObjAnim_SetCurrentMove((int)obj, 0, z0, 0);
+    }
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject((u32)obj);
     {
@@ -792,7 +795,7 @@ void pushable_init(s16* obj, char* def)
             {
                 int found = 0;
                 int j = 0;
-                u8 cnt = *(u8*)&state->pointCount;
+                s8 cnt = *(s8*)&state->pointCount;
                 f32 vx = vtx[0];
                 f32 vz = vtx[2];
 
@@ -1021,13 +1024,13 @@ void pushable_hitDetect(int* obj)
             vec.dir[1] = 0;
             vec.dir[2] = 0;
             vec.pos[0] = lbl_803E3588;
-            vec.pos[1] = lbl_803E3528;
-            vec.pos[2] = lbl_803E3528;
-            vec.pos[3] = lbl_803E3528;
+            vec.pos[1] = 0.0f;
+            vec.pos[2] = 0.0f;
+            vec.pos[3] = 0.0f;
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
-                                  &((GameObject*)obj)->anim.velocityX, &tmpY, &((GameObject*)obj)->anim.velocityZ);
-            objMove(obj, ((GameObject*)obj)->anim.velocityX, lbl_803E3528, ((GameObject*)obj)->anim.velocityZ);
+                                  (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
+            objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, state);
@@ -1235,8 +1238,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     start[0] = ((GameObject*)tgt)->anim.localPosX;
     start[1] = lbl_803E359C + ((GameObject*)tgt)->anim.localPosY;
     start[2] = ((GameObject*)tgt)->anim.localPosZ;
-    pp = &params;
-    pp->r[0] = lbl_803E35A0;
+    (pp = &params)->r[0] = lbl_803E35A0;
     pp->b10 = -1;
     pp->b14 = 3;
     pp->h2c = 0;
@@ -1363,19 +1365,23 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         state->moveFlags.b7 = 1;
         objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
         Obj_BuildTransformMatrices(obj);
-        w = wpos;
-        e2 = (f32*)state;
-        d = deltas;
-        for (i = 0; i < state->pointCount; i++)
         {
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
-                                           *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
-            d[0] = ((GameObject*)obj)->anim.localPosX - w[0];
-            d[1] = ((GameObject*)obj)->anim.localPosY - w[1];
-            d[2] = ((GameObject*)obj)->anim.localPosZ - w[2];
-            w += 3;
-            e2 = (f32*)((char*)e2 + 0xc);
-            d += 3;
+            int j;
+            j = 0;
+            w = wpos;
+            e2 = (f32*)state;
+            d = deltas;
+            for (; j < state->pointCount; j++)
+            {
+                Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
+                                               *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
+                d[0] = ((GameObject*)obj)->anim.localPosX - w[0];
+                d[1] = ((GameObject*)obj)->anim.localPosY - w[1];
+                d[2] = ((GameObject*)obj)->anim.localPosZ - w[2];
+                w += 3;
+                e2 = (f32*)((char*)e2 + 0xc);
+                d += 3;
+            }
         }
         if ((state->flags & 4) == 0)
         {
@@ -1424,10 +1430,12 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     else
     {
+        int j;
         char* mi = *(char**)((char*)obj + 0x58);
         f32* mtx2 = (f32*)(mi + ((*(u8*)(mi + 0x10c) + 2) << 4) * 4);
+        j = 0;
         e2 = (f32*)state;
-        for (i = 0; i < state->pointCount; i++)
+        for (; j < state->pointCount; j++)
         {
             Matrix_TransformPoint(mtx2, *(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
                                   *(f32*)((char*)e2 + 0x20), (f32*)((char*)e2 + 0x78),
@@ -1457,7 +1465,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         {
             ret = 5;
         }
-        state->flags = fl & ~0xf00;
+        state->flags = *(u16*)((u8*)state + 0x100) & ~0xf00;
     }
     return ret;
 }

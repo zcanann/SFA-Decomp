@@ -61,21 +61,21 @@ void effectbox_hitDetect(void)
 
 void effectbox_update(int obj)
 {
+    int* list;
     int def;
     int single;
     int count;
-    int* list;
     int i;
     int other;
     f32 cosY;
     f32 sinY;
     f32 cosX;
     f32 sinX;
+    f32 negExtX;
+    f32 negExtZ;
     f32 extX;
     f32 extY;
     f32 extZ;
-    f32 negExtX;
-    f32 negExtZ;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -95,7 +95,7 @@ void effectbox_update(int obj)
         extZ = (f32)((EffectboxPlacement*)def)->extentZ;
         switch (((EffectboxPlacement*)def)->targetMode)
         {
-        case 1:
+        case 0:
             single = (int)Obj_GetPlayerObject();
             if (single == 0u)
             {
@@ -104,7 +104,7 @@ void effectbox_update(int obj)
             list = &single;
             count = 1;
             break;
-        case 0:
+        case 1:
             single = (int)getTrickyObject();
             if (single == 0u)
             {

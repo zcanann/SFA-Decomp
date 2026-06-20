@@ -537,6 +537,9 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             }
             switch (ch)
             {
+            case 0xf8f4:
+                scale = params[0] * lbl_803DE708;
+                break;
             case 0xf8f7:
                 glyphLang = params[0];
                 tbl = &lbl_802C8680[glyphLang * 16];
@@ -553,9 +556,6 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
                         *outMaxH = mH;
                     }
                 }
-                break;
-            case 0xf8f4:
-                scale = params[0] * lbl_803DE708;
                 break;
             }
             continue;
@@ -630,7 +630,7 @@ void translateToDinoLanguage(u8* str)
             }
             if (base != 0)
             {
-                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
+                *p = sGameTextGlyphOrder[ch - base] + (base - 0x61);
             }
         }
         byteOff += charLen;
@@ -776,7 +776,6 @@ void* gameTextGet(int textId)
     int count;
     int slotIndex;
     u16* cachedEntry;
-    u16* prevCachedEntry;
     f32 zero;
     f32 fadeLimit;
     f32* cachedAlpha;
@@ -830,15 +829,8 @@ void* gameTextGet(int textId)
 
     slotIndex = 8;
     cachedEntry = (u16*)(gameTextBase + 0xa0);
-    while (1)
+    while (cachedEntry -= 6, slotIndex-- != 0)
     {
-        prevCachedEntry = cachedEntry;
-        cachedEntry = prevCachedEntry - 6;
-        if (slotIndex == 0)
-        {
-            break;
-        }
-        slotIndex--;
         if (*cachedEntry == textId)
         {
             zero = lbl_803DE704;
@@ -847,8 +839,9 @@ void* gameTextGet(int textId)
             fadeLimit = gGameTextFadeLimit;
             if (zero < fadeLimit)
             {
-                *cachedAlpha = zero + timeDelta;
-                if (*cachedAlpha >= fadeLimit)
+                f32 av = zero + timeDelta;
+                *cachedAlpha = av;
+                if (av >= fadeLimit)
                 {
                     sprintf((char*)*(int*)*(int**)((u8*)cachedEntry + 8), strings + 0xefc, textId,
                             sMapDirectoryNameTable[(int)curGameTextDir]);
@@ -989,7 +982,6 @@ void gameTextInit(void)
     gameTextLoadDir(0x1c);
 }
 
-void mm_free(void* p);
 
 extern void subtitleFn_8001b700(void);
 extern int gSubtitlesEnabled;
@@ -1303,6 +1295,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
+#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
@@ -1324,12 +1317,13 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->fc = y;
     }
 }
+#pragma optimization_level reset
 
 extern void* gSubtitleBoxTextures[];
 extern void* gSubtitleLineTable[];
 extern int gSubtitleBlockCount;
 
-#pragma peephole on
+#pragma peephole off
 #pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
 {
@@ -1373,14 +1367,13 @@ void subtitleFn_8001b700(void)
         slot = gSubtitleLineTable;
         while (i < gSubtitleBlockCount)
         {
-            if (*slot != NULL)
+            if (slot[i] != NULL)
             {
                 oldDelay = mmSetFreeDelay(0);
-                mm_free(*slot);
+                mm_free(slot[i]);
                 mmSetFreeDelay(oldDelay);
-                *slot = NULL;
+                slot[i] = NULL;
             }
-            slot++;
             i++;
         }
 
@@ -1733,22 +1726,28 @@ void gameTextRun(void)
 
     zero = lbl_803DE704;
     fadeLimit = gGameTextFadeLimit;
-    for (i = 7; i >= 0; i--)
     {
-        f32* alpha = (f32*)(gameTextBase + 0x20 + i * 4);
-        f32* timer = (f32*)(gameTextBase + 0x40 + i * 4);
-        u8* entry = gameTextBase + 0xa0 + i * 0xc;
-
-        if ((double)*timer > zero)
+        f32* timer = (f32*)(gameTextBase + 0x40);
+        f32* alpha = (f32*)(gameTextBase + 0x20);
+        u8* entry = gameTextBase + 0xa0;
+        i = 8;
+        do
         {
-            *alpha += timeDelta;
-            if ((double)*alpha > fadeLimit)
+            if ((double)*timer > zero)
             {
-                *timer = zero;
-                *alpha = zero;
-                sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                *alpha += timeDelta;
+                if ((double)*alpha > fadeLimit)
+                {
+                    *timer = zero;
+                    *alpha = zero;
+                    sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                }
             }
+            timer--;
+            alpha--;
+            entry -= 0xc;
         }
+        while (i-- != 0);
     }
 
     if (*(int*)(gameTextFonts + 0x1c) == 1)
@@ -1771,7 +1770,7 @@ void gameTextRun(void)
     lbl_803DC9AA = 0;
     lbl_803DC9A8 = 0;
 
-    cmd = lbl_8033A540;
+    cmd = (GameTextSlot*)(gameTextBase + 0xbc0);
     i = lbl_803DC9C8;
     while (i-- != 0)
     {
@@ -2129,8 +2128,8 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int c3y0;
     int c3x1;
     int c3x0;
-    s16 savedX;
     s16 savedY;
+    s16 savedX;
     u16 f;
     u8* cur;
     int hw;
@@ -2163,10 +2162,12 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     case 7:
         if ((int)getCurGameText() == 3)
         {
+            u16 bh = ((GameTextBox*)box)->height;
+            u16 bw = ((GameTextBox*)box)->width;
+            s16 by = ((GameTextBox*)box)->y;
+            s16 bx = ((GameTextBox*)box)->x;
             colorB = gGameTextBoxFillColor;
-            hudDrawRect(((GameTextBox*)box)->x, ((GameTextBox*)box)->y,
-                        ((GameTextBox*)box)->x + ((GameTextBox*)box)->width,
-                        ((GameTextBox*)box)->y + ((GameTextBox*)box)->height, &colorB);
+            hudDrawRect(bx, by, bx + bw, by + bh, &colorB);
         }
         else
         {
@@ -2179,10 +2180,14 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         break;
     case 1:
-        colorA = gGameTextBoxFillColor;
-        hudDrawRect(((GameTextBox*)box)->x, ((GameTextBox*)box)->y,
-                    ((GameTextBox*)box)->x + ((GameTextBox*)box)->width,
-                    ((GameTextBox*)box)->y + ((GameTextBox*)box)->height, &colorA);
+        {
+            u16 bh = ((GameTextBox*)box)->height;
+            u16 bw = ((GameTextBox*)box)->width;
+            s16 by = ((GameTextBox*)box)->y;
+            s16 bx = ((GameTextBox*)box)->x;
+            colorA = gGameTextBoxFillColor;
+            hudDrawRect(bx, by, bx + bw, by + bh, &colorA);
+        }
         break;
     case 6:
         if (strPtr == NULL)
@@ -2194,7 +2199,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
         }
-        else if (boxId != 0)
+        else if ((u32)boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
@@ -2222,15 +2227,15 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         {
             gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
         }
-        else if (boxId != 0)
+        else if ((u32)boxId != 0)
         {
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
-        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], ((GameTextBox*)box)->alpha, 0x100);
-        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], ((GameTextBox*)box)->alpha, 0x100,
+        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), gSubtitleBoxTextures[0], ((GameTextBox*)box)->alpha, 0x100);
+        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), gSubtitleBoxTextures[1], ((GameTextBox*)box)->alpha, 0x100,
                           c3x1 - c3x0, 0x24, 0);
-        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture((f32)c3x1, (f32)(c3y0 - 9), gSubtitleBoxTextures[2], ((GameTextBox*)box)->alpha, 0x100);
         break;
     case 2:
         x2 = ((GameTextBox*)box)->x;
@@ -2460,6 +2465,7 @@ extern u16 gGameTextSjisGlyphTable[];
 extern int lbl_803DB3C4;
 
 #pragma peephole off
+#pragma ppc_unroll_speculative off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     u8* fontData;
@@ -2631,30 +2637,23 @@ void gameTextLoadGraphicsFn_8001a918(void)
             for (row = ty; row < tyEnd; row++)
             {
                 int off = tx << 5;
-                int j2 = tx;
-                int n;
-                if (j2 < txEnd)
+                int j2;
+                for (j2 = tx; j2 < txEnd; j2++)
                 {
-                    n = cnt;
-                    do
-                    {
-                        u8* dst = *(u8**)(base31 + 0x60) + off;
-                        u32 tmp;
-                        dst += row * lbl_803DB3C4;
-                        *(u32*)(dst + 0x60) = src[0];
-                        *(u32*)(dst + 0x64) = src[1];
-                        *(u32*)(dst + 0x68) = src[2];
-                        *(u32*)(dst + 0x6c) = src[3];
-                        *(u32*)(dst + 0x70) = src[4];
-                        *(u32*)(dst + 0x74) = src[5];
-                        *(u32*)(dst + 0x78) = src[6];
-                        tmp = src[7];
-                        src += 8;
-                        *(u32*)(dst + 0x7c) = tmp;
-                        off += 0x20;
-                        j2++;
-                    }
-                    while (--n != 0);
+                    u8* dst = *(u8**)(base31 + 0x60) + off;
+                    u32 tmp;
+                    dst += row * lbl_803DB3C4;
+                    *(u32*)(dst + 0x60) = src[0];
+                    *(u32*)(dst + 0x64) = src[1];
+                    *(u32*)(dst + 0x68) = src[2];
+                    *(u32*)(dst + 0x6c) = src[3];
+                    *(u32*)(dst + 0x70) = src[4];
+                    *(u32*)(dst + 0x74) = src[5];
+                    *(u32*)(dst + 0x78) = src[6];
+                    tmp = src[7];
+                    src += 8;
+                    *(u32*)(dst + 0x7c) = tmp;
+                    off += 0x20;
                 }
             }
         }
@@ -2668,8 +2667,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int*)(base31 + 0x6c) = 2;
 }
+#pragma ppc_unroll_speculative on
 
-void* mmAlloc(int size, int type, int flag);
 
 extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
@@ -2813,6 +2812,7 @@ void gameTextInitFn_8001c794(void)
     u16* dst;
     u16* src;
     u8* rowBase;
+    void* tex;
 
     i = 1;
     p = &gGameTextBoxTexAssets + 1;
@@ -2822,8 +2822,9 @@ void gameTextInitFn_8001c794(void)
         *q = textureLoadAsset(*p);
     }
 
-    gGameTextBoxCornerTexture = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16*)((u8*)gGameTextBoxCornerTexture + 0x60);
+    tex = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
+    gGameTextBoxCornerTexture = tex;
+    dst = (u16*)((u8*)tex + 0x60);
     y = 0;
     src = gGameTextBoxCornerTexSrc;
     for (i = 0; i < 4; i++)
@@ -2895,8 +2896,9 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)gGameTextBoxCornerTexture + 0x60, 0x200);
 
-    gGameTextBoxEdgeTexture = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16*)((u8*)gGameTextBoxEdgeTexture + 0x60);
+    tex = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
+    gGameTextBoxEdgeTexture = tex;
+    dst = (u16*)((u8*)tex + 0x60);
     y = 0;
     src = lbl_802CA100;
     for (i = 0; i < 5; i++)

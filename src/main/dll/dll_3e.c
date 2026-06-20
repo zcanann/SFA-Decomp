@@ -99,7 +99,7 @@ void PlayControl(void)
 {
     AttractMovieTextureSet* decodedTexture;
     s32 frame;
-    u32 allowPop;
+    int allowPop;
 
     if (lbl_803DD664 != NULL)
     {
@@ -284,7 +284,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
 {
     char* base;
     AttractMovieControl* ctrl;
-    void* readyMsg;
+    s32 readyMsg;
     s32 startOffset;
 
     base = lbl_803A57C0;
@@ -304,19 +304,22 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         {
             return FALSE;
         }
-        if (ctrl->movieCount <= movieIndex)
+        if (ctrl->movieCount > movieIndex)
         {
-            return FALSE;
-        }
-        if (DVDRead((DVDFileInfo*)(base + 0x5a0), base + 0x560, 0x20,
-                    offsetTable + ((movieIndex - 1) * sizeof(u32))) < 0)
-        {
-            return FALSE;
-        }
+            if (DVDRead((DVDFileInfo*)(base + 0x5a0), base + 0x560, 0x20,
+                        offsetTable + ((movieIndex - 1) * sizeof(u32))) < 0)
+            {
+                return FALSE;
+            }
 
-        ctrl->frameOffset = ctrl->dataOffset + ctrl->readBufBegin;
-        ctrl->movieIndex = movieIndex;
-        ctrl->frameSize = ctrl->readBufEnd - ctrl->readBufBegin;
+            ctrl->frameOffset = ctrl->dataOffset + ctrl->readBufBegin;
+            ctrl->movieIndex = movieIndex;
+            ctrl->frameSize = ctrl->readBufEnd - ctrl->readBufBegin;
+        }
+        else
+        {
+            return FALSE;
+        }
     }
     else
     {
@@ -364,20 +367,19 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         ReadThreadStart();
     }
 
-    OSReceiveMessage((OSMessageQueue*)(base + 0x52c), &readyMsg, OS_MESSAGE_BLOCK);
-    if (readyMsg == NULL)
+    OSReceiveMessage((OSMessageQueue*)(base + 0x52c), (OSMessage*)&readyMsg, OS_MESSAGE_BLOCK);
+    if (readyMsg != 0)
     {
-        return FALSE;
+        ctrl->isPrepared = 1;
+        ctrl->field63d = 0;
+        ctrl->field68c = 0;
+        ctrl->field690 = 0;
+        ctrl->field684 = 0;
+        ctrl->field688 = 0;
+        lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+        return TRUE;
     }
-
-    ctrl->isPrepared = 1;
-    ctrl->field63d = 0;
-    ctrl->field68c = 0;
-    ctrl->field690 = 0;
-    ctrl->field684 = 0;
-    ctrl->field688 = 0;
-    lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
-    return TRUE;
+    return FALSE;
 }
 
 void PrepareReady(void* msg)

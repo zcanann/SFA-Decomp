@@ -52,7 +52,7 @@ extern void lightSetFieldBC_8001db14(void* light, int value);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val, f32 mult);
+extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, f32 f8val, f32 mult, void* origin, int flags);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
 extern f32 lbl_803E5388;
@@ -171,7 +171,7 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             angleDelta += 0xffff;
         }
-        if (((BombplantsporeUpdateDriftPlacement*)params)->unk1A < angleDelta)
+        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->unk1A)
         {
             ((BombPlantSporeState*)state)->spinAngle = (s16)(
                 baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->unk1A);
@@ -245,12 +245,13 @@ void bombplantspore_update(void* obj)
     s32 particleAlpha;
     s16 hitId;
     void* hitObj;
-    int hitObject;
-    void* playerObj;
     int poppedMessage;
     u32 poppedSender;
+    int hitObject;
+    void* playerObj;
     int detonateMessage;
     int i;
+    f32 detonateZero;
 
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0u)
@@ -265,7 +266,7 @@ void bombplantspore_update(void* obj)
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
                 {
-                    objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
+                    objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, lbl_803E53B0, lbl_803E53B8, NULL, 0);
                     (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
@@ -282,11 +283,12 @@ void bombplantspore_update(void* obj)
         }
     }
 
-    if (state->detonateTimer != lbl_803E5394)
+    detonateZero = lbl_803E5394;
+    if (state->detonateTimer != detonateZero)
     {
         *(s16*)obj += framesThisStep * 0x40;
         state->detonateTimer -= timeDelta;
-        if (state->detonateTimer <= lbl_803E5394)
+        if (state->detonateTimer <= detonateZero)
         {
             Obj_FreeObject(obj);
         }
@@ -296,13 +298,14 @@ void bombplantspore_update(void* obj)
     if (state->fuseTimer < lbl_803E53C0)
     {
         particleAlpha = (s32) - (lbl_803E53C8 * state->fuseTimer - lbl_803E53C4);
-        objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, NULL, 0, lbl_803E53B0,
+        objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, lbl_803E53B0,
                                     (f32)(lbl_803E53D8 *
                                         (double)(lbl_803E53C0 - state->fuseTimer) +
-                                        lbl_803E53D0));
+                                        lbl_803E53D0),
+                                    NULL, 0);
     }
     ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
-    hitObj = (void*)hitObject;
+    hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
     if (BOMBPLANTSPORE_FLAGS(state)->hitSurface == 0)
     {
         state->driftTimer -= timeDelta;
@@ -398,7 +401,7 @@ void bombplantspore_update(void* obj)
             (*gExpgfxInterface)->freeSource((u32)obj);
             for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
             {
-                objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
+                objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, lbl_803E53B0, lbl_803E53B8, NULL, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
             }
             modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);

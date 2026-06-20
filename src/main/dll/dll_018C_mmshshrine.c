@@ -116,14 +116,12 @@ typedef struct MMSHShrineObject
 
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
-    u8 command;
-    int i;
-    int playerObj;
     MMSHShrineRuntime* runtime;
-    MMSHShrineObject* obj;
+    u8 command;
+    int playerObj;
+    int i;
 
-    obj = (MMSHShrineObject*)objArg;
-    runtime = obj->runtime;
+    runtime = ((MMSHShrineObject*)objArg)->runtime;
     playerObj = Obj_GetPlayerObject();
     seq->targetObject = -1;
     seq->activeCommand = 0;
@@ -142,14 +140,14 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
                 break;
             case 0xe:
-                obj->flags06 |= MMSH_SHRINE_FLAG_LIT;
+                ((MMSHShrineObject*)objArg)->flags06 |= MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
                 }
                 break;
             case 0xf:
-                obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
+                ((MMSHShrineObject*)objArg)->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
@@ -188,7 +186,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
     }
 
     if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) &&
-        ((u8)fn_801C49B8((int)obj) != 0))
+        ((u8)fn_801C49B8(objArg) != 0))
     {
         fn_8011F6D4(0);
         runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE |

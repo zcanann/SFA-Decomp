@@ -68,7 +68,7 @@ typedef struct Dim2pathgeneratorPlacement
     s16 unk1C;
     u16 unk1E;
     s16 unk20;
-    s16 unk22;
+    s16 activeGameBit;
     u8 pad24[0x28 - 0x24];
 } Dim2pathgeneratorPlacement;
 
@@ -178,7 +178,7 @@ void dim2pathgenerator_update(int* obj)
     int count;
 
     def = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dim2pathgeneratorPlacement*)def)->unk22) == 0)
+    if (GameBit_Get(((Dim2pathgeneratorPlacement*)def)->activeGameBit) == 0)
     {
         return;
     }

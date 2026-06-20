@@ -46,7 +46,7 @@ typedef struct PlayerState {
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
     u8 unk3F7;
-    int unk3F8;
+    int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
     int unk400;
@@ -103,12 +103,12 @@ typedef struct PlayerState {
     f32 unk4B0;
     u16 unk4B4;
     u8 pad4B6[0x4B8 - 0x4B6];
-    void *unk4B8;
+    void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];
     int lastHitObject;
     int unk4C4;
-    f32 unk4C8;
-    f32 unk4CC;
+    f32 smoothVelX; /* smoothed planar velocity X; eased toward maxSpeed*sin(heading) */
+    f32 smoothVelZ; /* smoothed planar velocity Z; magnitude = sqrt(x^2+z^2) -> animSpeedC */
     s16 headPitch;
     s16 bodyLeanHalf;
     s16 bodyLeanAngle;
@@ -208,7 +208,7 @@ typedef struct PlayerState {
     u8 pad638[0x63C - 0x638];
     f32 unk63C;
     f32 traveledDistance;
-    f32 unk644;
+    f32 travelTargetDistance; /* PSVECMag(start->target); traveledDistance is compared against it */
     f32 unk648;
     f32 unk64C;
     u8 pad650[0x654 - 0x650];
@@ -225,7 +225,7 @@ typedef struct PlayerState {
     s8 unk681;
     u8 unk682;
     u8 pad683[0x684 - 0x683];
-    int unk684;
+    int interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
     s16 unk688;
     u8 pad68A[0x6A4 - 0x68A];
     f32 unk6A4;
@@ -240,16 +240,16 @@ typedef struct PlayerState {
     f32 unk6C8;
     u8 unk6CC;
     u8 pad6CD[0x6D0 - 0x6CD];
-    s32 unk6D0;
-    s32 unk6D4;
-    f32 unk6D8;
-    f32 unk6DC;
+    s32 stickX;
+    s32 stickY;
+    f32 stickYf;
+    f32 stickXf;
     u16 buttonsHeld;
     u16 buttonsJustPressed;
     u16 buttonsJustPressedIfNotBusy;
     u8 pad6E6[0x6E8 - 0x6E6];
-    int unk6E8;
-    u8 unk6EC;
+    int moveSequence; /* pointer to the active s16 move/anim descriptor (entries at +2/+8/+a) */
+    u8 moveSequenceFlags; /* behavior bits 0x1/0x4/0x8 selecting blend/progress handling */
     u8 pad6ED[0x768 - 0x6ED];
     f32 savedPosX;
     f32 savedPosY;
@@ -279,20 +279,20 @@ typedef struct PlayerState {
     f32 unk7E0;
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
-    int unk7F0;
+    int focusObject; /* object handle for camera setFocus / sequence-trigger interactions */
     u8 pad7F4[0x7F8 - 0x7F4];
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
     u8 unk800;
     u8 pad801[0x806 - 0x801];
     u16 unk806;
-    u16 unk808;
+    u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
     s16 unk80C;
     s16 unk80E;
     s16 unk810;
     s16 idleWaitTimer;
-    f32 unk814;
+    f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */
     u8 pad818[0x81A - 0x818];
     s16 characterId;
     s16 unk81C;
@@ -300,7 +300,7 @@ typedef struct PlayerState {
     f32 unk820;
     f32 unk824;
     f32 unk828;
-    f32 unk82C;
+    f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 unk830;
     f32 unk834;
     f32 unk838;
@@ -310,14 +310,14 @@ typedef struct PlayerState {
     f32 prevWorldPosY;
     f32 unk84C;
     f32 unk850;
-    f32 unk854;
+    f32 stateTimer; /* per-frame countdown (-= timeDelta), reset to a constant on expiry */
     int unk858;
     f32 turnDeadzoneScale;
     u8 pad860[0x86C - 0x860];
     u8 surfaceType;
     s8 stickDirection;
     u8 unk86E;
-    u8 unk86F;
+    u8 stopMoveIndex; /* cycling index into gPlayerStopMoves[], advanced %3 */
     u8 pad870[0x874 - 0x870];
     f32 unk874;
     f32 unk878;

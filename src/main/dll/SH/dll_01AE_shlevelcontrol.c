@@ -429,8 +429,8 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short param_5,
-                  int* param_6)
+void FUN_801d8480(u32 param_1, u32 param_2, short clearIfSetBit, short clearIfClearBit, short eventBit,
+                  int* textId)
 {
 
     extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId);
@@ -440,12 +440,12 @@ void FUN_801d8480(u32 param_1, u32 param_2, short param_3, short param_4, short 
     u64 latchState;
 
     latchState = FUN_80286838();
-    eventId = param_5;
+    eventId = eventBit;
     bitValue = GameBit_Get(eventId);
     bitValue = countLeadingZeros(bitValue);
     GameBit_Set(eventId, bitValue >> 5);
-    SCGameBitLatch_Update((int)((u64)latchState >> 0x20), latchState, param_3, param_4,
-                          param_5, (int)param_6);
+    SCGameBitLatch_Update((int)((u64)latchState >> 0x20), latchState, clearIfSetBit, clearIfClearBit,
+                          eventBit, (int)textId);
     bitValue = GameBit_Get(eventId);
     bitValue = countLeadingZeros(bitValue);
     GameBit_Set(eventId, bitValue >> 5);
@@ -642,11 +642,11 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 void sh_levelcontrol_update(int obj)
 {
     extern u8 lbl_80327618[0x104];
-    extern void SH_LevelControl_doEarlyScenes(int param_1, u32* param_2);
-    extern void SH_LevelControl_doThornTailEvents(int param_1, u32* param_2);
-    extern void SH_LevelControl_runBloopEvent(int param_1, u32* param_2);
+    extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
+    extern void SH_LevelControl_doThornTailEvents(int obj, u32* state);
+    extern void SH_LevelControl_runBloopEvent(int obj, u32* state);
     extern int Obj_GetPlayerObject(void);
-    extern void SH_LevelControl_setMusic(u32 * param_1);
+    extern void SH_LevelControl_setMusic(u32 * state);
 
     u32* state;
     u32 val;

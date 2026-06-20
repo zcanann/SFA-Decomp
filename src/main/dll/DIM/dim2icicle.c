@@ -436,13 +436,13 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
   hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
   if (hitResult != 0) {
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
-    if (*(s16 *)((int)state + 0x402) == 1) {
+    if (((GroundBaddieState *)state)->targetState == 1) {
       if ((gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE) == 0 ||
           hitType != 2) {
         hit = 1;
       }
     }
-    else if (*(s16 *)((int)state + 0x402) == 2) {
+    else if (((GroundBaddieState *)state)->targetState == 2) {
       if (hitType != 4 || ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E4C10 || ((GameObject *)obj)->anim.currentMove != 0x12) {
         hit = 1;
       }
@@ -478,7 +478,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
           ((BaddieState *)playerObj)->hasTarget = 0;
         }
       }
-      if (*(s16 *)((int)state + 0x402) == 1) {
+      if (((GroundBaddieState *)state)->targetState == 1) {
         if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 3) {
           ((void (*)(int, int, int, int, int))*(VtableFn **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
         }
@@ -486,7 +486,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
           ((void (*)(int, int, int, int, int))*(VtableFn **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
         }
       }
-      else if (*(s16 *)((int)state + 0x402) == 2) {
+      else if (((GroundBaddieState *)state)->targetState == 2) {
         if (*(s8 *)&((BaddieState *)playerObj)->hitPoints == 3) {
           ((void (*)(int, int, int, int, int))*(VtableFn **)(*(int *)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
         }
@@ -507,14 +507,14 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
-        if (*(s16 *)((int)state + 0x402) == 1) {
+        if (((GroundBaddieState *)state)->targetState == 1) {
           GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE1_WIN, 1);
         }
-        else if (*(s16 *)((int)state + 0x402) == 2) {
+        else if (((GroundBaddieState *)state)->targetState == 2) {
           GameBit_Set(GAMEBIT_DIM2_ICICLE_PHASE2_WIN, 1);
         }
       }
-      else if (*(s16 *)((int)state + 0x402) == 1) {
+      else if (((GroundBaddieState *)state)->targetState == 1) {
         (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 10);
       }
       else {

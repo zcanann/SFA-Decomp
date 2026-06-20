@@ -481,7 +481,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     }
     for (i = 0; i < 6; i++)
     {
-        dists[i] = lbl_803DF1A4 / sqrtf__inline(dists[i]);
+        dists[i] = 1.0f / sqrtf__inline(dists[i]);
     }
     for (i = 0; i < 6; i++)
     {
@@ -601,11 +601,13 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
     int j;
     int widx;
     f32 amp;
-    f32 size;
-    f32 negSize;
     f32 halfNeg;
+    f32 negSize;
+    f32 size;
+    f32 ab;
 
-    amp = a * b * gSnowFlakeWaveAmpScale;
+    ab = a * b;
+    amp = ab * gSnowFlakeWaveAmpScale;
     for (i = 0; i < 8; i++)
     {
         p = gNewClouds[i];
@@ -632,10 +634,11 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
     {
         size = gSnowFlakeSizeLarge;
     }
+    j = 0;
     e = p + 0x1008;
     negSize = -size;
     halfNeg = lbl_803DF1EC * negSize;
-    for (j = 0; j < 20; j++)
+    for (; j < 20; j++)
     {
         *(f32*)(e + 0x0) = negSize;
         *(f32*)(e + 0x18) = 0.0f;
@@ -709,8 +712,8 @@ void drawSkyStars(void)
 {
     int timeOk;
     int start;
-    int alpha;
     int div;
+    int alpha;
     int i;
     int red;
     int green;
@@ -844,10 +847,10 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
     int i;
     f32 total;
     f32 len;
-    f32 weight;
     f32 px;
     f32 py;
     f32 pz;
+    f32 weight;
     f32 step;
     f32 mtx[12];
     f32 dir[3];
@@ -1006,7 +1009,7 @@ void snowCloudUpdateFlakes(u8* snow)
                 f32 t1 = m0 * s3 - m1 * c3;
                 f32 t2 = m0 * c3 + m1 * s3;
                 m[c] = t1 * s1 + c1 * (t2 * c2) + c1 * (m2 * s2);
-                m[c + 3] = -m2 * c2 + t2 * s2;
+                m[c + 3] = t2 * s2 - m2 * c2;
                 m[c + 6] = -t1 * c1 + s1 * (t2 * c2) + s1 * (m2 * s2);
             }
             e += 0x2c;
@@ -1105,7 +1108,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     cur[0] = px;
     cur[1] = py;
     cur[2] = pz;
-    progress = lbl_803DF1A0;
+    progress = *(f32*)&lbl_803DF1A0;
     oddFlag = (u8)flags & 1;
     halfWidth = (u8)width >> 1;
     for (i = 0; i <= segs; i++)
@@ -1879,12 +1882,17 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->worldPosX =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x14);
-                    ((NewCloud*)NC_CLOUD)->worldPosY =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x18);
-                    ((NewCloud*)NC_CLOUD)->worldPosZ =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x1c);
+                    {
+                        u8* p14 = env + 0x14;
+                        u8* p18 = env + 0x18;
+                        u8* p1c = env + 0x1c;
+                        ((NewCloud*)NC_CLOUD)->worldPosX =
+                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosY =
+                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosZ =
+                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                    }
                     break;
                 case 1:
                     *(s16*)(env + 0x10) = (s16) * (u16*)(params + 0x24) - 1;
@@ -1900,18 +1908,23 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->worldPosX =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x14);
-                    ((NewCloud*)NC_CLOUD)->worldPosY =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x18);
-                    ((NewCloud*)NC_CLOUD)->worldPosZ =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x1c);
+                    {
+                        u8* p14 = env + 0x14;
+                        u8* p18 = env + 0x18;
+                        u8* p1c = env + 0x1c;
+                        ((NewCloud*)NC_CLOUD)->worldPosX =
+                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosY =
+                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosZ =
+                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                    }
                     break;
                 case 2:
                     *(s16*)(env + 0x12) = (s16) * (u16*)(params + 0x24) - 1;
                     *(int*)(env + 0x2c) = posA[0];
                     *(int*)(env + 0x30) = posA[1];
-                    *(env + 0x34) = posA[2];
+                    *(int*)(env + 0x34) = posA[2];
                     if ((s8)env[*(u16*)(params + 0x26) + 0x41] == -1)
                     {
                         return;
@@ -1921,12 +1934,17 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->worldPosX =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x14);
-                    ((NewCloud*)NC_CLOUD)->worldPosY =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x18);
-                    ((NewCloud*)NC_CLOUD)->worldPosZ =
-                        (f32) * (int*)(env + *(u16*)(params + 0x26) * 0xc + 0x1c);
+                    {
+                        u8* p14 = env + 0x14;
+                        u8* p18 = env + 0x18;
+                        u8* p1c = env + 0x1c;
+                        ((NewCloud*)NC_CLOUD)->worldPosX =
+                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosY =
+                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                        ((NewCloud*)NC_CLOUD)->worldPosZ =
+                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                    }
                     break;
                 }
             }
@@ -1943,7 +1961,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && NC_CLOUD[0x144e] != 0)
     {
-        env[*(params + 0x26) + 0x41] = NC_CLOUD[0x144d];
+        env[*(u16*)(params + 0x26) + 0x41] = NC_CLOUD[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
@@ -1956,7 +1974,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             args.f10 = lbl_803DF1A4;
             args.fc = 0;
             args.fa = 0;
-            args.f8 = *objA;
+            args.f8 = *(s16*)objA;
             vecRotateZXY(&args.f8, vec);
             ((NewCloud*)NC_CLOUD)->worldPosX = vec[0] + *(f32*)(objA + 0x18);
             ((NewCloud*)NC_CLOUD)->worldPosY = vec[1] + *(f32*)(objA + 0x1c);
@@ -1975,9 +1993,12 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         }
         if ((s8)env[*(u16*)(params + 0x26) + 0x41] == 0)
         {
-            *(env + *(u16*)(params + 0x26) * 0xc + 0x14) = posA[0];
-            *(env + *(params + 0x26) * 0xc + 0x18) = posA[1];
-            *(env + *(u16*)(params + 0x26) * 0xc + 0x1c) = posA[2];
+            u8* p14 = env + 0x14;
+            u8* p18 = env + 0x18;
+            u8* p1c = env + 0x1c;
+            *(int*)(p14 + *(u16*)(params + 0x26) * 0xc) = posA[0];
+            *(int*)(p18 + *(u16*)(params + 0x26) * 0xc) = posA[1];
+            *(int*)(p1c + *(u16*)(params + 0x26) * 0xc) = posA[2];
         }
     }
     else if (fl & 0x20)
@@ -2049,11 +2070,11 @@ void dll_07_func06(void)
     f32 t;
     f32 rot;
     void** clouds;
-    f32 d[3];
-    f32 vec[3];
-    f32 pos[3];
-    f32 wind[3];
     f32 inpos[3];
+    f32 wind[3];
+    f32 pos[3];
+    f32 vec[3];
+    f32 d[3];
     struct
     {
         s16 f8;
@@ -2264,7 +2285,7 @@ void dll_07_func06(void)
     }
     if (lbl_803DD19C != NULL)
     {
-        ((LightningEffect*)lbl_803DD19C)->timer = ((LightningEffect*)lbl_803DD19C)->timer + 1;
+        ((LightningEffect*)lbl_803DD19C)->timer += 1;
         if (((LightningEffect*)lbl_803DD19C)->timer >= ((LightningEffect*)lbl_803DD19C)->lifetime)
         {
             mm_free(lbl_803DD19C);
@@ -2310,9 +2331,9 @@ void dll_07_func06(void)
                     -(lbl_803DF20C * (*(f32*)(nearestCloud + 0x1440) / lbl_803DF210) +
                         lbl_803DF208)) /
                 gNewCloudFlashRotScale;
-            *(f32*)((u8*)gNewCloudLayerTextures + 0xd8) = lbl_803DF1A0;
-            *(f32*)((u8*)gNewCloudLayerTextures + 0xdc) = lbl_803DF244;
-            *(f32*)((u8*)gNewCloudLayerTextures + 0xe0) = lbl_803DF1A0;
+            *(f32*)((u8*)clouds + 0xd8) = lbl_803DF1A0;
+            *(f32*)((u8*)clouds + 0xdc) = lbl_803DF244;
+            *(f32*)((u8*)clouds + 0xe0) = lbl_803DF1A0;
             m = Camera_GetViewRotationMatrix();
             if (*(int*)(nearestCloud + 0x13f4) == 0)
             {
@@ -2333,8 +2354,8 @@ void dll_07_func06(void)
                 PSMTXRotRad(mtx, 0x7a, rot);
             }
             PSMTXConcat((void*)m, (void*)mtx, (void*)mtx);
-            PSMTXMultVec(mtx, (f32*)((u8*)gNewCloudLayerTextures + 0xd8),
-                         (f32*)((u8*)gNewCloudLayerTextures + 0xd8));
+            PSMTXMultVec(mtx, (f32*)((u8*)clouds + 0xd8),
+                         (f32*)((u8*)clouds + 0xd8));
             if (lbl_803DD190 < lbl_803DF278)
             {
                 lbl_803DD190 = lbl_803DD190 + gSnowFlakeSizeLarge;
@@ -2359,6 +2380,9 @@ extern void mtx44Transpose(f32* src, f32* dst);
 extern int gNewCloudFlashRotAngle;
 extern const f32 lbl_803DF204;
 
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
+#pragma opt_dead_assignments off
 int snowPrintSnowCloud(int arg, int cloudId)
 {
     u8* p;
@@ -2378,14 +2402,14 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 yb;
     f32 size;
     int base;
-    f32 mtxA[16];
     f32 mtxB[16];
-    f32 mtxOut[16];
     f32 mtxT[12];
-    f32 vx[3];
-    f32 vy[3];
-    f32 vz[3];
-    s16 uvs[6] = {-0x30, 0, 0xb0, 0, 0x40, 0x100};
+    f32 mtxA[16];
+    f32 mtxOut[16];
+    volatile f32 vx[3];
+    volatile f32 vy[3];
+    volatile f32 vz[3];
+    volatile s16 uvs[6] = {-0x30, 0, 0xb0, 0, 0x40, 0x100};
 
     scale = lbl_803DF1A4;
     if (renderModeSetOrGet(-1) == 1)
@@ -2569,3 +2593,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
     }
     return 0;
 }
+#pragma opt_dead_assignments reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset

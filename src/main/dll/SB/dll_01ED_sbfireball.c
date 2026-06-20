@@ -13,7 +13,6 @@
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/dll/VF/vf_shared.h"
 extern f32 lbl_803E58D8; /* fireball render scale */
-extern f32 timeDelta;
 
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 

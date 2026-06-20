@@ -145,10 +145,13 @@ void CameraModeBike_update(CameraObject* camera)
             ((lbl_803E17B0 * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance) +
             gCamTalkBikeState->followDistance;
         followDist = gCamTalkBikeState->followDistance;
+        sinPitch = followDist * sinPitch;
         cosPitch = followDist * cosPitch;
-        camera->anim.worldPosX = posZ + cosPitch * cosYaw;
-        camera->anim.worldPosY = posY + followDist * sinPitch;
-        camera->anim.worldPosZ = posX + cosPitch * sinYaw;
+        cosYaw = cosPitch * cosYaw;
+        sinYaw = cosPitch * sinYaw;
+        camera->anim.worldPosX = posZ + cosYaw;
+        camera->anim.worldPosY = posY + sinPitch;
+        camera->anim.worldPosZ = posX + sinYaw;
         rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         local_60 = (s64)rotVal;
         angleDelta = (short)rotVal - camera->anim.rotZ;
@@ -278,18 +281,18 @@ void firstPersonExit(CameraObject* camera)
     fVar1 = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
     lbl_803DD548->yawCurve.endTangent = fVar1;
-    fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
-    if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
+    if (((lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end) > lbl_803E17C8) ||
+        ((lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end) < lbl_803E17CC))
     {
         if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
         {
-            lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
+            lbl_803DD548->yawCurve.start = *(f32*)&lbl_803DD548->yawCurve.start + lbl_803E17D0;
         }
         else
         {
             if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
             {
-                lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
+                lbl_803DD548->yawCurve.end = *(f32*)&lbl_803DD548->yawCurve.end + lbl_803E17D0;
             }
         }
     }
@@ -298,18 +301,18 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->pitchCurve.end = lbl_803E17C4;
     lbl_803DD548->pitchCurve.startTangent = fVar1;
     lbl_803DD548->pitchCurve.endTangent = fVar1;
-    fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
-    if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
+    if (((lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end) > lbl_803E17C8) ||
+        ((lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end) < lbl_803E17CC))
     {
         if (lbl_803DD548->pitchCurve.start < lbl_803E17C4)
         {
-            lbl_803DD548->pitchCurve.start = lbl_803DD548->pitchCurve.start + lbl_803E17D0;
+            lbl_803DD548->pitchCurve.start = *(f32*)&lbl_803DD548->pitchCurve.start + lbl_803E17D0;
         }
         else
         {
             if (lbl_803DD548->pitchCurve.end < lbl_803E17C4)
             {
-                lbl_803DD548->pitchCurve.end = lbl_803DD548->pitchCurve.end + lbl_803E17D0;
+                lbl_803DD548->pitchCurve.end = *(f32*)&lbl_803DD548->pitchCurve.end + lbl_803E17D0;
             }
         }
     }

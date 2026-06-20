@@ -347,7 +347,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -883,17 +882,20 @@ void fireball_init(int* obj)
             if (*(void**)state != NULL)
             {
                 int c;
+                u8* base1;
+                u8* base2;
                 modelLightStruct_setLightKind(*(int*)state, 2);
                 lightSetField4D(*(int*)state, 0);
                 modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int*)state, 1);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(*(int**)state, ((u8*)lbl_80320978)[c],
-                                                 ((u8*)lbl_80320978 + 1)[c], ((u8*)lbl_80320978 + 2)[c], 0);
+                                                 (base1 = (u8*)lbl_80320978 + 1)[c],
+                                                 (base2 = (u8*)lbl_80320978 + 2)[c], 0);
                 modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E3358, lbl_803E3378);
                 c = ((FireballState*)state)->colorIndex * 3;
-                modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], ((u8*)lbl_80320978 + 1)[c],
-                                           ((u8*)lbl_80320978 + 2)[c], 32, lbl_803E337C);
+                modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], base1[c],
+                                           base2[c], 32, lbl_803E337C);
                 modelLightStruct_setGlowProjectionRadius(*(int*)state, lbl_803E337C);
             }
         }
@@ -1079,8 +1081,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     u16 savedRot2;
     u8 i;
     f32 savedF8;
-    s32 v = visible;
-    if (v == 0)
+    if (visible == 0)
     {
         return;
     }
@@ -1111,7 +1112,8 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject*)obj)->anim.rotY = savedRot2;
         ((GameObject*)obj)->anim.rootMotionScale = savedF8;
         ((ObjAnimComponent*)obj)->bankIndex = 0;
-        *(u8*)((char*)*(int**)((char*)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
+        model = Obj_GetActiveModel((int)obj);
+        *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) =
             gFireballColorIndexTable[((FireballState*)state)->colorIndex];
         ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         if (*(int**)state != NULL)
@@ -1155,7 +1157,6 @@ void fn_8016F260(int* obj, int* state, int* other)
         s16 targP;
         f32 t1;
         f32 t2;
-        f32 f;
         f32 c;
 
         angY = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
@@ -1204,13 +1205,13 @@ void fn_8016F260(int* obj, int* state, int* other)
         angY += framesThisStep * difY;
         angP += framesThisStep * difP;
 
-        f = gFireballPi * angY / gFireballAngleScale;
-        ((GameObject*)obj)->anim.velocityX = mathSinf(f);
-        ((GameObject*)obj)->anim.velocityZ = mathCosf(f);
-        f = gFireballPi * angP / gFireballAngleScale;
-        c = mathSinf(f);
+        dx = gFireballPi * angY / gFireballAngleScale;
+        ((GameObject*)obj)->anim.velocityX = mathSinf(dx);
+        ((GameObject*)obj)->anim.velocityZ = mathCosf(dx);
+        dx = gFireballPi * angP / gFireballAngleScale;
+        c = mathSinf(dx);
         {
-            f32 cosP = mathCosf(f);
+            f32 cosP = mathCosf(dx);
             if (lbl_803E3330 != cosP)
             {
                 c = c / cosP;

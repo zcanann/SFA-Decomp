@@ -29,7 +29,7 @@
 #include "dolphin/os.h"
 
 extern u32 FUN_80017690();
-extern void FUN_80017698(u32 param_1, u32 param_2);
+extern void FUN_80017698(u32 gameBit, u32 value);
 extern void FUN_800723a0(void);
 extern const char sSeqObjNeedBitUsedBitFormat[];
 extern const char sSeqObjNeedBitClearDuringSequenceFormat[];

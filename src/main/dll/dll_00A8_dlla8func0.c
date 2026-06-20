@@ -179,7 +179,7 @@ void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg
     buf.ctx = (int)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E15A0;
-    buf.pos[1] = lbl_803E15C8;
+    buf.pos[1] = *(f32*)&lbl_803E15C8;
     buf.pos[2] = lbl_803E15A0;
     buf.col[0] = lbl_803E15A0;
     buf.col[1] = lbl_803E15A0;
@@ -208,13 +208,13 @@ void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg
         if (sourceObj != 0)
         {
             buf.pos[0] = lbl_803E15A0 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E15C8 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[1] = *(f32*)&lbl_803E15C8 + *(f32*)(sourceObj + 0x1c);
             buf.pos[2] = lbl_803E15A0 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
             buf.pos[0] = lbl_803E15A0 + *(f32*)(posSource + 0xc);
-            buf.pos[1] = lbl_803E15C8 + *(f32*)(posSource + 0x10);
+            buf.pos[1] = *(f32*)&lbl_803E15C8 + *(f32*)(posSource + 0x10);
             buf.pos[2] = lbl_803E15A0 + *(f32*)(posSource + 0x14);
         }
     }

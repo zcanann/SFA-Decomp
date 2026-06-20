@@ -17,19 +17,9 @@ extern u32 fn_8003A328();
 extern u32 FUN_8003b1a4();
 extern u32 FUN_8003b280();
 extern u32 objAudioFn_8006ef38();
-extern u32 countLeadingZeros();
 extern u32 DAT_803274f4;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
-extern f32 lbl_803E5ECC;
-extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
@@ -488,16 +478,14 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             }
             {
                 int i = 0;
-                int* gb = gNwMammothBushGameBits;
-                int* ids = gNwMammothBushObjectIds;
                 for (; i < n; i++)
                 {
-                    if (GameBit_Get(*gb) != 0)
+                    if (GameBit_Get(gNwMammothBushGameBits[i]) != 0)
                     {
-                        GameBit_Set(*gb, 0);
+                        GameBit_Set(gNwMammothBushGameBits[i], 0);
                     }
                     {
-                        int* o2 = ObjList_FindObjectById(*ids);
+                        int* o2 = ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
                         if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                         {
                             fn_8014C66C(o2, *(int**)&state->playerObject);
@@ -507,7 +495,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
                             if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, o2 + 0x18) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                if (vec3f_distanceSquared(*(char**)&state->playerObject + 0x18, o2 + 0x18) >=
+                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, o2 + 0x18) >=
                                     gNwMammothTumbleweedDistSqThreshold)
                                 {
                                     fn_8014C66C(o2, obj);
@@ -523,8 +511,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                             }
                         }
                     }
-                    gb++;
-                    ids++;
                 }
             }
             {
@@ -566,7 +552,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             break;
         }
     case 0xe:
-        if (getXZDistance(st + 0xc, *(char**)&state->trackedObject + 0x18) < gNwMammothCaptureDist)
+        if (getXZDistance(st + 0xc, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) < gNwMammothCaptureDist)
         {
             Sfx_PlayFromObject((u32)obj, 0x38b);
             fn_80163980(*(int*)&state->trackedObject);
@@ -604,7 +590,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         st[0x408] = 0x13;
         break;
     case 0x11:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
+        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -615,7 +601,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         }
         break;
     case 0x12:
-        if (!(*(u16*)(*(char**)&state->playerObject + 0xb0) & 0x1000))
+        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {

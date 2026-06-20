@@ -22,7 +22,6 @@ void snd_handle_irq(void)
     u32 offset;
     u32 voiceIndex;
     u32 timeOffset;
-    u32 clearValue;
     u8* entry;
 
     if (gSynthInitialized == 0)
@@ -42,21 +41,20 @@ void snd_handle_irq(void)
     salAuxFrame = (salAuxFrame + 1) % 3;
     salFrame ^= 1;
 
-    clearValue = 0;
     offset = 0;
     voiceIndex = 0;
     while ((u8)voiceIndex < salNumVoices)
     {
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[0] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[0] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[1] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[1] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[2] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[2] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[3] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[3] = 0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[4] = clearValue;
+        ((DSPvoice*)(entry + offset))->changed[4] = 0;
         offset += 0xf4;
         voiceIndex++;
     }
@@ -163,10 +161,9 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
     u32 zero;
     u32 valueA;
     u32 valueB;
-    u32* dst;
 
-    zero = 0;
     inputOffset = 0;
+    zero = inputOffset;
     flags = 0;
     i = 0;
     offset = slot * 0xf4;
@@ -201,23 +198,22 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
 
     entry = dspVoice;
     entry += offset;
-    dst = (u32*)&((DSPvoice*)entry)->smp_info;
     valueA = values[0];
     valueB = values[1];
-    dst[0] = valueA;
-    dst[1] = valueB;
+    ((u32*)entry)[0x74 / 4 + 0] = valueA;
+    ((u32*)entry)[0x74 / 4 + 1] = valueB;
     valueA = values[2];
     valueB = values[3];
-    dst[2] = valueA;
-    dst[3] = valueB;
+    ((u32*)entry)[0x74 / 4 + 2] = valueA;
+    ((u32*)entry)[0x74 / 4 + 3] = valueB;
     valueA = values[4];
     valueB = values[5];
-    dst[4] = valueA;
-    dst[5] = valueB;
+    ((u32*)entry)[0x74 / 4 + 4] = valueA;
+    ((u32*)entry)[0x74 / 4 + 5] = valueB;
     valueA = values[6];
     valueB = values[7];
-    dst[6] = valueA;
-    dst[7] = valueB;
+    ((u32*)entry)[0x74 / 4 + 6] = valueA;
+    ((u32*)entry)[0x74 / 4 + 7] = valueB;
 
     if (resetAdsr != 0)
     {

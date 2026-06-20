@@ -539,7 +539,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     }
     mag = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
         ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
-    spd = (mag < lbl_803E83A4) ? lbl_803E83A4 : ((mag > lbl_803E83C0) ? lbl_803E83C0 : mag);
+    spd = (mag < *(f32*)&lbl_803E83A4) ? lbl_803E83A4 : ((mag > *(f32*)&lbl_803E83C0) ? lbl_803E83C0 : mag);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + (accel = ((grav = lbl_803E83C4) * spd) /
         lbl_803E83C0);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - grav;
@@ -663,7 +663,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         s16 ang;
         s16 diff;
         ang = (s16)(getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) + 0x8000);
-        diff = ang - inner->unkBBA;
+        diff = ang - (u16)inner->unkBBA;
         if (diff > 0x8000)
         {
             diff = diff - 0xffff;
@@ -716,7 +716,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         vecE.y = ((GameObject*)obj)->anim.previousLocalPosY - inner->lastPosY;
         vecE.z = ((GameObject*)obj)->anim.previousLocalPosZ - inner->lastPosZ;
         dist = sqrtf(vecE.z * vecE.z + (vecE.x * vecE.x + vecE.y * vecE.y));
-        t = (dist < (t = lbl_803E83A4)) ? t : ((dist > (t = lbl_803E83DC)) ? t : dist);
+        t = (dist < lbl_803E83A4) ? lbl_803E83A4 : ((dist > lbl_803E83DC) ? lbl_803E83DC : dist);
         Vec3_Normalize(&vecE);
         {
             f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
@@ -729,9 +729,9 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
             vecE.y = lbl_803E83A4;
         }
         vecE.y = vecE.y * lbl_803E83E4;
-        t = (vecE.y >= lbl_803E83A4) ? vecE.y : -vecE.y;
+        t = (vecE.y >= *(f32*)&lbl_803E83A4) ? vecE.y : -vecE.y;
         t = (lbl_803E83E8 - t) / lbl_803E83E8;
-        if (t < lbl_803E83A4)
+        if (t < *(f32*)&lbl_803E83A4)
         {
             t = lbl_803E83A4;
         }

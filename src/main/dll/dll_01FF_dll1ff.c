@@ -106,8 +106,6 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
 
-#pragma opt_strength_reduction off
-
 void dll_1FF_update(int obj)
 {
 
@@ -205,5 +203,3 @@ void dll_1FF_update(int obj)
         }
     }
 }
-
-#pragma opt_strength_reduction reset

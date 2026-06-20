@@ -1908,8 +1908,8 @@ extern void playerRender(int obj, int a, int b, int c, int d, int flag);
 void objRender(int a, int b, int c, int d, int obj, int flag)
 {
     void* sub;
-    int i;
     int walk;
+    int i;
     void (*vfn)(int, int, int, int, int, int);
 
     if ((((GameObject*)obj)->objectFlags & 0x40) != 0) return;
@@ -2102,7 +2102,6 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     int j;
     int k;
     int n;
-    int angle;
     s16 limit;
 
     found = NULL;
@@ -2126,10 +2125,11 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     }
     if (found != NULL)
     {
-        angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
-                              ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
-        angle = (s16)angle;
-        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
+        *(s16*)((char*)p3 + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
+                                                            *(f32*)((char*)p2 + 0xc),
+                                                        ((GameObject*)obj)->anim.localPosZ -
+                                                            *(f32*)((char*)p2 + 0x14)) -
+                                          ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit)
         {
@@ -2640,8 +2640,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             char* p;
             s16* ap;
             int i;
+            f32 prodB;
 
-            ang[0] = getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
+            ang[0] = (s16)getAngle(dx, dy) - (u16)((GameObject*)obj)->anim.rotX;
             if (ang[0] > 0x8000)
             {
                 ang[0] = (s16)(ang[0] - 0xffff);
@@ -2659,7 +2660,8 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             limA = (s16)(s32)(gObjPrintDegToAngle * a);
             p = p3;
             ap = ang;
-            minB = -(s16)(s32)(gObjPrintDegToAngle * b);
+            prodB = gObjPrintDegToAngle * b;
+            minB = -(s16)(s32)prodB;
             negA = -limA;
             for (i = 0; i < 2; i++)
             {
@@ -2670,9 +2672,9 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 {
                     v = minB;
                 }
-                else if ((s16)(s32)(gObjPrintDegToAngle * b) < v)
+                else if (v > (s16)(int)(f64)prodB)
                 {
-                    v = (s16)(s32)(gObjPrintDegToAngle * b);
+                    v = (s16)(int)(f64)prodB;
                 }
                 *ap = v;
                 *(s16*)(p + 0x14) += *ap;
@@ -2721,9 +2723,9 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
                                              (s8)(*(u8**)(*(char**)(staff + 0x50) + 0x2c))[off +
                                                  OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a]);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                vp[0] = *(f32*)(t + (off + 0x18));
-                va[1] = *(f32*)(t + (off + 0x1c));
-                va[2] = *(f32*)(t + (off + 0x20));
+                vp[0] = ((f32*)t)[(off + 0x18) >> 2];
+                va[1] = ((f32*)t)[(off + 0x1c) >> 2];
+                va[2] = ((f32*)t)[(off + 0x20) >> 2];
                 PSMTXMultVec(jm, vp, vp);
                 vp[0] = vp[0] + playerMapOffsetX;
                 va[2] = va[2] + playerMapOffsetZ;
@@ -2738,8 +2740,8 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
                 int idx2 = (s8) * (s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
                 char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
                 vb[0] = *(f32*)row;
-                vb[1] = *(f32*)(t + (off + 4));
-                vb[2] = *(f32*)(t + (off + 8));
+                vb[1] = ((f32*)t)[(off + 4) >> 2];
+                vb[2] = ((f32*)t)[(off + 8) >> 2];
                 PSMTXMultVec(mtx2, vb, vb);
                 vb[0] = vb[0] + playerMapOffsetX;
                 vb[2] = vb[2] + playerMapOffsetZ;
@@ -3229,7 +3231,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     }
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
-    fz = lbl_803DCC44 / texCnt;
+    fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3273,7 +3275,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB498);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(2, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(2, 0, 0);
@@ -3287,7 +3289,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
-    GXSetIndTexMtx(2, &mtxB, lbl_803DB49C);
+    GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
@@ -3458,7 +3460,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     }
     else
     {
-        fz = lbl_803DCC44 / texCnt;
+        fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
@@ -3604,7 +3606,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, lbl_803DB48C);
+    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(stage, 0, 0);
@@ -3620,7 +3622,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
-        GXSetIndTexMtx(2, &mtxB, lbl_803DB490);
+        GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     }
     else

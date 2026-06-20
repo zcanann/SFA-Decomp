@@ -36,7 +36,6 @@ extern f32 lbl_803E242C;
 extern f32 lbl_803E2430;
 extern f32 lbl_803E2434;
 extern f32 lbl_803E2438;
-extern f32 timeDelta;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -133,11 +132,11 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     {
         if (((state->statusFlags >> 5) & 1) == 0u)
         {
-            if (state->waterLevel == lbl_803E23DC)
+            if (lbl_803E23DC == state->waterLevel)
             {
                 doHeightSnap = 0;
             }
-            else if (state->unk2B0 == lbl_803E2410)
+            else if (lbl_803E2410 == state->unk2B0)
             {
                 doHeightSnap = 1;
             }
@@ -252,7 +251,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        (ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0))
+        ((u32)ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0u))
     {
         state->pathControlFlags &= ~4;
     }
@@ -1049,7 +1048,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
                         }
                     }
 
-                    routeFlags = (u8)(((ObjfsaRomCurveDef*)curve)->blockedLinkMask >> j);
+                    routeFlags = (u8)(((ObjfsaRomCurveDef*)curve)->blockedLinkMask >> (u8)j);
                     break;
                 }
             }
@@ -1168,10 +1167,9 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 slope;
     f32 intercept;
     f32 perpSlope;
-    f32 dx;
     f32 dz;
+    f32 dx;
     f32 length;
-    f32 adjustedDistance;
     int useBlendedDistance;
 
     useBlendedDistance = 0;
@@ -1222,22 +1220,21 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     dx = end[0] - center[0];
     dz = end[2] - center[2];
     length = sqrtf((dx * dx) + (dz * dz));
-    if (length != lbl_803E23DC)
+    if (lbl_803E23DC != length)
     {
         dx /= length;
         dz /= length;
     }
 
-    adjustedDistance = moveDistance;
     if (useBlendedDistance != 0)
     {
-        adjustedDistance = sqrtf(limitDistanceSq);
-        adjustedDistance =
-            adjustedDistance - ((adjustedDistance - sqrtf(centerToEnd)) * lbl_803E2480);
+        moveDistance = sqrtf(limitDistanceSq);
+        moveDistance =
+            moveDistance - ((moveDistance - sqrtf(centerToEnd)) * lbl_803E2480);
     }
 
-    end[0] = center[0] + (dx * adjustedDistance);
-    end[2] = center[2] + (dz * adjustedDistance);
+    end[0] = center[0] + (dx * moveDistance);
+    end[2] = center[2] + (dz * moveDistance);
 }
 
 #pragma peephole off

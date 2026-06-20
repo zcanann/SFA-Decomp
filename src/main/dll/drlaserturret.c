@@ -325,7 +325,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
         {
-            int tens = cv / 10;
+            int tens = (int)((long)cv / 10);
             texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         cv = cv / 100;
@@ -338,12 +338,12 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0)
         {
-            state->digitCount = state->digitCount - 1;
+            state->digitCount--;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         else if ((s8)stickLo > 0)
         {
-            state->digitCount = state->digitCount + 1;
+            state->digitCount++;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         if (state->digitCount > state->maxCount)
@@ -364,7 +364,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
             texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
             {
-                int tens = cv / 10;
+                int tens = (int)((long)cv / 10);
                 texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             }
             cv = cv / 100;
@@ -387,8 +387,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     }
     if (state->countValue < state->countTarget)
     {
-        if (state->nudgeCount >= DR_LASERTURRET_MAX_NUDGE_COUNT) nudge = 2;
-        else nudge = 0;
+        nudge = (state->nudgeCount < DR_LASERTURRET_MAX_NUDGE_COUNT) ? 0 : 2;
     }
     else
     {
@@ -399,7 +398,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     case DR_LASERTURRET_PROMPT_COUNT:
         if ((s8)nudge == 0)
         {
-            state->nudgeCount = state->nudgeCount + 1;
+            state->nudgeCount++;
         }
         return nudge == 0;
     case DR_LASERTURRET_PROMPT_NUDGE:

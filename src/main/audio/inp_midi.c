@@ -40,14 +40,9 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
     else
     {
         int i;
-        for (i = 0; i < 0x43; i++)
+        for (i = 0; i < 0x86; i++)
         {
             if (*src != 0xff)
-            {
-                *dst = *src;
-            }
-            dst++;
-            if (*++src != 0xff)
             {
                 *dst = *src;
             }
@@ -260,8 +255,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 0x20;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     if (((controller - 0x80) & 0xff) <= 1U)
@@ -272,8 +267,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     if (((controller - 0x84) & 0xff) <= 1U)
@@ -284,8 +279,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
             *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
                 srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         bank = stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1;
-        bank[dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl] =
-            bank[srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl];
+        *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
     *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +

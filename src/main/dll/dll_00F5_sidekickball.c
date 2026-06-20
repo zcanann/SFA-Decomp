@@ -260,9 +260,9 @@ void sidekickball_update(u8* self)
     player = Obj_GetPlayerObject();
     other = getTrickyObject();
     if (player == NULL
-        || (*(u16*)(player + 0xB0) & 0x1000) != 0
+        || (((GameObject*)player)->objectFlags & 0x1000) != 0
         || other == NULL
-        || (otherStatusZeroWord = __cntlzw((u32) * (u16*)(other + 0xB0)),
+        || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
             otherStatusMask = otherStatusZeroWord >> 5,
             (otherStatusMask & 0x1000) != 0)
         || GameBit_Get(0xD00) != 0)
@@ -378,11 +378,11 @@ u8 trickyBallMove(u8* obj)
     ObjHits_EnableObject((u32)obj);
 
     dy = state->prevPos[1] - ((GameObject*)obj)->anim.localPosY;
-    dy = (dy >= lbl_803E369C) ? dy : -dy;
+    dy = (dy >= 0.0f) ? dy : -dy;
     dx = state->prevPos[0] - ((GameObject*)obj)->anim.localPosX;
-    dx = (dx >= lbl_803E369C) ? dx : -dx;
+    dx = (dx >= 0.0f) ? dx : -dx;
     dz = state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ;
-    dz = (dz >= lbl_803E369C) ? dz : -dz;
+    dz = (dz >= 0.0f) ? dz : -dz;
 
     if ((dx + dy + dz) < lbl_803E36B4)
     {

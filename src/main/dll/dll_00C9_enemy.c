@@ -924,7 +924,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, in
     *(float*)(target + 0x2c) = (float)((double)vec2Z * mag2);
     if ((clampToGround != '\0') && (*(float*)(target + 0x28) < lbl_803E31FC))
     {
-        scale = lbl_803E3264 + *(float*)(*(int*)(state + 0x29c) + 0x10);
+        scale = lbl_803E3264 + *(float*)((int)((GroundBaddieState*)state)->baddie.trackedObj + 0x10);
         if (*(float*)(target + 0x10) < scale)
         {
             *(float*)(target + 0x28) =
@@ -983,7 +983,7 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
     extern f32 lbl_803E2574;
     ObjHitsPriorityState* hitState;
 
-    *(f32*)(p2 + 0x308) = lbl_803E256C / (lbl_803E2570 * mult);
+    ((BaddieState*)p2)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
     *(u8*)(p2 + 0x323) = c;
     ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -1272,9 +1272,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     }
     else
     {
-        radius = (f32)(f64)
-        radius * (f32)(f64)
-        radius;
+        radius = radius * radius;
         arr = ObjGroup_GetObjects(3, &count);
         if (count != 0)
         {
@@ -1557,7 +1555,7 @@ void fn_8014B878(int* arg1, int* sub)
     }
 }
 
-void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 fc)
+void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
     f32 stk_20[3];
@@ -1602,9 +1600,11 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 f
     {
         f32 angle;
         int gt;
+        f64 gtf;
         angle = fn_80291FF4(PSVECDotProduct(stk_20, stk_14));
         gt = (angle > fc);
-        if (__fabs((f32)gt) != lbl_803E2574)
+        gtf = __fabs((f32)gt);
+        if (gtf != lbl_803E2574)
         {
             f32 rot = fc * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
             PSMTXRotAxisRad(stk_2c, stk_8, rot);
@@ -1648,7 +1648,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 f
     }
 }
 
-void fn_8014CD1C(int* node, int* sub, u16 p3, u8 p5, f32 fa, f32 fb)
+void fn_8014CD1C(int* node, int* sub, u16 p3, f32 fa, f32 fb, u8 p5)
 {
     f32 dt;
     int angle;
@@ -1916,12 +1916,12 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u
 
     if ((double)lbl_803E31FC == param_1)
     {
-        *(float*)(param_10 + 0x308) = lbl_803E3208;
+        ((BaddieState*)param_10)->unk308 = lbl_803E3208;
     }
     else
     {
         param_2 = (double)lbl_803E3200;
-        *(float*)(param_10 + 0x308) =
+        ((BaddieState*)param_10)->unk308 =
             (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
     }
     *(char*)(param_10 + 0x323) = param_13;
@@ -2130,7 +2130,7 @@ void enemy_update(int obj)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
-    else if ((*(u16*)(*(int*)&((EnemyState*)state)->trackedObj + 0xb0) & 0x40) != 0)
+    else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & 0x40) != 0)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }

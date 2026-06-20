@@ -342,9 +342,13 @@ void bossdrakor_update(int obj)
         vec = objModelGetVecFn_800395d8(obj, 0xe);
         if (vec != NULL)
         {
+            f32 hxsq;
+            f32 hzsq;
             ObjPath_GetPointWorldPosition(obj, 4, &hx, &hy, &hz, 0);
             PSVECSubtract(&((GameObject*)player)->anim.localPosX, &hx, &hx);
-            d = (s16)getAngle(hy, sqrtf(hx * hx + hz * hz)) - (u16)vec[0];
+            hxsq = hx * hx;
+            hzsq = hz * hz;
+            d = (s16)getAngle(hy, sqrtf(hxsq + hzsq)) - (u16)vec[0];
             if (d > 0x8000)
             {
                 d = (s16)((int)d - 0xffff);
@@ -610,6 +614,13 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     int* tbl = gBossDrakorMoveStateTable;
     f32 t;
     int found;
+    if (action < 26)
+    {
+    if (action <= -1)
+    {
+    }
+    else
+    {
     switch (action)
     {
     case 1:
@@ -717,6 +728,8 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
             drakorhoverpad_resetPendingMotion(found);
         }
         break;
+    }
+    }
     }
 }
 

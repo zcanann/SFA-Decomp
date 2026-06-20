@@ -433,20 +433,16 @@ void saveSelectScreenFree(int runExitCallback)
         lbl_803DD6AC = NULL;
     }
 
-    i = 0;
     p = lbl_803A8680;
     zero = NULL;
-    do
+    for (i = 0; i < 4; i++)
     {
-        if (*p != NULL)
+        if (p[i] != NULL)
         {
-            textureFree(*p);
-            *p = zero;
+            textureFree(p[i]);
+            p[i] = zero;
         }
-        p++;
-        i++;
     }
-    while (i < 4);
 
     textureFree(gSaveSelectTexture);
     if (runExitCallback != 0)
@@ -534,12 +530,10 @@ void SaveSelectScreen_render(int param)
             ptrs = gSaveSelectSlotTextIds;
             do
             {
-                sprintf(*arr, &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
+                sprintf(arr[i], &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
-                gameTextAppendStr(*arr, *ptrs);
+                gameTextAppendStr(arr[i], ptrs[i]);
                 off += 0x24;
-                arr++;
-                ptrs++;
                 i++;
             }
             while (i < 3);

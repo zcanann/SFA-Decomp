@@ -91,14 +91,14 @@ void TrickyCurve_updateBurstTrigger(int obj)
     dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
 
-    if ((((TrickyCurveObjState*)state)->unk8 != -1) && (GameBit_Get(((TrickyCurveObjState*)state)->unk8) != 0))
+    if ((((TrickyCurveObjState*)state)->gateGameBit != -1) && (GameBit_Get(((TrickyCurveObjState*)state)->gateGameBit) != 0))
     {
         return;
     }
 
-    if (GameBit_Get(((TrickyCurveObjState*)state)->unkA) != 0)
+    if (GameBit_Get(((TrickyCurveObjState*)state)->triggerGameBit) != 0)
     {
-        GameBit_Set(((TrickyCurveObjState*)state)->unkA, 0);
+        GameBit_Set(((TrickyCurveObjState*)state)->triggerGameBit, 0);
     }
 
     if (dx <= 0.0f)
@@ -119,7 +119,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
     if (dz <= 0.0f)
     {
-        if (dz > -(f32)((TrickyCurveObjState*)state)->unk2)
+        if (dz > -(f32)((TrickyCurveObjState*)state)->rangeZ)
         {
             insideCount++;
             zSide = 1;
@@ -127,7 +127,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
     if (dz > 0.0f)
     {
-        if (dz < (f32)((TrickyCurveObjState*)state)->unk2)
+        if (dz < (f32)((TrickyCurveObjState*)state)->rangeZ)
         {
             insideCount++;
             zSide--;
@@ -135,7 +135,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
     if (dy <= 0.0f)
     {
-        if (dy > -(f32)((TrickyCurveObjState*)state)->unk4)
+        if (dy > -(f32)((TrickyCurveObjState*)state)->rangeY)
         {
             insideCount++;
             ySide = 1;
@@ -143,7 +143,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
     if (dy > 0.0f)
     {
-        if (dy < (f32)((TrickyCurveObjState*)state)->unk4)
+        if (dy < (f32)((TrickyCurveObjState*)state)->rangeY)
         {
             insideCount++;
             ySide--;
@@ -187,7 +187,7 @@ void TrickyCurve_updateBurstTrigger(int obj)
             }
             while (burstParticles-- != 0);
         }
-        GameBit_Set(((TrickyCurveObjState*)state)->unkA, 1);
+        GameBit_Set(((TrickyCurveObjState*)state)->triggerGameBit, 1);
         Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
     }
 
@@ -289,19 +289,19 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
     float fdz;
     u32 convHi0;
     u32 convLo0;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    float save31Hi;
+    float save31Lo;
+    float save30Hi;
+    float save30Lo;
+    float save29Hi;
+    float save29Lo;
 
-    local_8 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
-    local_18 = (float)savedF30;
-    fStack_14 = (float)savedPs30;
-    local_28 = (float)savedF29;
-    fStack_24 = (float)savedPs29;
+    save31Hi = (float)savedF31;
+    save31Lo = (float)savedPs31;
+    save30Hi = (float)savedF30;
+    save30Lo = (float)savedPs30;
+    save29Hi = (float)savedF29;
+    save29Lo = (float)savedPs29;
     obj = FUN_80286838();
     state = ((GameObject *)obj)->extra;
     ref = FUN_80017a98();
@@ -631,15 +631,15 @@ void TrickyCurve_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     state[0xc] = def[0x19];
-    ((TrickyCurveObjState*)state)->unk4 = (s16)((s32)((TrickyCurveObjectDef*)def)->unk18 << 2);
+    ((TrickyCurveObjState*)state)->rangeY = (s16)((s32)((TrickyCurveObjectDef*)def)->unk18 << 2);
     *(s16*)state = ((TrickyCurveObjectDef*)def)->unk1A;
-    ((TrickyCurveObjState*)state)->unk2 = ((TrickyCurveObjectDef*)def)->unk1C;
+    ((TrickyCurveObjState*)state)->rangeZ = ((TrickyCurveObjectDef*)def)->unk1C;
     state[0xe] = def[0x19];
     state[0x10] = 0;
     state[0x11] = 0;
     state[0x12] = 0;
-    ((TrickyCurveObjState*)state)->unk8 = ((TrickyCurveObjectDef*)def)->unk20;
-    ((TrickyCurveObjState*)state)->unkA = ((TrickyCurveObjectDef*)def)->unk1E;
+    ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->unk20;
+    ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->unk1E;
     ((TrickyCurveObjState*)state)->unk6 = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }

@@ -46,7 +46,7 @@ extern int getAngle(float y, float x);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
 extern int Obj_IsLoadingLocked(void);
-extern u8 objBboxFn_800640cc();
+extern int objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 
 extern char lbl_803DBCD8;
@@ -58,7 +58,7 @@ extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 extern u32 fn_80295CBC();
-extern u32 gDusterWallProbeOffsets;
+extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
@@ -121,7 +121,7 @@ extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
 #pragma opt_common_subs off
-void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
+void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
 {
     float hi;
     float lo;
@@ -198,17 +198,16 @@ void fn_801554B4(int* obj, int state)
     float hit[18];
 
     didHit = 0;
-    probeOffsets = (float*)&gDusterWallProbeOffsets;
-    for (i = 0; didHit == 0 && i < 4; i++)
+    for (i = 0, probeOffsets = gDusterWallProbeOffsets; didHit == 0 && i < 4; i++)
     {
-        maxv[0] = ((GameObject*)obj)->anim.localPosX + *probeOffsets;
+        maxv[0] = ((GameObject*)obj)->anim.localPosX + probeOffsets[0];
         maxv[1] = ((GameObject*)obj)->anim.localPosY;
         maxv[2] = ((GameObject*)obj)->anim.localPosZ + probeOffsets[1];
-        minv[0] = ((GameObject*)obj)->anim.localPosX - *probeOffsets;
+        minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[0];
         minv[1] = ((GameObject*)obj)->anim.localPosY;
         minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[1];
         didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
-        probeOffsets = probeOffsets + 2;
+        probeOffsets += 2;
     }
     if (didHit != 0)
     {
@@ -279,7 +278,7 @@ void fn_801557D4(int* obj, int state)
     }
     else
     {
-        if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+        if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
             (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
@@ -301,7 +300,7 @@ void fn_80155884(int* obj, int state)
     {
         fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
@@ -329,7 +328,7 @@ void fn_80155948(int* obj, int state)
     {
         fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
         (cond = fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
         ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
@@ -1046,7 +1045,7 @@ void fn_80156DA0(int obj, int state)
     bool resetting;
     int groundHit;
     u8 noHit;
-    u16 randBit;
+    int randBit;
     float toPos[3];
     float fromPos[3];
     float cosYaw;

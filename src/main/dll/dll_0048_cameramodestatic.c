@@ -104,9 +104,8 @@ void CameraModeStatic_update(short* camObj)
         }
         if ((*(u8*)(placement + 0x1b) & 2) != 0)
         {
-            pitch = getAngle(dy, sqrtf(dx * dx + dz * dz));
-            angle = ((pitch & 0xffff) - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (u32)(u16)
-            camObj[1];
+            pitch = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
+            angle = (pitch - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (u32)(u16)camObj[1];
             if (0x8000 < angle)
             {
                 angle = angle + -0xffff;
@@ -115,7 +114,7 @@ void CameraModeStatic_update(short* camObj)
             {
                 angle = angle + 0xffff;
             }
-            camObj[1] += (short)((int)(angle * framesThisStep) >> 3);
+            camObj[1] += (int)(angle * framesThisStep) >> 3;
         }
         if ((*(u8*)(placement + 0x1b) & 4) != 0)
         {
@@ -128,7 +127,7 @@ void CameraModeStatic_update(short* camObj)
             {
                 viewObj = viewObj + 0xffff;
             }
-            camObj[2] += (short)((int)(viewObj * framesThisStep) >> 3);
+            camObj[2] += (int)(viewObj * framesThisStep) >> 3;
         }
         Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
                                        *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),

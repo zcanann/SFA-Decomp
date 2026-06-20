@@ -771,7 +771,7 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     ((GroundBaddieState*)state)->baddie.moveInputX = neutralBlend;
     ((GroundBaddieState*)state)->baddie.moveInputZ = neutralBlend;
     memcpy((void*)route, &((GameObject*)obj)->anim.localPosX, 0xc);
-    memcpy((void*)(sub->route35C + 0xc), (void*)(*(int*)&((GroundBaddieState*)state)->baddie.targetObj + 0xc), 0xc);
+    memcpy((void*)(sub->route35C + 0xc), (void*)&((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX, 0xc);
     voxmaps_updateRoutePath((void*)route, (void*)(sub->route35C + 0x28));
     if (*(u8*)(route + 0x25) == 0)
     {
@@ -810,24 +810,24 @@ int iceBaddie_stateHandlerB07(int obj, int state)
             }
             else
             {
-                int control = *(int*)&sub->control;
+                IceBaddieControl* control = (IceBaddieControl*)*(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
+                    int attackIndex = control->attackPatternIndex;
+                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, gIceBaddieAttackMovesAlt[attackIndex]);
                 }
                 else
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
+                    int attackIndex = control->attackPatternIndex;
+                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
                         obj, state, gIceBaddieAttackMoves[attackIndex]);
                 }
-                if (((IceBaddieControl*)control)->attackPatternIndex >= 7)
+                if (control->attackPatternIndex >= 7)
                 {
-                    ((IceBaddieControl*)control)->attackPatternIndex = 0;
+                    control->attackPatternIndex = 0;
                 }
             }
         }
@@ -914,15 +914,17 @@ int iceBaddie_stateHandlerB07(int obj, int state)
 void iceBaddie_updateEffectAnchors(int obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
+    f32 transformed[3];
+#define transformedX (transformed[0])
+#define transformedY (transformed[1])
+#define transformedZ (transformed[2])
     f32 transformScratch[6];
-#define transformedX (transformScratch[0])
-#define transformedY (transformScratch[1])
-#define transformedZ (transformScratch[2])
-    f32 pathX;
-    f32 pathY;
-    f32 pathZ;
+#define pathX (transformScratch[3])
+#define pathY (transformScratch[4])
+#define pathZ (transformScratch[5])
     f32 pathMtx[16];
     f32 scale;
+    f32 minScale;
     f32 angle;
 
     memcpy(pathMtx, (void*)ObjPath_GetPointModelMtx(obj, 1), 0x40);
@@ -931,15 +933,20 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
     pathMtx[12] = lbl_803E2D14;
     if (((GameObject*)obj)->anim.seqId == 99)
     {
-        scale = lbl_803E2D48;
+        minScale = lbl_803E2D48;
     }
     else
     {
-        scale = lbl_803E2D2C;
+        minScale = lbl_803E2D2C;
     }
-    scale = (scale < ((GroundBaddieState*)state)->baddie.animSpeedA)
-                ? ((GroundBaddieState*)state)->baddie.animSpeedA
-                : scale;
+    if (((GroundBaddieState*)state)->baddie.animSpeedA < minScale)
+    {
+        scale = minScale;
+    }
+    else
+    {
+        scale = ((GroundBaddieState*)state)->baddie.animSpeedA;
+    }
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
         ObjPath_GetPointWorldPosition(obj, 2, (f32*)(control + 0x2c),
@@ -967,7 +974,7 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
         transformedY = lbl_803E2DAC;
         transformedZ = lbl_803E2DA4;
         Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
-        memcpy((void*)(control + 0x38), &transformedX, 0xc);
+        memcpy((void*)(control + 0x38), transformed, 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
         ((IceBaddieControl*)control)->effectFlags |= 1;
     }
@@ -975,6 +982,9 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
 #undef transformedX
 #undef transformedY
 #undef transformedZ
+#undef pathX
+#undef pathY
+#undef pathZ
 
 void iceBaddie_updateControlEffects(int obj, int state)
 {
@@ -1371,7 +1381,7 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
             obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8, v);
         *(int*)&((BaddieState*)state)->targetObj = acquired;
-        *(u8*)(state + 0x349) = 0;
+        ((BaddieState*)state)->hasTarget = 0;
         ((GroundBaddieState*)sub)->targetState = 1;
     }
 }

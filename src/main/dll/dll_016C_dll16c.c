@@ -372,7 +372,7 @@ void dll_16C_update(int* obj)
         {
             f32 t;
             int* player = (int*)Obj_GetPlayerObject();
-            t = Vec_distance((f32*)((char*)extra->linkedObj + 0x18), &((GameObject*)player)->anim.worldPosX);
+            t = Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
             t = (t - lbl_803E475C) / lbl_803E4760;
             if (t < lbl_803E4748)
             {

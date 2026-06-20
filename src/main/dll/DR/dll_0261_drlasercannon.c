@@ -413,7 +413,7 @@ void drlasercannon_hitDetect(int obj)
                                              &hitPosY, &hitPosZ);
     if (state->flags.b6 != 0)
     {
-        if (hit != 0 && *(s16 *)(hitObject + 0x46) != state->hitExcludeType &&
+        if (hit != 0 && ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType &&
             (void *)state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
@@ -421,7 +421,7 @@ void drlasercannon_hitDetect(int obj)
     }
     else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
              (void *)state->lastHitObject != (void *)hitObject &&
-             *(s16 *)(hitObject + 0x46) != state->hitExcludeType)
+             ((GameObject *)hitObject)->anim.seqId != state->hitExcludeType)
     {
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
@@ -544,14 +544,7 @@ void drlasercannon_update(int obj)
             v = (s16*)objModelGetVecFn_800395d8(obj, 0xb);
             v[0] = (s16)(v[0] >> 1);
         }
-        if (hit != 0)
-        {
-            if ((void*)state->firepipeObject != NULL)
-            {
-                firepipe_clearLinkedUpdateFlag(state->firepipeObject);
-            }
-        }
-        else if (dist < setup->targetRange)
+        if (hit == 0 && dist < setup->targetRange)
         {
             if ((void*)target == (void*)player)
             {
@@ -613,6 +606,10 @@ void drlasercannon_update(int obj)
                 break;
             }
         }
+        else if ((void*)state->firepipeObject != NULL)
+        {
+            firepipe_clearLinkedUpdateFlag(state->firepipeObject);
+        }
     }
     spawned = state->firepipeObject;
     if ((void*)spawned != NULL)
@@ -659,7 +656,7 @@ void drlasercannon_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E690C, 0);
         state->animStepScale = lbl_803E6920;
     }
-    state->bobPhase = (u16)(int)(lbl_803E6924 * timeDelta + (f32)(u32)state->bobPhase);
+    *(u16*)&state->bobPhase = (lbl_803E6924 * timeDelta + (f32)(u32)state->bobPhase);
     state->bobOffset =
         lbl_803E68EC * mathSinf(lbl_803E6928 * (f32)(u32)state->bobPhase / lbl_803E692C);
     ((GameObject*)obj)->anim.localPosY += state->bobOffset;

@@ -620,11 +620,11 @@ int smallbasket_getExtraSize(void)
     return 0x24;
 }
 
-void smallbasket_free(int param_1)
+void smallbasket_free(int obj)
 {
-    (*gModgfxInterface)->detachSource((void*)param_1);
+    (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(gSmallBasketResource);
-    ObjGroup_RemoveObject(param_1, 0x10);
+    ObjGroup_RemoveObject(obj, 0x10);
 }
 
 void objThrowFn_80182504(int obj)

@@ -18,7 +18,6 @@
 
 extern int getAngle(float y, float x);
 extern void objRenderFn_8003b8f4(f32);
-extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"

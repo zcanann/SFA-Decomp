@@ -87,7 +87,6 @@ extern f32 lbl_803E37F4;
 extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
-extern u32 FUN_80017a78();
 extern int ObjMsg_Pop();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -150,7 +149,7 @@ void appleontree_handleCollectableHit(int obj)
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, 0x7000a, obj, (int*)(state + 0x5c));
         GameBit_Set(0x90f, 1);
-        ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 4);
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
     }
     else
     {
@@ -168,7 +167,7 @@ void appleontree_handleCollectableHit(int obj)
             {
                 ObjHits_DisableObject(obj);
             }
-            ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
         }
     }
 }
@@ -190,7 +189,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, f32 scale); /* #57 */
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
-    if ((inner->unk5A & 2) == 0)
+    if ((inner->flags & 2) == 0)
     {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
@@ -240,7 +239,7 @@ void fn_8017D854(int obj, int msg)
             {
                 ObjHits_DisableObject(obj);
             }
-            ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+            ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
         }
     }
     else
@@ -269,7 +268,10 @@ void fn_8017D854(int obj, int msg)
             f32 r2;
             r = (lbl_803E37E4 - q) / t;
             r2 = (lbl_803E37E4 + q) / t;
-            if (!(r > 0.0f))
+            if (r > *(f32*)&lbl_803E37D4)
+            {
+            }
+            else
             {
                 r = r2;
             }
@@ -300,7 +302,7 @@ void fn_8017D854(int obj, int msg)
                 {
                     ObjHits_DisableObject(obj);
                 }
-                ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 2);
+                ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
             }
         }
         else
@@ -370,10 +372,10 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((GameObject*)p)->anim.rotY = ((AppleOnTreeState*)state)->rotY;
                 ((GameObject*)p)->anim.rotZ = ((AppleOnTreeState*)state)->rotZ;
                 ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->unk28;
-                if ((((AppleOnTreeState*)state)->unk5A & 8) == 0)
+                if ((((AppleOnTreeState*)state)->flags & 8) == 0)
                 {
                     Sfx_PlayFromObject(p, 0x407);
-                    ((AppleOnTreeState*)state)->unk5A = (u8)(((AppleOnTreeState*)state)->unk5A | 8);
+                    ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 8);
                 }
                 return 1;
             }
@@ -575,21 +577,22 @@ void appleontree_update(int objArg)
     extern u32 FUN_8017db40(); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     float fa;
-    u16* obj;
+    int obj;
     int val;
     u32* modelIdxPtrW;
     u32 bitVal;
     int* modelIdxPtr;
-    int placement;
     int state;
+    int placement;
+    int i;
     f32 fc;
     f32 fb;
     f32 fd;
     f32 frac;
-    int msg;
     f32 sunTime;
+    int msg;
 
-    obj = (u16*)objArg;
+    obj = objArg;
     state = *(int*)&((GameObject*)obj)->extra;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     msg = 0;
@@ -611,7 +614,7 @@ void appleontree_update(int objArg)
                     }
                     else
                     {
-                        if (*(void**)(obj + 0x2a) != 0)
+                        if (*(void**)((u8*)obj + 0x54) != 0)
                         {
                             ObjHits_DisableObject((int)obj);
                         }
@@ -639,14 +642,14 @@ void appleontree_update(int objArg)
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
-                placement = 0;
+                i = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
-                    placement = placement + 1;
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                    i = i + 1;
                 }
-                while (placement < 8);
-                if (*(void**)(obj + 0x2a) != 0)
+                while (i < 8);
+                if (*(void**)((u8*)obj + 0x54) != 0)
                 {
                     ObjHits_DisableObject((int)obj);
                 }
@@ -663,11 +666,11 @@ void appleontree_update(int objArg)
                 }
                 else
                 {
-                    placement = *(int*)&((GameObject*)obj)->extra;
+                    fb = (*(float*)(*(int*)&((GameObject*)obj)->extra + 8) /
+                          *(float*)(*(int*)&((GameObject*)obj)->extra + 4)) *
+                         (lbl_803E37C8 / *(float*)(*(int*)&((GameObject*)obj)->extra + 0x10));
                     ((GameObject*)obj)->anim.rootMotionScale =
-                        (*(float*)(placement + 8) / *(float*)(placement + 4)) *
-                        (lbl_803E37C8 / *(float*)(placement + 0x10)) *
-                        *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                        *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * fb;
                 }
             }
             break;
@@ -678,14 +681,14 @@ void appleontree_update(int objArg)
                     (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
-                placement = 0;
+                i = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
-                    placement = placement + 1;
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                    i = i + 1;
                 }
-                while (placement < 8);
-                if (*(void**)(obj + 0x2a) != 0)
+                while (i < 8);
+                if (*(void**)((u8*)obj + 0x54) != 0)
                 {
                     ObjHits_DisableObject((int)obj);
                 }
@@ -697,13 +700,13 @@ void appleontree_update(int objArg)
             {
                 if (frac > ((GroundBaddieState*)state)->baddie.posX)
                 {
-                    placement = 0;
+                    i = 0;
                     do
                     {
-                        (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
-                        placement = placement + 1;
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x55a, NULL, 2, -1, NULL);
+                        i = i + 1;
                     }
-                    while (placement < 8);
+                    while (i < 8);
                     ((AppleOnTreeState*)state)->unk3A = 2;
                 }
                 else
@@ -727,7 +730,7 @@ void appleontree_update(int objArg)
                 *modelIdxPtrW = 0;
                 *(float*)(val + 0x24) = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
-                FUN_80017a78((int)obj, 1);
+                Obj_SetActiveModelIndex((int)obj, 1);
                 ((AppleOnTreeState*)state)->unk3A = 3;
             }
             else
@@ -737,13 +740,14 @@ void appleontree_update(int objArg)
                 fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - fa) /
                 (*(float*)(val + 4) *
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
-                fa = fa * fa * fa * fa;
-                state = (int)((fa * fa) / *(float*)(val + 0x54));
+                fc = fa * fa;
+                fc = fc * fc;
+                state = 0x100 - (int)((fc * fc) / *(float*)(val + 0x54));
                 modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
-                *modelIdxPtr = 0x100 - state;
+                *modelIdxPtr = state;
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * *(float*)(val + 0x24);
-                FUN_80017a78((int)obj, 1);
+                Obj_SetActiveModelIndex((int)obj, 1);
             }
             state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((state != 0) ||
@@ -784,26 +788,25 @@ void appleontree_update(int objArg)
                 do
                 {
                     f32 t = ((AppleOnTreeState*)state)->unk0C;
-                    if (placement != 0) break;
                     fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
-                    if (((AppleOnTreeState*)state)->unk28 <= fd)
-                    {
-                        placement = FUN_8017e15c(fc, obj, state);
-                    }
-                    else
+                    if (((AppleOnTreeState*)state)->unk28 > fd)
                     {
                         placement = FUN_8017e3c0(fc, obj, state);
                     }
+                    else
+                    {
+                        placement = FUN_8017e15c(fc, obj, state);
+                    }
                     val = val + 1;
                 }
-                while ((val == 100) || (val != 0x66));
+                while (((val == 100) || (val != 0x66)) && placement == 0);
                 if (lbl_803E37D4 != ((AppleOnTreeState*)state)->unk30)
                 {
                     fb = ((AppleOnTreeState*)state)->unk0C / ((AppleOnTreeState*)state)->unk50;
-                    *obj = (f32) * (s16*)(state + 0x48) * fb;
-                    obj[1] = (f32) * (s16*)(state + 0x4a) * fb;
-                    obj[2] = (f32) * (s16*)(state + 0x4c) * fb;
+                    ((u16*)obj)[0] = (f32) * (s16*)(state + 0x48) * fb;
+                    ((u16*)obj)[1] = (f32) * (s16*)(state + 0x4a) * fb;
+                    ((u16*)obj)[2] = (f32) * (s16*)(state + 0x4c) * fb;
                 }
                 modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtr = (int)(lbl_803E380C * frac);
@@ -820,7 +823,7 @@ void appleontree_update(int objArg)
                 }
                 else
                 {
-                    if (*(void**)(obj + 0x2a) != 0)
+                    if (*(void**)((u8*)obj + 0x54) != 0)
                     {
                         ObjHits_DisableObject((int)obj);
                     }
@@ -839,7 +842,7 @@ void appleontree_update(int objArg)
                 }
                 else
                 {
-                    if (*(void**)(obj + 0x2a) != 0)
+                    if (*(void**)((u8*)obj + 0x54) != 0)
                     {
                         ObjHits_DisableObject((int)obj);
                     }
@@ -947,7 +950,6 @@ int dll_FC_getObjectTypeId(void);
 
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_FC_hitDetect(int* obj);
 
 ObjectDescriptor gDllFCObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

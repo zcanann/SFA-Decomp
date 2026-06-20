@@ -26,7 +26,7 @@ typedef struct AppleOnTreeState
     u8 pad4E[2];
     f32 unk50;
     u8 pad54[6];
-    u8 unk5A;
+    u8 flags;
     u8 pad5B;
     s16 unk5C;
     s16 unk5E;

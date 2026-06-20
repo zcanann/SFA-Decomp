@@ -82,10 +82,9 @@ void camcontrol_updateTargetFeedback(void)
         return;
     }
     result = gameTextFn_80134be8();
-    if (result != 0)
+    switch (result)
     {
-        return;
-    }
+    case 0:
     if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', target != NULL))
     {
         targetKind = CAMCONTROL_CAMERA->targetKind;
@@ -282,7 +281,8 @@ void camcontrol_updateTargetFeedback(void)
     reticle->alpha = alphaScale;
     gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
     *(s16*)&reticle->rotX = (gCamcontrolReticleSpinStepPerFrame * timeDelta + (float)reticle->rotX);
-    return;
+    break;
+    }
 }
 
 int Camera_isZooming(void)

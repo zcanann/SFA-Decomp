@@ -116,9 +116,9 @@ void spellstone_update(SpellStoneObject* obj)
             ObjHits_DisableObject((u32)obj);
             if (obj->followTarget != NULL)
             {
-                obj->posX = *(f32*)((u8*)obj->followTarget + 0xc);
-                obj->posY = *(f32*)((u8*)obj->followTarget + 0x10);
-                obj->posZ = *(f32*)((u8*)obj->followTarget + 0x14);
+                obj->posX = ((GameObject*)obj->followTarget)->anim.localPosX;
+                obj->posY = ((GameObject*)obj->followTarget)->anim.localPosY;
+                obj->posZ = ((GameObject*)obj->followTarget)->anim.localPosZ;
             }
         }
         else

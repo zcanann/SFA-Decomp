@@ -1509,13 +1509,13 @@ void intersectModLineBuild(int* obj)
     {
         int k;
         for (k = 0; k < 40; k++)
-            *(u8*)(*(int*)((char*)obj + 0x38) + k) = 0xff;
+            ((u8*)*(int*)((char*)obj + 0x38))[k] = 0xff;
     }
     prev = -1;
     for (li = 0; li < gIntersectLineCount; li++)
     {
         u8* base = (u8*)lbl_803DCF34;
-        int best = 0;
+        s16 best = 0;
         int j;
         int grp;
         for (j = 0; j < gIntersectLineCount; j++)
@@ -1538,26 +1538,24 @@ void intersectModLineBuild(int* obj)
         }
         {
             int m;
-            u8* so = (u8*)*(int*)((char*)obj + 0x34);
             for (m = 0; m < li; m++)
             {
-                if (*(s16*)(so + m * 0x10 + 8) == (s16)best)
-                    *(s16*)(so + m * 0x10 + 8) = li;
-                if (*(s16*)(so + m * 0x10 + 0xa) == best)
-                    *(s16*)(so + m * 0x10 + 0xa) = li;
+                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) == (s16)best)
+                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) = li;
+                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) == best)
+                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) = li;
             }
         }
         {
             int n;
             for (n = 0; n < gIntersectLineCount; n++)
             {
-                u8* Ln = (u8*)lbl_803DCF34 + n * 0x10;
-                if ((s8)Ln[3] != 0x14)
+                if ((s8)((u8*)lbl_803DCF34)[n * 0x10 + 3] != 0x14)
                 {
-                    if ((s16)best == *(s16*)(Ln + 8))
-                        *(s16*)(Ln + 8) = li;
-                    if ((s16)best == *(s16*)(Ln + 0xa))
-                        *(s16*)(Ln + 0xa) = li;
+                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8))
+                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8) = li;
+                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa))
+                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa) = li;
                 }
             }
         }
@@ -2612,7 +2610,7 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
             if (transformState == NULL) continue;
             if (transformState->resetFrames != 0) continue;
             if (transformState->pad10E != 0) continue;
-            model = (int*)resetObj->banks[hitState->stateIndex];
+            model = (int*)resetObj->banks[(s8)hitState->stateIndex];
             if (model == NULL) continue;
             hdr = *(int*)model;
             if (*(u16*)(hdr + 0xf0) == 0) continue;
@@ -2858,13 +2856,14 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 extern f32 __PADFixBits;
 
 
+#pragma optimization_level 2
 void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 {
-    u8 fmt;
+    u32 fmt;
     u32 w, h;
     int i, j;
     u32 wA, wB;
-    u16 texA, texB;
+    int texA, texB;
     u8 redA, redB;
     int rf, gf, bf;
 
@@ -2899,8 +2898,9 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
                     int i12 = (int)*(u16*)(a + 0xa) * im * 2;
-                    u8* ad = a + i6 + i4 + i5 + i12;
-                    u8* bd = b + i6 + i4 + i5 + i12;
+                    u8 *ad = a + i6 + i4 + i5 + i12;
+                    u8 *bd = b + i6 + i4 + i5 + i12;
+                    u8 *cd = c + i6 + i4 + i5 + i12;
                     texA = *(u16*)(ad + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
                     texB = *(u16*)(bd + 0x60);
@@ -2910,7 +2910,7 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
                         + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
-                    *(u16*)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
+                    *(u16*)(cd + 0x60) = bf | (rf | gf);
                 }
             }
         }
@@ -2948,6 +2948,7 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
         DCStoreRange(c + 0x60, *(int*)(c + 0x44));
     }
 }
+#pragma optimization_level reset
 
 extern void Obj_BuildTransformMatrices(void* obj);
 extern void fn_80296EB4(u8* p1, u8* p2);
@@ -2977,11 +2978,11 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     hitReact = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (oldParent != NULL)
     {
-        Obj_TransformLocalPointToWorld(*(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
-                                       (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20), (u32)oldParent);
+        Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+                                       &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ, (u32)oldParent);
         Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
                                        (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(*(f32*)(obj + 0x24), __AR_Callback, *(f32*)(obj + 0x2c),
+        Obj_TransformLocalVectorToWorld(((GameObject*)obj)->anim.velocityX, __AR_Callback, ((GameObject*)obj)->anim.velocityZ,
                                         &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
         yawSum = *(s16*)oldParent + ((GameObject*)obj)->anim.rotX;
     }
@@ -2996,8 +2997,8 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     {
         if (*(u8**)(obj + 0x30) != NULL)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c), *(f32*)(obj + 0x20),
-                                           (f32*)(obj + 0xc), (f32*)(obj + 0x10), (f32*)(obj + 0x14),
+            Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
+                                           &((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
                                            (u32)*(u8**)(obj + 0x30));
             Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
                                            (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
@@ -4249,8 +4250,8 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
             fl = (char*)gMapDynamicSlots;
             do
             {
-                if (*(u8*)(fl + 0x14) != 0 && *(int*)fl == (int)self &&
-                    *(int*)(fl + 4) == (int)o && *(u8*)(fl + 0x15) == slot)
+                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self &&
+                    *(u32*)(fl + 4) == (u32)o && *(u8*)(fl + 0x15) == (u8)slot)
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
@@ -4771,34 +4772,24 @@ u8 doEdges;
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
+            int m;
+            for (m = 4; m != 0; m--)
+            {
+                if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+                bit = (s16)(bit << 1);
+                pos += 0x50;
+            }
         }
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
+            int m;
+            for (m = 4; m != 0; m--)
+            {
+                if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+                bit = (s16)(bit << 1);
+                pos += 0x50;
+            }
         }
         tri = *(u8**)(blk + 0x50);
         triEnd = (u32)tri + *(u16*)(blk + 0x9a) * 0x14;
@@ -4932,8 +4923,8 @@ u8 doEdges;
                 {
                     int k22, deg, j2;
                     f32* ep;
-                    f32 eps = __AR_Callback;
                     f32 one = lbl_803DECC4;
+                    f32 eps = __AR_Callback;
                     PSVECSubtract(verts + 3, v0, e2);
                     k22 = 0;
                     deg = 0;

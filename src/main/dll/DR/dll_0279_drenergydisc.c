@@ -83,7 +83,7 @@ void drenergydisc_init(u8* obj, u8* setup)
 
     spawnRotX = (s16)((s8)setup[0x18] << 8);
     ((GameObject*)obj)->anim.rotX = spawnRotX;
-    if ((u32)GameBit_Get(*(s16*)(setup + 0x20)) != 0)
+    if ((u32)GameBit_Get(((DrenergydiscPlacement*)setup)->activeGameBit) != 0)
     {
         state->activated = 1;
         Sfx_PlayFromObject((int)obj, SFXfend_rob_servo2);

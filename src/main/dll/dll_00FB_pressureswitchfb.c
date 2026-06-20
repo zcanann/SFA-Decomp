@@ -4,7 +4,7 @@
  * far enough above the pad, the switch is held depressed: it slides on its
  * local Y toward the pressed target (CfGuardianState.targetPosY) at
  * velocityY * timeDelta, sets the placement's "pressed" game bit
- * (placement->unk1A) and swaps to the pressed texture (id 0x100). When the
+ * (placement->pressedGameBit) and swaps to the pressed texture (id 0x100). When the
  * weight leaves it springs back up and clears the game bit.
  *
  * Up to PRESSURESWITCHFB_TRACKED_OBJECT_COUNT contacts are cached in the runtime
@@ -145,12 +145,12 @@ typedef struct PressureswitchfbPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
-    s16 unk1A;
-    u8 unk1C;
+    s16 pressedGameBit;
+    u8 pressDepth;
     u8 unk1D;
-    u8 unk1E;
+    u8 drivesTricky;
     u8 pad1F[0x20 - 0x1F];
-    s16 unk20;
+    s16 enableGameBit;
     s16 unk22;
     s16 unk24;
     u8 pad26[0x28 - 0x26];
@@ -218,12 +218,12 @@ void pressureswitchfb_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     }
-    if ((((PressureswitchfbPlacement*)def)->unk20 == -1) || (GameBit_Get(((PressureswitchfbPlacement*)def)->unk20) !=
+    if ((((PressureswitchfbPlacement*)def)->enableGameBit == -1) || (GameBit_Get(((PressureswitchfbPlacement*)def)->enableGameBit) !=
         0))
     {
-        u8 c = *state;
-        *state = c - 1;
-        if ((s8)(c - 1) < 0)
+        s8 c = *state - 1;
+        *state = c;
+        if (c < 0)
         {
             *state = 0;
         }
@@ -323,7 +323,7 @@ void pressureswitchfb_update(int obj)
                     {
                         ((GameObject*)obj)->anim.localPosY = target;
                     }
-                    GameBit_Set(((PressureswitchfbPlacement*)def)->unk1A, 1);
+                    GameBit_Set(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
                     if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                     {
                         tex = objFindTexture((int*)obj, 0, 0);
@@ -340,7 +340,7 @@ void pressureswitchfb_update(int obj)
                     if (((GameObject*)obj)->anim.localPosY < target)
                     {
                         ((GameObject*)obj)->anim.localPosY = target;
-                        GameBit_Set(((PressureswitchfbPlacement*)def)->unk1A, 1);
+                        GameBit_Set(((PressureswitchfbPlacement*)def)->pressedGameBit, 1);
                         if ((((SwitchFlags*)(state + 0x84))->active) != 0)
                         {
                             tex = objFindTexture((int*)obj, 0, 0);
@@ -382,7 +382,7 @@ void pressureswitchfb_update(int obj)
                     if (((GameObject*)obj)->anim.localPosY > ((CfGuardianState*)state)->targetPosY)
                     {
                         ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)state)->targetPosY;
-                        GameBit_Set(((PressureswitchfbPlacement*)def)->unk1A, 0);
+                        GameBit_Set(((PressureswitchfbPlacement*)def)->pressedGameBit, 0);
                     }
                     else
                     {
@@ -392,7 +392,7 @@ void pressureswitchfb_update(int obj)
             }
             else
             {
-                if (GameBit_Get(((PressureswitchfbPlacement*)def)->unk1A) == 0)
+                if (GameBit_Get(((PressureswitchfbPlacement*)def)->pressedGameBit) == 0)
                 {
                     tex = objFindTexture((int*)obj, 0, 0);
                     if (tex != NULL)
@@ -433,8 +433,8 @@ void pressureswitchfb_update(int obj)
         {
             Sfx_StopObjectChannel(obj, 8);
         }
-        if (((((PressureswitchfbPlacement*)def)->unk1E != 0) && ((char*)(tmp = (int)getTrickyObject()) != NULL)) &&
-            (GameBit_Get(((PressureswitchfbPlacement*)def)->unk1A) == 0))
+        if (((((PressureswitchfbPlacement*)def)->drivesTricky != 0) && ((char*)(tmp = (int)getTrickyObject()) != NULL)) &&
+            (GameBit_Get(((PressureswitchfbPlacement*)def)->pressedGameBit) == 0))
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
@@ -485,11 +485,11 @@ void pressureswitchfb_init(u8* obj, u8* params)
         ((CfGuardianState*)sub)->velocityY = defaultOffset;
     }
     ((CfGuardianState*)sub)->targetPosY = *(f32*)(params + 0xc);
-    if (GameBit_Get(((PressureswitchfbPlacement*)params)->unk1A) != 0)
+    if (GameBit_Get(((PressureswitchfbPlacement*)params)->pressedGameBit) != 0)
     {
         s16 model;
         ((GameObject*)obj)->anim.localPosY = ((CfGuardianState*)sub)->targetPosY - (f32)(u32)
-        ((PressureswitchfbPlacement*)params)->unk1C;
+        ((PressureswitchfbPlacement*)params)->pressDepth;
         sub[0] = 0x1e;
         flags->canRelease = 0;
         model = ((GameObject*)obj)->anim.seqId;

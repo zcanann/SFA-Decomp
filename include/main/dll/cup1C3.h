@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-int DBSH_Symbol_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
+int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState *animUpdate);
 void FUN_801c9f44(void);
 void FUN_801c9f64(int param_1);
 void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

@@ -466,7 +466,7 @@ u32 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
-    state = *(LandedArwingState**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
     *(u8*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
@@ -559,7 +559,7 @@ void fn_80165B3C(int obj, int state)
 
 void fn_80166840(int obj, int state, f32* hit, f32* end)
 {
-    f32 fVar1;
+    f32 speed;
     f32 planeX;
     f32 planeY;
     f32 planeZ;
@@ -606,10 +606,10 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
     plane[3] = planeW;
     Vec3_Cross(plane, hit, response);
     Vec3_Normalize(response);
-    fVar1 = lbl_803E3004;
+    speed = lbl_803E3004;
     ((GameObject*)obj)->anim.velocityX = lbl_803E3004 * response[0];
-    ((GameObject*)obj)->anim.velocityY = fVar1 * response[1];
-    ((GameObject*)obj)->anim.velocityZ = fVar1 * response[2];
+    ((GameObject*)obj)->anim.velocityY = speed * response[1];
+    ((GameObject*)obj)->anim.velocityZ = speed * response[2];
     ((LandedArwingState*)state)->surfaceNormalX = hit[0];
     ((LandedArwingState*)state)->surfaceNormalY = hit[1];
     ((LandedArwingState*)state)->surfaceNormalZ = hit[2];
@@ -728,7 +728,7 @@ void fn_80166444(int obj, int state)
         u8 pad[0x10];
         u8 hitType;
     } hitScratch;
-    f32 fVar1;
+    f32 speed;
 
     distanceRemaining = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
         (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
@@ -820,10 +820,10 @@ void fn_80166444(int obj, int state)
         }
         else
         {
-            fVar1 = lbl_803E3030;
-            ((GameObject*)obj)->anim.velocityX = fVar1 * ((LandedArwingState*)state)->surfaceNormalX;
-            ((GameObject*)obj)->anim.velocityY = fVar1 * ((LandedArwingState*)state)->surfaceNormalY;
-            ((GameObject*)obj)->anim.velocityZ = fVar1 * ((LandedArwingState*)state)->surfaceNormalZ;
+            speed = lbl_803E3030;
+            ((GameObject*)obj)->anim.velocityX = speed * ((LandedArwingState*)state)->surfaceNormalX;
+            ((GameObject*)obj)->anim.velocityY = speed * ((LandedArwingState*)state)->surfaceNormalY;
+            ((GameObject*)obj)->anim.velocityZ = speed * ((LandedArwingState*)state)->surfaceNormalZ;
             ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = 1;
         }
     }
@@ -866,6 +866,7 @@ extern void LandedArwing_TriggerLaunchTarget(void);
 extern void LandedArwing_ReturnZero(void);
 
 #pragma fp_contract off
+#pragma opt_common_subs off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -875,16 +876,16 @@ void dll_D3_update(int* obj)
     int hitCount;
     int rc;
     int hits;
-    f32 searchRadius;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 vec[4];
     int aiStack_80[24];
-    char hitType;
+#define searchRadius vec[0]
+#define dx vec[1]
+#define dy vec[2]
+#define dz vec[3]
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
-    extra = *(LandedArwingState**)((char*)state + 0x40c);
+    extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     player = Obj_GetPlayerObject();
     searchRadius = gStaffActionBoundsSearchRadius;
 
@@ -912,7 +913,7 @@ void dll_D3_update(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->unk8;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->unkC;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->unk10;
-        (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement*)trans)->unk2E, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(*(s8*)((char*)trans + 0x2e), obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;
     }
@@ -932,15 +933,16 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetState != 1)
     {
-        rc = ((int (*)(f32, int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
+        rc = ((int (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
+            obj, state,
             (f32)(u32)((TreasureChestState*)state)->aggroRange,
-            obj, state, 0x8000);
+            0x8000);
         if (rc != 0u)
         {
             ((void (*)(int*, int*, int, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x28 /
                 4])(
                 obj, state,
-                (int)state + 0x35c,
+                (int)((char*)state + 0x35c),
                 (int)((TreasureChestState*)state)->gameBitB,
                 0, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
@@ -950,7 +952,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    if (((TreasureChestState*)state)->targetObj != 0 &&
+    if ((u32)((TreasureChestState*)state)->targetObj != 0 &&
         ((TreasureChestState*)state)->targetState == 2)
     {
         if (((TreasureChestState*)state)->targetDistance <=
@@ -962,14 +964,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        dx = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        dx = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosX -
             ((GameObject*)obj)->anim.worldPosX;
-        dy = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        dy = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosY -
             ((GameObject*)obj)->anim.worldPosY;
-        dz = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        dz = ((GameObject*)(((TreasureChestState*)state)->targetObj))->anim.worldPosZ -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(dx * dx + dy * dy + dz * dz);
+            sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -988,7 +990,8 @@ void dll_D3_update(int* obj)
             lbl_803202E8, lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
-            (*(void (**)(void))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))();
+            (*(void (**)(int))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))(
+                *(int*)&((GameObject*)player)->childObjs[0]);
             *(f32*)((char*)gStaffActionHitLightParams + 0xc) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)((char*)gStaffActionHitLightParams + 0x10) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)((char*)gStaffActionHitLightParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
@@ -1002,12 +1005,12 @@ void dll_D3_update(int* obj)
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
 
-    ((void (*)(f32, f32, int*, int*, void**, void*))((void**)*(int*)gPlayerInterface)[8 / 4])(
-        timeDelta, timeDelta, obj, state, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
+    ((void (*)(int*, int*, f32, f32, void**, void*))((void**)*(int*)gPlayerInterface)[8 / 4])(
+        obj, state, timeDelta, timeDelta, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
-    if ((extra->flags92 & 1) == 0 &&
+    if (((StaffBits*)&extra->flags92)->b0 == 0u &&
         extra->surfaceMode == 6)
     {
         hitCount = objBboxFn_800640cc(
@@ -1015,14 +1018,18 @@ void dll_D3_update(int* obj)
             &((GameObject*)obj)->anim.localPosX,
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
-        if (hitCount != 0 && hitType == 13)
+        if (hitCount != 0 && *(s8*)((char*)aiStack_80 + 0x50) == 13)
         {
-            extra->flags92 =
-                (u8)((extra->flags92 & 0xfe) | 1);
-            *(s16*)&extra->scriptTimer = (s16)(randomGetRange(10, 0xf) * 0x3c);
+            ((StaffBits*)&extra->flags92)->b0 = 1;
+            extra->scriptTimer = (u16)(randomGetRange(10, 0xf) * 0x3c);
         }
     }
 }
+#undef searchRadius
+#undef dx
+#undef dy
+#undef dz
+#pragma opt_common_subs reset
 #pragma fp_contract on
 
 void dll_D3_init(int obj, int def, int flag)
@@ -1043,7 +1050,7 @@ void dll_D3_init(int obj, int def, int flag)
         (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
     ((GameObject*)obj)->animEventCallback = NULL;
 
-    extra = *(LandedArwingState**)(state + 0x40c);
+    extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     memset((void*)extra, 0, 0x94);
     extra->surfaceMode = 5;
     ((StaffBits*)&extra->flags92)->hi = 3;

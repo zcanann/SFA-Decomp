@@ -49,7 +49,7 @@ typedef struct Dim2snowballObjectDef
 {
     u8 pad0[0x14 - 0x0];
     s32 targetId;
-    s8 unk18;
+    s8 initRotationByte; /* 0x18: <<8 into anim.rotX as the spawn heading */
     u8 pad19[0x1A - 0x19];
     s16 unk1A;
     s16 unk1C;
@@ -135,7 +135,7 @@ void dim2snowball_init(int* obj, int* def)
     state->targetId = ((Dim2snowballObjectDef*)def)->targetId;
     state->flagsAC = (u8)(state->flagsAC | 4);
     ((Dim2snowballObjectDef*)def)->targetId = -1;
-    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef*)def)->unk18 << 8);
+    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef*)def)->initRotationByte << 8);
     *(s8*)&((GameObject*)obj)->anim.alpha = 0;
     {
         ObjModelState* p = ((GameObject*)obj)->anim.modelState;

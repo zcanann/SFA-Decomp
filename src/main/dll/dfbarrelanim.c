@@ -82,20 +82,21 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     rope->stepPerTick = rope->step / tickScale;
     rope->inverseTicks = lbl_803E4E0C / tickScale;
 
-    zero = lbl_803E4DFC;
     nodes = rope->nodes;
     node = nodes;
     for (i = 0; i < count; i++, node++)
     {
+        f32 nzero;
         node->pos[0] = i * dx + rope->start[0];
         node->pos[1] = i * dy + rope->start[1];
         node->pos[2] = i * dz + rope->start[2];
-        node->velocity[2] = zero;
-        node->velocity[1] = zero;
-        node->velocity[0] = zero;
-        node->force[2] = zero;
-        node->force[1] = zero;
-        node->force[0] = zero;
+        nzero = lbl_803E4DFC;
+        node->velocity[2] = nzero;
+        node->velocity[1] = nzero;
+        node->velocity[0] = nzero;
+        node->force[2] = nzero;
+        node->force[1] = nzero;
+        node->force[0] = nzero;
         node->locked = 0;
         if ((i == 0) || (i == count - 1))
         {
@@ -121,6 +122,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     nodes[count - 1].locked = 1;
     nodes[0].locked = 1;
 
+    zero = lbl_803E4DFC;
     link = rope->links;
     node = nodes;
     linkCount = count - 1;

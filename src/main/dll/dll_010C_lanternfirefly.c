@@ -106,12 +106,12 @@ void LanternFireFly_func0B(int obj)
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
-    px = *(f32*)(p + 0x18);
+    px = ((GameObject*)p)->anim.worldPosX;
     vec[0] = px;
-    vec[1] = *(f32*)(p + 0x1c);
-    vec[2] = *(f32*)(p + 0x20);
-    vec[1] = *(f32*)(p + 0x1c) + lbl_803E3AA4;
-    y2 = lbl_803E3AA8 + *(f32*)(p + 0x1c);
+    vec[1] = ((GameObject*)p)->anim.worldPosY;
+    vec[2] = ((GameObject*)p)->anim.worldPosZ;
+    vec[1] = ((GameObject*)p)->anim.worldPosY + lbl_803E3AA4;
+    y2 = lbl_803E3AA8 + ((GameObject*)p)->anim.worldPosY;
     {
         LanternFireFlyState* st = ((GameObject*)obj)->extra;
         st->anchorX = px;

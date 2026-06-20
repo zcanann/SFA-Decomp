@@ -312,24 +312,20 @@ void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
     f32 distance;
     s8 inactive;
 
-    i = 0;
     slot = gCameraShakeSlots;
     inactive = 0;
-    do
+    for (i = 0; i <= 7; i++)
     {
-        dx = x - slot->x;
-        dy = y - slot->y;
-        dz = z - slot->z;
+        dx = x - slot[i].x;
+        dy = y - slot[i].y;
+        dz = z - slot[i].z;
         distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance < radius)
         {
-            slot->shakeMagnitude = (magnitude * (radius - distance)) / radius;
-            slot->shakeActive = inactive;
+            slot[i].shakeMagnitude = (magnitude * (radius - distance)) / radius;
+            slot[i].shakeActive = inactive;
         }
-        slot++;
-        i++;
     }
-    while (i <= 7);
 }
 
 void* fn_8000E814(void)
@@ -712,8 +708,8 @@ void Camera_UpdateProjection(void* viewportArg)
     u8 viewIndex = gCameraCurrentViewIndex;
     u8 activeViewIndex;
     u32 resolution = getScreenResolution();
-    u32 screenWidth = resolution >> 16;
     u32 screenHeight = resolution & 0xffff;
+    u32 screenWidth = resolution >> 16;
     u8* viewportEntry = gCameraViewportEntries + viewIndex * 0x34;
 
     if ((*(int*)(viewportEntry + 0x30) & 1) != 0)

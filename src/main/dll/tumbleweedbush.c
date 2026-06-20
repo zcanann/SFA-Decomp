@@ -160,7 +160,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 s16 move = ((GameObject*)obj)->anim.currentMove;
                 if (move >= 0x30 || move < 0x29)
                 {
-                    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((u32)(int)obj, 0x10) == 0)
                     {
                         objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x29d, 0, -1, 0);
                     }

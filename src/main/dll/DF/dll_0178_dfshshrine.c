@@ -341,7 +341,7 @@ void dfsh_shrine_update(int obj)
     if ((f32)(s32)state->transitionTimer > lbl_803E4E8C
     )
     {
-        state->transitionTimer = (s16)(s32)((f32)(s32)state->transitionTimer - timeDelta);
+        state->transitionTimer = (f32)(s32)state->transitionTimer - timeDelta;
         if ((f32)(s32)state->transitionTimer <= lbl_803E4E8C
         )
         {

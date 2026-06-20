@@ -64,8 +64,8 @@ void dll_19A_update(int obj)
         {
             newObj = Obj_AllocObjectSetup(0x38, 0x2d0);
             *(f32*)(newObj + 8) = ((ObjPlacement*)setup)->posX;
-            *(f32*)(newObj + 0xc) = ((ObjPlacement*)setup)->posY;
-            *(f32*)(newObj + 0x10) = ((ObjPlacement*)setup)->posZ;
+            ((GameObject*)newObj)->anim.localPosX = ((ObjPlacement*)setup)->posY;
+            ((GameObject*)newObj)->anim.localPosY = ((ObjPlacement*)setup)->posZ;
             *(u8*)(newObj + 4) = ((Dll19APlacement*)setup)->unk4;
             *(u8*)(newObj + 5) = ((Dll19APlacement*)setup)->unk5;
             *(u8*)(newObj + 6) = ((Dll19APlacement*)setup)->unk6;

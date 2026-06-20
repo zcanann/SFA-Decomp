@@ -10,7 +10,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
-extern u32 sfxplayer_updateState(int obj, u32 param_2, int hitState);
+extern u32 sfxplayer_updateState(int obj, u32 unused, int animUpdate);
 extern f32 timeDelta;
 
 #pragma dont_inline on

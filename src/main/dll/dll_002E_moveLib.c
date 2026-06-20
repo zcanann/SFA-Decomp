@@ -623,9 +623,9 @@ void dll_2E_func03(u16* obj, int state, int unused)
     extern int fn_8003AC14(); /* #57 */
     extern int fn_8003A9C0(); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
-    register int yawDelta;
-    register int seqHandle;
     register u32 target;
+    register int seqHandle;
+    register int yawDelta;
     int bit1;
     int ival;
     u32 hitReact;
@@ -931,10 +931,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
 
         objAnim->yaw += yawDelta;
         ret = (u32)(s16)yawDelta;
-        if ((int)ret < 0)
-        {
-            ret = -ret;
-        }
+        ret = ((int)ret >= 0) ? ret : -ret;
         *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
     }
     return 1;

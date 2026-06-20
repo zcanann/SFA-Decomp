@@ -98,11 +98,11 @@ void dimlavasmash_free(void);
 typedef struct DimcannonPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 resetGameBit;
+    s16 armGameBit;
+    s16 holdGameBit;
     u8 pad20[0x26 - 0x20];
-    s16 unk26;
+    s16 triggerRange;
     s8 unk28;
     u8 pad29[0x30 - 0x29];
 } DimcannonPlacement;
@@ -217,9 +217,9 @@ void dimcannon_init(int* obj, int* arg)
         ((GameObject*)obj)->animEventCallback = fn_801B2550;
         ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
-        if (GameBit_Get(*(s16*)((char*)arg + 0x1a)))
+        if (GameBit_Get(((DimcannonPlacement*)arg)->resetGameBit))
         {
-            *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
             ((DimCannonState*)state)->fireState = 5;
         }
         ((DimCannonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
@@ -243,7 +243,7 @@ void dimcannon_update(int* obj)
         return;
     }
 
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
     }
@@ -264,17 +264,17 @@ void dimcannon_update(int* obj)
     switch (((DimCannonState*)state)->fireState)
     {
     case 0:
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1C))
+        if (GameBit_Get(((DimcannonPlacement*)src)->armGameBit))
         {
             ((DimCannonState*)state)->fireState = 4;
         }
         break;
     case 5:
         {
-            s8 t = ((DimCannonState*)state)->unkB0;
+            s8 t = ((DimCannonState*)state)->chargeTimer;
             if (t > 0)
             {
-                ((DimCannonState*)state)->unkB0 = (s8)(t - framesThisStep);
+                ((DimCannonState*)state)->chargeTimer = (s8)(t - framesThisStep);
             }
             else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1)
             {
@@ -286,7 +286,7 @@ void dimcannon_update(int* obj)
                 buttonDisable(0, 0x100);
                 ((DimCannonState*)state)->fireState = 3;
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+                *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
             }
             ((DimCannonState*)state)->unkAD = 0;
@@ -297,15 +297,15 @@ void dimcannon_update(int* obj)
     case 4:
         DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4, *(f32*)&((DimCannonState*)state)->unk8,
                                    ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+        if (GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
         {
             ((DimCannonState*)state)->fireState = 5;
         }
-        else if (*(void**)(state + 0x0) != 0 && !GameBit_Get(((DimcannonPlacement*)src)->unk1E))
+        else if (*(void**)(state + 0x0) != 0 && !GameBit_Get(((DimcannonPlacement*)src)->holdGameBit))
         {
             f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                   (f32*)(*(char**)(state + 0x0) + 0x18));
-            int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF10;
+            int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF10;
             if (d < v / lbl_803E48EC)
             {
                 ((DimCannonState*)state)->fireState = 1;
@@ -316,12 +316,12 @@ void dimcannon_update(int* obj)
         ((DimCannonState*)state)->aimPitch = 0;
         break;
     case 1:
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1A))
+        if (GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
         {
             ((DimCannonState*)state)->fireState = 5;
             break;
         }
-        if (GameBit_Get(((DimcannonPlacement*)src)->unk1E))
+        if (GameBit_Get(((DimcannonPlacement*)src)->holdGameBit))
         {
             ((DimCannonState*)state)->fireState = 4;
             break;
@@ -367,7 +367,7 @@ void dimcannon_update(int* obj)
             DIMwooddoor_spawnShard(obj, 0);
             {
                 f32 d2 = ((DimCannonState*)state)->distance;
-                int v = ((DimcannonPlacement*)src)->unk26 * lbl_803DBF0C;
+                int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF0C;
                 if (d2 > v / lbl_803E48EC)
                 {
                     ((DimCannonState*)state)->fireState = 4;
@@ -419,11 +419,11 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             return 0;
         }
         vec = objModelGetVecFn_800395d8(obj, 0);
-        timer = ((DimCannonState*)state)->unkB0;
+        timer = ((DimCannonState*)state)->chargeTimer;
         if (timer > 0)
         {
-            ((DimCannonState*)state)->unkB0 = (s8)(timer - framesThisStep);
-            if (((DimCannonState*)state)->unkB0 <= 0)
+            ((DimCannonState*)state)->chargeTimer = (s8)(timer - framesThisStep);
+            if (((DimCannonState*)state)->chargeTimer <= 0)
             {
                 (*gGameUIInterface)->initAirMeter(gDimCannonMaxCharge, 0x5d5);
             }
@@ -532,7 +532,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gGameUIInterface)->airMeterSetShutdown();
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 ((DimCannonState*)state)->fireState = 5;
-                *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
+                *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);

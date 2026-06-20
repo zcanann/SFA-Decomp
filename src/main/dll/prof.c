@@ -170,11 +170,11 @@ void optionsMenu_openGeneralPanel(void)
     lbl_803A87D0[0] =
         (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(
             0x366, 0x22, 0, 1, lbl_803DD708[6]);
-    lbl_803A87D0[1] =
+    slot = &lbl_803A87D0[0];
+    slot[1] =
         (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
             0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
 
-    slot = &lbl_803A87D0[0];
     cheatId = 0;
     do
     {
@@ -188,7 +188,7 @@ void optionsMenu_openGeneralPanel(void)
             else
             {
                 slot[2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-                    0x36b, cheatId + 0x24, 0, 1, (s16)(saveFileStruct_isCheatActive(cheatId) == 0));
+                    0x36b, cheatId + 0x24, 0, 1, (s16)(saveFileStruct_isCheatActive((u8)cheatId) == 0));
             }
         }
         slot++;

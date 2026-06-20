@@ -131,16 +131,16 @@ void RollingBarrel_update(int obj)
     u32 hitC;
     int hitResult;
     u32 r;
-    u8 bVar1;
+    u8 stateId;
 
     state = ((GameObject*)obj)->extra;
     hitInfo = 0;
     descriptor = *(RollingBarrelMapData**)&((GameObject*)obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
-    bVar1 = state->state;
+    stateId = state->state;
 
-    switch (bVar1)
+    switch (stateId)
     {
     case ROLLINGBARREL_STATE_ROLLING:
         {

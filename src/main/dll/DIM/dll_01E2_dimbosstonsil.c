@@ -42,17 +42,17 @@ extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setLightKind(void* handle, int param_2);
+extern void modelLightStruct_setLightKind(void* handle, int kind);
 extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 param_2, f32 param_3);
-extern void lightSetField4D(void* handle, int param_2);
-extern void modelLightStruct_setGlowProjectionRadius(void* handle, f32 param_2);
+extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 min, f32 max);
+extern void lightSetField4D(void* handle, int value);
+extern void modelLightStruct_setGlowProjectionRadius(void* handle, f32 radius);
 extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(void* handle, int param_2, int param_3);
-extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int param_2);
-extern void modelLightStruct_setupGlow(void* handle, int param_3, int r, int g, int b, int a, f32 radius);
+extern void modelLightStruct_startColorFade(void* handle, int from, int to);
+extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int enable);
+extern void modelLightStruct_setupGlow(void* handle, int slot, int r, int g, int b, int a, f32 radius);
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
@@ -368,7 +368,7 @@ void DIMbosstonsil_update(void* obj)
 void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
 {
     extern u32* gBaddieControlInterface;
-    extern void modelLightStruct_setEnabled(void* handle, int p2, f32 param_3);
+    extern void modelLightStruct_setEnabled(void* handle, int enable, f32 fade);
 
     u8 variant;
     int state;

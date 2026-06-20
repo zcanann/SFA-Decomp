@@ -112,8 +112,8 @@ void trickyDigTunnel(u8* obj, u8* state)
     u8* ptr;
     int gidx;
     int k;
-    int idx;
     int off;
+    int idx;
     int v;
     int inWater;
     u16 id;
@@ -631,7 +631,7 @@ void trickyFn_80142524(u8* obj, u8* state)
     else
     {
         ((TrickyState*)state)->unk71C -= timeDelta;
-        if (((TrickyState*)state)->unk71C < lbl_803E23DC)
+        if (((TrickyState*)state)->unk71C < *(f32*)&lbl_803E23DC)
         {
             ((TrickyState*)state)->unk71C = lbl_803E23DC;
         }
@@ -714,8 +714,10 @@ int trickyFn_80142a14(int obj, int state)
 int trickyFlameFn_80142b6c(u8* obj, u8* state)
 {
     int i;
-    u8* p;
+    int j;
     u8* ptr;
+    u8* p;
+    u8* q;
     u8* e;
 
     switch (((GameObject*)obj)->anim.currentMove)
@@ -746,9 +748,9 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             {
                 ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
-                for (i = 0, p = state; i < 7; p += 4, i++)
+                for (j = 0, q = state; j < 7; q += 4, j++)
                 {
-                    objSetAnimSpeedTo1(*(u8**)(p + 0x700));
+                    objSetAnimSpeedTo1(*(u8**)(q + 0x700));
                 }
                 Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
                 ptr = ((GameObject*)obj)->extra;
@@ -1381,6 +1383,7 @@ int trickyFn_80143c04(int obj, int state)
 u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
+    int extra;
     u32 bitVal;
 
     done = trickyFoodFn_8014460c(obj, trickyState);
@@ -1465,12 +1468,12 @@ u32 fn_80143DD4(int obj, int* trickyState)
         {
             if ((u32)trickyState[0x1ec] != 0)
             {
-                done = *(int*)&((GameObject*)obj)->extra;
-                if ((((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
+                extra = *(int*)&((GameObject*)obj)->extra;
+                if ((((*(u8*)(extra + 0x58) >> 6 & 1) == 0U) &&
                     (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)
                     ) && !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
                 {
-                    objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8(obj, (void*)(extra + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
                 objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
                 *(u8*)((int)trickyState + 10) = 5;

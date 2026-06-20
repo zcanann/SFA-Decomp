@@ -196,7 +196,7 @@ void pointlight_init(int obj, int setup)
     {
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         objSetEventName(state->light, setupData->eventName);
-        modelLightStruct_setPosition(state->light, lbl_803E7230, lbl_803E7230, lbl_803E7230);
+        modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
 
         if ((setupData->flags & POINTLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
         {

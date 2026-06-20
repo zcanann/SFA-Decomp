@@ -72,8 +72,8 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 typedef struct DimlavasmashPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
+    s16 triggerGameBit;
+    s16 gateGameBit;
     u8 pad22[0x28 - 0x22];
 } DimlavasmashPlacement;
 
@@ -151,7 +151,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     def = *(int**)&((GameObject*)obj)->anim.placementData;
     if (((DimlavasmashState*)state)->state == 0)
     {
-        if (GameBit_Get(((DimlavasmashPlacement*)def)->unk20) != 0)
+        if (GameBit_Get(((DimlavasmashPlacement*)def)->gateGameBit) != 0)
         {
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags |= 1;
@@ -178,7 +178,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (animUpdate->triggerCommand == 1)
         {
-            GameBit_Set(((DimlavasmashPlacement*)def)->unk1E, 1);
+            GameBit_Set(((DimlavasmashPlacement*)def)->triggerGameBit, 1);
             ((DimlavasmashState*)state)->state = 1;
         }
     }
@@ -191,7 +191,7 @@ typedef struct DimlavasmashObjectDef
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
-    s16 unk1E;
+    s16 gameBit;
 } DimlavasmashObjectDef;
 
 void dimlavasmash_init(s16* obj, s8* def)
@@ -209,7 +209,7 @@ void dimlavasmash_init(s16* obj, s8* def)
     inner = ((GameObject*)obj)->extra;
     *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
     *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    *(u8*)(inner + 2) = GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
+    *(u8*)(inner + 2) = GameBit_Get(((DimlavasmashObjectDef*)def)->gameBit);
     if (*(u8*)(inner + 2) == 1)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,

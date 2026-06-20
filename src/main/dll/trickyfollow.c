@@ -842,20 +842,17 @@ state_selected:
                 trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
                 moved = trickyMove(obj, &route->posX);
                 type = *(s8*)((u8*)route->nodeA0 + 0x1a);
-                if (type == 5)
+                switch (type)
                 {
+                case 5:
                     ((TrickyState*)state)->unk09 = 0xb;
-                }
-                else if (type < 5)
-                {
-                    if (type == 1)
-                    {
-                        ((TrickyState*)state)->unk09 = 8;
-                    }
-                }
-                else if (type < 7)
-                {
+                    break;
+                case 1:
+                    ((TrickyState*)state)->unk09 = 8;
+                    break;
+                case 6:
                     ((TrickyState*)state)->unk09 = 0xd;
+                    break;
                 }
             }
         }
@@ -950,7 +947,7 @@ state_selected:
         }
         ((TrickyState*)state)->speed = v;
         {
-            f32 dx = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x2c);
+            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz)
             {
@@ -1168,7 +1165,7 @@ state_selected:
         ((TrickyState*)state)->unk353 = 0;
         trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
-            f32 dx = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x2c);
+            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
             if (lbl_803E23EC < dx * dx + dz * dz)
             {

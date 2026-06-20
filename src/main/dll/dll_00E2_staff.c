@@ -316,16 +316,10 @@ void dim2roofrub_free(int* obj);
 extern void gcbaddieshield_update(int* obj);
 
 
-void staff_func10(int* obj, s32 v);
-void staff_setHitReactValue(int* obj, s32 v);
-void staff_addHitReactValue(int* obj, s32 delta);
-void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 
 
 
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 
 extern void shield_update(int* obj);
@@ -869,15 +863,12 @@ void staff_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void fireball_free(int* obj);
 
 extern int textureFree(int tex);
 extern void* gStaffSwipeResource;
 extern void* gStaffSwipeTextures[2];
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void staff_release(void)
 {
@@ -903,7 +894,6 @@ void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void flamethrowerspe_init(int* obj, int* params);
 
 extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
@@ -978,9 +968,7 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
 
 void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
-void flamethrowerspe_update(int* obj);
 
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 
@@ -992,11 +980,9 @@ extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-void fireball_init(int* obj);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj);
 
@@ -1509,7 +1495,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
             {
                 tmax = prog;
             }
-            tbl = weaponDaTable->entries;
+            tbl = ((GameObject*)obj)->anim.weaponDaTable->entries;
             if (sw >= lbl_803E32B4)
             {
                 fla = fastFloorf(sw * lbl_803E32A4) / lbl_803E32A4;
@@ -1572,13 +1558,13 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             {
                                 idx[3] = count;
                             }
-                            pidx = idx;
                             pE = arrE;
                             pF = arrF;
                             pG = arrG;
                             pH = arrH;
                             pI = arrI;
                             pJ = arrJ;
+                            pidx = idx;
                             for (n = 4; n != 0; n--)
                             {
                                 f32 a, b, t1, t2;

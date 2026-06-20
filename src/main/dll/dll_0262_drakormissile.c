@@ -200,6 +200,7 @@ void drakormissile_update(int obj)
     int expired;
     int nearHit;
     int rem;
+    extern int modelLightStruct_getActiveState(void *light);
 
     moving = 0;
     switch (*(u8*)(p + DRAKORMISSILE_FIELD_STATE))
@@ -324,7 +325,7 @@ void drakormissile_update(int obj)
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
     }
-    if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState())
+    if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT)))
     {
         modelLightStruct_updateGlowAlpha(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
     }
@@ -372,6 +373,7 @@ void drakormissile_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
     u8* trail;
     u8* p = ((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    extern int modelLightStruct_getActiveState(void *light);
     if (visible != 0 && *(u8*)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT)
     {
         s16 savedRotZ = ((GameObject*)obj)->anim.rotZ;
@@ -401,7 +403,7 @@ void drakormissile_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
         ((GameObject*)obj)->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState() != 0)
+        if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT)) != 0)
         {
             queueGlowRender(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
         }

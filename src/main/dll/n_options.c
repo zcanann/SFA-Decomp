@@ -205,8 +205,8 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
 void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
 {
     u16 volumeScale;
-    f32 volume;
     u32 validSamples;
+    u32 process;
     int mixed;
     s16* audioPtr;
     u32 remain;
@@ -238,18 +238,24 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 while (validSamples == 0);
                 if (sampleCount <= validSamples)
                 {
-                    validSamples = sampleCount;
+                    process = sampleCount;
+                }
+                else
+                {
+                    process = validSamples;
                 }
                 audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
-                for (remain = validSamples; remain != 0; remain = remain - 1)
+                for (remain = 0; remain != process; remain = remain + 1)
                 {
-                    volume = lbl_803A5D60.targetVolume;
                     if (lbl_803A5D60.rampCount != 0)
                     {
                         lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
-                        volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
+                        lbl_803A5D60.curVolume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                     }
-                    lbl_803A5D60.curVolume = volume;
+                    else
+                    {
+                        lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
+                    }
                     volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
                     mixed = (int)*source + ((int)((u32)volumeScale * (int)*audioPtr) >> 0xf);
                     if (mixed < S16_MIN)
@@ -275,8 +281,8 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     source = source + 2;
                     audioPtr = audioPtr + 2;
                 }
-                sampleCount = sampleCount - validSamples;
-                lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - validSamples;
+                sampleCount = sampleCount - process;
+                lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - process;
                 lbl_803A5D60.curAudioBuffer->curPtr = audioPtr;
                 if (lbl_803A5D60.curAudioBuffer->validSample == 0)
                 {
@@ -315,15 +321,17 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 validSamples = sampleCount;
             }
             audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
-            for (remain = validSamples; remain != 0; remain = remain - 1)
+            for (remain = 0; remain != validSamples; remain = remain + 1)
             {
-                volume = lbl_803A5D60.targetVolume;
                 if (lbl_803A5D60.rampCount != 0)
                 {
                     lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
-                    volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
+                    lbl_803A5D60.curVolume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                 }
-                lbl_803A5D60.curVolume = volume;
+                else
+                {
+                    lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
+                }
                 volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
                 mixed = (int)((u32)volumeScale * (int)*audioPtr) >> 0xf;
                 if (mixed < S16_MIN)

@@ -80,19 +80,15 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 extern int* gPlayerInterface;
-extern f32 lbl_803E1B78;
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
-extern f32 lbl_803E1AC0;
-extern void* objModelGetVecFn_800395d8(void* obj, int target);
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803E1C30;
 extern f32 lbl_803E1C40;
 extern f32 lbl_803E1C44;
 extern f32 lbl_803E1C4C;
@@ -108,12 +104,10 @@ extern f32 lbl_803E1C60;
 extern GameObject* gDll19NearestObj;
 extern void voxmaps_allocRouteWork(u8 * work);
 extern u32 lbl_803E1C28;
-extern f32 lbl_803E1C38;
 extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];
 extern u32 lbl_803DB9E0;
 extern u32 lbl_803DD5E0;
-extern f32 lbl_803E1AD0;
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
@@ -282,7 +276,7 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
 {
     extern void mm_free(u32); /* #57 */
     Sfx_StopObjectChannel(p1, 127);
-    if ((*(u8*)((char*)p2 + 1028) & flag) == 0)
+    if ((((GroundBaddieState*)p2)->configFlags & flag) == 0)
     {
         s16 v;
         v = *(s16*)((char*)p2 + 1020);
@@ -320,7 +314,7 @@ void dll_19_func11(void)
 
 int dll_19_func0E(int p1, int p2, u8 b)
 {
-    if (b != 0 && (s8) * (u8*)(p2 + 0x354) <= 0 && ((GameObject*)p1)->anim.alpha == 0)
+    if (b != 0 && (s8)((BaddieState*)p2)->hitPoints <= 0 && ((GameObject*)p1)->anim.alpha == 0)
     {
         return 0;
     }
@@ -356,7 +350,7 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 {
     f32 fz;
     *(u32*)p2 |= 0x8000;
-    *(u16*)(p2 + 0x330) = 0;
+    ((BaddieState*)p2)->cameraYaw = 0;
     if (*(void**)(p1 + 0x54) != NULL)
     {
         ObjHits_SetHitVolumeSlot((void*)p1, 0, 0, -1);
@@ -367,10 +361,10 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
     }
     ((BaddieState*)p2)->gravity = fval;
     fz = lbl_803E1C2C;
-    *(f32*)(p2 + 0x290) = fz;
-    *(f32*)(p2 + 0x28c) = fz;
-    *(int*)(p2 + 0x31c) = 0;
-    *(int*)(p2 + 0x318) = 0;
+    ((BaddieState*)p2)->moveInputX = fz;
+    ((BaddieState*)p2)->moveInputZ = fz;
+    *(int*)&((BaddieState*)p2)->unk31C = 0;
+    *(int*)&((BaddieState*)p2)->unk318 = 0;
 }
 
 void dll_19_func19(u8* cam, u8* ctx)
@@ -463,9 +457,9 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (*(void**)(p2 + 720) == (void*)player && (s8)p2[852] != 0)
+        if (((BaddieState*)p2)->targetObj == (void*)player && (s8)((BaddieState*)p2)->hitPoints != 0)
         {
-            if (*(f32*)(p2 + 704) > f && p4 != 0)
+            if (((BaddieState*)p2)->targetDistance > f && p4 != 0)
             {
                 result = 1;
             }
@@ -534,8 +528,8 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
         if (*p8 == 0)
         {
             p2[1029] = 0;
-            *(s16*)(p2 + 628) = p5;
-            *(int*)(p2 + 720) = 0;
+            ((BaddieState*)p2)->controlMode = p5;
+            ((BaddieState*)p2)->targetObj = 0;
             p2[607] = 0;
             GameBit_Set(*(s16*)(p2 + 1012), 0);
         }
@@ -559,10 +553,10 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
             ObjMsg_SendToObject(msgData, 5, p1, 0);
             break;
         case 0xE0000:
-            if (msgData == *(int*)(p2 + 720))
+            if (msgData == (int)((BaddieState*)p2)->targetObj)
             {
-                *(s16*)(p2 + 624) = p6;
-                *(int*)(p2 + 720) = 0;
+                ((BaddieState*)p2)->substate = p6;
+                ((BaddieState*)p2)->targetObj = 0;
                 p2[841] = 0;
             }
             break;
@@ -571,21 +565,21 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
             break;
         case 1:
         case 0xA0001:
-            if (*(s16*)(p2 + 624) != p7)
+            if (((BaddieState*)p2)->substate != p7)
             {
                 dll_19_func0C(p1, p2, p3, p4, p5, p6, p8, 0, 1);
-                *(s16*)(p2 + 624) = p7;
+                ((BaddieState*)p2)->substate = p7;
                 p2[841] = 0;
-                *(int*)(p2 + 720) = msgData;
+                ((BaddieState*)p2)->targetObj = (void*)msgData;
                 return 1;
             }
             break;
         case 3:
-            if (*(s16*)(p2 + 624) == p7)
+            if (((BaddieState*)p2)->substate == p7)
             {
                 p2[841] = 0;
-                *(int*)(p2 + 720) = 0;
-                *(s16*)(p2 + 624) = p6;
+                ((BaddieState*)p2)->targetObj = 0;
+                ((BaddieState*)p2)->substate = p6;
                 return 2;
             }
             break;
@@ -621,14 +615,14 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     list = objs;
     negP4 = -p4;
 
-    while ((obj = *list) != 0)
+    while ((void*)(obj = *list) != NULL)
     {
         dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)p1)->anim.worldPosX;
         dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)p1)->anim.worldPosY;
         dp[2] = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)p1)->anim.worldPosZ;
         if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange)
         {
-            if ((s8)p2[852] != 0)
+            if ((s8)((BaddieState*)p2)->hitPoints != 0)
             {
                 if (fn_8029610C(obj) > lbl_803E1C64)
                 {
@@ -739,7 +733,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                 int other = *(int*)&((GameObject*)p1)->anim.placementData;
                 ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
                 ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
-                p2[852] = 0;
+                ((BaddieState*)p2)->hitPoints = 0;
                 p1[54] = 0;
                 ((GameObject*)p1)->unkF4 = 1;
                 ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
@@ -762,7 +756,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
     }
 
-    if (*(s8*)(p2 + 852) == 0)
+    if (*(s8*)&((BaddieState*)p2)->hitPoints == 0)
     {
         return 0;
     }
@@ -788,24 +782,24 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             v24 = 0;
         }
-        *(s8*)(p2 + 852) = (s8)(p2[852] - v24);
-        if (*(s8*)(p2 + 852) < 1)
+        *(s8*)&((BaddieState*)p2)->hitPoints = (s8)(((BaddieState*)p2)->hitPoints - v24);
+        if (*(s8*)&((BaddieState*)p2)->hitPoints < 1)
         {
             ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
             ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
             ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
-            *(s16*)(p2 + 624) = p7;
-            p2[852] = 0;
+            ((BaddieState*)p2)->substate = p7;
+            ((BaddieState*)p2)->hitPoints = 0;
         }
         else
         {
             if (v24 != 0)
             {
-                if (*(void**)(p2 + 720) == NULL)
+                if (((BaddieState*)p2)->targetObj == NULL)
                 {
                     if (fn_80295A04(player, 1) != 0)
                     {
-                        *(int*)(p2 + 720) = player;
+                        ((BaddieState*)p2)->targetObj = (void*)player;
                         p2[841] = 0;
                     }
                 }
@@ -816,7 +810,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                     if (p5[hit - 2] != -1)
                     {
                         (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(p1, p2);
-                        *(s16*)(p2 + 624) = p7;
+                        ((BaddieState*)p2)->substate = p7;
                     }
                 }
                 *(s8*)(p2 + 847) = hit;
@@ -969,8 +963,8 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 
     curveLocal = lbl_803E1C28;
     byteLocal = 1;
-    *(int*)(p3 + 1036) = (int)(p3 + 1040);
-    *(s16*)(p3 + 1026) = 0;
+    ((GroundBaddieState*)p3)->control = (void*)(p3 + 1040);
+    ((GroundBaddieState*)p3)->targetState = 0;
 
     flags = p7;
     b1 = flags & 1;
@@ -1014,9 +1008,9 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
         (*gPathControlInterface)->setup(path, 1, lbl_8031A048, &lbl_803DD5E0, &byteLocal);
     }
     (*gPathControlInterface)->attachObject((void*)p1, path);
-    p3[1028] = p2[43];
+    ((GroundBaddieState*)p3)->configFlags = p2[43];
     *(s16*)(p3 + 1008) = *(s16*)(p2 + 34);
-    p3[1030] = p2[47];
+    ((GroundBaddieState*)p3)->aggression = p2[47];
     p3[1031] = p2[39];
     p3[1032] = p2[40];
     ((GameObject*)p1)->objectFlags = ((GameObject*)p1)->objectFlags | ((s8)p3[1032] & 7);
@@ -1031,7 +1025,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
         *(s16*)(p3 + 1020) = 0;
     }
     *(s16*)(p3 + 1024) = 0;
-    *(u16*)(p3 + 1022) = (u16)(p2[41] << 3);
+    ((GroundBaddieState*)p3)->aggroRange = (u16)(p2[41] << 3);
     p3[1029] = 0;
     *(f32*)(p3 + 996) = fparam;
     ((GameObject*)p1)->anim.rotX = (s16)((s8)p2[42] << 8);
@@ -1095,7 +1089,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
                                              (f32)(u32) * (u16*)(p3 + 1022),
                                              &curveLocal, -1) == 0)
         {
-            *(u16*)(p3 + 1024) = *(u16*)(p3 + 1024) | 8;
+            ((GroundBaddieState*)p3)->flags400 = ((GroundBaddieState*)p3)->flags400 | 8;
         }
     }
     else

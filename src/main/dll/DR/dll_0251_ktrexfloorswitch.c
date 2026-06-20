@@ -175,13 +175,12 @@ void ktrexfloorswitch_update(int obj)
     f32 vecB[3];
     f32 mtx[12];
     f32 height;
-    f32 xLo, xHi, zLo, zHi, cx, cz, sumX, sumZ;
+    f32 cx, cz, xLo, xHi, zLo, zHi;
     *(Vec3Blob*)vecA = *(Vec3Blob*)lbl_802C2560;
     *(Vec3Blob*)vecB = *(Vec3Blob*)lbl_802C256C;
     ((GameObject*)obj)->unkF8 = ((GameObject*)obj)->unkF4;
     ((GameObject*)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement*)placement)->activeBit);
     tex = objFindTexture((void*)obj, 0, 0);
-    moved = 0;
     if (((GameObject*)obj)->unkF4 <= 1)
     {
         tex->textureId = 0;
@@ -192,13 +191,15 @@ void ktrexfloorswitch_update(int obj)
         if (((GameObject*)obj)->unkF4 != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
             int curveId;
+            int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= 0x2;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
+            curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
-                &gKTrexFloorSwitchCurveFindResult, 1, GameBit_Get(0x572) >> 1);
+                &gKTrexFloorSwitchCurveFindResult, 1, curveBits);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
@@ -224,13 +225,15 @@ void ktrexfloorswitch_update(int obj)
         else
         {
             int curveId;
+            int curveBits;
             ((KtrexfloorswitchState*)state)->flags |= 0x2;
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
+            curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
                 *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
-                &gKTrexFloorSwitchCurveFindResult, 1, GameBit_Get(0x572) >> 1);
+                &gKTrexFloorSwitchCurveFindResult, 1, curveBits);
             if (curveId != -1)
             {
                 void* curve = (*gRomCurveInterface)->getById(curveId);
@@ -256,28 +259,20 @@ void ktrexfloorswitch_update(int obj)
             PSMTXMultVecSR(mtx, vecA, vecA);
             PSMTXMultVecSR(mtx, vecB, vecB);
             cx = ((GameObject*)obj)->anim.localPosX;
-            sumX = vecB[0] + (cx + vecA[0]);
-            if (sumX < cx)
+            xLo = cx;
+            xHi = vecB[0] + (cx + vecA[0]);
+            if (xHi < cx)
             {
+                xLo = xHi;
                 xHi = cx;
-                xLo = sumX;
-            }
-            else
-            {
-                xHi = sumX;
-                xLo = cx;
             }
             cz = ((GameObject*)obj)->anim.localPosZ;
-            sumZ = vecB[2] + (cz + vecA[2]);
-            if (sumZ < cz)
+            zLo = cz;
+            zHi = vecB[2] + (cz + vecA[2]);
+            if (zHi < cz)
             {
+                zLo = zHi;
                 zHi = cz;
-                zLo = sumZ;
-            }
-            else
-            {
-                zHi = sumZ;
-                zLo = cz;
             }
             xLo += gKTrexFloorSwitchTriggerBoxInset;
             xHi -= gKTrexFloorSwitchTriggerBoxInset;
@@ -290,6 +285,7 @@ void ktrexfloorswitch_update(int obj)
             }
         }
     }
+    moved = 0;
     if ((((KtrexfloorswitchState*)state)->flags & 0x4) != 0)
     {
         height = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;

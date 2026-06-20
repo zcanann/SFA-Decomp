@@ -9,7 +9,7 @@
 #include "main/pad.h"
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
+extern f32 Curve_EvalLinear(float* param_2, f32 param_1, float* param_3);
 extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 
 extern CamCannonState* lbl_803DD560;
@@ -64,9 +64,9 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         t = lbl_803E18AC;
     }
-    lbl_803DD560->elapsed = t * timeDelta + lbl_803DD560->elapsed;
+    lbl_803DD560->elapsed += t * timeDelta;
 
-    q = lbl_803E1888;
+    q = *(f32*)&lbl_803E1888;
     if (q != lbl_803DD560->duration)
     {
         q = lbl_803DD560->elapsed / lbl_803DD560->duration;
@@ -75,21 +75,21 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         q = lbl_803E188C;
     }
-    camera->anim.localPosX = Curve_EvalLinear(q, &lbl_803DD560->posXStart, 0x0);
-    camera->anim.localPosY = Curve_EvalLinear(q, &lbl_803DD560->posYStart, 0x0);
-    camera->anim.localPosZ = Curve_EvalLinear(q, &lbl_803DD560->posZStart, 0x0);
-    camera->fov = Curve_EvalLinear(q, &lbl_803DD560->fovStart, 0x0);
+    camera->anim.localPosX = Curve_EvalLinear(&lbl_803DD560->posXStart, q, 0x0);
+    camera->anim.localPosY = Curve_EvalLinear(&lbl_803DD560->posYStart, q, 0x0);
+    camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, q, 0x0);
+    camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, q, 0x0);
 
     d = lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd;
     if ((d > lbl_803E1890) || (d < lbl_803E1894))
     {
         if (lbl_803DD560->rotXStart < lbl_803E1888)
         {
-            lbl_803DD560->rotXStart = lbl_803DD560->rotXStart + lbl_803E1898;
+            lbl_803DD560->rotXStart = *(f32*)&lbl_803DD560->rotXStart + lbl_803E1898;
         }
         else if (lbl_803DD560->rotXEnd < lbl_803E1888)
         {
-            lbl_803DD560->rotXEnd = lbl_803DD560->rotXEnd + lbl_803E1898;
+            lbl_803DD560->rotXEnd = *(f32*)&lbl_803DD560->rotXEnd + lbl_803E1898;
         }
     }
     d = lbl_803DD560->rotYStart - lbl_803DD560->rotYEnd;
@@ -97,11 +97,11 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         if (lbl_803DD560->rotYStart < lbl_803E1888)
         {
-            lbl_803DD560->rotYStart = lbl_803DD560->rotYStart + lbl_803E1898;
+            lbl_803DD560->rotYStart = *(f32*)&lbl_803DD560->rotYStart + lbl_803E1898;
         }
         else if (lbl_803DD560->rotYEnd < lbl_803E1888)
         {
-            lbl_803DD560->rotYEnd = lbl_803DD560->rotYEnd + lbl_803E1898;
+            lbl_803DD560->rotYEnd = *(f32*)&lbl_803DD560->rotYEnd + lbl_803E1898;
         }
     }
     d = lbl_803DD560->rotZStart - lbl_803DD560->rotZEnd;
@@ -109,11 +109,11 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         if (lbl_803DD560->rotZStart < lbl_803E1888)
         {
-            lbl_803DD560->rotZStart = lbl_803DD560->rotZStart + lbl_803E1898;
+            lbl_803DD560->rotZStart = *(f32*)&lbl_803DD560->rotZStart + lbl_803E1898;
         }
         else if (lbl_803DD560->rotZEnd < lbl_803E1888)
         {
-            lbl_803DD560->rotZEnd = lbl_803DD560->rotZEnd + lbl_803E1898;
+            lbl_803DD560->rotZEnd = *(f32*)&lbl_803DD560->rotZEnd + lbl_803E1898;
         }
     }
 
@@ -121,17 +121,17 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     if ((flags & 1) == 0)
     {
         *(s16*)&camera->anim.rotX =
-        Curve_EvalLinear(q, &lbl_803DD560->rotXStart, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotXStart, q, 0x0);
     }
     if ((flags & 2) == 0)
     {
         *(s16*)&camera->anim.rotY =
-        Curve_EvalLinear(q, &lbl_803DD560->rotYStart, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotYStart, q, 0x0);
     }
     if ((flags & 4) == 0)
     {
         *(s16*)&camera->anim.rotZ =
-        Curve_EvalLinear(q, &lbl_803DD560->rotZStart, 0x0);
+        Curve_EvalLinear(&lbl_803DD560->rotZStart, q, 0x0);
     }
     return q >= lbl_803E188C;
 }
@@ -139,9 +139,9 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd,
                                        s32 rotXEnd, s32 rotYEnd, s32 rotZEnd)
 {
-    f32 fVar1;
-    f32 fVar2;
-    f32 fVar3;
+    f32 dx;
+    f32 dy;
+    f32 dz;
 
     lbl_803DD560->transitionComplete = 0;
     lbl_803DD560->posXStart = camera->anim.localPosX;
@@ -162,10 +162,10 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
     lbl_803DD560->rotZEnd = rotZEnd;
     lbl_803DD560->fovEnd = fovEnd;
     lbl_803DD560->elapsed = lbl_803E1888;
-    fVar1 = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
-    fVar2 = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
-    fVar3 = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
-    lbl_803DD560->duration = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
+    dx = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
+    dy = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
+    dz = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
+    lbl_803DD560->duration = sqrtf(dx * dx + dy * dy + dz * dz);
     (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, lbl_803DD560->duration,
                                     lbl_803E18B0, (f64)lbl_803E18B4,
                                     (f64)*(f32*)&lbl_803E18B4, lbl_803E18B8);

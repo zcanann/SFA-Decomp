@@ -225,9 +225,7 @@ void cutsceneExit(void)
     Sfx_SetObjectSoundsPaused(0);
 }
 
-void gameTextInit(void);
 
-void* Obj_GetPlayerObject(void);
 
 
 extern void* loadAsset(void* req);
@@ -406,7 +404,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
     return 0;
 }
 
-void ObjModel_InitRenderBuffers(void);
 
 #pragma dont_inline on
 void* animationLoad(int id, s16 a, s16 b, int e, int f)
@@ -423,7 +420,6 @@ void* animationLoad(int id, s16 a, s16 b, int e, int f)
 
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
-void gameTextInitFn_8001bd14(void);
 
 void Obj_ApplyPendingParentLinks(void);
 
@@ -566,13 +562,14 @@ void GameBit_Set(int eventId, int value)
     end = (gGameBitTable[id * 4 + 2] & 0x1f) + start;
     for (i = start; i < end + 1; i++)
     {
+        int shift = i & 7;
         int byteIdx = i >> 3;
         int mask;
         if (byteIdx >= limit)
         {
             break;
         }
-        mask = 1 << (i & 7);
+        mask = 1 << shift;
         if (value & bit)
         {
             base[byteIdx] |= mask;
@@ -603,7 +600,6 @@ int gameBitIncrement(int bit)
 
 void Obj_FlushDeferredFreeList(void);
 
-void ObjModel_InitResourceCaches(void);
 
 extern void mapSetup();
 extern void Music_Trigger(int id, int arg);
@@ -1295,7 +1291,7 @@ extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
 
 #pragma peephole off
-#pragma optimization_level 2
+#pragma optimization_level 3
 void askProgressiveScanMode(void)
 {
     u32 counter;

@@ -84,7 +84,7 @@ void magicdust_update(int obj)
     int state;
     double dVar9;
     char fxArg;
-    u8 burstArg[3];
+    u8 burstArg[1];
     int msg[1];
     f32 dist;
 
@@ -182,7 +182,7 @@ void magicdust_update(int obj)
                 ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
                 ((GameObject*)obj)->anim.alpha = 0xff;
             }
-            if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+            if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj,
                                                  ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
@@ -192,7 +192,30 @@ void magicdust_update(int obj)
         }
         else
         {
-            if ((flagsByte & 4) == 0)
+            if ((flagsByte & 4) != 0)
+            {
+                if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+                {
+                    ((MagicDustState*)state)->flags27A = flagsByte & ~4;
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
+                    ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
+                    (*gExpgfxInterface)->freeSource2((u32)obj);
+                    if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
+                    {
+                        for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
+                        {
+                            (*gPartfxInterface)->spawnObject((void*)obj,
+                                                             ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
+                                                             burstArg);
+                        }
+                    }
+                    ((GameObject*)obj)->anim.alpha = 1;
+                    Sfx_PlayFromObject(obj, SFXen_waterblock_wave);
+                }
+                objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+                        ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
+            }
+            else
             {
                 if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
                 {
@@ -200,26 +223,6 @@ void magicdust_update(int obj)
                 }
                 goto LAB_80173f80;
             }
-            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
-            {
-                ((MagicDustState*)state)->flags27A = flagsByte & ~4;
-                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
-                ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
-                (*gExpgfxInterface)->freeSource2((u32)obj);
-                if (*(int*)&((GameObject*)obj)->anim.parent == 0)
-                {
-                    for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
-                    {
-                        (*gPartfxInterface)->spawnObject((void*)obj,
-                                                         ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
-                                                         burstArg);
-                    }
-                }
-                ((GameObject*)obj)->anim.alpha = 1;
-                Sfx_PlayFromObject(obj, SFXen_waterblock_wave);
-            }
-            objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
         }
         if ((((MagicDustState*)state)->flags27A & 3) == 0)
         {
@@ -232,22 +235,22 @@ void magicdust_update(int obj)
                 float vy = -((GameObject*)obj)->anim.velocityY;
                 float vz = -((GameObject*)obj)->anim.velocityZ;
                 float mag = sqrtf(vx * vx + vy * vy + vz * vz);
-                if (lbl_803E34CC < mag)
+                if (mag > lbl_803E34CC)
                 {
                     Sfx_PlayFromObject(obj, SFXwp_iceywindlp16);
                 }
-                if (((MagicDustState*)state)->unk6C < lbl_803E34D0)
+                if (((MagicDustState*)state)->unk6C >= lbl_803E34D0)
+                {
+                    ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
+                }
+                else
                 {
                     ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
                     fval = lbl_803E34D8;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34D8;
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
-                }
-                else
-                {
-                    ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
                 }
                 flagsByte = *(char*)&((MagicDustState*)state)->bounceCount + 1;
                 ((MagicDustState*)state)->bounceCount = flagsByte;
@@ -360,9 +363,9 @@ void magicdust_init(int obj, int placement)
         ref = (int)Obj_GetPlayerObject();
         chaseTime = lbl_803E34F4;
         ((GameObject*)obj)->anim.velocityX =
-            (*(float*)(ref + 0xc) - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
-        ((GameObject*)obj)->anim.velocityY = (*(float*)(ref + 0x10) - ((GameObject*)obj)->anim.localPosY) / chaseTime;
-        ((GameObject*)obj)->anim.velocityZ = (*(float*)(ref + 0x14) - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
+            (((GameObject*)ref)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
+        ((GameObject*)obj)->anim.velocityY = (((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / chaseTime;
+        ((GameObject*)obj)->anim.velocityZ = (((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
     }
     else if (mode == 3)
     {

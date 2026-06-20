@@ -113,9 +113,9 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
             st->full = 1;
             st->on = 1;
             st->blend = lbl_803E4074;
-            t = ((GameObject*)obj)->anim.localPosY +
-                (st->blend * ((f32)placement->fogTop - placement->fogBase) +
-                 placement->fogBase);
+            t = st->blend * ((f32)placement->fogTop - placement->fogBase) +
+                placement->fogBase;
+            t = ((GameObject*)obj)->anim.localPosY + t;
             enableHeavyFog(t,
                            ((f32)placement->fogBottom + t) - placement->fogTop,
                            placement->fogRed,

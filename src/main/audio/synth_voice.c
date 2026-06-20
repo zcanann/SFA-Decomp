@@ -234,6 +234,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 {
     u8* keymap;
     KeymapEntry* entry;
+    s32 idx;
     s32 p;
     s32 k;
     u32 handle;
@@ -244,77 +245,82 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
-        entry = (KeymapEntry*)(keymap + (key & 0x7F) * 8);
-        if (entry->id != 0xFFFF && (entry->id & 0xC000) != 0x4000)
+        idx = (key & 0x7F) * 8;
+        if (*(u16*)(keymap + idx) != 0xFFFF)
         {
-            if ((entry->panning & 0x80) == 0)
+            entry = (KeymapEntry*)(keymap + idx);
+            if ((entry->id & 0xC000) != 0x4000)
             {
-                p = (keymap[key * 8 + 3] - 0x40) + pan;
-                if (p < 0)
+                if ((entry->panning & 0x80) == 0)
                 {
-                    pan = 0;
-                }
-                else if (p > 0x7F)
-                {
-                    pan = 0x7F;
-                }
-                else
-                {
-                    pan = p;
-                }
-            }
-            else
-            {
-                pan = 0x80;
-            }
-
-            k = (key & 0x7F) + entry->transpose;
-            if (k > 0x7F)
-            {
-                k = 0x7F;
-            }
-            else if (k < 0)
-            {
-                k = 0;
-            }
-
-            prio += entry->prioOffset;
-            if (prio > 0xFF)
-            {
-                prio = 0xFF;
-            }
-            else if (prio < 0)
-            {
-                prio = 0;
-            }
-
-            if ((entry->id & 0xC000) == 0)
-            {
-                if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
-                {
-                    handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
-                    ok = !rejected;
+                    p = keymap[key * 8 + 3] - 0x40;
+                    p += pan;
+                    if (p < 0)
+                    {
+                        pan = 0;
+                    }
+                    else if (p > 0x7F)
+                    {
+                        pan = 0x7F;
+                    }
+                    else
+                    {
+                        pan = p;
+                    }
                 }
                 else
                 {
-                    handle = -1;
-                    ok = 1;
+                    pan = 0x80;
                 }
-                if (ok == 0)
+
+                k = (key & 0x7F) + *(s8*)(keymap + idx + 2);
+                if (k > 0x7F)
                 {
-                    return -1;
+                    k = 0x7F;
                 }
-                if (handle != 0xFFFFFFFF)
+                else if (k < 0)
                 {
-                    return handle;
+                    k = 0;
                 }
-                return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
-                                pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                studio, itd);
+
+                prio += *(s16*)(keymap + idx + 4);
+                if (prio > 0xFF)
+                {
+                    prio = 0xFF;
+                }
+                else if (prio < 0)
+                {
+                    prio = 0;
+                }
+
+                if ((entry->id & 0xC000) == 0)
+                {
+                    if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
+                    {
+                        handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
+                        ok = !rejected;
+                    }
+                    else
+                    {
+                        handle = -1;
+                        ok = 1;
+                    }
+                    if (ok == 0)
+                    {
+                        return -1;
+                    }
+                    if (handle != 0xFFFFFFFF)
+                    {
+                        return handle;
+                    }
+                    return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                    pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                    studio, itd);
+                }
+                return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                             pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                             studio, itd);
             }
-            return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
-                                         pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
-                                         studio, itd);
         }
     }
     return -1;
@@ -335,8 +341,14 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     s32 p;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
+    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                        u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                        u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
+    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                                     u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                                     u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
-    p = prio + prioOffset;
+    p = prioOffset + prio;
     if ((u8)p > 0xFF)
     {
         p = 0xFF;
@@ -648,6 +660,7 @@ end:
  */
 void ZeroOffsetHandler(int voice)
 {
+    u8* base = (u8*)(int)lbl_803BCD90;
     SynthHwVoice* sv;
     u32 lowDeltaTime;
     u16 Modulation;
@@ -700,12 +713,13 @@ void ZeroOffsetHandler(int voice)
 
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    f = SYNTH_MASTER_FADERS[sv->vGroup].pauseVol * SYNTH_MASTER_FADERS[sv->vGroup].volume *
-        SYNTH_MASTER_FADERS[sv->fxFlag ? 22 : 21].volume;
+    f = ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].pauseVol *
+            ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].volume *
+        ((SynthMasterFader*)(base + 0x5D4))[sv->fxFlag ? 22 : 21].volume;
 
     if (sv->track != 0xFF)
     {
-        vol = lbl_803E7798 * (f * (f32)SYNTH_TRACK_VOLUME[sv->track]);
+        vol = lbl_803E7798 * (f * (f32)(base + 0xBD4)[sv->track]);
     }
     else
     {
@@ -725,9 +739,10 @@ void ZeroOffsetHandler(int voice)
         Modulation = inpGetModulation((McmdVoiceState*)sv);
         lfoInt = 0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1);
         lfo = lbl_803E77A0 * (f32)lfoInt;
-        scale = lbl_803E77A4 *
-        ((f32)sv->treScale *
-            (lbl_803E77A8 - lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale))));
+        {
+            f32 modScale = lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
+            scale = lbl_803E77A4 * ((f32)sv->treScale * (lbl_803E77A8 - modScale));
+        }
         if (sv->treCurScale < scale)
         {
             if ((sv->treCurScale += lbl_803E77B0) > scale)
@@ -742,7 +757,10 @@ void ZeroOffsetHandler(int voice)
                 sv->treCurScale = scale;
             }
         }
-        voiceVol = voiceVol * (lbl_803E77A8 - lfo * (lbl_803E77A8 - sv->treCurScale));
+        {
+            f32 tmp = lfo * (lbl_803E77A8 - sv->treCurScale);
+            voiceVol = voiceVol * (lbl_803E77A8 - tmp);
+        }
         volUpdate = 1;
     }
 

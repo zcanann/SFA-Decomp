@@ -216,7 +216,7 @@ int hightop_stateHandler00(int obj)
 int hightop_stateHandler06(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         p->unk9FD |= 1;
     }
@@ -248,24 +248,24 @@ int hightop_stateHandler03(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
     f32 zero = lbl_803E6AA8;
-    *(f32*)(p2 + 0x294) = zero;
-    *(f32*)(p2 + 0x284) = zero;
-    *(f32*)(p2 + 0x280) = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedC = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedB = zero;
+    ((HighTopRuntime*)p2)->baddie.animSpeedA = zero;
     ((GameObject*)obj)->anim.velocityX = zero;
     ((GameObject*)obj)->anim.velocityY = zero;
     ((GameObject*)obj)->anim.velocityZ = zero;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
         if (*(u32*)&p->unkC3C == 4)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
         }
         else
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
         }
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6B00)
@@ -278,7 +278,7 @@ int hightop_stateHandler03(int obj, u8* p2)
 int hightop_stateHandler05(int obj, u8* p2)
 {
     HighTopRuntime* p = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         p->flagsC49.b1 = 0;
         p->unkC4B = 0xa;
@@ -484,19 +484,19 @@ void hightop_init(void* obj, u8* arg)
 int hightop_stateHandler08(int obj, u8* p2)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
-    if ((s8)p2[0x27a] != 0)
+    if ((s8)((BaddieState*)p2)->moveJustStartedA != 0)
     {
         f32 zero;
         state->unkC30 = lbl_803E6AB4;
         zero = lbl_803E6AA8;
-        *(f32*)(p2 + 0x294) = zero;
-        *(f32*)(p2 + 0x284) = zero;
-        *(f32*)(p2 + 0x280) = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedC = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedB = zero;
+        ((HighTopRuntime*)p2)->baddie.animSpeedA = zero;
         ((GameObject*)obj)->anim.velocityX = zero;
         ((GameObject*)obj)->anim.velocityY = zero;
         ((GameObject*)obj)->anim.velocityZ = zero;
     }
-    if ((s8)p2[0x346] != 0)
+    if ((s8)((BaddieState*)p2)->moveDone != 0)
     {
         s16 cur = ((GameObject*)obj)->anim.currentMove;
         switch (cur)
@@ -515,12 +515,12 @@ int hightop_stateHandler08(int obj, u8* p2)
             if (state->unkC30 < lbl_803E6AA8)
             {
                 ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AB8, 0);
-                *(f32*)(p2 + 0x2a0) = lbl_803E6ABC;
+                ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6ABC;
             }
             break;
         default:
             ObjAnim_SetCurrentMove(obj, 10, lbl_803E6AA8, 0);
-            *(f32*)(p2 + 0x2a0) = lbl_803E6AC0;
+            ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC0;
             break;
         }
     }
@@ -531,7 +531,7 @@ int hightop_stateHandler08(int obj, u8* p2)
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E6AC4)
             {
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
-                *(f32*)(p2 + 0x2a0) = lbl_803E6AC8;
+                ((HighTopRuntime*)p2)->baddie.moveSpeed = lbl_803E6AC8;
                 return 8;
             }
         }
@@ -564,6 +564,8 @@ int hightop_handleMotionEvent(int obj, u8 event)
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
     switch (event)
     {
+    case 0:
+        break;
     case 5:
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
         break;
@@ -839,7 +841,7 @@ int hightop_stateHandler04(int obj, int p)
         state->unkC40 |= 0x20;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
-            state + 0xa10, obj, 0x3463a, curve);
+            (char*)state + 0xa10, obj, 0x3463a, curve);
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, 0x5ce);
@@ -852,7 +854,7 @@ int hightop_stateHandler04(int obj, int p)
         GameBit_Set(0x62a, 1);
         return 0;
     }
-    objModelAndSoundFn_80039118(obj, state + 0xb48);
+    objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
     state->unkC30 -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {
@@ -1044,12 +1046,16 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     return 0;
 }
 
+#pragma opt_common_subs off
 int hightop_stateHandler09(int obj, int p)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    int prevCount;
     int i;
+    int prevCount;
+    int* weight;
+    int roll;
+    int idx;
     if ((s8)((HightopPlacement*)p)->unk27A != 0 || state->flagsC49.b6 != 0)
     {
         if (state->flagsC4A.b0 == 0)
@@ -1168,12 +1174,13 @@ int hightop_stateHandler09(int obj, int p)
         {
             if (randFn_80080100(0x1f4) != 0)
             {
-                int roll = randomGetRange(0, 0x64);
-                int idx = 0;
-                while (gHighTopIdleSequenceWeights[idx] < roll)
+                roll = randomGetRange(0, 0x64);
+                idx = 0;
+                weight = gHighTopIdleSequenceWeights;
+                while (*weight < roll)
                 {
-                    roll -= gHighTopIdleSequenceWeights[idx];
-                    idx++;
+                    weight++;
+                    roll -= gHighTopIdleSequenceWeights[idx++];
                 }
                 state->unkC42 = idx;
                 state->unk9FD |= 1;
@@ -1183,6 +1190,7 @@ int hightop_stateHandler09(int obj, int p)
     }
     return 0;
 }
+#pragma opt_common_subs reset
 
 #pragma opt_strength_reduction off
 int hightop_stateHandler10(int obj, int p)
@@ -1191,7 +1199,7 @@ int hightop_stateHandler10(int obj, int p)
     int* weight;
     int r;
     int i;
-    if ((s8) * (u8*)((char*)p + 0x27a) != 0)
+    if ((s8)((BaddieState*)p)->moveJustStartedA != 0)
     {
         rt->unkC4B = 3;
         *(int*)((char*)p + 0) |= 0x1000000;

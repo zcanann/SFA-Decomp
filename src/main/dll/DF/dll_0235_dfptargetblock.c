@@ -398,7 +398,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
                     state->floorPoints[(int)pointCount].x = point.x;
                     state->floorPoints[state->floorPointCount].y = point.y;
                     state->floorPoints[state->floorPointCount].z = point.z;
-                    state->floorPointCount = state->floorPointCount + '\x01';
+                    state->floorPointCount++;
                 }
             }
         }

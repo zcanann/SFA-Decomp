@@ -151,6 +151,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     buf.v59 = 0x12;
     buf.v5a = 0;
     buf.v5b = 0x10;
+    buf.spawnFlags = 0x5000004;
     buf.count = (e + 10) - buf.entries;
     buf.hw[0] = *(s16*)&tab[352];
     buf.hw[1] = *(s16*)&tab[354];
@@ -160,7 +161,6 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     buf.hw[5] = *(s16*)&tab[362];
     buf.hw[6] = *(s16*)&tab[364];
     buf.cmds = buf.entries;
-    buf.spawnFlags = 0x5000004;
     buf.spawnFlags |= flags;
     if ((buf.spawnFlags & 1) != 0)
     {

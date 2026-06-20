@@ -18,8 +18,8 @@ extern f32 lbl_803E60AC;
 extern f32 lbl_803E60B0;
 
 #define DLL_219_MOVING_OBJECT_ID 0x3a6
-#define DLL_219_OBJECT_ID_GATE 0x3ad
-#define DLL_219_UNUSED_OBJECT_ID 0x3af
+#define DLL_219_INERT_OBJECT_ID_LO 0x3ad
+#define DLL_219_INERT_OBJECT_ID_HI 0x3ae
 
 typedef struct Dll219State
 {
@@ -77,19 +77,13 @@ void dll_219_update(Dll219Object* obj)
     Dll219State* state = obj->state;
     s16 objectId = obj->objectId;
 
-    if (objectId < DLL_219_OBJECT_ID_GATE)
+    switch (objectId)
     {
-        if (objectId != DLL_219_MOVING_OBJECT_ID)
-        {
-            return;
-        }
-    }
-    else
-    {
-        if (objectId != DLL_219_UNUSED_OBJECT_ID)
-        {
-            return;
-        }
+    case DLL_219_MOVING_OBJECT_ID:
+        break;
+    case DLL_219_INERT_OBJECT_ID_LO:
+    case DLL_219_INERT_OBJECT_ID_HI:
+    default:
         return;
     }
 

@@ -677,8 +677,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
         }
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = idx;
+        q[++state->queueCount].value = idx;
         q[state->queueCount].priority = 0xFFFE;
         heapSiftUp(q, state->queueCount);
     }
@@ -692,7 +691,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         dx = box[0] - vs->originX;
         dz = box[2] - vs->originZ;
     }
-    map = vs->activeMap;
+    map = gVoxMapsRouteState.activeMap;
     if (map == NULL)
     {
         return;
@@ -723,7 +722,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
         {
             slot = y - map->minY;
         }
-        if ((map->bitmap[(slot << 5) | col] >> shift) & 1)
+        if (((map->bitmap[(slot << 5) | col] >> shift) & 1) != 0u)
         {
             u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
             p[0] = (node[zlo] >> xbit2) & 3;

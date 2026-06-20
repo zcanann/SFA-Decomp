@@ -112,9 +112,9 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         newObj = Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_A);
         *(f32*)(newObj + 8) = ((GameObject*)obj)->anim.localPosX + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
-        *(f32*)(newObj + 0xc) = ((GameObject*)obj)->anim.localPosY + (f32)(int)
+        ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
-        *(f32*)(newObj + 0x10) = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+        ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         *(u8*)(newObj + 0x1a) = 0;
         *(u8*)(newObj + 0x19) = 0;
@@ -140,9 +140,9 @@ void fn_802317A8(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         newObj = Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_B);
         *(f32*)(newObj + 8) = ((GameObject*)obj)->anim.localPosX + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadX, *(s8*)&setup->spreadX);
-        *(f32*)(newObj + 0xc) = ((GameObject*)obj)->anim.localPosY + (f32)(int)
+        ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadY, *(s8*)&setup->spreadY);
-        *(f32*)(newObj + 0x10) = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+        ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
         randomGetRange(-*(s8*)&setup->spreadZ, *(s8*)&setup->spreadZ);
         *(u8*)(newObj + 0x1a) = 0;
         *(u8*)(newObj + 0x19) = 0;

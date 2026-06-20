@@ -49,7 +49,7 @@ typedef struct
 extern u32 FUN_800305c4();
 extern int FUN_8014c78c();
 extern u32 FUN_8014d4c8();
-extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
+extern void fn_8014D08C(int obj, u8* state, int a, f32 f, int b, int c);
 extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
@@ -70,7 +70,6 @@ extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];
 extern u8 gGroundBaddieAngleSectorOffsets[8];
 extern u16 gGroundBaddieTriggerResponseSeq[4];
-extern f32 timeDelta;
 extern f32 gGroundBaddieModelChainDesc;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
@@ -187,7 +186,7 @@ void fn_801511E8(int obj, u8* state)
     u8* entry;
     u32 idx;
 
-    entry = *(u8**)(lbl_8031F16C + (state[0x33b] * 40 + 12));
+    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
     if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
@@ -211,10 +210,10 @@ void fn_801511E8(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], 0, 3, ((SeqEntry*)(entry + state[0x33a] * 16))->speed);
-    ObjAnim_SetMoveProgress(
-        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4),
-        (ObjAnimComponent*)obj);
+    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+        (ObjAnimComponent*)obj,
+        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
     {
@@ -277,10 +276,10 @@ void fn_801513AC(int obj, u8* state)
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], 0, 3, ((SeqEntry*)(entry + state[0x33a] * 16))->speed);
-    ObjAnim_SetMoveProgress(
-        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4),
-        (ObjAnimComponent*)obj);
+    fn_8014D08C(obj, state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+        (ObjAnimComponent*)obj,
+        *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8])
     {
@@ -331,12 +330,12 @@ void fn_8015165C(int obj, u8* state)
             if (*(u16*)(state + 0x338) != 0)
             {
                 *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
-                fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8], 0,
-                            (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4],
-                            *(f32*)(p28 + *(u16*)(state + 0x338) * 16));
-                ObjAnim_SetMoveProgress(
-                    *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4),
-                    (ObjAnimComponent*)obj);
+                fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8],
+                            *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
+                            (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4]);
+                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
                 *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[9];
             }
             else
@@ -371,8 +370,8 @@ void fn_8015165C(int obj, u8* state)
         }
         if ((state[0x323] & 8) == 0)
         {
-            fn_8014CF7C(obj, state, *(f32*)(*(int*)&((GroundBaddieState*)state)->baddie.trackedObj + 0xc),
-                        *(f32*)(*(int*)&((GroundBaddieState*)state)->baddie.trackedObj + 0x14), 10, 0);
+            fn_8014CF7C(obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
+                        ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosZ, 10, 0);
         }
     }
 }

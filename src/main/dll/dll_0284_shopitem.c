@@ -72,7 +72,7 @@ extern f32 lbl_803E5A4C;
 extern f32 lbl_803E5A50;
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void);
+extern void lightningRender(void *p);
 
 extern void mm_free_(int p);
 extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
@@ -377,12 +377,12 @@ void shopitem_update(int obj)
 
 void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 {
+    int slot;
     int state = *(int*)&((GameObject*)obj)->extra;
+    u8 i;
     u8 spawned = 0;
     ShopSparkleSpawn v;
     PushcartState97* b = (PushcartState97*)(state + 0xE8);
-    u8 i;
-    int slot;
     f32 scale;
 
     if (b->flag_40)
@@ -403,7 +403,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         slot = state + i * 4;
         if (*(void**)(slot + 0x98) != NULL)
         {
-            lightningRender();
+            lightningRender(*(void**)(slot + 0x98));
             if (getHudHiddenFrameCount() == 0)
             {
                 *(f32*)(slot + 0xC0) += timeDelta;

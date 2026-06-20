@@ -95,7 +95,7 @@ void drgenerator_init(int obj, char* arg)
     }
     ((DrgeneratorState*)p)->hitsRemaining = 2;
     ObjHits_EnableObject(obj);
-    if (GameBit_Get(*(s16*)(arg + 0x1e)) != 0)
+    if (GameBit_Get(((DrgeneratorPlacement*)arg)->completionGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList(obj);

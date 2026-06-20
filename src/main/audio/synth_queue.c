@@ -524,7 +524,7 @@ done:
     if ((found & 0x80000000) == 0)
     {
         voice = &runtime->voices[found];
-        switch (voice->state)
+        switch (runtime->voices[found].state)
         {
         case 1:
             if (voice->prev != 0)
@@ -550,7 +550,7 @@ done:
                 }
             }
             {
-                SynthCallbackLink* cb = voice->callbackLists[2];
+                SynthCallbackLink* cb = runtime->voices[found].callbackLists[2];
                 while (cb != 0)
                 {
                     voiceKillById(cb->callbackId);

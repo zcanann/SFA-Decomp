@@ -188,7 +188,8 @@ void fn_80204BF8(int obj)
             {
                 if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
                 {
-                    if (object->anim.localPosY < (k = lbl_803E63A0) + placement->posY)
+                    k = lbl_803E63A0;
+                    if (object->anim.localPosY < k + placement->posY)
                     {
                         object->anim.localPosY += timeDelta;
                         if (object->anim.localPosY >= k + placement->posY)
@@ -209,7 +210,7 @@ void fn_80204BF8(int obj)
         h = blob->pauseTimer;
         if (h != 0)
         {
-            blob->pauseTimer = h - (int)timeDelta;
+            blob->pauseTimer -= (s16)timeDelta;
             if (blob->pauseTimer <= 0)
             {
                 blob->pauseTimer = 0;
@@ -282,7 +283,8 @@ void fn_80204BF8(int obj)
         }
         break;
     case 4:
-        if (object->anim.localPosY < (k = lbl_803E63A0) + placement->posY)
+        k = lbl_803E63A0;
+        if (object->anim.localPosY < k + placement->posY)
         {
             object->anim.localPosY += timeDelta;
             if (object->anim.localPosY >= k + placement->posY)

@@ -58,8 +58,8 @@ typedef struct Dbholecontrol1Placement
     s16 unk18;
     u8 pad1A[0x1C - 0x1A];
     s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
+    s16 hideGameBit;
+    s16 triggerGameBit;
     u8 pad22[0x24 - 0x22];
     s16 unk24;
     u8 pad26[0x2B - 0x26];
@@ -138,7 +138,7 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(u32*)(control + 0x18) = *(u32*)(state + 0x2d0);
+        *(u32*)(control + 0x18) = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         *(u16*)(control + 0x1c) = 0x24;
         *(u32*)(control + 0x2c) = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -158,11 +158,11 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    float speedScale;
-    u32 queueBusy;
-    int targetObj;
-    short* hits;
-    int control;
+    float divisor;
+    u32 uVar2;
+    int iVar3;
+    short* msgQueue;
+    int ctrl;
     double dist;
     u32 msg1Id;
     u32 msg1Flag;
@@ -177,64 +177,64 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     float deltaY;
     float deltaZ;
 
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
-    *(u8*)(control + 0x15) = *(u8*)(control + 0x15) & 0xfb;
-    speedScale = lbl_803E6F88;
-    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
-    *(float*)(state + 0x284) = *(float*)(state + 0x284) / speedScale;
-    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
-    if (*(char*)(state + 0x27a) != '\0')
+    ctrl = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    *(u8*)(ctrl + 0x14) = *(u8*)(ctrl + 0x14) | 2;
+    *(u8*)(ctrl + 0x15) = *(u8*)(ctrl + 0x15) & 0xfb;
+    divisor = lbl_803E6F88;
+    *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
+    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / divisor;
+    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
-    if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)obj)->anim.localPosY < *(float*)(*(int*)(state + 0x2d0) + 0x10) - lbl_803E6F90))
+    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
+    if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
+        (((GameObject*)param_9)->anim.localPosY < ((GameObject*)((GroundBaddieState*)param_10)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
     {
-        targetObj = *(int*)(state + 0x2d0);
-        deltaX = *(float*)(targetObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        deltaY = *(float*)(targetObj + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
-        deltaZ = *(float*)(targetObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        iVar3 = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
+        deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
+        deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
         dist = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
         if (dist < (double)lbl_803E6F50)
         {
-            msg1Data = *(u32*)(state + 0x2d0);
-            hits = *(short**)(control + 0x24);
+            msg1Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+            msgQueue = *(short**)(ctrl + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
-            queueBusy = FUN_80006ab8(hits);
-            if (queueBusy == 0)
+            uVar2 = FUN_80006ab8(msgQueue);
+            if (uVar2 == 0)
             {
-                FUN_80006ac4(hits,  & msg1Id);
+                FUN_80006ac4(msgQueue,  & msg1Id);
             }
-            *(u8*)(control + 0x34) = 1;
+            *(u8*)(ctrl + 0x34) = 1;
         }
     }
     else
     {
-        hits = *(short**)(control + 0x24);
+        msgQueue = *(short**)(ctrl + 0x24);
         msg2Id = 9;
         msg2Flag = 0;
         msg2Data = 0x24;
-        queueBusy = FUN_80006ab8(hits);
-        if (queueBusy == 0)
+        uVar2 = FUN_80006ab8(msgQueue);
+        if (uVar2 == 0)
         {
-            FUN_80006ac4(hits,  & msg2Id);
+            FUN_80006ac4(msgQueue,  & msg2Id);
         }
-        *(u8*)(control + 0x34) = 1;
-        msg3Data = *(u32*)(state + 0x2d0);
-        hits = *(short**)(control + 0x24);
+        *(u8*)(ctrl + 0x34) = 1;
+        msg3Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        msgQueue = *(short**)(ctrl + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
-        queueBusy = FUN_80006ab8(hits);
-        if (queueBusy == 0)
+        uVar2 = FUN_80006ab8(msgQueue);
+        if (uVar2 == 0)
         {
-            FUN_80006ac4(hits,  & msg3Id);
+            FUN_80006ac4(msgQueue,  & msg3Id);
         }
-        *(u8*)(control + 0x34) = 1;
+        *(u8*)(ctrl + 0x34) = 1;
     }
     return 0;
 }
@@ -294,8 +294,8 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 0x10;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6FD8;
-    *(float*)(state + 0x280) = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
@@ -333,7 +333,7 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         *(u32*)(state + 0x314) = *(u32*)(state + 0x314) & ~1;
         *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 1;
     }
-    if (*(char*)(state + 0x346) != '\0')
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
@@ -410,8 +410,8 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             (float)((double)(u32) * (u8*)(extra + 0x406)) /
             lbl_803E6FE0;
     }
-    *(float*)(state + 0x280) = lbl_803E6F40;
-    if (*(char*)(state + 0x346) != '\0')
+    ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E6F40;
+    if (*(char*)&((GroundBaddieState*)state)->baddie.moveDone != '\0')
     {
         *(u8*)(control + 0x34) = 1;
     }
@@ -542,12 +542,12 @@ void dbholecontrol1_update(int* obj)
 
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk1E) != 0)
+    if (GameBit_Get(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
-    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk20) != 0)
+    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
     }
@@ -619,15 +619,14 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    if (GameBit_Get(((Dbholecontrol1Placement*)data)->unk1E) != 0 || lbl_803DDCE0 != 0)
+    if (GameBit_Get(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
         int count;
         int* objs = ObjGroup_GetObjects(36, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
         while (count-- != 0)
         {
-            ObjGroup_RemoveObject(*objs, 36);
-            objs++;
+            ObjGroup_RemoveObject(*objs++, 36);
         }
         return 4;
     }

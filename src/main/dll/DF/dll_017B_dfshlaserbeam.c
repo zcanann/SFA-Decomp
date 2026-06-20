@@ -550,12 +550,9 @@ int fn_801C49B8(void* objArg)
     runtime->swayVelocity += stickAccel * timeDelta;
 
     target = runtime->swayTarget;
-    if (target < lbl_803E4F40)
+    if (target < lbl_803E4F40 && runtime->swayAccel > target)
     {
-        if (runtime->swayAccel > target)
-        {
-            runtime->swayAccel -= lbl_803E4F48 * timeDelta;
-        }
+        runtime->swayAccel -= lbl_803E4F48 * timeDelta;
     }
     else if (target > *(volatile f32*)&lbl_803E4F40)
     {

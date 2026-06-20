@@ -379,6 +379,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     int ref;
     s8* eventId;
     u8* stateTables;
+    s32 activeConfigToken;
     f32 facingAngleRadians;
     f32 facingCos;
     f32 facingSin;
@@ -545,7 +546,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         {
             characterDoEyeAnims((int)obj, (int)runtime->collisionShapeState);
         }
-        runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
+        runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))
         {
             uval = randomGetRange(1, (u32) * runtime->impactSfxTable);
@@ -567,7 +568,8 @@ void SHthorntail_update(SHthorntailObject* obj)
             }
         }
         runtime->activeMoveValid = 1;
-        if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
+        activeConfigToken = gSHthorntailActiveConfigToken;
+        if (activeConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
         {
             gSHthorntailActiveConfigToken = obj->config->configToken;
             obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
@@ -579,7 +581,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         else
         {
-            if (gSHthorntailActiveConfigToken == config->configToken)
+            if ((u32)activeConfigToken == (u32)obj->config->configToken)
             {
                 gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
             }
