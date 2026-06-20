@@ -3322,6 +3322,7 @@ extern char sTrackCellCoordFormat[];
 extern void fn_80137948(char* fmt, ...);
 extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
+#pragma optimization_level 2
 void mapDebugRender(int* state)
 {
     int bx, bz;
@@ -3400,3 +3401,4 @@ void mapDebugRender(int* state)
         }
     }
 }
+#pragma optimization_level reset
