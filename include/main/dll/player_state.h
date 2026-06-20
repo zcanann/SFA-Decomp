@@ -46,7 +46,7 @@ typedef struct PlayerState {
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
     u8 unk3F7;
-    int unk3F8;
+    int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
     int unk400;

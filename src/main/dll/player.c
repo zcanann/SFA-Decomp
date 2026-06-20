@@ -318,7 +318,7 @@ void fn_802A49A8(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     inner->unk400 = (int)lbl_80333250;
-    inner->unk3F8 = (int)gPlayerMoveTableA;
+    inner->moveAnimTable = (int)gPlayerMoveTableA;
 }
 
 void fn_802B6F48(int obj)
@@ -1788,7 +1788,7 @@ int fn_802A5384(int obj, int state)
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
             ((PlayerState*)inner)->unk844 = ((PlayerState*)state)->baddie.animSpeedA;
             ObjAnim_SetCurrentMove(obj,
-                                   *(s16*)(((PlayerState*)inner)->unk3F8 + 0x3c),
+                                   *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3c),
                                    lbl_803E7EA4, 0);
         }
     }
@@ -2102,14 +2102,14 @@ int fn_802A5384(int obj, int state)
             if (locked != 0 ||
                 *(void**)((char*)inner + 0x3fc) != *(void**)((char*)inner + 0x3f8) ||
                 ((GameObject*)obj)->anim.currentMove !=
-                *(s16*)(((PlayerState*)inner)->unk3F8 +
+                *(s16*)(((PlayerState*)inner)->moveAnimTable +
                     (((PlayerState*)inner)->unk8CC + dir) * 2))
             {
                 if (((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
                     ((u32) * (u8*)((char*)inner + 0x3f2) >> 4 & 1) != 0)
                 {
                     ObjAnim_SetCurrentMove(obj,
-                                           *(s16*)(((PlayerState*)inner)->unk3F8 +
+                                           *(s16*)(((PlayerState*)inner)->moveAnimTable +
                                                (((PlayerState*)inner)->unk8CC + dir) * 2),
                                            spd, 0);
                     if (((u32) * (u8*)((char*)inner + 0x3f1) >> 5 & 1) != 0 &&
@@ -2150,7 +2150,7 @@ int fn_802A5384(int obj, int state)
                 {
                     Object_ObjAnimSetSecondaryBlendMove(
                         (ObjAnimComponent*)obj,
-                        *(s16*)(((PlayerState*)inner)->unk3F8 +
+                        *(s16*)(((PlayerState*)inner)->moveAnimTable +
                             (((PlayerState*)inner)->unk8CC + pos) * 2 + 2),
                         (int)(lbl_803E7FAC * ad));
                 }
@@ -7934,10 +7934,10 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             if (((PlayerState*)state)->baddie.unk276 == 2)
             {
-                int mA = *(s16*)(((PlayerState*)inner)->unk3F8 + 0x30);
+                int mA = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30);
                 int mB;
                 if (((GameObject*)obj)->anim.currentMove != mA &&
-                    (mB = *(s16*)(((PlayerState*)inner)->unk3F8 + 0x32),
+                    (mB = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x32),
                         ((GameObject*)obj)->anim.currentMove != mB) &&
                     ((ByteFlags*)((char*)inner + 0x3f3))->b40 == 0)
                 {
@@ -7964,8 +7964,8 @@ int fn_802A6694(int obj, int state, f32 fv)
             ((PlayerState*)state)->baddie.moveSpeed = fv;
         }
     }
-    if (((GameObject*)obj)->anim.currentMove == *(s16*)(((PlayerState*)inner)->unk3F8 + 0x30) ||
-        ((GameObject*)obj)->anim.currentMove == *(s16*)(((PlayerState*)inner)->unk3F8 + 0x32))
+    if (((GameObject*)obj)->anim.currentMove == *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30) ||
+        ((GameObject*)obj)->anim.currentMove == *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x32))
     {
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 &&
             ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
@@ -7979,10 +7979,10 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState *)inner)->targetYawRateSigned > 5)
     {
         if (((GameObject*)obj)->anim.currentMove !=
-            *(s16*)(((PlayerState*)inner)->unk3F8 + 0x3e) &&
+            *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3e) &&
             ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
         {
-            ObjAnim_SetCurrentMove(obj, *(s16*)(((PlayerState*)inner)->unk3F8 + 0x3e),
+            ObjAnim_SetCurrentMove(obj, *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3e),
                                    lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7E90;
         }
@@ -10155,7 +10155,7 @@ int fn_802A00E0(int obj, int state)
                                        &((GameObject*)obj)->anim.localPosZ, *(int*)&((GameObject*)obj)->anim.parent);
         fn_802AB5A4(obj, (int)inner, 5);
         ObjAnim_SetCurrentMove(obj,
-                               *(s16*)inner->unk3F8,
+                               *(s16*)inner->moveAnimTable,
                                lbl_803E7EA4, 1);
         *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -10234,7 +10234,7 @@ int fn_802A03BC(int obj, int state)
                                        &((GameObject*)obj)->anim.localPosZ, *(int*)&((GameObject*)obj)->anim.parent);
         fn_802AB5A4(obj, (int)inner, 5);
         ObjAnim_SetCurrentMove(obj,
-                               *(s16*)inner->unk3F8,
+                               *(s16*)inner->moveAnimTable,
                                lbl_803E7EA4, 1);
         *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -12632,7 +12632,7 @@ void objLoadPlayerFromSave(int obj)
     (*(void (*)(GameUIInterface*))(*(int*)((char*)*gGameUIInterface + 0x14)))(*gGameUIInterface);
     gPlayerChildObject = NULL;
     ((ByteFlags*)((char*)inner + 0x3f4))->b40 = 1;
-    ((PlayerState*)inner)->unk3F8 = (int)(base + 0x190);
+    ((PlayerState*)inner)->moveAnimTable = (int)(base + 0x190);
     ((PlayerState*)inner)->moveSlots = (int)(base + 0x854);
     ((PlayerState*)inner)->moveSlotCount = 0x1c;
     ((PlayerState*)inner)->unk450 = (int)(base + 0x450);
@@ -12796,7 +12796,7 @@ int fn_802AE480(int obj, int inner, int state)
         ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
         ((PlayerState*)inner)->unk8A6 = ((PlayerState*)inner)->unk8A7;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8070;
-        ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((PlayerState*)inner)->unk3F8 + 0x3a),
+        ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((PlayerState*)inner)->moveAnimTable + 0x3a),
                                lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x10);
         ((PlayerState*)inner)->unk858 = ((PlayerState*)inner)->yaw;
@@ -13228,7 +13228,7 @@ void fn_802AABE4(int obj)
 
     model = (int)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
 
-    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->unk3F8, lbl_803E7EA4, 0);
+    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->moveAnimTable, lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
     lbl_803DAF88[0] = out1[1];
 
@@ -16389,8 +16389,8 @@ int fn_802A4D34(int obj, int state)
             }
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F2C)
             {
-                inner->unk3F8 = (int)lbl_80333110;
-                ObjAnim_SetCurrentMove(obj, *(s16*)inner->unk3F8, lbl_803E7EA4, 0);
+                inner->moveAnimTable = (int)lbl_80333110;
+                ObjAnim_SetCurrentMove(obj, *(s16*)inner->moveAnimTable, lbl_803E7EA4, 0);
                 *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                 return 2;
@@ -16402,9 +16402,9 @@ int fn_802A4D34(int obj, int state)
             void* sub = *(void**)((char*)inner + 0x7f8);
             if (sub != NULL && *(s16*)((char*)sub + 0x46) == 0x112)
             {
-                inner->unk3F8 = (int)lbl_80333110;
+                inner->moveAnimTable = (int)lbl_80333110;
                 *(int*)((char*)inner->heldObj + 0xf8) = 1;
-                ObjAnim_SetCurrentMove(obj, *(s16*)inner->unk3F8, lbl_803E7EA4, 0);
+                ObjAnim_SetCurrentMove(obj, *(s16*)inner->moveAnimTable, lbl_803E7EA4, 0);
                 *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
                 *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
                 return 2;
@@ -17018,7 +17018,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                                            &local, &((GameObject*)obj)->anim.localPosZ,
                                            *(int*)&((GameObject*)obj)->anim.parent);
             fn_802AB5A4(obj, (int)inner, 5);
-            ObjAnim_SetCurrentMove(obj, *(s16*)(inner->unk3F8), lbl_803E7EA4, 1);
+            ObjAnim_SetCurrentMove(obj, *(s16*)(inner->moveAnimTable), lbl_803E7EA4, 1);
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
             return 2;
