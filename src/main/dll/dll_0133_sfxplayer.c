@@ -29,7 +29,6 @@ extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
-extern f32 timeDelta;
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
 
