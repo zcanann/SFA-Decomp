@@ -1399,7 +1399,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
     {
         obj = (void*)objects[objectIndex];
         if (((obj != sender) || (includeSender == 0)) &&
-            ((((GameObject*)obj)->anim.seqId == targetId ||
+            ((((GameObject*)obj)->anim.seqId == (s16)targetId ||
                 (matchAny != 0))) &&
             ((Vec_distance(&((GameObject*)sender)->anim.worldPosX,
                            &((GameObject*)obj)->anim.worldPosX) < radius &&
