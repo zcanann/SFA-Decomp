@@ -618,7 +618,7 @@ void FUN_800ea9b8(void)
     u32 flagWord;
     u32 bit;
     u32 flagId;
-    u32 unaff_r27;
+    u32 cachedFlagWord;
     u32 cachedFlagId;
     u32 scanId;
     short* mapFlags;
@@ -668,11 +668,11 @@ void FUN_800ea9b8(void)
                 mapId = (u32)(short)(((u8)history[5] >> 5) + 0x12f);
                 if (mapId != (int)(short)cachedFlagId)
                 {
-                    unaff_r27 = FUN_80017690(mapId);
+                    cachedFlagWord = FUN_80017690(mapId);
                     cachedFlagId = mapId;
                 }
             }
-            while ((unaff_r27 & 1 << ((u8)history[5] & 0x1f)) != 0);
+            while ((cachedFlagWord & 1 << ((u8)history[5] & 0x1f)) != 0);
         }
     }
     FUN_80286880();
