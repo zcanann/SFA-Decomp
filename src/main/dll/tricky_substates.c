@@ -714,8 +714,10 @@ int trickyFn_80142a14(int obj, int state)
 int trickyFlameFn_80142b6c(u8* obj, u8* state)
 {
     int i;
-    u8* p;
+    int j;
     u8* ptr;
+    u8* p;
+    u8* q;
     u8* e;
 
     switch (((GameObject*)obj)->anim.currentMove)
@@ -746,9 +748,9 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
             {
                 ((TrickyState*)state)->stateFlags &= ~0x800LL;
                 ((TrickyState*)state)->stateFlags |= 0x1000;
-                for (i = 0, p = state; i < 7; p += 4, i++)
+                for (j = 0, q = state; j < 7; q += 4, j++)
                 {
-                    objSetAnimSpeedTo1(*(u8**)(p + 0x700));
+                    objSetAnimSpeedTo1(*(u8**)(q + 0x700));
                 }
                 Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
                 ptr = ((GameObject*)obj)->extra;
