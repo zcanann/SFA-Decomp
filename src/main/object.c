@@ -414,9 +414,7 @@ int objGetFlagsE5_2(u8* obj)
     return ((GameObject*)obj)->colorFadeFlags & 2;
 }
 
-int roundUpTo4(int x);
 
-int roundUpTo8(int x);
 
 int roundUpTo32(int x);
 
@@ -474,7 +472,6 @@ void fn_8002B860(void* v)
     gObjPtrTable[i] = (int)v;
 }
 
-void mm_free(void* p);
 
 #pragma peephole off
 void* getTablesBinEntry(int i)
@@ -2633,7 +2630,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-void* mmAlloc(int size, int type, int flag);
 
 void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
 
