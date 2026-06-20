@@ -113,8 +113,8 @@ void softbody_update(int obj)
     if ((void*)obj == lbl_803DDD98)
     {
         f32 phase;
-        f32 td = timeDelta;
-        lbl_803DDDA0 = phase = lbl_803E728C * td + lbl_803DDDA0;
+        f32 td;
+        lbl_803DDDA0 = phase = lbl_803E728C * (td = timeDelta) + lbl_803DDDA0;
         while (phase > lbl_803E7288)
         {
             lbl_803DDDA0 = phase -= lbl_803E7288;
