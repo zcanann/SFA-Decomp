@@ -2672,9 +2672,9 @@ void beginLoadingMap(void)
             if (v != -1)
                 getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
         }
-        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) != 0);
-        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) != 0);
-        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) != 0);
+        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
+        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
+        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) ? 1 : 0);
         if (*(u8*)(env + 0x40) & 1)
             bo = 1;
         else
