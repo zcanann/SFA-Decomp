@@ -387,7 +387,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     }
     if (state->countValue < state->countTarget)
     {
-        nudge = (state->nudgeCount >= DR_LASERTURRET_MAX_NUDGE_COUNT) ? 2 : 0;
+        nudge = (state->nudgeCount < DR_LASERTURRET_MAX_NUDGE_COUNT) ? 0 : 2;
     }
     else
     {
