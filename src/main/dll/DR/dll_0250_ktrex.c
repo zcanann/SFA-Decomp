@@ -1292,9 +1292,9 @@ void ktrex_updateContactEffects(int obj, void* runtime)
 int ktrex_stateHandlerA02(int obj, int runtime)
 {
     void* p;
+    u16 flags;
     u8 phase;
     int idx;
-    u16 flags;
     int flag1;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
