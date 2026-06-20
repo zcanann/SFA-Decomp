@@ -154,7 +154,7 @@ void snowclaw_init(int* obj, u8* init)
     u8* table;
     int* inner;
 
-    table = gSnowClawMoveTable;
+    table = (u8*)(int)gSnowClawMoveTable;
     ((GameObject*)obj)->animEventCallback = snowclaw_animEventCallback;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
@@ -190,7 +190,7 @@ void snowclaw_init(int* obj, u8* init)
     ((SnowclawState*)inner)->unk30 = lbl_803E66EC;
     storeZeroToFloatParam((char*)inner + 0x98);
     s16toFloat((char*)((int)inner + 0x98), (s16) * (int*)(table + 0x3c));
-    objSeqInitFn_80080078(table, 6);
+    objSeqInitFn_80080078((u8*)(int)gSnowClawMoveTable, 6);
     gSnowClawDropBombAngle = 0x96;
     ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 = 0;
 }
