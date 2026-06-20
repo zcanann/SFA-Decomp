@@ -12,7 +12,6 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 
-extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(int* obj);
 extern f32 timeDelta;
 #include "main/game_object.h"
