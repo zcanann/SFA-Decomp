@@ -407,10 +407,10 @@ void kaldachom_update(int obj)
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
             (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
-            *(u16*)(state + 0x402) = 0;
+            ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject(obj, SFXkr_pullup1);
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
-            *(u8*)(state + 0x346) = 0;
+            ((GroundBaddieState*)state)->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.
                 resetHitboxMode | 8;
@@ -470,12 +470,12 @@ void kaldachom_update(int obj)
                 {
                     (*(void (**)(double, int, int, int))(*(int*)gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
                 }
-                *(u32*)(state + 0x3e0) = *(u32*)&((GameObject*)obj)->pendingParentObj;
+                ((GroundBaddieState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
                 *(u32*)&((GameObject*)obj)->pendingParentObj = 0;
                 (*(void (**)(double, double, int, int, void*, void*))(*(int*)gPlayerInterface + 8))
                 ((double)timeDelta, (double)timeDelta, obj, state, &gKaldaChomStateHandlersA,
                  &gKaldaChomStateHandlersB);
-                *(u32*)&((GameObject*)obj)->pendingParentObj = *(u32*)(state + 0x3e0);
+                *(u32*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)state)->savedObjC0;
             }
         }
     }
