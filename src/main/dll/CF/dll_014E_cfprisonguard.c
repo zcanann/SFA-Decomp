@@ -50,7 +50,6 @@ extern int Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E4268;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern int objGetAnimState80A(void* obj);
-extern u8 framesThisStep;
 extern f32 lbl_803E4280;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
