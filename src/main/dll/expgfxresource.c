@@ -20,10 +20,9 @@ void expgfx_updateResourceEntries(int unused)
     ExpgfxResourceEntry* entry;
     int i;
 
-    i = 0;
-    entry = EXPGFX_RUNTIME_DATA->resourceTable;
-    for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++)
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++)
     {
+        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->resourceId != 0)
         {
             entry->evictionScore = entry->evictionScore - framesThisStep;
@@ -38,7 +37,6 @@ void expgfx_updateResourceEntries(int unused)
                 entry->resource = NULL;
             }
         }
-        entry++;
     }
 }
 
