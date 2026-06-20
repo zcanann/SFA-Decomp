@@ -1322,7 +1322,7 @@ int pauseMenuGridFn_8012b4c4(void)
  * close SFX and kicks the menu-item exit animations. */
 void pauseMenuFn_8012b77c(void)
 {
-    u32 btn = (u16)getButtonsJustPressed(0);
+    u32 btn = getButtonsJustPressed(0) & 0xffff;
     f32 speed = lbl_803DD764;
     f32 v = speed * timeDelta + lbl_803DD760;
 
