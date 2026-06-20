@@ -97,6 +97,7 @@ void SpiritPrize_free(int obj)
 void SpiritPrize_init(int* obj, u8* init)
 {
     SpiritPrizeState* state;
+    int triggerId;
 
     state = ((GameObject*)obj)->extra;
     if (*(u32*)(init + 0x14) == SPIRITPRIZE_PLACEMENT_DISABLED) return;
@@ -104,20 +105,19 @@ void SpiritPrize_init(int* obj, u8* init)
     state->targetObjectId = -1;
     state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
     state->triggerHandle = -1;
-    if (((GameObject*)obj)->unkF4 == 0)
+    triggerId = ((GameObject*)obj)->unkF4;
+    if (triggerId == 0)
     {
         if (*(s16*)(init + 0x18) != 1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
             ((GameObject*)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
+            goto afterTrigger;
         }
     }
-    else
+    if (triggerId != 0)
     {
-    }
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        if (*(s16*)(init + 0x18) != ((GameObject*)obj)->unkF4 - 1)
+        if (*(s16*)(init + 0x18) != triggerId - 1)
         {
             (*gObjectTriggerInterface)->freeState((u8*)state);
             if (*(s16*)(init + 0x18) != -1)
@@ -127,6 +127,7 @@ void SpiritPrize_init(int* obj, u8* init)
             ((GameObject*)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     }
+afterTrigger:;
     if (((GameObject*)obj)->anim.seqId != 0x1d9)
     {
         state->useDetachedLight = 1;
