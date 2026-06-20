@@ -328,7 +328,7 @@ typedef struct PlayerState {
     f32 unk88C;
     f32 unk890;
     f32 unk894;
-    int unk898;
+    int stateHandler; /* staged state/anim handler fn-ptr (stored as int); copied into baddie.unk304 handler slot on anim change */
     u16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];
     u16 unk8A0;

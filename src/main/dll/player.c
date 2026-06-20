@@ -739,7 +739,7 @@ int fn_802A3F24(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 9;
-        ((PlayerState*)inner)->unk898 = 0;
+        ((PlayerState*)inner)->stateHandler = 0;
     }
     flagsBase = *(int*)&((GameObject*)obj)->extra;
     *(u32*)((char*)flagsBase + 0x360) &= ~2LL;
@@ -957,7 +957,7 @@ int fn_802A3B04(int obj, int state)
         void* sub;
         Sfx_PlayFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2cb : 0x29));
         *(s16*)((char*)state + 0x278) = 0xa;
-        ((PlayerState*)inner)->unk898 = 0;
+        ((PlayerState*)inner)->stateHandler = 0;
         ((PlayerState*)inner)->unk800 = 0;
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
@@ -1551,7 +1551,7 @@ int fn_802A5384(int obj, int state)
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
             *(s16*)((char*)state + 0x278) = 2;
-            ((PlayerState*)inner)->unk898 = (int)fn_802A514C;
+            ((PlayerState*)inner)->stateHandler = (int)fn_802A514C;
             if (((u32) * (u8*)((char*)inner + 0x3f1) >> 5 & 1) != 0)
             {
                 ((PlayerState*)inner)->maxSpeed = lbl_803E7F2C;
@@ -5955,7 +5955,7 @@ int fn_8029F108(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0x19;
-        inner->unk898 = 0;
+        inner->stateHandler = 0;
     }
     {
         int inner2 = *(int*)&((GameObject*)obj)->extra;
@@ -6277,7 +6277,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     {
         ((ByteFlags*)((char*)inner + 0x3f3))->b01 = ((ByteFlags*)((char*)inner + 0x3f3))->b08;
         *(s16*)((char*)state + 0x278) = 0x1d;
-        inner->unk898 = (int)fn_8029DAE0;
+        inner->stateHandler = (int)fn_8029DAE0;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -6547,7 +6547,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0xc;
-        ((PlayerState*)inner)->unk898 = 0;
+        ((PlayerState*)inner)->stateHandler = 0;
         ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
     }
     z = lbl_803E7EA4;
@@ -7856,7 +7856,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         *(u32*)state |= 0x200000;
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2000000LL;
         *(s16*)((char*)state + 0x278) = 1;
-        ((PlayerState*)inner)->unk898 = (int)fn_802A514C;
+        ((PlayerState*)inner)->stateHandler = (int)fn_802A514C;
         if (((ByteFlags*)((char*)inner + 0x3f1))->b20 != 0)
         {
             ((PlayerState*)inner)->maxSpeed = lbl_803E7F2C;
@@ -8466,7 +8466,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 ((PlayerState*)inner)->moveVariantIndex = 2;
                 newAnim = 0x23;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         case 7:
@@ -8476,7 +8476,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 ((PlayerState*)inner)->moveVariantIndex = 3;
                 newAnim = 0x23;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         case 0xc:
@@ -8484,7 +8484,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 ((PlayerState*)inner)->moveVariantIndex = 1;
                 newAnim = 0x23;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         case 0xa:
@@ -8492,14 +8492,14 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 ((PlayerState*)inner)->moveVariantIndex = 3;
                 newAnim = 0x23;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         case 4:
             if (canCounter)
             {
                 newAnim = 0x1f;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         case 1:
@@ -8574,7 +8574,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 ((PlayerState*)inner)->moveVariantIndex = 0;
                 newAnim = 0x23;
-                ((PlayerState*)inner)->unk898 = 0;
+                ((PlayerState*)inner)->stateHandler = 0;
             }
             break;
         }
@@ -8788,7 +8788,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 **(s8**)&((PlayerState *)inner)->playerStatus > 0)
             {
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, newAnim);
-                *(int*)&((PlayerState*)state)->baddie.unk304 = ((PlayerState*)inner)->unk898;
+                *(int*)&((PlayerState*)state)->baddie.unk304 = ((PlayerState*)inner)->stateHandler;
             }
         }
         else
@@ -9329,7 +9329,7 @@ int fn_802A1114(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0x12;
-        inner->unk898 = (int)fn_8029FFD0;
+        inner->stateHandler = (int)fn_8029FFD0;
         if (gPlayerPathObject != NULL)
         {
             if (((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -10118,7 +10118,7 @@ int fn_802A00E0(int obj, int state)
         inner->unk568 = inner->unk574 * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk550;
         *(s16*)((char*)state + 0x278) = 0x15;
-        inner->unk898 = (int)fn_8029FFD0;
+        inner->stateHandler = (int)fn_8029FFD0;
     }
     {
         int ex = *(int*)&((GameObject*)obj)->extra;
@@ -10201,7 +10201,7 @@ int fn_802A03BC(int obj, int state)
         inner->unk568 = inner->unk574 * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk54C;
         *(s16*)((char*)state + 0x278) = 0x14;
-        inner->unk898 = (int)fn_8029FFD0;
+        inner->stateHandler = (int)fn_8029FFD0;
     }
     {
         int ex = *(int*)&((GameObject*)obj)->extra;
@@ -11435,7 +11435,7 @@ int fn_8029E3F4(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0x1c;
-        inner->unk898 = 0;
+        inner->stateHandler = 0;
     }
     k = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedC = k;
@@ -11507,7 +11507,7 @@ int fn_802A49C8(int obj, int state)
         }
         ObjAnim_SetCurrentMove(obj, 0x443, lbl_803E7EAC, 0);
         *(s16*)((char*)state + 0x278) = 1;
-        inner->unk898 = (int)fn_802A514C;
+        inner->stateHandler = (int)fn_802A514C;
     }
     k = lbl_803E7EA4;
     ((PlayerState*)state)->baddie.animSpeedC = k;
@@ -11772,7 +11772,7 @@ int fn_802A4B78(int obj, int state)
     {
         ObjAnim_SetCurrentMove(obj, 0x447, lbl_803E7EA4, 0);
         *(s16*)((char*)state + 0x278) = 1;
-        inner->unk898 = (int)fn_802A514C;
+        inner->stateHandler = (int)fn_802A514C;
     }
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) &&
         (void*)(sub = inner->heldObj) != NULL)
@@ -15184,7 +15184,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
         *(s16*)((char*)state + 0x278) = 0xe;
-        inner->unk898 = (int)fn_8029FFD0;
+        inner->stateHandler = (int)fn_8029FFD0;
         vb.sp1c = lbl_803E7EA4;
         if (flag)
         {
@@ -15306,7 +15306,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0x16;
-        inner->unk898 = 0;
+        inner->stateHandler = 0;
     }
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
@@ -16366,7 +16366,7 @@ int fn_802A4D34(int obj, int state)
             }
         }
         *(s16*)((char*)state + 0x278) = 1;
-        inner->unk898 = (int)fn_802A514C;
+        inner->stateHandler = (int)fn_802A514C;
     }
     switch (((GameObject*)obj)->anim.currentMove)
     {
@@ -17470,7 +17470,7 @@ int fn_8029E568(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         *(s16*)((char*)state + 0x278) = 0x1b;
-        inner->unk898 = (int)fn_802A00C0;
+        inner->stateHandler = (int)fn_802A00C0;
         ObjHits_MarkObjectPositionDirty();
     }
     {
