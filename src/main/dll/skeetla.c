@@ -849,24 +849,28 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     s8 failedCount;
     s8 pass;
     u8* search;
+    u32* route;
 
+    route = routes;
     search = state;
     for (i = 0; i < 8; i++)
     {
-        if (routes[i] != 0)
+        if (*route != 0)
         {
-            fn_8004B31C(search + 0x538, routes[i], *(int*)&((TrickyState*)state)->unk28, pathId, routeFlags[i]);
+            fn_8004B31C(search + 0x538, *route, *(int*)&((TrickyState*)state)->unk28, pathId, routeFlags[i]);
         }
+        route++;
         search += 0x30;
     }
 
     for (pass = 0; pass < 100; pass++)
     {
         failedCount = 0;
+        route = routes;
         search = state;
         for (i = 0; i < 8; i++)
         {
-            if (routes[i] != 0)
+            if (*route != 0)
             {
                 status[i] = fn_8004B218(search + 0x538, 1);
             }
@@ -880,11 +884,12 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
             case 1:
                 return i;
             case -1:
-                routes[i] = 0;
+                *route = 0;
                 failedCount++;
                 break;
             }
 
+            route++;
             search += 0x30;
         }
 
@@ -893,9 +898,10 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
         case 8:
             return -1;
         case 7:
+            route = routes;
             for (i = 0; i < 8; i++)
             {
-                if (routes[i] != 0)
+                if (*route != 0)
                 {
                     status[i] = fn_8004B218(state + 0x538 + i * 0x30, 0x1f4);
                     if (status[i] == 1)
@@ -904,6 +910,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
                     }
                     return -1;
                 }
+                route++;
             }
             return -1;
         }
