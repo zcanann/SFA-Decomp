@@ -422,7 +422,8 @@ int gplayNewGame(char* name, int slot)
         dst = gSaveGameData + SAVEGAME_PLAYER_NAME_OFFSET;
         do
         {
-            c = (u8) * name++;
+            c = *(u8*)name;
+            name++;
             *dst++ = c;
         }
         while (c != '\0');
