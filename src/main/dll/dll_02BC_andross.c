@@ -1913,7 +1913,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->homePosZ);
         }
         if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568) &&
-            ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0))
+            ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0u))
         {
             work = randomGetRange(0, 1);
             if (work == 0)
@@ -1962,7 +1962,7 @@ void andross_update(int obj)
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
         ((AndrossState*)state)->unkE4 = ((AndrossState*)state)->unkE4 + timeDelta;
-        if ((lbl_803E7578 < ((AndrossState*)state)->unkE4) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0))
+        if ((lbl_803E7578 < ((AndrossState*)state)->unkE4) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
             Sfx_PlayFromObject(obj, 0x46f);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
@@ -2044,7 +2044,7 @@ void andross_update(int obj)
             thrustA.z = (float)(fc * lbl_803DC4A8);
             thrustAArg = thrustA;
             arwarwing_setVelocity(*state, (int)&thrustAArg);
-            if ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0)
+            if ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u)
             {
                 Sfx_PlayFromObject(obj, 0x46f);
                 ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
