@@ -63,7 +63,7 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
-extern f32 lbl_803E23E8;
+extern const f32 lbl_803E23E8;
 extern void Obj_FreeObject(u8* obj);
 extern f32 gDebugInitialScale;
 extern f32 gDebugScaleX;
