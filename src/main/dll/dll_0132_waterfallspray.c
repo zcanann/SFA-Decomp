@@ -10,8 +10,8 @@
 
 typedef struct WaterFallSprayState
 {
-    u32 unk0;
-    u32 unk4;
+    u32 sfxIdA;
+    u32 sfxIdB;
 } WaterFallSprayState;
 
 
@@ -144,12 +144,12 @@ void WaterFallSpray_init(u8* obj, u8* data)
     v = *(int*)((char*)(*(u8**)&((GameObject*)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END && v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
     {
-        ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_ALT_SFX_A;
-        ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_ALT_SFX_B;
+        ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_ALT_SFX_A;
+        ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_ALT_SFX_B;
         return;
     }
-    ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_DEFAULT_SFX_A;
-    ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_DEFAULT_SFX_B;
+    ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
+    ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
 }
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch

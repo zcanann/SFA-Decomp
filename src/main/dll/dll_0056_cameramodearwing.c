@@ -24,16 +24,16 @@ typedef struct CameraArwingWork
     f32 unk0;
     f32 unk4;
     f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 basePosX;
+    f32 basePosY;
+    f32 basePosZ;
     u8 pad18[0x24 - 0x18];
     f32 xScale;
     f32 yScale;
     f32 unk2C;
     f32 unk30;
     f32 unk34;
-    f32 unk38;
+    f32 posZOffset;
     f32 unk3C;
     f32 unk40;
     f32 yawScale;
@@ -123,7 +123,7 @@ void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
     }
     if (kind == 4)
     {
-        ((CameraArwingWork*)gCamArwingWork)->unk38 = ((f32*)p1)[0];
+        ((CameraArwingWork*)gCamArwingWork)->posZOffset = ((f32*)p1)[0];
         return;
     }
     ((CameraArwingWork*)gCamArwingWork)->unk3C = ((f32*)p1)[0];
@@ -140,9 +140,9 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     f32 fc;
     if (mode != 1)
     {
-        ((CameraArwingWork*)gCamArwingWork)->unkC = ((GameObject*)a4)->anim.worldPosX;
-        ((CameraArwingWork*)gCamArwingWork)->unk10 = ((GameObject*)a4)->anim.worldPosY;
-        ((CameraArwingWork*)gCamArwingWork)->unk14 = ((GameObject*)a4)->anim.worldPosZ;
+        ((CameraArwingWork*)gCamArwingWork)->basePosX = ((GameObject*)a4)->anim.worldPosX;
+        ((CameraArwingWork*)gCamArwingWork)->basePosY = ((GameObject*)a4)->anim.worldPosY;
+        ((CameraArwingWork*)gCamArwingWork)->basePosZ = ((GameObject*)a4)->anim.worldPosZ;
     }
     *(p = (f32*)((base = (char*)gCamArwingWork) + 48)) = lbl_803E1BA4;
     *(f32*)(base + 52) = lbl_803E1BC0;
@@ -188,11 +188,11 @@ void CameraModeArwing_update(u8* obj)
     int d;
 
     ((GameObject*)obj)->anim.worldPosX = gCamArwingWork[0] * ((CameraArwingWork*)gCamArwingWork)->xScale;
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.worldPosX + ((CameraArwingWork*)gCamArwingWork)->unkC;
+    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.worldPosX + ((CameraArwingWork*)gCamArwingWork)->basePosX;
     ((GameObject*)obj)->anim.worldPosY = gCamArwingWork[1] * ((CameraArwingWork*)gCamArwingWork)->yScale;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.worldPosY + ((CameraArwingWork*)gCamArwingWork)->unk10;
+    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.worldPosY + ((CameraArwingWork*)gCamArwingWork)->basePosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)state)->anim.worldPosZ + ((CameraArwingWork*)gCamArwingWork)->
-        unk38;
+        posZOffset;
 
     if ((s8)state[0xac] != 0x26)
     {

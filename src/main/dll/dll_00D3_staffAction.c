@@ -840,9 +840,9 @@ void fn_80166444(int obj, int state)
 typedef struct DllD3Placement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     u8 pad14[0x2E - 0x14];
     u8 unk2E;
     u8 pad2F[0x30 - 0x2F];
@@ -910,9 +910,9 @@ void dll_D3_update(int* obj)
 
     if (((GameObject*)obj)->unkF8 == 0)
     {
-        ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->unk8;
-        ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->unkC;
-        ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->unk10;
+        ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->posZ;
         (*gObjectTriggerInterface)->runSequence(*(s8*)((char*)trans + 0x2e), obj, -1);
         ((GameObject*)obj)->unkF8 = 1;
         return;

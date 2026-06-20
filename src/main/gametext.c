@@ -416,19 +416,18 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
             SpecialGlyph* g = lbl_802C86F0;
-            int count = 0;
             int n;
             int sel;
             for (n = 46; n != 0; n--)
             {
                 if (g->key == ch)
                 {
-                    count = g->val;
+                    n = g->val;
                     break;
                 }
                 g++;
             }
-            for (i = 0; i < count; i++)
+            for (i = 0; i < n; i++)
             {
                 int b0 = ((u8*)str)[cursor++];
                 int b1 = ((u8*)str)[cursor++];
@@ -437,13 +436,13 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             sel = 1;
             switch (ch)
             {
-            case 0xf8f7:
-                langIdx = params[0];
-                sizeEntry = &lbl_802C8680[langIdx];
-                break;
             case 0xf8f4:
                 scale = (f32)(int)
                 params[0] * lbl_803DE708;
+                break;
+            case 0xf8f7:
+                langIdx = params[0];
+                sizeEntry = &lbl_802C8680[langIdx];
                 break;
             default:
                 sel = 0;
@@ -460,18 +459,18 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* glyphs = (MeasGlyph*)gameTextFonts->field0;
-            MeasGlyph* found = NULL;
+            MeasGlyph* found = (MeasGlyph*)gameTextFonts->field0;
             int n = gameTextFonts->field8;
-            for (; n != 0; n--)
+            while (n-- != 0)
             {
-                if (glyphs->key == ch && glyphs->lang == langIdx)
+                if (found->key == ch && found->lang == langIdx)
                 {
-                    found = glyphs;
-                    break;
+                    goto gotGlyph;
                 }
-                glyphs++;
+                found++;
             }
+            found = NULL;
+        gotGlyph:
             if (found != NULL)
             {
                 int advance = found->fC + (found->f8 + found->f9);
@@ -543,32 +542,33 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             for (;;)
             {
                 int k = 6;
-                while (k > 0)
+                while (1)
                 {
                     ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
                     if (k == charLen2)
                     {
+                        if (!isSpace(ch))
+                        {
+                            goto foundBreak;
+                        }
+                        if (charLen2 != 0)
+                        {
+                            int j;
+                            for (j = 0; j < charLen2; j++)
+                            {
+                                *--dst = 0;
+                            }
+                        }
                         break;
                     }
                     k--;
-                }
-                if (k == 0)
-                {
-                    continue;
-                }
-                if (!isSpace(ch))
-                {
-                    break;
-                }
-                if (charLen2 != 0)
-                {
-                    int j;
-                    for (j = 0; j < charLen2; j++)
+                    if (k <= 0)
                     {
-                        *--dst = 0;
+                        break;
                     }
                 }
             }
+        foundBreak:
             q[1] = q[0];
             q[0] = 0;
             dst = q + 1;

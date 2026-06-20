@@ -997,13 +997,14 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     int yb;
     int i;
     int r;
-    u8 a;
+    int a;
     u16 v;
     Texture* tex;
     int box;
     u8 idx;
     f32 m;
     f32 sc3;
+    f32* mtx;
 
     m = (lbl_803DD9C4 = lbl_803DD9C4 + timeDelta);
     if (m > lbl_803E22F0)
@@ -1011,12 +1012,13 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         lbl_803DD9C4 = m - lbl_803E22F0;
     }
     lbl_803DD9C0 = lbl_803E232C *
-        mathCosf(gTitleScreenPi * (lbl_803E2334 * lbl_803DD9C4) / lbl_803E22F0) +
+        mathCosf(gTitleScreenPi * (lbl_803E2334 * lbl_803DD9C4) / *(f32*)&lbl_803E22F0) +
         lbl_803E2328;
     if (gTitleScreenCursorY > lbl_803E22F8)
     {
-        xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-        yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+        mtx = (f32*)gTitleScreenMtx;
+        xb = (int)mtx[3];
+        yb = (int)mtx[7];
         tex = (Texture*)gTitleScreenTextures[4];
         drawScaledTexture((char*)tex,
                           (f32)(int)(xb - 0x32 + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
@@ -1035,28 +1037,29 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         drawScaledTexture((char*)tex, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
     }
-    xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-    yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+    mtx = (f32*)gTitleScreenMtx;
+    xb = (int)mtx[3];
+    yb = (int)mtx[7];
     a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
     drawTexture(gTitleScreenTextures[1], (f32)(int)(xb - 0x18),
                 (f32)(int)(yb - ((Texture*)gTitleScreenTextures[1])->height + 3), 0xff, 0xff);
     drawTexture(gTitleScreenTextures[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
-    xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-    yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+    xb = (int)mtx[3];
+    yb = (int)mtx[7];
     a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
     drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18),
                 lbl_803E22FC + lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb, 0xff, 0xff);
     drawTexture(gTitleScreenTextures[7], (f32)(int)(xb + 0xa1),
                 lbl_803E2304 + lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb, a, 0xff);
     gameTextSetColor(0xff, 0xff, 0xff,
-                     (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - gTitleScreenCursorY)));
+                     (int)((f64)lbl_803DD9C0 * (lbl_803E2308 - gTitleScreenCursorY)));
     gameTextShow(0x3da);
-    drawTexture(gTitleScreenTextures[3], (f32)(int)((int)*(f32*)(gTitleScreenMtx + 0xc) - 0x32),
+    drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
-    if (gTitleScreenCursorY >= lbl_803E2338 && (p2 & 0xff) == 0)
+    if (gTitleScreenCursorY >= lbl_803E2338 && (p2 & 0xff) == 0u)
     {
-        xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-        yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+        xb = (int)mtx[3];
+        yb = (int)mtx[7];
         i = 0;
         sc3 = lbl_803E2300;
         do
@@ -1067,7 +1070,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                               (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x28 +
                                   (i + 1) * -4),
                               (f32)(int)(yb - 0x10 + (i + 1) * -3),
-                              (int)(u32)lbl_803DD9C0 >> ((i + 3) & 0x3f) & 0xff, 0x100,
+                              (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
                               tex->width + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
             i++;
         }
@@ -1076,11 +1079,12 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
-        if ((p2 & 0xff) == 0)
+        xb = (int)mtx[3];
+        yb = *(s16*)(box + 0x16) + (int)mtx[7];
+        if ((p2 & 0xff) == 0u)
         {
-            drawTexture(gTitleScreenTextures[5],
-                        (f32)(int)((int)*(f32*)(gTitleScreenMtx + 0xc) + 0x2f),
-                        (f32)(int)(*(s16*)(box + 0x16) + (int)*(f32*)(gTitleScreenMtx + 0x1c) - 1), p2, 0xff);
+            drawTexture(gTitleScreenTextures[5], (f32)(int)(xb + 0x2f),
+                        (f32)(int)(yb - 1), p2, 0xff);
         }
     }
     drawScaledTexture((char*)gTitleScreenTextures[18],
@@ -1115,10 +1119,10 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(gTitleScreenMainTex,
                 (f32)(int)((0x280 - ((int)((u32)((Texture*)gTitleScreenMainTex)->width * 0xbe) >> 8)) / 2),
                 (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
-    if ((p3 & 0xff) != 0)
+    if ((p3 & 0xff) != 0u)
     {
-        xb = (int)*(f32*)(gTitleScreenMtx + 0xc);
-        yb = (int)*(f32*)(gTitleScreenMtx + 0x1c);
+        xb = (int)mtx[3];
+        yb = (int)mtx[7];
         drawTexture(gTitleScreenTextures[17], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x14),
                     0xff, 0xff);
         drawTexture(gTitleScreenTextures[16], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x4b),

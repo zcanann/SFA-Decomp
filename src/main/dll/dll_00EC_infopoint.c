@@ -21,7 +21,7 @@ typedef struct InfopointObjectDef
     u16 textId;             /* 0x18: game-text id passed to gameTextGet */
     u8 pad1A[0x1B - 0x1A];
     u8 unk1B;
-    u8 unk1C;
+    u8 rotXByte;            /* 0x1C: rotX in 1/256 turns (<< 8 into anim.rotX) */
     u8 pad1D;
     u8 unk1E;
     u8 unk1F;
@@ -103,7 +103,7 @@ void infopoint_init(int* obj, u8* def)
     *(int*)(state + 4) = **(int**)((char*)txt + 8);
     *(int*)(state + 0xc) = 100;
     *(int*)state = (int)txt;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->unk1C << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->rotXByte << 8);
     *(int*)(state + 0x18) = 2;
     *(u8*)(state + 0x10) = ((InfopointObjectDef*)def)->unk1B;
     *(s16*)(state + 0x16) = 0;

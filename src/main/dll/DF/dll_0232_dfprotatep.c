@@ -517,9 +517,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     buf.baseVec[2] = lbl_803E6460;
     buf.baseVec[3] = lbl_803E6460;
     buf.baseVec[0] = lbl_803E6458;
-    angleStep = 0;
-    buf.rotation[2] = 0;
-    buf.rotation[1] = 0;
+    buf.rotation[2] = buf.rotation[1] = angleStep = 0;
     handles = gSfxplayerEffectHandles;
 
     for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)

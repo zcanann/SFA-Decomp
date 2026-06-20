@@ -13,7 +13,7 @@ typedef struct WindLift107State
     s16 ventState; /* 0x10 */
     s16 maxDist; /* 0x12 */
     s16 unk14; /* 0x14 */
-    s16 unk16; /* 0x16 */
+    s16 timer; /* 0x16 */
     s16 unk18; /* 0x18 */
     s16 liftTimer; /* 0x1a */
     u8 pad1C[2];

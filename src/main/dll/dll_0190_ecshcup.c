@@ -61,19 +61,19 @@ void gpsh_scene_init(int* obj, int* def);
 
 typedef struct EcshCupState
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s16 unk2C;
-    s8 unk2E;
+    f32 startPosX;
+    f32 startPosY;
+    f32 startPosZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    f32 spawnPosY;
+    f32 spawnTimer;
+    f32 bobTimer;
+    s32 currentMode;
+    s32 slotId;
+    s16 spinRate;
+    s8 bobDir;
     u8 pad2F[0x30 - 0x2F];
 } EcshCupState;
 
@@ -106,32 +106,32 @@ void ecsh_cup_update(short* obj)
     if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
     {
         (*(void (*)(int*, u8*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x28))(&mode, buf);
-        *obj = *obj + state->unk2C;
+        *obj = *obj + state->spinRate;
         if (mode != 6)
         {
-            state->unk1C -= timeDelta;
-            if (state->unk1C <= lbl_803E5068)
+            state->spawnTimer -= timeDelta;
+            if (state->spawnTimer <= lbl_803E5068)
             {
-                state->unk1C = lbl_803E506C;
+                state->spawnTimer = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7)
                 {
                     (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
                 }
             }
         }
-        state->unk20 -= timeDelta;
-        if (state->unk20 <= lbl_803E5068)
+        state->bobTimer -= timeDelta;
+        if (state->bobTimer <= lbl_803E5068)
         {
-            state->unk2E *= -1;
-            state->unk20 = lbl_803E5070;
+            state->bobDir *= -1;
+            state->bobTimer = lbl_803E5070;
         }
-        ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->unk2E + ((GameObject*)obj)->
+        ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->bobDir + ((GameObject*)obj)->
             anim.localPosY;
-        if (mode == 1 && state->unk24 == 1)
+        if (mode == 1 && state->currentMode == 1)
         {
-            ((GameObject*)obj)->anim.localPosX = state->unkC * timeDelta + ((GameObject*)obj)->anim.
+            ((GameObject*)obj)->anim.localPosX = state->velX * timeDelta + ((GameObject*)obj)->anim.
                 localPosX;
-            ((GameObject*)obj)->anim.localPosZ = state->unk14 * timeDelta + ((GameObject*)obj)->anim.
+            ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.
                 localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
@@ -145,7 +145,7 @@ void ecsh_cup_update(short* obj)
         }
         if (mode == 6)
         {
-            if (((GameObject*)obj)->anim.localPosY < state->unk18)
+            if (((GameObject*)obj)->anim.localPosY < state->spawnPosY)
             {
                 ((GameObject*)obj)->anim.localPosY = lbl_803E5078 * timeDelta + ((GameObject*)obj)->anim.localPosY;
             }
@@ -160,22 +160,22 @@ void ecsh_cup_update(short* obj)
                 *(u8*)((char*)obj + 0x37) = (u8)(int)
                 a;
             }
-            state->unk1C -= timeDelta;
-            if (state->unk1C <= lbl_803E5068)
+            state->spawnTimer -= timeDelta;
+            if (state->spawnTimer <= lbl_803E5068)
             {
-                state->unk1C = lbl_803E506C;
+                state->spawnTimer = lbl_803E506C;
                 (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         }
         else if (mode == 7)
         {
-            if (((GameObject*)obj)->anim.localPosY > state->unk18 - lbl_803E5084)
+            if (((GameObject*)obj)->anim.localPosY > state->spawnPosY - lbl_803E5084)
             {
                 ((GameObject*)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject*)obj)->anim.localPosY);
-                state->unk1C -= timeDelta;
-                if (state->unk1C <= lbl_803E5068)
+                state->spawnTimer -= timeDelta;
+                if (state->spawnTimer <= lbl_803E5068)
                 {
-                    state->unk1C = lbl_803E506C;
+                    state->spawnTimer = lbl_803E506C;
                     if (mode != 3)
                     {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
@@ -194,50 +194,50 @@ void ecsh_cup_update(short* obj)
                 a;
             }
         }
-        else if (mode == 8 && mode != state->unk24)
+        else if (mode == 8 && mode != state->currentMode)
         {
-            if (state->unk28 == buf[0])
+            if (state->slotId == buf[0])
             {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             }
-            state->unk24 = mode;
+            state->currentMode = mode;
         }
-        else if (mode == 1 && mode != state->unk24)
+        else if (mode == 1 && mode != state->currentMode)
         {
             (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
-                (u8)state->unk28, &v.x, &v.z);
-            state->unkC = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
-            state->unk14 = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
-            state->unk0 = ((GameObject*)obj)->anim.localPosX;
-            state->unk8 = ((GameObject*)obj)->anim.localPosZ;
-            state->unk24 = mode;
+                (u8)state->slotId, &v.x, &v.z);
+            state->velX = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
+            state->velZ = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
+            state->startPosX = ((GameObject*)obj)->anim.localPosX;
+            state->startPosZ = ((GameObject*)obj)->anim.localPosZ;
+            state->currentMode = mode;
         }
-        else if (mode == 0 && mode != state->unk24)
+        else if (mode == 0 && mode != state->currentMode)
         {
-            state->unkC = lbl_803E5068;
-            state->unk14 = lbl_803E5068;
-            state->unk24 = mode;
+            state->velX = lbl_803E5068;
+            state->velZ = lbl_803E5068;
+            state->currentMode = mode;
         }
-        else if (mode == 2 && mode != state->unk24)
+        else if (mode == 2 && mode != state->currentMode)
         {
-            state->unkC = lbl_803E5068;
-            state->unk14 = lbl_803E5068;
+            state->velX = lbl_803E5068;
+            state->velZ = lbl_803E5068;
             (*(void (*)(int, f32, f32))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x2c))(
-                (u8)state->unk28, ((GameObject*)obj)->anim.localPosX,
+                (u8)state->slotId, ((GameObject*)obj)->anim.localPosX,
                 ((GameObject*)obj)->anim.localPosZ);
-            state->unk24 = mode;
+            state->currentMode = mode;
         }
-        else if (mode == 3 && mode != state->unk24)
+        else if (mode == 3 && mode != state->currentMode)
         {
-            state->unk24 = mode;
+            state->currentMode = mode;
         }
-        else if (mode == 4 && mode != state->unk24)
+        else if (mode == 4 && mode != state->currentMode)
         {
             (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
-                (u8)state->unk28, &v.x, &v.z);
+                (u8)state->slotId, &v.x, &v.z);
             ((GameObject*)obj)->anim.localPosX = v.x;
             ((GameObject*)obj)->anim.localPosZ = v.z;
-            state->unk24 = mode;
+            state->currentMode = mode;
         }
         else if (mode == 5)
         {
@@ -246,8 +246,8 @@ void ecsh_cup_update(short* obj)
                 if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) < lbl_803E5088)
                 {
                     (*(void (*)(int))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x30))(
-                        (u8)state->unk28);
-                    if (state->unk28 == buf[0])
+                        (u8)state->slotId);
+                    if (state->slotId == buf[0])
                     {
                         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                     }
@@ -273,24 +273,24 @@ void ecsh_cup_init(int obj, int def)
     state = *(int*)&((GameObject*)obj)->extra;
     dist = lbl_803E5064;
     gEcShCupNearestObject = 0;
-    ((EcshCupState*)state)->unk0 = ((GameObject*)obj)->anim.localPosX;
-    ((EcshCupState*)state)->unk4 = ((GameObject*)obj)->anim.localPosY;
-    ((EcshCupState*)state)->unk8 = ((GameObject*)obj)->anim.localPosZ;
-    ((EcshCupState*)state)->unk18 = ((GameObject*)obj)->anim.localPosY;
+    ((EcshCupState*)state)->startPosX = ((GameObject*)obj)->anim.localPosX;
+    ((EcshCupState*)state)->startPosY = ((GameObject*)obj)->anim.localPosY;
+    ((EcshCupState*)state)->startPosZ = ((GameObject*)obj)->anim.localPosZ;
+    ((EcshCupState*)state)->spawnPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
-        ((EcshCupState*)state)->unkC = fz;
-        ((EcshCupState*)state)->unk10 = fz;
-        ((EcshCupState*)state)->unk14 = fz;
+        ((EcshCupState*)state)->velX = fz;
+        ((EcshCupState*)state)->velY = fz;
+        ((EcshCupState*)state)->velZ = fz;
     }
-    ((EcshCupState*)state)->unk24 = 0;
-    ((EcshCupState*)state)->unk28 = *(s16*)(def + 0x1a);
-    ((EcshCupState*)state)->unk20 = randomGetRange(0, 0x258);
-    ((EcshCupState*)state)->unk2C = randomGetRange(-0x320, 0x320);
-    *(u8*)&((EcshCupState*)state)->unk2E = 1;
+    ((EcshCupState*)state)->currentMode = 0;
+    ((EcshCupState*)state)->slotId = *(s16*)(def + 0x1a);
+    ((EcshCupState*)state)->bobTimer = randomGetRange(0, 0x258);
+    ((EcshCupState*)state)->spinRate = randomGetRange(-0x320, 0x320);
+    *(u8*)&((EcshCupState*)state)->bobDir = 1;
     *(u8*)(obj + 0x37) = 0;
-    ((EcshCupState*)state)->unk1C = lbl_803E5068;
+    ((EcshCupState*)state)->spawnTimer = lbl_803E5068;
     if (gEcShCupNearestObject == 0)
     {
         gEcShCupNearestObject = ObjGroup_FindNearestObject(0xb, obj, &dist);

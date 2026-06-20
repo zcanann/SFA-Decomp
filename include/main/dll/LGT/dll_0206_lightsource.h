@@ -20,7 +20,7 @@ typedef struct LightSourceState {
     void *light;
     f32 fxTimer;
     f32 sparkTimer;
-    f32 unk0C;
+    f32 sparkSpawnTimer;
     int gameBit;
     u8 mode;
     u8 fxType;

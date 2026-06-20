@@ -32,7 +32,7 @@ typedef struct AndrossState {
     f32 animSpeed; /* passed with ObjAnim_SetCurrentMove */
     f32 fadeAlpha; /* mesh alpha source (alpha = K * fadeAlpha) */
     f32 spawnCooldown;
-    f32 unk70;
+    f32 savedPosZ; /* cached anim.localPosZ; restored and used as (savedPosZ - localPosZ) delta */
     f32 springStiffness; /* vel += stiffness * (targetPos - pos) */
     f32 springDamping; /* vel *= damping each tick */
     int fightPhase; /* phase switch (1/2/5/6...) */
@@ -45,10 +45,10 @@ typedef struct AndrossState {
     s16 actionTimer; /* frames; -= framesThisStep, re-armed from config on expiry */
     u8 unk9A[0x9C - 0x9A];
     f32 durationTimer; /* seconds; -= timeDelta, compared to thresholds */
-    s16 unkA0;
-    s16 unkA2;
-    s16 unkA4;
-    s16 unkA6;
+    s16 targetRotX; /* target pitch angle; sval = targetRotX - anim.rotX */
+    s16 rotXSpeed; /* smoothed delta added to anim.rotX each tick */
+    s16 rotYSpeed; /* smoothed delta added to anim.rotY each tick */
+    s16 timer;
     f32 unkA8;
     u8 actionToggle;
     u8 signalFlags; /* |= signal (the setter param name) */
@@ -59,7 +59,7 @@ typedef struct AndrossState {
     u8 unkB5;
     u8 unkB6;
     u8 unkB7;
-    int unkB8;
+    int seqQueryObj; /* object handle queried via animatedObjGetSeqId */
     u8 unkBC;
     u8 unkBD[0xC0 - 0xBD];
     f32 cachedPosX;
@@ -71,7 +71,7 @@ typedef struct AndrossState {
     f32 unkD8;
     f32 unkDC;
     f32 unkE0;
-    f32 unkE4;
+    f32 soundTimer; /* += timeDelta; on threshold plays sfx 0x46f and latches a flag */
     u8 soundEventFlags;
     u8 unkE9[0xEC - 0xE9];
 } AndrossState;

@@ -8,8 +8,8 @@ typedef struct Dll199State
     u8 pad0[0x2 - 0x0];
     s16 unk2;
     u8 pad4[0xE - 0x4];
-    u8 unkE;
-    u8 unkF;
+    u8 unlockCount;
+    u8 phase;
     u8 unk10;
     u8 pad11[0x12 - 0x11];
     u8 unk12;

@@ -180,12 +180,12 @@ void lightsource_update(int obj)
         }
         if (b->sparks != 0)
         {
-            b->unk0C = b->unk0C - timeDelta;
-            if (b->unk0C <= lbl_803E5E0C)
+            b->sparkSpawnTimer = b->sparkSpawnTimer - timeDelta;
+            if (b->sparkSpawnTimer <= lbl_803E5E0C)
             {
                 fx.scale = lbl_803E5E08;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7cb, &fx, 2, -1, NULL);
-                b->unk0C = b->unk0C + gLightSourceSparkTimerPeriod;
+                b->sparkSpawnTimer = b->sparkSpawnTimer + gLightSourceSparkTimerPeriod;
             }
         }
     }

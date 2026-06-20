@@ -14,7 +14,7 @@
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18;
+    s8 wanderRange;
     u8 stateId;
     s16 timer;
     s16 unk1C;
@@ -99,7 +99,7 @@ void LanternFireFly_func0B(int obj)
 
     state = ((GameObject*)obj)->extra;
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    state->field68 = ((LanternFireFlyPlacement*)setup)->unk18;
+    state->wanderRange = ((LanternFireFlyPlacement*)setup)->wanderRange;
     state->stateId = ((LanternFireFlyPlacement*)setup)->stateId;
     state->field4C = lbl_803E3AA0;
     state->field50 = (f32)(int)((LanternFireFlyPlacement*)setup)->unk1C;
@@ -372,7 +372,7 @@ void LanternFireFly_init(int obj, int def)
     state->randPeriod = randValue;
     randValue = randomGetRange(0, 0xFDE8);
     state->randAngle = randValue;
-    state->field68 = 4;
+    state->wanderRange = 4;
     state->stateId = 4;
     state->field4C = lbl_803E3AB8;
     state->field50 = lbl_803E3AE0;
@@ -415,7 +415,7 @@ void fn_801868D0(int obj)
     state = ((GameObject*)obj)->extra;
     state->offX = lbl_803E3AB8;
     state->offY = (f32)(int)
-    randomGetRange(-state->field68, state->field68);
+    randomGetRange(-state->wanderRange, state->wanderRange);
     if (state->field50 < lbl_803E3ABC)
     {
         state->offZ = lbl_803E3AB8;

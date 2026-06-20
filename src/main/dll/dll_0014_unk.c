@@ -376,7 +376,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         {
             total = -total;
         }
-        return total;
+        goto done_exit;
     }
 
     reachedForward = 0;
@@ -512,6 +512,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     {
         total = -total;
     }
+done_exit:
     return total;
 }
 
@@ -1101,9 +1102,9 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     state->phase = savedPhase;
@@ -1322,7 +1323,8 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     {
         trig = mathSinf(angle);
     }
-    return lbl_803E05D0 * ((f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig);
+    trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
+    return lbl_803E05D0 * trig;
 }
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
@@ -1650,9 +1652,9 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
@@ -1755,9 +1757,9 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
@@ -2032,11 +2034,11 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 #pragma peephole on
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
-    state->nodeA0 = fromCurve;
-    state->nodeA4 = toCurve;
-
     if (state->reverse != 0)
     {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
         state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
         state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
         state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
@@ -2054,6 +2056,9 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
     }
     else
     {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
         state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
         state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
         state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
@@ -2077,9 +2082,9 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
 
     state->node94 = Curve_EvalHermite;
     state->node98 = Curve_BuildHermiteCoeffs;
-    state->unk84 = state->hermX;
-    state->unk88 = state->hermY;
-    state->unk8C = state->hermZ;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
     curvesMove((float*)state);
     return 0;
@@ -2231,6 +2236,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wg;
     ObjfsaPatch* p;
     ObjfsaPatch* sp;
+    ObjfsaPatch* np;
     u8* pp;
     char* slotPtr;
     char* lp;
@@ -2369,11 +2375,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                         gb = *(u8*)(linked + 3);
                         if (ga < gb)
                         {
-                            pairId = ((u16)gb << 8) | ga;
+                            pairId = (gb << 8) | ga;
                         }
                         else
                         {
-                            pairId = ((u16)ga << 8) | gb;
+                            pairId = (ga << 8) | gb;
                         }
 
                         found = 1;
@@ -2394,15 +2400,16 @@ void walkgroupFindExitPointFn_800dc398(void)
                         {
                             back = 0;
                             myId = *(s32*)(curve + 0x14);
-                            if (*(s32*)(linked + 0x1c) != myId &&
-                                (back = 1, *(s32*)(linked + 0x20) != myId) &&
-                                (back = 2, *(s32*)(linked + 0x24) != myId) &&
-                                (back = 3, *(s32*)(linked + 0x28) != myId))
+                            if (*(u32*)(linked + 0x1c) != (u32)myId &&
+                                (back = 1, *(u32*)(linked + 0x20) != (u32)myId) &&
+                                (back = 2, *(u32*)(linked + 0x24) != (u32)myId) &&
+                                (back = 3, *(u32*)(linked + 0x28) != (u32)myId))
                             {
                                 back = 4;
                             }
                             wg->patchIndices[slot] = gObjfsaPatchCount;
-                            patchBase[npi].groupId = pairId;
+                            np = &patchBase[npi];
+                            np->groupId = pairId;
                             pairs[npi * 2] = *(u8*)(curve + 3);
                             pairs[npi * 2 + 1] = *(u8*)(linked + 3);
 
@@ -2410,12 +2417,12 @@ void walkgroupFindExitPointFn_800dc398(void)
                             z0 = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10);
                             x1 = OBJFSA_CORNER(curve, slotPtr + 0x36, 0x8);
                             z1 = OBJFSA_CORNER(curve, slotPtr + 0x37, 0x10);
-                            patchBase[npi].exit0X = (s16)((x0 + x1) * lbl_803E0608);
-                            patchBase[npi].exit0Z = (s16)((z0 + z1) * lbl_803E0608);
+                            np->exit0X = (s16)((x0 + x1) * lbl_803E0608);
+                            np->exit0Z = (s16)((z0 + z1) * lbl_803E0608);
 
                             dxn = z1 - z0;
                             dzn = x0 - x1;
-                            OBJFSA_SET_PLANE(patchBase[npi], 0, x0, z0);
+                            OBJFSA_SET_PLANE(*np, 0, x0, z0);
 
                             lp = (char*)(linked + back * 4);
                             x2 = OBJFSA_CORNER(linked, lp + 0x34, 0x8);

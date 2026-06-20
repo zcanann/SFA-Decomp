@@ -30,7 +30,7 @@ typedef struct BombPlantSporeState {
   /* 0x294 */ f32 driftCos;
   /* 0x298 */ f32 spinTimer;
   /* 0x29C */ f32 driftSpeedTarget;
-  /* 0x2A0 */ f32 unk2a0;
+  /* 0x2A0 */ f32 spinChangeTimer;
   /* 0x2A4 */ f32 detonateTimer;
   /* 0x2A8 */ s16 unk2a8;
   /* 0x2AA */ s16 unk2aa;

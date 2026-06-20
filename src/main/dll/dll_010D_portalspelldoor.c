@@ -12,7 +12,7 @@
 typedef struct PortalspelldoorPlacement
 {
     u8 pad0[0x1E - 0x0];
-    s16 unk1E;
+    s16 openedGameBit;
 } PortalspelldoorPlacement;
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
@@ -62,7 +62,7 @@ void portalspelldoor_update(int obj)
         {
             fn_80296B78(player, -1);
         }
-        GameBit_Set(((PortalspelldoorPlacement*)p4c)->unk1E, 1);
+        GameBit_Set(((PortalspelldoorPlacement*)p4c)->openedGameBit, 1);
     }
     else
     {

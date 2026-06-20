@@ -43,8 +43,8 @@ void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode)
 {
     SynthVoice* voice;
     SynthVoiceRuntime* runtime;
-    u8* voiceBytes;
     u8* voiceCursor;
+    u8* voiceBytes;
     u32 voiceIndex;
     u32 studioIndex;
 
@@ -93,9 +93,8 @@ resolved:
         }
         else
         {
-            mode &= 0xF;
             voiceIndex = studioIndex & SYNTH_HANDLE_ID_MASK;
-            switch (mode)
+            switch (mode & 0xF)
             {
             case 0:
                 runtime->voices[voiceIndex].pendingUpdate.studio = value0;
@@ -166,20 +165,11 @@ resolved_initial:
     flags = request->flags;
     if ((flags & SYNTH_START_FLAG_PENDING_START) != 0)
     {
-        pendingVoice = &runtime->voices[slot];
-        pendingRequest = SYNTH_VOICE_PENDING_START_REQUEST(pendingVoice);
-        pendingRequest->handle = request->handle;
-        *(u32*)&pendingRequest->fadeTime = *(u32*)&request->fadeTime;
-        pendingRequest->reuseHandle = request->reuseHandle;
-        *(u32*)&pendingRequest->volumeTime = *(u32*)&request->volumeTime;
-        pendingRequest->seqId = request->seqId;
-        *(u32*)&pendingRequest->groupId = *(u32*)&request->groupId;
-        *(u32*)&pendingRequest->volume = *(u32*)&request->volume;
-        pendingRequest->mixValue0 = request->mixValue0;
-        pendingRequest->mixValue1 = request->mixValue1;
-        *(u32*)&pendingRequest->value16 = *(u32*)&request->value16;
-        SYNTH_VOICE_PENDING_START_ACTIVE(pendingVoice) = 1;
-        SYNTH_VOICE_PENDING_START_OUT_HANDLE(pendingVoice) = outHandle;
+        pendingVoice = (SynthVoice*)((u8*)runtime + slot * sizeof(SynthVoice));
+        pendingRequest = (SynthStartRequest*)((u8*)pendingVoice + 0x22B4);
+        *pendingRequest = *request;
+        *(u8*)((u8*)pendingVoice + 0x22E0) = 1;
+        *(u32**)((u8*)pendingVoice + 0x22DC) = outHandle;
         pendingRequest->flags &= ~SYNTH_START_FLAG_PENDING_START;
         *outHandle = request->handle | SYNTH_HANDLE_QUEUED_FLAG;
         return;
@@ -192,17 +182,18 @@ resolved_initial:
         {
             fadeTime = 5;
         }
+        mixValue1 = fadeTime;
         if ((flags & SYNTH_START_FLAG_VOLUME_MODE2) != 0)
         {
-            synthUpdateHandle(0, fadeTime, handle, 2);
+            synthUpdateHandle(0, mixValue1, handle, 2);
         }
         else if ((flags & SYNTH_START_FLAG_VOLUME_MODE3) != 0)
         {
-            synthUpdateHandle(0, fadeTime, handle, 3);
+            synthUpdateHandle(0, mixValue1, handle, 3);
         }
         else
         {
-            synthUpdateHandle(0, fadeTime, handle, 1);
+            synthUpdateHandle(0, mixValue1, handle, 1);
         }
     }
     else

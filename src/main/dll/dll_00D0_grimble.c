@@ -30,7 +30,7 @@
 typedef struct GrimblePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
 } GrimblePlacement;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -304,11 +304,11 @@ void fn_801627F4(int obj)
             ((GrimbleControl*)sub)->baseRotX =
                 (*(s16 (**)(int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x34))(
                     ((GrimbleControl*)sub)->pathObj);
-            ((GrimbleControl*)sub)->unk4C = ((GrimbleControl*)sub)->pathProgress;
+            ((GrimbleControl*)sub)->savedPathProgress = ((GrimbleControl*)sub)->pathProgress;
             ((GrimbleControl*)sub)->unk46 = 0;
-            ((GrimbleControl*)sub)->unk4 = ((GrimbleControl*)sub)->unk20;
-            ((GrimbleControl*)sub)->unk8 = ((GameObject*)obj)->anim.localPosY;
-            ((GrimbleControl*)sub)->unk0 = ((GrimbleControl*)sub)->unk4 - ((GrimbleControl*)sub)->unk8;
+            ((GrimbleControl*)sub)->anchorPosY = ((GrimbleControl*)sub)->homePosY;
+            ((GrimbleControl*)sub)->currentPosY = ((GameObject*)obj)->anim.localPosY;
+            ((GrimbleControl*)sub)->posYDelta = ((GrimbleControl*)sub)->anchorPosY - ((GrimbleControl*)sub)->currentPosY;
             diff = ((GameObject*)obj)->anim.rotX - (u16)((GrimbleControl*)sub)->baseRotX;
             if (diff > 0x8000)
             {
@@ -379,7 +379,7 @@ void grimble_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->unk14) != 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {
             (*(void (**)(int, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
                 0x58))(obj, def, state, 0xa, 6,

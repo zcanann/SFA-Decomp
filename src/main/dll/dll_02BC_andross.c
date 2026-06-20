@@ -193,7 +193,7 @@ void andross_init(int obj, u8* setup)
     ((AndrossState*)state)->unkB6 = 5;
     ((AndrossState*)state)->fightPhase = 1;
     ((AndrossState*)state)->prevFightPhase = -1;
-    ((AndrossState*)state)->unkA0 = -0x8000;
+    ((AndrossState*)state)->targetRotX = -0x8000;
     ((GameObject*)obj)->anim.rotX = -0x8000;
     ((AndrossState*)state)->spawnCooldown = gAndrossInitSpawnCooldown;
     ((AndrossState*)state)->unkA8 = lbl_803E74D4;
@@ -350,7 +350,7 @@ void andross_update(int obj)
         found = getArwing();
         *state = found;
         if (*(void**)state == NULL) goto LAB_8023ef14;
-        ((AndrossState*)state)->unk70 = ((GameObject*)*state)->anim.localPosZ;
+        ((AndrossState*)state)->savedPosZ = ((GameObject*)*state)->anim.localPosZ;
         arwarwing_setFlightHalfWidth(*state, gAndrossFlightHalfWidth);
     }
     for (work = 0; (u8)work < 4; work = work + 1)
@@ -389,7 +389,7 @@ void andross_update(int obj)
     ((AndrossState*)state)->unkD8 = lbl_803E74D4;
     ((AndrossState*)state)->unkDC = fval;
     ((AndrossState*)state)->unkE0 = fval;
-    if ((-0x4000 < ((AndrossState*)state)->unkA0) && (((GameObject*)obj)->anim.rotX < 0x4000))
+    if ((-0x4000 < ((AndrossState*)state)->targetRotX) && (((GameObject*)obj)->anim.rotX < 0x4000))
     {
         pathFlag = 1;
     }
@@ -475,7 +475,7 @@ void andross_update(int obj)
                 break;
             case 0x11:
                 ((AndrossState*)state)->actionState = 0x16;
-                ((AndrossState*)state)->unkA0 = 0x8000;
+                ((AndrossState*)state)->targetRotX = 0x8000;
                 ((AndrossState*)state)->fightPhase--;
             }
             ((AndrossState*)state)->actionPending = 0;
@@ -507,7 +507,7 @@ void andross_update(int obj)
                 {
                     ((AndrossState*)state)->fightPhase--;
                     ((AndrossState*)state)->actionState = 0x16;
-                    ((AndrossState*)state)->unkA0 = 0;
+                    ((AndrossState*)state)->targetRotX = 0;
                 }
                 else
                 {
@@ -817,16 +817,16 @@ void andross_update(int obj)
         {
             if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
                 goto LAB_8023bb18;
             }
         }
-        ((AndrossState*)state)->unkA6 -= framesThisStep;
-        if (((AndrossState*)state)->unkA6 < 1)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer < 1)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            ((AndrossState*)state)->unkA6 = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
     LAB_8023bb18:
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
@@ -1003,7 +1003,7 @@ void andross_update(int obj)
                 }
                 Sfx_PlayFromObject(obj, objId);
                 ((AndrossState*)state)->actionState = 0x16;
-                ((AndrossState*)state)->unkA0 = 0x8000;
+                ((AndrossState*)state)->targetRotX = 0x8000;
             }
         }
         else
@@ -1067,16 +1067,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023c584;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023c584:
@@ -1243,16 +1243,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023cbdc;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023cbdc:
@@ -1481,16 +1481,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023d59c;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023d59c:
@@ -1537,16 +1537,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023d7cc;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023d7cc:
@@ -1624,16 +1624,16 @@ void andross_update(int obj)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
-                    ((AndrossState*)state)->unkA6 = 0x3c;
+                    ((AndrossState*)state)->timer = 0x3c;
                     goto LAB_8023db24;
                 }
             }
-            ((AndrossState*)state)->unkA6 -= framesThisStep;
-            if (((AndrossState*)state)->unkA6 < 1)
+            ((AndrossState*)state)->timer -= framesThisStep;
+            if (((AndrossState*)state)->timer < 1)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
             }
         }
     LAB_8023db24:
@@ -1677,7 +1677,7 @@ void andross_update(int obj)
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionTimer = 0x1e;
             arwarwing_resetFlightState(*state);
-            ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->unk70;
+            ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->savedPosZ;
             ((AndrossState*)state)->unkA8 = lbl_803E74D4;
         }
         ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
@@ -1715,16 +1715,16 @@ void andross_update(int obj)
         {
             if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
             {
-                ((AndrossState*)state)->unkA6 = 0x3c;
+                ((AndrossState*)state)->timer = 0x3c;
                 goto LAB_8023de5c;
             }
         }
-        ((AndrossState*)state)->unkA6 -= framesThisStep;
-        if (((AndrossState*)state)->unkA6 < 1)
+        ((AndrossState*)state)->timer -= framesThisStep;
+        if (((AndrossState*)state)->timer < 1)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
-            ((AndrossState*)state)->unkA6 = 0x3c;
+            ((AndrossState*)state)->timer = 0x3c;
         }
     LAB_8023de5c:
         ((AndrossState*)state)->actionTimer -= framesThisStep;
@@ -1847,7 +1847,7 @@ void andross_update(int obj)
             }
             ((AndrossState*)state)->unkA8 = fval;
         }
-        sval = ((AndrossState*)state)->unkA0 - ((GameObject*)obj)->anim.rotX;
+        sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
         if (0x8000 < sval)
         {
             sval = sval + 1;
@@ -1934,7 +1934,7 @@ void andross_update(int obj)
             }
             else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568)
             {
-                ((AndrossState*)state)->unkA0 = 0;
+                ((AndrossState*)state)->targetRotX = 0;
                 androsshand_setState(((AndrossState*)state)->handObjA, 1,
                                      (u8)((((AndrossState*)state)->fightPhase == 4) + 1));
                 androsshand_setState(((AndrossState*)state)->handObjB, 1,
@@ -1949,11 +1949,11 @@ void andross_update(int obj)
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[3];
-            ((AndrossState*)state)->unkE4 = lbl_803E74D4;
+            ((AndrossState*)state)->soundTimer = lbl_803E74D4;
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
-        ((AndrossState*)state)->unkE4 = ((AndrossState*)state)->unkE4 + timeDelta;
-        if ((lbl_803E7578 < ((AndrossState*)state)->unkE4) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
+        ((AndrossState*)state)->soundTimer = ((AndrossState*)state)->soundTimer + timeDelta;
+        if ((lbl_803E7578 < ((AndrossState*)state)->soundTimer) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
             Sfx_PlayFromObject(obj, 0x46f);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
@@ -1974,7 +1974,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
+            fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8;
             if (lbl_803E74D4 < fval)
             {
@@ -2018,7 +2018,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
+            fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
             fval = lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8;
             if (lbl_803E74D4 < fval)
             {
@@ -2048,8 +2048,8 @@ void andross_update(int obj)
         break;
     case 0x1e:
         ref = GameBit_Get(2);
-        if (((ref != 0) || (ref = GameBit_Get(3), ref != 0)) ||
-            (ref = GameBit_Get(4), ref != 0))
+        if ((((u32)ref != 0) || (ref = GameBit_Get(3), (u32)ref != 0)) ||
+            (ref = GameBit_Get(4), (u32)ref != 0))
         {
             GameBit_Set(0x405, 0);
             (*gMapEventInterface)->setMapAct(0xb, 7);
@@ -2093,7 +2093,7 @@ void andross_update(int obj)
         }
         else
         {
-            ((AndrossState*)state)->unkE0 = lbl_803DC4B0 * (((AndrossState*)state)->unk70 - ((GameObject*)*state)->anim.localPosZ);
+            ((AndrossState*)state)->unkE0 = lbl_803DC4B0 * (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
         }
     }
     if (*(void**)(*state + 0xc0) == NULL)
@@ -2101,7 +2101,7 @@ void andross_update(int obj)
         velAdd = *(SunVec3*)(state + 0x36);
         arwarwing_addVelocity(*state, (int)&velAdd);
     }
-    sval = ((AndrossState*)state)->unkA0 - ((GameObject*)obj)->anim.rotX;
+    sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
     if (0x8000 < sval)
     {
         sval = sval + 1;
@@ -2110,15 +2110,15 @@ void andross_update(int obj)
     {
         sval = sval + -1;
     }
-    ((AndrossState*)state)->unkA2 =
-        ((AndrossState*)state)->unkA2 +
-        (short)(((int)sval / lbl_803DC430 - (int)((AndrossState*)state)->unkA2) / lbl_803DC434);
-    ((AndrossState*)state)->unkA4 =
-        ((AndrossState*)state)->unkA4 +
-        (short)((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->unkA4) /
+    ((AndrossState*)state)->rotXSpeed =
+        ((AndrossState*)state)->rotXSpeed +
+        (short)(((int)sval / lbl_803DC430 - (int)((AndrossState*)state)->rotXSpeed) / lbl_803DC434);
+    ((AndrossState*)state)->rotYSpeed =
+        ((AndrossState*)state)->rotYSpeed +
+        (short)((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->rotYSpeed) /
             lbl_803DC434);
-    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + ((AndrossState*)state)->unkA2;
-    ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((AndrossState*)state)->unkA4;
+    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + ((AndrossState*)state)->rotXSpeed;
+    ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((AndrossState*)state)->rotYSpeed;
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((AndrossState*)state)->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(obj, (int)state);
@@ -2145,7 +2145,7 @@ void andross_update(int obj)
                 ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
             if ((((AndrossState*)ref)->unk44 != 0x10) ||
-                (found = animatedObjGetSeqId(((AndrossState*)ref)->unkB8), found != 0x598))
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
@@ -2161,7 +2161,7 @@ void andross_update(int obj)
                 ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
             if ((((AndrossState*)ref)->unk44 != 0x10) ||
-                (found = animatedObjGetSeqId(((AndrossState*)ref)->unkB8), found != 0x598))
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
@@ -2177,7 +2177,7 @@ void andross_update(int obj)
                 ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
             if ((((AndrossState*)ref)->unk44 != 0x10) ||
-                (found = animatedObjGetSeqId(((AndrossState*)ref)->unkB8), found != 0x598))
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
@@ -2193,7 +2193,7 @@ void andross_update(int obj)
                 ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
             if ((((AndrossState*)ref)->unk44 != 0x10) ||
-                (found = animatedObjGetSeqId(((AndrossState*)ref)->unkB8), found != 0x598))
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;
@@ -2209,7 +2209,7 @@ void andross_update(int obj)
                 ref = *(int*)&((AndrossState*)ref)->cachedPosX;
             }
             if ((((AndrossState*)ref)->unk44 != 0x10) ||
-                (found = animatedObjGetSeqId(((AndrossState*)ref)->unkB8), found != 0x598))
+                (found = animatedObjGetSeqId(((AndrossState*)ref)->seqQueryObj), found != 0x598))
             {
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)(((AndrossState*)ref)->targetPosPtr + 0xc) = ((GameObject*)obj)->anim.localPosY;

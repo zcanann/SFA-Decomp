@@ -44,9 +44,9 @@ typedef struct XyzAnimatorState {
     int unk34;
     int unk38;
     int unk3C;
-    f32 unk40;
-    f32 unk44;
-    f32 unk48;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
     s8 gameBitValue;
     s8 unk4D;
     u16 loopSfxId;

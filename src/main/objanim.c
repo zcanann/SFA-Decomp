@@ -497,6 +497,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     int sampleIndex;
     int lastSample;
     int hasFirstAxis;
+    int broke;
     s16 axisFirstSample;
 
     bank = ObjAnim_GetActiveBank(objAnim);
@@ -606,21 +607,18 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     sampleIndex = sampleProgress;
     sampleFraction = sampleProgress - sampleIndex;
 
-    if (blendSamples != NULL && blendSamples[segmentCount] < 0)
-    {
-        blendScale = -blendScale;
-    }
-
     if (blendSamples != NULL)
     {
-        s16* axisAt = &axis[sampleIndex];
-        s16* blendAt = &blendSamples[sampleIndex];
-        previousDistance =
-            (rootScale * moveWeight * axisAt[1]) +
-            (blendScale * blendWeight * blendAt[0]);
-        nextDistance =
-            (rootScale * moveWeight * axisAt[2]) +
-            (blendScale * blendWeight * blendAt[1]);
+        s16* axisAt;
+        if (blendSamples[segmentCount] < 0)
+        {
+            blendScale = -blendScale;
+        }
+        axisAt = &axis[sampleIndex];
+        previousDistance = rootScale * (moveWeight * axisAt[1]);
+        previousDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
+        nextDistance = rootScale * (moveWeight * axisAt[2]);
+        nextDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
     }
     else
     {
@@ -631,38 +629,40 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
 
     targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
     phase = phaseStep - (phaseStep * sampleFraction);
-    while (1)
+    broke = 0;
+    do
     {
         if (nextDistance > targetDistance)
         {
-            phase -= phaseStep *
-                ((nextDistance - targetDistance) / (nextDistance - previousDistance));
-            break;
-        }
-        sampleIndex++;
-        if (sampleIndex >= segmentCount)
-        {
-            sampleIndex = 0;
-        }
-        previousDistance = nextDistance;
-        if (blendSamples != NULL)
-        {
-            s16* axisAt = &axis[sampleIndex];
-            s16* blendAt = &blendSamples[sampleIndex];
-            nextDistance +=
-                (rootScale * moveWeight *
-                    ((f32)axisAt[2] - axisAt[1])) +
-                (blendScale * blendWeight *
-                    ((f32)blendAt[1] - blendAt[0]));
+            phase -= (phaseStep * (nextDistance - targetDistance)) /
+                (nextDistance - previousDistance);
+            broke = 1;
         }
         else
         {
-            s16* axisAt = &axis[sampleIndex];
-            nextDistance +=
-                rootScale * ((f32)axisAt[2] - axisAt[1]);
+            sampleIndex++;
+            if (sampleIndex >= segmentCount)
+            {
+                sampleIndex = 0;
+            }
+            previousDistance = nextDistance;
+            if (blendSamples != NULL)
+            {
+                s16* axisAt = &axis[sampleIndex];
+                s16* blendAt = &blendSamples[sampleIndex];
+                nextDistance +=
+                    (rootScale * ((f32)axisAt[2] - axisAt[1]) * moveWeight) +
+                    (blendScale * ((f32)blendAt[1] - blendAt[0]) * blendWeight);
+            }
+            else
+            {
+                s16* axisAt = &axis[sampleIndex];
+                nextDistance +=
+                    rootScale * ((f32)axisAt[2] - axisAt[1]);
+            }
+            phase += phaseStep;
         }
-        phase += phaseStep;
-    }
+    } while (!broke);
 
     if (phaseOut != NULL)
     {
@@ -678,6 +678,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     ObjAnimBank* bank;
     ObjAnimState* state;
     ObjAnimEventTable* eventTable;
+    ObjAnimMoveData* moveData;
     ObjAnimRootCurve* curve;
     ObjAnimRootCurve* blendCurve;
     s16* axis;
@@ -831,9 +832,9 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     }
 
     events->rootCurveValid = 0;
-    events->rootDeltaX = gObjAnimProgressZero;
-    events->rootDeltaY = gObjAnimProgressZero;
     events->rootDeltaZ = gObjAnimProgressZero;
+    events->rootDeltaY = gObjAnimProgressZero;
+    events->rootDeltaX = gObjAnimProgressZero;
     eventTable = objAnim->eventTable;
     if (eventTable != NULL)
     {
@@ -897,12 +898,13 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
     }
 
-    curve = ObjAnim_GetMoveRootCurve(bank->animDef, state);
-    if (curve == NULL)
+    moveData = ObjAnim_GetCurrentMoveData(bank->animDef, state);
+    if (moveData->rootCurveOffset == 0)
     {
         events->rootCurveValid = 0;
         return wrapped;
     }
+    curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
     events->rootCurveValid = 1;
     rootScale = curve->scale * objAnim->rootMotionScale;

@@ -2197,6 +2197,7 @@ int fn_800626C8(int* obj, int delta)
     return v & 0xff;
 }
 
+#pragma optimization_level 3
 void fn_80069EB8(int param)
 {
     u8* cache;
@@ -2226,6 +2227,7 @@ void fn_80069EB8(int param)
     memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
     lbl_803DCF80 = param;
 }
+#pragma optimization_level 4
 
 typedef struct AngleXf
 {
@@ -3352,10 +3354,10 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32* out29,
                          f32* outNrm, f32* outDist)
 {
-    f32 hit[3];
-    f32 tmp14[3];
-    f32 e[3];
     f32 nrm[3];
+    f32 e[3];
+    f32 tmp14[3];
+    f32 hit[3];
     f32 len, f29, f12;
     f32* T = tri;
 
@@ -3377,7 +3379,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             f32 s = sqrtf(T[10] - f29);
             f32 dn = rayDir[1] * tmp14[1] + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
-            if (r < __AR_Callback) r = -r;
+            if (r < *(f32*)&__AR_Callback) r = -r;
             len = len - r;
         }
         if (len >= __AR_Callback)
@@ -3406,10 +3408,10 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                         outNrm[1] = hit[1] - tmp14[1];
                         outNrm[2] = hit[2] - tmp14[2];
                         Vec3_Normalize(outNrm);
-                        outNrm[3] = T[9] - (hit[1] * outNrm[1] + hit[0] * outNrm[0] + hit[2] * outNrm[2]);
-                        out29[0] = hit[0];
-                        out29[1] = hit[1];
-                        out29[2] = hit[2];
+                        outNrm[3] = T[9] - (*(f32*)((u8*)hit + 4) * outNrm[1] + *(f32*)((u8*)hit + 0) * outNrm[0] + *(f32*)((u8*)hit + 8) * outNrm[2]);
+                        out29[0] = *(f32*)((u8*)hit + 0);
+                        out29[1] = *(f32*)((u8*)hit + 4);
+                        out29[2] = *(f32*)((u8*)hit + 8);
                         *outDist = len;
                         return 3;
                     }
@@ -5733,7 +5735,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
 
     descEnd = &gTrackBlockDescriptors[gActiveTrackBlockCount];
     descBase = gTrackBlockDescriptors;
-    offX = (f32) * gTrackGridOrigin;
+    offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
     retLo = 0;
@@ -5788,7 +5790,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                 }
                 PSVECSubtract(we, ws, delta);
                 mag = PSVECMag(delta);
-                if (mag > eps)
+                if (mag > (*(f32*)&__AR_Callback))
                 {
                     PSVECNormalize(delta, dir);
                 }
@@ -5805,9 +5807,9 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                     plane[2] = *(f32*)(tri + 0xc);
                     plane[3] = *(f32*)tri;
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
-                    if (!(dE <= eps)) continue;
+                    if (!(dE <= (*(f32*)&__AR_Callback))) continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= eps && eps <= dE) || (eps <= dS && dE <= eps))
+                    if ((dS <= (*(f32*)&__AR_Callback) && (*(f32*)&__AR_Callback) <= dE) || ((*(f32*)&__AR_Callback) <= dS && dE <= (*(f32*)&__AR_Callback)))
                     {
                         f32 lo, hi;
                         if (dS != dE)
@@ -5816,7 +5818,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         }
                         else
                         {
-                            frac = eps;
+                            frac = (*(f32*)&__AR_Callback);
                         }
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
@@ -5840,11 +5842,11 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
                             + PSVECDotProduct(edge2, hitpt);
                         b = 0;
-                        if (radius > eps)
+                        if (radius > (*(f32*)&__AR_Callback))
                         {
-                            if (edge0[3] > eps) b |= 1;
-                            if (edge1[3] > eps) b |= 2;
-                            if (edge2[3] > eps) b |= 4;
+                            if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
+                            if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
+                            if (edge2[3] > (*(f32*)&__AR_Callback)) b |= 4;
                         }
                         if (b == 0)
                         {
@@ -5853,7 +5855,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         }
                         tri[0x4b] = b;
                     }
-                    else if (dE >= negStep && radius > eps)
+                    else if (dE >= negStep && radius > (*(f32*)&__AR_Callback))
                     {
                         edge0[0] = *(f32*)(tri + 0x24);
                         edge0[1] = *(f32*)(tri + 0x28);
@@ -5871,13 +5873,13 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
                             + PSVECDotProduct(edge2, ws);
                         b = 0;
-                        if (edge0[3] > eps) b |= 1;
-                        if (edge1[3] > eps) b |= 2;
-                        if (edge2[3] > eps) b |= 4;
+                        if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
+                        if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
+                        if (edge2[3] > (*(f32*)&__AR_Callback)) b |= 4;
                         tri[0x4b] = b;
                     }
                 }
-                if (eps == mag) goto found_hit;
+                if ((*(f32*)&__AR_Callback) == mag) goto found_hit;
                 for (tri = (u8*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri += 0x4c)
                 {
@@ -5900,7 +5902,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         vb[2] = vs[0xe];
                         PSVECSubtract(vb, va, evec);
                         rdata[2] = Vec3_Normalize(evec);
-                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, eps, hitpt, plane, &frac))
+                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane, &frac))
                         {
                             hit = 1;
                             goto found_hit;
@@ -5929,7 +5931,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         PSVECSubtract(va, ws, tmp1);
                         dotv = PSVECDotProduct(tmp1, dir);
                         sq = PSVECSquareMag(tmp1);
-                        if (dotv < eps && sq > rr)
+                        if (dotv < (*(f32*)&__AR_Callback) && sq > rr)
                         {
                             ok = 0;
                         }
@@ -5951,7 +5953,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                                 {
                                     dotv = dotv + root;
                                 }
-                                if (dotv >= eps && dotv <= mag)
+                                if (dotv >= (*(f32*)&__AR_Callback) && dotv <= mag)
                                 {
                                     PSVECScale(dir, hitpt, dotv);
                                     PSVECAdd(ws, hitpt, hitpt);

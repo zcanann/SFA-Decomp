@@ -11,7 +11,7 @@ extern int Obj_IsLoadingLocked(void);
 typedef struct GpshObjcreatorState
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
+    u8 objTypeIndex;
     u8 pad5[0x8 - 0x5];
 } GpshObjcreatorState;
 
@@ -20,9 +20,9 @@ typedef struct GpshObjcreatorObjectDef
     u8 pad0[0x18 - 0x0];
     s8 unk18;
     u8 pad19[0x1A - 0x19];
-    s16 unk1A;
+    s16 objTypeIndex;
     u8 pad1C[0x1E - 0x1C];
-    s8 unk1E;
+    s8 rotX;
     u8 pad1F[0x20 - 0x1F];
 } GpshObjcreatorObjectDef;
 
@@ -115,10 +115,10 @@ void gpsh_objcreator_init(int* obj, int* def)
     register u32 zero;
     register int* state;
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((GpshObjcreatorObjectDef*)def)->unk1E << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((GpshObjcreatorObjectDef*)def)->rotX << 8);
     zero = 0;
     ((GameObject*)obj)->unkF8 = zero;
-    ((GpshObjcreatorState*)state)->unk4 = (u8)((GpshObjcreatorObjectDef*)def)->unk1A;
+    ((GpshObjcreatorState*)state)->objTypeIndex = (u8)((GpshObjcreatorObjectDef*)def)->objTypeIndex;
     ((GpshShrineFlags*)((char*)state + 5))->b80 = 0;
     *(u8*)((char*)obj + 0x37) = 0xff;
     ((GameObject*)obj)->anim.alpha = 0xff;

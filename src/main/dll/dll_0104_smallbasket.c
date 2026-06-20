@@ -50,7 +50,7 @@ typedef struct SmallbasketState
     u8 pad7[0x9 - 0x7];
     s8 throwState;
     u8 padA[0x14 - 0xA];
-    s32 unk14;
+    s32 hiddenTimer;
 } SmallbasketState;
 
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
@@ -675,7 +675,7 @@ void smallbasket_render(int obj, int param_2, int param_3, int param_4,
     else
     {
         field_a = *(short*)(extra + 0xa);
-        if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->unk14 != 0)
+        if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->hiddenTimer != 0)
         {
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
         }
@@ -730,11 +730,11 @@ void smallbasket_init(int obj, int def)
     v1c = *(s16*)(def + 0x1c);
     if (v1c == 0)
     {
-        ((CfperchState*)state)->unk18 = 0;
+        ((CfperchState*)state)->respawnDelay = 0;
     }
     else
     {
-        ((CfperchState*)state)->unk18 = v1c * 0x3c;
+        ((CfperchState*)state)->respawnDelay = v1c * 0x3c;
     }
 
     gSmallBasketResource = Resource_Acquire(0x5b, 1);
@@ -756,7 +756,7 @@ void smallbasket_init(int obj, int def)
 
     if ((u32)GameBit_Get(((CfperchState*)state)->enableGameBit) != 0)
     {
-        ((CfperchState*)state)->unk14 = 1;
+        ((CfperchState*)state)->hiddenTimer = 1;
         ObjHits_DisableObject(obj);
     }
 
@@ -767,7 +767,7 @@ void smallbasket_init(int obj, int def)
     }
     else if (mode == 0x662)
     {
-        ((CfperchState*)state)->unk20 = 1;
+        ((CfperchState*)state)->disguiseGated = 1;
         ((CfperchState*)state)->sfxId = 0x37d;
     }
     else
@@ -827,12 +827,12 @@ void smallbasket_update(int obj)
         ((GameObject*)obj)->anim.velocityX = zf;
         ((GameObject*)obj)->anim.velocityZ = zf;
     }
-    if (((CfperchState*)state)->unk14 != 0)
+    if (((CfperchState*)state)->hiddenTimer != 0)
     {
         flag = 0;
         ((GameObject*)obj)->anim.alpha = flag;
-        ((CfperchState*)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
-        if (((CfperchState*)state)->unk14 <= 0)
+        ((CfperchState*)state)->hiddenTimer -= (s16)(int)(timeDelta * animSpeed);
+        if (((CfperchState*)state)->hiddenTimer <= 0)
         {
             if ((Vec_distance(&((GameObject*)obj)->anim.worldPosX,
                     &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
@@ -843,11 +843,11 @@ void smallbasket_update(int obj)
             }
             if (flag == 0)
             {
-                ((CfperchState*)state)->unk14 = 1;
+                ((CfperchState*)state)->hiddenTimer = 1;
             }
             else
             {
-                ((CfperchState*)state)->unk14 = 0;
+                ((CfperchState*)state)->hiddenTimer = 0;
                 ((CfperchState*)state)->disableTimer = 0;
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
@@ -873,15 +873,15 @@ void smallbasket_update(int obj)
             ((CfperchState*)state)->disableTimer -= framesThisStep;
             if (((CfperchState*)state)->disableTimer <= 0)
             {
-                if (((CfperchState*)state)->unk18 != 0)
+                if (((CfperchState*)state)->respawnDelay != 0)
                 {
-                    ((CfperchState*)state)->unk14 = ((CfperchState*)state)->unk18;
+                    ((CfperchState*)state)->hiddenTimer = ((CfperchState*)state)->respawnDelay;
                 }
                 else
                 {
-                    ((CfperchState*)state)->unk14 = 1;
+                    ((CfperchState*)state)->hiddenTimer = 1;
                 }
-                (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32)((CfperchState*)state)->unk18);
+                (*gMapEventInterface)->addTime(((ObjPlacement*)def)->mapId, (f32)((CfperchState*)state)->respawnDelay);
                 ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
@@ -919,7 +919,7 @@ void smallbasket_update(int obj)
                 if (((GameObject*)obj)->unkF8 == 0)
                 {
                     ObjHits_EnableObject(obj);
-                    if ((((CfperchState*)state)->unk20 != 0) && (playerIsDisguised(player) == 0))
+                    if ((((CfperchState*)state)->disguiseGated != 0) && (playerIsDisguised(player) == 0))
                     {
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
                     }
@@ -961,7 +961,7 @@ void smallbasket_update(int obj)
                     *(u8*)&((CfperchState*)state)->carryState = 2;
                 }
                 if (((((CfperchState*)state)->carryState == 2) && (((GameObject*)obj)->unkF8 == 0)) ||
-                    ((((CfperchState*)state)->unk20 != 0) && (playerIsDisguised(player) == 0)))
+                    ((((CfperchState*)state)->disguiseGated != 0) && (playerIsDisguised(player) == 0)))
                 {
                     if (fn_8029669C(player) != 0)
                     {
@@ -1017,7 +1017,7 @@ void smallbasket_update(int obj)
                 if (*(s8*)&((CfperchState*)state)->unk6 != 0)
                 {
                     ((CfperchState*)state)->disableTimer = 0;
-                    ((CfperchState*)state)->unk14 = 0;
+                    ((CfperchState*)state)->hiddenTimer = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
                                         (((CfperchState*)state)->unk2 << 16) | ((u16)((CfperchState*)state)->unk0));
                 }

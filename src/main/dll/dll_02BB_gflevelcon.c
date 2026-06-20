@@ -41,7 +41,7 @@
    allocation (gf_levelcon_getExtraSize returns 0x10). findLinkedObjects
    caches the three linked object handles as s32 ids (unk0=light,
    unk4=scrollA, unk8=scrollB); handleScriptEvents reads unk4/unk8 back as
-   s16* scroll-offset pointers and unkC as the prompt countdown. The split
+   s16* scroll-offset pointers and promptTimer as the prompt countdown. The split
    into two casts (with differing field types at unk4/unk8) is
    matching-required: collapsing to one struct changes the cast keys and
    the codegen. */
@@ -58,7 +58,7 @@ typedef struct GfLevelconHandleScriptEventsState
     s32 unk0;
     void* unk4;
     void* unk8;
-    f32 unkC;
+    f32 promptTimer;
 } GfLevelconHandleScriptEventsState;
 
 typedef struct GfHitState
@@ -100,7 +100,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
             getEnvfxAct(obj, obj, 0x21f, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
-            ((GfLevelconHandleScriptEventsState*)state)->unkC = lbl_803E746C;
+            ((GfLevelconHandleScriptEventsState*)state)->promptTimer = lbl_803E746C;
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
@@ -157,13 +157,13 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
         }
     }
 
-    if (((GfLevelconHandleScriptEventsState*)state)->unkC > lbl_803E7488)
+    if (((GfLevelconHandleScriptEventsState*)state)->promptTimer > lbl_803E7488)
     {
         gameTextShow(0x476);
-        ((GfLevelconHandleScriptEventsState*)state)->unkC -= timeDelta;
-        if (((GfLevelconHandleScriptEventsState*)state)->unkC < *(f32*)&lbl_803E7488)
+        ((GfLevelconHandleScriptEventsState*)state)->promptTimer -= timeDelta;
+        if (((GfLevelconHandleScriptEventsState*)state)->promptTimer < *(f32*)&lbl_803E7488)
         {
-            ((GfLevelconHandleScriptEventsState*)state)->unkC = lbl_803E7488;
+            ((GfLevelconHandleScriptEventsState*)state)->promptTimer = lbl_803E7488;
         }
     }
 

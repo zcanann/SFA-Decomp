@@ -587,6 +587,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         s32 h24;
         s32 mins25;
         f32 playRatio;
+        u8 magicVal;
         info = mapEvents->getCurCharacterState();
         hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
@@ -596,11 +597,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
-        i += GameBit_Get(0x5f4);
-        gbCount = (u8)(j + i);
+        gbCount = (u8)(j + (i + GameBit_Get(0x5f4)));
         {
-            u8* p = lbl_8031BB90;
             s8 k;
+            u8* p = lbl_8031BB90;
             for (k = 0; k < 4; k++)
             {
                 *(s16*)(p + 0xc0) = k < gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
@@ -609,21 +609,22 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         }
         if (GameBit_Get(0x91b) != 0)
         {
-            lbl_803DD734 = 0xc8;
+            magicVal = 0xc8;
         }
         else if (GameBit_Get(0x91a) != 0)
         {
-            lbl_803DD734 = 0x64;
+            magicVal = 0x64;
         }
         else if (GameBit_Get(0x919) != 0)
         {
-            lbl_803DD734 = 0x32;
+            magicVal = 0x32;
         }
         else
         {
-            lbl_803DD734 = 0xa;
+            magicVal = 0xa;
         }
-        *(s16*)(lbl_8031BB90 + 0x160) = lbl_803DD734 != 0 ? 0x4e : 0x25;
+        lbl_803DD734 = magicVal;
+        *(s16*)(lbl_8031BB90 + 0x160) = magicVal != 0 ? 0x4e : 0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
@@ -655,12 +656,16 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            for (i = 0; i < 7; i++)
+            f32 scl = lbl_803E1FAC;
+            f32 bse = lbl_803E1F30;
+            f32 mode = lbl_803E20B8;
+            u16 ii;
+            for (ii = 0; ii < 7; ii++)
             {
-                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i
-                +lbl_803E1F30;
+                f32 fy = scl * (f32)(u32)(u16)ii
+                +bse;
                 pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
-                                     lbl_803E20B8, 0);
+                                     (s32)mode, 0);
             }
         }
         for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
@@ -693,12 +698,12 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             }
         }
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, lbl_803DBAD0, lbl_803DBAD4,
-                             (s16)(0x100 - lbl_803DD75C), ty,
+                             0x100 - lbl_803DD75C, ty,
                              0x100, 0);
         drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
-                        (s16)(0x100 - lbl_803DD75C), ty, 0x100, 0x66, 0x12, 0);
+                        0x100 - lbl_803DD75C, ty, 0x100, 0x66, 0x12, 0);
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
-                             (s16)(0x100 - lbl_803DD75C), ty,
+                             0x100 - lbl_803DD75C, ty,
                              0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
         lbl_803DD824 = lbl_8031BB90;

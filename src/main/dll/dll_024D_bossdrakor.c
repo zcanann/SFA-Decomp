@@ -16,7 +16,7 @@
  * spread. Hits (priority hit 0xE/0xF) decrement airMeterHandle; when it
  * drops below zero the boss explodes, is removed from the update list, sets
  * map-act 0x1d=3 and game bit 0x83c, and grants the defeat bit stored in the
- * placement (unk1E). Defeat anim events warp to map 0x79 and restore the HUD.
+ * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/obj_placement.h"
@@ -36,7 +36,7 @@ typedef struct BossdrakorPlacement
     u8 unk19;
     s16 unk1A;
     s16 unk1C;
-    s16 unk1E;
+    s16 defeatedGameBit;
 } BossdrakorPlacement;
 
 typedef struct BossDrakorState
@@ -61,12 +61,12 @@ typedef struct BossDrakorState
     int unk16C;
     int airMeterHandle;
     int attackType;
-    f32 unk178;
-    f32 unk17C;
-    f32 unk180;
+    f32 shakeAmount;
+    f32 shakeVel;
+    f32 shakeScaleZ;
     f32 unk184;
     f32 unk188;
-    f32 unk18C;
+    f32 textTimer;
     u8 unk190;
     u8 pad191[3];
     int curveFollowState;
@@ -304,15 +304,15 @@ void bossdrakor_update(int obj)
         (*gGameUIInterface)->runAirMeter(((BossDrakorState*)state)->airMeterHandle);
     }
     t = lbl_803E6510;
-    if (t != ((BossDrakorState*)state)->unk178)
+    if (t != ((BossDrakorState*)state)->shakeAmount)
     {
-        ((BossDrakorState*)state)->unk17C = -(lbl_803E6578 * timeDelta - ((BossDrakorState*)state)->unk17C);
-        ((BossDrakorState*)state)->unk178 = ((BossDrakorState*)state)->unk178 + ((BossDrakorState*)state)->unk17C;
-        v = ((BossDrakorState*)state)->unk178;
+        ((BossDrakorState*)state)->shakeVel = -(lbl_803E6578 * timeDelta - ((BossDrakorState*)state)->shakeVel);
+        ((BossDrakorState*)state)->shakeAmount = ((BossDrakorState*)state)->shakeAmount + ((BossDrakorState*)state)->shakeVel;
+        v = ((BossDrakorState*)state)->shakeAmount;
         t = (v < t) ? t : ((v > lbl_803E6550) ? lbl_803E6550 : v);
-        ((BossDrakorState*)state)->unk178 = t;
-        shakeScaleZ = ((BossDrakorState*)state)->unk180;
-        shake = ((BossDrakorState*)state)->unk178;
+        ((BossDrakorState*)state)->shakeAmount = t;
+        shakeScaleZ = ((BossDrakorState*)state)->shakeScaleZ;
+        shake = ((BossDrakorState*)state)->shakeAmount;
         tbl = seqFn_800394a0();
         shakeX = (int)(gBossDrakorDegToAngle * shake);
         shakeY = (int)(gBossDrakorDegToAngle * (shake * shakeScaleZ));
@@ -747,7 +747,7 @@ void bossdrakor_hitDetect(int obj)
             ((DrakorFlags*)((char*)inner + 0x198))->b08 = 1;
             if (((BossDrakorState*)inner)->airMeterHandle < 0)
             {
-                GameBit_Set(((BossdrakorPlacement*)setup)->unk1E, 1);
+                GameBit_Set(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
                 spawnExplosion((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int*)obj);
                 (*gMapEventInterface)->setMapAct(0x1d, 3);
@@ -768,9 +768,9 @@ void bossdrakor_hitDetect(int obj)
                 Sfx_PlayFromObject(obj, 0x4af);
             }
             shakeInit = lbl_803E6518;
-            ((BossDrakorState*)inner)->unk17C = shakeInit;
-            ((BossDrakorState*)inner)->unk178 = shakeInit;
-            ((BossDrakorState*)inner)->unk180 = (f32)(s32)randomGetRange(-0x32, 0x32) / lbl_803E655C;
+            ((BossDrakorState*)inner)->shakeVel = shakeInit;
+            ((BossDrakorState*)inner)->shakeAmount = shakeInit;
+            ((BossDrakorState*)inner)->shakeScaleZ = (f32)(s32)randomGetRange(-0x32, 0x32) / lbl_803E655C;
         }
         else
         {
@@ -792,13 +792,13 @@ int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
     int target;
     int eventId;
     ((DrakorFlags*)((char*)inner + 0x198))->b10 = 1;
-    if (((BossDrakorState*)inner)->unk18C > lbl_803E6510)
+    if (((BossDrakorState*)inner)->textTimer > lbl_803E6510)
     {
         gameTextShow(0x569);
-        ((BossDrakorState*)inner)->unk18C -= timeDelta;
-        if (((BossDrakorState*)inner)->unk18C < lbl_803E6510)
+        ((BossDrakorState*)inner)->textTimer -= timeDelta;
+        if (((BossDrakorState*)inner)->textTimer < lbl_803E6510)
         {
-            ((BossDrakorState*)inner)->unk18C = lbl_803E6510;
+            ((BossDrakorState*)inner)->textTimer = lbl_803E6510;
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -820,7 +820,7 @@ int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 0);
                 ObjLink_AttachChild(obj, target, 1);
-                ((BossDrakorState*)inner)->unk18C = lbl_803E6514;
+                ((BossDrakorState*)inner)->textTimer = lbl_803E6514;
             }
             break;
         case 9:
@@ -866,10 +866,10 @@ void bossdrakor_init(int obj, BossdrakorPlacement* init)
     ((BossDrakorState*)inner)->attackType = 0;
     ((BossDrakorState*)inner)->unk164 = lbl_803E657C;
     ((DrakorFlags*)((char*)inner + 0x198))->b40 = 1;
-    ((BossDrakorState*)inner)->unk178 = fz;
-    ((BossDrakorState*)inner)->unk17C = fz;
+    ((BossDrakorState*)inner)->shakeAmount = fz;
+    ((BossDrakorState*)inner)->shakeVel = fz;
     ((BossDrakorState*)inner)->curveFollowState = 0;
-    ((BossDrakorState*)inner)->unk18C = fz;
+    ((BossDrakorState*)inner)->textTimer = fz;
     ((DrakorFlags*)((char*)inner + 0x198))->b10 = 1;
     storeZeroToFloatParam(&((BossDrakorState*)inner)->attackTimer);
     ObjGroup_AddObject(obj, 0x45);

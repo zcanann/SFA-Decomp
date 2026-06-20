@@ -196,7 +196,7 @@ void PlayControl(void)
     if ((decodedTexture != NULL) && (decodedTexture != (AttractMovieTextureSet*)-1))
     {
         lbl_803A5D60.curAudioTrack = decodedTexture->frameNumber;
-        if (lbl_803A5D60.curAudioNumber != 0)
+        if ((void*)lbl_803A5D60.curAudioNumber != NULL)
         {
             OSSendMessage(&lbl_803A5CCC, (OSMessage)lbl_803A5D60.curAudioNumber, OS_MESSAGE_NOBLOCK);
         }

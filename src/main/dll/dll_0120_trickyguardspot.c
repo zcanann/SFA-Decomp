@@ -11,7 +11,7 @@ typedef struct TrickyguardspotPlacement
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
     u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
+    s16 trickyInRangeGameBit;
 } TrickyguardspotPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
@@ -71,7 +71,7 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
         TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
         *(int*)sub = def[0x19] * 0x3c;
     }
-    GameBit_Set(((TrickyguardspotPlacement*)def)->unk1E, flags->trickyInRange);
+    GameBit_Set(((TrickyguardspotPlacement*)def)->trickyInRangeGameBit, flags->trickyInRange);
 }
 
 int trickyguardspot_getExtraSize(void) { return 0x8; }

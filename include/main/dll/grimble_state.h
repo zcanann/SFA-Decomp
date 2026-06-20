@@ -11,11 +11,11 @@
  * larger.
  */
 typedef struct GrimbleControl {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
+    f32 posYDelta;
+    f32 anchorPosY;
+    f32 currentPosY;
     u8 unkC[0x20 - 0xC];
-    f32 unk20;
+    f32 homePosY;
     u8 unk24[0x34 - 0x24];
     int candidatePathObj;
     int pathObj;
@@ -26,7 +26,7 @@ typedef struct GrimbleControl {
     u8 unk46;
     u8 unk47[0x48 - 0x47];
     f32 pathProgress;
-    f32 unk4C;
+    f32 savedPathProgress;
     f32 unk50;
     f32 targetProgress;
     s16 baseRotX;

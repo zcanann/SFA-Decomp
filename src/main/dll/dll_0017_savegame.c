@@ -36,7 +36,7 @@ typedef struct SaveGameData
     u8 pad0[0x20 - 0x0];
     u8 currentCharacter;
     u8 pad21[0x55E - 0x21];
-    u8 unk55E;
+    u8 taskCount;
     u8 pad55F[0x560 - 0x55F];
     f32 playTime;
     u8 pad564[0x6A4 - 0x564];
@@ -310,13 +310,14 @@ int trySaveGame(int slot)
 int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 {
     int rank;
-    int i;
     SaveScoreFile* file;
     int off;
+    int i;
 
+    rank = 0;
     off = slot * SAVE_SCORE_FILE_STRIDE;
     file = (SaveScoreFile*)(saveData + off);
-    for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
+    for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
     {
         if (score > file->entries[rank].score)
         {
@@ -332,10 +333,10 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
 
             file->entries[rank].score = score;
             file->entries[rank].flag = flag;
-            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[0] = initials[0];
-            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[1] = initials[1];
-            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[2] = initials[2];
-            ((SaveScoreFile*)(saveData + off))->entries[rank].initials[3] = initials[3];
+            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[0] = initials[0];
+            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[1] = initials[1];
+            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[2] = initials[2];
+            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[3] = initials[3];
             return rank;
         }
     }
@@ -498,22 +499,24 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         {
             if ((oldStatus & (1 << shift)) == 0)
             {
+                u32* gp = s->groupStatuses;
                 for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                     {
-                        s->groupStatuses[i] |= (u32)(1 << shift);
+                        gp[i] |= (u32)(1 << shift);
                     }
                 }
             }
         }
         else
         {
+            u32* gp = s->groupStatuses;
             for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                 {
-                    s->groupStatuses[i] &= ~(u32)(1 << shift);
+                    gp[i] &= ~(u32)(1 << shift);
                 }
             }
 
@@ -949,8 +952,8 @@ void SaveGame_updateTimes(void)
             i++;
         }
     }
-    if (((SaveGameData*)gSaveGameData)->unk55E > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
-    if (((SaveGameData*)lbl_803DD498)->unk55E > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
+    if (((SaveGameData*)gSaveGameData)->taskCount > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
+    if (((SaveGameData*)lbl_803DD498)->taskCount > 5) *(u8*)0 = 0; /* assert: task count <= 5 */
 }
 
 f32 SaveGame_gplayGetTime(int id)

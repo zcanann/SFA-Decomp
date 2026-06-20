@@ -51,7 +51,7 @@ typedef struct PlayerState {
     u16 unk3FE;
     int unk400;
     f32 maxSpeed;
-    f32 unk408;
+    f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
     u8 unk40C;
     u8 unk40D;
     u8 pad40E[0x410 - 0x40E];
@@ -106,7 +106,7 @@ typedef struct PlayerState {
     void *cameraTargetObject; /* Camera_GetTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];
     int lastHitObject;
-    int unk4C4;
+    int groundObject; /* object the player stands on/rides; transform parent for relative pos, set from collision hit */
     f32 smoothVelX; /* smoothed planar velocity X; eased toward maxSpeed*sin(heading) */
     f32 smoothVelZ; /* smoothed planar velocity Z; magnitude = sqrt(x^2+z^2) -> animSpeedC */
     s16 headPitch;
@@ -285,7 +285,7 @@ typedef struct PlayerState {
     f32 unk7FC;
     u8 unk800;
     u8 pad801[0x806 - 0x801];
-    u16 unk806;
+    u16 staffAnimState; /* staff grow/shrink anim state machine (fn_802AEF34): 0/1=shrink,2=grow,3=settle,0xf=variant */
     u16 hitIntervalTimer; /* countdown (-= dt) reset to 0x3c on expiry, firing a periodic ObjHits record */
     s16 animState;
     s16 unk80C;
@@ -303,8 +303,8 @@ typedef struct PlayerState {
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 unk830;
     f32 unk834;
-    f32 unk838;
-    f32 unk83C;
+    f32 waterDepth; /* waterSurfaceY - worldPosY; player's submerged depth, drives splash/ripple FX */
+    f32 waterSurfaceY; /* water surface world-Y (from cfg+0x1c0); compared against worldPosY */
     f32 unk840;
     f32 unk844;
     f32 prevWorldPosY;
@@ -332,7 +332,7 @@ typedef struct PlayerState {
     u16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];
     u16 unk8A0;
-    u8 unk8A2;
+    u8 moveVariantIndex; /* index into moveAnimTable->moves[]/angles[] (0xff = none) */
     u8 unk8A3;
     u8 unk8A4;
     u8 unk8A5;
@@ -348,8 +348,8 @@ typedef struct PlayerState {
     u8 unk8B0;
     u8 unk8B1;
     u8 pad8B2[0x8B3 - 0x8B2];
-    u8 unk8B3;
-    u8 unk8B4;
+    u8 staffGrown; /* 1 when the staff is grown/extended (set by staffDoGrowShrinkAnim grow path) */
+    u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
     u8 pad8B5[0x8B8 - 0x8B5];
     u8 unk8B8;
     u8 pad8B9[0x8BF - 0x8B9];

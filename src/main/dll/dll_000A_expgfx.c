@@ -10,7 +10,7 @@
 #include "main/sky_state.h"
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
-#include "track/intersect.h"
+#include "dolphin/os/OSFastCast.h"
 extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
@@ -93,7 +93,15 @@ extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);
-extern void fn_8007C3D0(u32 flag);
+extern void setupReflectionIndirectTev(u8 flag);
+extern void gxSetPeControl_ZCompLoc_(u32 param_1);
+extern void gxSetZMode_(u32 param_1, int param_2, u32 param_3);
+extern void _gxSetFogParams(void);
+extern void fn_80079180(void);
+extern void geomDrawFn_800796f0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void textureSetupFn_800799c0(void);
+extern void fn_8007D670(void);
 extern f32 lbl_803967C0[3][4];
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
@@ -2035,6 +2043,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
+#pragma optimization_level 2
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     void* dstBuf;
@@ -2046,18 +2055,19 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     void* viewMatrix;
     ExpgfxCameraViewSlot* cameraSlot;
     ExpgfxSlot* slot;
+    ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
     ExpgfxSourceObject* sourceObject;
     u32 texture;
+    u32 currentTexture;
     int slotIndex;
     u32 behaviorFlags;
     u32 renderFlags;
     u32 state;
     int alpha;
-    s16 lifetimeFrame;
-    s16 lifetimeFrameLimit;
     f32 lifeFraction;
     f32 scaleSize;
+    f32 sx, sy, sz;
     f32 scaleFactor;
     s16 angleA;
     s16 angleB;
@@ -2068,7 +2078,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 aimDelta[3];
     s16* vtxStream;
     int vertexIndex;
-    f32 sx, sy, sz;
     f32 viewProjW;
     volatile int dummy;
 
@@ -2102,14 +2111,16 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     blendMode = -1;
     zMode = -1;
     zCompLoc = -1;
+    currentTexture = 0;
     cacheQueueWait(0);
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
     slotIndex = 0;
+    tabBase = gExpgfxTableEntries;
     do
     {
         slot = (ExpgfxSlot*)((char*)slot + EXPGFX_SLOT_SIZE);
-        tabEntry = &gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)];
+        tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
@@ -2119,17 +2130,15 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID) goto next_slot;
         if ((state & 1) != 0) goto next_slot;
 
-        lifetimeFrame = slot->lifetimeFrame;
-        lifetimeFrameLimit = slot->lifetimeFrameLimit;
         lifeFraction = lbl_803DF358 * (f32)(s32)
-        lifetimeFrameLimit;
+        slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
-            lifetimeFrameLimit;
+            slot->lifetimeFrameLimit;
             if (ratio < lbl_803DF35C)
             {
                 ratio = lbl_803DF35C;
@@ -2146,10 +2155,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         }
         else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             (f32)(s32)
-            lifetimeFrameLimit;
+            slot->lifetimeFrameLimit;
             if (ratio < lbl_803DF35C)
             {
                 ratio = lbl_803DF35C;
@@ -2166,10 +2175,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         }
         else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
             (f32)(s32)
-                lifetimeFrame <= lifeFraction
+                slot->lifetimeFrame <= lifeFraction
         )
         {
-            f32 ratio = (f32)(s32)lifetimeFrame
+            f32 ratio = (f32)(s32)slot->lifetimeFrame
             /
             lifeFraction;
             if (ratio < lbl_803DF35C)
@@ -2190,16 +2199,16 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
         {
             f32 ratio;
-            if ((f32)(s32)lifetimeFrame <= lifeFraction
+            if ((f32)(s32)slot->lifetimeFrame <= lifeFraction
             )
             {
                 ratio = (f32)(s32)
-                lifetimeFrame / lifeFraction;
+                slot->lifetimeFrame / lifeFraction;
             }
             else
             {
                 ratio = (lifeFraction - ((f32)(s32)
-                lifetimeFrame - lifeFraction
+                slot->lifetimeFrame - lifeFraction
                 )
                 )
                 /
@@ -2305,10 +2314,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             alpha = (alpha * sourceObject->alpha) >> 8;
         }
 
-        if (slotPoolBase != texture)
+        if (currentTexture != texture)
         {
             selectTexture(texture, 0);
-            slotPoolBase = texture;
+            currentTexture = texture;
         }
 
         {
@@ -2327,7 +2336,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 if (!((s8)alphaMode == 4 && trackedFlags == (int)(flags & EXPGFX_RENDER_OVERRIDE_COLORS)))
                 {
-                    fn_8007C3D0(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
+                    setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
                     alphaMode = 4;
                     trackedFlags = (int)(slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS);
                 }
@@ -2398,9 +2407,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         GXBegin(0x80, 4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
-            f32 px = scaleFactor * vtxStream[0];
-            f32 py = scaleFactor * vtxStream[1];
-            f32 pz = scaleFactor * vtxStream[2];
+            f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
+            f32 py = scaleFactor * __OSs16tof32(&vtxStream[1]);
+            f32 pz = scaleFactor * __OSs16tof32(&vtxStream[2]);
             f32 outX, outY, outZ;
             f32 ax, ay;
             f32 ay_cosB, pz_sinB;
@@ -2434,9 +2443,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             *(volatile f32*)0xCC008000 = outX;
             *(volatile f32*)0xCC008000 = outY;
             *(volatile f32*)0xCC008000 = outZ;
-            *(volatile u8*)0xCC008000 = slot->colorByte0;
-            *(volatile u8*)0xCC008000 = slot->colorByte1;
-            *(volatile u8*)0xCC008000 = slot->colorByte2;
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[12];
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[13];
+            *(volatile u8*)0xCC008000 = ((u8*)slot)[14];
             *(volatile u8*)0xCC008000 = alpha;
             *(volatile s16*)0xCC008000 = vtxStream[4];
             *(volatile s16*)0xCC008000 = vtxStream[5];
@@ -2454,6 +2463,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma optimization_level reset
 
 void renderParticles(void)
 {
@@ -2757,7 +2767,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     ExpgfxAttachedSourceState* attachedSource;
     ExpgfxResourceHandle* resourceHandle;
     ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxTrackedSourceFrameMask* trackedFrameMask;
     GameObject* playerObj;
     u32 behaviorFlags;
     int resourceTableIndex;
@@ -2802,23 +2811,24 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         {
             runtime->poolSourceIds[poolIndex] = (int)config->attachedSource;
         }
-        trackedFrameMask = &runtime->trackedSourceFrameMasks[poolIndex & 1];
         if ((int)poolIndex < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
-            maskHighWord = trackedFrameMask->highWord;
-            maskLowWord = trackedFrameMask->lowWord;
+            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[poolIndex & 1];
+            maskHighWord = m->highWord;
+            maskLowWord = m->lowWord;
             bit = 1 << ((int)poolIndex >> 1);
-            trackedFrameMask->lowWord = maskLowWord | bit;
-            trackedFrameMask->highWord = maskHighWord | (u32)((int)bit >> 0x1f);
+            m->lowWord = maskLowWord | bit;
+            m->highWord = maskHighWord | (u32)((int)bit >> 0x1f);
         }
         else
         {
-            maskHighWord = trackedFrameMask->highWord;
-            maskLowWord = trackedFrameMask->lowWord;
+            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[poolIndex & 1];
+            maskHighWord = m->highWord;
+            maskLowWord = m->lowWord;
             inverseBit = ~(u32)(1 << ((int)poolIndex >> 1));
-            trackedFrameMask->lowWord = maskLowWord & inverseBit;
-            trackedFrameMask->highWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            m->lowWord = maskLowWord & inverseBit;
+            m->highWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
         }
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
@@ -2830,7 +2840,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         slot->sequenceId = gExpgfxSequenceCounter;
         slot->behaviorFlags = config->behaviorFlags;
         slot->renderFlags = config->renderFlags;
-        slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
+        slot->stateBits.bits.initPhase = 0;
 
         resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->texture.parts.textureId);
         if (resourceTableIndex < 0)

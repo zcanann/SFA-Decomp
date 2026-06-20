@@ -12,7 +12,7 @@
  */
 typedef struct BackpackState {
     u8 unk0[0x268 - 0x0];
-    u16 unk268;
+    u16 distToTarget;
     s16 unk26A;
     f32 targetScale;
     f32 growRate; /* scale/frame while growing; reused as a seconds countdown in later phases */
@@ -21,13 +21,13 @@ typedef struct BackpackState {
     u8 unk279;
     u8 flags;
     u8 unk27B[0x27C - 0x27B];
-    s16 unk27C;
-    s16 unk27E;
+    s16 recoilVelX;
+    s16 recoilVelZ;
     u8 unk280[0x284 - 0x280];
-    int *unk284;
-    f32 unk288;
-    f32 unk28C;
-    f32 *unk290;
+    int *targetObj;
+    f32 anchorPosX;
+    f32 anchorPosZ;
+    f32 *targetPos;
     f32 unk294;
     s16 unk298;
     s16 unk29A;
@@ -37,18 +37,18 @@ typedef struct BackpackState {
 } BackpackState;
 
 STATIC_ASSERT(sizeof(BackpackState) == 0x2A8);
-STATIC_ASSERT(offsetof(BackpackState, unk268) == 0x268);
+STATIC_ASSERT(offsetof(BackpackState, distToTarget) == 0x268);
 STATIC_ASSERT(offsetof(BackpackState, unk26A) == 0x26A);
 STATIC_ASSERT(offsetof(BackpackState, targetScale) == 0x26C);
 STATIC_ASSERT(offsetof(BackpackState, growRate) == 0x270);
 STATIC_ASSERT(offsetof(BackpackState, phase) == 0x278);
 STATIC_ASSERT(offsetof(BackpackState, unk279) == 0x279);
 STATIC_ASSERT(offsetof(BackpackState, flags) == 0x27A);
-STATIC_ASSERT(offsetof(BackpackState, unk27C) == 0x27C);
-STATIC_ASSERT(offsetof(BackpackState, unk284) == 0x284);
-STATIC_ASSERT(offsetof(BackpackState, unk288) == 0x288);
-STATIC_ASSERT(offsetof(BackpackState, unk28C) == 0x28C);
-STATIC_ASSERT(offsetof(BackpackState, unk290) == 0x290);
+STATIC_ASSERT(offsetof(BackpackState, recoilVelX) == 0x27C);
+STATIC_ASSERT(offsetof(BackpackState, targetObj) == 0x284);
+STATIC_ASSERT(offsetof(BackpackState, anchorPosX) == 0x288);
+STATIC_ASSERT(offsetof(BackpackState, anchorPosZ) == 0x28C);
+STATIC_ASSERT(offsetof(BackpackState, targetPos) == 0x290);
 STATIC_ASSERT(offsetof(BackpackState, unk294) == 0x294);
 STATIC_ASSERT(offsetof(BackpackState, unk298) == 0x298);
 STATIC_ASSERT(offsetof(BackpackState, unk29A) == 0x29A);

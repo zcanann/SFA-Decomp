@@ -11,8 +11,8 @@ typedef struct TexframeanimatorPlacement
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
+    s16 completedGameBit;
+    s16 triggerGameBit;
     s16 unk22;
     s16 unk24;
     u8 pad26[0x3C - 0x26];
@@ -73,7 +73,7 @@ void texframeanimator_update(int* obj)
     params = *(u8**)&((GameObject*)obj)->anim.placementData;
 
     if ((state->active == 0) &&
-        ((u32)GameBit_Get(((TexframeanimatorPlacement*)params)->unk20) != 0) &&
+        ((u32)GameBit_Get(((TexframeanimatorPlacement*)params)->triggerGameBit) != 0) &&
         (state->done == 0))
     {
         state->active = 1;
@@ -99,9 +99,9 @@ void texframeanimator_update(int* obj)
                 }
                 else if (state->frame > state->endFrame)
                 {
-                    if (((TexframeanimatorPlacement*)params)->unk1E != -1)
+                    if (((TexframeanimatorPlacement*)params)->completedGameBit != -1)
                     {
-                        GameBit_Set(((TexframeanimatorPlacement*)params)->unk1E, 1);
+                        GameBit_Set(((TexframeanimatorPlacement*)params)->completedGameBit, 1);
                         state->active = 0;
                         state->done = 1;
                         state->frame = state->endFrame;

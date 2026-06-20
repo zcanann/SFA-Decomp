@@ -994,6 +994,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
     gModelLightNextGXLightId <<= 1;
 }
 
+#pragma optimization_level 2
 void modelLightChannels_applyGXControls(void)
 {
     ModelLightChannelState* entry;
@@ -1071,6 +1072,7 @@ void modelLightChannels_applyGXControls(void)
         GXSetNumChans(0);
     }
 }
+#pragma optimization_level reset
 
 void updateLights(void)
 {

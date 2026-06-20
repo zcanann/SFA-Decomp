@@ -1791,19 +1791,19 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 typedef struct EnemyPlacement
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
+    s16 gameBit;
+    s16 gameBit2;
     u8 pad1C[0x28 - 0x1C];
     s8 unk28;
     u8 pad29[0x2A - 0x29];
-    s8 unk2A;
+    s8 rotXByte;
     u8 pad2B[0x2C - 0x2B];
     s16 unk2C;
-    s8 unk2E;
+    s8 triggerSeqId;
     u8 pad2F[0x34 - 0x2F];
     u16 unk34;
     u8 pad36[0x38 - 0x36];
@@ -2139,7 +2139,7 @@ void enemy_update(int obj)
     flags = ((EnemyState*)state)->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0)
     {
-        if (((EnemyPlacement*)setup)->unk2E == -1)
+        if (((EnemyPlacement*)setup)->triggerSeqId == -1)
         {
             return;
         }
@@ -2149,16 +2149,16 @@ void enemy_update(int obj)
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
         }
-        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->triggerSeqId, (void*)obj, -1);
         ((EnemyState*)state)->controlFlags |= 2;
         *(u32*)&((EnemyState*)state)->controlFlags = *(u32*)&((EnemyState*)state)->controlFlags & ~1LL;
         return;
     }
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if (((EnemyPlacement*)setup)->unk1A != -1)
+        if (((EnemyPlacement*)setup)->gameBit2 != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->unk1A) == 0)
+            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0)
             {
                 return;
             }
@@ -2171,9 +2171,9 @@ void enemy_update(int obj)
                 return;
             }
             player = Obj_GetPlayerObject();
-            if (((EnemyPlacement*)setup)->unk18 != -1)
+            if (((EnemyPlacement*)setup)->gameBit != -1)
             {
-                if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+                if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
                 {
                     return;
                 }
@@ -2196,9 +2196,9 @@ void enemy_update(int obj)
                 return;
             }
         }
-        else if (((EnemyPlacement*)setup)->unk18 != -1)
+        else if (((EnemyPlacement*)setup)->gameBit != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
             {
                 return;
             }
@@ -2277,12 +2277,12 @@ void enemy_update(int obj)
         if ((((EnemyState*)state)->flags2E4 & 0x20000) != 0)
         {
             s2 = *(u8**)&((GameObject*)obj)->anim.placementData;
-            ((GameObject*)obj)->anim.localPosX = ((EnemyPlacement*)s2)->unk8;
-            ((GameObject*)obj)->anim.localPosY = ((EnemyPlacement*)s2)->unkC;
-            ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->unk10;
+            ((GameObject*)obj)->anim.localPosX = ((EnemyPlacement*)s2)->posX;
+            ((GameObject*)obj)->anim.localPosY = ((EnemyPlacement*)s2)->posY;
+            ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->posZ;
             ((GameObject*)obj)->anim.rotZ = 0;
             ((GameObject*)obj)->anim.rotY = 0;
-            ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->unk2A << 8;
+            ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->rotXByte << 8;
             fz = lbl_803E2574;
             ((GameObject*)obj)->anim.velocityX = fz;
             ((GameObject*)obj)->anim.velocityY = fz;
@@ -2519,15 +2519,15 @@ void enemy_init(int obj, u8* setup, int flag)
         if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || *(u16*)(setup + 0x34) != 0
             || ((GameObject*)obj)->anim.seqId == 1022 || ((GameObject*)obj)->anim.seqId == 1990)
         {
-            ((EnemyState*)state)->unk4 |= 0x40000;
+            ((EnemyState*)state)->flags |= 0x40000;
         }
         else
         {
-            ((EnemyState*)state)->unk4 &= ~0x40000;
+            ((EnemyState*)state)->flags &= ~0x40000;
         }
         if ((((EnemyState*)state)->flags2E4 & 4) == 0 && (((EnemyState*)state)->flags2E4 & 8) != 0)
         {
-            ((EnemyState*)state)->unk4 &= ~0x3800;
+            ((EnemyState*)state)->flags &= ~0x3800;
         }
         if (((GameObject*)obj)->unkF4 != 0)
         {

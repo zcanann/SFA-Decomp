@@ -1688,6 +1688,7 @@ extern u8 gNewShadowCasterCount;
 extern int* gNewShadowCurrentViewSlot;
 extern char gNewShadowCasterTable[];
 extern f32 Ydchuff_803DED80;
+extern f32 Ydchuff_803DED90;
 extern const double TokenCB_803DED58;
 extern const double DrawDone_803DED60;
 extern inline float sqrtf(float x)
@@ -1708,6 +1709,7 @@ extern inline float sqrtf(float x)
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
+extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
 extern f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
@@ -1764,13 +1766,13 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 g = sqrtf(g);
                 acc5 = s0 * g + acc5;
                 acc6 = acc6 + over / depth;
-                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * (&Vdchuff_803DEDC0)[4]) + acc6;
+                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDD0) + acc6;
             }
         }
     }
     if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
     if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
-    *out1 = __GXCurrentThread_803DED40 * acc6 + (&Vdchuff_803DEDC0)[5];
+    *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDD4;
     *out2 = acc5;
 }
 
@@ -2292,7 +2294,7 @@ void shadowCreate(int* obj)
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
                 *(u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8) = 2;
-                *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = (&Ydchuff_803DED80)[4];
+                *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = Ydchuff_803DED90;
             }
         }
         else
@@ -2424,6 +2426,7 @@ void shadowRenderFn_8006b558(int* obj)
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 
+#pragma opt_loop_invariants off
 void fn_8006CB50(void)
 {
     int y, x;
@@ -2458,6 +2461,7 @@ void fn_8006CB50(void)
     }
     DCFlushRange((char*)lbl_803DCFBC + 0x60, *(u32*)((char*)lbl_803DCFBC + 0x44));
 }
+#pragma opt_loop_invariants reset
 
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);

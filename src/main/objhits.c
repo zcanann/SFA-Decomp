@@ -1607,7 +1607,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
         {
             result = ObjHits_CheckHitVolumes(objA, objB, objA, 1, 0, mask, stateA->skeletonHitMask >> 4);
         }
-        if (((attA != 0) && (result == 0)) &&
+        if ((((u32)attA != 0) && (result == 0)) &&
             (mask = stateA->objectHitMask & 0xf, mask != 0))
         {
             result = ObjHits_CheckHitVolumes(attA, objB, objA, 1, 0, mask, stateA->skeletonHitMask & 0xf);
@@ -1667,7 +1667,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
         {
             result = ObjHits_CheckHitVolumes(objB, objA, objB, 1, 0, mask, stateB->skeletonHitMask >> 4);
         }
-        if (((attB != 0) && (result == 0)) &&
+        if ((((u32)attB != 0) && (result == 0)) &&
             (mask = stateB->objectHitMask & 0xf, mask != 0))
         {
             result = ObjHits_CheckHitVolumes(attB, objA, objB, 1, 0, mask, stateB->skeletonHitMask & 0xf);

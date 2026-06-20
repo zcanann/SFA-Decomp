@@ -32,7 +32,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/seqobj11e.h"
+#include "main/dll/seqObj11E.h"
 #include "main/dll/objfsa.h"
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();

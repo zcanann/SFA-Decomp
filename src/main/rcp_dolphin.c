@@ -2053,6 +2053,7 @@ extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;
 
 #pragma dont_inline on
+#pragma opt_common_subs off
 int textureFn_80052bb4(int model, f32* params)
 {
     void* la;
@@ -2091,6 +2092,7 @@ int textureFn_80052bb4(int model, f32* params)
                                            LastCommandWasRead_803DEB60);
     return 0;
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 extern f32 powfCoreHighPrecision(f32 base, f32 exp);

@@ -27,14 +27,14 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 typedef struct Dll19Placement
 {
     u8 pad0[0x22 - 0x0];
-    s16 unk22;
+    s16 stateFlags;
     u8 pad24[0x32 - 0x24];
-    u8 unk32;
+    u8 progressDenominator;
     u8 pad33[0x3E8 - 0x33];
-    f32 unk3E8;
-    f32 unk3EC;
+    f32 oscValue;
+    f32 oscVelocity;
     u8 pad3F0[0x400 - 0x3F0];
-    u16 unk400;
+    u16 flags;
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
@@ -334,7 +334,7 @@ f32 dll_19_func1A(int obj)
 {
     int p_b8 = *(int*)&((GameObject*)obj)->extra;
     int p_4c = *(int*)&((GameObject*)obj)->anim.placementData;
-    u8 denom = ((Dll19Placement*)p_4c)->unk32;
+    u8 denom = ((Dll19Placement*)p_4c)->progressDenominator;
     if (denom != 0)
     {
         s8 numer = ((Dll19State*)p_b8)->progressNumerator;
@@ -713,26 +713,26 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     f32 posY;
     f32 posZ;
 
-    if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C2C)
+    if (((Dll19Placement*)state)->oscValue > lbl_803E1C2C)
     {
-        ((Dll19Placement*)state)->unk3E8 = timeDelta * ((Dll19Placement*)state)->unk3EC + ((Dll19Placement*)state)->unk3E8;
-        if ((((Dll19Placement*)state)->unk400 & 0x20) != 0)
+        ((Dll19Placement*)state)->oscValue = timeDelta * ((Dll19Placement*)state)->oscVelocity + ((Dll19Placement*)state)->oscValue;
+        if ((((Dll19Placement*)state)->flags & 0x20) != 0)
         {
-            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x20;
-            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x40;
-            if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x20;
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | 0x40;
+            if (((Dll19Placement*)state)->oscValue > lbl_803E1C40)
             {
-                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
-                ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
+                ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
+                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x40;
             }
         }
-        else if ((((Dll19Placement*)state)->unk400 & 0x40) != 0)
+        else if ((((Dll19Placement*)state)->flags & 0x40) != 0)
         {
-            if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C40)
+            if (((Dll19Placement*)state)->oscValue > lbl_803E1C40)
             {
                 int other = *(int*)&((GameObject*)p1)->anim.placementData;
-                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
-                ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
+                ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
+                ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x40;
                 ((BaddieState*)p2)->hitPoints = 0;
                 p1[54] = 0;
                 ((GameObject*)p1)->unkF4 = 1;
@@ -744,14 +744,14 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
         else
         {
-            if (((Dll19Placement*)state)->unk3E8 < lbl_803E1C2C)
+            if (((Dll19Placement*)state)->oscValue < lbl_803E1C2C)
             {
-                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
+                ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
             }
-            else if (((Dll19Placement*)state)->unk3E8 > lbl_803E1C44)
+            else if (((Dll19Placement*)state)->oscValue > lbl_803E1C44)
             {
-                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C44 - (((Dll19Placement*)state)->unk3E8 - lbl_803E1C44);
-                ((Dll19Placement*)state)->unk3EC = -((Dll19Placement*)state)->unk3EC;
+                ((Dll19Placement*)state)->oscValue = lbl_803E1C44 - (((Dll19Placement*)state)->oscValue - lbl_803E1C44);
+                ((Dll19Placement*)state)->oscVelocity = -((Dll19Placement*)state)->oscVelocity;
             }
         }
     }
@@ -785,9 +785,9 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         *(s8*)&((BaddieState*)p2)->hitPoints = (s8)(((BaddieState*)p2)->hitPoints - v24);
         if (*(s8*)&((BaddieState*)p2)->hitPoints < 1)
         {
-            ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
-            ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
-            ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
+            ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | 0x20;
+            ((Dll19Placement*)state)->oscValue = lbl_803E1C48;
+            ((Dll19Placement*)state)->oscVelocity = lbl_803E1C4C;
             ((BaddieState*)p2)->substate = p7;
             ((BaddieState*)p2)->hitPoints = 0;
         }
@@ -803,8 +803,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                         p2[841] = 0;
                     }
                 }
-                ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
-                ((Dll19Placement*)state)->unk3EC = lbl_803E1C50;
+                ((Dll19Placement*)state)->oscValue = lbl_803E1C48;
+                ((Dll19Placement*)state)->oscVelocity = lbl_803E1C50;
                 if (p5 != NULL)
                 {
                     if (p5[hit - 2] != -1)
@@ -847,7 +847,7 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     {
         return 0;
     }
-    if ((((Dll19Placement*)state)->unk22 & 0xf00) != 0)
+    if ((((Dll19Placement*)state)->stateFlags & 0xf00) != 0)
     {
         idx = ((p2 & 0xf00) >> 8) - 1;
         if (idx > 3)
@@ -857,7 +857,7 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
         setup = Obj_AllocObjectSetup(48, ids1[idx]);
         scale = lbl_803E1C54;
     }
-    if ((((Dll19Placement*)state)->unk22 & 0xf000) != 0)
+    if ((((Dll19Placement*)state)->stateFlags & 0xf000) != 0)
     {
         idx = ((p2 & 0xf000) >> 12) - 1;
         if (idx > 3)
@@ -867,7 +867,7 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
         setup = Obj_AllocObjectSetup(48, ids2[idx]);
         scale = lbl_803E1C54;
     }
-    if ((int)(u8)((Dll19Placement*)state)->unk22 != 0)
+    if ((int)(u8)((Dll19Placement*)state)->stateFlags != 0)
     {
         switch (p2)
         {
@@ -1334,11 +1334,11 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
         *outDelta = delta;
         if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b)
         {
-            ((Dll19State*)st)->unk400 &= ~0x10;
+            ((Dll19State*)st)->flags &= ~0x10;
         }
         else
         {
-            ((Dll19State*)st)->unk400 |= 0x10;
+            ((Dll19State*)st)->flags |= 0x10;
         }
         *outYaw = (u16)delta / (0x10000 / (u8)div);
         *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));

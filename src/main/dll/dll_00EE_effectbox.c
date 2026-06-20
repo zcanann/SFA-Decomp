@@ -6,7 +6,7 @@
  *
  * The placement's targetMode selects the candidate set: 0 = Tricky, 1 =
  * the player, 2 = every object in object group 5. The action depends on
- * the same mode (Tricky gets fn_80295918 with unk1D; group members get a
+ * the same mode (Tricky gets fn_80295918 with actionArg; group members get a
  * vtable call at slot 0x28). A non-negative placement game bit gates the
  * box: it only runs while the bit's value differs from gameBitValue.
  */
@@ -34,10 +34,10 @@ typedef struct EffectboxPlacement
     u8 extentX;         /* 0x1A */
     u8 extentY;         /* 0x1B */
     u8 extentZ;         /* 0x1C */
-    u8 unk1D;           /* 0x1D: action argument */
+    u8 actionArg;           /* 0x1D: action argument */
     u8 pad1E;
     u8 gameBitValue;    /* 0x1F: gate value compared against the game bit */
-    s16 unk20;          /* 0x20: game bit index */
+    s16 gameBitIndex;          /* 0x20: game bit index */
     u8 targetMode;      /* 0x22: 0 Tricky, 1 player, 2 object group */
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
@@ -144,10 +144,10 @@ void effectbox_update(int obj)
                         case 1:
                             break;
                         case 0:
-                            fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->unk1D);
+                            fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
                             break;
                         case 2:
-                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->unk1D);
+                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->actionArg);
                             break;
                         }
                     }
@@ -167,7 +167,7 @@ void effectbox_init(int obj, EffectboxPlacement* def)
         fn_8002B860(obj);
     }
     ((GameObject*)obj)->unkF4 = 1;
-    gameBit = def->unk20;
+    gameBit = def->gameBitIndex;
     if (gameBit > -1)
     {
         ((GameObject*)obj)->unkF8 = gameBit;

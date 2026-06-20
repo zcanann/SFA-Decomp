@@ -2768,6 +2768,9 @@ void doPendingMapLoads(void)
     int cnt;
     int* o1;
     f32 dz;
+    int* eBase;
+    int* aBase;
+    int* cBase;
     s16 recs[1200];
     int oa[4], ob[4], oc[4], od[4];
 
@@ -2824,10 +2827,13 @@ void doPendingMapLoads(void)
                 doNothing_8001F678(1, 0);
                 cnt = 0;
                 layer = 0;
+                eBase = (int*)(base + 0x41E0);
+                aBase = (int*)(base + 0x41F4);
+                cBase = (int*)(base + 0x41CC);
                 {
-                    int* bp2 = (int*)(base + 0x41E0);
-                    int* ap2 = (int*)(base + 0x41F4);
-                    int* cp2 = (int*)(base + 0x41CC);
+                    int* bp2 = eBase;
+                    int* ap2 = aBase;
+                    int* cp2 = cBase;
                     int k8;
                     s8 c;
                     p13 = recs;
@@ -2996,7 +3002,7 @@ void doPendingMapLoads(void)
                         }
                         lbl_803DCEB0 = lbl_803DCEB0 - 1;
                         {
-                            int* tp2 = (int*)(base + 0x41E0);
+                            int* tp2 = eBase;
                             for (i = 0; i < 5; i++)
                             {
                                 char* g2 = (char*)*tp2;
@@ -3025,8 +3031,8 @@ void doPendingMapLoads(void)
                         }
                         loadModelAndAnimTabs();
                         {
-                            int* ap3 = (int*)(base + 0x41F4);
-                            int* cp3 = (int*)(base + 0x41CC);
+                            int* ap3 = aBase;
+                            int* cp3 = cBase;
                             for (layer = 0; layer < 5; layer++)
                             {
                                 char* g3;

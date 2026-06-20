@@ -45,11 +45,11 @@ typedef struct DrExplodableState
     DrExplodableChunk chunks[15]; /* 0x000 */
     int children[15]; /* 0x690: spawned fragment objects */
     u32 flags6CC;
-    int unk6D0;
+    int breakSfx;
     u8 count6D4;
     u8 spawnedFlags[15]; /* 0x6d5 */
     u8 phase6E4;
-    u8 unk6E5;
+    u8 recipeIndex;
     u8 pad6E6[2];
 } DrExplodableState;
 

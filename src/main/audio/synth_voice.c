@@ -658,6 +658,7 @@ end:
  *
  * EN v1.0 Address: 0x80270938, size 1712b
  */
+#pragma fp_contract off
 void ZeroOffsetHandler(int voice)
 {
     u8* base = (u8*)(int)lbl_803BCD90;
@@ -838,6 +839,7 @@ end:
         sv->midiDirtyFlags = 0x1FFF;
     }
 }
+#pragma fp_contract reset
 
 /*
  * Event per-voice update: pedal state, deferred hardware start and key-off

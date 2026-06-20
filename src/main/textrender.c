@@ -2033,11 +2033,11 @@ void gameTextLoadForCurMap(int sourceId)
     }
     while (i-- != 0);
 
-    request = (GameTextLoadRequest*)(gameTextBase + GAMETEXT_LOAD_REQUESTS_OFFSET +
+    request = (GameTextLoadRequest*)(gameTextBase +
         sourceId * sizeof(GameTextLoadRequest));
-    request->state = 1;
-    request->dirId = (u8)curGameTextDir;
-    request->languageId = curLanguage;
+    *(int*)((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
+    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
+    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)
@@ -2060,22 +2060,22 @@ void gameTextLoadForCurMap(int sourceId)
 
     if (freeSlot != NULL)
     {
-        dirId = request->dirId;
-        languageId = request->languageId;
+        int slotDir = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8);
+        int slotLang = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9);
         freeSlot->state = 1;
-        freeSlot->dirId = dirId;
-        freeSlot->languageId = languageId;
+        freeSlot->dirId = slotDir;
+        freeSlot->languageId = slotLang;
         freeSlot->active = 1;
         freeSlot->sourceId = sourceId;
         sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
-                sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
+                sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang][0]);
         setFileInfo(freeSlot);
         freeSlot->loadHandle =
             loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
                                 &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
-        request->dirId = GAMETEXT_INVALID_DIR;
-        request->languageId = GAMETEXT_INVALID_LANGUAGE;
+        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = GAMETEXT_INVALID_DIR;
+        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = GAMETEXT_INVALID_LANGUAGE;
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
@@ -2290,7 +2290,7 @@ typedef struct GameTextCharset
 } GameTextCharset;
 
 #pragma dont_inline off
-#pragma peephole on
+#pragma peephole off
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
@@ -2307,7 +2307,7 @@ void setLanguageFn_8001ad64(void* reqp)
     u16* p;
     u16* texStart;
     int** slot;
-    int kind;
+    u16 kind;
     u32 bpp;
     u32 w;
     u32 h;
@@ -2346,14 +2346,14 @@ void setLanguageFn_8001ad64(void* reqp)
     cs->count = *(u16*)(hdr + 4);
     ofs = *(u16*)(hdr + 6);
     cs->entries = hdr + 8;
-    table = (int*)(cs->entries + cs->count * 12);
+    table = (int*)((hdr + 8) + cs->count * 12);
     numStrings = table[0];
     strs = table + 1;
     for (i = 0; i < cs->count; i++)
     {
         *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
     }
-    txt = (u8*)(table + numStrings + 1);
+    txt = (u8*)(table + numStrings) + 4;
     for (i = 0; i < numStrings; i++)
     {
         strs[i] = strs[i] + (int)txt;
@@ -2393,27 +2393,27 @@ void setLanguageFn_8001ad64(void* reqp)
         {
             if (bpp == 4)
             {
-                u8* dst8 = (u8*)slot[4] + 0x60;
                 u8* src8 = (u8*)p;
+                u8* dst8 = (u8*)slot[4] + 0x60;
                 n = (int)(w * h) >> 1;
-                for (i = 0; i < n; i++)
+                while (n--)
                 {
                     *dst8 = *src8;
-                    dst8++;
                     src8++;
+                    dst8++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
             else
             {
-                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
                 u16* src16 = p;
+                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
                 n = w * h;
-                for (i = 0; i < n; i++)
+                while (n--)
                 {
                     *dst16 = *src16;
-                    dst16++;
                     src16++;
+                    dst16++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
@@ -2429,7 +2429,7 @@ void setLanguageFn_8001ad64(void* reqp)
     {
         u16* d = newBuf;
         u16* s = old;
-        for (i = 0; i < n; i++)
+        while (n--)
         {
             *d = *s;
             d++;

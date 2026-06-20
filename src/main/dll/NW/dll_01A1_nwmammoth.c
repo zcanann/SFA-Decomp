@@ -231,7 +231,7 @@ int fn_801CE078(int* obj, u8* st)
     cv = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
     if (*(s8*)(st + 0x45b) != 0)
     {
-        snd = !*(s8*)(st + 0x453);
+        snd = *(s8*)(st + 0x453) == 0;
     }
     else
     {
@@ -493,9 +493,9 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
                         else
                         {
                             int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
-                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, o2 + 0x18) >= gNwMammothTumbleweedDistSqThreshold)
+                            if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, o2 + 0x18) >=
+                                if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, &o2[6]) >=
                                     gNwMammothTumbleweedDistSqThreshold)
                                 {
                                     fn_8014C66C(o2, obj);
@@ -564,8 +564,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
         {
             Obj_FreeObject(*(int*)&state->trackedObject);
             *(int*)&state->trackedObject = 0;
-            state->uiMessageCount += 1;
-            if (state->uiMessageCount > 3)
+            if (++state->uiMessageCount > 3)
             {
                 state->uiMessageCount = 3;
             }

@@ -482,7 +482,7 @@ int pushable_func0B(int obj, int other)
 typedef struct PushablePlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 gameBit;
     s16 unk1A;
     s8 unk1C;
     s8 unk1D;
@@ -499,8 +499,8 @@ typedef struct PushableObjectDef
     s16 gameBit;
     s16 unk1A;
     void* unk1C;
-    u16 unk20;
-    u8 unk22;
+    u16 scaleRaw;
+    u8 rotXByte;
     u8 unk23;
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
@@ -620,7 +620,7 @@ void pushable_free(int* obj)
         GameBit_Set(sub->gameBit, 0);
         break;
     default:
-        if (((PushablePlacement*)def)->unk18 > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->
+        if (((PushablePlacement*)def)->gameBit > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->
             savePosEnabled != 0)
         {
             saveGame_saveObjectPos(obj);
@@ -756,7 +756,7 @@ void pushable_init(s16* obj, char* def)
     {
         *(s8*)&((PushableObjectDef*)def)->unk23 = -1;
     }
-    *obj = ((PushableObjectDef*)def)->unk22 << 8;
+    *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
@@ -766,7 +766,7 @@ void pushable_init(s16* obj, char* def)
     entry = Transporter_GetActiveModel(obj);
     model = (int*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
-    state->scale = (f32) * &((PushableObjectDef*)def)->unk20 / gPushableU16ScaleDenom;
+    state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / gPushableU16ScaleDenom;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
@@ -1397,7 +1397,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             {
                 s16 t;
                 st2->flags = fl2 & ~1;
-                t = ((PushablePlacement*)def2)->unk18;
+                t = ((PushablePlacement*)def2)->gameBit;
                 if (t > -1)
                 {
                     switch (((GameObject*)obj)->anim.seqId)

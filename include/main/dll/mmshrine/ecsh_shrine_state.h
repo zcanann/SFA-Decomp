@@ -14,11 +14,11 @@ typedef struct EcshShrineState
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
+    s16 timer;
+    s16 animState;
+    s16 matchFlag;
     u8 pad28[0x2E - 0x28];
-    u8 unk2E;
+    u8 targetSlot;
     u8 unk2F;
     u8 unk30;
     u8 pad31[0x32 - 0x31];
