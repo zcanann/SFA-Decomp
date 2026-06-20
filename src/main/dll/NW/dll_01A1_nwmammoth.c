@@ -562,7 +562,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             break;
         }
     case 0xe:
-        if (getXZDistance(st + 0xc, *(char**)&state->trackedObject + 0x18) < gNwMammothCaptureDist)
+        if (getXZDistance(st + 0xc, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) < gNwMammothCaptureDist)
         {
             Sfx_PlayFromObject((u32)obj, 0x38b);
             fn_80163980(*(int*)&state->trackedObject);
