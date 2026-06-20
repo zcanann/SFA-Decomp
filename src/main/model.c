@@ -265,7 +265,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
     }
 }
 
-void mm_free(void* p);
 
 extern void setGQR7(u32 v);
 extern int textureLoad(int id, int flag);
@@ -794,7 +793,6 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     }
 }
 
-int randomGetRange(int lo, int hi);
 
 void memcpyToCache(void* dst, void* src, u32 count);
 
