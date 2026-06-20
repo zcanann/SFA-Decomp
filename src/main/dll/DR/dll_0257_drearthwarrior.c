@@ -973,7 +973,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                 }
             }
         }
-        if ((skip != 0 || ((EarthWarriorSub*)q)->unk3FC != ((EarthWarriorSub*)q)->moveTable ||
+        if ((skip != 0 || (void*)((EarthWarriorSub*)q)->unk3FC != (void*)((EarthWarriorSub*)q)->moveTable ||
                 ((GameObject*)obj)->anim.currentMove != *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)
                     ->attackPhase * 2)) &&
             (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 || ((ByteFlags*)&((EarthWarriorSub*)q)->
