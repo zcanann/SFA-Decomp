@@ -252,7 +252,7 @@ void CameraModeTestStrength_update(short* cam)
                 t2 = lbl_803E1888;
             }
         }
-        else if (t2 > lbl_803E188C)
+        else if (t2 > *(f32*)&lbl_803E188C)
         {
             if (w2[2] > -1 && w2[3] > -1)
             {
