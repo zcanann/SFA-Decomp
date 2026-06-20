@@ -1,4 +1,4 @@
-/* DLL 0x0138 (groundanimator) — Ground animator object [0x80193100-0x80193DBC). */
+/* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
