@@ -285,9 +285,9 @@ void Link_render(void)
     int y;
     s8 timer;
 
-    item = gTumbleweedBushItems;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
+        item = &gTumbleweedBushItems[i];
         drawItem = item;
 
         if ((item->flags & LINK_FLAG_HIDDEN) == 0)
@@ -422,8 +422,6 @@ void Link_render(void)
                 }
             }
         }
-
-        item++;
     }
 
     MWTRACE(0xff);
