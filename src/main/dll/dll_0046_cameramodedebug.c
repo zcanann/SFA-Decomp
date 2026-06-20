@@ -91,8 +91,8 @@ void CameraModeDebug_update(short* camObj)
     {
         f32 cosYaw = mathSinf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
         f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
-        f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / gCamDebugAngleUnitScale);
-        f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / gCamDebugAngleUnitScale);
+        f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
+        f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
         radius = gCamDebugState->orbitRadius;
         *(f32*)(cam + 24) = *(f32*)(state + 24) + radius * sinPitch * sinYaw;
         *(f32*)(cam + 28) = gCamDebugOrbitRadiusMin + *(f32*)(state + 28) + radius * cosPitch;
