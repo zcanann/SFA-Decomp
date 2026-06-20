@@ -30,7 +30,6 @@ extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
 
-extern f32 timeDelta;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
