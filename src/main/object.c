@@ -1563,7 +1563,7 @@ void objFreeObjDef(void* objp, int flag)
             for (i = 0; i < gObjCount; i++)
             {
                 o = ((u8**)gObjList)[i];
-                if (((GameObject*)o)->anim.parent == obj)
+                if (*(int*)&((GameObject*)o)->anim.parent == (int)obj)
                 {
                     *(int*)&((GameObject*)o)->anim.parent = 0;
                     if (*(void**)&((GameObject*)o)->anim.placementData != NULL)
@@ -1584,7 +1584,7 @@ void objFreeObjDef(void* objp, int flag)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            if (*(u8**)(((u8**)gObjList)[i] + 0xc0) == obj)
+            if (*(int*)(((u8**)gObjList)[i] + 0xc0) == (int)obj)
             {
                 *(int*)(((u8**)gObjList)[i] + 0xc0) = 0;
             }
