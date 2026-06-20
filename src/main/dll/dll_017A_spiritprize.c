@@ -25,7 +25,6 @@ extern void* objCreateLight(int* obj, int v);
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern f32 timeDelta;
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E98;
 extern f32 lbl_803E4E9C;
