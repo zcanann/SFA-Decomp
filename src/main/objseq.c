@@ -374,7 +374,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
         {
             result = seqObj;
             *(void**)(seqObj + 0xc0) = obj;
-            *(u16*)(seqObj + 0xb0) |= 0x1000;
+            ((GameObject*)seqObj)->objectFlags |= 0x1000;
             ((ObjSeqState*)seq)->callbackContext = seqObj;
 
             activeObj = *(u8**)seq;
@@ -1203,7 +1203,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             if (((s16*)(base + 0x3a98))[(s8)((ObjSeqState*)seq)->slot] - 1 != 0x45)
             {
@@ -1221,13 +1221,13 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         }
         break;
     case 24:
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             fn_802967E0(sourceObj, cmdArg);
         }
         break;
     case 25:
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             fn_8029672C(sourceObj, cmdArg);
         }
@@ -1347,7 +1347,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             break;
         }
-        if (*(s16*)(sourceObj + 0x44) == 1)
+        if (((GameObject*)sourceObj)->anim.classId == 1)
         {
             break;
         }
@@ -4931,7 +4931,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         if (((ObjSeqState*)seq)->targetObj != NULL)
         {
             *(void**)(seqObj + 0xc0) = NULL;
-            *(u16*)(seqObj + 0xb0) &= ~0x1000;
+            ((GameObject*)seqObj)->objectFlags &= ~0x1000;
             ((ObjSeqState*)seq)->targetObj = NULL;
         }
     }
