@@ -70,8 +70,9 @@ void OptionsScreen_render(int arg)
 
     if ((u8)alpha < 0x80)
     {
+        f32 conv = (f32)((u8)alpha * 0x86);
         titleScreenPositionElements(lbl_803E1DD8,
-                                    -((f32)((u8)alpha * 0x86) * lbl_803E1DE0 - lbl_803E1DDC));
+                                    -(conv * lbl_803E1DE0 - lbl_803E1DDC));
         fade = 0;
     }
     else
@@ -105,8 +106,7 @@ void OptionsScreen_render(int arg)
     (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + 0x10)))(arg);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(0);
-    lbl_803DD706--;
-    if ((s8)lbl_803DD706 < 0)
+    if ((s8)--lbl_803DD706 < 0)
     {
         lbl_803DD706 = 0;
     }
