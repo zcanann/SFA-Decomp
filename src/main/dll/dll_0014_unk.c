@@ -2668,7 +2668,7 @@ int RomCurve_func16(double x, double y, double z)
     top = &candidateIds[candidateCount];
     while (candidateCount != 0)
     {
-        if (curves_distFn15(x, y, z, candidateIds[0], &out) != 0)
+        if (curves_distFn15(candidateIds[0], x, y, z, &out) != 0)
         {
             return candidateIds[0];
         }
