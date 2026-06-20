@@ -147,9 +147,9 @@ void drawFn_80125424(void)
     int xLeft;
     f32 wave;
     f32 camPos;
-    f32 waveAmp;
-    f32 waveBase1;
     f32 waveBase2;
+    f32 waveBase1;
+    f32 waveAmp;
 
     if (gHeadDisplayActive != 0)
     {
