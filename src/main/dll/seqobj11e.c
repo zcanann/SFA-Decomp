@@ -332,8 +332,8 @@ void fn_80152B90(int* obj, u8* state)
         f32 dz;
 
         y = ((GameObject*)obj)->anim.localPosY;
-        dx = *(f32*)(state + 0x324) - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc);
-        dz = *(f32*)(state + 0x32c) - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14);
+        dx = *(f32*)(state + 0x324) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
+        dz = *(f32*)(state + 0x32c) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
         if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * ((BaddieState*)state)->unk2A8)
         {
             ((BaddieState*)state)->seqEntryIndex = 1;
