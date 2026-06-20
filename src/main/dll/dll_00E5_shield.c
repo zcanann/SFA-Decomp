@@ -997,10 +997,14 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     if (hud == 0)
                     {
                         u8 j;
-                        f32 cA = lbl_803E33D8;
-                        f32 cB = lbl_803E33DC;
-                        f32 cC = lbl_803E33AC;
-                        f32 cD = lbl_803E33C4;
+                        f32 cD;
+                        f32 cC;
+                        f32 cB;
+                        f32 cA;
+                        cA = lbl_803E33D8;
+                        cB = lbl_803E33DC;
+                        cC = lbl_803E33AC;
+                        cD = lbl_803E33C4;
                         for (j = 0; j < 2; j++)
                         {
                             f32 f8v = ((GameObject*)obj)->anim.rootMotionScale;
