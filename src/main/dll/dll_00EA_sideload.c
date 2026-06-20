@@ -180,7 +180,7 @@ typedef struct SideloadPlacement
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    s16 unk18; /* 0x18: arming game bit */
+    s16 armGameBit; /* 0x18: arming game bit */
     u8 unk1A;
     u8 pad1B[0x3C - 0x1B];
     s16 unk3C;
@@ -260,7 +260,7 @@ void sideload_update(int self)
 
     state = *(int*)&((GameObject*)self)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
-        (getTrickyObject() == 0) && (GameBit_Get((int)((SideloadPlacement*)state)->unk18) != 0))
+        (getTrickyObject() == 0) && (GameBit_Get((int)((SideloadPlacement*)state)->armGameBit) != 0))
     {
         obj = Obj_AllocObjectSetup(0x18, 0x24);
         *(u8*)((char*)obj + 4) = 2;
