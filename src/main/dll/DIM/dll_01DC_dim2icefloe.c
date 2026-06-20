@@ -23,7 +23,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 
-extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 
 extern int ObjList_FindObjectById(int id);
