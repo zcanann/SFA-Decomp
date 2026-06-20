@@ -621,7 +621,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     list = objs;
     negP4 = -p4;
 
-    while ((obj = *list) != 0)
+    while ((void*)(obj = *list) != NULL)
     {
         dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)p1)->anim.worldPosX;
         dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)p1)->anim.worldPosY;
