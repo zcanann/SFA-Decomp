@@ -1533,7 +1533,7 @@ void loadDataFiles(int);
 int GXFlush_(u8 visible, int unused);
 
 #pragma dont_inline on
-void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 length, u32* sizeOut, int entryIndex,
+void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                                u32 flagBits)
 {
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
