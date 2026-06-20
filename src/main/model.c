@@ -1921,7 +1921,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     int sz2;
     u8* hp2;
     u8* pc;
-    int d;
+    u8 d;
 
     aln = 0;
     tbl = gModelAnimOffsetTable;
