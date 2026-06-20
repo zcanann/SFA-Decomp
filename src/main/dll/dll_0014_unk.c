@@ -1914,7 +1914,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 }
 
                 linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
-                if (linkCurve == 0 || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
+                if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
                 {
                     continue;
                 }
