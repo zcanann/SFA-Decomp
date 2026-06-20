@@ -962,10 +962,8 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        worldIdx = 0;
-        pointIndex = worldIdx;
+        pointOffset = pointIndex = worldIdx = 0;
         worldBase = (u8*)collision;
-        pointOffset = worldIdx;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
