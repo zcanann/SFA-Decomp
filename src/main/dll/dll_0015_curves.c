@@ -1271,12 +1271,12 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             if ((linked == 0) || ((*(u16*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
             {
                 ((GameObject*)curveObj)->anim.velocityY =
-                    (f32)((f64)invStep * (f64)(((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48)));
+                    invStep * (((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48));
             }
             else
             {
                 ((GameObject*)curveObj)->anim.velocityY =
-                    (f32)((f64)invStep * (f64)(((GameObject*)curveObj)->anim.worldPosY - ((GameObject*)linked)->anim.worldPosZ));
+                    invStep * (((GameObject*)curveObj)->anim.worldPosY - ((GameObject*)linked)->anim.worldPosZ);
                 if (*(f32*)(*(int*)(curveObj + 0x2a) + 0x20) < ((GameObject*)curveObj)->anim.worldPosY)
                 {
                     ((GameObject*)curveObj)->anim.velocityY = lbl_803E0668;
