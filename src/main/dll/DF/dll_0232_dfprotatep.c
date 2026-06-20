@@ -643,20 +643,20 @@ void sfxplayer_free(int obj, int arg1)
 
     if (arg1 == 0)
     {
-        for (i = 0, handles = (u32*)gSfxplayerEffectHandles; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
+        handles = (u32*)gSfxplayerEffectHandles;
+        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
         {
-            if (handles[0] != 0)
+            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
             {
-                Obj_FreeObject(handles[0]);
+                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
             }
-            handles[0] = 0;
-            if (handles[1] != 0)
+            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
+            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
             {
-                Obj_FreeObject(handles[1]);
+                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
             }
-            handles[1] = 0;
+            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
             Sfx_PlayFromObject(obj, SFXPLAYER_TIMEOUT_RESET_SFX);
-            handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
         }
     }
     gameTimerStop();
