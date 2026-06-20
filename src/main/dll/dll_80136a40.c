@@ -1027,6 +1027,7 @@ int fn_80136E00(int p1, u8* p)
     u32 ca;
     u32 cb;
     u32 cc;
+    u32 cd;
     f32 sc;
     int rm;
     u8 c0;
@@ -1035,12 +1036,12 @@ int fn_80136E00(int p1, u8* p)
     u8 c3;
     u8 colb1[4]; /* four separate colb/colw pairs: distinct stack slots are load-bearing */
     u32 colw1;
-    u32 colw2;
-    u8 colb2[4];
-    u32 colw3;
-    u8 colb3[4];
-    u32 colw4;
+    u32 colw4; /* case 0x82 (declared first of the three hud buffers -> highest slot) */
     u8 colb4[4];
+    u32 colw2; /* case 0xa */
+    u8 colb2[4];
+    u32 colw3; /* line-wrap path */
+    u8 colb3[4];
     u8* start = p;
 
     while ((c = *p++) != 0)
@@ -1107,12 +1108,13 @@ int fn_80136E00(int p1, u8* p)
                     ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb4[0] = gDebugTextColorR;
                     colb4[1] = gDebugTextColorG;
                     colb4[2] = gDebugTextColorB;
                     colb4[3] = gDebugTextColorA;
                     colw4 = *(u32*)colb4;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw4);
+                    hudDrawRect(ca, cc, cb, cd, &colw4);
                 }
             }
             debugPrintYpos = p[0];
@@ -1148,12 +1150,13 @@ int fn_80136E00(int p1, u8* p)
                     ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb2[0] = gDebugTextColorR;
                     colb2[1] = gDebugTextColorG;
                     colb2[2] = gDebugTextColorB;
                     colb2[3] = gDebugTextColorA;
                     colw2 = *(u32*)colb2;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw2);
+                    hudDrawRect(ca, cc, cb, cd, &colw2);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -1200,12 +1203,13 @@ int fn_80136E00(int p1, u8* p)
                     ca = (u32)((f32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb3[0] = gDebugTextColorR;
                     colb3[1] = gDebugTextColorG;
                     colb3[2] = gDebugTextColorB;
                     colb3[3] = gDebugTextColorA;
                     colw3 = *(u32*)colb3;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw3);
+                    hudDrawRect(ca, cc, cb, cd, &colw3);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
