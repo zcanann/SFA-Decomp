@@ -710,8 +710,8 @@ int getPatchGroup(float* point, int patchGroupIndex)
     f32 y;
 
     base = (char*)gObjfsaPatches;
-    active = (u8*)(base + patchGroupIndex + OBJFSA_ACTIVE_WALKGROUPS_OFFSET);
-    wg = base + patchGroupIndex * OBJFSA_PATCHGROUP_STRIDE + 0x3000;
+    active = &((u8*)base + patchGroupIndex)[OBJFSA_ACTIVE_WALKGROUPS_OFFSET];
+    wg = &base[patchGroupIndex * OBJFSA_PATCHGROUP_STRIDE + 0x3000];
 
     for (k = 0; k < 4; k++)
     {
