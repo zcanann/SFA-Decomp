@@ -18,9 +18,6 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
                                void* thpWorkBuffer)
 {
     AttractMoviePlayer* player;
-    AttractMovieReadBuffer* readBuffer;
-    AttractMovieTextureSet* textureSet;
-    AttractMovieAudioBuffer* audioBuf;
     u8* curr;
     u32 frameBufferSize;
     u32 yTextureSize;
@@ -38,11 +35,10 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
     }
     else
     {
-        readBuffer = player->readBuffer;
         curr = movieOrReadBuffer;
         for (i = 0; i < 10; i++)
         {
-            readBuffer[i].ptr = curr;
+            player->readBuffer[i].ptr = curr;
             frameBufferSize = ALIGN_NEXT_32(player->header.mBufferSize);
             curr += frameBufferSize;
         }
@@ -51,36 +47,33 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
     player = &lbl_803A5D60;
     yTextureSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize);
     uvTextureSize = ALIGN_NEXT_32((player->videoInfo.xSize * player->videoInfo.ySize) >> 2);
-    textureSet = player->textureSet;
     for (i = 0; i < 3; i++)
     {
-        textureSet->yTexture = yTextureBuffer;
+        player->textureSet[i].yTexture = yTextureBuffer;
         DCInvalidateRange(curr, yTextureSize);
-        textureSet->uTexture = uTextureBuffer;
+        player->textureSet[i].uTexture = uTextureBuffer;
         DCInvalidateRange(curr, uvTextureSize);
-        textureSet->vTexture = vTextureBuffer;
+        player->textureSet[i].vTexture = vTextureBuffer;
         DCInvalidateRange(curr, uvTextureSize);
         curr += uvTextureSize;
-        textureSet++;
     }
 
     player = &lbl_803A5D60;
     if (player->audioExists != 0)
     {
-        audioBuf = player->audioBuffer;
-        audioBuf[0].buffer = audioBuffer;
-        audioBuf[0].curPtr = audioBuffer;
-        audioBuf[0].validSample = 0;
+        player->audioBuffer[0].buffer = audioBuffer;
+        player->audioBuffer[0].curPtr = audioBuffer;
+        player->audioBuffer[0].validSample = 0;
         {
             u32 audioBufferSize = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4);
             s16* nextAudioBuffer = (s16*)((u8*)audioBuffer + audioBufferSize);
-            audioBuf[1].buffer = nextAudioBuffer;
-            audioBuf[1].curPtr = nextAudioBuffer;
-            audioBuf[1].validSample = 0;
+            player->audioBuffer[1].buffer = nextAudioBuffer;
+            player->audioBuffer[1].curPtr = nextAudioBuffer;
+            player->audioBuffer[1].validSample = 0;
             nextAudioBuffer = (s16*)((u8*)nextAudioBuffer + audioBufferSize);
-            audioBuf[2].buffer = nextAudioBuffer;
-            audioBuf[2].curPtr = nextAudioBuffer;
-            audioBuf[2].validSample = 0;
+            player->audioBuffer[2].buffer = nextAudioBuffer;
+            player->audioBuffer[2].curPtr = nextAudioBuffer;
+            player->audioBuffer[2].validSample = 0;
         }
     }
 
