@@ -111,7 +111,7 @@ int fn_80295C24(int obj)
 int fn_80295C40(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->unk838 > lbl_803E7ED4;
+    return inner->waterDepth > lbl_803E7ED4;
 }
 
 int fn_80295CBC(int obj)
@@ -2227,7 +2227,7 @@ int fn_802A1CA8(int obj, int state)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityZ = z;
         *(u32*)((char*)state + 4) |= 0x8000000;
-        if (((PlayerState*)inner)->unk838 > lbl_803E7FA0)
+        if (((PlayerState*)inner)->waterDepth > lbl_803E7FA0)
         {
             fn_802AB5A4(obj, inner, 5);
             ((void (*)(int, int, int))fn_802AE83C)(obj, inner, state);
@@ -2311,7 +2311,7 @@ int fn_802A1CA8(int obj, int state)
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
             doRumble(lbl_803E7F10);
-            if (((PlayerState*)inner)->unk838 > lbl_803E7EA4)
+            if (((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
             {
                 (*gWaterfxInterface)->spawnSplashBurst(
                     (void*)obj, ((GameObject*)obj)->anim.localPosX,
@@ -6969,7 +6969,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             }
             ObjHits_RecordPositionHit(obj, 0, hv, 2, 0, x, y, z);
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 0;
-            if (((PlayerState*)inner)->unk838 > lbl_803E7FC4)
+            if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
                 Sfx_PlayFromObject(obj, 0x428);
             }
@@ -6983,7 +6983,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             Sfx_StopFromObject(obj,
                                (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2d0 : 0x26));
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 1;
-            if (((PlayerState*)inner)->unk838 > lbl_803E7FC4)
+            if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
                 Sfx_PlayFromObject(obj, 0x429);
             }
@@ -6997,7 +6997,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             Sfx_PlayFromObject(obj,
                                (u16)(((PlayerState*)inner)->characterId == 0 ? 0x399 : 0x27));
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 1;
-            if (((PlayerState*)inner)->unk838 > lbl_803E7FC4)
+            if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
                 Sfx_PlayFromObject(obj, 0x42a);
             }
@@ -7011,7 +7011,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             ((ByteFlags*)((char*)inner + 0x3f1))->b08 = 1;
             ((ByteFlags*)((char*)inner + 0x3f2))->b10 = 1;
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 1;
-            if (((PlayerState*)inner)->unk838 > lbl_803E7FC4)
+            if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
                 Sfx_PlayFromObject(obj, 0x42b);
             }
@@ -7673,10 +7673,10 @@ void fn_802B0EA4(int obj, int inner, int state)
     one = lbl_803E7EE0;
     ((PlayerState*)inner)->unk420 = one;
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
-        ((PlayerState*)inner)->unk838 > lbl_803E7EA4)
+        ((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
     {
         ((PlayerState*)inner)->unk840 =
-            (((PlayerState*)inner)->unk838 - lbl_803E7FFC) / lbl_803E8098;
+            (((PlayerState*)inner)->waterDepth - lbl_803E7FFC) / lbl_803E8098;
         v = ((PlayerState*)inner)->unk840;
         ((PlayerState*)inner)->unk840 = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
         ((PlayerState*)inner)->unk840 =
@@ -9663,8 +9663,8 @@ void fn_802A93F4(int obj, int p2, int p3)
     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
     ObjHits_SyncObjectPositionIfDirty(obj);
-    inner->unk838 = lbl_803E7EA4;
-    inner->unk83C = lbl_803E80D0;
+    inner->waterDepth = lbl_803E7EA4;
+    inner->waterSurfaceY = lbl_803E80D0;
     inner->unk880 = lbl_803E7FA4;
     inner->baddie.physicsActive = 1;
     *(int*)((char*)inner + 0x4) &= ~0x100000;
@@ -11018,16 +11018,16 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     b = ((PlayerState*)state)->unk3F0 >> 5 & 1;
     if (b == 0 || (b != 0 && lbl_803E80D0 != *(f32*)((char*)cfg + 0x1c0)))
     {
-        ((PlayerState*)state)->unk83C = *(f32*)((char*)cfg + 0x1c0);
+        ((PlayerState*)state)->waterSurfaceY = *(f32*)((char*)cfg + 0x1c0);
     }
-    if (lbl_803E80D0 != ((PlayerState*)state)->unk83C)
+    if (lbl_803E80D0 != ((PlayerState*)state)->waterSurfaceY)
     {
-        ((PlayerState*)state)->unk838 =
-            ((PlayerState*)state)->unk83C - ((GameObject*)obj)->anim.worldPosY;
+        ((PlayerState*)state)->waterDepth =
+            ((PlayerState*)state)->waterSurfaceY - ((GameObject*)obj)->anim.worldPosY;
     }
     else
     {
-        ((PlayerState*)state)->unk838 = lbl_803E7EA4;
+        ((PlayerState*)state)->waterDepth = lbl_803E7EA4;
     }
     ((ByteFlags*)((char*)state + 0x3f1))->b01 = 0;
     clamp = lbl_803E7EA4;
@@ -14269,7 +14269,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
         }
-        if (((PlayerState*)inner)->unk838 <= lbl_803E7EA4)
+        if (((PlayerState*)inner)->waterDepth <= lbl_803E7EA4)
         {
             if (gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 6 ||
                 gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 3)
@@ -14444,7 +14444,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     }
     gPlayerFrameCounter = gPlayerFrameCounter + 1;
     if (!((ByteFlags*)((char*)inner + 0x3f0))->b20 &&
-        ((PlayerState*)inner)->unk838 > lbl_803E7FA0 &&
+        ((PlayerState*)inner)->waterDepth > lbl_803E7FA0 &&
         *(f32*)((char*)state + 0x1b0) < lbl_803E80FC)
     {
         ((void (*)(int, int, int))fn_802AE83C)(obj, inner, state);
@@ -14658,7 +14658,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                 *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
                 return 0xc;
             }
-            if (((PlayerState*)inner)->unk838 < lbl_803E7FC0 &&
+            if (((PlayerState*)inner)->waterDepth < lbl_803E7FC0 &&
                 ((ByteFlags*)((char*)inner + 0x3f1))->b01)
             {
                 ((ByteFlags*)((char*)inner + 0x3f0))->b20 = 0;
@@ -15765,12 +15765,12 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
         {
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, ((GameObject*)obj)->anim.localPosX,
-                (((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->unk838) -
+                (((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->waterDepth) -
                 lbl_803E7F10,
                 ((GameObject*)obj)->anim.localPosZ, lbl_803E7FFC);
             ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                 ((GameObject*)obj)->anim.localPosX,
-                ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->unk838,
+                ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->waterDepth,
                 ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E80E4, 2);
             *(u32*)&((PlayerState*)inner)->flags360 &= ~0x20000LL;
         }
@@ -15942,7 +15942,7 @@ void fn_802AED2C(int obj, int state, int p3)
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
     }
     ((ByteFlags*)((char*)state + 0x3f1))->b20 = 0;
-    if (((PlayerState*)state)->unk838 > lbl_803E7EE0)
+    if (((PlayerState*)state)->waterDepth > lbl_803E7EE0)
     {
         if (((PlayerState*)state)->characterId == 0)
         {
@@ -16728,7 +16728,7 @@ void fn_802ADE80(int obj, int inner, int state)
     int loopCount;
     int i;
 
-    angle = ((PlayerState*)inner)->unk83C;
+    angle = ((PlayerState*)inner)->waterSurfaceY;
     angle = angle +
         mathSinf(gPlayerPi * (f32)(u32) * (u16*)((char*)inner + 0x89c) / lbl_803E7F98);
     *(s16*)&((PlayerState*)inner)->unk89C =
@@ -16777,9 +16777,9 @@ void fn_802ADE80(int obj, int inner, int state)
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
             Sfx_PlayAtPositionFromObject(obj, 0xe, ((GameObject*)obj)->anim.localPosX,
-                                         ((PlayerState*)inner)->unk83C, ((GameObject*)obj)->anim.localPosZ);
+                                         ((PlayerState*)inner)->waterSurfaceY, ((GameObject*)obj)->anim.localPosZ);
         }
-        if (((PlayerState*)inner)->unk838 < lbl_803E7FA0 &&
+        if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
             tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
@@ -16792,9 +16792,9 @@ void fn_802ADE80(int obj, int inner, int state)
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
             Sfx_PlayAtPositionFromObject(obj, 0xf, ((GameObject*)obj)->anim.localPosX,
-                                         ((PlayerState*)inner)->unk83C, ((GameObject*)obj)->anim.localPosZ);
+                                         ((PlayerState*)inner)->waterSurfaceY, ((GameObject*)obj)->anim.localPosZ);
         }
-        if (((PlayerState*)inner)->unk838 < lbl_803E7FA0 &&
+        if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
             s8 c;
@@ -16827,18 +16827,18 @@ void fn_802ADE80(int obj, int inner, int state)
         setMatrixFromObjectPos(mtx, v.angles);
         Matrix_TransformPoint(mtx, tx, lbl_803E7EA4, tz, &tx, &ty, &tz);
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
-            tx, ((PlayerState*)inner)->unk83C, tz, 0, lbl_803E7EA4, 5);
-        if (((PlayerState*)inner)->unk838 > lbl_803E8128 &&
+            tx, ((PlayerState*)inner)->waterSurfaceY, tz, 0, lbl_803E7EA4, 5);
+        if (((PlayerState*)inner)->waterDepth > lbl_803E8128 &&
             ((PlayerState*)state)->baddie.animSpeedC > lbl_803E7E9C)
         {
             u16 ang = ((PlayerState*)inner)->targetYaw -
                 getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
             (*gWaterfxInterface)->spawnSimpleRipple(
-                ang, tx, ((PlayerState*)inner)->unk83C, tz, lbl_803E7EA4);
+                ang, tx, ((PlayerState*)inner)->waterSurfaceY, tz, lbl_803E7EA4);
         }
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
-    loopCount = (((PlayerState*)inner)->unk83C - v.mat[2] > lbl_803E7F10) ? 1 : 0;
+    loopCount = (((PlayerState*)inner)->waterSurfaceY - v.mat[2] > lbl_803E7F10) ? 1 : 0;
     {
         f32 div0 = lbl_803E7FA4;
         f32 div1 = lbl_803E808C;
@@ -16848,7 +16848,7 @@ void fn_802ADE80(int obj, int inner, int state)
             pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / div0;
             pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / div1;
             pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / div0;
-            pfx.scale = ((PlayerState*)inner)->unk83C - pfx.y;
+            pfx.scale = ((PlayerState*)inner)->waterSurfaceY - pfx.y;
             if (pfx.scale > zero)
         {
                 (*gPartfxInterface)->spawnObject(
@@ -16871,7 +16871,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.localPosY = inner->savedPosY;
         fn_802AB5A4(obj, (int)inner, 5);
     }
-    if (inner->unk838 > lbl_803E7FA0)
+    if (inner->waterDepth > lbl_803E7FA0)
     {
         fn_802AB5A4(obj, (int)inner, 5);
         ((void (*)(int, int, int))fn_802AE83C)(obj, (int)inner, state);
@@ -16995,7 +16995,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                                                     inner->unk8A5);
             Sfx_PlayFromObject(obj, snd);
             doRumble(lbl_803E7F10);
-            if (inner->unk838 > lbl_803E7EA4)
+            if (inner->waterDepth > lbl_803E7EA4)
             {
                 (*gWaterfxInterface)->spawnSplashBurst(
                     (void*)obj, ((GameObject*)obj)->anim.localPosX,

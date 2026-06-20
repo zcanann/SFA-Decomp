@@ -303,8 +303,8 @@ typedef struct PlayerState {
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 unk830;
     f32 unk834;
-    f32 unk838;
-    f32 unk83C;
+    f32 waterDepth; /* waterSurfaceY - worldPosY; player's submerged depth, drives splash/ripple FX */
+    f32 waterSurfaceY; /* water surface world-Y (from cfg+0x1c0); compared against worldPosY */
     f32 unk840;
     f32 unk844;
     f32 prevWorldPosY;
