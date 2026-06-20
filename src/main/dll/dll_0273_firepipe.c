@@ -120,9 +120,9 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     for (i = 0; i < extra->effectCount; i++)
     {
         effectObj = extra->effectObjs[i];
-        if ((*(u16*)(effectObj + 0xb0) & 0x200) == 0)
+        if ((((GameObject*)effectObj)->objectFlags & 0x200) == 0)
         {
-            *(u16*)(effectObj + 0xb0) |= 0x200;
+            ((GameObject*)effectObj)->objectFlags |= 0x200;
             memcpy(*(void**)(effectObj + 0x4c), spawnDef, *(u8*)((int)spawnDef + 2));
             *(s16*)(effectObj + 6) &= ~0x4000;
             ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
@@ -140,7 +140,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     effectObj = loadObjectAtObject(obj, spawnDef);
     if (extra->effectCount != 8)
     {
-        *(u16*)(effectObj + 0xb0) |= 0x200;
+        ((GameObject*)effectObj)->objectFlags |= 0x200;
         i = extra->effectCount++;
         extra->effectObjs[i] = effectObj;
     }
