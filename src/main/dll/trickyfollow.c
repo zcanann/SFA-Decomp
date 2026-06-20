@@ -842,20 +842,17 @@ state_selected:
                 trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
                 moved = trickyMove(obj, &route->posX);
                 type = *(s8*)((u8*)route->nodeA0 + 0x1a);
-                if (type == 5)
+                switch (type)
                 {
+                case 5:
                     ((TrickyState*)state)->unk09 = 0xb;
-                }
-                else if (type < 5)
-                {
-                    if (type == 1)
-                    {
-                        ((TrickyState*)state)->unk09 = 8;
-                    }
-                }
-                else if (type < 7)
-                {
+                    break;
+                case 1:
+                    ((TrickyState*)state)->unk09 = 8;
+                    break;
+                case 6:
                     ((TrickyState*)state)->unk09 = 0xd;
+                    break;
                 }
             }
         }
