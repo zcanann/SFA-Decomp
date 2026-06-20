@@ -2048,8 +2048,8 @@ void andross_update(int obj)
         break;
     case 0x1e:
         ref = GameBit_Get(2);
-        if (((ref != 0) || (ref = GameBit_Get(3), ref != 0)) ||
-            (ref = GameBit_Get(4), ref != 0))
+        if ((((u32)ref != 0) || (ref = GameBit_Get(3), (u32)ref != 0)) ||
+            (ref = GameBit_Get(4), (u32)ref != 0))
         {
             GameBit_Set(0x405, 0);
             (*gMapEventInterface)->setMapAct(0xb, 7);
