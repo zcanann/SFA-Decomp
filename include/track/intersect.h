@@ -53,7 +53,7 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void trackIntersect_drawColorBand(void);
 void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth);
-void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale);
+void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale);
 void FUN_80070ec8(void);
 void fn_8007880C(void);
 void fn_800788DC(void);
