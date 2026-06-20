@@ -1090,6 +1090,14 @@ void audioFn_80271498(u32 delta)
     f32 fadeDelta;
     u32 i;
     u32 channel;
+    u8* auxAIndex;
+    u8* auxAMIDI;
+    u8* auxBIndex;
+    u8* auxBMIDI;
+    SynthAuxCallback* auxACallback;
+    u32* auxAData;
+    SynthAuxCallback* auxBCallback;
+    u32* auxBData;
     u16 auxSamplesA[8];
     u16 auxSamplesB[6];
 
@@ -1134,8 +1142,7 @@ void audioFn_80271498(u32 delta)
                         if (fadeDelta <= zeroThreshold)
                         {
                             fade[5] = fade[6];
-                            synthMasterFaderPauseActiveFlags &= ~mask;
-                            if ((synthMasterFaderPauseActiveFlags == 0) && (synthMasterFaderActiveFlags == 0))
+                            if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) && (synthMasterFaderActiveFlags == 0))
                             {
                                 break;
                             }
@@ -1145,38 +1152,46 @@ void audioFn_80271498(u32 delta)
                     fade += 12;
                 }
             }
+            auxAMIDI = &synthAuxAMIDI;
+            auxBMIDI = &synthAuxBMIDI;
+            auxACallback = (SynthAuxCallback*)(stateBase + 0xc34);
+            auxBCallback = (SynthAuxCallback*)(stateBase + 0xc74);
+            auxAIndex = &synthAuxAIndex;
+            auxBIndex = &synthAuxBIndex;
+            auxAData = (u32*)(stateBase + 0xc14);
+            auxBData = (u32*)(stateBase + 0xc54);
             for (i = 0; i < 8; i++)
             {
-                if ((&synthAuxAIndex)[i] != 0xff)
+                if (*auxAIndex != 0xff)
                 {
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesA[channel] =
-                            inpGetAuxA(i & 0xff, channel & 0xff, (&synthAuxAIndex)[i],
-                                       (&synthAuxAMIDI)[i]);
+                            inpGetAuxA(i & 0xff, channel & 0xff, *auxAIndex, *auxAMIDI);
                     }
-                    (*(SynthAuxCallback*)(stateBase + 0xc34 + i * 4))(
-                        1, auxSamplesA, *(u32*)(stateBase + 0xc14 + i * 4));
+                    (*auxACallback)(1, auxSamplesA, *auxAData);
                 }
-                if ((&synthAuxBIndex)[i] != 0xff)
+                if (*auxBIndex != 0xff)
                 {
                     for (channel = 0; channel < 4; channel++)
                     {
                         auxSamplesB[channel] =
-                            inpGetAuxB(i & 0xff, channel & 0xff, (&synthAuxBIndex)[i],
-                                       (&synthAuxBMIDI)[i]);
+                            inpGetAuxB(i & 0xff, channel & 0xff, *auxBIndex, *auxBMIDI);
                     }
-                    (*(SynthAuxCallback*)(stateBase + 0xc74 + i * 4))(
-                        1, auxSamplesB, *(u32*)(stateBase + 0xc54 + i * 4));
+                    (*auxBCallback)(1, auxSamplesB, *auxBData);
                 }
+                auxAIndex++;
+                auxAMIDI++;
+                auxBIndex++;
+                auxBMIDI++;
+                auxACallback++;
+                auxAData++;
+                auxBCallback++;
+                auxBData++;
             }
         }
         hwFrameDone();
-        {
-            u32 carry = addCarryOut32(synthRealTimeLo, delta);
-            synthRealTimeLo += delta;
-            synthRealTimeHi += carry;
-        }
+        *(u64*)&synthRealTimeHi += delta;
     }
 }
 
