@@ -33,7 +33,7 @@ typedef struct Dll19State
     u8 pad355[0x3F4 - 0x355];
     s16 unk3F4;
     u8 pad3F6[0x400 - 0x3F6];
-    u16 unk400;
+    u16 flags;
     u8 pad402[0x405 - 0x402];
     u8 unk405;
     u8 pad406[0x5F8 - 0x406];
