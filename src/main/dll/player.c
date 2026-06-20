@@ -1857,17 +1857,17 @@ int fn_802A5384(int obj, int state)
             ya = ((PlayerState*)inner)->maxSpeed *
             (t * -mathCosf((gPlayerPi * (f32) * (int*)((char*)inner + 0x474)) /
                 lbl_803E7F98));
-            t = interpolate(spd - ((PlayerState*)inner)->unk4C8,
+            t = interpolate(spd - ((PlayerState*)inner)->smoothVelX,
                             ((PlayerState*)inner)->unk438, timeDelta);
             {
-                f32 dy = interpolate(ya - ((PlayerState*)inner)->unk4CC,
+                f32 dy = interpolate(ya - ((PlayerState*)inner)->smoothVelZ,
                                      ((PlayerState*)inner)->unk438, timeDelta);
-                ((PlayerState*)inner)->unk4C8 = ((PlayerState*)inner)->unk4C8 + t;
-                ((PlayerState*)inner)->unk4CC = ((PlayerState*)inner)->unk4CC + dy;
+                ((PlayerState*)inner)->smoothVelX = ((PlayerState*)inner)->smoothVelX + t;
+                ((PlayerState*)inner)->smoothVelZ = ((PlayerState*)inner)->smoothVelZ + dy;
             }
             ((PlayerState*)state)->baddie.animSpeedC =
-                sqrtf(((PlayerState*)inner)->unk4C8 * ((PlayerState*)inner)->unk4C8 +
-                    ((PlayerState*)inner)->unk4CC * ((PlayerState*)inner)->unk4CC);
+                sqrtf(((PlayerState*)inner)->smoothVelX * ((PlayerState*)inner)->smoothVelX +
+                    ((PlayerState*)inner)->smoothVelZ * ((PlayerState*)inner)->smoothVelZ);
             {
                 ((PlayerState*)state)->baddie.animSpeedC =
                     (((PlayerState*)state)->baddie.animSpeedC < **(f32**)((char*)inner + 0x400))
@@ -1882,10 +1882,10 @@ int fn_802A5384(int obj, int state)
             {
                 f32 sn = mathCosf((gPlayerPi * (f32) * (s16*)((char*)inner + 0x478)) /
                     lbl_803E7F98);
-                f32 negA = -((PlayerState*)inner)->unk4CC;
-                f32 nx = negA * sn - ((PlayerState*)inner)->unk4C8 * t;
-                ya = ((PlayerState*)inner)->unk4C8 * sn -
-                    ((PlayerState*)inner)->unk4CC * t;
+                f32 negA = -((PlayerState*)inner)->smoothVelZ;
+                f32 nx = negA * sn - ((PlayerState*)inner)->smoothVelX * t;
+                ya = ((PlayerState*)inner)->smoothVelX * sn -
+                    ((PlayerState*)inner)->smoothVelZ * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
                     ((PlayerState*)state)->baddie.animSpeedA +
                     interpolate(nx - ((PlayerState*)state)->baddie.animSpeedA,
@@ -7742,8 +7742,8 @@ int fn_802A6694(int obj, int state, f32 fv)
         else
         {
             f32 z = lbl_803E7EA4;
-            ((PlayerState*)inner)->unk4C8 = z;
-            ((PlayerState*)inner)->unk4CC = z;
+            ((PlayerState*)inner)->smoothVelX = z;
+            ((PlayerState*)inner)->smoothVelZ = z;
         }
         ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
         ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
@@ -8047,15 +8047,15 @@ int fn_802A6694(int obj, int state, f32 fv)
         c = mathCosf((gPlayerPi * (f32) * (int*)((char*)inner + 0x474)) / lbl_803E7F98);
         vz = t * -c;
         vz = ((PlayerState*)inner)->maxSpeed * vz;
-        vx = interpolate(vx - ((PlayerState*)inner)->unk4C8,
+        vx = interpolate(vx - ((PlayerState*)inner)->smoothVelX,
                          ((PlayerState*)inner)->unk438, timeDelta);
-        vz = interpolate(vz - ((PlayerState*)inner)->unk4CC,
+        vz = interpolate(vz - ((PlayerState*)inner)->smoothVelZ,
                          ((PlayerState*)inner)->unk438, timeDelta);
-        ((PlayerState*)inner)->unk4C8 = ((PlayerState*)inner)->unk4C8 + vx;
-        ((PlayerState*)inner)->unk4CC = ((PlayerState*)inner)->unk4CC + vz;
+        ((PlayerState*)inner)->smoothVelX = ((PlayerState*)inner)->smoothVelX + vx;
+        ((PlayerState*)inner)->smoothVelZ = ((PlayerState*)inner)->smoothVelZ + vz;
         ((PlayerState*)state)->baddie.animSpeedC =
-            sqrtf(((PlayerState*)inner)->unk4C8 * ((PlayerState*)inner)->unk4C8 +
-                ((PlayerState*)inner)->unk4CC * ((PlayerState*)inner)->unk4CC);
+            sqrtf(((PlayerState*)inner)->smoothVelX * ((PlayerState*)inner)->smoothVelX +
+                ((PlayerState*)inner)->smoothVelZ * ((PlayerState*)inner)->smoothVelZ);
         ((PlayerState*)state)->baddie.animSpeedC =
             (((PlayerState*)state)->baddie.animSpeedC < lbl_803E7EA4)
                 ? lbl_803E7EA4
@@ -13680,14 +13680,14 @@ int fn_8029C9C8(int obj, int state)
         vy = inner->maxSpeed * (ratio * -mathCosf(ang));
     }
     {
-        f32 a = interpolate(vx - inner->unk4C8, lbl_803E7F44, timeDelta);
-        f32 b = interpolate(vy - inner->unk4CC, lbl_803E7F44, timeDelta);
-        inner->unk4C8 += a;
-        inner->unk4CC += b;
+        f32 a = interpolate(vx - inner->smoothVelX, lbl_803E7F44, timeDelta);
+        f32 b = interpolate(vy - inner->smoothVelZ, lbl_803E7F44, timeDelta);
+        inner->smoothVelX += a;
+        inner->smoothVelZ += b;
     }
     ((PlayerState*)state)->baddie.animSpeedC =
-        sqrtf(inner->unk4C8 * inner->unk4C8 +
-            inner->unk4CC * inner->unk4CC);
+        sqrtf(inner->smoothVelX * inner->smoothVelX +
+            inner->smoothVelZ * inner->smoothVelZ);
     {
         f32 v = ((PlayerState*)state)->baddie.animSpeedC;
         f32 lo = *(f32*)inner->unk400;
@@ -13703,8 +13703,8 @@ int fn_8029C9C8(int obj, int state)
         s = mathCosf(ang);
     }
     {
-        f32 c8 = inner->unk4C8;
-        f32 cc = inner->unk4CC;
+        f32 c8 = inner->smoothVelX;
+        f32 cc = inner->smoothVelZ;
         ((PlayerState*)state)->baddie.animSpeedA +=
             interpolate(-cc * s - c8 * c - ((PlayerState*)state)->baddie.animSpeedA,
                         inner->targetAnimSpeed, timeDelta);
@@ -15508,8 +15508,8 @@ int fn_8029CF30(int obj, int state, f32 fv)
     {
         inner->maxSpeed = lbl_803E7FC4;
         *(u8*)&((PlayerState*)inner)->unk8CC = 0;
-        inner->unk4C8 = zero;
-        inner->unk4CC = zero;
+        inner->smoothVelX = zero;
+        inner->smoothVelZ = zero;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
         ((PlayerState*)state)->baddie.animSpeedC = zero;
         gPlayerSubState = 5;
@@ -15527,13 +15527,13 @@ int fn_8029CF30(int obj, int state, f32 fv)
         (ang * -mathSinf(gPlayerPi * (f32)inner->inputHeading / lbl_803E7F98));
     vy = inner->maxSpeed *
         (ang * -mathCosf(gPlayerPi * (f32)inner->inputHeading / lbl_803E7F98));
-    dx = interpolate(vx - inner->unk4C8, lbl_803E7F44, timeDelta);
-    dy = interpolate(vy - inner->unk4CC, lbl_803E7F44, timeDelta);
-    inner->unk4C8 += dx;
-    inner->unk4CC += dy;
+    dx = interpolate(vx - inner->smoothVelX, lbl_803E7F44, timeDelta);
+    dy = interpolate(vy - inner->smoothVelZ, lbl_803E7F44, timeDelta);
+    inner->smoothVelX += dx;
+    inner->smoothVelZ += dy;
     ((PlayerState*)state)->baddie.animSpeedC =
-        sqrtf(inner->unk4C8 * inner->unk4C8 +
-            inner->unk4CC * inner->unk4CC);
+        sqrtf(inner->smoothVelX * inner->smoothVelX +
+            inner->smoothVelZ * inner->smoothVelZ);
     ((PlayerState*)state)->baddie.animSpeedC =
         (((PlayerState*)state)->baddie.animSpeedC < lbl_803E7EA4)
             ? lbl_803E7EA4

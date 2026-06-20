@@ -107,8 +107,8 @@ typedef struct PlayerState {
     u8 pad4BC[0x4C0 - 0x4BC];
     int lastHitObject;
     int unk4C4;
-    f32 unk4C8;
-    f32 unk4CC;
+    f32 smoothVelX; /* smoothed planar velocity X; eased toward maxSpeed*sin(heading) */
+    f32 smoothVelZ; /* smoothed planar velocity Z; magnitude = sqrt(x^2+z^2) -> animSpeedC */
     s16 headPitch;
     s16 bodyLeanHalf;
     s16 bodyLeanAngle;
