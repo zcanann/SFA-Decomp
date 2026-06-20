@@ -11,27 +11,27 @@
 typedef struct DoorObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
+    s16 openGameBit;  /* 0x18 */
+    s16 latchGameBit; /* 0x1A */
     u8 unk1C;
     u8 unk1D;
     u8 pad1E[0x20 - 0x1E];
     u8 unk20;
-    u8 unk21;
-    s16 unk22;
+    u8 rootMotionScaleInput; /* 0x21 */
+    s16 closeGameBit;        /* 0x22 */
     u8 pad24[0x28 - 0x24];
 } DoorObjectDef;
 
 typedef struct DoorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u8 unk1E;
+    s16 openGameBit;       /* 0x18 */
+    s16 latchGameBit;      /* 0x1A */
+    s16 triggerSequenceId; /* 0x1C */
+    u8 runSequenceId;      /* 0x1E */
     u8 pad1F[0x20 - 0x1F];
     s16 unk20;
-    s16 unk22;
+    s16 closeGameBit; /* 0x22 */
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } DoorPlacement;
@@ -61,24 +61,24 @@ void Door_init(int* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = Door_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->unk21 * gDoorRootMotionScaleFactor;
+    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->rootMotionScaleInput * gDoorRootMotionScaleFactor;
     if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3788)
     {
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3780;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
         ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    if (((DoorObjectDef*)def)->unk1A != -1)
+    if (((DoorObjectDef*)def)->latchGameBit != -1)
     {
-        state[4] = GameBit_Get(((DoorObjectDef*)def)->unk1A);
+        state[4] = GameBit_Get(((DoorObjectDef*)def)->latchGameBit);
     }
     else
     {
         state[4] = 0;
     }
     state[6] = 0;
-    if (GameBit_Get(((DoorObjectDef*)def)->unk18) != 0) state[6] = (u8)(state[6] | 1);
-    if (GameBit_Get(((DoorObjectDef*)def)->unk22) != 0) state[6] = (u8)(state[6] | 2);
+    if (GameBit_Get(((DoorObjectDef*)def)->openGameBit) != 0) state[6] = (u8)(state[6] | 1);
+    if (GameBit_Get(((DoorObjectDef*)def)->closeGameBit) != 0) state[6] = (u8)(state[6] | 2);
     {
         s16 model = ((GameObject*)obj)->anim.seqId;
         switch (model)
@@ -117,7 +117,7 @@ void Door_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (*(u8*)(state + 5) != 0)
     {
-        triggerId = ((DoorPlacement*)def)->unk1C;
+        triggerId = ((DoorPlacement*)def)->triggerSequenceId;
         if ((triggerId != 0) && (*(u8*)(state + 4) != 0))
         {
             triggerArg = *(u8*)(def + 0x20) & 0x7f;
@@ -127,9 +127,9 @@ void Door_update(int obj)
         {
             triggerArg = -1;
         }
-        if (*(s8*)&((DoorPlacement*)def)->unk1E != -1)
+        if (*(s8*)&((DoorPlacement*)def)->runSequenceId != -1)
         {
-            (*gObjectTriggerInterface)->runSequence((int)*(s8*)&((DoorPlacement*)def)->unk1E, (void*)obj, triggerArg);
+            (*gObjectTriggerInterface)->runSequence((int)*(s8*)&((DoorPlacement*)def)->runSequenceId, (void*)obj, triggerArg);
         }
         *(u8*)(state + 5) = 0;
     }
@@ -174,9 +174,9 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (*(u8*)(state + 4) == 0)
     {
-        opened = GameBit_Get(((DoorPlacement*)def)->unk18);
+        opened = GameBit_Get(((DoorPlacement*)def)->openGameBit);
         closeReady = 0;
-        if ((((DoorPlacement*)def)->unk22 == -1) || (GameBit_Get(((DoorPlacement*)def)->unk22) != 0))
+        if ((((DoorPlacement*)def)->closeGameBit == -1) || (GameBit_Get(((DoorPlacement*)def)->closeGameBit) != 0))
         {
             closeReady = 1;
         }
@@ -207,7 +207,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     else if (*(u8*)(state + 4) == 1)
     {
-        if (GameBit_Get(((DoorPlacement*)def)->unk18) == 0)
+        if (GameBit_Get(((DoorPlacement*)def)->openGameBit) == 0)
         {
             *(u8*)(state + 4) = 3;
             if (*(u16*)state != 0)
@@ -223,9 +223,9 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             if (animUpdate->eventIds[i] == 2)
             {
                 *(u8*)(state + 4) = 1;
-                if (((DoorPlacement*)def)->unk1A != -1)
+                if (((DoorPlacement*)def)->latchGameBit != -1)
                 {
-                    GameBit_Set(((DoorPlacement*)def)->unk1A, 1);
+                    GameBit_Set(((DoorPlacement*)def)->latchGameBit, 1);
                 }
                 if ((*(u16*)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16*)state) != 0))
                 {
@@ -246,9 +246,9 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 *(u8*)(state + 4) = 0;
                 *(u8*)(state + 6) = 0;
-                if (((DoorPlacement*)def)->unk1A != -1)
+                if (((DoorPlacement*)def)->latchGameBit != -1)
                 {
-                    GameBit_Set(((DoorPlacement*)def)->unk1A, 0);
+                    GameBit_Set(((DoorPlacement*)def)->latchGameBit, 0);
                 }
                 if ((*(u16*)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16*)state) != 0))
                 {
