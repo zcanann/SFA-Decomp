@@ -1171,7 +1171,6 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 dx;
     f32 dz;
     f32 length;
-    f32 adjustedDistance;
     int useBlendedDistance;
 
     useBlendedDistance = 0;
@@ -1228,16 +1227,15 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         dz /= length;
     }
 
-    adjustedDistance = moveDistance;
     if (useBlendedDistance != 0)
     {
-        adjustedDistance = sqrtf(limitDistanceSq);
-        adjustedDistance =
-            adjustedDistance - ((adjustedDistance - sqrtf(centerToEnd)) * lbl_803E2480);
+        moveDistance = sqrtf(limitDistanceSq);
+        moveDistance =
+            moveDistance - ((moveDistance - sqrtf(centerToEnd)) * lbl_803E2480);
     }
 
-    end[0] = center[0] + (dx * adjustedDistance);
-    end[2] = center[2] + (dz * adjustedDistance);
+    end[0] = center[0] + (dx * moveDistance);
+    end[2] = center[2] + (dz * moveDistance);
 }
 
 #pragma peephole off
