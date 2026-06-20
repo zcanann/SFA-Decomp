@@ -415,6 +415,7 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
             ((GameObject*)p)->anim.velocityZ * t);
 }
 
+#pragma opt_propagation off
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
@@ -466,6 +467,7 @@ void fn_800D8414(int* obj, int* ctx)
         *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs off
 void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
 {
