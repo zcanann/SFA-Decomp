@@ -53,7 +53,6 @@ int imicepillar_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(int* obj);
 extern void warpToMap(int idx, s8 transType);
 
-extern u8 framesThisStep;
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
