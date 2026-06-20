@@ -210,6 +210,10 @@ void worldobj_init(int obj, int arg)
         state->controlByte = 0;
         state->spinZStep = 0;
         break;
+    case 0x5dc:
+        break;
+    case 0x5f4:
+        break;
     case 0x5e2:
         idx = setup->variant;
         Obj_SetActiveModelIndex(obj, idx);
