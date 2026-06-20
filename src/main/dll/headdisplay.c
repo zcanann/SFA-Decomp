@@ -412,7 +412,7 @@ void drawArwingHud(void)
     int maxPips;
     u32 i;
     u32 pip;
-    int texIdx;
+    u8 texIdx;
     u8 bombSlot;
     int bombX;
 
@@ -463,7 +463,7 @@ void drawArwingHud(void)
             {
                 texIdx = partialFrame;
             }
-            drawTexture(hudTextures[(u8)texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
+            drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
         }
         for (bombSlot = 0; bombSlot < 3; bombSlot++)
