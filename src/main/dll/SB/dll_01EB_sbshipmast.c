@@ -18,7 +18,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* parent galleon anim.seqId selecting the rigging-animation behavior */
 #define SB_GALLEON_SEQID 0x139
 
-extern u8 framesThisStep;
 extern const f32 lbl_803E586C; /* 0.0f: pins localPos to the origin */
 extern f32 lbl_803E5870;       /* fast play speed (phase >= 0xc) */
 extern f32 lbl_803E5874;       /* medium play speed (0xa <= phase < 0xc) */
