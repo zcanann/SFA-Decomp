@@ -491,7 +491,11 @@ void worldplanet_update(int obj)
             switch (state->selectionLocked)
             {
             case 0:
-                if (gWorldPlanetReselectDelayTimer == 0)
+                if (gWorldPlanetReselectDelayTimer != 0)
+                {
+                    gWorldPlanetReselectDelayTimer -= 1;
+                }
+                else
                 {
                     if (gWorldPlanetSelectConfirmTimer == 0 &&
                         (state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
@@ -500,10 +504,6 @@ void worldplanet_update(int obj)
                         gWorldPlanetSelectConfirmTimer = 10;
                         mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
                     }
-                }
-                else
-                {
-                    gWorldPlanetReselectDelayTimer -= 1;
                 }
                 if (gWorldPlanetSelectConfirmTimer != 0)
                 {
