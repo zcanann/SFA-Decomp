@@ -16751,8 +16751,9 @@ void fn_802ADE80(int obj, int inner, int state)
         {
             d = lbl_803E7FA0;
         }
+        d = d / lbl_803E7FA0 * lbl_803E8118;
         ((GameObject*)obj)->anim.velocityY =
-            d / lbl_803E7FA0 * lbl_803E8118 * timeDelta + ((GameObject*)obj)->anim.velocityY;
+            d * timeDelta + ((GameObject*)obj)->anim.velocityY;
     }
     ((GameObject*)obj)->anim.velocityY =
         ((GameObject*)obj)->anim.velocityY - lbl_803E7EFC * timeDelta;
