@@ -2431,11 +2431,11 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
             gGxZCompLocCached = zCompLoc;
             gGxZCompLocValid = 1;
         }
-        if ((((ModelRenderOp *)renderOp)->flags & 0x8) != 0) {
-            GXSetCullMode(2);
-        } else {
-            GXSetCullMode(0);
-        }
+    }
+    if ((((ModelRenderOp *)renderOp)->flags & 0x8) != 0) {
+        GXSetCullMode(2);
+    } else {
+        GXSetCullMode(0);
     }
     return 1;
 }
