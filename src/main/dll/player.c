@@ -8848,9 +8848,12 @@ void fn_802B249C(int obj, int inner, int state)
                     dx = dx / d;
                     dz = dz / d;
                 }
-                ((GameObject*)obj)->anim.velocityX = lbl_803E7F9C * dx;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E7F9C * dz;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E7F9C;
+                {
+                    f32 spd = lbl_803E7F9C;
+                    ((GameObject*)obj)->anim.velocityX = spd * dx;
+                    ((GameObject*)obj)->anim.velocityZ = spd * dz;
+                    ((GameObject*)obj)->anim.velocityY = spd;
+                }
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
                 {
