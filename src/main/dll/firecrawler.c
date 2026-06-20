@@ -1719,7 +1719,7 @@ void crawler_updateC(s16* obj, u8* state)
                 }
                 t = (((BaddieState*)state)->pathStep * scale - *(f32*)(state + 0x310)) / lbl_803E2B84;
                 a = diff >= lbl_803E2BA8 ? diff : -diff;
-                *(f32*)(state + 0x308) = t * (lbl_803E2BA4 - a / lbl_803E2BCC);
+                ((BaddieState*)state)->unk308 = t * (lbl_803E2BA4 - a / lbl_803E2BCC);
                 if (*(f32*)(state + 0x308) < lbl_803E2BD4)
                 {
                     *(f32*)(state + 0x308) = lbl_803E2BD4;
