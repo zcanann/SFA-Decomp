@@ -7604,7 +7604,7 @@ void fn_802B0EA4(int obj, int inner, int state)
             u = t * ((PlayerState*)inner)->unk7E0;
             idx = (int)u;
             ((PlayerState*)inner)->unk438 =
-                lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->unk450 + (idx + 1) * 4, u - (f32)idx, 0);
+                lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
         }
     }
     else
@@ -7616,24 +7616,24 @@ void fn_802B0EA4(int obj, int inner, int state)
         u = t * ((PlayerState*)inner)->unk7E0;
         idx = (int)u;
         ((PlayerState*)inner)->unk438 =
-            lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->unk450 + (idx + 1) * 4, u - (f32)idx, 0);
+            lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
     }
     u = t * ((PlayerState*)inner)->unk7E0;
     idx = (int)u;
     ((PlayerState*)inner)->unk428 =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->unk454 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve1 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->unk7E0;
     idx = (int)u;
     ((PlayerState*)inner)->unk42C =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->unk458 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve2 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->unk7E0;
     idx = (int)u;
     ((PlayerState*)inner)->unk430 =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->unk45C + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve3 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->unk7E0;
     idx = (int)u;
     ((PlayerState*)inner)->unk434 =
-        Curve_EvalCatmullRom(((PlayerState*)inner)->unk460 + (idx + 1) * 4, u - (f32)idx, 0);
+        Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve4 + (idx + 1) * 4, u - (f32)idx, 0);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 != 0)
     {
         f32 k;
@@ -7661,7 +7661,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         int n = ((PlayerState*)inner)->targetYawRateSigned;
         ((PlayerState*)inner)->unk420 = Curve_EvalCatmullRom(
-            ((PlayerState*)inner)->unk464 + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
+            ((PlayerState*)inner)->leanCurve + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
     }
     else
     {
@@ -12632,15 +12632,15 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->moveAnimTable = (int)(base + 0x190);
     ((PlayerState*)inner)->moveSlots = (int)(base + 0x854);
     ((PlayerState*)inner)->moveSlotCount = 0x1c;
-    ((PlayerState*)inner)->unk450 = (int)(base + 0x450);
+    ((PlayerState*)inner)->paramCurve0 = (int)(base + 0x450);
     ((PlayerState*)inner)->unk8D0 = 0x29;
-    ((PlayerState*)inner)->unk454 = (int)(base + 0x4f4);
+    ((PlayerState*)inner)->paramCurve1 = (int)(base + 0x4f4);
     ((PlayerState*)inner)->unk8D1 = 0x29;
-    ((PlayerState*)inner)->unk458 = (int)(base + 0x598);
+    ((PlayerState*)inner)->paramCurve2 = (int)(base + 0x598);
     ((PlayerState*)inner)->unk8D2 = 0x2e;
-    ((PlayerState*)inner)->unk45C = (int)(base + 0x650);
+    ((PlayerState*)inner)->paramCurve3 = (int)(base + 0x650);
     ((PlayerState*)inner)->unk8D3 = 0x29;
-    ((PlayerState*)inner)->unk460 = (int)(base + 0x6f4);
+    ((PlayerState*)inner)->paramCurve4 = (int)(base + 0x6f4);
     ((PlayerState*)inner)->unk8D4 = 0x2e;
     ((PlayerState*)inner)->unk7E0 = lbl_803E7ED8;
     for (i = 0, off = 0; i < ((PlayerState*)inner)->moveSlotCount; i++)

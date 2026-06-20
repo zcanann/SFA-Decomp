@@ -72,12 +72,12 @@ typedef struct PlayerState {
     f32 unk444;
     f32 unk448;
     u8 pad44C[0x450 - 0x44C];
-    int unk450;
-    int unk454;
-    int unk458;
-    int unk45C;
-    int unk460;
-    int unk464;
+    int paramCurve0; /* Catmull-Rom curve-data ptr (resource base+0x450); Curve_EvalCatmullRom(...) at speed u, feeds unk438 */
+    int paramCurve1; /* curve-data ptr (base+0x4f4); feeds unk428 */
+    int paramCurve2; /* curve-data ptr (base+0x598); feeds unk42C */
+    int paramCurve3; /* curve-data ptr (base+0x650); feeds unk430 */
+    int paramCurve4; /* curve-data ptr (base+0x6f4); feeds unk434 */
+    int leanCurve;   /* Catmull-Rom curve-data ptr indexed by targetYawRateSigned (lean), feeds unk420 */
     u8 pad468[0x46C - 0x468];
     int spawnedObject; /* object handle from Obj_SetupObject (player-spawned, e.g. staff/projectile setup) */
     f32 inputMagnitude;
