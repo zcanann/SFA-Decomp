@@ -1509,13 +1509,13 @@ void intersectModLineBuild(int* obj)
     {
         int k;
         for (k = 0; k < 40; k++)
-            *(u8*)(*(int*)((char*)obj + 0x38) + k) = 0xff;
+            ((u8*)*(int*)((char*)obj + 0x38))[k] = 0xff;
     }
     prev = -1;
     for (li = 0; li < gIntersectLineCount; li++)
     {
         u8* base = (u8*)lbl_803DCF34;
-        int best = 0;
+        s16 best = 0;
         int j;
         int grp;
         for (j = 0; j < gIntersectLineCount; j++)
@@ -1538,26 +1538,24 @@ void intersectModLineBuild(int* obj)
         }
         {
             int m;
-            u8* so = (u8*)*(int*)((char*)obj + 0x34);
             for (m = 0; m < li; m++)
             {
-                if (*(s16*)(so + m * 0x10 + 8) == (s16)best)
-                    *(s16*)(so + m * 0x10 + 8) = li;
-                if (*(s16*)(so + m * 0x10 + 0xa) == best)
-                    *(s16*)(so + m * 0x10 + 0xa) = li;
+                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) == (s16)best)
+                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) = li;
+                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) == best)
+                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) = li;
             }
         }
         {
             int n;
             for (n = 0; n < gIntersectLineCount; n++)
             {
-                u8* Ln = (u8*)lbl_803DCF34 + n * 0x10;
-                if ((s8)Ln[3] != 0x14)
+                if ((s8)((u8*)lbl_803DCF34)[n * 0x10 + 3] != 0x14)
                 {
-                    if ((s16)best == *(s16*)(Ln + 8))
-                        *(s16*)(Ln + 8) = li;
-                    if ((s16)best == *(s16*)(Ln + 0xa))
-                        *(s16*)(Ln + 0xa) = li;
+                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8))
+                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8) = li;
+                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa))
+                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa) = li;
                 }
             }
         }
