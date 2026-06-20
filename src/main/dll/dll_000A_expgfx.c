@@ -2067,6 +2067,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     int alpha;
     f32 lifeFraction;
     f32 scaleSize;
+    f32 sx, sy, sz;
     f32 scaleFactor;
     s16 angleA;
     s16 angleB;
@@ -2077,7 +2078,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 aimDelta[3];
     s16* vtxStream;
     int vertexIndex;
-    f32 sx, sy, sz;
     f32 viewProjW;
     volatile int dummy;
 
