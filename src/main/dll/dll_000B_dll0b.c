@@ -2764,7 +2764,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #undef base
 }
 
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
 
@@ -2797,6 +2797,7 @@ void dll_0B_func05(void)
     BoneSpawnData tmpl;
     int objCount;
     int objIdx;
+    extern int randomGetRange(int min, int max); /* #57 signed-return override */
 
     emIdx = 0;
     gExpgfxUpdatingActivePools = 2;
@@ -2904,7 +2905,7 @@ void dll_0B_func05(void)
                     ang[1] = 0;
                     ang[2] = 0;
                     vecRotateZXY(&ang[0], &tmpl.x);
-                    if (*(int*)eff == 0)
+                    if (*(void**)eff == NULL)
                     {
                         if (Obj_IsLoadingLocked())
                         {
@@ -2929,7 +2930,7 @@ void dll_0B_func05(void)
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
                     }
-                    else if (*(int*)eff != 0)
+                    else if (*(void**)eff != NULL)
                     {
                         if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                         {
@@ -2947,7 +2948,7 @@ void dll_0B_func05(void)
                         *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
                         *(f32*)(*(int*)eff + 0x20) = tmpl.z;
                     }
-                    if (*(int*)eff != 0)
+                    if (*(void**)eff != NULL)
                     {
                         int* o = *(int**)eff;
                         int* list = *(int**)((char*)*(int**)&((GameObject*)o)->anim.hitReactState + 0x50);
