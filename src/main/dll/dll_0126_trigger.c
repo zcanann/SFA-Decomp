@@ -42,13 +42,13 @@ typedef struct TriggerPlacement
     u8 pad0[0x38 - 0x0];
     s16 unk38;
     u8 pad3A[0x46 - 0x3A];
-    u16 unk46;
+    u16 triggerDelayFrames; /* 0x46: frames the timer must reach before firing */
 } TriggerPlacement;
 
 typedef struct ObjInterpretSeqPlacement
 {
     u8 pad0[0x2 - 0x0];
-    s8 unk2;
+    s8 commandVariant; /* 0x2: sub-selector dispatched per interpret-seq opcode */
     u8 pad3[0x4 - 0x3];
     s16 unk4;
     u8 unk6;
@@ -81,8 +81,8 @@ typedef struct
 } TriggerFlags8A;
 
 STATIC_ASSERT(offsetof(TriggerPlacement, unk38) == 0x38);
-STATIC_ASSERT(offsetof(TriggerPlacement, unk46) == 0x46);
-STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk2) == 0x2);
+STATIC_ASSERT(offsetof(TriggerPlacement, triggerDelayFrames) == 0x46);
+STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, commandVariant) == 0x2);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk4) == 0x4);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk6) == 0x6);
 STATIC_ASSERT(offsetof(TriggerState, rangeSq) == 0x4);
@@ -648,7 +648,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x23:
-                    switch (((ObjInterpretSeqPlacement*)p)->unk2)
+                    switch (((ObjInterpretSeqPlacement*)p)->commandVariant)
                     {
                     case 0:
                         (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
@@ -670,7 +670,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     t = getTrickyObject();
                     if ((void*)t != NULL)
                     {
-                        switch (((ObjInterpretSeqPlacement*)p)->unk2)
+                        switch (((ObjInterpretSeqPlacement*)p)->commandVariant)
                         {
                         case 0:
                             (*(VtableFn*)(**(int**)(t + 0x68) + 0x3c))();
@@ -929,7 +929,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
-                    if ((u32)((TriggerPlacement*)def)->unk46 <= ((TriggerState*)state)->timer)
+                    if ((u32)((TriggerPlacement*)def)->triggerDelayFrames <= ((TriggerState*)state)->timer)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
