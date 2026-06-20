@@ -1048,7 +1048,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
                         }
                     }
 
-                    routeFlags = (u8)(((ObjfsaRomCurveDef*)curve)->blockedLinkMask >> j);
+                    routeFlags = (u8)(((ObjfsaRomCurveDef*)curve)->blockedLinkMask >> (u8)j);
                     break;
                 }
             }
