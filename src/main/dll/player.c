@@ -3178,7 +3178,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         {
             f32 fz = lbl_803E7EA4;
             ((PlayerState*)inner)->knockbackTimer = fz;
-            ((PlayerState*)inner)->unk7A0 = fz;
+            ((PlayerState*)inner)->knockbackHitTimer = fz;
         }
         if (((u32) * (u8*)((char*)inner + 0x3f2) >> 7 & 1) == 0)
         {
@@ -8581,8 +8581,8 @@ void fn_802AFB0C(int obj, int inner, int state)
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x800) == 0 && knockKind != 0)
         {
             ((PlayerState*)inner)->knockbackTimer = lbl_803E7EDC;
-            ((PlayerState*)inner)->unk7A0 = lbl_803E8050;
-            ((PlayerState*)inner)->unk7A4 = lbl_803E7EE0;
+            ((PlayerState*)inner)->knockbackHitTimer = lbl_803E8050;
+            ((PlayerState*)inner)->knockbackDrainRate = lbl_803E7EE0;
             ((KnockBits*)((char*)inner + 0x7a8))->knock = (u8)knockKind;
         }
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x800) != 0 && keepKnock != 0)
@@ -13139,13 +13139,13 @@ void fn_802B066C(int obj, int state)
         v = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
             (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
             ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
-        ((PlayerState*)state)->unk7A4 = v;
-        v = ((PlayerState*)state)->unk7A4;
-        ((PlayerState*)state)->unk7A4 =
+        ((PlayerState*)state)->knockbackDrainRate = v;
+        v = ((PlayerState*)state)->knockbackDrainRate;
+        ((PlayerState*)state)->knockbackDrainRate =
             (v < lbl_803E7EE0) ? lbl_803E7EE0 : ((v > lbl_803E8138) ? lbl_803E8138 : v);
     }
     ((PlayerState*)state)->knockbackTimer =
-        ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->unk7A4;
+        ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->knockbackDrainRate;
     zero = lbl_803E7EA4;
     if (((PlayerState*)state)->knockbackTimer <= zero)
     {
@@ -13157,12 +13157,12 @@ void fn_802B066C(int obj, int state)
         ((PlayerState*)state)->knockbackTimer = lbl_803E7EA4;
         return;
     }
-    ((PlayerState*)state)->unk7A0 = ((PlayerState*)state)->unk7A0 - timeDelta;
-    if (((PlayerState*)state)->unk7A0 <= zero)
+    ((PlayerState*)state)->knockbackHitTimer = ((PlayerState*)state)->knockbackHitTimer - timeDelta;
+    if (((PlayerState*)state)->knockbackHitTimer <= zero)
     {
         ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
         ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, px, py, pz);
-        ((PlayerState*)state)->unk7A0 = lbl_803E8050;
+        ((PlayerState*)state)->knockbackHitTimer = lbl_803E8050;
     }
 }
 
@@ -15823,7 +15823,7 @@ void fn_802AE650(int obj, int state, int p3)
         ((PlayerState*)state)->unk42C = ed4;
         ((PlayerState*)state)->unk434 = ed4;
     }
-    ((PlayerState*)state)->unk7A4 = lbl_803E80E4;
+    ((PlayerState*)state)->knockbackDrainRate = lbl_803E80E4;
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7EE0)
     {
         short tmp;

@@ -262,9 +262,9 @@ typedef struct PlayerState {
     f32 unk788;
     f32 unk78C;
     u8 pad790[0x79C - 0x790];
-    f32 knockbackTimer; /* knockback/stagger countdown (-= timeDelta*unk7A4); set on knock moves, gates knock FX/sfx (0x394/0x395) while >0, reset to 0 on expiry */
-    f32 unk7A0;
-    f32 unk7A4;
+    f32 knockbackTimer; /* knockback/stagger countdown (-= timeDelta*knockbackDrainRate); set on knock moves, gates knock FX/sfx (0x394/0x395) while >0, reset to 0 on expiry */
+    f32 knockbackHitTimer; /* periodic countdown during knockback drag (-= timeDelta); on expiry fires an ObjHits position-hit and reloads */
+    f32 knockbackDrainRate; /* drain multiplier for knockbackTimer (-= timeDelta*this); tracks velocity magnitude, clamped to a range */
     u8 unk7A8;
     u8 pad7A9[0x7B8 - 0x7A9];
     f32 unk7B8;
