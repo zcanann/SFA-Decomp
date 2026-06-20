@@ -43,8 +43,8 @@ void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode)
 {
     SynthVoice* voice;
     SynthVoiceRuntime* runtime;
-    u8* voiceBytes;
     u8* voiceCursor;
+    u8* voiceBytes;
     u32 voiceIndex;
     u32 studioIndex;
 
@@ -93,9 +93,8 @@ resolved:
         }
         else
         {
-            mode &= 0xF;
             voiceIndex = studioIndex & SYNTH_HANDLE_ID_MASK;
-            switch (mode)
+            switch (mode & 0xF)
             {
             case 0:
                 runtime->voices[voiceIndex].pendingUpdate.studio = value0;
