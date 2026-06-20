@@ -471,6 +471,8 @@ void andross_update(int obj)
             switch (((AndrossState*)state)->actionState)
             {
             default:
+            case 5:
+            case 0x16:
                 ((AndrossState*)state)->actionState = 6;
                 break;
             case 6:
@@ -514,16 +516,16 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 4;
                 break;
             case 4:
-                *(char*)&((AndrossState*)state)->unkB7 = *(char*)&((AndrossState*)state)->unkB7 + '\x01';
-                if (((AndrossState*)state)->unkB7 < 4)
-                {
-                    ((AndrossState*)state)->actionState = 0;
-                }
-                else
+                ((AndrossState*)state)->unkB7++;
+                if (((AndrossState*)state)->unkB7 > 3)
                 {
                     ((AndrossState*)state)->fightPhase--;
                     ((AndrossState*)state)->actionState = 0x16;
                     ((AndrossState*)state)->unkA0 = 0;
+                }
+                else
+                {
+                    ((AndrossState*)state)->actionState = 0;
                 }
                 break;
             }
@@ -536,6 +538,8 @@ void andross_update(int obj)
             switch (((AndrossState*)state)->actionState)
             {
             default:
+            case 5:
+            case 0x16:
                 ((AndrossState*)state)->actionState = 6;
                 break;
             case 6:
@@ -573,6 +577,7 @@ void andross_update(int obj)
             switch (((AndrossState*)state)->actionState)
             {
             default:
+            case 0x1b:
                 ((AndrossState*)state)->unkB1[0] = 3;
             case 0xf:
                 ((AndrossState*)state)->actionState = 0x12;
