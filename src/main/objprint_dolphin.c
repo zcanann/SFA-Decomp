@@ -213,7 +213,7 @@ extern u32 DAT_803dd8b0;
 extern u32 DAT_803dd8b4;
 extern u32 DAT_803dd8bc;
 extern u8 DAT_803dd8bd;
-extern u32 DAT_803dd8c4;
+extern s32 DAT_803dd8c4;
 extern u32 DAT_803dd8c8;
 extern u32 DAT_803dd8cc;
 extern u32 DAT_803dd8d4;
