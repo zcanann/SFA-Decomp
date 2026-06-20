@@ -299,7 +299,7 @@ typedef struct PlayerState {
     s16 unk81E;
     f32 unk820;
     f32 unk824;
-    f32 unk828;
+    f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
     f32 unk830;
     f32 unk834;
@@ -341,9 +341,9 @@ typedef struct PlayerState {
     u8 moveSlotCount;
     u8 moveSlotIndex;
     u8 unk8AA;
-    u8 unk8AB;
-    u8 unk8AC;
-    u8 unk8AD;
+    u8 hitCount; /* hits dealt so far in the current multi-hit move; ++ per hit, stops when >= hitCountMax */
+    u8 hitCountMax; /* max hits for the move (HitDesc.valsB[0]) */
+    u8 hitInterval; /* frames between hits (HitDesc.valsA[0]); reloads hitTimer */
     u8 pad8AE[0x8B0 - 0x8AE];
     u8 gaitStepLevel; /* gait/step level 1-4 (capped) derived from gaitLevel; indexes step-interval tables lbl_803DC6A8/lbl_803DC6B0 */
     u8 stepDustCount; /* footstep dust-particle burst counter loaded from lbl_803DC6B0[gaitStepLevel]; decremented per frame, spawns dust while nonzero */
