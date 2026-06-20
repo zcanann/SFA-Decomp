@@ -1828,6 +1828,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int linkCurve;
     int insertIndex;
     int selectedIndex;
+    int found;
     int i;
     int j;
     f32 distance;
@@ -1881,8 +1882,14 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         visited[directIndex] = 1;
         queueCount = 1;
 
-        while (queueCount > 0)
+        found = 0;
+        do
         {
+            if (queueCount <= 0)
+            {
+                found = 1;
+                continue;
+            }
             queueCount--;
             queueIndex = queueIndices[queueCount];
             queueCurve = (int)romCurves[queueIndex];
@@ -1891,9 +1898,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             if (*(u8*)(queueCurve + 0x34) == 1)
             {
                 candidateDistances[candidateCount] = distance;
-                candidateIds[candidateCount] = directLinkId;
+                candidateIds[candidateCount] = *(s32*)(cur + 0x1c);
                 candidateCount++;
-                break;
+                found = 1;
+                continue;
             }
 
             for (linkSlot = 0; linkSlot < 4; linkSlot++)
@@ -1934,7 +1942,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 visited[directIndex] = 1;
                 queueCount++;
             }
-        }
+        } while (!found);
     }
 
     if (candidateCount == 0)
