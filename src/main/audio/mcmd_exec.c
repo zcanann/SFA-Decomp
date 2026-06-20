@@ -60,8 +60,8 @@ extern void fn_802712C8(McmdVoiceState * state); /* synthStartSynthJobHandling *
  */
 void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    int k1;
-    int k2;
+    u8 k1;
+    u8 k2;
     int t;
     s32 i1;
     s32 i2;
@@ -71,7 +71,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     {
         k2 = args->flags >> 0x18;
         k1 = (args->flags >> 8) & 0xff;
-        if ((u32)k1 > (u32)(args->flags >> 0x18))
+        if (k1 > (args->flags >> 0x18))
         {
             t = k1;
             k1 = k2;
