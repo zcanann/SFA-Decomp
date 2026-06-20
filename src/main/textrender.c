@@ -2232,10 +2232,10 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
-        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], ((GameTextBox*)box)->alpha, 0x100);
-        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], ((GameTextBox*)box)->alpha, 0x100,
+        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), gSubtitleBoxTextures[0], ((GameTextBox*)box)->alpha, 0x100);
+        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), gSubtitleBoxTextures[1], ((GameTextBox*)box)->alpha, 0x100,
                           c3x1 - c3x0, 0x24, 0);
-        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture((f32)c3x1, (f32)(c3y0 - 9), gSubtitleBoxTextures[2], ((GameTextBox*)box)->alpha, 0x100);
         break;
     case 2:
         x2 = ((GameTextBox*)box)->x;
