@@ -197,7 +197,7 @@ void drawFn_80125424(void)
         }
         gHeadDisplayPanelHeight = height;
         width = gHeadDisplayPanelWidth;
-        type = *(u8*)(gHeadDisplayEntryTable + gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE);
+        type = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
         switch (type)
         {
         default:
