@@ -741,9 +741,9 @@ void appleontree_update(int objArg)
                 (*(float*)(val + 4) *
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
                 fa = fa * fa * fa * fa;
-                state = (int)((fa * fa) / *(float*)(val + 0x54));
+                state = 0x100 - (int)((fa * fa) / *(float*)(val + 0x54));
                 modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
-                *modelIdxPtr = 0x100 - state;
+                *modelIdxPtr = state;
                 *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
                 ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * *(float*)(val + 0x24);
                 Obj_SetActiveModelIndex((int)obj, 1);
