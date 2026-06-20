@@ -2650,7 +2650,7 @@ void expgfx_resetAllPools(void)
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
-            if ((*poolActiveMasks & activeBit) != 0)
+            if ((activeBit & *poolActiveMasks) != 0)
             {
                 if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
                 {
@@ -2675,7 +2675,7 @@ void expgfx_resetAllPools(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = ~activeBit;
+                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
                 *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
             }
 
