@@ -260,9 +260,9 @@ void sidekickball_update(u8* self)
     player = Obj_GetPlayerObject();
     other = getTrickyObject();
     if (player == NULL
-        || (*(u16*)(player + 0xB0) & 0x1000) != 0
+        || (((GameObject*)player)->objectFlags & 0x1000) != 0
         || other == NULL
-        || (otherStatusZeroWord = __cntlzw((u32) * (u16*)(other + 0xB0)),
+        || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
             otherStatusMask = otherStatusZeroWord >> 5,
             (otherStatusMask & 0x1000) != 0)
         || GameBit_Get(0xD00) != 0)
