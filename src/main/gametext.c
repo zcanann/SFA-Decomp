@@ -526,9 +526,10 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     {
         return 0;
     }
+    dst = (char*)buffer;
     for (i = 0; i < total; i++)
     {
-        ((char*)buffer)[i] = 0;
+        *dst++ = 0;
     }
 
     dst = (char*)buffer + lineOff;
