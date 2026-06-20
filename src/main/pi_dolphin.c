@@ -1529,7 +1529,7 @@ extern char sDirBlockTag;
 extern int zlbDecompress(void* dst, int size, int out, void* src);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
-void loadDataFiles(void);
+void loadDataFiles(int);
 int GXFlush_(u8 visible, int unused);
 
 #pragma dont_inline on
@@ -1585,7 +1585,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -1614,7 +1614,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -1674,7 +1674,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -1703,7 +1703,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -1792,7 +1792,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -1821,7 +1821,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2060,7 +2060,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2089,7 +2089,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2194,7 +2194,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2223,7 +2223,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2390,7 +2390,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -2419,7 +2419,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFiles(0);
                 dvdCheckError();
                 if (frame != 0)
                 {
@@ -6960,7 +6960,7 @@ extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
 extern void loadTableFiles(void);
 
-void loadDataFiles(void)
+void loadDataFiles(int arg)
 {
     int i;
     if (getButtonsJustPressed(2) & 0x100)
