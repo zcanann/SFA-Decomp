@@ -1360,8 +1360,8 @@ int fn_8029A76C(int obj, int state, f32 fv)
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        timer = inner->unk854 - timeDelta;
-        inner->unk854 = timer;
+        timer = inner->stateTimer - timeDelta;
+        inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
@@ -1375,7 +1375,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
                 v = *(s16*)((char*)sub + 0x6);
             }
             *(s16*)((char*)sub + 0x4) = v;
-            inner->unk854 = lbl_803E7F58;
+            inner->stateTimer = lbl_803E7F58;
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
@@ -4930,8 +4930,8 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        timer = inner->unk854 - timeDelta;
-        inner->unk854 = timer;
+        timer = inner->stateTimer - timeDelta;
+        inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
@@ -4945,7 +4945,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
                 v = *(s16*)((char*)sub + 0x6);
             }
             *(s16*)((char*)sub + 0x4) = v;
-            inner->unk854 = lbl_803E7F58;
+            inner->stateTimer = lbl_803E7F58;
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
@@ -5051,7 +5051,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
                         gPlayerHeldButtonMask = b28;
                         lbl_803DE42C = 1;
                         lbl_803DE430 = lbl_803E7EA4;
-                        inner->unk854 = lbl_803E7F58;
+                        inner->stateTimer = lbl_803E7F58;
                         sub2 = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                         v = *(s16*)((char*)sub2 + 0x4) - 1;
                         if (v < 0)
@@ -5197,8 +5197,8 @@ int fn_8029AF9C(int obj, int state)
                 f32 x;
                 int hi;
                 Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-                x = inner->unk854 - timeDelta;
-                inner->unk854 = x;
+                x = inner->stateTimer - timeDelta;
+                inner->stateTimer = x;
                 if (x <= lbl_803E7EA4)
                 {
                     int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
@@ -5212,7 +5212,7 @@ int fn_8029AF9C(int obj, int state)
                         v = *(s16*)((char*)sub + 0x6);
                     }
                     *(s16*)((char*)sub + 0x4) = v;
-                    inner->unk854 = lbl_803E7F58;
+                    inner->stateTimer = lbl_803E7F58;
                 }
                 ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
                 pfx.scale = lbl_803E7F9C;
@@ -5308,7 +5308,7 @@ int fn_8029AF9C(int obj, int state)
                                 gPlayerHeldButtonMask = b28;
                                 lbl_803DE42C = 1;
                                 lbl_803DE430 = lbl_803E7EA4;
-                                inner->unk854 = lbl_803E7F58;
+                                inner->stateTimer = lbl_803E7F58;
                                 sub2 = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
                                 v = *(s16*)((char*)sub2 + 0x4) - 1;
                                 if (v < 0)
@@ -9798,8 +9798,8 @@ int fn_80299E44(int obj, int state, f32 fv)
     if (lbl_803DE42C != 0)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
-        timer = inner->unk854 - timeDelta;
-        inner->unk854 = timer;
+        timer = inner->stateTimer - timeDelta;
+        inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
         {
             int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
@@ -9813,7 +9813,7 @@ int fn_80299E44(int obj, int state, f32 fv)
                 v = *(s16*)((char*)sub + 0x6);
             }
             *(s16*)((char*)sub + 0x4) = v;
-            inner->unk854 = lbl_803E7F58;
+            inner->stateTimer = lbl_803E7F58;
         }
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
         pfx.scale = lbl_803E7F9C;
@@ -12958,8 +12958,8 @@ void fn_802AF7F8(int obj, int state)
             ((PlayerState*)state)->unk80C = -1;
             buttonDisable(0, 0x200);
         }
-        ((PlayerState*)state)->unk854 = ((PlayerState*)state)->unk854 - timeDelta;
-        if (((PlayerState*)state)->unk854 <= lbl_803E7EA4)
+        ((PlayerState*)state)->stateTimer = ((PlayerState*)state)->stateTimer - timeDelta;
+        if (((PlayerState*)state)->stateTimer <= lbl_803E7EA4)
         {
             int r35c = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
             if (*(s16*)((char*)r35c + 4) < 0)
@@ -12975,7 +12975,7 @@ void fn_802AF7F8(int obj, int state)
                 v = *(s16*)((char*)r35c + 4);
             }
             *(s16*)((char*)r35c + 4) = v;
-            ((PlayerState*)state)->unk854 = lbl_803E7EDC;
+            ((PlayerState*)state)->stateTimer = lbl_803E7EDC;
         }
         break;
     case 0x5ce:
@@ -16230,7 +16230,7 @@ void fn_802AB38C(int a, int b, int c)
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802985AC;
         break;
     case 0x40:
-        ((PlayerState*)b)->unk854 = lbl_803E7EDC;
+        ((PlayerState*)b)->stateTimer = lbl_803E7EDC;
         {
             int sub = *(int*)((char*)((GameObject*)a)->extra + 0x35c);
             int v = *(s16*)((char*)sub + 0x4) - 0xa;

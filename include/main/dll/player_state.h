@@ -310,7 +310,7 @@ typedef struct PlayerState {
     f32 prevWorldPosY;
     f32 unk84C;
     f32 unk850;
-    f32 unk854;
+    f32 stateTimer; /* per-frame countdown (-= timeDelta), reset to a constant on expiry */
     int unk858;
     f32 turnDeadzoneScale;
     u8 pad860[0x86C - 0x860];
