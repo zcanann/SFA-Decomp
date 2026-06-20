@@ -1171,28 +1171,17 @@ void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visibl
     extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale); /* #57 */
     GroundBaddieState* state = ((GameObject*)obj)->extra;
 
-    if (visible == 0)
+    if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0)
     {
-        goto done;
+        return;
     }
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        goto done;
-    }
-    if (state->targetState != 0)
-    {
-        goto render;
-    }
-    goto done;
 
-render:
     if (state->unk3E8 != lbl_803E2D14)
     {
         fn_8003B5E0(0xc8, 0, 0, state->unk3E8);
     }
     objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
     iceBaddie_updateEffectAnchors(obj, (int)state);
-done:;
 }
 
 #pragma peephole on
