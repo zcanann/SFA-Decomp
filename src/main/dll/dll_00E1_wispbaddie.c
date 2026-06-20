@@ -406,10 +406,10 @@ void FUN_8014fef8(u32 param_1, int param_2, u32 param_3, int param_4)
 {
     if (param_4 == 0x10)
     {
-        *(u32*)(param_2 + 0x2e8) = *(u32*)(param_2 + 0x2e8) | 0x20;
+        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
         return;
     }
-    *(u32*)(param_2 + 0x2e8) = *(u32*)(param_2 + 0x2e8) | 8;
+    ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
     return;
 }
 
@@ -590,11 +590,11 @@ void fn_8014FEF8(int p1, int* p2, int p3, int code)
 {
     if (code == 0x10)
     {
-        *(u32*)((char*)p2 + 0x2e8) |= 0x20;
+        ((BaddieState*)p2)->reactionFlags |= 0x20;
     }
     else
     {
-        *(u32*)((char*)p2 + 0x2e8) |= 0x8;
+        ((BaddieState*)p2)->reactionFlags |= 0x8;
     }
 }
 
@@ -608,8 +608,8 @@ void fn_8014FF58(int unused, char* p)
 {
     f32 v1c;
     ((BaddieState*)p)->speedScale = lbl_803E2728;
-    *(u32*)(p + 0x2e4) = 1;
-    *(u32*)(p + 0x2e4) |= 0x80;
+    ((BaddieState*)p)->unk2E4 = 1;
+    ((BaddieState*)p)->unk2E4 |= 0x80;
     ((BaddieState*)p)->unk308 = lbl_803E272C;
     ((BaddieState*)p)->unk300 = lbl_803E2730;
     ((BaddieState*)p)->unk304 = lbl_803E2734;
