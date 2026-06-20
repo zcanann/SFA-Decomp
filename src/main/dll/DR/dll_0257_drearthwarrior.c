@@ -1306,13 +1306,11 @@ void DR_EarthWarrior_update(int obj)
     *(s8*)((char*)(char*)inner + 0x264) |= 0x10;
     {
         f32 saved = ((GameObject*)obj)->anim.velocityY;
-        u8 mode;
         ((GameObject*)obj)->anim.velocityY = lbl_803E8304;
         *(int*)&inner->baddie.eventFlags &= ~7;
-        mode = inner->sub.unk8A6;
-        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, mode, (int)((char*)inner + 0xb18),
+        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, inner->sub.unk8A6, (int)((char*)inner + 0xb18),
                             (int)((char*)inner + 0x4), inner->baddie.animSpeedA,
-                            (mode == 8) ? lbl_803E837C : lbl_803E8380);
+                            (inner->sub.unk8A6 == 8) ? lbl_803E837C : lbl_803E8380);
         ((GameObject*)obj)->anim.velocityY = saved;
     }
     if (inner->sub.flags8D8 & 8)
