@@ -86,7 +86,7 @@ typedef struct EarthWarriorSub
     f32 unk404;
     f32 unk408;
     u8 pad40C[4];
-    f32 unk410;
+    f32 footstepCooldown; /* 0x410: per-tick countdown gating footstep rumble/sfx */
     u8 pad414[0xc];
     f32 unk420;
     u8 pad424[4];
@@ -1185,10 +1185,10 @@ void DR_EarthWarrior_hitDetect(int obj)
         if (*(int*)inner & 0x800000)
         {
             if ((*(u8*)((char*)(char*)inner + 0x262) != 0 || (*(s8*)((char*)(char*)inner + 0x264) & 0xf0)) &&
-                inner->sub.unk410 <= lbl_803E8304 && inner->baddie.animSpeedA > lbl_803E836C)
+                inner->sub.footstepCooldown <= lbl_803E8304 && inner->baddie.animSpeedA > lbl_803E836C)
             {
                 doRumble((f32)(int)randomGetRange(2, 5));
-                inner->sub.unk410 = lbl_803E8370;
+                inner->sub.footstepCooldown = lbl_803E8370;
                 Sfx_PlayFromObject(obj, 0x404);
             }
             if (*(u8*)((char*)(char*)inner + 0x262) != 0 ||
@@ -1222,10 +1222,10 @@ void DR_EarthWarrior_hitDetect(int obj)
             }
             *(int*)inner &= ~0x800000;
         }
-        inner->sub.unk410 -= timeDelta;
-        if (inner->sub.unk410 < lbl_803E8304)
+        inner->sub.footstepCooldown -= timeDelta;
+        if (inner->sub.footstepCooldown < lbl_803E8304)
         {
-            inner->sub.unk410 = *(f32 *)&lbl_803E8304;
+            inner->sub.footstepCooldown = *(f32 *)&lbl_803E8304;
         }
         if ((void*)inner != NULL)
         {
