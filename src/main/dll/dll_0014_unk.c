@@ -591,7 +591,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         patch = &gObjfsaPatches[pidx];
         clz = __cntlzw(0xff - currentWalkGroupIndex);
         pgid = patch->groupId;
-        if (((clz >> 5) & pgid) == 0)
+        if ((((int)(clz >> 5)) & pgid) == 0)
         {
             lidx = pgid & 0xff;
         }
