@@ -1795,15 +1795,15 @@ typedef struct EnemyPlacement
     f32 posY;
     f32 posZ;
     u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
+    s16 gameBit;
+    s16 gameBit2;
     u8 pad1C[0x28 - 0x1C];
     s8 unk28;
     u8 pad29[0x2A - 0x29];
-    s8 unk2A;
+    s8 rotXByte;
     u8 pad2B[0x2C - 0x2B];
     s16 unk2C;
-    s8 unk2E;
+    s8 triggerSeqId;
     u8 pad2F[0x34 - 0x2F];
     u16 unk34;
     u8 pad36[0x38 - 0x36];
@@ -2139,7 +2139,7 @@ void enemy_update(int obj)
     flags = ((EnemyState*)state)->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0)
     {
-        if (((EnemyPlacement*)setup)->unk2E == -1)
+        if (((EnemyPlacement*)setup)->triggerSeqId == -1)
         {
             return;
         }
@@ -2149,16 +2149,16 @@ void enemy_update(int obj)
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
             ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
         }
-        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->unk2E, (void*)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement*)setup)->triggerSeqId, (void*)obj, -1);
         ((EnemyState*)state)->controlFlags |= 2;
         *(u32*)&((EnemyState*)state)->controlFlags = *(u32*)&((EnemyState*)state)->controlFlags & ~1LL;
         return;
     }
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if (((EnemyPlacement*)setup)->unk1A != -1)
+        if (((EnemyPlacement*)setup)->gameBit2 != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->unk1A) == 0)
+            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0)
             {
                 return;
             }
@@ -2171,9 +2171,9 @@ void enemy_update(int obj)
                 return;
             }
             player = Obj_GetPlayerObject();
-            if (((EnemyPlacement*)setup)->unk18 != -1)
+            if (((EnemyPlacement*)setup)->gameBit != -1)
             {
-                if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+                if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
                 {
                     return;
                 }
@@ -2196,9 +2196,9 @@ void enemy_update(int obj)
                 return;
             }
         }
-        else if (((EnemyPlacement*)setup)->unk18 != -1)
+        else if (((EnemyPlacement*)setup)->gameBit != -1)
         {
-            if (GameBit_Get(((EnemyPlacement*)setup)->unk18) != 0)
+            if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) != 0)
             {
                 return;
             }
@@ -2282,7 +2282,7 @@ void enemy_update(int obj)
             ((GameObject*)obj)->anim.localPosZ = ((EnemyPlacement*)s2)->posZ;
             ((GameObject*)obj)->anim.rotZ = 0;
             ((GameObject*)obj)->anim.rotY = 0;
-            ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->unk2A << 8;
+            ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)s2)->rotXByte << 8;
             fz = lbl_803E2574;
             ((GameObject*)obj)->anim.velocityX = fz;
             ((GameObject*)obj)->anim.velocityY = fz;
