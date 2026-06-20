@@ -519,13 +519,13 @@ FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
-    int iVar1;
+    int actionId;
 
     if (((*(char*)(*(int*)(param_9 + 0x4c) + 0x1d) != '\x02') &&
             (animUpdate->triggerCommand == 1)) &&
-        (iVar1 = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < iVar1))
+        (actionId = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < actionId))
     {
-        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
+        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, actionId, '\x01',
                      animUpdate, param_12, param_13, param_14, param_15, param_16);
         animUpdate->triggerCommand = 0;
     }
@@ -543,11 +543,11 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
              u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9,
              int param_10)
 {
-    float fVar1;
-    short* psVar2;
-    u32 uVar3;
-    int iVar4;
-    float* pfVar5;
+    float scale;
+    short* src;
+    u32 result;
+    int indexBase;
+    float* srcPos;
     u16 setupId;
     short setupSub1;
     short setupSub2;
@@ -556,9 +556,9 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     float local_18;
     float local_14;
 
-    psVar2 = (short*)FUN_80017a90();
+    src = (short*)FUN_80017a90();
     local_1c = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (psVar2 != 0x0))
+    if ((*(char*)(param_10 + 0x10) == '\0') && (src != 0x0))
     {
         *(float*)(param_9 + 0x24) = lbl_803E42B0;
         *(float*)(param_9 + 0x28) = local_1c;
@@ -566,23 +566,23 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         local_18 = local_1c;
         local_14 = local_1c;
         local_20 = lbl_803E42B8;
-        setupSub2 = psVar2[2];
-        setupSub1 = psVar2[1];
-        iVar4 = FUN_801365ac((int)psVar2);
-        setupId = *psVar2 + iVar4;
+        setupSub2 = src[2];
+        setupSub1 = src[1];
+        indexBase = FUN_801365ac((int)src);
+        setupId = *src + indexBase;
         FUN_80017748(&setupId, (float*)(param_9 + 0x24));
-        if ((psVar2[0x58] & 0x800U) == 0)
+        if ((src[0x58] & 0x800U) == 0)
         {
-            pfVar5 = (float*)(psVar2 + 6);
+            srcPos = (float*)(src + 6);
         }
         else
         {
-            pfVar5 = (float*)FUN_801365b8((int)psVar2);
+            srcPos = (float*)FUN_801365b8((int)src);
         }
-        fVar1 = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *pfVar5);
-        *(float*)(param_10 + 8) = -(fVar1 * *(float*)(param_9 + 0x28) - pfVar5[1]);
-        *(float*)(param_10 + 0xc) = -(fVar1 * *(float*)(param_9 + 0x2c) - pfVar5[2]);
+        scale = lbl_803E42BC;
+        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *srcPos);
+        *(float*)(param_10 + 8) = -(scale * *(float*)(param_9 + 0x28) - srcPos[1]);
+        *(float*)(param_10 + 0xc) = -(scale * *(float*)(param_9 + 0x2c) - srcPos[2]);
         if (*(char*)(param_10 + 0x11) == '\0')
         {
             ObjHits_ClearHitVolumes((int)param_9);
@@ -591,14 +591,14 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             *(char*)(param_10 + 0x11) = *(char*)(param_10 + 0x11) + -1;
         }
-        uVar3 = 1;
+        result = 1;
     }
     else
     {
         FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
-        uVar3 = 0;
+        result = 0;
     }
-    return uVar3;
+    return result;
 }
 
 #pragma scheduling off
