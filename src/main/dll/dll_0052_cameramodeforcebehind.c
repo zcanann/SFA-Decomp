@@ -135,7 +135,8 @@ void CameraModeForceBehind_update(u8* obj)
     sz = target->anim.worldPosZ;
     pos[2] = sinv * gCamForceBehindOrbitRadius + sz;
     camcontrol_traceFromTarget(pos, target, pos, &extra);
-    gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+    gCamForceBehindTraceDistance = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+    gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance;
 
     Player_GetAimAngles((int)target, &yaw, &pitch);
     yaw = (s16)((0x8000 - target->anim.rotX) + (yaw >> 1));
