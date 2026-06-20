@@ -2206,7 +2206,7 @@ void getVisibleObjects(s8* opacity)
     int* p;
     u8* o;
     int i;
-    int key;
+    u32 key;
     int depthInt;
     s8* cur;
     u8* sub;
