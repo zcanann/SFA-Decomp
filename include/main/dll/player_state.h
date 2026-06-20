@@ -212,9 +212,9 @@ typedef struct PlayerState {
     f32 unk648;
     f32 unk64C;
     u8 pad650[0x654 - 0x650];
-    f32 unk654;
-    f32 unk658;
-    f32 unk65C;
+    f32 surfaceNormalX; /* surface normal from the last collision sweep (SweepHit.n*); dotted with movement dir, drives slide angle (getAngle(X,Z)) and position offset */
+    f32 surfaceNormalY;
+    f32 surfaceNormalZ;
     f32 unk660;
     f32 unk664;
     f32 unk668;

@@ -4418,9 +4418,9 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                ((PlayerState*)p2)->unk654 = buf.nx;
-                ((PlayerState*)p2)->unk658 = buf.ny;
-                ((PlayerState*)p2)->unk65C = buf.nz;
+                ((PlayerState*)p2)->surfaceNormalX = buf.nx;
+                ((PlayerState*)p2)->surfaceNormalY = buf.ny;
+                ((PlayerState*)p2)->surfaceNormalZ = buf.nz;
                 ((PlayerState*)p2)->unk660 = buf.g38;
                 *(u8*)&((PlayerState*)p2)->unk681 = 0;
                 if ((u32)buf.hitObj != 0)
@@ -4447,9 +4447,9 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
             {
                 continue;
             }
-            ((PlayerState*)p2)->unk654 = buf.nx;
-            ((PlayerState*)p2)->unk658 = buf.ny;
-            ((PlayerState*)p2)->unk65C = buf.nz;
+            ((PlayerState*)p2)->surfaceNormalX = buf.nx;
+            ((PlayerState*)p2)->surfaceNormalY = buf.ny;
+            ((PlayerState*)p2)->surfaceNormalZ = buf.nz;
             ((PlayerState*)p2)->unk660 = buf.g38;
             *(u8*)&((PlayerState*)p2)->unk681 = 0;
             if ((u32)buf.hitObj != 0)
@@ -6292,7 +6292,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
         *(u8*)&((PlayerState*)inner)->stickDirection = 0;
         inner->unk86E = 0;
         inner->targetYaw =
-            getAngle(inner->unk654, inner->unk65C);
+            getAngle(inner->surfaceNormalX, inner->surfaceNormalZ);
         {
             s16 ang = inner->targetYaw;
             inner->yaw = ang;
@@ -6522,9 +6522,9 @@ int fn_8029DB70(int obj, int state, f32 fv)
             inner->unk664, inner->unk668,
             inner->unk66C, (void*)(obj + 0xc), &yOut, (void*)(obj + 0x14), sub);
         ((GameObject*)obj)->anim.localPosX =
-            lbl_803E7FB8 * inner->unk654 + ((GameObject*)obj)->anim.localPosX;
+            lbl_803E7FB8 * inner->surfaceNormalX + ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)obj)->anim.localPosZ =
-            lbl_803E7FB8 * inner->unk65C + ((GameObject*)obj)->anim.localPosZ;
+            lbl_803E7FB8 * inner->surfaceNormalZ + ((GameObject*)obj)->anim.localPosZ;
     }
     ((ByteFlags*)((char*)inner + 0x3f3))->b01 = ((ByteFlags*)((char*)inner + 0x3f3))->b08;
     return 0;
@@ -11444,14 +11444,14 @@ int fn_8029E3F4(int obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         s1 = 0;
-        a = inner->unk654;
+        a = inner->surfaceNormalX;
         if (a < k)
         {
             s1 = 1;
             a = -a;
         }
         s2 = 0;
-        b = inner->unk65C;
+        b = inner->surfaceNormalZ;
         if (b < lbl_803E7EA4)
         {
             s2 = 1;
