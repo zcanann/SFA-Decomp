@@ -121,14 +121,18 @@ void effectbox_update(int obj)
             }
             break;
         }
+        i = 0;
         negExtX = -extX;
         negExtZ = -extZ;
-        for (i = 0; i < count; i++)
+        for (; i < count; i++)
         {
             other = *list;
-            dx = ((GameObject*)other)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-            dy = ((GameObject*)other)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-            dz = ((GameObject*)other)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+            dx = ((GameObject*)other)->anim.localPosX;
+            dy = ((GameObject*)other)->anim.localPosY;
+            dz = ((GameObject*)other)->anim.localPosZ;
+            dx = dx - ((GameObject*)obj)->anim.localPosX;
+            dy = dy - ((GameObject*)obj)->anim.localPosY;
+            dz = dz - ((GameObject*)obj)->anim.localPosZ;
             proj = dx * cosY + dz * sinY;
             if ((proj > negExtX) && (proj < extX))
             {
