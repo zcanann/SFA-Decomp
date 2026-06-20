@@ -1311,8 +1311,9 @@ STATIC_ASSERT(offsetof(TrickyHud, trickyValue) == 0xBA4);
 
 void hudDrawFn_80121440(void)
 {
-    char* base = lbl_803A87F0;
-    int *player, *tricky;
+    TrickyHud* base = (TrickyHud*)lbl_803A87F0;
+    int *player;
+    void *tricky;
     int itemTex = 0;
     int hcArg = 0;
     int krazoa = 0;
@@ -1323,8 +1324,8 @@ void hudDrawFn_80121440(void)
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
-    if (((TrickyHud*)base)->magicCur >= lbl_803E1E3C || ((TrickyHud*)base)->scarabCur >= lbl_803E1E3C ||
-        ((TrickyHud*)base)->keyCur >= lbl_803E1E3C || cMenuFadeCounter != 0)
+    if (base->magicCur >= lbl_803E1E3C || base->scarabCur >= lbl_803E1E3C ||
+        base->keyCur >= lbl_803E1E3C || cMenuFadeCounter != 0)
         op = hudElementOpacity;
     else
         op = lbl_803E1E3C;
@@ -1342,20 +1343,20 @@ void hudDrawFn_80121440(void)
     if ((u8)alpha != 0)
     {
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-        if (!(((TrickyHud*)base)->magicCur > lbl_803E1F9C && ((TrickyHud*)base)->magicCur < lbl_803E1FA8 &&
-                ((int)((TrickyHud*)base)->magicCur & 8)) &&
-            !(((TrickyHud*)base)->scarabCur > lbl_803E1F9C && ((TrickyHud*)base)->scarabCur < lbl_803E1FA8 &&
-                ((int)((TrickyHud*)base)->scarabCur & 8)) &&
-            !(cell == 0 && fn_802972A8(player) != 0))
+        if (!(base->magicCur > lbl_803E1F9C && base->magicCur < lbl_803E1FA8 &&
+                ((int)base->magicCur & 8)) &&
+            !(base->scarabCur > lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 &&
+                ((int)base->scarabCur & 8)) &&
+            !(cell == 0 && (void*)fn_802972A8(player) != NULL))
         {
-            for (i = 0; (int)(u8)i < (((TrickyHud*)base)->magicCount >> 2); i++)
+            for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
             {
-                int b74 = ((TrickyHud*)base)->magicValue;
+                int b74 = base->magicValue;
                 int sel;
                 if ((int)(u8)i < (b74 >> 2)) sel = 0x16;
                 else if ((int)(u8)i > (b74 >> 2)) sel = 0x12;
                 else sel = (b74 & 3) + 0x12;
-                drawTexture(*(void**)(base + 0x1c0 + sel * 4),
+                drawTexture(*(void**)((char*)base + 0x1c0 + sel * 4),
                             (f32)(int)((u8)i * 0x21 + 0x1e), lbl_803E1FAC, alpha, 0x100);
             }
         }
@@ -1371,47 +1372,47 @@ void hudDrawFn_80121440(void)
     else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
     {
-        drawTexture(*(void**)(base + 0x1c0 + magicId * 4),
+        drawTexture(*(void**)((char*)base + 0x1c0 + magicId * 4),
                     (f32)(int)(s16)(krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
     if ((u8)krazoa != 0)
     {
-        drawTexture(((TrickyHud*)base)->icon348,
+        drawTexture(base->icon348,
                     (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
     if ((u8)alpha != 0 && tricky != NULL)
     {
         itemTex = 0x16;
-        if (!(((TrickyHud*)base)->trickyCur > lbl_803E1F9C && ((TrickyHud*)base)->trickyCur < lbl_803E1FA8 &&
-            ((int)((TrickyHud*)base)->trickyCur & 8)))
+        if (!(base->trickyCur > lbl_803E1F9C && base->trickyCur < lbl_803E1FA8 &&
+            ((int)base->trickyCur & 8)))
         {
-            drawTexture(((TrickyHud*)base)->icon314, lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
+            drawTexture(base->icon314, lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
         }
-        for (i = 0; (int)(u8)i < 0x14; i += 4)
+        for (i = 0; (u8)i < 0x14u; i += 4)
         {
-            int b98 = ((TrickyHud*)base)->scarabCount;
+            int b98 = base->scarabCount;
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0)
             {
                 int yo = ((u8)i * 0xf) / 4;
-                drawScaledTexture(((TrickyHud*)base)->icon31c, (f32)(int)(yo + 0x40), lbl_803E1FB4,
+                drawScaledTexture(base->icon31c, (f32)(int)(yo + 0x40), lbl_803E1FB4,
                                   alpha, 0x100, 6, 0x12, 0);
-                drawPartialTexture(((TrickyHud*)base)->icon318, (f32)(int)(yo + 0x46), lbl_803E1FB4,
+                drawPartialTexture(base->icon318, (f32)(int)(yo + 0x46), lbl_803E1FB4,
                                    alpha, 0x100, 7, 0x12, 6, 0);
             }
             else
             {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(*(void**)(base + 0x1c0 + sel * 4), (f32)(int)(yo + 0x40),
+                drawTexture(*(void**)((char*)base + 0x1c0 + sel * 4), (f32)(int)(yo + 0x40),
                             lbl_803E1FB4, alpha, 0x100);
             }
         }
     }
     {
         int camMode = (*gCameraInterface)->getMode();
-        if (camMode >= 0x47 && camMode < 0x49)
+        if (camMode < 0x49 && camMode >= 0x47)
         {
-            drawTexture(((TrickyHud*)base)->icon354, lbl_803E1F9C,
+            drawTexture(base->icon354, lbl_803E1F9C,
                         (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
         }
     }
@@ -1424,7 +1425,7 @@ void hudDrawFn_80121440(void)
         near = (int*)ObjGroup_FindNearestObject(9, Obj_GetPlayerObject(), &radius);
         if (near != NULL && pauseMenuState == 0)
         {
-            (*(void (*)(int*, int*, int*))(*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x54))(&c2, &c1, &c0);
+            (*(void (*)(int*, int*, int*))*(int*)((char*)*(int*)(*(int*)&((GameObject*)near)->anim.dll) + 0x54))(&c2, &c1, &c0);
             hcArg = 0x118;
             hudDrawCounter(0x1e, (s16)(c1 - c2), (s16)c0, 0xff, 0, &hcArg, 1);
         }
@@ -1436,17 +1437,17 @@ void hudDrawFn_80121440(void)
         else if (GameBit_Get(0x91a) != 0) style = 0x64;
         else if (GameBit_Get(0x919) != 0) style = 0x32;
         else style = 0xa;
-        hudDrawCounter(0x1e, (s16) ((TrickyHud*)base)->moneyValue, (s16)style, (int)((TrickyHud*)base)->spiritAnim,
-                       (int)((TrickyHud*)base)->spiritCur, &hcArg, 0);
-        hudDrawCounter(0x19, (s16) ((TrickyHud*)base)->spiritValue, 7, (int)((TrickyHud*)base)->healthAnim, (int)((TrickyHud*)base)->moneyCur,
+        hudDrawCounter(0x1e, (s16) base->moneyValue, (s16)style, (int)base->spiritAnim,
+                       (int)base->spiritCur, &hcArg, 0);
+        hudDrawCounter(0x19, (s16) base->spiritValue, 7, (int)base->healthAnim, (int)base->moneyCur,
                        &hcArg, 0);
-        hudDrawCounter(0x1a, (s16) ((TrickyHud*)base)->healthValue, 0xf, (int)((TrickyHud*)base)->magicAnim, (int)((TrickyHud*)base)->healthCur,
+        hudDrawCounter(0x1a, (s16) base->healthValue, 0xf, (int)base->magicAnim, (int)base->healthCur,
                        &hcArg, 0);
-        hudDrawCounter(0x18, (s16) ((TrickyHud*)base)->keyValue, 0x1f, (int)((TrickyHud*)base)->keyAnim, (int)((TrickyHud*)base)->magicFlash,
+        hudDrawCounter(0x18, (s16) base->keyValue, 0x1f, (int)base->keyAnim, (int)base->magicFlash,
                        &hcArg, 0);
-        hudDrawCounter(0x1b, (s16) ((TrickyHud*)base)->scarabValue, 7, (int)((TrickyHud*)base)->scarabAnim, (int)((TrickyHud*)base)->scarabFlash,
+        hudDrawCounter(0x1b, (s16) base->scarabValue, 7, (int)base->scarabAnim, (int)base->scarabFlash,
                        &hcArg, 0);
-        hudDrawCounter(0x1c, (s16) ((TrickyHud*)base)->trickyValue, 0xff, (int)((TrickyHud*)base)->trickyAnim, (int)((TrickyHud*)base)->trickyFlash,
+        hudDrawCounter(0x1c, (s16) base->trickyValue, 0xff, (int)base->trickyAnim, (int)base->trickyFlash,
                        &hcArg, 0);
     }
 }
