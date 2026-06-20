@@ -223,12 +223,13 @@ void wallanimator_update(int obj)
     }
 }
 
+#pragma optimization_level 1
 void wallanimator_init(s16* obj, s16* placement)
 {
     WallanimatorState* state;
 
     state = ((GameObject*)obj)->extra;
-    *obj = (s16)((WallanimatorPlacement*)placement)->unk24;
+    *obj = ((WallanimatorPlacement*)placement)->unk24;
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
@@ -237,3 +238,4 @@ void wallanimator_init(s16* obj, s16* placement)
         state->timer = WALLANIMATOR_DONE_TIMER;
     }
 }
+#pragma optimization_level reset
