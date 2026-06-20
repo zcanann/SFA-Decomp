@@ -317,7 +317,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -721,23 +720,17 @@ void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
 void gcbaddieshield_update(int* obj);
 
-void fireball_free(int* obj);
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void flamethrowerspe_init(int* obj, int* params);
 
 void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
-void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
@@ -874,9 +867,7 @@ void baddieinterestp_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-void fireball_init(int* obj);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj);
 
