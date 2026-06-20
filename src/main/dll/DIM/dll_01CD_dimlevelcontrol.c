@@ -40,7 +40,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 extern f32 lbl_803E4A20;
 extern void timeOfDayFn_80055000(void);
 extern u8 framesThisStep;
-extern f32 timeDelta;
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
