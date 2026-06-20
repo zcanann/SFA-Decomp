@@ -357,9 +357,9 @@ int hagabon_getObjectTypeId(void) { return 0xb; }
 void hagabon_update(int obj)
 {
     GameObject* player;
-    int data;
-    int oldCurve;
     HagabonState* state;
+    int oldCurve;
+    int data;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -368,9 +368,6 @@ void hagabon_update(int obj)
     int hitSphereIndex;
     u32 hitVolume;
     f32 lightPos[3];
-    f32 hitX;
-    f32 hitZ;
-    int fade;
 
     state = *(HagabonState**)&((GameObject*)obj)->extra;
     oldCurve = state->curve;
@@ -409,8 +406,7 @@ void hagabon_update(int obj)
     {
         if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
         {
-            fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
-            ((GameObject*)obj)->anim.alpha = fade;
+            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
             if (((GameObject*)obj)->anim.alpha <= 6)
             {
                 ((GameObject*)obj)->unkF4 = 1;
@@ -422,8 +418,7 @@ void hagabon_update(int obj)
         }
         if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
         {
-            fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
-            ((GameObject*)obj)->anim.alpha = fade;
+            ((GameObject*)obj)->anim.alpha = (s32)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
             if (((GameObject*)obj)->anim.alpha >= 0xf9)
             {
                 ((GameObject*)obj)->anim.alpha = 0xff;
@@ -434,7 +429,7 @@ void hagabon_update(int obj)
     else
     {
         if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
-                                               &hitX, &lightPos[1], &hitZ) != 0)
+                                               &lightPos[0], &lightPos[1], &lightPos[2]) != 0)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
             state->flags |= HAGABON_FLAG_FADE_OUT;
@@ -442,10 +437,8 @@ void hagabon_update(int obj)
             Sfx_PlayFromObject(obj, SFXdoor_creak);
             Sfx_PlayFromObject(obj, SFXfox_treadwater222);
             Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
-            hitX += playerMapOffsetX;
-            hitZ += playerMapOffsetZ;
-            lightPos[0] = hitX;
-            lightPos[2] = hitZ;
+            lightPos[0] += playerMapOffsetX;
+            lightPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
             (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->mapEventId,
                                                    (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
@@ -458,8 +451,8 @@ void hagabon_update(int obj)
         ObjHits_EnableObject(obj);
     }
 
-    player = Obj_GetPlayerObject();
-    state->player = player;
+    state->player = Obj_GetPlayerObject();
+    player = state->player;
     if (player != 0)
     {
         dx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
