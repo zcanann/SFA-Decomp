@@ -1778,7 +1778,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[7] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotX = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotX = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -1794,7 +1794,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[8] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotY = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotY = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -1810,7 +1810,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                         ((ObjSeqState*)seq)->trackRunLength[6] & 0xfff, frame);
                 }
             }
-        ((GameObject*)obj)->anim.rotZ = (int)(gObjSeqDegreesToAngle * val);
+        ((GameObject*)obj)->anim.rotZ = gObjSeqDegreesToAngle * val;
 
         if (((ObjSeqState*)seq)->animEntries == NULL)
             {
@@ -2042,7 +2042,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[2] = (int)(gObjSeqDegreesToAngle * val);
+                vec[2] = gObjSeqDegreesToAngle * val;
 
                 if ((((ObjSeqState*)seq)->flags & 0x400) != 0)
                 {
@@ -2095,7 +2095,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                vec[0] = (int)(gObjSeqDegreesToAngle * val);
+                vec[0] = gObjSeqDegreesToAngle * val;
             }
         }
 
