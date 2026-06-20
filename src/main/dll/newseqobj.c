@@ -259,7 +259,7 @@ void fn_80150EDC(void* p1, void* p2)
     }
 
     if (((BaddieState*)p2)->trackedObj != NULL &&
-        *(s16*)((u8*)((BaddieState*)p2)->trackedObj + 0x44) == 1)
+        ((GameObject*)((BaddieState*)p2)->trackedObj)->anim.classId == 1)
     {
         fn_8001FEA8();
     }
