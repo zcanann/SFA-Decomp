@@ -1941,7 +1941,7 @@ void ObjHits_DetectObjectPair(int objA, int objB)
     if (((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
         ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0))
     {
-        if (dy > gObjHitsScalarZero)
+        if (dy > *(f32*)&gObjHitsScalarZero)
         {
             if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)
             {
