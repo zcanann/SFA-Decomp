@@ -1892,7 +1892,8 @@ void initFn_8006d020(void)
 
 extern int textureLoadAsset(int);
 extern void fn_80069EB8();
-extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
+extern f32 lbl_803DED10, lbl_803DED34;
+extern const f32 Dev_803DED1C;
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
 {
@@ -2321,7 +2322,7 @@ extern u8 lbl_803DCF80;
 extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
-extern f32 Dev_803DED1C;
+extern const f32 Dev_803DED1C;
 extern u16 lbl_803DCFA0;
 #pragma peephole off
 void maybeHudFn_8006c91c(void)
