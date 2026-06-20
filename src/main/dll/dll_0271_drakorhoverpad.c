@@ -352,16 +352,20 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
     {
         result = drakorhoverpad_pickUnmaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, arg);
     }
-    if (result == -1)
+    if (result != -1)
+    {
+        ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
+        if (((GameObject*)p)->anim.targetObj != NULL)
+        {
+            goto have_target;
+        }
+    }
+    else
     {
         ((GameObject*)p)->anim.targetObj = NULL;
-        return 1;
     }
-    ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
-    if (((GameObject*)p)->anim.targetObj == NULL)
-    {
-        return 1;
-    }
+    return 1;
+have_target:
     if (*(int*)&((GameObject*)p)->anim.previousLocalPosX != 0)
     {
         *(f32*)&((GameObject*)p)->extra = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
@@ -396,31 +400,31 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
     else
     {
         *(f32*)&((GameObject*)p)->extra = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
-        *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
+        *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 8);
         *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
             currentMove + 0x2e) * mathSinf(
             gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            currentMove + 0x2e) * mathSinf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
+            targetObj + 0x2e) * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2c) << 8) / gDrakorHoverpadAngleScale));
         *(f32*)(p + 0xd8) = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
-        *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
+        *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0xc);
         *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
             mathSinf(
                 gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
                 gDrakorHoverpadAngleScale));
-        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
+        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2e) *
             mathSinf(
-                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
+                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2d) << 8) /
                 gDrakorHoverpadAngleScale));
         *(f32*)&((GameObject*)p)->unkF8 = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
-        ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
+        ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x10);
         ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
             0x2e) * mathCosf(
             gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
+        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.targetObj +
             0x2e) * mathCosf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
+            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2c) << 8) / gDrakorHoverpadAngleScale));
     }
     if (*(int*)&((GameObject*)p)->anim.previousWorldPosY != 0)
     {
