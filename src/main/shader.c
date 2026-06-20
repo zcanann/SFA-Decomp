@@ -2457,7 +2457,7 @@ void mapLoadUnloadObjects(int flag)
             {
                 char* obj2 = (char*)objs2[i];
                 u32 mid2 = *(u8*)(obj2 + 0x34);
-                char** slot = (char**)(base + mid2 * 4 + 0x83A8);
+                char** slot = &((char**)(base + 0x83A8))[mid2];
                 char* page2 = *slot;
                 if (page2 != 0)
                 {
