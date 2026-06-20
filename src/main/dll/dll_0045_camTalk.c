@@ -243,7 +243,8 @@ void firstPersonExit(CameraObject* camera)
 {
     register CameraObject* self = camera;
     GameObject* target;
-    float fVar1;
+    float tangent;
+    float dx;
     float dz;
     int targetYaw;
     float targetPos[3];
@@ -251,22 +252,22 @@ void firstPersonExit(CameraObject* camera)
 
     target = (GameObject*)self->anim.targetObj;
     lbl_803DD548->posXCurve.start = self->anim.worldPosX;
-    fVar1 = lbl_803E17C4;
+    tangent = lbl_803E17C4;
     lbl_803DD548->posXCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->posXCurve.endTangent = fVar1;
+    lbl_803DD548->posXCurve.endTangent = tangent;
     lbl_803DD548->posYCurve.start = self->anim.worldPosY;
-    lbl_803DD548->posYCurve.startTangent = fVar1;
-    lbl_803DD548->posYCurve.endTangent = fVar1;
+    lbl_803DD548->posYCurve.startTangent = tangent;
+    lbl_803DD548->posYCurve.endTangent = tangent;
     lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
-    lbl_803DD548->posZCurve.startTangent = fVar1;
-    lbl_803DD548->posZCurve.endTangent = fVar1;
+    lbl_803DD548->posZCurve.startTangent = tangent;
+    lbl_803DD548->posZCurve.endTangent = tangent;
     camcontrol_getTargetPosition(self, &target->anim, targetPos, (s16*)auStack_28);
     lbl_803DD548->posXCurve.end = targetPos[0];
     lbl_803DD548->posYCurve.end = targetPos[1];
     lbl_803DD548->posZCurve.end = targetPos[2];
-    fVar1 = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
+    dx = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
     dz = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
-    lbl_803DD548->exitDistance = sqrtf(fVar1 * fVar1 + dz * dz);
+    lbl_803DD548->exitDistance = sqrtf(dx * dx + dz * dz);
     lbl_803DD548->viewCurve.px = &lbl_803DD548->yawCurve.start;
     lbl_803DD548->viewCurve.py = &lbl_803DD548->pitchCurve.start;
     lbl_803DD548->viewCurve.pz = NULL;
@@ -278,9 +279,9 @@ void firstPersonExit(CameraObject* camera)
     targetYaw = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
                      (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
     lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - targetYaw);
-    fVar1 = lbl_803E17C4;
+    tangent = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->yawCurve.endTangent = fVar1;
+    lbl_803DD548->yawCurve.endTangent = tangent;
     if (((lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end) > lbl_803E17C8) ||
         ((lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end) < lbl_803E17CC))
     {
@@ -297,10 +298,10 @@ void firstPersonExit(CameraObject* camera)
         }
     }
     lbl_803DD548->pitchCurve.start = (float)(int)self->anim.rotY;
-    fVar1 = lbl_803E17C4;
+    tangent = lbl_803E17C4;
     lbl_803DD548->pitchCurve.end = lbl_803E17C4;
-    lbl_803DD548->pitchCurve.startTangent = fVar1;
-    lbl_803DD548->pitchCurve.endTangent = fVar1;
+    lbl_803DD548->pitchCurve.startTangent = tangent;
+    lbl_803DD548->pitchCurve.endTangent = tangent;
     if (((lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end) > lbl_803E17C8) ||
         ((lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end) < lbl_803E17CC))
     {
