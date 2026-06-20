@@ -3339,9 +3339,11 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
                                     zd = node->z - cand->z;
+                                    newDist = zd * zd;
                                     xd = node->x - cand->x;
-                                    yd = node->y - cand->y;
-                                    newDist = zd * zd + ((curDist + xd * xd) + yd * yd);
+                                    yd = curDist + xd * xd;
+                                    xd = node->y - cand->y;
+                                    newDist = newDist + (yd + xd * xd);
                                     pos = 0;
                                     for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
                                     {
