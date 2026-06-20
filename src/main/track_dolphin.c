@@ -3367,7 +3367,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     e[0] = rayOrig[0] - T[0];
     e[1] = rayOrig[1] - T[1];
     e[2] = rayOrig[2] - T[2];
-    f29 = e[1] * nrm[1] + e[0] * nrm[0] + e[2] * nrm[2];
+    f29 = nrm[1] * e[1] + nrm[0] * e[0] + nrm[2] * e[2];
     f29 = f29 * f29;
     if (f29 <= T[10])
     {
