@@ -78,6 +78,7 @@ void synthSetStudioChannelScale(int value, u8 bank, u32 key);
 #pragma fp_contract off
 void fn_8026EC44(u32 dt)
 {
+    extern float floorf(float x); /* #57 */
     SynthSong* song;
     SynthSong* next;
     SynthSong* cs;
