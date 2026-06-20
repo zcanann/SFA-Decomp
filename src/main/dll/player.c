@@ -6872,7 +6872,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         {
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
             ((ByteFlags*)((char*)inner + 0x3f3))->b40 = 1;
-            ((PlayerState*)inner)->unk40D = 0;
+            ((PlayerState*)inner)->staffHoldFrames = 0;
             return 1;
         }
         if (((PlayerState*)inner)->unk3F7 >= 2)
@@ -6898,7 +6898,7 @@ int fn_802AD2F4(int obj, int inner, int state)
                 else
                 {
                     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-                    ((PlayerState*)inner)->unk40D = 0;
+                    ((PlayerState*)inner)->staffHoldFrames = 0;
                     playerDie(obj);
                 }
             }
@@ -6918,7 +6918,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         {
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
             ((ByteFlags*)((char*)inner + 0x3f3))->b40 = 1;
-            ((PlayerState*)inner)->unk40D = 0;
+            ((PlayerState*)inner)->staffHoldFrames = 0;
             return 1;
         }
         (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2,
@@ -7004,7 +7004,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(0, sfx);
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-            ((PlayerState*)inner)->unk40D = 0;
+            ((PlayerState*)inner)->staffHoldFrames = 0;
             ((ByteFlags*)((char*)inner + 0x3f1))->b08 = 1;
             ((ByteFlags*)((char*)inner + 0x3f2))->b10 = 1;
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 1;
@@ -7065,7 +7065,7 @@ int fn_802AD2F4(int obj, int inner, int state)
     {
         fn_802AED2C(obj, inner, state);
         ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-        ((PlayerState*)inner)->unk40D = 0;
+        ((PlayerState*)inner)->staffHoldFrames = 0;
     }
     if (((PlayerState*)inner)->unk3F7 == 0 &&
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 == 0)
@@ -9650,7 +9650,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-    inner->unk40D = 0;
+    inner->staffHoldFrames = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b20 = 0;
@@ -11665,7 +11665,7 @@ void fn_802AE83C(int obj, int inner)
     ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-    ((PlayerState*)inner)->unk40D = 0;
+    ((PlayerState*)inner)->staffHoldFrames = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b20 = 1;
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     z = lbl_803E7EA4;
@@ -14455,15 +14455,15 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             if (((ByteFlags*)((char*)inner + 0x3f1))->b01 ||
                 *(f32*)((char*)state + 0x1b0) < lbl_803E7F58)
             {
-                ((PlayerState*)inner)->unk40D = 0;
+                ((PlayerState*)inner)->staffHoldFrames = 0;
             }
             else
             {
-                ((PlayerState*)inner)->unk40D += 1;
+                ((PlayerState*)inner)->staffHoldFrames += 1;
             }
-            ((PlayerState*)inner)->unk40D =
-                (((PlayerState*)inner)->unk40D > 10) ? 10 : ((PlayerState*)inner)->unk40D;
-            if (((PlayerState*)inner)->unk40D > 2)
+            ((PlayerState*)inner)->staffHoldFrames =
+                (((PlayerState*)inner)->staffHoldFrames > 10) ? 10 : ((PlayerState*)inner)->staffHoldFrames;
+            if (((PlayerState*)inner)->staffHoldFrames > 2)
             {
                 ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
                 ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
@@ -14597,7 +14597,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
                     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
                     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-                    ((PlayerState*)inner)->unk40D = 0;
+                    ((PlayerState*)inner)->staffHoldFrames = 0;
                     ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 1;
                     ((PlayerState*)inner)->isHoldingObject = 0;
                     if (*(void**)((char*)inner + 0x7f8) != NULL)
@@ -15900,7 +15900,7 @@ void fn_802AED2C(int obj, int state, int p3)
     ObjHits_SyncObjectPositionIfDirty(obj);
     ((ByteFlags*)((char*)state + 0x3f0))->b08 = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b04 = 0;
-    ((PlayerState*)state)->unk40D = 0;
+    ((PlayerState*)state)->staffHoldFrames = 0;
     ((ByteFlags*)((char*)state + 0x3f0))->b40 = 0;
     ((PlayerState*)state)->yawRateSigned = 0;
     ((PlayerState*)state)->targetYawRateSigned = 0;
@@ -16308,7 +16308,7 @@ void fn_802A514C(int obj, int state)
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-            inner->unk40D = 0;
+            inner->staffHoldFrames = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b20 = 0;
             if (((ByteFlags*)((char*)inner + 0x3f1))->b20)
             {
@@ -18008,7 +18008,7 @@ void fn_802AE9C8(int obj, int inner, int state)
 
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 1;
     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
-    ((PlayerState*)inner)->unk40D = 0;
+    ((PlayerState*)inner)->staffHoldFrames = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
     staffFn_80170380(gPlayerStaffObject, 2);

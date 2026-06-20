@@ -53,7 +53,7 @@ typedef struct PlayerState {
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
     u8 unk40C;
-    u8 unk40D;
+    u8 staffHoldFrames; /* frames the staff-hold/grab condition has persisted; ++ while held, reset to 0 on state changes, clamped to 10; >2 forces drop of carried object + staff action */
     u8 pad40E[0x410 - 0x40E];
     f32 unk410;
     f32 unk414;
