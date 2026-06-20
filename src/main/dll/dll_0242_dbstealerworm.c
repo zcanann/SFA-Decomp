@@ -792,11 +792,11 @@ void fn_80202EF0(int obj, int p2)
         {
             t = ((BaddieState*)p2)->targetDistance / lbl_803E62B4;
             dur = lbl_803E62B8 * t;
-            ((GameObject*)newObj)->anim.velocityX = (*(f32*)(*(int*)&((BaddieState*)p2)->targetObj + 0xc) - ((GameObject
+            ((GameObject*)newObj)->anim.velocityX = (((GameObject*)((BaddieState*)p2)->targetObj)->anim.localPosX - ((GameObject
                 *)obj)->anim.localPosX) / dur;
             ((GameObject*)newObj)->anim.velocityY = ((lbl_803E6380 * t + *(f32*)(*(int*)&((BaddieState*)p2)->targetObj +
                 0x10)) - ((GameObject*)obj)->anim.localPosY) / dur;
-            ((GameObject*)newObj)->anim.velocityZ = (*(f32*)(*(int*)&((BaddieState*)p2)->targetObj + 0x14) - ((
+            ((GameObject*)newObj)->anim.velocityZ = (((GameObject*)((BaddieState*)p2)->targetObj)->anim.localPosZ - ((
                 GameObject*)obj)->anim.localPosZ) / dur;
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
@@ -1029,7 +1029,7 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
     }
     bs->unk34D = 0x1f;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E62EC
-        && *(f32*)(*(int*)&bs->targetObj + 0x10) - lbl_803E62F8 <= ((GameObject*)obj)->anim.localPosY)
+        && ((GameObject*)bs->targetObj)->anim.localPosY - lbl_803E62F8 <= ((GameObject*)obj)->anim.localPosY)
     {
         obj = sub->msgStack;
         stk.msg9[0] = 9;
@@ -1057,9 +1057,9 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
         stk.pos[1] = ((GameObject*)obj)->anim.localPosY;
         stk.pos[2] = ((GameObject*)obj)->anim.localPosZ;
         stk.pos[1] = stk.pos[1] + lbl_803E62FC;
-        stk.pos[0] = *(f32*)(*(int*)&bs->targetObj + 0xc) - stk.pos[0];
-        stk.pos[1] = *(f32*)(*(int*)&bs->targetObj + 0x10) - stk.pos[1];
-        stk.pos[2] = *(f32*)(*(int*)&bs->targetObj + 0x14) - stk.pos[2];
+        stk.pos[0] = ((GameObject*)bs->targetObj)->anim.localPosX - stk.pos[0];
+        stk.pos[1] = ((GameObject*)bs->targetObj)->anim.localPosY - stk.pos[1];
+        stk.pos[2] = ((GameObject*)bs->targetObj)->anim.localPosZ - stk.pos[2];
         if (sqrtf(stk.pos[2] * stk.pos[2] + (stk.pos[0] * stk.pos[0] + stk.pos[1] * stk.pos[1])) < lbl_803E62B8)
         {
             tmp = *(int*)&bs->targetObj;
