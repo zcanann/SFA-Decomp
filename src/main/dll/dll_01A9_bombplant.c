@@ -120,7 +120,6 @@ void fn_801D29E4(int* obj, int* p2)
         MushSpawnBuild bd;
         f32 mtx[4][4];
         f32 tz, ty, tx;
-        f32 sx;
 
         spore = Obj_AllocObjectSetup(0x24, 0x198);
         bd.pos[0] = ((GameObject*)obj)->anim.rotX;
@@ -132,11 +131,10 @@ void fn_801D29E4(int* obj, int* p2)
         bd.w = lbl_803E5370;
         setMatrixFromObjectPos(mtx, &bd);
         Matrix_TransformPoint(mtx, 0.0f, lbl_803E5370, 0.0f, &tx, &ty, &tz);
-        sx = gBombPlantSporeOffsetScale * tx;
-        bd.v[0] = sx;
+        bd.v[0] = gBombPlantSporeOffsetScale * tx;
         bd.v[1] = gBombPlantSporeOffsetScale * ty;
         bd.v[2] = gBombPlantSporeOffsetScale * tz;
-        *(f32*)((char*)spore + 0x8) = ((GameObject*)obj)->anim.localPosX + sx;
+        *(f32*)((char*)spore + 0x8) = ((GameObject*)obj)->anim.localPosX + bd.v[0];
         *(f32*)((char*)spore + 0xc) = ((GameObject*)obj)->anim.localPosY + bd.v[1];
         *(f32*)&((ObjDef*)spore)->jointData = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
         *(u8*)((char*)spore + 0x5) = 1;
