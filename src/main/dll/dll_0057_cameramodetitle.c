@@ -206,7 +206,7 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
 
-        if (titleScreenCamProgress < lbl_803E1BF0)
+        if (titleScreenCamProgress < *(f32*)&lbl_803E1BF0)
         {
             v = lbl_803E1BF0 *
                 ((lbl_803E1BF4 * titleScreenCamProgress) * (lbl_803E1BF4 * titleScreenCamProgress));
