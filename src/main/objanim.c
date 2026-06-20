@@ -786,18 +786,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             state->eventCountdown - ((f32)state->eventStep * deltaTime)
             )
             ;
-            if (countdown < 0)
-            {
-                value = gObjAnimProgressZero;
-            }
-            else if ((f32)countdown > gObjAnimEventStepScale)
-            {
-                value = gObjAnimEventStepScale;
-            }
-            else
-            {
-                value = countdown;
-            }
+            value = (countdown < 0)
+                        ? gObjAnimProgressZero
+                        : (((f32)countdown > gObjAnimEventStepScale)
+                               ? gObjAnimEventStepScale
+                               : (f32)countdown);
             state->eventCountdown = (u16)(int)
             value;
         }
