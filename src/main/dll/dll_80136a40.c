@@ -1021,7 +1021,7 @@ int fn_80136E00(int p1, u8* p)
     int w;
     int x2;
     u16 y;
-    u16 y0;
+    int y0;
     int y1;
     u16 x0;
     u32 ca;
@@ -1101,12 +1101,12 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     cd = (u32)((f32)(u32)x2 * sc);
@@ -1145,12 +1145,12 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     cd = (u32)((f32)(u32)x2 * sc);
@@ -1198,12 +1198,12 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * sc);
+                    ca = (u32)((f32)(u32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     cd = (u32)((f32)(u32)x2 * sc);
