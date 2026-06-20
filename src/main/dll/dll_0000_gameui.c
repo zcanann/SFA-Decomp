@@ -2811,7 +2811,7 @@ void pauseMenuFn_80129ee0(void)
         pauseMenuFrameCounter = c;
     }
     {
-        u8 state = pauseMenuState;
+        s8 state = pauseMenuState;
         if (state == 1 || state >= 3)
         {
             int t = lbl_803DD78C + framesThisStep * 0x32;
