@@ -1715,9 +1715,10 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 {
     f32* p;
     int i;
-    f32 acc5 = lbl_803DED28;
-    f32 acc6 = lbl_803DED28;
+    f32 acc5;
+    f32 acc6;
 
+    acc5 = acc6 = lbl_803DED28;
     p = arr;
     for (i = 0; i < n; i++, p += 5)
     {
