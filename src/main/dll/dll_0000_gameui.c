@@ -153,7 +153,7 @@ extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 extern TaskHintEntry gTaskHintTable[5];
 extern u8 pauseMenuState;
-extern u8 pauseMenuFrameCounter;
+extern s8 pauseMenuFrameCounter;
 extern void padGetAnalogInput(int port, u8* x, u8* y);
 extern s16 lbl_803DD75C;
 extern f32 lbl_803DD7BC;
