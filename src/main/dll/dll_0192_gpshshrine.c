@@ -226,11 +226,11 @@ typedef struct GpshShrineState
 {
     u8 pad0[0x4 - 0x0];
     f32 timer;
-    f32 unk8;
+    f32 sfxTimer;
     u8 padC[0x12 - 0xC];
-    u8 unk12;
+    u8 solvedCount;
     u8 pad13[0x14 - 0x13];
-    u8 unk14;
+    u8 puzzleState;
     u8 pad15[0x18 - 0x15];
 } GpshShrineState;
 
@@ -325,21 +325,21 @@ void gpsh_shrine_update(int obj)
         }
         else
         {
-            switch (((GpshShrineState*)data)->unk14)
+            switch (((GpshShrineState*)data)->puzzleState)
             {
             case 0:
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                t = ((GpshShrineState*)data)->unk8 - timeDelta;
-                ((GpshShrineState*)data)->unk8 = t;
+                t = ((GpshShrineState*)data)->sfxTimer - timeDelta;
+                ((GpshShrineState*)data)->sfxTimer = t;
                 if (t <= k)
                 {
                     Sfx_PlayFromObject(obj, 0x343);
-                    ((GpshShrineState*)data)->unk8 = (f32)(int)
+                    ((GpshShrineState*)data)->sfxTimer = (f32)(int)
                     randomGetRange(500, 1000);
                 }
                 if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
                 {
-                    ((GpshShrineState*)data)->unk14 = 5;
+                    ((GpshShrineState*)data)->puzzleState = 5;
                     GameBit_Set(0x129, 0);
                     GameBit_Set(0x5af, 0);
                     GameBit_Set(0xdd2, 1);
@@ -350,47 +350,47 @@ void gpsh_shrine_update(int obj)
             case 5:
                 ((GpshShrineState*)data)->timer = lbl_803E5040;
                 (*gScreenTransitionInterface)->step(0x1e, 1);
-                ((GpshShrineState*)data)->unk14 = 1;
+                ((GpshShrineState*)data)->puzzleState = 1;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 break;
             case 1:
                 if (((GpshShrineFlags*)((char*)data + 0x15))->b80 == 1)
                 {
                     GameBit_Set(0x148, 1);
-                    ((GpshShrineState*)data)->unk14 = 2;
+                    ((GpshShrineState*)data)->puzzleState = 2;
                     gameTimerInit(0x1d, 0x4e);
                     timerSetToCountUp();
                 }
                 break;
             case 2:
-                ((GpshShrineState*)data)->unk12 = 0;
+                ((GpshShrineState*)data)->solvedCount = 0;
                 if (GameBit_Get(0x149))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
                 if (GameBit_Get(0x14b))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
                 if (GameBit_Get(0x14e))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
                 if (GameBit_Get(0x14d))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
                 if (GameBit_Get(0x14c))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
                 if (GameBit_Get(0x14a))
                 {
-                    ((GpshShrineState*)data)->unk12 += 1;
+                    ((GpshShrineState*)data)->solvedCount += 1;
                 }
-                if (((GpshShrineState*)data)->unk12 == 6)
+                if (((GpshShrineState*)data)->solvedCount == 6)
                 {
-                    ((GpshShrineState*)data)->unk14 = 6;
+                    ((GpshShrineState*)data)->puzzleState = 6;
                     gameTimerStop();
                     GameBit_Set(0xdd2, 0);
                     ((GpshShrineState*)data)->timer = lbl_803E5040;
@@ -399,7 +399,7 @@ void gpsh_shrine_update(int obj)
                 }
                 else if (isGameTimerDisabled())
                 {
-                    ((GpshShrineState*)data)->unk14 = 7;
+                    ((GpshShrineState*)data)->puzzleState = 7;
                     objs = ObjGroup_GetObjects(0x10, &count);
                     for (; count != 0; count--)
                     {
@@ -410,28 +410,28 @@ void gpsh_shrine_update(int obj)
                 }
                 else
                 {
-                    ((GpshShrineState*)data)->unk12 = 0;
+                    ((GpshShrineState*)data)->solvedCount = 0;
                 }
                 break;
             case 7:
-                ((GpshShrineState*)data)->unk14 = 4;
+                ((GpshShrineState*)data)->puzzleState = 4;
                 GameBit_Set(0xdd2, 0);
                 GameBit_Set(0xe37, 1);
                 break;
             case 6:
-                ((GpshShrineState*)data)->unk14 = 3;
+                ((GpshShrineState*)data)->puzzleState = 3;
                 break;
             case 3:
                 if (objGetAnimStateFlags((int)player, 0x80))
                 {
                     GameBit_Set(0x129, 1);
-                    ((GpshShrineState*)data)->unk14 = 4;
+                    ((GpshShrineState*)data)->puzzleState = 4;
                 }
                 else
                 {
                     audioStopByMask(3);
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                    ((GpshShrineState*)data)->unk14 = 4;
+                    ((GpshShrineState*)data)->puzzleState = 4;
                     GameBit_Set(0x36a, 0);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 0, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 1, 1);
@@ -443,7 +443,7 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 4:
-                ((GpshShrineState*)data)->unk14 = 0;
+                ((GpshShrineState*)data)->puzzleState = 0;
                 ((GpshShrineFlags*)((char*)data + 0x15))->b80 = 0;
                 GameBit_Set(0xdd2, 0);
                 GameBit_Set(0x129, 1);
