@@ -10,7 +10,7 @@
  * 0x26C f32 / 0x274 u8 agree exactly). */
 typedef struct SidekickBallState {
     u8 unk000[0x25B];
-    u8 unk25B; /* hittable latch */
+    u8 hittableLatch; /* 1 while thrown/hittable, 0 when idle (mirrors ObjHits enable/disable) */
     u8 pad25C[0x26C - 0x25C];
     f32 fadeTimer; /* 0x26C */
     u8 pad270[4];

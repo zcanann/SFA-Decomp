@@ -114,7 +114,7 @@ void fn_80179678(int obj)
     state->fadeTimer = lbl_803E369C;
     state->ballMode = SIDEKICK_BALL_IDLE;
     ObjHits_DisableObject(obj);
-    state->unk25B = 0;
+    state->hittableLatch = 0;
 }
 
 void fn_801796BC(int obj, f32 a, f32 b, f32 c)
@@ -127,7 +127,7 @@ void fn_801796BC(int obj, f32 a, f32 b, f32 c)
     ((GameObject*)obj)->anim.velocityZ = c;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
-    state->unk25B = 1;
+    state->hittableLatch = 1;
     state->launchX = ((GameObject*)obj)->anim.localPosX;
     state->launchY = ((GameObject*)obj)->anim.localPosY;
     state->launchZ = ((GameObject*)obj)->anim.localPosZ;
@@ -221,7 +221,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
         ((GameObject*)obj)->anim.velocityZ = c;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
-        st->unk25B = 1;
+        st->hittableLatch = 1;
         st->launchX = ((GameObject*)obj)->anim.localPosX;
         st->launchY = ((GameObject*)obj)->anim.localPosY;
         st->launchZ = ((GameObject*)obj)->anim.localPosZ;
@@ -526,7 +526,7 @@ void sidekickball_init(int obj)
     (*gPathControlInterface)->setup(state, 1, gSidekickBallPathPointData, state + 0x268, &pathFlag);
     (*gPathControlInterface)->attachObject((void*)obj, state);
     ObjHits_DisableObject((u32)obj);
-    ((SidekickBallState*)state)->unk25B = 0; /* explicit post-memset store in target */
+    ((SidekickBallState*)state)->hittableLatch = 0; /* explicit post-memset store in target */
     ObjMsg_AllocQueue((void*)obj, 1);
     GameBit_Set(0x3f8, 0);
 }
