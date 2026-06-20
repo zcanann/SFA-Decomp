@@ -1908,8 +1908,8 @@ extern void playerRender(int obj, int a, int b, int c, int d, int flag);
 void objRender(int a, int b, int c, int d, int obj, int flag)
 {
     void* sub;
-    int i;
     int walk;
+    int i;
     void (*vfn)(int, int, int, int, int, int);
 
     if ((((GameObject*)obj)->objectFlags & 0x40) != 0) return;
