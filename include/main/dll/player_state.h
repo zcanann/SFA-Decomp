@@ -292,7 +292,7 @@ typedef struct PlayerState {
     s16 unk80E;
     s16 unk810;
     s16 idleWaitTimer;
-    f32 unk814;
+    f32 idleHoldTimer; /* seconds the current idle move has been held; += timeDelta, clamped */
     u8 pad818[0x81A - 0x818];
     s16 characterId;
     s16 unk81C;

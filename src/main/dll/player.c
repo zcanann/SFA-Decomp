@@ -7745,7 +7745,7 @@ int fn_802A6694(int obj, int state, f32 fv)
             ((PlayerState*)inner)->unk4C8 = z;
             ((PlayerState*)inner)->unk4CC = z;
         }
-        ((PlayerState*)inner)->unk814 = lbl_803E7EA4;
+        ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
         ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
     }
     ((PlayerState*)state)->baddie.animSpeedA =
@@ -7779,7 +7779,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     fn_802AD204(obj, inner);
     if (*(s16**)((char*)inner + 0x3f8) == (s16*)(tbl + 0x190))
     {
-        if (((PlayerState*)inner)->unk814 >= lbl_803E7FBC &&
+        if (((PlayerState*)inner)->idleHoldTimer >= lbl_803E7FBC &&
             **(s8**)&((PlayerState *)inner)->playerStatus <= 4)
         {
             move = 0x5d;
@@ -7817,10 +7817,10 @@ int fn_802A6694(int obj, int state, f32 fv)
     picked:
         if (((GameObject*)obj)->anim.currentMove == **(s16**)((char*)inner + 0x3f8))
         {
-            ((PlayerState*)inner)->unk814 =
-                ((PlayerState*)inner)->unk814 + timeDelta;
-            v = ((PlayerState*)inner)->unk814;
-            ((PlayerState*)inner)->unk814 =
+            ((PlayerState*)inner)->idleHoldTimer =
+                ((PlayerState*)inner)->idleHoldTimer + timeDelta;
+            v = ((PlayerState*)inner)->idleHoldTimer;
+            ((PlayerState*)inner)->idleHoldTimer =
                 (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7FBC) ? lbl_803E7FBC : v);
             *(u16*)&((PlayerState*)inner)->idleWaitTimer =
                 (f32) * (s16*)((char*)inner + 0x812) - timeDelta;
@@ -7841,7 +7841,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             if (((GameObject*)obj)->anim.currentMove != 0x5d)
             {
-                ((PlayerState*)inner)->unk814 = lbl_803E7EA4;
+                ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
             }
             ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
         }
@@ -8765,7 +8765,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             {
                 fn_8009A8C8(obj, lbl_803E8134);
             }
-            ((PlayerState*)inner)->unk814 = lbl_803E7EA4;
+            ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
             ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
             ((PlayerState*)inner)->unk800 = 0;
             if (*(void**)((char*)inner + 0x7f8) != NULL)
