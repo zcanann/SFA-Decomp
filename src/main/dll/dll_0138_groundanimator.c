@@ -482,7 +482,7 @@ void groundanimator_update(int* obj)
                 }
             }
         }
-        else if ((*(u16*)((char*)g->linkedObj + 0xb0) & 0x40) != 0)
+        else if ((((GameObject*)g->linkedObj)->objectFlags & 0x40) != 0)
         {
             g->linkedObj = 0;
         }
@@ -526,7 +526,7 @@ void groundanimator_update(int* obj)
                 g->sinkDepth = lim;
                 if (*(void**)&g->linkedObj != NULL && *(void**)((char*)g->linkedObj + 0xb8) != NULL)
                 {
-                    switch (*(s16*)((char*)g->linkedObj + 0x46))
+                    switch (((GameObject*)g->linkedObj)->anim.seqId)
                     {
                     case 0x519:
                         fn_801A80F0((void*)g->linkedObj, 0);
