@@ -2795,8 +2795,8 @@ void dll_0B_func05(void)
     s16 ang[3];
     f32 q[4];
     BoneSpawnData tmpl;
-    int objIdx;
     int objCount;
+    int objIdx;
 
     emIdx = 0;
     gExpgfxUpdatingActivePools = 2;
