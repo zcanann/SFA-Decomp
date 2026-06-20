@@ -8,7 +8,7 @@
  * per-frame countdown timer and, each time the timer expires, re-seeds
  * the launch position from the rotated heading and the path's world
  * point, then integrates localPos by velocity*timeDelta every frame.
- * The placement's unk19 byte selects the hit-volume slot (3 when set,
+ * The placement's useAltHitVolume byte selects the hit-volume slot (3 when set,
  * else 1). The 4-byte extra holds only the countdown timer.
  */
 #include "main/game_object.h"
@@ -19,8 +19,8 @@
 typedef struct IceblastPlacement
 {
     u8 pad0[0x19 - 0x0];
-    s8 unk19;
-    s16 unk1A;
+    s8 useAltHitVolume;
+    s16 initialTimer;
     u8 pad1C[4];
 } IceblastPlacement;
 
@@ -55,7 +55,7 @@ void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f
 #pragma scheduling off
 void iceblast_init(int obj, IceblastPlacement* p)
 {
-    *(f32*)((GameObject*)obj)->extra = p->unk1A;
+    *(f32*)((GameObject*)obj)->extra = p->initialTimer;
     ObjHits_SetTargetMask(obj, 1);
 }
 #pragma reset
@@ -87,7 +87,7 @@ void iceblast_update(int* obj)
         return;
     }
     {
-        int slot = ((IceblastPlacement*)def)->unk19 != 0 ? 3 : 1;
+        int slot = ((IceblastPlacement*)def)->useAltHitVolume != 0 ? 3 : 1;
         ObjHits_SetHitVolumeSlot((u32)obj, 0x10, slot, 0);
     }
     state[0] = state[0] - timeDelta;
