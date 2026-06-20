@@ -463,7 +463,7 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
     if ((s8)p2[838] != 0)
     {
-        if (((BaddieState*)p2)->targetObj == (void*)player && (s8)p2[852] != 0)
+        if (((BaddieState*)p2)->targetObj == (void*)player && (s8)((BaddieState*)p2)->hitPoints != 0)
         {
             if (((BaddieState*)p2)->targetDistance > f && p4 != 0)
             {
@@ -628,7 +628,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
         dp[2] = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)p1)->anim.worldPosZ;
         if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange)
         {
-            if ((s8)p2[852] != 0)
+            if ((s8)((BaddieState*)p2)->hitPoints != 0)
             {
                 if (fn_8029610C(obj) > lbl_803E1C64)
                 {
@@ -739,7 +739,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
                 int other = *(int*)&((GameObject*)p1)->anim.placementData;
                 ((Dll19Placement*)state)->unk3E8 = lbl_803E1C2C;
                 ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 & ~0x40;
-                p2[852] = 0;
+                ((BaddieState*)p2)->hitPoints = 0;
                 p1[54] = 0;
                 ((GameObject*)p1)->unkF4 = 1;
                 ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
@@ -762,7 +762,7 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
     }
 
-    if (*(s8*)(p2 + 852) == 0)
+    if (*(s8*)&((BaddieState*)p2)->hitPoints == 0)
     {
         return 0;
     }
@@ -788,14 +788,14 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             v24 = 0;
         }
-        *(s8*)(p2 + 852) = (s8)(p2[852] - v24);
-        if (*(s8*)(p2 + 852) < 1)
+        *(s8*)&((BaddieState*)p2)->hitPoints = (s8)(((BaddieState*)p2)->hitPoints - v24);
+        if (*(s8*)&((BaddieState*)p2)->hitPoints < 1)
         {
             ((Dll19Placement*)state)->unk400 = ((Dll19Placement*)state)->unk400 | 0x20;
             ((Dll19Placement*)state)->unk3E8 = lbl_803E1C48;
             ((Dll19Placement*)state)->unk3EC = lbl_803E1C4C;
             ((BaddieState*)p2)->substate = p7;
-            p2[852] = 0;
+            ((BaddieState*)p2)->hitPoints = 0;
         }
         else
         {
