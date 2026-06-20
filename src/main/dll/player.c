@@ -7089,21 +7089,26 @@ int fn_802AD2F4(int obj, int inner, int state)
     if (((PlayerState*)inner)->unk3F7 == 0 &&
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 == 0)
     {
-        ((PlayerState*)inner)->unk428 = lbl_803E7FBC;
-        ((PlayerState*)inner)->unk42C = lbl_803E7E98;
-        ((PlayerState*)inner)->unk430 = lbl_803E7FBC;
-        ((PlayerState*)inner)->unk434 = lbl_803E7E98;
-        ((PlayerState*)inner)->unk82C = lbl_803E7F14;
-        ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * lbl_803E7F14;
+        f32 a = lbl_803E7FBC;
+        f32 b = lbl_803E7E98;
+        f32 c = lbl_803E7F14;
+        ((PlayerState*)inner)->unk428 = a;
+        ((PlayerState*)inner)->unk42C = b;
+        ((PlayerState*)inner)->unk430 = a;
+        ((PlayerState*)inner)->unk434 = b;
+        ((PlayerState*)inner)->unk82C = c;
+        ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * c;
     }
     else
     {
-        ((PlayerState*)inner)->unk428 = lbl_803E7FBC;
-        ((PlayerState*)inner)->unk42C = lbl_803E7EA4;
-        ((PlayerState*)inner)->unk430 = lbl_803E7FBC;
-        ((PlayerState*)inner)->unk434 = lbl_803E7EA4;
-        ((PlayerState*)inner)->unk82C = lbl_803E7EA4;
-        ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * lbl_803E7EA4;
+        f32 a = lbl_803E7FBC;
+        f32 b = lbl_803E7EA4;
+        ((PlayerState*)inner)->unk428 = a;
+        ((PlayerState*)inner)->unk42C = b;
+        ((PlayerState*)inner)->unk430 = a;
+        ((PlayerState*)inner)->unk434 = b;
+        ((PlayerState*)inner)->unk82C = b;
+        ((PlayerState*)inner)->unk408 = ((PlayerState*)inner)->unk408 * b;
     }
     {
         f32 t = ((PlayerState*)inner)->unk408;
