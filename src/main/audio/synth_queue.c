@@ -550,7 +550,7 @@ done:
                 }
             }
             {
-                SynthCallbackLink* cb = voice->callbackLists[2];
+                SynthCallbackLink* cb = runtime->voices[found].callbackLists[2];
                 while (cb != 0)
                 {
                     voiceKillById(cb->callbackId);
