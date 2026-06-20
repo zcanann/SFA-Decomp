@@ -2770,10 +2770,10 @@ int fn_802A0680(int obj, int state)
     default:
         if (1.0f == ((GameObject*)obj)->anim.currentMoveProgress)
         {
-            pnt[0] = -(lbl_803E7F30 * ((PlayerState*)inner)->unk56C -
+            pnt[0] = -(lbl_803E7F30 * ((PlayerState*)inner)->groundNormalX -
                 ((PlayerState*)inner)->savedPosX);
             pnt[1] = ((PlayerState*)inner)->savedPosY;
-            pnt[2] = -(lbl_803E7F30 * ((PlayerState*)inner)->unk574 -
+            pnt[2] = -(lbl_803E7F30 * ((PlayerState*)inner)->groundNormalZ -
                 ((PlayerState*)inner)->savedPosZ);
             {
                 int r = objBboxFn_800640cc((void*)((char*)inner + 0x768), pnt, 0.0f, 3,
@@ -2784,10 +2784,10 @@ int fn_802A0680(int obj, int state)
                     ((GameObject*)obj)->anim.localPosZ = pnt[2];
                     ((PlayerState*)inner)->unk54C = hit.gt * (hit.gb - hit.ga) + hit.ga;
                     ((PlayerState*)inner)->unk550 = hit.gt * (hit.fz1 - hit.fz0) + hit.fz0;
-                    ((PlayerState*)inner)->unk56C = hit.nx;
-                    ((PlayerState*)inner)->unk570 = hit.ny;
-                    ((PlayerState*)inner)->unk574 = hit.nz;
-                    ((PlayerState*)inner)->unk578 = hit.nw;
+                    ((PlayerState*)inner)->groundNormalX = hit.nx;
+                    ((PlayerState*)inner)->groundNormalY = hit.ny;
+                    ((PlayerState*)inner)->groundNormalZ = hit.nz;
+                    ((PlayerState*)inner)->groundNormalW = hit.nw;
                     ((PlayerState*)inner)->unk57C = -hit.nz;
                     ((PlayerState*)inner)->unk580 = 0.0f;
                     ((PlayerState*)inner)->unk584 = hit.nx;
@@ -2796,8 +2796,8 @@ int fn_802A0680(int obj, int state)
                             (pnt[0] * ((PlayerState*)inner)->unk57C +
                                 pnt[1] * ((PlayerState*)inner)->unk580));
                     ((PlayerState*)inner)->targetYaw =
-                        (s16)getAngle(((PlayerState*)inner)->unk56C,
-                                      ((PlayerState*)inner)->unk574);
+                        (s16)getAngle(((PlayerState*)inner)->groundNormalX,
+                                      ((PlayerState*)inner)->groundNormalZ);
                     ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
                     {
                         int hf = hit.flags;
@@ -2977,9 +2977,9 @@ int fn_802A0680(int obj, int state)
                             pnt[0] = ((PlayerState*)inner)->savedPosX - dx;
                             pnt[2] = ((PlayerState*)inner)->savedPosZ - dy;
                         }
-                        dst[0] = -(ph * ((PlayerState*)inner)->unk56C - pnt[0]);
+                        dst[0] = -(ph * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
-                        dst[2] = -(ph * ((PlayerState*)inner)->unk574 - pnt[2]);
+                        dst[2] = -(ph * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
                         if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, 0, obj, 1, 3, 0xff,
                                                0) != 0)
                         {
@@ -3007,9 +3007,9 @@ int fn_802A0680(int obj, int state)
                         {
                             pnt[1] = ((PlayerState*)inner)->savedPosY - lbl_803E7F50;
                         }
-                        dst[0] = -(dy * ((PlayerState*)inner)->unk56C - pnt[0]);
+                        dst[0] = -(dy * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
-                        dst[2] = -(dy * ((PlayerState*)inner)->unk574 - pnt[2]);
+                        dst[2] = -(dy * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
                         if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, 0, obj, 1, 3, 0xff,
                                                0) != 0)
                         {
@@ -9353,7 +9353,7 @@ int fn_802A1114(int obj, int state)
         ((PlayerState*)state)->baddie.animSpeedA = zero;
         ((PlayerState*)state)->baddie.animSpeedB = zero;
         inner->targetYaw =
-            (s16)getAngle(*(f32*)((int)inner + 0x56c), inner->unk574);
+            (s16)getAngle(*(f32*)((int)inner + 0x56c), inner->groundNormalZ);
         inner->yaw = inner->targetYaw;
         ((GameObject*)obj)->anim.localPosX = inner->unk58C;
         ((GameObject*)obj)->anim.localPosZ = inner->unk594;
@@ -10111,8 +10111,8 @@ int fn_802A00E0(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = inner->unk56C * buf1[2];
-        inner->unk568 = inner->unk574 * buf1[2];
+        inner->unk564 = inner->groundNormalX * buf1[2];
+        inner->unk568 = inner->groundNormalZ * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk550;
         *(s16*)((char*)state + 0x278) = 0x15;
         inner->stateHandler = (int)fn_8029FFD0;
@@ -10194,8 +10194,8 @@ int fn_802A03BC(int obj, int state)
         model = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-        inner->unk564 = inner->unk56C * buf1[2];
-        inner->unk568 = inner->unk574 * buf1[2];
+        inner->unk564 = inner->groundNormalX * buf1[2];
+        inner->unk568 = inner->groundNormalZ * buf1[2];
         ((GameObject*)obj)->anim.localPosY = inner->unk54C;
         *(s16*)((char*)state + 0x278) = 0x14;
         inner->stateHandler = (int)fn_8029FFD0;
@@ -13043,7 +13043,7 @@ int fn_802A14F8(int obj, int state)
             }
             ObjAnim_SetCurrentMove(obj, 0x41a, lbl_803E7EA4, 1);
             ((PlayerState*)inner)->targetYaw =
-                getAngle(((PlayerState*)inner)->unk56C, ((PlayerState*)inner)->unk574);
+                getAngle(((PlayerState*)inner)->groundNormalX, ((PlayerState*)inner)->groundNormalZ);
             ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
             ((GameObject*)obj)->anim.localPosX = ((PlayerState*)inner)->unk58C;
             ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->savedPosY;

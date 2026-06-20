@@ -153,10 +153,10 @@ typedef struct PlayerState {
     f32 unk560;
     f32 unk564;
     f32 unk568;
-    f32 unk56C;
-    f32 unk570;
-    f32 unk574;
-    f32 unk578;
+    f32 groundNormalX; /* surface normal (nx,ny,nz,nw) from the move-anchor collision query; getAngle(X,Z) drives targetYaw on slopes, used as a slide basis */
+    f32 groundNormalY;
+    f32 groundNormalZ;
+    f32 groundNormalW;
     f32 unk57C;
     f32 unk580;
     f32 unk584;
