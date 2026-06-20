@@ -25,12 +25,12 @@ typedef struct DimCannonState {
     s16 aimPitch;   /* 0xa6 */
     int unkA8;
     u8 fireState;   /* 0xac */
-    u8 unkAD;
-    u8 unkAE;
-    u8 unkAF;
+    u8 fireRequested; /* 0xad set when fired (magic spent) */
+    u8 airMeterCharge; /* 0xae accumulated charge, clamped to gDimCannonMaxCharge, drives runAirMeter */
+    u8 refreshTimer; /* 0xaf frames since last shard-aim source re-snapshot (>0xa resnaps) */
     s8 chargeTimer; /* 0xB0: countdown (framesThisStep) gating air-meter/fire */
-    u8 unkB1;
-    u8 unkB2;
+    u8 shutdownTimer; /* 0xb1 counts up once activated; >0x3c triggers shutdown */
+    u8 hasActivated; /* 0xb2 one-shot flag once player-operated + game bits set */
     u8 padB3;
 } DimCannonState;
 
