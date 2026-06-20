@@ -1745,8 +1745,8 @@ void fn_8014BC98(int* node, int* sub)
         ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
 
         {
-            f32 sqZ;
             f32 sqX;
+            f32 sqZ;
             f32 sqY;
             f32 t;
             t = d[2];
