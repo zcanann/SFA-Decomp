@@ -217,7 +217,7 @@ void dimcannon_init(int* obj, int* arg)
         ((GameObject*)obj)->animEventCallback = fn_801B2550;
         ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
-        if (GameBit_Get(*(s16*)((char*)arg + 0x1a)))
+        if (GameBit_Get(((DimcannonPlacement*)arg)->resetGameBit))
         {
             *(u8*)&((DimCannonState*)state)->unkB0 = 0x3c;
             ((DimCannonState*)state)->fireState = 5;
