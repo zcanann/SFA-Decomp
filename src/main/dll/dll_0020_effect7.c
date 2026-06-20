@@ -1297,8 +1297,6 @@ static u8 sProjgfxStringPad1[] = {0, 0, 0};
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 gEffect7TexScrollPhaseA;
 extern f32 gEffect7TexScrollPhaseB;
 extern int gEffect7SinAngleA;
