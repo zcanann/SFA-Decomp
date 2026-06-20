@@ -519,7 +519,7 @@ void fn_80296518(int obj, int flag, int set)
 u8 fn_80296414(int obj, int p2, u8* out)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    *out = inner->unk682;
+    *out = inner->surfaceDir;
     return inner->baddie.controlMode == 0x1c &&
         *(u32*)&((PlayerState*)inner)->contactObject == (u32)p2;
 }
@@ -7601,7 +7601,7 @@ void fn_802B0EA4(int obj, int inner, int state)
         }
         else
         {
-            u = t * ((PlayerState*)inner)->unk7E0;
+            u = t * ((PlayerState*)inner)->curveSpeedScale;
             idx = (int)u;
             ((PlayerState*)inner)->unk438 =
                 lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
@@ -7613,24 +7613,24 @@ void fn_802B0EA4(int obj, int inner, int state)
         t = (spd < (t = lbl_803E7EA4))
                 ? t
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
-        u = t * ((PlayerState*)inner)->unk7E0;
+        u = t * ((PlayerState*)inner)->curveSpeedScale;
         idx = (int)u;
         ((PlayerState*)inner)->unk438 =
             lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
     }
-    u = t * ((PlayerState*)inner)->unk7E0;
+    u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->unk428 =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve1 + (idx + 1) * 4, u - (f32)idx, 0);
-    u = t * ((PlayerState*)inner)->unk7E0;
+    u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->unk42C =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve2 + (idx + 1) * 4, u - (f32)idx, 0);
-    u = t * ((PlayerState*)inner)->unk7E0;
+    u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->unk430 =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve3 + (idx + 1) * 4, u - (f32)idx, 0);
-    u = t * ((PlayerState*)inner)->unk7E0;
+    u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
     ((PlayerState*)inner)->unk434 =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve4 + (idx + 1) * 4, u - (f32)idx, 0);
@@ -11461,22 +11461,22 @@ int fn_8029E3F4(int obj, int state)
         {
             if (s1)
             {
-                inner->unk682 = 0;
+                inner->surfaceDir = 0;
             }
             else
             {
-                inner->unk682 = 1;
+                inner->surfaceDir = 1;
             }
         }
         else
         {
             if (s2)
             {
-                inner->unk682 = 2;
+                inner->surfaceDir = 2;
             }
             else
             {
-                inner->unk682 = 3;
+                inner->surfaceDir = 3;
             }
         }
         ObjAnim_SetCurrentMove(obj, 0x57, lbl_803E7EA4, 0);
@@ -12642,7 +12642,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->unk8D3 = 0x29;
     ((PlayerState*)inner)->paramCurve4 = (int)(base + 0x6f4);
     ((PlayerState*)inner)->unk8D4 = 0x2e;
-    ((PlayerState*)inner)->unk7E0 = lbl_803E7ED8;
+    ((PlayerState*)inner)->curveSpeedScale = lbl_803E7ED8;
     for (i = 0, off = 0; i < ((PlayerState*)inner)->moveSlotCount; i++)
     {
         int da;

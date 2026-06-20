@@ -223,7 +223,7 @@ typedef struct PlayerState {
     int contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
     u8 pad680[0x681 - 0x680];
     s8 unk681;
-    u8 unk682;
+    u8 surfaceDir; /* dominant surface-normal axis+sign (0=+X,1=-X,2=+Z,3=-Z); picks the wall slide/climb anim variant */
     u8 pad683[0x684 - 0x683];
     int interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
     s16 unk688;
@@ -276,7 +276,7 @@ typedef struct PlayerState {
     f32 unk7D4;
     f32 unk7D8;
     f32 unk7DC;
-    f32 unk7E0;
+    f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
     int focusObject; /* object handle for camera setFocus / sequence-trigger interactions */
