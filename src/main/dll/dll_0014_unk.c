@@ -2236,6 +2236,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wg;
     ObjfsaPatch* p;
     ObjfsaPatch* sp;
+    ObjfsaPatch* np;
     u8* pp;
     char* slotPtr;
     char* lp;
@@ -2407,7 +2408,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 back = 4;
                             }
                             wg->patchIndices[slot] = gObjfsaPatchCount;
-                            patchBase[npi].groupId = pairId;
+                            np = &patchBase[npi];
+                            np->groupId = pairId;
                             pairs[npi * 2] = *(u8*)(curve + 3);
                             pairs[npi * 2 + 1] = *(u8*)(linked + 3);
 
@@ -2415,12 +2417,12 @@ void walkgroupFindExitPointFn_800dc398(void)
                             z0 = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10);
                             x1 = OBJFSA_CORNER(curve, slotPtr + 0x36, 0x8);
                             z1 = OBJFSA_CORNER(curve, slotPtr + 0x37, 0x10);
-                            patchBase[npi].exit0X = (s16)((x0 + x1) * lbl_803E0608);
-                            patchBase[npi].exit0Z = (s16)((z0 + z1) * lbl_803E0608);
+                            np->exit0X = (s16)((x0 + x1) * lbl_803E0608);
+                            np->exit0Z = (s16)((z0 + z1) * lbl_803E0608);
 
                             dxn = z1 - z0;
                             dzn = x0 - x1;
-                            OBJFSA_SET_PLANE(patchBase[npi], 0, x0, z0);
+                            OBJFSA_SET_PLANE(*np, 0, x0, z0);
 
                             lp = (char*)(linked + back * 4);
                             x2 = OBJFSA_CORNER(linked, lp + 0x34, 0x8);
