@@ -808,10 +808,8 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             transform.y = ((GameObject*)obj)->anim.worldPosY;
             transform.z = ((GameObject*)obj)->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
-            worldIdx = 0;
-            pointIndex = worldIdx;
+            pointOffset = pointIndex = worldIdx = 0;
             worldBase = (u8*)collision;
-            pointOffset = worldIdx;
             while (pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
                 localPoint = (f32*)((u8*)collision->segmentLocalPoints + pointOffset);
