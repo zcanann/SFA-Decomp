@@ -2340,7 +2340,7 @@ void skyFn_8008a04c(void)
     else
     {
         t = ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay;
-        tc = (t < pEXIInputFlag) ? pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
+        tc = (t < *(f32*)&pEXIInputFlag) ? *(f32*)&pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
         if (tc <= lbl_803DF07C)
         {
             frac = tc / lbl_803DF07C;
