@@ -121,7 +121,7 @@ extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
 #pragma opt_common_subs off
-void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
+void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
 {
     float hi;
     float lo;
