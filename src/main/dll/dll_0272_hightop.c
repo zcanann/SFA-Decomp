@@ -1050,8 +1050,8 @@ int hightop_stateHandler09(int obj, int p)
 {
     HighTopRuntime* state = ((GameObject*)obj)->extra;
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    int prevCount;
     int i;
+    int prevCount;
     int* weight;
     int roll;
     int idx;
