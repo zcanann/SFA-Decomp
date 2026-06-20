@@ -138,7 +138,7 @@ int gunpowderbarrel_getExtraSize(void)
     return 0x58;
 }
 
-void gunpowderbarrel_free(int obj, int param_2)
+void gunpowderbarrel_free(int obj, int mode)
 {
     extern int Obj_IsObjectAlive(int obj); /* #57 */
     int extra;
@@ -146,7 +146,7 @@ void gunpowderbarrel_free(int obj, int param_2)
     extra = *(int*)&((GameObject*)obj)->extra;
     (*(VtableFn*)(*(int*)gCarryableInterface + 0x10))(obj);
     child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
-    if (child != NULL && param_2 == 0)
+    if (child != NULL && mode == 0)
     {
         if (Obj_IsObjectAlive((int)child) != 0)
         {
@@ -454,7 +454,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
 /* Tail of the TU (0x801A1A60..0x801A27B8) - formerly the head of
  * cannontargetControl.c (now dll_0159_blasted.c). */
 
-void gunpowderbarrel_hitDetect(int param_1)
+void gunpowderbarrel_hitDetect(int obj)
 {
     extern int Obj_IsObjectAlive(int obj); /* #57 */
     GameObject* barrel;
@@ -463,14 +463,14 @@ void gunpowderbarrel_hitDetect(int param_1)
     f32 sp10[3];
     f32 collision_buf[24];
 
-    barrel = (GameObject*)param_1;
+    barrel = (GameObject*)obj;
     state = barrel->extra;
 
     if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0)
     {
         if ((void*)state->linkedTimerObject != NULL)
         {
-            ObjLink_DetachChild(param_1, state->linkedTimerObject);
+            ObjLink_DetachChild(obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;
         }
     }
@@ -491,7 +491,7 @@ void gunpowderbarrel_hitDetect(int param_1)
 
     if ((void*)state->queuedHitObject != NULL)
     {
-        objHitDetectFn_80062e84(param_1, state->queuedHitObject, 1);
+        objHitDetectFn_80062e84(obj, state->queuedHitObject, 1);
         state->queuedHitObject = 0;
     }
 
@@ -525,8 +525,8 @@ void gunpowderbarrel_hitDetect(int param_1)
         goto copy_end;
     }
 
-    if (objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc, lbl_803E432C, 1,
-                           (int)&collision_buf[0], param_1, 8, -1, 0xff, 0) == 0)
+    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E432C, 1,
+                           (int)&collision_buf[0], obj, 8, -1, 0xff, 0) == 0)
     {
         goto copy_end;
     }
@@ -539,15 +539,15 @@ void gunpowderbarrel_hitDetect(int param_1)
     if (((state->heldFlags >> 7) & 1) != 0u &&
         (s8) * ((u8*)&collision_buf[0] + 0x51) == 3)
     {
-        gunpowderbarrel_setPlayerHeldState((int*)param_1, 0);
-        ObjGroup_RemoveObject(param_1, 0x16);
+        gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
+        ObjGroup_RemoveObject(obj, 0x16);
         goto copy_end;
     }
 
     sp10[0] = *((f32*)&collision_buf[0] + 7);
     sp10[1] = *((f32*)&collision_buf[0] + 8);
     sp10[2] = *((f32*)&collision_buf[0] + 9);
-    Vec3_ReflectAgainstNormal(sp10, (void*)(param_1 + 0x24), (void*)(param_1 + 0x24));
+    Vec3_ReflectAgainstNormal(sp10, (void*)(obj + 0x24), (void*)(obj + 0x24));
     Vec3_ReflectAgainstNormal(sp10, &state->throwVelX, &state->throwVelX);
 
     {
@@ -565,7 +565,7 @@ void gunpowderbarrel_hitDetect(int param_1)
     {
         if (PSVECMag(&state->throwVelX) > lbl_803DBE84)
         {
-            Sfx_PlayFromObject((u32)param_1, 0x446);
+            Sfx_PlayFromObject((u32)obj, 0x446);
         }
         state->impactSoundCooldown = lbl_803E42C0;
     }
