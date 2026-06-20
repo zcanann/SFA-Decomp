@@ -424,7 +424,7 @@ void fn_8023A3E4(int p1, int p2)
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
-    got = ObjHits_GetPriorityHit(obj, &hitObj, &hitType, &hitVol);
+    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
     {
         u8 j;
         for (j = 0; j < 4; j++)
