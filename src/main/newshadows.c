@@ -2502,6 +2502,7 @@ extern int gRenderModeObj;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
+#pragma opt_common_subs off
 void renderShadows(void)
 {
     char* B = (char*)gNewShadowEntries;
@@ -2557,10 +2558,10 @@ void renderShadows(void)
         if ((u8)lod <= 4) continue;
         if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
         {
-            memcpy(mc48, obj + 0xc, 0xc);
-            memcpy(mc54p, obj + 0x18, 0xc);
-            memcpy((char*)obj + 0xc, of64 + 0x20, 0xc);
-            memcpy((char*)obj + 0x18, of64 + 0x20, 0xc);
+            memcpy(mc48, (char*)obj + 0xc, 0xc);
+            memcpy(mc54p, (char*)obj + 0x18, 0xc);
+            memcpy((char*)obj + 0xc, (char*)of64 + 0x20, 0xc);
+            memcpy((char*)obj + 0x18, (char*)of64 + 0x20, 0xc);
         }
         castSlot = B + (u8)r24 * 0x68 + 0x1170;
         *(u8*)(castSlot + 0x64) = lod;
@@ -2784,3 +2785,4 @@ void renderShadows(void)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
+#pragma opt_common_subs reset
