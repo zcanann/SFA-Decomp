@@ -28,7 +28,6 @@ extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern int objModelGetVecFn_800395d8(int obj, int idx);
 extern void objAudioFn_80039270(int obj, void* p, int id);
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern u8 framesThisStep;
 extern f32 lbl_803E428C;
 extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E4288;
