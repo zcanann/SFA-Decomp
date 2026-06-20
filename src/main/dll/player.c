@@ -13819,8 +13819,8 @@ extern f32 lbl_803E8054;
 int fn_802A418C(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int i;
     int c;
+    int i;
     int* list;
     u8 buf[64];
     f32 dist;
@@ -13848,7 +13848,7 @@ int fn_802A418C(int obj, int state, f32 fv)
     }
     else if ((s8)c == inner->unk8C2)
     {
-        int n = ((PlayerState *)inner)->unk8C3 + 1;
+        int n = inner->unk8C3 + 1;
         inner->unk8C3 = n;
         if ((u8)n > 200)
         {
@@ -14040,7 +14040,40 @@ int fn_802A418C(int obj, int state, f32 fv)
             return 0;
         }
         {
-            if (*(s8*)&((PlayerState*)inner)->staffGrown == 0)
+            if (*(u8*)&((PlayerState*)inner)->staffGrown != 0)
+            {
+                int r2;
+                if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x200) != 0 && gPlayerPathObject != NULL &&
+                    ((ByteFlags*)((char*)inner + 0x3f4))->b40)
+                {
+                    inner->staffActionRequest = 0;
+                    ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
+                }
+                {
+                    int in2 = *(int*)&((GameObject*)obj)->extra;
+                    u8 b;
+                    if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0 &&
+                        (b = ((ByteFlags*)((char*)in2 + 0x3f4))->b40, b != 0))
+                    {
+                        if (gPlayerPathObject != NULL && b != 0)
+                        {
+                            *(u8*)((char*)in2 + 0x8b4) = 4;
+                            ((ByteFlags*)((char*)in2 + 0x3f4))->b08 = 1;
+                        }
+                        *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
+                        r2 = 0x32;
+                    }
+                    else
+                    {
+                        r2 = 0;
+                    }
+                    if (r2 != 0)
+                    {
+                        return r2;
+                    }
+                }
+            }
+            else
             {
                 if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) != 0)
                 {
@@ -14077,39 +14110,6 @@ int fn_802A418C(int obj, int state, f32 fv)
                             inner->staffActionRequest = 2;
                             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
                         }
-                    }
-                }
-            }
-            else
-            {
-                int r2;
-                if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x200) != 0 && gPlayerPathObject != NULL &&
-                    ((ByteFlags*)((char*)inner + 0x3f4))->b40)
-                {
-                    inner->staffActionRequest = 0;
-                    ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 0;
-                }
-                {
-                    int in2 = *(int*)&((GameObject*)obj)->extra;
-                    u8 b;
-                    if ((*(int*)&((PlayerState*)state)->baddie.unk31C & 0x100) == 0 ||
-                        (b = ((ByteFlags*)((char*)in2 + 0x3f4))->b40, b == 0))
-                    {
-                        r2 = 0;
-                    }
-                    else
-                    {
-                        if (gPlayerPathObject != NULL && b != 0)
-                        {
-                            *(u8*)((char*)in2 + 0x8b4) = 4;
-                            ((ByteFlags*)((char*)in2 + 0x3f4))->b08 = 1;
-                        }
-                        *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
-                        r2 = 0x32;
-                    }
-                    if (r2 != 0)
-                    {
-                        return r2;
                     }
                 }
             }
