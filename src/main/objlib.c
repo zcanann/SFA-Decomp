@@ -688,7 +688,7 @@ void ObjHits_RefreshObjectState(int objPtr)
     return;
 }
 
-int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8 sphereIndex)
+int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
