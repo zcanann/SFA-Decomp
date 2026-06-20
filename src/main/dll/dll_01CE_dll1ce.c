@@ -496,9 +496,7 @@ void dll_1CE_update(int* obj)
         if (!found) return;
     }
     {
-        s8 c = (s8)sub->igniteCountdown - 1;
-        sub->igniteCountdown = c;
-        if (c > 0) return;
+        if ((s8)(sub->igniteCountdown -= 1) > 0) return;
     }
     GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
