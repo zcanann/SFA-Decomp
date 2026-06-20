@@ -36,9 +36,9 @@ void dimicewall_init(int obj, s8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
     *(s8*)(inner + 0) = (s8) * (s16*)(p + 0x1a);
-    if (*(s16*)(p + 0x1e) != -1)
+    if (((DimicewallPlacement*)p)->shatterGameBit != -1)
     {
-        ((DimicewallState*)inner)->unk1 = GameBit_Get(*(s16*)(p + 0x1e));
+        ((DimicewallState*)inner)->unk1 = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->objectFlags |= 0x4000;
