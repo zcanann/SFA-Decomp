@@ -320,11 +320,7 @@ void ObjModel_SetBlendChannelWeight(u8* model, int channel, f32 weight)
 {
     ObjModelBlendChannel* ch;
 
-    if (channel > 2)
-    {
-        return;
-    }
-    if (((ObjModel*)model)->file->morphTargetPtrs == NULL)
+    if (channel > 2 || ((ObjModel*)model)->file->morphTargetPtrs == NULL)
     {
         return;
     }
@@ -842,12 +838,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
 {
     ObjModelBlendChannel* ch;
     u8* hdr;
-    if (channel > 2)
-    {
-        return;
-    }
-    hdr = *(u8**)model;
-    if (((ModelFileHeader*)hdr)->morphTargetPtrs == NULL)
+    if (channel > 2 || ((ModelFileHeader*)(hdr = *(u8**)model))->morphTargetPtrs == NULL)
     {
         return;
     }
