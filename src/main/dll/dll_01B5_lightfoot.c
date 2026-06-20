@@ -285,7 +285,7 @@ void lightfoot_init(int obj, int p2, int p3)
 
     if (p3 != 0)
     {
-        flags = (u8)(flags | 1);
+        flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
