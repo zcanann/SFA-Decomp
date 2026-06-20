@@ -2324,8 +2324,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
 
         gObjfsaPatchCount = 1;
-        listWalk = curveList;
-        for (listIndex = 0; listIndex < curveCount; listIndex++)
+        for (listIndex = 0, listWalk = curveList; listIndex < curveCount; listIndex++)
         {
             curve = (int)*listWalk;
             if (*(s8*)(curve + 0x19) == 0x26)
@@ -2477,10 +2476,10 @@ void walkgroupFindExitPointFn_800dc398(void)
             listWalk++;
         }
 
-        pp = pairs;
+        pp = &pairs[2];
         div = lbl_803E060C;
         p = patchBase;
-        for (pi = 1; pp += 2, pi < gObjfsaPatchCount; pi++)
+        for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
             ga = pp[0];
             gb = pp[1];
@@ -2515,7 +2514,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             OSReport(sObjfsaMissingPatchExitPoint1, p[1].groupId & 0xff,
                      (int)(u32)p[1].groupId >> 8);
         exit1Done:
-            p++;
+            ;
         }
     }
 }
