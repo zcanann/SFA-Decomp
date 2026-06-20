@@ -70,7 +70,6 @@ extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];
 extern u8 gGroundBaddieAngleSectorOffsets[8];
 extern u16 gGroundBaddieTriggerResponseSeq[4];
-extern f32 timeDelta;
 extern f32 gGroundBaddieModelChainDesc;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
