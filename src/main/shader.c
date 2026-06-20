@@ -1210,7 +1210,7 @@ int mapProcessRomList(int slot)
     int j;
     int step;
     int rl;
-    f32 dz, dx;
+    f32 dx, dz;
     char* base;
 
     base = lbl_8037E0C0;
