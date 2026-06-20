@@ -154,7 +154,7 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
+             u64 param_6, u64 param_7, u64 param_8, int param_9, int param_10,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
@@ -187,8 +187,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
+                     param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        ((GroundBaddieState*)param_10)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||

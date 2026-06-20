@@ -402,9 +402,9 @@ void wispbaddie_init(int obj, int setup, int initialised)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-void FUN_8014fef8(u32 obj, int state, u32 param_3, int code)
+void FUN_8014fef8(u32 param_1, int param_2, u32 param_3, int param_4)
 {
-    if (code == 0x10)
+    if (param_4 == 0x10)
     {
         ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
         return;
@@ -420,9 +420,9 @@ void FUN_8014ff20(void)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ff24(short* obj, u32 state)
+void FUN_8014ff24(short* param_1, u32 param_2)
 {
-    FUN_8014d3d0(obj, state, 0xf, 0);
+    FUN_8014d3d0(param_1, param_2, 0xf, 0);
     return;
 }
 
