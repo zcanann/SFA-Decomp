@@ -263,7 +263,11 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
         *vec = (s16)((f32) * vec + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     }
     delta = self->anim.rotX - out->yaw;
-    return ((delta >= 0) ? delta : -delta) > 0x100;
+    if (delta < 0)
+    {
+        delta = -delta;
+    }
+    return delta > 0x100;
 }
 
 void drlasercannon_free(int obj)
