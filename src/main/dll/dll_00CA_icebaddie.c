@@ -776,7 +776,7 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     if (*(u8*)(route + 0x25) == 0)
     {
         ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(
-            obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), lbl_803E2D14,
+            obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), *(f32*)&lbl_803E2D14,
             lbl_803E2D14, lbl_803E2D18);
     }
     else
