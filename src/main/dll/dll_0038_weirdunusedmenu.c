@@ -122,7 +122,7 @@ int WeirdUnusedMenu_run(void)
         {
             saveGame_save();
         }
-        *(char*)&gWeirdMenuSaveTimer = (int)((f32)(s8)gWeirdMenuSaveTimer + timeDelta);
+        *(s8*)&gWeirdMenuSaveTimer = ((f32)(s8)gWeirdMenuSaveTimer + timeDelta);
         if ((f32)(s8)gWeirdMenuSaveTimer >= gWeirdMenuSaveTimerLimit)
         {
             gWeirdMenuPhase = 0;
