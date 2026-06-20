@@ -191,7 +191,7 @@ void fn_80296B70(int v)
 f32 fn_802966F4(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->unk778;
+    return inner->probeHitDist;
 }
 
 int fn_802972A8(int obj)
@@ -353,7 +353,7 @@ void fn_80296B78(int obj, int p2)
 int fn_802974A0(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    inner->unk778 = lbl_803E7ED8;
+    inner->probeHitDist = lbl_803E7ED8;
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000000LL;
     *(int*)((char*)state + 0) |= 0x200000;
     if (lbl_803E7EA4 == inner->verticalVel)
@@ -977,7 +977,7 @@ int fn_802A3B04(int obj, int state)
         }
     }
     fz = lbl_803E7EA4;
-    ((PlayerState*)inner)->unk778 = fz;
+    ((PlayerState*)inner)->probeHitDist = fz;
     {
         int e = *(int*)&((GameObject*)obj)->extra;
         *(u32*)((char*)e + 0x360) &= ~2LL;
@@ -4306,7 +4306,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
         hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         if (flagA != 0 && hit != 0)
         {
-            ((PlayerState*)p2)->unk778 = buf.dist;
+            ((PlayerState*)p2)->probeHitDist = buf.dist;
         }
         if (flagB != 0 && hit != 0)
         {
@@ -6548,7 +6548,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.velocityY = lbl_803E7EA4;
     }
     z = lbl_803E7EA4;
-    ((PlayerState*)inner)->unk778 = z;
+    ((PlayerState*)inner)->probeHitDist = z;
     {
         int in2 = *(int*)&((GameObject*)obj)->extra;
         *(u32*)((char*)in2 + 0x360) &= ~2LL;
@@ -7242,7 +7242,7 @@ void playerUpdate(int obj)
             {
                 ((PlayerState*)inner)->baddie.cameraYaw = *(s16*)cam;
             }
-            ((PlayerState*)inner)->unk778 = lbl_803E8164;
+            ((PlayerState*)inner)->probeHitDist = lbl_803E8164;
             ((PlayerState*)inner)->unk8C9 = 0;
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->unk8B8; i++)

@@ -255,7 +255,7 @@ typedef struct PlayerState {
     f32 savedPosY;
     f32 savedPosZ;
     u8 pad774[0x778 - 0x774];
-    f32 unk778;
+    f32 probeHitDist; /* hit distance (SweepHit.dist) from a directional collision probe (objBboxFn_800640cc); has a getter (fn_802966F4), reset to 0 on state changes */
     f32 unk77C;
     u8 pad780[0x784 - 0x780];
     f32 verticalVel; /* vertical velocity factor applied as anim.velocityY = verticalVel*fv; has dedicated get/set (fn_80296220), drives climb/descend move progress */
