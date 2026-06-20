@@ -676,7 +676,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
 {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
-    ObjAnimDef* animDef;
     ObjAnimState* state;
     ObjAnimEventTable* eventTable;
     ObjAnimRootCurve* curve;
@@ -725,8 +724,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                                                                     : moveStepScale);
 
     bank = ObjAnim_GetActiveBank(objAnim);
-    animDef = bank->animDef;
-    if (animDef->moveCount == 0)
+    if (bank->animDef->moveCount == 0)
     {
         return 0;
     }
@@ -899,7 +897,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
     }
 
-    curve = ObjAnim_GetMoveRootCurve(animDef, state);
+    curve = ObjAnim_GetMoveRootCurve(bank->animDef, state);
     if (curve == NULL)
     {
         events->rootCurveValid = 0;
@@ -923,7 +921,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     {
         blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef, state);
+        blendCurve = ObjAnim_GetBlendMoveRootCurve(bank->animDef, state);
         if (blendCurve != NULL)
         {
             blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
