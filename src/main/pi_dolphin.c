@@ -7421,15 +7421,15 @@ int initLoadFiles(void)
     }
     if (lbl_803DCC88 == 0)
     {
-        if (((lbl_803DCC80 & 0x100) == 0 || (lbl_803DCC80 & 0x400) == 0) &&
-            ((lbl_803DCC84 & 0x100) == 0 || (lbl_803DCC84 & 0x400) == 0))
+        if (((*(volatile int*)&lbl_803DCC80 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC80 & 0x400) == 0) &&
+            ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
         {
             int saved = testAndSet_onlyUseHeap3(0);
             mapLoadDataFile(5, 0x23);
             mapLoadDataFile(5, 0x24);
             testAndSet_onlyUseHeap3(saved);
         }
-        else if ((lbl_803DCC84 & 0x100) != 0 && (lbl_803DCC84 & 0x400) != 0)
+        else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
         {
             mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
             mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
