@@ -58,8 +58,8 @@ typedef struct Dbholecontrol1Placement
     s16 unk18;
     u8 pad1A[0x1C - 0x1A];
     s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
+    s16 hideGameBit;
+    s16 triggerGameBit;
     u8 pad22[0x24 - 0x22];
     s16 unk24;
     u8 pad26[0x2B - 0x26];
@@ -542,12 +542,12 @@ void dbholecontrol1_update(int* obj)
 
     u8* def;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk1E) != 0)
+    if (GameBit_Get(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
-    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->unk20) != 0)
+    else if (GameBit_Get(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
     }
@@ -619,7 +619,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
 
-    if (GameBit_Get(((Dbholecontrol1Placement*)data)->unk1E) != 0 || lbl_803DDCE0 != 0)
+    if (GameBit_Get(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
         int count;
         int* objs = ObjGroup_GetObjects(36, &count);
