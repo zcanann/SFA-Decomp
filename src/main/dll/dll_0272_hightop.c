@@ -1052,6 +1052,9 @@ int hightop_stateHandler09(int obj, int p)
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
     int prevCount;
     int i;
+    int* weight;
+    int roll;
+    int idx;
     if ((s8)((HightopPlacement*)p)->unk27A != 0 || state->flagsC49.b6 != 0)
     {
         if (state->flagsC4A.b0 == 0)
@@ -1170,9 +1173,9 @@ int hightop_stateHandler09(int obj, int p)
         {
             if (randFn_80080100(0x1f4) != 0)
             {
-                int roll = randomGetRange(0, 0x64);
-                int idx = 0;
-                int* weight = gHighTopIdleSequenceWeights;
+                roll = randomGetRange(0, 0x64);
+                idx = 0;
+                weight = gHighTopIdleSequenceWeights;
                 while (*weight < roll)
                 {
                     weight++;
