@@ -1670,7 +1670,7 @@ extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
 extern u8 CameraShake_IsActive(void);
-extern u8 bEnableMotionBlur;
+extern s8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
 extern int getHudHiddenFrameCount(void);
@@ -1761,7 +1761,7 @@ void sceneDraw(void)
         {
             drawSkyStars();
         }
-        (*gSkyInterface)->render();
+        (*gSkyInterface)->render(0, 0, 0, 0, flag);
         if ((renderFlags & 0x10) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
@@ -1769,7 +1769,7 @@ void sceneDraw(void)
     }
     else
     {
-        (*gSkyInterface)->render();
+        (*gSkyInterface)->render(0, 0, 0, 0, flag);
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }

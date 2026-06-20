@@ -6,7 +6,7 @@
 typedef void (*SkyUpdateEnvfxActFn)(int sourceObj, int targetObj, void *entry, int flags);
 typedef void (*SkyLoadLightsFn)(void);
 typedef void (*SkyUpdateTimeOfDayFn)(void);
-typedef void (*SkyRenderFn)(void);
+typedef void (*SkyRenderFn)(int a, int b, int c, int d, int e);
 typedef void (*SkyGetTimeOfDayFn)(f32 *outTime);
 typedef void (*SkyGetClockTimeFn)(f32 *outTime);
 typedef void (*SkyGetTransitionTimerFn)(int *outTimer);
