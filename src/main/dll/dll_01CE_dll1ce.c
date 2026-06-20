@@ -293,8 +293,8 @@ void FUN_801b5b8c(void)
     u32 vtxCount;
     double rnd;
     u64 objHandle;
-    u64 local_58;
-    u64 local_50;
+    u64 srcValPos;
+    u64 srcValNeg;
 
     objHandle = FUN_80286834();
     obj = (int)((u64)objHandle >> 0x20);
@@ -307,16 +307,16 @@ void FUN_801b5b8c(void)
         if (*srcVtx < 1)
         {
             rnd = (double)FUN_80293f90();
-            local_50 = (double)(int)*srcVtx;
+            srcValNeg = (double)(int)*srcVtx;
             *outVtx = (short)(int)-(float)((double)lbl_803E569C * rnd -
-                (double)(float)(local_50));
+                (double)(float)(srcValNeg));
         }
         else
         {
             rnd = (double)FUN_80293f90();
-            local_58 = (double)(int)*srcVtx;
+            srcValPos = (double)(int)*srcVtx;
             *outVtx = (short)(int)((double)lbl_803E569C * rnd +
-                (double)(float)(local_58));
+                (double)(float)(srcValPos));
         }
     }
     fifoArg = FUN_80017944((int)model, 0);
