@@ -30,7 +30,7 @@
 typedef struct GrimblePlacement
 {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 mapId;
 } GrimblePlacement;
 
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -379,7 +379,7 @@ void grimble_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->unk14) != 0)
+        if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {
             (*(void (**)(int, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
                 0x58))(obj, def, state, 0xa, 6,
