@@ -18,9 +18,9 @@ typedef struct Dll19DPlacement
 typedef struct Dll19DState
 {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     u8 pad14[0x2C - 0x14];
     s16 unk2C;
     s16 unk2E;
@@ -162,9 +162,9 @@ void dll_19D_update(int obj)
 
     if ((((Dll19DState*)state)->flags & 1) == 0)
     {
-        ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.localPosX;
-        ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.localPosY;
-        ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.localPosZ;
+        ((Dll19DState*)state)->posX = ((GameObject*)self)->anim.localPosX;
+        ((Dll19DState*)state)->posY = ((GameObject*)self)->anim.localPosY;
+        ((Dll19DState*)state)->posZ = ((GameObject*)self)->anim.localPosZ;
         ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 1);
     }
 
@@ -214,13 +214,13 @@ void dll_19D_update(int obj)
             ((Dll19DState*)state)->effectTimer = 0x32;
         }
 
-        ((Dll19DState*)state)->unk8 = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->unk8;
-        ((Dll19DState*)state)->unkC = ((GameObject*)self)->anim.velocityY * timeDelta + ((Dll19DState*)state)->unkC;
-        ((Dll19DState*)state)->unk10 = ((GameObject*)self)->anim.velocityZ * timeDelta + ((Dll19DState*)state)->unk10;
+        ((Dll19DState*)state)->posX = ((GameObject*)self)->anim.velocityX * timeDelta + ((Dll19DState*)state)->posX;
+        ((Dll19DState*)state)->posY = ((GameObject*)self)->anim.velocityY * timeDelta + ((Dll19DState*)state)->posY;
+        ((Dll19DState*)state)->posZ = ((GameObject*)self)->anim.velocityZ * timeDelta + ((Dll19DState*)state)->posZ;
         ((Dll19DState*)state)->unk34 = ((Dll19DState*)state)->unk34 + framesThisStep * 0x5dc;
-        ((GameObject*)self)->anim.localPosX = ((Dll19DState*)state)->unk8;
-        ((GameObject*)self)->anim.localPosY = ((Dll19DState*)state)->unkC;
-        ((GameObject*)self)->anim.localPosZ = ((Dll19DState*)state)->unk10;
+        ((GameObject*)self)->anim.localPosX = ((Dll19DState*)state)->posX;
+        ((GameObject*)self)->anim.localPosY = ((Dll19DState*)state)->posY;
+        ((GameObject*)self)->anim.localPosZ = ((Dll19DState*)state)->posZ;
 
         frames = framesThisStep;
         lifetime = *(int*)(self + 0xf4);
