@@ -4259,7 +4259,6 @@ void curves_remove(RomCurveDef* curve)
     int sortedCurveCount;
     RomCurveDef** tableSlot;
     int removeIndex;
-    u32 remaining;
 
     removeIndex = 0;
     tableSlot = romCurves;
@@ -4279,8 +4278,7 @@ void curves_remove(RomCurveDef* curve)
     nRomCurves = nRomCurves - 1;
     sortedCurveCount = nRomCurves;
     tableSlot = romCurves + removeIndex;
-    remaining = sortedCurveCount - removeIndex;
-    for (; remaining != 0; remaining--)
+    for (; removeIndex < sortedCurveCount; removeIndex++)
     {
         tableSlot[0] = tableSlot[1];
         tableSlot = tableSlot + 1;
