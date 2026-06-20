@@ -1,5 +1,6 @@
 /* DLL 0x243 - DBHoleControl1 [801FE118-801FEB30) */
 #include "main/game_object.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
@@ -127,14 +128,14 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
     *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
-    *(float*)(state + 0x2a0) = lbl_803E6F80;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(u8*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(u8*)(state + 0x34d) = 0x1f;
+    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
         *(u32*)(control + 0x18) = *(u32*)(state + 0x2d0);
@@ -182,14 +183,14 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     fVar1 = lbl_803E6F88;
     *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
     *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / fVar1;
-    *(float*)(param_10 + 0x2a0) = lbl_803E6F8C;
+    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        *(u8*)(param_10 + 0x346) = 0;
+        ((GroundBaddieState*)param_10)->baddie.moveDone = 0;
     }
-    *(u8*)(param_10 + 0x34d) = 0x1f;
+    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
         (((GameObject*)param_9)->anim.localPosY < *(float*)(*(int*)(param_10 + 0x2d0) + 0x10) - lbl_803E6F90))
     {
@@ -257,11 +258,11 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
                                param_8, obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
-        *(u8*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(u32*)(state + 0x2d0) = 0;
+        ((GroundBaddieState*)state)->baddie.targetObj = 0;
         if (*(int*)(control + 0x18) != 0)
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
@@ -291,8 +292,8 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         }
         *(u32*)(control + 0x3c) = 0;
     }
-    *(u8*)(state + 0x34d) = 0x10;
-    *(float*)(state + 0x2a0) = lbl_803E6FD8;
+    ((GroundBaddieState*)state)->baddie.unk34D = 0x10;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6FD8;
     *(float*)(state + 0x280) = lbl_803E6F40;
     if (*(char*)(state + 0x346) != '\0')
     {
@@ -317,14 +318,14 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     animId = 0xffffffff;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 10, 0, animId, param_13, param_14, param_15, param_16);
-        *(u8*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(u8*)(state + 0x34d) = 1;
+    ((GroundBaddieState*)state)->baddie.unk34D = 1;
     control = *(int*)(control + 0x40c);
     *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
     if ((*(u32*)(state + 0x314) & 1) != 0)
@@ -355,14 +356,14 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     }
     animId = 0xffffffff;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
-    *(float*)(state + 0x2a0) = lbl_803E6F8C;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                      obj, 5, 0, animId, param_13, param_14, param_15, param_16);
-        *(u8*)(state + 0x346) = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    *(u8*)(state + 0x34d) = 1;
+    ((GroundBaddieState*)state)->baddie.unk34D = 1;
     return 0;
 }
 
@@ -394,17 +395,17 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             {
                 FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                              obj, 7, 0, animId, param_13, param_14, param_15, param_16);
-                *(u8*)(state + 0x346) = 0;
+                ((GroundBaddieState*)state)->baddie.moveDone = 0;
             }
         }
         else if (*(char*)(state + 0x27a) != '\0')
         {
             FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                          obj, 6, 0, animId, param_13, param_14, param_15, param_16);
-            *(u8*)(state + 0x346) = 0;
+            ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
-        *(u8*)(state + 0x34d) = 1;
-        *(float*)(state + 0x2a0) =
+        ((GroundBaddieState*)state)->baddie.unk34D = 1;
+        ((GroundBaddieState*)state)->baddie.moveSpeed =
             lbl_803E6FDC +
             (float)((double)(u32) * (u8*)(extra + 0x406)) /
             lbl_803E6FE0;
