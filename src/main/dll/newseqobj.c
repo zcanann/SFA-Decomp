@@ -463,7 +463,7 @@ void fn_80150910(int* obj, u8* state)
         {
             delta = gSidekickToyAngleWrapFull + delta;
         }
-        *(f32*)(state + 0x308) =
+        ((BaddieState*)state)->unk308 =
             (((BaddieState*)state)->pathStep - *(f32*)(state + 0x310)) / lbl_803E274C *
             (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / gSidekickToyAngleWrapFull);
         if (*(f32*)(state + 0x308) < lbl_803E2754)
