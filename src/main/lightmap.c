@@ -2007,8 +2007,6 @@ typedef union
 
 void renderSceneGeometry(int* p1, s8* order)
 {
-    F64Cvt cv;
-    F64Cvt cv2;
     u8 map[256];
     int box0[4];
     int box1[4];
@@ -2030,15 +2028,11 @@ void renderSceneGeometry(int* p1, s8* order)
     int idx;
     u8* blk;
     f32 ws;
-    double bias;
-    int hi;
 
     layer = 4;
     lt = &gMapBlockLayerTables[4];
     lt2 = &lbl_8038228C[4];
     ws = gMapBlockWorldSize;
-    bias = gLightmapU32ToDoubleBias;
-    hi = 0x43300000;
     do
     {
         table = (s8*)*lt;
@@ -2112,9 +2106,7 @@ void renderSceneGeometry(int* p1, s8* order)
         for (; oi < 16; oi++)
         {
             row = *op;
-            cv.u.lo = row ^ 0x80000000;
-            cv.u.hi = hi;
-            rowF = ws * (f32)(cv.d - bias);
+            rowF = ws * (f32)row;
             ii = 0;
             ip = order;
             for (; ii < 16; ii++)
@@ -2138,13 +2130,9 @@ void renderSceneGeometry(int* p1, s8* order)
                 if (idx > -1 && mapRectFn_8005a728(row, col, blk) != 0)
                 {
                     lbl_803DCE58 = rowF;
-                    cv.u.lo = col ^ 0x80000000;
-                    cv.u.hi = 0x43300000;
-                    colF = gMapBlockWorldSize * (f32)(cv.d - gLightmapU32ToDoubleBias);
+                    colF = gMapBlockWorldSize * (f32)col;
                     lbl_803DCE54 = colF;
-                    cv2.u.lo = (int)*(s16*)(blk + 0x8e) ^ 0x80000000;
-                    cv2.u.hi = 0x43300000;
-                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(cv2.d - gLightmapU32ToDoubleBias), colF);
+                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)*(s16*)(blk + 0x8e), colF);
                     renderMapBlock(blk, p1);
                 }
             next:
