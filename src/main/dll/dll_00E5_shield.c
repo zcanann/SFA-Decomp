@@ -1155,16 +1155,12 @@ void staffFn_80170380(int* obj, int cmd)
                 int i;
                 u8* hw;
                 u8* w;
-                f32* t0;
-                f32* t1;
                 f32 k;
                 f32 kc;
                 ((ShieldState*)state)->unkC = amp;
                 i = 0;
                 hw = state;
                 w = state;
-                t0 = tbl;
-                t1 = (f32*)((char*)tbl + 0x10);
                 k = lbl_803E33A8;
                 kc = lbl_803E33C8;
                 for (; i < 4; i++)
@@ -1175,13 +1171,11 @@ void staffFn_80170380(int* obj, int cmd)
                     c = fcos16((u16) * (s16*)(hw + 0x34));
                     sum = amp + c;
                     c = sum * k;
-                    *(f32*)(w + 0x24) = *t0 * c;
-                    *(f32*)(w + 0x14) = *t1;
+                    *(f32*)(w + 0x24) = tbl[i] * c;
+                    *(f32*)(w + 0x14) = tbl[i + 4];
                     *(s16*)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
                     hw += 2;
-                    t0 += 1;
                     w += 4;
-                    t1 += 1;
                 }
             }
             Sfx_PlayFromObject(obj, 0x42c);
