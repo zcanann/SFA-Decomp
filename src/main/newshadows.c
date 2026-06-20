@@ -212,7 +212,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (k = 0; k < size; k++)
             {
                 blurred[k] = sum / window;
-                sum = sum - row[k] + (row + window)[k];
+                sum -= row[k];
+                sum += (row + window)[k];
             }
             src = (u32*)blurred;
             for (x = 0; x < size; x += 8)
@@ -267,7 +268,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 for (k = 0; k < size; k++)
                 {
                     blurred[k] = sum / window;
-                    sum = sum - row[k] + (row + window)[k];
+                    sum -= row[k];
+                    sum += (row + window)[k];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
@@ -326,7 +328,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (k = 0; k < size; k++)
             {
                 blurred[k] = sum / window;
-                sum = sum - row[k] + (row + window)[k];
+                sum -= row[k];
+                sum += (row + window)[k];
             }
             src = (u16*)blurred;
             for (x = 0; x < size; x += 8)
@@ -383,7 +386,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 for (k = 0; k < size; k++)
                 {
                     blurred[k] = sum / window;
-                    sum = sum - row[k] + (row + window)[k];
+                    sum -= row[k];
+                    sum += (row + window)[k];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
