@@ -2121,10 +2121,11 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                         (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objA)->anim.rootMotionScale);
 
                     {
+                        f32* pos = &point.x;
                         f32 rad = objBState->primaryRadius;
                         ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                         int mf = *hitboxBuf;
-                        ObjHits_CalcSkeletonResponse3D(&point.x, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
+                        ObjHits_CalcSkeletonResponse3D(pos, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
                                                        bestHit,
                                                        (ratio < gObjHitsScalarZero)
                                                            ? gObjHitsScalarZero
@@ -2164,10 +2165,11 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                         (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale);
 
                     {
+                        f32* pos = &point.x;
                         f32 rad = objBState->primaryRadius;
                         ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                         int mf = *hitboxBuf;
-                        ObjHits_CalcSkeletonResponseXZ(&point.x, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
+                        ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, (ObjHitsSkeletonHit*)hits, jd, mf,
                                                        bestHit,
                                                        (ratio < gObjHitsScalarZero)
                                                            ? gObjHitsScalarZero
