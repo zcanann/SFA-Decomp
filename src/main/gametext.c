@@ -636,13 +636,13 @@ void gameTextRenderStrs(char* str, int boxIdx)
             lbl_803DC9A7 = lbl_803DC992;
             lbl_803DC9A6 = lbl_803DC991;
             lbl_803DC9A5 = lbl_803DC990;
-            textRenderStr(lines[i], slot, 1, slot->f18, slot->f1a, lineH);
+            textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 1);
             lbl_803DC9A7 = save7;
             lbl_803DC9A6 = save6;
             lbl_803DC9A5 = save5;
             lbl_803DC9A0 = saveColor;
         }
-        textRenderStr(lines[i], slot, 0, slot->f18, slot->f1a, lineH);
+        textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 0);
         slot->f1a = (s16)((f32)slot->f1a + lineH);
         if (closeAtEnd)
         {

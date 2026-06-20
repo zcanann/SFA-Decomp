@@ -914,7 +914,7 @@ extern u8 lbl_803DC9A6;
 extern u8 lbl_803DC9A7;
 extern int lbl_803DC9C0;
 extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
-extern void textRenderStr(char *str, TextSlot *slot, int flag, f32 x, f32 y, f32 lineH);
+extern void textRenderStr(char *str, TextSlot *slot, f32 x, f32 y, f32 lineH, int flag);
 extern int gameTextCharset;
 extern int curLanguage;
 extern LanguageName sLanguageNameTable[];
