@@ -1798,6 +1798,7 @@ void initFn_8006d020(void)
     e = gNewShadowPlacements;
     while (placed < 0x32 && attempts < 10000u)
     {
+        f32 *p1, *p2, *p4;
         e[0] = (f32)(int)
         randomGetRange(8, 0x10);
         e[3] = 0.01f * (f32)(int)
@@ -1806,13 +1807,16 @@ void initFn_8006d020(void)
         randomGetRange(0x14, 0x32)
         )
         ;
+        p1 = &e[1];
+        p2 = &e[2];
+        p4 = &e[4];
         attempts = 0;
         do
         {
             f32* o;
-            e[1] = 0.001f * (f32)(int)
+            *p1 = 0.001f * (f32)(int)
             randomGetRange(0, 999);
-            e[2] = 0.001f * (f32)(int)
+            *p2 = 0.001f * (f32)(int)
             randomGetRange(0, 999);
             collide = 0;
             j = 0;
@@ -1820,19 +1824,19 @@ void initFn_8006d020(void)
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
-                mx = __fabsf(e[1] - o[1]);
-                tmp = __fabsf((1.0f + e[1]) - o[1]);
+                mx = __fabsf(*p1 - o[1]);
+                tmp = __fabsf((1.0f + *p1) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = __fabsf((e[1] - 1.0f) - o[1]);
+                tmp = __fabsf((*p1 - 1.0f) - o[1]);
                 if (tmp < mx) mx = tmp;
-                mz = __fabsf(e[2] - o[2]);
-                tmp = __fabsf((1.0f + e[2]) - o[2]);
+                mz = __fabsf(*p2 - o[2]);
+                tmp = __fabsf((1.0f + *p2) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = __fabsf((e[2] - 1.0f) - o[2]);
+                tmp = __fabsf((*p2 - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
                 if (d > 0.0f) d = sqrtf(d);
-                if (d < e[4] + o[3]) collide = 1;
+                if (d < *p4 + o[3]) collide = 1;
                 o += 5;
                 j++;
             }
