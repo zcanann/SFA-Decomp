@@ -1363,19 +1363,22 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         state->moveFlags.b7 = 1;
         objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
         Obj_BuildTransformMatrices(obj);
-        w = wpos;
-        e2 = (f32*)state;
-        d = deltas;
-        for (i = 0; i < state->pointCount; i++)
         {
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
-                                           *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
-            d[0] = ((GameObject*)obj)->anim.localPosX - w[0];
-            d[1] = ((GameObject*)obj)->anim.localPosY - w[1];
-            d[2] = ((GameObject*)obj)->anim.localPosZ - w[2];
-            w += 3;
-            e2 = (f32*)((char*)e2 + 0xc);
-            d += 3;
+            int j;
+            w = wpos;
+            e2 = (f32*)state;
+            d = deltas;
+            for (j = 0; j < state->pointCount; j++)
+            {
+                Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
+                                               *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
+                d[0] = ((GameObject*)obj)->anim.localPosX - w[0];
+                d[1] = ((GameObject*)obj)->anim.localPosY - w[1];
+                d[2] = ((GameObject*)obj)->anim.localPosZ - w[2];
+                w += 3;
+                e2 = (f32*)((char*)e2 + 0xc);
+                d += 3;
+            }
         }
         if ((state->flags & 4) == 0)
         {
@@ -1424,10 +1427,11 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     else
     {
+        int j;
         char* mi = *(char**)((char*)obj + 0x58);
         f32* mtx2 = (f32*)(mi + ((*(u8*)(mi + 0x10c) + 2) << 4) * 4);
         e2 = (f32*)state;
-        for (i = 0; i < state->pointCount; i++)
+        for (j = 0; j < state->pointCount; j++)
         {
             Matrix_TransformPoint(mtx2, *(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
                                   *(f32*)((char*)e2 + 0x20), (f32*)((char*)e2 + 0x78),
