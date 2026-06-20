@@ -51,7 +51,7 @@ typedef struct PlayerState {
     u16 unk3FE;
     int unk400;
     f32 maxSpeed;
-    f32 unk408;
+    f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
     u8 unk40C;
     u8 unk40D;
     u8 pad40E[0x410 - 0x40E];
