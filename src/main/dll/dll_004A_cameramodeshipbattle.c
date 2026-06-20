@@ -111,7 +111,8 @@ void CameraModeShipBattle_update(short* cam)
         ((CameraObject*)cam)->anim.worldPosY = gCamShipBattleState->smoothedYOffset + (focus->anim.worldPosY + gCamShipBattleState->
             verticalOffset);
     }
-    ((CameraObject*)cam)->anim.worldPosX = (lbl_803E1970 + focus->anim.worldPosX) + gCamShipBattleState->lateralOffset;
+    fa = lbl_803E1970 + focus->anim.worldPosX;
+    ((CameraObject*)cam)->anim.worldPosX = fa + gCamShipBattleState->lateralOffset;
     ((CameraObject*)cam)->anim.worldPosZ = focus->anim.worldPosZ + gCamShipBattleState->smoothedZOffset;
     cam[1] = 0x708;
     cam[0] = 0x4000;
