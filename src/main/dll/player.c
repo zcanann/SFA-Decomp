@@ -5693,7 +5693,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
             return 0x25;
         }
-        inner->unk3F1 = (inner->unk3F1 & 0x7f) | 0x80;
+        ((struct { u8 hi : 1; u8 lo : 7; }*)&inner->unk3F1)->hi = 1;
         *(u32*)&inner->flags360 |= 0x800000LL;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
@@ -14933,7 +14933,6 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 }
 
 #pragma peephole off
-#pragma optimization_level 2
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane planes[2];
@@ -15114,7 +15113,6 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         return 3;
     }
 }
-#pragma optimization_level reset
 #pragma peephole reset
 
 int fn_802A2918(int obj, int state, f32 fv)
