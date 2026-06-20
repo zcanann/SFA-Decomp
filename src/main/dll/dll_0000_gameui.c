@@ -1234,7 +1234,7 @@ void pauseMenuDrawText(void)
     {
         s16 width = (s16)(v[2] - v[3]);
         s16 blit_x = width + 0x28;
-        blit_x = (blit_x >= target) ? target : blit_x;
+        blit_x = (target <= blit_x) ? target : blit_x;
         if (blit_x < 0) blit_x = 0;
         *(s16*)((u8*)sprite + 0x8) = blit_x & 0xFFFE;
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
