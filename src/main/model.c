@@ -1597,7 +1597,6 @@ void modelAnimResetState(void* m, void* data)
     u8* mdl;
     f32 f;
 
-    hdr = *(u8**)m;
     *(u16*)(p2 + 0x44) = 0;
     *(u16*)(p2 + 0x5e) = 0;
     *(u16*)(p2 + 0x58) = 0;
@@ -1608,6 +1607,7 @@ void modelAnimResetState(void* m, void* data)
     *(f32*)(p2 + 4) = f;
     *(f32*)(p2 + 0x14) = f;
     *(u8*)(p2 + 0x60) = 0;
+    hdr = *(u8**)m;
     if (((ModelFileHeader*)hdr)->animationCount != 0)
     {
         if (((ModelFileHeader*)hdr)->flags & 0x40)
