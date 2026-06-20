@@ -245,8 +245,7 @@ void ktrexfloorswitch_update(int obj)
             }
         }
     }
-    ((KtrexfloorswitchState*)state)->graceTimer -= 1;
-    if ((s8)((KtrexfloorswitchState*)state)->graceTimer < 0)
+    if ((s8)(((KtrexfloorswitchState*)state)->graceTimer -= 1) < 0)
     {
         ((KtrexfloorswitchState*)state)->graceTimer = 0;
     }
