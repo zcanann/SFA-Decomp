@@ -1244,7 +1244,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     else
     {
-        tmpl.ff2 = n - 1;
+        n -= 1;
+        tmpl.ff2 = n;
     }
     tmpl.dll = NULL;
     if ((int)*(s16*)(def + 0x50) != -1)
