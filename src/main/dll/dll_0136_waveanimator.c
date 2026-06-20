@@ -138,8 +138,8 @@ void fn_801923F8(int* cfgArg)
     }
 
     {
-        f32 negMin = -cfg->minHeight;
         f32 colorSplitZero;
+        f32 negMin = -cfg->minHeight;
         colorSrcIdx = 0;
         colorIdx = 0;
         colorSplitZero = lbl_803E3F44;
