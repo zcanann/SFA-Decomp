@@ -10,7 +10,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
-extern f32 timeDelta;
 extern void objRenderFn_8003b8f4(f32);
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
 extern f32 Vec_distance(f32* a, f32* b);
