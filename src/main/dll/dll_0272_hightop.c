@@ -558,12 +558,13 @@ void hightop_initialise(void)
 }
 
 #pragma dont_inline on
-#pragma peephole off
 int hightop_handleMotionEvent(int obj, u8 event)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
     switch (event)
     {
+    case 0:
+        break;
     case 5:
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
         break;
@@ -588,7 +589,6 @@ int hightop_handleMotionEvent(int obj, u8 event)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma dont_inline reset
 
 void hightop_hitDetect(int obj)
