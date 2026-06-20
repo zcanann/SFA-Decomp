@@ -12,21 +12,21 @@
 
 typedef struct SnowBikeMountState
 {
-    s16 unk0;
+    s16 savedRotX;
     u8 pad2[0xC - 0x2];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 savedPosX;
+    f32 savedPosY;
+    f32 savedPosZ;
     u8 pad18[0x3D3 - 0x18];
     s8 unk3D3;
     u8 pad3D4[0x3E8 - 0x3D4];
-    f32 unk3E8;
-    f32 unk3EC;
-    f32 unk3F0;
+    f32 modelMtxPosX;
+    f32 modelMtxPosY;
+    f32 modelMtxPosZ;
     u8 pad3F4[0x400 - 0x3F4];
-    f32 unk400;
-    f32 unk404;
-    f32 unk408;
+    f32 mountPosX;
+    f32 mountPosY;
+    f32 mountPosZ;
     u8 pad40C[0x414 - 0x40C];
     f32 unk414;
     u8 pad418[0x420 - 0x418];
@@ -44,17 +44,17 @@ typedef struct SnowBikeMountState
 
 typedef struct SnowBikeSetTypeState
 {
-    s16 unk0;
+    s16 savedRotX;
     u8 pad2[0xC - 0x2];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 savedPosX;
+    f32 savedPosY;
+    f32 savedPosZ;
     u8 pad18[0x3D3 - 0x18];
     s8 unk3D3;
     u8 pad3D4[0x3E8 - 0x3D4];
-    f32 unk3E8;
-    f32 unk3EC;
-    f32 unk3F0;
+    f32 modelMtxPosX;
+    f32 modelMtxPosY;
+    f32 modelMtxPosZ;
     u8 pad3F4[0x400 - 0x3F4];
     f32 mountPosX;
     f32 mountPosY;
@@ -201,20 +201,20 @@ u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->ex
 void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
-    ((SnowBikeMountState*)t)->unk400 = ((GameObject*)obj)->anim.localPosX;
-    ((SnowBikeMountState*)t)->unk404 = ((GameObject*)obj)->anim.localPosY;
-    ((SnowBikeMountState*)t)->unk408 = ((GameObject*)obj)->anim.localPosZ;
-    *x = ((SnowBikeMountState*)t)->unk400;
-    *y = ((SnowBikeMountState*)t)->unk404;
-    *z = ((SnowBikeMountState*)t)->unk408;
+    ((SnowBikeMountState*)t)->mountPosX = ((GameObject*)obj)->anim.localPosX;
+    ((SnowBikeMountState*)t)->mountPosY = ((GameObject*)obj)->anim.localPosY;
+    ((SnowBikeMountState*)t)->mountPosZ = ((GameObject*)obj)->anim.localPosZ;
+    *x = ((SnowBikeMountState*)t)->mountPosX;
+    *y = ((SnowBikeMountState*)t)->mountPosY;
+    *z = ((SnowBikeMountState*)t)->mountPosZ;
 }
 
 void SnowBike_modelMtxFn(int obj, f32* x, f32* y, f32* z)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
-    *x = ((SnowBikeMountState*)t)->unk3E8;
-    *y = ((SnowBikeMountState*)t)->unk3EC;
-    *z = ((SnowBikeMountState*)t)->unk3F0;
+    *x = ((SnowBikeMountState*)t)->modelMtxPosX;
+    *y = ((SnowBikeMountState*)t)->modelMtxPosY;
+    *z = ((SnowBikeMountState*)t)->modelMtxPosZ;
 }
 
 void SnowBike_func15(int obj)
@@ -237,10 +237,10 @@ void SnowBike_func15(int obj)
         }
         (*gCheckpointInterface)->findRouteForObject((GameObject*)obj,
                                                     (CheckpointRouteState*)(t + 0x28), 0);
-        ((SnowBikeMountState*)t)->unkC = ((GameObject*)obj)->anim.localPosX;
-        ((SnowBikeMountState*)t)->unk10 = ((GameObject*)obj)->anim.localPosY;
-        ((SnowBikeMountState*)t)->unk14 = ((GameObject*)obj)->anim.localPosZ;
-        ((SnowBikeMountState*)t)->unk0 = ((GameObject*)obj)->anim.rotX;
+        ((SnowBikeMountState*)t)->savedPosX = ((GameObject*)obj)->anim.localPosX;
+        ((SnowBikeMountState*)t)->savedPosY = ((GameObject*)obj)->anim.localPosY;
+        ((SnowBikeMountState*)t)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
+        ((SnowBikeMountState*)t)->savedRotX = ((GameObject*)obj)->anim.rotX;
         zero = lbl_803E5AE8;
         ((SnowBikeMountState*)t)->unk494 = zero;
         ((SnowBikeMountState*)t)->unk498 = zero;
