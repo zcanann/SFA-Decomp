@@ -305,7 +305,7 @@ void ObjHits_RefreshObjectState(int obj);
 void ObjHits_AddContactObject(int obj,int contactObj);
 int ObjHits_RecordObjectHit(int obj,int hitObj,s8 priority,s8 hitVolume,s8 sphereIndex);
 int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,
-                              char priority,u8 hitVolume,u8 sphereIndex);
+                              s8 priority,s8 hitVolume,s8 sphereIndex);
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 u32 *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,u32 *outHitVolume);

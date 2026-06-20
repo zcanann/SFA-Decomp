@@ -743,8 +743,8 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 s
     return 1;
 }
 
-int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, char priority,
-                              u8 hitVolume, u8 sphereIndex)
+int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, s8 priority,
+                              s8 hitVolume, s8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
