@@ -60,7 +60,6 @@ extern void warpToMap(int idx, s8 transType);
 
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 gScLevelControlMusicStepSequence[4];
-extern f32 timeDelta;
 extern const f32 lbl_803E5558;
 extern f32 lbl_803E555C;
 extern f32 lbl_803E5560;
