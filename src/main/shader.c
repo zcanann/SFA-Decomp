@@ -3309,15 +3309,15 @@ void mapDebugRender(int* state)
     int sx, sz;
     int wx, wz;
     int ci;
-    s16 y0;
+    int y0;
     int y0a;
     f32 cy;
-    s16 y1;
+    int y1;
     int yy, dy, h;
     int step;
     int row, cx, cz;
     int cell;
-    s16 v;
+    int v;
     int n;
 
     if (lbl_803DCDED != 0)
