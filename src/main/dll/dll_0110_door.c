@@ -86,7 +86,7 @@ void Door_init(int* obj, u8* def)
         case 1101:
             {
                 s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if ((subtype >= 40 && subtype < 43) || (subtype < 35 && subtype >= 31))
+                if ((subtype < 35 && subtype >= 31) || (subtype >= 40 && subtype < 43))
                 {
                     *(s16*)state = 832;
                     *(s16*)&((CfGuardianState*)state)->sfxId = 833;
