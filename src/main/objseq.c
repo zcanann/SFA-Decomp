@@ -522,7 +522,7 @@ void ObjSeq_run(void)
         for (; i < objectCount; i++)
         {
             candidate = *objPtr;
-            if (*(s16*)(candidate + 0x44) == 0x10)
+            if (((GameObject*)candidate)->anim.classId == 0x10)
             {
                 model = *(u8**)(candidate + 0x4c);
                 seqp = *(u8**)(candidate + 0xb8);
