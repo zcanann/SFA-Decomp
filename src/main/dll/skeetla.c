@@ -36,7 +36,6 @@ extern f32 lbl_803E242C;
 extern f32 lbl_803E2430;
 extern f32 lbl_803E2434;
 extern f32 lbl_803E2438;
-extern f32 timeDelta;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
