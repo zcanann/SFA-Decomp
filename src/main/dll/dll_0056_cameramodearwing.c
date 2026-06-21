@@ -181,6 +181,7 @@ void fn_801101E8(void)
 #pragma dont_inline reset
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeArwing_update(u8* obj)
 {
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
@@ -296,6 +297,7 @@ void CameraModeArwing_update(u8* obj)
                                    &((GameObject*)obj)->anim.localPosZ,
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
