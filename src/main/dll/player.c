@@ -7245,7 +7245,7 @@ void playerUpdate(int obj)
             ((PlayerState*)inner)->probeHitDist = lbl_803E8164;
             ((PlayerState*)inner)->unk8C9 = 0;
             *(int*)((char*)inner + 0x310) = 0;
-            for (i = 0; i < ((PlayerState*)inner)->unk8B8; i++)
+            for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
                 int idx = i + 0x8b9;
                 *(u32*)((char*)inner + 0x310) |= 1 << *(u8*)((char*)inner + idx);
@@ -7407,7 +7407,7 @@ void playerUpdate(int obj)
             }
             (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(((PlayerState*)inner)->unk8C9);
             ((PlayerState*)inner)->isHoldingObject = 0;
-            ((PlayerState*)inner)->unk8B8 = 0;
+            ((PlayerState*)inner)->queuedBitCount = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
             objAudioFn_8006edcc(obj, *(int*)&((PlayerState*)inner)->baddie.eventFlags,
                                 ((PlayerState*)inner)->animSoundId, (void*)(inner + 0x3c4),
@@ -18549,11 +18549,11 @@ void fn_80295918(int obj, int sel, f32 fval)
     {
     case 1:
         {
-            u8 n = ((PlayerState*)state)->unk8B8;
+            u8 n = ((PlayerState*)state)->queuedBitCount;
             u8 v = (u8)iv;
             if (n < 4)
             {
-                ((PlayerState*)state)->unk8B8 += 1;
+                ((PlayerState*)state)->queuedBitCount += 1;
                 *((u8*)((char*)state + 0x8b9) + n) = v;
             }
             break;
