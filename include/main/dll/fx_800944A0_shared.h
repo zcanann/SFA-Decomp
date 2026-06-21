@@ -338,13 +338,12 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
 void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d);
 void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval);
 void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval);
-void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
-                    int flags, f32 f8val, f32 mult);
-void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
-                            void *origin, int flags, f32 f8val, f32 angBase,
-                            f32 lo, f32 hi);
-void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
-                         int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
+void objfx_spawnDirectionalBurst(void *obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                    f32 mult, void *origin, int flags);
+void objfx_spawnArcedBurst(void *obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                            f32 angBase, f32 lo, f32 hi, void *origin, int flags);
+void objfx_spawnBoxBurst(void *obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                         f32 mulX, f32 mulY, f32 mulZ, void *origin, int flags);
 void objShowButtonGlow(void *obj, u8 mode, f32 intensity);
 void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d);
 void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb);

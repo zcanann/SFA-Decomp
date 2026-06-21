@@ -197,8 +197,8 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fv
     (*gPartfxInterface)->spawnObject(obj, table2.v[a], &params, 2, -1, NULL);
 }
 
-void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                                 int flags, f32 f8val, f32 mult)
+void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                                 f32 mult, void* origin, int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0xd0);
@@ -279,9 +279,8 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
     }
 }
 
-void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
-                           void* origin, int flags, f32 f8val, f32 angBase,
-                           f32 lo, f32 hi)
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                           f32 angBase, f32 lo, f32 hi, void* origin, int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x8c);
@@ -362,8 +361,8 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
     }
 }
 
-void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                         int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ)
+void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance,
+                         f32 mulX, f32 mulY, f32 mulZ, void* origin, int flags)
 {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA*)((char*)gObjFxCrystalSparkleTbl + 0x48);
