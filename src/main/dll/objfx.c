@@ -1050,6 +1050,8 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
     u8 args[16];
     u8 i;
 
+    if (type != 0)
+    {
     switch (type)
     {
     case 1:
@@ -1149,6 +1151,7 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
             (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, args);
         }
         break;
+    }
     }
 
     if (light != NULL)
