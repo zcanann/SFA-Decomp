@@ -90,7 +90,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             ((GameObject*)obj)->anim.modelState->flags |= DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
         }
     }
-    if (state->flags.active == 0)
+    if (state->flags.active != 0)
     {
         return 0;
     }
@@ -143,13 +143,13 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
             return 0;
         }
-        (*gObjectTriggerInterface)->setXrot(state->triggerHandle, 0xbd);
+        (*gObjectTriggerInterface)->setXrot(state->triggerHandle, state->spinProgress);
         if (state->spinProgress < 0)
         {
             state->spinProgress = 0;
             if (state->spinSpeed < lbl_803E50EC)
             {
-                state->spinSpeed = lbl_803E50EC;
+                state->spinSpeed = *(f32*)&lbl_803E50EC;
             }
             state->prevSpinProgress = state->spinProgress;
             if (state->spinSpeed > lbl_803E50F0)
