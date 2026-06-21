@@ -173,7 +173,8 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * (waveB + waveA));
+    waveA = waveB + waveA;
+    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * waveA);
 
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) /
         lbl_803E2620
@@ -183,7 +184,8 @@ void fn_8014E1DC(int obj, HagabonState* state)
         lbl_803E2620
     )
     ;
-    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * (waveB + waveA));
+    waveA = waveB + waveA;
+    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * waveA);
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
