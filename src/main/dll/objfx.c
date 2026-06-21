@@ -1298,7 +1298,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
     int j;
     int effB;
     int t;
-    int n;
+    u8 n;
 
     if (framesThisStep > 3)
     {
