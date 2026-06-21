@@ -52,12 +52,12 @@ typedef struct PlayerState {
     int moveParams; /* ptr to a 0x60 locomotion-parameter block (lbl_80333250); deref'd as f32 speed thresholds/limits at +4/+c/+10/+14/+18/+1c */
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
-    u8 unk40C;
+    u8 fallFrames; /* frames spent in the falling/airborne path (gravity applied to velocityY each tick); ++ per frame clamped to 10, reset to 0 on landing/state-entry; >5 (with flag 0x3f1:b01) fires the landing rumble + footstep sfx */
     u8 staffHoldFrames; /* frames the staff-hold/grab condition has persisted; ++ while held, reset to 0 on state changes, clamped to 10; >2 forces drop of carried object + staff action */
     u8 pad40E[0x410 - 0x40E];
-    f32 unk410;
+    f32 rumbleCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; when expired (<=0) and moving fast (animSpeedA > thresh) fires doRumble + sfx 0x404 and resets to the cooldown interval */
     f32 buttonHoldTimer; /* accumulates frame-time while button 0x100 is held (and fn_802A9A0C true), clamped to a max; reset to 0 when released; paired with the 0x3f4:b20 "accumulating" flag */
-    f32 unk418;
+    f32 actionCooldown; /* f32 input-cooldown countdown decremented by timeDelta each tick, floored to 0; gates button 0x100: when pressed and the timer has expired (<=0) performs the staff/aim action (fn_802AA014) and resets to the cooldown interval */
     u8 unk41C;
     u8 pad41D[0x420 - 0x41D];
     f32 leanCurveScale; /* lean-curve sample: Curve_EvalCatmullRom(leanCurve) indexed by targetYawRateSigned (default 1.0); multiplies targetYawRateLimit to bound the per-frame targetYaw delta */

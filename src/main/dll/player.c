@@ -5822,7 +5822,7 @@ int fn_8029EBCC(int obj, int state)
             0x53, 1, sub != NULL ? 0x12 : -2, 0, NULL, 0, 0xff);
         ObjAnim_SetCurrentMove(obj, 0x43e, lbl_803E7EA4, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
-        inner->unk418 = lbl_803E7EA4;
+        inner->actionCooldown = lbl_803E7EA4;
         if (gPlayerPathObject != NULL)
         {
             if (((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
@@ -5836,18 +5836,18 @@ int fn_8029EBCC(int obj, int state)
     {
         ((GameObject*)obj)->anim.alpha = 1;
     }
-    inner->unk418 = inner->unk418 - timeDelta;
-    if (inner->unk418 < lbl_803E7EA4)
+    inner->actionCooldown = inner->actionCooldown - timeDelta;
+    if (inner->actionCooldown < lbl_803E7EA4)
     {
-        inner->unk418 = *(f32*)&lbl_803E7EA4;
+        inner->actionCooldown = *(f32*)&lbl_803E7EA4;
     }
     if ((inner->buttonsJustPressed & 0x100) != 0)
     {
-        if (inner->unk418 <= lbl_803E7EA4)
+        if (inner->actionCooldown <= lbl_803E7EA4)
         {
             buttonDisable(0, 0x100);
             ((void (*)(int, int, f32, f32))fn_802AA014)(obj, state, inner->aimInputZ, lbl_803E7EA4);
-            inner->unk418 = lbl_803E7F10;
+            inner->actionCooldown = lbl_803E7F10;
         }
     }
     {
@@ -8271,11 +8271,11 @@ void playerDoHitDetection(int obj)
                     *(u8*)((char*)inner + 0x262) != 0 ||
                     (Player_GetObjHitsState(obj)->flags & 8) != 0)
                 {
-                    if (((PlayerState*)inner)->unk410 <= lbl_803E7EA4 &&
+                    if (((PlayerState*)inner)->rumbleCooldown <= lbl_803E7EA4 &&
                         ((PlayerState*)inner)->baddie.animSpeedA > lbl_803E8160)
                     {
                         doRumble(lbl_803E7F10);
-                        ((PlayerState*)inner)->unk410 = lbl_803E7F30;
+                        ((PlayerState*)inner)->rumbleCooldown = lbl_803E7F30;
                         Sfx_PlayFromObject(obj, 0x404);
                     }
                     dt = mathSinf((gPlayerPi * (f32)((PlayerState*)inner)->yaw) /
@@ -10888,10 +10888,10 @@ void fn_802B18BC(int obj, int state, f32 fv)
         ((PlayerState*)state)->buttonHoldTimer = lbl_803E7EA4;
     }
 
-    ((PlayerState*)state)->unk410 -= fv;
-    if (((PlayerState*)state)->unk410 < lbl_803E7EA4)
+    ((PlayerState*)state)->rumbleCooldown -= fv;
+    if (((PlayerState*)state)->rumbleCooldown < lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk410 = *(f32*)&lbl_803E7EA4;
+        ((PlayerState*)state)->rumbleCooldown = *(f32*)&lbl_803E7EA4;
     }
     ((PlayerState*)state)->unk878 -= fv;
     if (((PlayerState*)state)->unk878 < lbl_803E7EA4)
@@ -16426,7 +16426,7 @@ int fn_802A4D34(int obj, int state)
 int fn_802ADC08(int obj, int inner, int p3)
 {
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803DC67C * timeDelta;
-    if (((PlayerState*)inner)->unk40C > 5 && ((ByteFlags*)((char*)inner + 0x3f1))->b01)
+    if (((PlayerState*)inner)->fallFrames > 5 && ((ByteFlags*)((char*)inner + 0x3f1))->b01)
     {
         u16 snd;
         doRumble(lbl_803E7F10);
@@ -16478,11 +16478,11 @@ int fn_802ADC08(int obj, int inner, int p3)
             ((PlayerState*)inner)->heldObj = 0;
         }
     }
-    ((PlayerState*)inner)->unk40C += 1;
+    ((PlayerState*)inner)->fallFrames += 1;
     {
-        u32 v = ((PlayerState*)inner)->unk40C;
+        u32 v = ((PlayerState*)inner)->fallFrames;
         if (v > 0xa) v = 0xa;
-        ((PlayerState*)inner)->unk40C = v;
+        ((PlayerState*)inner)->fallFrames = v;
     }
     ((PlayerState*)inner)->emissionState = 1;
     {
@@ -18021,7 +18021,7 @@ void fn_802AE9C8(int obj, int inner, int state)
     }
     ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 0;
-    ((PlayerState*)inner)->unk40C = 0;
+    ((PlayerState*)inner)->fallFrames = 0;
     if (((ByteFlags*)((char*)inner + 0x3f1))->b20)
     {
         int t = *(s16*)obj;
