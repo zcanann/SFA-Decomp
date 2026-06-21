@@ -63,8 +63,9 @@ void CameraModeBike_update(CameraObject* camera)
     int rotVal;
     float followDist;
     float clampedHeight;
-    float kFollowA;
     float kFollowB;
+    float kFollowA;
+    float yawInput;
     short angleDelta;
     GameObject* target;
     float sinYaw;
@@ -115,9 +116,10 @@ void CameraModeBike_update(CameraObject* camera)
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
                               &posZ, &posY, &posX);
         camera->anim.rotX = 0x8000 - target->anim.rotX;
+        yawInput = lbl_803E1794 * gCamTalkBikeState->turnInput;
         gCamTalkBikeState->smoothedYawOffset +=
             lbl_803E1790 *
-            (lbl_803E1794 * gCamTalkBikeState->turnInput - gCamTalkBikeState->smoothedYawOffset);
+            (yawInput - gCamTalkBikeState->smoothedYawOffset);
         rotVal = (int)
         ((f32)(s32)
         camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset
