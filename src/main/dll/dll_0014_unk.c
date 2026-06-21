@@ -1788,14 +1788,17 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
         if (state->reverse != 0)
         {
             distanceCurve = *(s32*)&state->nodeA4;
+            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         }
         else
         {
             distanceCurve = *(s32*)&state->nodeA0;
+            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         }
-        dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
-        dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
-        dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance > maxDistance)
         {
