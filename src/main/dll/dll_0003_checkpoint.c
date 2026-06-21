@@ -595,8 +595,8 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
         ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
     {
         dx = cp->posX - cp2->posX;
-        dy = cp->posY - cp2->posY;
         dz = cp->posZ - cp2->posZ;
+        dy = cp->posY - cp2->posY;
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (len > lbl_803E04E8)
         {
