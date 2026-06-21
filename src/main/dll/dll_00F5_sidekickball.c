@@ -210,7 +210,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
     {
-        f32 a = ((GameObject*)obj)->anim.velocityX;
+        f32 a = *(f32*)((char*)obj + 36);
         f32 b = ((GameObject*)obj)->anim.velocityY;
         f32 c = ((GameObject*)obj)->anim.velocityZ;
         SidekickBallState* st = ((GameObject*)obj)->extra;
