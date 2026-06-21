@@ -182,8 +182,8 @@ void camcontrol_updateTargetFeedback(void)
     }
     else
     {
-        ObjAnim_AdvanceCurrentMove(gCamcontrolReticleFadeInStep, timeDelta, (int)reticle,
-                                   (ObjAnimEventList*)0x0);
+        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)reticle, gCamcontrolReticleFadeInStep,
+                                                                    timeDelta, NULL);
     }
     result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
     if (result == 0)
@@ -245,14 +245,14 @@ void camcontrol_updateTargetFeedback(void)
             break;
         default:
             result = dll_19_func1B((int)target);
-            if (result == 0)
-            {
-                targetDistance = gCamcontrolNormalizedMax;
-            }
-            else
+            if (result != 0)
             {
                 targetDistance =
                     camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
+            }
+            else
+            {
+                targetDistance = gCamcontrolNormalizedMax;
             }
             break;
         }
