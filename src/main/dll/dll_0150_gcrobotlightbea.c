@@ -96,7 +96,7 @@ extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
 extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
-void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxIds)
+void FUN_8019b1d8(u32 unused1, u32 unused2, u16* sfxIds)
 {
     u32 obj;
     int latchedCmd;

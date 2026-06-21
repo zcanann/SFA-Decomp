@@ -80,33 +80,33 @@ extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 gNwMammothDefaultAnimStepScale;
 
-void FUN_801ce078(u16* param_1, int param_2)
+void FUN_801ce078(u16* model, int state)
 {
 }
 
-void FUN_801ce340(short* param_1, int param_2, int param_3)
+void FUN_801ce340(short* model, int state, int enable)
 {
-    if (((param_3 == 0) || (*(int*)(param_2 + 0x28) == 0)) ||
-        (lbl_803E5EAC <= *(float*)(param_2 + 0x18)))
+    if (((enable == 0) || (*(int*)(state + 0x28) == 0)) ||
+        (lbl_803E5EAC <= *(float*)(state + 0x18)))
     {
-        *(u8*)(param_2 + 0x40c) = 0;
+        *(u8*)(state + 0x40c) = 0;
     }
     else
     {
-        *(u8*)(param_2 + 0x40c) = 1;
-        *(u32*)(param_2 + 0x410) = *(u32*)(*(int*)(param_2 + 0x28) + 0xc);
-        *(u32*)(param_2 + 0x414) = *(u32*)(*(int*)(param_2 + 0x28) + 0x10);
-        *(u32*)(param_2 + 0x418) = *(u32*)(*(int*)(param_2 + 0x28) + 0x14);
+        *(u8*)(state + 0x40c) = 1;
+        *(u32*)(state + 0x410) = *(u32*)(*(int*)(state + 0x28) + 0xc);
+        *(u32*)(state + 0x414) = *(u32*)(*(int*)(state + 0x28) + 0x10);
+        *(u32*)(state + 0x418) = *(u32*)(*(int*)(state + 0x28) + 0x14);
     }
-    if (((&DAT_803274f4)[*(u8*)(param_2 + 0x408)] & 2) == 0)
+    if (((&DAT_803274f4)[*(u8*)(state + 0x408)] & 2) == 0)
     {
-        fn_8003A328((double)lbl_803E5EA4, param_1, (char*)(param_2 + 0x40c));
-        FUN_8003b280((int)param_1, param_2 + 0x40c);
+        fn_8003A328((double)lbl_803E5EA4, model, (char*)(state + 0x40c));
+        FUN_8003b280((int)model, state + 0x40c);
     }
     else
     {
-        FUN_8003a1c4((int)param_1, param_2 + 0x40c);
-        FUN_8003b1a4((int)param_1, param_2 + 0x40c);
+        FUN_8003a1c4((int)model, state + 0x40c);
+        FUN_8003b1a4((int)model, state + 0x40c);
     }
     return;
 }
@@ -717,7 +717,7 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-void nw_mammoth_update(NwMammothObject* obj, int param_2)
+void nw_mammoth_update(NwMammothObject* obj, int unused)
 {
     extern void fn_801CE2BC(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEA14(int obj, void* state, void* objDef); /* #57 */
@@ -736,7 +736,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     f32 stepScale;
     int triggerIndex;
 
-    (void)param_2;
+    (void)unused;
     state = obj->state;
     mapData = obj->mapData;
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0)
