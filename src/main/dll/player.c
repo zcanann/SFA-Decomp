@@ -8999,7 +8999,7 @@ void fn_802B249C(int obj, int inner, int state)
                 t = *(void**)(p + 0x64);
                 if (t != NULL)
                 {
-                    *(u32*)((char*)t + 0x30) &= 0xfffffffb;
+                    *(u32*)((char*)t + 0x30) &= ~0x4LL;
                 }
                 bit = **(s16**)((char*)inner + 0x8dc);
                 if (bit > 0)
