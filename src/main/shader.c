@@ -2326,8 +2326,7 @@ void mapLoadUnloadObjects(int flag)
                     if (tbit >= 0 && tbit >= 0)
                     {
                         u8* bb = *(u8**)(page + 0x10);
-                        int ix = tbit >> 3;
-                        *(s8*)(bb + ix) = bb[ix] & ~(1 << (tbit & 7));
+                        bb[tbit >> 3] = bb[tbit >> 3] & ~(1 << (tbit & 7));
                     }
                 }
                 if (((GameObject*)obj)->anim.seqId == 0x72)
