@@ -694,11 +694,20 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     prologue is often a loop/condition variable the dev initialized but the import dropped (it reads
     UB-uninitialized in your C, so MWCC emits no init). Add the init (e.g. `previousCurveId = curveId;`
     before a do-while that compares `previousCurveId != curveId`): the copy reappears and the instr
-    count matches. CAVEAT (open): the new live-at-entry var can ROTATE the saved-reg pool by one
-    (curveId r27→r31 as the copy defers its save past the float/ptr param saves) — decl-order,
-    `(int)`-cast, opt_level 2, and placement were all inert on the rotation; the creation-order lever
-    to reclaim the param's low saved reg is still to find. (WorkerB: dll_0014_unk curves_distFn15 — copy
-    recovered, rotation pending; reverted to hold 96.32 baseline until the coloring lever lands.)
+    count matches. CAVEAT (open): the new live-at-entry var ROTATES the saved-reg pool. ROOT CAUSE
+    pinned (curves_distFn15): baseline (no init) saves `mr r27,r3` (curveId, param1) BEFORE the
+    `fmr` float saves = declaration order, the #137-correct prologue. The dead-init copy makes MWCC
+    keep curveId in volatile r3 through entry (binary-search + the copy both read r3) and DEFER its
+    GPR save past the floats AND past outDistance(r4) → outDistance grabs r27, curveId lands high.
+    So the residual is precisely a #137 param-SAVE-ORDER disruption (target: curveId,floats,outDistance;
+    mine-with-init: floats,outDistance,curveId). INERT here: decl-order, `(int)`/`(int)(long)` cast,
+    opt_level 2/3, opt_propagation on/off, init placement (first/after-findbyid/before-do-while),
+    embedded-assign-in-call-arg `FindById(prev=curveId)`. BEST partial: a fully-decoupled named carried
+    value `int startId=curveId;` (use startId for binary-search + loop-tail + `prev=startId`, curveId
+    only its source) shrinks the cascade 29→11 regions (startId lands r29 not r31) — still outDistance@r27.
+    The transposition that saves curveId(r3) before the floats DESPITE the init is the open lever.
+    (WorkerB: dll_0014_unk curves_distFn15 — copy + full instr-multiset recovered T=C=148; reverted to
+    hold 96.32 baseline since the 11-region partial scores 95.11 < baseline. Strong seed for fresh eyes.)
     OPEN family in dll_0014: the unrolled candidate-collection first-iter `count=1` materializes as
     `mr rCount,rMask` (reuse mask=1) in retail but `li rCount,1` here (curves_getPos, countRandomPoints;
     getControlPointId_2A/2B already match with `li` — the outer-loop/register-pressure context selects
