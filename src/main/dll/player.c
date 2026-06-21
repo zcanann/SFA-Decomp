@@ -17486,6 +17486,7 @@ int fn_8029E568(int obj, int state, f32 fv)
     case 0x40d:
         {
             int active;
+            int atDest;
             f32 amt = ((PlayerState*)state)->baddie.moveInputZ / lbl_803E7FA8;
             f32 clamped;
             f32 sp;
@@ -17529,10 +17530,11 @@ int fn_8029E568(int obj, int state, f32 fv)
                 f32 ph = ((PlayerState*)state)->baddie.animSpeedC;
                 if (ph < lbl_803E7EF8 && ph > lbl_803E7FEC)
                 {
-                    ((PlayerState*)state)->baddie.animSpeedC = lbl_803E7EA4;
+                    f32 zeroPh = lbl_803E7EA4;
+                    ((PlayerState*)state)->baddie.animSpeedC = zeroPh;
                     if (((GameObject*)obj)->anim.currentMove != 0x76)
                     {
-                        ObjAnim_SetCurrentMove(obj, 0x76, lbl_803E7EA4, 0);
+                        ObjAnim_SetCurrentMove(obj, 0x76, zeroPh, 0);
                     }
                     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F78;
                 }
@@ -17546,8 +17548,9 @@ int fn_8029E568(int obj, int state, f32 fv)
                                                  (f32*)((char*)state + 0x2a0));
                 }
             }
-            if (inner->traveledDistance > inner->travelTargetDistance ||
-                inner->traveledDistance < lbl_803E7EA4)
+            atDest = inner->traveledDistance > inner->travelTargetDistance ||
+                     inner->traveledDistance < lbl_803E7EA4;
+            if (atDest)
             {
                 u8 anim;
                 ObjAnim_SetCurrentMove(obj, 0x40f, lbl_803E7EA4, 0);
