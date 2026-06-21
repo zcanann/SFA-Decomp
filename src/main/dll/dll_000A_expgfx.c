@@ -2654,14 +2654,14 @@ void expgfx_resetAllPools(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
+                if (EXPGFX_RUNTIME_DATA->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
+                    textureFree((void*)EXPGFX_RUNTIME_DATA->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                tableEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
+                tableEntry = &EXPGFX_RUNTIME_DATA->expTab[Expgfx_GetSlotTableIndex(slot)];
                 if (tableEntry->refCount != 0)
                 {
                     tableEntry->refCount--;
