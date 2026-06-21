@@ -305,10 +305,10 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
 #pragma scheduling on
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
-    int lo;
-    int hi;
-    int mid;
     int curve;
+    int hi;
+    int lo;
+    int mid;
     u32 id;
 
     if (curveId < 0)
