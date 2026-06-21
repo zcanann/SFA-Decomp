@@ -245,8 +245,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             int go;
             trickyDebugPrint(str + 0x5a0);
             ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
-            if (*(void**)(st + 0x24) != NULL)
+            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
             {
                 TRICKY_RETARGET(st, *(int *)(st + 0x24));
                 go = 1;
@@ -310,8 +309,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             int go;
             trickyDebugPrint(str + 0x5b4, **(u8**)(st + 0), *(int*)(st + 0x728));
             ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
-            if (*(void**)(st + 0x24) != NULL)
+            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
             {
                 TRICKY_RETARGET(st, *(int *)(st + 0x24));
                 go = 1;
@@ -433,8 +431,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             int go;
             trickyDebugPrint(str + 0x5cc);
             ok = trickyFn_8013b368(obj, lbl_803E24E4, st);
-            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
-            if (*(void**)(st + 0x24) != NULL)
+            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
             {
                 TRICKY_RETARGET(st, *(int *)(st + 0x24));
                 go = 1;

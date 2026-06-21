@@ -711,8 +711,8 @@ int getPatchGroup(float* point, int patchGroupIndex)
     f32 y;
 
     base = (char*)gObjfsaPatches;
-    active = (u8*)base + patchGroupIndex;
-    active = &active[OBJFSA_ACTIVE_WALKGROUPS_OFFSET];
+    active = (u8*)(base + patchGroupIndex);
+    active += OBJFSA_ACTIVE_WALKGROUPS_OFFSET;
     wg = &base[patchGroupIndex * OBJFSA_PATCHGROUP_STRIDE + 0x3000];
 
     for (k = 0; k < 4; k++)
@@ -1331,6 +1331,52 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 
+static inline int RomCurve_pickRandomControlPointId_2A(int curve)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != -1)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        return candidates[randomGetRange(0, count - 1)];
+    }
+    return -1;
+}
+
+static inline int RomCurve_pickRandomControlPointId_2B(int curve)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != -1)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        return candidates[randomGetRange(0, count - 1)];
+    }
+    return -1;
+}
+
 #pragma scheduling off
 #pragma peephole off
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
@@ -1608,7 +1654,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     {
         currentCurve = Objfsa_FindRomCurveById(startCurveId);
         *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
         if (nextId == -1)
         {
             return 1;
@@ -1626,11 +1672,11 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2B(currentCurve);
     }
     if (nextId == -1)
     {
@@ -1693,7 +1739,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     {
         currentCurve = Objfsa_FindRomCurveById(curveId);
         *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
         if (nextId == -1)
         {
             return 1;
@@ -1711,11 +1757,11 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+        nextId = RomCurve_pickRandomControlPointId_2B(currentCurve);
     }
     if (nextId == -1)
     {
@@ -1783,6 +1829,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int linkCurve;
     int insertIndex;
     int selectedIndex;
+    int found;
     int i;
     int j;
     f32 distance;
@@ -1836,8 +1883,14 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         visited[directIndex] = 1;
         queueCount = 1;
 
-        while (queueCount > 0)
+        found = 0;
+        do
         {
+            if (queueCount <= 0)
+            {
+                found = 1;
+                continue;
+            }
             queueCount--;
             queueIndex = queueIndices[queueCount];
             queueCurve = (int)romCurves[queueIndex];
@@ -1846,9 +1899,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             if (*(u8*)(queueCurve + 0x34) == 1)
             {
                 candidateDistances[candidateCount] = distance;
-                candidateIds[candidateCount] = directLinkId;
+                candidateIds[candidateCount] = *(s32*)(cur + 0x1c);
                 candidateCount++;
-                break;
+                found = 1;
+                continue;
             }
 
             for (linkSlot = 0; linkSlot < 4; linkSlot++)
@@ -1860,7 +1914,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 }
 
                 linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
-                if (linkCurve == 0 || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
+                if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
                 {
                     continue;
                 }
@@ -1889,7 +1943,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 visited[directIndex] = 1;
                 queueCount++;
             }
-        }
+        } while (!found);
     }
 
     if (candidateCount == 0)
@@ -2325,8 +2379,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
 
         gObjfsaPatchCount = 1;
-        listWalk = curveList;
-        for (listIndex = 0; listIndex < curveCount; listIndex++)
+        for (listIndex = 0, listWalk = curveList; listIndex < curveCount; listIndex++)
         {
             curve = (int)*listWalk;
             if (*(s8*)(curve + 0x19) == 0x26)
@@ -2478,10 +2531,10 @@ void walkgroupFindExitPointFn_800dc398(void)
             listWalk++;
         }
 
-        pp = pairs;
+        pp = &pairs[2];
         div = lbl_803E060C;
         p = patchBase;
-        for (pi = 1; pp += 2, pi < gObjfsaPatchCount; pi++)
+        for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
             ga = pp[0];
             gb = pp[1];
@@ -2516,7 +2569,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             OSReport(sObjfsaMissingPatchExitPoint1, p[1].groupId & 0xff,
                      (int)(u32)p[1].groupId >> 8);
         exit1Done:
-            p++;
+            ;
         }
     }
 }
@@ -2601,8 +2654,9 @@ int RomCurve_func16(double x, double y, double z)
     u32* end;
 
     candidateCount = 0;
+    i = 0;
     curveList = (int*)romCurves;
-    for (i = 0; i < nRomCurves && candidateCount < 20; i++)
+    for (; i < nRomCurves && candidateCount < 20; i++)
     {
         curve = *curveList;
         if (*(s8*)(curve + 0x19) == 0x17)
@@ -2612,10 +2666,10 @@ int RomCurve_func16(double x, double y, double z)
         curveList++;
     }
 
+    top = &candidateIds[candidateCount];
     while (candidateCount != 0)
     {
-        top = &candidateIds[candidateCount];
-        if (curves_distFn15(x, y, z, candidateIds[0], &out) != 0)
+        if (curves_distFn15(candidateIds[0], x, y, z, &out) != 0)
         {
             return candidateIds[0];
         }
@@ -2630,8 +2684,9 @@ int RomCurve_func16(double x, double y, double z)
             currentCurve = Objfsa_FindRomCurveById(*p);
             if (*(s8*)(currentCurve + 0x18) == category)
             {
-                candidateCount--;
                 end--;
+                top--;
+                candidateCount--;
                 *p = *end;
             }
             else
@@ -2754,14 +2809,16 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     f32 segmentDx;
     f32 segmentDy;
     f32 segmentDz;
+    f32 nextSegmentDx;
+    f32 nextSegmentDz;
     f32 tangentDx;
     f32 tangentDz;
     f32 nextTangentDx;
     f32 nextTangentDz;
     f32 tangentLen;
     f32 nextTangentLen;
-    f32 startDenom;
-    f32 endDenom;
+    f32 startNumer;
+    f32 endNumer;
     f32 startPhase;
     f32 endPhase;
     f32 phase;
@@ -2796,18 +2853,16 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
         tangentDz = tangentDz / tangentLen;
     }
 
-    startPhase = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
-    startDenom = tangentDx * segmentDx + tangentDz * segmentDz;
-    if ((*(volatile f32 *)&gFloatZero) != startDenom)
+    startNumer = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
+    startPhase = tangentDx * segmentDx + tangentDz * segmentDz;
+    if ((*(volatile f32 *)&gFloatZero) != startPhase)
     {
         startPhase =
-            -(startPhase + ((tangentDx * x) + (tangentDz * z))) / startDenom;
-    }
-    else
-    {
-        startPhase = gFloatZero;
+            -(startNumer + ((tangentDx * x) + (tangentDz * z))) / startPhase;
     }
 
+    nextSegmentDx = curves[2]->x - curves[1]->x;
+    nextSegmentDz = curves[2]->z - curves[1]->z;
     if (curves[3] != NULL)
     {
         nextTangentDx = curves[3]->x - curves[2]->x;
@@ -2815,11 +2870,11 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     }
     else
     {
-        nextTangentDx = segmentDx;
-        nextTangentDz = segmentDz;
+        nextTangentDx = nextSegmentDx;
+        nextTangentDz = nextSegmentDz;
     }
-    nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
-    nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
+    nextTangentDx = gFloatHalf * (nextTangentDx + nextSegmentDx);
+    nextTangentDz = gFloatHalf * (nextTangentDz + nextSegmentDz);
     nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
     if ((*(volatile f32 *)&gFloatZero) != nextTangentLen)
     {
@@ -2827,16 +2882,12 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
         nextTangentDz = nextTangentDz / nextTangentLen;
     }
 
-    endPhase = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
-    endDenom = nextTangentDx * segmentDx + nextTangentDz * segmentDz;
-    if ((*(volatile f32 *)&gFloatZero) != endDenom)
+    endNumer = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
+    endPhase = nextTangentDx * nextSegmentDx + nextTangentDz * nextSegmentDz;
+    if ((*(volatile f32 *)&gFloatZero) != endPhase)
     {
         endPhase =
-            -(endPhase + ((nextTangentDx * x) + (nextTangentDz * z))) / endDenom;
-    }
-    else
-    {
-        endPhase = gFloatZero;
+            -(endNumer + ((nextTangentDx * x) + (nextTangentDz * z))) / endPhase;
     }
 
     phase = -startPhase / (endPhase - startPhase);
@@ -2848,18 +2899,19 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
         segmentDy = curves[2]->y - curves[1]->y;
         segmentLen =
-            sqrtf(segmentDy * segmentDy + segmentDx * segmentDx + segmentDz * segmentDz);
-        lateralX = segmentDx;
-        lateralZ = segmentDz;
+            sqrtf(segmentDy * segmentDy + nextSegmentDx * nextSegmentDx +
+                  nextSegmentDz * nextSegmentDz);
+        lateralX = nextSegmentDx;
+        lateralZ = nextSegmentDz;
         if ((*(volatile f32 *)&gFloatZero) < segmentLen)
         {
-            lateralX = -segmentDx * (gFloatOne / segmentLen);
-            lateralZ = -segmentDz * (gFloatOne / segmentLen);
+            lateralX = -nextSegmentDx * (gFloatOne / segmentLen);
+            lateralZ = -nextSegmentDz * (gFloatOne / segmentLen);
         }
 
-        projX = segmentDx * phase + curves[1]->x;
+        projX = nextSegmentDx * phase + curves[1]->x;
         projY = segmentDy * phase + curves[1]->y;
-        projZ = segmentDz * phase + curves[1]->z;
+        projZ = nextSegmentDz * phase + curves[1]->z;
         *outLateralOffset =
             -((projX * lateralZ) - (projZ * lateralX)) + (x * lateralZ - z * lateralX);
         *outVerticalOffset = y - projY;
@@ -3156,31 +3208,24 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
             }
         }
     }
-    if (found < 1)
+    if (found > 0)
     {
-        return -1;
-    }
-    best = 0;
-    j = 0;
-    if (found >= 1)
-    {
-        do
+        best = 0;
+        for (j = 0; j < found; j++)
         {
             if (*distRead < bestDists[best])
             {
                 best = j;
             }
             distRead++;
-            j++;
-            found--;
         }
-        while (found != 0);
+        if (outLink != NULL)
+        {
+            *outLink = resultLinks[best];
+        }
+        return resultIds[best];
     }
-    if (outLink != NULL)
-    {
-        *outLink = resultLinks[best];
-    }
-    return resultIds[best];
+    return -1;
 }
 
 #pragma fp_contract off
@@ -3339,13 +3384,13 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
                                     zd = node->z - cand->z;
-                                    newDist = zd * zd;
+                                    zd = zd * zd;
                                     xd = node->x - cand->x;
-                                    yd = curDist + xd * xd;
-                                    xd = node->y - cand->y;
-                                    newDist = newDist + (yd + xd * xd);
+                                    xd = curDist + xd * xd;
+                                    yd = node->y - cand->y;
+                                    newDist = zd + (xd + yd * yd);
                                     pos = 0;
-                                    for (probe = queueDist; (pos < count) && (newDist < *probe); probe++)
+                                    for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
                                     {
                                         pos++;
                                     }
@@ -3380,40 +3425,33 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
         *outCurveId = curve->id;
         return results[0];
     }
-    if (found < 2)
+    if (found > 1)
     {
-        return -1;
-    }
-    for (j = 0; j < found; j++)
-    {
-        if (*outCurveId == results[j])
+        for (j = 0; j < found; j++)
         {
-            for (; j < found - 1; j++)
+            if (*outCurveId == results[j])
             {
-                results[j] = results[j + 1];
-                bestDists[j] = bestDists[j + 1];
+                for (; j < found - 1; j++)
+                {
+                    results[j] = results[j + 1];
+                    bestDists[j] = bestDists[j + 1];
+                }
+                found--;
             }
-            found--;
         }
-    }
-    *outCurveId = curve->id;
-    best = 0;
-    j = 0;
-    if (0 < found)
-    {
-        do
+        *outCurveId = curve->id;
+        best = 0;
+        for (j = best; j < found; j++)
         {
             if (*distRead < bestDists[best])
             {
                 best = j;
             }
             distRead++;
-            j++;
-            found--;
         }
-        while (found != 0);
+        return results[best];
     }
-    return results[best];
+    return -1;
 }
 #pragma fp_contract reset
 

@@ -45,7 +45,7 @@
 typedef struct MoonSeedPlantingSpotPlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 unkC;
+    f32 posY; /* 0x0c: planted-spot Y position */
 } MoonSeedPlantingSpotPlacement;
 
 typedef struct MoonSeedPlantingSpotState
@@ -220,7 +220,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
                 *(u8*)ex2 = MSPLANTING_PHASE_HARVESTED;
-                ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->unkC;
+                ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
             }
         }
         break;
@@ -315,7 +315,7 @@ void MoonSeedPlantingSpot_update(int obj)
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                     GameBit_Set(((MoonSeedPlantingSpotState*)ex2)->harvestedGameBit, 1);
                     *(u8*)ex2 = MSPLANTING_PHASE_HARVESTED;
-                    ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->unkC;
+                    ((GameObject*)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement*)setup2)->posY;
                 }
             }
             ((MoonSeedPlantingSpotState*)ex)->growthTimer = ((MoonSeedPlantingSpotState*)ex)->growthTimer - timeDelta;

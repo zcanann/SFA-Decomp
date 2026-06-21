@@ -164,24 +164,24 @@ void CameraModeCloudRunner_update(u8* obj)
     tgtYaw = (s16)(tgtYaw - (u16)camera->anim.rotX);
     if (tgtYaw > 0x8000)
     {
-        tgtYaw -= 0xffff;
+        tgtYaw = tgtYaw - 0xffff;
     }
     if (tgtYaw < -0x8000)
     {
-        tgtYaw += 0xffff;
+        tgtYaw = tgtYaw + 0xffff;
     }
-    camera->anim.rotX = camera->anim.rotX + tgtYaw;
+    camera->anim.rotX += tgtYaw;
 
     tgtPitch = (s16)(tgtPitch - (u16)camera->anim.rotY);
     if (tgtPitch > 0x8000)
     {
-        tgtPitch -= 0xffff;
+        tgtPitch = tgtPitch - 0xffff;
     }
     if (tgtPitch < -0x8000)
     {
-        tgtPitch += 0xffff;
+        tgtPitch = tgtPitch + 0xffff;
     }
-    camera->anim.rotY = camera->anim.rotY + tgtPitch;
+    camera->anim.rotY += tgtPitch;
 
     camera->anim.rotZ = (s16)(target->anim.rotZ * lbl_803DB9D4);
 

@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objhits.h"
+#include "main/objHitReact.h"
 #include "main/objfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/objfsa.h"
@@ -82,14 +83,12 @@ extern void** ObjGroup_GetObjects(int group, int* countOut);
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
     TrickyState* state;
-    ObjHitsPriorityState* hitState;
     f32 hitOffsetY;
     void* lastContactObj;
     f32 nearestDistance;
     f32 hitPos[3];
     f32 lightArgs[3];
     f32* hitPosPtr;
-    int hitObject;
     u8 doGroundSnap;
     int doHeightSnap;
     int hitKind;
@@ -128,41 +127,34 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         state->unk353 = 0;
     }
 
-    if ((s8)state->unk353 != 0)
+    if (((s8)state->unk353 != 0) && (((state->statusFlags >> 5) & 1) == 0u))
     {
-        if (((state->statusFlags >> 5) & 1) == 0u)
+        if (lbl_803E23DC == state->waterLevel)
         {
-            if (lbl_803E23DC == state->waterLevel)
-            {
-                doHeightSnap = 0;
-            }
-            else if (lbl_803E2410 == state->unk2B0)
-            {
-                doHeightSnap = 1;
-            }
-            else if (state->unk2B4 - state->unk2B0 > lbl_803E2414)
-            {
-                doHeightSnap = 1;
-            }
-            else
-            {
-                doHeightSnap = 0;
-            }
-
-            if (doHeightSnap != 0)
-            {
-                ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
-                ((GameObject*)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
-            }
-            else
-            {
-                ((GameObject*)obj)->anim.velocityY += lbl_803E2428 * timeDelta;
-                ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
-            }
+            doHeightSnap = 0;
+        }
+        else if (lbl_803E2410 == state->unk2B0)
+        {
+            doHeightSnap = 1;
+        }
+        else if (state->unk2B4 - state->unk2B0 > lbl_803E2414)
+        {
+            doHeightSnap = 1;
         }
         else
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
+            doHeightSnap = 0;
+        }
+
+        if (doHeightSnap != 0)
+        {
+            ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E23DC;
+            ((GameObject*)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.velocityY += lbl_803E2428 * timeDelta;
+            ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
         }
     }
     else
@@ -170,9 +162,8 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
     }
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    lastContactObj = (void*)hitState->lastHitObject;
-    if ((hitState->flags & 8) == 0 ||
+    lastContactObj = (void*)((GameObject*)obj)->anim.hitReactState->activeHit;
+    if ((((GameObject*)obj)->anim.hitReactState->flags & 8) == 0 ||
         (((GameObject*)lastContactObj)->anim.seqId == 0x1f))
     {
         lastContactObj = NULL;
@@ -193,10 +184,10 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         }
     }
     else if ((state->lastContactObj != NULL) &&
-        (state->lastContactObj == lastContactObj))
+        (lastContactObj == state->lastContactObj))
     {
         state->contactTimer += timeDelta;
-        if (state->contactTimer >= lbl_803E23E0)
+        if (state->contactTimer >= *(f32*)&lbl_803E23E0)
         {
             state->contactTimer -= lbl_803E23E0;
             state->stateFlags |= 8;
@@ -211,8 +202,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     state->lastContactObj = lastContactObj;
     hitPosPtr = hitPos;
     hitKind = ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown,
-                                                  &hitObject, hitPosPtr);
-    lastContactObj = (void*)hitObject;
+                                                  (int*)&lastContactObj, hitPosPtr);
     state->light = hitKind;
 
     switch (state->light)

@@ -50,7 +50,7 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern const f32 lbl_803DE8B8;
-extern void objFreeObjDef(void* def, int flags);
+extern void objFreeObjDef(u8* def, int flags);
 extern int gObjDeferredFreeCount;
 extern void** gObjDeferredFreeList;
 extern void Obj_RegisterObject(u8* obj, int b);
@@ -1503,9 +1503,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 }
 
 #pragma dont_inline off
-void objFreeObjDef(void* objp, int flag)
+void objFreeObjDef(u8* obj, int flag)
 {
-    u8* obj = objp;
     int defs[40];
     void(*fp)(u8 *, int);
     void(*cb)(u8 *);
@@ -1518,7 +1517,6 @@ void objFreeObjDef(void* objp, int flag)
     void* curTex;
     void* tex;
     void* shadowRenderResource;
-    ObjModelState* modelState;
     s8 modelCount;
     int group;
     int type;
@@ -1562,8 +1560,7 @@ void objFreeObjDef(void* objp, int flag)
                     *(int*)&((GameObject*)o)->anim.parent = 0;
                     if (*(void**)&((GameObject*)o)->anim.placementData != NULL)
                     {
-                        defs[count] = (int)o;
-                        count++;
+                        defs[count++] = (int)o;
                     }
                 }
             }
@@ -1600,17 +1597,16 @@ void objFreeObjDef(void* objp, int flag)
     {
         ObjGroup_RemoveObject((u32)obj, 8);
     }
-    modelState = ((ObjAnimComponent*)obj)->modelState;
-    if (modelState != NULL)
+    if (((ObjAnimComponent*)obj)->modelState != NULL)
     {
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
         {
             setShadowFlag_803db658(1);
         }
-        if (modelState->shadowTexture != NULL)
+        if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {
             curTex = textureFn_8006c5c4();
-            tex = modelState->shadowTexture;
+            tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {
                 if ((((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4) == 0)
@@ -1623,11 +1619,11 @@ void objFreeObjDef(void* objp, int flag)
                 }
             }
         }
-        if (modelState->shadowWorkBuffer != NULL)
+        if (((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer != NULL)
         {
-            mm_free(modelState->shadowWorkBuffer);
+            mm_free(((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer);
         }
-        shadowRenderResource = modelState->shadowRenderResource;
+        shadowRenderResource = ((ObjAnimComponent*)obj)->modelState->shadowRenderResource;
         if (shadowRenderResource != NULL && shadowRenderResource != (void*)-1)
         {
             mm_free(shadowRenderResource);

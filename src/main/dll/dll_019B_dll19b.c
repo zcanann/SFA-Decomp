@@ -410,11 +410,11 @@ void dll_19B_init(u8* obj, u8* params)
     GameBit_Set(0x40, 1);
     GameBit_Set(0x1d7, 1);
     GameBit_Set(0x1d8, 0);
-    ((Dll19CState*)sub)->unk4 = 0xc;
+    ((Dll19CState*)sub)->spawnTimer = 0xc;
     *(s16*)(sub + 8) = 0x1e;
     ((Dll19CState*)sub)->unk2 = 0xc8;
     ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
-    ((Dll19CState*)sub)->unk6 = 0;
+    ((Dll19CState*)sub)->active = 0;
     *(s16*)(sub + 0xa) = 0;
     sub[0x16] = 0;
     *(s16*)(sub + 0x10) = 0xc8;

@@ -800,13 +800,13 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
                         sumCur = sumNext;
                     }
                 }
-                if (sumCur > 1)
+                if (sumCur <= 1)
                 {
-                    dir = 0;
+                    blocked = 1;
                 }
                 else
                 {
-                    blocked = 1;
+                    dir = 0;
                 }
             }
         }
@@ -821,20 +821,21 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
 
     foundIdx = -1;
     {
-        int kkk = 0;
+        int kkk;
         int boff = 0;
+        s16 bz = box[2];
+        s16 bx = box[0];
         nodeCount = state->nodeCount;
-        for (; nodeCount != 0; nodeCount--)
+        for (kkk = 0; kkk < nodeCount; kkk++)
         {
             RouteNode* nn = (RouteNode*)((char*)state->nodes + boff);
-            if (nn->x == box[0] && nn->y == box[2])
+            if (nn->x == bx && nn->y == bz)
             {
                 savedFlag = nn->flag;
                 foundIdx = kkk;
                 goto searched;
             }
             boff += 14;
-            kkk++;
         }
         foundIdx = -1;
     }

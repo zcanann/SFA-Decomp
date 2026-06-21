@@ -1567,7 +1567,7 @@ void* textureAlloc512(void)
     return tex;
 }
 
-extern f32 lbl_803DED28;
+extern const f32 lbl_803DED28;
 extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
@@ -1706,8 +1706,9 @@ extern inline float sqrtf(float x)
     return x;
 }
 
-extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
-extern f32 Vdchuff_803DEDC0;
+extern const f32 CPUFifo_803DED38;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
+extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
 extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
 extern f32 Uachuff_803DEE00;
@@ -1724,7 +1725,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
     p = arr;
     for (i = 0; i < n; i++, p += 5)
     {
-        f32 over = lbl_803DED28;
+        f32 over = *(f32*)&lbl_803DED28;
         if (c < p[0])
         {
             f32 mx, mz, t, s0, tmp, p2lo, d2, sq, ratio, frac, depth;
@@ -1771,7 +1772,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
         }
     }
     if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
-    if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
+    if (acc6 > *(f32*)&lbl_803DED2C) acc6 = *(f32*)&lbl_803DED2C;
     *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDD4;
     *out2 = acc5;
 }
@@ -1798,6 +1799,7 @@ void initFn_8006d020(void)
     e = gNewShadowPlacements;
     while (placed < 0x32 && attempts < 10000u)
     {
+        f32 *p1, *p2, *p4;
         e[0] = (f32)(int)
         randomGetRange(8, 0x10);
         e[3] = 0.01f * (f32)(int)
@@ -1806,13 +1808,16 @@ void initFn_8006d020(void)
         randomGetRange(0x14, 0x32)
         )
         ;
+        p1 = &e[1];
+        p2 = &e[2];
+        p4 = &e[4];
         attempts = 0;
         do
         {
             f32* o;
-            e[1] = 0.001f * (f32)(int)
+            *p1 = 0.001f * (f32)(int)
             randomGetRange(0, 999);
-            e[2] = 0.001f * (f32)(int)
+            *p2 = 0.001f * (f32)(int)
             randomGetRange(0, 999);
             collide = 0;
             j = 0;
@@ -1820,19 +1825,19 @@ void initFn_8006d020(void)
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
-                mx = __fabsf(e[1] - o[1]);
-                tmp = __fabsf((1.0f + e[1]) - o[1]);
+                mx = __fabsf(*p1 - o[1]);
+                tmp = __fabsf((1.0f + *p1) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = __fabsf((e[1] - 1.0f) - o[1]);
+                tmp = __fabsf((*p1 - 1.0f) - o[1]);
                 if (tmp < mx) mx = tmp;
-                mz = __fabsf(e[2] - o[2]);
-                tmp = __fabsf((1.0f + e[2]) - o[2]);
+                mz = __fabsf(*p2 - o[2]);
+                tmp = __fabsf((1.0f + *p2) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = __fabsf((e[2] - 1.0f) - o[2]);
+                tmp = __fabsf((*p2 - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
-                if (d > 0.0f) d = sqrtf(d);
-                if (d < e[4] + o[3]) collide = 1;
+                d = sqrtf(d);
+                if (d < *p4 + o[3]) collide = 1;
                 o += 5;
                 j++;
             }
@@ -1852,17 +1857,17 @@ void initFn_8006d020(void)
         {
             for (col = 0; col < 0x40; col++)
             {
-                f32 o2, o1;
+                f32 o1, o2;
                 int hi, lo;
-                u16* dst = (u16*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
-                    + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+                char* dst = (char*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
+                    + (col & 3) * 8 + (col >> 2) * 0x200);
                 fn_8006CD20(gNewShadowPlacements, placed, &o1, &o2,
                             row * 0.015625f,
                             col * 0.015625f,
                             tex);
                 hi = (int)(padFix * o2);
                 lo = (int)(padFix * o1);
-                *dst = (u16)(((hi & 0xffff) << 8) | lo);
+                *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }
         DCFlushRange((void*)(*th + 0x60), *(u32*)(*th + 0x44));
@@ -1876,8 +1881,8 @@ void initFn_8006d020(void)
         {
             f32 cv, n1, n2, prod, fa, fb;
             int hi, lo;
-            u16* dst = (u16*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
-                + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+            char* dst = (char*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
+                + (col & 3) * 8 + (col >> 2) * 0x200);
             cv = 0.39275f * col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
@@ -1886,7 +1891,7 @@ void initFn_8006d020(void)
             fa = 127.0f * n1 + 127.0f;
             lo = fa;
             hi = fb;
-            *dst = (u16)(lo | ((hi & 0xffff) << 8));
+            *(u16*)(dst + 0x60) = (u16)(lo | ((hi & 0xffff) << 8));
         }
     }
     DCFlushRange((void*)(gNewShadowCausticTexture + 0x60), *(u32*)(gNewShadowCausticTexture + 0x44));
@@ -1900,6 +1905,8 @@ extern int textureLoadAsset(int);
 extern void fn_80069EB8();
 extern f32 lbl_803DED10, lbl_803DED34;
 extern const f32 Dev_803DED1C;
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
 {
@@ -2254,11 +2261,22 @@ void allocLotsOfTextures(void)
         u8* p;
         for (i = 0, p = (u8*)(int)gNewShadowEntries; i < 0x20; i += 0x10)
         {
-            for (j = 0; j < 0x10; j++)
-            {
-                p[j * 0x14 + 0x10] = 0;
-                p[j * 0x14 + 0x11] = 1;
-            }
+            p[0x010] = 0; p[0x011] = 1;
+            p[0x024] = 0; p[0x025] = 1;
+            p[0x038] = 0; p[0x039] = 1;
+            p[0x04c] = 0; p[0x04d] = 1;
+            p[0x060] = 0; p[0x061] = 1;
+            p[0x074] = 0; p[0x075] = 1;
+            p[0x088] = 0; p[0x089] = 1;
+            p[0x09c] = 0; p[0x09d] = 1;
+            p[0x0b0] = 0; p[0x0b1] = 1;
+            p[0x0c4] = 0; p[0x0c5] = 1;
+            p[0x0d8] = 0; p[0x0d9] = 1;
+            p[0x0ec] = 0; p[0x0ed] = 1;
+            p[0x100] = 0; p[0x101] = 1;
+            p[0x114] = 0; p[0x115] = 1;
+            p[0x128] = 0; p[0x129] = 1;
+            p[0x13c] = 0; p[0x13d] = 1;
             p += 0x140;
         }
         p = (u8*)(int)gNewShadowEntries + i * 0x14;
@@ -2272,6 +2290,8 @@ void allocLotsOfTextures(void)
     GXInvalidateTexAll();
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma opt_propagation reset
+#pragma opt_loop_invariants reset
 #pragma ppc_unroll_speculative on
 #pragma opt_common_subs off
 void shadowCreate(int* obj)
@@ -2446,14 +2466,15 @@ void fn_8006CB50(void)
             f32 s;
             if (dist <= Udchuff_803DEDB8)
             {
-                s = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist) * Udchuff_803DEDB4;
+                f32 t = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist);
+                s = t * Udchuff_803DEDB4;
             }
             else
             {
                 s = lbl_803DED28;
             }
             {
-                f32 py = Vdchuff_803DEDC8 * (ny * s) + Udchuff_803DEDBC;
+                f32 py = Vdchuff_803DEDC0 * (ny * s) + Udchuff_803DEDBC;
                 f32 px = Vdchuff_803DEDC0 * (nx * s) + Udchuff_803DEDBC;
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
@@ -2498,9 +2519,11 @@ extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
-extern f32 lbl_803DED28, lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
+extern const f32 lbl_803DED28;
+extern f32 lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
-extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern const f32 CPUFifo_803DED38;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
 extern f32 FinishQueue_803DED64;
 extern u8 lbl_803DB668[8];

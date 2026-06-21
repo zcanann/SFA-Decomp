@@ -85,34 +85,35 @@ void texframeanimator_update(int* obj)
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
                                                 ((GameObject*)obj)->anim.localPosY,
                                                 ((GameObject*)obj)->anim.localPosZ));
-        if ((block != NULL) && (((MapBlockData*)block)->unk4 & 8))
+        if (block == NULL || !(((MapBlockData*)block)->unk4 & 8))
         {
-            textureHit = return0_80056694(block, state->textureSlot);
-            if (textureHit != NULL)
+            return;
+        }
+        textureHit = return0_80056694(block, state->textureSlot);
+        if (textureHit != NULL)
+        {
+            textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
+            state->frame += state->speed * framesThisStep;
+            fn_80137948(sTexFrameAnimDebugFormat, state->frame);
+            if (state->frame < 0)
             {
-                textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
-                state->frame += state->speed * framesThisStep;
-                fn_80137948(sTexFrameAnimDebugFormat, state->frame);
-                if (state->frame < 0)
-                {
-                    state->frame = 0;
-                }
-                else if (state->frame > state->endFrame)
-                {
-                    if (((TexframeanimatorPlacement*)params)->completedGameBit != -1)
-                    {
-                        GameBit_Set(((TexframeanimatorPlacement*)params)->completedGameBit, 1);
-                        state->active = 0;
-                        state->done = 1;
-                        state->frame = state->endFrame;
-                    }
-                    else
-                    {
-                        state->frame = state->wrapFrame;
-                    }
-                }
-                textureEntry[1] = state->frame;
+                state->frame = 0;
             }
+            else if (state->frame > state->endFrame)
+            {
+                if (((TexframeanimatorPlacement*)params)->completedGameBit != -1)
+                {
+                    GameBit_Set(((TexframeanimatorPlacement*)params)->completedGameBit, 1);
+                    state->active = 0;
+                    state->done = 1;
+                    state->frame = state->endFrame;
+                }
+                else
+                {
+                    state->frame = state->wrapFrame;
+                }
+            }
+            textureEntry[1] = state->frame;
         }
     }
 }

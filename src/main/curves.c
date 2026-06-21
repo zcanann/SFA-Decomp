@@ -125,6 +125,8 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
 }
 #pragma dont_inline reset
 
+typedef f32 (*CurveEvalPtrFirst)(f32 *values, f32 t, f32 *outTangent);
+
 int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 {
     int seg, savedIdx;
@@ -166,15 +168,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] = curve->eval(lbl_803DE674, curve->px + savedIdx, &curve->tangent[0]);
+                        curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE674, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] = curve->eval(lbl_803DE674, curve->py + savedIdx, &curve->tangent[1]);
+                        curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE674, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] = curve->eval(lbl_803DE674, curve->pz + savedIdx, &curve->tangent[2]);
+                        curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE674, &curve->tangent[2]);
                     }
                     curve->t = lbl_803DE674;
                     curve->segmentDistance = lbl_803DE658;
@@ -192,15 +194,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
         if (curve->px != NULL)
         {
-            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+            curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
         }
         if (curve->py != NULL)
         {
-            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+            curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + curve->idx, t, &curve->tangent[1]);
         }
         if (curve->pz != NULL)
         {
-            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+            curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + curve->idx, t, &curve->tangent[2]);
         }
         curve->t = t;
         curve->segmentDistance = step;
@@ -239,15 +241,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] = curve->eval(lbl_803DE658, curve->px + savedIdx, &curve->tangent[0]);
+                        curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE658, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] = curve->eval(lbl_803DE658, curve->py + savedIdx, &curve->tangent[1]);
+                        curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE658, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
+                        curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
                     }
                     curve->t = zero;
                     curve->segmentDistance = -lengths[1];
@@ -264,15 +266,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
         if (curve->px != NULL)
         {
-            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+            curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
         }
         if (curve->py != NULL)
         {
-            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+            curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + curve->idx, t, &curve->tangent[1]);
         }
         if (curve->pz != NULL)
         {
-            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+            curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + curve->idx, t, &curve->tangent[2]);
         }
         curve->t = t;
         curve->segmentDistance = step - lengths[seg + 1];

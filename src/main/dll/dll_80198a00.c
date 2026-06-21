@@ -4,7 +4,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern u32 objInterpretSeq();
+extern u32 objInterpretSeq(void* obj, int seqArg, s8 legCode, int distSq);
 extern f32 lbl_803E40C8;
 extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;

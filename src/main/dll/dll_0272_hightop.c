@@ -831,7 +831,7 @@ int hightop_stateHandler04(int obj, int p)
     if (GameBit_Get(0x62b) != 0)
     {
         HighTopRuntime* state2;
-        RomCurveInterface* curve = *gRomCurveInterface;
+        RomCurveInterface* curve;
         GameBit_Set(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
@@ -841,7 +841,7 @@ int hightop_stateHandler04(int obj, int p)
         state->flagsC40 |= 0x20;
         state->flagsC49.b1 = 0;
         ((void (*)(void*, int, int, void*))curve->slotA8)(
-            (char*)state + 0xa10, obj, 0x3463a, curve);
+            (char*)state + 0xa10, obj, 0x3463a, (curve = *gRomCurveInterface));
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, 0x5ce);

@@ -36,7 +36,7 @@ typedef struct SlidingdoorPlacement
     s16 openGameBit;    /* 0x18: door opens while this bit is set (gated by gateGameBit) */
     s16 openedGameBit;  /* 0x1A: set to 1 once the door opens */
     s16 preemptEvent;   /* 0x1C: event preempted by slidingdoor_update if already moving */
-    s8 unk1E;           /* 0x1E: startup sequence id */
+    s8 startupSequenceId; /* 0x1E: startup sequence id */
     u8 pad1F[0x20 - 0x1F];
     s16 unk20;          /* 0x20 */
     s16 gateGameBit;    /* 0x22: -1 = none; otherwise must also be set to open */
@@ -184,7 +184,7 @@ void slidingdoor_update(u8* obj)
         }
     }
     {
-        s8 id = ((SlidingdoorPlacement*)data)->unk1E;
+        s8 id = ((SlidingdoorPlacement*)data)->startupSequenceId;
         if (id != -1)
         {
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);

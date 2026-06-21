@@ -39,7 +39,7 @@ typedef struct SBCloudRunnerState
     void *texture0;         /* 0x18 */
     void *texture1;         /* 0x1C */
     u8 pad20[0x2C - 0x20];
-    s16 unk2C;              /* 0x2C: flap/pitch accumulator */
+    s16 rotXAccum;          /* 0x2C: roll accumulator, biased into anim.rotX */
     s16 rotZ;              /* 0x2E: integrated body roll */
     u8 pad30[0x4C - 0x30];
     f32 spawnPosX;          /* 0x4C */
@@ -66,7 +66,7 @@ STATIC_ASSERT(offsetof(SBCloudRunnerState, targetObj) == 0x10);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, resource) == 0x14);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, texture0) == 0x18);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, texture1) == 0x1C);
-STATIC_ASSERT(offsetof(SBCloudRunnerState, unk2C) == 0x2C);
+STATIC_ASSERT(offsetof(SBCloudRunnerState, rotXAccum) == 0x2C);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, rotZ) == 0x2E);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, spawnPosX) == 0x4C);
 STATIC_ASSERT(offsetof(SBCloudRunnerState, tiltY) == 0x58);
@@ -316,9 +316,9 @@ void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
 
     {
         f32 t = (f32)(((SBCloudRunnerState *)state)->stickX << 3) / lbl_803E5C98;
-        ((SBCloudRunnerState *)state)->unk2C = -(t * timeDelta - (f32)((SBCloudRunnerState *)state)->unk2C);
+        ((SBCloudRunnerState *)state)->rotXAccum = -(t * timeDelta - (f32)((SBCloudRunnerState *)state)->rotXAccum);
     }
-    ((SBCloudRunnerState *)state)->unk2C -= (((SBCloudRunnerState *)state)->unk2C * framesThisStep) >> 5;
+    ((SBCloudRunnerState *)state)->rotXAccum -= (((SBCloudRunnerState *)state)->rotXAccum * framesThisStep) >> 5;
 
     d = yawTarget - (u16)((GameObject *)obj)->anim.rotY;
     if (d > 0x8000)
@@ -350,7 +350,7 @@ void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
     v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
     ((SBCloudRunnerState *)state)->rotZ = v;
 
-    ((GameObject *)obj)->anim.rotX = ((SBCloudRunnerState *)state)->unk2C + 0x4000;
+    ((GameObject *)obj)->anim.rotX = ((SBCloudRunnerState *)state)->rotXAccum + 0x4000;
     ((GameObject *)obj)->anim.rotZ = ((SBCloudRunnerState *)state)->rotZ;
 
     events.sfxFlag = 0;
@@ -516,7 +516,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     state->spawnPosX = ((GameObject *)obj)->anim.localPosX;
     state->spawnPosY = ((GameObject *)obj)->anim.localPosY;
     state->spawnPosZ = ((GameObject *)obj)->anim.localPosZ;
-    state->unk2C = (s16)(((GameObject *)obj)->anim.rotX - 0x4000);
+    state->rotXAccum = (s16)(((GameObject *)obj)->anim.rotX - 0x4000);
     state->rotZ = ((GameObject *)obj)->anim.rotZ;
     for (i = 0; i < animUpdate->eventCount; i++)
     {

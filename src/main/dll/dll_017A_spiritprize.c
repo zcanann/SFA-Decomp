@@ -41,7 +41,7 @@ typedef struct SpiritPrizePlacement
 {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
-    s16 unk18;
+    s16 triggerOrder;   /* 0x18: trigger sequence index; -1 = none, stored as obj->unkF4 = +1 */
     u8 pad1A[0x20 - 0x1A];
 } SpiritPrizePlacement;
 
@@ -188,7 +188,7 @@ void SpiritPrize_update(int obj)
     {
         return;
     }
-    if (((SpiritPrizePlacement*)params)->unk18 == -1)
+    if (((SpiritPrizePlacement*)params)->triggerOrder == -1)
     {
         return;
     }

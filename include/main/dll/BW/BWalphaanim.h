@@ -10,9 +10,9 @@
  * and the 0x428 byte carries the SnowBikeFlags bitfield overlay. */
 typedef struct SnowBikeState {
     u8 pad000[0xc];
-    f32 unk00C;             /* 0x00c: position snapshot X */
-    f32 unk010;             /* 0x010: position snapshot Y */
-    f32 unk014;             /* 0x014: position snapshot Z */
+    f32 posSnapshotX;       /* 0x00c: position snapshot X */
+    f32 posSnapshotY;       /* 0x010: position snapshot Y */
+    f32 posSnapshotZ;       /* 0x014: position snapshot Z */
     f32 unk018;             /* 0x018 */
     f32 unk01C;             /* 0x01c */
     f32 unk020;             /* 0x020 */
@@ -100,7 +100,7 @@ typedef struct SnowBikeState {
     f32 unk478;             /* 0x478 */
     f32 unk47C;             /* 0x47c */
     f32 unk480;             /* 0x480 */
-    f32 unk484;             /* 0x484 */
+    f32 distanceScaleLimit; /* 0x484: symmetric clamp bound applied to distanceScale */
     u8 pad488[0xc];
     f32 unk494;             /* 0x494 */
     f32 unk498;             /* 0x498 */

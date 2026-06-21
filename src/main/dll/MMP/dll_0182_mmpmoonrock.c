@@ -26,7 +26,9 @@ STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
 typedef struct MmpMoonrockPlacement
 {
-    u8 pad0[0x1E - 0x0];
+    u8 pad0[0x1A - 0x0];
+    s16 kindGameBit;   /* 0x1A: gamebit whose value selects the moonrock kind */
+    u8 pad1C[0x1E - 0x1C];
     s16 unk1E;
     s16 gateBit;       /* 0x20: gamebit gating pickup (cleared = grabbable) */
     u8 pad22[0x28 - 0x22];
@@ -316,7 +318,7 @@ void mmp_moonrock_init(int obj, int param2)
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
     *(s16*)&state->flags = 0;
-    state->kind = GameBit_Get(*(s16*)(param2 + 0x1a));
+    state->kind = GameBit_Get(((MmpMoonrockPlacement*)param2)->kindGameBit);
     kind = state->kind;
     if (kind != 0)
     {

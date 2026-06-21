@@ -15,7 +15,7 @@ typedef struct CfperchState {
     s16 unk2;
     u8 unk4[0x5 - 0x4];
     s8 carryState;       /* 0x5 carry/throw state machine: 0 idle, 1 grabbed, 2 carried */
-    u8 unk6;
+    u8 carryAttached;    /* 0x6 set while held by player; gates the per-frame carry message */
     u8 unk7[0x9 - 0x7];
     u8 throwState;       /* 0x9 in-flight mode: 0 none, 1 thrown, 2 dropped */
     s16 disableTimer;    /* 0xA post-action hide/disable countdown (framesThisStep) */

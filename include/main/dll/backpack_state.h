@@ -13,7 +13,7 @@
 typedef struct BackpackState {
     u8 unk0[0x268 - 0x0];
     u16 distToTarget;
-    s16 unk26A;
+    s16 triggerRange;
     f32 targetScale;
     f32 growRate; /* scale/frame while growing; reused as a seconds countdown in later phases */
     u8 unk274[0x278 - 0x274];
@@ -28,7 +28,7 @@ typedef struct BackpackState {
     f32 anchorPosX;
     f32 anchorPosZ;
     f32 *targetPos;
-    f32 unk294;
+    f32 speed;
     s16 unk298;
     s16 unk29A;
     f32 unk29C;
@@ -38,7 +38,7 @@ typedef struct BackpackState {
 
 STATIC_ASSERT(sizeof(BackpackState) == 0x2A8);
 STATIC_ASSERT(offsetof(BackpackState, distToTarget) == 0x268);
-STATIC_ASSERT(offsetof(BackpackState, unk26A) == 0x26A);
+STATIC_ASSERT(offsetof(BackpackState, triggerRange) == 0x26A);
 STATIC_ASSERT(offsetof(BackpackState, targetScale) == 0x26C);
 STATIC_ASSERT(offsetof(BackpackState, growRate) == 0x270);
 STATIC_ASSERT(offsetof(BackpackState, phase) == 0x278);
@@ -49,7 +49,7 @@ STATIC_ASSERT(offsetof(BackpackState, targetObj) == 0x284);
 STATIC_ASSERT(offsetof(BackpackState, anchorPosX) == 0x288);
 STATIC_ASSERT(offsetof(BackpackState, anchorPosZ) == 0x28C);
 STATIC_ASSERT(offsetof(BackpackState, targetPos) == 0x290);
-STATIC_ASSERT(offsetof(BackpackState, unk294) == 0x294);
+STATIC_ASSERT(offsetof(BackpackState, speed) == 0x294);
 STATIC_ASSERT(offsetof(BackpackState, unk298) == 0x298);
 STATIC_ASSERT(offsetof(BackpackState, unk29A) == 0x29A);
 STATIC_ASSERT(offsetof(BackpackState, unk29C) == 0x29C);

@@ -35,11 +35,12 @@ void fn_80204320(int obj)
     player = Obj_GetPlayerObject();
     if (lbl_803DC182 != 0)
     {
-        s16* walk = lbl_80329848;
+        s16* walk;
         s16 i;
-        walk[6] = 0;
-        walk[7] = 0;
-        walk[8] = 0;
+        lbl_80329848[6] = 0;
+        lbl_80329848[7] = 0;
+        lbl_80329848[8] = 0;
+        walk = lbl_80329848;
         for (i = 0; i < 6; i++)
         {
             *walk = (s16)randomGetRange(1, 4);

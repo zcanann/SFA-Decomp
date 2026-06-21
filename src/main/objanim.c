@@ -724,7 +724,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                            : ((moveStepScale > gObjAnimProgressOne) ? gObjAnimProgressOne
                                                                     : moveStepScale);
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = objAnim->banks[objAnim->bankIndex];
     if (bank->animDef->moveCount == 0)
     {
         return 0;
@@ -899,14 +899,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     }
 
     moveData = ObjAnim_GetCurrentMoveData(bank->animDef, state);
-    if (moveData->rootCurveOffset == 0)
+    if (moveData->rootCurveOffset != 0)
     {
-        events->rootCurveValid = 0;
-        return wrapped;
-    }
-    curve = ObjAnim_GetMoveDataRootCurve(moveData);
-
     events->rootCurveValid = 1;
+    curve = ObjAnim_GetMoveDataRootCurve(moveData);
     rootScale = curve->scale * objAnim->rootMotionScale;
     sampleCount = curve->sampleCount;
     segmentCount = sampleCount - 1;
@@ -923,11 +919,9 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     {
         blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        blendCurve = ObjAnim_GetBlendMoveRootCurve(bank->animDef, state);
-        if (blendCurve != NULL)
-        {
-            blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
-        }
+        blendCurve = ObjAnim_GetMoveDataRootCurve(
+            ObjAnim_GetCurrentBlendMoveData(bank->animDef, state));
+        blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
     }
     else
     {
@@ -935,7 +929,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         moveWeight = gObjAnimProgressOne;
     }
 
-    for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT; axisIndex++)
+    axisIndex = 0;
+    do
     {
         if (*axis == 0)
         {
@@ -1023,8 +1018,12 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                 blendAxis += sampleCount;
             }
         }
+        axisIndex++;
+    } while (axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT);
+        return wrapped;
     }
 
+    events->rootCurveValid = 0;
     return wrapped;
 }
 

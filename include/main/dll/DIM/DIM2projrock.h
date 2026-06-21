@@ -109,9 +109,9 @@ STATIC_ASSERT(offsetof(Dim2IceFloeState, followedObj) == 0x9C);
 /* dim2icicle extra state (dim2icicle_getExtraSize == 0xC). */
 typedef struct Dim2IcicleState {
     f32 dropY;   /* 0x0: world Y the icicle drops toward / rest height */
-    s16 unk4;    /* 0x4: spin rate / yaw step */
+    s16 wobbleRotY; /* 0x4: post-impact spin angle, written to anim.rotY and decayed to 0 */
     u8 mode;     /* 0x6 */
-    u8 unk7;     /* 0x7 */
+    u8 dropTargetFound; /* 0x7: one-shot flag once a drop-target Y is located */
     s16 timer;   /* 0x8 */
     u8 padA[2];
 } Dim2IcicleState;

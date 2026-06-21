@@ -21,9 +21,9 @@
 
 typedef struct CameraArwingWork
 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
     f32 basePosX;
     f32 basePosY;
     f32 basePosZ;
@@ -161,9 +161,9 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     ((CameraArwingWork*)gCamArwingWork)->unk3C = fc2;
     ((CameraArwingWork*)gCamArwingWork)->unk5B = 90;
     ((CameraArwingWork*)gCamArwingWork)->unk5A = 100;
-    ((CameraArwingWork*)gCamArwingWork)->unk8 = fc;
-    ((CameraArwingWork*)gCamArwingWork)->unk4 = fc;
-    ((CameraArwingWork*)gCamArwingWork)->unk0 = fc;
+    ((CameraArwingWork*)gCamArwingWork)->offsetZ = fc;
+    ((CameraArwingWork*)gCamArwingWork)->offsetY = fc;
+    ((CameraArwingWork*)gCamArwingWork)->offsetX = fc;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)a4)->anim.worldPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)a4)->anim.worldPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)a4)->anim.worldPosZ + *(f32*)(base + 56);

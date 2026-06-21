@@ -136,7 +136,7 @@ void updateVisibleGeometry(void)
     f32 xx, yy, zz;
     f32 tt, ff, ss;
     f32 negff, negss;
-    f32 ratio2;
+    f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
     PosRot st;
@@ -171,8 +171,8 @@ void updateVisibleGeometry(void)
     n++;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
-    ratio2 = fn_80293D0C(fov) / tt;
-    ratio2 = ratio2 * ratio2;
+    ratio = fn_80293D0C(fov) / tt;
+    ratio2 = ratio * ratio;
     tt = fn_80292248(sqrtf(changed_803DEC08.lo * (changed_803DEC08.lo * ratio2) + ratio2));
     ff = floor(tt);
     ss = fn_802943F4(tt);
@@ -2048,57 +2048,37 @@ void renderSceneGeometry(int* p1, s8* order)
         for (y = box0[2]; y <= box0[3]; y++)
         {
             p = map + (y + 7) * 0x10 + box0[0];
-            if (box0[0] <= box0[1])
+            for (x0 = box0[0]; x0 <= box0[1]; x0++)
             {
-                n = (box0[1] + 1) - box0[0];
-                while (n != 0)
-                {
-                    p[7] = 1;
-                    p++;
-                    n--;
-                }
+                p[7] = 1;
+                p++;
             }
         }
         for (y = box1[2]; y <= box1[3]; y++)
         {
             p = map + (y + 7) * 0x10 + box1[0];
-            if (box1[0] <= box1[1])
+            for (x0 = box1[0]; x0 <= box1[1]; x0++)
             {
-                n = (box1[1] + 1) - box1[0];
-                while (n != 0)
-                {
-                    p[7] = 1;
-                    p++;
-                    n--;
-                }
+                p[7] = 1;
+                p++;
             }
         }
         for (y = box2[2]; y <= box2[3]; y++)
         {
             p = map + (y + 7) * 0x10 + box2[0];
-            if (box2[0] <= box2[1])
+            for (x0 = box2[0]; x0 <= box2[1]; x0++)
             {
-                n = (box2[1] + 1) - box2[0];
-                while (n != 0)
-                {
-                    p[7] = 1;
-                    p++;
-                    n--;
-                }
+                p[7] = 1;
+                p++;
             }
         }
         for (y = box3[2]; y <= box3[3]; y++)
         {
             p = map + (y + 7) * 0x10 + box3[0];
-            if (box3[0] <= box3[1])
+            for (x0 = box3[0]; x0 <= box3[1]; x0++)
             {
-                n = (box3[1] + 1) - box3[0];
-                while (n != 0)
-                {
-                    p[7] = 1;
-                    p++;
-                    n--;
-                }
+                p[7] = 1;
+                p++;
             }
         }
         oi = 0;

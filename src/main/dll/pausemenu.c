@@ -33,7 +33,7 @@ extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);
 extern void Camera_SetCurrentViewIndex(int index);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_SetFovY(f32 fovY);
@@ -567,7 +567,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     {
         for (i8 = 0x14; i8 >= 0; i8 -= 4)
         {
-            s16 px = (s16)((s16)(0xf0 - i8) - lbl_803DD75C);
+            s16 px = (s16)((0xf0 - i8) - lbl_803DD75C);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
                             px, ty, 0x100, 0x190, 4, 0);
             drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,

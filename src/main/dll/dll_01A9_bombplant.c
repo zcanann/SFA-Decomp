@@ -163,9 +163,9 @@ int bombplant_SeqFn(int* obj)
         src = *(int**)&((GameObject*)obj)->anim.placementData;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)src)->unk8;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)src)->unkC;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)src)->unk10;
+        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)src)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)src)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)src)->posZ;
         ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
         ((EnemyMushroomState*)state)->riseDuration = gBombPlantGrowDuration;
         ((EnemyMushroomState*)state)->heightTarget = ((EnemyMushroomState*)state)->baseScale;
@@ -187,7 +187,7 @@ int bombplant_SeqFn(int* obj)
         {
             int v;
             ((EnemyMushroomState*)state)->flags = (u8)(flags & ~0x2);
-            v = ((BombplantPlacement*)base)->unk1A + randomGetRange(-0x32, 0x32);
+            v = ((BombplantPlacement*)base)->timerBase + randomGetRange(-0x32, 0x32);
             ((EnemyMushroomState*)state)->timer = v;
         }
         if (((GameObject*)obj)->objectFlags & 0x800)
@@ -219,15 +219,15 @@ void bombplant_init(void* obj, void* param, int flag)
         return;
     }
 
-    bitId = ((BombplantPlacement*)param)->unk1C;
+    bitId = ((BombplantPlacement*)param)->gameBit;
     if (bitId != -1 && GameBit_Get(bitId) == 0)
     {
         p4c = ((GameObject*)obj)->anim.placementData;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->unk8;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->unkC;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->unk10;
+        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
         ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
         ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
         ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
@@ -242,9 +242,9 @@ void bombplant_init(void* obj, void* param, int flag)
         p4c = ((GameObject*)obj)->anim.placementData;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->unk8;
-        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->unkC;
-        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->unk10;
+        ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
         ObjHits_RefreshObjectState(obj);
     }
 }
@@ -293,7 +293,7 @@ void bombplant_update(void* obj)
             ((BombPlantState*)state)->flags &= ~0x2;
             ((BombPlantState*)state)->growTimer = (f32)(int)((BombplantPlacement*)param)->growTimer;
         }
-        bitId = ((BombplantPlacement*)param)->unk1C;
+        bitId = ((BombplantPlacement*)param)->gameBit;
         if (bitId != -1)
         {
             if (GameBit_Get(bitId) != 0)
@@ -335,9 +335,9 @@ void bombplant_update(void* obj)
             p4c = ((GameObject*)obj)->anim.placementData;
             ((GameObject*)obj)->anim.alpha = 0xff;
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->unk8;
-            ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->unkC;
-            ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->unk10;
+            ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+            ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+            ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
             ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
             ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
             ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
@@ -379,7 +379,7 @@ void bombplant_update(void* obj)
         {
             ((BombPlantState*)state)->flags &= ~0x2;
             ((BombPlantState*)state)->growTimer =
-                (f32)(int)(((BombplantPlacement*)param)->unk1A + randomGetRange(-0x32, 0x32));
+                (f32)(int)(((BombplantPlacement*)param)->timerBase + randomGetRange(-0x32, 0x32));
         }
         if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
         {

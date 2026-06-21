@@ -78,12 +78,12 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u8 moved;
     int wg;
     char* strs = lbl_8031D2E8;
-    u32 tp;
+    int tp;
     u8* target;
     int targetWg;
     u8 slot;
     u16 pp;
-    u32 trickyPatch;
+    int trickyPatch;
     u32 prod;
     u32 dir;
     int i;

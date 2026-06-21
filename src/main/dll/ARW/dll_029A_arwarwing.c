@@ -34,7 +34,7 @@
 typedef struct ArwarwingState
 {
     u8 pad0[0x47C - 0x0];
-    u16 unk47C;
+    u16 bonusScore; /* 0x47C: bonus score, +200 per pickup, capped at 9999 */
     u8 pad47E[0x498 - 0x47E];
 } ArwarwingState;
 
@@ -1340,11 +1340,11 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 int s2 = *(int*)&((GameObject*)obj)->extra;
                 int score47C;
-                ((ArwarwingState*)s2)->unk47C += 0xc8;
-                score47C = ((ArwarwingState*)s2)->unk47C;
+                ((ArwarwingState*)s2)->bonusScore += 0xc8;
+                score47C = ((ArwarwingState*)s2)->bonusScore;
                 if ((u16)score47C > 0x270f)
                     score47C = 0x270f;
-                ((ArwarwingState*)s2)->unk47C = score47C;
+                ((ArwarwingState*)s2)->bonusScore = score47C;
             }
             registerNewScore((s8)((ArwingState*)state)->scoreSlot, ((ArwingState*)state)->score,
                              ((ArwingState*)state)->collectedRings, 2);

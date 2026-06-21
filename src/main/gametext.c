@@ -354,7 +354,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int params[8];
     int* boundary;
     int cursor = 0;
-    f32 penX = lbl_803DE704;
+    f32 penX;
     int* bp;
     int lineCount = 0;
     int breakPos = 0;
@@ -362,8 +362,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int langIdx;
     FontSizeEntry* sizeEntry;
     int lineOff = 0;
-    f32 maxWidth = width;
-    f32 scale = height;
+    f32 maxWidth;
+    f32 scale;
     int charLen;
     int charLen2;
     int total;
@@ -375,6 +375,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int lineIdx;
     int charPos;
 
+    maxWidth = width;
+    scale = height;
+    penX = lbl_803DE704;
     if (gameTextCharset == 2)
     {
         langIdx = 6;
@@ -504,7 +507,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 
     lineCount++;
     lineOff = lineCount << 2;
-    lineStarts[lineCount] = cursor;
+    *(int*)((char*)lineStarts + lineOff) = cursor;
     *outCount = lineCount;
     if (cursor == 0)
     {
@@ -523,9 +526,10 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     {
         return 0;
     }
+    dst = (char*)buffer;
     for (i = 0; i < total; i++)
     {
-        ((char*)buffer)[i] = 0;
+        *dst++ = 0;
     }
 
     dst = (char*)buffer + lineOff;

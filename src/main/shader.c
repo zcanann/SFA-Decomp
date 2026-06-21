@@ -2257,7 +2257,7 @@ void mapLoadUnloadObjects(int flag)
         for (k = 0; k < 3; k++)
         {
             s16 id = *q;
-            if (id >= 0 && id < 80 && *(void**)(base + 0x83A8 + id * 4) != 0)
+            if (id >= 0 && id < 80 && *(void**)(base + (0x83A8 + id * 4)) != 0)
             {
                 s16 dup = 0;
                 s16* w = list;
@@ -2282,13 +2282,11 @@ void mapLoadUnloadObjects(int flag)
         int* objs = ObjList_GetObjects(&i, &n);
         while (i < n)
         {
-            s8 mapEventSlot;
             obj = (char*)objs[i];
             fp = (void*)((GameObject*)obj)->anim.placementData;
             i++;
             unload = 0;
-            mapEventSlot = ((GameObject*)obj)->anim.mapEventSlot;
-            if (mapEventSlot > -1)
+            if (((GameObject*)obj)->anim.mapEventSlot > -1)
             {
                 u8 fl = *(u8*)(fp + 4);
                 if (!(fl & 2))
@@ -2299,8 +2297,8 @@ void mapLoadUnloadObjects(int flag)
                         {
                             unload = 1;
                         }
-                        else if (mapEventSlot < 80 &&
-                            *(void**)(base + 0x83A8 + mapEventSlot * 4) == 0)
+                        else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
+                            *(void**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4)) == 0)
                         {
                             unload = 1;
                         }
@@ -2311,8 +2309,8 @@ void mapLoadUnloadObjects(int flag)
                         {
                             unload = 1;
                         }
-                        else if (mapEventSlot < 80 &&
-                            mapEventSlot != gShaderCurMapEventId)
+                        else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
+                            ((GameObject*)obj)->anim.mapEventSlot != gShaderCurMapEventId)
                         {
                             unload = 1;
                         }
@@ -2321,7 +2319,7 @@ void mapLoadUnloadObjects(int flag)
             }
             if (unload)
             {
-                char* page = *(char**)(base + 0x83A8 + mapEventSlot * 4);
+                char* page = *(char**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4));
                 if (page != 0)
                 {
                     s16 tbit = *(s16*)(obj + 0xB2);
@@ -2334,7 +2332,7 @@ void mapLoadUnloadObjects(int flag)
                 }
                 if (((GameObject*)obj)->anim.seqId == 0x72)
                 {
-                    s8 mid = mapEventSlot;
+                    s8 mid = ((GameObject*)obj)->anim.mapEventSlot;
                     s16 j3 = 0;
                     s16* w2 = list;
                     for (j3 = 0; j3 < count; j3++)
@@ -2354,7 +2352,7 @@ void mapLoadUnloadObjects(int flag)
     {
         for (i = 0; i < 80; i++)
         {
-            if (((int*)(base + 0x83A8))[i] != 0)
+            if (((void**)(base + 0x83A8))[i] != NULL)
             {
                 bits = (*gMapEventInterface)->getObjGroups(i);
                 if (bits != 0)
@@ -2958,7 +2956,7 @@ void doPendingMapLoads(void)
                             int k;
                             for (k = 0; k < cn; k++)
                             {
-                                if (*(int*)p2 != 0 && m == *(s16*)(p2 + 4))
+                                if (*(void**)p2 != NULL && m == *(s16*)(p2 + 4))
                                     goto found;
                                 p2 += 8;
                                 i2++;
@@ -2980,7 +2978,7 @@ void doPendingMapLoads(void)
                             {
                                 u8* e = lbl_803DCE78;
                                 getTabEntry(e, 0x1f, m2 << 5, 0x20);
-                                curMapType = *(u8*)(e + 0x1c);
+                                *(u8*)&curMapType = e[0x1c];
                             }
                         }
                         *(s8*)(base + slot * 8 + 0x4192) = 1;
@@ -3126,7 +3124,7 @@ void doPendingMapLoads(void)
                                 defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
                                                     sl, 1);
                                 mm_free(*(void**)p4);
-                                *(int*)(base + 0x83A8 + sl * 4) = 0;
+                                ((int*)(base + 0x83A8))[sl] = 0;
                             }
                             *(int*)p4 = 0;
                             *(s16*)(p4 + 4) = -1;

@@ -3427,7 +3427,7 @@ extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 8
-#pragma ppc_unroll_instructions_limit 200
+#pragma ppc_unroll_instructions_limit 160
 u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
     f32 initB, initA;
@@ -3904,7 +3904,7 @@ extern void skyBuildSunModelMatrix(f32 * out);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ);
 extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
 extern int depthReadRequestPoll(int x, int y, void* p);
-extern int pauseMenuGetState(void);
+extern u8 pauseMenuGetState(void);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int sSynthFadeUnit;
@@ -4605,6 +4605,7 @@ extern f32 PSVECMag(f32 * v);
 extern int lbl_803DCDC8;
 extern int lbl_803DCDCC;
 
+#pragma ppc_unroll_instructions_limit 16
 int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
 int cur;
 int x0;
@@ -4984,6 +4985,7 @@ u8 doEdges;
     }
     return cur;
 }
+#pragma ppc_unroll_instructions_limit 64
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
@@ -5022,13 +5024,9 @@ void trackIntersect(void)
         lbl_803DCF4D = 2;
     }
 
+    for (i = 0; i < 0x47; i++)
     {
-        s16* cp = counts;
-        for (i = 0; i < 0x47; i++)
-        {
-            *cp = 0;
-            cp++;
-        }
+        counts[i] = 0;
     }
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
@@ -5226,6 +5224,7 @@ extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 extern const f32 lbl_803DB660;
 
+#pragma optimization_level 2
 int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                  int pmask, int seg, int ytol, int self, f32 radius)
 {
@@ -5238,8 +5237,9 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     s16 m[2];
     int start, end;
     int vt, vp, lineIdx;
-    s8 flag1, flag2;
-    u8 flag4;
+    s8 flag1;
+    int flag2;
+    int flag4;
     f32 minX, maxX, minZ, maxZ;
     int count, found;
     s16* hitp;
@@ -5345,7 +5345,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         for (i = start; i < end; i++, ep++, rp += 0x10)
         {
             u8* rec;
-            s16 i0, i1;
+            int i0, i1;
             f32 *va, *vb;
             f32 ax2, ay2, az2, bx2, by2, bz2;
             f32 ylo, yhi, ha, hb;
@@ -5367,7 +5367,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             i1 = *(s16*)(rec + 6);
             if ((s8)rec[3] & 0x80)
             {
-                if (flag4 != 0) continue;
+                if ((u8)flag4 != 0) continue;
                 lineType = 0;
             }
             else
@@ -5642,8 +5642,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             rec2 = (s16*)(vt + hi * 0x10);
         }
         {
-            s16 j0 = rec2[2];
-            s16 j1 = rec2[3];
+            int j0 = rec2[2];
+            int j1 = rec2[3];
             if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80)
             {
                 fa = rec2[0];
@@ -5654,12 +5654,12 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 fa = (f32)(s8) * (u8*)rec2;
                 fb = (f32)(s8) * ((u8*)rec2 + 1);
             }
-            outf[1] = *(f32*)(vp + j0 * 0xc);
+            outf[1] = ((f32*)vp)[j0 * 3];
             va2 = (f32*)(vp + j0 * 0xc);
             outf[3] = va2[1];
             outf[0xf] = outf[3] + fa;
             outf[5] = va2[2];
-            outf[2] = *(f32*)(vp + j1 * 0xc);
+            outf[2] = ((f32*)vp)[j1 * 3];
             vb2 = (f32*)(vp + j1 * 0xc);
             outf[4] = vb2[1];
             outf[0x10] = outf[4] + fb;
@@ -5681,6 +5681,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     }
     return count;
 }
+#pragma optimization_level reset
 
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */

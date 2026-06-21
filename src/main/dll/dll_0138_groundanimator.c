@@ -236,7 +236,7 @@ void groundanimator_free(int* obj, int flag)
                 if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
                 {
                     midoff = off;
-                    for (mid = *(u16*)entry; mid < ((MapBlockData*)block)->unk14; mid++)
+                    for (mid = *(u16*)entry; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
                         vtx = fn_800606DC(block, mid);
                         innoff = midoff;
@@ -577,7 +577,7 @@ void groundanimator_update(int* obj)
     }
     else
     {
-        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) != 0;
+        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) ? 1 : 0;
     }
     if ((g->flags & 2) == 0 && allow != 0)
     {

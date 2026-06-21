@@ -31,7 +31,7 @@ typedef struct CarryableUpdateHeldState
     s8 carryState;
     u8 isHeld;
     u8 flags;
-    u8 unk8;
+    u8 surfaceType;
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
 
@@ -147,7 +147,7 @@ int Carryable_updateHeld(u8* obj)
     u8* held;
     void* player;
     held = ((GameObject*)obj)->extra;
-    ((CarryableUpdateHeldState*)held)->unk8 = 0;
+    ((CarryableUpdateHeldState*)held)->surfaceType = 0;
     ((CarryableUpdateHeldState*)held)->flags &= ~1;
     player = Obj_GetPlayerObject();
     if (((CarryableUpdateHeldState*)held)->carryState == 0)
@@ -218,9 +218,9 @@ int Carryable_updateHeld(u8* obj)
                 if (d < lbl_803E06E8)
                 {
                     s8 t2 = *(s8*)((u8*)list[i] + 0x14);
-                    if (t2 > ((CarryableUpdateHeldState*)held)->unk8)
+                    if (t2 > ((CarryableUpdateHeldState*)held)->surfaceType)
                     {
-                        *(s8*)&((CarryableUpdateHeldState*)held)->unk8 = t2;
+                        *(s8*)&((CarryableUpdateHeldState*)held)->surfaceType = t2;
                     }
                 }
                 i++;

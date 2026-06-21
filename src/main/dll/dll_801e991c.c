@@ -36,7 +36,7 @@ static inline void shPos3f32(const f32 x, const f32 y, const f32 z)
     GXWGFifo.f32 = z;
 }
 
-static inline void shColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
+static inline void shColor4u8(u8 r, u8 g, u8 b, u8 a)
 {
     GXWGFifo.u8 = r;
     GXWGFifo.u8 = g;
@@ -84,8 +84,11 @@ void fn_801E991C(int p1, char* table)
     u8 g;
     u8 b;
     ShColor color;
+    f32* verts;
     char* p;
     int i;
+    f32 u1, u0;
+    int j;
 
     color = lbl_803E5AE4;
     selectTexture(lbl_803DDC60, 0);
@@ -111,29 +114,28 @@ void fn_801E991C(int p1, char* table)
     {
         if (((*(u8*)(p + 0x4ce) & 1) != 0) && (*(s16*)(p + 0x4cc) >= 4))
         {
-            int j = 0;
-            f32* verts;
-            f32 u1, u0;
+            j = 0;
             verts = *(f32**)(p + 0x4c8);
-            u0 = lbl_803E5AE8;
-            u1 = lbl_803E5AEC;
-            for (; j < *(s16*)(p + 0x4cc) - 2; j += 2)
+            do
             {
+                u0 = lbl_803E5AE8;
+                u1 = lbl_803E5AEC;
                 GXBegin(0x80, 2, 4);
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0xc));
+                shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0xc));
                 shTexCoord2f32(u0, u0);
                 shPos3f32(verts[4] - playerMapOffsetX, verts[4 + 1], verts[4 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x1c));
+                shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x1c));
                 shTexCoord2f32(u1, u0);
                 shPos3f32(verts[0xc] - playerMapOffsetX, verts[0xc + 1], verts[0xc + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x3c));
+                shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x3c));
                 shTexCoord2f32(u1, u0);
                 shPos3f32(verts[8] - playerMapOffsetX, verts[8 + 1], verts[8 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x2c));
+                shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x2c));
                 shTexCoord2f32(u0, u0);
                 verts += 8;
-            }
+                j += 2;
+            } while (j < *(s16*)(p + 0x4cc) - 2);
         }
         p += 8;
     }

@@ -493,7 +493,7 @@ void SaveSelectScreen_render(int param)
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         n = 0;
         p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
-        while (n < 3 && *(int*)(p + 0xc) != 0)
+        while (n < 3 && *(void**)(p + 0xc) != NULL)
         {
             p += 4;
             n++;

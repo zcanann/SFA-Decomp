@@ -57,9 +57,9 @@ typedef struct WallanimatorPlacement
     u8 pad0[0x18 - 0x0];
     s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C; /* debris spawn rotation / particle-desc index */
+    s16 unk1C; /* 0x1C: debris spawn rotation (rot[2]) / modelMtx selector */
     u8 pad1E[0x24 - 0x1E];
-    s16 unk24; /* initial rotX seed */
+    s16 initialRotX; /* 0x24: initial rotX seed */
     u8 pad26[0x28 - 0x26];
 } WallanimatorPlacement;
 
@@ -229,7 +229,7 @@ void wallanimator_init(s16* obj, s16* placement)
     WallanimatorState* state;
 
     state = ((GameObject*)obj)->extra;
-    *obj = ((WallanimatorPlacement*)placement)->unk24;
+    *obj = ((WallanimatorPlacement*)placement)->initialRotX;
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)((WallanimatorPlacement*)placement)->gameBit) != 0)

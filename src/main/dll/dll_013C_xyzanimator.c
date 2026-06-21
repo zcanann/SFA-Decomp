@@ -108,7 +108,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
-        if ((int)setup->unk28 == blockLayer)
+        if ((int)setup->blockLayer == blockLayer)
         {
             *(s16*)(state->unk10 + coordOffset) = ((MapBlockHdr*)mapBlock)->posA;
             *(s16*)(state->unk14 + coordOffset) = ((MapBlockHdr*)mapBlock)->posB;
@@ -175,7 +175,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
-        if ((int)def->unk28 == blockLayer)
+        if ((int)def->blockLayer == blockLayer)
         {
             ((MapBlockHdr*)mapBlock)->posA = (s16)(state->offsetY +
                 (f32) * (s16*)(state->unk10 + coordOffset));
@@ -215,7 +215,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         vertexOffset = (int)fn_800606FC((int*)block, edgeOffset);
         shader = fn_8006070C((int*)block, *(u8*)(vertexOffset + 0x13));
         shader = Shader_getLayer(shader, 0);
-        if ((int) * (u8*)((int)shader + 5) == def->unk28)
+        if ((int) * (u8*)((int)shader + 5) == def->blockLayer)
         {
             scale = lbl_803E4008;
             ((EdgeVerts*)vertexOffset)->a = (s16)(scale * state->offsetX +
@@ -314,7 +314,7 @@ void xyzanimator_update(int obj)
         {
             row = mapBlockFn_800606ec(block, i);
             t = mapBlockFn_80060678();
-            if (((XyzAnimatorPlacement*)setup)->unk28 == t)
+            if (((XyzAnimatorPlacement*)setup)->blockLayer == t)
             {
                 ((XyzAnimatorState*)state)->rowCount++;
                 ((XyzAnimatorState*)state)->unk4 += (*(u16*)(row + 0x14) - *(u16*)(row + 0));
@@ -325,23 +325,23 @@ void xyzanimator_update(int obj)
             goto no_update;
         }
         ((XyzAnimatorState*)state)->unk4 *= 3;
-        if (((XyzAnimatorPlacement*)setup)->unk18 == -1)
+        if (((XyzAnimatorPlacement*)setup)->triggerGameBit == -1)
         {
             ((XyzAnimatorState*)state)->gameBitValue = 1;
         }
         else
         {
-            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
+            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         }
         ((XyzAnimatorState*)state)->unk8 = *(u8*)(block + 0xa1);
-        ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk1C;
-        ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk1E;
-        ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk20;
-        if (((XyzAnimatorPlacement*)setup)->unk1A != -1 && GameBit_Get(((XyzAnimatorPlacement*)setup)->unk1A) != 0)
+        ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
+        ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
+        ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
+        if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1 && GameBit_Get(((XyzAnimatorPlacement*)setup)->doneGameBit) != 0)
         {
-            ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk22;
-            ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk24;
-            ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk26;
+            ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
+            ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
+            ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
             ((XyzAnimatorState*)state)->gameBitValue = 1;
         }
         t = ((XyzAnimatorState*)state)->unk4 * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
@@ -375,7 +375,7 @@ void xyzanimator_update(int obj)
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk3C = alloc;
         fn_80194964(setup, state, block);
-        if (((XyzAnimatorPlacement*)setup)->unk2C != 4)
+        if (((XyzAnimatorPlacement*)setup)->mode != 4)
         {
             fn_80194C40(setup, state, block);
             *(u16*)(block + 4) = *(u16*)(block + 4) ^ 1;
@@ -383,17 +383,17 @@ void xyzanimator_update(int obj)
             *(u16*)(block + 4) = *(u16*)(block + 4) ^ 1;
         }
     }
-    if (((XyzAnimatorPlacement*)setup)->unk2C == 2)
+    if (((XyzAnimatorPlacement*)setup)->mode == 2)
     {
-        t = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
+        t = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         if (((XyzAnimatorState*)state)->gameBitValue != t)
         {
             ((XyzAnimatorState*)state)->gameBitValue = t;
             if (t == 0)
             {
-                if (((XyzAnimatorPlacement*)setup)->unk1A > -1)
+                if (((XyzAnimatorPlacement*)setup)->doneGameBit > -1)
                 {
-                    GameBit_Set(((XyzAnimatorPlacement*)setup)->unk1A, 0);
+                    GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 0);
                 }
             }
             if (((XyzAnimatorState*)state)->unk4D > 2)
@@ -418,165 +418,165 @@ void xyzanimator_update(int obj)
         }
         if (((XyzAnimatorState*)state)->gameBitValue == 0)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->unk18);
+            ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
             if (((XyzAnimatorState*)state)->gameBitValue == 0)
             {
                 goto no_update;
             }
         }
     }
-    switch (((XyzAnimatorPlacement*)setup)->unk2C)
+    switch (((XyzAnimatorPlacement*)setup)->mode)
     {
     case 0:
     case 4:
         done = 0;
-        if (((XyzAnimatorPlacement*)setup)->unk1C > ((XyzAnimatorPlacement*)setup)->unk22)
+        if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
         {
             ((XyzAnimatorState*)state)->offsetX =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetX);
-            if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->unk22)
+            if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk22;
+                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
                 done = 1;
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetX =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetX;
-            if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->unk22)
+            if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk22;
+                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
                 done = 1;
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->unk1E > ((XyzAnimatorPlacement*)setup)->unk24)
+        if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
         {
             ((XyzAnimatorState*)state)->offsetY =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetY);
-            if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->unk24)
+            if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk24;
+                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
                 done += 1;
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetY =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetY;
-            if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->unk24)
+            if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk24;
+                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
                 done += 1;
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->unk20 > ((XyzAnimatorPlacement*)setup)->unk26)
+        if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetZ);
-            if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->unk26)
+            if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk26;
+                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
                 done += 1;
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetZ;
-            if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->unk26)
+            if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk26;
+                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
                 done += 1;
             }
         }
         if (done == 3)
         {
-            if (((XyzAnimatorPlacement*)setup)->unk1A != -1)
+            if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
             {
-                GameBit_Set(((XyzAnimatorPlacement*)setup)->unk1A, 1);
+                GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
             }
             ((XyzAnimatorState*)state)->unk4D += 1;
         }
         break;
     case 1:
-        if (((XyzAnimatorPlacement*)setup)->unk1C > ((XyzAnimatorPlacement*)setup)->unk22)
+        if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
         {
             ((XyzAnimatorState*)state)->offsetX =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetX);
-            if (((XyzAnimatorState*)state)->offsetX < (f32)((XyzAnimatorPlacement*)setup)->unk22)
+            if (((XyzAnimatorState*)state)->offsetX < (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    (f32)(((XyzAnimatorPlacement*)setup)->unk1C -
-                        (int)((f32)((XyzAnimatorPlacement*)setup)->unk22 - ((XyzAnimatorState*)state)->offsetX));
+                    (f32)(((XyzAnimatorPlacement*)setup)->startX -
+                        (int)((f32)((XyzAnimatorPlacement*)setup)->targetX - ((XyzAnimatorState*)state)->offsetX));
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetX =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetX;
-            if (((XyzAnimatorState*)state)->offsetX > (f32)((XyzAnimatorPlacement*)setup)->unk1C)
+            if (((XyzAnimatorState*)state)->offsetX > (f32)((XyzAnimatorPlacement*)setup)->startX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    (f32)(((XyzAnimatorPlacement*)setup)->unk22 +
-                        (int)(((XyzAnimatorState*)state)->offsetX - (f32)((XyzAnimatorPlacement*)setup)->unk22));
+                    (f32)(((XyzAnimatorPlacement*)setup)->targetX +
+                        (int)(((XyzAnimatorState*)state)->offsetX - (f32)((XyzAnimatorPlacement*)setup)->targetX));
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->unk1E > ((XyzAnimatorPlacement*)setup)->unk24)
+        if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
         {
             ((XyzAnimatorState*)state)->offsetY =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetY);
-            if (((XyzAnimatorState*)state)->offsetY < (f32)((XyzAnimatorPlacement*)setup)->unk24)
+            if (((XyzAnimatorState*)state)->offsetY < (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
                     -(lbl_803E4018 *
-                        (f32)(int)((f32)((XyzAnimatorPlacement*)setup)->unk24 - ((XyzAnimatorState*)state)->offsetY) -
-                        (f32)((XyzAnimatorPlacement*)setup)->unk1E);
+                        (f32)(int)((f32)((XyzAnimatorPlacement*)setup)->targetY - ((XyzAnimatorState*)state)->offsetY) -
+                        (f32)((XyzAnimatorPlacement*)setup)->startY);
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetY =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetY;
-            if (((XyzAnimatorState*)state)->offsetY > (f32)((XyzAnimatorPlacement*)setup)->unk1E)
+            if (((XyzAnimatorState*)state)->offsetY > (f32)((XyzAnimatorPlacement*)setup)->startY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    (f32)(((XyzAnimatorPlacement*)setup)->unk24 +
-                        (int)(((XyzAnimatorState*)state)->offsetY - (f32)((XyzAnimatorPlacement*)setup)->unk24));
+                    (f32)(((XyzAnimatorPlacement*)setup)->targetY +
+                        (int)(((XyzAnimatorState*)state)->offsetY - (f32)((XyzAnimatorPlacement*)setup)->targetY));
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->unk20 > ((XyzAnimatorPlacement*)setup)->unk26)
+        if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) - ((XyzAnimatorState*)
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) - ((XyzAnimatorState*)
                     state)->offsetZ);
-            if (((XyzAnimatorState*)state)->offsetZ < (f32)((XyzAnimatorPlacement*)setup)->unk26)
+            if (((XyzAnimatorState*)state)->offsetZ < (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    (f32)(((XyzAnimatorPlacement*)setup)->unk20 -
-                        (int)((f32)((XyzAnimatorPlacement*)setup)->unk26 - ((XyzAnimatorState*)state)->offsetZ));
+                    (f32)(((XyzAnimatorPlacement*)setup)->startZ -
+                        (int)((f32)((XyzAnimatorPlacement*)setup)->targetZ - ((XyzAnimatorState*)state)->offsetZ));
             }
         }
         else
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) + ((XyzAnimatorState*)
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) + ((XyzAnimatorState*)
                     state)->offsetZ;
-            if (((XyzAnimatorState*)state)->offsetZ > (f32)((XyzAnimatorPlacement*)setup)->unk20)
+            if (((XyzAnimatorState*)state)->offsetZ > (f32)((XyzAnimatorPlacement*)setup)->startZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    (f32)(((XyzAnimatorPlacement*)setup)->unk26 +
-                        (int)(((XyzAnimatorState*)state)->offsetZ - (f32)((XyzAnimatorPlacement*)setup)->unk26));
+                    (f32)(((XyzAnimatorPlacement*)setup)->targetZ +
+                        (int)(((XyzAnimatorState*)state)->offsetZ - (f32)((XyzAnimatorPlacement*)setup)->targetZ));
             }
         }
         break;
@@ -584,146 +584,146 @@ void xyzanimator_update(int obj)
         done = 0;
         if (((XyzAnimatorState*)state)->gameBitValue != 0)
         {
-            if (((XyzAnimatorPlacement*)setup)->unk1C > ((XyzAnimatorPlacement*)setup)->unk22)
+            if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetX);
-                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->unk22)
+                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk22;
+                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
                     done = 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetX;
-                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->unk22)
+                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk22;
+                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
                     done = 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->unk1E > ((XyzAnimatorPlacement*)setup)->unk24)
+            if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetY);
-                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->unk24)
+                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk24;
+                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
                     done += 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetY;
-                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->unk24)
+                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk24;
+                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
                     done += 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->unk20 > ((XyzAnimatorPlacement*)setup)->unk26)
+            if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetZ);
-                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->unk26)
+                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk26;
+                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
                     done += 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetZ;
-                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->unk26)
+                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk26;
+                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
                     done += 1;
                 }
             }
             if (done == 3)
             {
-                if (((XyzAnimatorPlacement*)setup)->unk1A != -1)
+                if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
                 {
-                    GameBit_Set(((XyzAnimatorPlacement*)setup)->unk1A, 1);
+                    GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
                 }
                 ((XyzAnimatorState*)state)->unk4D += 1;
             }
         }
         else
         {
-            if (((XyzAnimatorPlacement*)setup)->unk1C > ((XyzAnimatorPlacement*)setup)->unk22)
+            if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetX;
-                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->unk1C)
+                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->startX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk1C;
+                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
                     done = 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk29 * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetX);
-                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->unk1C)
+                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->startX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->unk1C;
+                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
                     done = 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->unk1E > ((XyzAnimatorPlacement*)setup)->unk24)
+            if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetY;
-                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->unk1E)
+                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->startY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk1E;
+                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
                     done += 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2A * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetY);
-                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->unk1E)
+                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->startY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->unk1E;
+                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
                     done += 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->unk20 > ((XyzAnimatorPlacement*)setup)->unk26)
+            if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) + ((XyzAnimatorState*)
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) + ((XyzAnimatorState*)
                         state)->offsetZ;
-                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->unk20)
+                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->startZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk20;
+                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
                     done += 1;
                 }
             }
             else
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->unk2B * timeDelta) -
+                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                         ((XyzAnimatorState*)state)->offsetZ);
-                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->unk20)
+                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->startZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->unk20;
+                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
                     done += 1;
                 }
             }

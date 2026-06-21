@@ -236,7 +236,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     validSamples = lbl_803A5D60.curAudioBuffer->validSample;
                 }
                 while (validSamples == 0);
-                if (sampleCount <= validSamples)
+                if (validSamples >= sampleCount)
                 {
                     process = sampleCount;
                 }

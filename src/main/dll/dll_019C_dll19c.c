@@ -80,15 +80,15 @@ void dll_19C_update(int* obj)
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
             Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
-            ((Dll19CState*)sub)->unk6 = 1;
+            ((Dll19CState*)sub)->active = 1;
             ((GameObject*)obj)->unkF8 = 1;
         }
     }
-    if (((Dll19CState*)sub)->unk6 != 0)
+    if (((Dll19CState*)sub)->active != 0)
     {
-        ((Dll19CState*)sub)->unk4 = (s16)(((Dll19CState*)sub)->unk4 - ((Dll19CState*)sub)->unk6 * framesThisStep);
+        ((Dll19CState*)sub)->spawnTimer = (s16)(((Dll19CState*)sub)->spawnTimer - ((Dll19CState*)sub)->active * framesThisStep);
     }
-    if (((Dll19CState*)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
+    if (((Dll19CState*)sub)->spawnTimer <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
         ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
@@ -101,8 +101,8 @@ void dll_19C_update(int* obj)
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
         Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
-        ((Dll19CState*)sub)->unk4 = 0x64;
-        ((Dll19CState*)sub)->unk6 = 0;
+        ((Dll19CState*)sub)->spawnTimer = 0x64;
+        ((Dll19CState*)sub)->active = 0;
     }
 }
 
@@ -119,8 +119,8 @@ void dll_19C_init(int obj, u8* initData)
     register int state = *(int*)&((GameObject*)self)->extra;
     *(short*)self = (short)((int)(signed char)initData[0x1e] << 8);
     ((GameObject*)self)->unkF8 = 0;
-    ((Dll19CState*)state)->unk4 = 0x64;
-    ((Dll19CState*)state)->unk6 = 0;
+    ((Dll19CState*)state)->spawnTimer = 0x64;
+    ((Dll19CState*)state)->active = 0;
     *(int*)state = 0;
     *(u8*)(self + 0x37) = 0xff;
     ((GameObject*)self)->anim.alpha = 0xff;

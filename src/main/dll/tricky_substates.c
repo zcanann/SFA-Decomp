@@ -206,8 +206,8 @@ void trickyDigTunnel(u8* obj, u8* state)
             0x10);
         vx = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x2c);
         vz = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x30);
-        spd = vx * vx;
-        if (vz * vz + spd > lbl_803E23EC)
+        spd = vz * vz;
+        if (vx * vx + spd > lbl_803E23EC)
         {
             trickyTurnTowardYaw(obj, getAngle(-vx, -vz));
         }

@@ -79,19 +79,18 @@ void proximitymine_render(ProximityMineObject* obj, u32 p2, u32 p3,
         state->targetObj = obj->pendingTarget;
         obj->pendingTarget = NULL;
     }
-    if (fn_80080150(&state->renderTimer) == 0)
+    if (fn_80080150(&state->renderTimer) != 0 ||
+        (mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY,
+                                        (double)obj->posZ)) == -1)
     {
-        mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ);
-        if (mapBlock != -1)
-        {
-            effect = state->effectHandle;
-            if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0))
-            {
-                queueGlowRender(effect);
-            }
-            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6778);
-        }
+        return;
     }
+    effect = state->effectHandle;
+    if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0))
+    {
+        queueGlowRender(effect);
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6778);
     return;
 }
 

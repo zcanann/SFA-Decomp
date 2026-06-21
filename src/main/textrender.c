@@ -1642,8 +1642,8 @@ void gameTextRun(void)
     GameTextSlot* cmd;
     u8* textWindow;
     int color;
-    double zero;
     double fadeLimit;
+    double zero;
 
     gameTextBase = gGameTextBase;
 
@@ -2089,9 +2089,9 @@ extern u32 gGameTextBoxFillColor;
 extern u8* gameTextGetCurBox(void);
 extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, int* y1);
-extern void drawTexture(f32 x, f32 y, void* tex, int alpha, int scale);
-extern void drawScaledTexture(f32 x, f32 y, void* tex, int alpha, int scale, int w, int h, int flag);
-extern void drawPartialTexture(f32 x, f32 y, void* tex, int alpha, int scale, int w, int h, int part, int flag);
+extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
+extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
+extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
 extern void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 
 typedef struct GameTextBox
@@ -2132,10 +2132,10 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     s16 savedX;
     u16 f;
     u8* cur;
-    int hw;
-    int hh;
-    int cx;
     int cy;
+    int cx;
+    int hh;
+    int hw;
     u16 h7;
     u16 w7;
     s16 y7;
@@ -2208,17 +2208,17 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         hh = (c6y1 - c6y0) >> 1;
         cx = c6x0 + hw;
         cy = c6y0 + hh;
-        drawScaledTexture((f32)(c6x0 - gGameTextBoxCornerInset), (f32)(c6y0 - gGameTextBoxCornerInset), gGameTextBoxCornerTexture, 0xff, 0x100,
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset), (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100,
                           hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 0);
-        drawScaledTexture((f32)cx, (f32)(c6y0 - gGameTextBoxCornerInset), gGameTextBoxCornerTexture, 0xff, 0x100,
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100,
                           hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 1);
-        drawScaledTexture((f32)(c6x0 - gGameTextBoxCornerInset), cy, gGameTextBoxCornerTexture, 0xff, 0x100,
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset), cy, 0xff, 0x100,
                           hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 2);
-        drawScaledTexture((f32)cx, cy, gGameTextBoxCornerTexture, 0xff, 0x100,
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, cy, 0xff, 0x100,
                           hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 3);
         break;
     case 0:
-        drawScaledTexture((f32)((GameTextBox*)box)->x, (f32)((GameTextBox*)box)->y, gGameTextBoxBgTexture, 0xff, 0x100,
+        drawScaledTexture(gGameTextBoxBgTexture, (f32)((GameTextBox*)box)->x, (f32)((GameTextBox*)box)->y, 0xff, 0x100,
                           ((GameTextBox*)box)->width, ((GameTextBox*)box)->height, 0);
         break;
     case 3:
@@ -2232,10 +2232,10 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
             gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
-        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), gSubtitleBoxTextures[0], ((GameTextBox*)box)->alpha, 0x100);
-        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), gSubtitleBoxTextures[1], ((GameTextBox*)box)->alpha, 0x100,
+        drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
+        drawScaledTexture(gSubtitleBoxTextures[1], (f32)c3x0, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100,
                           c3x1 - c3x0, 0x24, 0);
-        drawTexture((f32)c3x1, (f32)(c3y0 - 9), gSubtitleBoxTextures[2], ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(gSubtitleBoxTextures[2], (f32)c3x1, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
         break;
     case 2:
         x2 = ((GameTextBox*)box)->x;
@@ -2253,18 +2253,18 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
             rem = 0;
         }
         GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture((f32)(x2 - 0x34), (f32)(y2 - 0x23), lbl_8033BE40[0], ((GameTextBox*)box)->alpha, 0x100);
-        drawTexture((f32)xw, (f32)(y2 - 0x23), lbl_8033BE40[4], ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(lbl_8033BE40[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(lbl_8033BE40[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
         if (half != 0)
         {
-            drawScaledTexture((f32)x2, (f32)(y2 - 0x13), lbl_8033BE40[1], ((GameTextBox*)box)->alpha, 0x100,
+            drawScaledTexture(lbl_8033BE40[1], (f32)x2, (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
                               half, 0x3a, 0);
-            drawPartialTexture((f32)(xw - half), (f32)(y2 - 0x13), lbl_8033BE40[3], ((GameTextBox*)box)->alpha, 0x100,
+            drawPartialTexture(lbl_8033BE40[3], (f32)(xw - half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
                                half, 0x3a, 0xc - half, 0);
         }
         if (rem != 0)
         {
-            drawScaledTexture((f32)(x2 + half), (f32)(y2 - 0x13), lbl_8033BE40[2], ((GameTextBox*)box)->alpha, 0x100,
+            drawScaledTexture(lbl_8033BE40[2], (f32)(x2 + half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
                               rem, 0x3a, 0);
         }
         break;

@@ -281,7 +281,7 @@ void expgfxRemoveAll(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = ~activeBit;
+                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
                 *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
             }
 
@@ -314,7 +314,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     u32* activeMaskPtr;
     u32 currentMask;
     u32 activeBit;
-    int foundPool;
+    short foundPool;
     int foundPoolIndex;
     int poolIndex;
     int slotIndex;
@@ -2080,6 +2080,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     int vertexIndex;
     f32 viewProjW;
     volatile int dummy;
+    u32* activeMasks;
 
     dstBuf = getCache();
     trackedFlags = 0;
@@ -2116,6 +2117,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
     slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
     slotIndex = 0;
+    activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
     do
     {
@@ -2123,7 +2125,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
-        if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
+        if ((1U << slotIndex & *activeMasks) == 0) goto next_slot;
         state = slot->stateBits.value;
         if (((state >> 2) & 3) != 0) goto next_slot;
         if (((state >> 1) & 1) == 0) goto next_slot;
@@ -2238,7 +2240,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sx = slot->renderX;
         sy = slot->renderY;
         sz = slot->renderZ;
-        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)(u16)
+        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)
         slot->scaleCurrent;
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
         {
@@ -2419,17 +2421,17 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 f32 ny = px * sinC + py * cosC;
                 ay_cosB = ny * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + cosA * ay_cosB + nx * sinA + cosA * pz_sinB;
-                outY = sy + ny * sinB + (-pz) * cosB;
-                outZ = sz + sinA * ay_cosB + (-nx) * cosA + sinA * pz_sinB;
+                outX = sx + (cosA * ay_cosB + nx * sinA + cosA * pz_sinB);
+                outY = sy + (ny * sinB + (-pz) * cosB);
+                outZ = sz + (sinA * ay_cosB + (-nx) * cosA + sinA * pz_sinB);
             }
             else
             {
                 ay_cosB = py * cosB;
                 pz_sinB = pz * sinB;
-                outX = sx + cosA * ay_cosB + px * sinA + cosA * pz_sinB;
-                outY = sy + py * sinB + (-pz) * cosB;
-                outZ = sz + sinA * ay_cosB + (-px) * cosA + sinA * pz_sinB;
+                outX = sx + (cosA * ay_cosB + px * sinA + cosA * pz_sinB);
+                outY = sy + (py * sinB + (-pz) * cosB);
+                outZ = sz + (sinA * ay_cosB + (-px) * cosA + sinA * pz_sinB);
             }
             viewProjW = ((f32*)viewMatrix)[8] * outX
                 + ((f32*)viewMatrix)[9] * outY
@@ -2650,7 +2652,7 @@ void expgfx_resetAllPools(void)
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
-            if ((*poolActiveMasks & activeBit) != 0)
+            if ((activeBit & *poolActiveMasks) != 0)
             {
                 if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
                 {
@@ -2675,7 +2677,7 @@ void expgfx_resetAllPools(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = ~activeBit;
+                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
                 *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
             }
 
@@ -2799,38 +2801,43 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     {
         return EXPGFX_INVALID_POOL_INDEX;
     }
-    if (expgfxGetSlot(&poolIndex, &slotIndex, slotType,
+    if (expgfxGetSlot(&poolIndex, &slotIndex, (int)slotType,
                       preferredPoolIndex, (u32)(int)config->attachedSource)
         == EXPGFX_INVALID_POOL_INDEX)
     {
         return EXPGFX_INVALID_POOL_INDEX;
     }
     {
+        int pi = poolIndex;
 
-        if ((int)poolIndex < EXPGFX_POOL_COUNT)
+        if (pi < EXPGFX_POOL_COUNT)
         {
-            runtime->poolSourceIds[poolIndex] = (int)config->attachedSource;
+            runtime->poolSourceIds[pi] = (int)config->attachedSource;
         }
-        if ((int)poolIndex < EXPGFX_POOL_COUNT &&
+        if (pi < EXPGFX_POOL_COUNT &&
             (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
-            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[poolIndex & 1];
-            maskHighWord = m->highWord;
-            maskLowWord = m->lowWord;
-            bit = 1 << ((int)poolIndex >> 1);
-            m->lowWord = maskLowWord | bit;
-            m->highWord = maskHighWord | (u32)((int)bit >> 0x1f);
+            u8* mb = (u8*)runtime + (pi & 1) * 8;
+            maskHighWord = *(u32*)(mb + 4112);
+            maskLowWord = *(u32*)(mb + 4116);
+            bit = 1 << (pi >> 1);
+            maskLowWord = maskLowWord | bit;
+            maskHighWord = maskHighWord | (u32)((int)bit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord;
+            *(u32*)(mb + 4112) = maskHighWord;
         }
         else
         {
-            ExpgfxTrackedSourceFrameMask* m = &runtime->trackedSourceFrameMasks[poolIndex & 1];
-            maskHighWord = m->highWord;
-            maskLowWord = m->lowWord;
-            inverseBit = ~(u32)(1 << ((int)poolIndex >> 1));
-            m->lowWord = maskLowWord & inverseBit;
-            m->highWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            u8* mb = (u8*)runtime + (pi & 1) * 8;
+            maskHighWord = *(u32*)(mb + 4112);
+            maskLowWord = *(u32*)(mb + 4116);
+            inverseBit = ~(u32)(1 << (pi >> 1));
+            maskLowWord = maskLowWord & inverseBit;
+            maskHighWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord;
+            *(u32*)(mb + 4112) = maskHighWord;
         }
-        slot = (ExpgfxSlot*)(runtime->slotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
         if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < gExpgfxSequenceCounter)
@@ -2914,7 +2921,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        Expgfx_SetSlotTableIndex(slot, expTabIndex);
+        ((struct { u8 tableIndex : 7; u8 lowBit : 1; }*)&slot->encodedTableIndex)->tableIndex = (u8)expTabIndex;
 
         slot->posX.value = config->startPosX.value;
         slot->startPosX.value = config->startPosX.value;
@@ -2979,7 +2986,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
             f32 step;
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
+            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_BACKDATE_MOTION + 0LL);
             step = lbl_803DF41C * (f32)(s32)
             slot->lifetimeFrame;
             slot->posX.value = slot->velocityX * step + slot->posX.value;
@@ -2997,7 +3004,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             f32 distSq;
             f32 inv;
             playerObj = (GameObject*)Obj_GetPlayerObject();
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
+            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_AIM_AT_ACTOR + 0LL);
             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0)
             {
                 dx = playerObj->anim.worldPosX - slot->startPosX.value;

@@ -54,14 +54,14 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     SalVolTab* tabs;
     f32* vol_tab;
     f32 p, sp, t;
-    f32 pan_f, pan_fm, span_f, span_fm;
     u32 pan_i, pan_im, span_i, span_im;
-    f32 rpan_f, rpan_fm;
     u32 rpan_i, rpan_im;
     u32 pan2, span2;
     u32 i;
-    f32 v, f, vs, ftmp, one_;
     f32 om_span_f, om_span_fm, om_pan_f, om_pan_fm;
+    f32 rpan_fm, rpan_f;
+    f32 span_fm, pan_fm, span_f, pan_f;
+    f32 v, f, vs, ftmp, one_;
     f32* pan1;
 
     tabs = &gSnd3dRoomVolTable;

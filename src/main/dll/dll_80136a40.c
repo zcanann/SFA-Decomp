@@ -38,7 +38,7 @@
 typedef struct TrickyImpressState
 {
     u8 pad0[0x54 - 0x0];
-    u32 unk54;
+    u32 flags54;
     u8 pad58[0x408 - 0x58];
     f32 unk408;
     f32 unk40C;
@@ -229,7 +229,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         f32 dx, dy, dz;
     } stk;
     u8 i = 0x14;
-    u32 flags = ((TrickyImpressState*)b)->unk54;
+    u32 flags = ((TrickyImpressState*)b)->flags54;
     if ((flags & 0x1800) == 0) return;
     stk.dx = ((TrickyImpressState*)b)->unk408 - *(f32*)(a + 0x18);
     stk.dy = ((TrickyImpressState*)b)->unk40C - *(f32*)(a + 0x1c);
@@ -244,7 +244,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         {
             (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
         }
-        ((TrickyImpressState*)b)->unk54 = ((TrickyImpressState*)b)->unk54 & ~0x1000LL;
+        ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
     }
 }
 
@@ -321,8 +321,8 @@ int trickyFn_80138f14(u8* obj)
     u8* b = ((GameObject*)obj)->extra;
     if ((u32)GameBit_Get(0x4E4) != 0u)
     {
-        ((TrickyImpressState*)b)->unk54 |= 0x10000LL;
-        if ((((TrickyImpressState*)b)->unk54 & 0x10) != 0u)
+        ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
+        if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
         {
             return 1;
         }
@@ -351,16 +351,20 @@ void fn_80137998(void)
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
  * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
  * record counter at gDebugRecordCount has already exceeded 0xFA. */
+#pragma optimization_level 1
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
     u8* p;
+    u8 tag;
+    u8 term;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
     if (n > 0xfa) return;
+    tag = 0x81;
     p = debugLogEnd;
     debugLogEnd = p + 1;
-    *p = 0x81;
+    *p = tag;
     p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = r;
@@ -373,10 +377,12 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     p = debugLogEnd;
     debugLogEnd = p + 1;
     *p = a;
+    term = 0;
     p = debugLogEnd;
     debugLogEnd = p + 1;
-    *p = 0;
+    *p = term;
 }
+#pragma optimization_level reset
 
 /* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via objAudioFn_800393f8) only when:
@@ -473,7 +479,7 @@ void fn_80137948(char* fmt, ...)
 void trickyImpress(u8* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
-    ((TrickyImpressState*)b)->unk54 |= 0x80000000;
+    ((TrickyImpressState*)b)->flags54 |= 0x80000000;
     ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
 }
 
@@ -1008,18 +1014,20 @@ int fn_80136A40(int p1, int c)
 }
 
 #pragma peephole off
+#pragma optimization_level 3
 int fn_80136E00(int p1, u8* p)
 {
     u8 c;
     int w;
     int x2;
-    u16 y;
-    u16 y0;
+    int y;
+    int y0;
     int y1;
     u16 x0;
     u32 ca;
     u32 cb;
     u32 cc;
+    u32 cd;
     f32 sc;
     int rm;
     u8 c0;
@@ -1028,12 +1036,12 @@ int fn_80136E00(int p1, u8* p)
     u8 c3;
     u8 colb1[4]; /* four separate colb/colw pairs: distinct stack slots are load-bearing */
     u32 colw1;
-    u32 colw2;
-    u8 colb2[4];
-    u32 colw3;
-    u8 colb3[4];
-    u32 colw4;
+    u32 colw4; /* case 0x82 (declared first of the three hud buffers -> highest slot) */
     u8 colb4[4];
+    u32 colw2; /* case 0xa */
+    u8 colb2[4];
+    u32 colw3; /* line-wrap path */
+    u8 colb3[4];
     u8* start = p;
 
     while ((c = *p++) != 0)
@@ -1065,8 +1073,9 @@ int fn_80136E00(int p1, u8* p)
             break;
         case 0x87:
             gDebugScaleBiasX = p[0];
-            gDebugScaleBiasY = p[1];
+            c0 = p[1];
             p += 2;
+            gDebugScaleBiasY = c0;
             break;
         case 0x85:
             c0 = p[0];
@@ -1092,34 +1101,37 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb4[0] = gDebugTextColorR;
                     colb4[1] = gDebugTextColorG;
                     colb4[2] = gDebugTextColorB;
                     colb4[3] = gDebugTextColorA;
                     colw4 = *(u32*)colb4;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw4);
+                    hudDrawRect(ca, cc, cb, cd, &colw4);
                 }
             }
             debugPrintYpos = p[0];
             debugPrintYpos |= p[1] << 8;
             debugPrintXpos = p[2];
-            debugPrintXpos |= p[3] << 8;
+            c0 = p[3];
             p += 4;
+            debugPrintXpos |= c0 << 8;
             gDebugRectStartY = debugPrintYpos;
             gDebugRectStartX = debugPrintXpos;
             break;
         case 0x86:
             gDebugTabWidth = p[0];
-            gDebugTabWidth |= p[1] << 8;
+            c0 = p[1];
             p += 2;
+            gDebugTabWidth |= c0 << 8;
             break;
         case 0x20:
             w = 6;
@@ -1133,20 +1145,21 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
+                    ca = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb2[0] = gDebugTextColorR;
                     colb2[1] = gDebugTextColorG;
                     colb2[2] = gDebugTextColorB;
                     colb2[3] = gDebugTextColorA;
                     colw2 = *(u32*)colb2;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw2);
+                    hudDrawRect(ca, cc, cb, cd, &colw2);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -1185,20 +1198,21 @@ int fn_80136E00(int p1, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if (y0 >= 2)
+                    if ((u32)y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    ca = (u32)((f32)y0 * sc);
+                    ca = (u32)((f32)(u32)y0 * sc);
                     cb = (u32)((f32)(u32)y1 * sc);
                     cc = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
+                    cd = (u32)((f32)(u32)x2 * sc);
                     colb3[0] = gDebugTextColorR;
                     colb3[1] = gDebugTextColorG;
                     colb3[2] = gDebugTextColorB;
                     colb3[3] = gDebugTextColorA;
                     colw3 = *(u32*)colb3;
-                    hudDrawRect(ca, cc, cb, (u32)((f32)(u32)x2 * sc), &colw3);
+                    hudDrawRect(ca, cc, cb, cd, &colw3);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -1209,6 +1223,7 @@ int fn_80136E00(int p1, u8* p)
     }
     return p - start;
 }
+#pragma optimization_level reset
 
 /* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
@@ -1480,6 +1495,7 @@ void fn_80137DF8(void)
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
+#pragma optimization_level 2
 void debugPrintDraw(int ctx)
 {
     u8* p;
@@ -1493,30 +1509,34 @@ void debugPrintDraw(int ctx)
     f32 scale;
     u32 colw;
     u32 colb;
+    u32 sw;
+    u32 sh;
 
     res = getScreenResolution();
     gDebugScreenHeight = (u16)(res >> 0x10);
     gDebugScreenWidth = res;
     GXSetScissor(0, 0, gDebugScreenWidth, gDebugScreenHeight);
-    if (gDebugScreenWidth <= 0x140)
+    sw = gDebugScreenWidth;
+    if (sw <= 0x140)
     {
         gDebugPrintOriginY = 0x10;
-        gDebugMarginRight = gDebugScreenWidth - 0x10;
+        gDebugMarginRight = sw - 0x10;
     }
     else
     {
         gDebugPrintOriginY = 0x20;
-        gDebugMarginRight = gDebugScreenWidth - 0x20;
+        gDebugMarginRight = sw - 0x20;
     }
-    if (gDebugScreenHeight <= 0xf0)
+    sh = gDebugScreenHeight;
+    if (sh <= 0xf0)
     {
         gDebugPrintOriginX = 0x10;
-        gDebugMarginBottom = gDebugScreenHeight - 0x10;
+        gDebugMarginBottom = sh - 0x10;
     }
     else
     {
         gDebugPrintOriginX = 0x20;
-        gDebugMarginBottom = gDebugScreenHeight - 0x20;
+        gDebugMarginBottom = sh - 0x20;
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;

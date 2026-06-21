@@ -28,7 +28,7 @@ typedef struct LightfootSub
     s32 unk0;
     s32 unk4;
     u8 pad8[0xC - 0x8];
-    f32 unkC;
+    f32 animTimer;
     u8 pad10[0x14 - 0x10];
     f32 unk14;
     u8 pad18[0x24 - 0x18];
@@ -285,7 +285,7 @@ void lightfoot_init(int obj, int p2, int p3)
 
     if (p3 != 0)
     {
-        flags = (u8)(flags | 1);
+        flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
@@ -419,7 +419,7 @@ void lightfoot_init(int obj, int p2, int p3)
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C,
                             (ObjAnimComponent*)obj);
     ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
-    ((LightfootSub*)sub)->unkC = lbl_803E81C0;
+    ((LightfootSub*)sub)->animTimer = lbl_803E81C0;
     if (((GameObject*)obj)->unkF4 != 0)
     {
         ObjHits_DisableObject(obj);

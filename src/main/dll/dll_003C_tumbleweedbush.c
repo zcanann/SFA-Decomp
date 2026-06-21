@@ -573,7 +573,7 @@ u32 Link_update(void)
                 result = 1;
             }
         }
-        else if ((buttons & 0x200) != 0)
+        else if ((int)(buttons & 0x200) != 0)
         {
             buttonDisable(0, 0x200);
             result = 0;

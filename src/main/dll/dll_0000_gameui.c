@@ -153,7 +153,7 @@ extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 extern TaskHintEntry gTaskHintTable[5];
 extern u8 pauseMenuState;
-extern u8 pauseMenuFrameCounter;
+extern s8 pauseMenuFrameCounter;
 extern void padGetAnalogInput(int port, u8* x, u8* y);
 extern s16 lbl_803DD75C;
 extern f32 lbl_803DD7BC;
@@ -3353,7 +3353,7 @@ void pauseMenuFn_80129ee0(void)
                     lbl_803DD784 = 0;
                     break;
                 case 8:
-                    *(u8*)(player + 0x9) = (u8)(*(u8*)(player + 0x9) - 1);
+                    *(u8*)(player + 0x9) -= 1;
                     fn_80296C84(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
@@ -4435,15 +4435,16 @@ void textureFreeFn_8012fcec(void)
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
     {
-        void** tex = (void**)(lbl_803A87F0 + i * 4);
+        int j = i;
+        void** tex = (void**)(lbl_803A87F0 + j * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {
             textureFree(*tex);
             *tex = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + i * 2) = -1;
-        lbl_803A87F0[1096 + i] = 1;
+        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
+        lbl_803A87F0[1096 + j] = 1;
     }
     if (lbl_803DD7C8 != NULL)
     {

@@ -67,7 +67,7 @@ void dfpfloorbar_hitDetect(int* obj)
 typedef struct DfpfloorbarPlacement
 {
     u8 pad0[0xC - 0x0];
-    f32 unkC;
+    f32 posY;
 } DfpfloorbarPlacement;
 
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
@@ -98,14 +98,14 @@ void dfpfloorbar_update(int obj)
         if (state->modeIndex > 5) return;
         if (GameBit_Get(0xe57) != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
             return;
         }
         break;
     case 2:
         if (GameBit_Get(0xe58) != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
             return;
         }
         break;
@@ -146,13 +146,13 @@ void dfpfloorbar_update(int obj)
 
     active = state->active;
     if (active != 0 &&
-        ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
+        ((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
-        if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
+        if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
         {
-            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
         }
         return;
     }
@@ -160,7 +160,7 @@ void dfpfloorbar_update(int obj)
     if (state->requiredScore == 0) return;
     if (active == 0)
     {
-        ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC;
+        ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY;
     }
     if (state->active != 0) return;
 

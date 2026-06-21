@@ -255,7 +255,7 @@ void worldplanet_update(int obj)
     struct
     {
         u8 inY;
-        s8 inX[3];
+        u8 inX[3];
     } in;
 
     tbl = gWorldPlanetObjectIdTable;
@@ -407,7 +407,7 @@ void worldplanet_update(int obj)
             }
         }
         gWorldPlanetPathProgress = gWorldPlanetPathProgress + gWorldPlanetPathProgressStep;
-        if (gWorldPlanetPathProgressMax <= gWorldPlanetPathProgress)
+        if (gWorldPlanetPathProgress >= gWorldPlanetPathProgressMax)
         {
             gWorldPlanetPathProgress = lbl_803E65F8;
         }
@@ -491,7 +491,11 @@ void worldplanet_update(int obj)
             switch (state->selectionLocked)
             {
             case 0:
-                if (gWorldPlanetReselectDelayTimer == 0)
+                if (gWorldPlanetReselectDelayTimer != 0)
+                {
+                    gWorldPlanetReselectDelayTimer -= 1;
+                }
+                else
                 {
                     if (gWorldPlanetSelectConfirmTimer == 0 &&
                         (state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
@@ -501,15 +505,11 @@ void worldplanet_update(int obj)
                         mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
                     }
                 }
-                else
-                {
-                    gWorldPlanetReselectDelayTimer -= 1;
-                }
                 if (gWorldPlanetSelectConfirmTimer != 0)
                 {
                     Pause_ResetMenuFrameCounter();
                     gWorldPlanetSelectConfirmTimer -= 1;
-                    if (gWorldPlanetSelectConfirmTimer < 2)
+                    if (gWorldPlanetSelectConfirmTimer <= 1)
                     {
                         gWorldPlanetSelectConfirmTimer = 0;
                         Sfx_PlayFromObject(0, 0x98);

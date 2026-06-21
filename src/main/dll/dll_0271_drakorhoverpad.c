@@ -74,12 +74,12 @@ typedef struct DrakorHoverpadRenderState
     f32 verticalVel;
     f32 unk114;
     u8 pad118[0x154 - 0x118];
-    f32 unk154;
-    f32 unk158;
-    f32 unk15C;
-    f32 unk160;
-    f32 particleEmitY;
-    f32 unk168;
+    f32 particleEmitAX; /* 0x154: emit point A, X (jittered) */
+    f32 particleEmitAY; /* 0x158 */
+    f32 particleEmitAZ; /* 0x15c: emit point A, Z (jittered) */
+    f32 particleEmitBX; /* 0x160: emit point B, X (jittered) */
+    f32 particleEmitBY; /* 0x164 */
+    f32 particleEmitBZ; /* 0x168: emit point B, Z (jittered) */
     u8 pad16C[0x174 - 0x16C];
     s16 anglePhase;
     s16 frameCounter;
@@ -237,15 +237,15 @@ void drakorhoverpad_render(void* obj, int p2, int p3, int p4, int p5, char visib
         if (((DrakorHoverpadRenderState*)p)->frameCounter == 0 || ((DrakorHoverpadRenderState*)p)->frameCounter > 10)
         {
             ((DrakorHoverpadRenderState*)p)->frameCounter = 0;
-            ((DrakorHoverpadRenderState*)p)->unk154 = ((GameObject*)obj)->anim.localPosX + (f32)(int)
+            ((DrakorHoverpadRenderState*)p)->particleEmitAX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
             randomGetRange(-30, 30);
-            ((DrakorHoverpadRenderState*)p)->unk158 = ((GameObject*)obj)->anim.localPosY;
-            ((DrakorHoverpadRenderState*)p)->unk15C = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+            ((DrakorHoverpadRenderState*)p)->particleEmitAY = ((GameObject*)obj)->anim.localPosY;
+            ((DrakorHoverpadRenderState*)p)->particleEmitAZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
             randomGetRange(-30, 30);
-            ((DrakorHoverpadRenderState*)p)->unk160 = ((GameObject*)obj)->anim.localPosX + (f32)(int)
+            ((DrakorHoverpadRenderState*)p)->particleEmitBX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
             randomGetRange(-120, 120);
-            ((DrakorHoverpadRenderState*)p)->particleEmitY = ((GameObject*)obj)->anim.localPosY - lbl_803E6A88;
-            ((DrakorHoverpadRenderState*)p)->unk168 = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+            ((DrakorHoverpadRenderState*)p)->particleEmitBY = ((GameObject*)obj)->anim.localPosY - lbl_803E6A88;
+            ((DrakorHoverpadRenderState*)p)->particleEmitBZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
             randomGetRange(-120, 120);
         }
     }
@@ -460,6 +460,7 @@ void drakorhoverpad_updateMain(int obj)
     int nearest;
     int yawDelta;
     int c;
+    int angle;
 
     Obj_GetPlayerObject();
     if (drakorhoverpad_init(obj) != 0)
@@ -487,12 +488,10 @@ void drakorhoverpad_updateMain(int obj)
     curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
-        phase = gDrakorHoverpadPi *
-            (f32)(int)
-        getAngle(sqrtf(curve->tangentX * curve->tangentX +
-                     curve->tangentZ * curve->tangentZ),
-                 curve->tangentY) /
-            gDrakorHoverpadAngleScale;
+        angle = getAngle(sqrtf(curve->tangentX * curve->tangentX +
+                               curve->tangentZ * curve->tangentZ),
+                         curve->tangentY);
+        phase = gDrakorHoverpadPi * (f32)angle / gDrakorHoverpadAngleScale;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0)

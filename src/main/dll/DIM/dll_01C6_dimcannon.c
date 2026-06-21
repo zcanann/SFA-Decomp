@@ -189,7 +189,7 @@ void dimcannon_init(int* obj, int* arg)
             {
                 v = 1;
             }
-            ((DimCannonState*)state)->unkB2 = v;
+            ((DimCannonState*)state)->hasActivated = v;
         }
 
         for (i = 0; i < 0xa; i += 5)
@@ -211,7 +211,7 @@ void dimcannon_init(int* obj, int* arg)
             *(f32*)((char*)state + i * 4 + 0x74) = ((GameObject*)obj)->anim.localPosZ;
         }
 
-        ((DimCannonState*)state)->unkAF = 0x80;
+        ((DimCannonState*)state)->refreshTimer = 0x80;
         ((DimCannonState*)state)->unk98 = lbl_803E48B8;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
         ((GameObject*)obj)->animEventCallback = fn_801B2550;
@@ -279,8 +279,8 @@ void dimcannon_update(int* obj)
             else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1)
             {
                 int* focusObj;
-                ((DimCannonState*)state)->unkAE = 0;
-                ((DimCannonState*)state)->unkB1 = 0;
+                ((DimCannonState*)state)->airMeterCharge = 0;
+                ((DimCannonState*)state)->shutdownTimer = 0;
                 focusObj = obj;
                 (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
                 buttonDisable(0, 0x100);
@@ -289,7 +289,7 @@ void dimcannon_update(int* obj)
                 *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
             }
-            ((DimCannonState*)state)->unkAD = 0;
+            ((DimCannonState*)state)->fireRequested = 0;
             ((DimCannonState*)state)->aimYaw = 0;
             ((DimCannonState*)state)->aimPitch = 0;
             break;
@@ -311,7 +311,7 @@ void dimcannon_update(int* obj)
                 ((DimCannonState*)state)->fireState = 1;
             }
         }
-        ((DimCannonState*)state)->unkAD = 0;
+        ((DimCannonState*)state)->fireRequested = 0;
         ((DimCannonState*)state)->aimYaw = 0;
         ((DimCannonState*)state)->aimPitch = 0;
         break;
@@ -328,12 +328,12 @@ void dimcannon_update(int* obj)
         }
         if (*(void**)(state + 0x0) != 0)
         {
-            ((DimCannonState*)state)->unkAF += framesThisStep;
-            if (((DimCannonState*)state)->unkAF > 0xa)
+            ((DimCannonState*)state)->refreshTimer += framesThisStep;
+            if (((DimCannonState*)state)->refreshTimer > 0xa)
             {
                 char* e;
                 u8 j;
-                ((DimCannonState*)state)->unkAF = 0;
+                ((DimCannonState*)state)->refreshTimer = 0;
                 for (j = 0; j < 9; j++)
                 {
                     e = state + j * 4;
@@ -474,7 +474,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 buttonDisable(0, 0x100);
                 if (Player_GetCurrentMagic((int)player) >= 1)
                 {
-                    ((DimCannonState*)state)->unkAE += framesThisStep;
+                    ((DimCannonState*)state)->airMeterCharge += framesThisStep;
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 2) == 0)
                     {
                         Sfx_PlayFromObject((u32)obj, 0x201);
@@ -490,36 +490,36 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             {
                 Sfx_StopObjectChannel((u32)obj, 2);
             }
-            if (((DimCannonState*)state)->unkAE > gDimCannonMaxCharge)
+            if (((DimCannonState*)state)->airMeterCharge > gDimCannonMaxCharge)
             {
-                ((DimCannonState*)state)->unkAE = gDimCannonMaxCharge;
+                ((DimCannonState*)state)->airMeterCharge = gDimCannonMaxCharge;
             }
-            (*gGameUIInterface)->runAirMeter(((DimCannonState*)state)->unkAE);
-            ((DimCannonState*)state)->unk98 = (f32)((DimCannonState*)state)->unkAE * lbl_803DBEFC + lbl_803DBEF8;
+            (*gGameUIInterface)->runAirMeter(((DimCannonState*)state)->airMeterCharge);
+            ((DimCannonState*)state)->unk98 = (f32)((DimCannonState*)state)->airMeterCharge * lbl_803DBEFC + lbl_803DBEF8;
             if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
-                ((DimCannonState*)state)->unkAE == gDimCannonMaxCharge)
+                ((DimCannonState*)state)->airMeterCharge == gDimCannonMaxCharge)
             {
                 if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
                 {
                     buttonDisable(0, 0x100);
                     playerAddRemoveMagic(player, -1);
-                    ((DimCannonState*)state)->unkAD = 1;
-                    ((DimCannonState*)state)->unkAE = 0;
+                    ((DimCannonState*)state)->fireRequested = 1;
+                    ((DimCannonState*)state)->airMeterCharge = 0;
                 }
             }
             DIMwooddoor_spawnShard(obj, 1);
-            if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED && ((DimCannonState*)state)->unkB2 == 0 &&
+            if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED && ((DimCannonState*)state)->hasActivated == 0 &&
                 GameBit_Get(0xc17) && GameBit_Get(0xa21))
             {
-                ((DimCannonState*)state)->unkB2 = 1;
-                ((DimCannonState*)state)->unkB1 = 1;
+                ((DimCannonState*)state)->hasActivated = 1;
+                ((DimCannonState*)state)->shutdownTimer = 1;
             }
             {
-                u8 b1 = ((DimCannonState*)state)->unkB1;
+                u8 b1 = ((DimCannonState*)state)->shutdownTimer;
                 if (b1 != 0)
                 {
-                    ((DimCannonState*)state)->unkB1 += framesThisStep;
-                    if (((DimCannonState*)state)->unkB1 > 0x3c)
+                    ((DimCannonState*)state)->shutdownTimer += framesThisStep;
+                    if (((DimCannonState*)state)->shutdownTimer > 0x3c)
                     {
                         done = 1;
                     }

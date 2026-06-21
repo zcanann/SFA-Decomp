@@ -6,7 +6,7 @@
 typedef struct AppleOnTreeState
 {
     u8 unk00[8];
-    f32 unk08;
+    f32 elapsedTime;
     f32 unk0C;
     u8 unk10[0x24 - 0x10];
     f32 unk24;

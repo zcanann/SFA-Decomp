@@ -265,12 +265,12 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
         result = 1;
     val = (dist / scale < -clampRange) ? -clampRange : ((dist / scale > clampRange) ? clampRange : dist / scale);
     ang = lbl_803E74A0 * yaw / lbl_803E74A4;
-    ((AndrossState*)state)->unkD8 = val * mathSinf(ang);
-    ((AndrossState*)state)->unkDC = val * mathCosf(ang);
+    ((AndrossState*)state)->velX = val * mathSinf(ang);
+    ((AndrossState*)state)->velY = val * mathCosf(ang);
     arwarwing_getVelocity((int)vel, *(int*)state);
-    ((AndrossState*)state)->unkD8 -= vel[0] * gAndrossArwingVelDamp;
-    ((AndrossState*)state)->unkDC -= vel[1] * gAndrossArwingVelDamp;
-    ((AndrossState*)state)->unkE0 = zVel;
+    ((AndrossState*)state)->velX -= vel[0] * gAndrossArwingVelDamp;
+    ((AndrossState*)state)->velY -= vel[1] * gAndrossArwingVelDamp;
+    ((AndrossState*)state)->velZ = zVel;
     return result;
 }
 
@@ -386,9 +386,9 @@ void andross_update(int obj)
     }
     ((AndrossState*)state)->prevFightPhase = found;
     fval = lbl_803E74D4;
-    ((AndrossState*)state)->unkD8 = lbl_803E74D4;
-    ((AndrossState*)state)->unkDC = fval;
-    ((AndrossState*)state)->unkE0 = fval;
+    ((AndrossState*)state)->velX = lbl_803E74D4;
+    ((AndrossState*)state)->velY = fval;
+    ((AndrossState*)state)->velZ = fval;
     if ((-0x4000 < ((AndrossState*)state)->targetRotX) && (((GameObject*)obj)->anim.rotX < 0x4000))
     {
         pathFlag = 1;
@@ -1317,7 +1317,7 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 0x10;
                 *(u8*)(state + 0x2e) = 1;
                 ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->cachedPosZ;
-                ((AndrossState*)state)->unkE0 = lbl_803E74D4;
+                ((AndrossState*)state)->velZ = lbl_803E74D4;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
                 gAndrossDistortPhase += gAndrossDistortPhaseStep;
                 if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
@@ -1580,7 +1580,7 @@ void andross_update(int obj)
         }
         for (work = 0; (u8)work < 2; work = work + 1)
         {
-            if ((((((AndrossState*)state)->unk14 == 0) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
+            if (((((void*)((AndrossState*)state)->unk14 == NULL) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
                 &&
                 (delayPair[(u8)work] < (short)ref)) && (bval = Obj_IsLoadingLocked(), bval != 0))
             {
@@ -1593,7 +1593,7 @@ void andross_update(int obj)
                 ((AndrossState*)found)->unk20 = 0xffff;
                 found = ((int(*)(int,int))loadObjectAtObject)(obj, found);
                 ((AndrossState*)state)->unk14 = found;
-                if (((AndrossState*)state)->unk14 != 0)
+                if ((void*)((AndrossState*)state)->unk14 != NULL)
                 {
                     ((GameObject*)((AndrossState*)state)->unk14)->anim.alpha = 0xff;
                     *(u8*)(((AndrossState*)state)->unk14 + 0x37) = 0xff;
@@ -2085,7 +2085,7 @@ void andross_update(int obj)
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + ((GameObject*)obj)->anim.velocityX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((GameObject*)obj)->anim.velocityY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((GameObject*)obj)->anim.velocityZ;
-    if (lbl_803E74D4 == ((AndrossState*)state)->unkE0)
+    if (lbl_803E74D4 == ((AndrossState*)state)->velZ)
     {
         if (*(u8*)(state + 0x2e) != 0)
         {
@@ -2093,7 +2093,7 @@ void andross_update(int obj)
         }
         else
         {
-            ((AndrossState*)state)->unkE0 = lbl_803DC4B0 * (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
+            ((AndrossState*)state)->velZ = lbl_803DC4B0 * (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
         }
     }
     if (*(void**)(*state + 0xc0) == NULL)
@@ -2123,7 +2123,7 @@ void andross_update(int obj)
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(obj, (int)state);
     ref = ((AndrossState*)state)->unk14;
-    if (ref != 0)
+    if (*(void**)&((AndrossState*)state)->unk14 != NULL)
     {
         *(float*)&((AndrossState*)ref)->unk14 = *(float*)&((AndrossState*)ref)->unk14 - lbl_803E74D8;
         ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - framesThisStep;

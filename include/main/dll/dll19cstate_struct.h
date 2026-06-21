@@ -7,8 +7,8 @@ typedef struct Dll19CState
 {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
-    s16 unk4;
-    s16 unk6;
+    s16 spawnTimer; /* 0x4: counts down by active*framesThisStep, spawns at <=0 */
+    s16 active; /* 0x6: 0/1 enables the spawn countdown */
     f32 unk8;
     f32 unkC;
     f32 unk10;

@@ -1015,14 +1015,14 @@ void hudDrawAirMeter(void)
     int* m = airMeter;
     AirMeterFlags* p = (AirMeterFlags*)airMeter;
     s16 alpha;
-    s16 clamped;
     if (m == NULL) return;
     alpha = ((TrickyAirMeter*)m)->unk18;
     if (p->bit7 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0 ||
         (player != NULL && (((GameObject*)player)->objectFlags & 0x1000) != 0 &&
             ((TrickyAirMeter*)m)->unk2C != 0x5d5))
     {
-        alpha = (s16)(alpha - (framesThisStep << 2));
+        s16 clamped;
+        alpha -= framesThisStep << 2;
         clamped = (alpha < 0) ? 0 : alpha;
         ((TrickyAirMeter*)m)->unk18 = clamped;
         if (((TrickyAirMeter*)m)->unk18 == 0 && p->bit7)
@@ -1034,7 +1034,8 @@ void hudDrawAirMeter(void)
     }
     else
     {
-        alpha = (s16)(alpha + (framesThisStep << 2));
+        s16 clamped;
+        alpha += framesThisStep << 2;
         clamped = (alpha > 0xff) ? 0xff : alpha;
         ((TrickyAirMeter*)m)->unk18 = clamped;
     }

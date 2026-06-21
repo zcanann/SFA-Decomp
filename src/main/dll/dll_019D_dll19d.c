@@ -22,8 +22,8 @@ typedef struct Dll19DState
     f32 posY;
     f32 posZ;
     u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 unk2E;
+    s16 rotVelZ; /* 0x2c: per-frame rotZ spin rate */
+    s16 rotVelX; /* 0x2e: per-frame rotX spin rate */
     s16 effectTimer;
     s16 despawnTimer;
     u16 unk34;
@@ -202,8 +202,8 @@ void dll_19D_update(int obj)
         ((GameObject*)self)->anim.previousLocalPosY = ((GameObject*)self)->anim.localPosY;
         ((GameObject*)self)->anim.previousLocalPosZ = ((GameObject*)self)->anim.localPosZ;
 
-        ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->unk2E * framesThisStep);
-        ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->unk2C * framesThisStep);
+        ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->rotVelX * framesThisStep);
+        ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->rotVelZ * framesThisStep);
         (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
 
         if ((((Dll19DState*)state)->effectTimer -= framesThisStep) <= 0)

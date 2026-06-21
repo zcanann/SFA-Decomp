@@ -5,7 +5,7 @@
 typedef struct NwIcePlacement
 {
     u8 pad0[0x1B - 0x0];
-    u8 unk1B;
+    u8 linkId; /* pairing key: matched against another nwice's 0x1B to find linkedObj */
     u8 pad1C[0x20 - 0x1C];
 } NwIcePlacement;
 
@@ -77,7 +77,7 @@ void nw_ice_update(int* obj)
         {
             candidate = *scan;
             if ((obj != candidate) &&
-                (((NwIcePlacement*)setup)->unk1B ==
+                (((NwIcePlacement*)setup)->linkId ==
                     *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
             {
                 state->linkedObj = objects[i];
