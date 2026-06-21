@@ -110,6 +110,7 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 }
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeForceBehind_update(u8* obj)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -186,4 +187,5 @@ void CameraModeForceBehind_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
