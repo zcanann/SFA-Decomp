@@ -4878,18 +4878,15 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
         return;
     }
 
-    x = ((GameObject*)obj)->anim.localPosX;
-    dx = x - *(f32*)(base + 0x08);
-    y = ((GameObject*)obj)->anim.localPosY;
-    dy = y - *(f32*)(base + 0x0c);
-    z = ((GameObject*)obj)->anim.localPosZ;
-    dz = z - *(f32*)(base + 0x10);
+    dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(base + 0x08);
+    dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(base + 0x0c);
+    dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(base + 0x10);
     offset[0] = dx;
     offset[1] = dy;
     offset[2] = dz;
-    outPos[0] = x;
-    outPos[1] = y;
-    outPos[2] = z;
+    outPos[0] = ((GameObject*)obj)->anim.localPosX;
+    outPos[1] = ((GameObject*)obj)->anim.localPosY;
+    outPos[2] = ((GameObject*)obj)->anim.localPosZ;
 
     if (node->links[0] < 0)
     {
