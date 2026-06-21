@@ -19,8 +19,8 @@ typedef struct ExplosionState {
     u8 flameCount;
     u8 rayMode; /* 0 none, 1 grounded pair, 2 random pair */
     u8 debrisCount;
-    s8 halfLifeFired;
-    s8 nearGround; /* spawned close to the probed floor */
+    u8 halfLifeFired;
+    u8 nearGround; /* spawned close to the probed floor */
     u8 modelKind; /* params & 3, active model index */
     u8 padA5E[2];
 } ExplosionState;
