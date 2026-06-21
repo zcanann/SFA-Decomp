@@ -2403,7 +2403,7 @@ int fn_802A1CA8(int obj, int state)
                     spd = ph;
                 }
                 ((PlayerState*)inner)->climbStartY =
-                    ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->unk500;
+                    ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->moveStartPosY;
                 ((PlayerState*)inner)->climbTargetY =
                     (f32) * (s8*)((char*)inner + 0x4e4) * ((PlayerState*)inner)->climbStepHeight +
                     ((PlayerState*)inner)->climbBaseY;
@@ -2555,7 +2555,7 @@ int fn_802A1CA8(int obj, int state)
                             ((PlayerState*)inner)->climbBaseY;
                         {
                             f32 y2 = ((GameObject*)obj)->anim.localPosY -
-                                ((PlayerState*)inner)->unk500;
+                                ((PlayerState*)inner)->moveStartPosY;
                             ((PlayerState*)inner)->climbStartY = y2;
                             ((GameObject*)obj)->anim.localPosY = y2;
                         }
@@ -2618,7 +2618,7 @@ finish:
                                           ((GameObject*)obj)->anim.rootMotionScale, buf1, tmp);
             ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EE0,
                                           ((GameObject*)obj)->anim.rootMotionScale, buf2, tmp);
-            ((PlayerState*)inner)->unk500 = buf2[1] - buf1[1];
+            ((PlayerState*)inner)->moveStartPosY = buf2[1] - buf1[1];
             *(u8*)&((PlayerState*)inner)->unk4E7 = 1;
         }
     }
@@ -16858,7 +16858,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
         lbl_803DE498 = lbl_803E7EA4;
         ObjAnim_SetCurrentMove(obj, 0x35, lbl_803E7EA4, 1);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20;
-        inner->unk500 = ((GameObject*)obj)->anim.localPosY;
+        inner->moveStartPosY = ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.localPosY = inner->savedPosY;
         fn_802AB5A4(obj, (int)inner, 5);
     }
@@ -16908,7 +16908,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                             0x42, 0, 1, 0, NULL, 0, 0xff);
                         inner->curAnimId = 0x42;
                     }
-                    inner->unk500 = ((GameObject*)obj)->anim.localPosY;
+                    inner->moveStartPosY = ((GameObject*)obj)->anim.localPosY;
                     v4ec = inner->climbBaseY;
                     ((GameObject*)obj)->anim.worldPosY = v4ec;
                     ((GameObject*)obj)->anim.localPosY = v4ec;
@@ -17024,15 +17024,15 @@ int fn_802A16CC(int obj, int state, f32 fv)
         {
         case 0x35:
             cy = ((GameObject*)obj)->anim.currentMoveProgress *
-                (((GameObject*)obj)->anim.localPosY - inner->unk500) +
-                inner->unk500;
+                (((GameObject*)obj)->anim.localPosY - inner->moveStartPosY) +
+                inner->moveStartPosY;
             break;
         case 0x37:
             {
                 f32 w = ((GameObject*)obj)->anim.currentMoveProgress;
                 cx = w * (inner->savedPosX - cx) + cx;
                 cy = (lbl_803E7EE0 - w) *
-                    (inner->unk500 - ((GameObject*)obj)->anim.localPosY) +
+                    (inner->moveStartPosY - ((GameObject*)obj)->anim.localPosY) +
                     ((GameObject*)obj)->anim.localPosY;
                 cz = w * (inner->savedPosZ - cz) + cz;
             }

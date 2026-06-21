@@ -129,7 +129,7 @@ typedef struct PlayerState {
     f32 climbTargetY; /* target localPosY for the current climb step (climbStep*climbStepHeight + climbBaseY); lerp endpoint */
     f32 climbStartY;  /* localPosY at climb-step start; lerp base: localPosY = progress*(climbTargetY-climbStartY) + climbStartY */
     f32 unk4FC;
-    f32 unk500;
+    f32 moveStartPosY; /* localPosY captured at the start of the 0x35/0x37 vertical moves; the per-frame Y is interpolated between this anchor and the current localPosY by currentMoveProgress */
     f32 unk504;
     f32 unk508;
     f32 unk50C;
