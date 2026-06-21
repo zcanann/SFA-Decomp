@@ -99,7 +99,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     m.pos[0] = lbl_803E0734;
     m.pos[1] = lbl_803E0734;
     m.pos[2] = lbl_803E0734;
-    m.scale = lbl_803E0738;
+    m.scale = *(const f32*)&lbl_803E0738;
     m.seqId = 0;
     obj = *(u8**)spr;
     if (*(u8*)(obj + 0xf2) == 0)
