@@ -1881,7 +1881,7 @@ void pauseMenuRunSubmenu(u8 p1)
                 valid = 1;
             }
         }
-        if ((gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0)
+        if (((int)gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0)
         {
             if (valid != 0)
             {
@@ -2171,7 +2171,7 @@ void cMenuRun(void)
                         }
                     }
                 }
-                else if (gCMenuButtons & 0x200)
+                else if ((int)gCMenuButtons & 0x200)
                 {
                     Sfx_PlayFromObject(0, 0x37c);
                     cMenuOpen = 0;
