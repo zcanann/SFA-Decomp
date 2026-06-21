@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objhits.h"
+#include "main/objHitReact.h"
 #include "main/objfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/objfsa.h"
@@ -82,14 +83,12 @@ extern void** ObjGroup_GetObjects(int group, int* countOut);
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
     TrickyState* state;
-    ObjHitsPriorityState* hitState;
     f32 hitOffsetY;
     void* lastContactObj;
     f32 nearestDistance;
     f32 hitPos[3];
     f32 lightArgs[3];
     f32* hitPosPtr;
-    int hitObject;
     u8 doGroundSnap;
     int doHeightSnap;
     int hitKind;
@@ -170,9 +169,8 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
     }
 
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-    lastContactObj = (void*)hitState->lastHitObject;
-    if ((hitState->flags & 8) == 0 ||
+    lastContactObj = (void*)((GameObject*)obj)->anim.hitReactState->activeHit;
+    if ((((GameObject*)obj)->anim.hitReactState->flags & 8) == 0 ||
         (((GameObject*)lastContactObj)->anim.seqId == 0x1f))
     {
         lastContactObj = NULL;
@@ -211,8 +209,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     state->lastContactObj = lastContactObj;
     hitPosPtr = hitPos;
     hitKind = ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown,
-                                                  &hitObject, hitPosPtr);
-    lastContactObj = (void*)hitObject;
+                                                  (int*)&lastContactObj, hitPosPtr);
     state->light = hitKind;
 
     switch (state->light)
