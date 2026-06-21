@@ -88,8 +88,8 @@ extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int po
 extern const f32 lbl_803E3970;
 void smallbasket_init(int obj, int def);
 void smallbasket_update(int obj);
-void smallbasket_render(int obj, int param_2, int param_3, int param_4,
-                        int param_5, char param_6);
+void smallbasket_render(int obj, int p2, int p3, int p4,
+                        int p5, char visible);
 extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
@@ -659,8 +659,8 @@ void objThrowFn_80182504(int obj)
     vecRotateZXY(&local.f8, &((GameObject*)obj)->anim.velocityX);
 }
 
-void smallbasket_render(int obj, int param_2, int param_3, int param_4,
-                        int param_5, char param_6)
+void smallbasket_render(int obj, int p2, int p3, int p4,
+                        int p5, char visible)
 {
     int extra;
     int result;
@@ -679,13 +679,13 @@ void smallbasket_render(int obj, int param_2, int param_3, int param_4,
         {
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
         }
-        else if (((GameObject*)obj)->unkF8 != 0 && param_6 != -1)
+        else if (((GameObject*)obj)->unkF8 != 0 && visible != -1)
         {
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
         }
         else
         {
-            objRenderFn_8003b8f4((void*)obj, param_2, param_3, param_4, param_5,
+            objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5,
                                  (double)lbl_803E3950);
         }
     }

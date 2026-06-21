@@ -245,7 +245,7 @@ int xyzanimator_getExtraSize(void)
     return 0x50;
 }
 
-void xyzanimator_free(int obj, int param_2)
+void xyzanimator_free(int obj, int flag)
 {
     extern int mapGetBlock(int blockIdx); /* #57 */
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
@@ -260,7 +260,7 @@ void xyzanimator_free(int obj, int param_2)
     state->offsetX = zero;
     state->offsetY = zero;
     state->offsetZ = zero;
-    if (param_2 == 0)
+    if (flag == 0)
     {
         block = objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                     (double)((GameObject*)obj)->anim.localPosY,

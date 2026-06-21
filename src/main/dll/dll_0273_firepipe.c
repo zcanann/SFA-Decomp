@@ -32,11 +32,11 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
-extern void modelLightStruct_freeSlot(int param_1);
+extern void modelLightStruct_freeSlot(int p);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
-extern void Obj_FreeObject(int param_1);
+extern void Obj_FreeObject(int obj);
 extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject * obj);
@@ -49,7 +49,7 @@ extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject();
-extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
 extern void storeZeroToFloatParam(f32* p);
 extern void s16toFloat(f32* p, s16 val);
@@ -104,7 +104,7 @@ typedef struct
     u8 glowEnabled : 1;      /* bit0: spawn the point-light glow (from placement flag 0x2) */
 } FirePipeBitFlags;
 
-typedef void (*FirePipeEffectInitFn)(int obj, void* spawnDef, int param_3);
+typedef void (*FirePipeEffectInitFn)(int obj, void* spawnDef, int p3);
 
 #pragma dont_inline on
 int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef)

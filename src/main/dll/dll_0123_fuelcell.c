@@ -31,7 +31,7 @@ extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* state);
 
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
+extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay, int c, int d);
 extern f32 lbl_803E3CC8;
 extern f32 lbl_803E3CCC;
 extern f32 lbl_803E3CD0;
