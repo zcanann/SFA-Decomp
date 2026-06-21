@@ -75,6 +75,12 @@ extern const f32 lbl_803E59E0; /* curve-node Y bias */
 extern u32 lbl_803E59D0;       /* head of the rom-curve search pair (first type id) */
 extern u32 lbl_803E59D4;       /* head of the rom-curve search pair (second type id) */
 
+typedef struct RomCurveSearchPair
+{
+    u32 a;
+    u32 b;
+} RomCurveSearchPair;
+
 /* timer object's query slot (vtable+0x54): fills elapsed/now/limit outparams (recipe #35) */
 typedef void (*TimerQueryFn)(int timer, int* elapsed, int* now, int* limit);
 
@@ -89,8 +95,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     int pushKindB;
     int popOut;
 
-    head[0] = lbl_803E59D0;
-    head[1] = lbl_803E59D4;
+    *(RomCurveSearchPair*)head = *(RomCurveSearchPair*)&lbl_803E59D0;
     playerObj = (int)Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)arg1)->extra;
 
