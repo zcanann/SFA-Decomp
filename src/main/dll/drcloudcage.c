@@ -546,9 +546,8 @@ f32 fn_801EA678(int obj, int state)
         {
             f32 ratio = (d - *(f32*)(state + 0x1c)) /
                     (*(f32*)(state + 0x18) - *(f32*)(state + 0x1c));
-            result = ratio *
-                (*(f32*)(state + 0x20) - *(f32*)((u8*)state + 0x24)) +
-                *(f32*)(state + 0x24);
+            d = *(f32*)((u8*)state + 0x24);
+            result = ratio * (*(f32*)(state + 0x20) - d) + d;
         }
         if (*(u8*)(state + 0x434) == 0)
         {
