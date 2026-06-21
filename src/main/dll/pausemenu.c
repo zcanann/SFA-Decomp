@@ -152,8 +152,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     s32 y;
     s32 rnd1;
     s32 rnd2;
-    s32 i;
     s32 idx;
+    s32 i;
     s32 acc;
     s32 val;
     s32 h;
