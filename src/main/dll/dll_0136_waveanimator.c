@@ -147,26 +147,26 @@ void fn_801923F8(int* cfgArg)
         colorSplitZero = lbl_803E3F44;
         for (i = 0; i < cfg->period; i++)
         {
-            colorSrcIdx = srcRow;
-            colorIdx = byteRow;
+            int src = srcRow;
+            int byte = byteRow;
             for (j = 0; j < cfg->period; j++)
             {
-                f32 v = *(f32*)((u8*)lbl_803DDAF4 + colorSrcIdx);
+                f32 v = *(f32*)((u8*)lbl_803DDAF4 + src);
                 if (v < colorSplitZero)
                 {
                     f32 t = (v - cfg->minHeight) / negMin;
-                    ((u8*)lbl_803DDAEC)[colorIdx] = lbl_803E3F54 * t + lbl_803E3F50;
-                    ((u8*)lbl_803DDAEC)[colorIdx + 1] = lbl_803E3F5C * t + lbl_803E3F58;
-                    ((u8*)lbl_803DDAEC)[colorIdx + 2] = lbl_803E3F64 * t + lbl_803E3F60;
+                    ((u8*)lbl_803DDAEC)[byte] = lbl_803E3F54 * t + lbl_803E3F50;
+                    ((u8*)lbl_803DDAEC)[byte + 1] = lbl_803E3F5C * t + lbl_803E3F58;
+                    ((u8*)lbl_803DDAEC)[byte + 2] = lbl_803E3F64 * t + lbl_803E3F60;
                 }
                 else
                 {
-                    ((u8*)lbl_803DDAEC)[colorIdx] = 255;
-                    ((u8*)lbl_803DDAEC)[colorIdx + 1] = 255;
-                    ((u8*)lbl_803DDAEC)[colorIdx + 2] = 255;
+                    ((u8*)lbl_803DDAEC)[byte] = 255;
+                    ((u8*)lbl_803DDAEC)[byte + 1] = 255;
+                    ((u8*)lbl_803DDAEC)[byte + 2] = 255;
                 }
-                colorSrcIdx += 4;
-                colorIdx += 3;
+                src += 4;
+                byte += 3;
                 srcRow += 4;
                 byteRow += 3;
             }
