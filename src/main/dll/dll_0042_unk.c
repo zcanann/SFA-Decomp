@@ -689,7 +689,7 @@ void camstatic_update(CameraObject* camera)
     float fa;
     int val;
     u32 angleDelta;
-    u16 yaw;
+    int yaw;
     float aimZ2;
     float aimY2;
     float aimX2;
@@ -855,9 +855,9 @@ void camstatic_update(CameraObject* camera)
     }
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
         (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
-    yaw = getAngle(dx2, dz);
+    yaw = 0x8000 - (u16)getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
-    camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
+    camera->anim.rotX = yaw - gCamcontrolModeSettings->pitchOffset;
     angleDelta = (u16)getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
