@@ -2931,11 +2931,13 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                 {
                     int i9 = (j & 3) * 2;
                     int i12 = (j >> 2) * 0x40;
-                    int i6 = (int)*(u16*)(a + 0xa) * i5 * 2;
-                    u8* ad = a + i9 + i12 + i4 + (int)*(u16*)(a + 0xa) * i5 * 2;
-                    u8* bd = b + i9 + i12 + i4 + (int)*(u16*)(a + 0xa) * i5 * 2;
-                    u8* cd;
+                    int i6;
+                    u8 *ad, *bd, *cd;
                     u8 aLo, bLo, aHi, bHi;
+                    ad = a + i9; ad += i12; ad += i4;
+                    i6 = (int)*(u16*)(a + 0xa) * i5 * 2;
+                    ad += i6;
+                    bd = b + i9; bd += i12; bd += i4; bd += i6;
                     aLo = *(u16*)(ad + 0x60);
                     bLo = *(u16*)(bd + 0x60);
                     texA = *(u16*)(ad + 0x80);
