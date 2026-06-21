@@ -457,7 +457,7 @@ void CameraModeCombat_update(short* cam)
                             turnOnBlurFilter(tgt->anim.worldPosX, tgt->anim.worldPosY, tgt->anim.worldPosZ, 1, 0);
                             if (lbl_803E18C4 == ((CameraObject*)cam)->blendProgress)
                             {
-                                ((CameraObject*)cam)->smoothingFlags |= 0x80;
+                                ((struct { u8 b7 : 1; } *)&((CameraObject*)cam)->smoothingFlags)->b7 = 1;
                             }
                             Obj_TransformWorldPointToLocal(*(f32*)((char*)cam + 0x18),
                                                            ((CameraObject*)cam)->anim.worldPosY,
