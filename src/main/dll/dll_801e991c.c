@@ -116,7 +116,7 @@ void fn_801E991C(int p1, char* table)
         {
             j = 0;
             verts = *(f32**)(p + 0x4c8);
-            for (; j < *(s16*)(p + 0x4cc) - 2; j += 2)
+            do
             {
                 u0 = lbl_803E5AE8;
                 u1 = lbl_803E5AEC;
@@ -134,7 +134,8 @@ void fn_801E991C(int p1, char* table)
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x2c));
                 shTexCoord2f32(u0, u0);
                 verts += 8;
-            }
+                j += 2;
+            } while (j < *(s16*)(p + 0x4cc) - 2);
         }
         p += 8;
     }
