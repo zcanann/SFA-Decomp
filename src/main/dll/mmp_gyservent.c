@@ -137,7 +137,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
     f32 t;
     f32 distSqB;
     bool nearEnd;
-    char leg;
+    s8 leg;
     MmpGyserventState* state;
 
     state = ((GameObject*)obj)->extra;
@@ -165,14 +165,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
                     nearEnd = true;
                 }
             }
-            if (nearEnd)
-            {
-                leg = 2;
-            }
-            else
-            {
-                leg = 1;
-            }
+            leg = nearEnd ? 2 : 1;
             goto end;
         }
     }
@@ -185,14 +178,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
             nearEnd = true;
         }
     }
-    if (nearEnd)
-    {
-        leg = -1;
-    }
-    else
-    {
-        leg = -2;
-    }
+    leg = nearEnd ? -1 : -2;
 end:
     objInterpretSeq(obj, arg2, leg, distSqB);
 }
