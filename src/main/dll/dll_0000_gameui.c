@@ -2141,7 +2141,7 @@ void cMenuRun(void)
                             }
                             lbl_803DBA65 = 3;
                             gCMenuScrollLock = 0;
-                            gCMenuSelIndex = (s16)(gCMenuSelIndex + 1);
+                            gCMenuSelIndex++;
                             if (gCMenuSelIndex >= count)
                             {
                                 gCMenuSelIndex = 0;
@@ -2165,7 +2165,7 @@ void cMenuRun(void)
                             }
                             lbl_803DBA65 = -3;
                             gCMenuScrollLock = 0;
-                            gCMenuSelIndex = (s16)(gCMenuSelIndex - 1);
+                            gCMenuSelIndex--;
                             if (gCMenuSelIndex < 0)
                             {
                                 gCMenuSelIndex = (s16)(count - 1);
