@@ -699,7 +699,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             for (i8 = 0x14; i8 >= 0; i8 -= 4)
             {
                 s16 px = (s16)((0xff - i8) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int**)(lbl_8031BB90 + tex * 4), fyj, lbl_803E20B4, px, ty,
+                pauseMenuDrawElement(*(int**)((u8*)hudTextures + tex * 4), fyj, lbl_803E20B4, px, ty,
                                      lbl_803E20B8, 0);
             }
         }
