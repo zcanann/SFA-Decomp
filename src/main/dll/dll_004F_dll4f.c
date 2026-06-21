@@ -210,7 +210,7 @@ void dll_4F_update(int* obj)
     camera->anim.rotZ = 0;
     camera->letterboxTargetOffset = 0;
     camera->fov = lbl_803E1AB0;
-    gCameraMode4FState->blendProgress = lbl_803E1AB4 * timeDelta + gCameraMode4FState->blendProgress;
+    gCameraMode4FState->blendProgress += lbl_803E1AB4 * timeDelta;
     if (gCameraMode4FState->blendProgress > *(f32*)&lbl_803E1A8C)
     {
         gCameraMode4FState->blendProgress = lbl_803E1A8C;
