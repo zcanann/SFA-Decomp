@@ -277,8 +277,9 @@ void fn_80150EDC(void* p1, void* p2)
                 *(f32*)((u8*)p2 + 0x328) = zero;
                 ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
                 {
-                    SeqRow16* arow = (SeqRow16*)seqRows + *(u16*)((u8*)p2 + 0x338);
-                    *(u16*)((u8*)p2 + 0x338) = arow->alt;
+                    SeqRow16* seqRow16 = (SeqRow16*)seqRows;
+                    *(u16*)((u8*)p2 + 0x338) =
+                        seqRow16[*(u16*)((u8*)p2 + 0x338)].alt;
                 }
             }
         }
