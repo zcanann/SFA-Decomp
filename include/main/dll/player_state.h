@@ -38,11 +38,11 @@ typedef struct PlayerState {
     u8 pad3E4[0x3E8 - 0x3E4];
     u8 maxMagicUsed;
     u8 pad3E9[0x3F0 - 0x3E9];
-    u8 unk3F0;
-    u8 unk3F1;
+    u8 flags3F0; /* state flag byte (bits read via >>N&1 and a ByteFlags overlay): bit4/5 move-mode gates, bit6/7 etc. */
+    u8 flags3F1; /* state flag byte: bit0/bit4/bit5 gate locomotion/yaw-arc paths */
     u8 unk3F2;
-    u8 unk3F3;
-    u8 unk3F4;
+    u8 flags3F3; /* state flag byte: bits 1/2/3 queried by accessor getters */
+    u8 flags3F4; /* state flag byte: bit6 = path-follow/scripted-move gate */
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
     u8 unk3F7;
