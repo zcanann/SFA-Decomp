@@ -590,7 +590,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
-            int targ = (int)trickyState->targetPosition;
+            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((int)obj, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
@@ -618,7 +618,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
-            int targ = (int)trickyState->targetPosition;
+            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((int)obj, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
@@ -651,7 +651,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else
         {
-            int targ = (int)trickyState->targetPosition;
+            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((int)obj, getAngle(
                                     -(*(f32*)targ - obj->worldPosX),
                                     -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
