@@ -2787,10 +2787,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
     u32 inverseBit;
     short poolIndex;
     short slotIndex;
-    int texS1 = 0;
-    int texS0 = 0;
-    int texT0 = 0;
-    int texT1 = 0;
+    s16 texS1 = 0;
+    s16 texS0 = 0;
+    s16 texT0 = 0;
+    s16 texT1 = 0;
     f32 scaleVal;
     u8* poolSourceModesByte;
     u8 modeFlag;
