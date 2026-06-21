@@ -345,9 +345,8 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         if (gb != 0)
         {
-            i = objIdx;
-            walk = (int**)((char*)list + i * 4);
-            while (i < objCount && active == 0)
+            for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0;
+                 i++, walk++)
             {
                 other = *walk;
                 if (((GameObject*)other)->anim.seqId == 0x7c)
@@ -367,8 +366,6 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                         }
                     }
                 }
-                walk++;
-                i++;
             }
             if (active != 0)
             {
