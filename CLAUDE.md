@@ -562,6 +562,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the shared prototype too and confirm codegen-neutral across them (it will be — same registers).
     Independently found on gameplay (WorkerA: dll_0282_barrelgener Obj_UpdateLightningCluster,
     dll_80220608_shared.h) AND math (fastCastFloatToS16 `(float x, s16 *p)`) — a broad, reliable lever.
+138. **Global-base WALKED array with a `mr rWalker,r0` detour → index it as a TYPED STRUCT ARRAY.**
+    When a loop walks a global array and the base routes through r0 (`lis r3; addi r0,r3,LO; mr
+    rWalker,r0`) instead of the target's direct `addi rWalker,r3,LO`, the clean form is
+    `Entry *p = (Entry *)glob; for (i = 0; p[i].key; i++) p[i].field = 0;` (#135 typed struct
+    array) — ONE walker carrying field displacements AND a direct base addi, no r0 detour. The raw
+    `u8 *p` pointer walk and the `i*stride` index form both take the detour / two-walker split; the
+    typed struct array is the one that lands it. This is the clean source for the global-base
+    sub-case of #136 (the "global-base counter/walker" residual that looked stuck dissolves into
+    ordinary typed C). (WorkerB: dll_0000_gameui GameUI_unselectAllItems, expgfx family.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
