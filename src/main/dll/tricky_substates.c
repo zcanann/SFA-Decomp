@@ -1696,7 +1696,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                     {
                         cnt += 1;
                     }
-                    if (n < cnt)
+                    if (cnt > n)
                     {
                         ((TrickyState*)state)->unk82D = a + (n << 2);
                         GameBit_Set(0xc1, 0);
