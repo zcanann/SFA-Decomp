@@ -331,16 +331,14 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         {
             step = 1;
         }
-        for (maxAlpha = 0; hiEdge = maxAlpha & 0xffff, (int)hiEdge < (int)(halfSpan - step); maxAlpha += step)
+        for (hStep = 0; hiEdge = hStep & 0xffff, (int)hiEdge < (int)(halfSpan - step); hStep += step)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
             col.a = ((int)(fadeAlpha * (edge - hiEdge)) / (int)edge) & 0xff;
-            screenX = vy + (loEdge & 0xffff);
-            hudDrawRect(vx, screenX, vr, step + screenX, col);
-            screenX = vy + (inset & 0xffff);
-            hudDrawRect(vx, (screenX - step) + 1, vr, screenX + 1, col);
+            hudDrawRect(vx, vy + (loEdge & 0xffff), vr, step + (vy + (loEdge & 0xffff)), col);
+            hudDrawRect(vx, (vy + (inset & 0xffff) - step) + 1, vr, vy + (inset & 0xffff) + 1, col);
             loEdge += step;
             inset -= step;
         }
