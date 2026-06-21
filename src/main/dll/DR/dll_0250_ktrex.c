@@ -650,7 +650,7 @@ void ktrex_update(int obj)
         (char*)gKTRexRuntime + 0x405, 2, 2, 0);
     ktrex_updateContactEffects(obj, runtime);
     ktrex_updateAttackEffects(obj);
-    (*(void (**)(int, void*, int, f32))((char*)*gBaddieControlInterface + 0x2c))(obj, runtime, 0, lbl_803E67B8);
+    (*(void (**)(int, void*, f32, int))((char*)*gBaddieControlInterface + 0x2c))(obj, runtime, lbl_803E67B8, 0);
     ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
     (*(void (**)(int, void*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
