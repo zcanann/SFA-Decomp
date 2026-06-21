@@ -541,6 +541,8 @@ void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
 
 void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb)
 {
+    extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
+    extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *sx, int *sy, int *sz);
     PartfxParams params;
     f32 lvec[3];
     f32 proj[3];
@@ -563,45 +565,48 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
         fb = lbl_803DF380;
     }
     params.vec[0] = fb;
-    switch (type)
+    if (type != 0)
     {
-    case 1:
-        params.f6 = 0x159;
-        params.pad[2] = 1;
-        for (i = 0; i < n; i++)
+        switch (type)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
-        }
-        break;
-    case 2:
-        params.f6 = 0x159;
-        params.pad[2] = 0;
-        for (i = 0; i < n; i++)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
-        }
-        break;
-    case 3:
-        params.f6 = 0x8e;
-        for (i = 0; i < n; i++)
-        {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
-        }
-        break;
-    case 4:
-        {
-            int flags = 2;
-            if ((((GameObject*)obj)->anim.flags & 0x40080) != 0)
+        case 1:
+            params.f6 = 0x159;
+            params.pad[2] = 1;
+            for (i = 0; i < n; i++)
             {
-                flags |= 0x20000000;
+                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
             }
-            params.f6 = 0xc0e;
+            break;
+        case 2:
+            params.f6 = 0x159;
             params.pad[2] = 0;
             for (i = 0; i < n; i++)
             {
-                (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
+                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
             }
             break;
+        case 3:
+            params.f6 = 0x8e;
+            for (i = 0; i < n; i++)
+            {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
+            }
+            break;
+        case 4:
+            {
+                int flags = 2;
+                if ((((GameObject*)obj)->anim.flags & 0x40080) != 0)
+                {
+                    flags |= 0x20000000;
+                }
+                params.f6 = 0xc0e;
+                params.pad[2] = 0;
+                for (i = 0; i < n; i++)
+                {
+                    (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
+                }
+                break;
+            }
         }
     }
 
@@ -614,20 +619,20 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
             lvec[2] = *(f32*)((char*)light + 0x14);
             vecRotateZXY(obj, lvec);
             Camera_ProjectWorldPointWithOffset(
-                &proj[2], &proj[1], &proj[0],
                 ((GameObject*)obj)->anim.worldPosX + lvec[0] - playerMapOffsetX,
                 ((GameObject*)obj)->anim.worldPosY + lvec[1],
-                ((GameObject*)obj)->anim.worldPosZ + lvec[2] - playerMapOffsetZ, lbl_803DF384);
+                ((GameObject*)obj)->anim.worldPosZ + lvec[2] - playerMapOffsetZ, lbl_803DF384,
+                &proj[2], &proj[1], &proj[0]);
         }
         else
         {
             Camera_ProjectWorldPointWithOffset(
-                &proj[2], &proj[1], &proj[0],
                 ((GameObject*)obj)->anim.worldPosX - playerMapOffsetX,
                 ((GameObject*)obj)->anim.worldPosY,
-                ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384);
+                ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384,
+                &proj[2], &proj[1], &proj[0]);
         }
-        Camera_NdcToScreen(&screen[2], &screen[1], &screen[0], proj[2], proj[1], proj[0]);
+        Camera_NdcToScreen(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
         depth = depthReadRequestPoll(screen[2], screen[1], obj);
         if (screen[0] > depth)
         {
