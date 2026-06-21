@@ -72,8 +72,8 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     int idx;
     int count;
     int i;
-    int player;
     DbshSymbolState* state;
+    int player;
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
@@ -220,14 +220,8 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     }
     {
         f32 vol = lbl_803E5108 * state->spinSpeed;
-        if (vol >= lbl_803E50EC)
-        {
-        }
-        else
-        {
-            vol = -vol;
-        }
-        v = vol;
+        vol = (vol >= lbl_803E50EC) ? vol : -vol;
+        v = (int)vol;
         if (v > 100)
         {
             v = 100;
