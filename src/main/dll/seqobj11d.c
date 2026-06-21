@@ -98,7 +98,7 @@ extern f32 lbl_803E27E8;
 
 void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  short* param_9, int param_10)
+                  short* obj, int state)
 {
     short angleDelta;
     int entryOff;
@@ -109,15 +109,15 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
     u8* entry;
     double speed;
 
-    entry = (&PTR_DAT_8031fdc8)[(u32) * (u8*)(param_10 + 0x33b) * 10];
-    entryOff = FUN_8014c78c(param_9, 1, 0x10, &DAT_803ad088);
+    entry = (&PTR_DAT_8031fdc8)[(u32) * (u8*)(state + 0x33b) * 10];
+    entryOff = FUN_8014c78c(obj, 1, 0x10, &DAT_803ad088);
     if (0 < entryOff)
     {
-        if (((DAT_803ad08c < 0x29) && (*(short*)(param_10 + 0x2a0) != 3)) &&
-            (*(short*)(param_10 + 0x2a0) != 4))
+        if (((DAT_803ad08c < 0x29) && (*(short*)(state + 0x2a0) != 3)) &&
+            (*(short*)(state + 0x2a0) != 4))
         {
             entryOff = FUN_80017730();
-            angleDelta = entryOff - *param_9;
+            angleDelta = entryOff - *obj;
             angle = angleDelta;
             if (0x8000 < angle)
             {
@@ -127,53 +127,53 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
             {
                 angle = (u32)(short)((short)angle + -1);
             }
-            ((GroundBaddieState*)param_10)->baddie.seqEntryIndex =
+            ((GroundBaddieState*)state)->baddie.seqEntryIndex =
                 entry[8] + (&DAT_803dc8f0)[(short)((angle & 0xffff) >> 0xd)];
         }
         else if (DAT_803ad08c < 0x47)
         {
-            while ((entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 10] & 1) != 0)
+            while ((entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 10] & 1) != 0)
             {
-                *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
-                if ((u8)entry[8] < *(u8*)(param_10 + 0x33a))
+                *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex + '\x01';
+                if ((u8)entry[8] < *(u8*)(state + 0x33a))
                 {
-                    ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
+                    ((GroundBaddieState*)state)->baddie.seqEntryIndex = 1;
                 }
             }
         }
     }
-    speed = (double)(f32)(u32) * (u16*)(param_10 + 0x2a4);
-    if (speed < (double)(lbl_803E3440 * ((GroundBaddieState*)param_10)->baddie.speedScale))
+    speed = (double)(f32)(u32) * (u16*)(state + 0x2a4);
+    if (speed < (double)(lbl_803E3440 * ((GroundBaddieState*)state)->baddie.speedScale))
     {
-        *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = entry[8] + '\x01';
+        *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex = entry[8] + '\x01';
     }
     while (true)
     {
-        if ((*(u32*)(entry + (u32) * (u8*)(param_10 + 0x33a) * 0x10 + 4) == 0) ||
-            ((((GroundBaddieState*)param_10)->baddie.controlFlags &
-                *(u32*)(entry + (u32) * (u8*)(param_10 + 0x33a) * 0x10 + 4)) != 0))
+        if ((*(u32*)(entry + (u32) * (u8*)(state + 0x33a) * 0x10 + 4) == 0) ||
+            ((((GroundBaddieState*)state)->baddie.controlFlags &
+                *(u32*)(entry + (u32) * (u8*)(state + 0x33a) * 0x10 + 4)) != 0))
             break;
-        *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
-        if ((u8)entry[8] < *(u8*)(param_10 + 0x33a))
+        *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex + '\x01';
+        if ((u8)entry[8] < *(u8*)(state + 0x33a))
         {
-            ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
+            ((GroundBaddieState*)state)->baddie.seqEntryIndex = 1;
         }
     }
-    *(u8*)(param_10 + 0x2f2) = entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 10];
-    *(u8*)(param_10 + 0x2f3) = entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 0xb];
-    *(u8*)(param_10 + 0x2f4) = entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 0xc];
-    entryOff = (u32) * (u8*)(param_10 + 0x33a) * 0x10;
+    *(u8*)(state + 0x2f2) = entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 10];
+    *(u8*)(state + 0x2f3) = entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 0xb];
+    *(u8*)(state + 0x2f4) = entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 0xc];
+    entryOff = (u32) * (u8*)(state + 0x33a) * 0x10;
     FUN_8014d4c8((double)*(float*)(entry + entryOff), speed, param_3, param_4, param_5, param_6, param_7,
-                 param_8, param_9, param_10, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
+                 param_8, obj, state, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
     FUN_800305c4((double)*(float*)(&DAT_8031e980 +
-                     (u32)(u8)entry[(u32) * (u8*)(param_10 + 0x33a) * 0x10 + 8] *
-                 4), param_9
+                     (u32)(u8)entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 8] *
+                 4), obj
     )
     ;
-    *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)param_10)->baddie.seqEntryIndex + '\x01';
-    if ((u8)entry[8] < *(u8*)(param_10 + 0x33a))
+    *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex = *(char*)&((GroundBaddieState*)state)->baddie.seqEntryIndex + '\x01';
+    if ((u8)entry[8] < *(u8*)(state + 0x33a))
     {
-        ((GroundBaddieState*)param_10)->baddie.seqEntryIndex = 1;
+        ((GroundBaddieState*)state)->baddie.seqEntryIndex = 1;
     }
 }
 

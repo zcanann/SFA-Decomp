@@ -34,23 +34,23 @@ extern f32 gExplodedGroundFriction;
 extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
 
-void FUN_801a4520(int param_1)
+void FUN_801a4520(int obj)
 {
     int placement;
 
-    if (((GameObject*)param_1)->unkF4 == 0)
+    if (((GameObject*)obj)->unkF4 == 0)
     {
-        placement = *(int*)&((GameObject*)param_1)->anim.placementData;
-        if ((*(short*)(placement + 0x1c) != 0) && (**(u8**)&((GameObject*)param_1)->extra >> 5 != 0))
+        placement = *(int*)&((GameObject*)obj)->anim.placementData;
+        if ((*(short*)(placement + 0x1c) != 0) && (**(u8**)&((GameObject*)obj)->extra >> 5 != 0))
         {
-            (*gObjectTriggerInterface)->preempt(param_1, *(s16*)(placement + 0x1c));
+            (*gObjectTriggerInterface)->preempt(obj, *(s16*)(placement + 0x1c));
         }
         placement = (int)*(char*)(placement + 0x1e);
         if (placement != -1)
         {
-            (*gObjectTriggerInterface)->runSequence(placement, (void*)param_1, -1);
+            (*gObjectTriggerInterface)->runSequence(placement, (void*)obj, -1);
         }
-        ((GameObject*)param_1)->unkF4 = 1;
+        ((GameObject*)obj)->unkF4 = 1;
     }
     return;
 }

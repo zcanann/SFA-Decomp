@@ -106,9 +106,9 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-void FUN_801b3de4(u32 param_1, u32 param_2)
+void FUN_801b3de4(u32 obj, u32 variant)
 {
-    (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
+    (*gObjectTriggerInterface)->runSequence((variant ^ 1) + 2, (void*)obj, -1);
     return;
 }
 
@@ -211,7 +211,7 @@ LAB_801b44d4:
 
 void explosion_release(u32 obj);
 
-void fn_explosion_release_v11_unused(u32 param_1)
+void fn_explosion_release_v11_unused(u32 obj)
 {
     short hitShapeId;
     float clampedSpeed;
@@ -222,10 +222,10 @@ void fn_explosion_release_v11_unused(u32 param_1)
     short* placement;
     ObjHitsPriorityState* hitState;
 
-    placement = *(short**)&((GameObject*)param_1)->anim.placementData;
-    state = ((GameObject*)param_1)->extra;
+    placement = *(short**)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
     FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
-    ((GameObject*)param_1)->anim.localPosZ = ((GameObject*)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
         *)state)->unk8;
     clampedSpeed = lbl_803E566C;
     if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
@@ -238,16 +238,16 @@ void fn_explosion_release_v11_unused(u32 param_1)
         }
         ((FnExplosionReleaseV11UnusedState*)state)->unk8 = clampedSpeed;
     }
-    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
+    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E5674))
     {
         found = false;
         idx = 0;
-        count = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
+        count = (int)*(char*)(*(int*)(obj + 0x58) + 0x10f);
         if (0 < count)
         {
             do
             {
-                hitShapeId = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + idx + 0x100) + 0x46);
+                hitShapeId = *(short*)(*(int*)(*(int*)(obj + 0x58) + idx + 0x100) + 0x46);
                 if ((hitShapeId == 399) || (hitShapeId == 0x1d6))
                 {
                     found = true;
@@ -264,19 +264,19 @@ void fn_explosion_release_v11_unused(u32 param_1)
             ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
             *state = '\0';
             GameBit_Set((int)placement[0xf], 1);
-            FUN_80006824(param_1, 0x3e1);
+            FUN_80006824(obj, 0x3e1);
         }
     }
     else
     {
-        count = (u32)((GameObject*)param_1)->anim.alpha + DAT_803dc070 * -0x10;
+        count = (u32)((GameObject*)obj)->anim.alpha + DAT_803dc070 * -0x10;
         if (count < 0)
         {
             count = 0;
         }
-        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        ((GameObject*)param_1)->anim.alpha = count;
+        ((GameObject*)obj)->anim.alpha = count;
     }
     return;
 }
@@ -326,12 +326,12 @@ void FUN_801b5b8c(void)
     return;
 }
 
-void FUN_801b5d00(int param_1, int param_2)
+void FUN_801b5d00(int obj, int state)
 {
     int channel;
     u32 phase;
 
-    channel = FUN_80039520(param_1, 0);
+    channel = FUN_80039520(obj, 0);
     *(short*)(channel + 10) = *(short*)(channel + 10) + 0x14;
     if (10000 < *(short*)(channel + 10))
     {
@@ -342,24 +342,24 @@ void FUN_801b5d00(int param_1, int param_2)
     {
         *(short*)(channel + 8) = *(short*)(channel + 8) + -10000;
     }
-    channel = FUN_80039520(param_1, 1);
+    channel = FUN_80039520(obj, 1);
     *(short*)(channel + 10) = *(short*)(channel + 10) + 0x1e;
     if (10000 < *(short*)(channel + 10))
     {
         *(short*)(channel + 10) = *(short*)(channel + 10) + -10000;
     }
-    phase = (u32) * (u16*)(param_2 + 0x60) + DAT_803dc070 * 0x100;
+    phase = (u32) * (u16*)(state + 0x60) + DAT_803dc070 * 0x100;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x60) = phase;
-    phase = (u32) * (u16*)(param_2 + 0x62) + DAT_803dc070 * 0x80;
+    *(short*)(state + 0x60) = phase;
+    phase = (u32) * (u16*)(state + 0x62) + DAT_803dc070 * 0x80;
     if (0xffff < phase)
     {
         phase = phase - 0xffff;
     }
-    *(short*)(param_2 + 0x62) = phase;
+    *(short*)(state + 0x62) = phase;
     return;
 }
 

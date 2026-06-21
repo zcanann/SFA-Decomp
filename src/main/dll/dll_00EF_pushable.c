@@ -515,15 +515,15 @@ static inline int* Transporter_GetActiveModel(void* obj)
 
 u32
 FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
     int actionId;
 
-    if (((*(char*)(*(int*)(param_9 + 0x4c) + 0x1d) != '\x02') &&
+    if (((*(char*)(*(int*)(obj + 0x4c) + 0x1d) != '\x02') &&
             (animUpdate->triggerCommand == 1)) &&
-        (actionId = (int)*(char*)(*(int*)(param_9 + 0x4c) + 0x1a), -1 < actionId))
+        (actionId = (int)*(char*)(*(int*)(obj + 0x4c) + 0x1a), -1 < actionId))
     {
         FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, actionId, '\x01',
                      animUpdate, param_12, param_13, param_14, param_15, param_16);
@@ -532,16 +532,16 @@ FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     return 0;
 }
 
-void FUN_801778d0(int param_1)
+void FUN_801778d0(int obj)
 {
-    *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
+    *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x10) = 1;
     return;
 }
 
 u32
 FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9,
-             int param_10)
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj,
+             int state)
 {
     float scale;
     short* src;
@@ -558,11 +558,11 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
     src = (short*)FUN_80017a90();
     vecBase = lbl_803E42B0;
-    if ((*(char*)(param_10 + 0x10) == '\0') && (src != 0x0))
+    if ((*(char*)(state + 0x10) == '\0') && (src != 0x0))
     {
-        *(float*)(param_9 + 0x24) = lbl_803E42B0;
-        *(float*)(param_9 + 0x28) = vecBase;
-        *(float*)(param_9 + 0x2c) = lbl_803E42B4;
+        *(float*)(obj + 0x24) = lbl_803E42B0;
+        *(float*)(obj + 0x28) = vecBase;
+        *(float*)(obj + 0x2c) = lbl_803E42B4;
         vec2 = vecBase;
         vec3 = vecBase;
         vecW = lbl_803E42B8;
@@ -570,7 +570,7 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         setupSub1 = src[1];
         indexBase = FUN_801365ac((int)src);
         setupId = *src + indexBase;
-        FUN_80017748(&setupId, (float*)(param_9 + 0x24));
+        FUN_80017748(&setupId, (float*)(obj + 0x24));
         if ((src[0x58] & 0x800U) == 0)
         {
             srcPos = (float*)(src + 6);
@@ -580,22 +580,22 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
             srcPos = (float*)FUN_801365b8((int)src);
         }
         scale = lbl_803E42BC;
-        *(float*)(param_10 + 4) = -(lbl_803E42BC * *(float*)(param_9 + 0x24) - *srcPos);
-        *(float*)(param_10 + 8) = -(scale * *(float*)(param_9 + 0x28) - srcPos[1]);
-        *(float*)(param_10 + 0xc) = -(scale * *(float*)(param_9 + 0x2c) - srcPos[2]);
-        if (*(char*)(param_10 + 0x11) == '\0')
+        *(float*)(state + 4) = -(lbl_803E42BC * *(float*)(obj + 0x24) - *srcPos);
+        *(float*)(state + 8) = -(scale * *(float*)(obj + 0x28) - srcPos[1]);
+        *(float*)(state + 0xc) = -(scale * *(float*)(obj + 0x2c) - srcPos[2]);
+        if (*(char*)(state + 0x11) == '\0')
         {
-            ObjHits_ClearHitVolumes((int)param_9);
+            ObjHits_ClearHitVolumes((int)obj);
         }
         else
         {
-            *(char*)(param_10 + 0x11) = *(char*)(param_10 + 0x11) + -1;
+            *(char*)(state + 0x11) = *(char*)(state + 0x11) + -1;
         }
         result = 1;
     }
     else
     {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
+        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
         result = 0;
     }
     return result;
