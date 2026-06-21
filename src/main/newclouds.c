@@ -980,7 +980,7 @@ void snowCloudUpdateFlakes(u8* snow)
     e = snow + 0x1008;
     if (*(int*)(snow + 0x13f4) == 0)
     {
-        f32 size = 16.0f;
+        f32 size = gSnowFlakeSizeLarge;
         f32 negSize = -size;
         for (i = 0; i < 20; i++)
         {
@@ -1003,13 +1003,14 @@ void snowCloudUpdateFlakes(u8* snow)
             angleToVec2(*(u16*)(e + 0x2a), &c3, &s3);
             for (c = 0; c < 3; c++)
             {
+                f32 t2;
                 f32 m0 = m[c];
                 f32 m1 = m[c + 3];
                 f32 m2 = m[c + 6];
                 f32 t1 = m0 * s3 - m1 * c3;
-                f32 t2 = m0 * c3 + m1 * s3;
+                t2 = m0 * c3 + m1 * s3;
                 m[c] = t1 * s1 + c1 * (t2 * c2) + c1 * (m2 * s2);
-                m[c + 3] = t2 * s2 - m2 * c2;
+                m[c + 3] = t2 * s2 + -m2 * c2;
                 m[c + 6] = -t1 * c1 + s1 * (t2 * c2) + s1 * (m2 * s2);
             }
             e += 0x2c;
