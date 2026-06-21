@@ -118,14 +118,14 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
 }
 
 void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
-                  u32 param_5, u32 param_6, char visible, int alpha, int param_9)
+                  u32 param_5, u32 param_6, char visible, int alpha, int enabled)
 {
     u8 savedAlpha;
     u32 posZ;
     u32 posY;
     u32 posX[5];
 
-    if (((param_9 != 0) && (visible != '\0')) && (0 < alpha))
+    if (((enabled != 0) && (visible != '\0')) && (0 < alpha))
     {
         savedAlpha = *(u8*)((int)src + 0x37);
         *(char*)((int)src + 0x37) = alpha;
@@ -158,7 +158,7 @@ void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
 u32
 FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
              u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* param_11, u32 param_12, u32* param_13, u32 param_14, u32 param_15
+             , ObjAnimUpdateState* animUpdate, u32 param_12, u32* param_13, u32 param_14, u32 param_15
              , u32 param_16)
 {
     u32 active;
@@ -175,10 +175,10 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     extra = ((GameObject*)obj)->extra;
     *(u8*)(extra + 8) = 0xff;
     linkedObj = *extra;
-    if (param_11->triggerCommand == 3)
+    if (animUpdate->triggerCommand == 3)
     {
         *(u8*)((int)extra + 0x21) = 0xff;
-        param_11->triggerCommand = 0;
+        animUpdate->triggerCommand = 0;
     }
     local_28 = DAT_802c2a88;
     local_24 = DAT_802c2a8c;
@@ -212,13 +212,13 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
         }
     }
-    param_11->hitVolumePair = param_11->activeHitVolumePair;
-    if ((linkedObj == 0) || (param_11->triggerCommand != 2))
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
+    if ((linkedObj == 0) || (animUpdate->triggerCommand != 2))
     {
-        if ((linkedObj != 0) && (param_11->triggerCommand == 1))
+        if ((linkedObj != 0) && (animUpdate->triggerCommand == 1))
         {
             (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 0);
-            param_11->triggerCommand = 0;
+            animUpdate->triggerCommand = 0;
         }
     }
     else
@@ -235,12 +235,12 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         {
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
-        param_11->hitVolumePair &= ~4;
-        param_11->triggerCommand = 0;
+        animUpdate->hitVolumePair &= ~4;
+        animUpdate->triggerCommand = 0;
     }
     if ((linkedObj != 0) && (linkedObj = (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x38))(linkedObj), linkedObj == 2))
     {
-        param_11->hitVolumePair &= 0xfffc;
+        animUpdate->hitVolumePair &= 0xfffc;
     }
     return 0;
 }

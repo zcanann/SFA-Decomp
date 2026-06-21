@@ -842,7 +842,7 @@ void FUN_8014ccac(int obj, u32 value)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, int state,
+void FUN_8014ccb8(double maxMagnitude, double tolerance, double turnScale, int target, int state,
                   float* dir, char clampToGround)
 {
     float scale;
@@ -895,7 +895,7 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, in
     {
         FUN_80247f90(&vec1X, &vec2X);
         cross = (double)FUN_80292754();
-        uStack_6c = ((u32)(u8)((param_3 < cross) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        uStack_6c = ((u32)(u8)((turnScale < cross) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
         local_70 = 0x43300000;
         if (ABS((double)(float)((double)(u32)uStack_6c)) !=
             (double)lbl_803E31FC)
@@ -905,19 +905,19 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int target, in
             {
                 scale = lbl_803E3200;
             }
-            FUN_80247944((double)(float)(param_3 * (double)scale), afStack_a4, afStack_c8);
+            FUN_80247944((double)(float)(turnScale * (double)scale), afStack_a4, afStack_c8);
             FUN_80247cd8(afStack_a4, &vec1X, &vec2X);
         }
     }
     cross = (double)(float)(mag2 * (double)lbl_803E3280);
-    mag2 = (double)(float)(mag1 + param_2);
-    if ((cross <= mag2) && (mag2 = cross, cross < (double)(float)(mag1 - param_2)))
+    mag2 = (double)(float)(mag1 + tolerance);
+    if ((cross <= mag2) && (mag2 = cross, cross < (double)(float)(mag1 - tolerance)))
     {
-        mag2 = (double)(float)(mag1 - param_2);
+        mag2 = (double)(float)(mag1 - tolerance);
     }
-    if (param_1 < mag2)
+    if (maxMagnitude < mag2)
     {
-        mag2 = param_1;
+        mag2 = maxMagnitude;
     }
     *(float*)(target + 0x24) = (float)((double)vec2X * mag2);
     *(float*)(target + 0x28) = (float)((double)vec2Y * mag2);
@@ -1808,16 +1808,16 @@ typedef struct EnemyPlacement
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
 
-void FUN_8014d164(double param_1, double param_2, u16* angles, int state, u32 denom,
-                  char param_6)
+void FUN_8014d164(double pitchFactor, double rollFactor, u16* angles, int state, u32 denom,
+                  char clampPitch)
 {
     extern u32 FUN_80293900();
     u32 targetAngle;
     double delta;
     double scaledDelta;
     double step;
-    u64 local_50;
-    u64 local_48;
+    u64 pitchDiff;
+    u64 yawDiff;
 
     step = (double)(lbl_803DC074 /
         (float)((double)(u32)(denom & 0xffff)));
@@ -1826,8 +1826,8 @@ void FUN_8014d164(double param_1, double param_2, u16* angles, int state, u32 de
         step = (double)lbl_803E3200;
     }
     targetAngle = FUN_80017730();
-    local_50 = (double)(int)((targetAngle & 0xffff) - (u32) * angles);
-    delta = (double)(float)(local_50);
+    pitchDiff = (double)(int)((targetAngle & 0xffff) - (u32) * angles);
+    delta = (double)(float)(pitchDiff);
     if ((double)lbl_803E324C < delta)
     {
         delta = (double)(float)((double)lbl_803E3284 + delta);
@@ -1838,11 +1838,11 @@ void FUN_8014d164(double param_1, double param_2, u16* angles, int state, u32 de
     }
     scaledDelta = (double)(float)(delta * step);
     *angles = *angles + (short)(int)(delta * step);
-    if (param_1 != (double)lbl_803E31FC)
+    if (pitchFactor != (double)lbl_803E31FC)
     {
-        if (param_6 == '\0')
+        if (clampPitch == '\0')
         {
-            angles[2] = (u16)(int)(lbl_803DC078 * (float)(scaledDelta * param_1));
+            angles[2] = (u16)(int)(lbl_803DC078 * (float)(scaledDelta * pitchFactor));
             if ((short)angles[2] < 0x2001)
             {
                 if ((short)angles[2] < -0x2000)
@@ -1857,16 +1857,16 @@ void FUN_8014d164(double param_1, double param_2, u16* angles, int state, u32 de
         }
         else
         {
-            angles[2] = angles[2] + (short)(int)(param_1 * (double)(float)(scaledDelta * step));
+            angles[2] = angles[2] + (short)(int)(pitchFactor * (double)(float)(scaledDelta * step));
         }
     }
-    if ((double)lbl_803E31FC != param_2)
+    if ((double)lbl_803E31FC != rollFactor)
     {
         FUN_80293900((double)(*(float*)(state + 0x2c0) * *(float*)(state + 0x2c0) +
             *(float*)(state + 0x2b8) * *(float*)(state + 0x2b8)));
         targetAngle = FUN_80017730();
-        local_48 = (double)(int)((targetAngle & 0xffff) - angles[1]);
-        delta = (double)(float)(local_48);
+        yawDiff = (double)(int)((targetAngle & 0xffff) - angles[1]);
+        delta = (double)(float)(yawDiff);
         if ((double)lbl_803E324C < delta)
         {
             delta = (double)(float)((double)lbl_803E3284 + delta);
