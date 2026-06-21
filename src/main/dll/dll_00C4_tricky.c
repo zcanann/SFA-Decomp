@@ -1420,21 +1420,21 @@ void Tricky_update(int obj)
             {
                 if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff))
                 {
-                    *(s16*)obj = *(s16*)obj + diff;
+                    *(s16*)obj = *(volatile s16*)obj + diff;
                 }
                 else
                 {
-                    *(s16*)obj = *(s16*)obj + step;
+                    *(s16*)obj = *(volatile s16*)obj + step;
                 }
             }
             else
             {
-                *(s16*)obj = *(s16*)obj + step;
+                *(s16*)obj = *(volatile s16*)obj + step;
             }
         }
         else
         {
-            *(s16*)obj = *(s16*)obj + diff;
+            *(s16*)obj = *(volatile s16*)obj + diff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & 0x40) != 0)
