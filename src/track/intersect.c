@@ -501,16 +501,14 @@ void fn_8006FC00(int enable)
     a = gWaterSplashQuads;
     b = gWaterRipples;
     for (i = 0; i < 32; i++) {
-        a[0x033] = 0;  b[0x0E] = 0;
-        a[0x06B] = 0;  b[0x1E] = 0;
-        a[0x0A3] = 0;  b[0x2E] = 0;
-        a[0x0DB] = 0;  b[0x3E] = 0;
-        a[0x113] = 0;  b[0x4E] = 0;
-        a[0x14B] = 0;  b[0x5E] = 0;
-        a[0x183] = 0;  b[0x6E] = 0;
-        a[0x1BB] = 0;  b[0x7E] = 0;
-        a += 0x1C0;
-        b += 0x80;
+        a[i * 0x1C0 + 0x033] = 0;  b[i * 0x80 + 0x0E] = 0;
+        a[i * 0x1C0 + 0x06B] = 0;  b[i * 0x80 + 0x1E] = 0;
+        a[i * 0x1C0 + 0x0A3] = 0;  b[i * 0x80 + 0x2E] = 0;
+        a[i * 0x1C0 + 0x0DB] = 0;  b[i * 0x80 + 0x3E] = 0;
+        a[i * 0x1C0 + 0x113] = 0;  b[i * 0x80 + 0x4E] = 0;
+        a[i * 0x1C0 + 0x14B] = 0;  b[i * 0x80 + 0x5E] = 0;
+        a[i * 0x1C0 + 0x183] = 0;  b[i * 0x80 + 0x6E] = 0;
+        a[i * 0x1C0 + 0x1BB] = 0;  b[i * 0x80 + 0x7E] = 0;
     }
     gWaterQuadWriteIdx = 0;
     *(u8*)&gWaterRippleWriteIdx = 0;
