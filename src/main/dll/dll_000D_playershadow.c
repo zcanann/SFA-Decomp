@@ -1241,14 +1241,8 @@ void playerShadow_renderObject(void* obj)
     u32 mode;
     f32 hitData[6];
     f32 verts[8][3];
-    f32 radius;
     f32 height;
-    f32 minX;
-    f32 maxX;
-    f32 topY;
-    f32 bottomY;
-    f32 minZ;
-    f32 maxZ;
+    f32 radius;
 
     defaults = gPlayerShadowDefaultParams;
     *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
@@ -1296,37 +1290,30 @@ void playerShadow_renderObject(void* obj)
         break;
     }
 
-    minX = ((GameObject*)obj)->anim.localPosX - radius;
-    maxX = ((GameObject*)obj)->anim.localPosX + radius;
-    topY = ((GameObject*)obj)->anim.localPosY + height;
-    bottomY = ((GameObject*)obj)->anim.localPosY - height;
-    minZ = ((GameObject*)obj)->anim.localPosZ - radius;
-    maxZ = ((GameObject*)obj)->anim.localPosZ + radius;
-
-    verts[0][0] = minX;
-    verts[0][1] = topY;
-    verts[0][2] = minZ;
-    verts[1][0] = minX;
-    verts[1][1] = topY;
-    verts[1][2] = maxZ;
-    verts[2][0] = maxX;
-    verts[2][1] = topY;
-    verts[2][2] = maxZ;
-    verts[3][0] = maxX;
-    verts[3][1] = topY;
-    verts[3][2] = minZ;
-    verts[4][0] = minX;
-    verts[4][1] = bottomY;
-    verts[4][2] = minZ;
-    verts[5][0] = minX;
-    verts[5][1] = bottomY;
-    verts[5][2] = maxZ;
-    verts[6][0] = maxX;
-    verts[6][1] = bottomY;
-    verts[6][2] = maxZ;
-    verts[7][0] = maxX;
-    verts[7][1] = bottomY;
-    verts[7][2] = minZ;
+    verts[0][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[0][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[0][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[1][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[1][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[1][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[2][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[2][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[2][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[3][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[3][1] = ((GameObject*)obj)->anim.localPosY + height;
+    verts[3][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[4][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[4][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[4][2] = ((GameObject*)obj)->anim.localPosZ - radius;
+    verts[5][0] = ((GameObject*)obj)->anim.localPosX - radius;
+    verts[5][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[5][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[6][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[6][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[6][2] = ((GameObject*)obj)->anim.localPosZ + radius;
+    verts[7][0] = ((GameObject*)obj)->anim.localPosX + radius;
+    verts[7][1] = ((GameObject*)obj)->anim.localPosY - height;
+    verts[7][2] = ((GameObject*)obj)->anim.localPosZ - radius;
 
     hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
     hitDetectFn_800691c0(obj, hitData, 0x84, 0);
