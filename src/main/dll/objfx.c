@@ -73,7 +73,6 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
     ParticlePairTbl partbl = *(ParticlePairTbl*)gObjFxRandomBurstTbl;
     u16 rvec[3];
     int i;
-    int total;
     f32 r;
     u8 frames = framesThisStep;
 
@@ -81,8 +80,7 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
     {
         frames = 3;
     }
-    total = frames * count;
-    for (i = 0; i < total; i++)
+    for (i = 0; i < frames * count; i++)
     {
         r = randomGetRange(0, 1000) / 1000.0f;
         rvec[0] = randomGetRange(0, 0xffff);
@@ -104,11 +102,11 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
         params.f8 = 1.0f;
         if (type >= 9 && type <= 0xb)
         {
-            if (type == 0xa || type == 0xb)
+            if (type == 0xb || type == 0xa)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
             }
-            if (type == 9 || type == 0xb)
+            if (type == 0xb || type == 9)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
             }
