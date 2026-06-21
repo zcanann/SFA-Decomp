@@ -690,17 +690,17 @@ void camstatic_update(CameraObject* camera)
     int val;
     u32 angleDelta;
     u16 yaw;
-    float dx;
-    float dy;
-    float dz;
-    u8 relPosScratch[4];
-    float dx2;
-    float aimX;
-    float aimY;
-    float aimZ;
-    float aimX2;
-    float aimY2;
     float aimZ2;
+    float aimY2;
+    float aimX2;
+    float aimZ;
+    float aimY;
+    float aimX;
+    float dx2;
+    u8 relPosScratch[4];
+    float dz;
+    float dy;
+    float dx;
     u8 probeTraceScratch[112];
     u8 wallTraceScratch[116];
 
