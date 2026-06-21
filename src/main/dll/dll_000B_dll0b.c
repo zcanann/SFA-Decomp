@@ -3024,25 +3024,24 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x100000)
                 {
-                    GameObject* obj = *(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj;
                     if (active == 1)
                     {
                         if (((ModgfxEffectSlot*)eff)->frameDuration != 0)
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
                                 (*(f32*)(E9 + emOff + 0x4) - (f32)(u32)
-                            obj->anim.alpha
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha
                             )
                             /
                             (f32)((ModgfxEffectSlot*)eff)->frameDuration;
                             ((ModgfxEffectSlot*)eff)->alphaCurrent = (f32)(u32)
-                            obj->anim.alpha;
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha;
                         }
                         else
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
                                 *(f32*)(E9 + emOff + 0x4) - (f32)(u32)
-                            obj->anim.alpha;
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha;
                             ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                         }
                     }
@@ -3056,7 +3055,7 @@ void dll_0B_func05(void)
                     {
                         ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                     }
-                    obj->anim.alpha = (int)((ModgfxEffectSlot*)eff)->alphaCurrent;
+                    (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha = (int)((ModgfxEffectSlot*)eff)->alphaCurrent;
                 }
                 if (*(int*)(E9 + emOff) & 0x400000)
                 {
