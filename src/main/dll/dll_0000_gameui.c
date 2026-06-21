@@ -601,14 +601,20 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
  * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
  * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
+typedef struct CMenuSectionEntry
+{
+    void* key;
+    s16 selectedItem;
+    u8 pad[0x10 - 0x6];
+} CMenuSectionEntry;
+
 void GameUI_unselectAllItems(void)
 {
-    register int* p;
-    p = (int*)gCMenuSections;
-    while (*(void**)p != NULL)
+    CMenuSectionEntry* sections = (CMenuSectionEntry*)gCMenuSections;
+    int i;
+    for (i = 0; sections[i].key != NULL; i++)
     {
-        *(s16*)((u8*)p + 4) = 0;
-        p = (int*)((u8*)p + 0x10);
+        sections[i].selectedItem = 0;
     }
     gCMenuActivatedId = -1;
     gCMenuCloseSfx = 0;
