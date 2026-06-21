@@ -173,6 +173,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
 {
     GameObject* object;
+    RomCurvePoint** list;
     int found1;
     int hits;
     RomCurvePoint* point;
@@ -183,7 +184,6 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     int i;
     int count;
     int j;
-    RomCurvePoint** list;
     f32 sum0;
     f32 sum1;
     f32 sum2;
