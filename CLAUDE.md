@@ -732,6 +732,23 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     copy-vs-rematerialize). Plus systemic FP f2/f3 volatile swaps (#82) and f28/f30 hoist-coloring
     (#121 conversion-bias sub-case) across effect9/dim2icicle/arwsquadron/xyzanimator/dimsnowhorn1 —
     each a near-100 with the lever still being mapped.
+148. *(OPEN SEED — high-value, 5-fn payoff)* **Global-base INDEXED-array detour `base + state[K]*0x28 + off`
+    — front-end EVAL-ORDER (idx-first vs base-first), a NEW lever still to find.** Signature across the
+    newseqobj-family (newseqobj fn_80150EDC/fn_80150910/fn_801504F8, seqobj11d fn_801511E8/fn_8015165C):
+    target materializes the global base FIRST into its final reg and re-derives the index after —
+    `lis r3; addi r3,r3,@lo` (base→r3 direct); `lbz r0,K(state); mulli r0,r0,40; add r3,r3,r0` (entry,
+    base-first); then `lwz off(r3)`. OURS evaluates the INDEX first and routes the base through a temp:
+    `lbz r0,K(state); mulli r4,r0,40; lis r3; addi r0,r3,@lo` (base→r0!); `add r3,r0,r4` (idx-first) — an
+    extra working reg and the `addi r0` detour. Both TUs are `-opt nopeephole,noschedule`, so this is the
+    FRONT-END's operand-eval order for `base + idx*40`, NOT the scheduler and NOT peephole. CONFIRMED INERT
+    (do not re-try): #80 `(u8*)(int)lbl` / `(char*)(int)lbl` launder (detour byte-identical), K-grouping
+    `base+(idx*40+K)` / `(base+K)+idx*40`, `&lbl[idx*40+K]`, named-base-alias local, idx-precomputed-to-local,
+    #135 typed-struct-array `((Slot40*)lbl)[idx].field`, decl reorder. Best partial: `&arr[...]` / `base+(idx*40+K)`
+    nudge +0.05%. The untried frontier: an eval-order forcing lever (probe_battery.py A/B in isolation;
+    or find the source shape where MWCC evaluates the `+`'s LEFT operand first for a global-base + memory-load-index
+    sum). Cracking ONE applies verbatim to all five — a strong fresh-eyes target. SEPARATE FP-coloring residuals
+    (NOT this detour): dll_8B_func03's dominant diff is an 8-reg FP rotation f24..f31 off-by-one (#121/#82
+    hoist-coloring); DFRope_Create is gRopeNodeS32ToDoubleBias conversion-bias coloring (#121).
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
