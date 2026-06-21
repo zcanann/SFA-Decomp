@@ -2990,11 +2990,12 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x100)
                 {
-                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(E9 + emOff +
+                    char* em = E9 + emOff;
+                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(em +
                         0x4) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(em +
                         0x8) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(em +
                         0xc) * gModgfxMotionStep);
                 }
                 if (*(int*)(E9 + emOff) & 0x80)
@@ -3063,11 +3064,12 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x80000000)
                 {
-                    ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(E9 + emOff + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    char* em = E9 + emOff;
+                    ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(em + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetX;
-                    ((ModgfxEffectSlot*)eff)->motionOffsetY = *(f32*)(E9 + emOff + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->motionOffsetY = *(f32*)(em + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetY;
-                    ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(E9 + emOff + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(em + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetZ;
                 }
                 if (*(int*)(E9 + emOff) & 0x800000)
