@@ -2930,19 +2930,19 @@ void dll_0B_func05(void)
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
                     }
-                    else if (*(void**)eff != NULL)
+                    if (*(void**)eff != NULL)
                     {
                         if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                         {
-                            tmpl.x += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX;
-                            tmpl.y += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY;
-                            tmpl.z += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ;
+                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
+                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
+                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.z;
                         }
                         else
                         {
-                            tmpl.x += ((ModgfxEffectSlot*)eff)->posOffsetX;
-                            tmpl.y += ((ModgfxEffectSlot*)eff)->posOffsetY;
-                            tmpl.z += ((ModgfxEffectSlot*)eff)->posOffsetZ;
+                            tmpl.x = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.x;
+                            tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
+                            tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
                         }
                         *(f32*)(*(int*)eff + 0x18) = tmpl.x;
                         *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
