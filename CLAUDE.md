@@ -638,6 +638,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     search-loop form. The COUNTDOWN `bdnz` variant (e.g. Objfsa_GetPatchGroupIdAtPoint) is a DISTINCT
     sub-case where the index form adds a 2nd counter and comma-init keeps the `mr` — its clean form
     is still to find.
+144. **Switch CASE-FUSION controls the binary-search PIVOT TREE — keep an identical-valued case
+    UNFUSED from `default` to preserve it as a distinct dispatch node.** When the target
+    binary-searches with pivots (e.g. cmpwi 12 & 14) but your build collapses to a single cmpwi (13),
+    the source FUSED the cases with default: `default: case 0xb: case 0xc: → X;` makes MWCC treat
+    0xb/0xc as redundant-with-default and REMOVE them, collapsing the search to the one distinct case.
+    FIX: un-fuse the case with its OWN (even identical-valued) body — `case 0xc: → X;` SEPARATE from
+    `case 0xb: default: → X;`. That forces 0xc to stay a distinct binary-search node (cmpwi 12), AND
+    keeping 0xb on the default arm supplies the lower pivot boundary (the dead cmpwi 11 that shifts
+    the pivot 13→12) → reproduces retail's exact dispatch tree. Distinct from #13 (reorder) and #122
+    (dead empty case). (The residual peephole CROSS-JUMP of identical outcome blocks — 2 vs 3 blocks —
+    is not source-controllable.) (WorkerC: andross_update case set 12&14 recovered.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
