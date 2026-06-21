@@ -612,6 +612,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     count here and collaterally un-CSEs other exprs (regresses); volatile and opt_loop_invariants
     off are inert. (WorkerC: fn_80137DF8 89.86→90.81; the per-store global-pointer RE-READ in the
     remaining tail is a separate shape still being mapped.)
+142. **`#pragma opt_propagation off` keeps a separate-statement LOAD at its decl point — fixes a
+    load-ORDER reorder (the third distinct use of this pragma).** When the target loads a value at
+    its declaration (`s16 a = obj->rotX;` → `lha`) BEFORE an adjacent operand/const (`lfs` Pi), but
+    MWCC PROPAGATES the variable into a later expression (the multiply) so its load emits AFTER the
+    const, wrap the fn in `#pragma opt_propagation off` … `reset`: it keeps `a` a real variable
+    loaded at its decl → exact target load order. `scheduling off` is INERT here — the reorder is
+    propagation, not the scheduler. This joins the opt_propagation-off family: #128 (late saved-reg
+    rematerialization of a stack addr), #141 (2D-array named row-pointer not folded back), and now
+    eval/load-order. (WorkerC: CameraModeForceBehind_init 97.26→100.) Companion confirmation of #110:
+    opt_level 1 REGRESSES loop/call-bearing fns (O1 creation-order overhead dwarfs the chained-copy
+    fix) — it's only for small call-free fns; the int-const chained fold stays open for loop fns.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
