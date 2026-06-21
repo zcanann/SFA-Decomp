@@ -293,6 +293,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         {
             if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
             {
+                extern u8 cmbsrc_cycleColor(int obj, int state); /* #11 */
                 colorIdx = cmbsrc_cycleColor(obj, state);
             }
             else
