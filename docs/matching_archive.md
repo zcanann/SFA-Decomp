@@ -173,12 +173,12 @@ probes on the bundled compilers):
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
-   **Inverse cap — CRACKED by recipe #74.** When target MATERIALIZES the mask
+   **Inverse snag — CRACKED by recipe #74.** When target MATERIALIZES the mask
    (`li rX,-K; and` / `lis;or`) where every 32-bit C spelling gives
    `rlwinm`/`oris`, write the constant with an `LL` suffix
    (`x &= ~0x80LL;` / `x |= 0x800000LL;`) — MWCC then materializes exactly
    target's form. The old "leave as documented partial" guidance is obsolete;
-   retry all previously-capped materialized-mask partials.
+   retry all previously-stalled materialized-mask partials.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -186,7 +186,7 @@ probes on the bundled compilers):
    **U-SUFFIX LITERALS are the width lever the `(u32)` cast can't be: `x == 0u`
    / `(x >> 6 & 1) == 0u` forces `cmplwi` on u8/bit-extract compares** where
    the `(u32)`-cast form is inert (probe-verified t3/t19/t20 + trickyGrowl's
-   two banked width sites -> fixed). The suffix rides the COMPARE's type
+   two set-aside width sites -> fixed). The suffix rides the COMPARE's type
    instead of the operand's, so nothing folds it away. Use before reaching
    for #58 width locals.
    **MWCC DROPS a `(u32)` cast on a `!= 0` compare — so `(u32)x != 0` still
@@ -199,7 +199,7 @@ probes on the bundled compilers):
    (`inner->heldObj`), MWCC CSE-merges the loads and the int read's signedness
    wins the compare; the only fix is a struct-field pointer retype (header
    change, gold-gated) — body-local u32/volatile launders are inert/worse
-   (fn_802A49C8, banked #108-CSE-open: void* retype build-fails on int-
+   (fn_802A49C8, set-aside #108-CSE-open: void* retype build-fails on int-
    arithmetic use sites).
 
 4. **`if (v > K) v = K; return v;` instead of `if (v <= K) return v; return K;`**.
@@ -288,7 +288,7 @@ probes on the bundled compilers):
     project's named `lbl_xxx` f64 magic (matching target). When converting an
     unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
     than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
-    **THE @magic-vs-named-lbl cap is usually fixable — this is the #1 residual
+    **THE @magic-vs-named-lbl snag is usually fixable — this is the #1 residual
     on the autos units, don't just leave it.** When an int→f32 conversion emits
     an anonymous compiler `@NNNN` magic where target references a named
     `lbl_803Exxxx` f64 magic, add an EXPLICIT cast matching the conversion's
@@ -302,11 +302,11 @@ probes on the bundled compilers):
     **Caveat — on some units this is float-pool-ORDERING-bound, not cast-bound.**
     On large multi-handler units (placeholder_80295318, 80220608) the named f64
     magic is emitted only for the EARLIEST functions in the TU's float pool;
-    later functions cap at the anonymous `@NNN` regardless of the cast (confirmed
+    later functions stall at the anonymous `@NNN` regardless of the cast (confirmed
     by two hunters — the `(f32)(int)` variant tested and reverted, sometimes
     *worse*). If the explicit cast doesn't flip it on a late-pool function, the
     deficit (~85-96%) is float-pool ORDERING — an open problem awaiting a
-    pool-reordering lever; bank the partial and revisit when one lands.
+    pool-reordering lever; set the partial aside and revisit when one lands.
     **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
     fixable via symbols.txt.** ⚠️ **CONFIRMED & CLOSED by recipe #70** (task
     #145): the @NNN reloc itself is score-neutral (proven by 100.0% fns
@@ -378,7 +378,7 @@ probes on the bundled compilers):
     any shared-header return-width flip): (1) snapshot per-fn fuzzy, retype,
     full report rebuild, diff per-fn; (2) keep ONLY if net-positive with no
     real regressions; (3) the one collateral regressor here (hagabon_update, an
-    already-capped #108 coloring fn whose int-width result web perturbed its
+    in-progress #108 coloring fn whose int-width result web perturbed its
     coloring net-negative) was ISOLATED with a block-scope fn-ptr cast back to
     the old width — `((u8 (*)(int))(*iface)->fn)(args)` — recipe #57/#35, ->
     zero regressions. CRITICAL NEGATIVE: most u8 vtable returns are CORRECT
@@ -434,7 +434,7 @@ probes on the bundled compilers):
     runs (`cmpwi K-1; beq/bge`); 2+ value gaps keep exact bounds; run
     leaves emit `cmpwi hi+1; bge` + a dead `cmpwi lo; b`. A tree shape no
     case-set reproduces can mean the import FABRICATED or DROPPED case
-    values — brute-force the case-set space before banking (dll_179's
+    values — brute-force the case-set space before setting it aside (dll_179's
     "vestigial run [0x87-0x8D]" never existed in v1.0; true set recovered,
     CFCrate_SeqFn → 100).
     ⚠️ OVERTURNED SAME-DAY (CFBaby maverick): the dead-`cmpwi K+1`-no-beq
@@ -443,10 +443,10 @@ probes on the bundled compilers):
     the dead compare and retargets the bge (verified bidirectionally).
     Fix: the empty-case pair (`case 3: break; case 4: break;` → cmpwi
     last+1) + a local `#pragma peephole off/reset` wrap (InfoPoint_SeqFn
-    → 100). RETRY every banked "empty-case island unreachable" partial
+    → 100). RETRY every set-aside "empty-case island unreachable" partial
     under peephole OFF. (The same-day "always edge-eliminated" verdict was
     an artifact of probing under peephole ON — a model case for
-    re-attacking fresh banks.)
+    re-attacking set-aside residuals fresh.)
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -474,17 +474,17 @@ probes on the bundled compilers):
     earlier variable (the obj/setup base), MWCC does the reverse, and it cascades
     through every instruction referencing that var. Declaration-order reorder
     (both directions) didn't flip it on the fns observed. Pending a fresh lever
-    this can sit at ~74-90% on such units — but the partial banks real fuzzy%,
+    this can sit at ~74-90% on such units — but the partial records real fuzzy%,
     so commit it, record the permutation, and re-attack with the class-pooled
     allocator model (#108), un-/re-naming (#107), and callee-decl widths (#115)
     as your next moves.
-    **Before banking a coloring residual, try making the base a REAL PARAM
+    **Before setting aside a coloring residual, try making the base a REAL PARAM
     instead of `void*` + a local copy.** If the function is `f(void *p){ Obj *o =
     (Obj*)p; ... }` and the saved-reg coloring is off, change the signature to the
     concrete pointer type `f(u8 *o)` (or `Obj *o`) — taking the base as a typed
     PARAM (no local copy) often flips MWCC's r29/r30/r31 assignment to match
     target. (hotel7, Obj_BuildWorldTransformMatrix → 100%.) This is a real fix,
-    not a cap — try it first.
+    not a stall — try it first.
     **Local TYPE controls frame size: `f32 m[16]` (64B) vs `Mtx m` (48B).** When
     target reserves a full 64-byte 4x4 stack slot but your `Mtx`/`MtxP` local only
     reserves 48B (shifting the frame + every sp-offset), declare the matrix local
@@ -563,7 +563,7 @@ probes on the bundled compilers):
     11.6% → 97.3%. Clean C, no asm.
 
 **(s16)timeDelta DIRECT subtrahend — cracks the 'converted-float subtrahend'
-cap (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
+snag (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
 field emits fctiwz + subf + EXTSH + sth; `field -= (s16)timeDelta;` truncates
 the float straight to s16 (same fctiwz, no (int) node) and the compound folds
 the extension — exactly target's shape. tesla -> 100, fxemit_update +0.5,
@@ -628,7 +628,7 @@ subtrahend IS the fix (shrine1CE → 100 by dropping the wrap + this cast).
     idiom and your `x != 0` (or `(int)(x != 0)`) emits the `neg; orc/or; srwi`
     form instead, write `!!x` (double logical-NOT) to get the `cntlzw` form.
     Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
-    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
+    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom snag."
     **Related — `break` (fall to common return) instead of `case`-body
     `return 0` drops a spurious `cntlzw` boolean.** When a switch case ends with
     an explicit `return 0;` and target instead uses an `li`-branch to a shared
@@ -641,7 +641,7 @@ MWCC's materialization of `x <= 0` (signed).** Mechanism: cntlzw(x) is 32 for
 x==0 and 0 for x<0; rotating 1 by either lands bit31 set, any other count
 clears it. When a tiny predicate fn shows this tail and the import wrote
 `== 0`, the original was `<= 0` — a real behavioral difference, not a codegen
-cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
+snag (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
 (s8)-cast extsb before the stb).
 
 24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
@@ -661,11 +661,11 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     assumption that flagged some matrix/vector fns as untouchable.) CAVEAT:
     it only controls the fmadds FUSION — it does NOT fix eval-order /
     FP-register-allocation divergences. A function whose divergence is
-    FP-reg/eval-order, not fusion, will still cap with fp_contract off, so
+    FP-reg/eval-order, not fusion, will still stall with fp_contract off, so
     try it on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix
     coloring.
 
-25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
+25. **An FP comparison feeding a BRANCH is NOT a snag — write the plain
     operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
     reproduces target's `fcmpo` + `cror` (the `cror eq,gt,eq`→`>=`,
     `eq,lt,eq`→`<=` combine) directly from the `>=`/`<=`/`<`/`>` operator — do
@@ -695,8 +695,8 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     it — `int v = (d < A && d > B); if (v){…}`. Writing `if (d<A && d>B)` directly
     short-circuits with NO materialization (loses the `li r0,0/1`); the int-temp
     assignment forces it. (zulu19, arwsquadron_update — all 5 instances,
-    83.4→85.8%.) If NEITHER form lands, bank the partial and keep it on the
-    materialized-float-bool retry list.
+    83.4→85.8%.) If NEITHER form lands, set the partial aside and keep it on the
+    materialized-float-bool retry list — there's a lever to find.
 
 26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
     size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
