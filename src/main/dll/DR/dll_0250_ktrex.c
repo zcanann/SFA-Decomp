@@ -79,7 +79,7 @@ typedef struct KTRexArenaState
     u8 unkFE;
     u8 unkFF;
     u8 laneMode; /* 0x100: 1/2 z-lanes, 4/8 x-lanes */
-    u8 unk101;
+    u8 phaseCounter; /* 0x101: arena phase/stage counter (published to GameBit 0x572/1394) */
     u8 unk102;
     u8 unk103;
     u32 phaseFlags; /* 0x104: arena phase progression bits */
@@ -703,7 +703,7 @@ int ktrex_stateHandlerB08(int obj, int runtime)
     {
         ObjAnim_SetCurrentMove(obj, 13, lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->unk2A0 =
-            lbl_803E67F4 + lbl_803E67F8 * (f32)(int)(((KTRexArenaState*)gKTRexState)->unk101 >> 1);
+            lbl_803E67F4 + lbl_803E67F8 * (f32)(int)(((KTRexArenaState*)gKTRexState)->phaseCounter >> 1);
         Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
@@ -1324,7 +1324,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     flags = ((KTRexArenaState*)gKTRexState)->timerFA;
     flag1 = flags & 1;
     if (((KTRexArenaState*)gKTRexState)->unkFC == 0 &&
-        (phase = ((KTRexArenaState*)gKTRexState)->unk101) >= 2 && (flags & 0x20) == 0 &&
+        (phase = ((KTRexArenaState*)gKTRexState)->phaseCounter) >= 2 && (flags & 0x20) == 0 &&
         ((flag1 == 0 && ((KTRexArenaState*)gKTRexState)->unk8 >= lbl_803E67E8) ||
             (flag1 != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
     {
@@ -1464,9 +1464,9 @@ int ktrex_stateHandlerA07(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 6);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-        ((KTRexArenaState*)gKTRexState)->unk101 += 1;
+        ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
-        GameBit_Set(1394, ((KTRexArenaState*)gKTRexState)->unk101);
+        GameBit_Set(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         ((KTRexArenaState*)gKTRexState)->timerFA |= 0x10;
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~8;
         Music_Trigger(148, 0);
@@ -1572,7 +1572,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
         {
             u8* row = (u8*)p + 0x4a;
             ((KTRexArenaState*)gKTRexState)->unk4 =
-                (f32)(u32) * (u16*)(row + (((KTRexArenaState*)gKTRexState)->unk101 & ~1));
+                (f32)(u32) * (u16*)(row + (((KTRexArenaState*)gKTRexState)->phaseCounter & ~1));
         }
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
         goto ret0;
@@ -1727,8 +1727,8 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         {
             u8 cond;
             u8 fe;
-            ((KTRexArenaState*)gKTRexState)->unk101 += 1;
-            GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
+            ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
+            GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
             ((KTRexArenaState*)gKTRexState)->unkFD = 0;
             ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x8;
             fe = ((KTRexArenaState*)gKTRexState)->unkFE;
@@ -1775,7 +1775,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         else
         {
             int push;
-            ((KTRexArenaState*)gKTRexState)->unk101 -= 1;
+            ((KTRexArenaState*)gKTRexState)->phaseCounter -= 1;
             push = 2;
             if (Stack_IsFull(((KTRexArenaState*)gKTRexState)->stack) == 0)
             {
@@ -1784,7 +1784,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
         }
         ktrexlevel_updatePathGameBits();
         (*gCameraInterface)->loadTriggeredCamAction(3, 0, 0);
-        GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->unk101);
+        GameBit_Set(0x572, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         {
             int popped = 0;
             if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
