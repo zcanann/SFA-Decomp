@@ -1965,6 +1965,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         *previousCurveId = *(s32*)(startCurve + 0x14);
         return candidateIds[0];
     }
+    if (candidateCount <= 1)
+    {
+        return -1;
+    }
 
     for (i = 0; i < candidateCount; i++)
     {
@@ -1978,11 +1982,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             candidateCount--;
             i--;
         }
-    }
-
-    if (candidateCount <= 0)
-    {
-        return -1;
     }
 
     *previousCurveId = *(s32*)(startCurve + 0x14);
