@@ -418,8 +418,8 @@ void CameraModeCombat_update(short* cam)
                             dy = *(f32*)(view + 0x10) - py;
                             fa = *(f32*)(view + 0x14) - t;
                             t = sqrtf(fb * fb + fa * fa);
-                            ad = getAngle(dy, t);
-                            ad = (ad & 0xffff) - ((int)cam[1] & 0xffffU);
+                            ad = getAngle(dy, t) & 0xffff;
+                            ad = ad - ((int)cam[1] & 0xffffU);
                             if ((int)ad > 0x8000)
                             {
                                 ad = ad - 0xffff;
