@@ -761,9 +761,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         ((EarthWarriorSub*)q)->unk48C = 0;
     }
     {
+        f32 a;
         f32 ph = (((BaddieState*)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
-        f32 a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
-        f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
+        f32 t;
+        a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
+        t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         ((EarthWarriorSub*)q)->unk408 = a * (t * ((EarthWarriorSub*)q)->unk840);
     }
     if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
