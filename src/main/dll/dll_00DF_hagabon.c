@@ -364,6 +364,7 @@ void hagabon_update(int obj)
     int oldCurve;
     int data;
     f32 lightPos[3];
+    f32 effectPos[3];
     f32 d[3];
     f32 dist;
     int hitObject;
@@ -440,7 +441,7 @@ void hagabon_update(int obj)
             Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
             lightPos[0] += playerMapOffsetX;
             lightPos[2] += playerMapOffsetZ;
-            objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
+            objLightFn_8009a1dc((void*)obj, lbl_803E2660, effectPos, 3, 0);
             (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->mapEventId,
                                                    (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
             if (((HagabonPlacement*)data)->armGameBit != -1)
