@@ -308,12 +308,10 @@ void fn_80150EDC(void* p1, void* p2)
             Baddie_SetMove(p1, p2, row->anim,
                         *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
                         (u8)row->flags);
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)p1,
-                *(f32*)(table + (row->anim << 2)));
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            *(u16*)((u8*)p2 + 0x338) = row->next;
+                *(f32*)(table + (seqRow16[*(u16*)((u8*)p2 + 0x338)].anim << 2)));
+            *(u16*)((u8*)p2 + 0x338) = seqRow16[*(u16*)((u8*)p2 + 0x338)].next;
         }
         else
         {
