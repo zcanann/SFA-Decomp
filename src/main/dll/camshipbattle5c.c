@@ -45,6 +45,7 @@ extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 #define NODE_TAG1 0x32
 #define NODE_TAG2 0x33
 
+#pragma ppc_unroll_factor_limit 1
 void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                                 f32* o5, f32* o6, f32* o7)
 {
@@ -163,8 +164,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
             {
                 wp = axisOut;
                 upper = lbl_803E1890;
-                step = 3;
-                do
+                for (step = 0; step < 3; step++)
                 {
                     near = lbl_803E1888;
                     lower = lbl_803E1894;
@@ -184,15 +184,14 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                         }
                     }
                     wp++;
-                    step--;
                 }
-                while (step != 0);
             }
             axis++;
         }
         while (axis < 3);
     }
 }
+#pragma ppc_unroll_factor_limit 4
 
 void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 {
