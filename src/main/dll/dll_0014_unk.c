@@ -350,7 +350,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     f32 total;
     int reachedForward;
     int done;
-    int cur;
+    u32 cur;
     int found;
     int next;
     int count;
