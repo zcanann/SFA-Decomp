@@ -13132,9 +13132,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 void fn_802B066C(int obj, int state)
 {
     f32 v;
-    f32 pz;
-    f32 py;
-    f32 px;
+    f32 posWork[6];
     f32 zero;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
@@ -13153,8 +13151,7 @@ void fn_802B066C(int obj, int state)
     }
     ((PlayerState*)state)->knockbackTimer =
         ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->knockbackDrainRate;
-    zero = lbl_803E7EA4;
-    if (((PlayerState*)state)->knockbackTimer <= zero)
+    if (((PlayerState*)state)->knockbackTimer <= (zero = lbl_803E7EA4))
     {
         if (Sfx_IsPlayingFromObject(obj, 0x394))
         {
@@ -13167,8 +13164,8 @@ void fn_802B066C(int obj, int state)
     ((PlayerState*)state)->knockbackHitTimer = ((PlayerState*)state)->knockbackHitTimer - timeDelta;
     if (((PlayerState*)state)->knockbackHitTimer <= zero)
     {
-        ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
-        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, px, py, pz);
+        ObjPath_GetPointWorldPosition(obj, 0xb, &posWork[3], &posWork[4], &posWork[5], 0);
+        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, posWork[3], posWork[4], posWork[5]);
         ((PlayerState*)state)->knockbackHitTimer = lbl_803E8050;
     }
 }
