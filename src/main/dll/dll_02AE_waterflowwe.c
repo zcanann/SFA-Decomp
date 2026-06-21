@@ -117,7 +117,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
                 radius = gWaterFlowRadiusPerCell * (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
                 if (distance < radius)
                 {
-                    strength = ((radius - distance) / radius) * (gWaterFlowStrengthScale * other->anim.rootMotionScale);
+                    strength = (radius - distance) / radius;
+                    strength = strength * (gWaterFlowStrengthScale * other->anim.rootMotionScale);
                     currentX += strength * mathSinf((gWaterFlowPi * other->anim.rotX) / gWaterFlowAngleFullScale);
                     currentZ += strength * mathCosf((gWaterFlowPi * other->anim.rotX) / gWaterFlowAngleFullScale);
                 }
@@ -143,7 +144,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
             radius = (f32)(s32)(((ObjectCurrentSourceSetup*)other->anim.placementData)->radiusCells << 3);
             if (distance < radius)
             {
-                strength = ((radius - distance) / radius) * objectStrength;
+                strength = (radius - distance) / radius;
+                strength = strength * objectStrength;
                 angle = (gWaterFlowPi * currentAngle) / gWaterFlowAngleFullScale;
                 currentX += strength * mathSinf(angle);
                 currentZ += strength * mathCosf(angle);
