@@ -413,9 +413,10 @@ void CameraModeCombat_update(short* cam)
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
                             camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
                                                  (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
+                            t = lbl_803E18F8 * dz + focus->anim.worldPosZ;
                             fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
                             dy = *(f32*)(view + 0x10) - py;
-                            fa = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + focus->anim.worldPosZ);
+                            fa = *(f32*)(view + 0x14) - t;
                             t = sqrtf(fb * fb + fa * fa);
                             ad = getAngle(dy, t);
                             ad = (ad & 0xffff) - ((int)cam[1] & 0xffffU);
