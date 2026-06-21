@@ -514,13 +514,13 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 if ((u8)Obj_IsLoadingLocked() != 0)
                 {
                     trickyState->flags = trickyState->flags | TRICKY_STATE_HELPERS_ACTIVE_FLAG;
-                    for (i = 0, slot = trickyState->guardHelpers; i < TRICKY_GUARD_HELPER_COUNT; i++)
+                    for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
                         setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = i;
-                        *slot = (void*)Obj_SetupObject(setup, 5, obj->mapEventSlot, -1, obj->parent);
+                        slot[0x700 / 4] = (void*)Obj_SetupObject(setup, 5, obj->mapEventSlot, -1, obj->parent);
                         slot++;
                     }
                     Sfx_PlayFromObject((int)obj, 0x3db);
@@ -557,9 +557,9 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         if ((double)obj->currentMoveProgress >= (double)lbl_803E24D0)
         {
             TRICKY_MARK_HELPERS_FINISHED(trickyState);
-            for (i = 0, slot = trickyState->guardHelpers; i < TRICKY_GUARD_HELPER_COUNT; i++)
+            for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
             {
-                objSetAnimSpeedTo1(*slot);
+                objSetAnimSpeedTo1(slot[0x700 / 4]);
                 slot++;
             }
             Sfx_RemoveLoopedObjectSound((int)obj, 0x3dc);
