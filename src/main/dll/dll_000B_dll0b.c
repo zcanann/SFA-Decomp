@@ -2223,7 +2223,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     f32 rot[3];
     EffXform xf;
     f32 mtxA[12];
-    f32 mtxB[16];
+    f32 mtxB[12];
     int** p;
     int slot;
     void* view;
