@@ -5147,6 +5147,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern void GXSetZCompLoc(u8);
     Mtx mtx_30;
     GXColor temp;
+    GXColor temp2;
     u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
@@ -5186,10 +5187,10 @@ void fn_8007BD8C(int handle1, int handle2)
     ((u8*)&temp)[2] = (u8)((int)((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
-    ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
-    ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
-    ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
-    GXSetTevColor(2, temp);
+    ((u8*)&temp2)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
+    ((u8*)&temp2)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
+    ((u8*)&temp2)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
+    GXSetTevColor(2, temp2);
 
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
