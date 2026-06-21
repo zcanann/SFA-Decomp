@@ -3359,8 +3359,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
             {
                 if (linkedCurve->type == types[typeIndex])
                 {
-                    candidates[candidateCount] = linkId;
-                    candidateCount++;
+                    candidates[candidateCount++] = curve->linkIds[linkIndex];
                     typeIndex = typeCount;
                 }
             }
