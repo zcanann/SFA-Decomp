@@ -3318,13 +3318,13 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
     {
         idx = 0;
     }
-    PSMTXCopy(*(f32**)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10, tmp);
+    PSMTXCopy(*(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
     idx = (*(int***)(chain + 4))[0][0];
     if (idx >= boneBlendSlotLimit(model))
     {
         idx = 0;
     }
-    m = *(f32**)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
+    m = *(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
     cap = gModelDotClampMax;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
