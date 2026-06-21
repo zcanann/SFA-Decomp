@@ -1060,7 +1060,8 @@ void hudDrawAirMeter(void)
             int off;
             int by;
             int cy;
-            int clampedC;
+            int clampVal;
+            s16 clampedC;
             switch (((TrickyAirMeter*)m)->unk2C)
             {
             case 0x63e:
@@ -1086,9 +1087,9 @@ void hudDrawAirMeter(void)
             {
                 m[2] = m[2] + framesThisStep * gTrickyAirMeterFillSpeed;
             }
-            clampedC = (m[3] < 0) ? 0 : ((m[3] > m[2]) ? m[2] : m[3]);
-            m[3] = clampedC;
-            clampedC = clampedC;
+            clampVal = (m[3] < 0) ? 0 : ((m[3] > m[2]) ? m[2] : m[3]);
+            m[3] = clampVal;
+            clampedC = clampVal;
             drawScaledTexture((void*)m[0xf], (f32)(int)(by + clampedC), (f32)(int)cy,
                               ((TrickyAirMeter*)m)->unk18, 0x100, m[2] - clampedC, 0x1a, 0);
             drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy,
