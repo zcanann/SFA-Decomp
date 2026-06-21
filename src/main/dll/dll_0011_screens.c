@@ -780,7 +780,7 @@ void gameBitFn_800ea2e0(u8 id)
     u32 cachedBits;
     u32 mask;
     u32 bits;
-    s16 bank;
+    int bank;
     s16 historyIdx;
     s16* taskMap;
 
