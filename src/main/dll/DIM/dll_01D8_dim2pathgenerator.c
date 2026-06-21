@@ -48,8 +48,8 @@ typedef struct Dim2pathgeneratorObjectDef
     s16 spawnPeriod;
     s16 unk1A;
     s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
+    u16 spawnType0; /* 0x1E primary spawn object type -> state->spawnTypes[0] */
+    s16 spawnType1; /* 0x20 secondary spawn type (-1 = reuse spawnType0) -> spawnTypes[1] */
     u8 pad22[0x28 - 0x22];
 } Dim2pathgeneratorObjectDef;
 
@@ -66,8 +66,8 @@ typedef struct Dim2pathgeneratorPlacement
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
+    u16 spawnType0; /* 0x1E */
+    s16 spawnType1; /* 0x20 */
     s16 activeGameBit;
     u8 pad24[0x28 - 0x24];
 } Dim2pathgeneratorPlacement;
@@ -146,12 +146,12 @@ void dim2pathgenerator_init(int* obj, int* def)
     state = ((GameObject*)obj)->extra;
     state->spawnPeriod = ((Dim2pathgeneratorObjectDef*)def)->spawnPeriod;
     state->spawnTimer = (s16) * (u8*)((char*)def + 29);
-    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
+    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
     {
-        s16 v = ((Dim2pathgeneratorObjectDef*)def)->unk20;
+        s16 v = ((Dim2pathgeneratorObjectDef*)def)->spawnType1;
         if (v == -1)
         {
-            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
+            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->spawnType0;
         }
         else
         {
