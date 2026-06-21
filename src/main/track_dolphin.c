@@ -4240,7 +4240,10 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
         rad = (f32)((u16)modelFileHeaderGetCullDistance((void*)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
-        if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
+        {
+            f32 ddy = dy * dy;
+            if (ddy + dx * dx + dz * dz < rad) hit = 1;
+        }
         if (hit == 0)
         {
             f32 ex = ((GameObject*)o)->anim.localPosX - w1[0];
