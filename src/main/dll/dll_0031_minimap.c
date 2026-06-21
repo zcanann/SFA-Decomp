@@ -277,13 +277,13 @@ int Minimap_update(void)
                             if (marker == r2->mapId)
                             {
                                 m = r2->x0;
-                                gMinimapRegionMinX = (m >= gMinimapRegionMinX) ? gMinimapRegionMinX : m;
+                                gMinimapRegionMinX = (gMinimapRegionMinX >= m) ? gMinimapRegionMinX : m;
                                 m = r2->x1;
-                                gMinimapRegionMaxX = (m <= gMinimapRegionMaxX) ? gMinimapRegionMaxX : m;
+                                gMinimapRegionMaxX = (gMinimapRegionMaxX <= m) ? gMinimapRegionMaxX : m;
                                 m = r2->z0;
-                                gMinimapRegionMinZ = (m >= gMinimapRegionMinZ) ? gMinimapRegionMinZ : m;
+                                gMinimapRegionMinZ = (gMinimapRegionMinZ >= m) ? gMinimapRegionMinZ : m;
                                 m = r2->z1;
-                                gMinimapRegionMaxZ = (m <= gMinimapRegionMaxZ) ? gMinimapRegionMaxZ : m;
+                                gMinimapRegionMaxZ = (gMinimapRegionMaxZ <= m) ? gMinimapRegionMaxZ : m;
                             }
                         }
                         gMinimapTexU = rows[k].texU;
