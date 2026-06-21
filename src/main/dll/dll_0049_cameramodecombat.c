@@ -327,7 +327,7 @@ void CameraModeCombat_update(short* cam)
                             }
                             if (diff < 3000 && diff > 0)
                             {
-                                if (gCamCombatPrevYawDiff < 3000 && diff < 1000 && diff < gCamCombatPrevYawDiff)
+                                if (gCamCombatPrevYawDiff < 3000 && diff < 1000 && gCamCombatPrevYawDiff > diff)
                                 {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
@@ -340,14 +340,14 @@ void CameraModeCombat_update(short* cam)
                             }
                             else if (diff > -3000 && diff < 0)
                             {
-                                if (gCamCombatPrevYawDiff <= -3000 || diff <= -1000 || diff <= gCamCombatPrevYawDiff)
+                                if (gCamCombatPrevYawDiff > -3000 && diff > -1000 && gCamCombatPrevYawDiff < diff)
                                 {
-                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
+                                    step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
                                 }
                                 else
                                 {
-                                    step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
+                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
                                 }
                             }
