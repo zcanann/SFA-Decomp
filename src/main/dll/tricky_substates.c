@@ -1009,10 +1009,11 @@ u32 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
+#pragma optimization_level 2
 u32 trickyFn_80143388(int obj, int* trickyState)
 {
-    int val;
     int ref;
+    int val;
 
     val = trickyFoodFn_8014460c(obj, trickyState);
     if (val != 0)
@@ -1047,6 +1048,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     }
     return 1;
 }
+#pragma optimization_level reset
 
 int trickyFn_801434b0(int obj, int* trickyState)
 {
