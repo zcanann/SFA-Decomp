@@ -2045,7 +2045,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount = st[0x5d];
+    *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount = st[0x5d];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word114 = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word118 = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word11C = 0;
@@ -2158,7 +2158,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = e;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st[0x5c];
+    *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st[0x5c];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = *(int*)(st + 0x40);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupStride = *(int*)(st + 0x3c);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialStateByte = st[0x59];
