@@ -148,10 +148,10 @@ void CameraModeBike_update(CameraObject* camera)
         sinPitch = followDist * sinPitch;
         cosPitch = followDist * cosPitch;
         cosYaw = cosPitch * cosYaw;
-        sinYaw = cosPitch * sinYaw;
+        cosPitch = cosPitch * sinYaw;
         camera->anim.worldPosX = posZ + cosYaw;
         camera->anim.worldPosY = posY + sinPitch;
-        camera->anim.worldPosZ = posX + sinYaw;
+        camera->anim.worldPosZ = posX + cosPitch;
         rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         local_60 = (s64)rotVal;
         angleDelta = (short)rotVal - camera->anim.rotZ;
