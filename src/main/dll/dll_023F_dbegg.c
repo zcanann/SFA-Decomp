@@ -643,8 +643,8 @@ void dbegg_update(int obj)
     blob = *(int*)&((GameObject*)obj)->extra;
     n = lbl_803E61C0;
     i = lbl_803E61C4;
-    buf2[1] = i;
     buf2[0] = n;
+    buf2[1] = i;
     if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ) != -1)
     {
