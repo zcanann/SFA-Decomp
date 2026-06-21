@@ -309,8 +309,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 case 1:
                     switch (p[2])
                     {
-                    case 0:
-                        break;
                     case 8:
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
@@ -648,7 +646,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x23:
-                    switch (((ObjInterpretSeqPlacement*)p)->commandVariant)
+                    switch (p[2])
                     {
                     case 0:
                         (*gMapEventInterface)->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
@@ -670,7 +668,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     t = getTrickyObject();
                     if ((void*)t != NULL)
                     {
-                        switch (((ObjInterpretSeqPlacement*)p)->commandVariant)
+                        switch (p[2])
                         {
                         case 0:
                             (*(VtableFn*)(**(int**)(t + 0x68) + 0x3c))();
