@@ -3909,7 +3909,8 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
     outXStart = outX;
     outXCursor = outX;
     foundCount = 0;
-    windowCursor = windowCurves;
+    resolveCursor = windowCurves;
+    windowCursor = resolveCursor;
     remaining = 4;
     outZCursor = outZ;
     outYCursor = outY;
@@ -3938,10 +3939,9 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
         return 0;
     }
 
-    windowCursor = windowCurves;
     for (foundCount = 0, remaining = 4; remaining != 0; remaining--)
     {
-        if (*windowCursor == NULL)
+        if (*resolveCursor == NULL)
         {
             if (foundCount == 0)
             {
@@ -3956,7 +3956,7 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
                 *outZ = windowCurves[2]->z + (windowCurves[2]->z - windowCurves[1]->z);
             }
         }
-        windowCursor = windowCursor + 1;
+        resolveCursor = resolveCursor + 1;
         outXStart = outXStart + 1;
         outY = outY + 1;
         outZ = outZ + 1;
