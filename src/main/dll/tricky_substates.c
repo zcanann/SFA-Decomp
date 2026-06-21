@@ -1691,7 +1691,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                 else
                 {
                     d = c - a;
-                    cnt = d >> 2;
+                    cnt = (u32)d >> 2;
                     if (d % 4)
                     {
                         cnt += 1;
