@@ -80,7 +80,7 @@ typedef struct DimlavasmashPlacement
 typedef struct DimlavasmashState
 {
     u8 pad0[0x1 - 0x0];
-    u8 unk1;
+    u8 surfaceLayerId; /* surface material/layer index passed to setBlockSurfaceFlags */
     u8 state;
     u8 pad3[0x7 - 0x3];
     u8 unk7;
@@ -167,8 +167,8 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     block = mapGetBlock();
                     if ((void*)block != NULL)
                     {
-                        dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->unk1);
-                        dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState*)state)->unk1 + 1);
+                        dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->surfaceLayerId);
+                        dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState*)state)->surfaceLayerId + 1);
                     }
                 }
             }
@@ -189,7 +189,7 @@ typedef struct DimlavasmashObjectDef
 {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
-    s16 unk1A;
+    s16 surfaceLayerId; /* 0x1A def source for state.surfaceLayerId */
     s16 unk1C;
     s16 gameBit;
 } DimlavasmashObjectDef;
@@ -207,7 +207,7 @@ void dimlavasmash_init(s16* obj, s8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = dimlavasmash_SeqFn;
     inner = ((GameObject*)obj)->extra;
-    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
+    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->surfaceLayerId;
     *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
     *(u8*)(inner + 2) = GameBit_Get(((DimlavasmashObjectDef*)def)->gameBit);
     if (*(u8*)(inner + 2) == 1)
