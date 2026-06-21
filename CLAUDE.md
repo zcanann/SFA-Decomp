@@ -489,6 +489,25 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     a structural-distance (instr-multiset + per-access reg) read beats fuzzy% (a 99.94% E2 and a
     98.9% E1 were both 1-displacement off — same multiset, different `mr` slot). (fn_801B3DE4: phi
     E1 98.9% mr@0x40; phi+embed E2 99.94% mr@0x80 w/ 2-instr base-reg split; OR 100%.)
+134. **#131's OR no-op is NOT the only 100% — a NO-OP WIDTH CAST splits the VN and is PLAUSIBLE C.**
+    `slotLife = state + (int)(long)off;` gives the 2nd same-value pointer a DISTINCT value-number
+    (#114: conversion nodes split VN) → MWCC keeps it as a non-coalesced LAZY copy (the target's
+    `mr r29,r31`), a single web used by EVERY access of that field — exactly what #131/#132 needed,
+    with NO bitwise op. KEY: cast a SUB-OPERAND of the address sum (`state + (int)(long)off`), NOT
+    the pointer variable (`(int)(long)slot` FOLDS — cast-of-copy is simplified; this is why #133's
+    embed-launder failed, it cast the wrong node). The cast splits at zero cost AND yields a copy
+    (value still CSEs to the field reg → `mr`, not a fresh `add`). CAVEAT: the cast ELEVATES its
+    operand — `off` jumps to r31, swapping slot↔off (~99.4%, slot=r30, off=r31; lifetime already
+    correct at r29). FIX with a #108 creation-order lever: re-derive `slot = state + off;` right
+    after, so slot is the LATEST-created value and reclaims r31. Net two lines —
+    `slotLife = state + (int)(long)off; slot = state + off;` — = 100%, byte-identical (0 instr diff),
+    reads as a width cast + a pointer re-derive. METHOD: the cast gives the right MECHANISM on the
+    first build (read savegpr_26 + the `mr`); the residual is then a PURE within-class register swap
+    — grep the per-value reg each build and move it with decl-order/re-derive (#108), not more
+    splitters. (fn_801B3DE4/dimexplosion: retired the `|= slot` no-op across ~16 sessions of "OR is
+    the only way" → plausible-C 100%. The "OR is mathematically unique" proof was WRONG: it only
+    covers NODE-level splits; an OPERAND-level conversion-node split is a second family — but it
+    permutes the saved regs, so always pair it with a creation-order fix.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,

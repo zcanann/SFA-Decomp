@@ -161,8 +161,10 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     *(int*)((char*)slot + 0x10) = 0;
     {
         int life = (int)(lbl_803E4930 * sqrtf(spd));
-        slotLife = state + off;
-        slotLife |= slot; /* keep 0x14 base in its own saved reg (mr r29,r31) */
+        /* widened offset gives the lifetime base its own value-number (kept in
+           a separate saved reg); the re-derive keeps slot itself in r31. */
+        slotLife = state + (int)(long)off;
+        slot = state + off;
         *(int*)((char*)slotLife + 0x14) = life;
     }
     {
