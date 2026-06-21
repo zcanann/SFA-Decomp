@@ -123,10 +123,11 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     nodes[0].locked = 1;
 
     zero = lbl_803E4DFC;
+    i = 0;
     link = rope->links;
     node = nodes;
     linkCount = count - 1;
-    for (i = 0; i < linkCount; i++)
+    for (; i < linkCount; i++)
     {
         link->restLength = rope->totalLength / linkCount;
         link->stiffness = lbl_803E4E10;
