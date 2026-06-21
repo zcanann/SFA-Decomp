@@ -391,7 +391,7 @@ static f32 skeetla_pathSpeedDelta(u8* obj)
     f32 currentSpeed;
 
     currentPathPoint = (f32*)state->unk28;
-    if (currentPathPoint == state->previousPathPoint)
+    if ((f32*)state->unk28 == state->previousPathPoint)
     {
         dx = state->previousPathX - ((GameObject*)obj)->anim.worldPosX;
         dz = state->previousPathZ - ((GameObject*)obj)->anim.worldPosZ;
