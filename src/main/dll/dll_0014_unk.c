@@ -4180,29 +4180,18 @@ int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
 
 int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds)
 {
-    int count;
     int linkId;
+    int count;
+    int i;
 
     count = 0;
-    linkId = curve->linkIds[0];
-    if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId)
+    for (i = 0; i < 4; i++)
     {
-        outIds[count++] = linkId;
-    }
-    linkId = curve->linkIds[1];
-    if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId)
-    {
-        outIds[count++] = linkId;
-    }
-    linkId = curve->linkIds[2];
-    if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId)
-    {
-        outIds[count++] = linkId;
-    }
-    linkId = curve->linkIds[3];
-    if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId)
-    {
-        outIds[count++] = linkId;
+        linkId = curve->linkIds[i];
+        if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId)
+        {
+            outIds[count++] = linkId;
+        }
     }
     return count;
 }
