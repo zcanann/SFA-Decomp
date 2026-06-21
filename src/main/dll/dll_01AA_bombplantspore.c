@@ -351,11 +351,12 @@ void bombplantspore_update(void* obj)
         }
         else
         {
+            f32 driftSpeed = state->driftSpeed;
             state->driftSpeed =
                 lbl_803E53EC *
-                (state->driftSpeedTarget - state->driftSpeed) *
+                (state->driftSpeedTarget - driftSpeed) *
                 timeDelta +
-                state->driftSpeed;
+                driftSpeed;
         }
         ((GameObject*)obj)->anim.velocityX =
             state->driftSin * state->driftSpeed +
@@ -398,8 +399,9 @@ void bombplantspore_update(void* obj)
     }
     else
     {
-        state->fuseTimer -= timeDelta;
-        if (state->fuseTimer <= lbl_803E5394)
+        f32 fuse = state->fuseTimer - timeDelta;
+        state->fuseTimer = fuse;
+        if (fuse <= lbl_803E5394)
         {
             Sfx_PlayFromObject(obj, SFXmv_torclp_6);
             (*gExpgfxInterface)->freeSource((u32)obj);
