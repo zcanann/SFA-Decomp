@@ -210,11 +210,12 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     buf.flags = fl;
     if (fl & 1)
     {
-        if (sourceObj != 0)
+        GameObject* obj = (GameObject*)buf.ctx;
+        if (obj != 0)
         {
-            buf.pos[0] = buf.pos[0] + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = buf.pos[1] + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = lbl_803E1570 + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] = buf.pos[0] + obj->anim.worldPosX;
+            buf.pos[1] = buf.pos[1] + obj->anim.worldPosY;
+            buf.pos[2] = lbl_803E1570 + obj->anim.worldPosZ;
         }
         else
         {
