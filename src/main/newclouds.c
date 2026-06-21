@@ -842,8 +842,8 @@ extern const f32 lbl_803DF1CC;
 
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 {
-    int savedRand;
     int segs;
+    int savedRand;
     int i;
     f32 total;
     f32 len;
