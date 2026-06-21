@@ -389,6 +389,12 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 void groundanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
+    int foff;
+    int hoff;
+    int foffEntry;
+    int hoffEntry;
+    int foffVtx;
+    int hoffVtx;
     GroundAnimatorState * g;
     int* r20;
     s8 bi;
@@ -399,12 +405,6 @@ void groundanimator_update(int* obj)
     int blkIdx;
     int mid;
     int inner;
-    int foff;
-    int hoff;
-    int foffEntry;
-    int hoffEntry;
-    int foffVtx;
-    int hoffVtx;
     u8 oldbit;
     u8 allow;
     void* tricky;
