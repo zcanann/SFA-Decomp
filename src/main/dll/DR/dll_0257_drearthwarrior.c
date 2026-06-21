@@ -932,18 +932,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         {
             ((EarthWarriorSub*)q)->attackStage = 4;
         }
-        if (((EarthWarriorSub*)q)->attackStage > 3)
-        {
-            ((EarthWarriorSub*)q)->unk8A6 = 0xa;
-        }
-        else
-        {
-            ((EarthWarriorSub*)q)->unk8A6 = 8;
-        }
+        ((EarthWarriorSub*)q)->unk8A6 = (((EarthWarriorSub*)q)->attackStage > 3) ? 0xa : 8;
         {
             f32 v294 = ((EarthWarriorState*)p2)->baddie.animSpeedC;
             int tbl = ((EarthWarriorSub*)q)->configRow;
-            if (v294 < *(f32*)(tbl + i2 * 4))
+            if (v294 < ((f32*)tbl)[i2])
             {
                 if (((EarthWarriorSub*)q)->attackPhase == 4)
                 {
@@ -958,7 +951,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                     ((EarthWarriorSub*)q)->attackPhase -= 4;
                 }
             }
-            else if (v294 >= *(f32*)(tbl + i2 * 4 + 4))
+            else if (v294 >= *(f32*)((char*)&((f32*)tbl)[i2] + 4))
             {
                 if (((EarthWarriorSub*)q)->attackPhase < 0x14)
                 {
