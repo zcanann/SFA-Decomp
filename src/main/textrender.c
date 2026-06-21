@@ -1122,9 +1122,8 @@ void gameTextResetCursor(int flags)
     }
     if (flags & 2)
     {
-        int i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        lbl_8033A540[i].v = 0xb;
+        int* p = &lbl_8033A540[lbl_803DC9C8++].v;
+        *p = 0xb;
     }
 }
 
