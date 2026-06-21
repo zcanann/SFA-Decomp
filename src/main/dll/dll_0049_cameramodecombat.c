@@ -171,7 +171,6 @@ void CameraModeCombat_update(short* cam)
     f32 fb;
     int ang;
     int diff;
-    int abs2;
     u32 ad;
     short classId;
 
@@ -353,17 +352,16 @@ void CameraModeCombat_update(short* cam)
                                     *cam = (s16)((f32)(s32) * cam + step);
                                 }
                             }
-                            abs2 = diff;
+                            gCamCombatPrevYawDiff = diff;
                             if (diff < 0)
                             {
-                                abs2 = -diff;
+                                diff = -diff;
                             }
-                            if (abs2 > 9000)
+                            if (diff > 9000)
                             {
-                                abs2 = 9000;
+                                diff = 9000;
                             }
-                            zoom = (f32)(s32)(9000 - abs2) / lbl_803E18E4;
-                            gCamCombatPrevYawDiff = diff;
+                            zoom = (f32)(s32)(9000 - diff) / lbl_803E18E4;
                             step = interpolate(lbl_803E18E8 - gCamCombatState->heightOffset, lbl_803E18EC, timeDelta);
                             gCamCombatState->heightOffset = gCamCombatState->heightOffset + step;
                             step = interpolate(
