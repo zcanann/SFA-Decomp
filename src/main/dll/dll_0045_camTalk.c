@@ -140,8 +140,8 @@ void CameraModeBike_update(CameraObject* camera)
         cosPitch = mathCosf(gCamTalkPi * (f32)(s32)camera->anim.rotY / gCamTalkAngleUnitScale);
         sinPitch = mathSinf(gCamTalkPi * (f32)(s32)camera->anim.rotY / gCamTalkAngleUnitScale);
         followDist = -gCamTalkBikeState->heightInput / lbl_803E17A4;
-        kFollowA = lbl_803E17A8;
         kFollowB = lbl_803E17B0;
+        kFollowA = lbl_803E17A8;
         clampedHeight = (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
         gCamTalkBikeState->followDistance +=
             kFollowA *
