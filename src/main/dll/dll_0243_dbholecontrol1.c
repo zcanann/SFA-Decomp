@@ -159,8 +159,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
              u32 param_15, u32 param_16)
 {
     float divisor;
-    u32 uVar2;
-    int iVar3;
+    u32 queueFull;
+    int targetObj;
     short* msgQueue;
     int ctrl;
     double dist;
@@ -194,10 +194,10 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
         (((GameObject*)param_9)->anim.localPosY < ((GameObject*)((GroundBaddieState*)param_10)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
     {
-        iVar3 = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
-        deltaX = *(float*)(iVar3 + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        deltaY = *(float*)(iVar3 + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        deltaZ = *(float*)(iVar3 + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        targetObj = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        deltaX = *(float*)(targetObj + 0xc) - ((GameObject*)param_9)->anim.localPosX;
+        deltaY = *(float*)(targetObj + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
+        deltaZ = *(float*)(targetObj + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
         dist = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
         if (dist < (double)lbl_803E6F50)
         {
@@ -205,8 +205,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             msgQueue = *(short**)(ctrl + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
-            uVar2 = FUN_80006ab8(msgQueue);
-            if (uVar2 == 0)
+            queueFull = FUN_80006ab8(msgQueue);
+            if (queueFull == 0)
             {
                 FUN_80006ac4(msgQueue,  & msg1Id);
             }
@@ -219,8 +219,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         msg2Id = 9;
         msg2Flag = 0;
         msg2Data = 0x24;
-        uVar2 = FUN_80006ab8(msgQueue);
-        if (uVar2 == 0)
+        queueFull = FUN_80006ab8(msgQueue);
+        if (queueFull == 0)
         {
             FUN_80006ac4(msgQueue,  & msg2Id);
         }
@@ -229,8 +229,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         msgQueue = *(short**)(ctrl + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
-        uVar2 = FUN_80006ab8(msgQueue);
-        if (uVar2 == 0)
+        queueFull = FUN_80006ab8(msgQueue);
+        if (queueFull == 0)
         {
             FUN_80006ac4(msgQueue,  & msg3Id);
         }
