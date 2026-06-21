@@ -6,7 +6,7 @@
 typedef struct EcshShrineState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 animTimer;
     f32 cooldownTimer;
     u8 padC[0x18 - 0xC];
     s16 unk18;
