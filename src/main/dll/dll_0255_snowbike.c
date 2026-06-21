@@ -856,7 +856,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     fv = ((SnowBikeState*)state)->unk46C;
     ((SnowBikeState*)state)->distanceScaleLimit = fv;
     ((SnowBikeState*)state)->unk478 = fv;
-    ((SnowBikeState*)state)->unk060 = base + ((SnowBikeState*)state)->bikeType * 6 + 0xa4;
+    ((SnowBikeState*)state)->unk060 = &base[((SnowBikeState*)state)->bikeType * 6 + 0xa4];
     if (((SnowBikeState*)state)->bikeType == 0)
     {
         if (!((SnowBikeFlags*)(state + 0x428))->b02)
