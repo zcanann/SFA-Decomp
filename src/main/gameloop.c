@@ -427,6 +427,7 @@ extern u8* gGameBitTable;
 extern s16 gGameBitCount;
 extern u8* gGameBitSaveData;
 #pragma dont_inline off
+#pragma scheduling off
 u32 GameBit_Get(int eventId)
 {
     s16 id = (s16)eventId & 0xfff;
@@ -489,6 +490,7 @@ u32 GameBit_Get(int eventId)
     }
     return result;
 }
+#pragma scheduling reset
 
 
 extern void gameBitFn_800ea2e0(u8 id);
