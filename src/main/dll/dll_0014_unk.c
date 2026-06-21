@@ -3889,7 +3889,7 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
     }
 }
 
-int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int excludeLinkId)
+int RomCurve_getNearestAdjacentLink(RomCurveDef* curve, int excludeLinkId, f32 x, f32 y, f32 z)
 {
     int bestLink[2];
     f32 bestDistance[2];
