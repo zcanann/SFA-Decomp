@@ -4352,19 +4352,32 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 void objSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
-    u8* flagsB = base + 0x3b9c;
-    u8* flagsA = base + 0x3b44;
-    s16* modes = (s16*)(base + 0x3a98);
-    u8* actions = base + 0x3c4c;
-    u8* results = base + 0x3bf4;
-    u8* states = base + 0x3a40;
-    u8* pending = base + 0x39e8;
-    f32* frames = (f32*)(base + 0x3894);
-    f32* dists = (f32*)(base + 0x3740);
-    u8* counts = base + 0x3590;
-    int* handles = (int*)(base + 0x33e4);
-    u8* marks = base + 0x338c;
+    u8* flagsB;
+    u8* flagsA;
+    s16* modes;
+    u8* actions;
+    u8* results;
+    u8* states;
+    u8* pending;
+    f32* frames;
+    f32* dists;
+    u8* counts;
+    int* handles;
+    u8* marks;
     int i = 0;
+
+    flagsB = base + 0x3b9c;
+    flagsA = base + 0x3b44;
+    modes = (s16*)(base + 0x3a98);
+    actions = base + 0x3c4c;
+    results = base + 0x3bf4;
+    states = base + 0x3a40;
+    pending = base + 0x39e8;
+    frames = (f32*)(base + 0x3894);
+    dists = (f32*)(base + 0x3740);
+    counts = base + 0x3590;
+    handles = (int*)(base + 0x33e4);
+    marks = base + 0x338c;
 
     {
         for (; i < 0x50; i += 8)
