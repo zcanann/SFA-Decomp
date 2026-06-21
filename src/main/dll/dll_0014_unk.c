@@ -2977,9 +2977,9 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
                 }
                 hitCount++;
             }
+            previousCurveId = nextCurveId;
+            curve = nextCurve;
         }
-        previousCurveId = nextCurveId;
-        curve = nextCurve;
     }
     while ((previousCurveId != (int)curveId) && (nextCurveId != (int)ROMCURVE_LINK_ID_NONE));
 
