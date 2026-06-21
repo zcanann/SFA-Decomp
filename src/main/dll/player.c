@@ -1688,7 +1688,7 @@ int fn_802A5384(int obj, int state)
                     ((u32) * (u8*)((char*)inner + 0x3f6) >> 6 & 1) == 0 &&
                     ((PlayerState*)inner)->baddie.controlMode != 0x26 &&
                     (((GameObject*)obj)->objectFlags & 0x1000) == 0 &&
-                    ((PlayerState*)inner)->unk880 == lbl_803E7EA4)
+                    ((PlayerState*)inner)->idleDelayTimer == lbl_803E7EA4)
                 {
                     stay = 1;
                 }
@@ -9662,7 +9662,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     ObjHits_SyncObjectPositionIfDirty(obj);
     inner->waterDepth = lbl_803E7EA4;
     inner->waterSurfaceY = lbl_803E80D0;
-    inner->unk880 = lbl_803E7FA4;
+    inner->idleDelayTimer = lbl_803E7FA4;
     inner->baddie.physicsActive = 1;
     *(int*)((char*)inner + 0x4) &= ~0x100000;
     *(int*)((char*)inner + 0x4) |= 0x8000000;
@@ -10903,10 +10903,10 @@ void fn_802B18BC(int obj, int state, f32 fv)
     {
         ((PlayerState*)state)->unk87C = *(f32*)&lbl_803E7EA4;
     }
-    ((PlayerState*)state)->unk880 -= fv;
-    if (((PlayerState*)state)->unk880 < lbl_803E7EA4)
+    ((PlayerState*)state)->idleDelayTimer -= fv;
+    if (((PlayerState*)state)->idleDelayTimer < lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk880 = *(f32*)&lbl_803E7EA4;
+        ((PlayerState*)state)->idleDelayTimer = *(f32*)&lbl_803E7EA4;
     }
 }
 #pragma dont_inline reset
@@ -12602,7 +12602,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->unk834 = fz;
     ((PlayerState*)inner)->velSmoothRateBase = lbl_803E8144;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 1;
-    ((PlayerState*)inner)->unk880 = lbl_803E7FA4;
+    ((PlayerState*)inner)->idleDelayTimer = lbl_803E7FA4;
     ((PlayerState*)inner)->walkAnimSoundId = 3;
     ((PlayerState*)inner)->runAnimSoundId = 4;
     ((PlayerState*)inner)->footstepSoundId = 5;
@@ -14573,7 +14573,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
                     ((ByteFlags*)((char*)inner + 0x3f6))->b40 ||
                     ((PlayerState*)inner)->baddie.controlMode == 0x26 ||
                     (((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
-                    ((PlayerState*)inner)->unk880 != lbl_803E7EA4)
+                    ((PlayerState*)inner)->idleDelayTimer != lbl_803E7EA4)
                 {
                     ok = 0;
                 }

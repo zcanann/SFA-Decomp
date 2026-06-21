@@ -322,7 +322,7 @@ typedef struct PlayerState {
     f32 unk874;
     f32 unk878;
     f32 unk87C;
-    f32 unk880;
+    f32 idleDelayTimer; /* idle-eligibility countdown (f32); set positive at state init (lbl_803E7FA4), decremented by frame-time in fn_802B18BC and floored at 0; the default-idle "stay" path requires it == 0 */
     u32 unk884;
     f32 unk888;
     f32 unk88C;
