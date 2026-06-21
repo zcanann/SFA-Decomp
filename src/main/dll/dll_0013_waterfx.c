@@ -691,6 +691,7 @@ void fn_80095164(WaterParticle* s)
     u8* p;
 
     PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
+    i = 0;
     mtxIdx = 0;
     p = (u8*)s;
     c2E0 = lbl_803DF2E0;
@@ -702,7 +703,7 @@ void fn_80095164(WaterParticle* s)
     c2F4 = lbl_803DF2F4;
     c2FC = lbl_803DF2FC;
     c304 = lbl_803DF304;
-    for (i = 0; i < 8; i++)
+    for (; i < 8; i++)
     {
         f32 h = s->f10;
         f32 a = c2E4 * ((f32)i / c2F8);
