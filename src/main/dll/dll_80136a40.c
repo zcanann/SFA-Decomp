@@ -1231,6 +1231,7 @@ int fn_80136E00(int p1, u8* p)
  * box pixels directly into the framebuffer, and flips buffers forever. */
 #pragma ppc_unroll_speculative off
 #pragma opt_strength_reduction off
+#pragma opt_propagation off
 void fn_80137DF8(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
@@ -1239,6 +1240,7 @@ void fn_80137DF8(void)
     int hold;
     int x, col;
     int row;
+    u16* fbrow;
     int h, h2;
     int b;
     int y;
@@ -1274,14 +1276,22 @@ void fn_80137DF8(void)
                     row = 0;
                     for (n = 0; n < 60; n++)
                     {
-                        *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
-                        *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
+                        fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
+                        *(u16*)((char*)fbrow + col) = 0x1080;
                         row += 0x2800;
                     }
                     col += 2;
@@ -1465,14 +1475,22 @@ void fn_80137DF8(void)
                 row = 0;
                 for (n = 0; n < 60; n++)
                 {
-                    *(u16*)((char*)debugDrawFrameBuffer + row + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x500) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0xA00) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0xF00) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1400) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1900) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00) + col) = 0x1080;
-                    *(u16*)((char*)debugDrawFrameBuffer + (row + 0x2300) + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
+                    fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
+                    *(u16*)((char*)fbrow + col) = 0x1080;
                     row += 0x2800;
                 }
                 col += 2;
@@ -1489,6 +1507,7 @@ void fn_80137DF8(void)
         }
     }
 }
+#pragma opt_propagation on
 #pragma opt_strength_reduction on
 #pragma ppc_unroll_speculative on
 
