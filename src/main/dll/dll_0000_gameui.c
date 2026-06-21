@@ -1935,13 +1935,14 @@ void cMenuRun(void)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
-    s8 isTricky = 0;
+    s8 isTricky;
     u16 btn16;
     u32 btn;
     s16* cursor;
     int flags;
 
     player = Obj_GetPlayerObject();
+    isTricky = 0;
     cMenuSelectedItem = -1;
     if (player == 0)
     {
