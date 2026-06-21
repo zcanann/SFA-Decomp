@@ -72,6 +72,7 @@ void fn_801101E8(void)
     lbl_803DD5B8 = NULL;
 }
 
+#pragma opt_propagation off
 void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -108,6 +109,7 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
         gCamForceBehindActiveHeightOffset = gCamForceBehindHeightOffset;
     }
 }
+#pragma opt_propagation reset
 
 #pragma opt_common_subs off
 #pragma opt_propagation off
