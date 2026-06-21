@@ -1086,13 +1086,13 @@ void newshadows_getShadowNoiseTexture(int* textureOut)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8006b03c(int param_1, u32* param_2, u32* param_3, int* param_4, int* param_5)
+void FUN_8006b03c(int object, u32* groupOut, u32* scaleOut, int* offsetXOut, int* offsetYOut)
 {
-    ObjModelState* modelState = ((GameObject*)param_1)->anim.modelState;
-    *param_2 = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
-    *param_3 = *(u32*)&modelState->shadowScale;
-    *param_4 = modelState->shadowOffsetX;
-    *param_5 = modelState->shadowOffsetY;
+    ObjModelState* modelState = ((GameObject*)object)->anim.modelState;
+    *groupOut = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
+    *scaleOut = *(u32*)&modelState->shadowScale;
+    *offsetXOut = modelState->shadowOffsetX;
+    *offsetYOut = modelState->shadowOffsetY;
     return;
 }
 
