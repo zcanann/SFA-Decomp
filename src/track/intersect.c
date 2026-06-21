@@ -3663,6 +3663,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern u32 lbl_803DEEAC;
     extern u8 lbl_803DEEB0;
+    extern u8 lbl_803DEEB2;
     extern u32 lbl_803E8450;
     extern f32 gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
@@ -3686,7 +3687,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     u32 stab0;
     GXColor temp;
     GXColor color2;
-    f32 fog_var;
+    GXColor fog_var;
     f32 vec3[3];
     int handle;
     int stage_idx;
@@ -3702,8 +3703,8 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     buf_38 = *(Blk28*)(lbl_802C1EA8 + 0xA4);
     stab0 = lbl_803DEEAC;
     *(u16*)((u8*)&stab1 + 0) = *(u16*)&lbl_803DEEB0;
-    ((u8*)&stab1)[2] = (&lbl_803DEEB0)[2];
-    fog_var = lbl_803E8450;
+    ((u8*)&stab1)[2] = lbl_803DEEB2;
+    *(u32*)&fog_var = lbl_803E8450;
 
     PSMTXConcat((f32(*)[4])((u8*)lbl_802C1EA8 + 0xB8), mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, 0x1e, 1);
@@ -3792,8 +3793,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
         f32 d2;
         mtx_110[0][0] = lbl_803DEEDC;
         mtx_110[0][1] = lbl_803DEEDC;
-        d2 = f31_val - (f31_val - scale);
-        mtx_110[0][2] = lbl_803DEEE4 / d2;
+        mtx_110[0][2] = lbl_803DEEE4 / (d2 = f31_val - (f31_val - scale));
         mtx_110[0][3] = f31_val / d2;
         mtx_110[1][0] = lbl_803DEEDC;
         mtx_110[1][1] = lbl_803DEEDC;
@@ -3820,11 +3820,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     GXSetNumTexGens(2);
     GXSetNumTevStages((u8)(stage_count + 2));
 
-    {
-        GXColor fc;
-        *(u32*)&fc = lbl_803E8450;
-        GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fc);
-    }
+    GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
     GXSetBlendMode(1, 0, 3, 5);
 
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
