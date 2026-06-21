@@ -204,6 +204,7 @@ void camcontrol_updateTargetFeedback(void)
             CAMCONTROL_CAMERA->targetFlags =
                 CAMCONTROL_CAMERA->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
         }
+        target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus;
         objType = target->objType;
         switch (objType)
         {
