@@ -394,10 +394,10 @@ void andross_update(int obj)
         pathFlag = 1;
     }
     ObjPath_GetPointWorldPosition(obj, pathFlag, (f32*)(state + 0x30), (f32*)(state + 0x31), (f32*)(state + 0x32), 0);
-    fval = gAndrossPathPosOffset;
     if (pathFlag == 1)
     {
-        ((AndrossState*)state)->cachedPosY = ((AndrossState*)state)->cachedPosY + gAndrossPathPosOffset;
+        fval = gAndrossPathPosOffset;
+        ((AndrossState*)state)->cachedPosY = ((AndrossState*)state)->cachedPosY + fval;
         ((AndrossState*)state)->cachedPosZ = ((AndrossState*)state)->cachedPosZ + fval;
     }
     switch (((AndrossState*)state)->fightPhase)
