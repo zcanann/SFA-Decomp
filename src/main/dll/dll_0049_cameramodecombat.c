@@ -140,7 +140,7 @@ void CameraModeCombat_free(CameraObject* camera)
 void CameraModeCombat_update(short* cam)
 {
     extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
-    f32 n[3];
+    f32 vec[3];
     f32 prevZ;
     f32 prevY;
     f32 prevX;
@@ -148,12 +148,12 @@ void CameraModeCombat_update(short* cam)
     f32 ty;
     f32 dx;
     f32 dz;
-    f32 vec[3];
+    f32 n[3];
     u8 trace[116];
     int view = Camera_GetCurrentViewSlot();
     GameObject* tgt;
-    GameObject* focus;
     ObjHitVolumeRuntimeTransform* hitVolumes;
+    GameObject* focus;
     f32 range;
     f32 dist;
     f32 px;
