@@ -16,12 +16,12 @@
 typedef struct TrickyCurveObjectDef
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18;
+    s8 rangeYRaw; /* 0x18 << 2 -> state.rangeY */
     u8 pad19[0x1A - 0x19];
     s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
+    s16 rangeZ;         /* 0x1C -> state.rangeZ */
+    s16 triggerGameBit; /* 0x1E -> state.triggerGameBit */
+    s16 gateGameBit;    /* 0x20 -> state.gateGameBit */
     u8 pad22[0x28 - 0x22];
 } TrickyCurveObjectDef;
 
@@ -631,15 +631,15 @@ void TrickyCurve_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
     state[0xc] = def[0x19];
-    ((TrickyCurveObjState*)state)->rangeY = (s16)((s32)((TrickyCurveObjectDef*)def)->unk18 << 2);
+    ((TrickyCurveObjState*)state)->rangeY = (s16)((s32)((TrickyCurveObjectDef*)def)->rangeYRaw << 2);
     *(s16*)state = ((TrickyCurveObjectDef*)def)->unk1A;
-    ((TrickyCurveObjState*)state)->rangeZ = ((TrickyCurveObjectDef*)def)->unk1C;
+    ((TrickyCurveObjState*)state)->rangeZ = ((TrickyCurveObjectDef*)def)->rangeZ;
     state[0xe] = def[0x19];
     state[0x10] = 0;
     state[0x11] = 0;
     state[0x12] = 0;
-    ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->unk20;
-    ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->unk1E;
+    ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->gateGameBit;
+    ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->triggerGameBit;
     ((TrickyCurveObjState*)state)->unk6 = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
