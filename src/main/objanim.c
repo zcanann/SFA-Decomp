@@ -169,17 +169,17 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
         {
             if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                do
+                while (state->prevFramePhase < gObjAnimProgressZero)
                 {
                     state->prevFramePhase += prevFrameLength;
-                } while (state->prevFramePhase < gObjAnimProgressZero);
+                }
             }
             if (state->prevFramePhase >= prevFrameLength)
             {
-                do
+                while (state->prevFramePhase >= prevFrameLength)
                 {
                     state->prevFramePhase -= prevFrameLength;
-                } while (state->prevFramePhase >= prevFrameLength);
+                }
             }
         }
         else
@@ -286,7 +286,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 
         if (scanMode == OBJANIM_EVENT_SCAN_FORWARD)
         {
-            if ((previousFrame <= eventFrame) && (eventFrame < currentFrame))
+            if ((eventFrame >= previousFrame) && (eventFrame < currentFrame))
             {
                 events->triggeredIds[events->triggerCount++] = eventId;
             }
