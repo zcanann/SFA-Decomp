@@ -978,6 +978,8 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
     params.pad[2] = 0;
     params.pad[1] = 0;
     params.f6 = 0xc0a;
+    if ((u8)type)
+    {
     switch (type & 0xff)
     {
     case 1:
@@ -1018,6 +1020,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
         (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &fxParam, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
+    }
     }
 
     if (light != NULL)
