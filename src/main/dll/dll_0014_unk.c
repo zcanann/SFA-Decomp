@@ -2582,7 +2582,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 
-int RomCurve_func1B(f32 x, f32 y, f32 z, int curve, int preferredNeighborId)
+int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 {
     int bestNeighborIds[2];
     float bestDistances[2];
