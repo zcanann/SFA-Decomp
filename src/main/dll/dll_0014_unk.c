@@ -383,15 +383,16 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     found = a;
     while (done == 0)
     {
-        blocked = 1;
         for (slot = 0; slot < 4; slot++)
         {
             if (*(int*)(found + 0x1C + slot * 4) != -1 && (*(s8*)(found + 0x1B) & (1 << slot)) == 0)
             {
                 blocked = 0;
-                break;
+                goto blocked_checked;
             }
         }
+        blocked = 1;
+    blocked_checked:
         if (blocked != 0)
         {
             done = 1;
