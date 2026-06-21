@@ -344,7 +344,7 @@ void fn_80150EDC(void* p1, void* p2)
             ((BaddieState*)p2)->pathStep *
             (((f32)(u32)*(u16*)((u8*)p2 + 0x2a4) /
                     ((BaddieState*)p2)->unk2A8 / lbl_803E274C) *
-                *(f32*)(table + (((BaddieState*)p2)->inWhirlpoolGroup << 2) + 0x1538));
+                ((f32*)(table + 0x1538))[((BaddieState*)p2)->inWhirlpoolGroup]);
         if (((BaddieState*)p2)->unk308 < lbl_803E27A0)
         {
             ((BaddieState*)p2)->unk308 = *(f32*)&lbl_803E27A0;
