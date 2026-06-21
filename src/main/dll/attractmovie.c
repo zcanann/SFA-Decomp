@@ -66,13 +66,13 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer,
         player->audioBuffer[0].validSample = 0;
         {
             u32 audioBufferSize = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4);
-            s16* nextAudioBuffer = (s16*)((u8*)audioBuffer + audioBufferSize);
-            player->audioBuffer[1].buffer = nextAudioBuffer;
-            player->audioBuffer[1].curPtr = nextAudioBuffer;
+            u8* nextAudioBuffer = (u8*)audioBuffer + audioBufferSize;
+            player->audioBuffer[1].buffer = (s16*)nextAudioBuffer;
+            player->audioBuffer[1].curPtr = (s16*)nextAudioBuffer;
             player->audioBuffer[1].validSample = 0;
-            nextAudioBuffer = (s16*)((u8*)nextAudioBuffer + audioBufferSize);
-            player->audioBuffer[2].buffer = nextAudioBuffer;
-            player->audioBuffer[2].curPtr = nextAudioBuffer;
+            nextAudioBuffer = nextAudioBuffer + audioBufferSize;
+            player->audioBuffer[2].buffer = (s16*)nextAudioBuffer;
+            player->audioBuffer[2].curPtr = (s16*)nextAudioBuffer;
             player->audioBuffer[2].validSample = 0;
         }
     }
