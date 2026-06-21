@@ -123,22 +123,21 @@ void fastCastFloatToS16(s16* p, float x)
 #pragma optimize_for_size on
 float fastFloorf(float x)
 {
-    register float input = x;
-    register float abs_x;
-    register float rounded;
+    float abs_x;
+    float rounded;
     s16 short_value;
     int int_value;
 
-    abs_x = __fabsf(input);
+    abs_x = __fabsf(x);
     if (abs_x < lbl_803E79A0) {
         fastCastFloatToU16(&short_value, abs_x);
         rounded = fastCastU16ToFloat(&short_value);
 
-        if (input >= lbl_803E79A4) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (input != -rounded) {
+        if (x != -rounded) {
             return lbl_803E79A8 - rounded;
         }
 
@@ -146,21 +145,21 @@ float fastFloorf(float x)
     }
 
     if (abs_x < lbl_803E79AC) {
-        int_value = input;
+        int_value = x;
         rounded = (float)int_value;
 
-        if (input >= lbl_803E79A4) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (input != rounded) {
+        if (x != rounded) {
             return rounded - lbl_803E79B0;
         }
 
         return rounded;
     }
 
-    return input;
+    return x;
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset
