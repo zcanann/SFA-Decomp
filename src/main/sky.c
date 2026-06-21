@@ -3179,7 +3179,7 @@ void Sky_func03(int a, int b, u8* cfg)
         }
         if (((Sky2Config*)cfg)->unk5D != 0)
         {
-            skyFn_80088c94(mask, ((Sky2Config*)cfg)->unk5D > 2 ? 1 : 0);
+            skyFn_80088c94(mask, (u8)(((Sky2Config*)cfg)->unk5D > 2 ? 1 : 0));
         }
         vis = ((Sky2Config*)cfg)->unk56;
         for (i = 0; i < 2; i++)
