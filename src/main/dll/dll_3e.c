@@ -305,11 +305,8 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     ctrl = (AttractMovieControl*)base;
     gAttractMovieLoopCompleted = 0;
 
-    if (ctrl->enabled == 0 || ctrl->isPrepared != 0)
+    if (ctrl->enabled != 0 && ctrl->isPrepared == 0)
     {
-        return FALSE;
-    }
-
     if ((s32)movieIndex > 0)
     {
         u32 offsetTable = ctrl->offsetTable;
@@ -382,16 +379,18 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     }
 
     OSReceiveMessage((OSMessageQueue*)(base + 0x52c), (OSMessage*)&readyMsg, OS_MESSAGE_BLOCK);
-    if (readyMsg != 0)
+    if (readyMsg == 0)
     {
-        ctrl->isPrepared = 1;
-        ctrl->field63d = 0;
-        ctrl->field68c = 0;
-        ctrl->field690 = 0;
-        ctrl->field684 = 0;
-        ctrl->field688 = 0;
-        lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
-        return TRUE;
+        return FALSE;
+    }
+    ctrl->isPrepared = 1;
+    ctrl->field63d = 0;
+    ctrl->field68c = 0;
+    ctrl->field690 = 0;
+    ctrl->field684 = 0;
+    ctrl->field688 = 0;
+    lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+    return TRUE;
     }
     return FALSE;
 }
