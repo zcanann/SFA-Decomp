@@ -442,8 +442,8 @@ void kaldachom_update(int obj)
                 {
                     (*(void (**)(int, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta, 5);
                 }
-                ref = (int)(*(void* (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x48))
-                    ((f64)(f32)(u32)((CampfireState*)state)->aggroRange, obj, state, 0x8000);
+                ref = (int)(*(void* (**)(int, int, double, int))(*(int*)gBaddieControlInterface + 0x48))
+                    (obj, state, (f64)(f32)(u32)((CampfireState*)state)->aggroRange, 0x8000);
                 if ((void*)ref != NULL)
                 {
                     (*(void (**)(int, int, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x28))
@@ -465,15 +465,15 @@ void kaldachom_update(int obj)
                 player = Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 kaldachom_handleAnimEvents(obj, state, state);
-                (*(void (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x2c))((double)lbl_803E3060, obj, state, 0xffffffff);
+                (*(void (**)(int, int, double, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, state, (double)lbl_803E3060, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
                     (*(void (**)(int, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta, 5);
                 }
                 ((GroundBaddieState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
                 *(u32*)&((GameObject*)obj)->pendingParentObj = 0;
-                (*(void (**)(double, double, int, int, void*, void*))(*(int*)gPlayerInterface + 8))
-                ((double)timeDelta, (double)timeDelta, obj, state, &gKaldaChomStateHandlersA,
+                (*(void (**)(double, int, int, double, void*, void*))(*(int*)gPlayerInterface + 8))
+                ((double)timeDelta, obj, state, (double)timeDelta, &gKaldaChomStateHandlersA,
                  &gKaldaChomStateHandlersB);
                 *(u32*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)state)->savedObjC0;
             }
