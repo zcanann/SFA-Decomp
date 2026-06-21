@@ -82,7 +82,7 @@ void FUN_801ac248(u64 param_1, double param_2, double param_3, u64 param_4,
 
 u32
 FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj)
 {
     int lookupBase;
     u32 in_r9;
@@ -91,11 +91,11 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
     double dist;
     double value;
 
-    if (((GameObject*)param_9)->anim.seqId != 0x172)
+    if (((GameObject*)obj)->anim.seqId != 0x172)
     {
-        state = ((GameObject*)param_9)->extra;
+        state = ((GameObject*)obj)->extra;
         lookupBase = FUN_80017a98();
-        dist = (double)FUN_8001771c((float*)(lookupBase + 0x18), (float*)&((GameObject*)param_9)->anim.worldPosX);
+        dist = (double)FUN_8001771c((float*)(lookupBase + 0x18), (float*)&((GameObject*)obj)->anim.worldPosX);
         value = (double)*state;
         if ((value <= dist) || (*(char*)((int)state + 0xb) != '\0'))
         {
@@ -103,14 +103,14 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
                 (*(char*)((int)state + 0xb) != '\0'))
             {
                 *(u8*)((int)state + 0xb) = 0;
-                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
+                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
                             (u32) * (u16*)(state + 2), 0, 0, 0, in_r9, in_r10);
             }
         }
         else
         {
             *(u8*)((int)state + 0xb) = 1;
-            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
+            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
                         (u32) * (u16*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
         }
     }

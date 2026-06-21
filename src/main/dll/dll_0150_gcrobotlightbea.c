@@ -240,7 +240,7 @@ FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 pa
 
 u32
 FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
@@ -253,14 +253,14 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     u32 altActionId;
     u32 altActionArg;
 
-    state = ((GameObject*)param_9)->extra;
+    state = ((GameObject*)obj)->extra;
     defaultActionId = DAT_802c2a58;
     defaultActionArg = DAT_802c2a5c;
     altActionId = DAT_802c2a60;
     altActionArg = DAT_802c2a64;
-    if (((GameObject*)param_9)->seqIndex < 0)
+    if (((GameObject*)obj)->seqIndex < 0)
     {
-        FUN_800e8630(param_9);
+        FUN_800e8630(obj);
         result = 0;
     }
     else
@@ -275,7 +275,7 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         }
         moveResult = FUN_8007f924((int)animUpdate);
         if ((moveResult == 0x283) ||
-            (moveResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9
+            (moveResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj
                                   , animUpdate, state, (short)*moveTable, moveTable[1], param_14, param_15,
                                   param_16), moveResult == 0))
         {
@@ -296,7 +296,7 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 obj
              , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
@@ -307,16 +307,16 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     u32 msgId;
     u32 msgData[4];
 
-    state = ((GameObject*)param_9)->extra;
+    state = ((GameObject*)obj)->extra;
     msgSender = 0;
-    while (hasMsg = ObjMsg_Pop(param_9, &msgId, msgData, &msgSender), hasMsg != 0)
+    while (hasMsg = ObjMsg_Pop(obj, &msgId, msgData, &msgSender), hasMsg != 0)
     {
         if (msgId == 0x110001)
         {
             if ((*state == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                    0x110001, param_9, 0, param_13, param_14, param_15, param_16);
+                                    0x110001, obj, 0, param_13, param_14, param_15, param_16);
             }
         }
         else if ((int)msgId < 0x110001)
@@ -331,14 +331,14 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
             if ((*state == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
                 ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                    0x110003, param_9, 0, param_13, param_14, param_15, param_16);
+                                    0x110003, obj, 0, param_13, param_14, param_15, param_16);
             }
         }
         else if ((((int)msgId < 0x110003) && (*state == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
             ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                0x110002, param_9, 0, param_13, param_14, param_15, param_16);
+                                0x110002, obj, 0, param_13, param_14, param_15, param_16);
         }
     }
     for (hasMsg = 0; hasMsg < (int)(u32)animUpdate->eventCount; hasMsg = hasMsg + 1)
@@ -354,33 +354,33 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 
 u32
 FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
+             u64 param_6, u64 param_7, u64 param_8, u32 obj,
              u32 param_10, u32 param_11, u32 param_12, u32 param_13,
              u32 param_14, u32 param_15, u32 param_16)
 {
     int state;
     double clampedSpeed;
 
-    state = *(int*)&((GameObject*)param_9)->extra;
-    if ((((GameObject*)param_9)->anim.currentMove != 5) && (((GameObject*)param_9)->anim.currentMove != 0xd))
+    state = *(int*)&((GameObject*)obj)->extra;
+    if ((((GameObject*)obj)->anim.currentMove != 5) && (((GameObject*)obj)->anim.currentMove != 0xd))
     {
-        FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
                      param_6, param_7,
-                     param_8, param_9, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    if ((((GameObject*)param_9)->anim.currentMove == 5) && (lbl_803E4EC4 < ((GameObject*)param_9)->anim.velocityY))
+    if ((((GameObject*)obj)->anim.currentMove == 5) && (lbl_803E4EC4 < ((GameObject*)obj)->anim.velocityY))
     {
-        FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
                      param_6, param_7,
-                     param_8, param_9, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    if ((((GameObject*)param_9)->anim.currentMove == 0xd) && (((GameObject*)param_9)->anim.velocityY < lbl_803E4EB0))
+    if ((((GameObject*)obj)->anim.currentMove == 0xd) && (((GameObject*)obj)->anim.velocityY < lbl_803E4EB0))
     {
-        FUN_800305f8((double)((GameObject*)param_9)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
                      param_6, param_7,
-                     param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
+                     param_8, obj, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    clampedSpeed = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
+    clampedSpeed = (double)((((GameObject*)obj)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
     if (clampedSpeed < (double)lbl_803E4EB0)
     {
         clampedSpeed = (double)lbl_803E4EB0;
@@ -389,15 +389,15 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         clampedSpeed = (double)lbl_803E4ECC;
     }
-    if (((GameObject*)param_9)->anim.currentMove == 0xd)
+    if (((GameObject*)obj)->anim.currentMove == 0xd)
     {
-        if (((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E4ECC)
+        if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E4ECC)
         {
             *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf;
         }
         else if ((*(u8*)(state + 0x244) >> 6 & 1) == 0)
         {
-            FUN_80006824(param_9, SFXand_spitout);
+            FUN_80006824(obj, SFXand_spitout);
             *(u8*)(state + 0x244) = *(u8*)(state + 0x244) & 0xbf | 0x40;
         }
     }
