@@ -2628,12 +2628,14 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
             if (f26 < c - r) continue;
             if (f27 > c + r) continue;
 
-            n = transformState->activeMatrixIndex;
-            desc->currentCollisionMatrix = transformState->matrices[n + 2];
-            desc->currentMatrix = transformState->matrices[n];
-            n = transformState->activeMatrixIndex ^ 1;
-            desc->alternateCollisionMatrix = transformState->matrices[n + 2];
-            desc->alternateMatrix = transformState->matrices[n];
+            desc->currentCollisionMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2];
+            desc->currentMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex];
+            desc->alternateCollisionMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[(((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2];
+            desc->alternateMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1];
 
             desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
             desc->object = resetObj;
