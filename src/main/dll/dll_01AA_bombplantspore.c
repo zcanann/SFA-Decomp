@@ -352,11 +352,8 @@ void bombplantspore_update(void* obj)
         else
         {
             f32 driftSpeed = state->driftSpeed;
-            state->driftSpeed =
-                lbl_803E53EC *
-                (state->driftSpeedTarget - driftSpeed) *
-                timeDelta +
-                driftSpeed;
+            f32 driftAccel = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+            state->driftSpeed = driftAccel * timeDelta + driftSpeed;
         }
         ((GameObject*)obj)->anim.velocityX =
             state->driftSin * state->driftSpeed +
