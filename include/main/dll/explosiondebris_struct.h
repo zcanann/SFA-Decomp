@@ -16,7 +16,7 @@ typedef struct ExplosionDebris
     s32 spawnTimer;    /* 0x20: counts down by framesThisStep; spawns a sub-flame at <= 0 */
     s32 spawnInterval; /* 0x24: reload value copied into spawnTimer after each spawn */
     s16 spinAngle; /* 0x28: rotation accumulator fed to PSMTXRotRad */
-    u16 spinSpeed; /* 0x2A: per-frame rotation increment */
+    s16 spinSpeed; /* 0x2A: per-frame rotation increment (signed; can be negated) */
     u8 unk2C;
     u8 unk2D;
     u8 alpha;      /* 0x2E: render alpha byte */

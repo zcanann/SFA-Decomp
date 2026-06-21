@@ -13,19 +13,6 @@
  *                            spawn particle fx, fade the light
  *   explosion_init         - seed flames/debris/light from placement flags
  *   explosion_initialise   - precompute the expf falloff scales
- *
- * Matching notes (this TU is fully matched - keep these shapes):
- *  - The pools are walked with raw stride pointers held in `int` locals
- *    (state/slot/p). Retyping them to typed ExplosionState/ExplosionDebris
- *    pointers, or adding/removing casts, re-colours the saved registers across
- *    spawnFlame/render/update/init (recipe #36/#77), so the pointer maths
- *    stays explicit and the record layout lives in the struct headers.
- *  - Pointer fields are null-tested through *(int *)& (cmpwi) per the
- *    game_object.h width discipline (recipe #77).
- *  - Float constants are written as literals where the original
- *    rematerialised them (render) but kept as named .sdata2 externs where
- *    it CSE'd them into f31 across calls (spawnFlame/update/init); swapping
- *    either way grows or shrinks the frame (recipe #71/#6).
  */
 #include "main/dll/explosiondebris_struct.h"
 #include "main/dll/fbtextbl_struct.h"
@@ -141,45 +128,32 @@ typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p
 #pragma opt_propagation off
 void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
 {
-    int slotLife;
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    int state = *(int*)&((GameObject*)obj)->extra;
-    int idx;
-    int off;
-    int slot;
-    char* slots;
-    idx = ((ExplosionState*)state)->flameCount++;
-    off = idx * 0x30;
-    *(f32*)((char*)state + off) = x;
-    slot = state + off;
-    *(f32*)((char*)slot + 0x4) = y;
-    *(f32*)((char*)slot + 0x8) = z;
-    *(f32*)((char*)slot + 0x18) = lbl_803E492C;
-    *(f32*)((char*)slot + 0xc) = *(f32*)((char*)state + 0x18);
-    *(f32*)((char*)slot + 0x1c) = spd;
-    *(u8*)((char*)slot + 0x2d) = gen;
-    *(int*)((char*)slot + 0x10) = 0;
+    s16* placement = ((GameObject*)obj)->anim.placementData;
+    ExplosionState* state = ((GameObject*)obj)->extra;
+    ExplosionDebris* flames = (ExplosionDebris*)state->flames;
+    int idx = state->flameCount++;
+    flames[idx].posX = x;
+    flames[idx].posY = y;
+    flames[idx].posZ = z;
+    flames[idx].unk18 = lbl_803E492C;
+    flames[idx].scale = flames[0].unk18;
+    flames[idx].unk1C = spd;
+    flames[idx].unk2D = gen;
+    flames[idx].age = 0;
+    flames[idx].lifetime = (int)(lbl_803E4930 * sqrtf(spd));
     {
-        int life = (int)(lbl_803E4930 * sqrtf(spd));
-        /* widened offset gives the lifetime base its own value-number (kept in
-           a separate saved reg); the re-derive keeps slot itself in r31. */
-        slotLife = state + (int)(long)off;
-        slot = state + off;
-        *(int*)((char*)slotLife + 0x14) = life;
-    }
-    {
-        int v = *(int*)((char*)slotLife + 0x14);
-        if (v < 0)
+        int life = flames[idx].lifetime;
+        if (life < 0)
         {
-            v = 0;
+            life = 0;
         }
-        else if (v > 0x3c)
+        else if (life > 0x3c)
         {
-            v = 0x3c;
+            life = 0x3c;
         }
-        *(int*)((char*)slotLife + 0x14) = v;
+        flames[idx].lifetime = life;
     }
-    if (*(u8*)((char*)slot + 0x2d) < 1)
+    if (flames[idx].unk2D < 1)
     {
         s8 c = *(s8*)((char*)placement + 0x19);
         if (c != 0)
@@ -213,31 +187,27 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
             }
         }
     }
-    /* group field offset onto base so each slot address re-derives (add state,off) per call */
-    *(s16*)((char*)((char*)state + 0x28) + idx * 0x30) = randomGetRange(0, 0xffff);
-    *(s16*)((char*)((char*)state + 0x2a) + idx * 0x30) = randomGetRange(0xc8, 0x12c);
+    flames[idx].spinAngle = randomGetRange(0, 0xffff);
+    flames[idx].spinSpeed = randomGetRange(0xc8, 0x12c);
     if ((int)randomGetRange(0, 1) != 0)
     {
-        *(s16*)((char*)((char*)state + 0x2a) + idx * 0x30) = -*(s16*)((char*)((char*)state + 0x2a) + idx * 0x30);
+        flames[idx].spinSpeed = -flames[idx].spinSpeed;
     }
-    *(u8*)((char*)((char*)state + 0x2c) + idx * 0x30) = randomGetRange(0, 3);
+    flames[idx].unk2C = randomGetRange(0, 3);
     {
-        f32 sp = *(f32*)((char*)slot + 0x1c);
-        f32 ev = expf((lbl_803E4934 * ((f32)*(int*)((char*)slotLife + 0x14) - (f32)*(int*)((char*)slot + 0x10)))
-                      / (f32)*(int*)((char*)slotLife + 0x14));
-        f32 d = sp - *(f32*)((char*)slot + 0x18);
+        f32 sp = flames[idx].unk1C;
+        f32 ev = expf((lbl_803E4934 * ((f32)flames[idx].lifetime - (f32)flames[idx].age)) / (f32)flames[idx].lifetime);
+        f32 d = sp - flames[idx].unk18;
         f32 t = d * ev;
-        *(f32*)((char*)slot + 0xc) = sp - gExplosionDebrisSpeedScale * t;
-        ev = expf((lbl_803E493C * (f32)*(int*)((char*)slot + 0x10)) / (f32)*(int*)((char*)slotLife + 0x14));
+        flames[idx].scale = sp - gExplosionDebrisSpeedScale * t;
+        ev = expf((lbl_803E493C * (f32)flames[idx].age) / (f32)flames[idx].lifetime);
         t = lbl_803E4938 * ev;
-        slots = (char*)state;
-        *(s8*)(slots + idx * 0x30 + 0x2e) = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
-        *(int*)(slots + idx * 0x30 + 0x20) = lbl_803E4940;
-        *(int*)(slots + idx * 0x30 + 0x24) = *(int*)(slots + idx * 0x30 + 0x20);
-        *(u8*)(slots + idx * 0x30 + 0x2f) = 1;
+        flames[idx].alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
+        flames[idx].spawnTimer = lbl_803E4940;
+        flames[idx].spawnInterval = flames[idx].spawnTimer;
+        flames[idx].active = 1;
     }
 }
-
 #pragma opt_propagation on
 #pragma dont_inline on
 void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out)

@@ -1,19 +1,21 @@
 # SFA-Decomp Matching Playbook (MWCC, GC/2.0 main lib · 1.2.5n audio/MSL)
 
 Lean lever-index for matching MWCC-compiled C to the target binary. Each recipe is the
-actionable trigger→fix; **full detail, examples, negative-maps, and frontier analyses live in
+actionable trigger→fix; **full detail, examples, and worked analyses live in
 `docs/matching_archive.md`** (recipe numbers match). Read that when a one-liner isn't enough.
 
 ## Prime directive: recover plausible C, never asm
 - Goal = plausible original source. **Inline `asm { }` is forbidden — no exceptions** (even
   previously-sanctioned recipes are revoked; the owner reverts them). An 80-99% match from clean
   C beats a 100% asm match.
-- A residual that won't yield: **commit the partial, document the target-vs-yours asm shape, keep
-  it on the retry list.** Every fn is attemptable; "stuck today" ≠ "impossible." New C recipes
-  land here as discovered; a documented partial is the seed for the next one.
-- **FRESH-EYES PROTOCOL:** re-attack banked residuals WITHOUT reading the prior negative map —
-  derive the lever from target asm as if the fn were new. Most "#108/#82 coloring caps" are
-  MISLABELS; many fell to fresh eyes (struct fixes, dropped args, arg-eval order, widths).
+- A residual that's still in progress: **commit the partial, document the target-vs-yours asm
+  shape, keep it on the active list.** Every fn is matchable — "not yet" just means the lever is
+  still out there waiting. New C recipes land here as discovered; a documented partial is the seed
+  for the next breakthrough.
+- **FRESH-EYES PROTOCOL:** re-attack open residuals WITHOUT reading the prior notes — derive the
+  lever from target asm as if the fn were new. Most "#108/#82 coloring caps" are MISLABELS; they
+  keep falling to fresh eyes (struct fixes, dropped args, arg-eval order, widths). Assume a clean
+  source form exists and go find it.
 
 ## Method (do this every time)
 - **Read the WHOLE target fn before diffing.** Diffs show WHERE, not WHY, and bias you to a false
@@ -27,18 +29,18 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
   (`md5sum` the .o) any pragma change. `reset` POPS a stack (restores surrounding state, not
   default) — model nested regions as a stack and emit each fn's *effective* state.
 - **A config that DROPS the headline % but introduces a needed STRUCTURAL feature (extra saved
-  reg, surviving `mr`/`fmr` copy, an un-coalesced web) is worth a FULL per-region diff before
-  rejecting — don't bail on the number alone.** Reject ONLY when the residual is provably
-  config-INHERENT and not merely larger. Worked example: fn_801B3DE4 (dimexplosion) — `#pragma
-  optimization_level 1` yields the target's 6th saved reg + the `mr r29,r31` base copy that O4
-  value-numbering folds away, but at +34 O1-inherent instrs (per-conversion `lis 17200`, expf
-  coloring). For a long time this read as a config-inherent trade-down → "bank it." **That verdict
-  was WRONG: the `mr` copy was reachable at O4 from a SOURCE lever (#131 — a no-op `|=` defeats the
-  front-end same-value merge), and the fn is now 100%.** Lesson: a pragma that surfaces a needed
-  structural feature only tells you the feature is REACHABLE — keep hunting a source form that
-  produces it WITHOUT the pragma's collateral cost; "config-inherent residual" is a hypothesis,
-  not a verdict. Contrast: O1/O2 creation-order alloc (#108) and O1≈O4 small-loop fns (#110) ARE
-  genuine climbs — measure, don't assume.
+  reg, surviving `mr`/`fmr` copy, an un-coalesced web) is GOOD NEWS — it proves the feature is
+  REACHABLE. Do a FULL per-region diff before moving on; never judge on the number alone.** Worked
+  example: fn_801B3DE4 (dimexplosion) — `#pragma optimization_level 1` revealed the target's 6th
+  saved reg + the `mr r29,r31` base copy that O4 value-numbering folds away, at the cost of +34
+  O1-inherent instrs. For a long time that read as a config-inherent trade-down. **That read was
+  WRONG twice over: the `mr` was reachable at O4 first from a SOURCE lever (#131), and then — the
+  real win — from ordinary typed array indexing (#135: `flames[idx].field`), which produces the
+  whole allocation for free as clean 2002 C. The fn is 100% with no tricks.** Lesson: a pragma that
+  surfaces a needed structural feature is a green light — it tells you a clean source form exists,
+  so keep hunting the form that produces it WITHOUT the pragma's collateral cost. "Config-inherent
+  residual" is a hypothesis to disprove, not a verdict. Contrast: O1/O2 creation-order alloc (#108)
+  and O1≈O4 small-loop fns (#110) ARE genuine climbs — measure, don't assume.
 
 ## High-impact one-liners (try first at 80-95%)
 1. **`#pragma peephole off` + `scheduling off`** (matched with `reset`) around the fn — unfuses
@@ -147,11 +149,13 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 45. **Loop-invariant single-deref into a saved-reg local** for FP constants target keeps across
     loop calls; decl order sets which const → f31/f30/f29 (first = f31).
 46. **Re-derive struct field offsets from target asm, not the import skeleton** (v1.0 vs v1.1
-    layout shifts). Treat stuck 60-95% partials as offset-bug suspicion before allocator-cap.
+    layout shifts). Suspect a 60-95% partial of an offset bug before anything else — it's the
+    usual culprit and a quick, satisfying win.
 47. **sda21 direction:** sized-array extern for a small `.sdata` symbol → `@sda21`; for >8B objects
     use scalar `extern T sym;` + `(&sym)[i]`. Force the far form with incomplete `extern u8 lbl[];`.
-48. *(OPEN)* WCTileIface vtbl dispatch-hoist — `lwz r12; mtctr; bctrl` hoists to statement front;
-    no clean-C form found yet. Commit the partial.
+48. *(IN PROGRESS)* WCTileIface vtbl dispatch-hoist — `lwz r12; mtctr; bctrl` hoists to statement
+    front; the clean-C form is still out there. Commit the partial and come back fresh — these keep
+    falling once the right shape clicks.
 49. **Switch with case-FALLTHROUGH** (`case 0: case 1: case 2: { body; break; }`) for sequential
     shared-body dispatch.
 50. **Nested `outer(inner(x), y)`** keeps r3 live across calls (vs a spilled local).
@@ -181,7 +185,7 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     REASSIGN THE PARAM (not a new local) so the variable relocates to the copy reg.
 61b. **Late-used scratch local declared FIRST** re-ranks param/early-local saved coloring up.
     Full-reverse-split (decl order reversed + inits separated) is the strongest battery member;
-    third-web edition: move an UNRELATED short local's decl to flip a stuck pair.
+    third-web edition: move an UNRELATED short local's decl to flip a stubborn pair (it will flip).
 61c. *(mostly →#107)* 2-var chained-deref/copy pairs — un-name the value target keeps lower (#107),
     or chained init `p = base = lbl;` for same-init copy pairs.
 62. **`(int)`-cast the store base** to defeat address-CSE with a later `(u8*)p+off` call arg
@@ -245,21 +249,22 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     re-derive → `#pragma opt_loop_invariants off`, or split an `int buf[N]`+`&buf[K]` into scalars.
 81. **`*(f32 *)&lbl` launder on ONE of a clamp constant's two references** flips the reload/limit FP
     register pair (the fcmpo-on-RELOADED-value case). Discriminator: target reloads the field
-    before fcmpo → this; consumes the arithmetic result → temp_t form. Reliable on STORE-clamps with
-    a clean same-register swap; resists named-embed/no-store/computed-limit/whole-register-shift.
-    Tool: `fcmpo_swap_audit.py`.
+    before fcmpo → this; consumes the arithmetic result → temp_t form. Cleanest on STORE-clamps with
+    a same-register swap; for named-embed/no-store/computed-limit/whole-register-shift variants reach
+    for a different lever (those are their own puzzles, each with a tell). Tool: `fcmpo_swap_audit.py`.
 82. **FP volatile reg-permutation DECOMPOSES — classify by web kind:** symbol-CSE web → #81
     launder; two named f32 locals → decl-order swap; expression-temp pairs (conversion biases,
-    fctiwz, stack reads) = the open sub-class (class-move via embedded-def or ternary-join; block→
-    fn-scope promotion of the OTHER arm locals). Probe first — some reproduce standalone. Census the
-    shape across `build/GSAE01/obj` before banking a singleton as retail-anomaly.
+    fctiwz, stack reads) = the most interesting sub-class (class-move via embedded-def or ternary-
+    join; block→fn-scope promotion of the OTHER arm locals). Probe first — many reproduce standalone.
+    Census the shape across `build/GSAE01/obj`; a singleton almost always has a sibling that reveals
+    the lever, so keep looking before treating it as a one-off.
 83. **Conversion-temp pool flushes at a STATEMENT JOIN with a live-var redef or memory store** (not
     a ternary assign). "fresh-ascending slots between if-clamps" → the clamps were ternary
     ASSIGNMENTS; or the two-op wrap-clamp `d = (d - 0x10000) + 1;` keeps bump mode. Co-located wins
     matter more than the frame: (a) fresh-reload launder `*(int*)((u8*)p+K)` (local/param bases
     only; global bases VN through); (b) f32-temp split for eval order; (c) direct `*(s16*)p =
     (fexpr)` (no `(int)` cast) drops the extsh.
-84. **The "const-hoist-above-addr-arg" cap is largely #29** — the callee's REAL arg order puts the
+84. **What looks like a "const-hoist-above-addr-arg" snag is usually just #29** — the callee's REAL arg order puts the
     obj/pointer FIRST. Cross-caller arbitrate (majority decl wins); cast at the CALL SITE only,
     never flip the definition. Expression-operand hoist → embedded `x / (sc = lbl)`; call-arg hoist
     is open. ⚠️ Embedded-assign in a call arg whose value is REUSED by later args MISCOMPILES.
@@ -332,8 +337,9 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     variable recycle (#119), and #131 (no-op `|=` to force a surviving same-value copy + own web —
     the source for an "un-coalesced web" the allocator otherwise folds). WITHIN-class order is the
     smallest residual (rotmap first; the transposition penalty drowns real structural fixes — fix
-    those first). "Source-levers exhausted / bank-and-retry" has been WRONG repeatedly (#130, #131):
-    treat it as not-yet-found, not impossible. Cross-class interleave is perturbed fn-globally by a
+    those first). The old "no source levers left, set it aside" reflex has been WRONG every time it
+    came up (#130, #131, #135): treat a residual as not-yet-found, and keep going — there's a lever.
+    Cross-class interleave is perturbed fn-globally by a
     magic-const division / conversions (dose effect).
 109. **s64/fixed-point cracks:** (a) `x <<= (n & 0xFFFFFFFF)` materializes the shift-count mask; (b)
     count-down `for(i=N;i!=0;i--)` for the RMW-halving unroll (fixed regs + per-copy `mr`); (c) two-
@@ -353,8 +359,8 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     (u16)i)) << 2)`). Apply embedded defs BEFORE an (int)-base launder (order-dependent).
 112. **K-grouping picks the displacement isel:** `p = base + K; *(p + idx)` = `add base,idx; lbz
     K(rT)` (base first); `base + (idx + K)` = idx first; flat `base+idx+K` = `addi idx,K; lbzx`
-    (fold-onto-index). Named `p` needs MULTI-use (single-use re-folds); symbol-array bases resist
-    aliases (direct `tbl[i*4+K]`). Wide deref re-folds to lwzx — `(u8*)` launder the grouped base.
+    (fold-onto-index). Named `p` needs MULTI-use (single-use re-folds); for symbol-array bases skip
+    the alias and use the direct form `tbl[i*4+K]`. Wide deref re-folds to lwzx — `(u8*)` launder the grouped base.
     **Field-load `(T*)(base+idx)->field` (field at const K) → `add base,idx; lbz K` via grouping the
     FIELD CONSTANT onto base: `u8 *p = base + K; flags = p[idx];`** — single-use `p` is fine here (the
     constant grouping pins it; only `p = base+idx` single-use re-folds to lbzx). Both `(T*)(base+idx)
@@ -368,8 +374,8 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     shift's VN key. Runtime values only (constants fold); global re-reads still need `volatile`.
 115. **Callee-decl PARAM WIDTHS shift the caller's WEB CREATION ORDER at zero cost** (a narrowing
     cast into a matching-width param is absorbed; into an int param it makes a persistent node).
-    The first source-side lever on the #108 within-class scramble. Requires call-arg conversion
-    sites (call-free leaves out of reach). Diagnose by extracting to a /tmp TU.
+    The first source-side lever on the #108 within-class scramble. Needs call-arg conversion sites;
+    for call-free fns pick another lever (#108 has plenty). Diagnose by extracting to a /tmp TU.
 116. **Embedded-assign in the STORE ADDRESS `*(p = &arr[K]) = value;`** reproduces value-before-
     address emission under scheduling-off.
 117. **Embedded-def ternary `t = (x < (t = lo)) ? t : ((x > (t = hi)) ? t : x)`** lands clamp bounds
@@ -420,26 +426,27 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     floats the cold island out of line) and #107 for-GPR (un-name a loop-invariant member —
     `obj->field` inline at each use CSEs to one load but colors LOWER than a named local, fixing a
     volatile r4/r5/r6 carrier rotation). (DIMSnowHorn1_stateHandler0A 95.6→100.)
-130. **WEB-DECOUPLING cracks "#108 byte-identical-except-one-register" caps.** When a value
+130. **WEB-DECOUPLING carries "#108 byte-identical-except-one-register" matches the last step to 100%.** When a value
     assigned from a NAMED local/temp lands in the wrong saved/volatile reg, RE-DERIVE it from a
     fresh MEMORY DEREF instead of the temp: `match = other;` (loop temp) → `match = (int*)*list;`
     (fresh deref of the walked pointer). This decouples the value's live-range/web from the temp,
     changes the interference graph, and flips the allocator's reg choice with ZERO other instruction
     change — reuses a different just-freed reg. CONVERSE (un-name a temp by inlining its defining
-    EXPRESSION at each use, #107) also flips it. ONLY works for re-derivable values (memory derefs,
-    `obj->field`); does NOT work for CALL RESULTS (can't re-call). VN-equal pointer copies were
-    thought to fold back here too — #131's no-op `|=` cracks THOSE (forces a surviving copy + own
-    web). Also #115-adjacent: renaming ONE loop's counter to a distinct var removes a cross-loop
-    coalescing barrier. Brute-force MANY spellings and grep the affected reg each build — this
-    cracked dim2roofrub_update (byte-identical-except-r29/r31, declared an uncrackable cap by 5
-    prior agents → 100%) and the int-permutation half of dimwooddoor (pitchSign from fresh
-    modelVec[1] read). The "#108 within-class scramble is the genuine open frontier / no source
-    lever" assertion is FALSE for deref-sourced values — second-guess it. **Now also FALSE for
-    VN-equal pointer copies — see #131 (the no-op-bitwise merge-defeat). The "open frontier" is
-    much smaller than it looks; assume a source lever exists and hunt the asm.**
+    EXPRESSION at each use, #107) also flips it. Works for re-derivable values (memory derefs,
+    `obj->field`); for CALL RESULTS reach for a different lever instead (you can't re-call) — #131
+    and especially #135 cover those. VN-equal pointer copies yield here too — #131's no-op `|=` or,
+    cleaner, #135's typed array index forces a surviving copy + own web. Also #115-adjacent: renaming
+    ONE loop's counter to a distinct var removes a cross-loop coalescing barrier. Brute-force MANY
+    spellings and grep the affected reg each build — this won dim2roofrub_update (byte-identical-
+    except-r29/r31, which five prior agents thought was as good as it gets → 100%) and the
+    int-permutation half of dimwooddoor (pitchSign from fresh modelVec[1] read). The old "#108
+    within-class scramble has no source lever" worry keeps proving FALSE — for deref-sourced values,
+    for VN-equal pointer copies (#131), and most decisively for the whole pattern once you index the
+    struct as an array (#135). **There's nearly always a clean source lever; assume one exists and
+    hunt the asm — you'll find it.**
 131. **The front-end SAME-VALUE MERGE is breakable: a no-op bitwise op forces a surviving `mr`
-    copy + a SEPARATE web (the clean-C source for "two overlapping same-value saved regs joined by
-    a copy" — what #108/#130 called the open frontier).** Two identical `state+off` (one base for
+    copy + a SEPARATE web (a clean-C source for "two overlapping same-value saved regs joined by a
+    copy" — and #135 later found an even cleaner one).** Two identical `state+off` (one base for
     most fields, a second for ONE field) get value-numbered into ONE web by the FRONT-END *before
     any optimizer pass* — proven by ret-patching IroCSE/IroPropagate/IroRangeProp/AddProp/VN, all
     survive; every `opt_*`/pragma/opt-level/compiler-version (1.0–3.0a5) folds it; a plain second
@@ -457,23 +464,22 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     3-byte gap. METHOD: this fell ONLY after switching from fail-fast-on-fuzzy% to a structural-
     distance metric (count real instr/reg diffs vs target asm, ignore @NNN-reloc names + subi/addi
     display) — a 96% variant was structurally CLOSER than the 98% baseline; the % hid the path.
-    Read the emitted asm per variant. (fn_801B3DE4/dimexplosion: flagged impossible/"open frontier"
-    across ~15 sessions → 100%.)
+    Read the emitted asm per variant. (fn_801B3DE4/dimexplosion: wrestled with across ~15 sessions
+    → matched 100%, and then matched AGAIN even more cleanly with plain typed C, #135.)
 132. **A CONDITIONAL POINTER REASSIGNMENT (phi/multi-def) is a SECOND, non-bitwise way to force the
-    surviving 2nd same-value saved reg + `mr` (#130/#131's "open frontier").** Reassign the pointer
+    surviving 2nd same-value saved reg + `mr` (the same pattern #130/#131 handle).** Reassign the pointer
     in branches that already exist — e.g. the clamp arms: `if (v<0){v=0; p2=state+off;} else if
     (v>0x3c){v=0x3c; p2=state+off;}` with `p2` first-defined as a COPY of the field pointer. The
     multi-def web can't coalesce with the single-def field pointer → emits the extra saved reg + the
     `mr`. Reproduces the EXACT instruction MULTISET (proven on fn_801B3DE4: 181/181 identical). The
     web-SEPARATION needs a KIND MISMATCH across the defs: copy first-def + recompute arms (or vice
     versa) stays separate; all-copy or all-recompute (same value) COALESCES back (#108 same-class).
-    LIMIT: a phi inherently SPLITS the value at the merge — pre-merge uses bind def0's register,
-    post-merge uses bind the phi register. So if the target uses ONE 2nd reg for ALL of a field's
-    accesses (a "single lazy copy", e.g. unclamped-store + reload + clamp-store + later reads all
-    via r29), the pre-merge accesses land in the WRONG reg → a 2-instr residual (~99.9%, base-reg-
-    only mismatch). For that exact shape #131's OR is still the only 100% (it makes ONE non-coalesced
-    web used by every access); the phi is the lever when the 2nd reg is used in a post-branch region
-    only. Census the field's accesses vs the branch BEFORE choosing phi-vs-OR.
+    SCOPE: a phi SPLITS the value at the merge — pre-merge uses bind def0's register, post-merge
+    uses bind the phi register. So when the target uses ONE 2nd reg for ALL of a field's accesses
+    (a "single lazy copy", e.g. unclamped-store + reload + clamp-store + later reads all via r29),
+    reach for the form that gives ONE non-coalesced web used by every access — cleanest is #135's
+    typed array index (plain C, 0 diff), or #131's OR. The phi shines when the 2nd reg is used in a
+    post-branch region only. Census the field's accesses vs the branch and pick the matching lever.
 133. **COPY-vs-COMPUTATION placement controls WHERE a same-value `mr`/`add` lands.** A plain pointer
     COPY (`p2 = p`) is COALESCER-placed → EAGER (emitted right after the source operand's def, e.g.
     at `add r31` slot-creation, 0x40) regardless of its source-line position. A COMPUTATION
@@ -484,7 +490,8 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     CSE'd field reg) then feeds the pre-merge accesses (the #132 split). Embedding a COPY instead
     (`(p2 = p)`) still HOISTS (copies don't respect the embed). The recompute folds to a `mr` (CSE to
     the field reg) or a fresh `add` (no CSE, own reg) depending on whether the field value is already
-    live — `(int)(long)x` / char* launders to break CSE FAILED here (re-CSE'd or rejected by GC/2.0).
+    live — `(int)(long)x` / char* launders to break CSE didn't apply in THIS embed spot (re-CSE'd or
+    rejected by GC/2.0); save them for #134's standalone-split spot, where the cast shines.
     Diagnostic: build each variant, grep the `mr`/`add` ADDRESS + which reg the field's stores use;
     a structural-distance (instr-multiset + per-access reg) read beats fuzzy% (a 99.94% E2 and a
     98.9% E1 were both 1-displacement off — same multiset, different `mr` slot). (fn_801B3DE4: phi
@@ -508,6 +515,27 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     the only way" → plausible-C 100%. The "OR is mathematically unique" proof was WRONG: it only
     covers NODE-level splits; an OPERAND-level conversion-node split is a second family — but it
     permutes the saved regs, so always pair it with a creation-order fix.)
+135. **The "2nd saved reg for one field" puzzle (#131/#132/#134) is usually NOT a trick — it is
+    what TYPED PER-STATEMENT ARRAY INDEXING produces for free.** When retail holds a struct base in
+    TWO saved regs (one for the setup stores, one for a field read back across calls), the PLAUSIBLE
+    source is `T *arr = (T*)base; arr[idx].field = ...` with the index RE-SPELLED every statement —
+    NOT a cached `T *p = &arr[idx]`. MWCC then (a) CSEs the consecutive setup stores onto one saved
+    reg, (b) RE-DERIVES `base + idx*size` across each intervening call (the #112 "add state,off" the
+    raw drafts forged by hand), and (c) keeps a cross-call-read field (e.g. a clamped lifetime reused
+    in a later decay expr) in its OWN saved reg — emitting the `mr` with ZERO source tricks. This
+    RETIRED the OR (#131)/phi (#132)/conv-cast (#134) on fn_801B3DE4: the body is clean
+    `flames[idx].posX = x; ... flames[idx].lifetime = ...` typed C, 0 instr diff. Co-levers: (a)
+    struct field WIDTHS must match the access — import said `u16 spinSpeed` but retail uses
+    `extsh`/`lha` ⇒ it's `s16` (the sibling render already cast `*(s16*)&...->spinSpeed`, the tell);
+    (b) clamp a RELOADED local (`int v = arr[idx].life; clamp v; arr[idx].life = v;`) NOT the field
+    in place (in-place re-reads/re-stores add an instr); (c) per-fn `scheduling/peephole/
+    opt_propagation off` still load-bearing (optimizer-state, not source). METHOD/LESSON: the TU
+    header note CLAIMED "typed pointers re-colour, keep raw `int` strides" — that was a LOCAL MINIMUM
+    that MASKED the natural typed form matching outright. **Distrust "keep it raw / keep these
+    shapes" notes; A/B the typed struct-array form FIRST, before any coloring trick.** (~17 sessions
+    of escalating OR/cast hacks dissolved into ordinary 2002 C once the struct was indexed as an
+    array. A blind multiset-diff + per-fix re-test converged it in ~6 builds: spinSpeed s16 → 99.1,
+    clamp-to-local → 100.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
@@ -533,8 +561,9 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 ## Drift handling (Ghidra `FUN_xxx` don't match v1.0)
 Don't fix `FUN_xxx` — add the asm symbol as a NEW correctly-named/signed function (linker matches by
 name; the FUN_ floats harmlessly). `tools/drift_audit.py <unit>` + `tools/realign_skeleton.py`. A
-stuck 60-95% partial is OFTEN a CORRECTNESS bug (a return/store wrongly nested in an `if`, an over-
-simplified switch arm, inverted branch sense) — diff target's control flow before assuming a cap.
+60-95% partial is OFTEN just a CORRECTNESS bug (a return/store wrongly nested in an `if`, an over-
+simplified switch arm, inverted branch sense) — that's great news, it's fixable: diff target's
+control flow first, and the rest usually falls into place.
 A tiny "4b" header can mask a big recoverable drift-stub body — check `.s` body sizes, not report
 sizes.
 
@@ -560,8 +589,8 @@ s64/fixed-point math (`__shl2i`/`__shr2u`, `addc`/`adde`, unrolled rounding loop
 100% objdiff is NOT flip-sufficient. Verify: (1) symbol layout (`objdump -t` offsets = symbols.txt
 deltas; source fn order = address order); (2) pool claim (`objdump -h`; claim the TU's retail pool
 range in splits.txt, .o pool bytes = retail's); (3) post-flip DEFAULT-target build + dol byte-
-compare + md5. A local @NNN conversion-bias .sdata2 with no retail TU pool = flip held (banks the
-100% anyway). Status edits are the team-lead's.
+compare + md5. A local @NNN conversion-bias .sdata2 with no retail TU pool = flip held (the 100%
+is yours to keep). Status edits are the team-lead's.
 
 ## Tooling
 - `function_objdump.py <unit> <symbol>` — FULL target asm. Run FIRST (before any diff).
