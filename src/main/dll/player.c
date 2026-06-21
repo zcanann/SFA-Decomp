@@ -1784,7 +1784,7 @@ int fn_802A5384(int obj, int state)
         {
             ((PlayerState*)inner)->pendingFxFlags |= 8;
             ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 1;
-            ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A7;
+            ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->altAnimSoundId;
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x1000000LL;
             ((PlayerState*)inner)->unk844 = ((PlayerState*)state)->baddie.animSpeedA;
             ObjAnim_SetCurrentMove(obj,
@@ -2056,11 +2056,11 @@ int fn_802A5384(int obj, int state)
                 u8 c;
                 if (((PlayerState*)inner)->gaitStepLevel > 3)
                 {
-                    c = ((PlayerState*)inner)->unk8A4;
+                    c = ((PlayerState*)inner)->runAnimSoundId;
                 }
                 else
                 {
-                    c = ((PlayerState*)inner)->unk8A3;
+                    c = ((PlayerState*)inner)->walkAnimSoundId;
                 }
                 ((PlayerState*)inner)->animSoundId = c;
             }
@@ -7922,7 +7922,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState*)inner)->targetYawRate = 0;
         ((PlayerState *)inner)->yawRateSigned = 0;
         ((PlayerState*)inner)->yawRate = 0;
-        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A3;
+        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->walkAnimSoundId;
         ((PlayerState*)inner)->gaitStepLevel = 0;
         ((PlayerState*)state)->baddie.velSmoothTime = lbl_803E8018;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8084;
@@ -12603,11 +12603,11 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->unk830 = lbl_803E8144;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 1;
     ((PlayerState*)inner)->unk880 = lbl_803E7FA4;
-    ((PlayerState*)inner)->unk8A3 = 3;
-    ((PlayerState*)inner)->unk8A4 = 4;
+    ((PlayerState*)inner)->walkAnimSoundId = 3;
+    ((PlayerState*)inner)->runAnimSoundId = 4;
     ((PlayerState*)inner)->footstepSoundId = 5;
-    ((PlayerState*)inner)->unk8A7 = 6;
-    ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A3;
+    ((PlayerState*)inner)->altAnimSoundId = 6;
+    ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->walkAnimSoundId;
     ((PlayerState*)inner)->unk8BF = 0;
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 0x42, 1);
     *(int*)((char*)inner + 0x27c) = inner + 0x6f0;
@@ -12791,7 +12791,7 @@ int fn_802AE480(int obj, int inner, int state)
     {
         ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 1;
         ((ByteFlags*)((char*)inner + 0x3f0))->b80 = 0;
-        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->unk8A7;
+        ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->altAnimSoundId;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8070;
         ObjAnim_SetCurrentMove(obj, *(s16*)((char*)((PlayerState*)inner)->moveAnimTable + 0x3a),
                                lbl_803E7EA4, 0);
