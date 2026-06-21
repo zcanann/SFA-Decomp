@@ -112,9 +112,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     f32 dir[3];
     f32 hitDir[3];
     f32 endPos[3];
-    int startGrid[2];
-    int endGrid[2];
-    int hitGrid[2];
+    int startGrid[3];
+    int endGrid[3];
+    int hitGrid[3];
     f32 mag;
     f32 horizDist;
 
