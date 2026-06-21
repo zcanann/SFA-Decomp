@@ -802,8 +802,8 @@ void arwarwing_updateRollAndEngine(int obj, int state)
                                             : ((ArwingState*)state)->rollEnergy;
 
     {
-        f32 zero = lbl_803E6ECC;
-        if (((ArwingState*)state)->rollEnergy <= zero)
+        f32 zero;
+        if (((ArwingState*)state)->rollEnergy <= (zero = lbl_803E6ECC))
         {
             ((ArwingState*)state)->flags477 &= ~0x6;
             ((ArwingState*)state)->rollCooldown = ((ArwingState*)state)->rollCooldownInit;
