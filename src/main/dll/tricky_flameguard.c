@@ -216,19 +216,14 @@ void trickyFlame(int p1, int p2)
                 delta = (s16)(delta + 0xFFFF);
             }
             absDelta = delta;
-            if (absDelta >= 0)
-            {
-            }
-            else
-            {
-                absDelta = -absDelta;
-            }
+            absDelta = (absDelta >= 0) ? absDelta : -absDelta;
             if (absDelta >= 0x4000)
             {
                 srcAng = (s16)(srcAng + 0x8000);
             }
             trickyTurnTowardYaw(p1, srcAng);
         }
+        dieFlag = 1;
         if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
             if ((((TrickyRuntime*)p2)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
@@ -249,14 +244,12 @@ void trickyFlame(int p1, int p2)
                     Sfx_PlayFromObject(p1, 0x3db);
                     Sfx_AddLoopedObjectSound(p1, 0x3dc);
                 }
-                dieFlag = 1;
             }
             else
             {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
                 if (cb != NULL && cb((int)((TrickyRuntime*)p2)->homeObj, 1) == 0)
                 {
-                    dieFlag = 1;
                 }
                 else if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E2504)
                 {
@@ -281,15 +274,7 @@ void trickyFlame(int p1, int p2)
                     }
                     dieFlag = 0;
                 }
-                else
-                {
-                    dieFlag = 1;
-                }
             }
-        }
-        else
-        {
-            dieFlag = 1;
         }
         if (dieFlag == 0)
         {
@@ -330,6 +315,7 @@ void trickyFlame(int p1, int p2)
         break;
     case 6:
         trickyDebugPrint(strBase + 0x778);
+        dieFlag = 1;
         if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
             if ((((TrickyRuntime*)p2)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
@@ -350,14 +336,12 @@ void trickyFlame(int p1, int p2)
                     Sfx_PlayFromObject(p1, 0x3db);
                     Sfx_AddLoopedObjectSound(p1, 0x3dc);
                 }
-                dieFlag = 1;
             }
             else
             {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
                 if (cb != NULL && cb((int)((TrickyRuntime*)p2)->homeObj, 1) == 0)
                 {
-                    dieFlag = 1;
                 }
                 else if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E2504)
                 {
@@ -382,15 +366,7 @@ void trickyFlame(int p1, int p2)
                     }
                     dieFlag = 0;
                 }
-                else
-                {
-                    dieFlag = 1;
-                }
             }
-        }
-        else
-        {
-            dieFlag = 1;
         }
         if (dieFlag == 0)
         {
