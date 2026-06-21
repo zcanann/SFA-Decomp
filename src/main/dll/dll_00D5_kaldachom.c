@@ -406,7 +406,7 @@ void kaldachom_update(int obj)
         if ((((CampfireState*)state)->unk270 != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
-            (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
+            (*(void (**)(int, int, int, int, int, int, int, double))(*(int*)gBaddieControlInterface + 0x58))(obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);
             ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject(obj, SFXkr_pullup1);
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
@@ -440,7 +440,7 @@ void kaldachom_update(int obj)
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (*(void (**)(double, int, int, int))(*(int*)gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
+                    (*(void (**)(int, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta, 5);
                 }
                 ref = (int)(*(void* (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x48))
                     ((f64)(f32)(u32)((CampfireState*)state)->aggroRange, obj, state, 0x8000);
@@ -468,7 +468,7 @@ void kaldachom_update(int obj)
                 (*(void (**)(double, int, int, int))(*(int*)gBaddieControlInterface + 0x2c))((double)lbl_803E3060, obj, state, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (*(void (**)(double, int, int, int))(*(int*)gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
+                    (*(void (**)(int, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta, 5);
                 }
                 ((GroundBaddieState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
                 *(u32*)&((GameObject*)obj)->pendingParentObj = 0;
