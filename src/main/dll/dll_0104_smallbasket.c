@@ -172,8 +172,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     {
         return 0;
     }
-    vel = gSmallBasketHitVelocity;
-    if (vel[1] < lbl_803E393C)
+    if (gSmallBasketHitVelocity[1] < lbl_803E393C)
     {
         slowMo = 1;
     }
@@ -218,6 +217,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         mode = data[0x1e];
     }
 
+    vel = gSmallBasketHitVelocity;
     switch ((s16)mode)
     {
     case 1:
