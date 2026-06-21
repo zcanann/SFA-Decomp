@@ -406,7 +406,7 @@ void kaldachom_update(int obj)
         if ((((CampfireState*)state)->unk270 != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
-            (*(void (**)(double, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
+            (*(void (**)(int, int, int, int, int, int, int, double))(*(int*)gBaddieControlInterface + 0x58))(obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);
             ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject(obj, SFXkr_pullup1);
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
