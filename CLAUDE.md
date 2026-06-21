@@ -337,6 +337,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     lower); chained load → spell the member expression at each use (CSE keeps one load, value
     becomes an expression temp). Narrow-typed locals jump the queue — retype to `int` (keep the
     cast). FP clamps: un-name only when target holds the value in f0 (directional, per-clamp).
+    **FP `d = a - b` then RANGE-CHECK (`if (d > hi || d < lo)`) with INLINE-deref operands (`d =
+    obj->fieldA - obj->fieldB`): un-name `d` — inline the subtraction at EACH compare.** The named
+    `d` colors HIGH (f3, operands grab f1/f2); inlined, MWCC CSEs to ONE fsubs but `d` becomes an
+    expression temp that colors f1 while the operands take f2/f3 — exactly the target's FP regs, 0
+    instr change. (fn_8010AEA8 99.41→100, CameraModeViewfinder_init 99.87→100 — both `objState->
+    rotXStart - rotXEnd` style diffs.) DISCRIMINATOR: works when the OPERANDS are inline field
+    reads; if the operands are themselves NAMED locals (`d = start - end` with `start`/`end` copied
+    first), the named `d` form is ALREADY correct — un-naming REGRESSES it (firstPersonEnter stayed
+    100 named, broke un-named). So: inline-operand subtraction → un-name the result; named-operand
+    subtraction → leave the result named.
 108. **Saved-reg assignment is CLASS-POOLED, not weight-ranked.** Single-def copies → top
     (last-created → r31); multi-def/phi → descend in creation order; params → bottom; all-const
     flags → very bottom. Use-count/first-use/loop-depth are INERT within a class. CLASS-MOVERS
