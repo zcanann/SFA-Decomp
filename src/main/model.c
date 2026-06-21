@@ -1671,8 +1671,8 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* p2, u8* hdr)
 
     if (((ModelFileHeader*)hdr)->flags & 0x40)
     {
-        b1 = *(u8**)(p2 + *(u16*)(p2 + 0x44) * 4 + 0x1c);
-        b2 = *(u8**)(p2 + *(u16*)(p2 + 0x46) * 4 + 0x1c);
+        b1 = *(u8**)((u8*)(p2 + 0x1c) + *(u16*)(p2 + 0x44) * 4);
+        b2 = *(u8**)((u8*)(p2 + 0x1c) + *(u16*)(p2 + 0x46) * 4);
     }
     else
     {
