@@ -561,7 +561,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     }
 
     ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
-    ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
+    {
+        f64 tmp = (double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C);
+        ty = (s32)(tmp * lbl_803E2088);
+    }
     fn_80127F24(ty);
     if (lbl_803DD7C4 != 0)
     {
@@ -592,7 +595,10 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         hintCount = (u8)((u16)getNextTaskHintText() * 0x64 / 0xbb);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
-        ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
+        {
+            f64 tmp = (double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C);
+            ty = (s32)(tmp * lbl_803E2088);
+        }
         fn_80128120(arg1, ty);
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
