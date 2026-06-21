@@ -2901,10 +2901,9 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                 {
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
-                    int i12 = (int)*(u16*)(a + 0xa) * im * 2;
-                    u8 *ad = a + i6 + i4 + i5 + i12;
-                    u8 *bd = b + i6 + i4 + i5 + i12;
-                    u8 *cd = c + i6 + i4 + i5 + i12;
+                    u8 *ad = a + i6 + i4 + i5 + (int)*(u16*)(a + 0xa) * im * 2;
+                    u8 *bd = b + i6 + i4 + i5 + (int)*(u16*)(a + 0xa) * im * 2;
+                    u8 *cd = c + i6 + i4 + i5 + (int)*(u16*)(a + 0xa) * im * 2;
                     texA = *(u16*)(ad + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
                     texB = *(u16*)(bd + 0x60);
@@ -2931,8 +2930,8 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     int i9 = (j & 3) * 2;
                     int i12 = (j >> 2) * 0x40;
                     int i6 = (int)*(u16*)(a + 0xa) * i5 * 2;
-                    u8* ad = a + i9 + i12 + i4 + i6;
-                    u8* bd = b + i9 + i12 + i4 + i6;
+                    u8* ad = a + i9 + i12 + i4 + (int)*(u16*)(a + 0xa) * i5 * 2;
+                    u8* bd = b + i9 + i12 + i4 + (int)*(u16*)(a + 0xa) * i5 * 2;
                     u8* cd;
                     u8 aLo, bLo, aHi, bHi;
                     aLo = *(u16*)(ad + 0x60);
