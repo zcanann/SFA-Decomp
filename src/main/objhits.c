@@ -1097,6 +1097,7 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     float blo;
     float bhi;
     float cc;
+    float sb0;
     float disc;
     float q;
     float sc;
@@ -1413,9 +1414,10 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
                                     dys = dys / sumSq;
                                     dzs = dzs / sumSq;
                                 }
-                                cw[2] = dxs * sphB[0];
-                                cw[3] = dys * sphB[0];
-                                cw[4] = dzs * sphB[0];
+                                sb0 = sphB[0];
+                                cw[2] = dxs * sb0;
+                                cw[3] = dys * sb0;
+                                cw[4] = dzs * sb0;
                             }
                             *((u8*)cw + 24) = i;
                             *((u8*)cw + 25) = j;
