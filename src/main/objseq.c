@@ -1744,14 +1744,12 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
             }
         vol = val;
 
-        walk = seq;
         for (i = 0; i < 3; i++)
         {
-            if (*(s16*)(walk + 0x30) != 0)
+            if (*(s16*)(seq + i * 2 + 0x30) != 0)
             {
-                Sfx_IsPlayingFromObject((u32)seqObj, (u16) * (s16*)(walk + 0x38));
+                Sfx_IsPlayingFromObject((u32)seqObj, (u16) * (s16*)(seq + i * 2 + 0x38));
             }
-            walk += 2;
         }
 
         if (vol > 0 && ((ObjSeqState*)seq)->sfxTimer[3] != 0)
