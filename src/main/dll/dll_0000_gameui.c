@@ -4098,7 +4098,7 @@ void GameUI_update(void)
     s16 cx;
     u8 f25 = 1;
     u8 f26 = 0;
-    int r29v;
+    u8 r29v;
     int flags;
 
     gCMenuButtons = getButtonsJustPressed(0);
