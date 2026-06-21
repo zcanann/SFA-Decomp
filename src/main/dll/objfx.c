@@ -967,7 +967,6 @@ void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval)
 
 void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light)
 {
-    f32 fxParam = extraScale;
     PartfxParams params;
     f32 zoff = lbl_803DF394;
     ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
@@ -988,38 +987,38 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
         params.vec[0] = scale * randomGetRange(-10, 10);
         params.vec[1] = scale * randomGetRange(-10, 10);
         params.vec[2] = scale * randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &fxParam);
+        (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
         break;
     case 2:
         params.vec[0] = scale * randomGetRange(-10, 10);
         params.vec[1] = scale * randomGetRange(-10, 10);
         params.vec[2] = scale * randomGetRange(-10, 10);
-        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &fxParam);
+        (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
         break;
     case 3:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &fxParam, 0x19, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
         break;
     case 4:
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &fxParam, 0x19, NULL);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &extraScale, 0x19, NULL);
         break;
     case 5:
         params.f6 = 0xc0a;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &fxParam, 0x32, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &extraScale, 0x32, &params);
         break;
     case 6:
         params.f6 = 0xc0d;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &fxParam, 0x50, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &extraScale, 0x50, &params);
         break;
     case 7:
         params.f6 = 0x605;
         params.pad[2] = 1;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &fxParam, 0x19, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
     case 8:
         params.f6 = 0x605;
         params.pad[2] = 0;
-        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &fxParam, 0x19, &params);
+        (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
     }
