@@ -586,6 +586,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (PULSE)`), restoring the dropped block. Sibling of #79 (asm-decode dropped code); this is the
     control-flow-fold flavor. (WorkerB: dll_000A_expgfx drawGlow restored the dropped 6th fade
     branch, 88.4→91.8.)
+140. **Fixed-offset far-global `lis;addi r0;mr rN` detour → the #80 launder, when the base is a
+    SAVED reg.** A far global a fn uses (as a plain call-arg AND for fixed `base+K` offset loads)
+    can materialize via a temp+copy (`lis;addi r0; mr r30,r0`) instead of the target's direct
+    `lis;addi r30`. When the base lives in a SAVED reg (or the fn has body calls — `_savegpr_NN`
+    present), launder BOTH the init AND every plain use identically as `(char *)(int)lbl_X` (#80):
+    it collapses the detour to a direct `addi r30` AND relieves saved-reg pressure, cascading away
+    the downstream allocation diffs (WorkerC: dbstealerworm_update 58→8 diff regions, 96.83→97.22).
+    DISCRIMINATOR: the launder is the lever for SAVED-reg / call-bearing detours. For a VOLATILE-reg
+    base in a call-FREE fn it instead trades the 1-instr detour for a volatile-reg permutation —
+    that's a DIFFERENT shape with its own clean form still to find, so keep the launder off there
+    and hunt the volatile lever separately (dll_94/97/99 trio is the volatile shape).
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
