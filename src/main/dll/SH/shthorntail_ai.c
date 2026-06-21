@@ -133,7 +133,6 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
     short angleDelta;
     int value;
     u32 nextState;
-    u16 facingAngle;
     s8 behaviorState;
     f32 dist;
 
@@ -160,8 +159,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
         {
             value = getAngle(object->modelPos.x - config->homePos.x,
                              object->modelPos.z - config->homePos.z);
-            facingAngle = object->facingAngle;
-            angleDelta = value - facingAngle;
+            angleDelta = value - (u16)object->facingAngle;
             if (0x8000 < angleDelta)
             {
                 angleDelta = angleDelta - 0xFFFF;
@@ -177,7 +175,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
                 OSReport(sSHthorntailAngleYawDebug,
                          (u16)getAngle(object->modelPos.x - config->homePos.x,
                                        object->modelPos.z - config->homePos.z),
-                         facingAngle);
+                         object->facingAngle);
                 behaviorState = runtime->behaviorState;
                 if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
                     (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
@@ -191,23 +189,16 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
                                             object->cullRadius * object->modelScale);
         if (value == 0)
         {
-            nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+            return SHTHORNTAIL_STATE_CLOSE_ATTACK;
         }
-        else
+        behaviorState = runtime->behaviorState;
+        if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+            (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
         {
-            behaviorState = runtime->behaviorState;
-            if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
-                (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
-            {
-                nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
-                nextState = nextState & 0xff;
-            }
-            else
-            {
-                nextState = SHTHORNTAIL_STATE_MOVE_2;
-            }
+            nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
+            return nextState & 0xff;
         }
-        return nextState;
+        return SHTHORNTAIL_STATE_MOVE_2;
     }
     return SHTHORNTAIL_STATE_CLOSE_ATTACK;
 }
