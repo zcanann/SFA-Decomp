@@ -519,9 +519,10 @@ void fn_80150910(int* obj, u8* state)
             u8 r = randomGetRange(1, tbl4[8]);
             if (*(u16*)(state + 0x338) != 0)
             {
-                state[0x2f2] = (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 0xc);
                 {
                     SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
+                    state[0x2f2] = (u8)row->extra;
+                    row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
                     Baddie_SetMove(obj, state, row->anim,
                                 *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
                                 (u8)row->flags);
