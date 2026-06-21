@@ -217,7 +217,7 @@ void CameraModeArwing_update(u8* obj)
 
     if (arwarwing_isDead((int)state) != 0)
     {
-        f32 vd, vc, vb, va;
+        f32 va, vb, vc, vd;
         int step;
         ((CameraArwingWork*)gCamArwingWork)->rollRate = lbl_803E1BA8;
         (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(
