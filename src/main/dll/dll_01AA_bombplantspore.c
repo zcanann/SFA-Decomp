@@ -209,10 +209,11 @@ void bombplantspore_updateDrift(void* obj, void* state)
         angleDelta += 0xffff;
     }
     ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
-    ((BombPlantSporeState*)state)->driftAmplitude =
-        lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->driftAmplitude) *
-        timeDelta +
-        ((BombPlantSporeState*)state)->driftAmplitude;
+    {
+        f32 amp = ((BombPlantSporeState*)state)->driftAmplitude;
+        f32 ampAccel = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amp);
+        ((BombPlantSporeState*)state)->driftAmplitude = ampAccel * timeDelta + amp;
+    }
 
     ((BombPlantSporeState*)state)->driftBaseX =
         ((BombPlantSporeState*)state)->driftAmplitude *
