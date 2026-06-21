@@ -1132,11 +1132,10 @@ int fn_8011E0D8(int *this, int *p2, int p3)
 {
     f32 m1[12];
     f32 m2[12];
-    f32 m3[12];
     f32 mtex[12];
+    f32 m3[12];
     _IndMtx indmtx;
     GXColor chanCol;
-    int kcolor;
     int tex2;
     void *op, *layer, *tex0;
     f32 sval;
@@ -1208,8 +1207,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     fn_8006C5CC(&tex2);
     selectTexture((void*)tex2, 1);
     GXSetTevKAlphaSel(2, 0x1c);
-    kcolor = gTrickyHudIconKColor;
-    GXSetTevKColor(0, *(GXColor*)&kcolor);
+    GXSetTevKColor(0, *(GXColor*)&gTrickyHudIconKColor);
     GXSetTevDirect(2);
     GXSetTevOrder(2, 2, 1, 0xff);
     GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
