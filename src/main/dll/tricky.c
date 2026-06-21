@@ -1539,9 +1539,10 @@ void drawViewFinderHud(void)
     {
         gViewFinderFadeLevel = (f32)(gViewFinderFadeLevel - lbl_803E1EA8 * timeDelta);
     }
-    v = (gViewFinderFadeLevel < lbl_803E1E3C)
+    v = gViewFinderFadeLevel;
+    v = (v < lbl_803E1E3C)
             ? lbl_803E1E3C
-            : ((gViewFinderFadeLevel > lbl_803E1E68) ? lbl_803E1E68 : gViewFinderFadeLevel);
+            : ((v > lbl_803E1E68) ? lbl_803E1E68 : v);
     gViewFinderFadeLevel = v;
     if (v == lbl_803E1E3C) return;
     gViewFinderBaseY = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
