@@ -1,4 +1,4 @@
-/* DLL 0x004F — Camera mode misc handler [0x8010F2F8-0x8010F540). */
+/* DLL 0x004F - Camera mode misc handler [0x8010F2F8-0x8010F540). */
 #include "main/mm.h"
 extern float mathSinf(float x);
 extern float mathCosf(float x);

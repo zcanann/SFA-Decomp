@@ -1,4 +1,4 @@
-/* DLL 0x0285 — SP shop objects [801E4288-801E42F8) */
+/* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
