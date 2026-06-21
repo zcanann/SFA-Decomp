@@ -1570,11 +1570,16 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
             if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
                 ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
             {
-                goto haveLink;
+                k = 0;
+                goto checkLoop;
             }
         }
-        break;
-    haveLink:;
+        k = 1;
+    checkLoop:
+        if (k != 0)
+        {
+            break;
+        }
     } while (1);
 
     *outPhase = gFloatZero;
