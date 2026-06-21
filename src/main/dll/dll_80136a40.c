@@ -38,7 +38,7 @@
 typedef struct TrickyImpressState
 {
     u8 pad0[0x54 - 0x0];
-    u32 unk54;
+    u32 flags54;
     u8 pad58[0x408 - 0x58];
     f32 unk408;
     f32 unk40C;
@@ -229,7 +229,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         f32 dx, dy, dz;
     } stk;
     u8 i = 0x14;
-    u32 flags = ((TrickyImpressState*)b)->unk54;
+    u32 flags = ((TrickyImpressState*)b)->flags54;
     if ((flags & 0x1800) == 0) return;
     stk.dx = ((TrickyImpressState*)b)->unk408 - *(f32*)(a + 0x18);
     stk.dy = ((TrickyImpressState*)b)->unk40C - *(f32*)(a + 0x1c);
@@ -244,7 +244,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         {
             (*gPartfxInterface)->spawnObject(a, 0x533, &stk, 2, -1, NULL);
         }
-        ((TrickyImpressState*)b)->unk54 = ((TrickyImpressState*)b)->unk54 & ~0x1000LL;
+        ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
     }
 }
 
@@ -321,8 +321,8 @@ int trickyFn_80138f14(u8* obj)
     u8* b = ((GameObject*)obj)->extra;
     if ((u32)GameBit_Get(0x4E4) != 0u)
     {
-        ((TrickyImpressState*)b)->unk54 |= 0x10000LL;
-        if ((((TrickyImpressState*)b)->unk54 & 0x10) != 0u)
+        ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
+        if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
         {
             return 1;
         }
@@ -479,7 +479,7 @@ void fn_80137948(char* fmt, ...)
 void trickyImpress(u8* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
-    ((TrickyImpressState*)b)->unk54 |= 0x80000000;
+    ((TrickyImpressState*)b)->flags54 |= 0x80000000;
     ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
 }
 
