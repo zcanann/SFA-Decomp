@@ -2388,7 +2388,10 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     {
         idx = 0;
     }
-    base = ((AnimBufSel*)(model + ((((ObjModel*)model)->bufferFlags & 1) << 2)))->buf + idx * 0x40;
+    {
+        u8* p = model + 0xc;
+        base = *(u8**)((u8*)p + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x40;
+    }
     vec[0] = *(f32*)(base + 0x20);
     vec[1] = *(f32*)(base + 0x24);
     vec[2] = *(f32*)(base + 0x28);
