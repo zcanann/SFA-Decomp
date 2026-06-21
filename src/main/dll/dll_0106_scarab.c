@@ -296,7 +296,7 @@ void scarab_update(int obj)
                 rot.b = 0;
                 rot.ang = randomGetRange(-10000, 10000);
                 vecRotateZXY(&rot, (f32*)(obj + 0x24));
-                ang = getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
+                ang = (u16)getAngle(((GameObject*)obj)->anim.velocityX, -((GameObject*)obj)->anim.velocityZ);
                 diff = ((GameObject*)obj)->anim.rotX - ang;
                 if (diff > 0x8000)
                 {
