@@ -991,6 +991,7 @@ extern f32 lbl_803E2338;
 extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
+#pragma opt_propagation off
 void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 {
     int xb;
@@ -1017,24 +1018,24 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     if (gTitleScreenCursorY > lbl_803E22F8)
     {
         mtx = (f32*)gTitleScreenMtx;
-        xb = (int)mtx[3];
+        xb = (int)mtx[3] - 0x32;
         yb = (int)mtx[7];
         tex = (Texture*)gTitleScreenTextures[4];
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb - 0x32 + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
+                          (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
                           (f32)(int)(yb - 0x10), p1, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = (Texture*)gTitleScreenTextures[6];
-        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x28), (f32)(int)(yb - 0x10), 0xff, 0x100,
+        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = (Texture*)gTitleScreenTextures[6];
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb - 0x32 + ((Texture*)gTitleScreenTextures[4])->width +
+                          (f32)(int)(xb + ((Texture*)gTitleScreenTextures[4])->width +
                               tex->width + 0x57),
                           (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
-        drawScaledTexture((char*)tex, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
+        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x23), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
     }
     mtx = (f32*)gTitleScreenMtx;
@@ -1129,6 +1130,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                     0xff, 0xff);
     }
 }
+#pragma opt_propagation reset
 
 #pragma scheduling on
 #pragma peephole on
