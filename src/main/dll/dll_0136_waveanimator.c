@@ -139,15 +139,19 @@ void fn_801923F8(int* cfgArg)
 
     {
         f32 colorSplitZero;
+        int srcRow;
+        int byteRow;
         f32 negMin = -cfg->minHeight;
-        colorSrcIdx = 0;
-        colorIdx = 0;
+        srcRow = 0;
+        byteRow = 0;
         colorSplitZero = lbl_803E3F44;
         for (i = 0; i < cfg->period; i++)
         {
+            colorSrcIdx = srcRow;
+            colorIdx = byteRow;
             for (j = 0; j < cfg->period; j++)
             {
-                f32 v = ((f32*)lbl_803DDAF4)[colorSrcIdx];
+                f32 v = *(f32*)((u8*)lbl_803DDAF4 + colorSrcIdx);
                 if (v < colorSplitZero)
                 {
                     f32 t = (v - cfg->minHeight) / negMin;
@@ -161,8 +165,10 @@ void fn_801923F8(int* cfgArg)
                     ((u8*)lbl_803DDAEC)[colorIdx + 1] = 255;
                     ((u8*)lbl_803DDAEC)[colorIdx + 2] = 255;
                 }
-                colorSrcIdx++;
+                colorSrcIdx += 4;
                 colorIdx += 3;
+                srcRow += 4;
+                byteRow += 3;
             }
         }
     }
