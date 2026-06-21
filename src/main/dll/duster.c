@@ -1050,7 +1050,7 @@ void fn_80156DA0(int obj, int state)
     float fromPos[3];
     float cosYaw;
     float sinYaw;
-    float hitOut[24];
+    float hitOut[22];
 
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
     if (*(float*)(state + 0x324) <= lbl_803E2B18)
