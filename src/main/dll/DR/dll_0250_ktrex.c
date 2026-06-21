@@ -608,26 +608,31 @@ void ktrex_update(int obj)
     }
     ((KTRexArenaState*)gKTRexState)->unkFF = maskA;
     player = ((KTRexRuntime*)runtime)->unk2D0;
-    phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
-    dz = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
-        ->rowAX)[phase];
-    dx = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBZ)[phase] - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)
-        ->rowAZ)[phase];
-    if (__fabs(dz) > __fabs(dx))
     {
-        frac =
-            (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAX)[phase]) /
-            dz;
-    }
-    else
-    {
-        frac =
-            (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowAZ)[phase]) /
-            dx;
+        KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
+        phase = (st->timerFA >> 1) & 3;
+        dz = ((f32*)*(int*)&st->rowBX)[phase] - ((f32*)*(int*)&st->rowAX)[phase];
+        dx = ((f32*)*(int*)&st->rowBZ)[phase] - ((f32*)*(int*)&st->rowAZ)[phase];
+        if (__fabs(dz) > __fabs(dx))
+        {
+            frac =
+                (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&st->rowAX)[phase]) /
+                dz;
+        }
+        else
+        {
+            frac =
+                (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&st->rowAZ)[phase]) /
+                dx;
+        }
     }
     ((KTRexArenaState*)gKTRexState)->unkF4 = frac;
-    tmp = lbl_803E67B0;
-    ((KTRexArenaState*)gKTRexState)->unkFE = ((u8*)&tmp)[(((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3];
+    {
+        KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
+        int t = st->timerFA;
+        tmp = lbl_803E67B0;
+        st->unkFE = ((u8*)&tmp)[(t >> 1) & 3];
+    }
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
     maskB = 0;
     bitB = lbl_803DC298;
