@@ -623,6 +623,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     eval/load-order. (WorkerC: CameraModeForceBehind_init 97.26→100.) Companion confirmation of #110:
     opt_level 1 REGRESSES loop/call-bearing fns (O1 creation-order overhead dwarfs the chained-copy
     fix) — it's only for small call-free fns; the int-const chained fold stays open for loop fns.
+143. **Global-base WALKER detour in COUNT/bdnz search loops (`addi r0; mr rWalker` vs target's
+    direct `addi rWalker`) → INDEX form + count-global used DIRECTLY in the loop condition.** The
+    clean C is TWO parts: (a) write the search loop as INDEX form `glob[i]` (NOT a pointer-walk
+    `p = glob; p++`) — MWCC strength-reduces `glob[i]` to the target's pointer walk but inits the
+    base with a DIRECT `addi rWalker`; the pointer-walk SOURCE is what forces the `addi r0; mr`
+    detour. (b) Use the COUNT global DIRECTLY in the loop condition (`while (i < nGlob && ...)`) — do
+    NOT pre-cache it to a local before the loop: pre-caching emits the count load BEFORE the hoisted
+    base; direct use hoists it AFTER the base, matching the target preheader (`li i; lis/addi base;
+    lwz count`). The count/bdnz sibling of #138 (sentinel-index) and #136 (counter/walker) — solves
+    the recurring count/bdnz global-base-walker detour that #138/#140 didn't fit (savegame
+    restore/saveObjectPos, nw_mammoth, Objfsa_GetPatchGroupIdAtPoint all share the `mr rN,r0` shape).
+    (WorkerB: dll_0014_unk/curves_remove 98.33→100.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
