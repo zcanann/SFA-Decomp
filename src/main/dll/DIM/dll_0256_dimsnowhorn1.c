@@ -319,7 +319,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
             ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
         }
     }
-    else if (d <= 0)
+    else if (d < 1)
     {
         if (((GameObject*)obj)->anim.currentMove != 0x200)
         {
