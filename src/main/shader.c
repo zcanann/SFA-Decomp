@@ -1053,9 +1053,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     if (i == count)
     {
-        int newCount = *(volatile u8*)&lbl_803DCE98 + 1;
-        lbl_803DCE98 = newCount;
-        if ((u8)newCount == 0x40)
+        lbl_803DCE98++;
+        if (lbl_803DCE98 == 0x40)
         {
             OSReport(sTrackLoadBlockOverrunError);
         }
@@ -1492,8 +1491,8 @@ void unloadMap(void)
                 {
                     blk = lbl_803DCE9C[mapType];
                     lbl_803DCE94[mapType] = -1;
-                    lbl_803DCE9C[mapType] = 0;
-                    for (j = 0; j < *(u8*)(blk + 0xa2); j++)
+                    lbl_803DCE9C[mapType] = j = 0;
+                    for (; j < *(u8*)(blk + 0xa2); j++)
                     {
                         rb = *(int*)(blk + 0x64) + j * 68;
                         p = (char*)rb;
