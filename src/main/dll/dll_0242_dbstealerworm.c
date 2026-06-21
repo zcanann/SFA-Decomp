@@ -1999,7 +1999,7 @@ void dbstealerworm_update(u8* objp)
     extern f32 lbl_803E638C;
     extern u8 lbl_803AD0C0[];
     extern u8 lbl_803293B8[];
-    char* st = (char*)lbl_803AD0C0;
+    char* st = (char*)(int)lbl_803AD0C0;
     char* tbl = (char*)lbl_803293B8;
     int blob = *(int*)(objp + 0xb8);
     int data = *(int*)(objp + 0x4c);
@@ -2092,12 +2092,12 @@ void dbstealerworm_update(u8* objp)
                 }
                 if (((int (*)(int, int, int, int, char*, char*, int, char*))((void**)*gBaddieControlInterface)[20])(
                     obj, blob, blob + 0x35c, ((GroundBaddieState*)blob)->gameBitB, tbl + 0x2ac, tbl + 0x324, 1,
-                    st) != 0)
+                    (char*)(int)lbl_803AD0C0) != 0)
                 {
                     *(f32*)(st + 0xc) = ((GameObject*)obj)->anim.localPosX;
                     *(f32*)(st + 0x10) = ((GameObject*)obj)->anim.localPosY;
                     ((GroundBaddieState*)st)->baddie.posX = ((GameObject*)obj)->anim.localPosZ;
-                    objLightFn_8009a1dc((void*)obj, lbl_803E638C, st, 1, 0);
+                    objLightFn_8009a1dc((void*)obj, lbl_803E638C, (char*)(int)lbl_803AD0C0, 1, 0);
                 }
                 if (((GroundBaddieState*)blob)->targetState == 0)
                 {

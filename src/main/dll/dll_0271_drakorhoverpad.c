@@ -759,18 +759,18 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
             (*(f32*)p < lbl_803E6A3C) ? lbl_803E6A7C : lbl_803E6A80;
         break;
     case 7:
-        if (*(f32*)p <= lbl_803E6A3C)
+        if (*(f32*)p <= (cur = lbl_803E6A3C))
         {
             f->state = 3;
-            *(f32*)p = lbl_803E6A3C;
+            *(f32*)p = cur;
             Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         }
         break;
     case 17:
-        if (*(f32*)p >= lbl_803E6A3C)
+        if (*(f32*)p >= (cur = lbl_803E6A3C))
         {
             f->state = 4;
-            *(f32*)p = lbl_803E6A3C;
+            *(f32*)p = cur;
             Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         }
         break;

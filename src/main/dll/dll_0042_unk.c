@@ -285,9 +285,9 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
         Matrix_TransformPoint(mtx, state->vectorX, state->vectorY,
                               state->vectorZ, &outX, &outY, &outZ);
         angle = getAngle((f64)outY, outZ);
-        gCamcontrolModeSettings->slideAngle +=
-            (int)(framesThisStep * ((0x4000 - (angle & 0xffff)) -
-                gCamcontrolModeSettings->slideAngle)) >> 5;
+        cur = gCamcontrolModeSettings->slideAngle;
+        gCamcontrolModeSettings->slideAngle =
+            cur + ((int)(framesThisStep * ((0x4000 - (angle & 0xffff)) - cur)) >> 5);
     }
     else
     {
@@ -689,7 +689,7 @@ void camstatic_update(CameraObject* camera)
     float fa;
     int val;
     u32 angleDelta;
-    u16 yaw;
+    int yaw;
     float aimZ2;
     float aimY2;
     float aimX2;
@@ -772,7 +772,7 @@ void camstatic_update(CameraObject* camera)
         }
         if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
                 (*(f32*)((u8*)camera + 0x38) < lbl_803E1728)) &&
-            (target->anim.localPosZ <= lbl_803E16AC))
+            (target->anim.velocityY <= lbl_803E16AC))
         {
             gCamcontrolModeSettings->clampFlags.b6 = 1;
             gCamcontrolModeSettings->heightLockLimit = camera->anim.worldPosY;
@@ -855,9 +855,9 @@ void camstatic_update(CameraObject* camera)
     }
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
         (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
-    yaw = getAngle(dx2, dz);
+    yaw = 0x8000 - (u16)getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
-    camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
+    camera->anim.rotX = yaw - gCamcontrolModeSettings->pitchOffset;
     angleDelta = (u16)getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);

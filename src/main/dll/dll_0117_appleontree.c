@@ -1,4 +1,4 @@
-/* DLL 0x0117 — appleontree / groundAnimator group. TU: 0x8017D818–0x8017E1A0. */
+/* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/dll/groundAnimator.h"

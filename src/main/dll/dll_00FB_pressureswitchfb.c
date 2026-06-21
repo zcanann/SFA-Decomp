@@ -269,8 +269,7 @@ void pressureswitchfb_update(int obj)
                         }
                         ju = j & 0xff;
                         *(u32*)(tmp + ju * 4 + 4) = other;
-                        base = tmp + ju * 8;
-                        *(f32*)(base + 0x2c) = ((GameObject*)other)->anim.localPosX;
+                        *(f32*)((base = tmp + ju * 8) + 0x2c) = ((GameObject*)other)->anim.localPosX;
                         *(f32*)(base + 0x30) = ((GameObject*)other)->anim.localPosZ;
                     skip_insert: ;
                     }

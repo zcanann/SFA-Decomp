@@ -220,7 +220,13 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     }
     {
         f32 vol = lbl_803E5108 * state->spinSpeed;
-        vol = (vol >= lbl_803E50EC) ? vol : -vol;
+        if (vol >= lbl_803E50EC)
+        {
+        }
+        else
+        {
+            vol = -vol;
+        }
         v = (int)vol;
         if (v > 100)
         {

@@ -139,8 +139,7 @@ float fn_80292248(float x) {
                            + lbl_803E7A30));
     }
 
-    y = lbl_803E7AB0 / ax;
-    z = y * y;
+    z = (y = lbl_803E7AB0 / ax) * y;
     result = (float)(lbl_803E79E0
                      - y * (((((((((((((((lbl_803E7AA8 * z + lbl_803E7AA0) * z + lbl_803E7A98) * z
                                         + lbl_803E7A90) * z + lbl_803E7A88) * z + lbl_803E7A80) * z

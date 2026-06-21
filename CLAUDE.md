@@ -575,6 +575,54 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     typed struct array is the one that lands it. This is the clean source for the global-base
     sub-case of #136 (the "global-base counter/walker" residual that looked stuck dissolves into
     ordinary typed C). (WorkerB: dll_0000_gameui GameUI_unselectAllItems, expgfx family.)
+139. **A FOLDED BRANCH is a recoverable dropped-code bug — count conversion ops to find it, split
+    the merged if/else back into sibling else-ifs.** When a function is INSTRUCTION-SHORT vs target
+    (current < target by a block), the import often merged what were SEPARATE branches into one:
+    e.g. an `if/else` picking a ratio INSIDE one outer branch folds to a single `fctiwz`/conversion,
+    where the original wrote TWO `else if` siblings (each with its own conversion). DIAGNOSE by
+    counting conversion/`fctiwz`/select ops in target vs current — if the target has MORE, a branch
+    was folded away. FIX: split the merged inner-if back into sibling `else if` branches (re-spell
+    the guards as the dev did, e.g. `else if (PULSE && frame <= lifeFraction)` then `else if
+    (PULSE)`), restoring the dropped block. Sibling of #79 (asm-decode dropped code); this is the
+    control-flow-fold flavor. (WorkerB: dll_000A_expgfx drawGlow restored the dropped 6th fade
+    branch, 88.4→91.8.)
+140. **Fixed-offset far-global `lis;addi r0;mr rN` detour → the #80 launder, when the base is a
+    SAVED reg.** A far global a fn uses (as a plain call-arg AND for fixed `base+K` offset loads)
+    can materialize via a temp+copy (`lis;addi r0; mr r30,r0`) instead of the target's direct
+    `lis;addi r30`. When the base lives in a SAVED reg (or the fn has body calls — `_savegpr_NN`
+    present), launder BOTH the init AND every plain use identically as `(char *)(int)lbl_X` (#80):
+    it collapses the detour to a direct `addi r30` AND relieves saved-reg pressure, cascading away
+    the downstream allocation diffs (WorkerC: dbstealerworm_update 58→8 diff regions, 96.83→97.22).
+    DISCRIMINATOR: the launder is the lever for SAVED-reg / call-bearing detours. For a VOLATILE-reg
+    base in a call-FREE fn it instead trades the 1-instr detour for a volatile-reg permutation —
+    that's a DIFFERENT shape with its own clean form still to find, so keep the launder off there
+    and hunt the volatile lever separately (dll_94/97/99 trio is the volatile shape).
+141. **2D-array stores emitting displacement `sth` where the target uses indexed `sthx` → NAMED
+    row-pointer reassigned per store + `#pragma opt_propagation off`.** When the target indexes every
+    store of a 2D array by column (`sthx`) but MWCC reassociates your address to `base+row+col+K` and
+    emits displacement `sth`, defeat the reassociation with a NAMED row pointer recomputed per store,
+    pinned by opt_propagation off:
+      #pragma opt_propagation off
+      fbrow = (u16*)((char*)base + (row + K)); *(u16*)((char*)fbrow + col) = v;
+      #pragma opt_propagation reset
+    The named var defeats the reassociation (a plain grouped-cast `(char*)((char*)base+(row+K))+col`
+    AND a cached `p = &row[0]` both re-fold back to `base+row+col+K`); opt_propagation off keeps
+    fbrow a real var so it isn't propagated/folded away → the stores flip to col-indexed `sthx`
+    (#112/#128 applied to 2D arrays). DISCRIMINATOR: opt_common_subs off does NOT raise the sthx
+    count here and collaterally un-CSEs other exprs (regresses); volatile and opt_loop_invariants
+    off are inert. (WorkerC: fn_80137DF8 89.86→90.81; the per-store global-pointer RE-READ in the
+    remaining tail is a separate shape still being mapped.)
+142. **`#pragma opt_propagation off` keeps a separate-statement LOAD at its decl point — fixes a
+    load-ORDER reorder (the third distinct use of this pragma).** When the target loads a value at
+    its declaration (`s16 a = obj->rotX;` → `lha`) BEFORE an adjacent operand/const (`lfs` Pi), but
+    MWCC PROPAGATES the variable into a later expression (the multiply) so its load emits AFTER the
+    const, wrap the fn in `#pragma opt_propagation off` … `reset`: it keeps `a` a real variable
+    loaded at its decl → exact target load order. `scheduling off` is INERT here — the reorder is
+    propagation, not the scheduler. This joins the opt_propagation-off family: #128 (late saved-reg
+    rematerialization of a stack addr), #141 (2D-array named row-pointer not folded back), and now
+    eval/load-order. (WorkerC: CameraModeForceBehind_init 97.26→100.) Companion confirmation of #110:
+    opt_level 1 REGRESSES loop/call-bearing fns (O1 creation-order overhead dwarfs the chained-copy
+    fix) — it's only for small call-free fns; the int-const chained fold stays open for loop fns.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
