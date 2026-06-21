@@ -165,14 +165,7 @@ void objSeqMoveFn_80199188(void* obj, int arg2)
                     nearEnd = true;
                 }
             }
-            if (nearEnd)
-            {
-                leg = 2;
-            }
-            else
-            {
-                leg = 1;
-            }
+            leg = nearEnd ? 2 : 1;
             goto end;
         }
     }
