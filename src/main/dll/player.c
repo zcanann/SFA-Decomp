@@ -1804,7 +1804,7 @@ int fn_802A5384(int obj, int state)
                                     timeDelta);
                 {
                     f32 m = timeDelta *
-                        (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->unk420);
+                        (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->leanCurveScale);
                     d = (d > m) ? m : d;
                 }
                 if (((PlayerState*)inner)->targetYawRate < 0)
@@ -7660,15 +7660,15 @@ void fn_802B0EA4(int obj, int inner, int state)
     if (*(void**)((char*)inner + 0x464) != NULL)
     {
         int n = ((PlayerState*)inner)->targetYawRateSigned;
-        ((PlayerState*)inner)->unk420 = Curve_EvalCatmullRom(
+        ((PlayerState*)inner)->leanCurveScale = Curve_EvalCatmullRom(
             ((PlayerState*)inner)->leanCurve + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
     }
     else
     {
-        ((PlayerState*)inner)->unk420 = lbl_803E7EE0;
+        ((PlayerState*)inner)->leanCurveScale = lbl_803E7EE0;
     }
     one = lbl_803E7EE0;
-    ((PlayerState*)inner)->unk420 = one;
+    ((PlayerState*)inner)->leanCurveScale = one;
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
         ((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
     {
@@ -8013,7 +8013,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         f32 lim;
         step = interpolate((f32) * (int*)((char*)inner + 0x47c),
                            lbl_803E7EE0 / ((PlayerState*)inner)->targetYawSmoothRate, timeDelta);
-        lim = timeDelta * (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->unk420);
+        lim = timeDelta * (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->leanCurveScale);
         step = (step < lim) ? step : lim;
         if (((PlayerState*)inner)->targetYawRate < 0)
         {

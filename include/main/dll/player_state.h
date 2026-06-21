@@ -60,7 +60,7 @@ typedef struct PlayerState {
     f32 unk418;
     u8 unk41C;
     u8 pad41D[0x420 - 0x41D];
-    f32 unk420;
+    f32 leanCurveScale; /* lean-curve sample: Curve_EvalCatmullRom(leanCurve) indexed by targetYawRateSigned (default 1.0); multiplies targetYawRateLimit to bound the per-frame targetYaw delta */
     u8 pad424[0x428 - 0x424];
     f32 targetYawSmoothRate; /* curve1 sample (Curve_EvalCatmullRom @paramCurve1); 1/this = the interpolate() rate easing targetYaw toward inputHeading */
     f32 targetYawRateLimit;  /* curve2 sample (@paramCurve2); * leanCurve output bounds the per-frame targetYaw delta */
@@ -77,7 +77,7 @@ typedef struct PlayerState {
     int paramCurve2; /* curve-data ptr (base+0x598); feeds unk42C */
     int paramCurve3; /* curve-data ptr (base+0x650); feeds unk430 */
     int paramCurve4; /* curve-data ptr (base+0x6f4); feeds unk434 */
-    int leanCurve;   /* Catmull-Rom curve-data ptr indexed by targetYawRateSigned (lean), feeds unk420 */
+    int leanCurve;   /* Catmull-Rom curve-data ptr indexed by targetYawRateSigned (lean), feeds leanCurveScale */
     u8 pad468[0x46C - 0x468];
     int spawnedObject; /* object handle from Obj_SetupObject (player-spawned, e.g. staff/projectile setup) */
     f32 inputMagnitude;
