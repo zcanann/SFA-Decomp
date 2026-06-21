@@ -857,6 +857,13 @@ void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[18].layer = 4;
     buf.entries[18].flags = 0;
     buf.entries[18].tex = NULL;
+    buf.entries[18].mode = 0x400000;
+    buf.entries[18].x = lbl_803E0990;
+    buf.entries[18].y = lbl_803E09B0;
+    buf.entries[18].z = lbl_803E0990;
+    buf.entries[18].layer = 4;
+    buf.entries[18].flags = 0;
+    buf.entries[18].tex = NULL;
     buf.entries[18].mode = 0x20000000;
     buf.entries[18].x = lbl_803E099C;
     buf.entries[18].y = lbl_803E09A0;
@@ -903,7 +910,7 @@ void dll_66_func03(int sourceObj, int variant, int posSource, u32 flags)
             buf.pos[2] = lbl_803E0990 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &lbl_803131A8[212], 0x155, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &base[212], 0x155, 0);
 }
 
 void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags);
