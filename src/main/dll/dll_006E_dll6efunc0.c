@@ -148,6 +148,7 @@ extern f32 lbl_803E0AA0;
 extern f32 lbl_803E0AA4;
 extern f32 lbl_803E0AA8;
 extern f32 lbl_803E0AAC;
+extern f32 lbl_803E0AB0;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -749,7 +750,7 @@ void dll_6E_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.ctx = ctx;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0AAC;
-    buf.pos[1] = lbl_803E0AAC;
+    buf.pos[1] = lbl_803E0AB0;
     buf.pos[2] = lbl_803E0AAC;
     buf.col[0] = lbl_803E0A9C;
     buf.col[1] = lbl_803E0A9C;
