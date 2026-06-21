@@ -352,20 +352,15 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
     {
         result = drakorhoverpad_pickUnmaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, arg);
     }
-    if (result != -1)
+    if (result == -1)
     {
-        ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
-        if (((GameObject*)p)->anim.targetObj != NULL)
-        {
-            goto have_target;
-        }
+        goto set_null;
     }
-    else
+    ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
+    if (((GameObject*)p)->anim.targetObj == NULL)
     {
-        ((GameObject*)p)->anim.targetObj = NULL;
+        goto ret1;
     }
-    return 1;
-have_target:
     if (*(int*)&((GameObject*)p)->anim.previousLocalPosX != 0)
     {
         *(f32*)&((GameObject*)p)->extra = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
@@ -439,6 +434,10 @@ have_target:
         Curve_AdvanceAlongPath(curve, lbl_803E6A48);
     }
     return 0;
+set_null:
+    ((GameObject*)p)->anim.targetObj = NULL;
+ret1:
+    return 1;
 }
 
 void drakorhoverpad_updateMain(int obj)
