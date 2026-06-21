@@ -270,7 +270,7 @@ void cmbsrc_updateVisuals(int obj, int state)
     int viewSlot;
     f32 dist;
     f32 vec[3];
-    f32 param[3];
+    f32 param[6];
 
     viewSlot = Camera_GetCurrentViewSlot();
     if (sourceState->active == 0)
