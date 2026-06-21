@@ -515,13 +515,15 @@ done_exit:
     return total;
 }
 
+#pragma opt_loop_invariants off
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     u8 k;
     u8 k2;
     u32 pidx;
     u32 lpidx;
-    u32 lidx;
+    u32 clz;
+    u16 lidx;
     u16 pgid;
     u8 i;
     u8 j;
@@ -587,9 +589,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
             continue;
         }
         patch = &gObjfsaPatches[pidx];
-        lidx = __cntlzw(0xff - currentWalkGroupIndex) >> 5;
+        clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
         pgid = patch->groupId;
-        if (((int)lidx & pgid) == 0)
+        if (((int)clz & pgid) == 0)
         {
             lidx = pgid & 0xff;
         }
@@ -653,6 +655,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
 
     return 0;
 }
+#pragma opt_loop_invariants reset
 
 u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
