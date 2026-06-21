@@ -566,6 +566,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the shared prototype too and confirm codegen-neutral across them (it will be — same registers).
     Independently found on gameplay (WorkerA: dll_0282_barrelgener Obj_UpdateLightningCluster,
     dll_80220608_shared.h) AND math (fastCastFloatToS16 `(float x, s16 *p)`) — a broad, reliable lever.
+    METHOD (recovering the natural order): when a fn's DEFINITION has its float params shoved to the
+    END (`(obj,idx,kind,mode,chance,origin,flags, f32 f8val, f32 mult)`) — a recurring Ghidra
+    floats-last import artifact — the CALLERS' own per-file `extern` decls usually preserve the
+    ORIGINAL order (`(obj,idx,f32 f8val,kind,mode,chance,f32 mult,origin,flags)`); grep the call
+    sites, take the majority caller spelling, reorder the definition + shared header to match.
+    Register-neutral (within-type order unchanged) ⇒ callers compile byte-identical; full-rebuild +
+    report-diff to confirm 0 regressions across all ~60 header includers. (WorkerC: objfx
+    spawnDirectionalBurst/spawnBoxBurst→100, spawnArcedBurst 98.4→99.2; fx_800944A0_shared.h.)
+    COROLLARY (address-of a param spills at its HOME slot): a local `T x = param; ... &x` (Ghidra's
+    by-address-arg idiom) emits the spill store AFTER the prologue param-saves; writing `&param`
+    DIRECTLY spills the param at its declaration-order home slot, interleaving the store between the
+    adjacent param-saves (matches target) AND drops the redundant local. (WorkerC: objfx
+    objParticleFn_80099d84 99.28→100 via `&extraScale`.)
 138. **Global-base WALKED array with a `mr rWalker,r0` detour → index it as a TYPED STRUCT ARRAY.**
     When a loop walks a global array and the base routes through r0 (`lis r3; addi r0,r3,LO; mr
     rWalker,r0`) instead of the target's direct `addi rWalker,r3,LO`, the clean form is
