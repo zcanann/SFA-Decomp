@@ -724,8 +724,8 @@ void arwsquadron_update(int obj)
         }
     case ARW_SQUADRON_STATE_ACTIVE:
         {
-            ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
             int leader;
+            ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
             int disable;
             ((GameObject*)obj)->anim.alpha = 0xff;
             getArwing();
