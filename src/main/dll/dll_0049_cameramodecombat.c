@@ -433,17 +433,17 @@ void CameraModeCombat_update(short* cam)
                             )
                             ;
                             fa = lbl_803E1924 + dist;
-                            if (lbl_803E1924 + dist < lbl_803E1928)
+                            if (fa < lbl_803E1928)
                             {
                                 fa = lbl_803E1928;
                             }
-                            if (lbl_803E192C < fa)
+                            if (fa > lbl_803E192C)
                             {
                                 fa = lbl_803E192C;
                             }
-                            t = fa - gCamCombatState->followDistance;
+                            fa = fa - gCamCombatState->followDistance;
                             step = powfBitEstimate(lbl_803E18EC, timeDelta);
-                            fa = t * step;
+                            fa = fa * step;
                             if (fa > lbl_803E18D8 * timeDelta)
                             {
                                 fa = lbl_803E18D8 * timeDelta;
