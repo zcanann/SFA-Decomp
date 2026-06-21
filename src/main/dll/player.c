@@ -2782,8 +2782,8 @@ int fn_802A0680(int obj, int state)
                 {
                     ((GameObject*)obj)->anim.localPosX = pnt[0];
                     ((GameObject*)obj)->anim.localPosZ = pnt[2];
-                    ((PlayerState*)inner)->unk54C = hit.gt * (hit.gb - hit.ga) + hit.ga;
-                    ((PlayerState*)inner)->unk550 = hit.gt * (hit.fz1 - hit.fz0) + hit.fz0;
+                    ((PlayerState*)inner)->spanTopY = hit.gt * (hit.gb - hit.ga) + hit.ga;
+                    ((PlayerState*)inner)->spanBottomY = hit.gt * (hit.fz1 - hit.fz0) + hit.fz0;
                     ((PlayerState*)inner)->groundNormalX = hit.nx;
                     ((PlayerState*)inner)->groundNormalY = hit.ny;
                     ((PlayerState*)inner)->groundNormalZ = hit.nz;
@@ -2879,7 +2879,7 @@ int fn_802A0680(int obj, int state)
                 }
                 if (b6 != 0)
                 {
-                    f32 fv = ((PlayerState*)inner)->unk54C - ((PlayerState*)inner)->savedPosY;
+                    f32 fv = ((PlayerState*)inner)->spanTopY - ((PlayerState*)inner)->savedPosY;
                     f32 lo = lbl_803DAF88[12];
                     f32 hi;
                     if (lo < 0.0f)
@@ -2903,7 +2903,7 @@ int fn_802A0680(int obj, int state)
                 }
                 else if (b7 != 0)
                 {
-                    f32 fv = ((PlayerState*)inner)->savedPosY - ((PlayerState*)inner)->unk550;
+                    f32 fv = ((PlayerState*)inner)->savedPosY - ((PlayerState*)inner)->spanBottomY;
                     f32 lo = lbl_803DAF88[14];
                     f32 hi;
                     if (lo < 0.0f)
@@ -9383,8 +9383,8 @@ int fn_802A1114(int obj, int state)
         inner->moveOffsetX = fz;
         inner->moveOffsetY = buf1[1];
         inner->moveOffsetZ = fz;
-        pos[0] = inner->unk54C;
-        pos[1] = inner->unk550;
+        pos[0] = inner->spanTopY;
+        pos[1] = inner->spanBottomY;
         ic = inner->curAnimId;
         if (ic != 0x48 && ic != 0x47)
         {
@@ -10113,7 +10113,7 @@ int fn_802A00E0(int obj, int state)
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
         inner->moveOffsetX = inner->groundNormalX * buf1[2];
         inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
-        ((GameObject*)obj)->anim.localPosY = inner->unk550;
+        ((GameObject*)obj)->anim.localPosY = inner->spanBottomY;
         *(s16*)((char*)state + 0x278) = 0x15;
         inner->stateHandler = (int)fn_8029FFD0;
     }
@@ -10196,7 +10196,7 @@ int fn_802A03BC(int obj, int state)
                                       ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
         inner->moveOffsetX = inner->groundNormalX * buf1[2];
         inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
-        ((GameObject*)obj)->anim.localPosY = inner->unk54C;
+        ((GameObject*)obj)->anim.localPosY = inner->spanTopY;
         *(s16*)((char*)state + 0x278) = 0x14;
         inner->stateHandler = (int)fn_8029FFD0;
     }
@@ -13034,8 +13034,8 @@ int fn_802A14F8(int obj, int state)
         break;
     default:
         {
-            pos[0] = ((PlayerState*)inner)->unk54C;
-            pos[1] = ((PlayerState*)inner)->unk550;
+            pos[0] = ((PlayerState*)inner)->spanTopY;
+            pos[1] = ((PlayerState*)inner)->spanBottomY;
             if (((PlayerState*)inner)->curAnimId != 0x48 && ((PlayerState*)inner)->curAnimId != 0x47)
             {
                 (*gCameraInterface)->setMode(
@@ -14635,9 +14635,9 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             {
                 f32 mid;
                 f32 lo;
-                f32 hi = ((PlayerState*)inner)->unk54C - lbl_803E7F10;
+                f32 hi = ((PlayerState*)inner)->spanTopY - lbl_803E7F10;
                 mid = lbl_803E8100 + ((GameObject*)obj)->anim.localPosY;
-                lo = lbl_803E7F30 + ((PlayerState*)inner)->unk550;
+                lo = lbl_803E7F30 + ((PlayerState*)inner)->spanBottomY;
                 if (mid >= lo && mid <= hi)
                 {
                     doRumble(lbl_803E7ED8);

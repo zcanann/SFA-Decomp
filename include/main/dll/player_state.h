@@ -147,8 +147,8 @@ typedef struct PlayerState {
     u8 pad548[0x549 - 0x548];
     s8 unk549;
     u8 pad54A[0x54C - 0x54A];
-    f32 unk54C;
-    f32 unk550;
+    f32 spanTopY;    /* upper Y bound of the collision span (interpolated from SweepHit.g* at hit.gt); localPosY is clamped/checked against [spanBottomY, spanTopY] */
+    f32 spanBottomY; /* lower Y bound of the collision span (interpolated from SweepHit.fz0/fz1) */
     u8 pad554[0x560 - 0x554];
     f32 moveOffsetY; /* local-space root/move displacement vector (offsetX at 0x564, Y at 0x560, Z at 0x568); scaled by moveProgress and added to localPos for camera overridePos; derived from joint-transform samples + groundNormal */
     f32 moveOffsetX;
