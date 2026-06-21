@@ -155,11 +155,10 @@ void SpiritDoorLock_update(int obj)
             state->active = GameBit_Get(placement->activeGameBit);
             if (state->active != 0)
             {
+                f32 modelScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
+                    (f32)(int) placement->scale;
                 ((GameObject*)obj)->anim.rootMotionScale =
-                    (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] *
-                    (f32)(int)
-                placement->scale *
-                    gSpiritDoorLockScaleFactor;
+                    modelScale * gSpiritDoorLockScaleFactor;
                 if ((void*)state->light == NULL)
                 {
                     state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
@@ -199,9 +198,9 @@ void SpiritDoorLock_update(int obj)
         int camMode;
         int* orbitObjs;
         ObjTextureRuntimeSlot* tex;
+        s16 angleStep;
+        s16 angle;
         int i;
-        int angle;
-        int angleStep;
         f32 maxDist;
         camMode = (*gCameraInterface)->getMode();
         if (camMode != 0x51)
@@ -209,7 +208,7 @@ void SpiritDoorLock_update(int obj)
             Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
         }
         orbitObjs = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
-        angleStep = (s16)(0x10000 / state->orbitCount);
+        angleStep = 0x10000 / state->orbitCount;
         angle = state->spinAngle;
         orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;
         maxDist = gSpiritDoorLockOrbitMaxDist;

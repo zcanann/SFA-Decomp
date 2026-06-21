@@ -19,7 +19,7 @@ typedef struct ChukaPlacement
     u8 pad18[0x19 - 0x18];
     u8 unk19;
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
+    s16 barHeight; /* 0x1C model-scale height divisor (rootMotionScale) */
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
@@ -114,7 +114,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
@@ -125,7 +125,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
@@ -140,7 +140,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
@@ -155,7 +155,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
@@ -170,7 +170,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
@@ -185,7 +185,7 @@ void chuka_update(int obj)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        h = ((ChukaPlacement*)data)->unk1C;
+        h = ((ChukaPlacement*)data)->barHeight;
         if (h != 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E63F8 / ((f32)h / lbl_803E63FC);

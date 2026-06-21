@@ -25,17 +25,17 @@ typedef struct DfpobjcreatorObjectDef
 typedef struct DfpobjcreatorPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 colorR; /* 0x4 -> spawn setup base.unk04[0] */
+    u8 colorG; /* 0x5 -> spawn setup base.unk04[1] */
+    u8 colorB; /* 0x6 -> spawn setup base.unk04[2] */
+    u8 colorA; /* 0x7 -> spawn setup base.unk04[3] */
     f32 posX;
     f32 posY;
     f32 posZ;
     s32 unk14;
     u8 pad18[0x19 - 0x18];
     u8 unk19;
-    s16 unk1A;
+    s16 behaviorMode; /* 0x1A switch selector (case 7 spawns the periodic object) */
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
@@ -128,7 +128,7 @@ void dfpobjcreator_update(int obj)
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        switch (((DfpobjcreatorPlacement*)data)->unk1A)
+        switch (((DfpobjcreatorPlacement*)data)->behaviorMode)
         {
         case 7:
             state->spawnTimer -= (s16)timeDelta;
@@ -139,10 +139,10 @@ void dfpobjcreator_update(int obj)
                 ((DfpobjcreatorSetup*)setup)->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
                 ((DfpobjcreatorSetup*)setup)->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
                 ((DfpobjcreatorSetup*)setup)->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[0] = ((DfpobjcreatorPlacement*)data)->unk4;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[1] = ((DfpobjcreatorPlacement*)data)->unk5;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[2] = ((DfpobjcreatorPlacement*)data)->unk6;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[3] = ((DfpobjcreatorPlacement*)data)->unk7;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[0] = ((DfpobjcreatorPlacement*)data)->colorR;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[1] = ((DfpobjcreatorPlacement*)data)->colorG;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[2] = ((DfpobjcreatorPlacement*)data)->colorB;
+                ((DfpobjcreatorSetup*)setup)->base.unk04[3] = ((DfpobjcreatorPlacement*)data)->colorA;
                 ((DfpobjcreatorSetup*)setup)->unk1E = -1;
                 ((DfpobjcreatorSetup*)setup)->unk20 = -1;
                 ((DfpobjcreatorSetup*)setup)->unk1A = 0xdc;

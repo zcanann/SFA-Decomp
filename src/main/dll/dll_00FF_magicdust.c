@@ -417,6 +417,7 @@ void magicdust_init(int obj, int placement)
         *(u16*)&((MagicDustState*)state)->unk276 = 0x5b2;
         *(u8*)&((MagicDustState*)state)->mode = 2;
         break;
+    case 0x2cf:
     default:
         *(u8*)(*(int*)(ref + 0x34) + 8) = 2;
         *(u16*)&((MagicDustState*)state)->ambientEffectId = 0x550;

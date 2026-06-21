@@ -523,15 +523,16 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             if (!createTransient)
             {
                 transient = s->transient;
-                found = -1;
                 for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
                 {
                     if (transient[i].mapId == idx && transient[i].shift == shift)
                     {
                         found = i;
-                        break;
+                        goto checkedTransient;
                     }
                 }
+                found = -1;
+            checkedTransient:
                 if (found == -1)
                 {
                     for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)

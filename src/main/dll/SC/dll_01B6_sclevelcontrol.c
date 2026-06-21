@@ -541,9 +541,9 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->musicTrack = 0x2d;
             Music_Trigger(0x2d, 1);
         }
-        if (((ScLevelControlState*)state)->unk21 != -1)
+        if (((ScLevelControlState*)state)->ambientMusicTrack != -1)
         {
-            ((ScLevelControlState*)state)->unk21 = -1;
+            ((ScLevelControlState*)state)->ambientMusicTrack = -1;
             Music_Trigger(0x22, 0);
         }
     }
@@ -554,9 +554,9 @@ void sc_levelcontrol_update(int obj)
             ((ScLevelControlState*)state)->musicTrack = 0x33;
             Music_Trigger(0x33, 1);
         }
-        if (((ScLevelControlState*)state)->unk21 != 0x22)
+        if (((ScLevelControlState*)state)->ambientMusicTrack != 0x22)
         {
-            ((ScLevelControlState*)state)->unk21 = 0x22;
+            ((ScLevelControlState*)state)->ambientMusicTrack = 0x22;
             Music_Trigger(0x22, 1);
         }
     }

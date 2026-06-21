@@ -2155,7 +2155,7 @@ void dll_07_func06(void)
             {
                 ((NewCloud*)D7_CLOUD)->unk1434 = ((NewCloud*)D7_CLOUD)->flakeCount;
             }
-            if (((NewCloud*)D7_CLOUD)->unk1434 < lbl_803DF1A0)
+            if (((NewCloud*)D7_CLOUD)->unk1434 < *(f32*)&lbl_803DF1A0)
             {
                 ((NewCloud*)D7_CLOUD)->unk1434 = lbl_803DF1A0;
             }

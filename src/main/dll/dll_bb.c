@@ -137,8 +137,7 @@ void camcontrol_applyState(CamcontrolCameraState *camera)
   Camera_SetFovY(lbl_803DD4D0);
   Obj_UpdateWorldTransform((s16 *)view);
   loadMapForCameraPos(camera->worldX,camera->worldY,camera->worldZ);
-  itmp = Camera_GetViewportYOffset();
-  lbl_803DD4C0 = itmp;
+  lbl_803DD4C0 = Camera_GetViewportYOffset();
   if ((int)lbl_803DD4C0 != camera->letterboxTargetOffset) {
     if ((int)lbl_803DD4C0 < camera->letterboxTargetOffset) {
       lbl_803DD4C0 = lbl_803DD4C0 + camera->letterboxStep * (int)timeDelta;

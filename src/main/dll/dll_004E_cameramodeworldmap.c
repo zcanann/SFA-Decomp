@@ -409,16 +409,15 @@ void CameraModeWorldMap_update(u8* obj)
     e = (s16)(objB->anim.rotX - 0x2198);
     if (e > -0x2000 && e < 0x2000)
     {
-        f32 lim = lbl_803E1A28;
-        if (lbl_803E1A28 <=
+        f32 lim;
+        lim = (lbl_803E1A28 >
             gCamWorldMapAlphaScale *
             (mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotX - 0x2198) * 2) / gCamWorldMapAngleScale) *
                 mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotY - 0x4000) * 2) / gCamWorldMapAngleScale)))
-        {
-            lim = gCamWorldMapAlphaScale *
+            ? lbl_803E1A28
+            : gCamWorldMapAlphaScale *
             (mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotX - 0x2198) * 2) / gCamWorldMapAngleScale) *
                 mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotY - 0x4000) * 2) / gCamWorldMapAngleScale));
-        }
         objB->anim.alpha = lim;
     }
     else

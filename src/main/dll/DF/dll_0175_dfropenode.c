@@ -372,10 +372,10 @@ void dfropenode_free(void* obj)
 typedef struct DfropenodePlacement
 {
     u8 pad0[0x18 - 0x0];
-    u8 unk18;
+    u8 flags18; /* bit0 enables rope-render pass */
     u8 pad19[0x1B - 0x19];
-    u8 unk1B;
-    s16 unk1C;
+    u8 textureIndex; /* gRopeNodeTextures index; 1 = white/active style */
+    s16 fadeGameBit; /* game bit gating the node fade-out */
     u8 pad1E[0x20 - 0x1E];
 } DfropenodePlacement;
 
@@ -405,7 +405,7 @@ void dfropenode_render(int obj, int p2, int p3)
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
     objDef = *(int*)&objAnim->placementData;
-    eventId = ((DfropenodePlacement*)objDef)->unk1C;
+    eventId = ((DfropenodePlacement*)objDef)->fadeGameBit;
     if ((eventId != 0) && (GameBit_Get(eventId) != 0))
     {
         oldAlpha = objAnim->alpha;
@@ -437,7 +437,7 @@ void dfropenode_render(int obj, int p2, int p3)
         }
     }
 
-    if (((((DfropenodePlacement*)objDef)->unk18 & 1) != 0) && (*(void**)&extra->linkedObj != NULL) &&
+    if (((((DfropenodePlacement*)objDef)->flags18 & 1) != 0) && (*(void**)&extra->linkedObj != NULL) &&
         (extra->rope != NULL))
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
@@ -447,7 +447,7 @@ void dfropenode_render(int obj, int p2, int p3)
         textureSetupFn_800799c0();
         textRenderSetupFn_800795e8();
         textRenderSetupFn_80079804();
-        if (((DfropenodePlacement*)objDef)->unk1B == 1)
+        if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
             renderState.red = 0xff;
             renderState.green = 0xff;
@@ -473,7 +473,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 gxBlendFn_80078b4c();
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
-            selectTexture((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->unk1B], 0);
+            selectTexture((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex], 0);
             setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                          (u8)alpha);
         }
@@ -484,7 +484,7 @@ void dfropenode_render(int obj, int p2, int p3)
             fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
             drawFn_8005cf8c(matrix, gRopeNodeDisplayList, 6);
         }
-        if (((DfropenodePlacement*)objDef)->unk1B == 1)
+        if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x480);
             gxBlendFn_80078b4c();

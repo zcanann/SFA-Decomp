@@ -1723,9 +1723,12 @@ void animatedobj_update(int* obj)
             ((GameObject*)obj)->objectFlags |= 0x8000;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
-        if (((GameObject*)obj)->anim.seqId == 0x774)
+        switch (((GameObject*)obj)->anim.seqId)
+        {
+        case 0x774:
         {
             int i;
+            seq = ((GameObject*)obj)->extra;
             for (i = 0; i < seq->eventCount; i++)
             {
                 int b = seq->eventIds[i];
@@ -1753,6 +1756,8 @@ void animatedobj_update(int* obj)
                     break;
                 }
             }
+            break;
+        }
         }
     }
 }

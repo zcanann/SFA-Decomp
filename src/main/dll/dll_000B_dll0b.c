@@ -2223,7 +2223,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     f32 rot[3];
     EffXform xf;
     f32 mtxA[12];
-    f32 mtxB[16];
+    f32 mtxB[12];
     int** p;
     int slot;
     void* view;
@@ -2912,15 +2912,15 @@ void dll_0B_func05(void)
                             int* o;
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
-                                tmpl.x += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX;
-                                tmpl.y += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY;
-                                tmpl.z += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ;
+                                tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
+                                tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
+                                tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.z;
                             }
                             else
                             {
-                                tmpl.x += ((ModgfxEffectSlot*)eff)->posOffsetX;
-                                tmpl.y += ((ModgfxEffectSlot*)eff)->posOffsetY;
-                                tmpl.z += ((ModgfxEffectSlot*)eff)->posOffsetZ;
+                                tmpl.x = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.x;
+                                tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
+                                tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
                             }
                             o = Obj_AllocObjectSetup(0x20, 0x66);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
@@ -2930,19 +2930,19 @@ void dll_0B_func05(void)
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
                     }
-                    else if (*(void**)eff != NULL)
+                    if (*(void**)eff != NULL)
                     {
                         if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                         {
-                            tmpl.x += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX;
-                            tmpl.y += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY;
-                            tmpl.z += ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ;
+                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
+                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
+                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.z;
                         }
                         else
                         {
-                            tmpl.x += ((ModgfxEffectSlot*)eff)->posOffsetX;
-                            tmpl.y += ((ModgfxEffectSlot*)eff)->posOffsetY;
-                            tmpl.z += ((ModgfxEffectSlot*)eff)->posOffsetZ;
+                            tmpl.x = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.x;
+                            tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
+                            tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
                         }
                         *(f32*)(*(int*)eff + 0x18) = tmpl.x;
                         *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
@@ -3024,25 +3024,24 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x100000)
                 {
-                    GameObject* obj = *(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj;
                     if (active == 1)
                     {
                         if (((ModgfxEffectSlot*)eff)->frameDuration != 0)
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
                                 (*(f32*)(E9 + emOff + 0x4) - (f32)(u32)
-                            obj->anim.alpha
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha
                             )
                             /
                             (f32)((ModgfxEffectSlot*)eff)->frameDuration;
                             ((ModgfxEffectSlot*)eff)->alphaCurrent = (f32)(u32)
-                            obj->anim.alpha;
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha;
                         }
                         else
                         {
                             ((ModgfxEffectSlot*)eff)->alphaDelta =
                                 *(f32*)(E9 + emOff + 0x4) - (f32)(u32)
-                            obj->anim.alpha;
+                            (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha;
                             ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                         }
                     }
@@ -3056,7 +3055,7 @@ void dll_0B_func05(void)
                     {
                         ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                     }
-                    obj->anim.alpha = (int)((ModgfxEffectSlot*)eff)->alphaCurrent;
+                    (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha = (int)((ModgfxEffectSlot*)eff)->alphaCurrent;
                 }
                 if (*(int*)(E9 + emOff) & 0x400000)
                 {

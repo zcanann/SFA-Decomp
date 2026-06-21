@@ -45,19 +45,19 @@ typedef struct PlayerState {
     u8 flags3F4; /* state flag byte: bit6 = path-follow/scripted-move gate */
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
-    u8 unk3F7;
+    u8 fallSeverity; /* fall/landing severity tier (0-3) set from the fall height-difference (hdiff vs lbl_803E8104/8108/810C thresholds); selects the landing move/sfx (move 0xa/0x90) and at >=2 fires camera shake + a ground-impact ObjHits; reset to 0 on state change */
     int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
     int moveParams; /* ptr to a 0x60 locomotion-parameter block (lbl_80333250); deref'd as f32 speed thresholds/limits at +4/+c/+10/+14/+18/+1c */
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
-    u8 unk40C;
+    u8 fallFrames; /* frames spent in the falling/airborne path (gravity applied to velocityY each tick); ++ per frame clamped to 10, reset to 0 on landing/state-entry; >5 (with flag 0x3f1:b01) fires the landing rumble + footstep sfx */
     u8 staffHoldFrames; /* frames the staff-hold/grab condition has persisted; ++ while held, reset to 0 on state changes, clamped to 10; >2 forces drop of carried object + staff action */
     u8 pad40E[0x410 - 0x40E];
-    f32 unk410;
+    f32 rumbleCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; when expired (<=0) and moving fast (animSpeedA > thresh) fires doRumble + sfx 0x404 and resets to the cooldown interval */
     f32 buttonHoldTimer; /* accumulates frame-time while button 0x100 is held (and fn_802A9A0C true), clamped to a max; reset to 0 when released; paired with the 0x3f4:b20 "accumulating" flag */
-    f32 unk418;
+    f32 actionCooldown; /* f32 input-cooldown countdown decremented by timeDelta each tick, floored to 0; gates button 0x100: when pressed and the timer has expired (<=0) performs the staff/aim action (fn_802AA014) and resets to the cooldown interval */
     u8 unk41C;
     u8 pad41D[0x420 - 0x41D];
     f32 leanCurveScale; /* lean-curve sample: Curve_EvalCatmullRom(leanCurve) indexed by targetYawRateSigned (default 1.0); multiplies targetYawRateLimit to bound the per-frame targetYaw delta */
@@ -129,7 +129,7 @@ typedef struct PlayerState {
     f32 climbTargetY; /* target localPosY for the current climb step (climbStep*climbStepHeight + climbBaseY); lerp endpoint */
     f32 climbStartY;  /* localPosY at climb-step start; lerp base: localPosY = progress*(climbTargetY-climbStartY) + climbStartY */
     f32 unk4FC;
-    f32 unk500;
+    f32 moveStartPosY; /* localPosY captured at the start of the 0x35/0x37 vertical moves; the per-frame Y is interpolated between this anchor and the current localPosY by currentMoveProgress */
     f32 unk504;
     f32 unk508;
     f32 unk50C;
@@ -157,10 +157,10 @@ typedef struct PlayerState {
     f32 groundNormalY;
     f32 groundNormalZ;
     f32 groundNormalW;
-    f32 unk57C;
-    f32 unk580;
-    f32 unk584;
-    f32 unk588;
+    f32 slopeTangentX; /* horizontal tangent to the ground plane (= -groundNormalZ); the (slopeTangentX, slopeTangentY, slopeTangentZ) vector is the ground normal rotated 90deg in XZ, used to project movement along the slope */
+    f32 slopeTangentY; /* ground-tangent Y component, always 0 (the tangent is horizontal) */
+    f32 slopeTangentZ; /* ground-tangent Z component (= groundNormalX) */
+    f32 slopePlaneD; /* signed plane-distance term for the slope-tangent plane: -(point . slopeTangent), computed when the ground tangent is captured */
     f32 unk58C;
     u8 pad590[0x594 - 0x590];
     f32 unk594;
@@ -297,7 +297,7 @@ typedef struct PlayerState {
     s16 characterId;
     s16 pendingBoneEffectId; /* one-shot bone-particle effect id (set by fn_802960E8); spawned via gBoneParticleEffectInterface->spawnEffect then cleared to 0 */
     s16 unk81E;
-    f32 cutsceneTimer; /* time-stop/cutscene countdown (-= dt while >0); on expiry calls cutsceneEnterExit(0,0)+sets unk8CF, at threshold lbl_803E7EF0 calls cutsceneEnterExit(1,0)+setTimeStop */
+    f32 cutsceneTimer; /* time-stop/cutscene countdown (-= dt while >0); on expiry calls cutsceneEnterExit(0,0)+sets cutsceneEnded, at threshold lbl_803E7EF0 calls cutsceneEnterExit(1,0)+setTimeStop */
     f32 unk824;
     f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
@@ -316,12 +316,12 @@ typedef struct PlayerState {
     u8 pad860[0x86C - 0x860];
     u8 surfaceType;
     s8 stickDirection;
-    u8 unk86E;
+    u8 latchedStickDir; /* latched stick-direction code (0..4) from the prior frame's edge/collision probe; compared against the current stickDirection to detect a held/repeated direction (gates the press-vs-hold move + speed branch); reset to 0 when the direction changes */
     u8 stopMoveIndex; /* cycling index into gPlayerStopMoves[], advanced %3 */
     u8 pad870[0x874 - 0x870];
     f32 unk874;
-    f32 unk878;
-    f32 unk87C;
+    f32 particleBurstCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; while moving fast, on expiry (<=0) spawns a burst of particle FX (spawnObject 0x804) then resets to the burst interval */
+    f32 targetSuppressTimer; /* f32 countdown decremented by frame-time each tick, floored to 0; set on a state transition (flag 0x3f2:b40); while active (>0, queried via fn_80295C24) suppresses A-button-hint camera targeting */
     f32 idleDelayTimer; /* idle-eligibility countdown (f32); set positive at state init (lbl_803E7FA4), decremented by frame-time in fn_802B18BC and floored at 0; the default-idle "stay" path requires it == 0 */
     u32 unk884;
     f32 unk888;
@@ -351,8 +351,8 @@ typedef struct PlayerState {
     u8 staffGrown; /* 1 when the staff is grown/extended (set by staffDoGrowShrinkAnim grow path) */
     u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
     u8 pad8B5[0x8B8 - 0x8B5];
-    u8 unk8B8;
-    u8 pad8B9[0x8BF - 0x8B9];
+    u8 queuedBitCount; /* count (0..4) of queued bit-index bytes stored in the following array at 0x8b9; a "case 1" push appends a byte and increments this, clamped to 4; on state init the loop ORs (1 << each stored byte) into the bitmask at 0x310 then this is reset to 0 */
+    u8 pad8B9[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
     u8 unk8BF;
     u8 unk8C0;
     u8 unk8C1;
@@ -363,13 +363,13 @@ typedef struct PlayerState {
     u8 pad8C6[0x8C7 - 0x8C6];
     u8 staffUnlockedFlags;
     u8 curAnimId; /* current move/anim id (0x44 = default) */
-    u8 unk8C9;
+    u8 cameraFlags; /* flags word accumulated via |= (e.g. bit 2) and passed to the camera interface (gCameraInterface slot 0x68) on state change; reset to 0 on state entry */
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
     s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */
     s8 activeHitWindow; /* index (0-2) of the currently-active hit window in the move's HitDesc list; -1 = none active */
     s8 hitWindowIndex; /* latched copy of activeHitWindow used to index per-window hit data (offset *4) */
-    u8 unk8CF;
+    u8 cutsceneEnded; /* one-shot flag set to 1 when cutsceneTimer expires and cutsceneEnterExit(0,0) runs (in playerUpdate / playerUpdateWhileTimeStopped); cleared to 0 on a new move start; signals the cutscene/time-stop just finished */
     u8 unk8D0;
     u8 unk8D1;
     u8 unk8D2;

@@ -2,7 +2,7 @@
  * dll_1CE: hatch-door object. The lid coasts open under a clamped velocity
  * while idle; once a key object (seqId 0x18F or 0x1D6) is in range it counts
  * down, sets its placement gamebit, and - if the load isn't locked and the
- * placement's unk1A bit matches gamebit 0x46D - spawns its contents object
+ * placement's spawnGameBitValue matches gamebit 0x46D - spawns its contents object
  * (subtype 0x246) seeded from the door's transform.
  *
  * The TU also hosts dimmagicbridge_* and explosion_* sibling exports (in
@@ -500,7 +500,7 @@ void dll_1CE_update(int* obj)
     }
     GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
     sub->opened = 1;
-    if ((u32)(s16)((Dll1CEPlacement*)q)->unk1A != GameBit_Get(0x46d)) return;
+    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != GameBit_Get(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
         int* no = Obj_AllocObjectSetup(0x30, 0x246);

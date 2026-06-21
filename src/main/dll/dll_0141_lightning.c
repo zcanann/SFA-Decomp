@@ -146,7 +146,7 @@ void lightning_update(u8* obj)
             handle = lightningCreate((float*)(obj + 0x0c), (float*)(objects[objectIndex] + 0x0c),
                                      *(f32*)(state + 0x08), ((MmpMoonrockState*)state)->baseY,
                                      delay, state[0x1d],
-                                     (u8)(((LightningFlags*)(state + 0x25))->style ? 1 : 0));
+                                     (u8)(((LightningFlags*)(state + 0x25))->style != 0));
             *(int*)state = handle;
             *(f32*)(state + 0x04) = lbl_803E4088;
             if ((((LightningMode*)(state + 0x24))->mode & 1) != 0)

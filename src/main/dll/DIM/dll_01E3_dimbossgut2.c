@@ -17,11 +17,11 @@ typedef struct Dimbossgut2State
     u8 pad0[0x4 - 0x0];
     s32 unk4;
     u8 pad8[0x3DC - 0x8];
-    s32 unk3DC;
+    s32 curvePath; /* 0x3DC rom-curve path walker (Curve_AdvanceAlongPath/goNextPoint) */
     u8 pad3E0[0x400 - 0x3E0];
-    u16 unk400;
+    u16 flags400; /* 0x400 bit3 = advancing along path */
     u8 pad402[0x40C - 0x402];
-    s32 unk40C;
+    s32 curveData; /* 0x40C Dimbossgut2Curve definition pointer */
     u8 pad410[0x42C - 0x410];
 } Dimbossgut2State;
 
@@ -101,15 +101,15 @@ void dimbossgut2_updateTracking(int obj, int state)
     int player;
     int rel;
 
-    curve = ((Dimbossgut2State*)state)->unk40C;
-    r30v = ((Dimbossgut2State*)state)->unk3DC;
-    if ((((Dimbossgut2State*)state)->unk400 & 8) != 0)
+    curve = ((Dimbossgut2State*)state)->curveData;
+    r30v = ((Dimbossgut2State*)state)->curvePath;
+    if ((((Dimbossgut2State*)state)->flags400 & 8) != 0)
     {
         if ((Curve_AdvanceAlongPath(r30v, ((Dimbossgut2Curve*)curve)->f10) != 0) || (*(int*)(r30v + 0x10) != 0))
         {
             if ((*gRomCurveInterface)->goNextPoint((void*)r30v) != 0)
             {
-                ((Dimbossgut2State*)state)->unk400 = ((Dimbossgut2State*)state)->unk400 & ~0x8;
+                ((Dimbossgut2State*)state)->flags400 = ((Dimbossgut2State*)state)->flags400 & ~0x8;
             }
         }
         angle = (s16)(getAngle(*(f32*)(r30v + 0x74), *(f32*)(r30v + 0x7c)) + 0x8000);
@@ -174,7 +174,7 @@ void dimbossgut2_free(int arg9)
     void* childObj;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    handle = ((Dimbossgut2Curve*)((Dimbossgut2State*)state)->unk40C)->light;
+    handle = ((Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData)->light;
     if (handle != 0)
     {
         ModelLightStruct_free((void*)handle);
@@ -199,7 +199,7 @@ void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
                                                                       lbl_803E4CF0);
-        light = *(u8**)(((Dimbossgut2State*)light)->unk40C + 0x18);
+        light = *(u8**)(((Dimbossgut2State*)light)->curveData + 0x18);
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {
             queueGlowRender(light);
@@ -244,7 +244,7 @@ void dimbossgut2_update(int obj)
             tmpVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
         }
         while (tmpVar != 0);
-        posData = *(float**)&((Dimbossgut2State*)state)->unk40C;
+        posData = *(float**)&((Dimbossgut2State*)state)->curveData;
         if ((*posData < lbl_803E4CD0) && (posData[4] < lbl_803E4CD4))
         {
             heightDiff = posData[3] - ((GameObject*)obj)->anim.localPosY;
@@ -274,7 +274,7 @@ void dimbossgut2_update(int obj)
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
-        val = ((Dimbossgut2State*)state)->unk40C;
+        val = ((Dimbossgut2State*)state)->curveData;
         curveLight = *(u8**)(val + 0x18);
         if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))
         {
@@ -313,7 +313,7 @@ void dimbossgut2_init(int obj, int def, int p3)
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
         obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
     ((GameObject*)obj)->animEventCallback = NULL;
-    p = ((Dimbossgut2State*)state)->unk40C;
+    p = ((Dimbossgut2State*)state)->curveData;
     z = lbl_803E4CD8;
     ((Dimbossgut2Curve*)p)->f0 = z;
     ((Dimbossgut2Curve*)p)->f4 = z;

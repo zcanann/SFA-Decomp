@@ -2521,7 +2521,7 @@ void ObjHits_Update(int objectCount)
                         {
                             diff = ((GameObject*)obj)->anim.worldPosY -
                                 ((GameObject*)candObj)->anim.worldPosY;
-                            if (diff > gObjHitsScalarZero)
+                            if (diff > *(const f32*)&gObjHitsScalarZero)
                             {
                             }
                             else

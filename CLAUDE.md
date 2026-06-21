@@ -29,12 +29,16 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
 - **A config that DROPS the headline % but introduces a needed STRUCTURAL feature (extra saved
   reg, surviving `mr`/`fmr` copy, an un-coalesced web) is worth a FULL per-region diff before
   rejecting — don't bail on the number alone.** Reject ONLY when the residual is provably
-  config-INHERENT and not merely larger. Worked example: fn_801B3DE4 (dimexplosion) —
-  `#pragma optimization_level 1` yields the target's 6th saved reg (`_savegpr_26`) + the `mr
-  r29,r31` base copy that O4 value-numbering folds away, but caps BELOW O4's 97.07% because the
-  +34 instrs are O1-inherent (per-conversion `lis 17200`, expf-chain f1/f2 coloring) — a real
-  trade-down, confirmed only by reading every region. Contrast: O1/O2 creation-order alloc (#108)
-  and O1≈O4 small-loop fns (#110) ARE genuine climbs — measure, don't assume.
+  config-INHERENT and not merely larger. Worked example: fn_801B3DE4 (dimexplosion) — `#pragma
+  optimization_level 1` yields the target's 6th saved reg + the `mr r29,r31` base copy that O4
+  value-numbering folds away, but at +34 O1-inherent instrs (per-conversion `lis 17200`, expf
+  coloring). For a long time this read as a config-inherent trade-down → "bank it." **That verdict
+  was WRONG: the `mr` copy was reachable at O4 from a SOURCE lever (#131 — a no-op `|=` defeats the
+  front-end same-value merge), and the fn is now 100%.** Lesson: a pragma that surfaces a needed
+  structural feature only tells you the feature is REACHABLE — keep hunting a source form that
+  produces it WITHOUT the pragma's collateral cost; "config-inherent residual" is a hypothesis,
+  not a verdict. Contrast: O1/O2 creation-order alloc (#108) and O1≈O4 small-loop fns (#110) ARE
+  genuine climbs — measure, don't assume.
 
 ## High-impact one-liners (try first at 80-95%)
 1. **`#pragma peephole off` + `scheduling off`** (matched with `reset`) around the fn — unfuses
@@ -325,10 +329,12 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     flags → very bottom. Use-count/first-use/loop-depth are INERT within a class. CLASS-MOVERS
     (the lever): first-def-split (a branch-consumed call result → its own var), last-def merge,
     `#pragma optimization_level 2` (creation-order alloc), block-scope per-arm re-decls, same-
-    variable recycle (#119). WITHIN-class order is the genuine open frontier (rotmap first; the
-    transposition penalty drowns real structural fixes — fix those, then bank the pure-rename
-    residual). Cross-class interleave is perturbed fn-globally by a magic-const division /
-    conversions (dose effect) — characterized, source-levers exhausted; bank-and-retry.
+    variable recycle (#119), and #131 (no-op `|=` to force a surviving same-value copy + own web —
+    the source for an "un-coalesced web" the allocator otherwise folds). WITHIN-class order is the
+    smallest residual (rotmap first; the transposition penalty drowns real structural fixes — fix
+    those first). "Source-levers exhausted / bank-and-retry" has been WRONG repeatedly (#130, #131):
+    treat it as not-yet-found, not impossible. Cross-class interleave is perturbed fn-globally by a
+    magic-const division / conversions (dose effect).
 109. **s64/fixed-point cracks:** (a) `x <<= (n & 0xFFFFFFFF)` materializes the shift-count mask; (b)
     count-down `for(i=N;i!=0;i--)` for the RMW-halving unroll (fixed regs + per-copy `mr`); (c) two-
     web u32 address temp; (d) plain-statement `cmp; beq next; b far` = a single-case `switch` with
@@ -421,13 +427,38 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     changes the interference graph, and flips the allocator's reg choice with ZERO other instruction
     change — reuses a different just-freed reg. CONVERSE (un-name a temp by inlining its defining
     EXPRESSION at each use, #107) also flips it. ONLY works for re-derivable values (memory derefs,
-    `obj->field`); does NOT work for CALL RESULTS (can't re-call) or VN-equal pointer copies (fold
-    back). Also #115-adjacent: renaming ONE loop's counter to a distinct var removes a cross-loop
+    `obj->field`); does NOT work for CALL RESULTS (can't re-call). VN-equal pointer copies were
+    thought to fold back here too — #131's no-op `|=` cracks THOSE (forces a surviving copy + own
+    web). Also #115-adjacent: renaming ONE loop's counter to a distinct var removes a cross-loop
     coalescing barrier. Brute-force MANY spellings and grep the affected reg each build — this
     cracked dim2roofrub_update (byte-identical-except-r29/r31, declared an uncrackable cap by 5
     prior agents → 100%) and the int-permutation half of dimwooddoor (pitchSign from fresh
     modelVec[1] read). The "#108 within-class scramble is the genuine open frontier / no source
-    lever" assertion is FALSE for deref-sourced values — second-guess it.
+    lever" assertion is FALSE for deref-sourced values — second-guess it. **Now also FALSE for
+    VN-equal pointer copies — see #131 (the no-op-bitwise merge-defeat). The "open frontier" is
+    much smaller than it looks; assume a source lever exists and hunt the asm.**
+131. **The front-end SAME-VALUE MERGE is breakable: a no-op bitwise op forces a surviving `mr`
+    copy + a SEPARATE web (the clean-C source for "two overlapping same-value saved regs joined by
+    a copy" — what #108/#130 called the open frontier).** Two identical `state+off` (one base for
+    most fields, a second for ONE field) get value-numbered into ONE web by the FRONT-END *before
+    any optimizer pass* — proven by ret-patching IroCSE/IroPropagate/IroRangeProp/AddProp/VN, all
+    survive; every `opt_*`/pragma/opt-level/compiler-version (1.0–3.0a5) folds it; a plain second
+    pointer, `e14=e` copy, cast, phi-with-overhead, or opaque call-result all fold or add cost.
+    DEFEAT IT: `e14 = state + off; e14 |= e;` (e == state+off) → emits `or r29,r31,r31` (== `mr
+    r29,r31`) AND keeps e14 a distinct web, because the `|` node blocks the merge — value still
+    state+off, ZERO extra instructions, no branch. Then (a) pin the reg with #108 DECL-ORDER
+    (declare e14 FIRST → r29); (b) align the copy's POSITION by computing the field value to a temp
+    first (`int life = (int)(K*sqrtf(spd)); e14 = state+off; e14 |= e; *(int*)(e14+0x14)=life;`) so
+    the def/`mr` sits AFTER the intervening call, matching target. `&=`/`|=` both work (no-op when
+    the operand equals the lvalue). Companion (#112 corollary, same fn): the per-call slot re-derive
+    + add operand order — grouping the field K onto the BASE (`(char*)((char*)state + K) + idx*0x30`)
+    re-derives `state+off` per call AND emits `add r28,r30` (state,off order); grouping K onto the
+    INDEX (`state + (idx*0x30 + K)`) re-derives but FLIPS to `add r30,r28` (off,state) — the last
+    3-byte gap. METHOD: this fell ONLY after switching from fail-fast-on-fuzzy% to a structural-
+    distance metric (count real instr/reg diffs vs target asm, ignore @NNN-reloc names + subi/addi
+    display) — a 96% variant was structurally CLOSER than the 98% baseline; the % hid the path.
+    Read the emitted asm per variant. (fn_801B3DE4/dimexplosion: flagged impossible/"open frontier"
+    across ~15 sessions → 100%.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,

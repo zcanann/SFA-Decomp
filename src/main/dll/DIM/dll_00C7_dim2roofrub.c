@@ -178,7 +178,7 @@ typedef struct Dim2roofrubPlacement
     f32 posY;
     f32 posZ;
     s32 unk14;
-    s16 unk18;
+    s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
@@ -749,21 +749,21 @@ void dim2roofrub_init(int* obj, int* params)
     ((Dim2roofrubState*)state)->unk114 = 0;
     ((GameObject*)obj)->unkF8 = 0;
     f4 = ((GameObject*)obj)->unkF4;
-    if (f4 == 0 && ((Dim2roofrubPlacement*)params)->unk18 != 1)
+    if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
-    else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->unk18 != f4 - 1)
+    else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)state);
-        if (((Dim2roofrubPlacement*)params)->unk18 != -1)
+        if (((Dim2roofrubPlacement*)params)->animDataIndex != -1)
         {
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)state, (u8*)params);
         }
-        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -932,7 +932,7 @@ void dim2roofrub_update(int* obj)
     ObjSeqState* seq = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (params != NULL && ((Dim2roofrubPlacement*)params)->unk18 != -1)
+    if (params != NULL && ((Dim2roofrubPlacement*)params)->animDataIndex != -1)
     {
         Dim2PartVec v;
         int count;

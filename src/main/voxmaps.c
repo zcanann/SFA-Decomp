@@ -763,12 +763,15 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             blocked = 1;
             dir = 0;
         }
-        else if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2))
+        if (!blocked)
         {
-            blocked = 1;
-            dir = 0;
+            if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2))
+            {
+                blocked = 1;
+                dir = 0;
+            }
         }
-        else
+        if (!blocked)
         {
             sumCur = occ[dir][0] + occ[dir][1] + occ[dir][2] + occ[dir][3];
             sumNext = occ[next][0] + occ[next][1] + occ[next][2] + occ[next][3];

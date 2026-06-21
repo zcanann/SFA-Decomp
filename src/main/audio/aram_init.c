@@ -117,10 +117,10 @@ void aramInit(u32 extraSize)
     }
     DCFlushRange(buf, 0x500);
     flag = status + 0x281;
-    status[0x281] = 0;
-    status[0x280] = 0;
-    status[0x505] = 0;
-    status[0x504] = 0;
+    flag[0] = 0;
+    flag[-1] = 0;
+    flag[0x284] = 0;
+    flag[0x283] = 0;
     aramUploadData((u32)buf, arBase, 0x500, 0, 0, 0);
     while (*flag != 0)
     {

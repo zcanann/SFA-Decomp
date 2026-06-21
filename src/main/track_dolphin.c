@@ -2628,12 +2628,14 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
             if (f26 < c - r) continue;
             if (f27 > c + r) continue;
 
-            n = transformState->activeMatrixIndex;
-            desc->currentCollisionMatrix = transformState->matrices[n + 2];
-            desc->currentMatrix = transformState->matrices[n];
-            n = transformState->activeMatrixIndex ^ 1;
-            desc->alternateCollisionMatrix = transformState->matrices[n + 2];
-            desc->alternateMatrix = transformState->matrices[n];
+            desc->currentCollisionMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2];
+            desc->currentMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex];
+            desc->alternateCollisionMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[(((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2];
+            desc->alternateMatrix =
+                ((ObjHitbox*)resetObj)->transformState->matrices[((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1];
 
             desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
             desc->object = resetObj;
@@ -3049,7 +3051,7 @@ extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy,
 int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 {
     u8* base = gIntersectSegmentTypeTable;
-    TrackBlockDescriptor* desc;
+    TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
     TrackBlockDescriptor* end;
     u8* ptr;
     int i, j;
@@ -3059,10 +3061,12 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 
     if (e >= 0)
     {
-        conv[0] = conv[3] = b;
+        conv[0] = b;
+        conv[3] = b;
         conv[1] = (int)(c - lbl_803DECE8);
         conv[4] = (int)(lbl_803DECE8 + c);
-        conv[2] = conv[5] = d;
+        conv[2] = d;
+        conv[5] = d;
         hitDetectFn_800691c0((int*)a, conv, f, 1);
     }
     else
@@ -3075,7 +3079,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
     end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
-    for (desc = (TrackBlockDescriptor*)(base + 0x424); desc < end; desc++)
+    for (; desc < end; desc++)
     {
         if (lbl_803DCF60 >= 0x23) break;
         if (desc->object != NULL)
@@ -4236,7 +4240,10 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
         rad = (f32)((u16)modelFileHeaderGetCullDistance((void*)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
-        if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
+        {
+            f32 ddy = dy * dy;
+            if (ddy + dx * dx + dz * dz < rad) hit = 1;
+        }
         if (hit == 0)
         {
             f32 ex = ((GameObject*)o)->anim.localPosX - w1[0];

@@ -173,6 +173,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
 {
     GameObject* object;
+    RomCurvePoint** list;
     int found1;
     int hits;
     RomCurvePoint* point;
@@ -180,10 +181,9 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     f32 dx;
     f32 dz;
     int ang;
-    int count;
     int i;
+    int count;
     int j;
-    RomCurvePoint** list;
     f32 sum0;
     f32 sum1;
     f32 sum2;
@@ -195,19 +195,17 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     object = (GameObject*)obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
     {
-        sum0 = lbl_803E0668;
         count = 0;
-        sum1 = sum0;
-        sum2 = sum0;
-        sum3 = sum0;
+        sum3 = sum2 = sum1 = sum0 = lbl_803E0668;
         for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
             hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY,
                                         collision->points[i][2], &hitOut, -1, 0);
             found1 = 0;
-            if ((hits != 0) && (list = hitOut, 0 < hits))
+            if (hits != 0)
             {
+                list = hitOut;
                 for (j = 0; j < hits; j++)
                 {
                     if (!found1)
@@ -243,16 +241,19 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
         {
             collision->surfaceCounter = 0;
         }
-        dz = collision->segmentLocalPoints[11] - collision->segmentLocalPoints[2];
-        dx = heights[3] - heights[0];
+        dx = heights[3];
+        dz = collision->segmentLocalPoints[11];
+        dz = dz - collision->segmentLocalPoints[2];
+        dx = dx - heights[0];
         getAngle(dx, dz);
         ang = getAngle(dx, dz);
         object->anim.rotY = -ang;
         if (((int)collision->flags & 0x400) != 0)
         {
-            object->anim.rotZ = getAngle(heights[1] - heights[0],
-                                         collision->segmentLocalPoints[3] -
-                                         collision->segmentLocalPoints[0]);
+            dx = heights[1];
+            dz = collision->segmentLocalPoints[3] - collision->segmentLocalPoints[0];
+            dx = dx - heights[0];
+            object->anim.rotZ = getAngle(dx, dz);
         }
     }
 }

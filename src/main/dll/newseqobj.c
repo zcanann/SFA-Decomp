@@ -277,8 +277,9 @@ void fn_80150EDC(void* p1, void* p2)
                 *(f32*)((u8*)p2 + 0x328) = zero;
                 ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
                 {
-                    SeqRow16* arow = (SeqRow16*)seqRows + *(u16*)((u8*)p2 + 0x338);
-                    *(u16*)((u8*)p2 + 0x338) = arow->alt;
+                    SeqRow16* seqRow16 = (SeqRow16*)seqRows;
+                    *(u16*)((u8*)p2 + 0x338) =
+                        seqRow16[*(u16*)((u8*)p2 + 0x338)].alt;
                 }
             }
         }
@@ -308,12 +309,10 @@ void fn_80150EDC(void* p1, void* p2)
             Baddie_SetMove(p1, p2, row->anim,
                         *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
                         (u8)row->flags);
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)p1,
-                *(f32*)(table + (row->anim << 2)));
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            *(u16*)((u8*)p2 + 0x338) = row->next;
+                *(f32*)(table + (seqRow16[*(u16*)((u8*)p2 + 0x338)].anim << 2)));
+            *(u16*)((u8*)p2 + 0x338) = seqRow16[*(u16*)((u8*)p2 + 0x338)].next;
         }
         else
         {
@@ -519,9 +518,10 @@ void fn_80150910(int* obj, u8* state)
             u8 r = randomGetRange(1, tbl4[8]);
             if (*(u16*)(state + 0x338) != 0)
             {
-                state[0x2f2] = (u8) * (u32*)(tbl1c + *(u16*)(state + 0x338) * 16 + 0xc);
                 {
                     SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
+                    state[0x2f2] = (u8)row->extra;
+                    row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
                     Baddie_SetMove(obj, state, row->anim,
                                 *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
                                 (u8)row->flags);

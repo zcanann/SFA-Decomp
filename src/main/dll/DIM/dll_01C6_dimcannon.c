@@ -295,8 +295,8 @@ void dimcannon_update(int* obj)
             break;
         }
     case 4:
-        DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4, *(f32*)&((DimCannonState*)state)->unk8,
-                                   ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
+        DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->aimTargetX, *(f32*)&((DimCannonState*)state)->aimTargetY,
+                                   ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
         if (GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
         {
             ((DimCannonState*)state)->fireState = 5;
@@ -340,16 +340,16 @@ void dimcannon_update(int* obj)
                     *(f32*)(e + 0x14) = *(f32*)(e + 0x18);
                     *(f32*)(e + 0x3c) = *(f32*)(e + 0x40);
                     *(f32*)(e + 0x64) = *(f32*)(e + 0x68);
-                    if (j == 0 || *(f32*)(e + 0x3c) > *(f32*)&((DimCannonState*)state)->unk8)
+                    if (j == 0 || *(f32*)(e + 0x3c) > *(f32*)&((DimCannonState*)state)->aimTargetY)
                     {
-                        *(f32*)&((DimCannonState*)state)->unk8 = *(f32*)(e + 0x3c);
+                        *(f32*)&((DimCannonState*)state)->aimTargetY = *(f32*)(e + 0x3c);
                     }
                 }
                 *(f32*)(state + 0x38) = *(f32*)(*(char**)(state + 0x0) + 0xc);
                 *(f32*)(state + 0x60) = *(f32*)(*(char**)(state + 0x0) + 0x10);
                 ((DimCannonState*)state)->unk88 = *(f32*)(*(char**)(state + 0x0) + 0x14);
-                *(f32*)&((DimCannonState*)state)->unk4 = *(f32*)(state + 0x14);
-                ((DimCannonState*)state)->unkC = *(f32*)(state + 0x64);
+                *(f32*)&((DimCannonState*)state)->aimTargetX = *(f32*)(state + 0x14);
+                ((DimCannonState*)state)->aimTargetZ = *(f32*)(state + 0x64);
             }
             if (((DimCannonState*)state)->aimYaw > 0)
             {
@@ -361,9 +361,9 @@ void dimcannon_update(int* obj)
             }
             ((DimCannonState*)state)->distance = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
                                                             (f32*)(*(char**)(state + 0x0) + 0x18));
-            DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->unk4,
-                                       *(f32*)&((DimCannonState*)state)->unk8,
-                                       ((DimCannonState*)state)->unkC, ((DimCannonState*)state)->distance);
+            DIMwooddoor_updateShardAim(obj, *(f32*)&((DimCannonState*)state)->aimTargetX,
+                                       *(f32*)&((DimCannonState*)state)->aimTargetY,
+                                       ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
             DIMwooddoor_spawnShard(obj, 0);
             {
                 f32 d2 = ((DimCannonState*)state)->distance;
@@ -455,12 +455,12 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             else
             {
-                if (((DimCannonState*)state)->unkA8 != 0)
+                if (((DimCannonState*)state)->prevAimDelta != 0)
                 {
                     Sfx_PlayFromObject((u32)obj, 0x1fe);
                 }
             }
-            ((DimCannonState*)state)->unkA8 = delta;
+            ((DimCannonState*)state)->prevAimDelta = delta;
             if (((DimCannonState*)state)->aimYaw > 0)
             {
                 ((DimCannonState*)state)->aimYaw -= framesThisStep;

@@ -1068,7 +1068,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
             result = -result;
             if (result != startState)
             {
-                ((BaddieState*)obj)->prevSubstate = startState;
+                ((BaddieState*)obj)->prevSubstate = (s16)(int)startState;
                 ((BaddieState*)obj)->moveJustStartedB = 1;
                 ((BaddieState*)obj)->unk32E = 0;
             }

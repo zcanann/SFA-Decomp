@@ -77,7 +77,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     f32 outY;
     f32 outZ;
     f32 outX;
-    f32 mtx[24];
+    f32 mtx[22];
 
     state = ((GameObject*)obj)->extra;
     obj[0] = (s16)((*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTX) & 0x3f) << 10);

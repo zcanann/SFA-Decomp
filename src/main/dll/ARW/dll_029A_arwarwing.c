@@ -536,10 +536,10 @@ void arwarwing_update(int obj)
             throttle = lbl_803E6FFC * timeDelta +
                 (f32)(u32)((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha;
             if (throttle > lbl_803E7000) throttle = lbl_803E7000;
-            ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = (u8)(int)
+            ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = (u8)(int)(f64)
             throttle;
             ((GameObject*)((ArwingState*)state)->thrusterR)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)((ArwingState*)state)->thrusterR)->anim.alpha = (u8)(int)
+            ((GameObject*)((ArwingState*)state)->thrusterR)->anim.alpha = (u8)(int)(f64)
             throttle;
         }
         ((ArwingState*)state)->velTargetX = -((ArwingState*)state)->stickX * ((ArwingState*)state)->maxSpeedX;

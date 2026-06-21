@@ -27,11 +27,11 @@ STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 typedef struct DrcreatorPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A; /* 0x1A */
+    s16 behaviorMode; /* 0x1A switch selector: 3/9 run-sequence, 4 spawn-projectiles */
     u8 pad1C[0x20 - 0x1C];
 } DrcreatorPlacement;
 
-STATIC_ASSERT(offsetof(DrcreatorPlacement, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(DrcreatorPlacement, behaviorMode) == 0x1A);
 STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x20);
 
 
@@ -115,14 +115,14 @@ void drcreator_update(int obj)
     char* projectile;
     if (Obj_IsLoadingLocked() != 0)
     {
-        switch (((DrcreatorPlacement*)placement)->unk1A)
+        switch (((DrcreatorPlacement*)placement)->behaviorMode)
         {
         case 3:
         case 9:
             if (GameBit_Get(((DrcreatorState*)runtime)->gameBitId) != 0)
             {
                 (*gObjectTriggerInterface)
-                    ->runSequence((((DrcreatorPlacement*)placement)->unk1A == 3) ? 0 : 4, (void*)obj, -1);
+                    ->runSequence((((DrcreatorPlacement*)placement)->behaviorMode == 3) ? 0 : 4, (void*)obj, -1);
             }
             break;
         case 4:
@@ -190,7 +190,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        switch (((DrcreatorPlacement*)placement)->unk1A)
+        switch (((DrcreatorPlacement*)placement)->behaviorMode)
         {
         case 3:
         case 4:

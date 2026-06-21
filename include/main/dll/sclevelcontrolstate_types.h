@@ -23,7 +23,7 @@ typedef struct ScLevelControlState
     u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
     u8 flags1F; /* 0x1f */
     u8 musicTrack; /* 0x20 */
-    s8 unk21; /* 0x21 */
+    s8 ambientMusicTrack; /* 0x21: day/night ambient cue (0x22) latch gating Music_Trigger; -1 = off */
     u8 flags22; /* 0x22: SnowFlags22 overlay (bit 7) */
     u8 pad23;
 } ScLevelControlState;

@@ -2492,12 +2492,12 @@ u8* loadObjectFile(int id)
         gObjFileRefCount[id]++;
         return *(u8**)((int)gObjFileBufferTable + (id << 2));
     }
-    off = id << 2;
-    base = ((int*)gObjFileOffsetTable)[id];
     {
-        int* t = (int*)((int)gObjFileOffsetTable + off);
-        size = t[1] - base;
+        int* offsets = (int*)gObjFileOffsetTable;
+        base = offsets[id];
+        size = (&offsets[id])[1] - base;
     }
+    off = id << 2;
     buf = mmAlloc(size, 0xe, 0);
     if (buf != 0)
     {
@@ -2541,9 +2541,12 @@ u8* loadObjectFile(int id)
         }
         *(u8**)((int)gObjFileBufferTable + off) = buf;
         gObjFileRefCount[id] = 1;
-        return buf;
     }
-    return 0;
+    else
+    {
+        return 0;
+    }
+    return buf;
 }
 
 int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)

@@ -251,6 +251,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
         itemMask = gTrickyHudItemMask;
         if (itemMask != -1)
         {
+            src = items;
             idsW = ids;
             aW = (s16*)(base + 0x5c8);
             cW = base + 0x508;
@@ -258,7 +259,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
             eW = base + 0x488;
             actionMask = gTrickyHudActionMask;
             yItem = yButtonItem;
-            for (src = items; *src > -1; src += 8)
+            for (; *src > -1; src += 8)
             {
                 if ((actionMask & *src) != 0)
                 {
@@ -760,12 +761,10 @@ void cMenuRotateFn_80124d80(void)
         }
         *(s16*)gCMenuRingObjs[0] = cur;
         *(s16*)gCMenuRingFrontObjs[0] = cur;
-        t1 = cur + 0x5555;
-        *(s16*)gCMenuRingObjs[1] = t1;
-        *(s16*)gCMenuRingFrontObjs[1] = t1;
-        t1 = cur + 0xAAAA;
-        *(s16*)gCMenuRingObjs[2] = t1;
-        *(s16*)gCMenuRingFrontObjs[2] = t1;
+        *(s16*)gCMenuRingObjs[1] = cur + 0x5555;
+        *(s16*)gCMenuRingFrontObjs[1] = cur + 0x5555;
+        *(s16*)gCMenuRingObjs[2] = cur + 0xAAAA;
+        *(s16*)gCMenuRingFrontObjs[2] = cur + 0xAAAA;
         curd = lbl_803DD79C;
         d1 = curd;
         if (curd > 0x8000)
@@ -836,12 +835,10 @@ void cMenuRotateFn_80124d80(void)
     cur = lbl_803DD79C;
     *(s16*)gCMenuRingObjs[0] = cur;
     *(s16*)gCMenuRingFrontObjs[0] = cur;
-    t1 = cur + 0x5555;
-    *(s16*)gCMenuRingObjs[1] = t1;
-    *(s16*)gCMenuRingFrontObjs[1] = t1;
-    t1 = cur + 0xAAAA;
-    *(s16*)gCMenuRingObjs[2] = t1;
-    *(s16*)gCMenuRingFrontObjs[2] = t1;
+    *(s16*)gCMenuRingObjs[1] = cur + 0x5555;
+    *(s16*)gCMenuRingFrontObjs[1] = cur + 0x5555;
+    *(s16*)gCMenuRingObjs[2] = cur + 0xAAAA;
+    *(s16*)gCMenuRingFrontObjs[2] = cur + 0xAAAA;
     curd = lbl_803DD79C;
     d1 = curd;
     if (curd > 0x8000)

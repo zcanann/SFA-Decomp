@@ -1881,7 +1881,7 @@ void pauseMenuRunSubmenu(u8 p1)
                 valid = 1;
             }
         }
-        if ((gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0)
+        if (((int)gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0)
         {
             if (valid != 0)
             {
@@ -2171,7 +2171,7 @@ void cMenuRun(void)
                         }
                     }
                 }
-                else if (gCMenuButtons & 0x200)
+                else if ((int)gCMenuButtons & 0x200)
                 {
                     Sfx_PlayFromObject(0, 0x37c);
                     cMenuOpen = 0;
@@ -2397,6 +2397,7 @@ void fn_80128470(int p1)
     }
     if (lbl_803DD75C == 0)
     {
+        u8* tex = hudTextures;
         GridEntry* e = &lbl_803DD824[lbl_803DD7D8];
         f32 scale = (f32)(lbl_803E2108 * e->f10);
         int w = lbl_803E1F34;
@@ -2426,13 +2427,13 @@ void fn_80128470(int p1)
         }
         alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
         w16 = w;
-        pauseMenuDrawElement(*(int*)(hudTextures + 0x80), (f32)(s16)x1, (f32)(s16)y1,
+        pauseMenuDrawElement(*(int*)(tex + 0x80), (f32)(s16)x1, (f32)(s16)y1,
                              0x100, (u8)alpha, w16, 0);
-        drawFn_8011eb3c(*(int*)(hudTextures + 0x80), x2, (f32)(s16)y1,
+        drawFn_8011eb3c(*(int*)(tex + 0x80), x2, (f32)(s16)y1,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 1);
-        drawFn_8011eb3c(*(int*)(hudTextures + 0x80), (f32)(s16)x1, y2,
+        drawFn_8011eb3c(*(int*)(tex + 0x80), (f32)(s16)x1, y2,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 2);
-        drawFn_8011eb3c(*(int*)(hudTextures + 0x80), x2, y2,
+        drawFn_8011eb3c(*(int*)(tex + 0x80), x2, y2,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 3);
     }
     gameTextSetDrawFunc(0);

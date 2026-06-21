@@ -346,11 +346,11 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 {
     int cand1[4];
-    int cand3[4];
+    int cand2[4];
     f32 total;
     int reachedForward;
     int done;
-    int cur;
+    u32 cur;
     int found;
     int next;
     int count;
@@ -383,15 +383,16 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     found = a;
     while (done == 0)
     {
-        blocked = 1;
         for (slot = 0; slot < 4; slot++)
         {
             if (*(int*)(found + 0x1C + slot * 4) != -1 && (*(s8*)(found + 0x1B) & (1 << slot)) == 0)
             {
                 blocked = 0;
-                break;
+                goto blocked_checked;
             }
         }
+        blocked = 1;
+    blocked_checked:
         if (blocked != 0)
         {
             done = 1;
@@ -485,14 +486,14 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 n = *(int*)(a + 0x1C + k * 4);
                 if (n > -1 && (*(s8*)(a + 0x1B) & mask) == 0 && n != 0)
                 {
-                    cand3[count] = n;
+                    cand1[count] = n;
                     count++;
                 }
                 mask <<= 1;
             }
             if (count != 0)
             {
-                nextId = cand3[randomGetRange(0, count - 1)];
+                nextId = cand1[randomGetRange(0, count - 1)];
             }
             else
             {
@@ -515,6 +516,7 @@ done_exit:
     return total;
 }
 
+#pragma opt_loop_invariants off
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     u8 k;
@@ -522,7 +524,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     u32 pidx;
     u32 lpidx;
     u32 clz;
-    u32 lidx;
+    u16 lidx;
     u16 pgid;
     u8 i;
     u8 j;
@@ -531,8 +533,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     ObjfsaWalkGroup* wg;
     f32 y;
 
-    wg = &gObjfsaWalkGroups[currentWalkGroupIndex];
-    for (k = 0; k < 4; k++)
+    for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
     {
         pidx = wg->patchIndices[k];
         if (pidx == 0)
@@ -589,9 +590,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
             continue;
         }
         patch = &gObjfsaPatches[pidx];
-        clz = __cntlzw(0xff - currentWalkGroupIndex);
+        clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
         pgid = patch->groupId;
-        if ((((int)(clz >> 5)) & pgid) == 0)
+        if (((int)clz & pgid) == 0)
         {
             lidx = pgid & 0xff;
         }
@@ -655,6 +656,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
 
     return 0;
 }
+#pragma opt_loop_invariants reset
 
 u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {

@@ -18,10 +18,10 @@ typedef struct Dimsnowball1c2State
 typedef struct Dimsnowball1c2Placement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 colorR; /* 0x4 -> spawn setup head.unk04[0] */
+    u8 colorG; /* 0x5 -> spawn setup head.unk04[1] */
+    u8 colorB; /* 0x6 -> spawn setup head.unk04[2] */
+    u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
     u8 pad8[0x14 - 0x8];
     s32 unk14;
     u8 pad18[0x19 - 0x18];
@@ -102,10 +102,10 @@ void dimsnowball1c2_update(int* obj)
                 int* def;
                 def = *(int**)&((GameObject*)obj)->anim.placementData;
                 np = (int*)Obj_AllocObjectSetup(36, 406);
-                *(u8*)((char*)np + 4) = ((Dimsnowball1c2Placement*)def)->unk4;
-                *(u8*)((char*)np + 6) = ((Dimsnowball1c2Placement*)def)->unk6;
-                *(u8*)((char*)np + 5) = ((Dimsnowball1c2Placement*)def)->unk5;
-                *(u8*)((char*)np + 7) = ((Dimsnowball1c2Placement*)def)->unk7;
+                *(u8*)((char*)np + 4) = ((Dimsnowball1c2Placement*)def)->colorR;
+                *(u8*)((char*)np + 6) = ((Dimsnowball1c2Placement*)def)->colorB;
+                *(u8*)((char*)np + 5) = ((Dimsnowball1c2Placement*)def)->colorG;
+                *(u8*)((char*)np + 7) = ((Dimsnowball1c2Placement*)def)->colorA;
                 *(f32*)((char*)np + 8) = ((GameObject*)obj)->anim.localPosX;
                 *(f32*)((char*)np + 0xc) = ((GameObject*)obj)->anim.localPosY;
                 *(f32*)&((ObjDef*)np)->jointData = ((GameObject*)obj)->anim.localPosZ;

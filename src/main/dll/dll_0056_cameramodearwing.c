@@ -196,8 +196,8 @@ void CameraModeArwing_update(u8* obj)
 
     if ((s8)state[0xac] != 0x26)
     {
-        f32 t = ((CameraArwingWork*)gCamArwingWork)->unk40 / ((CameraArwingWork*)gCamArwingWork)->unk3C -
-            lbl_803E1BA0;
+        f32 t = ((CameraArwingWork*)gCamArwingWork)->unk40 / ((CameraArwingWork*)gCamArwingWork)->unk3C;
+        t = t - lbl_803E1BA0;
         if (t < lbl_803E1BA4)
         {
             ((GameObject*)obj)->anim.worldPosZ =

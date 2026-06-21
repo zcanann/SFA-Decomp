@@ -361,7 +361,7 @@ void Link_render(void)
                         }
                         else
                         {
-                            alpha = linkItemOpacity * 0x100 >> 8;
+                            alpha = linkItemOpacity * 256 >> 8;
                         }
                         gameTextSetColor((u8)red, (u8)green, (u8)blue, (u8)alpha);
                     }

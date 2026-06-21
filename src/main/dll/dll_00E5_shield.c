@@ -257,7 +257,7 @@ extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 extern int getHudHiddenFrameCount(void);
 extern void vecRotateZXY(int* obj, f32* p);
 extern f32 fcos16(u16 angle);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
+extern void Sfx_SetObjectSfxVolume(s16* obj, int sfx, int vol, f32 ratio);
 extern f32 lbl_803E33A8;
 extern f32 lbl_803E33AC;
 extern f32 lbl_803E33C4;
@@ -865,7 +865,7 @@ void shield_update(int* obj)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(192, 255);
     }
-    Sfx_SetObjectSfxVolume(lbl_803E33A8, (s16*)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])));
+    Sfx_SetObjectSfxVolume((s16*)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
     if (((GameObject*)obj)->anim.alpha != 0)
     {
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;

@@ -1394,7 +1394,7 @@ extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d,
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
-#pragma optimization_level 3
+#pragma opt_propagation off
 void boneParticleEffect_update(void* ctx, int p2, u8* o)
 {
     BoneFxVtx s;
@@ -1502,8 +1502,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                     u8* t;
                     u8* t4;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
-                    t = base + 0x590;
-                    cls = *(u8*)(t + id);
+                    cls = *(u8*)(base + id + 0x590);
                     if (cls == 0)
                     {
                         s.vx = pa[0] * *(f32*)((base + 0x5d8) + id * 4);
@@ -1526,13 +1525,12 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                     Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                     s.vx = s.vx + playerMapOffsetX;
                     s.vz = s.vz + playerMapOffsetZ;
-                    idx = (k + row) * 0x10;
-                    *(s16*)((u8*)*grp + idx) = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
-                    *(s16*)((u8*)*grp + idx + 2) = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
-                    *(s16*)((u8*)*grp + idx + 4) = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
-                    *(u8*)((u8*)*grp + idx + 0xf) = 0x9b;
-                    t = base + idx;
-                    *(s16*)((u8*)*grp + idx + 0xa) = (s16)(*(s16*)(t + 0x1ba) - (gBoneParticleScrollOffset << 2));
+                    *(s16*)((u8*)*grp + (k + row) * 0x10) = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
+                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 2) = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
+                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 4) = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
+                    *(u8*)((u8*)*grp + (k + row) * 0x10 + 0xf) = 0x9b;
+                    t = base + 0x1ba;
+                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 0xa) = (s16)(*(s16*)(t + (k + row) * 0x10) - (gBoneParticleScrollOffset << 2));
                     pa += 3;
                     pb += 3;
                     pc += 3;
@@ -1596,7 +1594,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
     }
     gBoneParticleBufferFlip = 1 - gBoneParticleBufferFlip;
 }
-#pragma optimization_level 4
+#pragma opt_propagation reset
 
 typedef struct
 {

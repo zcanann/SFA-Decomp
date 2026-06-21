@@ -14,7 +14,7 @@ typedef struct Dll1CEPlacement
     f32 posYOffset;
     f32 posZ;
     u8 pad14[0x1A - 0x14];
-    s16 unk1A;
+    s16 spawnGameBitValue; /* compared against GameBit_Get(0x46D); spawns contents when equal */
     u8 pad1C[0x1E - 0x1C];
     s16 gameBitId;
 } Dll1CEPlacement;
