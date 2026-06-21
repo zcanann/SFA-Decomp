@@ -3106,7 +3106,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                              ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * sp1) / lbl_803DB460)
                              : d1);
             d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
-            t2 = (s16)(s32)(gObjPrintDegToAngle * (f32) * sp2);
+            t2 = (s16)(s32)(*(volatile f32*)&gObjPrintDegToAngle * (f32) * sp2);
             div2 = lbl_803DB460 << 1;
             lim3 = (d2 < framesThisStep * (-t2 / div2))
                        ? framesThisStep * (-t2 / div2)
