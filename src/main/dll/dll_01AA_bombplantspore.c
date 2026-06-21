@@ -209,10 +209,11 @@ void bombplantspore_updateDrift(void* obj, void* state)
         angleDelta += 0xffff;
     }
     ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
-    ((BombPlantSporeState*)state)->driftAmplitude =
-        lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - ((BombPlantSporeState*)state)->driftAmplitude) *
-        timeDelta +
-        ((BombPlantSporeState*)state)->driftAmplitude;
+    {
+        f32 amplitude = ((BombPlantSporeState*)state)->driftAmplitude;
+        f32 amplitudeStep = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amplitude);
+        ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
+    }
 
     ((BombPlantSporeState*)state)->driftBaseX =
         ((BombPlantSporeState*)state)->driftAmplitude *
@@ -352,11 +353,8 @@ void bombplantspore_update(void* obj)
         else
         {
             f32 driftSpeed = state->driftSpeed;
-            state->driftSpeed =
-                lbl_803E53EC *
-                (state->driftSpeedTarget - driftSpeed) *
-                timeDelta +
-                driftSpeed;
+            f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+            state->driftSpeed = driftStep * timeDelta + driftSpeed;
         }
         ((GameObject*)obj)->anim.velocityX =
             state->driftSin * state->driftSpeed +
