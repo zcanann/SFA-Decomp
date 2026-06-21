@@ -114,6 +114,7 @@ void CameraModeCloudRunner_free(void)
     lbl_803DD5B8 = NULL;
 }
 
+#pragma opt_propagation off
 void CameraModeCloudRunner_update(u8* obj)
 {
 
@@ -201,6 +202,7 @@ void CameraModeCloudRunner_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+#pragma opt_propagation reset
 
 void CameraModeCloudRunner_release(void)
 {
