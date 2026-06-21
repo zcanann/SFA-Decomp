@@ -460,6 +460,7 @@ void drakorhoverpad_updateMain(int obj)
     int nearest;
     int yawDelta;
     int c;
+    int angle;
 
     Obj_GetPlayerObject();
     if (drakorhoverpad_init(obj) != 0)
@@ -487,12 +488,10 @@ void drakorhoverpad_updateMain(int obj)
     curve = &((DrakorHoverpadState*)p)->curve;
     if (g->f08 != 0)
     {
-        phase = gDrakorHoverpadPi *
-            (f32)(int)
-        getAngle(sqrtf(curve->tangentX * curve->tangentX +
-                     curve->tangentZ * curve->tangentZ),
-                 curve->tangentY) /
-            gDrakorHoverpadAngleScale;
+        angle = getAngle(sqrtf(curve->tangentX * curve->tangentX +
+                               curve->tangentZ * curve->tangentZ),
+                         curve->tangentY);
+        phase = gDrakorHoverpadPi * (f32)angle / gDrakorHoverpadAngleScale;
         wobbleY = lbl_803E6A8C * mathCosf(phase);
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0)
