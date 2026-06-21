@@ -675,8 +675,9 @@ void fn_80095164(WaterParticle* s)
     f32 scale[12];
     f32 mtxB[12];
     f32 mtxC[12];
-    int mtxIdx;
     int i;
+    int mtxIdx;
+    u8* p;
     f32 c2FC;
     f32 c2F4;
     f32 c2EC;
@@ -690,7 +691,9 @@ void fn_80095164(WaterParticle* s)
     f32 c304;
 
     PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
+    i = 0;
     mtxIdx = 0;
+    p = (u8*)s;
     c2E0 = lbl_803DF2E0;
     c2E4 = lbl_803DF2E4;
     c2F8 = lbl_803DF2F8;
@@ -700,7 +703,7 @@ void fn_80095164(WaterParticle* s)
     c2F4 = lbl_803DF2F4;
     c2FC = lbl_803DF2FC;
     c304 = lbl_803DF304;
-    for (i = 0; i < 8; i++)
+    for (; i < 8; i++)
     {
         f32 h = s->f10;
         f32 a = c2E4 * ((f32)i / c2F8);
@@ -727,8 +730,9 @@ void fn_80095164(WaterParticle* s)
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
         GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)((u8*)s + i * 4 + 0x18) = (u8)(int)(c304 * t);
+        *(u32*)(p + 0x18) = (u8)(int)(c304 * t);
         mtxIdx += 3;
+        p += 4;
     }
     DCStoreRange(s->pad18, 32);
     GXSetArray(11, s->pad18, 4);
