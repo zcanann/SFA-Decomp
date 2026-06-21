@@ -76,13 +76,18 @@ typedef struct
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {
-    u8* base = lbl_8031F16C;
-    u8* slot = base + state[0x33b] * 0x28;
-    u8* animRows = *(u8**)(slot + 0x10);
-    u8* rowsC = *(u8**)(slot + 0x24);
-    u8* rowsB = *(u8**)(slot + 0x1c);
-    u8* trig = *(u8**)(slot + 0x20);
+    u8* slot = lbl_8031F16C;
+    u8* animRows;
+    u8* rowsC;
+    u8* rowsB;
+    u8* trig;
     int ret = 0;
+
+    slot += state[0x33b] * 0x28;
+    animRows = *(u8**)(slot + 0x10);
+    rowsC = *(u8**)(slot + 0x24);
+    rowsB = *(u8**)(slot + 0x1c);
+    trig = *(u8**)(slot + 0x20);
 
     if (state[0x33b] == 5)
     {
@@ -364,12 +369,16 @@ void fn_80150EDC(void* p1, void* p2)
 void fn_80150910(int* obj, u8* state)
 {
     RomCurveWalker* path = *(RomCurveWalker**)state;
-    u8* base = lbl_8031F16C;
-    u8* slot = base + state[0x33b] * 0x28;
-    u8* tbl4 = *(u8**)(slot + 4);
-    u8* tbl0 = *(u8**)slot;
-    u8* tbl1c = *(u8**)(slot + 0x1c);
+    u8* slot = lbl_8031F16C;
+    u8* tbl4;
+    u8* tbl0;
+    u8* tbl1c;
     u32 flags;
+
+    slot += state[0x33b] * 0x28;
+    tbl4 = *(u8**)(slot + 4);
+    tbl0 = *(u8**)slot;
+    tbl1c = *(u8**)(slot + 0x1c);
 
     if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
