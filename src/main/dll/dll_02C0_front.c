@@ -1066,13 +1066,13 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         do
         {
             tex = (Texture*)gTitleScreenTextures[4];
-            r = (u32)(sc3 * gTitleScreenCursorY);
             drawScaledTexture((char*)tex,
                               (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x5a -
                                   (i + 1) * 4),
                               (f32)(int)(yb - (i + 1) * 3),
                               (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
-                              tex->width + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
+                              tex->width + (i + 1) * 8,
+                              (u32)(sc3 * gTitleScreenCursorY) + (i + 1) * 6 + 0x10, 4);
             i++;
         }
         while (i < 4);
