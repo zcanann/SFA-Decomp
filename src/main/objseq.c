@@ -1580,6 +1580,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     if (((ObjSeqState*)seq)->fade > 0.0f)
                     {
+                        rate = gObjSeqDefaultFadeRate;
                         if (((ObjSeqState*)seq)->trackRunLength[10] != 0)
                         {
                             frame = ((ObjSeqState*)seq)->curFrame - 1;
