@@ -58,13 +58,13 @@ extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
-void magicdust_free(int param_1)
+void magicdust_free(int obj)
 {
-    if (*(u32*)(param_1 + 0xc4) != 0)
+    if (*(u32*)(obj + 0xc4) != 0)
     {
-        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
+        ObjLink_DetachChild(*(int*)(obj + 0xc4), obj);
     }
-    (*gExpgfxInterface)->freeSource2((u32)param_1);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
     return;
 }
 
