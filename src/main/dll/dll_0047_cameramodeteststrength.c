@@ -360,6 +360,7 @@ void CameraModeTestStrength_update(short* cam)
     }
 }
 
+#pragma scheduling off
 void CameraModeTestStrength_init(short* cam, int param2, int* param3)
 {
     extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, int pitch, int yaw, int roll); /* #57 */
@@ -451,7 +452,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     if ((*(u8*)(romNode + 0x3b) & 2) != 0)
     {
         yaw = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-        yaw = (int)((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0));
+        yaw = (f32)yaw - Curve_EvalCatmullRom(yawS, t, 0);
     }
     else
     {
@@ -480,6 +481,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     lbl_803DD560->pathProgress = t;
 }
+#pragma scheduling reset
 
 void CameraModeTestStrength_release(void)
 {
