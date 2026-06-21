@@ -320,7 +320,7 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     }
     nx = lbl_803E18A8 * (sx + dx1);
     nz = lbl_803E18A8 * (sz + dz1);
-    len = sqrtf(nx * nx + nz * nz);
+    len = sqrtf(nz * nz + nx * nx);
     if (0.0f != len)
     {
         nx = nx / len;
