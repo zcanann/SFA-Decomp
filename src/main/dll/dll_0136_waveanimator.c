@@ -89,8 +89,6 @@ void fn_801923F8(int* cfgArg)
     int y;
     int stepY;
     int heightIdx;
-    int colorSrcIdx;
-    int colorIdx;
     int phaseIdx;
     f32 a;
     f32 waveDivisor;
