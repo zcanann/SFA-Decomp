@@ -166,7 +166,7 @@ void camclimb_update(CameraObject* cam)
                                        cam->anim.localPosZ, &cam->anim.worldPosX, &cam->anim.worldPosY,
                                        &cam->anim.worldPosZ, *(int*)&cam->anim.parent);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))
-            ((double)gCamStaffAnimCurveMin, (double)gCamStaffAnimCurveMax, cam, target);
+            (cam, target, (double)gCamStaffAnimCurveMin, (double)gCamStaffAnimCurveMax);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
                                                          &gCamcontrolPathState->curveMin,
                                                          &gCamcontrolPathState->curveMax);
@@ -201,7 +201,7 @@ void camclimb_update(CameraObject* cam)
         }
         cam->anim.rotX += yawDelta;
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))
-            ((double)target->anim.worldPosY, (double)relDistXZ, cam);
+            (cam, (double)target->anim.worldPosY, (double)relDistXZ);
         if (needsReset != 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);

@@ -399,7 +399,12 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 *(int*)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1,
                                                                       *(int*)&((GameObject*)obj)->anim.parent);
                                 ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPackedSlots*)(st + 0x7bc))->c);
-                                *(f32*)(st + 0x7c0) = *(f32*)(st + 0x7c4) = *(f32*)(st + 0x7c8) = lbl_803E23DC;
+                                {
+                                    f32 z3 = lbl_803E23DC;
+                                    *(f32*)(st + 0x7c0) = z3;
+                                    *(f32*)(st + 0x7c4) = z3;
+                                    *(f32*)(st + 0x7c8) = z3;
+                                }
                             }
                         }
                     }
@@ -490,7 +495,7 @@ void fn_8013E0D0(int* obj, register u8* st)
             fl = *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET);
             if (fl & TRICKY_STATE_FLAG_8000000)
             {
-                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) = fl & ~TRICKY_STATE_FLAG_800;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) = fl & ~0x800LL;
                 *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_1000;
                 {
                     int i = 0;
@@ -503,7 +508,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                 }
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
                 TRICKY_BARK(obj, 0x29d, 0);
-                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10;
+                *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10LL;
                 st[0xa] = 0;
             }
             break;

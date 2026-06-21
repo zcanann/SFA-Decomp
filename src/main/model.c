@@ -2133,8 +2133,10 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
     }
     else
     {
+        int s61;
         total = sizes[4] + 100;
-        total = ((sizes[6] + sizes[1]) + 8) + total;
+        s61 = sizes[6] + sizes[1];
+        total = (s61 + 8) + total;
         total = sizes[3] + total;
     }
     total = total + sizes[0];

@@ -85,8 +85,8 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - gCamShipBattleState->smoothedZOffset);
         fa = (f32)focus->anim.rotY / lbl_803E1968;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - gCamShipBattleState->smoothedYOffset);
-        fc = lbl_803E196C;
         fb = gCamShipBattleState->smoothedZOffset;
+        fc = lbl_803E196C;
         fa = fc * fb;
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - fb);
         fb = gCamShipBattleState->smoothedYOffset;
@@ -101,8 +101,8 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - gCamShipBattleState->smoothedZOffset);
         fa = (f32)focus->anim.rotY / lbl_803E1968;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - gCamShipBattleState->smoothedYOffset);
-        fc = lbl_803E196C;
         fb = gCamShipBattleState->smoothedZOffset;
+        fc = lbl_803E196C;
         fa = fc * fb;
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - fb);
         fb = gCamShipBattleState->smoothedYOffset;

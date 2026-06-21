@@ -23,7 +23,7 @@ typedef struct
     u32 mode; /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
     void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
+    s16 flags; /* +0x14 */
     u8 layer; /* +0x16 */
 } GfxCmd;
 
@@ -204,17 +204,17 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     buf.hw[5] = *(s16*)&tab[0x82];
     buf.hw[6] = *(s16*)&tab[0x84];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    fl = 0x4040000;
-    buf.flags = fl; /* first store kept live for matching codegen */
-    fl |= (flags | 0x80);
-    buf.flags = fl;
+    buf.flags = 0x4040000; /* first store kept live for matching codegen */
+    buf.flags |= (flags | 0x80);
+    fl = buf.flags;
     if (fl & 1)
     {
-        if (sourceObj != 0)
+        GameObject* obj = (GameObject*)buf.ctx;
+        if (obj != 0)
         {
-            buf.pos[0] = buf.pos[0] + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = buf.pos[1] + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = lbl_803E1570 + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] = buf.pos[0] + obj->anim.worldPosX;
+            buf.pos[1] = buf.pos[1] + obj->anim.worldPosY;
+            buf.pos[2] = lbl_803E1570 + obj->anim.worldPosZ;
         }
         else
         {

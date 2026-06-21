@@ -531,7 +531,7 @@ void fn_8013FBE4(int obj, register int state)
         bitIndex = ((TrickyNibblePair*)(state + 0x700))->hi;
         if (bitIndex != currentBit)
         {
-            ((TrickyNibblePair*)(state + 0x700))->hi = bitIndex + 1;
+            ((TrickyNibblePair*)(state + 0x700))->hi++;
             **(u8**)state -= 2;
         }
         targetPos = (float*)fn_801CDE70(*(int*)&((TrickyState*)state)->followObj);

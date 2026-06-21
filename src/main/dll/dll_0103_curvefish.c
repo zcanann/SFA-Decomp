@@ -118,6 +118,8 @@ void curvefish_update(int obj)
 
     switch (state->mode)
     {
+    default:
+        return;
     case 0:
         {
             f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
@@ -157,11 +159,8 @@ void curvefish_update(int obj)
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
         state->mode = 3;
-        break;
     case 3:
         break;
-    default:
-        return;
     }
 
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)

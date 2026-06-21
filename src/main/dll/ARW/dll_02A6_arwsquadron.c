@@ -659,10 +659,11 @@ void arwsquadron_update(int obj)
     {
     case ARW_SQUADRON_STATE_WAITING:
         {
-            int leader = obj;
+            int leader;
             ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
             int enable;
             getArwing();
+            leader = obj;
             if (setupL->leaderObjectId > 0)
             {
                 if ((u32)state->leaderObj == 0)
@@ -723,11 +724,12 @@ void arwsquadron_update(int obj)
         }
     case ARW_SQUADRON_STATE_ACTIVE:
         {
+            int leader;
             ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
-            int leader = obj;
             int disable;
             ((GameObject*)obj)->anim.alpha = 0xff;
             getArwing();
+            leader = obj;
             if ((u32)state->leaderObj != 0)
                 leader = state->leaderObj;
             if ((u32)leader == 0)

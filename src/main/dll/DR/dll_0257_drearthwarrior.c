@@ -761,9 +761,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         ((EarthWarriorSub*)q)->unk48C = 0;
     }
     {
+        f32 a;
         f32 ph = (((BaddieState*)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
-        f32 a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
-        f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
+        f32 t;
+        a = ((EarthWarriorSub*)q)->unk404 - lbl_803E833C;
+        t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         ((EarthWarriorSub*)q)->unk408 = a * (t * ((EarthWarriorSub*)q)->unk840);
     }
     if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40)
@@ -932,18 +934,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         {
             ((EarthWarriorSub*)q)->attackStage = 4;
         }
-        if (((EarthWarriorSub*)q)->attackStage > 3)
-        {
-            ((EarthWarriorSub*)q)->unk8A6 = 0xa;
-        }
-        else
-        {
-            ((EarthWarriorSub*)q)->unk8A6 = 8;
-        }
+        ((EarthWarriorSub*)q)->unk8A6 = (((EarthWarriorSub*)q)->attackStage > 3) ? 0xa : 8;
         {
             f32 v294 = ((EarthWarriorState*)p2)->baddie.animSpeedC;
             int tbl = ((EarthWarriorSub*)q)->configRow;
-            if (v294 < *(f32*)(tbl + i2 * 4))
+            if (v294 < ((f32*)tbl)[i2])
             {
                 if (((EarthWarriorSub*)q)->attackPhase == 4)
                 {
@@ -958,7 +953,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                     ((EarthWarriorSub*)q)->attackPhase -= 4;
                 }
             }
-            else if (v294 >= *(f32*)(tbl + i2 * 4 + 4))
+            else if (v294 >= *(f32*)((char*)&((f32*)tbl)[i2] + 4))
             {
                 if (((EarthWarriorSub*)q)->attackPhase < 0x14)
                 {

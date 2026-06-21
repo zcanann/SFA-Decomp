@@ -855,7 +855,7 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     dir = ((KTRexArenaState*)gKTRexState)->timerFA & 1;
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
-        ObjAnim_SetCurrentMove(obj, lbl_8032A510[((KTRexArenaState*)gKTRexState)->unkFC * 2 + dir], lbl_803E67B8, 0);
+        ObjAnim_SetCurrentMove(obj, lbl_8032A510[((KTRexArenaState*)gKTRexState)->unkFC * 2 + (((KTRexArenaState*)gKTRexState)->timerFA & 1)], lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->unk2A0 = lbl_8032A528[((KTRexArenaState*)gKTRexState)->unkFC];
         ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }

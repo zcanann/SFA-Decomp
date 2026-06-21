@@ -8644,9 +8644,13 @@ void fn_802AFB0C(int obj, int inner, int state)
                 {
                     v = 0;
                 }
-                else if (v > hp[1])
+                else
                 {
-                    v = hp[1];
+                    int hi = hp[1];
+                    if (v > hi)
+                    {
+                        v = hi;
+                    }
                 }
                 *hp = v;
                 if (**(s8**)((char*)hb + 0x35c) <= 0)
@@ -14564,23 +14568,23 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             int btn = getButtons_80014dd8(0);
             if ((btn & 0x20) != 0)
             {
-                if (!((ByteFlags*)((char*)inner + 0x3f4))->b40 ||
-                    ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
-                    ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
-                    ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
-                    ((PlayerState*)inner)->curAnimId == 0x44 ||
-                    *(void**)((char*)inner + 0x7f8) != NULL ||
-                    ((PlayerState*)inner)->baddie.targetObj != NULL ||
-                    ((ByteFlags*)((char*)inner + 0x3f6))->b40 ||
-                    ((PlayerState*)inner)->baddie.controlMode == 0x26 ||
-                    (((GameObject*)obj)->objectFlags & 0x1000) != 0 ||
-                    ((PlayerState*)inner)->idleDelayTimer != lbl_803E7EA4)
+                if (((ByteFlags*)((char*)inner + 0x3f4))->b40 &&
+                    !((ByteFlags*)((char*)inner + 0x3f0))->b20 &&
+                    !((ByteFlags*)((char*)inner + 0x3f0))->b08 &&
+                    !((ByteFlags*)((char*)inner + 0x3f0))->b04 &&
+                    ((PlayerState*)inner)->curAnimId != 0x44 &&
+                    *(void**)((char*)inner + 0x7f8) == NULL &&
+                    ((PlayerState*)inner)->baddie.targetObj == NULL &&
+                    !((ByteFlags*)((char*)inner + 0x3f6))->b40 &&
+                    ((PlayerState*)inner)->baddie.controlMode != 0x26 &&
+                    (((GameObject*)obj)->objectFlags & 0x1000) == 0 &&
+                    ((PlayerState*)inner)->idleDelayTimer == lbl_803E7EA4)
                 {
-                    ok = 0;
+                    ok = 1;
                 }
                 else
                 {
-                    ok = 1;
+                    ok = 0;
                 }
                 if (ok != 0 && !((ByteFlags*)((char*)inner + 0x3f0))->b02)
                 {

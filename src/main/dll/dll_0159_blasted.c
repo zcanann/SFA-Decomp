@@ -120,8 +120,10 @@ STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
  * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
  * advances the damage model index, and on the final piece latches the
  * GameBit, fires the trigger, and swaps to the destroyed model. */
+#pragma opt_loop_invariants off
 void blasted_update(int obj)
 {
+    int i;
     BlastedTargetSetup* setup = (BlastedTargetSetup*)((GameObject*)obj)->anim.placementData;
     BlastedTargetState* state = ((GameObject*)obj)->extra;
     s16 total = setup->pieceCount;
@@ -136,8 +138,6 @@ void blasted_update(int obj)
         return;
     }
     {
-        int i;
-
         for (i = 0; i < ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
         {
             u32 v;
@@ -181,8 +181,7 @@ void blasted_update(int obj)
                 if (state->damageStep + 1 > total)
                 {
                     int n;
-                    int lim = total + 1;
-                    for (n = 0; n < lim; n++)
+                    for (n = 0; n < total + 1; n++)
                     {
                         GameBit_Set(n + 0x2de, 0);
                     }
@@ -200,6 +199,7 @@ void blasted_update(int obj)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 /* Tail of the TU (0x801A2AF8..0x801A2BDC) - formerly the head of
  * gasventControl.c. */

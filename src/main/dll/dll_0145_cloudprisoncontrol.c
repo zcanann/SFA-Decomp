@@ -77,6 +77,7 @@ void cloudprisoncontrol_update(int obj)
     int n;
     int idx;
     int dval;
+    int m;
     int* p;
 
     data = 0;
@@ -88,7 +89,8 @@ void cloudprisoncontrol_update(int obj)
     lbl_803DDB08 = 0;
     while (ObjMsg_Pop(obj, msg, &target, &data) != 0)
     {
-        switch (msg[0])
+        m = msg[0];
+        switch (m)
         {
         case CPMSG_REGISTER:
             if (((GameObject*)target)->anim.mapEventSlot == ((GameObject*)obj)->anim.mapEventSlot)
@@ -144,7 +146,7 @@ void cloudprisoncontrol_update(int obj)
         default:
             idx = lbl_803DDB08 * 0xc;
             *(int*)((char*)lbl_803AC878 + idx + 4) = target;
-            *(int*)((char*)lbl_803AC878 + idx) = msg[0];
+            *(int*)((char*)lbl_803AC878 + idx) = m;
             *(int*)((char*)lbl_803AC878 + idx + 8) = data;
             lbl_803DDB08++;
             break;

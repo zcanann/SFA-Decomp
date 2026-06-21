@@ -223,7 +223,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     state->fadeTimer = state->fadeTimer + timeDelta;
                     if (state->fadeTimer >= lbl_803E54E0)
                     {
-                        state->fadeTimer = lbl_803E54E0;
+                        state->fadeTimer = *(f32*)&lbl_803E54E0;
                     }
                     spd = lbl_803E54E4 * state->fadeTimer;
                 }

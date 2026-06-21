@@ -2368,7 +2368,7 @@ void fn_80128470(int p1)
     gameTextSetColor(0xff, 0xff, 0xff,
                      (int)((double)(sp1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
-    if ((s8)pauseMenuState < 0xb && (s8)pauseMenuState >= 8)
+    if ((int)pauseMenuState < 0xb && (int)pauseMenuState >= 8)
     {
         gameTextFn_80016810(0x3e8, 0xc8, 0x154);
     }

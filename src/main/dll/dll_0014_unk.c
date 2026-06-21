@@ -2088,7 +2088,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
     return 0;
 }
 
-#pragma peephole on
+#pragma peephole off
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
     if (state->reverse != 0)

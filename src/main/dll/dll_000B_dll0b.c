@@ -2099,7 +2099,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     }
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->currentStage = -1;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageFrameCountdown = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageFrameCountdown = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[((PartfxEffectState**)gPartfxActiveEffects)[slot]->currentStage];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags = *(int*)(st + 0x54);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosX = *(f32*)(st + 0x2c);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosY = *(f32*)(st + 0x30);
@@ -2344,7 +2344,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         if (*(int*)((char*)p[slot] + 0xa4) & 0x400000)
         {
             dscale = lbl_803DF458 * *(f32*)((char*)p[slot] + 0xd4);
-            xf.scale = dscale + dscale / randomGetRange(1, 10);
+            xf.scale = dscale + dscale / (int)randomGetRange(1, 10);
         }
         else
         {
@@ -2990,11 +2990,12 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x100)
                 {
-                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(E9 + emOff +
+                    char* em = E9 + emOff;
+                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(em +
                         0x4) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(em +
                         0x8) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(E9 + emOff +
+                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(em +
                         0xc) * gModgfxMotionStep);
                 }
                 if (*(int*)(E9 + emOff) & 0x80)
@@ -3063,11 +3064,12 @@ void dll_0B_func05(void)
                 }
                 if (*(int*)(E9 + emOff) & 0x80000000)
                 {
-                    ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(E9 + emOff + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    char* em = E9 + emOff;
+                    ((ModgfxEffectSlot*)eff)->motionOffsetX = *(f32*)(em + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetX;
-                    ((ModgfxEffectSlot*)eff)->motionOffsetY = *(f32*)(E9 + emOff + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->motionOffsetY = *(f32*)(em + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetY;
-                    ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(E9 + emOff + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
+                    ((ModgfxEffectSlot*)eff)->motionOffsetZ = *(f32*)(em + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)
                         eff)->motionOffsetZ;
                 }
                 if (*(int*)(E9 + emOff) & 0x800000)
