@@ -89,6 +89,7 @@ void wcfloortile_update(int obj)
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     WcFloorTileState* state = ((GameObject*)obj)->extra;
     WcFloorTileSetup* setup = (WcFloorTileSetup*)((GameObject*)obj)->anim.placementData;
+    f32 shakeMax;
 
     if ((u32)GameBit_Get(824) != 0)
     {
@@ -125,10 +126,10 @@ void wcfloortile_update(int obj)
         break;
     case 1:
         state->shakeTime = state->shakeTime + timeDelta;
-        if (state->shakeTime > lbl_803E6EA0)
+        if (state->shakeTime > (shakeMax = lbl_803E6EA0))
         {
             state->flags |= 3;
-            state->shakeTime = lbl_803E6EA0;
+            state->shakeTime = shakeMax;
             ((GameObject*)obj)->anim.velocityY = lbl_803E6EA4 * timeDelta + ((GameObject*)obj)->anim.velocityY;
         }
         state->shakeMag = lbl_803E6EA8 * (state->shakeTime / lbl_803E6EA0);
