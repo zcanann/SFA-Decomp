@@ -3733,11 +3733,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                 {
                     int b;
                     int a;
-                    if (lbl_803DCC5C == 0)
-                    {
-                        use = 0;
-                    }
-                    else
+                    if (lbl_803DCC5C != 0)
                     {
                         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &a, &b);
                         if (a == 0)
@@ -3746,8 +3742,13 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                         }
                         else
                         {
-                            use = 0;
+                            goto useZero;
                         }
+                    }
+                    else
+                    {
+                    useZero:
+                        use = 0;
                     }
                 }
                 else if (i < lbl_803DCC5C && p5 == 0)
