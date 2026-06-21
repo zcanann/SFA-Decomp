@@ -406,7 +406,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 gameTextFn_8001628c(0x3cc, 0, 0, &b38, &b34, &b30, &b2c);
                 val = b38 - b34;
                 *(u8*)((u8*)lbl_803DD824 + 0x28) = val;
-                x = *(s16*)((u8*)box + 0x14) + ((val >> 1) - 0x140);
+                x = *(s16*)((u8*)box + 0x14) + (val >> 1) - 0x140;
                 *(s16*)((u8*)lbl_803DD824 + 0x22) = lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34;
 
                 if (lbl_803DD7D8 != 0)
