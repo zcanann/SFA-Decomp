@@ -63,6 +63,7 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
     u32 s;
     u32 k;
     u32 ctrl;
+    u32 row;
     u8* stateBase;
 
     stateBase = (u8*)lbl_803CD760;
@@ -75,15 +76,17 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
             ctrl = controller & 0xff;
             if (ctrl < 0x40)
             {
-                return (u16)(((u32)stateBase[k * INP_MIDI_KEY_STRIDE + s * INP_MIDI_CTRL_BANK_SIZE +
-                        INP_MIDI_CTRL_BY_KEY_OFFSET + (ctrl & 0x1f)] << 7) |
-                    stateBase[k * INP_MIDI_KEY_STRIDE + s * INP_MIDI_CTRL_BANK_SIZE +
-                        INP_MIDI_CTRL_BY_KEY_OFFSET + (ctrl & 0x1f) + 0x20]);
+                row = (u32)stateBase + k * INP_MIDI_KEY_STRIDE + s * INP_MIDI_CTRL_BANK_SIZE;
+                return (u16)(((u32)*(u8*)(row +
+                        INP_MIDI_CTRL_BY_KEY_OFFSET + (ctrl & 0x1f)) << 7) |
+                    *(u8*)(row +
+                        INP_MIDI_CTRL_BY_KEY_OFFSET + (ctrl & 0x1f) + 0x20));
             }
             if (ctrl < 0x46)
             {
-                return (u16)((stateBase[k * INP_MIDI_KEY_STRIDE + s * INP_MIDI_CTRL_BANK_SIZE +
-                                 INP_MIDI_CTRL_BY_KEY_OFFSET + ctrl] < 0x40)
+                row = (u32)stateBase + k * INP_MIDI_KEY_STRIDE + s * INP_MIDI_CTRL_BANK_SIZE;
+                return (u16)((*(u8*)(row +
+                                 INP_MIDI_CTRL_BY_KEY_OFFSET + ctrl) < 0x40)
                                  ? 0
                                  : 0x3fff);
             }
