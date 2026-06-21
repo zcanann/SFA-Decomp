@@ -88,7 +88,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if (accept == 0) {
             continue;
         }
-        if ((int)obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
+        if ((int)*(u8 *)&obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
             continue;
         }
         if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->unkE4].flags & 0x80)) {
@@ -118,18 +118,18 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if (canTarget == 0) {
             continue;
         }
-        bestPri = obj->anim.modelInstance->hitVolumes[obj->unkE4].priority;
+        bestPri = *(u8 *)&obj->anim.modelInstance->hitVolumes[obj->unkE4].priority;
         i = 0;
         pTarget = targets;
         while (i < count
-            && (int)(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority > bestPri) {
+            && (int)*(u8 *)&(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority > bestPri) {
             pTarget++;
             i++;
         }
         pDist = dist + i;
         pTarget = targets + i;
         while (i < count && *pDist < distsq
-            && bestPri == (int)(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority) {
+            && bestPri == (int)*(u8 *)&(*pTarget)->anim.modelInstance->hitVolumes[(*pTarget)->unkE4].priority) {
             pDist++;
             pTarget++;
             i++;
