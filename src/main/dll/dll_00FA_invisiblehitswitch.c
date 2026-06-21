@@ -104,9 +104,11 @@ void InvisibleHitSwitch_update(int obj)
         {
             ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730;
             GameBit_Set((int)*(short*)(state2 + 0x18), 0);
+        }
+        else
+        {
             return;
         }
-        return;
     }
 
     if (((InvisibleHitSwitchState*)state)->activationTimer != *(volatile f32*)&lbl_803E3730)
