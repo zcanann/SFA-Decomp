@@ -2123,7 +2123,7 @@ void andross_update(int obj)
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(obj, (int)state);
     ref = ((AndrossState*)state)->unk14;
-    if (ref != 0)
+    if (*(void**)&((AndrossState*)state)->unk14 != NULL)
     {
         *(float*)&((AndrossState*)ref)->unk14 = *(float*)&((AndrossState*)ref)->unk14 - lbl_803E74D8;
         ((AndrossState*)state)->spawnedObjLifetime = ((AndrossState*)state)->spawnedObjLifetime - framesThisStep;
