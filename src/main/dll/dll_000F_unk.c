@@ -833,6 +833,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     f32 limit;
     f32 ldx;
     f32 ldz;
+    void* pathObj;
 
     keepPathControls = 1;
     lbl_803DD44E = 0;
@@ -849,7 +850,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         ((BaddieState*)state)->targetDistance = lbl_803E0570;
     }
 
-    if ((*(int*)state & 0x8000) != 0 && *(void**)(pos + 0xc0) == NULL)
+    pathObj = *(void**)(pos + 0xc0);
+    if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
         fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
         ((BaddieState*)state)->unk32E = (s16)((f32)((BaddieState*)state)->unk32E + dt);
