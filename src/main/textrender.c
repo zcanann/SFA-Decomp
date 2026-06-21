@@ -2345,8 +2345,9 @@ void setLanguageFn_8001ad64(void* reqp)
     hdr = (u8*)data + cs->headerCount * 16;
     cs->count = *(u16*)(hdr + 4);
     ofs = *(u16*)(hdr + 6);
-    cs->entries = hdr + 8;
-    table = (int*)((hdr + 8) + cs->count * 12);
+    hdr = hdr + 8;
+    cs->entries = hdr;
+    table = (int*)(hdr + cs->count * 12);
     numStrings = table[0];
     strs = table + 1;
     for (i = 0; i < cs->count; i++)
