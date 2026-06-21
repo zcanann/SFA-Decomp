@@ -366,6 +366,14 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             lbl_803DBA8C = lbl_803E20A0;
             switch (pauseMenuState)
             {
+            default:
+                gameTextFn_80016810(0x3cf, 0xc8, 0x118);
+                gameTextFn_80016810(0x3e1, 0xc8, 0x96);
+                break;
+            case 6:
+            case 10:
+                gameTextFn_80016810(0x3ce, 0xc8, 0x96);
+                break;
             case 8:
                 {
                     MapEventInterface* mapEvents = *gMapEventInterface;
@@ -382,14 +390,6 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                                          0x258, 0);
                     break;
                 }
-            case 6:
-            case 10:
-                gameTextFn_80016810(0x3ce, 0xc8, 0x96);
-                break;
-            default:
-                gameTextFn_80016810(0x3cf, 0xc8, 0x118);
-                gameTextFn_80016810(0x3e1, 0xc8, 0x96);
-                break;
             }
             {
                 s32 b38, b34, b30, b2c;
