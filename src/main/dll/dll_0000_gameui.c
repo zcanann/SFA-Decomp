@@ -822,7 +822,10 @@ void timeListFn_8012be84(void)
     prev_state = lbl_803DD75B;
     if (pauseMenuState != 0) return;
 
-    buttons = (u16)getButtonsJustPressed(0);
+    {
+        u16 b = getButtonsJustPressed(0);
+        buttons = b;
+    }
     padGetAnalogInput(0, &buf[1], &buf[0]);
     {
         int analog = buf[0];

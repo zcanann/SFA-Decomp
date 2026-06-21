@@ -433,8 +433,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     changes the interference graph, and flips the allocator's reg choice with ZERO other instruction
     change — reuses a different just-freed reg. CONVERSE (un-name a temp by inlining its defining
     EXPRESSION at each use, #107) also flips it. Works for re-derivable values (memory derefs,
-    `obj->field`); for CALL RESULTS reach for a different lever instead (you can't re-call) — #131
-    and especially #135 cover those. VN-equal pointer copies yield here too — #131's no-op `|=` or,
+    `obj->field`); a CALL RESULT can ALSO be web-decoupled WITHOUT re-calling — SPLIT it into a
+    block-scope temp at the call site (`{u16 b = call(); var = b;}` instead of `var = (u16)call();`):
+    the temp gives the call result its own short web + a `mr`-free copy into `var`, which re-classes
+    `var` and flips a stubborn within-class saved-reg pair. (timeListFn_8012be84 99.74→100: a clean
+    r30↔r31 swap between a global-load local and a `(u16)`-masked call result; the temp-split on the
+    call result flipped both, decl-order/opt_level2/#131-|=/fresh-deref all inert first.) #131/#135
+    also cover call-result-adjacent cases. VN-equal pointer copies yield here too — #131's no-op `|=` or,
     cleaner, #135's typed array index forces a surviving copy + own web. Also #115-adjacent: renaming
     ONE loop's counter to a distinct var removes a cross-loop coalescing barrier. Brute-force MANY
     spellings and grep the affected reg each build — this won dim2roofrub_update (byte-identical-
