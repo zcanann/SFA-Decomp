@@ -347,6 +347,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 {
     int cand1[4];
     int cand2[4];
+    int cand3[4];
     f32 total;
     int reachedForward;
     int done;
@@ -446,14 +447,14 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         n = *(int*)(a + 0x1C + k * 4);
         if (n > -1 && (*(s8*)(a + 0x1B) & mask) == 0 && n != 0)
         {
-            cand1[count] = n;
+            cand2[count] = n;
             count++;
         }
         mask <<= 1;
     }
     if (count != 0)
     {
-        nextId = cand1[randomGetRange(0, count - 1)];
+        nextId = cand2[randomGetRange(0, count - 1)];
     }
     else
     {
@@ -486,14 +487,14 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 n = *(int*)(a + 0x1C + k * 4);
                 if (n > -1 && (*(s8*)(a + 0x1B) & mask) == 0 && n != 0)
                 {
-                    cand1[count] = n;
+                    cand3[count] = n;
                     count++;
                 }
                 mask <<= 1;
             }
             if (count != 0)
             {
-                nextId = cand1[randomGetRange(0, count - 1)];
+                nextId = cand3[randomGetRange(0, count - 1)];
             }
             else
             {
