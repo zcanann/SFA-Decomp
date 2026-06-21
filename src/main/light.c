@@ -94,15 +94,15 @@ void vfpblock1_update(int obj)
 }
 
 #pragma scheduling on
-void FUN_801fc978(int param_1)
+void FUN_801fc978(int obj)
 {
-    FUN_8003b818(param_1);
+    FUN_8003b818(obj);
     return;
 }
 
 u32
 FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int param_9, u32 param_10
+             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
              , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
@@ -116,7 +116,7 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     u64 floatArg;
     u64 extraout_f1_00;
 
-    hitVolume = *(int*)&((GameObject*)param_9)->extra;
+    hitVolume = *(int*)&((GameObject*)obj)->extra;
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
     for (eventIdx = 0; eventIdx < animUpdate->eventCount; eventIdx = eventIdx + 1)
@@ -126,11 +126,11 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             GameBit_Set(0x500, 0);
             GameBit_Set(0xd72, 1);
             GameBit_Set(0xd44, 1);
-            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
-            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
             iface1 = (int)*gMapEventInterface;
-            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)param_9)->anim.mapEventSlot, 0x16, 1);
-            mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x16, 1);
+            mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
             if (mapAct == '\x01')
             {
                 floatArg = extraout_f1;
@@ -147,7 +147,7 @@ FUN_801fcccc(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             }
             else
             {
-                mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)param_9)->anim.mapEventSlot);
+                mapAct = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
                 if (mapAct == '\x02')
                 {
                     floatArg = extraout_f1_00;
@@ -1026,7 +1026,7 @@ void vfpplatform_update(int obj)
     }
 }
 
-void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9);
+void FUN_801fd398(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj);
 
 #pragma scheduling on
 #pragma peephole on

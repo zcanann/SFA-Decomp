@@ -494,7 +494,7 @@ u32 FUN_800575b4(double radius, float* pos)
     return 0;
 }
 
-u32 FUN_80057690(int param_1)
+u32 FUN_80057690(int obj)
 {
     float projSize;
     int viewObj;
@@ -513,34 +513,34 @@ u32 FUN_80057690(int param_1)
     u8 auStack_34[4];
     u64 local_30;
 
-    if (((GameObject*)param_1)->anim.alpha == 0)
+    if (((GameObject*)obj)->anim.alpha == 0)
     {
-        *(u8*)(param_1 + 0x37) = 0;
+        *(u8*)(obj + 0x37) = 0;
         return 0;
     }
-    placementData = *(int*)&((GameObject*)param_1)->anim.placementData;
+    placementData = *(int*)&((GameObject*)obj)->anim.placementData;
     if ((placementData == 0) || ((*(u8*)(placementData + 5) & 1) == 0))
     {
-        range = (double)*(float*)(param_1 + 0x40);
+        range = (double)*(float*)(obj + 0x40);
         if (range < (double)lbl_803DF838)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         viewObj = FUN_80017a98();
         if (((placementData == 0) || ((*(u8*)(placementData + 5) & 2) == 0)) || (viewObj == 0))
         {
-            dist = (double)FUN_80006958((double)((GameObject*)param_1)->anim.worldPosX,
-                                         (double)((GameObject*)param_1)->anim.worldPosY,
-                                         (double)((GameObject*)param_1)->anim.worldPosZ);
+            dist = (double)FUN_80006958((double)((GameObject*)obj)->anim.worldPosX,
+                                         (double)((GameObject*)obj)->anim.worldPosY,
+                                         (double)((GameObject*)obj)->anim.worldPosZ);
         }
         else
         {
-            dist = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(viewObj + 0x18));
+            dist = (double)FUN_8001771c((float*)(obj + 0x18), (float*)(viewObj + 0x18));
         }
         if (range < dist)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         alpha = 0xff;
@@ -552,16 +552,16 @@ u32 FUN_80057690(int param_1)
             local_30 = (double)(s64)(int)
             alpha;
         }
-        FUN_8000693c((double)(((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58),
-                     (double)((GameObject*)param_1)->anim.worldPosY,
-                     (double)(((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C),
-                     (double)(((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale),
+        FUN_8000693c((double)(((GameObject*)obj)->anim.worldPosX - lbl_803DDA58),
+                     (double)((GameObject*)obj)->anim.worldPosY,
+                     (double)(((GameObject*)obj)->anim.worldPosZ - lbl_803DDA5C),
+                     (double)(((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
                      auStack_34,
                      auStack_38, &screenY, &projRadius, &screenH, &screenW);
         projSize = ABS(projRadius) * lbl_803DF834;
         if (projSize < lbl_803DF860)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         if (projSize < lbl_803DF868)
@@ -570,13 +570,13 @@ u32 FUN_80057690(int param_1)
             alpha = (u32)(((float)(local_30) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
-        *(char*)(param_1 + 0x37) = (char)(alpha * (((GameObject*)param_1)->anim.alpha + 1) >> 8);
+        *(char*)(obj + 0x37) = (char)(alpha * (((GameObject*)obj)->anim.alpha + 1) >> 8);
     }
     else
     {
-        *(char*)(param_1 + 0x37) = (char)((((GameObject*)param_1)->anim.alpha + 1) * 0xff >> 8);
+        *(char*)(obj + 0x37) = (char)((((GameObject*)obj)->anim.alpha + 1) * 0xff >> 8);
     }
-    if (*(char*)(param_1 + 0x37) == '\0')
+    if (*(char*)(obj + 0x37) == '\0')
     {
         result = 0;
     }
@@ -585,11 +585,11 @@ u32 FUN_80057690(int param_1)
         for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
         {
             alpha = planeIdx;
-            if (((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale +
+            if (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
                 (float)(&DAT_803885a8)[alpha * 5] +
-                (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C) +
-                ((GameObject*)param_1)->anim.worldPosY * (float)(&DAT_803885a0)[alpha * 5] +
-                (float)(&DAT_8038859c)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58) <
+                (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)obj)->anim.worldPosZ - lbl_803DDA5C) +
+                ((GameObject*)obj)->anim.worldPosY * (float)(&DAT_803885a0)[alpha * 5] +
+                (float)(&DAT_8038859c)[alpha * 5] * (((GameObject*)obj)->anim.worldPosX - lbl_803DDA58) <
                 lbl_803DF84C)
             {
                 return 0;
