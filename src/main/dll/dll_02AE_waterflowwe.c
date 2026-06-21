@@ -165,11 +165,8 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
             current->currentX = current->currentX - k * currentX;
             current->currentZ = current->currentZ - k * currentZ;
         }
-        {
-            f32 k = gWaterFlowDecayCoeff;
-            current->currentX = current->currentX * k;
-            current->currentZ = current->currentZ * k;
-        }
+        current->currentX = current->currentX * gWaterFlowDecayCoeff;
+        current->currentZ = current->currentZ * gWaterFlowDecayCoeff;
         distance = sqrtf(current->currentX * current->currentX + current->currentZ * current->currentZ);
         if (distance > gWaterFlowMaxMagnitude)
         {
