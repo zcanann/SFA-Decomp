@@ -1868,7 +1868,6 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
 {
     ExpgfxTableEntry* entry;
     ExpgfxTableEntry* freeScan;
-    u16* refCount;
     int tableIndex;
     int freeIndex;
 
@@ -1880,13 +1879,12 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
             (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey))
         {
-            refCount = &gExpgfxTableEntries[tableIndex].refCount;
-            if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW)
+            if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW)
             {
                 debugPrintf(sExpgfxAddToTableUsageOverflow);
                 return EXPGFX_INVALID_TABLE_INDEX;
             }
-            (*refCount)++;
+            gExpgfxTableEntries[tableIndex].refCount++;
             return (s16)tableIndex;
         }
     }
