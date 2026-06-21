@@ -2925,17 +2925,20 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     }
     *(u16*)(stk + 0x58) = w;
     modelAnimUpdateChannels(hdr, stk, 2);
-    h = h & 0xF;
-    if ((h & 0xC) == 0)
     {
-        int sv = *(s8*)(c + 0x63);
-        if (sv & 1)
+        int hm = h & 0xF;
+        h = hm;
+        if ((hm & 0xC) == 0)
         {
-            h = (u8)(h | 0x10);
-        }
-        if (sv & 4)
-        {
-            h = (u8)(h | 0x20);
+            int sv = *(s8*)(c + 0x63);
+            if (sv & 1)
+            {
+                h = (u8)(hm | 0x10);
+            }
+            if (sv & 4)
+            {
+                h = (u8)(h | 0x20);
+            }
         }
     }
     lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, d, (u8)h);
