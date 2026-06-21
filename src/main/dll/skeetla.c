@@ -127,41 +127,34 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         state->unk353 = 0;
     }
 
-    if ((s8)state->unk353 != 0)
+    if (((s8)state->unk353 != 0) && (((state->statusFlags >> 5) & 1) == 0u))
     {
-        if (((state->statusFlags >> 5) & 1) == 0u)
+        if (lbl_803E23DC == state->waterLevel)
         {
-            if (lbl_803E23DC == state->waterLevel)
-            {
-                doHeightSnap = 0;
-            }
-            else if (lbl_803E2410 == state->unk2B0)
-            {
-                doHeightSnap = 1;
-            }
-            else if (state->unk2B4 - state->unk2B0 > lbl_803E2414)
-            {
-                doHeightSnap = 1;
-            }
-            else
-            {
-                doHeightSnap = 0;
-            }
-
-            if (doHeightSnap != 0)
-            {
-                ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
-                ((GameObject*)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
-            }
-            else
-            {
-                ((GameObject*)obj)->anim.velocityY += lbl_803E2428 * timeDelta;
-                ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
-            }
+            doHeightSnap = 0;
+        }
+        else if (lbl_803E2410 == state->unk2B0)
+        {
+            doHeightSnap = 1;
+        }
+        else if (state->unk2B4 - state->unk2B0 > lbl_803E2414)
+        {
+            doHeightSnap = 1;
         }
         else
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E23DC;
+            doHeightSnap = 0;
+        }
+
+        if (doHeightSnap != 0)
+        {
+            ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E23DC;
+            ((GameObject*)obj)->anim.localPosY = state->unk2B4 - lbl_803E23EC;
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.velocityY += lbl_803E2428 * timeDelta;
+            ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
         }
     }
     else
