@@ -343,7 +343,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             u0 = lbl_803DE714 * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
-        if (fy0 < lbl_803DE704 && fy1 > lbl_803DE704)
+        if (fy0 < *(volatile f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
         {
             v0 = lbl_803DE714 * -fy0 + v0;
             fy0 = lbl_803DE704;
