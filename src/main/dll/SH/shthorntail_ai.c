@@ -68,14 +68,14 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     objects = ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
     for (index = 0; index < count; index++)
     {
-        if (((*objects)->objType == SHTHORNTAIL_OBJ_TYPE) &&
-            (((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
-                ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
-                ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][3])))
+        if ((objects[index]->objType == SHTHORNTAIL_OBJ_TYPE) &&
+            ((objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
+                (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
+                (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
         {
-            fn_8014C66C(*objects, obj);
-            if ((vec3f_distanceSquared(&(*objects)->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
-                (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0u))
+            fn_8014C66C(objects[index], obj);
+            if ((vec3f_distanceSquared(&objects[index]->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
+                (GameBit_Get(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {
                 linkedEventPending = 1;
             }
@@ -85,7 +85,6 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
                 break;
             }
         }
-        objects++;
     }
     return linkedEventPending;
 }
