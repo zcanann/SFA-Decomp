@@ -772,7 +772,7 @@ void camstatic_update(CameraObject* camera)
         }
         if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
                 (*(f32*)((u8*)camera + 0x38) < lbl_803E1728)) &&
-            (target->anim.localPosZ <= lbl_803E16AC))
+            (target->anim.velocityY <= lbl_803E16AC))
         {
             gCamcontrolModeSettings->clampFlags.b6 = 1;
             gCamcontrolModeSettings->heightLockLimit = camera->anim.worldPosY;
