@@ -591,7 +591,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
                 collision->floorGap[0] = collision->points[0][1] - point->x;
                 if (collision->segmentHitTypes[0] == -1)
                 {
-                    collision->segmentHitTypes[0] = point->type;
+                    *(u8*)&collision->segmentHitTypes[0] = point->type;
                 }
                 foundBelow = 1;
             }
@@ -1777,9 +1777,9 @@ typedef struct CurvesSaveGameObjectPosition
 int pushable_savePos(int obj)
 {
     int i;
+    CurvesSaveGameObjectPosition* slot;
     int off;
     CurvesSaveGameObjectPosition* position;
-    CurvesSaveGameObjectPosition* slot;
     u32 objectId;
     f32 savedX;
 
