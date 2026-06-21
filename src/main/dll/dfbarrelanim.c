@@ -56,8 +56,8 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
 
     {
         s32 nodesSize = count * sizeof(DFRopeNode);
-        rope = (DFRope*)mmAlloc(nodesSize + (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope),
-                                0xFF, 0);
+        s32 allocSize = (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope) + nodesSize;
+        rope = (DFRope*)mmAlloc(allocSize, 0xFF, 0);
         rope->nodes = (DFRopeNode*)((u8*)rope + sizeof(DFRope));
         rope->links = (DFRopeLink*)((u8*)rope + nodesSize + sizeof(DFRope));
     }
