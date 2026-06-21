@@ -536,6 +536,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     of escalating OR/cast hacks dissolved into ordinary 2002 C once the struct was indexed as an
     array. A blind multiset-diff + per-fix re-test converged it in ~6 builds: spinSpeed s16 → 99.1,
     clamp-to-local → 100.)
+136. **Strength-reduced loop COUNTER/WALKER coloring is set by COUNTER-REUSE; flip it with a comma-
+    init walker.** When the target puts the loop COUNTER in the higher saved reg and the WALKER in
+    the lower but MWCC's index form `arr[i]` does the opposite, rewrite as `for (i = 0, p = base;
+    i < N; p += stride, i++)` — increment order `p += stride, i++` (walker bump FIRST) to match the
+    target's `addi walker; addi counter; cmpwi`. CAVEAT: clean ONLY when `base` is already a local/
+    register value; a GLOBAL base array costs an extra `mr walker,r0` (the strength reducer
+    materializes the global into a volatile then copies — only IT avoids that copy, but then it
+    picks the wrong color), netting a regression despite being 1 instr from 100%. ROOT CAUSE: the
+    reducer's counter/walker coloring is CONTEXT-DEPENDENT on whether the COUNTER's value is reused
+    elsewhere — a `*p = NULL` whose 0 materializes as `mr rNull,rCounter` reuses i, raising i's web
+    priority so the reducer colors counter=higher; a loop with no such extra i-use leaves i low. So
+    to get counter-higher WITH the reducer (no comma-init, no extra mr), give the counter an
+    incidental reuse. (WorkerB: dll_4e/optionsMenu_applyGameplaySetting vs shop_init.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
