@@ -1205,7 +1205,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
                                                                         (int)(u32)collision->pointCounts >>
                                                                         CURVES_POINT_COUNT_SEGMENT_SHIFT,
                                                                         collision->segmentHitPlanes, 0);
-                collision->surfaceCounter = collision->traceHitCount;
+                *(s8*)&collision->surfaceCounter = collision->traceHitCount;
                 collision->surfaceHitMask = 0;
             }
             switch (collision->updateMode)
