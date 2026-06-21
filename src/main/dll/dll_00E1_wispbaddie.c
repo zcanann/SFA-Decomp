@@ -808,12 +808,15 @@ void fn_8015039C(int obj, int animState)
     }
 }
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma optimization_level 2
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
-    u8* ptr = *(u8**)((u8*)lbl_8031F16C + inner[0x33b] * 0x28 + 4);
+    u8* tbl = (u8*)lbl_8031F16C;
+    u8* ptr = *(u8**)(tbl + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
+#pragma optimization_level reset
 #pragma scheduling reset
