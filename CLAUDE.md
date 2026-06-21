@@ -634,7 +634,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     lwz count`). The count/bdnz sibling of #138 (sentinel-index) and #136 (counter/walker) — solves
     the recurring count/bdnz global-base-walker detour that #138/#140 didn't fit (savegame
     restore/saveObjectPos, nw_mammoth, Objfsa_GetPatchGroupIdAtPoint all share the `mr rN,r0` shape).
-    (WorkerB: dll_0014_unk/curves_remove 98.33→100.)
+    (WorkerB: dll_0014_unk/curves_remove 98.33→100.) SCOPE: this is the UP-COUNTING `i < count`
+    search-loop form. The COUNTDOWN `bdnz` variant (e.g. Objfsa_GetPatchGroupIdAtPoint) is a DISTINCT
+    sub-case where the index form adds a 2nd counter and comma-init keeps the `mr` — its clean form
+    is still to find.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
