@@ -824,7 +824,7 @@ void fn_801DFA28(u8* obj)
         ((SBGalleonState*)state)->moveScale += lbl_803E57B0;
         if (((SBGalleonState*)state)->moveScale > lbl_803E57A4)
         {
-            ((SBGalleonState*)state)->moveScale = lbl_803E57A4;
+            ((SBGalleonState*)state)->moveScale = *(f32*)&lbl_803E57A4;
         }
         blendK = lbl_803E57B4;
         ((SBGalleonState*)state)->unk5C += blendK * (timeDelta * (ambA - ((SBGalleonState*)state)->unk5C));
