@@ -317,19 +317,18 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
     extern void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g); /* #57 */
     int i;
     int spawned;
-    void** p;
     f32 pos[3];
 
     spawned = 0;
     if (lbl_803E6C38 == intensity)
     {
         spawned = 0;
-        for (i = 0, p = entries; i < count; i++, p++)
+        for (i = 0; i < count; i++)
         {
-            if (*p != 0)
+            if (entries[i] != 0)
             {
-                mm_free_(*p);
-                *p = 0;
+                mm_free_(entries[i]);
+                entries[i] = 0;
             }
         }
         if (*light != 0)
@@ -339,16 +338,16 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
         return 0;
     }
 
-    for (i = 0, p = entries; i < count; i++, p++)
+    for (i = 0; i < count; i++)
     {
-        if (*p != 0)
+        if (entries[i] != 0)
         {
-            lightningRender(*p);
-            *(u16*)((char*)*p + 0x20) += framesThisStep;
-            if ((f32)(u32) * (u16*)((char*)*p + 0x20) > lbl_803DC3A8)
+            lightningRender(entries[i]);
+            *(u16*)((char*)entries[i] + 0x20) += framesThisStep;
+            if ((f32)(u32) * (u16*)((char*)entries[i] + 0x20) > lbl_803DC3A8)
             {
-                mm_free_(*p);
-                *p = 0;
+                mm_free_(entries[i]);
+                entries[i] = 0;
             }
         }
         else if (spawned == 0)
@@ -359,7 +358,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light,
             pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            *p = lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
+            entries[i] = lightningCreate((f32*)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
                                  lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
