@@ -1254,8 +1254,8 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 }
                 if (!blocked)
                 {
-                    sumA = buf[i * 4];
-                    sumB = buf[next * 4];
+                    sumA = *(u8*)&buf[i * 4];
+                    sumB = *(u8*)&buf[next * 4];
                     sumA += buf[i * 4 + 1];
                     sumB += buf[next * 4 + 1];
                     sumA += buf[i * 4 + 2];
