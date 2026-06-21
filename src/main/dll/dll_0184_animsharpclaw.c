@@ -167,7 +167,7 @@ void animsharpclaw_update(int* obj)
     {
         return;
     }
-    kind = (s8)((AnimsharpclawState*)inner)->unk57;
+    kind = *(s8*)&((AnimsharpclawState*)inner)->unk57;
     found = NULL;
     objects = (int*)ObjList_GetObjects(&i, &count);
     matchCount = 0;
