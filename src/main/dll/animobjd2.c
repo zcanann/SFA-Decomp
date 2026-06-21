@@ -355,7 +355,7 @@ void fn_8013E0D0(int* obj, register u8* st)
                         {
                             *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_4;
                             TRICKY_RESET(st);
-                            if (*(int*)(st + 0x7b8) == 0)
+                            if (*(void**)(st + 0x7b8) == NULL)
                             {
                                 int o = Obj_AllocObjectSetup(0x20, 0x17b);
                                 s8 slots[4];
@@ -363,15 +363,15 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 slots[0] = -1;
                                 slots[1] = -1;
                                 slots[2] = -1;
-                                if (*(int*)(st + 0x7a8) != 0)
+                                if (*(void**)(st + 0x7a8) != NULL)
                                 {
                                     slots[((TrickyPackedSlots*)(st + 0x7bc))->a] = 1;
                                 }
-                                if (*(int*)(st + 0x7b0) != 0)
+                                if (*(void**)(st + 0x7b0) != NULL)
                                 {
                                     slots[((TrickyPackedSlots*)(st + 0x7bc))->b] = 1;
                                 }
-                                if (*(int*)(st + 0x7b8) != 0)
+                                if (*(void**)(st + 0x7b8) != NULL)
                                 {
                                     slots[((TrickyPackedSlots*)(st + 0x7bc))->c] = 1;
                                 }
