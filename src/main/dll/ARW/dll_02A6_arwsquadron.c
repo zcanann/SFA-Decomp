@@ -610,7 +610,7 @@ void arwsquadron_followLeader(int p1, int p2)
     if (!state->flags.cmd.f08)
     {
         objAnim->rotZ =
-            leaderState->rollAmplitude *
+            state->rollAmplitude *
             mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
             leaderAnim->rotZ;
     }
