@@ -3075,11 +3075,11 @@ void Sky_func03(int a, int b, u8* cfg)
     s16* envp;
     u8* env2;
     u8 mask;
-    int i;
     int iofs;
+    int i;
     u8* p4;
     u32 cloudMode;
-    u8 vis;
+    int vis;
     int tmp;
 
     envp = (s16*)saveGameGetEnvState();
