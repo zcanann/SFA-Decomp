@@ -429,16 +429,15 @@ void GameUI_func15(s16 a, int b, int c)
 
 void GameUI_airMeterRun(int v)
 {
-    int* m = airMeter;
     int clamped;
-    if (m == NULL) return;
-    clamped = (v < 0) ? 0 : ((v > m[1]) ? m[1] : v);
+    if (airMeter == NULL) return;
+    clamped = (v < 0) ? 0 : ((v > ((int*)airMeter)[1]) ? ((int*)airMeter)[1] : v);
     v = clamped;
-    if (m[0x10] == 1)
+    if (((int*)airMeter)[0x10] == 1)
     {
-        v = clamped * 0x9e / m[1];
+        v = clamped * 0x9e / ((int*)airMeter)[1];
     }
-    m[3] = v;
+    ((int*)airMeter)[3] = v;
 }
 
 extern u8 cMenuEnabled;
