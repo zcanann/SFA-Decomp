@@ -3061,10 +3061,12 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 
     if (e >= 0)
     {
-        conv[0] = conv[3] = b;
+        conv[0] = b;
+        conv[3] = b;
         conv[1] = (int)(c - lbl_803DECE8);
         conv[4] = (int)(lbl_803DECE8 + c);
-        conv[2] = conv[5] = d;
+        conv[2] = d;
+        conv[5] = d;
         hitDetectFn_800691c0((int*)a, conv, f, 1);
     }
     else
@@ -3076,7 +3078,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
     lbl_803DCF68 = (int)(base + 0xdc);
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
-    end = desc + gActiveTrackBlockCount;
+    end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
     for (; desc < end; desc++)
     {
         if (lbl_803DCF60 >= 0x23) break;
