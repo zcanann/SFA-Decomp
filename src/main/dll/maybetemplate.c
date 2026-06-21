@@ -1299,13 +1299,14 @@ int trickyBitFn_801241cc(short* arr, s8 flag)
         mask = gTrickyHudItemMask;
         if (mask > 0)
         {
-            while (arr[0] > -1)
+            int i = 0;
+            while (arr[i] > -1)
             {
-                if (mask != -1 && (mask & arr[0]) != 0)
+                if (mask != -1 && (mask & arr[i]) != 0)
                 {
                     count++;
                 }
-                arr += 8;
+                i += 8;
             }
         }
     }
