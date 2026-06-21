@@ -218,7 +218,7 @@ void fn_8017D854(int obj, int msg)
     }
     ((AppleOnTreeState*)state)->healthRestore = v;
     ((AppleOnTreeState*)state)->animState = 4;
-    ((AppleOnTreeState*)state)->unk08 = timeDelta;
+    ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
     ((AppleOnTreeState*)state)->unk0C = timeDelta;
     ((AppleOnTreeState*)state)->rotX = randomGetRange(-0x8000, 0x7fff);
     ((AppleOnTreeState*)state)->rotY = randomGetRange(-0x8000, 0x7fff);
@@ -628,10 +628,10 @@ void appleontree_update(int objArg)
     }
     if ((*(u8*)(state + 0x5a) & 2) == 0)
     {
-        ((AppleOnTreeState*)state)->unk08 = ((AppleOnTreeState*)state)->unk08 + timeDelta;
+        ((AppleOnTreeState*)state)->elapsedTime = ((AppleOnTreeState*)state)->elapsedTime + timeDelta;
         fa = ((AppleOnTreeState*)state)->unk0C;
         ((AppleOnTreeState*)state)->unk0C = fa + timeDelta;
-        fb = ((AppleOnTreeState*)state)->unk08;
+        fb = ((AppleOnTreeState*)state)->elapsedTime;
         frac = fb / *(float*)(state + 4);
         switch (((AppleOnTreeState*)state)->animState)
         {
@@ -654,7 +654,7 @@ void appleontree_update(int objArg)
                     ObjHits_DisableObject((int)obj);
                 }
                 *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
-                ((AppleOnTreeState*)state)->unk08 = timeDelta;
+                ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
                 ((AppleOnTreeState*)state)->animState = 5;
             }
             else
@@ -693,7 +693,7 @@ void appleontree_update(int objArg)
                     ObjHits_DisableObject((int)obj);
                 }
                 *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
-                ((AppleOnTreeState*)state)->unk08 = timeDelta;
+                ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
                 ((AppleOnTreeState*)state)->animState = 5;
             }
             else
@@ -758,7 +758,7 @@ void appleontree_update(int objArg)
             }
             break;
         case 3:
-            ((AppleOnTreeState*)state)->unk08 = fb - timeDelta;
+            ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
             if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
                 FUN_8017db40((u32)obj, 0);
@@ -778,7 +778,7 @@ void appleontree_update(int objArg)
             if (frac > *(float*)(state + 0x20))
             {
                 ((AppleOnTreeState*)state)->animState = 6;
-                ((AppleOnTreeState*)state)->unk08 = timeDelta;
+                ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
             }
             else
             {
