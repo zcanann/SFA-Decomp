@@ -257,11 +257,11 @@ void expgfxRemoveAll(void)
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0)
             {
-                if (runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0 &&
-                    runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource != 0)
+                if (((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0 &&
+                    ((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].resource);
+                    textureFree((void*)((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource);
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
