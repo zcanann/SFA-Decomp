@@ -796,7 +796,7 @@ foundFirst:
             if (next > -1)
             {
                 nextBuf = (u8*)cache + parity * 0x1000;
-                copyToCache(nextBuf, (void*)runtime->slotPoolBases[next], EXPGFX_POOL_CACHE_LINE_COUNT);
+                copyToCache(nextBuf, (void*)*(u32*)((u8*)runtime->slotPoolBases + next * 4), EXPGFX_POOL_CACHE_LINE_COUNT);
                 curCache = nextBuf;
                 prefetched = 1;
             }
