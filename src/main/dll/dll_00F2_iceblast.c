@@ -93,9 +93,10 @@ void iceblast_update(int* obj)
     state[0] = state[0] - timeDelta;
     {
         f32 zero;
-        if (state[0] <= (zero = lbl_803E3604))
+        f32 cur = state[0];
+        if (cur <= (zero = lbl_803E3604))
         {
-            state[0] = state[0] + lbl_803E3608;
+            state[0] = cur + lbl_803E3608;
             ((f32*)(int)obj)[9] = zero;
             ((f32*)obj)[11] = zero;
             ((f32*)obj)[10] = lbl_803E360C;
