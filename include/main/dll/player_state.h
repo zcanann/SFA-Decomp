@@ -301,7 +301,7 @@ typedef struct PlayerState {
     f32 unk824;
     f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
-    f32 unk830;
+    f32 velSmoothRateBase; /* per-surface default that velSmoothRate is reset to (set by surfaceType: 0x803E8144 default, 0x803E8118 case13, 0x803E7F6C case3) */
     f32 unk834;
     f32 waterDepth; /* waterSurfaceY - worldPosY; player's submerged depth, drives splash/ripple FX */
     f32 waterSurfaceY; /* water surface world-Y (from cfg+0x1c0); compared against worldPosY */

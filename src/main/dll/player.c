@@ -11010,7 +11010,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         ((PlayerState*)state)->targetAnimSpeed = z;
         ((PlayerState*)state)->unk834 = z;
     }
-    ((PlayerState*)state)->unk830 = lbl_803E8144;
+    ((PlayerState*)state)->velSmoothRateBase = lbl_803E8144;
     ((PlayerState*)state)->surfaceType = 0;
     b = ((PlayerState*)state)->flags3F0 >> 5 & 1;
     if (b == 0 || (b != 0 && lbl_803E80D0 != *(f32*)((char*)cfg + 0x1c0)))
@@ -11040,12 +11040,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 13:
             ((PlayerState*)state)->targetAnimSpeed = lbl_803E8148;
             ((PlayerState*)state)->unk834 = lbl_803E814C;
-            ((PlayerState*)state)->unk830 = lbl_803E8118;
+            ((PlayerState*)state)->velSmoothRateBase = lbl_803E8118;
             break;
         case 3:
             ((PlayerState*)state)->targetAnimSpeed = lbl_803E7EE0;
             ((PlayerState*)state)->unk834 = fv2;
-            ((PlayerState*)state)->unk830 = lbl_803E7F6C;
+            ((PlayerState*)state)->velSmoothRateBase = lbl_803E7F6C;
             break;
         case 6:
             iv = (int)((f32) * (s16*)((char*)state + 0x808) - dt);
@@ -12600,7 +12600,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->animState = -1;
     ((PlayerState*)inner)->targetAnimSpeed = fz;
     ((PlayerState*)inner)->unk834 = fz;
-    ((PlayerState*)inner)->unk830 = lbl_803E8144;
+    ((PlayerState*)inner)->velSmoothRateBase = lbl_803E8144;
     ((ByteFlags*)((char*)inner + 0x3f1))->b01 = 1;
     ((PlayerState*)inner)->unk880 = lbl_803E7FA4;
     ((PlayerState*)inner)->walkAnimSoundId = 3;
@@ -12817,7 +12817,7 @@ int fn_802AE480(int obj, int inner, int state)
             return 1;
         }
         ((PlayerState*)inner)->currentSpeed = lbl_803E7EA4;
-        ((PlayerState*)inner)->velSmoothRate = ((PlayerState*)inner)->unk830;
+        ((PlayerState*)inner)->velSmoothRate = ((PlayerState*)inner)->velSmoothRateBase;
     }
     return 0;
 }
