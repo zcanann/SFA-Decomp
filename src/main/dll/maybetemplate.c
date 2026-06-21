@@ -603,7 +603,7 @@ void pauseMenuDrawStatus(void)
             off = i * 4;
             if (((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C) &&
                     ((*(u16*)(player + 0xB0) & 0x1000) == 0) && (pauseMenuState == 0) &&
-                    (airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
+                    ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
                     (PMDS_CAMERA_GET_STATE() != 0x44)) ||
                 ((i == 3) && ((lbl_803DD792 & 2) != 0)))
             {
