@@ -187,7 +187,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         (lastContactObj == state->lastContactObj))
     {
         state->contactTimer += timeDelta;
-        if (state->contactTimer >= lbl_803E23E0)
+        if (state->contactTimer >= *(f32*)&lbl_803E23E0)
         {
             state->contactTimer -= lbl_803E23E0;
             state->stateFlags |= 8;
