@@ -191,7 +191,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         }
     }
     else if ((state->lastContactObj != NULL) &&
-        (state->lastContactObj == lastContactObj))
+        (lastContactObj == state->lastContactObj))
     {
         state->contactTimer += timeDelta;
         if (state->contactTimer >= lbl_803E23E0)
