@@ -173,12 +173,12 @@ typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p
 #pragma opt_propagation off
 void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
 {
+    int e14;
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     int idx;
     int off;
     int e;
-    int e14;
     char* p;
     idx = ((ExplosionState*)state)->flameCount++;
     off = idx * 0x30;
@@ -191,8 +191,12 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
     *(f32*)((char*)e + 0x1c) = spd;
     *(u8*)((char*)e + 0x2d) = b;
     *(int*)((char*)e + 0x10) = 0;
-    e14 = state + off;
-    *(int*)((char*)e14 + 0x14) = (int)(lbl_803E4930 * sqrtf(spd));
+    {
+        int life = (int)(lbl_803E4930 * sqrtf(spd));
+        e14 = state + off;
+        e14 |= e; /* keep 0x14 base in its own saved reg (mr r29,r31) */
+        *(int*)((char*)e14 + 0x14) = life;
+    }
     {
         int v = *(int*)((char*)e14 + 0x14);
         if (v < 0)
@@ -239,13 +243,14 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
             }
         }
     }
-    *(s16*)((char*)state + idx * 0x30 + 0x28) = randomGetRange(0, 0xffff);
-    *(s16*)((char*)state + idx * 0x30 + 0x2a) = randomGetRange(0xc8, 0x12c);
+    /* group field offset onto base so each slot address re-derives (add state,off) per call */
+    *(s16*)((char*)((char*)state + 0x28) + idx * 0x30) = randomGetRange(0, 0xffff);
+    *(s16*)((char*)((char*)state + 0x2a) + idx * 0x30) = randomGetRange(0xc8, 0x12c);
     if ((int)randomGetRange(0, 1) != 0)
     {
-        *(s16*)((char*)state + idx * 0x30 + 0x2a) = -*(s16*)((char*)state + idx * 0x30 + 0x2a);
+        *(s16*)((char*)((char*)state + 0x2a) + idx * 0x30) = -*(s16*)((char*)((char*)state + 0x2a) + idx * 0x30);
     }
-    *(u8*)((char*)state + idx * 0x30 + 0x2c) = randomGetRange(0, 3);
+    *(u8*)((char*)((char*)state + 0x2c) + idx * 0x30) = randomGetRange(0, 3);
     {
         f32 sp = *(f32*)((char*)e + 0x1c);
         f32 ev = expf(
@@ -254,7 +259,7 @@ void fn_801B3DE4(int obj, u8 b, f32 spd, f32 x, f32 y, f32 z)
         f32 d = sp - *(f32*)((char*)e + 0x18);
         f32 t = d * ev;
         *(f32*)((char*)e + 0xc) = sp - gExplosionDebrisSpeedScale * t;
-        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(e = (int) * (int*)((char*)e14 + 0x14)));
+        ev = expf((lbl_803E493C * (f32)(int) * (int*)((char*)e + 0x10)) / (f32)(int) * (int*)((char*)e14 + 0x14));
         t = lbl_803E4938 * ev;
         p = (char*)state;
         *(s8*)(p + idx * 0x30 + 0x2e) = lbl_803E4938 - gExplosionDebrisAlphaScale * t;

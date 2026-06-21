@@ -1,5 +1,19 @@
 # Handover: crack fn_801B3DE4 via dynamic RE of mwcceppc (x86 Ubuntu)
 
+> **✅ SOLVED 2026-06-21 — fn_801B3DE4 is 100% byte-matched from clean C (no asm, no dynamic-RE
+> needed in the end). Solution + recipe in `fn_801B3DE4_SOLVED.md` and CLAUDE.md #131. The dynamic-RE
+> tooling below (gdb-at-guest-VA, patched-compiler diagnostics) remains valid and reusable for the
+> next hard residual, but this function is done — don't re-attack it.**
+>
+> **UPDATE 2026-06-20 (x86_64 Ubuntu session):** Dynamic RE is now OPERATIONAL. gdb breaks at
+> guest VAs under wibo; setup in `gdb_setup.sh`, repro TU in `fn_801B3DE4_mini.c`, pass profile
+> + REFINED diagnosis in `fn_801B3DE4_partial.md`. Headline correction: the divergence is
+> **local CSE** of two identical pure `state+off` exprs in the entry BB (robust across O0–O4 and
+> every relevant pragma), NOT an unconditional VN fold, and NOT reproducible from clean C
+> without rescrambling the #36/#77 whole-TU coloring. Still banked at 98.04%. Read the partial
+> doc before re-attacking. Open next step: instrument IroCSE/VN to learn why the retail compile
+> turned the 2nd state+off into a surviving COPY rather than substituting it away.
+
 You are continuing work that was blocked on an arm64 Mac. **Goal: 100% match
 `fn_801B3DE4` using the compiler reverse-engineering technique** (no inline asm — forbidden).
 On x86 Ubuntu the path that was blocked for me — live-debugging the compiler — is open to you.
