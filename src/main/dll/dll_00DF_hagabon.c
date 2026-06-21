@@ -218,7 +218,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         waveB = ((lbl_803E262C * waveA) +
                 *(f32*)(curve + 0x6c)) -
             ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.velocityY += lbl_803E2624 * waveB;
+        ((GameObject*)obj)->anim.velocityY += waveB * lbl_803E2624;
         ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
 
