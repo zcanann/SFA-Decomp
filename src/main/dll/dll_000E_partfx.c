@@ -3741,12 +3741,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.sourcePosZ = lbl_803DF4DC;
         cfg.sourcePosW = lbl_803DF4DC;
         cfg.sourcePosX = lbl_803DF4D0;
-        cfg.sourceVecZ = randomGetRange(0, 200);
-        cfg.sourceVecZ = 100 - cfg.sourceVecZ;
-        cfg.sourceVecY = randomGetRange(0, 200);
-        cfg.sourceVecY = 100 - cfg.sourceVecY;
-        cfg.sourceVecX = randomGetRange(0, 200);
-        cfg.sourceVecX = 100 - cfg.sourceVecX;
+        cfg.sourceVecZ = 100 - randomGetRange(0, 200);
+        cfg.sourceVecY = 100 - randomGetRange(0, 200);
+        cfg.sourceVecX = 100 - randomGetRange(0, 200);
         break;
     case 0x4e:
 
@@ -3772,10 +3769,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.sourcePosW = lbl_803DF4DC;
         cfg.sourcePosX = lbl_803DF4D0;
         cfg.sourceVecZ = 0;
-        cfg.sourceVecY = randomGetRange(0, 1000);
-        cfg.sourceVecY = 500 - cfg.sourceVecY;
-        cfg.sourceVecX = randomGetRange(0, 1000);
-        cfg.sourceVecX = 500 - cfg.sourceVecX;
+        cfg.sourceVecY = 500 - randomGetRange(0, 1000);
+        cfg.sourceVecX = 500 - randomGetRange(0, 1000);
         break;
     case 0x49:
         cfg.startPosY = lbl_803DF604;
@@ -3814,12 +3809,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.sourcePosZ = lbl_803DF4DC;
         cfg.sourcePosW = lbl_803DF4DC;
         cfg.sourcePosX = lbl_803DF4D0;
-        cfg.sourceVecZ = randomGetRange(0, 1000);
-        cfg.sourceVecZ = 500 - cfg.sourceVecZ;
-        cfg.sourceVecY = randomGetRange(0, 1000);
-        cfg.sourceVecY = 500 - cfg.sourceVecY;
-        cfg.sourceVecX = randomGetRange(0, 1000);
-        cfg.sourceVecX = 500 - cfg.sourceVecX;
+        cfg.sourceVecZ = 500 - randomGetRange(0, 1000);
+        cfg.sourceVecY = 500 - randomGetRange(0, 1000);
+        cfg.sourceVecX = 500 - randomGetRange(0, 1000);
         break;
     case 0x40:
 
@@ -3973,12 +3965,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         rot.m[2] = lbl_803DF4DC;
         rot.m[3] = lbl_803DF4DC;
         rot.m[0] = lbl_803DF530;
-        rot.z = randomGetRange(0, 4000);
-        rot.z = 2000 - rot.z;
-        rot.y = randomGetRange(0, 4000);
-        rot.y = 2000 - rot.y;
-        rot.x = randomGetRange(0, 4000);
-        rot.x = 2000 - rot.x;
+        rot.z = 2000 - randomGetRange(0, 4000);
+        rot.y = 2000 - randomGetRange(0, 4000);
+        rot.x = 2000 - randomGetRange(0, 4000);
         vecRotateZXY((s16*)&rot, &cfg.velocityX);
         cfg.scale = lbl_803DF65C;
         cfg.lifetimeFrames = 0x50;
