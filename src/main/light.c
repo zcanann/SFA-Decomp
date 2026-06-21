@@ -929,7 +929,7 @@ void vfpplatform_update(int obj)
                     {
                         if (yi < tyi)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
                             if ((int)((GameObject*)obj)->anim.localPosZ >= tyi)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = tyi;
@@ -956,7 +956,7 @@ void vfpplatform_update(int obj)
                     {
                         if (yi > tyi - 60)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
                             if ((int)((GameObject*)obj)->anim.localPosZ <= tyi - 60)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = (tyi - 60);
@@ -983,7 +983,7 @@ void vfpplatform_update(int obj)
                     {
                         if (yi > tyi)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
                             if ((int)((GameObject*)obj)->anim.localPosZ <= tyi)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = tyi;
@@ -1010,7 +1010,7 @@ void vfpplatform_update(int obj)
                     {
                         if (yi < tyi + 60)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
                             if ((int)((GameObject*)obj)->anim.localPosZ >= tyi + 60)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = (tyi + 60);
