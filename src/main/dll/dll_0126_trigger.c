@@ -750,7 +750,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x2c:
-                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s16)((p[2] << 8) | p[3]);
+                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = Obj_GetPlayerObject();
