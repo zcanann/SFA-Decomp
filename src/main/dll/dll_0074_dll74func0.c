@@ -713,7 +713,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].x = lbl_803E0BBC;
         entries[1].y = lbl_803E0BC0;
         entries[1].z = lbl_803E0BBC;
-        e = &entries[2];
+        e = &buf.entries[2];
     }
     else
     {
@@ -724,7 +724,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].x = lbl_803E0BBC;
         entries[1].y = lbl_803E0BC4;
         entries[1].z = lbl_803E0BBC;
-        e = &entries[2];
+        e = &buf.entries[2];
     }
     if (variant == 0)
     {

@@ -343,7 +343,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             u0 = lbl_803DE714 * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
-        if (fy0 < lbl_803DE704 && fy1 > lbl_803DE704)
+        if (fy0 < *(volatile f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
         {
             v0 = lbl_803DE714 * -fy0 + v0;
             fy0 = lbl_803DE704;
@@ -791,7 +791,10 @@ void* gameTextGet(int textId)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+        {
+            u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+            entry = (u16*)(slotBase + 0x40);
+        }
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -856,7 +859,10 @@ void* gameTextGet(int textId)
     {
         gGameTextBufferIndex = 0;
     }
-    entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+    {
+        u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+        entry = (u16*)(slotBase + 0x40);
+    }
     gGameTextLastEntry = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
@@ -2297,6 +2303,7 @@ void setLanguageFn_8001ad64(void* reqp)
     GameTextCharset* cs;
     int* data;
     u8* hdr;
+    u8* entries;
     int ofs;
     int* table;
     int numStrings;
@@ -2345,9 +2352,9 @@ void setLanguageFn_8001ad64(void* reqp)
     hdr = (u8*)data + cs->headerCount * 16;
     cs->count = *(u16*)(hdr + 4);
     ofs = *(u16*)(hdr + 6);
-    hdr = hdr + 8;
-    cs->entries = hdr;
-    table = (int*)(hdr + cs->count * 12);
+    entries = hdr + 8;
+    cs->entries = entries;
+    table = (int*)(entries + cs->count * 12);
     numStrings = table[0];
     strs = table + 1;
     for (i = 0; i < cs->count; i++)

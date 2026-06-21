@@ -1346,7 +1346,7 @@ void sky2_run(void)
             {
                 r = lbl_803DF108;
             }
-            if (g > lbl_803DF118)
+            if (g > *(volatile f32*)&lbl_803DF118)
             {
                 g = lbl_803DF118;
             }
@@ -1354,7 +1354,7 @@ void sky2_run(void)
             {
                 g = lbl_803DF108;
             }
-            if (b > lbl_803DF118)
+            if (b > *(volatile f32*)&lbl_803DF118)
             {
                 b = lbl_803DF118;
             }
@@ -2590,7 +2590,8 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     else
     {
         ofs = slot * 0xa4;
-        if ((u32)((gSkyState[ofs + 0xc1] >> 7) & 1) != 0)
+        cb = ofs + 0xc1;
+        if ((u32)((gSkyState[cb] >> 7) & 1) != 0)
         {
             dir[0] = lbl_803DF06C;
             dir[1] = lbl_803DF06C;
@@ -2598,7 +2599,7 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
             PSVECNormalize(dir, dir);
             PSMTXMultVecSR(Camera_GetInverseViewMatrix(), dir, dir);
         }
-        if ((u32)((gSkyState[ofs + 0xc1] >> 6) & 1) != 0)
+        if ((u32)((gSkyState[cb] >> 6) & 1) != 0)
         {
             p3 = gSkyState + ofs;
             dir[0] = *(f32*)(p3 + 0xa8);

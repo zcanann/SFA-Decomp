@@ -426,12 +426,9 @@ void fn_8015383C(int obj, int state)
 
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0x7f;
     losDetected = 0;
-    {
-        int p29c = *(int*)&((BaddieState*)state)->trackedObj;
-        vec[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)p29c)->anim.localPosX;
-        vec[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)p29c)->anim.localPosY;
-        vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)p29c)->anim.localPosZ;
-    }
+    vec[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
+    vec[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
+    vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
     if (PSVECMag(vec) < lbl_803E2900
         && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & 0x1000) == 0)
     {
@@ -516,8 +513,7 @@ void fn_8015383C(int obj, int state)
             && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
         {
             fn_80153640(obj, state);
-            fn_8015355C(obj, state);
-            return;
+            goto sharedTail;
         }
     }
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
@@ -527,6 +523,7 @@ void fn_8015383C(int obj, int state)
         *(f32*)(state + 0x324) = (f32)(s32)rnd;
         Sfx_PlayFromObject(obj, SFXwatery_bubble3);
     }
+sharedTail:
     fn_8015355C(obj, state);
 }
 

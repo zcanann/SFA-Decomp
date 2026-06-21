@@ -115,6 +115,9 @@ void optionsMenu_openGeneralPanel(void)
     int entryOffset;
     int* slot;
     int cheatId;
+    int cheatId2;
+    int entryOffset2;
+    int lastUnlocked2;
 
     if (lbl_803DBA28 != -1)
     {
@@ -146,22 +149,22 @@ void optionsMenu_openGeneralPanel(void)
     }
     while (cheatId > 1);
 
-    lastUnlocked = 1;
-    cheatId = 2;
-    entryOffset = 0x78;
+    lastUnlocked2 = 1;
+    cheatId2 = 2;
+    entryOffset2 = 0x78;
     do
     {
-        if (isCheatUnlocked((u8)(cheatId - 2)) != 0)
+        if (isCheatUnlocked((u8)(cheatId2 - 2)) != 0)
         {
-            panels->optionEntries[entryOffset + 0x1a] = lastUnlocked;
-            *(u16*)(panels->optionEntries + entryOffset + 0x16) =
-                (u16)(*(u16*)(panels->optionEntries + entryOffset + 0x16) & ~OPTION_ENTRY_DISABLED);
-            lastUnlocked = cheatId;
+            panels->optionEntries[entryOffset2 + 0x1a] = lastUnlocked2;
+            *(u16*)(panels->optionEntries + entryOffset2 + 0x16) =
+                (u16)(*(u16*)(panels->optionEntries + entryOffset2 + 0x16) & ~OPTION_ENTRY_DISABLED);
+            lastUnlocked2 = cheatId2;
         }
-        entryOffset += 0x3c;
-        cheatId++;
+        entryOffset2 += 0x3c;
+        cheatId2++;
     }
-    while (cheatId < 4);
+    while (cheatId2 < 4);
 
     (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(
         *gTitleMenuLinkInterface + 4))(panels->optionEntries, panels->optionCount, 0, 0, 0, 0,

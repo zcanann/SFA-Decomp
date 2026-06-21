@@ -108,10 +108,11 @@ void fn_801923F8(int* cfgArg)
     cfg->maxHeight = z;
     cfg->minHeight = z;
 
+    i = 0;
     heightIdx = 0;
     waveScale = lbl_803E3F48;
     waveDivisor = lbl_803E3F4C;
-    for (i = 0; i < cfg->period; i++)
+    for (; i < cfg->period; i++)
     {
         f32 xv = waveScale * x;
         for (j = 0; j < cfg->period; j++)

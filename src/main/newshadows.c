@@ -2538,7 +2538,8 @@ void renderShadows(void)
     char* B = (char*)gNewShadowEntries;
     int* slot;
     f32 savedFovY, sCamX, sCamY, sCamZ;
-    s16 s170, s14, s19;
+    int s170;
+    s16 s14, s19;
     f32 om100[24];
     f32 mTrans[12], mScale[12], mOrtho[16];
     f32 mc54[3], mc48[3];
@@ -2649,7 +2650,11 @@ void renderShadows(void)
             f21 = vA[2];
             dirZ = -f21;
             gNewShadowLightAngleX = (u16)getAngle(dirX, f21);
-            gNewShadowLightAngleY = getAngle(sqrtf(f22 * f22 + f21 * f21), vAy) - 0x3fc8;
+            {
+                f32 sqA = f22 * f22;
+                f32 sqB = f21 * f21;
+                gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
+            }
             ((GameObject*)slot)->anim.rotY = gNewShadowLightAngleY;
             ((GameObject*)slot)->anim.rotX = gNewShadowLightAngleX;
             {

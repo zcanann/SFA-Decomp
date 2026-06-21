@@ -562,7 +562,7 @@ void GameBit_Set(int eventId, int value)
     start = *(u16*)(gGameBitTable + id * 4);
     bit = 1;
     end = (gGameBitTable[id * 4 + 2] & 0x1f) + start;
-    for (i = start; i < end + 1; i++)
+    for (i = start; i <= end; i++)
     {
         int shift = i & 7;
         int byteIdx = i >> 3;

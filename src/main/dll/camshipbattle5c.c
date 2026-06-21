@@ -283,8 +283,8 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
 {
     int* pts[4];
-    int** dp;
     int* sp;
+    int** dp;
     int i;
     f32 dx1;
     f32 dz1;
@@ -320,13 +320,13 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     }
     nx = lbl_803E18A8 * (sx + dx1);
     nz = lbl_803E18A8 * (sz + dz1);
-    len = sqrtf(nx * nx + nz * nz);
+    len = sqrtf(nz * nz + nx * nx);
     if (0.0f != len)
     {
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nx * *(f32*)((char*)pts[1] + NODE_POS_X) + nz * *(f32*)((char*)pts[1] + NODE_POS_Z));
+    negdot = -(nz * *(f32*)((char*)pts[1] + NODE_POS_Z) + nx * *(f32*)((char*)pts[1] + NODE_POS_X));
     t1 = nx * dx1 + nz * dz1;
     if (0.0f != t1)
     {

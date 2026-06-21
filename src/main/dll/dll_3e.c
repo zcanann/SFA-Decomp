@@ -133,16 +133,30 @@ void PlayControl(void)
     {
         if ((lbl_803A5D60.playFlags & THP_PLAY_EVEN_FIELD) != 0)
         {
-            allowPop = (VIGetNextField() == 0) ? 1 : 0;
+            if (VIGetNextField() != 0)
+            {
+                goto deny;
+            }
+            allowPop = 1;
+            goto checked;
         }
         else if ((lbl_803A5D60.playFlags & THP_PLAY_ODD_FIELD) != 0)
         {
-            allowPop = (VIGetNextField() == 1) ? 1 : 0;
+            if (VIGetNextField() != 1)
+            {
+                goto deny;
+            }
+            allowPop = 1;
+            goto checked;
         }
         else
         {
             allowPop = 1;
+            goto checked;
         }
+    deny:
+        allowPop = 0;
+    checked:
 
         if (allowPop != 0)
         {
@@ -291,11 +305,8 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     ctrl = (AttractMovieControl*)base;
     gAttractMovieLoopCompleted = 0;
 
-    if (ctrl->enabled == 0 || ctrl->isPrepared != 0)
+    if (ctrl->enabled != 0 && ctrl->isPrepared == 0)
     {
-        return FALSE;
-    }
-
     if ((s32)movieIndex > 0)
     {
         u32 offsetTable = ctrl->offsetTable;
@@ -368,16 +379,18 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
     }
 
     OSReceiveMessage((OSMessageQueue*)(base + 0x52c), (OSMessage*)&readyMsg, OS_MESSAGE_BLOCK);
-    if (readyMsg != 0)
+    if (readyMsg == 0)
     {
-        ctrl->isPrepared = 1;
-        ctrl->field63d = 0;
-        ctrl->field68c = 0;
-        ctrl->field690 = 0;
-        ctrl->field684 = 0;
-        ctrl->field688 = 0;
-        lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
-        return TRUE;
+        return FALSE;
+    }
+    ctrl->isPrepared = 1;
+    ctrl->field63d = 0;
+    ctrl->field68c = 0;
+    ctrl->field690 = 0;
+    ctrl->field684 = 0;
+    ctrl->field688 = 0;
+    lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+    return TRUE;
     }
     return FALSE;
 }
@@ -420,14 +433,14 @@ void InitAllMessageQueue(void)
 
     if (lbl_803A5D60.audioExists != 0)
     {
-        j = 0;
+        i = 0;
         do
         {
             PushFreeAudioBuffer(q + 0x174);
             q += sizeof(AttractMovieAudioBuffer);
-            j++;
+            i++;
         }
-        while (j < 3);
+        while (i < 3);
     }
 
     OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);

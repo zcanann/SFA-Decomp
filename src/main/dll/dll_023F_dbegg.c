@@ -872,7 +872,7 @@ void dbegg_update(int obj)
             if (Curve_AdvanceAlongPath(&((DbEggState*)blob)->curve, lbl_803E6250) != 0 ||
                 ((DbEggState*)blob)->curve.atSegmentEnd != 0)
             {
-                if ((*gRomCurveInterface)->goNextPoint(&((DbEggState*)blob)->curve) != 0)
+                if ((*gRomCurveInterface)->goNextPoint((RomCurveWalker*)(blob + 4)) != 0)
                 {
                     ((DbEggState*)blob)->mode = 5;
                 }
@@ -930,7 +930,7 @@ void dbegg_update(int obj)
             fz = *(f32*)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
             fx = *(f32*)((int)d + 0);
-            fx = fx >= lbl_803E61C8 ? fx : -fx;
+            fx = fx >= *(f32*)&lbl_803E61C8 ? fx : -fx;
             if (fx + fz < lbl_803E625C)
             {
                 ObjHits_EnableObject(obj);

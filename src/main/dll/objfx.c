@@ -609,14 +609,14 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
     {
         if (light != NULL)
         {
-            lvec[0] = *(f32*)((char*)light + 0xc);
-            lvec[1] = *(f32*)((char*)light + 0x10);
-            lvec[2] = *(f32*)((char*)light + 0x14);
-            vecRotateZXY(obj, lvec);
+            lvec[3] = *(f32*)((char*)light + 0xc);
+            lvec[4] = *(f32*)((char*)light + 0x10);
+            lvec[5] = *(f32*)((char*)light + 0x14);
+            vecRotateZXY(obj, &lvec[3]);
             Camera_ProjectWorldPointWithOffset(
-                ((GameObject*)obj)->anim.worldPosX + lvec[0] - playerMapOffsetX,
-                ((GameObject*)obj)->anim.worldPosY + lvec[1],
-                ((GameObject*)obj)->anim.worldPosZ + lvec[2] - playerMapOffsetZ, lbl_803DF384,
+                ((GameObject*)obj)->anim.worldPosX + lvec[3] - playerMapOffsetX,
+                ((GameObject*)obj)->anim.worldPosY + lvec[4],
+                ((GameObject*)obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, lbl_803DF384,
                 &proj[2], &proj[1], &proj[0]);
         }
         else

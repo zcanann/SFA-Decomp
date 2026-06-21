@@ -1050,7 +1050,7 @@ void fn_80156DA0(int obj, int state)
     float fromPos[3];
     float cosYaw;
     float sinYaw;
-    float hitOut[24];
+    float hitOut[22];
 
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
     if (*(float*)(state + 0x324) <= lbl_803E2B18)
@@ -1089,26 +1089,23 @@ void fn_80156DA0(int obj, int state)
         groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj,
                                    (u32) * (u8*)(state + 0x261), 0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
-        if (noHit || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
+        if (!noHit || ((((BaddieState*)state)->controlFlags & 0x40000000) != 0))
         {
-            if (!noHit)
+            if (noHit && ((GameObject*)obj)->anim.currentMove != 0)
             {
-                if (((GameObject*)obj)->anim.currentMove == 0)
-                {
-                    *(u16*)(state + 0x338) = 0;
-                    Baddie_SetMove(obj, state, 0, lbl_803E2B40, 0, 1);
-                }
-                else
-                {
-                    float fz;
-                    Baddie_SetMove(obj, state, 1, lbl_803E2B44, 0, 0);
-                    fz = lbl_803E2B18;
-                    ((GameObject*)obj)->anim.velocityX = fz;
-                    ((GameObject*)obj)->anim.velocityY = fz;
-                    ((GameObject*)obj)->anim.velocityZ = fz;
-                    randBit = randomGetRange(0, 1);
-                    *(u16*)(state + 0x338) = (u16)((randBit - 1) * 0x12c);
-                }
+                *(u16*)(state + 0x338) = 0;
+                Baddie_SetMove(obj, state, 0, lbl_803E2B40, 0, 1);
+            }
+            else
+            {
+                float fz;
+                Baddie_SetMove(obj, state, 1, lbl_803E2B44, 0, 0);
+                fz = lbl_803E2B18;
+                ((GameObject*)obj)->anim.velocityX = fz;
+                ((GameObject*)obj)->anim.velocityY = fz;
+                ((GameObject*)obj)->anim.velocityZ = fz;
+                randBit = randomGetRange(0, 1);
+                *(u16*)(state + 0x338) = (u16)((randBit - 1) * 0x12c);
             }
         }
         ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;

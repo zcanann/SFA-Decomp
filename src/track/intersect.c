@@ -141,7 +141,19 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     void *desc;
 
     tbl = lbl_8030E8B0;
-    sfxTab = fn_8006F388(type);
+    switch (type) {
+        case 0:  sfxTab = (u16 *)tbl; break;
+        case 1:  sfxTab = (u16 *)(tbl + 0x14); break;
+        case 2:  sfxTab = (u16 *)(tbl + 0x3C); break;
+        case 3:  sfxTab = (u16 *)(tbl + 0x64); break;
+        case 4:  sfxTab = (u16 *)(tbl + 0x50); break;
+        case 5:  sfxTab = (u16 *)(tbl + 0x78); break;
+        case 6:  sfxTab = (u16 *)(tbl + 0x8C); break;
+        case 7:  sfxTab = (u16 *)(tbl + 0xA0); break;
+        case 10:
+        case 8:  sfxTab = (u16 *)(tbl + 0x28); break;
+        default: sfxTab = (u16 *)(tbl + 0x28); break;
+    }
     flags = 0;
     i = 0;
     for (i = 0; i < hits[0x1b]; i++) {
@@ -579,7 +591,7 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = gDepthReadPendingCount;
         if (n < 0x14) {
-            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].x = x;
+            ((DepthReadRequest*)(int)&gDepthReadPendingQueue)[n].x = x;
             p = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
             p->y = y;
             p->key = requestKey;
@@ -795,7 +807,7 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
     gFogColor.b = blue;
 }
 
-void renderWhirlpool(void* obj_a, void** obj_b, int slot)
+int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
@@ -1013,6 +1025,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     } else {
         GXSetCullMode(0);
     }
+    return 1;
 }
 
 void screenImageDraw(u8 alpha)
@@ -1473,7 +1486,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern f32 lbl_803DEF24;
     extern f32 lbl_803DB6C4, lbl_803DB6C8, lbl_803DB6CC;
     extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
-    extern struct { f32 x, y; } lbl_803DEF1C;
+    extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
     extern Mtx hudMatrix;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
@@ -1561,11 +1574,11 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         if (sr > lbl_803DEEE4) {
             c2.a = 0xFF;
         } else {
-            c2.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+            c2.a = (s32)(lbl_803DEF20 * sr);
         }
         sr = sr * gSynthFadeMask;
         if (sr > lbl_803DEEE4) sr = lbl_803DEEE4;
-        c1.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+        c1.a = (s32)(lbl_803DEF20 * sr);
     }
 
     GXSetTevKColor(0, c0);
@@ -3662,6 +3675,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern u32 lbl_803DEEAC;
     extern u8 lbl_803DEEB0;
+    extern u8 lbl_803DEEB2;
     extern u32 lbl_803E8450;
     extern f32 gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
@@ -3685,7 +3699,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     u32 stab0;
     GXColor temp;
     GXColor color2;
-    f32 fog_var;
+    GXColor fog_var;
     f32 vec3[3];
     int handle;
     int stage_idx;
@@ -3701,8 +3715,8 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     buf_38 = *(Blk28*)(lbl_802C1EA8 + 0xA4);
     stab0 = lbl_803DEEAC;
     *(u16*)((u8*)&stab1 + 0) = *(u16*)&lbl_803DEEB0;
-    ((u8*)&stab1)[2] = (&lbl_803DEEB0)[2];
-    fog_var = lbl_803E8450;
+    ((u8*)&stab1)[2] = lbl_803DEEB2;
+    *(u32*)&fog_var = lbl_803E8450;
 
     PSMTXConcat((f32(*)[4])((u8*)lbl_802C1EA8 + 0xB8), mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, 0x1e, 1);
@@ -3791,8 +3805,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
         f32 d2;
         mtx_110[0][0] = lbl_803DEEDC;
         mtx_110[0][1] = lbl_803DEEDC;
-        d2 = f31_val - (f31_val - scale);
-        mtx_110[0][2] = lbl_803DEEE4 / d2;
+        mtx_110[0][2] = lbl_803DEEE4 / (d2 = f31_val - (f31_val - scale));
         mtx_110[0][3] = f31_val / d2;
         mtx_110[1][0] = lbl_803DEEDC;
         mtx_110[1][1] = lbl_803DEEDC;
@@ -3819,11 +3832,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     GXSetNumTexGens(2);
     GXSetNumTevStages((u8)(stage_count + 2));
 
-    {
-        GXColor fc;
-        *(u32*)&fc = lbl_803E8450;
-        GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fc);
-    }
+    GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
     GXSetBlendMode(1, 0, 3, 5);
 
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
@@ -5146,6 +5155,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern void GXSetZCompLoc(u8);
     Mtx mtx_30;
     GXColor temp;
+    GXColor temp2;
     u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
@@ -5185,10 +5195,10 @@ void fn_8007BD8C(int handle1, int handle2)
     ((u8*)&temp)[2] = (u8)((int)((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
-    ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
-    ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
-    ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
-    GXSetTevColor(2, temp);
+    ((u8*)&temp2)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
+    ((u8*)&temp2)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
+    ((u8*)&temp2)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
+    GXSetTevColor(2, temp2);
 
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);

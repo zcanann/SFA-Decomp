@@ -8826,9 +8826,14 @@ void fn_802B249C(int obj, int inner, int state)
             break;
         case 0x60003:
             {
-                f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dz * dz + dx * dx);
+                f32 dz;
+                f32 dx;
+                f32 d;
+                f32 zz;
+                dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
+                dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
+                zz = dz * dz;
+                d = sqrtf(zz + dx * dx);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8994,7 +8999,7 @@ void fn_802B249C(int obj, int inner, int state)
                 t = *(void**)(p + 0x64);
                 if (t != NULL)
                 {
-                    *(u32*)((char*)t + 0x30) &= 0xfffffffb;
+                    *(u32*)((char*)t + 0x30) &= ~0x4LL;
                 }
                 bit = **(s16**)((char*)inner + 0x8dc);
                 if (bit > 0)
@@ -15117,11 +15122,12 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
 
 int fn_802A2918(int obj, int state, f32 fv)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
     int flag;
+    PlayerState* innerV = ((GameObject*)obj)->extra;
+    PlayerState* inner = ((GameObject*)obj)->extra;
 
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)innerV)->flags360 &= ~0x2LL;
+    *(u32*)&((PlayerState*)innerV)->flags360 |= 0x2000LL;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
         f32 z = lbl_803E7EA4;
@@ -15133,7 +15139,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         *(int*)((char*)state + 0x4) |= 0x8000000;
         ((GameObject*)obj)->anim.velocityY = z;
     }
-    flag = inner->climbStep != 1;
+    flag = innerV->climbStep != 1;
     if (flag)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;

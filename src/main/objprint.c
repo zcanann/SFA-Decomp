@@ -3047,7 +3047,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
         }
 
         {
-            s16* src = &ang[2];
+            s16* src = (s16*)((char*)ang + 4);
             s16* dst = &ang[0];
             int n2;
             for (n2 = 0; n2 < 2; n2++)

@@ -224,9 +224,12 @@ void RollingBarrel_update(int obj)
                 }
             }
 
-            ((GameObject*)obj)->anim.rotY =
-                (s16)(lbl_803E44AC * timeDelta * state->curveSpeed +
-                    (f32)(int)((GameObject*)obj)->anim.rotY);
+            {
+                f32 rotYStep = lbl_803E44AC * timeDelta;
+                ((GameObject*)obj)->anim.rotY =
+                    (s16)(rotYStep * state->curveSpeed +
+                        (f32)(int)((GameObject*)obj)->anim.rotY);
+            }
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
             if (blocked != 0 || (void*)hitInfo == (void*)Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||

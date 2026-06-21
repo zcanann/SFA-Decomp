@@ -1484,18 +1484,15 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     if (modelDef->hitVolumeCount != 0)
     {
-        ObjDefHitVolume *hitVolume;
         obj->hitVolumeBounds = (ObjHitVolumeRuntimeBounds*)roundUpTo4(cursor);
         i = 0;
-        hitVolume = modelDef->hitVolumes;
         for (; i < modelDef->hitVolumeCount; i++)
         {
-            obj->hitVolumeBounds[i].flags = hitVolume->flags;
-            obj->hitVolumeBounds[i].bounds[0] = hitVolume->bounds[0];
-            obj->hitVolumeBounds[i].bounds[3] = hitVolume->bounds[3];
-            obj->hitVolumeBounds[i].bounds[1] = hitVolume->bounds[1];
-            obj->hitVolumeBounds[i].bounds[2] = hitVolume->bounds[2];
-            hitVolume++;
+            obj->hitVolumeBounds[i].flags = modelDef->hitVolumes[i].flags;
+            obj->hitVolumeBounds[i].bounds[0] = modelDef->hitVolumes[i].bounds[0];
+            obj->hitVolumeBounds[i].bounds[3] = modelDef->hitVolumes[i].bounds[3];
+            obj->hitVolumeBounds[i].bounds[1] = modelDef->hitVolumes[i].bounds[1];
+            obj->hitVolumeBounds[i].bounds[2] = modelDef->hitVolumes[i].bounds[2];
         }
     }
     obj->parent = parent;

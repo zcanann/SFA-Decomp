@@ -56,46 +56,26 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     groupIndex = -1;
     matchCount = 0;
     linkedConfigRow = gSHthorntailDataTables[0];
-    if (obj->config->configToken == linkedConfigRow[0])
+    for (index = 0; index < 6; index++)
     {
-        groupIndex = 0;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 1;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 2;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 3;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 4;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 5;
+        if (obj->config->configToken == linkedConfigRow[0])
+        {
+            groupIndex = index;
+            break;
+        }
+        linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES);
     }
     objects = ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
     for (index = 0; index < count; index++)
     {
-        if (((*objects)->objType == SHTHORNTAIL_OBJ_TYPE) &&
-            (((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
-                ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
-                ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][3])))
+        if ((objects[index]->objType == SHTHORNTAIL_OBJ_TYPE) &&
+            ((objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
+                (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
+                (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
         {
-            fn_8014C66C(*objects, obj);
-            if ((vec3f_distanceSquared(&(*objects)->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
-                (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0u))
+            fn_8014C66C(objects[index], obj);
+            if ((vec3f_distanceSquared(&objects[index]->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
+                (GameBit_Get(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {
                 linkedEventPending = 1;
             }
@@ -105,7 +85,6 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
                 break;
             }
         }
-        objects++;
     }
     return linkedEventPending;
 }
@@ -154,7 +133,6 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
     short angleDelta;
     int value;
     u32 nextState;
-    u16 facingAngle;
     s8 behaviorState;
     f32 dist;
 
@@ -181,8 +159,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
         {
             value = getAngle(object->modelPos.x - config->homePos.x,
                              object->modelPos.z - config->homePos.z);
-            facingAngle = object->facingAngle;
-            angleDelta = value - facingAngle;
+            angleDelta = value - (u16)object->facingAngle;
             if (0x8000 < angleDelta)
             {
                 angleDelta = angleDelta - 0xFFFF;
@@ -198,7 +175,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
                 OSReport(sSHthorntailAngleYawDebug,
                          (u16)getAngle(object->modelPos.x - config->homePos.x,
                                        object->modelPos.z - config->homePos.z),
-                         facingAngle);
+                         object->facingAngle);
                 behaviorState = runtime->behaviorState;
                 if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
                     (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
@@ -212,23 +189,16 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
                                             object->cullRadius * object->modelScale);
         if (value == 0)
         {
-            nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+            return SHTHORNTAIL_STATE_CLOSE_ATTACK;
         }
-        else
+        behaviorState = runtime->behaviorState;
+        if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+            (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
         {
-            behaviorState = runtime->behaviorState;
-            if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
-                (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
-            {
-                nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
-                nextState = nextState & 0xff;
-            }
-            else
-            {
-                nextState = SHTHORNTAIL_STATE_MOVE_2;
-            }
+            nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
+            return nextState & 0xff;
         }
-        return nextState;
+        return SHTHORNTAIL_STATE_MOVE_2;
     }
     return SHTHORNTAIL_STATE_CLOSE_ATTACK;
 }

@@ -895,8 +895,8 @@ int hightop_stateHandler04(int obj, int p)
     if (player != 0)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        if ((dy >= 0.0f ? dy : -dy) < lbl_803E6AEC ||
-            (dy >= 0.0f ? dy : -dy) > lbl_803E6AF0)
+        if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC ||
+            (dy >= *(volatile f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
             state->flags |= 1;
             if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)

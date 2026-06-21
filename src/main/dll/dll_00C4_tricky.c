@@ -2368,7 +2368,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             if (((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter != 0)
             {
-                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter -= 1;
+                ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter--;
             }
         }
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xfffffdc7;

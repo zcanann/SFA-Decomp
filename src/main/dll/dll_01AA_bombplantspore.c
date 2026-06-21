@@ -52,7 +52,7 @@ extern void lightSetFieldBC_8001db14(void* light, int value);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, f32 f8val, f32 mult, void* origin, int flags);
+extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mult, void* origin, int flags);
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
 extern f32 lbl_803E5388;
@@ -210,9 +210,9 @@ void bombplantspore_updateDrift(void* obj, void* state)
     }
     ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
     {
-        f32 amp = ((BombPlantSporeState*)state)->driftAmplitude;
-        f32 ampAccel = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amp);
-        ((BombPlantSporeState*)state)->driftAmplitude = ampAccel * timeDelta + amp;
+        f32 amplitude = ((BombPlantSporeState*)state)->driftAmplitude;
+        f32 amplitudeStep = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amplitude);
+        ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
     }
 
     ((BombPlantSporeState*)state)->driftBaseX =
@@ -267,7 +267,7 @@ void bombplantspore_update(void* obj)
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
                 {
-                    objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, lbl_803E53B0, lbl_803E53B8, NULL, 0);
+                    objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
                     (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
@@ -302,7 +302,7 @@ void bombplantspore_update(void* obj)
         if (fuse < fuseCap)
         {
             particleAlpha = (s32) - (lbl_803E53C8 * fuse - lbl_803E53C4);
-            objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, lbl_803E53B0,
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, particleAlpha & 0xff,
                                         (f32)(lbl_803E53D8 *
                                             (double)(fuseCap - fuse) +
                                             lbl_803E53D0),
@@ -353,8 +353,8 @@ void bombplantspore_update(void* obj)
         else
         {
             f32 driftSpeed = state->driftSpeed;
-            f32 driftAccel = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
-            state->driftSpeed = driftAccel * timeDelta + driftSpeed;
+            f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+            state->driftSpeed = driftStep * timeDelta + driftSpeed;
         }
         ((GameObject*)obj)->anim.velocityX =
             state->driftSin * state->driftSpeed +
@@ -405,7 +405,7 @@ void bombplantspore_update(void* obj)
             (*gExpgfxInterface)->freeSource((u32)obj);
             for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
             {
-                objfx_spawnDirectionalBurst(obj, 5, 7, 1, 0x3c, lbl_803E53B0, lbl_803E53B8, NULL, 0);
+                objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
             }
             modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);

@@ -73,11 +73,16 @@ void objFn_80198fa4(s16* obj, void* placement)
 {
     void* state;
     s16 rot[3];
-    f32 rotMtx[15];
+    union
+    {
+        f32 m[18];
+        f64 a8;
+    } rotU;
     f32 outY;
     f32 outZ;
     f32 outX;
-    f32 mtx[22];
+    f32 mtx[20];
+#define rotMtx rotU.m
 
     state = ((GameObject*)obj)->extra;
     obj[0] = (s16)((*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_ROTX) & 0x3f) << 10);
@@ -94,7 +99,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     mtx[2] = lbl_803E40D8;
     mtx[3] = lbl_803E40D8;
     setMatrixFromObjectPos(&mtx[4], rot);
-    Matrix_TransformPoint((f32*)((char*)mtx + 16), lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outZ, &outY, &outX);
+    Matrix_TransformPoint((f32*)((char*)mtx + 16), lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outY, &outZ, &outX);
     ((MmpGyserventState*)state)->planeNormalX = outY;
     ((MmpGyserventState*)state)->planeNormalY = outZ;
     ((MmpGyserventState*)state)->planeNormalZ = outX;
@@ -120,6 +125,7 @@ void objFn_80198fa4(s16* obj, void* placement)
     {
         OSReport(lbl_8032253C);
     }
+#undef rotMtx
 }
 
 void objSeqMoveFn_80199188(void* obj, int arg2)

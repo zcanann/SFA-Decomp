@@ -560,7 +560,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     }
     if (moveData->rootCurveOffset == 0)
     {
-        return 0;
+        goto noCurve;
     }
     curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
@@ -588,7 +588,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     axisFirstSample = *axis;
     if (axisFirstSample == 0)
     {
-        return 0;
+        goto noCurve;
     }
 
     lastSample = ObjAnim_ReadRootAxisSample(axis, segmentCount);
@@ -669,6 +669,9 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         *phaseOut = phase;
     }
     return 1;
+
+noCurve:
+    return 0;
 }
 
 int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle,

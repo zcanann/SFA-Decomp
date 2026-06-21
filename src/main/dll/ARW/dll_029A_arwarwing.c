@@ -706,13 +706,14 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 {
     int vec;
     f32 vol;
+    f64 sum;
 
     vec = objModelGetVecFn_800395d8(((ArwingState*)state)->escortObj, 0x14);
 
     if (((ArwingState*)state)->mode < ARWING_MODE_DEAD && GameBit_Get(0x9d6) == 0 && GameBit_Get(0x9d8) == 0)
     {
-        vol = (f32)((lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ)) *
-            lbl_803E6F50);
+        sum = lbl_803E6F48 + fn_802945E0(((ArwingState*)state)->velZ / ((ArwingState*)state)->maxSpeedZ);
+        vol = (f32)(sum * lbl_803E6F50);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXbaddie_pinpon_launch);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }

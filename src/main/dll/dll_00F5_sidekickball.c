@@ -401,11 +401,11 @@ u8 trickyBallMove(u8* obj)
         state->floorDepth = state->floorHeight;
         hasFloorDepth = 1;
     }
-    else if (state->floorY != lbl_803E369C)
+    else if (state->floorY != *(volatile f32*)&lbl_803E369C)
     {
         if (((GameObject*)obj)->anim.localPosY > state->floorY)
         {
-            state->floorY = lbl_803E369C;
+            state->floorY = *(volatile f32*)&lbl_803E369C;
             hasFloorDepth = 0;
         }
         else

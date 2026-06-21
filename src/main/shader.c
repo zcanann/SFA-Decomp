@@ -3255,17 +3255,17 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         out[2] = cv4;
         if (cv3 != -1)
         {
-            int i3 = mapFindRomListSlot(p2, cv3);
-            if (i3 == -1)
-                i3 = mapProcessRomList(cv3);
-            *(s8*)(p6 + i3 * 8) = 1;
+            slot = mapFindRomListSlot(p2, cv3);
+            if (slot == -1)
+                slot = mapProcessRomList(cv3);
+            *(s8*)(p6 + slot * 8) = 1;
         }
         if (cv4 != -1)
         {
-            int i4 = mapFindRomListSlot(p2, cv4);
-            if (i4 == -1)
-                i4 = mapProcessRomList(cv4);
-            *(s8*)(p6 + i4 * 8) = 1;
+            slot = mapFindRomListSlot(p2, cv4);
+            if (slot == -1)
+                slot = mapProcessRomList(cv4);
+            *(s8*)(p6 + slot * 8) = 1;
         }
         rects = (s16*)(gShaderMapRomBuffers[1] + id * 10);
         x = x - rects[0];

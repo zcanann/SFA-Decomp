@@ -1300,6 +1300,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     u8 phase;
     int idx;
     int flag1;
+    u8* pb;
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
@@ -1329,7 +1330,8 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             (flag1 != 0 && ((KTRexArenaState*)gKTRexState)->unk8 <= lbl_803E67C0)))
     {
         idx = phase >> 1;
-        if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x56])
+        pb = (u8*)p;
+        if ((int)randomGetRange(0, 0x64) <= pb[idx + 0x56])
         {
             int push;
             ((KTRexArenaState*)gKTRexState)->unk103 = 2;
@@ -1341,7 +1343,7 @@ int ktrex_stateHandlerA02(int obj, int runtime)
             ((KTRexArenaState*)gKTRexState)->unkFD = 1;
             return 5;
         }
-        if ((int)randomGetRange(0, 0x64) <= ((u8*)p)[idx + 0x52])
+        if ((int)randomGetRange(0, 0x64) <= pb[idx + 0x52])
         {
             u8 cond;
             u8 fe = ((KTRexArenaState*)gKTRexState)->unkFE;

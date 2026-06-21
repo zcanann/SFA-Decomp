@@ -1570,18 +1570,23 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
             if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
                 ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
             {
-                goto haveLink;
+                k = 0;
+                goto checkLoop;
             }
         }
-        break;
-    haveLink:;
+        k = 1;
+    checkLoop:
+        if (k != 0)
+        {
+            break;
+        }
     } while (1);
 
     *outPhase = gFloatZero;
     return curve;
 }
 
-void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
+void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 {
     f32 dx;
     f32 dy;
@@ -1783,14 +1788,17 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
         if (state->reverse != 0)
         {
             distanceCurve = *(s32*)&state->nodeA4;
+            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         }
         else
         {
             distanceCurve = *(s32*)&state->nodeA0;
+            dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         }
-        dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
-        dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
-        dz = *(f32*)(distanceCurve + 0x10) - ((GameObject*)obj)->anim.localPosZ;
         distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance > maxDistance)
         {
@@ -1957,6 +1965,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         *previousCurveId = *(s32*)(startCurve + 0x14);
         return candidateIds[0];
     }
+    if (candidateCount <= 1)
+    {
+        return -1;
+    }
 
     for (i = 0; i < candidateCount; i++)
     {
@@ -1970,11 +1982,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             candidateCount--;
             i--;
         }
-    }
-
-    if (candidateCount <= 0)
-    {
-        return -1;
     }
 
     *previousCurveId = *(s32*)(startCurve + 0x14);
@@ -3069,74 +3076,9 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     {
         if (-1 < (int)start->linkIds[li])
         {
-            pc = visited;
-            zval = 0;
-            off = 0;
-            for (rem = 0x1b; rem != 0; rem--)
+            for (off = 0; off < 0x514; off++)
             {
-                pc[0] = zval;
-                pc[1] = zval;
-                pc[2] = zval;
-                pc[3] = zval;
-                pc[4] = zval;
-                pc[5] = zval;
-                pc[6] = zval;
-                pc[7] = zval;
-                pc[8] = zval;
-                pc[9] = zval;
-                pc[10] = zval;
-                pc[11] = zval;
-                pc[12] = zval;
-                pc[13] = zval;
-                pc[14] = zval;
-                pc[15] = zval;
-                pc[16] = zval;
-                pc[17] = zval;
-                pc[18] = zval;
-                pc[19] = zval;
-                pc[20] = zval;
-                pc[21] = zval;
-                pc[22] = zval;
-                pc[23] = zval;
-                pc[24] = zval;
-                pc[25] = zval;
-                pc[26] = zval;
-                pc[27] = zval;
-                pc[28] = zval;
-                pc[29] = zval;
-                pc[30] = zval;
-                pc[31] = zval;
-                pc[32] = zval;
-                pc[33] = zval;
-                pc[34] = zval;
-                pc[35] = zval;
-                pc[36] = zval;
-                pc[37] = zval;
-                pc[38] = zval;
-                pc[39] = zval;
-                pc[40] = zval;
-                pc[41] = zval;
-                pc[42] = zval;
-                pc[43] = zval;
-                pc[44] = zval;
-                pc[45] = zval;
-                pc[46] = zval;
-                pc[47] = zval;
-                pc = pc + 0x30;
-                off = off + 0x30;
-            }
-            pu = visited + off;
-            rem = 0x514 - off;
-            if (off < 0x514)
-            {
-                do
-                {
-                    *pu = 0;
-                    pu++;
-                    off++;
-                    rem--;
-                }
-                while (rem != 0);
+                visited[off] = 0;
             }
             visited[startIdx] = 1;
             node = RomCurve_findByIdWithIndex(start->linkIds[li], &idx);
@@ -3280,74 +3222,9 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     {
         if (-1 < (int)curve->linkIds[li])
         {
-            pc = visited;
-            zval = 0;
-            off = 0;
-            for (rem = 0x1b; rem != 0; rem--)
+            for (off = 0; off < 0x514; off++)
             {
-                pc[0] = zval;
-                pc[1] = zval;
-                pc[2] = zval;
-                pc[3] = zval;
-                pc[4] = zval;
-                pc[5] = zval;
-                pc[6] = zval;
-                pc[7] = zval;
-                pc[8] = zval;
-                pc[9] = zval;
-                pc[10] = zval;
-                pc[11] = zval;
-                pc[12] = zval;
-                pc[13] = zval;
-                pc[14] = zval;
-                pc[15] = zval;
-                pc[16] = zval;
-                pc[17] = zval;
-                pc[18] = zval;
-                pc[19] = zval;
-                pc[20] = zval;
-                pc[21] = zval;
-                pc[22] = zval;
-                pc[23] = zval;
-                pc[24] = zval;
-                pc[25] = zval;
-                pc[26] = zval;
-                pc[27] = zval;
-                pc[28] = zval;
-                pc[29] = zval;
-                pc[30] = zval;
-                pc[31] = zval;
-                pc[32] = zval;
-                pc[33] = zval;
-                pc[34] = zval;
-                pc[35] = zval;
-                pc[36] = zval;
-                pc[37] = zval;
-                pc[38] = zval;
-                pc[39] = zval;
-                pc[40] = zval;
-                pc[41] = zval;
-                pc[42] = zval;
-                pc[43] = zval;
-                pc[44] = zval;
-                pc[45] = zval;
-                pc[46] = zval;
-                pc[47] = zval;
-                pc = pc + 0x30;
-                off = off + 0x30;
-            }
-            pu = visited + off;
-            rem = 0x514 - off;
-            if (off < 0x514)
-            {
-                do
-                {
-                    *pu = 0;
-                    pu++;
-                    off++;
-                    rem--;
-                }
-                while (rem != 0);
+                visited[off] = 0;
             }
             visited[startIdx] = 1;
             node = RomCurve_findByIdWithIndex(curve->linkIds[li], &idx);
@@ -3900,7 +3777,8 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
     outXStart = outX;
     outXCursor = outX;
     foundCount = 0;
-    windowCursor = windowCurves;
+    resolveCursor = windowCurves;
+    windowCursor = resolveCursor;
     remaining = 4;
     outZCursor = outZ;
     outYCursor = outY;
@@ -3929,10 +3807,9 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
         return 0;
     }
 
-    windowCursor = windowCurves;
     for (foundCount = 0, remaining = 4; remaining != 0; remaining--)
     {
-        if (*windowCursor == NULL)
+        if (*resolveCursor == NULL)
         {
             if (foundCount == 0)
             {
@@ -3947,7 +3824,7 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
                 *outZ = windowCurves[2]->z + (windowCurves[2]->z - windowCurves[1]->z);
             }
         }
-        windowCursor = windowCursor + 1;
+        resolveCursor = resolveCursor + 1;
         outXStart = outXStart + 1;
         outY = outY + 1;
         outZ = outZ + 1;
