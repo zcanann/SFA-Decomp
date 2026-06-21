@@ -967,8 +967,8 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
 {
     f32 fxParam = extraScale;
     PartfxParams params;
-    ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
     f32 zoff = lbl_803DF394;
+    ColorTbl colors = *(ColorTbl*)gObjFxCrystalSparkleTbl;
     u8* cbuf;
     u8* cbuf1;
     u8* cbuf2;
