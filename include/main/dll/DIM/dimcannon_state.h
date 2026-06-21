@@ -5,9 +5,9 @@
 
 typedef struct DimCannonState {
     u8 pad0[0x4 - 0x0];
-    s32 unk4;
-    s32 unk8;
-    f32 unkC;
+    s32 aimTargetX; /* 0x04 shard-aim target X (f32 via cast), passed to DIMwooddoor_updateShardAim */
+    s32 aimTargetY; /* 0x08 shard-aim target Y (f32 via cast), max posY across cannonball columns */
+    f32 aimTargetZ; /* 0x0C shard-aim target Z */
     f32 distance;   /* 0x10 XZ distance to player (getXZDistance) */
     u8 pad14[0x18 - 0x14];
     u8 unk18;
@@ -23,7 +23,7 @@ typedef struct DimCannonState {
     u8 pad9C[8];
     s16 aimYaw;     /* 0xa4 */
     s16 aimPitch;   /* 0xa6 */
-    int unkA8;
+    int prevAimDelta; /* 0xa8 previous-frame stick aim delta (drives aim-stop sfx) */
     u8 fireState;   /* 0xac */
     u8 fireRequested; /* 0xad set when fired (magic spent) */
     u8 airMeterCharge; /* 0xae accumulated charge, clamped to gDimCannonMaxCharge, drives runAirMeter */
