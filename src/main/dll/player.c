@@ -395,9 +395,10 @@ int fn_802974A0(int obj, int state, f32 fv)
     }
     {
         f32 v = lbl_803E7EE0 + inner->verticalVel;
+        f32 w;
         f32 clamped;
-        v = v * lbl_803E7E98;
-        clamped = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);
+        w = v * lbl_803E7E98;
+        clamped = (w < lbl_803E7EA4) ? lbl_803E7EA4 : ((w > lbl_803E7EE0) ? lbl_803E7EE0 : w);
         ObjAnim_SetMoveProgress(lbl_803E7EE0 - clamped, (ObjAnimComponent*)obj);
     }
     (*(void (*)(int, int, int, f32, f32))(*(int*)(*gPlayerInterface + 0x44)))(
