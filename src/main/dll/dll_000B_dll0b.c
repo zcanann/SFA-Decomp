@@ -2964,7 +2964,7 @@ void dll_0B_func05(void)
                                     (*gPartfxInterface)->spawnObject(
                                         *(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
                                         (int)*(f32*)(E9 + emIdx * 0x18 + 0xc),
-                                        &tmpl, 0x200001, -1, NULL);
+                                        &tmpl, 0x200001, -1, q);
                                 }
                                 ((ModgfxEffectSlot*)eff)->pendingFrameIdx = (int)*(f32*)(E9 + emIdx * 0x18 + 0x8);
                                 break;
