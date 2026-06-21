@@ -37,9 +37,9 @@ typedef struct SnowBikeMountState
     u8 unk434;
     u8 unk435;
     u8 pad436[0x494 - 0x436];
-    f32 unk494;
-    f32 unk498;
-    f32 unk49C;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
 } SnowBikeMountState;
 
 typedef struct SnowBikeSetTypeState
@@ -242,9 +242,9 @@ void SnowBike_func15(int obj)
         ((SnowBikeMountState*)t)->savedPosZ = ((GameObject*)obj)->anim.localPosZ;
         ((SnowBikeMountState*)t)->savedRotX = ((GameObject*)obj)->anim.rotX;
         zero = lbl_803E5AE8;
-        ((SnowBikeMountState*)t)->unk494 = zero;
-        ((SnowBikeMountState*)t)->unk498 = zero;
-        ((SnowBikeMountState*)t)->unk49C = zero;
+        ((SnowBikeMountState*)t)->velocityX = zero;
+        ((SnowBikeMountState*)t)->velocityY = zero;
+        ((SnowBikeMountState*)t)->velocityZ = zero;
         (*gPathControlInterface)->attachObject((void*)obj, (void*)(t + 0x178));
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
@@ -406,9 +406,9 @@ f32 SnowBike_func13(int obj, f32* out)
     int t = *(int*)&((GameObject*)obj)->extra;
     f32 r;
     *out = lbl_803E5BB8;
-    r = sqrtf(((SnowBikeMountState*)t)->unk49C * ((SnowBikeMountState*)t)->unk49C
-        + (((SnowBikeMountState*)t)->unk494 * ((SnowBikeMountState*)t)->unk494
-            + ((SnowBikeMountState*)t)->unk498 * ((SnowBikeMountState*)t)->unk498));
+    r = sqrtf(((SnowBikeMountState*)t)->velocityZ * ((SnowBikeMountState*)t)->velocityZ
+        + (((SnowBikeMountState*)t)->velocityX * ((SnowBikeMountState*)t)->velocityX
+            + ((SnowBikeMountState*)t)->velocityY * ((SnowBikeMountState*)t)->velocityY));
     r = r * lbl_803E5BA8;
     if (r > lbl_803E5AEC)
     {
