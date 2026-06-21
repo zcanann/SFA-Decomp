@@ -33,7 +33,7 @@ extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
+void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* outPosY, float* outPosZ)
 {
     float bias;
     float* config;
@@ -62,9 +62,9 @@ void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* par
     }
     bias = DAT_803de1fc[4];
     *(float*)result = (float)(cosA * (double)(float)(dist + (double)bias) + offX);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
+    *outPosY = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
         (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
+    *outPosZ = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
     FUN_80286888();
     return;
 }

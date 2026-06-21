@@ -930,8 +930,8 @@ void modgfx_resetActiveEffectRegistry(u64 param_1, u64 param_2, u64 param_3,
 }
 
 u32
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a2a98(int sourceObj, int effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }

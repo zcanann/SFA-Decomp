@@ -291,7 +291,7 @@ void curvefish_update(int obj)
     state->animTimer += timeDelta;
 }
 
-void curvefish_init(int obj, u8* param_2)
+void curvefish_init(int obj, u8* setup)
 {
     int state;
     u32 flags;
@@ -300,9 +300,9 @@ void curvefish_init(int obj, u8* param_2)
     flags |= 0x6000;
     ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
-        ((f32)(u32)((CurveFishSetup*)param_2)->rootMotionScaleParam / lbl_803E3928);
+        ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / lbl_803E3928);
     ((CurveFishState*)state)->mode = 1;
-    ((CurveFishState*)state)->maxSpeed = (f32)(u32)param_2[0x19] / lbl_803E3928;
+    ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / lbl_803E3928;
 }
 
 ObjectDescriptor gMagicPlantObjDescriptor = {

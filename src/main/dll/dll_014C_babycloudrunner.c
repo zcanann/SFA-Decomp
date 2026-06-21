@@ -533,7 +533,7 @@ void babycloudrunner_init(int* obj, u8* def)
 }
 
 #pragma scheduling on
-void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible;
 

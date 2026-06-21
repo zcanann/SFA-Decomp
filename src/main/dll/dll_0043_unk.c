@@ -224,7 +224,7 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
 
 #pragma scheduling off
 #pragma peephole off
-void CameraModeStaffAnim_init(CameraObject* camera, int param_2, u8* settings)
+void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
 {
     extern int getAngle(float y, float x);
     GameObject* target;
