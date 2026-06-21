@@ -27,7 +27,7 @@ void _gxSetFogParams(void);
 void fogFn_80070404(f32 a, f32 b);
 void getColor803dd01c(u8* param_1);
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
-void renderWhirlpool(void* obj_a, void** obj_b, int param_3);
+int renderWhirlpool(void* obj_a, void** obj_b, int param_3);
 void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);

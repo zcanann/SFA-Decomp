@@ -795,7 +795,7 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
     gFogColor.b = blue;
 }
 
-void renderWhirlpool(void* obj_a, void** obj_b, int slot)
+int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
@@ -1013,6 +1013,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
     } else {
         GXSetCullMode(0);
     }
+    return 1;
 }
 
 void screenImageDraw(u8 alpha)
