@@ -1700,7 +1700,7 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
-    s16 x, y, w, h;
+    s16 h, w, y, x;
     u8* box = gameTextGetBox(0x36);
     int pulse;
     s16 ang = (s16)(gHighScorePulseAngle + gHighScorePulseAngleStep);
@@ -1920,7 +1920,7 @@ void pauseMenuRunSubmenu(u8 p1)
             return;
         }
         if (sel >= 0 || p1 != 0 ||
-            (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160))
+            (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
         {
             if (lbl_803DD824[lbl_803DD7D8].f18 != 0)
             {
