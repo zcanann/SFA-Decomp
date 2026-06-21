@@ -455,8 +455,8 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
 {
     s16 angle;
-    int anglePlus;
-    int angleMinus;
+    s16 anglePlus;
+    s16 angleMinus;
     int i;
     f32 rad;
     f32 c;
