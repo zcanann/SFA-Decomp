@@ -87,7 +87,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u16 pp;
     int trickyPatch;
     u32 prod;
-    u32 dir;
+    int dir;
     int i;
     u8* node;
     u8* prevNode;
@@ -750,8 +750,8 @@ state_selected:
                                 }
                                 else if (found < 2)
                                 {
-                                    dir = (route->reverse ^ 1) & 0xff;
-                                    if (dir == 0)
+                                    u32 rdir = (route->reverse ^ 1) & 0xff;
+                                    if (rdir == 0)
                                     {
                                         RomCurve_stepClamped(route, lbl_803E23F8);
                                     }
@@ -759,7 +759,7 @@ state_selected:
                                     {
                                         RomCurve_stepClamped(route, lbl_803E2448);
                                     }
-                                    route->reverse = dir;
+                                    route->reverse = rdir;
                                     fn_800D9EE8(route);
                                 }
                             }
