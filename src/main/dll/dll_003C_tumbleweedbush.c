@@ -294,8 +294,7 @@ void Link_render(void)
         {
             if ((item->flags & LINK_FLAG_FADE_TIMER_ONLY) != 0)
             {
-                timer = item->timer - 1;
-                item->timer = timer;
+                timer = (item->timer -= 1);
                 if (timer < 0)
                 {
                     item->timer = 0;
@@ -414,8 +413,7 @@ void Link_render(void)
                     }
                 }
 
-                timer = drawItem->timer - 1;
-                drawItem->timer = timer;
+                timer = (drawItem->timer -= 1);
                 if (timer < 0)
                 {
                     drawItem->timer = 0;
