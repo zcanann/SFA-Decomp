@@ -96,18 +96,18 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         } else {
             dy = focus->worldPosY - obj->anim.hitVolumeTransforms[obj->unkE4].centerY;
         }
-        if (dy <= lbl_803E1644) {
+        if (!(dy > lbl_803E1644)) {
             continue;
         }
-        if (dy >= lbl_803E1648) {
+        if (!(dy < lbl_803E1648)) {
             continue;
         }
         dx = focus->worldPosX - obj->anim.hitVolumeTransforms[obj->unkE4].centerX;
         dz = focus->worldPosZ - obj->anim.hitVolumeTransforms[obj->unkE4].centerZ;
-        distsq = dz * dz + dx * dx;
+        distsq = dx * dx + dz * dz;
         entry = &data[obj->unkE4];
         range = (f32)(int)(entry->bounds[2] << 2);
-        if (distsq >= range * range) {
+        if (!(distsq < range * range)) {
             continue;
         }
         canTarget = 1;
