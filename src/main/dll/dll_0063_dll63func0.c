@@ -812,22 +812,20 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else
     {
-        f32 s;
         e[1].layer = 0;
         e[1].flags = 7;
         e[1].tex = &base[0x100];
         e[1].mode = 2;
-        s = ((PartFxSpawnParams*)posSource)->scale;
-        e[1].x = lbl_803E08D8 * s;
-        e[1].y = lbl_803E08DC * s;
-        e[1].z = lbl_803E08D8 * s;
+        e[1].x = lbl_803E08D8 * ((PartFxSpawnParams*)posSource)->scale;
+        e[1].y = lbl_803E08DC * ((PartFxSpawnParams*)posSource)->scale;
+        e[1].z = lbl_803E08D8 * ((PartFxSpawnParams*)posSource)->scale;
         e[2].layer = 0;
         e[2].flags = 7;
         e[2].tex = &base[0xf0];
         e[2].mode = 2;
-        e[2].x = lbl_803E08E0 * s;
-        e[2].y = s;
-        e[2].z = lbl_803E08E0 * s;
+        e[2].x = lbl_803E08E0 * ((PartFxSpawnParams*)posSource)->scale;
+        e[2].y = ((PartFxSpawnParams*)posSource)->scale;
+        e[2].z = lbl_803E08E0 * ((PartFxSpawnParams*)posSource)->scale;
         e += 3;
     }
     e[0].layer = 1;
