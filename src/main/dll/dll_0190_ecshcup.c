@@ -89,6 +89,7 @@ void ecsh_cup_update(short* obj)
 {
     f32 dist;
     int mode;
+    int m;
     u8 buf[4];
     CupVec3 v;
     GameObject* player = Obj_GetPlayerObject();
@@ -143,7 +144,8 @@ void ecsh_cup_update(short* obj)
             ObjHits_SetHitVolumeSlot((int)obj, 0, 0, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
-        if (mode == 6)
+        m = mode;
+        if (m == 6)
         {
             if (((GameObject*)obj)->anim.localPosY < state->spawnPosY)
             {
@@ -167,7 +169,7 @@ void ecsh_cup_update(short* obj)
                 (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         }
-        else if (mode == 7)
+        else if (m == 7)
         {
             if (((GameObject*)obj)->anim.localPosY > state->spawnPosY - lbl_803E5084)
             {
@@ -176,7 +178,7 @@ void ecsh_cup_update(short* obj)
                 if (state->spawnTimer <= lbl_803E5068)
                 {
                     state->spawnTimer = lbl_803E506C;
-                    if (mode != 3)
+                    if (m != 3)
                     {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
                     }
@@ -194,7 +196,7 @@ void ecsh_cup_update(short* obj)
                 a;
             }
         }
-        else if (mode == 8 && mode != state->currentMode)
+        else if (m == 8 && m != state->currentMode)
         {
             if (state->slotId == buf[0])
             {
@@ -202,7 +204,7 @@ void ecsh_cup_update(short* obj)
             }
             state->currentMode = mode;
         }
-        else if (mode == 1 && mode != state->currentMode)
+        else if (m == 1 && m != state->currentMode)
         {
             (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
                 (u8)state->slotId, &v.x, &v.z);
@@ -212,13 +214,13 @@ void ecsh_cup_update(short* obj)
             state->startPosZ = ((GameObject*)obj)->anim.localPosZ;
             state->currentMode = mode;
         }
-        else if (mode == 0 && mode != state->currentMode)
+        else if (m == 0 && m != state->currentMode)
         {
             state->velX = lbl_803E5068;
             state->velZ = lbl_803E5068;
             state->currentMode = mode;
         }
-        else if (mode == 2 && mode != state->currentMode)
+        else if (m == 2 && m != state->currentMode)
         {
             state->velX = lbl_803E5068;
             state->velZ = lbl_803E5068;
@@ -227,11 +229,11 @@ void ecsh_cup_update(short* obj)
                 ((GameObject*)obj)->anim.localPosZ);
             state->currentMode = mode;
         }
-        else if (mode == 3 && mode != state->currentMode)
+        else if (m == 3 && m != state->currentMode)
         {
             state->currentMode = mode;
         }
-        else if (mode == 4 && mode != state->currentMode)
+        else if (m == 4 && m != state->currentMode)
         {
             (*(void (*)(int, f32*, f32*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))(
                 (u8)state->slotId, &v.x, &v.z);
@@ -239,7 +241,7 @@ void ecsh_cup_update(short* obj)
             ((GameObject*)obj)->anim.localPosZ = v.z;
             state->currentMode = mode;
         }
-        else if (mode == 5)
+        else if (m == 5)
         {
             if (player != NULL)
             {
