@@ -756,8 +756,8 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     int pointOffset;
     f32* localPoint;
     f32 raisedPointOffset;
-    f32 resetRange;
     f32 resetMin;
+    f32 resetRange;
     f32 resetZero;
     CurvesTransformScratch transform;
     f32 matrix[16];
