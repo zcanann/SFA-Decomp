@@ -87,6 +87,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     WaterFlowWeState* current = object->extra;
     int count;
     int i;
+    GameObject* other;
     GameObject** objects;
     f32 currentX;
     f32 currentZ;
@@ -103,7 +104,7 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     hasCurrent = 0;
     for (i = 0; i < count; i++)
     {
-        GameObject* other = objects[i];
+        other = objects[i];
         if ((((FoliageCurrentSetup*)other->anim.placementData)->currentFlags & WATERFLOWWE_FOLIAGE_CURRENT_ENABLED) !=
             0)
         {
@@ -129,9 +130,11 @@ void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
     objects = (GameObject**)ObjGroup_GetObjects(WATERFLOWWE_OBJECT_CURRENT_GROUP, &count);
     for (i = 0; i < count; i++)
     {
-        GameObject* other = objects[i];
-        f32 objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / 10.0f;
+        f32 objectStrength;
         s16 currentAngle;
+
+        other = objects[i];
+        objectStrength = (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths / 10.0f;
 
         hasCurrent = 1;
         dy = other->anim.localPosY - object->anim.localPosY;
