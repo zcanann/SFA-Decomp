@@ -520,7 +520,7 @@ void FUN_8019f1dc(void)
     *(u8*)(model + 0x49) = *(u8*)(model + 0x49) | 2;
     if ((*(u8*)(model + 0x48) >> 6 & 1) != 0)
     {
-        model = *(int*)(obj + 0x4c);
+        model = (int)((GameObject*)obj)->anim.placementData;
         otherObj = 0;
         if (*(short*)(model + 0x1a) == 0)
         {

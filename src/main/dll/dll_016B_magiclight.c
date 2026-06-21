@@ -189,8 +189,8 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                    *(int*)&((GameObject*)obj)->childObjs[0]);
-            *(u32*)(obj + 200) = 0;
-            *(u8*)(obj + 0xeb) = 0;
+            *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
+            ((GameObject*)obj)->childCount = 0;
         }
         active = FUN_80017ae8();
         if ((active & 0xff) == 0)
@@ -206,8 +206,8 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
                 param_13 = *(u32**)&((GameObject*)obj)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
-                *(u32*)(obj + 200) = spawned;
-                *(u8*)(obj + 0xeb) = 1;
+                *(u32*)&((GameObject*)obj)->childObjs[0] = spawned;
+                ((GameObject*)obj)->childCount = 1;
             }
             *(u8*)((int)extra + 0x22) = *(u8*)((int)extra + 0x21);
         }

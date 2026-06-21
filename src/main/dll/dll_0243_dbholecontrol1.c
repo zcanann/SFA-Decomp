@@ -430,7 +430,7 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
     double signedDist;
     float info[5];
 
-    control = *(int*)(obj + 0x5c);
+    control = *(int*)&((GameObject*)obj)->extra;
     yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
     if ((double)lbl_803E6F40 == param_4)
     {
@@ -478,7 +478,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
     double absDy;
     float info[7];
 
-    control = *(int*)(obj + 0x5c);
+    control = *(int*)&((GameObject*)obj)->extra;
     if ((obj != 0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
