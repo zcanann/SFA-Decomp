@@ -659,7 +659,7 @@ void fn_802985AC(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 0;
-    inner->unk414 = lbl_803E7EA4;
+    inner->buttonHoldTimer = lbl_803E7EA4;
     ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 0;
     inner->animState = -1;
     ObjHits_SyncObjectPositionIfDirty(obj);
@@ -9971,7 +9971,7 @@ int fn_80299BB0(int obj, int p2)
     near = (void*)ObjGroup_FindNearestObject(0x3e, obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
-    inner->unk414 = fz;
+    inner->buttonHoldTimer = fz;
     if (near != 0)
     {
         dir[0] = *(f32*)((char*)near + 0xc) - ((GameObject*)obj)->anim.localPosX;
@@ -10877,15 +10877,15 @@ void fn_802B18BC(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->buttonsHeld & 0x100) && fn_802A9A0C(obj, state))
     {
         ((ByteFlags*)((char*)state + 0x3f4))->b20 = 1;
-        ((PlayerState*)state)->unk414 += fv;
-        v = ((PlayerState*)state)->unk414;
-        ((PlayerState*)state)->unk414 =
+        ((PlayerState*)state)->buttonHoldTimer += fv;
+        v = ((PlayerState*)state)->buttonHoldTimer;
+        ((PlayerState*)state)->buttonHoldTimer =
             (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E813C) ? lbl_803E813C : v);
     }
     else
     {
         ((ByteFlags*)((char*)state + 0x3f4))->b20 = 0;
-        ((PlayerState*)state)->unk414 = lbl_803E7EA4;
+        ((PlayerState*)state)->buttonHoldTimer = lbl_803E7EA4;
     }
 
     ((PlayerState*)state)->unk410 -= fv;

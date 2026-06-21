@@ -56,7 +56,7 @@ typedef struct PlayerState {
     u8 staffHoldFrames; /* frames the staff-hold/grab condition has persisted; ++ while held, reset to 0 on state changes, clamped to 10; >2 forces drop of carried object + staff action */
     u8 pad40E[0x410 - 0x40E];
     f32 unk410;
-    f32 unk414;
+    f32 buttonHoldTimer; /* accumulates frame-time while button 0x100 is held (and fn_802A9A0C true), clamped to a max; reset to 0 when released; paired with the 0x3f4:b20 "accumulating" flag */
     f32 unk418;
     u8 unk41C;
     u8 pad41D[0x420 - 0x41D];
