@@ -2493,20 +2493,20 @@ void walkgroupFindExitPointFn_800dc398(void)
                             z2 = OBJFSA_CORNER(linked, lp + 0x35, 0x10);
                             dxn = z2 - z1;
                             dzn = x1 - x2;
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 1, x1, z1);
+                            OBJFSA_SET_PLANE((*np), 1, x1, z1);
 
                             x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
                             z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
-                            OBJFSA_NEWPATCH.exit1X = (s16)((x2 + x3) * lbl_803E0608);
-                            OBJFSA_NEWPATCH.exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+                            (*np).exit1X = (s16)((x2 + x3) * lbl_803E0608);
+                            (*np).exit1Z = (s16)((z2 + z3) * lbl_803E0608);
 
                             dxn = z3 - z2;
                             dzn = x2 - x3;
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 2, x2, z2);
+                            OBJFSA_SET_PLANE((*np), 2, x2, z2);
 
                             dxn = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10) - z3;
                             dzn = x3 - OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 3, x3, z3);
+                            OBJFSA_SET_PLANE((*np), 3, x3, z3);
 
                             fy0 = lbl_803E05D0 * (f32) * (s8*)(curve + 0x18) +
                                 *(f32*)(curve + 0xc);
@@ -2514,11 +2514,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 *(f32*)(linked + 0xc);
                             if (fy0 <= fy1)
                             {
-                                OBJFSA_NEWPATCH.maxY = fy1;
+                                (*np).maxY = fy1;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.maxY = fy0;
+                                (*np).maxY = fy0;
                             }
                             fy0 = -(lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) -
                                 *(f32*)(curve + 0xc));
@@ -2526,11 +2526,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 *(f32*)(linked + 0xc));
                             if (fy1 <= fy0)
                             {
-                                OBJFSA_NEWPATCH.minY = fy1;
+                                (*np).minY = fy1;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.minY = fy0;
+                                (*np).minY = fy0;
                             }
                             gObjfsaPatchCount++;
                         }
