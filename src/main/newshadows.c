@@ -2650,7 +2650,11 @@ void renderShadows(void)
             f21 = vA[2];
             dirZ = -f21;
             gNewShadowLightAngleX = (u16)getAngle(dirX, f21);
-            gNewShadowLightAngleY = getAngle(sqrtf(f22 * f22 + f21 * f21), vAy) - 0x3fc8;
+            {
+                f32 sqA = f22 * f22;
+                f32 sqB = f21 * f21;
+                gNewShadowLightAngleY = getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
+            }
             ((GameObject*)slot)->anim.rotY = gNewShadowLightAngleY;
             ((GameObject*)slot)->anim.rotX = gNewShadowLightAngleX;
             {
