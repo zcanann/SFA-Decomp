@@ -920,7 +920,7 @@ extern CreditEntry gCreditEntries[];
 
 void creditsStart_(void)
 {
-    u8 alpha;
+    int alpha;
     if (gTitleScreenCreditIndex >= lbl_803DBC0A)
     {
         if ((*gCameraInterface)->getMode() == 0x57)
@@ -942,7 +942,7 @@ void creditsStart_(void)
     }
     if (gTitleScreenCreditTimer < 0x14)
     {
-        alpha = (u8)(gTitleScreenCreditTimer * 0xff / 0x14);
+        alpha = gTitleScreenCreditTimer * 0xff / 0x14 & 0xff;
     }
     else if (gTitleScreenCreditTimer >= gCreditEntries[gTitleScreenCreditIndex].b - 0x14)
     {
@@ -951,7 +951,7 @@ void creditsStart_(void)
             streamFn_8000a380(3, 2, 0xfa0);
             gTitleScreenCreditsEndTriggered = 1;
         }
-        alpha = (u8)(0xff - (gTitleScreenCreditTimer - gCreditEntries[gTitleScreenCreditIndex].b) * 0xff / 0x14);
+        alpha = 0xff - (gTitleScreenCreditTimer - gCreditEntries[gTitleScreenCreditIndex].b) * 0xff / 0x14 & 0xff;
     }
     else
     {
