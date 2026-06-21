@@ -775,13 +775,13 @@ void gameBitFn_800ea2e0(u8 id)
 {
     u8* texts;
     u8 wasNew;
+    u32 i;
     s16 cachedBank;
     u32 cachedBits;
     u32 mask;
     u32 bits;
     s16 bank;
     s16 historyIdx;
-    u32 i;
     s16* taskMap;
 
     texts = getLastSavedGameTexts();
