@@ -2895,7 +2895,7 @@ int fn_802A0680(int obj, int state)
                     {
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
-                        ((PlayerState*)inner)->unk5A4 = (s16)(lbl_803E7FAC * m);
+                        ((PlayerState*)inner)->animEventState = (s16)(lbl_803E7FAC * m);
                         ((PlayerState*)inner)->moveOffsetY = m;
                         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
                         return 0x15;
@@ -2919,7 +2919,7 @@ int fn_802A0680(int obj, int state)
                     {
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
-                        ((PlayerState*)inner)->unk5A4 = (s16)(lbl_803E7FAC * m);
+                        ((PlayerState*)inner)->animEventState = (s16)(lbl_803E7FAC * m);
                         ((PlayerState*)inner)->moveOffsetY = m;
                         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
                         return 0x16;
@@ -9372,7 +9372,7 @@ int fn_802A1114(int obj, int state)
         }
         {
             extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
-            inner->unk5A4 =
+            inner->animEventState =
                 fn_802A71E0(obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598),
                             (int*)((char*)inner + 0x56c), lbl_803E7EA4, lbl_803E7EA4, 2, (u8)flags);
         }
@@ -9401,7 +9401,7 @@ int fn_802A1114(int obj, int state)
         }
     }
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
-                           OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
+                           OBJANIM_STATE_WORD_EVENT_STATE, inner->animEventState);
     (*gCameraInterface)->overridePos(
         ((GameObject*)obj)->anim.localPosX,
         inner->moveOffsetY * ((GameObject*)obj)->anim.currentMoveProgress + ((GameObject*)obj)->anim.localPosY,
@@ -10132,7 +10132,7 @@ int fn_802A00E0(int obj, int state)
     *(int*)((char*)state + 4) |= 0x8000000;
     ((GameObject*)obj)->anim.velocityY = fz;
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
-                           OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
+                           OBJANIM_STATE_WORD_EVENT_STATE, inner->animEventState);
     if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
     {
         doRumble(lbl_803E7F10);
@@ -10215,7 +10215,7 @@ int fn_802A03BC(int obj, int state)
     *(int*)((char*)state + 4) |= 0x8000000;
     ((GameObject*)obj)->anim.velocityY = fz;
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
-                           OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
+                           OBJANIM_STATE_WORD_EVENT_STATE, inner->animEventState);
     obj98 = ((GameObject*)obj)->anim.currentMoveProgress;
     if (obj98 > lbl_803E7F68)
     {
