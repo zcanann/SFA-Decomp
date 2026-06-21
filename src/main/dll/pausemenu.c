@@ -378,7 +378,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 {
                     MapEventInterface* mapEvents = *gMapEventInterface;
                     int* info = mapEvents->getCurCharacterState();
-                    char buf[0x10];
+                    char buf[0x50];
                     *(int*)buf = lbl_803E1E04;
                     gameTextFn_80016810(0x3e0, 0xc8, 0x118);
                     sprintf(buf, &lbl_803DBB68, *(u8*)((u8*)info + 9));
@@ -472,7 +472,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         case 1:
             {
                 s32 b14, b10, bc, b8;
-                char buf[0x10];
+                char buf[0x50];
                 gameTextFn_80016810(0x440, 0, 0x78);
                 gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
                 acc = (bc - b8) + 5;
@@ -584,7 +584,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     else
     {
         MapEventInterface* mapEvents = *gMapEventInterface;
-        char buf[0x80];
+        char buf[0x50];
         s32 hintCount;
         s32 gbCount;
         s32 h24;
