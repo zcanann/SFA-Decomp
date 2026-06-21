@@ -312,11 +312,11 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-int Obj_UpdateLightningCluster(int obj, void** entries, int count, void** light, f32 intensity)
+int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, void** light)
 {
     extern void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g); /* #57 */
-    int i;
     int spawned;
+    int i;
     f32 pos[3];
 
     spawned = 0;
