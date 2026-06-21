@@ -203,8 +203,9 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
             hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY,
                                         collision->points[i][2], &hitOut, -1, 0);
             found1 = 0;
-            if ((hits != 0) && (list = hitOut, 0 < hits))
+            if (hits != 0)
             {
+                list = hitOut;
                 for (j = 0; j < hits; j++)
                 {
                     if (!found1)
