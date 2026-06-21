@@ -237,6 +237,7 @@ void fn_80154328(int obj, int p)
 }
 
 #pragma optimization_level 1
+#pragma peephole on
 void fn_801544E8(int obj, u8* state, int p3, int p4)
 {
     if (p4 == 17 || p4 == 16) return;
@@ -253,6 +254,7 @@ void fn_801544E8(int obj, u8* state, int p3, int p4)
         *(int*)&((BaddieState*)state)->reactionFlags |= 16;
     }
 }
+#pragma peephole reset
 #pragma optimization_level reset
 
 void fn_801542AC(int unused, u8* state)
