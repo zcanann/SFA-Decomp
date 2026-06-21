@@ -327,7 +327,7 @@ void fn_801EC870(int p1, register int p2_int)
     ((SnowBikeState*)p2_int)->unk480 = fb;
     fc = ((SnowBikeState*)p2_int)->unk478;
     ((SnowBikeState*)p2_int)->unk46C = fc;
-    ((SnowBikeState*)p2_int)->unk484 = fc;
+    ((SnowBikeState*)p2_int)->distanceScaleLimit = fc;
     flags->pathActive = 0;
     flags->impulseLatch = 0;
     *(u32*)(p2_int + 0x42c) = 0;
@@ -657,7 +657,7 @@ clamp:
         f32 lim;
         f32 v = state->distanceScale;
         f32 c;
-        lim = state->unk484;
+        lim = state->distanceScaleLimit;
         if (v < -lim)
         {
             c = -lim;
@@ -854,7 +854,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->unk480 = fv;
     ((SnowBikeState*)state)->unk474 = fv;
     fv = ((SnowBikeState*)state)->unk46C;
-    ((SnowBikeState*)state)->unk484 = fv;
+    ((SnowBikeState*)state)->distanceScaleLimit = fv;
     ((SnowBikeState*)state)->unk478 = fv;
     ((SnowBikeState*)state)->unk060 = base + ((SnowBikeState*)state)->bikeType * 6 + 0xa4;
     if (((SnowBikeState*)state)->bikeType == 0)
@@ -979,7 +979,7 @@ void SnowBike_update(int obj)
                     {
                         ((SnowBikeState*)state)->unk47C = ((SnowBikeState*)state)->unk464;
                         ((SnowBikeState*)state)->unk480 = ((SnowBikeState*)state)->unk468;
-                        ((SnowBikeState*)state)->unk484 = ((SnowBikeState*)state)->unk46C;
+                        ((SnowBikeState*)state)->distanceScaleLimit = ((SnowBikeState*)state)->unk46C;
                     }
                     fz = lbl_803E5AE8;
                     rq1.quad[1] = fz;
@@ -1059,7 +1059,7 @@ void SnowBike_update(int obj)
                 {
                     ((SnowBikeState*)state)->unk47C = ((SnowBikeState*)state)->unk464;
                     ((SnowBikeState*)state)->unk480 = ((SnowBikeState*)state)->unk468;
-                    ((SnowBikeState*)state)->unk484 = ((SnowBikeState*)state)->unk46C;
+                    ((SnowBikeState*)state)->distanceScaleLimit = ((SnowBikeState*)state)->unk46C;
                 }
                 fz = lbl_803E5AE8;
                 rq2.quad[1] = fz;

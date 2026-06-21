@@ -100,7 +100,7 @@ typedef struct SnowBikeState {
     f32 unk478;             /* 0x478 */
     f32 unk47C;             /* 0x47c */
     f32 unk480;             /* 0x480 */
-    f32 unk484;             /* 0x484 */
+    f32 distanceScaleLimit; /* 0x484: symmetric clamp bound applied to distanceScale */
     u8 pad488[0xc];
     f32 unk494;             /* 0x494 */
     f32 unk498;             /* 0x498 */
