@@ -297,7 +297,7 @@ f32 groundanimator_setScale(int* obj, int* target)
             int* e;
             g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth;
             e = (int*)g->linkedObj;
-            switch (*(s16*)((char*)e + 0x46))
+            switch (((GameObject*)e)->anim.seqId)
             {
             case 0x519:
                 fn_801A80F0(e, 0);

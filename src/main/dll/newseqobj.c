@@ -197,13 +197,13 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
         ((BaddieState*)state)->reactionFlags |= 8;
-        if (*(s16*)((char*)p3 + 0x44) == 0x1c)
+        if (((GameObject*)p3)->anim.classId == 0x1c)
         {
             return 0;
         }
         {
             int* other = *(int**)((char*)p3 + 0xc4);
-            if (other != 0 && *(s16*)((char*)other + 0x44) == 0x1c)
+            if (other != 0 && ((GameObject*)other)->anim.classId == 0x1c)
             {
                 return 0;
             }

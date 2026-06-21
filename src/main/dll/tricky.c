@@ -1216,7 +1216,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetTevSwapMode(2, 0, 0);
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 1, 0, 0, 1, 0);
-    if (*(s16*)((char*)this + 0x46) == 0x755)
+    if (((GameObject*)this)->anim.seqId == 0x755)
     {
         GXSetCullMode(1);
     }

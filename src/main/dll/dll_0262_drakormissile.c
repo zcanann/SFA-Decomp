@@ -281,7 +281,7 @@ void drakormissile_update(int obj)
             expired = 1;
         }
         nearHit = 0;
-        if (lastHit != NULL && *(s16*)((char*)lastHit + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        if (lastHit != NULL && ((GameObject*)lastHit)->anim.seqId != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
         {
             nearHit = 1;
         }

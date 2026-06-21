@@ -373,7 +373,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -651,7 +651,7 @@ void fn_802A4B4C(int obj)
     void* p = *(void**)((char*)inner + 0x7f8);
     if (p != NULL)
     {
-        *(int*)((char*)p + 0xf8) = 1;
+        ((GameObject*)p)->unkF8 = 1;
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
 }
@@ -963,7 +963,7 @@ int fn_802A3B04(int obj, int state)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -11854,7 +11854,7 @@ int playerSetHeldObject(int obj, int held)
         sub = inner->heldObj;
         if ((void*)sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504(sub);
@@ -16293,7 +16293,7 @@ void fn_802A514C(int obj, int state)
             sub = *(void**)((char*)inner + 0x7f8);
             if (sub != NULL)
             {
-                s16 id = *(s16*)((char*)sub + 0x46);
+                s16 id = ((GameObject*)sub)->anim.seqId;
                 if (id == 0x3cf || id == 0x662)
                 {
                     objThrowFn_80182504((int)sub);
@@ -16381,7 +16381,7 @@ int fn_802A4D34(int obj, int state)
                 f32 amt;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E98)
                 {
-                    *(int*)((char*)sub + 0xf8) = 1;
+                    ((GameObject*)sub)->unkF8 = 1;
                 }
                 amt = interpolate((f32)inner->targetObjectBearing, lbl_803E805C, timeDelta);
                 inner->targetYaw = (f32)inner->targetYaw + amt;
@@ -16400,7 +16400,7 @@ int fn_802A4D34(int obj, int state)
     default:
         {
             void* sub = *(void**)((char*)inner + 0x7f8);
-            if (sub != NULL && *(s16*)((char*)sub + 0x46) == 0x112)
+            if (sub != NULL && ((GameObject*)sub)->anim.seqId == 0x112)
             {
                 inner->moveAnimTable = (int)lbl_80333110;
                 *(int*)((char*)inner->heldObj + 0xf8) = 1;
@@ -16473,7 +16473,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -16952,7 +16952,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                         sub = *(void**)((char*)inner + 0x7f8);
                         if (sub != NULL)
                         {
-                            s16 id = *(s16*)((char*)sub + 0x46);
+                            s16 id = ((GameObject*)sub)->anim.seqId;
                             if (id == 0x3cf || id == 0x662)
                             {
                                 objThrowFn_80182504((int)sub);
@@ -18068,7 +18068,7 @@ void fn_802AE9C8(int obj, int inner, int state)
         void* sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
