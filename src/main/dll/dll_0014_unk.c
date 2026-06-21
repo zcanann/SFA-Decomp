@@ -4194,15 +4194,13 @@ void curves_remove(RomCurveDef* curve)
     int removeIndex;
 
     removeIndex = 0;
-    tableSlot = romCurves;
-    sortedCurveCount = nRomCurves;
-    while ((removeIndex < sortedCurveCount) &&
-        (curve->id != (*tableSlot)->id))
+    while ((removeIndex < nRomCurves) &&
+        (curve->id != romCurves[removeIndex]->id))
     {
-        tableSlot = tableSlot + 1;
         removeIndex = removeIndex + 1;
     }
 
+    sortedCurveCount = nRomCurves;
     if (removeIndex >= sortedCurveCount)
     {
         return;
