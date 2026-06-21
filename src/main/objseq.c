@@ -1708,7 +1708,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     int i;
     int k;
     int slots;
-    int scroll;
+    s16 scroll;
     f32 val;
 
     model = *(u8**)&((GameObject*)obj)->anim.placementData;
