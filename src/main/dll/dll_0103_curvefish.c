@@ -172,8 +172,7 @@ void curvefish_update(int obj)
         (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
     {
         state->speed += ((lbl_803E38F8 * (f32)(u32)setup2->speedChange) * timeDelta) / lbl_803E38FC;
-        maxHitSpeed = lbl_803E38F8 * state->maxSpeed;
-        if (state->speed > maxHitSpeed)
+        if (state->speed > (maxHitSpeed = lbl_803E38F8 * state->maxSpeed))
         {
             state->speed = maxHitSpeed;
         }
