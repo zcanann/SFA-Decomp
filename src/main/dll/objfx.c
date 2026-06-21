@@ -538,7 +538,7 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
     extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
     extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *sx, int *sy, int *sz);
     PartfxParams params;
-    f32 lvec[3];
+    f32 lvec[6];
     f32 proj[3];
     int screen[3];
     int i;
