@@ -128,6 +128,7 @@ void CameraModeWorldMap_free(void)
 #pragma dont_inline reset
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeWorldMap_update(u8* obj)
 {
     GameObject* camera = (GameObject*)obj;
@@ -429,4 +430,5 @@ void CameraModeWorldMap_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
