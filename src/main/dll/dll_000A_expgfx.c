@@ -423,7 +423,7 @@ void expgfx_initSlotQuad(void* slotPtr)
 
     slot = (ExpgfxSlot*)slotPtr;
     staticData = EXPGFX_STATIC_DATA;
-    entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
+    entry = Expgfx_GetTableEntry(((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK);
     resource = entry->resource;
 
     slot->stateBits.bits.frameParity = 0;
@@ -820,7 +820,8 @@ foundFirst:
                 {
                     continue;
                 }
-                entry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
+                entry = (ExpgfxTableEntry*)((u8*)runtime->expTab +
+                    (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
                 srcObj = (ExpgfxSourceObject*)entry->sourceId;
                 resource = entry->resource;
                 slot->stateBits.bits.frameParity = 0;
