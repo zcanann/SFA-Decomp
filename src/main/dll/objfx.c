@@ -1299,8 +1299,8 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
 void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
 {
     PartfxParams params;
-    int i;
     int j;
+    int i;
     int effB;
     int t;
     u8 n;
@@ -1523,7 +1523,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         case 12:
             if (params.f8 < lbl_803DF38C)
             {
-                params.f8 = lbl_803DF38C;
+                params.f8 = *(f32*)&lbl_803DF38C;
             }
             params.pad[2] = 50;
             for (j = 0; j < n * 2; j++)
