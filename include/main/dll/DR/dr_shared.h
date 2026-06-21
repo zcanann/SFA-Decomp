@@ -67,7 +67,7 @@ typedef struct {
 } Flags377;
 
 extern u8 framesThisStep;
-extern f32 lbl_803E6A3C;
+extern const f32 lbl_803E6A3C;
 extern f32 lbl_803E6A40;
 extern f32 lbl_803E6AA8;
 extern f32 lbl_803E6AB4;
