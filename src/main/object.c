@@ -1517,7 +1517,6 @@ void objFreeObjDef(u8* obj, int flag)
     void* curTex;
     void* tex;
     void* shadowRenderResource;
-    ObjModelState* modelState;
     s8 modelCount;
     int group;
     int type;
@@ -1598,17 +1597,16 @@ void objFreeObjDef(u8* obj, int flag)
     {
         ObjGroup_RemoveObject((u32)obj, 8);
     }
-    modelState = ((ObjAnimComponent*)obj)->modelState;
-    if (modelState != NULL)
+    if (((ObjAnimComponent*)obj)->modelState != NULL)
     {
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 1)
         {
             setShadowFlag_803db658(1);
         }
-        if (modelState->shadowTexture != NULL)
+        if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {
             curTex = textureFn_8006c5c4();
-            tex = modelState->shadowTexture;
+            tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {
                 if ((((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4) == 0)
@@ -1621,11 +1619,11 @@ void objFreeObjDef(u8* obj, int flag)
                 }
             }
         }
-        if (modelState->shadowWorkBuffer != NULL)
+        if (((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer != NULL)
         {
-            mm_free(modelState->shadowWorkBuffer);
+            mm_free(((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer);
         }
-        shadowRenderResource = modelState->shadowRenderResource;
+        shadowRenderResource = ((ObjAnimComponent*)obj)->modelState->shadowRenderResource;
         if (shadowRenderResource != NULL && shadowRenderResource != (void*)-1)
         {
             mm_free(shadowRenderResource);
