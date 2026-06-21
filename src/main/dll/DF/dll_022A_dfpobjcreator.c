@@ -35,7 +35,7 @@ typedef struct DfpobjcreatorPlacement
     s32 unk14;
     u8 pad18[0x19 - 0x18];
     u8 unk19;
-    s16 unk1A;
+    s16 behaviorMode; /* 0x1A switch selector (case 7 spawns the periodic object) */
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
@@ -128,7 +128,7 @@ void dfpobjcreator_update(int obj)
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        switch (((DfpobjcreatorPlacement*)data)->unk1A)
+        switch (((DfpobjcreatorPlacement*)data)->behaviorMode)
         {
         case 7:
             state->spawnTimer -= (s16)timeDelta;
