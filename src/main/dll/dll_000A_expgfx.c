@@ -230,16 +230,17 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 void expgfxRemoveAll(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxSlot* slot;
     u32* slotPoolBases;
     u32* poolActiveMasks;
     s8* poolActiveCountPtrs;
     s16* poolSlotTypeIds;
+    u16* refCountPtr;
     ExpgfxTableEntry* expTabEntry;
     u32 activeBit;
     u32 inactiveBitMask;
     int poolIndex;
     int slotIndex;
+    ExpgfxSlot* slot;
 
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
@@ -265,11 +266,12 @@ void expgfxRemoveAll(void)
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                expTabEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
-                if (expTabEntry->refCount != 0)
+                expTabEntry = (ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
+                refCountPtr = &expTabEntry->refCount;
+                if (*refCountPtr != 0)
                 {
-                    expTabEntry->refCount--;
-                    if (expTabEntry->refCount == 0)
+                    (*refCountPtr)--;
+                    if (*refCountPtr == 0)
                     {
                         expTabEntry->resource = 0;
                         expTabEntry->sourceId = 0;
