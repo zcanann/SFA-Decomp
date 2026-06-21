@@ -198,9 +198,9 @@ void SpiritDoorLock_update(int obj)
         int camMode;
         int* orbitObjs;
         ObjTextureRuntimeSlot* tex;
-        int i;
-        s16 angle;
         s16 angleStep;
+        s16 angle;
+        int i;
         f32 maxDist;
         camMode = (*gCameraInterface)->getMode();
         if (camMode != 0x51)
@@ -208,7 +208,7 @@ void SpiritDoorLock_update(int obj)
             Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
         }
         orbitObjs = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
-        angleStep = (s16)(0x10000 / state->orbitCount);
+        angleStep = 0x10000 / state->orbitCount;
         angle = state->spinAngle;
         orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;
         maxDist = gSpiritDoorLockOrbitMaxDist;
