@@ -4319,7 +4319,7 @@ void GameUI_update(void)
                     if (absPrev >= 0xf) goto camCheck;
                 }
                 if (gCMenuScrollTimer != 0) goto camCheck;
-                if (*(s8*)&cMenuOpen != 0) closed = 0;
+                if (*(s8*)&cMenuOpen == 0) closed = 0;
                 else closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
                 if (!closed) goto camCheck;
                 {
