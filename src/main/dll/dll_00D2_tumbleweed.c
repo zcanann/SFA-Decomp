@@ -82,9 +82,9 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     {
         ((GameObject*)obj)->anim.velocityX = lbl_803E2F80;
     }
-    else if (((GameObject*)obj)->anim.velocityX < lbl_803E2F7C)
+    else if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E2F7C)
     {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E2F7C;
+        ((GameObject*)obj)->anim.velocityX = *(f32*)&lbl_803E2F7C;
     }
     if (((GameObject*)obj)->anim.velocityY > lbl_803E2F80)
     {
