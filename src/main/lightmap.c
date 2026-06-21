@@ -2201,7 +2201,7 @@ void getVisibleObjects(s8* opacity)
     i = 0;
     p = objects;
     cur = opacity;
-    for (; i < count; i++)
+    for (; i < count; i++, cur++)
     {
         o = (u8*)*p;
         
@@ -2320,7 +2320,6 @@ void getVisibleObjects(s8* opacity)
             }
         }
         p++;
-        cur++;
     }
     if (gVisibleObjectSortKeyCount > 1)
     {
