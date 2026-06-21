@@ -144,8 +144,8 @@ int Carryable_updateRenderState(int* obj, int flag)
 int Carryable_updateHeld(u8* obj)
 {
     f32** list;
-    u8* held;
     void* player;
+    u8* held;
     held = ((GameObject*)obj)->extra;
     ((CarryableUpdateHeldState*)held)->surfaceType = 0;
     ((CarryableUpdateHeldState*)held)->flags &= ~1;
