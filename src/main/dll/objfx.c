@@ -323,7 +323,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance,
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 3:
-            f29 = lbl_803DF354 - f29 * (f29 * f29);
+            f29 = *(f32*)&lbl_803DF354 - f29 * (f29 * f29);
             params.vec[0] = lbl_803DF354 - f30 * f30;
             break;
         case 4:
