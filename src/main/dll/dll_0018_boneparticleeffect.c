@@ -1261,15 +1261,15 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
 }
 
 u32
-FUN_800a3828(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a3828(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }
 
 u32
-FUN_800a3924(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a3924(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }

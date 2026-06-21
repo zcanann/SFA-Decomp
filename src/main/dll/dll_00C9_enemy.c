@@ -1907,27 +1907,26 @@ void FUN_8014d3d0(short* angle, u32 param_2, u32 denom, short bias)
 }
 
 void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u64 param_5
-                  , u64 param_6, u64 param_7, u64 param_8, int param_9, int param_10,
-                  u32 param_11, u32 param_12, u32 param_13, u32 param_14,
+                  , u64 param_6, u64 param_7, u64 param_8, int obj, int state,
+                  u32 param_11, u32 param_12, u32 animFlag, u32 param_14,
                   u32 param_15, u32 param_16)
 {
     ObjHitsPriorityState* hitState;
 
     if ((double)lbl_803E31FC == param_1)
     {
-        ((BaddieState*)param_10)->unk308 = lbl_803E3208;
+        ((BaddieState*)state)->unk308 = lbl_803E3208;
     }
     else
     {
         param_2 = (double)lbl_803E3200;
-        ((BaddieState*)param_10)->unk308 =
+        ((BaddieState*)state)->unk308 =
             (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
     }
-    *(char*)(param_10 + 0x323) = param_13;
+    *(char*)(state + 0x323) = animFlag;
     FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 param_9, param_11 & 0xff, param_12, param_12, param_13, param_14, param_15, param_16);
-    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
-    /* param_9 = obj, param_10 = state, param_13 = anim flag */
+                 obj, param_11 & 0xff, param_12, param_12, animFlag, param_14, param_15, param_16);
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
         hitState->suppressOutgoingHits = 0;
