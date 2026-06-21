@@ -591,7 +591,7 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = gDepthReadPendingCount;
         if (n < 0x14) {
-            ((DepthReadRequest*)&gDepthReadPendingQueue)[n].x = x;
+            ((DepthReadRequest*)(int)&gDepthReadPendingQueue)[n].x = x;
             p = (DepthReadRequest*)((u8*)&gDepthReadPendingQueue + n * 0xC);
             p->y = y;
             p->key = requestKey;
