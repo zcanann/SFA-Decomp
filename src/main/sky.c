@@ -2012,7 +2012,11 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     u8* p2;
     u8** base = &gSky2State;
 
-    b1 = (((Sky2Config*)cfg)->unk58 & 0x80) ? 1 : 0;
+    b1 = 0;
+    if ((((Sky2Config*)cfg)->unk58 & 0x80) != 0)
+    {
+        b1 = 1;
+    }
     *(int*)(base[b1]) = 0;
     base[b1][0x317] = 1;
     for (i = 0; i < 0x21; i++)
