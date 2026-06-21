@@ -2072,6 +2072,7 @@ void dll_07_func06(void)
     f32 mag;
     f32 t;
     f32 rot;
+    f32 wrap;
     void** clouds;
     f32 inpos[3];
     f32 wind[3];
@@ -2297,21 +2298,23 @@ void dll_07_func06(void)
     }
     t = lbl_803DF254 * timeDelta + gNewCloudScrollPhaseA;
     gNewCloudScrollPhaseA = t;
-    if (t > gNewCloudScrollWrap)
+    wrap = *(volatile f32*)&gNewCloudScrollWrap;
+    if (t > wrap)
     {
-        gNewCloudScrollPhaseA = t - gNewCloudScrollWrap;
+        gNewCloudScrollPhaseA = t - wrap;
     }
     t = lbl_803DF25C * timeDelta + gNewCloudScrollPhaseB;
     gNewCloudScrollPhaseB = t;
-    if (t > gNewCloudScrollWrap)
+    wrap = *(volatile f32*)&gNewCloudScrollWrap;
+    if (t > wrap)
     {
-        gNewCloudScrollPhaseB = t - gNewCloudScrollWrap;
+        gNewCloudScrollPhaseB = t - wrap;
     }
     t = gNewCloudScrollPhaseC - lbl_803DF260 * timeDelta;
     gNewCloudScrollPhaseC = t;
     if (t < gNewCloudScrollWrapNeg)
     {
-        gNewCloudScrollPhaseC = t + gNewCloudScrollWrap;
+        gNewCloudScrollPhaseC = t + *(volatile f32*)&gNewCloudScrollWrap;
     }
     t = gNewCloudOvercastFadeLevel + gNewCloudOvercastFadeRate;
     gNewCloudOvercastFadeLevel = t;
