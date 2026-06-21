@@ -1717,8 +1717,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     int pos;
     int end;
     int n;
-    int k;
     int o2;
+    int k;
     u8* q;
     f32 f;
 
