@@ -675,6 +675,7 @@ void fn_80095164(WaterParticle* s)
     f32 scale[12];
     f32 mtxB[12];
     f32 mtxC[12];
+    u8* p;
     int mtxIdx;
     int i;
     f32 c2FC;
@@ -688,7 +689,6 @@ void fn_80095164(WaterParticle* s)
     f32 fade;
     f32 t;
     f32 c304;
-    u8* p;
 
     PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
     i = 0;
