@@ -56,34 +56,14 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     groupIndex = -1;
     matchCount = 0;
     linkedConfigRow = gSHthorntailDataTables[0];
-    if (obj->config->configToken == linkedConfigRow[0])
+    for (index = 0; index < 6; index++)
     {
-        groupIndex = 0;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 1;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 2;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 3;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 4;
-    }
-    else if (linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
-        obj->config->configToken == linkedConfigRow[0])
-    {
-        groupIndex = 5;
+        if (obj->config->configToken == linkedConfigRow[0])
+        {
+            groupIndex = index;
+            break;
+        }
+        linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES);
     }
     objects = ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
     for (index = 0; index < count; index++)
