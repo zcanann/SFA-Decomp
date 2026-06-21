@@ -2072,9 +2072,9 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
             if (v != -1 && v < count)
                 m = v;
             j = 0;
-            q = (int*)tbl;
-            for (n2 = 0; n2 < 4; n2++)
+            for (n2 = 0; n2 < 4; n2++, j += 7)
             {
+                q = (int*)tbl + j + n2;
                 v = q[0];
                 if (v != -1 && v < m)
                     m = v;
@@ -2099,8 +2099,6 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                 v = q[7];
                 if (v != -1 && v < m)
                     m = v;
-                q += 8;
-                j += 7;
             }
             tbl[0x22] = m;
             v = tbl[0x21];
