@@ -1022,8 +1022,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     }
     for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
     {
-        ref = val + 0x81f;
-        if (*(char*)((int)trickyState + ref) != '\0') continue;
+        if (*(char*)((int)trickyState + val + 0x81f) != '\0') continue;
         ref = *(int*)&((GameObject*)obj)->extra;
         if (((u32)(*(u8*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
         if ((int)((GameObject*)obj)->anim.currentMove >= 0x30 || (int)((GameObject*)obj)->anim.currentMove < 0x29)
