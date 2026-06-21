@@ -195,9 +195,9 @@ void nw_levcontrol_update(int objArg)
                 }
                 else
                 {
-                    val = (int)(fn_80014668() / lbl_803E527C);
+                    int extra = (int)(fn_80014668() / lbl_803E527C);
                     gameTimerStop();
-                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5) + val);
+                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5) + extra);
                     timerSetToCountUp();
                 }
                 (*gObjectTriggerInterface)->runSequence(*(u8*)(state + 3), (void*)obj,
