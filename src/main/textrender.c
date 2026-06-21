@@ -1552,8 +1552,7 @@ void gameTextInitFn_8001a234(void)
     gameTextBase = gGameTextBase;
 
     i = 0x94;
-    textWindow = gTextBoxes + 0x1280;
-    p = textWindow;
+    p = textWindow = gTextBoxes + 0x1280;
     while (p -= 0x20, i-- != 0)
     {
         *(u16*)(p + 8) = *(u16*)(p + 2);
