@@ -565,8 +565,8 @@ void cmbsrc_init(int obj, u8* setup)
             modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3],
                                               c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0xff);
             {
-                int n = (int)((mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0)
-                    * cmbsrc->objAnim.rootMotionScale);
+                f32 attn = mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0;
+                int n = (int)(attn * cmbsrc->objAnim.rootMotionScale);
                 modelLightStruct_setDistanceAttenuation(state->light, n, lbl_803E73B4 + n);
             }
             if (state->flags & CMBSRC_STATE_THORNTAIL_GATE)
