@@ -177,6 +177,7 @@ static inline float exp2_kernel(float x, float* table)
 
 #define float_bits(value) (*(u32*)&(value))
 
+#pragma optimization_level 2
 float powf(float x, float y)
 {
     float log_value;
