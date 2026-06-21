@@ -363,7 +363,7 @@ typedef struct PlayerState {
     u8 pad8C6[0x8C7 - 0x8C6];
     u8 staffUnlockedFlags;
     u8 curAnimId; /* current move/anim id (0x44 = default) */
-    u8 unk8C9;
+    u8 cameraFlags; /* flags word accumulated via |= (e.g. bit 2) and passed to the camera interface (gCameraInterface slot 0x68) on state change; reset to 0 on state entry */
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
     s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */

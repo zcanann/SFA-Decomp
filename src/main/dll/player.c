@@ -1084,7 +1084,7 @@ int fn_802A3B04(int obj, int state)
         break;
     }
     }
-    ((PlayerState*)inner)->unk8C9 |= 4;
+    ((PlayerState*)inner)->cameraFlags |= 4;
     fn_802AB5A4(obj, inner + 4, 5);
     return 0;
 }
@@ -7243,7 +7243,7 @@ void playerUpdate(int obj)
                 ((PlayerState*)inner)->baddie.cameraYaw = *(s16*)cam;
             }
             ((PlayerState*)inner)->probeHitDist = lbl_803E8164;
-            ((PlayerState*)inner)->unk8C9 = 0;
+            ((PlayerState*)inner)->cameraFlags = 0;
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
@@ -7405,7 +7405,7 @@ void playerUpdate(int obj)
                     setBButtonIcon(0xc);
                 }
             }
-            (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(((PlayerState*)inner)->unk8C9);
+            (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(((PlayerState*)inner)->cameraFlags);
             ((PlayerState*)inner)->isHoldingObject = 0;
             ((PlayerState*)inner)->queuedBitCount = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
