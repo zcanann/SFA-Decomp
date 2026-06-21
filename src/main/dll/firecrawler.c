@@ -1695,7 +1695,7 @@ void crawler_updateC(s16* obj, u8* state)
             }
             if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || base->atSegmentEnd != 0)
                 && (*gRomCurveInterface)->goNextPoint(base) != 0
-                && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BC0,
+                && (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
             {
                 ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000LL;
