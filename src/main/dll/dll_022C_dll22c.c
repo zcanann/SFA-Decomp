@@ -230,7 +230,7 @@ void fn_80204BF8(int obj)
                         blob->sfxLatch = 1;
                     }
                 }
-                else if (object->anim.localPosY == d - lbl_803E63A8)
+                else if (object->anim.localPosY == placement->posY - lbl_803E63A8)
                 {
                     blob->mode = 4;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
