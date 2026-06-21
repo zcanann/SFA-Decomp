@@ -602,11 +602,9 @@ void tumbleweed_updateEffects(int obj)
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
         (((GameObject*)obj)->objectFlags & 0x800) != 0)
     {
-        u32 r;
         ObjHits_SetHitVolumeSlot((u32)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
-        r = state->hitPulseCounter + 1;
-        state->hitPulseCounter = r;
-        if ((int)(u8)r % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
+        state->hitPulseCounter = state->hitPulseCounter + 1;
+        if ((int)(u8)state->hitPulseCounter % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
         {
             fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 1, 0, 0, 0);
         }
