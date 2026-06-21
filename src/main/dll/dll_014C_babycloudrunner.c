@@ -1119,7 +1119,7 @@ void babycloudrunner_update(int* obj)
                     fn_8019E3F4(obj);
                 }
             }
-            inRange = Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
+            inRange = Vec_distance((char*)((int)obj + 0x18), player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
             if (sub->runnerState == 2)
             {
                 radius = (f32) * (s16*)(def + 0x18);
