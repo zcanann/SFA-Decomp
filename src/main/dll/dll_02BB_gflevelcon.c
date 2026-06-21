@@ -439,13 +439,14 @@ void fn_8023A3E4(int p1, int p2)
     }
     if (got != 0)
     {
-        switch (hitType)
+        int ht = hitType;
+        switch (ht)
         {
         case 0:
         case 1:
         case 2:
         {
-            u8* hp = (u8*)s + hitType;
+            u8* hp = (u8*)s + ht;
             if (hp[0xAE] != 0 && hp[0xB2] == 0)
             {
                 hp[0xAE] -= 1;
@@ -470,9 +471,11 @@ void fn_8023A3E4(int p1, int p2)
             break;
         }
         case 3:
+        {
+            u8* hp = (u8*)s + ht;
             if (((GameObject*)hitObj)->anim.seqId == 0x605 &&
-                s->timer[hitType] == 0 &&
-                s->hits[hitType] != 0 &&
+                hp[0xB2] == 0 &&
+                hp[0xAE] != 0 &&
                 s->mode == 0xc)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
@@ -480,6 +483,7 @@ void fn_8023A3E4(int p1, int p2)
                 s->timer[hitType] = 0xc8;
             }
             break;
+        }
         }
     }
     for (i = 0; i < 3; i++)
