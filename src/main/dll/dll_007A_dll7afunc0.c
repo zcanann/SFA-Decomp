@@ -367,7 +367,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_8028688c();
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
 {
     bool isClearMode;
     char slotIdx;
@@ -396,17 +396,17 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
     {
         if ((u16)(&DAT_80312460)[flagId] != 0)
         {
-            if (param_3 == -1)
+            if (mode == -1)
             {
-                param_3 = 1;
+                mode = 1;
             }
-            isClearMode = param_3 == -2;
+            isClearMode = mode == -2;
             if (isClearMode)
             {
-                param_3 = 0;
+                mode = 0;
             }
             flagWord = FUN_80017690((u32)(u16)(&DAT_80312460)[flagId]);
-            if (param_3 == 0)
+            if (mode == 0)
             {
                 newWord = flagWord & ~(1 << bitIndex);
             }
@@ -417,7 +417,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
             FUN_80017698((u32)(u16)(&DAT_80312460)[flagId], newWord);
             DAT_803de104 = flagId;
             uRam803de108 = newWord;
-            if (param_3 == 0)
+            if (mode == 0)
             {
                 actPtr = &DAT_80312460;
                 wordPtr = &DAT_803a3c1c;
