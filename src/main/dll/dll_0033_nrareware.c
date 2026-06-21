@@ -8,7 +8,7 @@ extern f32 gNrarewareStage1Timer;
 extern u8 gNrarewareTransitionStarted;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
-extern void fn_8001404C(int param_1);
+extern void fn_8001404C(int value);
 extern void OSReport(const char* msg, ...);
 extern u8 framesThisStep;
 extern f32 timeDelta;
