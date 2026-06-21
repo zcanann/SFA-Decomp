@@ -2310,10 +2310,11 @@ void shadowCreate(int* obj)
             ((GameObject*)obj)->anim.modelState->shadowScale / dist;
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
         {
-            *(u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8) = 1;
+            u8* slot8;
+            *(slot8 = (u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8)) = 1;
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
-                *(u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8) = 2;
+                *slot8 = 2;
                 *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = Ydchuff_803DED90;
             }
         }
