@@ -279,7 +279,9 @@ void CameraModeCombat_update(short* cam)
                             dy = hitVolumes[tgt->unkE4].centerY - ty;
                             dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
                         }
-                        dist = sqrtf(dx * dx + dz * dz);
+                        fa = dx * dx;
+                        fb = dz * dz;
+                        dist = sqrtf(fa + fb);
                         ((CameraObject*)cam)->letterboxTargetOffset = 0x30;
                         ((CameraObject*)cam)->letterboxStep = 1;
                         if (dist > range)
