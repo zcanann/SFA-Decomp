@@ -568,11 +568,11 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     {
         if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
         {
-            lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
+            lbl_803DD548->yawCurve.start += lbl_803E17D0;
         }
         else if (lbl_803DD548->yawCurve.end < lbl_803E17C4)
         {
-            lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
+            lbl_803DD548->yawCurve.end += lbl_803E17D0;
         }
     }
     lbl_803DD548->pitchCurve.start = obj[1];
