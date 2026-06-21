@@ -35,7 +35,6 @@ extern f32 lbl_803E18BC;
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 {
     u8 flags;
-    f32 d;
     f32 t;
     f32 q;
 
@@ -80,8 +79,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, q, 0x0);
     camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, q, 0x0);
 
-    d = lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd;
-    if ((d > lbl_803E1890) || (d < lbl_803E1894))
+    if (((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) > lbl_803E1890) || ((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) < lbl_803E1894))
     {
         if (lbl_803DD560->rotXStart < lbl_803E1888)
         {
@@ -92,8 +90,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
             lbl_803DD560->rotXEnd = *(f32*)&lbl_803DD560->rotXEnd + lbl_803E1898;
         }
     }
-    d = lbl_803DD560->rotYStart - lbl_803DD560->rotYEnd;
-    if ((d > lbl_803E1890) || (d < lbl_803E1894))
+    if (((lbl_803DD560->rotYStart - lbl_803DD560->rotYEnd) > lbl_803E1890) || ((lbl_803DD560->rotYStart - lbl_803DD560->rotYEnd) < lbl_803E1894))
     {
         if (lbl_803DD560->rotYStart < lbl_803E1888)
         {
@@ -104,8 +101,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
             lbl_803DD560->rotYEnd = *(f32*)&lbl_803DD560->rotYEnd + lbl_803E1898;
         }
     }
-    d = lbl_803DD560->rotZStart - lbl_803DD560->rotZEnd;
-    if ((d > lbl_803E1890) || (d < lbl_803E1894))
+    if (((lbl_803DD560->rotZStart - lbl_803DD560->rotZEnd) > lbl_803E1890) || ((lbl_803DD560->rotZStart - lbl_803DD560->rotZEnd) < lbl_803E1894))
     {
         if (lbl_803DD560->rotZStart < lbl_803E1888)
         {
