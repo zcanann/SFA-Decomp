@@ -208,7 +208,7 @@ typedef struct BlastedState
 {
     u8 pad0[0x10 - 0x0];
     u8 unk10;
-    u8 unk11;
+    u8 gameBitLatchState;
     u8 pad12[0x6E4 - 0x12];
     u8 unk6E4;
     u8 pad6E5[0x6E8 - 0x6E5];
@@ -230,10 +230,10 @@ void blasted_init(int obj, int placement)
     if (gbid != -1)
     {
         v = GameBit_Get(gbid);
-        ((BlastedState*)state)->unk11 = v;
+        ((BlastedState*)state)->gameBitLatchState = v;
         if (v != 0)
         {
-            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->unk11);
+            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
         }
     }
     GameBit_Set(0x2de, 1);
