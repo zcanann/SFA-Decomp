@@ -223,12 +223,11 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     f32 dy;
     f32 dz;
     f32 distance;
-    f32 objPos[3];
     f32 curvePos[3];
-    s16 objGrid[4];
     s16 curveGrid[4];
+    s16 objGrid[4];
     u8 traceHit;
-    int bboxHit[14];
+    int bboxHit[20];
     int curveIndex;
     int typeIndex;
     u8 traceResult;
@@ -238,10 +237,10 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
-    objPos[0] = *(f32*)(obj + 0xc);
-    objPos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
-    objPos[2] = *(f32*)(obj + 0x14);
-    voxmaps_worldToGrid(objPos, objGrid);
+    curvePos[0] = *(f32*)(obj + 0xc);
+    curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
+    curvePos[2] = *(f32*)(obj + 0x14);
+    voxmaps_worldToGrid(curvePos, objGrid);
 
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
     {
