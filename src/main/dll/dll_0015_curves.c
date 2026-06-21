@@ -641,6 +641,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     u8 pointCount;
     u32 flags;
     f32* localPoint;
+    f32* targetRow;
     int radiusOffset;
     int pointIndex;
     int mode;
@@ -733,15 +734,18 @@ buildTransform:
     transform.y = ((GameObject*)obj)->anim.localPosY;
     transform.z = ((GameObject*)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix, &transform);
-    localOffset = 0;
-    for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
+    pointIndex = 0;
+    targetRow = (f32*)collision;
+    localOffset = pointIndex;
+    for (; pointIndex < pointCount * 3; pointIndex += 3)
     {
-        collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
-        collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
+        targetRow[69] = targetRow[57];
+        targetRow[71] = targetRow[59];
         localPoint = (f32*)((u8*)collision->localPointPositions + localOffset);
         Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2], &tempX,
-                              &collision->localPointTarget[pointIndex][1], &tempZ);
+                              &((f32*)collision)[pointIndex + 70], &tempZ);
         localOffset += 0xc;
+        targetRow += 3;
     }
 }
 #pragma opt_unroll_count 0
