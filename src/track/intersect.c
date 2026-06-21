@@ -1474,7 +1474,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern f32 lbl_803DEF24;
     extern f32 lbl_803DB6C4, lbl_803DB6C8, lbl_803DB6CC;
     extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
-    extern struct { f32 x, y; } lbl_803DEF1C;
+    extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
     extern Mtx hudMatrix;
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
@@ -1562,11 +1562,11 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         if (sr > lbl_803DEEE4) {
             c2.a = 0xFF;
         } else {
-            c2.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+            c2.a = (s32)(lbl_803DEF20 * sr);
         }
         sr = sr * gSynthFadeMask;
         if (sr > lbl_803DEEE4) sr = lbl_803DEEE4;
-        c1.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+        c1.a = (s32)(lbl_803DEF20 * sr);
     }
 
     GXSetTevKColor(0, c0);
