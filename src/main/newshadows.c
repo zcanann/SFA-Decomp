@@ -2538,7 +2538,8 @@ void renderShadows(void)
     char* B = (char*)gNewShadowEntries;
     int* slot;
     f32 savedFovY, sCamX, sCamY, sCamZ;
-    s16 s170, s14, s19;
+    int s170;
+    s16 s14, s19;
     f32 om100[24];
     f32 mTrans[12], mScale[12], mOrtho[16];
     f32 mc54[3], mc48[3];
