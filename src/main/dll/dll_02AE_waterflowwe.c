@@ -83,10 +83,10 @@ extern const f32 gWaterFlowMaxMagnitude;
 void waterflowwe_calcCurrentVector(int obj, f32* vx, f32* vz)
 {
     GameObject* object = (GameObject*)obj;
+    int hasCurrent;
     WaterFlowWeState* current = object->extra;
     int count;
     int i;
-    int hasCurrent;
     GameObject** objects;
     f32 currentX;
     f32 currentZ;
