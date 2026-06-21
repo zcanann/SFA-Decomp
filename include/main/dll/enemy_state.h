@@ -32,7 +32,7 @@ typedef struct EnemyState {
     u32 controlFlags;
     int initialFlags;
     u32 flags2E4;
-    int unk2E8;
+    int flags2E8;
     s16 unk2EC;
     u8 unk2EE[0x2F8 - 0x2EE];
     s16 unk2F8;

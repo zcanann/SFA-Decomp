@@ -1956,13 +1956,13 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         case 0:
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
-                u32 flags = *(u32*)&((EnemyState*)state)->unk2E8;
+                u32 flags = *(u32*)&((EnemyState*)state)->flags2E8;
                 if ((flags & 3) != 0)
                 {
                     if ((flags & 1) != 0)
                     {
-                        *(u32*)&((EnemyState*)state)->unk2E8 = flags & ~1LL;
-                        *(u32*)&((EnemyState*)state)->unk2E8 = *(u32*)&((EnemyState*)state)->unk2E8 | 2;
+                        *(u32*)&((EnemyState*)state)->flags2E8 = flags & ~1LL;
+                        *(u32*)&((EnemyState*)state)->flags2E8 = *(u32*)&((EnemyState*)state)->flags2E8 | 2;
                     }
                     if (*(void**)&((EnemyState*)state)->modelLight == NULL)
                     {
@@ -1972,7 +1972,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                                            ((EnemyState*)state)->modelLight);
                 }
             }
-            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 4) != 0)
+            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 4) != 0)
             {
                 if (*(void**)&((EnemyState*)state)->modelLight == NULL)
                 {
@@ -1981,17 +1981,17 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
                                        ((EnemyState*)state)->modelLight);
             }
-            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x40) != 0)
+            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
                 objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
-            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x80) != 0)
+            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
                 objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
-            if ((*(u32*)&((EnemyState*)state)->unk2E8 & 0x100) != 0)
+            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)
             {
                 objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
@@ -2379,7 +2379,7 @@ void enemy_init(int obj, u8* setup, int flag)
     if (flag == 0)
     {
         *(int*)&((EnemyState*)state)->flags2E4 = 0;
-        ((EnemyState*)state)->unk2E8 = 0;
+        ((EnemyState*)state)->flags2E8 = 0;
         state[0x2f1] = 0;
         state[0x2f2] = 0;
         ((EnemyState*)state)->unk2EC = 0;
