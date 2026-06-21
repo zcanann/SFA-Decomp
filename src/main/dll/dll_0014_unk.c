@@ -1259,18 +1259,18 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         while (high >= low)
         {
             mid = (high + low) >> 1;
-            nextCurve = (s32)romCurves[mid];
-            if ((u32)neighborId > *(u32*)(nextCurve + 0x14))
+            if ((u32)neighborId > ((ObjfsaRomCurveDef*)(s32)romCurves[mid])->id)
             {
                 low = mid + 1;
             }
-            else if ((u32)neighborId >= *(u32*)(nextCurve + 0x14))
+            else if ((u32)neighborId < ((ObjfsaRomCurveDef*)(s32)romCurves[mid])->id)
             {
-                goto found;
+                high = mid - 1;
             }
             else
             {
-                high = mid - 1;
+                nextCurve = (s32)romCurves[mid];
+                goto found;
             }
         }
         nextCurve = 0;
@@ -1746,9 +1746,8 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse != 0)
     {
-        currentCurve = Objfsa_FindRomCurveById(curveId);
-        *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
+        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
         if (nextId == -1)
         {
             return 1;
