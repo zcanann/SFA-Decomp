@@ -78,7 +78,7 @@ int Credits_frameStart(void)
         if (lbl_803DD970 < 10)
         {
             i = 0;
-            cur = lbl_803DD968;
+            cur = *(volatile f32*)&lbl_803DD968;
             page = &gCreditsPages[lbl_803DD970];
             for (; i < page->count; i++)
             {
