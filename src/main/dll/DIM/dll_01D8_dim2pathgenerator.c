@@ -57,10 +57,10 @@ typedef struct Dim2pathgeneratorPlacement
 {
     u8 pad0[0x3 - 0x0];
     u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 colorR; /* 0x4 -> spawn setup head.unk04[0] */
+    u8 colorG; /* 0x5 -> spawn setup head.unk04[1] */
+    u8 colorB; /* 0x6 -> spawn setup head.unk04[2] */
+    u8 colorA; /* 0x7 -> spawn setup head.unk04[3] (forced 0xff) */
     u8 pad8[0x14 - 0x8];
     s32 unk14;
     s16 unk18;
@@ -247,10 +247,10 @@ void dim2pathgenerator_update(int* obj)
         *(f32*)((char*)np + 8) = ((Dim2PathGeneratorState*)extra)->originX;
         *(f32*)((char*)np + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
         *(f32*)&((ObjDef*)np)->jointData = ((Dim2PathGeneratorState*)extra)->originZ;
-        *(u8*)((char*)np + 4) = ((Dim2pathgeneratorPlacement*)def)->unk4;
-        *(u8*)((char*)np + 6) = ((Dim2pathgeneratorPlacement*)def)->unk6;
-        *(u8*)((char*)np + 5) = ((Dim2pathgeneratorPlacement*)def)->unk5;
-        *(u8*)((char*)np + 7) = ((Dim2pathgeneratorPlacement*)def)->unk7;
+        *(u8*)((char*)np + 4) = ((Dim2pathgeneratorPlacement*)def)->colorR;
+        *(u8*)((char*)np + 6) = ((Dim2pathgeneratorPlacement*)def)->colorB;
+        *(u8*)((char*)np + 5) = ((Dim2pathgeneratorPlacement*)def)->colorG;
+        *(u8*)((char*)np + 7) = ((Dim2pathgeneratorPlacement*)def)->colorA;
         *(u8*)((char*)np + 7) = 255;
         *(u8*)((char*)np + 3) = ((Dim2pathgeneratorPlacement*)def)->unk3;
         *(s8*)((char*)np + 0x18) = (s8) * (u8*)((char*)def + 0x1c);
