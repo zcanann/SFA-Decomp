@@ -1586,7 +1586,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* 
     return curve;
 }
 
-void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
+void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 {
     f32 dx;
     f32 dy;
