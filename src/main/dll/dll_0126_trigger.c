@@ -524,7 +524,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 case 0x21:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x1fff;
-                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13)));
+                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13 & 7)));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
