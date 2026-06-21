@@ -195,8 +195,9 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     object = (GameObject*)obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
     {
+        sum0 = lbl_803E0668;
         count = 0;
-        sum3 = sum2 = sum1 = sum0 = lbl_803E0668;
+        sum3 = sum2 = sum1 = sum0;
         for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
