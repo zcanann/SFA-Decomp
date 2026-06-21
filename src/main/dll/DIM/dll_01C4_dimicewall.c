@@ -38,7 +38,7 @@ void dimicewall_init(int obj, s8* p)
     *(s8*)(inner + 0) = (s8) * (s16*)(p + 0x1a);
     if (((DimicewallPlacement*)p)->shatterGameBit != -1)
     {
-        ((DimicewallState*)inner)->unk1 = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
+        ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->objectFlags |= 0x4000;
@@ -60,7 +60,7 @@ void dimicewall_update(int* obj)
     int* extra = ((GameObject*)obj)->extra;
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-    if (((DimicewallState*)extra)->unk1 == 0)
+    if (((DimicewallState*)extra)->shattered == 0)
     {
         if (*(s8*)extra <= 0)
         {
@@ -96,7 +96,7 @@ void dimicewall_update(int* obj)
             {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
-            ((DimicewallState*)extra)->unk1 = 1;
+            ((DimicewallState*)extra)->shattered = 1;
             if (((DimicewallPlacement*)def)->shatterGameBit != -1)
             {
                 GameBit_Set(((DimicewallPlacement*)def)->shatterGameBit, 1);
