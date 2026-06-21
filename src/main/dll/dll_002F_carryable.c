@@ -176,8 +176,8 @@ int Carryable_updateHeld(u8* obj)
         if (((GameObject*)obj)->unkF8 == 0)
         {
             int cnt, i, j;
-            f32** p;
             u8* hit;
+            f32** p;
             ObjHits_SyncObjectPositionIfDirty(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
