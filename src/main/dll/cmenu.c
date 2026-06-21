@@ -708,7 +708,6 @@ void cMenuRotateFn_80124d80(void)
     s16 r;
     int t1;
     int t5;
-    int tmp;
     s16 best;
 
     step = (s16)(lbl_803DD79A * (framesThisStep * 1000));
@@ -793,42 +792,10 @@ void cMenuRotateFn_80124d80(void)
         {
             d3 = (s16)(d3 + 0xFFFF);
         }
-        t5 = d2;
-        if (t5 < 0)
-        {
-            t5 = -t5;
-        }
-        t1 = d1;
-        if (t1 < 0)
-        {
-            t1 = -t1;
-        }
-        if (t1 < t5)
-        {
-            tmp = d1;
-            if (d1 < 0)
-            {
-                tmp = -d1;
-            }
-        }
-        else
-        {
-            tmp = d2;
-            if (d2 < 0)
-            {
-                tmp = -d2;
-            }
-        }
-        best = tmp;
-        t1 = d3;
-        if (t1 < 0)
-        {
-            t1 = -t1;
-        }
-        if (best >= t1 && (best = d3, d3 < 0))
-        {
-            best = -d3;
-        }
+        best = ((d2 < 0 ? -d2 : d2) < (d1 < 0 ? -d1 : d1))
+                   ? (d2 < 0 ? -d2 : d2)
+                   : (d1 < 0 ? -d1 : d1);
+        best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
         r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
         lbl_803DD8D4 = (r > 0) ? r : 0;
     }
@@ -867,42 +834,10 @@ void cMenuRotateFn_80124d80(void)
     {
         d3 = (s16)(d3 + 0xFFFF);
     }
-    t5 = d2;
-    if (t5 < 0)
-    {
-        t5 = -t5;
-    }
-    t1 = d1;
-    if (t1 < 0)
-    {
-        t1 = -t1;
-    }
-    if (t1 < t5)
-    {
-        tmp = d1;
-        if (d1 < 0)
-        {
-            tmp = -d1;
-        }
-    }
-    else
-    {
-        tmp = d2;
-        if (d2 < 0)
-        {
-            tmp = -d2;
-        }
-    }
-    best = tmp;
-    t1 = d3;
-    if (t1 < 0)
-    {
-        t1 = -t1;
-    }
-    if (best >= t1 && (best = d3, d3 < 0))
-    {
-        best = -d3;
-    }
+    best = ((d2 < 0 ? -d2 : d2) < (d1 < 0 ? -d1 : d1))
+               ? (d2 < 0 ? -d2 : d2)
+               : (d1 < 0 ? -d1 : d1);
+    best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
     r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
     lbl_803DD8D4 = (r > 0) ? r : 0;
 }
