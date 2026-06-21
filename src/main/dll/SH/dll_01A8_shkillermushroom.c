@@ -20,7 +20,7 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 
 extern f32 gKillerMushroomRiseStepEpsilon;
-extern f32 lbl_803E52FC;
+extern const f32 lbl_803E52FC;
 extern f32 lbl_803E5300;
 extern f32 lbl_803E5304;
 
