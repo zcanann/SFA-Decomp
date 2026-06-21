@@ -2588,6 +2588,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
 
 #pragma opt_propagation off
 #pragma opt_strength_reduction off
+#pragma opt_loop_invariants off
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
@@ -3135,6 +3136,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
     return 0;
 }
+#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 
