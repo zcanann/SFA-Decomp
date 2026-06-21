@@ -433,7 +433,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
 {
     u8 flags;
     float animRate;
-    float fVar3;
+    float timerValue;
     int tableOff;
     short* subObj;
     u32 animIdx;
@@ -445,7 +445,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     u64 handle;
 
     handle = FUN_80286840();
-    fVar3 = lbl_803E33D8;
+    timerValue = lbl_803E33D8;
     subObj = (short*)((u64)handle >> 0x20);
     obj = (int)handle;
     animTable = (&PTR_DAT_8031fdc4)[(u32) * (u8*)(obj + 0x33b) * 10];
@@ -489,7 +489,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
         }
         *(float*)(obj + 0x324) = (float)(param_2 - (double)lbl_803DC074);
         if (dVar10 < (double)*(float*)(obj + 0x324)) goto LAB_80150818;
-        *(float*)(obj + 0x324) = fVar3;
+        *(float*)(obj + 0x324) = timerValue;
     }
     if ((((((param_11 & 0xff) == 0) || (*(char*)(obj + 0x2f1) == '\0')) ||
             (animTable[animIdx * 0xc + 8] == '\0')) && ((*(u8*)(obj + 0x2f1) & 0x20) == 0)) ||
@@ -537,9 +537,9 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     else
     {
         animEntry = (float*)(animTable + animIdx * 0xc);
-        fVar3 = lbl_803E33E4 * (float)(rate * (double)*animEntry);
-        *(float*)(obj + 0x330) = fVar3;
-        *(float*)(obj + 0x32c) = fVar3;
+        timerValue = lbl_803E33E4 * (float)(rate * (double)*animEntry);
+        *(float*)(obj + 0x330) = timerValue;
+        *(float*)(obj + 0x32c) = timerValue;
         *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) | 0x40;
         *(u8*)(obj + 0x2f2) = *(u8*)(obj + 0x2f2) | 0x80;
         *(u8*)(obj + 0x2f3) = 0;
