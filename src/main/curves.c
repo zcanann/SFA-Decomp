@@ -133,6 +133,7 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
     f32* lengths = &curve->totalLen;
     f32 step = dt * timeDelta;
     f32 zero;
+    f32 c;
     f32 base, frac, t;
 
     if (step > lbl_803DE658)
@@ -251,9 +252,10 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                     {
                         curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
                     }
-                    curve->t = zero;
+                    c = lbl_803DE658;
+                    curve->t = c;
                     curve->segmentDistance = -lengths[1];
-                    curve->pathDistance = zero;
+                    curve->pathDistance = c;
                     curve->idx = 0;
                     return 1;
                 }
