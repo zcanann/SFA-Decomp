@@ -484,8 +484,11 @@ void gunpowderbarrel_hitDetect(int obj)
     {
         return;
     }
-    if (fn_80080150(&state->releaseTimer) != 0)
+    switch (fn_80080150(&state->releaseTimer))
     {
+    case 0:
+        break;
+    default:
         return;
     }
 
