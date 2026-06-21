@@ -52,7 +52,7 @@ static inline float int_float(s32 value)
 
 static inline float int_float_wide(s32 value)
 {
-    return (float)(double)value;
+    return (float)value;
 }
 
 static inline int classify_float(float value)
