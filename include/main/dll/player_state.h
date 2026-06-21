@@ -67,8 +67,8 @@ typedef struct PlayerState {
     f32 yawSmoothRate;       /* curve3 sample (@paramCurve3); 1/this = the interpolate() rate easing applied yaw toward targetYaw */
     f32 yawRateLimit;        /* curve4 sample (@paramCurve4); * timeDelta bounds the per-frame applied-yaw delta */
     f32 velSmoothRate;       /* curve0 sample (@paramCurve0); the interpolate() rate easing smoothVelX/Z toward maxSpeed*sin/cos(heading) */
-    f32 unk43C;
-    f32 unk440;
+    f32 waterCurrentVelA; /* smoothed local-space water-current velocity (interpolate toward playerCalcWaterCurrent rotated by yaw); added to baddie.animSpeedA when flag 0x3f0:b20 set */
+    f32 waterCurrentVelB; /* smoothed local-space water-current velocity component; added to baddie.animSpeedB when flag 0x3f0:b20 set */
     f32 unk444;
     f32 unk448;
     u8 pad44C[0x450 - 0x44C];

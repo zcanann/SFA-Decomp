@@ -10954,8 +10954,8 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
         f30v = ((PlayerState*)state)->baddie.animSpeedB;
         if (((ByteFlags*)((char*)b + 0x3f0))->b20)
         {
-            f31v = f31v + ((PlayerState*)b)->unk43C;
-            f30v = f30v + ((PlayerState*)b)->unk440;
+            f31v = f31v + ((PlayerState*)b)->waterCurrentVelA;
+            f30v = f30v + ((PlayerState*)b)->waterCurrentVelB;
         }
         v.angles[0] = ((PlayerState*)b)->yaw;
         v.angles[1] = 0;
@@ -11669,8 +11669,8 @@ void fn_802AE83C(int obj, int inner)
     ((ByteFlags*)((char*)inner + 0x3f0))->b20 = 1;
     ((ByteFlags*)((char*)inner + 0x3f0))->b10 = 0;
     z = lbl_803E7EA4;
-    ((PlayerState*)inner)->unk440 = z;
-    ((PlayerState*)inner)->unk43C = z;
+    ((PlayerState*)inner)->waterCurrentVelB = z;
+    ((PlayerState*)inner)->waterCurrentVelA = z;
     Sfx_StopFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? 0x2d0 : 0x26));
 
     if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -16755,12 +16755,12 @@ void fn_802ADE80(int obj, int inner, int state)
         f32 cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 a = -waterZ * sinv - waterX * cosv;
-        ((PlayerState*)inner)->unk440 =
-            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->unk440)) +
-            ((PlayerState*)inner)->unk440;
-        ((PlayerState*)inner)->unk43C =
-            timeDelta * (lbl_803E7EFC * (a - ((PlayerState*)inner)->unk43C)) +
-            ((PlayerState*)inner)->unk43C;
+        ((PlayerState*)inner)->waterCurrentVelB =
+            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB)) +
+            ((PlayerState*)inner)->waterCurrentVelB;
+        ((PlayerState*)inner)->waterCurrentVelA =
+            timeDelta * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA)) +
+            ((PlayerState*)inner)->waterCurrentVelA;
     }
     playEffect = 0;
     if (((PlayerState*)state)->baddie.controlMode == 1)
