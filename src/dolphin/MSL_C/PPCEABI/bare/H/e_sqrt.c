@@ -88,8 +88,8 @@ float powfCoreHighPrecision(float x, float y) {
 }
 
 float powfCoreFast(float x, register float y) {
-    register float expf;
-    register float scalef;
+    float scalef;
+    float expf;
     register u32 ix;
     register int ysign;
     float result;
