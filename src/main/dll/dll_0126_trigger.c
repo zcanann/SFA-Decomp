@@ -863,23 +863,24 @@ void Trigger_hitDetect(int obj)
                 {
                     if ((*state & 0x40) != 0)
                     {
-                        if ((s8)def[0x43] == 2)
+                        switch (def[0x43])
                         {
+                        case 2:
                             ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.worldPosX;
                             ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.worldPosY;
                             ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.worldPosZ;
-                        }
-                        else if ((s8)def[0x43] < 2)
-                        {
+                            break;
+                        case 0:
+                        case 1:
                             ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousWorldPosX;
                             ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousWorldPosY;
                             ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousWorldPosZ;
-                        }
-                        else
-                        {
+                            break;
+                        default:
                             ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousLocalPosX;
                             ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousLocalPosY;
                             ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousLocalPosZ;
+                            break;
                         }
                         *state &= ~0x40;
                     }
@@ -889,17 +890,20 @@ void Trigger_hitDetect(int obj)
                         ((TriggerState*)state)->targetPosY = ((TriggerState*)state)->prevTargetPosY;
                         ((TriggerState*)state)->targetPosZ = ((TriggerState*)state)->prevTargetPosZ;
                     }
-                    if ((s8)def[0x43] < 3)
+                    switch (def[0x43])
                     {
+                    case 0:
+                    case 1:
+                    case 2:
                         ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.worldPosX;
                         ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.worldPosY;
                         ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.worldPosZ;
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.localPosX;
                         ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.localPosY;
                         ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.localPosZ;
+                        break;
                     }
                 }
                 switch (*(s16*)def)
