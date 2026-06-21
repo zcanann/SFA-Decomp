@@ -162,7 +162,7 @@ void wcfloortile_update(int obj)
                 }
                 t = t * lbl_803E6EB0;
             }
-            objAnim->alpha = t;
+            objAnim->alpha = (u8)(int)t;
         }
         if (objAnim->alpha == 0)
         {
