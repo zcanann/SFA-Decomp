@@ -241,6 +241,7 @@ typedef struct VoicePrioBlockRec
     VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
 } VoicePrioBlockRec;
 
+#pragma optimization_level 2
 void voiceRemovePriority(int state)
 {
     McmdVoiceState* s = (McmdVoiceState*)state;
@@ -287,3 +288,4 @@ void voiceRemovePriority(int state)
     }
     vps->user = 0;
 }
+#pragma optimization_level reset
