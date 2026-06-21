@@ -2397,6 +2397,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     int i;
     int j;
     int texIdx;
+    int ct;
     u8 hudHidden;
     u8 cr;
     u8 cg;
@@ -2453,14 +2454,15 @@ int snowPrintSnowCloud(int arg, int cloudId)
     mtxB[5] = lbl_803DF1A4;
     mtxB[10] = lbl_803DF1A4;
     mtxB[15] = lbl_803DF1A4;
-    if (((NewCloud*)p)->cloudType != 4 && p[0x1451] != 0)
+    ct = ((NewCloud*)p)->cloudType;
+    if (ct != 4 && p[0x1451] != 0)
     {
         mtxB[0] = mathCosf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[1] = -mathSinf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[4] = mathSinf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[5] = mathCosf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
     }
-    else if (((NewCloud*)p)->cloudType == 4)
+    else if (ct == 4)
     {
         if (p[0x144a] & 0x80)
         {
