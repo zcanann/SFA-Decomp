@@ -1135,8 +1135,8 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     f32 mtex[12];
     f32 m3[12];
     _IndMtx indmtx;
-    GXColor chanCol;
     int tex2;
+    GXColor chanCol;
     void *op, *layer, *tex0;
     f32 sval;
 
