@@ -1380,23 +1380,25 @@ int ktrex_stateHandlerA02(int obj, int runtime)
     if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
     {
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~0x40;
-        if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
         {
             u8 result;
-            if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
+            if ((((KTRexArenaState*)gKTRexState)->unkFE & ((KTRexArenaState*)gKTRexState)->unkFF) != 0)
             {
-                if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
+                if ((((KTRexArenaState*)gKTRexState)->timerFA & 1) != 0)
                 {
-                    result = 1;
-                    goto haveResult;
+                    if (((KTRexArenaState*)gKTRexState)->unk8 - ((KTRexArenaState*)gKTRexState)->unkF4 > lbl_803E67B4)
+                    {
+                        result = 1;
+                        goto haveResult;
+                    }
                 }
-            }
-            else
-            {
-                if (((KTRexArenaState*)gKTRexState)->unkF4 - ((KTRexArenaState*)gKTRexState)->unk8 > lbl_803E67B4)
+                else
                 {
-                    result = 1;
-                    goto haveResult;
+                    if (((KTRexArenaState*)gKTRexState)->unkF4 - ((KTRexArenaState*)gKTRexState)->unk8 > lbl_803E67B4)
+                    {
+                        result = 1;
+                        goto haveResult;
+                    }
                 }
             }
             result = 0;
