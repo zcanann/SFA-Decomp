@@ -403,7 +403,7 @@ void trickyFlame(int p1, int p2)
 #pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 {
-    int target = (int)trickyState->guardTarget;
+    u32 target = (u32)trickyState->guardTarget;
     int count;
     int* list;
     int i;
@@ -411,7 +411,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     list = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++)
     {
-        if (*list == target)
+        if ((u32)*list == target)
         {
             return 1;
         }
