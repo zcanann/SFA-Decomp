@@ -401,11 +401,15 @@ void groundanimator_update(int* obj)
     int inner;
     int foff;
     int hoff;
+    int foffEntry;
+    int hoffEntry;
+    int foffVtx;
+    int hoffVtx;
     u8 oldbit;
     u8 allow;
     void* tricky;
     f32 nd;
-    f32 vbuf[2];
+    f32 vbuf[3];
     Obj_GetPlayerObject();
     g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r20 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
@@ -547,20 +551,28 @@ void groundanimator_update(int* obj)
             for (blkIdx = 0; blkIdx < g->entryCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
+                foffEntry = foff;
+                hoffEntry = hoff;
                 for (mid = *(u16*)entry; mid < *(u16*)((char*)entry + 0x14); mid++)
                 {
                     vtx = fn_800606DC(block, mid);
+                    foffVtx = foffEntry;
+                    hoffVtx = hoffEntry;
                     for (inner = 0; inner < 3; inner++)
                     {
-                        if (*(f32*)((char*)g->falloffBuf + foff) > lbl_803E3FB0)
+                        if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0)
                         {
                             void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
-                            fn_800605F0(cell, &vbuf[1]);
-                            vbuf[0] = (f32) * (s16*)((char*)g->heightBuf + hoff) -
+                            fn_800605F0(cell, vbuf);
+                            vbuf[1] = (f32) * (s16*)((char*)g->heightBuf + hoffVtx) -
                                 (g->lastDepth / lbl_803E3F98) *
-                                *(f32*)((char*)g->falloffBuf + foff);
-                            fn_8006058C(cell, &vbuf[1]);
+                                *(f32*)((char*)g->falloffBuf + foffVtx);
+                            fn_8006058C(cell, vbuf);
                         }
+                        foffVtx += 4;
+                        hoffVtx += 2;
+                        foffEntry += 4;
+                        hoffEntry += 2;
                         foff += 4;
                         hoff += 2;
                         vtx = (char*)vtx + 2;
@@ -571,13 +583,14 @@ void groundanimator_update(int* obj)
                                ((MapBlockData*)block)->unk90 * 6);
         }
     }
-    if (((GroundanimatorPlacement*)r20)->enableGameBit == -1)
+    if (((GroundanimatorPlacement*)r20)->enableGameBit == -1 ||
+        GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) != 0)
     {
         allow = 1;
     }
     else
     {
-        allow = GameBit_Get(((GroundanimatorPlacement*)r20)->enableGameBit) ? 1 : 0;
+        allow = 0;
     }
     if ((g->flags & 2) == 0 && allow != 0)
     {
