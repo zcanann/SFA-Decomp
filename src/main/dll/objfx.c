@@ -348,7 +348,10 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
         }
         params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
         vecRotateZXY(rvec, params.vec);
-        params.vec[1] = (f29 - lbl_803DF358) * hi;
+        {
+            f32 t = f29 - lbl_803DF358;
+            params.vec[1] = t * hi;
+        }
         if (origin != NULL)
         {
             params.vec[0] += ((GameObject*)origin)->anim.localPosX;
