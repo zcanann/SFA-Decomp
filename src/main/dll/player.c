@@ -105,7 +105,7 @@ int fn_80295C0C(int obj)
 int fn_80295C24(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->unk87C > lbl_803E7EA4;
+    return inner->targetSuppressTimer > lbl_803E7EA4;
 }
 
 int fn_80295C40(int obj)
@@ -4561,7 +4561,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                if (((PlayerState*)p2)->unk878 <= lbl_803E7EA4)
+                if (((PlayerState*)p2)->particleBurstCooldown <= lbl_803E7EA4)
                 {
                     for (k = 0; k < 0x4b; k++)
                     {
@@ -4580,7 +4580,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void* out, f32 fv, u32 mask)
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
                                                          -1, NULL);
                     }
-                    ((PlayerState*)p2)->unk878 = lbl_803E7F30;
+                    ((PlayerState*)p2)->particleBurstCooldown = lbl_803E7F30;
                 }
             }
             else
@@ -9621,7 +9621,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     ((ByteFlags*)((char*)inner + 0x3f2))->b80 = 0;
     if (((ByteFlags*)((char*)inner + 0x3f2))->b40)
     {
-        inner->unk87C = lbl_803E7FBC;
+        inner->targetSuppressTimer = lbl_803E7FBC;
     }
     ((ByteFlags*)((char*)inner + 0x3f2))->b40 = 0;
     ((ByteFlags*)((char*)inner + 0x3f2))->b20 = 0;
@@ -10893,15 +10893,15 @@ void fn_802B18BC(int obj, int state, f32 fv)
     {
         ((PlayerState*)state)->rumbleCooldown = *(f32*)&lbl_803E7EA4;
     }
-    ((PlayerState*)state)->unk878 -= fv;
-    if (((PlayerState*)state)->unk878 < lbl_803E7EA4)
+    ((PlayerState*)state)->particleBurstCooldown -= fv;
+    if (((PlayerState*)state)->particleBurstCooldown < lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk878 = *(f32*)&lbl_803E7EA4;
+        ((PlayerState*)state)->particleBurstCooldown = *(f32*)&lbl_803E7EA4;
     }
-    ((PlayerState*)state)->unk87C -= fv;
-    if (((PlayerState*)state)->unk87C < lbl_803E7EA4)
+    ((PlayerState*)state)->targetSuppressTimer -= fv;
+    if (((PlayerState*)state)->targetSuppressTimer < lbl_803E7EA4)
     {
-        ((PlayerState*)state)->unk87C = *(f32*)&lbl_803E7EA4;
+        ((PlayerState*)state)->targetSuppressTimer = *(f32*)&lbl_803E7EA4;
     }
     ((PlayerState*)state)->idleDelayTimer -= fv;
     if (((PlayerState*)state)->idleDelayTimer < lbl_803E7EA4)
