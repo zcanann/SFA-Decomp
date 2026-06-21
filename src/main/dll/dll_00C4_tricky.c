@@ -2696,7 +2696,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     }
 }
 
-void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
+void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
 {
     u8 mode;
     int i;
@@ -2708,7 +2708,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
     if (doRender != '\0')
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E23E8);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E23E8);
         pathState = *(int*)&((GameObject*)obj)->extra;
         i = 0;
         pathPoint = pathState;
@@ -2747,7 +2747,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->unk40C;
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->unk410;
                 }
-                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, param_2, param_3, param_4, param_5,
+                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5,
                                      lbl_803E23E8);
             }
         }
