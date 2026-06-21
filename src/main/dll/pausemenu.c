@@ -724,9 +724,6 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
 void fn_80127F24(s32 alpha)
 {
-    f32 baseSub;
-    f32 baseAdd;
-    f32 denom;
     f32 phase;
     f32 brightness;
     s8 i;
@@ -749,23 +746,16 @@ void fn_80127F24(s32 alpha)
     }
 
     brightness = lbl_803E20C4 - phase * lbl_803E1E6C;
-    denom = lbl_803E2090;
-    baseAdd = lbl_803E20C8;
-    baseSub = lbl_803E20D0;
     for (i = 10; i >= 0; i -= 10)
     {
-        f32 off = phase * (denom - (f32)(s32)(s8)
-        i
-        )
-        /
-        denom;
+        f32 off = phase * (40.0f - (f32)(s32)(s8)i) / 40.0f;
         s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                             baseAdd + off, lbl_803E20CC,
+                             595.0f + off, lbl_803E20CC,
                              x = (s16)((0xff - i) - lbl_803DD75C),
                              alpha, (s32)(f64)brightness, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                             baseSub - off, lbl_803E20CC,
+                             27.0f - off, lbl_803E20CC,
                              x,
                              alpha, (s32)(f64)brightness, 0);
     }
