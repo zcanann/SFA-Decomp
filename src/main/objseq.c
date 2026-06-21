@@ -4480,29 +4480,24 @@ void objSeq_onMapSetup(void)
         }
     }
 
-    base = lbl_80396918;
     {
-        u8* byteBase = base + i;
-        s16* modes2 = (s16*)(base + i * 2 + 0x3a98);
-        int* handles2 = (int*)(base + i * 4 + 0x33e4);
-        u8* marks2 = byteBase + 0x338c;
         for (; i < 0x55; i++)
         {
-            *(marks2 + (0x3b9c - 0x338c)) = 0;
-            *(marks2 + (0x3b44 - 0x338c)) = 0;
-            modes2[0] = 0;
-            *(marks2 + (0x3c4c - 0x338c)) = 0;
-            *(marks2 + (0x3bf4 - 0x338c)) = 0;
-            *(marks2 + (0x3a40 - 0x338c)) = 0;
-            *(marks2 + (0x39e8 - 0x338c)) = 0;
-            *(f32*)((u8*)handles2 + (0x3894 - 0x33e4)) = lbl_803DEFB0;
-            *(f32*)((u8*)handles2 + (0x3740 - 0x33e4)) = lbl_803DEFF0;
-            *(marks2 + (0x3590 - 0x338c)) = 0;
-            handles2[0] = 0;
-            marks2[0] = 0;
-            modes2++;
-            handles2++;
-            marks2++;
+            u8* marks2 = base + i;
+            u8* handles2 = base + i * 4;
+            s16* modes2 = (s16*)(base + i * 2);
+            marks2[0x3b9c] = 0;
+            marks2[0x3b44] = 0;
+            modes2[0x3a98 / 2] = 0;
+            marks2[0x3c4c] = 0;
+            marks2[0x3bf4] = 0;
+            marks2[0x3a40] = 0;
+            marks2[0x39e8] = 0;
+            *(f32*)(handles2 + 0x3894) = lbl_803DEFB0;
+            *(f32*)(handles2 + 0x3740) = lbl_803DEFF0;
+            marks2[0x3590] = 0;
+            *(int*)(handles2 + 0x33e4) = 0;
+            marks2[0x338c] = 0;
         }
     }
 
