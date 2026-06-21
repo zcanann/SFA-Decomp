@@ -431,7 +431,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
 static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
 {
     u8* state = ((GameObject*)obj)->extra;
-    if (((((TrickyState*)state)->statusFlags >> 6) & 1) == 0u &&
+    if (((((TrickyState*)((GameObject*)obj)->extra)->statusFlags >> 6) & 1) == 0u &&
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))
     {
