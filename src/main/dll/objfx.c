@@ -976,7 +976,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
     params.pad[2] = 0;
     params.pad[1] = 0;
     params.f6 = 0xc0a;
-    switch (type)
+    switch (type & 0xff)
     {
     case 1:
         params.vec[0] = scale * randomGetRange(-10, 10);
