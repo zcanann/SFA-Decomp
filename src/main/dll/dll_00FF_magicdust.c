@@ -361,11 +361,10 @@ void magicdust_init(int obj, int placement)
             ObjHits_DisableObject(obj);
         }
         ref = (int)Obj_GetPlayerObject();
-        chaseTime = lbl_803E34F4;
         ((GameObject*)obj)->anim.velocityX =
             (((GameObject*)ref)->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
-        ((GameObject*)obj)->anim.velocityY = (((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / chaseTime;
-        ((GameObject*)obj)->anim.velocityZ = (((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
+        ((GameObject*)obj)->anim.velocityY = (((GameObject*)ref)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) / lbl_803E34F4;
+        ((GameObject*)obj)->anim.velocityZ = (((GameObject*)ref)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / lbl_803E34F4;
     }
     else if (mode == 3)
     {
