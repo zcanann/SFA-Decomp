@@ -46,7 +46,7 @@ typedef struct SmallbasketState
 {
     u8 pad0[0x5 - 0x0];
     s8 carryState;
-    s8 unk6;
+    s8 carryAttached;
     u8 pad7[0x9 - 0x7];
     s8 throwState;
     u8 padA[0x14 - 0xA];
@@ -644,7 +644,7 @@ void objThrowFn_80182504(int obj)
     short* player;
     extra = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    ((SmallbasketState*)extra)->unk6 = 0;
+    ((SmallbasketState*)extra)->carryAttached = 0;
     ((SmallbasketState*)extra)->carryState = 0;
     ((SmallbasketState*)extra)->throwState = 1;
     ((GameObject*)obj)->anim.velocityY = lbl_803E3958;
@@ -914,7 +914,7 @@ void smallbasket_update(int obj)
                 ((CfperchState*)state)->carryState = flag;
                 if (((CfperchState*)state)->carryState != 0)
                 {
-                    ((CfperchState*)state)->unk6 = 1;
+                    ((CfperchState*)state)->carryAttached = 1;
                 }
                 if (((GameObject*)obj)->unkF8 == 0)
                 {
@@ -948,7 +948,7 @@ void smallbasket_update(int obj)
                 {
                     if (fn_80295BF0(player) != 0)
                     {
-                        ((CfperchState*)state)->unk6 = 0;
+                        ((CfperchState*)state)->carryAttached = 0;
                         buttonDisable(0, 0x100);
                     }
                     else
@@ -1010,11 +1010,11 @@ void smallbasket_update(int obj)
                         blk.h0 = ((GameObject*)player)->anim.rotX;
                         vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
-                        ((CfperchState*)state)->unk6 = 0;
+                        ((CfperchState*)state)->carryAttached = 0;
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                     }
                 }
-                if (*(s8*)&((CfperchState*)state)->unk6 != 0)
+                if (*(s8*)&((CfperchState*)state)->carryAttached != 0)
                 {
                     ((CfperchState*)state)->disableTimer = 0;
                     ((CfperchState*)state)->hiddenTimer = 0;
