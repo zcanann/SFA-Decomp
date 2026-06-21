@@ -1100,15 +1100,13 @@ void andross_update(int obj)
         {
             switch (((AndrossState*)state)->actionState)
             {
+            default:
+            case 0xb:
             case 0xc:
                 ((AndrossState*)state)->actionState = 0xc;
                 break;
             case 0xd:
                 ((AndrossState*)state)->actionState = 0xe;
-                break;
-            case 0xb:
-            default:
-                ((AndrossState*)state)->actionState = 0xc;
                 break;
             }
         }
