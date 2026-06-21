@@ -1434,7 +1434,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
     extern int Stack_IsFull(int sp);
     extern void Stack_Push(int sp, int* args);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern int Obj_GetYawDeltaToObject(int, int, f32*);
+    extern s16 Obj_GetYawDeltaToObject(int, int, f32*);
     extern f32 lbl_803E6310;
     extern f32 lbl_803E6314;
     extern f32 lbl_803E6318;
