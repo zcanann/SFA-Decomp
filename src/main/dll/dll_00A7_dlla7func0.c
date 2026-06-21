@@ -23,7 +23,7 @@ typedef struct
     u32 mode; /* +0x00 */
     f32 x, y, z; /* +0x04 +0x08 +0x0c */
     void* tex; /* +0x10 */
-    u16 flags; /* +0x14 */
+    s16 flags; /* +0x14 */
     u8 layer; /* +0x16 */
 } GfxCmd;
 
