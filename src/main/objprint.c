@@ -3234,7 +3234,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     }
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
-    fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
+    fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
