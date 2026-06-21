@@ -123,9 +123,9 @@ void player_render2(s16* obj, int* state, f32 f1, f32 f2)
         if (delta > lbl_803E0570)
         {
             *obj += (s16)(((BaddieState*)state)->unk300 * delta);
+            ((BaddieState*)state)->unk2A8 = new_;
         }
     }
-    ((BaddieState*)state)->unk2A8 = new_;
 }
 
 void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
