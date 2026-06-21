@@ -454,13 +454,13 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                     if (*(s16*)(def + 0x20) != -1)
                     {
                         GameBit_Set(*(s16*)(def + 0x20),
-                                    (u8)((u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c)));
+                                    (u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c));
                     }
                 }
                 else if (*(s16*)(def + 0x1a) != -1)
                 {
                     GameBit_Set(*(s16*)(def + 0x1a),
-                                (u8)((u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8)));
+                                (u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8));
                 }
                 if (sd <= lbl_803E3648)
                 {
@@ -518,13 +518,13 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                     if (*(s16*)(def + 0x20) != -1)
                     {
                         GameBit_Set(*(s16*)(def + 0x20),
-                                    (u8)((u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c)));
+                                    (u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c));
                     }
                 }
                 else if (*(s16*)(def + 0x1a) != -1)
                 {
                     GameBit_Set(*(s16*)(def + 0x1a),
-                                (u8)((u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8)));
+                                (u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8));
                 }
                 switch (((GameObject*)obj)->anim.seqId)
                 {
