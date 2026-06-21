@@ -2294,7 +2294,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 gb;
     u8 e;
     u32 j2;
-    u16 pairId;
+    int pairId;
     u8 found;
     int searchCount;
     ObjfsaWalkGroup* wg;
