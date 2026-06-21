@@ -536,6 +536,7 @@ void padUpdate(void)
             *buttonMask = -1;
         }
 
+        readPad++;
         prevStickY++;
         prevStickX++;
         repeatY++;
@@ -550,9 +551,8 @@ void padUpdate(void)
         triggers++;
         triggersReleased++;
         triggersPressed++;
-        readPad++;
-        prevPad++;
         statuses++;
+        prevPad++;
         buttonMask++;
     }
 
