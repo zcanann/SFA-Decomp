@@ -11136,7 +11136,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 {
                     n = 0;
                 }
-                else if (p[1] < n)
+                else if (n > p[1])
                 {
                     n = p[1];
                 }
