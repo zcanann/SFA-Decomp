@@ -118,19 +118,23 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
             edgeOffset = triangleOffset;
             for (; triangle < blockEnd; triangle++)
             {
+                int o6;
+                int o12;
                 mapBlock = fn_800606DC((int*)block, triangle);
                 vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32) * mapBlock * 6);
                 *(s16*)(state->dataBuffer + edgeOffset) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset + 4) = vtx->z;
+                o6 = edgeOffset + 6;
                 vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[1] * 6);
-                *(s16*)(state->dataBuffer + edgeOffset + 6) = vtx->x;
-                *(s16*)(state->dataBuffer + edgeOffset + 8) = vtx->y;
-                *(s16*)(state->dataBuffer + edgeOffset + 10) = vtx->z;
+                *(s16*)(state->dataBuffer + o6) = vtx->x;
+                *(s16*)(state->dataBuffer + o6 + 2) = vtx->y;
+                *(s16*)(state->dataBuffer + o6 + 4) = vtx->z;
+                o12 = o6 + 6;
                 vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[2] * 6);
-                *(s16*)(state->dataBuffer + edgeOffset + 0xc) = vtx->x;
-                *(s16*)(state->dataBuffer + edgeOffset + 0xe) = vtx->y;
-                *(s16*)(state->dataBuffer + edgeOffset + 0x10) = vtx->z;
+                *(s16*)(state->dataBuffer + o12) = vtx->x;
+                *(s16*)(state->dataBuffer + o12 + 2) = vtx->y;
+                *(s16*)(state->dataBuffer + o12 + 4) = vtx->z;
                 edgeOffset += 0x12;
                 triangleOffset += 0x12;
             }
