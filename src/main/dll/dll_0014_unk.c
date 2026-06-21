@@ -3252,8 +3252,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                             done = 1;
                             *distWrite = queueDist[count];
                             distWrite++;
-                            results[found] = curve->linkIds[li];
-                            found++;
+                            results[found++] = curve->linkIds[li];
                         }
                         else
                         {
