@@ -385,7 +385,6 @@ void CameraModeCombat_update(short* cam)
                             {
                                 PSVECNormalize(vec, vec);
                             }
-                            speed = mag;
                             if (((CameraObject*)cam)->blendProgress <= lbl_803E18C4)
                             {
                                 fa = focus->anim.previousWorldPosX - focus->anim.worldPosX;
@@ -396,20 +395,19 @@ void CameraModeCombat_update(short* cam)
                                 {
                                     lim = lbl_803E1910;
                                 }
-                                speed = mag;
                                 if (mag < lbl_803E18C4)
                                 {
-                                    speed = lbl_803E18C4;
+                                    mag = lbl_803E18C4;
                                 }
                                 else if (mag > lim)
                                 {
-                                    speed = lim;
+                                    mag = lim;
                                 }
                             }
                             PSVECScale(vec, vec,
-                                       (speed < lbl_803E18C4)
+                                       (mag < lbl_803E18C4)
                                            ? lbl_803E18C4
-                                           : ((speed > lbl_803E18D0) ? lbl_803E18D0 : speed));
+                                           : ((mag > lbl_803E18D0) ? lbl_803E18D0 : mag));
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
                             camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
                                                  (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
