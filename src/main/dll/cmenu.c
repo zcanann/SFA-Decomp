@@ -251,6 +251,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
         itemMask = gTrickyHudItemMask;
         if (itemMask != -1)
         {
+            src = items;
             idsW = ids;
             aW = (s16*)(base + 0x5c8);
             cW = base + 0x508;
@@ -258,7 +259,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
             eW = base + 0x488;
             actionMask = gTrickyHudActionMask;
             yItem = yButtonItem;
-            for (src = items; *src > -1; src += 8)
+            for (; *src > -1; src += 8)
             {
                 if ((actionMask & *src) != 0)
                 {
