@@ -152,7 +152,6 @@ void dbegg_processMessages(int obj)
             case 17:
                 {
                     f32 buf[6];
-                    s16* hbuf = (s16*)buf;
                     f32 v;
                     ((GameObject*)obj)->anim.velocityX = *(f32*)(sub + 0x10c);
                     ((GameObject*)obj)->anim.velocityY = *(f32*)(sub + 0x110);
@@ -162,9 +161,9 @@ void dbegg_processMessages(int obj)
                     buf[4] = v;
                     buf[5] = v;
                     buf[2] = lbl_803E61CC;
-                    hbuf[2] = 0;
-                    hbuf[1] = 0;
-                    hbuf[0] = *(s16*)msgArg;
+                    ((s16*)buf)[2] = 0;
+                    ((s16*)buf)[1] = 0;
+                    ((s16*)buf)[0] = *(s16*)msgArg;
                     vecRotateZXY(buf, obj + 0x24);
                 }
             case 16:
