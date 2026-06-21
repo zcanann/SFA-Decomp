@@ -280,10 +280,11 @@ void cmbsrc_updateVisuals(int obj, int state)
     else
     {
         f32 fullRadius = lbl_803E7374 * setup->radius;
+        f32 radiusScaled;
         sourceState->radius += interpolate(
             sourceState->hitCharge / lbl_803E7378 *
-            (fullRadius - setup->radius * lbl_803E737C) +
-            setup->radius * lbl_803E737C - sourceState->radius,
+            (fullRadius - (radiusScaled = setup->radius * lbl_803E737C)) +
+            radiusScaled - sourceState->radius,
             lbl_803E7380, timeDelta);
     }
     dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
