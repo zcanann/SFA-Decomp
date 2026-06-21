@@ -563,8 +563,8 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->yawCurve.end = zero;
     lbl_803DD548->yawCurve.startTangent = zero;
     lbl_803DD548->yawCurve.endTangent = zero;
-    dx = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
-    if (dx > lbl_803E17C8 || dx < lbl_803E17CC)
+    if (lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end > lbl_803E17C8 ||
+        lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end < lbl_803E17CC)
     {
         if (lbl_803DD548->yawCurve.start < lbl_803E17C4)
         {
