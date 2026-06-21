@@ -178,7 +178,7 @@ void ecsh_cup_update(short* obj)
                 if (state->spawnTimer <= lbl_803E5068)
                 {
                     state->spawnTimer = lbl_803E506C;
-                    if (m != 3)
+                    if (mode != 3)
                     {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
                     }
