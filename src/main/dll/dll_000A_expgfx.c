@@ -2982,7 +2982,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
             f32 step;
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
+            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_BACKDATE_MOTION + 0LL);
             step = lbl_803DF41C * (f32)(s32)
             slot->lifetimeFrame;
             slot->posX.value = slot->velocityX * step + slot->posX.value;
@@ -3000,7 +3000,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             f32 distSq;
             f32 inv;
             playerObj = (GameObject*)Obj_GetPlayerObject();
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
+            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_AIM_AT_ACTOR + 0LL);
             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0)
             {
                 dx = playerObj->anim.worldPosX - slot->startPosX.value;
