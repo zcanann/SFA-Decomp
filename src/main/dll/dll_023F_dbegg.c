@@ -753,8 +753,8 @@ void dbegg_update(int obj)
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             if (randomGetRange(0, 10) == 0)
             {
-                int nb = h < lbl_803E6200;
-                nb = (nb < 0) ? -nb : nb;
+                int nb;
+                nb = ((h < lbl_803E6200) >= 0) ? (h < lbl_803E6200) : -(h < lbl_803E6200);
                 if (nb != 0)
                 {
                     ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
