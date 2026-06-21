@@ -1871,9 +1871,9 @@ void crawler_updateB(s16* obj, u8* state)
         {
             if (*(u8*)(state + 0x33f) != 0)
             {
-                i = *(u8*)(state + 0x33f) * 0x10;
-                Baddie_SetMove((int*)obj, state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
-                            *(int*)((char*)seq + i + 4) & 0xff);
+                Baddie_SetMove((int*)obj, state, seq[*(u8*)(state + 0x33f)].moveId,
+                            seq[*(u8*)(state + 0x33f)].spd, 0,
+                            seq[*(u8*)(state + 0x33f)].mask & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
                 ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
@@ -1944,9 +1944,9 @@ void crawler_updateB(s16* obj, u8* state)
             }
             if (*(u8*)(state + 0x33f) != 0)
             {
-                i = *(u8*)(state + 0x33f) * 0x10;
-                Baddie_SetMove((int*)obj, state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
-                            *(int*)((char*)seq + i + 4) & 0xff);
+                Baddie_SetMove((int*)obj, state, seq[*(u8*)(state + 0x33f)].moveId,
+                            seq[*(u8*)(state + 0x33f)].spd, 0,
+                            seq[*(u8*)(state + 0x33f)].mask & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
                 ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
