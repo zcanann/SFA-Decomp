@@ -4435,13 +4435,14 @@ void GameUI_update(void)
 
 void textureFreeFn_8012fcec(void)
 {
+    u8* base = lbl_803A87F0;
     u8 i;
 
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
     {
         int j = i;
-        void** tex = (void**)(lbl_803A87F0 + j * 4);
+        void** tex = (void**)(base + j * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {
