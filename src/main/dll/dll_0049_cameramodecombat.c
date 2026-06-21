@@ -340,7 +340,7 @@ void CameraModeCombat_update(short* cam)
                             }
                             else if (diff > -3000 && diff < 0)
                             {
-                                if (gCamCombatPrevYawDiff < -2999 || diff < -999 || diff <= gCamCombatPrevYawDiff)
+                                if (gCamCombatPrevYawDiff <= -3000 || diff <= -1000 || diff <= gCamCombatPrevYawDiff)
                                 {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
@@ -406,15 +406,10 @@ void CameraModeCombat_update(short* cam)
                                     speed = lim;
                                 }
                             }
-                            if (speed < lbl_803E18C4)
-                            {
-                                speed = lbl_803E18C4;
-                            }
-                            else if (speed > lbl_803E18D0)
-                            {
-                                speed = lbl_803E18D0;
-                            }
-                            PSVECScale(vec, vec, speed);
+                            PSVECScale(vec, vec,
+                                       (speed < lbl_803E18C4)
+                                           ? lbl_803E18C4
+                                           : ((speed > lbl_803E18D0) ? lbl_803E18D0 : speed));
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
                             camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
                                                  (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
