@@ -26,7 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
-extern f32 lbl_803E23DC;
+extern const f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E2410;
