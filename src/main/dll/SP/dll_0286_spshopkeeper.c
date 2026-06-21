@@ -269,7 +269,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
         if ((*gScreenTransitionInterface)->isFinished() != 0)
         {
             (*gScreenTransitionInterface)->step(0x1E, 1);
-            (*gObjectTriggerInterface)->endSequence((s8)seq->slot);
+            (*gObjectTriggerInterface)->endSequence(*(s8*)&seq->slot);
         }
         return 0;
     }
