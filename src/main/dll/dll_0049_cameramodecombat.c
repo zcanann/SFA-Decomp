@@ -364,8 +364,10 @@ void CameraModeCombat_update(short* cam)
                             zoom = (f32)(s32)(9000 - diff) / lbl_803E18E4;
                             step = interpolate(lbl_803E18E8 - gCamCombatState->heightOffset, lbl_803E18EC, timeDelta);
                             gCamCombatState->heightOffset = gCamCombatState->heightOffset + step;
+                            fb = lbl_803E18C0 - zoom;
+                            fb = lbl_803E18F0 + fb;
                             step = interpolate(
-                                (lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - gCamCombatState->zoomOffset,
+                                fb / lbl_803E18F4 - gCamCombatState->zoomOffset,
                                 lbl_803E18F8, timeDelta);
                             gCamCombatState->zoomOffset = gCamCombatState->zoomOffset + step;
                             c = mathSinf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
