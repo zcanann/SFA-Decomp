@@ -597,6 +597,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     base in a call-FREE fn it instead trades the 1-instr detour for a volatile-reg permutation —
     that's a DIFFERENT shape with its own clean form still to find, so keep the launder off there
     and hunt the volatile lever separately (dll_94/97/99 trio is the volatile shape).
+141. **2D-array stores emitting displacement `sth` where the target uses indexed `sthx` → NAMED
+    row-pointer reassigned per store + `#pragma opt_propagation off`.** When the target indexes every
+    store of a 2D array by column (`sthx`) but MWCC reassociates your address to `base+row+col+K` and
+    emits displacement `sth`, defeat the reassociation with a NAMED row pointer recomputed per store,
+    pinned by opt_propagation off:
+      #pragma opt_propagation off
+      fbrow = (u16*)((char*)base + (row + K)); *(u16*)((char*)fbrow + col) = v;
+      #pragma opt_propagation reset
+    The named var defeats the reassociation (a plain grouped-cast `(char*)((char*)base+(row+K))+col`
+    AND a cached `p = &row[0]` both re-fold back to `base+row+col+K`); opt_propagation off keeps
+    fbrow a real var so it isn't propagated/folded away → the stores flip to col-indexed `sthx`
+    (#112/#128 applied to 2D arrays). DISCRIMINATOR: opt_common_subs off does NOT raise the sthx
+    count here and collaterally un-CSEs other exprs (regresses); volatile and opt_loop_invariants
+    off are inert. (WorkerC: fn_80137DF8 89.86→90.81; the per-store global-pointer RE-READ in the
+    remaining tail is a separate shape still being mapped.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
