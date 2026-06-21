@@ -465,6 +465,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             {
                 s32 b14, b10, bc, b8;
                 char buf[0x50];
+                u8* tbl216;
                 gameTextFn_80016810(0x440, 0, 0x78);
                 gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
                 acc = (bc - b8) + 5;
@@ -475,8 +476,9 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 gameTextFn_80016810(0x441, 0, acc + 0x78);
                 gameTextFn_8001628c(0x441, 0, 0, &b14, &b10, &bc, &b8);
                 acc += bc - b8;
-                gameTextFn_80016810(*(s16*)(statusTable + lbl_803DD756 * 8 + 0x216), 0, acc + 0x78);
-                gameTextFn_8001628c(*(s16*)(statusTable + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
+                tbl216 = statusTable + 0x216;
+                gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, acc + 0x78);
+                gameTextFn_8001628c(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
                 acc = (bc - b8) + acc + 0xa;
                 gameTextFn_80016810(0x442, 0, acc + 0x78);
                 gameTextFn_8001628c(0x442, 0, 0, &b14, &b10, &bc, &b8);
@@ -487,11 +489,13 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         case 2:
             {
                 s32 b14, b10, bc, b8;
+                u8* tbl216;
                 gameTextFn_80016810(0x443, 0, 0xa0);
                 gameTextFn_8001628c(0x443, 0, 0, &b14, &b10, &bc, &b8);
                 x = (bc - b8) + 5;
-                gameTextFn_80016810(*(s16*)(statusTable + lbl_803DD756 * 8 + 0x216), 0, x + 0xa0);
-                gameTextFn_8001628c(*(s16*)(statusTable + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
+                tbl216 = statusTable + 0x216;
+                gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, x + 0xa0);
+                gameTextFn_8001628c(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
                 x += bc - b8;
                 gameTextFn_80016810(0x444, 0, x + 0xaa);
                 break;
