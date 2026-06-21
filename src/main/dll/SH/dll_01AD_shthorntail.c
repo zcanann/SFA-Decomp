@@ -362,7 +362,7 @@ typedef struct SHthorntailTailSwingEffectScratch
     Vec position;
 } SHthorntailTailSwingEffectScratch;
 
-#pragma optimization_level 2
+#pragma optimization_level 3
 void SHthorntail_update(SHthorntailObject* obj)
 {
     extern int randomGetRange(int lo, int hi); /* #57 */
