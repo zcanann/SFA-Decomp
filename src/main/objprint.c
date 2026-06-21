@@ -3463,7 +3463,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     }
     else
     {
-        fz = (f32)(u32)lbl_803DCC44 / (f32)(u32)texCnt;
+        fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
