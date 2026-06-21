@@ -142,10 +142,11 @@ void fn_801923F8(int* cfgArg)
         int srcRow;
         int byteRow;
         f32 negMin = -cfg->minHeight;
-        srcRow = 0;
-        byteRow = 0;
+        i = 0;
+        srcRow = i;
+        byteRow = i;
         colorSplitZero = lbl_803E3F44;
-        for (i = 0; i < cfg->period; i++)
+        for (; i < cfg->period; i++)
         {
             int src = srcRow;
             int byte = byteRow;
