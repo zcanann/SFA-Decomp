@@ -66,7 +66,7 @@ extern float mathCosf(float x);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
-extern void drawHudBox(int id, int x, int y, int w, int alpha, int p6);
+extern void drawHudBox(s16 id, s16 x, s16 y, s16 w, int alpha, u8 p6);
 extern void gameTextSetCursor(int a, int b, int c);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
@@ -403,9 +403,9 @@ int Minimap_update(void)
                     texH = ((Texture*)minimapTexture)->height;
                     gMinimapWorldToTexScale = texW / (f32)(gMinimapRegionMaxX - gMinimapRegionMinX);
                     boxW = gMinimapBoxWidth;
-                    a = boxW / texW;
+                    a = (f32)boxW / (f32)texW;
                     boxH = gMinimapBoxHeight;
-                    b = boxH / texH;
+                    b = (f32)boxH / (f32)texH;
                     a = (a < b) ? a : b;
                     a = (a < gMinimapMaxZoom) ? a : gMinimapMaxZoom;
                     gMinimapMinZoom = a;
@@ -433,9 +433,9 @@ int Minimap_update(void)
                     if (t == panx)
                     {
                         a = gMinimapZoom * (xrel * gMinimapWorldToTexScale) - (f32)(boxW / 2);
-                        t = (t > a) ? t : a;
+                        if (t > a) {} else { t = a; }
                         b = texW * gMinimapZoom - boxW;
-                        t = (t < b) ? t : b;
+                        if (t < b) {} else { t = b; }
                         ox = t;
                     }
                     t = *(f32*)&gMinimapZero;
