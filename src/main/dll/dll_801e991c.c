@@ -84,8 +84,11 @@ void fn_801E991C(int p1, char* table)
     u8 g;
     u8 b;
     ShColor color;
+    f32* verts;
     char* p;
     int i;
+    f32 u1, u0;
+    int j;
 
     color = lbl_803E5AE4;
     selectTexture(lbl_803DDC60, 0);
@@ -111,14 +114,12 @@ void fn_801E991C(int p1, char* table)
     {
         if (((*(u8*)(p + 0x4ce) & 1) != 0) && (*(s16*)(p + 0x4cc) >= 4))
         {
-            int j = 0;
-            f32* verts;
-            f32 u1, u0;
+            j = 0;
             verts = *(f32**)(p + 0x4c8);
-            u0 = lbl_803E5AE8;
-            u1 = lbl_803E5AEC;
             for (; j < *(s16*)(p + 0x4cc) - 2; j += 2)
             {
+                u0 = lbl_803E5AE8;
+                u1 = lbl_803E5AEC;
                 GXBegin(0x80, 2, 4);
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0xc));
