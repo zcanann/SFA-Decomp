@@ -1697,6 +1697,7 @@ void animatedobj_update(int* obj)
             list = ObjList_GetObjects(&res, &count);
             cnt = 0;
             slot = slot8;
+            slot |= slot8;
             for (res = 0; res < count; res++)
             {
                 int* other = (int*)*list;
