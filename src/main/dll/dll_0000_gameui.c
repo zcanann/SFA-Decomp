@@ -1233,11 +1233,13 @@ void pauseMenuDrawText(void)
 
     {
         s16 width = (s16)(v[2] - v[3]);
-        s16 blit_x = width + 0x28;
+        int blit_x = width + 0x28;
+        s16 clamped;
         blit_x = (target <= blit_x) ? target : blit_x;
         if (blit_x < 0) blit_x = 0;
-        *(s16*)((u8*)sprite + 0x8) = blit_x & 0xFFFE;
-        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
+        clamped = (s16)blit_x;
+        *(s16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
+        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (clamped >> 1));
     }
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
