@@ -362,13 +362,13 @@ void CameraModeTestStrength_update(short* cam)
 
 void CameraModeTestStrength_init(short* cam, int param2, int* param3)
 {
-    extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, s16 pitch, s16 yaw, s16 roll); /* #57 */
+    extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, int pitch, int yaw, int roll); /* #57 */
     int romNode;
     int obj;
     int curveNode2;
-    int pitch;
-    int yaw;
-    int roll;
+    s16 pitch;
+    s16 yaw;
+    s16 roll;
     f32 t;
     f32 px;
     f32 py;
