@@ -749,6 +749,31 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     sum). Cracking ONE applies verbatim to all five — a strong fresh-eyes target. SEPARATE FP-coloring residuals
     (NOT this detour): dll_8B_func03's dominant diff is an 8-reg FP rotation f24..f31 off-by-one (#121/#82
     hoist-coloring); DFRope_Create is gRopeNodeS32ToDoubleBias conversion-bias coloring (#121).
+145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch is
+    almost always recoverable source, not coloring.** Two confirmed sub-cases, both clean 2002-C fixes:
+    (a) **Import-UNDERSIZED matrix/array** (#67b) — a `mtx44Transpose`/4x4 op fed a `f32 m[12]` that must be
+    `[16]`; the −16B frame is the tell (dll_0B_func09: mtxB[12]→[16], frame −256→−272). (b) **DROPPED function
+    ARG surfacing as a write-only/dead local** — a filled-but-never-read local (identity quaternion `f32 q[4]`)
+    is DSE'd, shrinking the frame; it was the `spawnObject` `extraArg` the import passed as `NULL`. Pass the
+    local → reserves the slot, matches the frame, and CASCADES coloring fixes (dll_0B_func05 94.8→95.7, +0.85%
+    from one arg). METHOD: scan every near-miss for `stwu` mismatch FIRST; then grep each fn's locals for
+    write-only names (declared + assigned, never on a RHS/`&local`/call-arg) — those are dropped uses/args
+    waiting to be restored. `cosmetic_audit.py`/`width_audit.py` cover the no-frame-change cases (wrong const,
+    field width). OPEN residuals on the dll0b set, each a lever-still-to-find (target-vs-yours shape noted):
+    (1) **chained-zero copy** `a=b=c=0` → retail `li;mr;mr`, O4 copy-prop folds to 3×`li` (curves
+    preparePointCollisionFrame/updateLocalPointTransforms, dll_15_func0A, func04 `found=i`). Source already
+    uses the copy form; opt_level-1 keeps it but regresses these call-bearing fns (#142) — the fresh-eyes win
+    is the source shape that survives O4 copy-prop (a #131/#136(b) integer analogue). (2) **dead-branch
+    self-assign** `if(x==NULL){x=NULL}` retail keeps the `li`, O4 folds to `beq` (trickySelect/FindPathRouteEntry;
+    cosmetic_audit SIZE-MISMATCH −4B). Smells like a redundant-looking assignment the import flattened — re-derive
+    "what would a Rare dev have typed." (3) **address re-derive vs CSE-hoist** (pushable_savePos): retail
+    re-materializes `&gSaveGameData` per use (3×lis) reusing the offset; forcing it (form-asymmetry/launder/
+    opt_common_subs-off) reproduces the exact instr MULTISET but frees the addr's saved reg → a #108 coloring
+    permutation underneath. The clean win pins that one freed reg. (4) #108 within-class perms (fn_800A02DC FP
+    f1/f2 swap immune to source-order/named-local/const/launder; fn_800A0C78 buf/buf2). (5) objFn_80198fa4
+    (99.975%): a 64B `f32[16]`/union sits at stack-offset 28/32, never 112 where retail puts it (only a 72B m[18]
+    lands at 112) — the conv-temp wants 176; likely a #120 split where the 4x4 was adjacent to another local in
+    one bigger struct (rejoin to size it onto 112).
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
