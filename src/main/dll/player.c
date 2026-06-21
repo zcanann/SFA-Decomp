@@ -15167,6 +15167,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
+        extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
         s16* tbl;
         s16* t;
         int sel;
