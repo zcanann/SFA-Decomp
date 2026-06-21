@@ -434,7 +434,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     u8 flags;
     float animRate;
     float fVar3;
-    int iVar4;
+    int tableOff;
     short* subObj;
     u32 animIdx;
     int obj;
@@ -479,8 +479,8 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
         dVar10 = (double)lbl_803E33D8;
         if (param_2 == dVar10)
         {
-            iVar4 = (u32) * (u8*)(obj + 0x33b) * 2;
-            animIdx = randomGetRange((u32)(u8)(&DAT_8031feac)[iVar4], (u32)(u8)(&DAT_8031fead)[iVar4]);
+            tableOff = (u32) * (u8*)(obj + 0x33b) * 2;
+            animIdx = randomGetRange((u32)(u8)(&DAT_8031feac)[tableOff], (u32)(u8)(&DAT_8031fead)[tableOff]);
             *(float*)(obj + 0x324) =
                 *(float*)(obj + 0x334) +
                 (f32)(s32)(animIdx);
@@ -506,10 +506,10 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
             }
             if ((*(u32*)(obj + 0x2dc) & 0x40000000) != 0)
             {
-                iVar4 = (u32) * (u8*)(obj + 0x33c) * 0xc;
-                FUN_8014d4c8((double)*(float*)(animTable + iVar4), dVar10, rate, param_4, param_5, param_6,
-                             param_7, param_8, (int)subObj, obj, (u32)(u8)animTable[iVar4 + 8], 0,
-                             *(u32*)(animTable + iVar4 + 4) & 0xff, param_14, param_15, param_16);
+                tableOff = (u32) * (u8*)(obj + 0x33c) * 0xc;
+                FUN_8014d4c8((double)*(float*)(animTable + tableOff), dVar10, rate, param_4, param_5, param_6,
+                             param_7, param_8, (int)subObj, obj, (u32)(u8)animTable[tableOff + 8], 0,
+                             *(u32*)(animTable + tableOff + 4) & 0xff, param_14, param_15, param_16);
                 FUN_800305c4((double)*(float*)(&DAT_8031e980 +
                                  (u32)(u8)animTable[(u32) * (u8*)(obj + 0x33c) * 0xc + 8]
                              * 4), (int)subObj
