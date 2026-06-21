@@ -94,9 +94,9 @@ void wcbouncycra_update(int obj)
             }
             else
             {
-                dist = (v - *(f32*)&gBouncyCrateNearDistance) / lbl_803E6D34;
-                dist = lbl_803E6D38 - dist;
-                dist = dist * lbl_803E6D2C;
+                f32 t = (v - *(f32*)&gBouncyCrateNearDistance) / lbl_803E6D34;
+                t = lbl_803E6D38 - t;
+                dist = t * lbl_803E6D2C;
             }
             ((GameObject*)obj)->anim.velocityY = dist;
             state->flags |= WBOUNCY_FLAG_ACTIVE;
