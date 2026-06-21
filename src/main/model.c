@@ -2864,6 +2864,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     u32 i1;
     u32 i2;
     int fl;
+    int vo;
     u8* p;
 
     hdr = *(u8**)b;
@@ -2896,28 +2897,23 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     {
         *(u16*)(stk + 0x44) = 0;
         *(u16*)(stk + 0x46) = 1;
-        p = c + i1 * 2;
-        p = c + *(u16*)(p + 0x44) * 4;
-        *(int*)(stk + 0x1c) = *(int*)&((ModelFileHeader*)p)->unk1C;
+        vo = *(u16*)((u8*)(c + 0x44) + i1 * 2) * 4;
+        *(int*)(stk + 0x1c) = *(int*)((u8*)(c + 0x1c) + vo);
         if (i2 < 2)
         {
-            p = c + i2 * 2;
-            p = c + *(u16*)(p + 0x44) * 4;
-            *(int*)(stk + 0x20) = *(int*)&((ModelFileHeader*)p)->unk1C;
+            vo = *(u16*)((u8*)(c + 0x44) + i2 * 2) * 4;
+            *(int*)(stk + 0x20) = *(int*)((u8*)(c + 0x1c) + vo);
         }
         else
         {
-            p = c + i2 * 2;
-            p = c + *(u16*)(p + 0x44) * 4;
-            *(int*)(stk + 0x20) = *(int*)(p + 0x24);
+            vo = *(u16*)((u8*)(c + 0x44) + i2 * 2) * 4;
+            *(int*)(stk + 0x20) = *(int*)((u8*)(c + 0x24) + vo);
         }
     }
     else
     {
-        p = c + i1 * 2;
-        *(u16*)(stk + 0x44) = *(u16*)(p + 0x44);
-        p = c + i2 * 2;
-        *(u16*)(stk + 0x46) = *(u16*)(p + 0x44);
+        *(u16*)(stk + 0x44) = *(u16*)((u8*)(c + 0x44) + i1 * 2);
+        *(u16*)(stk + 0x46) = *(u16*)((u8*)(c + 0x44) + i2 * 2);
     }
     if (w == 0)
     {
