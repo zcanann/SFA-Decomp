@@ -513,8 +513,7 @@ void fn_8015383C(int obj, int state)
             && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
         {
             fn_80153640(obj, state);
-            fn_8015355C(obj, state);
-            return;
+            goto sharedTail;
         }
     }
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
@@ -524,6 +523,7 @@ void fn_8015383C(int obj, int state)
         *(f32*)(state + 0x324) = (f32)(s32)rnd;
         Sfx_PlayFromObject(obj, SFXwatery_bubble3);
     }
+sharedTail:
     fn_8015355C(obj, state);
 }
 
