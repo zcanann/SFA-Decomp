@@ -316,7 +316,7 @@ typedef struct PlayerState {
     u8 pad860[0x86C - 0x860];
     u8 surfaceType;
     s8 stickDirection;
-    u8 unk86E;
+    u8 latchedStickDir; /* latched stick-direction code (0..4) from the prior frame's edge/collision probe; compared against the current stickDirection to detect a held/repeated direction (gates the press-vs-hold move + speed branch); reset to 0 when the direction changes */
     u8 stopMoveIndex; /* cycling index into gPlayerStopMoves[], advanced %3 */
     u8 pad870[0x874 - 0x870];
     f32 unk874;

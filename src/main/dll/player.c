@@ -6290,7 +6290,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
                 0x52, 1, 0, 8, &col, 0x1e, 0xff);
         }
         *(u8*)&((PlayerState*)inner)->stickDirection = 0;
-        inner->unk86E = 0;
+        inner->latchedStickDir = 0;
         inner->targetYaw =
             getAngle(inner->surfaceNormalX, inner->surfaceNormalZ);
         {
@@ -6425,18 +6425,18 @@ int fn_8029DB70(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(obj, 0x2b);
             }
             *(u32*)&((PlayerState*)inner)->flags360 |= 0x200LL;
-            if (inner->stickDirection != (u8)prev || *(s8*)&((PlayerState*)inner)->unk86E == 0)
+            if (inner->stickDirection != (u8)prev || *(s8*)&((PlayerState*)inner)->latchedStickDir == 0)
             {
                 ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
-                inner->unk86E = 0;
+                inner->latchedStickDir = 0;
             }
-            else if (inner->stickDirection == *(s8*)&((PlayerState*)inner)->unk86E)
+            else if (inner->stickDirection == *(s8*)&((PlayerState*)inner)->latchedStickDir)
             {
                 if (((ByteFlags*)((char*)inner + 0x3f3))->b08 != 0 &&
                     ((ByteFlags*)((char*)inner + 0x3f3))->b01 == 0)
                 {
                     ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
-                    inner->unk86E = 0;
+                    inner->latchedStickDir = 0;
                 }
                 else
                 {
@@ -6482,19 +6482,19 @@ int fn_8029DB70(int obj, int state, f32 fv)
                 sub, obj, inner->stickDirection, a, b);
             if (res == 1)
             {
-                inner->unk86E = 1;
+                inner->latchedStickDir = 1;
             }
             else if (res == 2)
             {
-                inner->unk86E = 2;
+                inner->latchedStickDir = 2;
             }
             else if (res == 3)
             {
-                inner->unk86E = 4;
+                inner->latchedStickDir = 4;
             }
             else if (res == 4)
             {
-                inner->unk86E = 3;
+                inner->latchedStickDir = 3;
             }
             else if (res == 5)
             {
@@ -6502,7 +6502,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
             }
             else
             {
-                inner->unk86E = 0;
+                inner->latchedStickDir = 0;
             }
         }
     }
