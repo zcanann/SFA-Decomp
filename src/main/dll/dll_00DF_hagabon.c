@@ -189,13 +189,12 @@ void fn_8014E1DC(int obj, HagabonState* state)
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
-        player = state->player;
-        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (player->anim.localPosX - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityX += lbl_803E2624 * (state->player->anim.localPosX - ((GameObject*)obj)->anim.
             localPosX);
         ((GameObject*)obj)->anim.velocityY += lbl_803E2624 *
-        ((lbl_803E2628 + player->anim.localPosY) -
+        ((lbl_803E2628 + state->player->anim.localPosY) -
             ((GameObject*)obj)->anim.localPosY);
-        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (player->anim.localPosZ - ((GameObject*)obj)->anim.
+        ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (state->player->anim.localPosZ - ((GameObject*)obj)->anim.
             localPosZ);
     }
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
