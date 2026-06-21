@@ -149,8 +149,7 @@ void kytesmum_update(int obj)
         {
             ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
         }
-        d = diff;
-        kytesMum->yaw = (s16)(kytesMum->yaw + ((d + 1) >> 4));
+        kytesMum->yaw = (s16)(kytesMum->yaw + (((d = diff) + 1) >> 4));
         runtime->animSpeed = lbl_803E699C * (f32)(d / 1024);
         if (d >= 0)
         {
