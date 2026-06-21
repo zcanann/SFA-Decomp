@@ -575,6 +575,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     typed struct array is the one that lands it. This is the clean source for the global-base
     sub-case of #136 (the "global-base counter/walker" residual that looked stuck dissolves into
     ordinary typed C). (WorkerB: dll_0000_gameui GameUI_unselectAllItems, expgfx family.)
+139. **A FOLDED BRANCH is a recoverable dropped-code bug — count conversion ops to find it, split
+    the merged if/else back into sibling else-ifs.** When a function is INSTRUCTION-SHORT vs target
+    (current < target by a block), the import often merged what were SEPARATE branches into one:
+    e.g. an `if/else` picking a ratio INSIDE one outer branch folds to a single `fctiwz`/conversion,
+    where the original wrote TWO `else if` siblings (each with its own conversion). DIAGNOSE by
+    counting conversion/`fctiwz`/select ops in target vs current — if the target has MORE, a branch
+    was folded away. FIX: split the merged inner-if back into sibling `else if` branches (re-spell
+    the guards as the dev did, e.g. `else if (PULSE && frame <= lifeFraction)` then `else if
+    (PULSE)`), restoring the dropped block. Sibling of #79 (asm-decode dropped code); this is the
+    control-flow-fold flavor. (WorkerB: dll_000A_expgfx drawGlow restored the dropped 6th fade
+    branch, 88.4→91.8.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
