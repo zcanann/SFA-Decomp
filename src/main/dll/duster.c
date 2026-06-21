@@ -198,16 +198,16 @@ void fn_801554B4(int* obj, int state)
     float hit[18];
 
     didHit = 0;
-    for (i = 0, probeOffsets = gDusterWallProbeOffsets; didHit == 0 && i < 4; i++)
+    probeOffsets = gDusterWallProbeOffsets;
+    for (i = 0; didHit == 0 && i < 4; i++)
     {
-        maxv[0] = ((GameObject*)obj)->anim.localPosX + probeOffsets[0];
+        maxv[0] = ((GameObject*)obj)->anim.localPosX + probeOffsets[i * 2 + 0];
         maxv[1] = ((GameObject*)obj)->anim.localPosY;
-        maxv[2] = ((GameObject*)obj)->anim.localPosZ + probeOffsets[1];
-        minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[0];
+        maxv[2] = ((GameObject*)obj)->anim.localPosZ + probeOffsets[i * 2 + 1];
+        minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[i * 2 + 0];
         minv[1] = ((GameObject*)obj)->anim.localPosY;
-        minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[1];
+        minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[i * 2 + 1];
         didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
-        probeOffsets += 2;
     }
     if (didHit != 0)
     {
