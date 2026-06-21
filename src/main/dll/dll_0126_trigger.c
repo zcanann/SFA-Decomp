@@ -793,8 +793,8 @@ void Trigger_hitDetect(int obj)
     int ok2;
     int inside;
     int wasInside;
-    int i;
     u8* p8;
+    int i;
     u8 c;
     s16 ty;
     f32 dist[1];
