@@ -147,7 +147,8 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     }
     if (count > 0) {
         best = targets[0];
-        row = &best->anim.modelInstance->hitVolumes[best->unkE4];
+        row = best->anim.modelInstance->hitVolumes;
+        row += best->unkE4;
         if (row->flags & 0x20) {
             worldFrom[0] = focus->worldPosX;
             worldFrom[1] = lbl_803E1648 + focus->worldPosY;
