@@ -112,7 +112,7 @@ probes on the bundled compilers):
    `switch` MWCC would lower to a jump table into a compare-chain. If a function
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
    the jump table survives; if it mixes a switch with bit-ops you can't have
-   both from this lever, so pick whichever the target uses and bank the other as
+   both from this lever, so pick whichever the target uses and set the other aside as
    an open residual (revisit when a finer-grained pragma/recipe lands).
    **BUT peephole-off does NOT always kill the table — DENSE switches can keep
    both.** For a sufficiently dense switch (e.g. 30 contiguous cases) `#pragma
