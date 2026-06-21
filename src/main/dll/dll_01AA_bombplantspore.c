@@ -295,14 +295,18 @@ void bombplantspore_update(void* obj)
         return;
     }
 
-    if (state->fuseTimer < lbl_803E53C0)
     {
-        particleAlpha = (s32) - (lbl_803E53C8 * state->fuseTimer - lbl_803E53C4);
-        objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, lbl_803E53B0,
-                                    (f32)(lbl_803E53D8 *
-                                        (double)(lbl_803E53C0 - state->fuseTimer) +
-                                        lbl_803E53D0),
-                                    NULL, 0);
+        f32 fuse = state->fuseTimer;
+        f32 fuseCap = lbl_803E53C0;
+        if (fuse < fuseCap)
+        {
+            particleAlpha = (s32) - (lbl_803E53C8 * fuse - lbl_803E53C4);
+            objfx_spawnDirectionalBurst(obj, 5, 7, 1, particleAlpha & 0xff, lbl_803E53B0,
+                                        (f32)(lbl_803E53D8 *
+                                            (double)(fuseCap - fuse) +
+                                            lbl_803E53D0),
+                                        NULL, 0);
+        }
     }
     ObjHits_GetPriorityHit((int)obj, &hitObject, 0, 0);
     hitObj = *(void**)((GameObject*)obj)->anim.hitReactState;
@@ -376,7 +380,7 @@ void bombplantspore_update(void* obj)
                 state->fuseTimer = lbl_803E53C0;
             }
         }
-        if ((*(u8*)((u8*)state + 0x268) & 0x11) != 0)
+        if ((*(s8*)((u8*)state + 0x268) & 0x11) != 0)
         {
             BOMBPLANTSPORE_FLAGS(state)->hitSurface = 1;
             if (state->fuseTimer > *(f32*)&lbl_803E53C0)
