@@ -1665,10 +1665,10 @@ int fn_802A5384(int obj, int state)
                 ((GameObject*)obj)->anim.velocityZ = z;
                 {
                     f32 w = lbl_803E7FA4;
-                    ((PlayerState*)inner)->unk428 = w;
-                    ((PlayerState*)inner)->unk42C = z;
-                    ((PlayerState*)inner)->unk430 = w;
-                    ((PlayerState*)inner)->unk434 = z;
+                    ((PlayerState*)inner)->targetYawSmoothRate = w;
+                    ((PlayerState*)inner)->targetYawRateLimit = z;
+                    ((PlayerState*)inner)->yawSmoothRate = w;
+                    ((PlayerState*)inner)->yawRateLimit = z;
                     ((PlayerState*)inner)->currentSpeed = z;
                 }
             }
@@ -1800,11 +1800,11 @@ int fn_802A5384(int obj, int state)
             if (((PlayerState*)inner)->yawRateSigned < 0x96)
             {
                 f32 d = interpolate((f32) * (int*)((char*)inner + 0x47c),
-                                    lbl_803E7EE0 / ((PlayerState*)inner)->unk428,
+                                    lbl_803E7EE0 / ((PlayerState*)inner)->targetYawSmoothRate,
                                     timeDelta);
                 {
                     f32 m = timeDelta *
-                        (((PlayerState*)inner)->unk42C * ((PlayerState*)inner)->unk420);
+                        (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->unk420);
                     d = (d > m) ? m : d;
                 }
                 if (((PlayerState*)inner)->targetYawRate < 0)
@@ -1817,10 +1817,10 @@ int fn_802A5384(int obj, int state)
             if (((PlayerState*)inner)->yawRateSigned < 0x96)
             {
                 f32 d = interpolate((f32) * (int*)((char*)inner + 0x488),
-                                    lbl_803E7EE0 / ((PlayerState*)inner)->unk430,
+                                    lbl_803E7EE0 / ((PlayerState*)inner)->yawSmoothRate,
                                     timeDelta);
                 {
-                    f32 m = ((PlayerState*)inner)->unk434 * timeDelta;
+                    f32 m = ((PlayerState*)inner)->yawRateLimit * timeDelta;
                     d = (d > m) ? m : d;
                 }
                 if (((PlayerState*)inner)->yawRate < 0)
@@ -1858,10 +1858,10 @@ int fn_802A5384(int obj, int state)
             (t * -mathCosf((gPlayerPi * (f32) * (int*)((char*)inner + 0x474)) /
                 lbl_803E7F98));
             t = interpolate(spd - ((PlayerState*)inner)->smoothVelX,
-                            ((PlayerState*)inner)->unk438, timeDelta);
+                            ((PlayerState*)inner)->velSmoothRate, timeDelta);
             {
                 f32 dy = interpolate(ya - ((PlayerState*)inner)->smoothVelZ,
-                                     ((PlayerState*)inner)->unk438, timeDelta);
+                                     ((PlayerState*)inner)->velSmoothRate, timeDelta);
                 ((PlayerState*)inner)->smoothVelX = ((PlayerState*)inner)->smoothVelX + t;
                 ((PlayerState*)inner)->smoothVelZ = ((PlayerState*)inner)->smoothVelZ + dy;
             }
@@ -1942,7 +1942,7 @@ int fn_802A5384(int obj, int state)
             {
                 f32 d = interpolate(((PlayerState*)inner)->currentSpeed -
                                     ((PlayerState*)state)->baddie.animSpeedC,
-                                    ((PlayerState*)inner)->unk438, timeDelta);
+                                    ((PlayerState*)inner)->velSmoothRate, timeDelta);
                 f32 m = (d < lbl_803E7EA8 * timeDelta)
                             ? lbl_803E7EA8 * timeDelta
                             : ((d > lbl_803E7EFC * timeDelta) ? lbl_803E7EFC * timeDelta : d);
@@ -7073,10 +7073,10 @@ int fn_802AD2F4(int obj, int inner, int state)
         f32 a = lbl_803E7FBC;
         f32 b = lbl_803E7E98;
         f32 c = lbl_803E7F14;
-        ((PlayerState*)inner)->unk428 = a;
-        ((PlayerState*)inner)->unk42C = b;
-        ((PlayerState*)inner)->unk430 = a;
-        ((PlayerState*)inner)->unk434 = b;
+        ((PlayerState*)inner)->targetYawSmoothRate = a;
+        ((PlayerState*)inner)->targetYawRateLimit = b;
+        ((PlayerState*)inner)->yawSmoothRate = a;
+        ((PlayerState*)inner)->yawRateLimit = b;
         ((PlayerState*)inner)->targetAnimSpeed = c;
         ((PlayerState*)inner)->currentSpeed = ((PlayerState*)inner)->currentSpeed * c;
     }
@@ -7084,10 +7084,10 @@ int fn_802AD2F4(int obj, int inner, int state)
     {
         f32 a = lbl_803E7FBC;
         f32 b = lbl_803E7EA4;
-        ((PlayerState*)inner)->unk428 = a;
-        ((PlayerState*)inner)->unk42C = b;
-        ((PlayerState*)inner)->unk430 = a;
-        ((PlayerState*)inner)->unk434 = b;
+        ((PlayerState*)inner)->targetYawSmoothRate = a;
+        ((PlayerState*)inner)->targetYawRateLimit = b;
+        ((PlayerState*)inner)->yawSmoothRate = a;
+        ((PlayerState*)inner)->yawRateLimit = b;
         ((PlayerState*)inner)->targetAnimSpeed = b;
         ((PlayerState*)inner)->currentSpeed = ((PlayerState*)inner)->currentSpeed * b;
     }
@@ -7597,13 +7597,13 @@ void fn_802B0EA4(int obj, int inner, int state)
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
         if (lbl_803E7EE0 == ((PlayerState*)inner)->targetAnimSpeed)
         {
-            ((PlayerState*)inner)->unk438 = lbl_803E7F44;
+            ((PlayerState*)inner)->velSmoothRate = lbl_803E7F44;
         }
         else
         {
             u = t * ((PlayerState*)inner)->curveSpeedScale;
             idx = (int)u;
-            ((PlayerState*)inner)->unk438 =
+            ((PlayerState*)inner)->velSmoothRate =
                 lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
         }
     }
@@ -7615,31 +7615,31 @@ void fn_802B0EA4(int obj, int inner, int state)
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
         u = t * ((PlayerState*)inner)->curveSpeedScale;
         idx = (int)u;
-        ((PlayerState*)inner)->unk438 =
+        ((PlayerState*)inner)->velSmoothRate =
             lbl_803E7EE0 / Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve0 + (idx + 1) * 4, u - (f32)idx, 0);
     }
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
-    ((PlayerState*)inner)->unk428 =
+    ((PlayerState*)inner)->targetYawSmoothRate =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve1 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
-    ((PlayerState*)inner)->unk42C =
+    ((PlayerState*)inner)->targetYawRateLimit =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve2 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
-    ((PlayerState*)inner)->unk430 =
+    ((PlayerState*)inner)->yawSmoothRate =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve3 + (idx + 1) * 4, u - (f32)idx, 0);
     u = t * ((PlayerState*)inner)->curveSpeedScale;
     idx = (int)u;
-    ((PlayerState*)inner)->unk434 =
+    ((PlayerState*)inner)->yawRateLimit =
         Curve_EvalCatmullRom(((PlayerState*)inner)->paramCurve4 + (idx + 1) * 4, u - (f32)idx, 0);
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 != 0)
     {
         f32 k;
-        ((PlayerState*)inner)->unk428 = ((PlayerState*)inner)->unk428 * (k = lbl_803E80E4);
-        ((PlayerState*)inner)->unk430 = ((PlayerState*)inner)->unk430 * k;
-        ((PlayerState*)inner)->unk438 = ((PlayerState*)inner)->unk438 * lbl_803E7F44;
+        ((PlayerState*)inner)->targetYawSmoothRate = ((PlayerState*)inner)->targetYawSmoothRate * (k = lbl_803E80E4);
+        ((PlayerState*)inner)->yawSmoothRate = ((PlayerState*)inner)->yawSmoothRate * k;
+        ((PlayerState*)inner)->velSmoothRate = ((PlayerState*)inner)->velSmoothRate * lbl_803E7F44;
     }
     else
     {
@@ -7648,9 +7648,9 @@ void fn_802B0EA4(int obj, int inner, int state)
             f32 base = *(f32*)(((PlayerState*)inner)->moveParams + 0x10);
             f32 frac = (((PlayerState*)state)->baddie.animSpeedA - base) /
                 (((PlayerState*)inner)->maxSpeed - base);
-            f32 v430 = ((PlayerState*)inner)->unk430;
+            f32 v430 = ((PlayerState*)inner)->yawSmoothRate;
             f32 diff = ((PlayerState*)inner)->unk834 - lbl_803E7EE0;
-            ((PlayerState*)inner)->unk430 =
+            ((PlayerState*)inner)->yawSmoothRate =
                 v430 * (diff * ((frac < lbl_803E7EA4)
                                     ? lbl_803E7EA4
                                     : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac)) +
@@ -7914,7 +7914,7 @@ int fn_802A6694(int obj, int state, f32 fv)
         ((PlayerState*)state)->baddie.animSpeedC =
             ((PlayerState*)state)->baddie.animSpeedC +
             interpolate(((PlayerState*)inner)->currentSpeed - ((PlayerState*)state)->baddie.animSpeedC,
-                        ((PlayerState*)inner)->unk438, timeDelta);
+                        ((PlayerState*)inner)->velSmoothRate, timeDelta);
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -8012,8 +8012,8 @@ int fn_802A6694(int obj, int state, f32 fv)
         f32 step;
         f32 lim;
         step = interpolate((f32) * (int*)((char*)inner + 0x47c),
-                           lbl_803E7EE0 / ((PlayerState*)inner)->unk428, timeDelta);
-        lim = timeDelta * (((PlayerState*)inner)->unk42C * ((PlayerState*)inner)->unk420);
+                           lbl_803E7EE0 / ((PlayerState*)inner)->targetYawSmoothRate, timeDelta);
+        lim = timeDelta * (((PlayerState*)inner)->targetYawRateLimit * ((PlayerState*)inner)->unk420);
         step = (step < lim) ? step : lim;
         if (((PlayerState*)inner)->targetYawRate < 0)
         {
@@ -8022,8 +8022,8 @@ int fn_802A6694(int obj, int state, f32 fv)
         *(u16*)&((PlayerState*)inner)->targetYaw =
             gPlayerDegToBinAngle * step + (f32) * (s16*)((char*)inner + 0x478);
         step = interpolate((f32) * (int*)((char*)inner + 0x488),
-                           lbl_803E7EE0 / ((PlayerState*)inner)->unk430, timeDelta);
-        lim = ((PlayerState*)inner)->unk434 * timeDelta;
+                           lbl_803E7EE0 / ((PlayerState*)inner)->yawSmoothRate, timeDelta);
+        lim = ((PlayerState*)inner)->yawRateLimit * timeDelta;
         step = (step < lim) ? step : lim;
         if (((PlayerState*)inner)->yawRate < 0)
         {
@@ -8045,9 +8045,9 @@ int fn_802A6694(int obj, int state, f32 fv)
         vz = t * -c;
         vz = ((PlayerState*)inner)->maxSpeed * vz;
         vx = interpolate(vx - ((PlayerState*)inner)->smoothVelX,
-                         ((PlayerState*)inner)->unk438, timeDelta);
+                         ((PlayerState*)inner)->velSmoothRate, timeDelta);
         vz = interpolate(vz - ((PlayerState*)inner)->smoothVelZ,
-                         ((PlayerState*)inner)->unk438, timeDelta);
+                         ((PlayerState*)inner)->velSmoothRate, timeDelta);
         ((PlayerState*)inner)->smoothVelX = ((PlayerState*)inner)->smoothVelX + vx;
         ((PlayerState*)inner)->smoothVelZ = ((PlayerState*)inner)->smoothVelZ + vz;
         ((PlayerState*)state)->baddie.animSpeedC =
@@ -12817,7 +12817,7 @@ int fn_802AE480(int obj, int inner, int state)
             return 1;
         }
         ((PlayerState*)inner)->currentSpeed = lbl_803E7EA4;
-        ((PlayerState*)inner)->unk438 = ((PlayerState*)inner)->unk830;
+        ((PlayerState*)inner)->velSmoothRate = ((PlayerState*)inner)->unk830;
     }
     return 0;
 }
@@ -15798,21 +15798,21 @@ void fn_802AE650(int obj, int state, int p3)
     }
     {
         f32 fa4 = lbl_803E7FA4;
-        ((PlayerState*)state)->unk428 = fa4;
-        ((PlayerState*)state)->unk430 = fa4;
+        ((PlayerState*)state)->targetYawSmoothRate = fa4;
+        ((PlayerState*)state)->yawSmoothRate = fa4;
     }
     b = (((PlayerState*)state)->unk3F1 >> 4) & 1;
     if (b != 0)
     {
         f32 ea4 = lbl_803E7EA4;
-        ((PlayerState*)state)->unk42C = ea4;
-        ((PlayerState*)state)->unk434 = ea4;
+        ((PlayerState*)state)->targetYawRateLimit = ea4;
+        ((PlayerState*)state)->yawRateLimit = ea4;
     }
     else
     {
         f32 ed4 = lbl_803E7ED4;
-        ((PlayerState*)state)->unk42C = ed4;
-        ((PlayerState*)state)->unk434 = ed4;
+        ((PlayerState*)state)->targetYawRateLimit = ed4;
+        ((PlayerState*)state)->yawRateLimit = ed4;
     }
     ((PlayerState*)state)->knockbackDrainRate = lbl_803E80E4;
     if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7EE0)
@@ -16487,10 +16487,10 @@ int fn_802ADC08(int obj, int inner, int p3)
     ((PlayerState*)inner)->unk8C5 = 1;
     {
         f32 f4, c4;
-        ((PlayerState*)inner)->unk428 = (c4 = lbl_803E80C4);
-        ((PlayerState*)inner)->unk42C = (f4 = lbl_803E7FF4);
-        ((PlayerState*)inner)->unk430 = c4;
-        ((PlayerState*)inner)->unk434 = f4;
+        ((PlayerState*)inner)->targetYawSmoothRate = (c4 = lbl_803E80C4);
+        ((PlayerState*)inner)->targetYawRateLimit = (f4 = lbl_803E7FF4);
+        ((PlayerState*)inner)->yawSmoothRate = c4;
+        ((PlayerState*)inner)->yawRateLimit = f4;
     }
     ((PlayerState*)inner)->targetAnimSpeed = lbl_803DC684;
     {

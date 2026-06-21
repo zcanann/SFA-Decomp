@@ -62,11 +62,11 @@ typedef struct PlayerState {
     u8 pad41D[0x420 - 0x41D];
     f32 unk420;
     u8 pad424[0x428 - 0x424];
-    f32 unk428;
-    f32 unk42C;
-    f32 unk430;
-    f32 unk434;
-    f32 unk438;
+    f32 targetYawSmoothRate; /* curve1 sample (Curve_EvalCatmullRom @paramCurve1); 1/this = the interpolate() rate easing targetYaw toward inputHeading */
+    f32 targetYawRateLimit;  /* curve2 sample (@paramCurve2); * leanCurve output bounds the per-frame targetYaw delta */
+    f32 yawSmoothRate;       /* curve3 sample (@paramCurve3); 1/this = the interpolate() rate easing applied yaw toward targetYaw */
+    f32 yawRateLimit;        /* curve4 sample (@paramCurve4); * timeDelta bounds the per-frame applied-yaw delta */
+    f32 velSmoothRate;       /* curve0 sample (@paramCurve0); the interpolate() rate easing smoothVelX/Z toward maxSpeed*sin/cos(heading) */
     f32 unk43C;
     f32 unk440;
     f32 unk444;
