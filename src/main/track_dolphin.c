@@ -2901,9 +2901,11 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                 {
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
-                    int i12 = (int)*(u16*)(a + 0xa) * im * 2;
+                    int i12;
                     u8 *p;
-                    p = a + i6; p += i4; p += i5; p += i12;
+                    p = a + i6; p += i4; p += i5;
+                    i12 = (int)*(u16*)(a + 0xa) * im * 2;
+                    p += i12;
                     texA = *(u16*)(p + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
                     p = b + i6; p += i4; p += i5; p += i12;
