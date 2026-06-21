@@ -653,6 +653,40 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     our build can't emit — so the net was a ~1-instr regression and it was REVERTED (compact fused
     form kept). So the lever is sound for pivot-tree matching; just confirm no confounding cross-jump
     of identical outcome blocks before committing (that's a separate open shape). (WorkerC: andross_update.)
+145. **A SHARED `static inline`'s LOCAL DECL ORDER is a multi-function lever — reorder once, lift
+    every caller.** When many fns inline the same helper (e.g. a binary search) and all show the SAME
+    volatile/saved permutation in the inlined body, the fix is decl-order (#5/#108) on the INLINE's
+    locals, applied ONCE. MWCC colors the four search locals descending by decl order; matching
+    retail's `curve=r8,hi=r7,lo=r6,mid=r5` just needs decl order `curve,hi,lo,mid`. (WorkerB:
+    dll_0014_unk Objfsa_FindRomCurveById reorder → RomCurve_func29 99.86→100 AND +7 sibling callers
+    improved, zero regressions.) Always A/B the whole-unit per-fn delta after an inline edit.
+146. **#137 cross-class param reorder is broadly reliable for the `fmr-before-mr` prologue —
+    confirmed across units.** When retail saves an int/ptr param BEFORE the fmr float-param saves but
+    your decl puts the floats first, move the int/ptr param(s) ahead of the floats. It's register-
+    NEUTRAL (ABI assigns by type+within-class order, so cross-class moves don't change any reg) and
+    only reorders the prologue save sequence. KEEP the int params' relative order (so r3/r4 stay).
+    (WorkerB: RomCurve_getNearestAdjacentLink 98.35→100, `(curve,excludeLinkId,x,y,z)`; RomCurve_func1B
+    96.57→98.14, `(curve,preferredNeighborId,x,y,z)`.) No call sites → free; with callers, reorder the
+    shared proto+sites (codegen stays byte-identical). OPEN sub-case: when the ptr param is a WALKED
+    base (`p += K` in the loop) the reorder fixes the early r4 save but retail still uses r3 DIRECTLY
+    for the pre-loop field loads then saves r3 lazily — splitting into a separate walk pointer
+    regressed (re-coalesced); the lazy-r3 lever for walked bases is still to find.
+147. **Recover a MISSING entry-time copy by INITIALIZING an apparently-dead/UB-read variable.** A fn
+    that's 1 instr SHORT vs retail (T=N, C=N-1) where retail has an `mr rX,rParam` right after the
+    prologue is often a loop/condition variable the dev initialized but the import dropped (it reads
+    UB-uninitialized in your C, so MWCC emits no init). Add the init (e.g. `previousCurveId = curveId;`
+    before a do-while that compares `previousCurveId != curveId`): the copy reappears and the instr
+    count matches. CAVEAT (open): the new live-at-entry var can ROTATE the saved-reg pool by one
+    (curveId r27→r31 as the copy defers its save past the float/ptr param saves) — decl-order,
+    `(int)`-cast, opt_level 2, and placement were all inert on the rotation; the creation-order lever
+    to reclaim the param's low saved reg is still to find. (WorkerB: dll_0014_unk curves_distFn15 — copy
+    recovered, rotation pending; reverted to hold 96.32 baseline until the coloring lever lands.)
+    OPEN family in dll_0014: the unrolled candidate-collection first-iter `count=1` materializes as
+    `mr rCount,rMask` (reuse mask=1) in retail but `li rCount,1` here (curves_getPos, countRandomPoints;
+    getControlPointId_2A/2B already match with `li` — the outer-loop/register-pressure context selects
+    copy-vs-rematerialize). Plus systemic FP f2/f3 volatile swaps (#82) and f28/f30 hoist-coloring
+    (#121 conversion-bias sub-case) across effect9/dim2icicle/arwsquadron/xyzanimator/dimsnowhorn1 —
+    each a near-100 with the lever still being mapped.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
