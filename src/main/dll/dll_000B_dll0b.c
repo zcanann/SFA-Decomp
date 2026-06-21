@@ -2344,7 +2344,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         if (*(int*)((char*)p[slot] + 0xa4) & 0x400000)
         {
             dscale = lbl_803DF458 * *(f32*)((char*)p[slot] + 0xd4);
-            xf.scale = dscale + dscale / randomGetRange(1, 10);
+            xf.scale = dscale + dscale / (int)randomGetRange(1, 10);
         }
         else
         {
