@@ -1589,10 +1589,12 @@ void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 a, f
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
 
+#pragma opt_common_subs off
 void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f)
 {
     f32 fScale;
     f32 eScale;
+    f32 unit;
 
     obj->projectionTop = a;
     obj->projectionBottom = b;
@@ -1604,12 +1606,11 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, 
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
                     obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
                     eScale);
-    {
-        f32 unit = *(volatile f32*)&lbl_803DE790;
-        C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
-                        obj->projectionLeft, obj->projectionRight, unit, unit, unit, unit);
-    }
+    unit = lbl_803DE790;
+    C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
+                    obj->projectionLeft, obj->projectionRight, unit, unit, unit, unit);
 }
+#pragma opt_common_subs reset
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
 {
