@@ -910,8 +910,8 @@ void saveGame_saveObjectPos(int* obj)
         if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
         {
             int objectId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-            char* entry = (char*)gSaveGameData + i * sizeof(SaveGameObjectPosition);
-            *(int*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
+            char* entry;
+            *(int*)((entry = (char*)gSaveGameData + i * sizeof(SaveGameObjectPosition)) + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = ((GameObject*)obj)->anim.localPosZ;
