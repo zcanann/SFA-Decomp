@@ -395,7 +395,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
                     {
                         speed = (speed - lbl_803E16DC) / (range - lbl_803E16DC);
                     }
-                    if (speed < lbl_803E16AC)
+                    if (speed < *(f32*)&lbl_803E16AC)
                     {
                         speed = lbl_803E16AC;
                     }
