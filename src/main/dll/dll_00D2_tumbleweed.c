@@ -128,15 +128,15 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             ((GameObject*)obj)->anim.localPosY = lbl_803E2F60 + *(float*)hitList[0][bestHit];
             if (((short*)obj)[0x23] == 0x3fb)
             {
-                uval = randomGetRange(0x8c, 0xb4);
-                dy = (f32) * (u16*)(state + 0x268) / (f32)(int)uval;
+                dy = (f32)(int)(uval = randomGetRange(0x8c, 0xb4));
+                dy = (f32) * (u16*)(state + 0x268) / dy;
                 ((GameObject*)obj)->anim.velocityY =
                     -(lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY * dy);
             }
             else
             {
-                uval = randomGetRange(0x14, 0x28);
-                dy = (f32) * (u16*)(state + 0x268) / (f32)(int)uval;
+                dy = (f32)(int)(uval = randomGetRange(0x14, 0x28));
+                dy = (f32) * (u16*)(state + 0x268) / dy;
                 ((GameObject*)obj)->anim.velocityY =
                     -(lbl_803E2F84 * ((GameObject*)obj)->anim.velocityY * dy);
             }
