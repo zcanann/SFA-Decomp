@@ -115,10 +115,9 @@ void CameraModeBike_update(CameraObject* camera)
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
                               &posZ, &posY, &posX);
         camera->anim.rotX = 0x8000 - target->anim.rotX;
-        gCamTalkBikeState->smoothedYawOffset =
+        gCamTalkBikeState->smoothedYawOffset +=
             lbl_803E1790 *
-            (lbl_803E1794 * gCamTalkBikeState->turnInput - gCamTalkBikeState->smoothedYawOffset) +
-            gCamTalkBikeState->smoothedYawOffset;
+            (lbl_803E1794 * gCamTalkBikeState->turnInput - gCamTalkBikeState->smoothedYawOffset);
         rotVal = (int)
         ((f32)(s32)
         camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset
@@ -144,10 +143,9 @@ void CameraModeBike_update(CameraObject* camera)
         kFollowA = lbl_803E17A8;
         kFollowB = lbl_803E17B0;
         clampedHeight = (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
-        gCamTalkBikeState->followDistance =
+        gCamTalkBikeState->followDistance +=
             kFollowA *
-            ((kFollowB * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance) +
-            gCamTalkBikeState->followDistance;
+            ((kFollowB * clampedHeight + gCamTalkDefaultFollowDist) - gCamTalkBikeState->followDistance);
         followDist = gCamTalkBikeState->followDistance;
         sinPitch = followDist * sinPitch;
         cosPitch = followDist * cosPitch;
