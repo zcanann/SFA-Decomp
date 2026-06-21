@@ -15214,7 +15214,7 @@ int fn_802A2918(int obj, int state, f32 fv)
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
-                    ((PlayerState*)state)->baddie.moveSpeed, 0, flag ? 0x34 | 0x40 : 0x34);
+                    ((PlayerState*)state)->baddie.moveSpeed, 0, 0x34 | (flag ? 0x40 : 0));
         fn_802A71E0(obj, t[2], t[3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
