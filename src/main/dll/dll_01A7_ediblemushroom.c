@@ -461,9 +461,10 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
     f32 rad;
     f32 c;
     f32 s;
-    f32 cosP;
     f32 cosM;
+    f32 cosP;
     f32 sinM;
+    f32 sinP;
     f32 cosStepP;
     f32 cosStepM;
     f32 sinStepP;
@@ -486,6 +487,7 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
         cosP = c;
         cosStepP = mathSinf(lbl_803E52D4);
         cosStepM = mathSinf(lbl_803E52D8);
+        sinP = s;
         sinM = s;
         sinStepP = mathCosf(lbl_803E52D4);
         sinStepM = mathCosf(lbl_803E52D8);
@@ -494,11 +496,11 @@ s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist)
             f32 t;
 
             anglePlus += 0xe38;
-            t = cosP * sinStepP + s * cosStepP;
-            s = s * sinStepP - cosP * cosStepP;
+            t = cosP * sinStepP + sinP * cosStepP;
+            sinP = sinP * sinStepP - cosP * cosStepP;
             cosP = t;
             vec[0] = ((GameObject*)obj)->anim.localPosX - dist * t;
-            vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * s;
+            vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sinP;
             if (objBboxFn_800640cc(obj + 0xc, vec, lbl_803E52D0, 1, 0, obj, 8, -1, 0xff, 0) == 0)
             {
                 return anglePlus;
