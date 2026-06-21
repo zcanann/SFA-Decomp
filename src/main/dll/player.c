@@ -8644,9 +8644,13 @@ void fn_802AFB0C(int obj, int inner, int state)
                 {
                     v = 0;
                 }
-                else if (v > hp[1])
+                else
                 {
-                    v = hp[1];
+                    int hi = hp[1];
+                    if (v > hi)
+                    {
+                        v = hi;
+                    }
                 }
                 *hp = v;
                 if (**(s8**)((char*)hb + 0x35c) <= 0)
