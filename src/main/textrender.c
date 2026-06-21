@@ -791,7 +791,10 @@ void* gameTextGet(int textId)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+        {
+            u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+            entry = (u16*)(slotBase + 0x40);
+        }
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -856,7 +859,10 @@ void* gameTextGet(int textId)
     {
         gGameTextBufferIndex = 0;
     }
-    entry = (u16*)(gameTextBase + 0x40 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+    {
+        u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+        entry = (u16*)(slotBase + 0x40);
+    }
     gGameTextLastEntry = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
