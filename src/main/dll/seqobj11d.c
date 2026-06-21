@@ -185,8 +185,11 @@ void fn_801511E8(int obj, u8* state)
 {
     u8* entry;
     u32 idx;
+    char* base;
 
-    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
+    base = lbl_8031F16C;
+    base += state[0x33b] * 40;
+    entry = *(u8**)(base + 12);
     if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
@@ -227,8 +230,11 @@ void fn_801513AC(int obj, u8* state)
     u8* entry;
     u32 idx;
     s16 d;
+    char* base;
 
-    entry = *(u8**)(lbl_8031F16C + state[0x33b] * 40 + 12);
+    base = lbl_8031F16C;
+    base += state[0x33b] * 40;
+    entry = *(u8**)(base + 12);
     if (fn_8014C11C(obj, 1, 16, gGroundBaddieTargetSearchResult, lbl_803E27AC) >= 1)
     {
         if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40
@@ -295,10 +301,13 @@ void fn_8015165C(int obj, u8* state)
     u8 t;
     f32 tv;
     f32 fz;
+    char* base;
 
     t = state[0x33b];
-    p20 = *(u8**)(lbl_8031F16C + t * 40 + 20);
-    p28 = *(u8**)(lbl_8031F16C + t * 40 + 28);
+    base = lbl_8031F16C;
+    base += t * 40;
+    p20 = *(u8**)(base + 20);
+    p28 = *(u8**)(base + 28);
     if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
     {
         GameBit_Set(456, 1);
