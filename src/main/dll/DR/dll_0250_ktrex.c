@@ -16,9 +16,9 @@ typedef struct KTRexWork
     s16 unk4;
     u8 pad6[0x8 - 0x6];
     f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 posX; /* 0xC */
+    f32 posY; /* 0x10 */
+    f32 posZ; /* 0x14 */
 } KTRexWork;
 
 
@@ -1238,9 +1238,9 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         (((KTRexArenaState*)gKTRexState)->timerFA & 0x10) != 0 && hit == 5)
     {
         pt = contactPoints + hitType * 4;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unkC = playerMapOffsetX + pt[1];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk10 = pt[2];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk14 = playerMapOffsetZ + pt[3];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + pt[1];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
         Sfx_PlayFromObject(obj, SFXmv_roothack16);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, gKTRexEffectSpawnWork, 0x200001, -1,
@@ -1268,14 +1268,14 @@ void ktrex_updateContactEffects(int obj, void* runtime)
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
         pt = contactPoints + hitType * 4;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unkC = playerMapOffsetX + pt[1];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk10 = pt[2];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk14 = playerMapOffsetZ + pt[3];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + pt[1];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
         (*gPartfxInterface)->spawnObject((void*)obj, 0x328, gKTRexEffectSpawnWork, 0x200001, -1,
                                          NULL);
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unkC -= ((GameObject*)obj)->anim.worldPosX;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk10 -= ((GameObject*)obj)->anim.worldPosY;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->unk14 -= ((GameObject*)obj)->anim.worldPosZ;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posY -= ((GameObject*)obj)->anim.worldPosY;
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ -= ((GameObject*)obj)->anim.worldPosZ;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk8 = lbl_803E6818;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk0 = 0;
         ((KTRexWork*)gKTRexEffectSpawnWork)->unk2 = 0;
