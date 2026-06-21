@@ -154,11 +154,11 @@ void CameraModeCombat_update(short* cam)
     GameObject* tgt;
     ObjHitVolumeRuntimeTransform* hitVolumes;
     GameObject* focus;
-    f32 range;
     f32 dist;
     f32 px;
     f32 py;
     f32 pz;
+    f32 range;
     f32 step;
     f32 zoom;
     f32 mag;
@@ -381,7 +381,7 @@ void CameraModeCombat_update(short* cam)
                             n[1] = ((CameraObject*)cam)->anim.worldPosY - step;
                             PSVECSubtract(n, (f32*)((char*)cam + 0x18), vec);
                             mag = PSVECMag(vec);
-                            if (lbl_803E18C4 < mag)
+                            if (mag > lbl_803E18C4)
                             {
                                 PSVECNormalize(vec, vec);
                             }
