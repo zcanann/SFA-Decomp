@@ -2032,17 +2032,16 @@ void fn_8008C9F4(u8* cfg, u8 flags)
         *(f32*)(base[b1] + i * 4 + 0x1fc) = lbl_803DF10C;
         *(f32*)(base[b1] + i * 4 + 0x228) = lbl_803DF110;
     }
-    p2 = gSkyConfigFieldIndices;
-    for (i = 0; i < 0xb; i++, p2++)
+    for (i = 0; i < 0xb; i++)
     {
         *(f32*)(base[b1] + i * 4 + 0xf4) = (f32)(u32)
-        cfg[*p2 + 0xc];
+        cfg[gSkyConfigFieldIndices[i] + 0xc];
         *(f32*)(base[b1] + i * 4 + 0x120) = (f32)(u32)
-        cfg[*p2 + 0x14];
+        cfg[gSkyConfigFieldIndices[i] + 0x14];
         *(f32*)(base[b1] + i * 4 + 0x14c) = (f32)(u32)
-        cfg[*p2 + 0x1c];
-        *(f32*)(base[b1] + i * 4 + 0x254) = (f32)(u32) * (u16*)(cfg + *p2 * 2 + 0x3e);
-        *(f32*)(base[b1] + i * 4 + 0x280) = (f32)(u32) * (u16*)(cfg + *p2 * 2 + 0x2e);
+        cfg[gSkyConfigFieldIndices[i] + 0x1c];
+        *(f32*)(base[b1] + i * 4 + 0x254) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x3e);
+        *(f32*)(base[b1] + i * 4 + 0x280) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x2e);
     }
     *(u16*)(base[b1] + 4) = ((Sky2Config*)cfg)->unk58;
     *(u16*)(base[b1] + 6) = ((Sky2Config*)cfg)->unk59;
