@@ -358,11 +358,11 @@ void trickyFn_80141fec(u8* obj, u8* state)
             if (((TrickyState*)state)->unk70C != NULL)
             {
                 state[0xa] = 2;
-                if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk70C + 8)
+                ptr = ((TrickyState*)state)->unk70C + 8;
+                if (((TrickyState*)state)->unk28 != ptr)
                 {
-                    ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk70C + 8;
-                    ret = *(u32*)&((TrickyState*)state)->stateFlags;
-                    *(u32*)&((TrickyState*)state)->stateFlags = ret & ~0x400LL;
+                    ((TrickyState*)state)->unk28 = ptr;
+                    ((TrickyState*)state)->stateFlags &= ~0x400LL;
                     ((TrickyState*)state)->unkD2 = 0;
                 }
             }
