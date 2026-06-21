@@ -2494,11 +2494,13 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int n, t;
             int hint;
             {
-                u8* p;
-                u8* base = gGameUiTaskHintCandidates;
                 int i;
+                u8* base;
+                u8* p;
+                i = 0;
+                base = (u8*)(int)gGameUiTaskHintCandidates;
                 p = base;
-                for (i = 0; i < 5; i++)
+                for (; i < 5; i++)
                 {
                     if (GameBit_Get(gTaskHintTable[*p].bit_id))
                     {
