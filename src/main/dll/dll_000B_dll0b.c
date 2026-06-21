@@ -2099,7 +2099,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     }
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->currentStage = -1;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageFrameCountdown = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageFrameCountdown = ((PartfxEffectState**)gPartfxActiveEffects)[slot]->stageDurations[((PartfxEffectState**)gPartfxActiveEffects)[slot]->currentStage];
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->flags = *(int*)(st + 0x54);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosX = *(f32*)(st + 0x2c);
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawPosY = *(f32*)(st + 0x30);
