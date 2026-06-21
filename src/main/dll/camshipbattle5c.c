@@ -326,7 +326,7 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nx * *(f32*)((char*)pts[1] + NODE_POS_X) + nz * *(f32*)((char*)pts[1] + NODE_POS_Z));
+    negdot = -(nz * *(f32*)((char*)pts[1] + NODE_POS_Z) + nx * *(f32*)((char*)pts[1] + NODE_POS_X));
     t1 = nx * dx1 + nz * dz1;
     if (0.0f != t1)
     {
