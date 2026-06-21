@@ -1026,7 +1026,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
         if (*(char*)((int)trickyState + ref) != '\0') continue;
         ref = *(int*)&((GameObject*)obj)->extra;
         if (((u32)(*(u8*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
-        if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+        if ((int)((GameObject*)obj)->anim.currentMove >= 0x30 || (int)((GameObject*)obj)->anim.currentMove < 0x29)
         {
             if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
             {
