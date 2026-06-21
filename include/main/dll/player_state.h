@@ -359,7 +359,7 @@ typedef struct PlayerState {
     s8 unk8C2;
     u8 unk8C3;
     u8 unk8C4;
-    u8 unk8C5;
+    u8 emissionState; /* emission-controller lifecycle state code (0-4) set by the staff/move handler keyed on current move; returned by EmissionController_IsLingering */
     u8 pad8C6[0x8C7 - 0x8C6];
     u8 staffUnlockedFlags;
     u8 curAnimId; /* current move/anim id (0x44 = default) */

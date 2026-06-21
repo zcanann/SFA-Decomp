@@ -203,7 +203,7 @@ int fn_802972A8(int obj)
 int EmissionController_IsLingering(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    return inner->unk8C5;
+    return inner->emissionState;
 }
 
 u32 playerGetStateFlag310(int obj)
@@ -3528,7 +3528,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     ((PlayerState*)inner)->baddie.cameraYaw = 0;
                     ((PlayerState*)inner)->baddie.physicsActive = 1;
                     *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
-                    ((PlayerState*)inner)->unk8C5 = 0;
+                    ((PlayerState*)inner)->emissionState = 0;
                     fn_802B0EA4(obj, (int)inner, (int)inner);
                     (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) +
                         8))(
@@ -3553,7 +3553,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 ((PlayerState*)inner)->baddie.cameraYaw = 0;
                 ((PlayerState*)inner)->baddie.physicsActive = 1;
                 *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
-                ((PlayerState*)inner)->unk8C5 = 0;
+                ((PlayerState*)inner)->emissionState = 0;
                 fn_802B0EA4(obj, (int)inner, (int)inner);
                 (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) +
                     8))(timeDelta, obj, (int)inner,
@@ -6838,7 +6838,7 @@ int fn_802AD2F4(int obj, int inner, int state)
     case 0xa:
     case 0x54:
     case 0x90:
-        ((PlayerState*)inner)->unk8C5 = 2;
+        ((PlayerState*)inner)->emissionState = 2;
         break;
     case 0x13:
         {
@@ -6877,11 +6877,11 @@ int fn_802AD2F4(int obj, int inner, int state)
         }
         if (((PlayerState*)inner)->unk3F7 >= 2)
         {
-            ((PlayerState*)inner)->unk8C5 = 4;
+            ((PlayerState*)inner)->emissionState = 4;
         }
         else
         {
-            ((PlayerState*)inner)->unk8C5 = 3;
+            ((PlayerState*)inner)->emissionState = 3;
         }
         break;
     case 0xb:
@@ -6904,7 +6904,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             }
             (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2,
                 timeDelta);
-            ((PlayerState*)inner)->unk8C5 = 4;
+            ((PlayerState*)inner)->emissionState = 4;
             break;
         }
     case 0xc:
@@ -6923,13 +6923,13 @@ int fn_802AD2F4(int obj, int inner, int state)
         }
         (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2,
                                                                              timeDelta);
-        ((PlayerState*)inner)->unk8C5 = 4;
+        ((PlayerState*)inner)->emissionState = 4;
         break;
     default:
         ObjAnim_SetCurrentMove(obj, 0x54, lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x14);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C;
-        ((PlayerState*)inner)->unk8C5 = 2;
+        ((PlayerState*)inner)->emissionState = 2;
         ((PlayerState*)inner)->unk3F7 = 0;
         ((ByteFlags*)((char*)inner + 0x3f0))->b01 = 0;
         ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 0;
@@ -12331,7 +12331,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
-    ((PlayerState*)state)->unk8C5 = 0;
+    ((PlayerState*)state)->emissionState = 0;
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x2000LL;
     *(int*)state |= 0x1000000;
     fn_802B0EA4(obj, state, state);
@@ -16484,7 +16484,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         if (v > 0xa) v = 0xa;
         ((PlayerState*)inner)->unk40C = v;
     }
-    ((PlayerState*)inner)->unk8C5 = 1;
+    ((PlayerState*)inner)->emissionState = 1;
     {
         f32 f4, c4;
         ((PlayerState*)inner)->targetYawSmoothRate = (c4 = lbl_803E80C4);
