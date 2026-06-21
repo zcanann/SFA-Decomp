@@ -240,7 +240,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 hStep;
     u32 loEdge;
     u32 inset;
-    u32 maxAlpha;
+    u8 maxAlpha;
     u32 H;
     u8 step;
     u8 fadeAlpha;
