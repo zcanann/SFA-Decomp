@@ -993,13 +993,13 @@ void andross_update(int obj)
             if (((AndrossState*)state)->fightPhase < 5)
             {
                 ref = randomGetRange(0, 1);
-                if (ref == 0)
+                if (ref != 0)
                 {
-                    objId = 0x472;
+                    objId = 0x471;
                 }
                 else
                 {
-                    objId = 0x471;
+                    objId = 0x472;
                 }
                 Sfx_PlayFromObject(obj, objId);
                 ((AndrossState*)state)->actionState = 0x16;
@@ -1753,14 +1753,14 @@ void andross_update(int obj)
                 randVal = randomGetRange(0x14, 0x1e);
                 ((AndrossState*)state)->actionTimer = randVal;
                 val = randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX);
-                ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX + (f32)(int)
-                val;
+                ((AndrossState*)state)->targetPosX = (f32)(int)val +
+                ((AndrossState*)state)->homePosX;
                 randOffsetY = randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY);
-                ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY + (f32)(int)
-                randOffsetY;
+                ((AndrossState*)state)->targetPosY = (f32)(int)randOffsetY +
+                ((AndrossState*)state)->homePosY;
                 val = randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ);
-                ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ + (f32)(int)
-                val;
+                ((AndrossState*)state)->targetPosZ = (f32)(int)val +
+                ((AndrossState*)state)->homePosZ;
             }
         }
         if ((((AndrossState*)state)->signalFlags & 8) != 0)
@@ -1797,13 +1797,13 @@ void andross_update(int obj)
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
             ref = randomGetRange(0, 1);
-            if (ref == 0)
+            if (ref != 0)
             {
-                objId = 0x472;
+                objId = 0x471;
             }
             else
             {
-                objId = 0x471;
+                objId = 0x472;
             }
             Sfx_PlayFromObject(obj, objId);
         }
@@ -1817,13 +1817,13 @@ void andross_update(int obj)
         if (moveChanged)
         {
             ref = randomGetRange(0, 1);
-            if (ref == 0)
+            if (ref != 0)
             {
-                objId = 0x472;
+                objId = 0x471;
             }
             else
             {
-                objId = 0x471;
+                objId = 0x472;
             }
             Sfx_PlayFromObject(obj, objId);
             ref = *(int*)&((GameObject*)obj)->extra;
@@ -1889,7 +1889,7 @@ void andross_update(int obj)
         {
             fc = mathSinf(((lbl_803E74A0 *
                     (float)(lbl_803E7548 *
-                        lbl_803E7550 * (fc / lbl_803E7540))) /
+                        (lbl_803E7550 * (fc / lbl_803E7540)))) /
                 lbl_803E74A4));
             ((AndrossState*)state)->targetPosZ = (lbl_803E74A8 * fc + ((AndrossState*)state)->homePosZ);
         }
@@ -1907,13 +1907,13 @@ void andross_update(int obj)
             ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0u))
         {
             work = randomGetRange(0, 1);
-            if (work == 0)
+            if (work != 0)
             {
-                objId = 0x472;
+                objId = 0x471;
             }
             else
             {
-                objId = 0x471;
+                objId = 0x472;
             }
             Sfx_PlayFromObject(obj, objId);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 1;
