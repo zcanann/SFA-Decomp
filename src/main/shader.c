@@ -1791,7 +1791,7 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
         cellVal = *(int*)(*(int*)(ptr0 + 0xc) + (idx2 >> 1) * 4) & 0x7f;
         if (cellVal != 127)
         {
-            v2 = ((int*)tbl2)[f1 + cellVal * 4 - 1];
+            v2 = ((int*)tbl2)[f1 - 1 + cellVal * 4];
             o0[0] = ((v2 >> 12) & 0xf) - 7;
             o0[2] = ((v2 >> 8) & 0xf) - 7;
             o0[1] = ((v2 >> 4) & 0xf) - 7;
