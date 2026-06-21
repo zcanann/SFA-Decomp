@@ -1,7 +1,7 @@
 # SFA-Decomp Matching Playbook — FULL ARCHIVE
 
 > Complete, unabridged playbook: every recipe with its full negative-maps, CRACKED/SUPERSEDED
-> history, campaign/task notes, and frontier analyses. `CLAUDE.md` is a lean lever-index
+> history, campaign/task notes, and open-puzzle analyses. `CLAUDE.md` is a lean lever-index
 > distilled from this file — consult THIS file when a one-liner there isn't enough. Recipe
 > numbers match between the two. This archive is the source of truth.
 
@@ -32,19 +32,19 @@ land in this playbook as they're discovered, and a documented partial is the
 exact seed the next technique grows from. Don't reach for asm to fill the gap —
 the gap is the point, and the gap is recoverable.
 
-Heuristic (these are checkpoints to BANK progress, never stop signs — re-attack
+Heuristic (these are checkpoints to record progress, never stop signs — re-attack
 every partial when a new recipe lands):
 - Residual is a single instruction / register-allocation choice? → commit the
   partial with the divergence documented, then keep it on the retry list.
-- Function ≥80% fuzzy on clean C? → bank the partial and circle back as
+- Function ≥80% fuzzy on clean C? → set the partial aside and circle back as
   techniques accumulate.
 - Looks like "MWCC can't pick this from any C"? → **commit the partial** and
   flag the function so it gets revisited with the next playbook recipe (this
   exact framing is how the cracked caps got cracked). Never asm.
 
-**FRESH-EYES PROTOCOL for stale banks: re-attack WITHOUT reading the previous
+**FRESH-EYES PROTOCOL for set-aside residuals: re-attack WITHOUT reading the previous
 attempt's negative map.** A documented "probed inert ×N" list anchors the next
-attacker onto the same axes; FOUR banked residuals fell in ONE day to
+attacker onto the same axes; FOUR set-aside residuals fell in ONE day to
 attackers told only the score and "the playbook may be wrong" (SB_Galleon_func0E
 95.9→100 — the "unproducible at O4" verdict was a wrong axis; SB_ShipGun_update
 99.42→100 — every spelling battery missed that the LOOP-ELEMENT VARIABLE
@@ -54,7 +54,7 @@ cfprisonguard's "retail-anomaly, permanently unmatchable" census verdict — a
 dropped argument). Negative maps stay valuable
 for the SAME axis (don't re-run them); the protocol is for finding the axis
 nobody tried: derive the hypothesis from the target asm as if the function were
-new, and only afterwards check the bank for overlap.
+new, and only afterwards check the set-aside notes for overlap.
 
 ## Pragma states: what they are and where they come from (read before #1)
 
