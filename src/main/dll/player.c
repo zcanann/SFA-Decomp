@@ -15117,11 +15117,12 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
 
 int fn_802A2918(int obj, int state, f32 fv)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
     int flag;
+    PlayerState* innerV = ((GameObject*)obj)->extra;
+    PlayerState* inner = ((GameObject*)obj)->extra;
 
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~0x2LL;
-    *(u32*)&((PlayerState*)inner)->flags360 |= 0x2000LL;
+    *(u32*)&((PlayerState*)innerV)->flags360 &= ~0x2LL;
+    *(u32*)&((PlayerState*)innerV)->flags360 |= 0x2000LL;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
         f32 z = lbl_803E7EA4;
@@ -15133,7 +15134,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         *(int*)((char*)state + 0x4) |= 0x8000000;
         ((GameObject*)obj)->anim.velocityY = z;
     }
-    flag = inner->climbStep != 1;
+    flag = innerV->climbStep != 1;
     if (flag)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
