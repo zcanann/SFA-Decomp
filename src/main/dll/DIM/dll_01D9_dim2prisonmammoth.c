@@ -19,11 +19,11 @@ typedef struct Dim2prisonmammothPlacement
 
 typedef struct Dim2prisonmammothState
 {
-    s32 unk0;
+    s32 flags; /* 0x0 object flag bits (0x8000, 0x400000) */
     u8 pad4[0x25F - 0x4];
     u8 unk25F;
     u8 pad260[0x274 - 0x260];
-    s16 unk274;
+    s16 stateIndex; /* 0x274 indexes gPrisonMammothStateFlagsTable */
     u8 pad276[0x28C - 0x276];
     f32 unk28C;
     f32 unk290;
@@ -37,7 +37,7 @@ typedef struct Dim2prisonmammothState
     u8 pad355[0x38C - 0x355];
     s16 unk38C;
     u8 pad38E[0x5FC - 0x38E];
-    u8 unk5FC;
+    u8 hitReactState; /* 0x5FC carried in/out of ObjHitReact_Update */
     u8 pad5FD[0x604 - 0x5FD];
 } Dim2prisonmammothState;
 
@@ -268,11 +268,11 @@ void dim2prisonmammoth_update(int obj)
     f32 matrix[16];
     int inner = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->unk274] & 8) == 0)
+    if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
-        ((Dim2prisonmammothState*)inner)->unk5FC = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-            obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->unk5FC, (f32*)(inner + 0x390));
-        if (((Dim2prisonmammothState*)inner)->unk5FC != 0)
+        ((Dim2prisonmammothState*)inner)->hitReactState = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
+            obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState, (f32*)(inner + 0x390));
+        if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
             fn_8003A168(obj, inner + 0x35c);
             characterDoEyeAnims(obj, inner + 0x35c);
@@ -293,7 +293,7 @@ void dim2prisonmammoth_update(int obj)
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState*)inner)->unk354 = 0;
-    ((Dim2prisonmammothState*)inner)->unk0 &= ~0x8000;
+    ((Dim2prisonmammothState*)inner)->flags &= ~0x8000;
     {
         f32 fz = lbl_803E82C0;
         ((Dim2prisonmammothState*)inner)->unk290 = fz;
@@ -302,7 +302,7 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->unk31C = 0;
     ((Dim2prisonmammothState*)inner)->unk318 = 0;
     ((Dim2prisonmammothState*)inner)->unk330 = 0;
-    ((Dim2prisonmammothState*)inner)->unk0 |= 0x400000;
+    ((Dim2prisonmammothState*)inner)->flags |= 0x400000;
     (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
