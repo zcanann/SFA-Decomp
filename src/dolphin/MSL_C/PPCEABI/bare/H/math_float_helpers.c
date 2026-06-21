@@ -60,21 +60,20 @@ void fastCastFloatToS16(s16* p, float x);
 float exp2f(float x)
 {
     s16 exponent;
-    float input = x;
     float integer_part;
     float fraction;
     float result;
 
-    if (input < lbl_803E7978) {
+    if (x < lbl_803E7978) {
         return lbl_803E797C;
     }
 
-    fastCastFloatToS16(&exponent, input);
+    fastCastFloatToS16(&exponent, x);
     integer_part = fastCastS16ToFloat(&exponent);
-    fraction = input - integer_part;
+    fraction = x - integer_part;
 
     if (fraction != lbl_803E797C) {
-        if (input < lbl_803E797C) {
+        if (x < lbl_803E797C) {
             exponent--;
             fraction += lbl_803E7980;
         }
