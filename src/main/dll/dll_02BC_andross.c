@@ -648,8 +648,8 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
-        if ((u32) * (u8*)((int)state + 0xae) + (u32) * (u8*)((int)state + 0xaf) +
-            (u32)((AndrossState*)state)->unkB0 == 0)
+        if ((u16)(*(u8*)((int)state + 0xae) + *(u8*)((int)state + 0xaf) +
+            *(u8*)((int)state + 0xb0)) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -684,8 +684,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 2;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u32) * (u8*)((int)state + 0xae) + (u32) * (u8*)((int)state + 0xaf) +
-            (u32)((AndrossState*)state)->unkB0 == 0)
+        if ((u16)(*(u8*)((int)state + 0xae) + *(u8*)((int)state + 0xaf) +
+            *(u8*)((int)state + 0xb0)) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -730,8 +730,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 3;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u32) * (u8*)((int)state + 0xae) + (u32) * (u8*)((int)state + 0xaf) +
-            (u32)((AndrossState*)state)->unkB0 == 0)
+        if ((u16)(*(u8*)((int)state + 0xae) + *(u8*)((int)state + 0xaf) +
+            *(u8*)((int)state + 0xb0)) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
@@ -796,8 +796,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionPending = 1;
             GameBit_Set(0xd, 0);
         }
-        if ((u32) * (u8*)((int)state + 0xae) + (u32) * (u8*)((int)state + 0xaf) +
-            (u32)((AndrossState*)state)->unkB0 == 0)
+        if ((u16)(*(u8*)((int)state + 0xae) + *(u8*)((int)state + 0xaf) +
+            *(u8*)((int)state + 0xb0)) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
             ((AndrossState*)state)->actionState = 5;
