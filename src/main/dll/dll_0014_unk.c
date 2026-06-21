@@ -2260,10 +2260,10 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     ex = (f32)(XF);                                                             \
     j2 = 0;                                                                     \
     for (e = 0; e < 4; e++) {                                                   \
-        if (lbl_803E05F0 <                                                      \
-            OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
-                ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                  \
-                ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) {           \
+        if (OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
+                (ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                 \
+                 ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) >          \
+            lbl_803E05F0) {                                                     \
             break;                                                              \
         }                                                                       \
         j2 += 2;                                                                \
