@@ -3084,13 +3084,16 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             expgfx_initSlotQuad(slot);
         }
 
-        poolSourceModesByte = &runtime->poolSourceModes[poolIndex];
-        modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
-        *poolSourceModesByte = modeFlag;
-        if (*poolSourceModesByte != 0 &&
-            (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)
         {
-            *poolSourceModesByte = *poolSourceModesByte + 1;
+            ExpgfxRuntimeDataLayout* poolModeBase =
+                (ExpgfxRuntimeDataLayout*)((u8*)runtime + poolIndex);
+            modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
+            poolModeBase->poolSourceModes[0] = modeFlag;
+            if (poolModeBase->poolSourceModes[0] != 0 &&
+                (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)
+            {
+                poolModeBase->poolSourceModes[0] = poolModeBase->poolSourceModes[0] + 1;
+            }
         }
         runtime->poolBoundsTemplateIds[poolIndex] = boundsTemplateId;
 
