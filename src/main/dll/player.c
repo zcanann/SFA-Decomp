@@ -2742,12 +2742,12 @@ int fn_802A0680(int obj, int state)
     case 0x10:
         if (((GameObject*)obj)->anim.currentMove == 0x66)
         {
-            ((PlayerState*)inner)->unk5A6 = 0;
+            ((PlayerState*)inner)->moveAltToggle = 0;
             gPlayerCurrentMoveId = 0x16;
         }
         else
         {
-            ((PlayerState*)inner)->unk5A6 = 1;
+            ((PlayerState*)inner)->moveAltToggle = 1;
             gPlayerCurrentMoveId = 0x15;
         }
         ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->savedPosY;
@@ -2836,7 +2836,7 @@ int fn_802A0680(int obj, int state)
                 gPlayerPrevMoveId = -1;
                 if ((s16)gPlayerCurrentMoveId == 4 || (s16)gPlayerCurrentMoveId == 0)
                 {
-                    ((PlayerState*)inner)->unk5A6 ^= 1;
+                    ((PlayerState*)inner)->moveAltToggle ^= 1;
                 }
                 b6 = 0;
                 b7 = 0;
@@ -2873,7 +2873,7 @@ int fn_802A0680(int obj, int state)
                     b8 = 1;
                     break;
                 }
-                if (((PlayerState*)inner)->unk5A6 != 0)
+                if (((PlayerState*)inner)->moveAltToggle != 0)
                 {
                     gPlayerCurrentMoveId += 8;
                 }
@@ -3034,12 +3034,12 @@ int fn_802A0680(int obj, int state)
                         int st2 = (s16)gPlayerCurrentMoveId;
                         if (st2 == 4 || st2 == 0 || ((st2 == 0xc) | (st2 == 8)) != 0)
                         {
-                            ((PlayerState*)inner)->unk5A6 ^= 1;
+                            ((PlayerState*)inner)->moveAltToggle ^= 1;
                         }
                     }
                     {
                         s16 ns;
-                        if (((PlayerState*)inner)->unk5A6 != 0)
+                        if (((PlayerState*)inner)->moveAltToggle != 0)
                         {
                             ns = 0x15;
                         }
@@ -3063,7 +3063,7 @@ int fn_802A0680(int obj, int state)
                 ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->savedPosY;
                 {
                     s16 ns;
-                    if (((PlayerState*)inner)->unk5A6 != 0)
+                    if (((PlayerState*)inner)->moveAltToggle != 0)
                     {
                         ns = 0x15;
                     }

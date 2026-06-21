@@ -166,7 +166,7 @@ typedef struct PlayerState {
     f32 unk594;
     u8 pad598[0x5A4 - 0x598];
     s16 animEventState; /* anim event-state word written each frame via ObjAnim_WriteStateWord(...EVENT_STATE); from fn_802A71E0 or a scaled move-blend factor */
-    s16 unk5A6;
+    s16 moveAltToggle; /* alternating selector for a paired repeating move: !=0 picks move 0x15, ==0 picks 0x16; XOR-toggled each cycle (e.g. left/right climb step) */
     f32 unk5A8;
     f32 unk5AC;
     f32 unk5B0;
