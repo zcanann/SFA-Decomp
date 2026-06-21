@@ -2023,8 +2023,9 @@ void dbstealerworm_update(u8* objp)
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
         off = n * 0xc;
-        for (; n != 0; n--)
+        for (; n != 0;)
         {
+            n--;
             Stack_Push(((DbStealerwormControl*)sub)->msgStack, (int*)(*(int*)entry + (off -= 12)));
         }
         ((DbStealerwormControl*)sub)->unk34 = 1;
