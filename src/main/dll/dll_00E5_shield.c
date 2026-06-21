@@ -1235,7 +1235,6 @@ void staffFn_80170380(int* obj, int cmd)
             i = 0;
             hw = state;
             w = state;
-            t0 = tbl;
             t1 = (f32*)((char*)tbl + 0x10);
             k = lbl_803E33A8;
             for (; i < 4; i++)
@@ -1246,10 +1245,10 @@ void staffFn_80170380(int* obj, int cmd)
                 c = fcos16((u16) * (s16*)(hw + 0x34));
                 sum = amp + c;
                 c = sum * k;
-                *(f32*)(w + 0x24) = *t0 * c;
+                *(f32*)(w + 0x24) = *tbl * c;
                 *(f32*)(w + 0x14) = *t1;
                 hw += 2;
-                t0 += 1;
+                tbl += 1;
                 w += 4;
                 t1 += 1;
             }
