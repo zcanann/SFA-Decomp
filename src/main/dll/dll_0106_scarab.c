@@ -367,11 +367,11 @@ void scarab_update(int obj)
                 {
                     ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + randomGetRange(-1460, 1460));
                 }
-                ((GameObject*)obj)->anim.velocityX = ((ScarabState*)state)->velX;
+                *(f32*)((int)obj + 0x24) = ((ScarabState*)state)->velX;
                 {
                     f32 fz = lbl_803E39F8;
-                    ((GameObject*)obj)->anim.velocityY = fz;
-                    ((GameObject*)obj)->anim.velocityZ = ((ScarabState*)state)->velZ;
+                    *(f32*)((int)obj + 0x28) = fz;
+                    *(f32*)((int)obj + 0x2c) = ((ScarabState*)state)->velZ;
                     rot.x = fz;
                     rot.y = fz;
                     rot.z = fz;
