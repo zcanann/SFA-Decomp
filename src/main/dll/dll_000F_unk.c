@@ -831,6 +831,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     f32 dz;
     f32 dist;
     f32 limit;
+    f32 ldx;
+    f32 ldz;
 
     keepPathControls = 1;
     lbl_803DD44E = 0;
@@ -923,8 +925,9 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         dist = sqrtf(dx * dx + dz * dz);
         if (dist < lbl_803E05BC)
         {
-            limit = sqrtf((*(f32*)(pos + 0xc) - gPlayerMoveOverridePosX) * (*(f32*)(pos + 0xc) - gPlayerMoveOverridePosX) +
-                (*(f32*)(pos + 0x14) - gPlayerMoveOverridePosZ) * (*(f32*)(pos + 0x14) - gPlayerMoveOverridePosZ));
+            ldx = *(f32*)(pos + 0xc) - gPlayerMoveOverridePosX;
+            ldz = *(f32*)(pos + 0x14) - gPlayerMoveOverridePosZ;
+            limit = sqrtf(ldx * ldx + ldz * ldz);
             if (limit < lbl_803E05B4)
             {
                 limit = lbl_803E05B4;
@@ -941,8 +944,10 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
                 {
                     limit = dist;
                 }
-                *(f32*)(pos + 0xc) = dx / dist * limit + gPlayerMoveOverridePosX;
-                *(f32*)(pos + 0x14) = dz / dist * limit + gPlayerMoveOverridePosZ;
+                dx = dx / dist;
+                dz = dz / dist;
+                *(f32*)(pos + 0xc) = dx * limit + gPlayerMoveOverridePosX;
+                *(f32*)(pos + 0x14) = dz * limit + gPlayerMoveOverridePosZ;
             }
         }
     }
@@ -955,13 +960,13 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         (*gPathControlInterface)->apply(pos, state + 0x4);
         (*gPathControlInterface)->advance(pos, state + 0x4, pathDt);
 
-        if (((s32) * (s8*)(state + 0x264) & 0x10) == 0)
+        if (((s32) * (s8*)(state + 0x264) & 0x10) != 0)
         {
-            *(u32*)state &= 0xfffbffff;
+            *(u32*)state |= 0x40000;
         }
         else
         {
-            *(u32*)state |= 0x40000;
+            *(u32*)state &= 0xfffbffff;
         }
 
         if ((*(int*)state & 0x800000) != 0)
