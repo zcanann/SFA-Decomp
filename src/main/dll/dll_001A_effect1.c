@@ -927,8 +927,8 @@ void modgfx_resetActiveEffectRegistry(u64 param_1, u64 param_2, u64 param_3,
 }
 
 u32
-FUN_800a2a98(int param_1, int param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a2a98(int sourceObj, int effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }
@@ -1258,15 +1258,15 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
 }
 
 u32
-FUN_800a3828(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a3828(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }
 
 u32
-FUN_800a3924(int param_1, u32 param_2, ExpgfxAttachedSourceState* param_3, u32 param_4,
-             u8 param_5)
+FUN_800a3924(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
+             u8 modelId)
 {
     return 0;
 }
@@ -1630,7 +1630,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DF750;
         cfg.lifetimeFrames = 0xb4;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8048100;
+        cfg.behaviorFlags = 0x80480100;
         cfg.renderFlags = 0x2000000;
         cfg.quadVertex3Pad06 = 0x5e9;
         cfg.textureId = 0x26c;
@@ -2130,7 +2130,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.initialAlpha = 0x9b;
         cfg.scale = lbl_803DF7AC;
         cfg.lifetimeFrames = randomGetRange(0x8c, 0xa5);
-        cfg.behaviorFlags = 0x8110000;
+        cfg.behaviorFlags = 0x81100000;
         cfg.renderFlags = (u32)(0x410000 - 0x7fe0);
         cfg.colorWord0 = 0x7d0;
         cfg.colorWord1 = 0x7d0;
@@ -2148,7 +2148,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.initialAlpha = 0x9b;
         cfg.scale = lbl_803DF7B0;
         cfg.lifetimeFrames = randomGetRange(0x46, 0x64);
-        cfg.behaviorFlags = 0x8110000;
+        cfg.behaviorFlags = 0x81100000;
         cfg.renderFlags = (u32)(0x410000 - 0x7fe0);
         cfg.colorWord0 = 0x7d0;
         cfg.colorWord1 = 0x7d0;
@@ -2274,7 +2274,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.overrideColor1 = 0x7fff;
         cfg.overrideColor2 = 0x7fff;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8050100;
+        cfg.behaviorFlags = 0x80500100;
         cfg.renderFlags = 0x8000800;
         break;
     case 0x5e1: /* L_800B1938 */
@@ -2295,7 +2295,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.overrideColor1 = 0x7fff;
         cfg.overrideColor2 = 0x7fff;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8050100;
+        cfg.behaviorFlags = 0x80500100;
         cfg.renderFlags = 0x8000800;
         break;
     case 0x5e2: /* L_800B19DC */
@@ -2316,7 +2316,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.overrideColor1 = 0x7fff;
         cfg.overrideColor2 = 0x7fff;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8050100;
+        cfg.behaviorFlags = 0x80500100;
         cfg.renderFlags = 0x8000800;
         break;
     case 0x396: /* L_800B1A80 */
@@ -2388,7 +2388,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DF81C;
         cfg.lifetimeFrames = randomGetRange(0x212, 0x2a8);
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8048208;
+        cfg.behaviorFlags = 0x80480208;
         cfg.textureId = 0xc0d;
         break;
     case 0x392: /* L_800B1DC4 */
@@ -2405,7 +2405,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DF820 * (f32)(s32)
         randomGetRange(0xa, 0xf);
         cfg.lifetimeFrames = randomGetRange(0x5a, 0x8c);
-        cfg.behaviorFlags = 0x8040201;
+        cfg.behaviorFlags = 0x80400201;
         cfg.linkGroup = 0;
         cfg.textureId = 0x23b;
         break;
@@ -2650,7 +2650,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.initialAlpha = 0xff;
         cfg.quadVertex3Pad06 = 0x385;
         cfg.renderFlags = 0x200000;
-        cfg.behaviorFlags = 0x8100120;
+        cfg.behaviorFlags = 0x81000120;
         cfg.textureId = 0xc0a;
         break;
     case 0x385: /* L_800B2DFC */
@@ -2678,7 +2678,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(0, 0xa) + lbl_803DF858;
         cfg.lifetimeFrames = randomGetRange(0xe6, 0x118);
         cfg.initialAlpha = 0x9b;
-        cfg.behaviorFlags = 0x8048200;
+        cfg.behaviorFlags = 0x80480200;
         cfg.textureId = 0xc0d;
         break;
     default: /* L_800B2F6C */

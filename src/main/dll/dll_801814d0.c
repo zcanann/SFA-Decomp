@@ -24,7 +24,7 @@ extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVol
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void fn_801816F8(int obj, int param_2, u8* state);
+extern void fn_801816F8(int obj, int arg, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
@@ -61,7 +61,7 @@ typedef struct DusterHitEffectPos
     f32 z;
 } DusterHitEffectPos;
 
-void fn_801814D0(int obj, int param_2, u8* state)
+void fn_801814D0(int obj, int arg, u8* state)
 {
     int hitWork[4];
     DusterHitEffectPos effectPos;
@@ -124,7 +124,7 @@ void fn_801814D0(int obj, int param_2, u8* state)
             }
             ((DusterState*)state)->hitReactTimer = 0x32;
             state[9] = 0;
-            fn_801816F8(obj, param_2, state);
+            fn_801816F8(obj, arg, state);
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;

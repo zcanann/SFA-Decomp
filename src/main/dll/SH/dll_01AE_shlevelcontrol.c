@@ -429,7 +429,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801d8480(u32 param_1, u32 param_2, short clearIfSetBit, short clearIfClearBit, short eventBit,
+void FUN_801d8480(u32 p1, u32 p2, short clearIfSetBit, short clearIfClearBit, short eventBit,
                   int* textId)
 {
 

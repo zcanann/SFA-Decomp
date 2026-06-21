@@ -1175,7 +1175,7 @@ void renderObjects(s8* arg0)
             if (p != NULL && ((GameObject*)obj)->anim.modelState->shadowCastSlot != NULL)
             {
                 renderShadowType3(obj, 0x13, 0);
-                ((LightmapQEnt*)qbase)[lbl_803DCE30].d = 2;
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
                 lbl_803DCE30++;
             }
             else if (((GameObject*)obj)->anim.modelInstance->shadowType == 3 && (((GameObject*)obj)->anim.flags
@@ -1183,7 +1183,7 @@ void renderObjects(s8* arg0)
                 OBJ_MODEL_STATE_SHADOW_VISIBLE))
             {
                 renderShadowType3(obj, 0x13, 0);
-                ((LightmapQEnt*)qbase)[lbl_803DCE30].d = 3;
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
                 lbl_803DCE30++;
             }
         }
@@ -1472,7 +1472,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     state[4] = cursor;
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1515,7 +1515,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     state[4] = cursor;
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1565,7 +1565,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     cursor = state[4];
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;

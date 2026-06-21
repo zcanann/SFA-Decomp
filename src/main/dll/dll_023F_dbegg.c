@@ -518,33 +518,33 @@ void fn_801FE774(int cam, f32* vel)
 u32
 #pragma peephole off
 FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9, int param_10,
+             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
     int control;
 
-    control = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
     *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
-    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F80;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)param_10)->baddie.moveDone = 0;
+                               param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
+    if (*(char*)(state + 0x27a) != '\0')
     {
-        *(int*)(control + 0x18) = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        *(int*)(control + 0x18) = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         ((DbStealerwormControl*)control)->unk1C = 0x24;
         ((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            *(int*)(control + 0x18), 0x11, param_9, 0x12, param_13, param_14, param_15, param_16);
-        FUN_80006824(param_9, SFXfoot_ice_run_3);
+                            *(int*)(control + 0x18), 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+        FUN_80006824(obj, SFXfoot_ice_run_3);
     }
-    if (lbl_803E6F84 < ((GameObject*)param_9)->anim.currentMoveProgress)
+    if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
         *(u8*)(control + 0x34) = 1;
     }

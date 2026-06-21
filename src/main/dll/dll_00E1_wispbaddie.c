@@ -402,14 +402,14 @@ void wispbaddie_init(int obj, int setup, int initialised)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-void FUN_8014fef8(u32 param_1, int param_2, u32 param_3, int param_4)
+void FUN_8014fef8(u32 obj, int state, u32 p3, int cmd)
 {
-    if (param_4 == 0x10)
+    if (cmd == 0x10)
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         return;
     }
-    ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
+    ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
     return;
 }
 
@@ -420,9 +420,9 @@ void FUN_8014ff20(void)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ff24(short* param_1, u32 param_2)
+void FUN_8014ff24(short* angle, u32 arg)
 {
-    FUN_8014d3d0(param_1, param_2, 0xf, 0);
+    FUN_8014d3d0(angle, arg, 0xf, 0);
     return;
 }
 
@@ -433,7 +433,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
 {
     u8 flags;
     float animRate;
-    float fVar3;
+    float timerValue;
     int tableOff;
     short* subObj;
     u32 animIdx;
@@ -445,7 +445,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     u64 handle;
 
     handle = FUN_80286840();
-    fVar3 = lbl_803E33D8;
+    timerValue = lbl_803E33D8;
     subObj = (short*)((u64)handle >> 0x20);
     obj = (int)handle;
     animTable = (&PTR_DAT_8031fdc4)[(u32) * (u8*)(obj + 0x33b) * 10];
@@ -489,7 +489,7 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
         }
         *(float*)(obj + 0x324) = (float)(param_2 - (double)lbl_803DC074);
         if (dVar10 < (double)*(float*)(obj + 0x324)) goto LAB_80150818;
-        *(float*)(obj + 0x324) = fVar3;
+        *(float*)(obj + 0x324) = timerValue;
     }
     if ((((((param_11 & 0xff) == 0) || (*(char*)(obj + 0x2f1) == '\0')) ||
             (animTable[animIdx * 0xc + 8] == '\0')) && ((*(u8*)(obj + 0x2f1) & 0x20) == 0)) ||
@@ -537,9 +537,9 @@ void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4,
     else
     {
         animEntry = (float*)(animTable + animIdx * 0xc);
-        fVar3 = lbl_803E33E4 * (float)(rate * (double)*animEntry);
-        *(float*)(obj + 0x330) = fVar3;
-        *(float*)(obj + 0x32c) = fVar3;
+        timerValue = lbl_803E33E4 * (float)(rate * (double)*animEntry);
+        *(float*)(obj + 0x330) = timerValue;
+        *(float*)(obj + 0x32c) = timerValue;
         *(u32*)(obj + 0x2dc) = *(u32*)(obj + 0x2dc) | 0x40;
         *(u8*)(obj + 0x2f2) = *(u8*)(obj + 0x2f2) | 0x80;
         *(u8*)(obj + 0x2f3) = 0;
@@ -808,12 +808,15 @@ void fn_8015039C(int obj, int animState)
     }
 }
 
-#pragma scheduling on
+#pragma scheduling off
+#pragma optimization_level 2
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
-    u8* ptr = *(u8**)((u8*)lbl_8031F16C + inner[0x33b] * 0x28 + 4);
+    u8* tbl = (u8*)lbl_8031F16C;
+    u8* ptr = *(u8**)(tbl + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
+#pragma optimization_level reset
 #pragma scheduling reset

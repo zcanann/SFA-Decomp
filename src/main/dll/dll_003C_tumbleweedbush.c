@@ -294,8 +294,7 @@ void Link_render(void)
         {
             if ((item->flags & LINK_FLAG_FADE_TIMER_ONLY) != 0)
             {
-                timer = item->timer - 1;
-                item->timer = timer;
+                timer = (item->timer -= 1);
                 if (timer < 0)
                 {
                     item->timer = 0;
@@ -414,8 +413,7 @@ void Link_render(void)
                     }
                 }
 
-                timer = drawItem->timer - 1;
-                drawItem->timer = timer;
+                timer = (drawItem->timer -= 1);
                 if (timer < 0)
                 {
                     drawItem->timer = 0;
@@ -473,6 +471,7 @@ u32 Link_update(void)
     LinkMenuItem* item;
     int result;
     u32 buttons;
+    u8 acceptPressed;
     s8 horizontalInput;
     s8 verticalInput;
 
@@ -553,7 +552,7 @@ u32 Link_update(void)
 
         if ((s8)linkSelected < 0)
         {
-            linkSelected = (s8)((s8)gTumbleweedBushItemCount - 1);
+            linkSelected = (s8)(gTumbleweedBushItemCount - 1);
         }
         if ((s8)linkSelected >= gTumbleweedBushItemCount)
         {
@@ -564,7 +563,8 @@ u32 Link_update(void)
     if (gTumbleweedBushInputEnabled != 0)
     {
         buttons = getButtonsJustPressed(0);
-        if ((buttons & 0x1100) != 0)
+        acceptPressed = (buttons & 0x1100) ? 1 : 0;
+        if (acceptPressed)
         {
             if (((gTumbleweedBushItems[linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
                 (GameBit_Get(0x44f) == 0))

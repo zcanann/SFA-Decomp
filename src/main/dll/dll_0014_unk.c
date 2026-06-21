@@ -223,12 +223,11 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     f32 dy;
     f32 dz;
     f32 distance;
-    f32 objPos[3];
     f32 curvePos[3];
-    s16 objGrid[4];
     s16 curveGrid[4];
+    s16 objGrid[4];
     u8 traceHit;
-    int bboxHit[14];
+    int bboxHit[20];
     int curveIndex;
     int typeIndex;
     u8 traceResult;
@@ -238,10 +237,10 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
-    objPos[0] = *(f32*)(obj + 0xc);
-    objPos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
-    objPos[2] = *(f32*)(obj + 0x14);
-    voxmaps_worldToGrid(objPos, objGrid);
+    curvePos[0] = *(f32*)(obj + 0xc);
+    curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
+    curvePos[2] = *(f32*)(obj + 0x14);
+    voxmaps_worldToGrid(curvePos, objGrid);
 
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
     {
@@ -532,6 +531,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     ObjfsaPatch* patch;
     ObjfsaPatch* lp;
     ObjfsaWalkGroup* wg;
+    u8* lwg;
     f32 y;
 
     for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
@@ -593,17 +593,18 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         patch = &gObjfsaPatches[pidx];
         clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
         pgid = patch->groupId;
-        if (((int)clz & pgid) == 0)
-        {
-            lidx = pgid & 0xff;
-        }
-        else
+        if (((int)clz & pgid) != 0)
         {
             lidx = (int)(pgid & 0xff00) >> 8;
         }
+        else
+        {
+            lidx = pgid & 0xff;
+        }
+        lwg = (u8*)gObjfsaWalkGroups + lidx * OBJFSA_PATCHGROUP_STRIDE;
         for (k2 = 0; k2 < 4; k2++)
         {
-            lpidx = *((u8*)gObjfsaWalkGroups + lidx * OBJFSA_PATCHGROUP_STRIDE + k2 + 0x24);
+            lpidx = lwg[k2 + 0x24];
             if (lpidx == 0)
             {
                 continue;
@@ -1257,18 +1258,18 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         while (high >= low)
         {
             mid = (high + low) >> 1;
-            nextCurve = (s32)romCurves[mid];
-            if ((u32)neighborId > *(u32*)(nextCurve + 0x14))
+            if ((u32)neighborId > ((ObjfsaRomCurveDef*)(s32)romCurves[mid])->id)
             {
                 low = mid + 1;
             }
-            else if ((u32)neighborId >= *(u32*)(nextCurve + 0x14))
+            else if ((u32)neighborId < ((ObjfsaRomCurveDef*)(s32)romCurves[mid])->id)
             {
-                goto found;
+                high = mid - 1;
             }
             else
             {
-                high = mid - 1;
+                nextCurve = (s32)romCurves[mid];
+                goto found;
             }
         }
         nextCurve = 0;
@@ -1744,9 +1745,8 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse != 0)
     {
-        currentCurve = Objfsa_FindRomCurveById(curveId);
-        *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
+        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
         if (nextId == -1)
         {
             return 1;
@@ -2259,10 +2259,10 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     ex = (f32)(XF);                                                             \
     j2 = 0;                                                                     \
     for (e = 0; e < 4; e++) {                                                   \
-        if (lbl_803E05F0 <                                                      \
-            OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
-                ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                  \
-                ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) {           \
+        if (OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
+                (ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                 \
+                 ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) >          \
+            lbl_803E05F0) {                                                     \
             break;                                                              \
         }                                                                       \
         j2 += 2;                                                                \
@@ -2294,7 +2294,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 gb;
     u8 e;
     u32 j2;
-    u16 pairId;
+    int pairId;
     u8 found;
     int searchCount;
     ObjfsaWalkGroup* wg;
@@ -2492,20 +2492,20 @@ void walkgroupFindExitPointFn_800dc398(void)
                             z2 = OBJFSA_CORNER(linked, lp + 0x35, 0x10);
                             dxn = z2 - z1;
                             dzn = x1 - x2;
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 1, x1, z1);
+                            OBJFSA_SET_PLANE((*np), 1, x1, z1);
 
                             x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
                             z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
-                            OBJFSA_NEWPATCH.exit1X = (s16)((x2 + x3) * lbl_803E0608);
-                            OBJFSA_NEWPATCH.exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+                            (*np).exit1X = (s16)((x2 + x3) * lbl_803E0608);
+                            (*np).exit1Z = (s16)((z2 + z3) * lbl_803E0608);
 
                             dxn = z3 - z2;
                             dzn = x2 - x3;
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 2, x2, z2);
+                            OBJFSA_SET_PLANE((*np), 2, x2, z2);
 
                             dxn = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10) - z3;
                             dzn = x3 - OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
-                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 3, x3, z3);
+                            OBJFSA_SET_PLANE((*np), 3, x3, z3);
 
                             fy0 = lbl_803E05D0 * (f32) * (s8*)(curve + 0x18) +
                                 *(f32*)(curve + 0xc);
@@ -2977,9 +2977,9 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
                 }
                 hitCount++;
             }
+            previousCurveId = nextCurveId;
+            curve = nextCurve;
         }
-        previousCurveId = nextCurveId;
-        curve = nextCurve;
     }
     while ((previousCurveId != (int)curveId) && (nextCurveId != (int)ROMCURVE_LINK_ID_NONE));
 
@@ -3250,8 +3250,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                             done = 1;
                             *distWrite = queueDist[count];
                             distWrite++;
-                            results[found] = curve->linkIds[li];
-                            found++;
+                            results[found++] = curve->linkIds[li];
                         }
                         else
                         {
@@ -3261,12 +3260,9 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                         ((cand = RomCurve_findByIdWithIndex(node->linkIds[k], &idx)) != NULL)) &&
                                     (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                                 {
-                                    zd = node->z - cand->z;
-                                    zd = zd * zd;
-                                    xd = node->x - cand->x;
-                                    xd = curDist + xd * xd;
-                                    yd = node->y - cand->y;
-                                    newDist = zd + (xd + yd * yd);
+                                    newDist = SQ(node->z - cand->z) +
+                                        ((curDist + SQ(node->x - cand->x)) +
+                                            SQ(node->y - cand->y));
                                     pos = 0;
                                     for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
                                     {
@@ -3362,8 +3358,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
             {
                 if (linkedCurve->type == types[typeIndex])
                 {
-                    candidates[candidateCount] = linkId;
-                    candidateCount++;
+                    candidates[candidateCount++] = curve->linkIds[linkIndex];
                     typeIndex = typeCount;
                 }
             }

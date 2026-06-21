@@ -610,10 +610,8 @@ int Minimap_update(void)
                                         gMinimapF48, (f32)(xc + 0x1a), &cwR);
                     }
                 }
-                xl = xc - 4;
-                xr = xc + 4;
                 cwM = col2;
-                hudDrawTriangle(gMinimapF28, xl, gMinimapF28, xr,
+                hudDrawTriangle(gMinimapF28, (xl = xc - 4), gMinimapF28, (xr = xc + 4),
                                 gMinimapF22, xc, &cwM);
                 cwB = col2;
                 hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr,

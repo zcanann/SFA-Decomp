@@ -973,26 +973,17 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                           0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
-            if (gCMenuCurSection != 1)
+            switch (gCMenuCurSection)
             {
-                if (gCMenuCurSection < 1)
-                {
-                    if (gCMenuCurSection < 0)
-                    {
-                    }
-                    else
-                    {
-                        icon = 0x59;
-                    }
-                }
-                else if (gCMenuCurSection < 3)
-                {
-                    icon = 0x58;
-                }
-            }
-            else
-            {
+            case 2:
+                icon = 0x58;
+                break;
+            case 0:
+                icon = 0x59;
+                break;
+            case 1:
                 icon = 0x5A;
+                break;
             }
             drawTexture(((int*)(base + 0x1C0))[icon], lbl_803E1FDC, lbl_803E1FB4, fade * lbl_803DD8D4 / 0xFF & 0xFF,
                         0x100);

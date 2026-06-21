@@ -206,7 +206,7 @@ void campfire_free(int obj)
     }
 }
 
-void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void** state;
     void* effect;

@@ -36,7 +36,7 @@ extern void queueGlowRender(void* light);
 extern void ModelLightStruct_free(void* light);
 extern void* objCreateLight(void* obj, int);
 extern void modelLightStruct_setLightKind(void*, int);
-extern void modelLightStruct_setPosition(f32, f32, f32);
+extern void modelLightStruct_setPosition(void*, f32, f32, f32);
 extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
 extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
@@ -312,11 +312,11 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
         {
             if (obj->anim.seqId == 0x705 || obj->anim.seqId == 0x712)
             {
-                modelLightStruct_setPosition(lbl_803E5E0C, lbl_803E5E0C, lbl_803E5E0C);
+                modelLightStruct_setPosition(state->light, lbl_803E5E0C, lbl_803E5E0C, lbl_803E5E0C);
             }
             else
             {
-                modelLightStruct_setPosition(lbl_803E5E0C, lbl_803E5E28, lbl_803E5E0C);
+                modelLightStruct_setPosition(state->light, lbl_803E5E0C, lbl_803E5E28, lbl_803E5E0C);
             }
 
             colorBase = state->fxType * 3;

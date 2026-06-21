@@ -566,21 +566,18 @@ extern char sMmMemoryStoreMessageBlock[];
 
 int mmAllocateFromFBMemoryStore(int handle, int size)
 {
-    void** p;
     int* found;
     int i;
     int avail;
-    p = gMmStoreArray;
     found = NULL;
     i = 0;
     while (i < 0x20)
     {
-        if (*p != NULL && handle == ((int*)*p)[3])
+        if (gMmStoreArray[i] != NULL && handle == ((int*)gMmStoreArray[i])[3])
         {
             found = gMmStoreArray[i];
             break;
         }
-        p++;
         if (++i == 0x20)
         {
             OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);

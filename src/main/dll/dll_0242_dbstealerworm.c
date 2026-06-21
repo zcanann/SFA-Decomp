@@ -1505,9 +1505,9 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
             stk.v[1] = *(f32*)(t + 0x10) - ((GameObject*)obj)->anim.localPosY;
             stk.v[2] = *(f32*)(t + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             {
-                f32 sq0 = stk.v[0] * stk.v[0];
-                f32 sq2 = stk.v[2] * stk.v[2];
-                dist = sqrtf(sq0 + sq2);
+                f32 sqx = stk.v[0] * stk.v[0];
+                f32 sqz = stk.v[2] * stk.v[2];
+                dist = sqrtf(sqx + sqz);
             }
             stk.v[1] = stk.v[1] * lbl_803E6310;
             dist = dist / lbl_803E6314;

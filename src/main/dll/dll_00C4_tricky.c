@@ -73,11 +73,11 @@ extern char FUN_80006a64();
 extern u32 FUN_80006a68();
 extern u32 FUN_80017690();
 extern int randomGetRange(int lo, int hi);
-extern void Sfx_RemoveLoopedObjectSound(int param_1, int param_2);
-extern int Sfx_IsPlayingFromObjectChannel(int param_1, int param_2);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-extern int voxmaps_traceLine(void* from, void* to, int param_3, u8* hit, int param_5);
+extern int voxmaps_traceLine(void* from, void* to, int coordOut, u8* hit, int skipFirst);
 extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
 extern void* getTrickyObject(void);
@@ -89,9 +89,9 @@ extern int Obj_GetActiveModel(int obj);
 extern int Obj_GetPlayerObject(void);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
-extern void Obj_FreeObject(int param_1);
+extern void Obj_FreeObject(int obj);
 extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject(int setup, int param_2, int param_3, int param_4, int param_5);
+extern int Obj_SetupObject(int setup, int b, int c, int d, int e);
 extern u8 Obj_IsLoadingLocked(void);
 extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
@@ -101,9 +101,9 @@ extern void objAudioFn_800393f8(int param_1, void* param_2, int param_3, int par
                                 int param_6);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int objModelGetVecFn_800395d8(int obj, int param_2);
-extern void freeAndNull(void* param_1);
-extern void trickyVoxAllocFn_8004b5d4(void* param_1);
+extern int objModelGetVecFn_800395d8(int obj, int target);
+extern void freeAndNull(void* p);
+extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
 extern void objAudioFn_8006edcc(int obj, u16 param_4, int param_5, float* points, void* aux, f32 param_1, f32 param_2);
@@ -113,7 +113,7 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int gameBitIncrement(int bit);
-extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
+extern void objAnimFreeChildren(int a, int b, int* c);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
@@ -121,15 +121,15 @@ extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void fn_8013ADFC(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
-extern void objSetAnimSpeedTo1(int param_1);
-extern f32 objFn_801948c0(int obj, int param_2);
+extern void objSetAnimSpeedTo1(int obj);
+extern f32 objFn_801948c0(int obj, int coord);
 extern u32 FUN_80247eb8();
 extern double SeekTwiceBeforeRead();
 extern u64 FUN_8028683c();
 extern u32 FUN_80286888();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
-extern void objParticleFn_80099d84(int obj, f32 param_1, int param_4, f32 param_2, int param_5);
+extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int param_7,
                               int param_8, int param_9, int param_10);
 extern float mathSinf(float x);
@@ -1420,21 +1420,21 @@ void Tricky_update(int obj)
             {
                 if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff))
                 {
-                    *(s16*)obj = *(s16*)obj + diff;
+                    *(s16*)obj = *(volatile s16*)obj + diff;
                 }
                 else
                 {
-                    *(s16*)obj = *(s16*)obj + step;
+                    *(s16*)obj = *(volatile s16*)obj + step;
                 }
             }
             else
             {
-                *(s16*)obj = *(s16*)obj + step;
+                *(s16*)obj = *(volatile s16*)obj + step;
             }
         }
         else
         {
-            *(s16*)obj = *(s16*)obj + diff;
+            *(s16*)obj = *(volatile s16*)obj + diff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & 0x40) != 0)
@@ -2696,7 +2696,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
     }
 }
 
-void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
+void Tricky_render(int obj, int p2, int p3, int p4, int p5, char doRender)
 {
     u8 mode;
     int i;
@@ -2708,7 +2708,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
     if (doRender != '\0')
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E23E8);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E23E8);
         pathState = *(int*)&((GameObject*)obj)->extra;
         i = 0;
         pathPoint = pathState;
@@ -2747,7 +2747,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->unk40C;
                     ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->unk410;
                 }
-                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, param_2, param_3, param_4, param_5,
+                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5,
                                      lbl_803E23E8);
             }
         }
@@ -2932,9 +2932,9 @@ int Tricky_getCurrentCommandType(int* obj, int* out)
     return 1;
 }
 
-extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int param_2);
+extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
-extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
+extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 
 int trickyFn_801451d8(int obj, int state)
 {

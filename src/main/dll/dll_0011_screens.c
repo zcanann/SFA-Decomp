@@ -187,7 +187,7 @@ u8* FUN_800e82d8(void)
     return (u8*)&DAT_803a4460;
 }
 
-void FUN_800e8630(int param_1)
+void FUN_800e8630(int obj)
 {
     int placementId;
     u8* slot;
@@ -195,7 +195,7 @@ void FUN_800e8630(int param_1)
     int foundIndex;
     int remaining;
 
-    if ((*(u16*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -207,7 +207,7 @@ void FUN_800e8630(int param_1)
     slot = &DAT_803a3f08;
     remaining = 9;
     while ((foundIndex = baseIndex, *(int*)(slot + 0x168) != 0 &&
-        (placementId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), placementId != *(int*)(slot + 0x168))))
+        (placementId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14), placementId != *(int*)(slot + 0x168))))
     {
         foundIndex = baseIndex + 1;
         if ((*(int*)(slot + 0x178) == 0) || (placementId == *(int*)(slot + 0x178))) break;
@@ -231,15 +231,15 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    (&DAT_803a4070)[foundIndex * 4] = *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[foundIndex * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[foundIndex * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[foundIndex * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosZ;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(u32*)&((GameObject*)param_1)->anim
+    (&DAT_803a4070)[foundIndex * 4] = *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    (&DAT_803a4074)[foundIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosX;
+    (&DAT_803a4078)[foundIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosY;
+    (&DAT_803a407c)[foundIndex * 4] = *(u32*)&((GameObject*)obj)->anim.localPosZ;
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(u32*)&((GameObject*)obj)->anim
         .localPosX;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(u32*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(u32*)&((GameObject*)obj)->
         anim.localPosY;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(u32*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(u32*)&((GameObject*)obj)->
         anim.localPosZ;
     return;
 }
@@ -364,7 +364,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     return;
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
 {
     bool keepTransient;
     char foundIndex;
@@ -393,17 +393,17 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
     {
         if ((u16)(&DAT_80312460)[mapId] != 0)
         {
-            if (param_3 == -1)
+            if (setMode == -1)
             {
-                param_3 = 1;
+                setMode = 1;
             }
-            keepTransient = param_3 == -2;
+            keepTransient = setMode == -2;
             if (keepTransient)
             {
-                param_3 = 0;
+                setMode = 0;
             }
             flags = FUN_80017690((u32)(u16)(&DAT_80312460)[mapId]);
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 newFlags = flags & ~(1 << shift);
             }
@@ -414,7 +414,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
             FUN_80017698((u32)(u16)(&DAT_80312460)[mapId], newFlags);
             DAT_803de104 = mapId;
             uRam803de108 = newFlags;
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 eventIds = &DAT_80312460;
                 groupStatuses = &DAT_803a3c1c;
@@ -789,11 +789,9 @@ void gameBitFn_800ea2e0(u8 id)
 
     if (texts[6] == 0)
     {
-        i = 1;
-        taskMap = &lbl_803119E0[1];
-        for (; (s16)i < 0xce; i++)
+        for (i = 1; (s16)i < 0xce; i++)
         {
-            if ((*taskMap == 0xffff) || (*taskMap == -1))
+            if ((lbl_803119E0[i] == 0xffff) || (lbl_803119E0[i] == -1))
             {
                 mask = 1 << ((u8)i % 32);
                 bank = (s16)(((u32)(u8)i >> 5) + 0x12f
@@ -806,7 +804,6 @@ void gameBitFn_800ea2e0(u8 id)
                     GameBit_Set(bank, bits);
                 }
             }
-            taskMap++;
         }
     }
 

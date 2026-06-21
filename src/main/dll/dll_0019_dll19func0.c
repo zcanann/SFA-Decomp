@@ -116,7 +116,7 @@ extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
-void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
+void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* outPosY, float* outPosZ)
 {
     float distBias;
     float* params;
@@ -145,9 +145,9 @@ void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* par
     }
     distBias = DAT_803de1fc[4];
     *(float*)ctx = (float)(dVar5 * (double)(float)(dist + (double)distBias) + aimX);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - params[1]) -
+    *outPosY = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - params[1]) -
         (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dVar7 * (double)(float)(dist + (double)distBias) + aimZ);
+    *outPosZ = (float)(dVar7 * (double)(float)(dist + (double)distBias) + aimZ);
     FUN_80286888();
     return;
 }
@@ -162,14 +162,14 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
     u32 in_r8;
     u32 in_r9;
     u32 in_r10;
-    u16 uStack_1a;
-    u32 local_18;
-    u32 local_14;
-    u16 local_10;
+    u16 nameTail;
+    u32 name0;
+    u32 name4;
+    u16 name8;
 
-    local_18 = DAT_802c2910;
-    local_14 = DAT_802c2914;
-    local_10 = DAT_802c2918;
+    name0 = DAT_802c2910;
+    name4 = DAT_802c2914;
+    name8 = DAT_802c2918;
     if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
         (((GameObject*)obj)->anim.alpha != 0))
     {
@@ -188,7 +188,7 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
         {
             if (0 < *(char*)(state + 0x407))
             {
-                spawnArgs = FUN_80017aa4(0x18, (&uStack_1a)[*(char*)(state + 0x407)]);
+                spawnArgs = FUN_80017aa4(0x18, (&nameTail)[*(char*)(state + 0x407)]);
                 childObj = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnArgs,
                                      4, 0xff, 0xffffffff, *(u32**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
                                      in_r10);
@@ -822,6 +822,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     return hit;
 }
 
+typedef struct { u32 w0, w1; } IdPair;
+
 int dll_19_func15(u8* p1, int p2, int p3, int p4)
 {
     GameObject* source = (GameObject*)p1;
@@ -835,10 +837,8 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     f32 scale;
 
     scale = lbl_803E1C2C;
-    *(u32*)&ids1[0] = lbl_803E1C18;
-    *(u32*)&ids1[2] = lbl_803E1C1C;
-    *(u32*)&ids2[0] = lbl_803E1C20;
-    *(u32*)&ids2[2] = lbl_803E1C24;
+    *(IdPair*)ids1 = *(IdPair*)&lbl_803E1C18;
+    *(IdPair*)ids2 = *(IdPair*)&lbl_803E1C20;
     if (p2 == 0)
     {
         return 0;

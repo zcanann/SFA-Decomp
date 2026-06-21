@@ -1580,6 +1580,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     if (((ObjSeqState*)seq)->fade > 0.0f)
                     {
+                        rate = gObjSeqDefaultFadeRate;
                         if (((ObjSeqState*)seq)->trackRunLength[10] != 0)
                         {
                             frame = ((ObjSeqState*)seq)->curFrame - 1;
@@ -4351,19 +4352,32 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 void objSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
-    u8* flagsB = base + 0x3b9c;
-    u8* flagsA = base + 0x3b44;
-    s16* modes = (s16*)(base + 0x3a98);
-    u8* actions = base + 0x3c4c;
-    u8* results = base + 0x3bf4;
-    u8* states = base + 0x3a40;
-    u8* pending = base + 0x39e8;
-    f32* frames = (f32*)(base + 0x3894);
-    f32* dists = (f32*)(base + 0x3740);
-    u8* counts = base + 0x3590;
-    int* handles = (int*)(base + 0x33e4);
-    u8* marks = base + 0x338c;
+    u8* flagsB;
+    u8* flagsA;
+    s16* modes;
+    u8* actions;
+    u8* results;
+    u8* states;
+    u8* pending;
+    f32* frames;
+    f32* dists;
+    u8* counts;
+    int* handles;
+    u8* marks;
     int i = 0;
+
+    flagsB = base + 0x3b9c;
+    flagsA = base + 0x3b44;
+    modes = (s16*)(base + 0x3a98);
+    actions = base + 0x3c4c;
+    results = base + 0x3bf4;
+    states = base + 0x3a40;
+    pending = base + 0x39e8;
+    frames = (f32*)(base + 0x3894);
+    dists = (f32*)(base + 0x3740);
+    counts = base + 0x3590;
+    handles = (int*)(base + 0x33e4);
+    marks = base + 0x338c;
 
     {
         for (; i < 0x50; i += 8)
@@ -4479,29 +4493,27 @@ void objSeq_onMapSetup(void)
         }
     }
 
-    base = lbl_80396918;
     {
-        u8* byteBase = base + i;
-        s16* modes2 = (s16*)(base + i * 2 + 0x3a98);
-        int* handles2 = (int*)(base + i * 4 + 0x33e4);
-        u8* marks2 = byteBase + 0x338c;
+        u8* marks2 = base + 0x338c + i;
+        int* handles2 = (int*)(base + 0x33e4) + i;
+        s16* modes2 = (s16*)(base + 0x3a98) + i;
         for (; i < 0x55; i++)
         {
-            *(marks2 + (0x3b9c - 0x338c)) = 0;
-            *(marks2 + (0x3b44 - 0x338c)) = 0;
+            marks2[0x3b9c - 0x338c] = 0;
+            marks2[0x3b44 - 0x338c] = 0;
             modes2[0] = 0;
-            *(marks2 + (0x3c4c - 0x338c)) = 0;
-            *(marks2 + (0x3bf4 - 0x338c)) = 0;
-            *(marks2 + (0x3a40 - 0x338c)) = 0;
-            *(marks2 + (0x39e8 - 0x338c)) = 0;
+            marks2[0x3c4c - 0x338c] = 0;
+            marks2[0x3bf4 - 0x338c] = 0;
+            marks2[0x3a40 - 0x338c] = 0;
+            marks2[0x39e8 - 0x338c] = 0;
             *(f32*)((u8*)handles2 + (0x3894 - 0x33e4)) = lbl_803DEFB0;
             *(f32*)((u8*)handles2 + (0x3740 - 0x33e4)) = lbl_803DEFF0;
-            *(marks2 + (0x3590 - 0x338c)) = 0;
+            marks2[0x3590 - 0x338c] = 0;
             handles2[0] = 0;
             marks2[0] = 0;
-            modes2++;
-            handles2++;
             marks2++;
+            handles2++;
+            modes2++;
         }
     }
 
@@ -4866,18 +4878,15 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
         return;
     }
 
-    x = ((GameObject*)obj)->anim.localPosX;
-    dx = x - *(f32*)(base + 0x08);
-    y = ((GameObject*)obj)->anim.localPosY;
-    dy = y - *(f32*)(base + 0x0c);
-    z = ((GameObject*)obj)->anim.localPosZ;
-    dz = z - *(f32*)(base + 0x10);
+    dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(base + 0x08);
+    dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(base + 0x0c);
+    dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(base + 0x10);
     offset[0] = dx;
     offset[1] = dy;
     offset[2] = dz;
-    outPos[0] = x;
-    outPos[1] = y;
-    outPos[2] = z;
+    outPos[0] = ((GameObject*)obj)->anim.localPosX;
+    outPos[1] = ((GameObject*)obj)->anim.localPosY;
+    outPos[2] = ((GameObject*)obj)->anim.localPosZ;
 
     if (node->links[0] < 0)
     {

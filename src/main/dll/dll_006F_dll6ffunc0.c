@@ -383,7 +383,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     FUN_8028688c();
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
 {
     bool isClearMode;
     char slotIdx;
@@ -412,17 +412,17 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
     {
         if ((u16)(&DAT_80312460)[flagId] != 0)
         {
-            if (param_3 == -1)
+            if (setMode == -1)
             {
-                param_3 = 1;
+                setMode = 1;
             }
-            isClearMode = param_3 == -2;
+            isClearMode = setMode == -2;
             if (isClearMode)
             {
-                param_3 = 0;
+                setMode = 0;
             }
             flagWord = FUN_80017690((u32)(u16)(&DAT_80312460)[flagId]);
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 newWord = flagWord & ~(1 << bitIndex);
             }
@@ -433,7 +433,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
             FUN_80017698((u32)(u16)(&DAT_80312460)[flagId], newWord);
             DAT_803de104 = flagId;
             uRam803de108 = newWord;
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 actPtr = &DAT_80312460;
                 wordPtr = &DAT_803a3c1c;
@@ -958,8 +958,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.hw[5] = *(s16*)&base[434];
     buf.hw[6] = *(s16*)&base[436];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.flags = 0x4000084;
-    buf.flags |= flags;
+    buf.flags = 0x4000084 | flags;
     if ((buf.flags & 1) != 0)
     {
         if ((void*)ctx != NULL)

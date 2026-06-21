@@ -35,7 +35,7 @@ typedef struct LightfootSub
     u16 unk24;
     s16 unk26;
     s16 unk28;
-    s16 unk2A;
+    u16 unk2A;
     u8 pad2C[0x30 - 0x2C];
 } LightfootSub;
 

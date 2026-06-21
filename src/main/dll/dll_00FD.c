@@ -27,10 +27,10 @@ extern f32 lbl_803E3880;
 extern void dll_14D_update();
 extern void dll_14D_free_nop();
 
-void dll_14D_hitDetect(int param_1)
+void dll_14D_hitDetect(int obj)
 {
-    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) &&
-        (((ObjAnimComponent*)param_1)->hitVolumeTransforms != NULL))
+    if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
+        (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
     {
         objRenderFn_80041018();
     }

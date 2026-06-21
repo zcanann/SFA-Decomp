@@ -50,8 +50,8 @@ typedef struct Dll19EState
     u8 sequenceIndex;
 } Dll19EState;
 
-void dll_19E_render(int obj, int param_2, int param_3, int param_4,
-                    int param_5, s8 visible)
+void dll_19E_render(int obj, int p2, int p3, int p4,
+                    int p5, s8 visible)
 {
     Dll19EState* state;
     u8* camera;

@@ -588,7 +588,7 @@ void worldplanet_update(int obj)
                 }
                 else
                 {
-                    *p = *p + 0x3c;
+                    *p += 0x3c;
                 }
                 if (state->orbitSoundFrameCount > 2)
                 {

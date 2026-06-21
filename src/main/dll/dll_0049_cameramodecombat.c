@@ -140,7 +140,7 @@ void CameraModeCombat_free(CameraObject* camera)
 void CameraModeCombat_update(short* cam)
 {
     extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
-    f32 n[3];
+    f32 vec[3];
     f32 prevZ;
     f32 prevY;
     f32 prevX;
@@ -148,17 +148,17 @@ void CameraModeCombat_update(short* cam)
     f32 ty;
     f32 dx;
     f32 dz;
-    f32 vec[3];
+    f32 n[3];
     u8 trace[116];
     int view = Camera_GetCurrentViewSlot();
     GameObject* tgt;
-    GameObject* focus;
     ObjHitVolumeRuntimeTransform* hitVolumes;
-    f32 range;
+    GameObject* focus;
     f32 dist;
     f32 px;
     f32 py;
     f32 pz;
+    f32 range;
     f32 step;
     f32 zoom;
     f32 mag;
@@ -171,7 +171,6 @@ void CameraModeCombat_update(short* cam)
     f32 fb;
     int ang;
     int diff;
-    int abs2;
     u32 ad;
     short classId;
 
@@ -279,7 +278,9 @@ void CameraModeCombat_update(short* cam)
                             dy = hitVolumes[tgt->unkE4].centerY - ty;
                             dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
                         }
-                        dist = sqrtf(dx * dx + dz * dz);
+                        fa = dx * dx;
+                        fb = dz * dz;
+                        dist = sqrtf(fa + fb);
                         ((CameraObject*)cam)->letterboxTargetOffset = 0x30;
                         ((CameraObject*)cam)->letterboxStep = 1;
                         if (dist > range)
@@ -327,7 +328,7 @@ void CameraModeCombat_update(short* cam)
                             }
                             if (diff < 3000 && diff > 0)
                             {
-                                if (gCamCombatPrevYawDiff < 3000 && diff < 1000 && diff < gCamCombatPrevYawDiff)
+                                if (gCamCombatPrevYawDiff < 3000 && diff < 1000 && gCamCombatPrevYawDiff > diff)
                                 {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
@@ -340,32 +341,33 @@ void CameraModeCombat_update(short* cam)
                             }
                             else if (diff > -3000 && diff < 0)
                             {
-                                if (gCamCombatPrevYawDiff <= -3000 || diff <= -1000 || diff <= gCamCombatPrevYawDiff)
-                                {
-                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
-                                    *cam = (s16)((f32)(s32) * cam + step);
-                                }
-                                else
+                                if (gCamCombatPrevYawDiff > -3000 && diff > -1000 && gCamCombatPrevYawDiff < diff)
                                 {
                                     step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
                                     *cam = (s16)((f32)(s32) * cam + step);
                                 }
+                                else
+                                {
+                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
+                                    *cam = (s16)((f32)(s32) * cam + step);
+                                }
                             }
-                            abs2 = diff;
+                            gCamCombatPrevYawDiff = diff;
                             if (diff < 0)
                             {
-                                abs2 = -diff;
+                                diff = -diff;
                             }
-                            if (abs2 > 9000)
+                            if (diff > 9000)
                             {
-                                abs2 = 9000;
+                                diff = 9000;
                             }
-                            zoom = (f32)(s32)(9000 - abs2) / lbl_803E18E4;
-                            gCamCombatPrevYawDiff = diff;
+                            zoom = (f32)(s32)(9000 - diff) / lbl_803E18E4;
                             step = interpolate(lbl_803E18E8 - gCamCombatState->heightOffset, lbl_803E18EC, timeDelta);
                             gCamCombatState->heightOffset = gCamCombatState->heightOffset + step;
+                            fb = lbl_803E18C0 - zoom;
+                            fb = lbl_803E18F0 + fb;
                             step = interpolate(
-                                (lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - gCamCombatState->zoomOffset,
+                                fb / lbl_803E18F4 - gCamCombatState->zoomOffset,
                                 lbl_803E18F8, timeDelta);
                             gCamCombatState->zoomOffset = gCamCombatState->zoomOffset + step;
                             c = mathSinf((gCamCombatPi * (f32)(s32) * cam) / gCamCombatBinAngleHalfCircle);
@@ -381,11 +383,10 @@ void CameraModeCombat_update(short* cam)
                             n[1] = ((CameraObject*)cam)->anim.worldPosY - step;
                             PSVECSubtract(n, (f32*)((char*)cam + 0x18), vec);
                             mag = PSVECMag(vec);
-                            if (lbl_803E18C4 < mag)
+                            if (mag > lbl_803E18C4)
                             {
                                 PSVECNormalize(vec, vec);
                             }
-                            speed = mag;
                             if (((CameraObject*)cam)->blendProgress <= lbl_803E18C4)
                             {
                                 fa = focus->anim.previousWorldPosX - focus->anim.worldPosX;
@@ -396,29 +397,29 @@ void CameraModeCombat_update(short* cam)
                                 {
                                     lim = lbl_803E1910;
                                 }
-                                speed = mag;
                                 if (mag < lbl_803E18C4)
                                 {
-                                    speed = lbl_803E18C4;
+                                    mag = lbl_803E18C4;
                                 }
                                 else if (mag > lim)
                                 {
-                                    speed = lim;
+                                    mag = lim;
                                 }
                             }
                             PSVECScale(vec, vec,
-                                       (speed < lbl_803E18C4)
+                                       (mag < lbl_803E18C4)
                                            ? lbl_803E18C4
-                                           : ((speed > lbl_803E18D0) ? lbl_803E18D0 : speed));
+                                           : ((mag > lbl_803E18D0) ? lbl_803E18D0 : mag));
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
                             camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
                                                  (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
+                            t = lbl_803E18F8 * dz + focus->anim.worldPosZ;
                             fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
                             dy = *(f32*)(view + 0x10) - py;
-                            fa = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + focus->anim.worldPosZ);
+                            fa = *(f32*)(view + 0x14) - t;
                             t = sqrtf(fb * fb + fa * fa);
-                            ad = getAngle(dy, t);
-                            ad = (ad & 0xffff) - ((int)cam[1] & 0xffffU);
+                            ang = getAngle(dy, t) & 0xffff;
+                            ad = ang - ((int)cam[1] & 0xffffU);
                             if ((int)ad > 0x8000)
                             {
                                 ad = ad - 0xffff;
@@ -434,17 +435,17 @@ void CameraModeCombat_update(short* cam)
                             )
                             ;
                             fa = lbl_803E1924 + dist;
-                            if (lbl_803E1924 + dist < lbl_803E1928)
+                            if (fa < lbl_803E1928)
                             {
                                 fa = lbl_803E1928;
                             }
-                            if (lbl_803E192C < fa)
+                            if (fa > lbl_803E192C)
                             {
                                 fa = lbl_803E192C;
                             }
-                            t = fa - gCamCombatState->followDistance;
+                            fa = fa - gCamCombatState->followDistance;
                             step = powfBitEstimate(lbl_803E18EC, timeDelta);
-                            fa = t * step;
+                            fa = fa * step;
                             if (fa > lbl_803E18D8 * timeDelta)
                             {
                                 fa = lbl_803E18D8 * timeDelta;
@@ -457,7 +458,7 @@ void CameraModeCombat_update(short* cam)
                             turnOnBlurFilter(tgt->anim.worldPosX, tgt->anim.worldPosY, tgt->anim.worldPosZ, 1, 0);
                             if (lbl_803E18C4 == ((CameraObject*)cam)->blendProgress)
                             {
-                                ((CameraObject*)cam)->smoothingFlags |= 0x80;
+                                ((struct { u8 b7 : 1; } *)&((CameraObject*)cam)->smoothingFlags)->b7 = 1;
                             }
                             Obj_TransformWorldPointToLocal(*(f32*)((char*)cam + 0x18),
                                                            ((CameraObject*)cam)->anim.worldPosY,

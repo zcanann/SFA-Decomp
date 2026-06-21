@@ -187,7 +187,7 @@ void appleontree_free(int* obj)
 
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, f32 scale); /* #57 */
+    extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale); /* #57 */
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
     if ((inner->flags & 2) == 0)
     {

@@ -2503,7 +2503,7 @@ void drbarrelgr_update(int obj);
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5);
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5);
 void drearthcal_update(int obj);
-int Obj_UpdateLightningCluster(int obj, void **entries, int count, void **light, f32 intensity);
+int Obj_UpdateLightningCluster(int obj, void **entries, int count, f32 intensity, void **light);
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e);
 int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void *p1, void *p2);

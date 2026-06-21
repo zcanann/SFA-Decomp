@@ -48,7 +48,7 @@ extern const f32 lbl_803E1B68;
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* param_4)
+void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* outPosY, float* outPosZ)
 {
     float bias;
     float* config;
@@ -77,16 +77,16 @@ void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* param_3, float* par
     }
     bias = DAT_803de1fc[4];
     *(float*)result = (float)(cosA * (double)(float)(dist + (double)bias) + offX);
-    *param_3 = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
+    *outPosY = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
         (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
-    *param_4 = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
+    *outPosZ = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
     FUN_80286888();
     return;
 }
 
 void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  int param_9, int param_10)
+                  int obj, int state)
 {
     u32 active;
     u16* model;
@@ -102,33 +102,33 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
     name0 = DAT_802c2910;
     name4 = DAT_802c2914;
     name8 = DAT_802c2918;
-    if ((*(char*)(param_10 + 0x407) != *(char*)(param_10 + 0x409)) &&
-        (((GameObject*)param_9)->anim.alpha != 0))
+    if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
+        (((GameObject*)obj)->anim.alpha != 0))
     {
-        if (*(int*)&((GameObject*)param_9)->childObjs[0] != 0)
+        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                   *(int*)&((GameObject*)param_9)->childObjs[0]);
-            *(u32*)&((GameObject*)param_9)->childObjs[0] = 0;
+                                   *(int*)&((GameObject*)obj)->childObjs[0]);
+            *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
         }
         active = FUN_80017ae8();
         if ((active & 0xff) == 0)
         {
-            *(u8*)(param_10 + 0x409) = 0;
+            *(u8*)(state + 0x409) = 0;
         }
         else
         {
-            if (0 < *(char*)(param_10 + 0x407))
+            if (0 < *(char*)(state + 0x407))
             {
-                model = FUN_80017aa4(0x18, (&nameTail)[*(char*)(param_10 + 0x407)]);
+                model = FUN_80017aa4(0x18, (&nameTail)[*(char*)(state + 0x407)]);
                 newChild = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, model,
-                                     4, 0xff, 0xffffffff, *(u32**)&((GameObject*)param_9)->anim.parent, in_r8, in_r9,
+                                     4, 0xff, 0xffffffff, *(u32**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
                                      in_r10);
-                *(u32*)&((GameObject*)param_9)->childObjs[0] = newChild;
-                *(u16*)(*(int*)&((GameObject*)param_9)->childObjs[0] + 0xb0) = ((GameObject*)param_9)->objectFlags &
+                *(u32*)&((GameObject*)obj)->childObjs[0] = newChild;
+                *(u16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0xb0) = ((GameObject*)obj)->objectFlags &
                     7;
             }
-            *(u8*)(param_10 + 0x409) = *(u8*)(param_10 + 0x407);
+            *(u8*)(state + 0x409) = *(u8*)(state + 0x407);
         }
     }
     return;

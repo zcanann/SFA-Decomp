@@ -494,7 +494,7 @@ u32 FUN_800575b4(double radius, float* pos)
     return 0;
 }
 
-u32 FUN_80057690(int param_1)
+u32 FUN_80057690(int obj)
 {
     float projSize;
     int viewObj;
@@ -513,34 +513,34 @@ u32 FUN_80057690(int param_1)
     u8 auStack_34[4];
     u64 local_30;
 
-    if (((GameObject*)param_1)->anim.alpha == 0)
+    if (((GameObject*)obj)->anim.alpha == 0)
     {
-        *(u8*)(param_1 + 0x37) = 0;
+        *(u8*)(obj + 0x37) = 0;
         return 0;
     }
-    placementData = *(int*)&((GameObject*)param_1)->anim.placementData;
+    placementData = *(int*)&((GameObject*)obj)->anim.placementData;
     if ((placementData == 0) || ((*(u8*)(placementData + 5) & 1) == 0))
     {
-        range = (double)*(float*)(param_1 + 0x40);
+        range = (double)*(float*)(obj + 0x40);
         if (range < (double)lbl_803DF838)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         viewObj = FUN_80017a98();
         if (((placementData == 0) || ((*(u8*)(placementData + 5) & 2) == 0)) || (viewObj == 0))
         {
-            dist = (double)FUN_80006958((double)((GameObject*)param_1)->anim.worldPosX,
-                                         (double)((GameObject*)param_1)->anim.worldPosY,
-                                         (double)((GameObject*)param_1)->anim.worldPosZ);
+            dist = (double)FUN_80006958((double)((GameObject*)obj)->anim.worldPosX,
+                                         (double)((GameObject*)obj)->anim.worldPosY,
+                                         (double)((GameObject*)obj)->anim.worldPosZ);
         }
         else
         {
-            dist = (double)FUN_8001771c((float*)(param_1 + 0x18), (float*)(viewObj + 0x18));
+            dist = (double)FUN_8001771c((float*)(obj + 0x18), (float*)(viewObj + 0x18));
         }
         if (range < dist)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         alpha = 0xff;
@@ -552,16 +552,16 @@ u32 FUN_80057690(int param_1)
             local_30 = (double)(s64)(int)
             alpha;
         }
-        FUN_8000693c((double)(((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58),
-                     (double)((GameObject*)param_1)->anim.worldPosY,
-                     (double)(((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C),
-                     (double)(((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale),
+        FUN_8000693c((double)(((GameObject*)obj)->anim.worldPosX - lbl_803DDA58),
+                     (double)((GameObject*)obj)->anim.worldPosY,
+                     (double)(((GameObject*)obj)->anim.worldPosZ - lbl_803DDA5C),
+                     (double)(((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
                      auStack_34,
                      auStack_38, &screenY, &projRadius, &screenH, &screenW);
         projSize = ABS(projRadius) * lbl_803DF834;
         if (projSize < lbl_803DF860)
         {
-            *(u8*)(param_1 + 0x37) = 0;
+            *(u8*)(obj + 0x37) = 0;
             return 0;
         }
         if (projSize < lbl_803DF868)
@@ -570,13 +570,13 @@ u32 FUN_80057690(int param_1)
             alpha = (u32)(((float)(local_30) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
-        *(char*)(param_1 + 0x37) = (char)(alpha * (((GameObject*)param_1)->anim.alpha + 1) >> 8);
+        *(char*)(obj + 0x37) = (char)(alpha * (((GameObject*)obj)->anim.alpha + 1) >> 8);
     }
     else
     {
-        *(char*)(param_1 + 0x37) = (char)((((GameObject*)param_1)->anim.alpha + 1) * 0xff >> 8);
+        *(char*)(obj + 0x37) = (char)((((GameObject*)obj)->anim.alpha + 1) * 0xff >> 8);
     }
-    if (*(char*)(param_1 + 0x37) == '\0')
+    if (*(char*)(obj + 0x37) == '\0')
     {
         result = 0;
     }
@@ -585,11 +585,11 @@ u32 FUN_80057690(int param_1)
         for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
         {
             alpha = planeIdx;
-            if (((GameObject*)param_1)->anim.hitboxScale * ((GameObject*)param_1)->anim.rootMotionScale +
+            if (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
                 (float)(&DAT_803885a8)[alpha * 5] +
-                (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosZ - lbl_803DDA5C) +
-                ((GameObject*)param_1)->anim.worldPosY * (float)(&DAT_803885a0)[alpha * 5] +
-                (float)(&DAT_8038859c)[alpha * 5] * (((GameObject*)param_1)->anim.worldPosX - lbl_803DDA58) <
+                (float)(&DAT_803885a4)[alpha * 5] * (((GameObject*)obj)->anim.worldPosZ - lbl_803DDA5C) +
+                ((GameObject*)obj)->anim.worldPosY * (float)(&DAT_803885a0)[alpha * 5] +
+                (float)(&DAT_8038859c)[alpha * 5] * (((GameObject*)obj)->anim.worldPosX - lbl_803DDA58) <
                 lbl_803DF84C)
             {
                 return 0;
@@ -1053,9 +1053,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     }
     if (i == count)
     {
-        int newCount = *(volatile u8*)&lbl_803DCE98 + 1;
-        lbl_803DCE98 = newCount;
-        if ((u8)newCount == 0x40)
+        lbl_803DCE98++;
+        if (lbl_803DCE98 == 0x40)
         {
             OSReport(sTrackLoadBlockOverrunError);
         }
@@ -1492,8 +1491,8 @@ void unloadMap(void)
                 {
                     blk = lbl_803DCE9C[mapType];
                     lbl_803DCE94[mapType] = -1;
-                    lbl_803DCE9C[mapType] = 0;
-                    for (j = 0; j < *(u8*)(blk + 0xa2); j++)
+                    lbl_803DCE9C[mapType] = j = 0;
+                    for (; j < *(u8*)(blk + 0xa2); j++)
                     {
                         rb = *(int*)(blk + 0x64) + j * 68;
                         p = (char*)rb;
@@ -2072,9 +2071,9 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
             if (v != -1 && v < count)
                 m = v;
             j = 0;
-            q = (int*)tbl;
-            for (n2 = 0; n2 < 4; n2++)
+            for (n2 = 0; n2 < 4; n2++, j += 7)
             {
+                q = (int*)tbl + j + n2;
                 v = q[0];
                 if (v != -1 && v < m)
                     m = v;
@@ -2099,8 +2098,6 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                 v = q[7];
                 if (v != -1 && v < m)
                     m = v;
-                q += 8;
-                j += 7;
             }
             tbl[0x22] = m;
             v = tbl[0x21];
@@ -2326,8 +2323,7 @@ void mapLoadUnloadObjects(int flag)
                     if (tbit >= 0 && tbit >= 0)
                     {
                         u8* bb = *(u8**)(page + 0x10);
-                        int ix = tbit >> 3;
-                        *(s8*)(bb + ix) = bb[ix] & ~(1 << (tbit & 7));
+                        *(s8*)&bb[tbit >> 3] = bb[tbit >> 3] & ~(1 << (tbit & 7));
                     }
                 }
                 if (((GameObject*)obj)->anim.seqId == 0x72)

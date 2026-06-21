@@ -601,14 +601,20 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
  * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
  * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
+typedef struct CMenuSectionEntry
+{
+    void* key;
+    s16 selectedItem;
+    u8 pad[0x10 - 0x6];
+} CMenuSectionEntry;
+
 void GameUI_unselectAllItems(void)
 {
-    register int* p;
-    p = (int*)gCMenuSections;
-    while (*(void**)p != NULL)
+    CMenuSectionEntry* sections = (CMenuSectionEntry*)gCMenuSections;
+    int i;
+    for (i = 0; sections[i].key != NULL; i++)
     {
-        *(s16*)((u8*)p + 4) = 0;
-        p = (int*)((u8*)p + 0x10);
+        sections[i].selectedItem = 0;
     }
     gCMenuActivatedId = -1;
     gCMenuCloseSfx = 0;
@@ -1233,11 +1239,13 @@ void pauseMenuDrawText(void)
 
     {
         s16 width = (s16)(v[2] - v[3]);
-        s16 blit_x = width + 0x28;
+        int blit_x = width + 0x28;
+        s16 clamped;
         blit_x = (target <= blit_x) ? target : blit_x;
         if (blit_x < 0) blit_x = 0;
-        *(s16*)((u8*)sprite + 0x8) = blit_x & 0xFFFE;
-        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
+        clamped = (s16)blit_x;
+        *(s16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
+        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (clamped >> 1));
     }
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
@@ -1698,7 +1706,7 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
-    s16 x, y, w, h;
+    s16 h, w, y, x;
     u8* box = gameTextGetBox(0x36);
     int pulse;
     s16 ang = (s16)(gHighScorePulseAngle + gHighScorePulseAngleStep);
@@ -1918,7 +1926,7 @@ void pauseMenuRunSubmenu(u8 p1)
             return;
         }
         if (sel >= 0 || p1 != 0 ||
-            (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160))
+            (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
         {
             if (lbl_803DD824[lbl_803DD7D8].f18 != 0)
             {
@@ -1935,13 +1943,14 @@ void cMenuRun(void)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
-    s8 isTricky = 0;
+    s8 isTricky;
     u16 btn16;
     u32 btn;
     s16* cursor;
     int flags;
 
     player = Obj_GetPlayerObject();
+    isTricky = 0;
     cMenuSelectedItem = -1;
     if (player == 0)
     {
@@ -2141,7 +2150,7 @@ void cMenuRun(void)
                             }
                             lbl_803DBA65 = 3;
                             gCMenuScrollLock = 0;
-                            gCMenuSelIndex = (s16)(gCMenuSelIndex + 1);
+                            gCMenuSelIndex++;
                             if (gCMenuSelIndex >= count)
                             {
                                 gCMenuSelIndex = 0;
@@ -2165,7 +2174,7 @@ void cMenuRun(void)
                             }
                             lbl_803DBA65 = -3;
                             gCMenuScrollLock = 0;
-                            gCMenuSelIndex = (s16)(gCMenuSelIndex - 1);
+                            gCMenuSelIndex--;
                             if (gCMenuSelIndex < 0)
                             {
                                 gCMenuSelIndex = (s16)(count - 1);
@@ -2453,22 +2462,23 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     }
     if (lbl_803DD776 != 0)
     {
+        extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
+        extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
         s16 v = lbl_803DD776;
-        s16 a16 = (s16)(v * 0xf);
-        u8 alpha;
+        s16 alpha = (s16)(v * 0xf);
         s16 h0;
-        s16 x, y, h, w;
-        if (a16 > 0xff)
+        int h;
+        s16 x, y, w;
+        if (alpha > 0xff)
         {
-            a16 = 0xff;
+            alpha = 0xff;
         }
-        alpha = a16;
         h0 = (s16)(v - 0x14);
         if (h0 < 0)
         {
             h0 = 0;
         }
-        h0 = (s16)(h0 << 4);
+        h0 <<= 4;
         if (h0 > *(u16*)(gTextBoxes + 0x186))
         {
             h0 = (s16) * (u16*)(gTextBoxes + 0x186);
@@ -2601,12 +2611,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int ph1 = 0;
             int ph2 = 0;
             f32 k = lbl_803E204C;
+            f32 c0 = lbl_803E2050;
+            f32 c1 = lbl_803E2010;
             for (row = 0; row < 0x96; row += 4)
             {
                 f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + ph1));
                 int a2, b2, r1, r2;
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + ph2)) + s;
-                a2 = (int)((f32)alpha * (lbl_803E2050 + s));
+                a2 = (int)((f32)alpha * (c0 + s));
                 if (a2 < 0)
                 {
                     a2 = 0;
@@ -2619,7 +2631,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 }
                 drawPartialTexture(*(void**)(hudTextures + 0x150), lbl_803E1F48, (f32)(row + 0x32),
                                    (u8)a2, 0x100, 0x82, 2, r2, r1);
-                b2 = (int)((f32)alpha * (lbl_803E2010 + s));
+                b2 = (int)((f32)alpha * (c1 + s));
                 if (b2 < 0)
                 {
                     b2 = 0;
@@ -4435,13 +4447,14 @@ void GameUI_update(void)
 
 void textureFreeFn_8012fcec(void)
 {
+    u8* base = lbl_803A87F0;
     u8 i;
 
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
     {
         int j = i;
-        void** tex = (void**)(lbl_803A87F0 + j * 4);
+        void** tex = (void**)(base + j * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
         {

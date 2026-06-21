@@ -73,6 +73,8 @@ extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
+#pragma opt_common_subs off
+#pragma opt_loop_invariants off
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
     u8 moved;
@@ -85,7 +87,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     u16 pp;
     int trickyPatch;
     u32 prod;
-    u32 dir;
+    int dir;
     int i;
     u8* node;
     u8* prevNode;
@@ -120,9 +122,8 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         u16 patch[5];
     } wgi;
     int routePtrs[9];
-    RomCurveWalker* route;
+#define route (&((TrickyState*)state)->route)
 
-    route = &((TrickyState*)state)->route;
     moved = 1;
     if ((((TrickyState*)state)->unk09 < 5) && (isInWalkGroupOrPatch((f32*)(obj + 0x18)) == 0))
     {
@@ -749,8 +750,8 @@ state_selected:
                                 }
                                 else if (found < 2)
                                 {
-                                    dir = (route->reverse ^ 1) & 0xff;
-                                    if (dir == 0)
+                                    u32 rdir = (route->reverse ^ 1) & 0xff;
+                                    if (rdir == 0)
                                     {
                                         RomCurve_stepClamped(route, lbl_803E23F8);
                                     }
@@ -758,7 +759,7 @@ state_selected:
                                     {
                                         RomCurve_stepClamped(route, lbl_803E2448);
                                     }
-                                    route->reverse = dir;
+                                    route->reverse = rdir;
                                     fn_800D9EE8(route);
                                 }
                             }
@@ -1299,6 +1300,9 @@ state_selected:
     }
     return 0;
 }
+#pragma opt_loop_invariants reset
+#pragma opt_common_subs reset
+#undef route
 
 void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag)
 {

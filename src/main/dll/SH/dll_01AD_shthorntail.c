@@ -371,6 +371,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
     int byteVal;
+    int i;
     u8 hitResult;
     u8 mode;
     ObjHitReactEntry* hitReactEntries;
@@ -507,7 +508,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->facingAngle += animEvents.rootPitch;
         }
         eventId = (s8*)&animEvents;
-        for (val = 0; val < animEvents.triggerCount; val = val + 1)
+        for (i = 0; i < animEvents.triggerCount; i = i + 1)
         {
             if (eventId[0x13] == '\0')
             {

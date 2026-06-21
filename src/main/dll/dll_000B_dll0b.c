@@ -1905,8 +1905,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     void** scan;
 
     total = 0;
-    found = 0;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
+    for (i = 0, found = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
         if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
     }
@@ -1936,7 +1935,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     base0 = 0;
     if ((*(u32*)(st + 0x54) & 0x800) == 0)
     {
-        base0 = ((e * 3) << 4) + (int)(long)((c * 3) << 4);
+        base0 = (int)(long)((c * 3) << 4) + ((e * 3) << 4);
     }
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot] = (PartfxEffectState*)mmAlloc(base0 + n * 0x18 + total * 2 + 0x240, 0x15, 0);

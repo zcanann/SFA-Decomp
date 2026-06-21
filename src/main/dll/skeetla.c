@@ -26,7 +26,7 @@
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
-extern f32 lbl_803E23DC;
+extern const f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
 extern f32 lbl_803E2410;
@@ -391,7 +391,7 @@ static f32 skeetla_pathSpeedDelta(u8* obj)
     f32 currentSpeed;
 
     currentPathPoint = (f32*)state->unk28;
-    if (currentPathPoint == state->previousPathPoint)
+    if ((f32*)state->unk28 == state->previousPathPoint)
     {
         dx = state->previousPathX - ((GameObject*)obj)->anim.worldPosX;
         dz = state->previousPathZ - ((GameObject*)obj)->anim.worldPosZ;
@@ -431,7 +431,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
 static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
 {
     u8* state = ((GameObject*)obj)->extra;
-    if (((((TrickyState*)state)->statusFlags >> 6) & 1) == 0u &&
+    if (((((TrickyState*)((GameObject*)obj)->extra)->statusFlags >> 6) & 1) == 0u &&
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))
     {
@@ -476,10 +476,10 @@ int trickyMove(u8* obj, f32* targetPos)
     if (moveSpeed < lbl_803E2420)
     {
         prospectivePos[0] =
-            lbl_803E2420 * ((TrickyState*)state)->dirX * timeDelta + ((GameObject*)obj)->anim.worldPosX;
+            lbl_803E2420 * (((TrickyState*)state)->dirX * timeDelta) + ((GameObject*)obj)->anim.worldPosX;
         prospectivePos[1] = ((GameObject*)obj)->anim.worldPosY;
         prospectivePos[2] =
-            lbl_803E2420 * ((TrickyState*)state)->dirZ * timeDelta + ((GameObject*)obj)->anim.worldPosZ;
+            lbl_803E2420 * (((TrickyState*)state)->dirZ * timeDelta) + ((GameObject*)obj)->anim.worldPosZ;
     }
     else
     {
@@ -834,8 +834,8 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
 {
     s8 status[8];
     s8 i;
-    s8 failedCount;
     s8 pass;
+    s8 failedCount;
     u8* search;
     u32* route;
 

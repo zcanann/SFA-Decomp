@@ -495,10 +495,10 @@ void drakorhoverpad_updateMain(int obj)
         limit = lbl_803E6A90 * (lbl_803E6A94 * mathSinf(phase));
         if (f->b40 != 0)
         {
-            absH = *(f32*)p;
-            absH = (absH >= lbl_803E6A3C) ? absH : -absH;
-            absV = ((DrakorHoverpadUpdateMainState*)p)->verticalVel;
-            absV = (absV >= lbl_803E6A3C) ? absV : -absV;
+            absH = (*(f32*)p >= lbl_803E6A3C) ? *(f32*)p : -*(f32*)p;
+            absV = (((DrakorHoverpadUpdateMainState*)p)->verticalVel >= lbl_803E6A3C)
+                       ? ((DrakorHoverpadUpdateMainState*)p)->verticalVel
+                       : -((DrakorHoverpadUpdateMainState*)p)->verticalVel;
             if (absV > lbl_803E6A38 + absH)
             {
                 limit = limit + lbl_803E6A38;

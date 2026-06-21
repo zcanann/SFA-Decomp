@@ -447,7 +447,7 @@ void drawArwingHud(void)
             {
                 texIdx = 0x16;
             }
-            else if (fullPips < pip)
+            else if ((int)pip > fullPips)
             {
                 texIdx = 0x12;
             }

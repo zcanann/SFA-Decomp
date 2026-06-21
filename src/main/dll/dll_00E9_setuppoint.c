@@ -231,7 +231,7 @@ void staticCamera_free(int obj)
     ObjGroup_RemoveObject(obj, 7);
 }
 
-void staticCamera_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {

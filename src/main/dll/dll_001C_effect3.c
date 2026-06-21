@@ -1378,11 +1378,11 @@ extern f32 lbl_803DFA78;
 #pragma scheduling off
 #pragma peephole off
 int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                   u8 modelId, void* param_6v)
+                   u8 modelId, void* extraArgsIn)
 {
     int spawnResult;
     PartFxSpawn cfg;
-    s16* extraArgs = param_6v;
+    s16* extraArgs = extraArgsIn;
 
     if (sourceObj == 0) return -1;
     if ((spawnFlags & 0x200000) != 0)

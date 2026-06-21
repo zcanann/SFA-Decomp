@@ -44,7 +44,7 @@ extern float lbl_803E7BEC;
 extern float lbl_803E7BF0;
 
 float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(s16* p, float x);
+void fastCastFloatToS16(float x, s16* p);
 
 
 float powfCoreHighPrecision(float x, float y) {
@@ -88,8 +88,8 @@ float powfCoreHighPrecision(float x, float y) {
 }
 
 float powfCoreFast(float x, register float y) {
-    register float expf;
-    register float scalef;
+    float scalef;
+    float expf;
     register u32 ix;
     register int ysign;
     float result;
@@ -105,7 +105,7 @@ float powfCoreFast(float x, register float y) {
         value = value * (value * (lbl_803E7BE4 * value + lbl_803E7BE0) + lbl_803E7BDC) + lbl_803E7BD8;
         expf = fastCastS16ToFloat(&exponent);
         value = y * (value + expf);
-        fastCastFloatToS16(&scale, value);
+        fastCastFloatToS16(value, &scale);
         scalef = fastCastS16ToFloat(&scale);
         value = value - scalef;
         result = (value != lbl_803E7AB8) ? (value * (lbl_803E7BF0 * value + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;

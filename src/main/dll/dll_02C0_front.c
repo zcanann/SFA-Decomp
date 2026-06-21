@@ -1007,7 +1007,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     f32* mtx;
 
     m = (lbl_803DD9C4 = lbl_803DD9C4 + timeDelta);
-    if (m > lbl_803E22F0)
+    if (m > *(f32*)&lbl_803E22F0)
     {
         lbl_803DD9C4 = m - lbl_803E22F0;
     }

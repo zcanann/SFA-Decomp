@@ -131,32 +131,32 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801b7314(int param_1, u32 param_2, float* param_3, float* param_4)
+void FUN_801b7314(int obj, u32 unused, float* outX, float* outZ)
 {
     u32 bitValue;
     int typeId;
     float* extra;
 
-    extra = ((GameObject*)param_1)->extra;
+    extra = ((GameObject*)obj)->extra;
     if (extra[4] == 0.0)
     {
         FUN_800067c0((int*)0xdf, 1);
     }
     extra[4] = 2.8026e-44;
-    typeId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    typeId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
     if (typeId == 0x49b23)
     {
         bitValue = GameBit_Get(0xc5c);
         if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5b), bitValue == 0))
         {
-            *param_3 = *extra;
-            *param_4 = extra[1];
+            *outX = *extra;
+            *outZ = extra[1];
         }
         bitValue = GameBit_Get(0xc5b);
         if ((bitValue != 0) && (bitValue = GameBit_Get(0xc5c), bitValue == 0))
         {
-            *param_3 = -*extra;
-            *param_4 = -extra[1];
+            *outX = -*extra;
+            *outZ = -extra[1];
         }
         bitValue = GameBit_Get(0xc5b);
         if (bitValue != 0)
@@ -171,13 +171,13 @@ void FUN_801b7314(int param_1, u32 param_2, float* param_3, float* param_4)
     }
     else if ((typeId < 0x49b23) && (typeId == 0x1ea9))
     {
-        *param_3 = *extra;
-        *param_4 = extra[1];
+        *outX = *extra;
+        *outZ = extra[1];
     }
     else
     {
-        *param_3 = *extra;
-        *param_4 = extra[1];
+        *outX = *extra;
+        *outZ = extra[1];
     }
     return;
 }
@@ -389,7 +389,10 @@ void dll_1D6_update(int* obj)
                 int* row;
                 f32 lim;
                 model = DIM2snowball_GetActiveModel(obj);
-                row = ((int**)((char*)model + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4))[1];
+                {
+                    char* mrow = (char*)model + 4;
+                    row = *(int**)(mrow + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4);
+                }
                 lim = ((GameObject*)obj)->anim.rootMotionScale *
                     (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
                 if (lx <= lim)

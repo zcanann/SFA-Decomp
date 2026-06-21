@@ -1122,9 +1122,8 @@ void gameTextResetCursor(int flags)
     }
     if (flags & 2)
     {
-        int i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        lbl_8033A540[i].v = 0xb;
+        int* p = &lbl_8033A540[lbl_803DC9C8++].v;
+        *p = 0xb;
     }
 }
 
@@ -1553,8 +1552,7 @@ void gameTextInitFn_8001a234(void)
     gameTextBase = gGameTextBase;
 
     i = 0x94;
-    textWindow = gTextBoxes + 0x1280;
-    p = textWindow;
+    p = textWindow = gTextBoxes + 0x1280;
     while (p -= 0x20, i-- != 0)
     {
         *(u16*)(p + 8) = *(u16*)(p + 2);

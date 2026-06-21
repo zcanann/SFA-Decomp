@@ -174,7 +174,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     )
     ;
     waveA = waveB + waveA;
-    ((GameObject*)obj)->anim.rotZ = (s16)(s32)(lbl_803E2618 * waveA);
+    ((GameObject*)obj)->anim.rotZ = lbl_803E2618 * waveA;
 
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseC) /
         lbl_803E2620
@@ -185,7 +185,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     )
     ;
     waveA = waveB + waveA;
-    ((GameObject*)obj)->anim.rotY = (s16)(s32)(lbl_803E2618 * waveA);
+    ((GameObject*)obj)->anim.rotY = lbl_803E2618 * waveA;
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
@@ -363,12 +363,13 @@ void hagabon_update(int obj)
     HagabonState* state;
     int oldCurve;
     int data;
+    f32 lightPos[3];
+    f32 effectPos[3];
     f32 d[3];
     f32 dist;
     int hitObject;
     int hitSphereIndex;
     u32 hitVolume;
-    f32 lightPos[3];
 
     state = *(HagabonState**)&((GameObject*)obj)->extra;
     oldCurve = state->curve;
@@ -440,7 +441,7 @@ void hagabon_update(int obj)
             Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
             lightPos[0] += playerMapOffsetX;
             lightPos[2] += playerMapOffsetZ;
-            objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
+            objLightFn_8009a1dc((void*)obj, lbl_803E2660, effectPos, 3, 0);
             (*gMapEventInterface)->addTime(((HagabonPlacement*)data)->mapEventId,
                                                    (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
             if (((HagabonPlacement*)data)->armGameBit != -1)
@@ -456,17 +457,19 @@ void hagabon_update(int obj)
     player = state->player;
     if (player != 0)
     {
-        d[0] = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        state->playerDistance = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+        f32* dp = d;
+        dp[0] = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = player->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        state->playerDistance = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     if ((void*)oldCurve != NULL)
     {
-        d[0] = *(f32*)&((GameObject*)oldCurve)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
-        d[1] = *(f32*)&((GameObject*)oldCurve)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
-        d[2] = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
-        state->pathDistance = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+        f32* dp = d;
+        dp[0] = *(f32*)&((GameObject*)oldCurve)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = *(f32*)&((GameObject*)oldCurve)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        state->pathDistance = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (state->pathDistance > lbl_803E2664))
     {

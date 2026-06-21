@@ -168,7 +168,7 @@ u8* FUN_800e82d8(void)
     return (u8*)&DAT_803a4460;
 }
 
-void FUN_800e8630(int param_1)
+void FUN_800e8630(int obj)
 {
     int objId;
     u8* entry;
@@ -176,7 +176,7 @@ void FUN_800e8630(int param_1)
     int slotIdx;
     int groupsLeft;
 
-    if ((*(u16*)&((GameObject*)param_1)->anim.flags & 0x2000) != 0)
+    if ((*(u16*)&((GameObject*)obj)->anim.flags & 0x2000) != 0)
     {
         return;
     }
@@ -188,7 +188,7 @@ void FUN_800e8630(int param_1)
     entry = &DAT_803a3f08;
     groupsLeft = 9;
     while ((slotIdx = slotBase, *(int*)(entry + 0x168) != 0 &&
-        (objId = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14), objId != *(int*)(entry + 0x168))))
+        (objId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14), objId != *(int*)(entry + 0x168))))
     {
         slotIdx = slotBase + 1;
         if ((*(int*)(entry + 0x178) == 0) || (objId == *(int*)(entry + 0x178))) break;
@@ -212,15 +212,15 @@ void FUN_800e8630(int param_1)
     {
         return;
     }
-    (&DAT_803a4070)[slotIdx * 4] = *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
-    (&DAT_803a4074)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosX;
-    (&DAT_803a4078)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosY;
-    (&DAT_803a407c)[slotIdx * 4] = *(u32*)&((GameObject*)param_1)->anim.localPosZ;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 8) = *(u32*)&((GameObject*)param_1)->anim
+    (&DAT_803a4070)[slotIdx * 4] = *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    (&DAT_803a4074)[slotIdx * 4] = *(u32*)&((GameObject*)obj)->anim.localPosX;
+    (&DAT_803a4078)[slotIdx * 4] = *(u32*)&((GameObject*)obj)->anim.localPosY;
+    (&DAT_803a407c)[slotIdx * 4] = *(u32*)&((GameObject*)obj)->anim.localPosZ;
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = *(u32*)&((GameObject*)obj)->anim
         .localPosX;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0xc) = *(u32*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc) = *(u32*)&((GameObject*)obj)->
         anim.localPosY;
-    *(u32*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x10) = *(u32*)&((GameObject*)param_1)->
+    *(u32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10) = *(u32*)&((GameObject*)obj)->
         anim.localPosZ;
     return;
 }
@@ -345,7 +345,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     return;
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
+void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
 {
     bool isClearMode;
     char slotIdx;
@@ -374,17 +374,17 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
     {
         if ((u16)(&DAT_80312460)[flagId] != 0)
         {
-            if (param_3 == -1)
+            if (setMode == -1)
             {
-                param_3 = 1;
+                setMode = 1;
             }
-            isClearMode = param_3 == -2;
+            isClearMode = setMode == -2;
             if (isClearMode)
             {
-                param_3 = 0;
+                setMode = 0;
             }
             flagWord = FUN_80017690((u32)(u16)(&DAT_80312460)[flagId]);
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 newWord = flagWord & ~(1 << bitIndex);
             }
@@ -395,7 +395,7 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int param_3)
             FUN_80017698((u32)(u16)(&DAT_80312460)[flagId], newWord);
             DAT_803de104 = flagId;
             uRam803de108 = newWord;
-            if (param_3 == 0)
+            if (setMode == 0)
             {
                 actPtr = &DAT_80312460;
                 wordPtr = &DAT_803a3c1c;

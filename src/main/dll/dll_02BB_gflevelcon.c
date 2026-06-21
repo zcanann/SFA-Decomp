@@ -429,21 +429,24 @@ void fn_8023A3E4(int p1, int p2)
         u8 j;
         for (j = 0; j < 4; j++)
         {
-            int v = ((u8*)s)[j + 178] - framesThisStep;
+            u8* sb = (u8*)s;
+            int off = j + 178;
+            int v = sb[off] - framesThisStep;
             if (v < 0)
                 v = 0;
-            ((u8*)s)[j + 178] = v;
+            sb[off] = v;
         }
     }
     if (got != 0)
     {
-        switch (hitType)
+        int ht = hitType;
+        switch (ht)
         {
         case 0:
         case 1:
         case 2:
         {
-            u8* hp = (u8*)s + hitType;
+            u8* hp = (u8*)s + ht;
             if (hp[0xAE] != 0 && hp[0xB2] == 0)
             {
                 hp[0xAE] -= 1;
@@ -468,9 +471,11 @@ void fn_8023A3E4(int p1, int p2)
             break;
         }
         case 3:
+        {
+            u8* hp = (u8*)s + ht;
             if (((GameObject*)hitObj)->anim.seqId == 0x605 &&
-                s->timer[hitType] == 0 &&
-                s->hits[hitType] != 0 &&
+                hp[0xB2] == 0 &&
+                hp[0xAE] != 0 &&
                 s->mode == 0xc)
             {
                 Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
@@ -479,10 +484,12 @@ void fn_8023A3E4(int p1, int p2)
             }
             break;
         }
+        }
     }
     for (i = 0; i < 3; i++)
     {
-        u8* p = (u8*)s + i;
+        int idx = i;
+        u8* p = (u8*)s + idx;
         if (p[0xAE] != 0)
         {
             if (p[0xB2] != 0)
@@ -496,7 +503,7 @@ void fn_8023A3E4(int p1, int p2)
         }
         state = p[0xB9];
         adjusted = state;
-        texIdx = (&lbl_803DC4C8)[i];
+        texIdx = (&lbl_803DC4C8)[idx];
         if ((u32)texIdx < 2 && state == 1)
             adjusted = 0;
         tex = objFindTexture((void *)obj, texIdx * 2, 0);

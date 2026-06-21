@@ -823,12 +823,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             ((EarthWarriorSub*)q)->unk434 *= m2;
         }
         ((EarthWarriorSub*)q)->unk408 *= lbl_803E831C;
+        if (((EarthWarriorSub*)q)->unk408 < *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc))
         {
-            f32 lim = *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc);
-            if (((EarthWarriorSub*)q)->unk408 < lim)
-            {
-                ((EarthWarriorSub*)q)->unk408 = lim;
-            }
+            ((EarthWarriorSub*)q)->unk408 = *(f32*)(((EarthWarriorSub*)q)->configRow + 0xc);
         }
         hitState->hitVolumePriority = 0x15;
         hitState->hitVolumeId = 2;

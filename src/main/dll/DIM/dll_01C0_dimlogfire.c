@@ -58,12 +58,12 @@ extern void ModelLightStruct_free(void* light);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
+extern void fn_80098B18(int obj, f32 scale, int type, int count, int mode, int vec);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
@@ -303,11 +303,11 @@ void dimlogfire_update(int obj)
 void dimlogfire_init(int obj, int def)
 {
     extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
-    extern void modelLightStruct_setupGlow(int light, int param_2, int r, int g, int b, int a, f32 radius); /* #57 */
+    extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius); /* #57 */
     extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far); /* #57 */
     extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a); /* #57 */
     extern void modelLightStruct_setLightKind(int light, int value); /* #57 */
-    extern int objCreateLight(int obj, int param_2); /* #57 */
+    extern int objCreateLight(int obj, int mode); /* #57 */
     int radius;
     DimLogFireState* state;
 

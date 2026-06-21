@@ -320,7 +320,7 @@ s8 fn_801631C8(int* obj)
     count = 0;
     while (idx < outCount)
     {
-        int j = idx;
+        int j = *(volatile int*)&idx;
         idx = j + 1;
         if (siblingType == ((GameObject*)list[j])->anim.seqId) count++;
     }

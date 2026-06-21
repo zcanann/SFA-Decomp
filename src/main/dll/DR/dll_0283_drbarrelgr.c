@@ -292,13 +292,17 @@ void drbarrelgr_update(int obj)
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    int i;
     int objRef;
     int nearest;
     int match;
+    int i;
     f32 dval;
     f32 vec[3];
     DrBarrelGrRenderParams params;
+    f32* vp;
+    f32* vp1;
+    f32* vp2;
+    extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
 
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6CA0);
     ObjPath_GetPointWorldPosition(obj, 0, (f32*)(state + 0x14), (f32*)(state + 0x18),
@@ -306,13 +310,17 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     params.a = 0;
     params.c = 0;
     params.b = 0x4000;
+    i = 0;
+    vp2 = &vec[2];
+    vp1 = &vec[1];
+    vp = &vec[0];
     dval = lbl_803E6CA4;
-    for (i = 0; i < 4; i++)
+    for (; i < 4; i++)
     {
-        ObjPath_GetPointWorldPosition(obj, i + 1, &vec[0], &vec[1], &vec[2], 0);
-        PSVECSubtract(&vec[0], (void*)(obj + 0xc), &vec[0]);
+        ObjPath_GetPointWorldPosition(obj, i + 1, vp, vp1, vp2, 0);
+        PSVECSubtract(vp, (void*)(obj + 0xc), vp);
         params.d = dval;
-        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
+        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
     }
     objRef = *(u32*)&((DrbarrelgrState*)state)->heldBarrel;
     if ((u32)objRef != 0)

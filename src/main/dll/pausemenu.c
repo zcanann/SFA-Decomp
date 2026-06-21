@@ -141,7 +141,7 @@ extern f32 lbl_803E20CC;
 extern f32 lbl_803E20D0;
 
 void pauseMenuDrawStatus_801274a0(int* arg1);
-void fn_80127F24(s32 param_1);
+void fn_80127F24(s32 alpha);
 
 void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 {

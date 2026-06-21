@@ -1075,10 +1075,10 @@ void hudDrawAirMeter(void)
                 break;
             }
             {
-                int base = 0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1);
-                base += lbl_803DBAEC;
+                int base = (0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1)) + lbl_803DBAEC;
+                base = base + ((s8)off + lbl_803DD7F8);
                 drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
-                            (f32)(int)(base + (lbl_803DD7F8 + (s8)off)),
+                            (f32)(int)base,
                             ((TrickyAirMeter*)m)->unk18, 0x100);
             }
             by = *(u16*)((char*)m[0xc] + 0xa) + 0xb4;
@@ -1217,7 +1217,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     GXSetTevSwapMode(2, 0, 0);
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 1, 0, 0, 1, 0);
-    if (*(s16*)((char*)this + 0x46) == 0x755)
+    if (((GameObject*)this)->anim.seqId == 0x755)
     {
         GXSetCullMode(1);
     }
@@ -1249,7 +1249,8 @@ extern f32 timeDelta;
 /* overlay for lbl_803A87F0; offsets verified against maybetemplate.c */
 typedef struct TrickyHud
 {
-    u8 _pad0[0x314];
+    u8 _pad0[0x1c0];
+    void* icons[0x55];   /* 0x1c0 */
     void* icon314;       /* 0x314 */
     void* icon318;       /* 0x318 */
     void* icon31c;       /* 0x31c */
@@ -1356,11 +1357,11 @@ void hudDrawFn_80121440(void)
             for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
             {
                 int b74 = base->magicValue;
-                int sel;
+                u8 sel;
                 if ((int)(u8)i < (b74 >> 2)) sel = 0x16;
                 else if ((int)(u8)i > (b74 >> 2)) sel = 0x12;
                 else sel = (b74 & 3) + 0x12;
-                drawTexture(*(void**)((char*)base + 0x1c0 + sel * 4),
+                drawTexture(base->icons[sel],
                             (f32)(int)((u8)i * 0x21 + 0x1e), lbl_803E1FAC, alpha, 0x100);
             }
         }
@@ -1369,14 +1370,13 @@ void hudDrawFn_80121440(void)
     {
         hudDrawMagicBar(alpha, 0x100, 0);
     }
-    krazoa = 0;
     if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
     magicId = 0;
     if (GameBit_Get(0x123) != 0 || GameBit_Get(0x83b) != 0) magicId = 0x63;
     else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
     if ((u8)magicId != 0)
     {
-        drawTexture(*(void**)((char*)base + 0x1c0 + magicId * 4),
+        drawTexture(base->icons[(u8)magicId],
                     (f32)(int)(s16)(krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
     if ((u8)krazoa != 0)
@@ -1407,7 +1407,7 @@ void hudDrawFn_80121440(void)
             {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(*(void**)((char*)base + 0x1c0 + sel * 4), (f32)(int)(yo + 0x40),
+                drawTexture(base->icons[sel], (f32)(int)(yo + 0x40),
                             lbl_803E1FB4, alpha, 0x100);
             }
         }

@@ -108,8 +108,8 @@ float fn_80292194(float x) {
     float lo;
 
     if (ax <= lbl_803E79D8) {
-        y = x * x;
-        return x * ((lbl_803E7A18 * y + lbl_803E7A14) * y + lbl_803E7A10);
+        z = x * x;
+        return x * ((lbl_803E7A18 * z + lbl_803E7A14) * z + lbl_803E7A10);
     }
 
     y = fn_80292DEC(ax);
@@ -130,12 +130,12 @@ float fn_80292248(float x) {
     float result;
 
     if (ax <= lbl_803E79D8) {
-        y = x * x;
-        return (float)(x * (((((((((((((((lbl_803E7AA8 * y + lbl_803E7AA0) * y + lbl_803E7A98) * y
-                                       + lbl_803E7A90) * y + lbl_803E7A88) * y + lbl_803E7A80) * y
-                                    + lbl_803E7A78) * y + lbl_803E7A70) * y + lbl_803E7A68) * y
-                                 + lbl_803E7A60) * y + lbl_803E7A58) * y + lbl_803E7A50) * y
-                              + lbl_803E7A48) * y + lbl_803E7A40) * y + lbl_803E7A38) * y
+        z = x * x;
+        return (float)(x * (((((((((((((((lbl_803E7AA8 * z + lbl_803E7AA0) * z + lbl_803E7A98) * z
+                                       + lbl_803E7A90) * z + lbl_803E7A88) * z + lbl_803E7A80) * z
+                                    + lbl_803E7A78) * z + lbl_803E7A70) * z + lbl_803E7A68) * z
+                                 + lbl_803E7A60) * z + lbl_803E7A58) * z + lbl_803E7A50) * z
+                              + lbl_803E7A48) * z + lbl_803E7A40) * z + lbl_803E7A38) * z
                            + lbl_803E7A30));
     }
 

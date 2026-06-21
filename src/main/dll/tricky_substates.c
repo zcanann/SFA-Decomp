@@ -137,11 +137,11 @@ void trickyDigTunnel(u8* obj, u8* state)
             *(u32*)&((TrickyState*)state)->unk704 = *(u32*)&((TrickyState*)state)->unk704 ^ *(u32*)&((TrickyState*)
                 state)->unk708;
         }
-        if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk708 + 8)
+        ptr = ((TrickyState*)state)->unk708 + 8;
+        if (((TrickyState*)state)->unk28 != ptr)
         {
-            ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk708 + 8;
-            v = *(u32*)&((TrickyState*)state)->stateFlags;
-            *(u32*)&((TrickyState*)state)->stateFlags = v & ~0x400LL;
+            ((TrickyState*)state)->unk28 = ptr;
+            ((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 1;
@@ -358,11 +358,11 @@ void trickyFn_80141fec(u8* obj, u8* state)
             if (((TrickyState*)state)->unk70C != NULL)
             {
                 state[0xa] = 2;
-                if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk70C + 8)
+                ptr = ((TrickyState*)state)->unk70C + 8;
+                if (((TrickyState*)state)->unk28 != ptr)
                 {
-                    ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk70C + 8;
-                    ret = *(u32*)&((TrickyState*)state)->stateFlags;
-                    *(u32*)&((TrickyState*)state)->stateFlags = ret & ~0x400LL;
+                    ((TrickyState*)state)->unk28 = ptr;
+                    ((TrickyState*)state)->stateFlags &= ~0x400LL;
                     ((TrickyState*)state)->unkD2 = 0;
                 }
             }
@@ -1009,10 +1009,11 @@ u32 trickyFn_801432cc(int obj, int* trickyState)
     return 1;
 }
 
+#pragma optimization_level 2
 u32 trickyFn_80143388(int obj, int* trickyState)
 {
-    int val;
     int ref;
+    int val;
 
     val = trickyFoodFn_8014460c(obj, trickyState);
     if (val != 0)
@@ -1021,11 +1022,10 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     }
     for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
     {
-        ref = val + 0x81f;
-        if (*(char*)((int)trickyState + ref) != '\0') continue;
+        if (*(char*)((int)trickyState + val + 0x81f) != '\0') continue;
         ref = *(int*)&((GameObject*)obj)->extra;
         if (((u32)(*(u8*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
-        if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+        if ((int)((GameObject*)obj)->anim.currentMove >= 0x30 || (int)((GameObject*)obj)->anim.currentMove < 0x29)
         {
             if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
             {
@@ -1047,6 +1047,7 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     }
     return 1;
 }
+#pragma optimization_level reset
 
 int trickyFn_801434b0(int obj, int* trickyState)
 {

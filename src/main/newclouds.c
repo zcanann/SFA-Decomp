@@ -842,8 +842,8 @@ extern const f32 lbl_803DF1CC;
 
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 {
-    int savedRand;
     int segs;
+    int savedRand;
     int i;
     f32 total;
     f32 len;
@@ -980,7 +980,7 @@ void snowCloudUpdateFlakes(u8* snow)
     e = snow + 0x1008;
     if (*(int*)(snow + 0x13f4) == 0)
     {
-        f32 size = 16.0f;
+        f32 size = gSnowFlakeSizeLarge;
         f32 negSize = -size;
         for (i = 0; i < 20; i++)
         {
@@ -1003,13 +1003,14 @@ void snowCloudUpdateFlakes(u8* snow)
             angleToVec2(*(u16*)(e + 0x2a), &c3, &s3);
             for (c = 0; c < 3; c++)
             {
+                f32 t2;
                 f32 m0 = m[c];
                 f32 m1 = m[c + 3];
                 f32 m2 = m[c + 6];
                 f32 t1 = m0 * s3 - m1 * c3;
-                f32 t2 = m0 * c3 + m1 * s3;
+                t2 = m0 * c3 + m1 * s3;
                 m[c] = t1 * s1 + c1 * (t2 * c2) + c1 * (m2 * s2);
-                m[c + 3] = t2 * s2 - m2 * c2;
+                m[c + 3] = t2 * s2 + -m2 * c2;
                 m[c + 6] = -t1 * c1 + s1 * (t2 * c2) + s1 * (m2 * s2);
             }
             e += 0x2c;
@@ -2396,6 +2397,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     int i;
     int j;
     int texIdx;
+    int ct;
     u8 hudHidden;
     u8 cr;
     u8 cg;
@@ -2452,14 +2454,15 @@ int snowPrintSnowCloud(int arg, int cloudId)
     mtxB[5] = lbl_803DF1A4;
     mtxB[10] = lbl_803DF1A4;
     mtxB[15] = lbl_803DF1A4;
-    if (((NewCloud*)p)->cloudType != 4 && p[0x1451] != 0)
+    ct = ((NewCloud*)p)->cloudType;
+    if (ct != 4 && p[0x1451] != 0)
     {
         mtxB[0] = mathCosf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[1] = -mathSinf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[4] = mathSinf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
         mtxB[5] = mathCosf((gNewCloudPi * gNewCloudFlashRotAngle) / lbl_803DF1F4);
     }
-    else if (((NewCloud*)p)->cloudType == 4)
+    else if (ct == 4)
     {
         if (p[0x144a] & 0x80)
         {

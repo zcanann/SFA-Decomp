@@ -391,12 +391,12 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     u32 convLo0;
     s64 convResult;
 
-    state = *(int*)(obj + 0x5c);
+    state = *(int*)&((GameObject*)obj)->extra;
     if ((((*(u8*)(state + 8) >> 4 & 1) != 0) && ((*(u8*)(state + 8) >> 5 & 1) == 0)) &&
         (0x32 < *(short*)(state + 4)))
     {
         FUN_800068c4((u32)obj, 0x459);
-        mode = (*gMapEventInterface)->getMapAct((int)*(char*)(obj + 0x56));
+        mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         if (mode == '\x02')
         {
             convLo0 = (u32) * (u8*)(state + 7);

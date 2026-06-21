@@ -373,7 +373,7 @@ int fn_802974A0(int obj, int state, f32 fv)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -651,7 +651,7 @@ void fn_802A4B4C(int obj)
     void* p = *(void**)((char*)inner + 0x7f8);
     if (p != NULL)
     {
-        *(int*)((char*)p + 0xf8) = 1;
+        ((GameObject*)p)->unkF8 = 1;
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= 0x800000LL;
 }
@@ -963,7 +963,7 @@ int fn_802A3B04(int obj, int state)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -10641,7 +10641,7 @@ int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
     {
         {
             f32 t = (f32)(s32)((u16) * (u16*)((char*)sub + 0x20) - 0x7fff) * timeDelta;
-            ((GameObject*)obj)->anim.rotX += (int)(t * lbl_803E8194);
+            ((GameObject*)obj)->anim.rotX += (s16)(t * lbl_803E8194);
         }
     }
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
@@ -11136,7 +11136,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 {
                     n = 0;
                 }
-                else if (p[1] < n)
+                else if (n > p[1])
                 {
                     n = p[1];
                 }
@@ -11854,7 +11854,7 @@ int playerSetHeldObject(int obj, int held)
         sub = inner->heldObj;
         if ((void*)sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504(sub);
@@ -13132,9 +13132,7 @@ void fn_802972B4(int obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
 void fn_802B066C(int obj, int state)
 {
     f32 v;
-    f32 pz;
-    f32 py;
-    f32 px;
+    f32 posWork[6];
     f32 zero;
 
     if (((PlayerState*)state)->surfaceType == 0x1a)
@@ -13153,8 +13151,7 @@ void fn_802B066C(int obj, int state)
     }
     ((PlayerState*)state)->knockbackTimer =
         ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->knockbackDrainRate;
-    zero = lbl_803E7EA4;
-    if (((PlayerState*)state)->knockbackTimer <= zero)
+    if (((PlayerState*)state)->knockbackTimer <= (zero = lbl_803E7EA4))
     {
         if (Sfx_IsPlayingFromObject(obj, 0x394))
         {
@@ -13167,8 +13164,8 @@ void fn_802B066C(int obj, int state)
     ((PlayerState*)state)->knockbackHitTimer = ((PlayerState*)state)->knockbackHitTimer - timeDelta;
     if (((PlayerState*)state)->knockbackHitTimer <= zero)
     {
-        ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
-        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, px, py, pz);
+        ObjPath_GetPointWorldPosition(obj, 0xb, &posWork[3], &posWork[4], &posWork[5], 0);
+        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, posWork[3], posWork[4], posWork[5]);
         ((PlayerState*)state)->knockbackHitTimer = lbl_803E8050;
     }
 }
@@ -15167,6 +15164,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
+        extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
         s16* tbl;
         s16* t;
         int sel;
@@ -16295,7 +16293,7 @@ void fn_802A514C(int obj, int state)
             sub = *(void**)((char*)inner + 0x7f8);
             if (sub != NULL)
             {
-                s16 id = *(s16*)((char*)sub + 0x46);
+                s16 id = ((GameObject*)sub)->anim.seqId;
                 if (id == 0x3cf || id == 0x662)
                 {
                     objThrowFn_80182504((int)sub);
@@ -16383,7 +16381,7 @@ int fn_802A4D34(int obj, int state)
                 f32 amt;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E98)
                 {
-                    *(int*)((char*)sub + 0xf8) = 1;
+                    ((GameObject*)sub)->unkF8 = 1;
                 }
                 amt = interpolate((f32)inner->targetObjectBearing, lbl_803E805C, timeDelta);
                 inner->targetYaw = (f32)inner->targetYaw + amt;
@@ -16402,7 +16400,7 @@ int fn_802A4D34(int obj, int state)
     default:
         {
             void* sub = *(void**)((char*)inner + 0x7f8);
-            if (sub != NULL && *(s16*)((char*)sub + 0x46) == 0x112)
+            if (sub != NULL && ((GameObject*)sub)->anim.seqId == 0x112)
             {
                 inner->moveAnimTable = (int)lbl_80333110;
                 *(int*)((char*)inner->heldObj + 0xf8) = 1;
@@ -16475,7 +16473,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);
@@ -16954,7 +16952,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                         sub = *(void**)((char*)inner + 0x7f8);
                         if (sub != NULL)
                         {
-                            s16 id = *(s16*)((char*)sub + 0x46);
+                            s16 id = ((GameObject*)sub)->anim.seqId;
                             if (id == 0x3cf || id == 0x662)
                             {
                                 objThrowFn_80182504((int)sub);
@@ -18070,7 +18068,7 @@ void fn_802AE9C8(int obj, int inner, int state)
         void* sub = *(void**)((char*)inner + 0x7f8);
         if (sub != NULL)
         {
-            s16 id = *(s16*)((char*)sub + 0x46);
+            s16 id = ((GameObject*)sub)->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
                 objThrowFn_80182504((int)sub);

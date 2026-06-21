@@ -41,7 +41,7 @@ float fastCastU16ToFloat(s16* p)
     return result;
 }
 
-void fastCastFloatToU16(s16* p, float x)
+void fastCastFloatToU16(float x, s16* p)
 {
     register s16* ptr = p;
     register float value = x;
@@ -53,28 +53,27 @@ void fastCastFloatToU16(s16* p, float x)
 }
 
 float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(s16* p, float x);
+void fastCastFloatToS16(float x, s16* p);
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float exp2f(float x)
 {
     s16 exponent;
-    float input = x;
     float integer_part;
     float fraction;
     float result;
 
-    if (input < lbl_803E7978) {
+    if (x < lbl_803E7978) {
         return lbl_803E797C;
     }
 
-    fastCastFloatToS16(&exponent, input);
+    fastCastFloatToS16(x, &exponent);
     integer_part = fastCastS16ToFloat(&exponent);
-    fraction = input - integer_part;
+    fraction = x - integer_part;
 
     if (fraction != lbl_803E797C) {
-        if (input < lbl_803E797C) {
+        if (x < lbl_803E797C) {
             exponent--;
             fraction += lbl_803E7980;
         }
@@ -109,7 +108,7 @@ float fastCastS16ToFloat(s16* p)
     return result;
 }
 
-void fastCastFloatToS16(s16* p, float x)
+void fastCastFloatToS16(float x, s16* p)
 {
     register s16* ptr = p;
     register float value = x;
@@ -124,22 +123,21 @@ void fastCastFloatToS16(s16* p, float x)
 #pragma optimize_for_size on
 float fastFloorf(float x)
 {
-    register float input = x;
-    register float abs_x;
-    register float rounded;
+    float abs_x;
+    float rounded;
     s16 short_value;
     int int_value;
 
-    abs_x = __fabsf(input);
+    abs_x = __fabsf(x);
     if (abs_x < lbl_803E79A0) {
-        fastCastFloatToU16(&short_value, abs_x);
+        fastCastFloatToU16(abs_x, &short_value);
         rounded = fastCastU16ToFloat(&short_value);
 
-        if (input >= lbl_803E79A4) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (input != -rounded) {
+        if (x != -rounded) {
             return lbl_803E79A8 - rounded;
         }
 
@@ -147,21 +145,21 @@ float fastFloorf(float x)
     }
 
     if (abs_x < lbl_803E79AC) {
-        int_value = input;
+        int_value = x;
         rounded = (float)int_value;
 
-        if (input >= lbl_803E79A4) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (input != rounded) {
+        if (x != rounded) {
             return rounded - lbl_803E79B0;
         }
 
         return rounded;
     }
 
-    return input;
+    return x;
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset

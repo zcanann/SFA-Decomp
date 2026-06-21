@@ -104,9 +104,11 @@ void InvisibleHitSwitch_update(int obj)
         {
             ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730;
             GameBit_Set((int)*(short*)(state2 + 0x18), 0);
+        }
+        else
+        {
             return;
         }
-        return;
     }
 
     if (((InvisibleHitSwitchState*)state)->activationTimer != *(volatile f32*)&lbl_803E3730)
@@ -156,29 +158,29 @@ void InvisibleHitSwitch_update(int obj)
     }
 }
 
-void InvisibleHitSwitch_init(int obj, u8* param_2)
+void InvisibleHitSwitch_init(int obj, u8* placement)
 {
 
     u8* info;
 
     info = (u8*)*(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    if (param_2[0x1d] == 0)
+    if (placement[0x1d] == 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
         {
-            f32 v = (f32)(u32)param_2[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+            f32 v = (f32)(u32)placement[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
             ((GameObject*)obj)->anim.rootMotionScale = v * lbl_803E3750;
         }
     }
     ObjHitbox_SetSphereRadius(
         obj,
-        (s16)((param_2[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
-    info[0] = GameBit_Get(*(s16*)(param_2 + 0x18));
-    switch ((param_2[0x23] & 0xe) >> 1)
+        (s16)((placement[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
+    info[0] = GameBit_Get(*(s16*)(placement + 0x18));
+    switch ((placement[0x23] & 0xe) >> 1)
     {
     case 0:
     default:

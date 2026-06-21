@@ -154,7 +154,7 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 
 u32
 FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int param_9, int param_10,
+             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
              u32 param_11, u32 param_12, u32 param_13, u32 param_14,
              u32 param_15, u32 param_16)
 {
@@ -177,31 +177,31 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     float deltaY;
     float deltaZ;
 
-    ctrl = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
+    ctrl = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     *(u8*)(ctrl + 0x14) = *(u8*)(ctrl + 0x14) | 2;
     *(u8*)(ctrl + 0x15) = *(u8*)(ctrl + 0x15) & 0xfb;
     divisor = lbl_803E6F88;
-    *(float*)(param_10 + 0x280) = *(float*)(param_10 + 0x280) / lbl_803E6F88;
-    *(float*)(param_10 + 0x284) = *(float*)(param_10 + 0x284) / divisor;
-    ((GroundBaddieState*)param_10)->baddie.moveSpeed = lbl_803E6F8C;
-    if (*(char*)(param_10 + 0x27a) != '\0')
+    *(float*)(state + 0x280) = *(float*)(state + 0x280) / lbl_803E6F88;
+    *(float*)(state + 0x284) = *(float*)(state + 0x284) / divisor;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
+    if (*(char*)(state + 0x27a) != '\0')
     {
         FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     param_9, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
-        ((GroundBaddieState*)param_10)->baddie.moveDone = 0;
+                     obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)param_10)->baddie.unk34D = 0x1f;
-    if ((((GameObject*)param_9)->anim.currentMoveProgress <= lbl_803E6F84) ||
-        (((GameObject*)param_9)->anim.localPosY < ((GameObject*)((GroundBaddieState*)param_10)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
+    ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
+    if ((((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E6F84) ||
+        (((GameObject*)obj)->anim.localPosY < ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY - lbl_803E6F90))
     {
-        targetObj = *(int*)&((GroundBaddieState*)param_10)->baddie.targetObj;
-        deltaX = *(float*)(targetObj + 0xc) - ((GameObject*)param_9)->anim.localPosX;
-        deltaY = *(float*)(targetObj + 0x10) - (((GameObject*)param_9)->anim.localPosY + lbl_803E6F94);
-        deltaZ = *(float*)(targetObj + 0x14) - ((GameObject*)param_9)->anim.localPosZ;
+        targetObj = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
+        deltaX = *(float*)(targetObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
+        deltaY = *(float*)(targetObj + 0x10) - (((GameObject*)obj)->anim.localPosY + lbl_803E6F94);
+        deltaZ = *(float*)(targetObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
         dist = FUN_80293900((double)(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY));
         if (dist < (double)lbl_803E6F50)
         {
-            msg1Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+            msg1Data = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
             msgQueue = *(short**)(ctrl + 0x24);
             msg1Id = 0xe;
             msg1Flag = 1;
@@ -225,7 +225,7 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             FUN_80006ac4(msgQueue,  & msg2Id);
         }
         *(u8*)(ctrl + 0x34) = 1;
-        msg3Data = *(u32*)&((GroundBaddieState*)param_10)->baddie.targetObj;
+        msg3Data = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         msgQueue = *(short**)(ctrl + 0x24);
         msg3Id = 7;
         msg3Flag = 1;
@@ -430,7 +430,7 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
     double signedDist;
     float info[5];
 
-    control = *(int*)(obj + 0x5c);
+    control = *(int*)&((GameObject*)obj)->extra;
     yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
     if ((double)lbl_803E6F40 == param_4)
     {
@@ -478,7 +478,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
     double absDy;
     float info[7];
 
-    control = *(int*)(obj + 0x5c);
+    control = *(int*)&((GameObject*)obj)->extra;
     if ((obj != 0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
@@ -514,11 +514,11 @@ int dbstealerworm_stateHandlerA03(int obj, int p);
 
 int dbstealerworm_stateHandlerA01(int obj, int p);
 
-void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void FUN_80204320(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(obj);
     }
     return;
 }

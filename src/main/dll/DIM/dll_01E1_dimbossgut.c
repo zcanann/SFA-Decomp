@@ -7,8 +7,8 @@
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
 extern void objSetSlot(u8* obj, s8 slot);
-extern void objRenderFn_8003b8f4(int obj, u32 param_2, u32 param_3,
-                                 u32 param_4, u32 param_5, double scale);
+extern void objRenderFn_8003b8f4(int obj, u32 p2, u32 p3,
+                                 u32 p4, u32 p5, double scale);
 
 extern f32 timeDelta;
 extern f32 lbl_803E4C80;

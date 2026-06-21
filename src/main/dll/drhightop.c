@@ -162,11 +162,7 @@ void fn_801EAE4C(short* obj, int stateRaw)
             {
                 angDelta = angDelta + 0xffff;
             }
-            absDelta = angDelta;
-            if ((int)absDelta < 0)
-            {
-                absDelta = -absDelta;
-            }
+            absDelta = ((int)angDelta >= 0) ? angDelta : -angDelta;
             if ((int)((u32)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) ==
                 0)
             {

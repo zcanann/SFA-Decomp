@@ -83,7 +83,7 @@ extern f32 lbl_803E1730;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 
-void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
+void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
     float zLim;
@@ -110,7 +110,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_
     {
         *(float*)(cameraAddr + 0x74) = lbl_803E1688;
         *(s8*)(cameraAddr + 0x84) = -1;
-        *(s8*)(cameraAddr + 0x88) = param_3;
+        *(s8*)(cameraAddr + 0x88) = collisionFlag;
         res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
         camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;

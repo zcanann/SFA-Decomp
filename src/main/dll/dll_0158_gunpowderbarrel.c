@@ -162,7 +162,7 @@ void gunpowderbarrel_free(int obj, int mode)
     }
 }
 
-void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int param_5,
+void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
                             s8 visFlag)
 {
     u8* sub;
@@ -182,13 +182,13 @@ void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int
     result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E42DC);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E42DC);
     }
     child = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)
     {
         (*(void (**)(int*, int, int, int, int, s8))(*(int*)(*(int*)&((GameObject*)child)->anim.dll) + 0x10))(
-            child, param_2, param_3, param_4, param_5, visFlag);
+            child, p2, p3, p4, p5, visFlag);
     }
 }
 
@@ -1180,7 +1180,8 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         }
         else
         {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotZ * (rate * w);
+            t = (f32)(u16)((GameObject*)obj)->anim.rotZ;
+            t = t * (rate * w);
         }
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
     }

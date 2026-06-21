@@ -4,9 +4,9 @@
 #include "main/dll/dll_0016_screentransition.h"
 extern u32 DAT_803de0af;
 
-void FUN_800d7780(u8 param_1)
+void FUN_800d7780(u8 value)
 {
-    DAT_803de0af = param_1;
+    DAT_803de0af = value;
     return;
 }
 

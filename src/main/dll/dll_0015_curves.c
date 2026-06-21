@@ -195,8 +195,9 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     object = (GameObject*)obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
     {
+        sum0 = *(const f32*)&lbl_803E0668;
         count = 0;
-        sum3 = sum2 = sum1 = sum0 = lbl_803E0668;
+        sum3 = sum2 = sum1 = sum0;
         for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
@@ -344,12 +345,12 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32 scale;
     f32 secondArg;
     f32 zero;
-    u8 pointCount;
-    s32 pointLimit;
-    s16 pointIndex;
     s8 idx1;
     s8 idx2;
     s8 idx3;
+    u8 pointCount;
+    s32 pointLimit;
+    s16 pointIndex;
     f32* pointX;
     f32* pointYZ;
     f32* point;
@@ -590,7 +591,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
                 collision->floorGap[0] = collision->points[0][1] - point->x;
                 if (collision->segmentHitTypes[0] == -1)
                 {
-                    collision->segmentHitTypes[0] = point->type;
+                    *(u8*)&collision->segmentHitTypes[0] = point->type;
                 }
                 foundBelow = 1;
             }
@@ -640,6 +641,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     u8 pointCount;
     u32 flags;
     f32* localPoint;
+    f32* targetRow;
     int radiusOffset;
     int pointIndex;
     int mode;
@@ -732,15 +734,18 @@ buildTransform:
     transform.y = ((GameObject*)obj)->anim.localPosY;
     transform.z = ((GameObject*)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix, &transform);
-    localOffset = 0;
-    for (pointIndex = 0; pointIndex < pointCount; pointIndex++)
+    pointIndex = 0;
+    targetRow = (f32*)collision;
+    localOffset = pointIndex;
+    for (; pointIndex < pointCount * 3; pointIndex += 3)
     {
-        collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
-        collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
+        targetRow[69] = targetRow[57];
+        targetRow[71] = targetRow[59];
         localPoint = (f32*)((u8*)collision->localPointPositions + localOffset);
         Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2], &tempX,
-                              &collision->localPointTarget[pointIndex][1], &tempZ);
+                              &((f32*)collision)[pointIndex + 70], &tempZ);
         localOffset += 0xc;
+        targetRow += 3;
     }
 }
 #pragma opt_unroll_count 0
@@ -756,8 +761,8 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     int pointOffset;
     f32* localPoint;
     f32 raisedPointOffset;
-    f32 resetRange;
     f32 resetMin;
+    f32 resetRange;
     f32 resetZero;
     CurvesTransformScratch transform;
     f32 matrix[16];
@@ -1772,9 +1777,9 @@ typedef struct CurvesSaveGameObjectPosition
 int pushable_savePos(int obj)
 {
     int i;
+    CurvesSaveGameObjectPosition* slot;
     int off;
     CurvesSaveGameObjectPosition* position;
-    CurvesSaveGameObjectPosition* slot;
     u32 objectId;
     f32 savedX;
 

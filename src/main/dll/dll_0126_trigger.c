@@ -479,18 +479,19 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         {
                             goto match;
                         }
-                        if (d > 0x54)
+                        if (d < 0x54)
                         {
-                            if (d == 0x230)
+                            if (d >= 0x51 || d < 0x4b)
                             {
-                                goto match;
+                                continue;
                             }
-                            continue;
+                            goto match;
                         }
-                        if (d >= 0x51 || d < 0x4b)
+                        if (d == 0x230)
                         {
-                            continue;
+                            goto match;
                         }
+                        continue;
                     match:
                         if (*(s16*)((char*)tbl + 0x38) == id)
                         {
@@ -523,7 +524,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 case 0x21:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x1fff;
-                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13)));
+                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13 & 7)));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
@@ -749,7 +750,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x2c:
-                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s16)((p[2] << 8) | p[3]);
+                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = Obj_GetPlayerObject();

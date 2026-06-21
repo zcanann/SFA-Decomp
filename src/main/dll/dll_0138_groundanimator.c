@@ -297,7 +297,7 @@ f32 groundanimator_setScale(int* obj, int* target)
             int* e;
             g->sinkDepth = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth;
             e = (int*)g->linkedObj;
-            switch (*(s16*)((char*)e + 0x46))
+            switch (((GameObject*)e)->anim.seqId)
             {
             case 0x519:
                 fn_801A80F0(e, 0);
@@ -323,13 +323,18 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     int blkIdx;
     int mid;
     int inner;
-    int foff;
+    int fallOff;
+    int fallMid;
+    int fallInn;
+    int htOff;
+    int htMid;
+    int htInn;
     int ix;
     int iz;
     f32 fracX;
+    f32 clampMax;
     f32 fracZ;
     f32 radsq;
-    f32 clampMax;
     f32 vpos[3];
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
@@ -346,19 +351,26 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     iz = fastFloorf((((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
     fracX = ((GameObject*)obj)->anim.localPosX - (lbl_803E3FC0 * ix + playerMapOffsetX);
     fracZ = ((GameObject*)obj)->anim.localPosZ - (lbl_803E3FC0 * iz + playerMapOffsetZ);
+    fallOff = 0;
     state->entryCount = 0;
     radsq = state->radius * state->radius;
-    foff = 0;
+    htOff = fallOff;
     for (blkIdx = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
     {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (*(u8*)((char*)placement + 0x25) == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
+            fallMid = fallOff;
+            fallMid |= fallOff;
+            htMid = htOff;
+            htMid |= htOff;
             clampMax = lbl_803E3FC4;
             for (; mid < ((MapBlockData*)block)->unk14; mid++)
             {
                 vtx = fn_800606DC(block, mid);
+                fallInn = fallMid;
+                htInn = htMid;
                 for (inner = 0; inner < 3; inner++)
                 {
                     void* cell = (char*)((MapBlockData*)block)->unk58 + *(u16*)vtx * 6;
@@ -374,9 +386,14 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
                         d = clampMax;
                     }
                     d = d * d;
-                    ((f32*)state->falloffBuf)[foff] = clampMax - d;
-                    *(s16*)((char*)state->heightBuf + foff * 2) = vpos[1];
-                    foff++;
+                    *(f32*)((char*)state->falloffBuf + fallInn) = clampMax - d;
+                    *(s16*)((char*)state->heightBuf + htInn) = vpos[1];
+                    fallInn += 4;
+                    htInn += 2;
+                    fallMid += 4;
+                    htMid += 2;
+                    fallOff += 4;
+                    htOff += 2;
                     vtx = (char*)vtx + 2;
                 }
             }

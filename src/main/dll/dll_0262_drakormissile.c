@@ -112,9 +112,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     f32 dir[3];
     f32 hitDir[3];
     f32 endPos[3];
-    int startGrid[3];
-    int endGrid[3];
-    int hitGrid[3];
+    s16 startGrid[3];
+    s16 endGrid[3];
+    s16 hitGrid[3];
     f32 mag;
     f32 horizDist;
 
@@ -281,7 +281,7 @@ void drakormissile_update(int obj)
             expired = 1;
         }
         nearHit = 0;
-        if (lastHit != NULL && *(s16*)((char*)lastHit + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        if (lastHit != NULL && ((GameObject*)lastHit)->anim.seqId != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
         {
             nearHit = 1;
         }

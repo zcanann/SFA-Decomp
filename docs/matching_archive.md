@@ -1,7 +1,7 @@
 # SFA-Decomp Matching Playbook — FULL ARCHIVE
 
 > Complete, unabridged playbook: every recipe with its full negative-maps, CRACKED/SUPERSEDED
-> history, campaign/task notes, and frontier analyses. `CLAUDE.md` is a lean lever-index
+> history, campaign/task notes, and open-puzzle analyses. `CLAUDE.md` is a lean lever-index
 > distilled from this file — consult THIS file when a one-liner there isn't enough. Recipe
 > numbers match between the two. This archive is the source of truth.
 
@@ -32,19 +32,19 @@ land in this playbook as they're discovered, and a documented partial is the
 exact seed the next technique grows from. Don't reach for asm to fill the gap —
 the gap is the point, and the gap is recoverable.
 
-Heuristic (these are checkpoints to BANK progress, never stop signs — re-attack
+Heuristic (these are checkpoints to record progress, never stop signs — re-attack
 every partial when a new recipe lands):
 - Residual is a single instruction / register-allocation choice? → commit the
   partial with the divergence documented, then keep it on the retry list.
-- Function ≥80% fuzzy on clean C? → bank the partial and circle back as
+- Function ≥80% fuzzy on clean C? → set the partial aside and circle back as
   techniques accumulate.
 - Looks like "MWCC can't pick this from any C"? → **commit the partial** and
   flag the function so it gets revisited with the next playbook recipe (this
   exact framing is how the cracked caps got cracked). Never asm.
 
-**FRESH-EYES PROTOCOL for stale banks: re-attack WITHOUT reading the previous
+**FRESH-EYES PROTOCOL for set-aside residuals: re-attack WITHOUT reading the previous
 attempt's negative map.** A documented "probed inert ×N" list anchors the next
-attacker onto the same axes; FOUR banked residuals fell in ONE day to
+attacker onto the same axes; FOUR set-aside residuals fell in ONE day to
 attackers told only the score and "the playbook may be wrong" (SB_Galleon_func0E
 95.9→100 — the "unproducible at O4" verdict was a wrong axis; SB_ShipGun_update
 99.42→100 — every spelling battery missed that the LOOP-ELEMENT VARIABLE
@@ -54,7 +54,7 @@ cfprisonguard's "retail-anomaly, permanently unmatchable" census verdict — a
 dropped argument). Negative maps stay valuable
 for the SAME axis (don't re-run them); the protocol is for finding the axis
 nobody tried: derive the hypothesis from the target asm as if the function were
-new, and only afterwards check the bank for overlap.
+new, and only afterwards check the set-aside notes for overlap.
 
 ## Pragma states: what they are and where they come from (read before #1)
 
@@ -112,7 +112,7 @@ probes on the bundled compilers):
    `switch` MWCC would lower to a jump table into a compare-chain. If a function
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
    the jump table survives; if it mixes a switch with bit-ops you can't have
-   both from this lever, so pick whichever the target uses and bank the other as
+   both from this lever, so pick whichever the target uses and set the other aside as
    an open residual (revisit when a finer-grained pragma/recipe lands).
    **BUT peephole-off does NOT always kill the table — DENSE switches can keep
    both.** For a sufficiently dense switch (e.g. 30 contiguous cases) `#pragma
@@ -173,12 +173,12 @@ probes on the bundled compilers):
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
-   **Inverse cap — CRACKED by recipe #74.** When target MATERIALIZES the mask
+   **Inverse snag — CRACKED by recipe #74.** When target MATERIALIZES the mask
    (`li rX,-K; and` / `lis;or`) where every 32-bit C spelling gives
    `rlwinm`/`oris`, write the constant with an `LL` suffix
    (`x &= ~0x80LL;` / `x |= 0x800000LL;`) — MWCC then materializes exactly
    target's form. The old "leave as documented partial" guidance is obsolete;
-   retry all previously-capped materialized-mask partials.
+   retry all previously-stalled materialized-mask partials.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -186,7 +186,7 @@ probes on the bundled compilers):
    **U-SUFFIX LITERALS are the width lever the `(u32)` cast can't be: `x == 0u`
    / `(x >> 6 & 1) == 0u` forces `cmplwi` on u8/bit-extract compares** where
    the `(u32)`-cast form is inert (probe-verified t3/t19/t20 + trickyGrowl's
-   two banked width sites -> fixed). The suffix rides the COMPARE's type
+   two set-aside width sites -> fixed). The suffix rides the COMPARE's type
    instead of the operand's, so nothing folds it away. Use before reaching
    for #58 width locals.
    **MWCC DROPS a `(u32)` cast on a `!= 0` compare — so `(u32)x != 0` still
@@ -199,7 +199,7 @@ probes on the bundled compilers):
    (`inner->heldObj`), MWCC CSE-merges the loads and the int read's signedness
    wins the compare; the only fix is a struct-field pointer retype (header
    change, gold-gated) — body-local u32/volatile launders are inert/worse
-   (fn_802A49C8, banked #108-CSE-open: void* retype build-fails on int-
+   (fn_802A49C8, set-aside #108-CSE-open: void* retype build-fails on int-
    arithmetic use sites).
 
 4. **`if (v > K) v = K; return v;` instead of `if (v <= K) return v; return K;`**.
@@ -288,7 +288,7 @@ probes on the bundled compilers):
     project's named `lbl_xxx` f64 magic (matching target). When converting an
     unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
     than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
-    **THE @magic-vs-named-lbl cap is usually fixable — this is the #1 residual
+    **THE @magic-vs-named-lbl snag is usually fixable — this is the #1 residual
     on the autos units, don't just leave it.** When an int→f32 conversion emits
     an anonymous compiler `@NNNN` magic where target references a named
     `lbl_803Exxxx` f64 magic, add an EXPLICIT cast matching the conversion's
@@ -302,11 +302,11 @@ probes on the bundled compilers):
     **Caveat — on some units this is float-pool-ORDERING-bound, not cast-bound.**
     On large multi-handler units (placeholder_80295318, 80220608) the named f64
     magic is emitted only for the EARLIEST functions in the TU's float pool;
-    later functions cap at the anonymous `@NNN` regardless of the cast (confirmed
+    later functions stall at the anonymous `@NNN` regardless of the cast (confirmed
     by two hunters — the `(f32)(int)` variant tested and reverted, sometimes
     *worse*). If the explicit cast doesn't flip it on a late-pool function, the
     deficit (~85-96%) is float-pool ORDERING — an open problem awaiting a
-    pool-reordering lever; bank the partial and revisit when one lands.
+    pool-reordering lever; set the partial aside and revisit when one lands.
     **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
     fixable via symbols.txt.** ⚠️ **CONFIRMED & CLOSED by recipe #70** (task
     #145): the @NNN reloc itself is score-neutral (proven by 100.0% fns
@@ -378,7 +378,7 @@ probes on the bundled compilers):
     any shared-header return-width flip): (1) snapshot per-fn fuzzy, retype,
     full report rebuild, diff per-fn; (2) keep ONLY if net-positive with no
     real regressions; (3) the one collateral regressor here (hagabon_update, an
-    already-capped #108 coloring fn whose int-width result web perturbed its
+    in-progress #108 coloring fn whose int-width result web perturbed its
     coloring net-negative) was ISOLATED with a block-scope fn-ptr cast back to
     the old width — `((u8 (*)(int))(*iface)->fn)(args)` — recipe #57/#35, ->
     zero regressions. CRITICAL NEGATIVE: most u8 vtable returns are CORRECT
@@ -434,7 +434,7 @@ probes on the bundled compilers):
     runs (`cmpwi K-1; beq/bge`); 2+ value gaps keep exact bounds; run
     leaves emit `cmpwi hi+1; bge` + a dead `cmpwi lo; b`. A tree shape no
     case-set reproduces can mean the import FABRICATED or DROPPED case
-    values — brute-force the case-set space before banking (dll_179's
+    values — brute-force the case-set space before setting it aside (dll_179's
     "vestigial run [0x87-0x8D]" never existed in v1.0; true set recovered,
     CFCrate_SeqFn → 100).
     ⚠️ OVERTURNED SAME-DAY (CFBaby maverick): the dead-`cmpwi K+1`-no-beq
@@ -443,10 +443,10 @@ probes on the bundled compilers):
     the dead compare and retargets the bge (verified bidirectionally).
     Fix: the empty-case pair (`case 3: break; case 4: break;` → cmpwi
     last+1) + a local `#pragma peephole off/reset` wrap (InfoPoint_SeqFn
-    → 100). RETRY every banked "empty-case island unreachable" partial
+    → 100). RETRY every set-aside "empty-case island unreachable" partial
     under peephole OFF. (The same-day "always edge-eliminated" verdict was
     an artifact of probing under peephole ON — a model case for
-    re-attacking fresh banks.)
+    re-attacking set-aside residuals fresh.)
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -474,17 +474,17 @@ probes on the bundled compilers):
     earlier variable (the obj/setup base), MWCC does the reverse, and it cascades
     through every instruction referencing that var. Declaration-order reorder
     (both directions) didn't flip it on the fns observed. Pending a fresh lever
-    this can sit at ~74-90% on such units — but the partial banks real fuzzy%,
+    this can sit at ~74-90% on such units — but the partial records real fuzzy%,
     so commit it, record the permutation, and re-attack with the class-pooled
     allocator model (#108), un-/re-naming (#107), and callee-decl widths (#115)
     as your next moves.
-    **Before banking a coloring residual, try making the base a REAL PARAM
+    **Before setting aside a coloring residual, try making the base a REAL PARAM
     instead of `void*` + a local copy.** If the function is `f(void *p){ Obj *o =
     (Obj*)p; ... }` and the saved-reg coloring is off, change the signature to the
     concrete pointer type `f(u8 *o)` (or `Obj *o`) — taking the base as a typed
     PARAM (no local copy) often flips MWCC's r29/r30/r31 assignment to match
     target. (hotel7, Obj_BuildWorldTransformMatrix → 100%.) This is a real fix,
-    not a cap — try it first.
+    not a stall — try it first.
     **Local TYPE controls frame size: `f32 m[16]` (64B) vs `Mtx m` (48B).** When
     target reserves a full 64-byte 4x4 stack slot but your `Mtx`/`MtxP` local only
     reserves 48B (shifting the frame + every sp-offset), declare the matrix local
@@ -563,7 +563,7 @@ probes on the bundled compilers):
     11.6% → 97.3%. Clean C, no asm.
 
 **(s16)timeDelta DIRECT subtrahend — cracks the 'converted-float subtrahend'
-cap (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
+snag (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
 field emits fctiwz + subf + EXTSH + sth; `field -= (s16)timeDelta;` truncates
 the float straight to s16 (same fctiwz, no (int) node) and the compound folds
 the extension — exactly target's shape. tesla -> 100, fxemit_update +0.5,
@@ -628,7 +628,7 @@ subtrahend IS the fix (shrine1CE → 100 by dropping the wrap + this cast).
     idiom and your `x != 0` (or `(int)(x != 0)`) emits the `neg; orc/or; srwi`
     form instead, write `!!x` (double logical-NOT) to get the `cntlzw` form.
     Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
-    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
+    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom snag."
     **Related — `break` (fall to common return) instead of `case`-body
     `return 0` drops a spurious `cntlzw` boolean.** When a switch case ends with
     an explicit `return 0;` and target instead uses an `li`-branch to a shared
@@ -641,7 +641,7 @@ MWCC's materialization of `x <= 0` (signed).** Mechanism: cntlzw(x) is 32 for
 x==0 and 0 for x<0; rotating 1 by either lands bit31 set, any other count
 clears it. When a tiny predicate fn shows this tail and the import wrote
 `== 0`, the original was `<= 0` — a real behavioral difference, not a codegen
-cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
+snag (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
 (s8)-cast extsb before the stb).
 
 24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
@@ -661,11 +661,11 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     assumption that flagged some matrix/vector fns as untouchable.) CAVEAT:
     it only controls the fmadds FUSION — it does NOT fix eval-order /
     FP-register-allocation divergences. A function whose divergence is
-    FP-reg/eval-order, not fusion, will still cap with fp_contract off, so
+    FP-reg/eval-order, not fusion, will still stall with fp_contract off, so
     try it on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix
     coloring.
 
-25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
+25. **An FP comparison feeding a BRANCH is NOT a snag — write the plain
     operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
     reproduces target's `fcmpo` + `cror` (the `cror eq,gt,eq`→`>=`,
     `eq,lt,eq`→`<=` combine) directly from the `>=`/`<=`/`<`/`>` operator — do
@@ -695,8 +695,8 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     it — `int v = (d < A && d > B); if (v){…}`. Writing `if (d<A && d>B)` directly
     short-circuits with NO materialization (loses the `li r0,0/1`); the int-temp
     assignment forces it. (zulu19, arwsquadron_update — all 5 instances,
-    83.4→85.8%.) If NEITHER form lands, bank the partial and keep it on the
-    materialized-float-bool retry list.
+    83.4→85.8%.) If NEITHER form lands, set the partial aside and keep it on the
+    materialized-float-bool retry list — there's a lever to find.
 
 26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
     size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
@@ -741,7 +741,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     and constant-lift didn't flip it on the fns tried. When the only residual is
     "target unrolls x4, mine x8" on an init/clear loop, try the count-down form
     below and the `opt_unroll_*` / `ppc_unroll_*` pragmas (#98/#113); if those
-    don't bite yet, bank the partial as an open unroll-factor case.
+    don't bite yet, set the partial aside as an open unroll-factor case.
     **PARTIAL CRACK — the COUNT-DOWN loop form `for (i = N; i != 0; i--)` flips
     both the unroll FACTOR and the unroll STYLE.** When target shows the x4
     walker-bump unroll (store constants hoisted above mtctr, `addi ptr,ptr,stride`
@@ -754,7 +754,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     `srwi ctr,count,3` + `andi. rem,count,7` two-phase unroll comes from the
     count-down form, while count-up emits the newer compare-8-first shape
     (streamsLoadedCallback 78.1->97.1). Try the count-down spelling BEFORE
-    banking an unroll-factor partial.
+    setting aside an unroll-factor partial.
     **LOOK-ALIKE that is NOT an unrolled loop: `li K; slwi K2; stwx` per
     copy over constant indices 0,1,2..N = a MULTI-DEF POST-INCREMENT
     INDEX (`arr[idx++] = 0;` written N times).** Per-def const-prop emits
@@ -846,7 +846,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     #16. (dc221d25d task #121.)
     **BURST RULE — #36 scales to WHOLE-QUAD rotations, but only when ALL the
     no-op casts drop AT ONCE (the #74 burst lesson applied to casts).**
-    cfguardian cfguardian_updateMain (nee waterSpellStone1Fn) had been BANKED as a "fn-text-bound #108
+    cfguardian cfguardian_updateMain (nee waterSpellStone1Fn) had been SET ASIDE as a "fn-text-bound #108
     rotation" ("#36 cast drops tried — inert") with all four saved webs
     exactly reversed (T obj=r28/def=r29/player=r30/sub=r31, ours the mirror).
     The real cause: 19 Ghidra-noise `(int)obj` casts on an ALREADY-`int`
@@ -929,14 +929,14 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     frame, the lift IS the match.
 
 46. **Ghidra-import wrong-offset bug class: re-derive struct field offsets from
-    target asm, not from the imported skeleton.** A surprisingly common stuck-
+    target asm, not from the imported skeleton.** A surprisingly common in-progress-
     partial cause: the Ghidra C has the right *operations* but the wrong *byte
     offsets* into the state struct, because the v1.1 layout shifted vs v1.0.
     Read the actual offsets off the target's `lwz`/`lhz`/`lbz` displacements.
     Pattern caught: firepipe `FirePipeMapData` `s16 cycleTime` at `0x1A`,
     import had wrong offsets `0x20/0x22` for timer/flags; mazewell control
     flow had non-fallthrough ifs where target's switch falls through. Treat
-    "stuck mid-partial 60-95%" as offset-bug suspicion before allocator-cap
+    "in-progress mid-partial 60-95%" as offset-bug suspicion before allocator-stall
     suspicion. Related to the "import logic-bug class" already documented in
     the drift-handling section.
 
@@ -1049,8 +1049,8 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     Test which class the dup is in: if target's call site shows a `bl` to
     the canonical name (external resolve) → drop the dup. If target inlines
     the body at the call site → keep the dup. This **resolves the wave-
-    lesson "−48 byte cross-inline tail TU cap"** documented in the
-    "Graduating a placeholder" section — that cap was actually duplicate-
+    lesson "−48 byte cross-inline tail TU snag"** documented in the
+    "Graduating a placeholder" section — that snag was actually duplicate-
     def reloc-stealing, not pool migration, and is FIXABLE for the
     non-inlined case. The CLAUDE.md wave-lessons section should be read
     with this update in mind.
@@ -1206,14 +1206,14 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
 61b. **Saved-reg coloring IS often source-flippable: declare a late-used
     scratch local (`int ret;`/loop counter) FIRST.**
     **TRANSPLANT BATTERY (the #108 rosetta method, 3 wins on previously
-    35-lever-resistant fns): probe every banked rotation with the standard
+    35-lever-resistant fns): probe every set-aside rotation with the standard
     3-variant battery — (a) late-local-first, (b) FULL-REVERSE-SPLIT
     (decl order reversed AND inits separated from decls: `int flag;
     TimerFlags *f; TimerSetup *setup; TimerState *state; int v;` then
     `state = ...; setup = ...; f = ...;` — the strongest member:
     timer_update 98.36->99.10 after the whole campaign failed),
     (c) full-reverse with inits in place (n_rareware 86.69->87.26,
-    fn_800D55BC ret-first +0.24). Hit rate ~3/8 on the banked inventory;
+    fn_800D55BC ret-first +0.24). Hit rate ~3/8 on the set-aside inventory;
     inert where address-taken locals dominate (#5 pins offsets) or the fn
     is a bare 2-web pair (dead decls DCE). Derived from reading MP4's
     matched THPSimpleDecode (locals literally named after their registers —
@@ -1226,7 +1226,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     coloring shifts up to match (endObjSequence j-first → j=r31;
     explodeplan_updateTriggerCallback ret-first → obj/q/runtime=r31/r30/r29;
     fn_802C0A5C inner-before-q → p2/q=r31/r30). Try this BEFORE declaring a
-    recipe #16 coloring cap.
+    recipe #16 coloring stall.
     **VOLATILE-reg edition — a FN-SCOPE decl (assignment left in place) sets
     the vreg NUMBERING even when decl-order swaps among initialized locals
     are inert.** Split the decl from its init and move ONLY the decl to fn
@@ -1313,7 +1313,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     were real Ghidra import condition-INVERSIONS on fn_80151DB8 (the import
     negated/returned on the opposite branch) — whenever target's branch
     sense differs from the import's, suspect inverted logic (drift section)
-    before a codegen cap. fn_80151DB8 98.16→100.
+    before a codegen stall. fn_80151DB8 98.16→100.
     **SINGLE-USE FOLD CAVEAT + the empty-ELSE escape (cfguardian w-site).**
     The #63 ternary only keeps its own-statement shape when its result
     survives as a statement boundary; a SINGLE-USE result gets
@@ -1475,8 +1475,8 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     hoists; (int)-cast launders are VN'd through; only the structurally
     distinct raw-arith tree lands target's sth-then-addi order.
     GXColor-style by-value struct args each take an 8B caller temp slot —
-    same threshold behavior (objFn_8003dc50 capped: target allocates 2
-    fewer temps for identical call sites; no source form found).
+    same threshold behavior (objFn_8003dc50 stalled: target allocates 2
+    fewer temps for identical call sites; no source form found yet).
     **(a)-struct corollary — a STRUCT-typed local reserves its stack slot
     even when fully enregistered; flat scalar locals don't.** When the
     frame is N bytes SHORT and the body computes a vector/aggregate in
@@ -1493,7 +1493,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     the bare scalars; but wrapping ALREADY-slotted outparam scalars
     (CameraModeCrawl's &v20..&v8 quad) is frame-NEUTRAL — the extra 16B
     there is the separate conversion-temp threshold class. A/B per fn.
-    Threshold caps seen in the census sweep (deletion probes move the
+    Threshold snags seen in the census sweep (deletion probes move the
     frame in 16B steps but no single source construct owns it; 4+ forms
     tried each): treasurechest_update, CameraModeCrawl_update, drawHudBox
     (target gives EVERY s16→f32 call-arg conversion a fresh slot — 18
@@ -1506,13 +1506,13 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     `z[2]→z[1]` + a #62 arg launder), drawHudBox → 100 via recipe #83;
     CameraModeCrawl improved via #83 ternary clamps (97.68→97.79, frame +
     slot stream now exact) but still partial. Retry the others against
-    recipes #80-#83 before banking them as open threshold residuals.
+    recipes #80-#83 before setting them aside as open threshold residuals.
 
 68. **`mr rS,r3`-copy forward-prop into early derefs is a PEEPHOLE opt —
     `#pragma peephole off` makes pre-call derefs use the COPY, matching
     target.** The recurring 1-2 instr residual where target derefs the param
     through its saved-reg copy (`mr r30,r3; lwz r31,184(r30)`) but yours
-    derefs through r3 directly (`lwz r31,184(r3)`) is NOT a coloring cap and
+    derefs through r3 directly (`lwz r31,184(r3)`) is NOT a coloring snag and
     NOT fixable by source restructure (param reassign, local copy, (u32)
     casts, typed params, statement moves all tested null on
     earthwalker_hitDetect) — it is the PEEPHOLE pass propagating the copy
@@ -1534,7 +1534,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     (no pragmas — audio/), target's compile ALREADY did the propagation, so
     the residual there is genuine scheduler/coloring, NOT copy-prop.
     Diagnostic: check the unit's pragma state FIRST. Applying `peephole off`
-    to a peephole-ON-target fn REGRESSES hard (golf-1's audio-cap A/B:
+    to a peephole-ON-target fn REGRESSES hard (golf-1's audio-stall A/B:
     synthAssignHandle 98.6→81.4, hwChangeStudio 98.2→82.1,
     synthGetNextChannelEvent 98.0→91.8, DoSetPitch unchanged — all reverted).
     The audio ON-target rule holds at the SCHEDULING level too: a sched-off
@@ -1568,7 +1568,7 @@ lives as recipes #93-95 at the end of the numbered list.)*
   inside a condition that target executes unconditionally
   (sc_musictree_render: `obj->0xF8 = 1` belonged AFTER the if-block, the
   import early-returned past it). Suspect behavioral guard bugs before
-  layout caps when ONE branch target is off by one store's width.
+  layout stalls when ONE branch target is off by one store's width.
 
 **Recipe #65 addendum — the allocator-gap finds REAL dropped arguments.**
 ~half of #65 applications surface genuine Ghidra-dropped call args, not
@@ -1601,7 +1601,7 @@ retail") — all three real behavioral bugs, 99.31→99.54.
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
 Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
-(12 fns → 100%, ~10 capped after exhaustive source-form A/B):
+(12 fns → 100%, ~10 still in progress after exhaustive source-form A/B):
 
 - **TRACTABLE — spurious narrow-store extension (`extsh`/`clrlwi` before
   `sth`/`stb`).** Simple same-lvalue compound (`x = x ± K`) → write `--`/`+=`
@@ -1609,7 +1609,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   float→s16 conversion store → DROP the cast (fn_80039DF8 → 100%). BUT when
   the subtrahend is a converted float (`h - (int)timeDelta`) or the value
   pairs with a separate compare local, the extension survives every form
-  (7 tried) — cap (DFP_Torch_update, shopitem_update).
+  (7 tried) — needs a different lever (DFP_Torch_update, shopitem_update).
 - **TRACTABLE — stack-address re-derive vs CSE reuse.** Target re-derives
   `addi r0,r1,K` where current reuses a live reg: write the address as a
   formally different expression — `(GfxCmd *)((u8 *)&buf + 0x60)` — to kill
@@ -1618,7 +1618,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
 - **TRACTABLE — loop-init `li` order** → recipe #43 comma-init
   (staff_release → 100%). But a compiler-HOISTED invariant constant ordered
   before/after the counter init does NOT respond (Sfx_StopAllObjectSounds —
-  cap).
+  needs a different lever).
 - **TRACTABLE — audio/musyx: A/B the upstream MP4 musyx source verbatim
   FIRST** (inpSetMidiCtrl14 → 100% from MP4 snd_midictrl.c form: else-if
   chain, no `& 0xff`, repeated subexpressions, no locals). COUNTEREXAMPLE:
@@ -1628,9 +1628,9 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   penalizes TRANSPOSED instructions far more than same-position byte diffs —
   a "2-instr swap" can score WORSE than a "3-instr same-slot" diff
   (ObjModel_LoadModelData 99.75→96.6 on a 2-instr transposition "fix").
-  BANKING-SCORE RULE (CFBaby): objdiff punishes MISSING-instruction
+  SET-ASIDE-SCORE RULE (CFBaby): objdiff punishes MISSING-instruction
   misalignment more than extra same-position instructions — when choosing
-  between two non-matching spellings for a banked residual, keep the
+  between two non-matching spellings for a set-aside residual, keep the
   LONGER one (InfoPoint: extra-beq form 95.83 vs missing-beq 95.63).
 - **TRACTABLE — int compare/`+`-operand swaps respond to recipe #66** (a
   block-local for one operand) where the bare source flip does NOT — MWCC
@@ -1675,7 +1675,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   reload case was the open part on fn_801CEA14, dim2icicle_update,
   cclevcontrol_update, wctemple_update until #81. Read the target asm between
   the stfs and the fcmpo to pick. ⚠️ **CRACKED by recipe #81** (the reload case is
-  cracked by the `*(f32 *)&lbl` launder) — the four "still-capped" fns above
+  cracked by the `*(f32 *)&lbl` launder) — the four "still-stalled" fns above
   are #81's test set (5 of 6 → 100%). Use the same stfs/fcmpo read to pick
   temp_t vs the #81 launder.
 - **`addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` — MOSTLY recipe #80
@@ -1689,7 +1689,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   it's internal vreg-numbering state; 8 forms inert (init/indexed-use
   launders, register-keyword drop, separate local, comma-init, peephole-on).
   Classify by recipient reg: saved → apply #80; volatile with a matching
-  twin → open vreg-numbering case, bank the 1-instr partial and re-attack when
+  twin → open vreg-numbering case, set the 1-instr partial aside and re-attack when
   a vreg-numbering lever lands. DECREMENT-SPELLING sub-case (fuelcell_render
   → 100): a via-r0 on a `value±K` CALL ARG of a call that REASSIGNS the same
   variable = move the arithmetic onto the variable (`pickCount--; pickCount =
@@ -1759,7 +1759,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   (SR walker grabs the HIGHER reg, opposite target) and misrepresents the
   source (target compiled the walker form) -- per #160's own guard (convert
   only when target's reg assignment survives) it is NOT a faithful fix here;
-  banked. CONCLUSION: this is the #108 fn-global dose class; the next lever
+  set aside. CONCLUSION: this is the #108 fn-global dose class; the next lever
   must change the fn-global construct census / priority-fn inputs without
   changing the instruction stream (the open research direction in the #108
   cross-class-interleave note), reachable only via real-TU A/B, never probes.
@@ -1784,7 +1784,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   spelling (`x |= 0x20000LL;`) materializes the constant** — warpDarkIceMines
   recovered (see #74's refinement note).
 
-70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool cap" was a
+70. **@NNN-vs-named-lbl SDA21 relocs are SCORE-NEUTRAL — the "pool snag" was a
     misattribution; the deficit is always real codegen divergence elsewhere.**
     (Task #145, four decisive experiments.) objdiff content-matches a reloc by
     the DATA BYTES at the resolved target, so a local `.sdata2` copy (`@534`)
@@ -1799,7 +1799,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     only because referencing units are NonMatching); (c) when a fn shows many
     @NNN refs and <100%, align the instruction streams (mnemonic-level difflib
     of `function_objdump.py`'s two halves) — the real divergences are ordinary
-    recipe-class bugs. Effect7_func04's "77-ref @NNN cap" was actually ~12
+    recipe-class bugs. Effect7_func04's "77-ref @NNN snag" was actually ~12
     fixable divergences (98.30→99.87).
 
 71. **Literal float constants REMATERIALIZE per use; named `lbl_` externs get
@@ -1858,7 +1858,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
 
 74. **`LL`-suffixed constants in logical ops force MATERIALIZED-constant
     codegen — cracks the whole immediate-vs-materialized isel class
-    (including the recipe #2 "inverse cap").** When target materializes a
+    (including the recipe #2 "inverse snag").** When target materializes a
     logical-op constant where every 32-bit C spelling folds to the immediate
     form, widen the CONSTANT to long long — the op widens to s64 and
     truncates back into the u32 lvalue with byte-identical semantics and no
@@ -1871,9 +1871,9 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     Version-independent (probed all 5 mwcc versions) — it is purely the
     operand TYPE; plausibly the original flag constants were 64-bit
     enums/macros. Swept ~20 sites in modgfx/dim_partfx → contributed to 5
-    fns reaching 100%. Retry every "materialized-mask cap" partial
+    fns reaching 100%. Retry every "materialized-mask snag" partial
     (warpDarkIceMines `|= 0x20000`, player_SeqFn's ~9 mask sites, arwing
-    flag handlers, the ~70%-capped tiny flag fns) with this spelling.
+    flag handlers, the ~70%-stalled tiny flag fns) with this spelling.
     Probe-batch method (a /tmp probe.c with N spellings × objdump grep)
     found it in minutes — use that pattern for future isel mysteries.
     BURST SEQUENCING: when a macro/burst has several ADJACENT materialized
@@ -1886,7 +1886,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     REFINEMENT (foxtrot): the LVALUE must be u32 — an `int` lvalue widens
     SIGNED and emits an extra `srawi rX,rY,31` for the high word
     (fn_80296BBC needed `*(u32 *)(...) &= ~2LL`, recovering the historic
-    70%-capped tiny-flag-fn example from the old recipe #2 inverse note to
+    70%-stalled tiny-flag-fn example from the old recipe #2 inverse note to
     100%). player_SeqFn's 9 mask sites + warpDarkIceMines also recovered
     with #74 — the "11 missing instructions" diagnosis was entirely this
     class.
@@ -1953,7 +1953,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     statement order. (camcontrol_getTargetPosition 95.96→98.42; remaining open
     residual: the PLACEMENT of `mr r31,r6` among the prologue copies is
     allocator-internal — emission order followed neither statement order nor
-    cast-ness on the spellings tried; bank the partial and re-attack via #108.
+    cast-ness on the spellings tried; set the partial aside and re-attack via #108.
     Same fn: sqrtf store-then-round
     `stfs f1; frsp f5,f1` vs round-then-store is also allocator-internal.)
     **#77 addendum — struct-container conversions (task #178): retyping an
@@ -2024,7 +2024,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     sandwormBoss/CFBaby/gasvent/groundAnimator) — when a "family" state's
     offsets recur across TUs, check for an interface vtable taking the
     state pointer before defining a private struct.
-    **#77 CROSS-CLASS INTERLEAVE — a real (small) dent in the #108 frontier
+    **#77 CROSS-CLASS INTERLEAVE — a real (small) dent in the #108 open problem
     (coloring-A, fn_8029560C → 100).** When target keeps a PARAM in the
     HIGHER saved reg ABOVE a single-def copy local (e.g. target state(param)
     =r31, *state(deref copy)=r30; ours inverts), lift the param into the
@@ -2036,7 +2036,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     deref value `v` to land state in r31) — opposite of #108's E1 "last-
     created → r31", so the within-copy-pool direction is PER-FN; A/B both decl
     orders. ABI-neutral (pointer param, regs assign by class). One data point
-    on the #108 within-class/cross-class ordering frontier.
+    on the #108 within-class/cross-class ordering open problem.
 
 78. **Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
     Ghidra always left-flattens; target groups the constant-by-conversion
@@ -2100,7 +2100,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
        byte-exact 100s; the module's author used the idiom pervasively).
     Audit signature counts for the remaining modgfx fns are in task #147.
 
-80. **Saved-reg HOIST-COUNT cap CRACKED — the "one extra saved reg +
+80. **Saved-reg HOIST-COUNT snag CRACKED — the "one extra saved reg +
     `mr rX,rY` copy at the prologue" class is a named-pointer-local
     USE-BINDING SPLIT, fixed by cast-laundering the init + spelling the
     call's PLAIN-pointer arg as the same laundered constant.** (task #149;
@@ -2196,7 +2196,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       init reorder all inert or regress (fn_80204098,
       CameraShake_ApplyRadial, renderParticles' walk set).
       Allocator-internal so far; an open sub-shape awaiting a walked-pointer
-      coloring lever (recognize by the `p++` walk, bank the partial).
+      coloring lever (recognize by the `p++` walk, set the partial aside).
       (b) ARRAY-typed externs (`extern T sym[]`) without a plain/offset
       use SPLIT resist decl laundering (dbstealerworm st — regressed).
       (c) Some textually-identical SPLIT siblings still regress (dll_63,
@@ -2206,7 +2206,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       OFFS-only shapes (dll_61, dll_98) — try it cheaply before the
       full 2-part fix.
 
-81. **fcmpo-on-RELOADED-value cap CRACKED — `*(f32 *)&lbl` launder on ONE of
+81. **fcmpo-on-RELOADED-value snag CRACKED — `*(f32 *)&lbl` launder on ONE of
     the clamp constant's two references flips the reload/limit register pair.**
     (task #150; fn_801CEA14, dim2icicle_update, wctemple_update,
     cclevcontrol_update, dll_1DB_update, fogcontrol_update — 5 to 100%.)
@@ -2248,7 +2248,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     **IN-LOOP HOISTED-CONSTANT extension (CF sweep, scarab loops): laundering
     a loop-hoisted compare/multiply constant (`*(f32 *)&lbl`) re-ranks the
     whole loop's FP volatile rotation in count-up scan loops (~12 instrs per
-    loop from one launder) — try before banking a loop-wide FP rotation.**
+    loop from one launder) — try before setting aside a loop-wide FP rotation.**
     **STORE-CLAMP DISCRIMINATOR (~20-AB calibration, miner-4) — the launder
     is RELIABLE iff the clamp STORES the constant back AND the swap is a CLEAN
     SAME-REGISTER pair.** This generalizes #81 from the reload case to all FP
@@ -2263,7 +2263,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       gf_levelcon, fn_801EA240 ×6, dim_levelcontrol_update, …). Multi-clamp
       blocks with INDEPENDENT constants per clamp (velocity x/y/z to a shared
       [lo,hi] pair, fn_8014EE8C) launder all-at-once cleanly.
-    - RESIST (bank, don't grind — these need a different lever): (a) named-
+    - RESIST (set aside, don't grind — these need a different lever): (a) named-
       `lim` embedded-assign clamps `if (x op (lim = lbl)) {…}` — laundering the
       init or removing the local cascades a whole-fn regression (FireFly,
       dll_2A3_update). ⚠️ **(a) CRACKED — DOUBLE-EMBED with a named field
@@ -2318,7 +2318,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       seedDebrisMotion 6, Curve_SampleSegmentPoints Z-block 3, drawTexture
       fctiwz; cfprisonguard_render reload-f2 left this list — it was a
       #65 dropped arg, see the overturn note below). The residual is 1-8 bytes —
-      bank it, recognize the signature, and re-attack when a lever for
+      set it aside, recognize the signature, and re-attack when a lever for
       unnamed expression-temp coloring lands (the #114 conversion-node
       splitter is the closest existing tool to try).
       ⚠️ CLASS-MOVE MODEL (decoration11a → 100, superseding the earlier
@@ -2335,8 +2335,8 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       temp class and the arm value coalesces into it). decoration11a
       needed both, plus fn-scope bMax (block-scope regresses the
       coalesce). LIMIT: class-moving levers are verified INERT for the
-      SAVED-FP pool (deathseq_update banked 99.785 — within-class order
-      there is the #108 IR-internal frontier).
+      SAVED-FP pool (deathseq_update set aside at 99.785 — within-class order
+      there is the #108 IR-internal open problem).
       4th member — NAMED-WEB PRIORITY INVERSION (mtxRotateByVec3s,
       probe-characterized via probe_battery): target gives the NAMED
       multi-def temps (u, zero) the LOWEST volatiles (f0) and the unnamed
@@ -2366,7 +2366,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       into `factor` (coalesces the fsubs result into factor's f3) and a
       #81 store-side launder on the final clamp. On the next 4th-member
       fn, battery scope promotions of the arm-local SETS (incl. the
-      both-arms-at-once combination) before banking. Retry candidates:
+      both-arms-at-once combination) before setting aside. Retry candidates:
       mtxRotateByVec3s, Vec3_Normalize, fn_801D29E4.
     - Sub-class-2 EXTENSION: when the swapped pair is two named f32 locals
       init'd from DIFFERENT symbols (`f1 = lblA; ... f0 = lblB;` store-burst)
@@ -2391,7 +2391,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       NOT version-tunable and NOT C-surface-reachable on such fns; the
       divergence lives in compiler-internal IR state the TU content does
       not determine (the #108 fn-global-state phenomenon, FP edition).
-      Bank on sight once the probe confirms invariance; do not re-spell.
+      Set aside on sight once the probe confirms invariance; do not re-spell.
       Re-confirmed post-#119: the recycling lever (named const var reused
       for the reload), double-embed `(a = field) < (lim = lbl)`,
       single-embed, and reload-via-t forms are all invariant at f1 too.
@@ -2405,7 +2405,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       ~50-spelling battery could never reach it because no spelling of
       the EXISTING args changes the call's register demand.
     - ⚠️ RETAIL-ANOMALY CENSUS (the conclusive instrument for this class,
-      CF research program): for cfprisonguard_render's banked digit, a
+      CF research program): for cfprisonguard_render's set-aside digit, a
       corpus census of the exact 1-use [stfs fX,K(rN); lfs fY,K(rN);
       lfs const; fcmpo; no further fY use] shape found TARGET emits f1
       at 311 of 312 sites game-wide - the prisonguard site is the SINGLE
@@ -2416,12 +2416,12 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       emitted exactly once in the whole game is best explained as a
       non-deterministic retail-compile anomaly (host-state-dependent
       allocation, cf. the known IDO uninitialized-memory class), i.e.
-      likely permanently unmatchable under deterministic re-compilation.
-      METHOD (reusable): when a banked residual survives exhaustive
+      one that needs a lever beyond deterministic re-compilation.
+      METHOD (reusable): when a set-aside residual survives exhaustive
       enumeration, census the shape across build/GSAE01/obj - if target
-      itself is near-unanimous AGAINST its own choice at the banked
-      site, reclassify the residual as retail-anomaly and stop spending
-      on it. Census script pattern in the CF-campaign commits.
+      itself is near-unanimous AGAINST its own choice at the set-aside
+      site, reclassify the residual as retail-anomaly and set it aside
+      for now. Census script pattern in the CF-campaign commits.
       ⚠️ METHOD CAVEAT (the prisonguard overturn): a census shape
       filter like "no further fY use" is BLIND to arg-register liveness
       into a following bl — the one "anomalous" f2 site in the game was
@@ -2600,7 +2600,7 @@ fn_8008020C+4). When a new `sym+0xNNN` regex census
 (`grep -rh "+0x" build/GSAE01/asm/main/dll/*.s`) surfaces more, verify the
 addend lands mid-function (not at a symbol boundary) before adding a range.
 
-84. **The "const-hoist-above-addr-arg" cap family is largely recipe #29 in
+84. **The "const-hoist-above-addr-arg" snag family is largely recipe #29 in
     disguise — the callee's REAL arg order puts the object/pointer FIRST.**
     Signature: T has `mr r3,rX` / `addi r3,...` BEFORE the `lfs` const loads;
     C emits the lfs first. The fix is the obj-first calling form:
@@ -2780,7 +2780,7 @@ try the immediate itself first.
     where the import's `t = lbl` embedded form was the #84 miscompile hazard,
     silently reading stale f31 and SCORING HIGHER than correct code).
 
-91. **The #25 counter-caveat cap (target has cror-FREE `bge`/`ble` clamps
+91. **The #25 counter-caveat snag (target has cror-FREE `bge`/`ble` clamps
     where your `>=`/`<=` if-chain emits the cror combine) is CRACKED — write
     the STRICT-compare nested ternary.** Target shape per clamp:
     `lfs v; lfs lo; fcmpo; bge L1; b Lstore; L1: lfs hi; fcmpo; ble L2;
@@ -2794,7 +2794,7 @@ try the immediate itself first.
     produces identical VALUE flow but cror'd compares — that was the
     documented #25 counter-caveat "genuine residual"; it is now fixable.
     Cleared 6 cror sites (3 clamps) in objAnimFn_8014a9f0 (97.46→100, 3.7KB).
-    Same fn also banked: `dx = (dz = lbl); dy = dz;` embedded-chain form for
+    Same fn also recorded: `dx = (dz = lbl); dy = dz;` embedded-chain form for
     a direct `lfs f30` constant load + left-to-right fmr copy order (plain
     chain `dx=dy=dz=lbl` copies right-to-left; separate statements route via
     a volatile f0 hop), and the `B - A*C` spelling to get `fnmsubs` where
@@ -2866,7 +2866,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) has resisted
     every source spelling tried so far.** ⚠️ **SCOPE: this OPEN case is INTEGER
     compares whose arms are statement blocks ONLY, in LOOP-BREAK position. Two
-    nearby shapes ARE recoverable, so classify carefully before banking: (1) the
+    nearby shapes ARE recoverable, so classify carefully before setting it aside: (1) the
     visually-identical fcmpo+cror `bne +8; b far; fneg` shape is recipe #63's
     keep-or-negate TERNARY (`x = (cond) ? x : -x;`) — scarab_update cleared two
     such sites (95.76→97.31); (2) the PLAIN-STATEMENT (non-loop-break) version
@@ -2879,7 +2879,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     branch-over-branch eagerly BEFORE codegen; `#pragma peephole off` did
     not preserve it. Likely an original-compiler-version artifact, so the next
     lever to try is per-fn `#pragma optimization_level` (#110-family) and the
-    older-version probe matrix. ~3 instrs per site; bank the partial and keep
+    older-version probe matrix. ~3 instrs per site; set the partial aside and keep
     it on the retry list (fn_801DFA28 ×2 sites). Recognize it by the
     conditional branch targeting the immediately-following instruction.
     The same open shape covers POINTER-null compares with statement-block arms
@@ -2889,7 +2889,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     regressed hard so far (88.2 -> 83.9 / 78.0 on ObjSeq_RebuildCurveStateToFrame;
     #118's pointer-ternary needs the result IN the walked reg, absent
     here). For the ObjSeq_update / RebuildCurveStateToFrame b-over-b
-    sites, bank the b-over-b component as open and pocket the recoverable
+    sites, set the b-over-b component aside as open and pocket the recoverable
     part now: #71 literal 0.0f for the 19 lbl_803DEFB0 refs. (task #16, miner-1.)
     Related wins from the same fn: a bare `(s16)` cast (NO `(int)`
     intermediate) on a float→int conversion result assigned to an `int`
@@ -2985,7 +2985,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     NOT in the ignored set — it is FUNCTIONAL in GC/2.0** (A/B-verified: same
     source, walker vs folded displacements). See recipe #96.
 
-96. **Counter-chain cap CRACKED — repeated `lha; addi rX,rX,1; sth; lha
+96. **Counter-chain snag CRACKED — repeated `lha; addi rX,rX,1; sth; lha
     (FRESH reload); cmpwi` blocks with ONE hoisted `li r0,K` shared across
     the resets = an UNROLLED `for` loop; write the loop + `#pragma
     opt_strength_reduction off`.** (task #175; ecsh_shrine_update
@@ -3014,7 +3014,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     SR and the pragma's no-SR; pragma scored 87.09 vs 91.24 baseline on
     RomCurve_func20 (decisively worse, reverted). That "SR WIDTH divergence"
     shape (one scaled counter in T vs per-array walkers in ours) is an open
-    problem — no spelling found yet; bank the partial and re-attack when an
+    problem — no spelling found yet; set the partial aside and re-attack when an
     SR-width lever lands.
     Sibling tells from the same fn: a constant compared at a jump-table
     DISPATCH and re-stored with no reload in later CASES = an embedded
@@ -3052,7 +3052,7 @@ pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
     `cmplwi` IMMEDIATES (the int form materializes the constants via
     lis/addi into saved regs and signed cmpw — a whole-fn coloring shift
     from one decl; recipe #58 at fn scale).
-    **f32->int DIRECTION caveat (the GVN-rematerialization cap): a hoisted
+    **f32->int DIRECTION caveat (the GVN-rematerialization snag): a hoisted
     `int v = (int)volf;` makes every LATER `(int)volf` VN-reuse the result
     (`mr`), while target RE-EXECUTES the fctiwz per site.** The #97
     int->f32 "load CSEs, cast doesn't" behavior does NOT hold for
@@ -3124,11 +3124,11 @@ the addi exists in the .o after the sweep.
     region; `#pragma optimize_for_size on` is FUNCTIONAL and supplies the
     `_savefpr_NN`/`stmw` helper-save prologue; both work under GC/1.2.5n
     (extending #95's GC/2.0 finding).** (e_atan2 unit 76.6 -> 100.0, all 3
-    capped fns.) Recognize the class: a fn whose TARGET homes params to
+    formerly-stalled fns.) Recognize the class: a fn whose TARGET homes params to
     stack/saved-regs with redundant `mr r3,r31` re-derives before calls,
     keeps every named float local in its own callee-saved FP reg (f30, f31),
     and re-reads locals per use — inside a unit whose other fns are normal
-    -O4 matches. That is NOT a coloring cap; the original wrapped the fn in
+    -O4 matches. That is NOT a coloring snag; the original wrapped the fn in
     a per-function O0 region. Levers, all probe-verified:
     - `#pragma optimization_level 0` reproduces the param-homing body
       (params spill to stack when address-taken or implicitly via
@@ -3262,7 +3262,7 @@ on every unrolled scan loop -- this was the presumed score FLOOR of the audio
 `static inline` helper return-joins (#92 gate-clearer) — Music_LoadChannel-
 ForTrigger x17 → 100, Music_Trigger → 100, Sfx_AllocObjectChannel 90.35→98.
 Plain-statement guards take the #17 pinned-`||` triage instead (far-is-an-
-earlier-branch-target). Recognize and bank it — BUT first check the PLAIN-STATEMENT
+earlier-branch-target). Recognize and set it aside — BUT first check the PLAIN-STATEMENT
 case: a single compare + `beq next; b far` outside loop-break position IS
 reproducible as a single-case `switch` with `default: break;` (recipe #109(d),
 synthAdvanceVirtualSampleEntry x3 -> 100).
@@ -3293,7 +3293,7 @@ MatchingFor flip (status edits remain the team-lead's):
    addresses; the unreferenced float slice stayed in the auto unit).
    **(b)-extended -- a local @NNN conversion-bias pool in .sdata2 with NO
    corresponding retail TU pool = flip held pending a link-level dedup;
-   the unit's 100%% still banks fully (this is a flip-eligibility gate, not a
+   the unit's 100%% still counts fully (this is a flip-eligibility gate, not a
    matching limit — the functions ARE matched).** When our .o carries an 8-byte
    .sdata2 (the signed int->f32 bias `43300000 80000000`) but RETAIL's TU
    references the SHARED auto_11 copy (lbl_803E3578-class) and owns no pool
@@ -3355,7 +3355,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     playerAddHealth — all 3 → 100, byte-exact.) When the only residual is a
     2-reg volatile permutation across a load pair/chain (target q=rLOW
     p=rHIGH, yours p=rLOW q=rHIGH) and decl-order is inert (the #61c
-    cap), read which value target puts in the LOWER reg — that one was an
+    snag), read which value target puts in the LOWER reg — that one was an
     UNNAMED compiler-created web in the original source:
     - **Walked-pointer loop** (`lwz rH,glob; mr rL,rH`; loop derefs+bumps
       rL; rH indexed at the hit/exit): write the INDEX form
@@ -3393,7 +3393,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       a whole saved-reg trio (voiceConfigureParamRamp 97.75→99.13,
       audio/scheduling-ON unit — the residual volatile-pair swap there
       did NOT respond to naming; volatile pairs under scheduling-ON stay
-      a cap).
+      a snag).
     - **Retro-sweep detector**: cosmetic_audit hits whose first diffs are
       same-shape loads/mr with only r-numbers swapped = #107 candidates
       (batch 1: camcontrol_release → 100 — actually the curUiDllDraw
@@ -3445,7 +3445,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
 108. **Saved-reg assignment is CLASS-POOLED, not weight-ranked — partial
     allocator model from controlled probes (task #12; /tmp battery
     E1-E15, GC/2.0 -O4 unit flags).** Use this taxonomy to DIAGNOSE
-    whole-fn rotations (#16 cap) before grinding spellings:
+    whole-fn rotations (#16 snag) before grinding spellings:
     - **Single-def value-copy locals** (call results `x = f();`, #77
       cast-assigned locals from void* params) occupy the TOP block,
       last-created → r31 (E1: a,b,c,d call results → r28..r31 ascending;
@@ -3464,7 +3464,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       source-controllable. ⚠️ PARTIAL ESCAPE: an unrelated third web's
       decl position can flip which saved reg disjoint short webs inherit
       (#61b third-web edition, wmwallcrawler_update → 100) — bisect a
-      full-reverse decl battery before banking. ⚠️ SEE-SAW ESCAPE
+      full-reverse decl battery before setting it aside. ⚠️ SEE-SAW ESCAPE
       (CFcrystal FireFlyLantern_SeqFn → 100): when decl perms only flip
       the PAIRING POLARITY (fixing one loop inverts the other), the
       cross-pairing IS the import's web structure — convert the named
@@ -3537,7 +3537,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     kind + def count from source), THEN check whether the mis-colored
     web is in the wrong CLASS (fixable: name/un-name per #107, #77
     cast-local, second-def add/remove) vs wrong POSITION within its
-    class (bank the partial — the within-class POSITION axis is the open
+    class (set the partial aside — the within-class POSITION axis is the open
     one below, and #115 later opened a first source-side lever on it).
     **FIRST-DEF SPLIT is the cleanest class-mover (SB_ShipHead_update
     97.4→100, whole 5-web rotation collapsed in one edit): when a
@@ -3551,7 +3551,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     was inert until the class move. Recognize: a rotation where ONE
     multi-def var's first def is a branch-consumed call result.**
     **The MIRROR move — LAST/EARLY-def MERGE into a different variable —
-    cracked SB_ShipGun_update's "banked" state/ref2 pair (99.42→100,
+    cracked SB_ShipGun_update's "set-aside" state/ref2 pair (99.42→100,
     blank-canvas re-attack after decl perms ×11, launders, #115, per-fn O2
     all tested inert): the import used `ref2` as a scan-loop element
     (`ref2 = arr[i]; if (*(s16*)(ref2+0x46) == K) ...`) BEFORE ref2's real
@@ -3566,7 +3566,7 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     **CROSS-CLASS INTERLEAVE — characterized as an IR-internal residual,
     OPEN for a fresh lever (task #12 round 3, ~75-probe battery; minimal
     repro harness in the commit). The phenomenology below is hard-won
-    compiler knowledge; treat it as the map to the next lever, not a wall.**
+    compiler knowledge; treat it as the map to the next lever — there's a way through.**
     The "target ranks a multi-def/counter web ABOVE param webs where ours
     inverts" residual (drshackle_updateSwingBlend, texscroll2_
     applyMapTextureScroll, skyFn_8008a04c vec, partfx top-block,
@@ -3623,18 +3623,18 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     It costs ~6 added instrs (cmp+branch+defs) so it is NOT match-
     preserving by itself; use only where target ITSELF shows a mid-fn
     re-derive (the #55 read — check fresh lwz of the same offsets in T
-    first; timer's T has none, so it stays banked). The pool-membership
+    first; timer's T has none, so it stays set aside for now). The pool-membership
     mechanism (single-def copies vs multi-def phi webs) is confirmed
     manipulable — the remaining question is the within-pool ORDER.
-    DIAGNOSTIC (to RECOGNIZE the class, then bank-and-retry): residual =
+    DIAGNOSTIC (to RECOGNIZE the class, then set-aside-and-retry): residual =
     pure saved-reg permutation where a
     multi-def/copy web and param webs swap ranks, AND the fn contains a
     magic-const division / int<->f32 conversions / big-const
     materializations, AND target's order is closer to canonical pools
-    than ours → bank the partial and keep it on the rotation retry list
+    than ours → set the partial aside and keep it on the rotation retry list
     (the zero-cost levers above are spent; spend new budget on a new axis).
     The 1-2 instr "half" states (one rank off) are the same open class,
-    not a separate bug. SCARAB CONFIRMATION (windlift scarab_update banked
+    not a separate bug. SCARAB CONFIRMATION (windlift scarab_update set aside at
     99.931, direction (b)): #115 callee-width flips x4, #126 param read,
     copy-init/chain spellings at every position, stack-tracked reads, and
     #114 sandwiches x4 are ALL verified insufficient — every front-end
@@ -3681,7 +3681,7 @@ bare array's base web is created first regardless of decl position
 
 **#108 ROTATION-CLASS RESEARCH CAMPAIGN (timer_update deep-dive + corpus
 sweep; tools/rotmap.py):**
-- **ALWAYS rotmap BEFORE banking a rotation.** `tools/rotmap.py <unit> <fn>`
+- **ALWAYS rotmap BEFORE setting aside a rotation.** `tools/rotmap.py <unit> <fn>`
   aligns the two streams on register SKELETONS (regs masked) so pure renames
   pair up — the structural diffs HIDDEN under a rotation fall out as
   explicit regions. timer_update's "pure #108 rotation" hid FOUR invisible
@@ -3734,10 +3734,10 @@ sweep; tools/rotmap.py):**
   register_coloring/opt_* pragma battery, ALL 14 GC compiler versions
   (1.0-3.0a5.2: none match target's coloring — three distinct version-era
   colorings, all wrong; NOT a version artifact).
-- WORKFLOW for any banked rotation now: (1) rotmap, (2) fix every
+- WORKFLOW for any set-aside rotation now: (1) rotmap, (2) fix every
   structural region (real score gains — the transposition penalty often
   releases more than the instr count suggests), (3) re-rotmap to confirm
-  pure-rename state, (4) bank with the permutation table in the commit
+  pure-rename state, (4) commit with the permutation table in the commit
   message. The pure-rename residual awaits an allocator-policy lever
   (decl-order-at-O4) that the probe battery says is not source-reachable
   with known spellings.
@@ -3749,7 +3749,7 @@ allocator model at 121e28185) — and is now #112. Commit messages citing
 double-#110 (GVN chained-constant vs speculative-unroller pragmas) was
 resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
 
-112. **#86's displacement-fold-onto-index cap CRACKED for the non-loop case —
+112. **#86's displacement-fold-onto-index snag CRACKED for the non-loop case —
     the GROUPING POSITION of the constant K in `base + idx + K` picks the
     isel, and the side K is peeled FROM becomes the FIRST add operand.**
     (task #14; 5 instances, 4 byte-exact: hwSetVirtualSampleLoopBuffer →100
@@ -3766,7 +3766,7 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
       (fold-onto-index). Write this when TARGET has the lbzx form
       (bossdrakor; wcpushblock's recipe generalized).
     - **Sum-local `p = base + idx; *(p + K)` ALWAYS folds onto the index**
-      — this is what every previously-capped instance used. Same for
+      — this is what every previously-stalled instance used. Same for
       struct member arrays through a struct-typed local when the index is
       a chained in-loop load (voiceAllocate shape).
     Caveats: (a) a WIDE deref cast over the whole sum (`*(u32 *)(sum)`)
@@ -3798,7 +3798,7 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
     (renderObjects' 3 stw sites, ObjModel_SampleJointTransform's 4 load
     sites — grouped/unnamed/named forms each probed). When the base is a
     named alias of a symbol and the use is single-site, recognize this open
-    sub-shape and bank the partial (the symbol-alias fold-back is the part
+    sub-shape and set the partial aside (the symbol-alias fold-back is the part
     still awaiting a lever; the direct-symbol-index escape in #112(c) is the
     closest thing to try).
 
@@ -3830,7 +3830,7 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
     in the source (switch compare-chain lowering emits branch-over-branch;
     if/else folds it). MP4 vsUpdateBuffer proved it verbatim for
     synthAdvanceVirtualSampleEntry (3 sites + `%` modulo for the wrap +
-    embedded-assign callback + real loopSizePtr local). The #92 cap text
+    embedded-assign callback + real loopSizePtr local). The #92 snag text
     stands for LOOP-BREAK position and statement-block arms; the switch
     reading recovers the plain-statement instances.
     (e) **#67(a)-struct corollary holds for GPR pairs on 1.2.5n**: a
@@ -3859,7 +3859,7 @@ ASSOCIATIVITY SPELLING — A/B the opposite parenthesization.** A 3-term
 `glow + (drift + rnd)` (parens) collects to `(rnd+glow)+drift`, while the
 paren-FREE left-assoc `glow + drift + rnd` re-associates to
 `glow+(drift+rnd)` — opposite outputs from the same math. When a 3-term
-sum's add order/grouping diverges, flip the spelling before banking
+sum's add order/grouping diverges, flip the spelling before setting it aside
 (wallanimator kaldachompspit_update → 100; the import had ADDED parens).
 (int)(long) sandwiches, opt_common_subs/opt_propagation off, embedded
 defs, and #15 array-index forms were all inert on that shape. For
@@ -3885,7 +3885,7 @@ the pragma matrix (opt_propagation/opt_loop_invariants/
 opt_dead_assignments/opt_strength_reduction off, optimization_level 3/2
 — all >= baseline; sched-off tested earlier by match-3). The #112
 grouping survives only 2-term sums; recognize >=3-term multi-base shapes,
-bank the partial, and keep it open for a lever that controls n-ary sum
+set the partial aside, and keep it open for a lever that controls n-ary sum
 collection (the probes above are spent — a new axis is needed).
 (fn_80069B1C also carries one #92 branch-over-branch site in its guard
 chain — independent open residual.)
@@ -3898,7 +3898,7 @@ then-block) in PLAIN STATEMENT position — NOT loop-break — the original was 
 `switch (x) { case K: A; break; default: B; break; }`, not an if/else (if/else
 folds to a single inverted `bne <B>`). Rewrite the if/else as that switch and
 MWCC regenerates the `beq; b`. This is the non-loop-break companion to the #92
-cap (which stays open for VARIABLE-compare loop-break-position branch-over-
+snag (which stays open for VARIABLE-compare loop-break-position branch-over-
 branch). Read the position: plain statement → switch reading; loop-break →
 still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
 #93c (drop (int) on float→s16 store) when those co-occur in the same fn.
@@ -3919,13 +3919,13 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
   reading canNOT reproduce the compare width — probed exhaustively:
   `(u32)` cast, u32 local, `+ 0u`, `& 0xffu` all stay cmpwi; if/goto/
   discarded-ternary/empty-arm spellings all fold the branch. Best
-  achievable is the switch's 1-byte cmpwi residual (dll_1FB_render banked
+  achievable is the switch's 1-byte cmpwi residual (dll_1FB_render set aside at
   96.5). An unsigned-compare branch-over-branch lever is still open.
-  POINTER-null operands are the same wall, worse: `switch ((int)ptr)
+  POINTER-null operands are the same snag, worse: `switch ((int)ptr)
   { case 0: break; default: <body> }` both DEGRADES the width (cmpwi)
   AND still folds to a single beq — don't convert pointer-guard
-  empty-then sites at all (fxemit_update's def==NULL site, banked).
-  ⚠️ THE UNSIGNED WALL IS CRACKED — it was never a switch: the unsigned
+  empty-then sites at all (fxemit_update's def==NULL site, set aside).
+  ⚠️ THE UNSIGNED SNAG IS CRACKED — it was never a switch: the unsigned
   `cmplwi; bne next; b far` plain-statement b-over-b is recipe #17's
   MERGED-`||` GUARD whose then-block (`b far`) is PINNED by an EARLIER
   `||` term's conditional branch targeting it, so the front-end cannot
@@ -3947,7 +3947,7 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     chains a constant-equal copy) is per-fn `#pragma optimization_level 1`,
     NOT a VN spelling.** (task #13; fn_80063368 96.25→100, fn_80060BB0
     94.4→100, track_dolphin, both byte-exact — the earlier "4 spellings inert"
-    bank turned into a full crack once the right axis was found, a model case
+    set-aside turned into a full crack once the right axis was found, a model case
     for re-attacking any open residual.) At O4 EVERY spelling of a constant-equal copy (`zero = idx;`
     after `idx = 0;`, #51 chains `zero = idx = 0;`, casts,
     opt_propagation/opt_common_subs/global_optimizer off, all 9 compiler
@@ -4003,8 +4003,8 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     value-diamond before calling it original). Model case for the
     fresh-eyes protocol (Prime Directive section).
 
-111. **Member-address reassociation cap CRACKED (the audio memmove NAMED
-    cap) — MWCC's address-sum association is keyed on the constant's
+111. **Member-address reassociation snag CRACKED (the audio memmove NAMED
+    snag) — MWCC's address-sum association is keyed on the constant's
     SYNTACTIC ORIGIN; plus #40 embedded assignments as arg-eval-order
     FOLD-BLOCKERS.** (task #13; Sfx_RemoveLoopedObjectSoundForObject
     76.55→98.91, Sfx_RemoveLoopedObjectSound 76.39→99.2,
@@ -4029,7 +4029,7 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
       (gives in-place `add rW,base,r0; addi rW,rW,384`); in CALL-ARG
       position nested re-canonicalizes to addi-first — use the FLAT form
       there. Named single-use dst/src locals get copy-propped into the
-      args and re-canonicalize, so that spelling is a dead end here — use
+      args and re-canonicalize, so that spelling doesn't land it here — use
       the flat form.
     THE ARG-EVAL ANCHOR (the +12pp move): when target evaluates the SIZE
     arg BEFORE dst/src (subf/clrlwi r5 ahead of the r3/r4 setups), the
@@ -4207,7 +4207,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       loop-3 ch/i cross-pairing (induction-affinity, #108 -- callee-sig
       A/Bs inert on it).
     - SCOPE (sweep results): #115 requires CALL-ARG conversion sites --
-      CALL-FREE leaf rotations are out of reach (hwChangeStudio,
+      CALL-FREE leaf rotations need a different lever (hwChangeStudio,
       s3dInsertActiveEmitter: the audio band's small rotations are
       mostly leaves; decl-order/un-naming/launders A/B'd inert on both,
       and un-naming hwChangeStudio's voice alias broke isel per #30 --
@@ -4217,7 +4217,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       s3dInsertActiveEmitter's real divergence is a target-side
       materialized entry copy (`mr. r8,r4` = `scan = next` kept where
       ours copy-props it away; assign-split and (int)-launder both fold
-      per #94) -- #110-family, possibly per-fn O1 in the original; bank it
+      per #94) -- #110-family, possibly per-fn O1 in the original; set it aside
       and try the #110 per-fn O1 wrap next.
 
 116. **Embedded-assign in the STORE ADDRESS (`*(p = &arr[K]) = value;`)
@@ -4279,7 +4279,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     walker reg byte-exact. For other statement-position int b-over-b sites,
     re-read #109(d) first (single-case switch — but switch compares degrade
     cmplwi->cmpwi; A/B which residual is smaller) and #92 (variable-compare
-    loop-break stays capped). Pairs with #107 un-naming for adjacent
+    loop-break stays in progress). Pairs with #107 un-naming for adjacent
     re-derived address args (the `path` buffer re-derive). (task #16:
     loadGameTextSequence 90.85->98.06, gameTextLoadForCurMap 88.18->95.13,
     gameTextRun chain byte-exact; 3x 8-level chains, commit 546beb98b.)
@@ -4392,7 +4392,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     statements) because the shared .sdata2 pool labels look like globals.
     Residual fmuls operand order from the self-accum compound form
     (`fmuls fD,fD,fK` vs target `fmuls fD,f0,fK`) is canonicalization-
-    internal (operand swap, fresh temps probed inert) — bank it.
+    internal (operand swap, fresh temps probed inert) — set it aside.
     **EXPRESSION-VARIANT addendum (task #16, miner-1): in-loop literal
     EXPRESSIONS hoist like bare constants — including an invariant
     literal-op-PARAM division.** The import-named head local
@@ -4423,7 +4423,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     took `androssligh_update` 99.98→100 by dropping dead `case 3`, leaving
     cases 0/1/2 and matching the target's upper-bound check.
     (b) **Single-byte store offset after `memset` is likely the wrong
-    struct member, not a scheduling cap.** If a clear/init function is
+    struct member, not a scheduling snag.** If a clear/init function is
     byte-identical except `stb K,offA` vs `stb K,offB`, read the struct
     layout and nearby uses before trying source-order tricks. In
     `curves_clear`, target stored the initial `5` at offset `0x258`
@@ -4500,7 +4500,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     prologue and type the param accordingly; per-fn cast noise on an int
     obj is then FAITHFUL reconstruction, not import damage.
     NOTE — decl-order stays LIVE for the non-param webs even while the
-    param web is stuck: under the rotated pointer param, swapping the
+    param web is still in progress: under the rotated pointer param, swapping the
     state copy's decl above the loop counter still landed state in
     target's r30 (19→14 diff regions). Fix what decl-order can reach
     before judging the param type.
@@ -4550,7 +4550,7 @@ cast for cmpwi; the shared-field sites already use the `*(int *)&` launder conve
 r3,r3`); #29/#84 arg-eval reorder; #5 decl/init SPLIT (decl-order fixes the coloring,
 init-order fixes the emission/load-order — lands "coloring right but 2 loads swapped"
 residuals); #121 defer const-load (move `f32 k = lbl;` AFTER an earlier RMW when
-target loads the const lazily). RESISTANT here — bank on sight after ≤2 tries, do NOT
+target loads the const lazily). RESISTANT here — set aside on sight after ≤2 tries, do NOT
 grind: #82 FP-expr-temp operand-order (commutative-reassociation-internal — fmuls/fsubs
 flips INERT); FP-compare-operand flips (regress as often as help); 2-var GPR coloring
 swaps that SEESAW (fixing one site moves the divergence to the adjacent instr —
@@ -4584,7 +4584,7 @@ pre-evaluates branchy args at the call statement's FRONT. Probed broadly
 ternary, named arg-locals for the leading args (gets the conv+loads above the
 clamp but the simple mr/addi args still sink below it). Naming args 2/5/6 as
 locals recovers MOST of the order (+7pp there) — do that, pocket the gain,
-then bank the ~6-instr residual and keep it on the retry list. Recognize by:
+then set the ~6-instr residual aside and keep it on the retry list. Recognize by:
 branchy arg + strict-L2R target (and check the BOUNDARY exception below first
 — the hoist often doesn't fire at all).
 **BOUNDARY (task #18): the hoist does NOT fire when the args preceding the
@@ -4593,7 +4593,7 @@ than simple mr/addi setups -- and a shared base-pointer local (#112
 K-on-base, `pb2 = &spheresB[idxB * 4];` before the call) keeps the arms
 cheap enough that the ternary evaluates IN-SLOT (CheckHitVolumes
 RecordPositionHit y-arg, +3pp in one edit). Try the base-local + load-y
-args shape BEFORE banking this as an open residual.
+args shape BEFORE setting this aside as an open residual.
 
 **OPEN CLASS — the addi-fold (3-use threshold) on big-offset slot-indexed
 fields.** At 3+ uses of `t->bigTable[slot]` (member offset > 16 bits), MWCC
@@ -4624,7 +4624,7 @@ identically — both reverted). (c) The trigger involves same-ADDRESS
 multi-use (lwz+stw read-write pairs), not constant site count: in the
 SAME fn, MLDF_OWNER's 14 read-only big-offset sites stay disp-form
 while MLDF_PTR's lwz+stw clusters fold. This is an open in-tree-only class
-tied to the #108 fn-global state mechanism — bank the partial and re-attack
+tied to the #108 fn-global state mechanism — set the partial aside and re-attack
 together with #108 when a fn-global lever lands.
 
 ## Foreign-compiler objects (GCC/SN ProDG): out of MWCC scope, matchable via a build-rule path
@@ -4687,18 +4687,18 @@ seed for that recipe.
 tool on this project, even for cases the playbook previously sanctioned
 (materialized-mask `li`/`lis;ori` + `and`, GQR/MSR/HID0 `mtspr` ops, `rlwimi`
 bit inserts, register-order forcing via `register` decls). If clean C won't
-reach 100% today, **bank the partial as an OPEN problem and document the
+reach 100% today, **set the partial aside as an OPEN problem and document the
 residual** — there is always a C recipe for the divergence; we just don't know
 it yet, and the documented partial is what the next recipe builds on. New C
 techniques land in this playbook as they're discovered; asm escape hatches
-don't. Banking is a checkpoint, never a verdict that the function is
+don't. Setting a partial aside is a checkpoint, never a verdict that the function is
 impossible.
 
 Previous reference commits using asm (`2e20e326`, `01400901`, `a42bb90b`) are
 being reverted by the repo owner (see "Replace X flag asm with C" commits) —
 do not cite them as precedent.
 
-If a function is stuck below target because of an unknown-C divergence, the
+If a function is sitting below target because of an unknown-C divergence, the
 correct action is:
 1. Commit the highest clean-C partial you've reached.
 2. Document the divergence (target asm shape vs your output) in the task
@@ -4792,7 +4792,7 @@ caller *before* the helper's definition so MWCC can't inline the helper upward
 (it's not yet defined), while the helper still inlines its own callees normally.
 Reach for `dont_inline` only when the wrapped fn has no callees it needs to
 inline.
-**When source-order is IMPOSSIBLE (the dont_inline'd fn has callers on BOTH
+**When source-order is UNAVAILABLE (the dont_inline'd fn has callers on BOTH
 sides of its definition), MANUALLY INLINE the blocked callee's body.** If the
 wrapped fn must stay un-inlined (38 callers before+after the def, so no
 source-order placement works) but it calls a `static inline` accessor that
@@ -4955,19 +4955,19 @@ emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
 `addi counter; cmpwi; addi ptr` (counter bumped/tested before the pointer). On
 the first pass it didn't respond to index-vs-pointer-walk OR scheduling toggle.
 Holds some array-walk loops at ~93-95% — but read the SHARPENED mechanism
-below, which makes it a controllable tradeoff rather than a wall.
+below, which makes it a controllable tradeoff rather than a dead stop.
 **MECHANISM SHARPENED (task #14 probe battery, q1-q5 both compilers +
-wmseqpoint_update in-place A/B): the cap is a SCHEDULING-OFF artifact.**
+wmseqpoint_update in-place A/B): the snag is a SCHEDULING-OFF artifact.**
 Under scheduling-ON, the bump order at the tail FOLLOWS SOURCE ORDER —
 comma-increment order (`p++, i++` vs `i++, p++`), body-end `p++` placement,
 and the SR'd index form (ptr-first) all reproduce their respective orders;
-the cap shape never appears. Under scheduling-OFF, walker bumps (named OR
+the snag shape never appears. Under scheduling-OFF, walker bumps (named OR
 SR-created) pin to the latch AFTER the compare (`addi i; cmpwi; addi ptr`)
 and NO source form flips it (body-end bump, comma-order, explicit walker
 all tested; walker forms also add an init `mr` + swap the i/q coloring —
 net WORSE than the plain index form). When target shows ptr-bump-first in
 a fn that needs scheduling-off for its other divergences, the 1-instr
-transposition is the current price of the pragma — bank it (wmseqpoint_update
+transposition is the current price of the pragma — set it aside (wmseqpoint_update
 99.0, musicInitMidiWad) and keep it open. If the fn does NOT otherwise need
 sched-off, try sched-on + source-ordered increments first, which removes the
 transposition entirely.
@@ -5206,24 +5206,24 @@ session, every carve byte-exact first try. (alpha-35, task #134.)
 
 **Drift stubs HIDE large recoverable functions — a tiny header size (e.g. "4b")
 can mask a big real v1.0 body, so size-based triage UNDERCOUNTS the work.** When
-a unit looks "mostly capped/drained" by function-size, run `drift_audit.py` and
+a unit looks "mostly stalled/drained" by function-size, run `drift_audit.py` and
 check the real `.s` body sizes: a 0%/"0.1%" symbol the report calls tiny may be a
 1-4KB drift stub fully recoverable by the reconstruction recipe below. hotel8
 found ~111 such stubs on placeholder_8001746C (textRenderStr was labeled "4b" but
 is ~4100B → reconstructed to 83%). Before declaring any unit drained, confirm via
 the .s sizes, not the header/report sizes.
 
-**A stuck mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
-cap — verify the target's actual control flow BEFORE assuming a cap.** The
+**An in-progress mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
+snag — verify the target's actual control flow BEFORE assuming a snag.** The
 Ghidra import frequently got the C *logic* subtly wrong: a `return`/store nested
 inside an `if` that target executes unconditionally, an over-simplified switch
 arm (a bare list-walk where target has an inner sub-switch), a spurious extra
 `return 0`. These read like "register-allocation residuals" but are really wrong
-behaviour. Before filing a partial as a cap, diff the target asm's branches/
+behaviour. Before filing a partial as a snag, diff the target asm's branches/
 returns against your C control flow and fix the logic — november11 took
 fn_80295A04 66.6→100% and fn_802A7160 93.6→100% this way (both were import
-control-flow bugs, not caps). Only after the control flow provably matches should
-a residual be called a coloring/codegen cap.
+control-flow bugs, not snags). Only after the control flow provably matches should
+a residual be called a coloring/codegen snag.
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong
 function boundaries vs the v1.0 `.s`. **Don't try to fix `FUN_xxx`** — instead:
@@ -5260,7 +5260,7 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   any diff — a failed compile leaves the PREVIOUS .o on disk and
   ndiff/objdump/objdiff happily score the stale object.** A silent compile
   failure mid-battery scores as "this variant diverges" and can enshrine a
-  false "spelling X is load-bearing" verdict that later reads as a cap
+  false "spelling X is load-bearing" verdict that later reads as a snag
   (wmspiritplace_SeqFn's typed-mapId "negative" was exactly this — a
   corrupted edit failed to compile, the stale-.o diff was logged as proof,
   and the wrong conclusion survived until a clean re-test). Also gate
@@ -5401,7 +5401,7 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
 - `python3 tools/rotmap.py <unit> <symbol>` — register-rotation mapper:
   skeleton-aligns T/C streams, prints the T→C register permutation with
   per-web counts + the STRUCTURAL diffs hidden under the rotation. Run on
-  every #108-class partial before banking (see the rotation-campaign
+  every #108-class partial before setting it aside (see the rotation-campaign
   section).
 - `python3 tools/pragma_depushpop.py [--apply] [--filter S]` — eliminate
   `#pragma push/pop` scaffolding: full-environment model (push/pop saves +
@@ -5418,7 +5418,7 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   its "sched=def-on/peep=def-on" flags are NOISE (CF sweep: scarab/fxemit
   flagged, wraps byte-inert). Check the unit's configure.py cflags first. THE highest-yield triage signal on
   the 60-90 band: run it BEFORE any shape work on a partial (per-fn #1 wraps
-  alone ran +12 to +27pp; intersect.c's 7-fn cluster banked ~+103pp in one
+  alone ran +12 to +27pp; intersect.c's 7-fn cluster gained ~+103pp in one
   commit). A/B MANDATORY both ways — ~50% of peep=ON-only flags are correct-
   ON (jump tables, #68 peephole-ON-target units; allocLotsOfTextures
   REGRESSED with the wrap) and inert wraps must be removed (#173). The
@@ -5520,14 +5520,14 @@ Sibling of the MP4 oracle, using OUR OWN tree: when a residual is a specific
 instruction shape, walk `build/GSAE01/obj/**/*.o` disasms for the exact
 pattern and read the C of any unit already at 100% that produces it (the
 re-split duplicates make multiple hits per shape likely). One script find:
-the store-reload-into-f2 fcmpo shape (cfprisonguard_render's once-banked
+the store-reload-into-f2 fcmpo shape (cfprisonguard_render's once-set-aside
 digit) EXISTS in matched dll_0141_lightning (lightning_update, compound `-=`
 + `<=`), proving the compiler emits it from plain C. (The prisonguard site
 itself turned out to be a #65 dropped f32 call arg — the reload CSEs into
 the f2 arg register — so its "dead-slot reuse divergence" framing was a
 misread; see the #82 overturn note.)
 Use the oracle to settle whether a shape is C-reachable at all before
-banking; the corpus-walk script pattern is in the CF-campaign commits.
+setting it aside; the corpus-walk script pattern is in the CF-campaign commits.
 
 ### Matching-help corpus (Discord export + decomp.me scratches)
 
@@ -5535,7 +5535,7 @@ A year of decomp.me's matching-help Discord channel (`reference_projects/Discord
 5000 messages, 989 unique scratch links) plus the already-fetched scratch
 payloads (`reference_projects/decompme_scratches.jsonl`, gitignored) form a
 searchable corpus of real-world matching attempts: someone posts a scratch
-with their stuck C, others respond with the recipe that fixes it. Useful when
+with their in-progress C, others respond with the recipe that fixes it. Useful when
 a residual's symptoms match something others have already solved (FP register
 coloring, fmadds fusion, peephole behavior, rlwinm vs andi, fp_contract
 surprises, etc.). There is NO working scripted network path to decomp.me —
@@ -5618,7 +5618,7 @@ carves) — the conservation gate, not the dol, is what catches mistakes.
 Mario Party 4 (`reference_projects/marioparty4`) is 100% byte-matched
 against the original game, so every function in MP4's compiled `.o` files
 is a definitive C↔asm pair for whatever MWCC quirk produced that
-instruction shape. When SFA is stuck trying to coax MWCC into a specific
+instruction shape. When SFA is working to coax MWCC into a specific
 sequence (rlwimi at a given bit position, `cntlzw` idiom, paired-single
 `psq_st`, a specific fmuls operand order, `__cvt_` helper invocation,
 etc.), grep MP4 for the pattern and read the C that produced it —
