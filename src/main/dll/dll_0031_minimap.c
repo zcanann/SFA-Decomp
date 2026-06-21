@@ -256,7 +256,7 @@ int Minimap_update(void)
                 row = &rows[k];
                 if (fx >= row->x0 && fx < row->x1 &&
                     fz >= row->z0 && fz < row->z1 &&
-                    yi >= row->y0 && yi < row->y1 &&
+                    (s16)yi >= row->y0 && (s16)yi < row->y1 &&
                     GameBit_Get(row->gameBit) != 0)
                 {
                     j = 0;
