@@ -892,11 +892,7 @@ int hightop_stateHandler04(int obj, int p)
         ObjAnim_SetCurrentMove(obj, move, lbl_803E6AA8, 0);
     }
     player = Obj_GetPlayerObject();
-    if (player == 0)
-    {
-        state->flags &= ~1;
-    }
-    else
+    if (player != 0)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
         if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC ||
@@ -912,12 +908,10 @@ int hightop_stateHandler04(int obj, int p)
                     (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
                 }
             }
-        }
-        else
-        {
-            state->flags &= ~1;
+            return 0;
         }
     }
+    state->flags &= ~1;
     return 0;
 }
 
