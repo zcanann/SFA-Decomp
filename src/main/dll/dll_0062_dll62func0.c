@@ -732,7 +732,6 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     } buf;
     GfxCmd* e = buf.entries;
     u8* base = (u8*)(int)lbl_803129C8;
-    int ctx;
     u8 cnt;
     f32 v;
     v = lbl_803E0898;
@@ -846,8 +845,7 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[13].y = lbl_803E08A0;
     e[13].z = lbl_803E08B0;
     buf.v58 = 0;
-    ctx = sourceObj;
-    buf.ctx = ctx;
+    buf.ctx = sourceObj;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E08A0;
     buf.pos[1] = lbl_803E08A0;
@@ -881,11 +879,11 @@ void dll_62_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((void*)ctx != NULL)
+        if ((void*)buf.ctx != NULL)
         {
-            buf.pos[0] += *(f32*)(ctx + 0x18);
-            buf.pos[1] += *(f32*)(ctx + 0x1c);
-            buf.pos[2] += *(f32*)(ctx + 0x20);
+            buf.pos[0] += *(f32*)(buf.ctx + 0x18);
+            buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
+            buf.pos[2] += *(f32*)(buf.ctx + 0x20);
         }
         else
         {
