@@ -2740,19 +2740,19 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
             buf2 = *(u8**)((char*)state + 0x78);
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                if (noChange != *(f32*)(bp + 0x30))
+                if (*(f32*)(bp + 0x30) != noChange)
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
                         *(f32*)(bp + 0x30) *
                         (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
                 }
-                if (noChange != *(f32*)(bp + 0x34))
+                if (*(f32*)(bp + 0x34) != noChange)
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
                         *(f32*)(bp + 0x34) *
                         (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2);
                 }
-                if (noChange != *(f32*)(bp + 0x38))
+                if (*(f32*)(bp + 0x38) != noChange)
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) =
                         *(f32*)(bp + 0x38) *
