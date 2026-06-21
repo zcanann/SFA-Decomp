@@ -1814,7 +1814,7 @@ void fn_80144B50(u8* obj, u8* state)
     int inWater;
 
     ((TrickyState*)state)->unk720 -= timeDelta;
-    if (((TrickyState*)state)->unk720 < lbl_803E23DC)
+    if (((TrickyState*)state)->unk720 < *(f32*)&lbl_803E23DC)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
     }
