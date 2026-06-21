@@ -8826,9 +8826,14 @@ void fn_802B249C(int obj, int inner, int state)
             break;
         case 0x60003:
             {
-                f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dz * dz + dx * dx);
+                f32 dz;
+                f32 dx;
+                f32 d;
+                f32 zz;
+                dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
+                dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
+                zz = dz * dz;
+                d = sqrtf(zz + dx * dx);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
