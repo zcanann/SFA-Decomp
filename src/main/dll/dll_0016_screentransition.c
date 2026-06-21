@@ -305,8 +305,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             col.b = 0xff;
             col.a = ((int)(fadeAlpha * (halfSpan - cur)) / (int)halfSpan) & 0xff;
             hudDrawRect(vx + (hiEdge & 0xffff), vy, step + (vx + (hiEdge & 0xffff)), vb, col);
-            screenX = vx + (edge & 0xffff);
-            hudDrawRect((screenX - step) + 1, vy, screenX + 1, vb, col);
+            hudDrawRect((vx + (edge & 0xffff) - step) + 1, vy, vx + (edge & 0xffff) + 1, vb, col);
             hiEdge += step;
             edge -= step;
         }
