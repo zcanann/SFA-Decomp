@@ -176,18 +176,7 @@ void kytesmum_update(int obj)
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, runtime->animSpeed, timeDelta,
                                                                     (ObjAnimEventList*)runtime->animEvents) != 0)
     {
-        if ((int)randomGetRange(0, 7) != 0)
-        {
-            moveIdx = 0;
-        }
-        else if ((int)randomGetRange(0, 1) != 0)
-        {
-            moveIdx = 1;
-        }
-        else
-        {
-            moveIdx = 4;
-        }
+        moveIdx = (s16)((int)randomGetRange(0, 7) != 0 ? 0 : ((int)randomGetRange(0, 1) != 0 ? 1 : 4));
         ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
         runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
     }
