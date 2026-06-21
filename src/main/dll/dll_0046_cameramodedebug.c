@@ -36,6 +36,7 @@ extern f32 gCamDebugAngleUnitScale;
 extern f32 gCamDebugOrbitRadiusInit;
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeDebug_update(short* camObj)
 {
     extern u16 getButtonsJustPressed(int port); /* u16 override: & 2 must produce cmplwi, not cmpwi */
@@ -91,15 +92,21 @@ void CameraModeDebug_update(short* camObj)
         f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
         f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
         f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
+        f32 vy, h, px, pz;
         radius = gCamDebugState->orbitRadius;
-        *(f32*)(cam + 24) = *(f32*)(state + 24) + radius * sinPitch * sinYaw;
-        *(f32*)(cam + 28) = gCamDebugOrbitRadiusMin + *(f32*)(state + 28) + radius * cosPitch;
-        *(f32*)(cam + 32) = *(f32*)(state + 32) + radius * sinPitch * cosYaw;
+        vy = radius * cosPitch;
+        h = radius * sinPitch;
+        px = h * sinYaw;
+        pz = h * cosYaw;
+        *(f32*)(cam + 24) = *(f32*)(state + 24) + px;
+        *(f32*)(cam + 28) = gCamDebugOrbitRadiusMin + *(f32*)(state + 28) + vy;
+        *(f32*)(cam + 32) = *(f32*)(state + 32) + pz;
     }
     Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
                                    (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
                                    *(int*)(cam + 48));
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
 
 void CameraModeDebug_init(void)
