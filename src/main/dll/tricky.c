@@ -1423,7 +1423,7 @@ void hudDrawFn_80121440(void)
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (gTrickyHudShowNearestInfo != 0)
     {
-        int c0 = 0, c1 = 0, c2 = 0;
+        int c2 = 0, c1 = 0, c0 = 0;
         f32 radius = gTrickyHudNearestObjMaxDist;
         int* near;
         near = (int*)ObjGroup_FindNearestObject(9, Obj_GetPlayerObject(), &radius);
