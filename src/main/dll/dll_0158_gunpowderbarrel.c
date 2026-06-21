@@ -1180,7 +1180,8 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         }
         else
         {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotZ * (rate * w);
+            t = (f32)(u16)((GameObject*)obj)->anim.rotZ;
+            t = t * (rate * w);
         }
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
     }
