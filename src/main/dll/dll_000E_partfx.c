@@ -1735,7 +1735,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     f32* extraArgs = extraArgsArg;
     int intVal;
     s16 i;
-    u8 variant;
+    int variant;
     f32 srcPosX;
     f32 srcPosY;
     f32 srcPosZ;
