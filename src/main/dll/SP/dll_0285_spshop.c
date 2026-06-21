@@ -15,7 +15,7 @@ extern void objRenderFn_8003b8f4(f32);
 typedef struct ShopBuyItemState
 {
     u8 pad0[0x1 - 0x0];
-    s8 unk1;
+    s8 itemIndex; /* 0x1 shop item type: purchase-effect switch + items-table index */
     u8 pad2[0x4 - 0x2];
     u8 unk4;
     u8 pad5[0x56 - 0x5];
@@ -139,7 +139,7 @@ void shop_buyItem(int obj, int price)
     mapEventState = (int)(*gMapEventInterface)->getCurCharacterState();
     playerAddMoney(player, -price);
 
-    switch (((ShopBuyItemState*)state)->unk1)
+    switch (((ShopBuyItemState*)state)->itemIndex)
     {
     case 0:
         playerAddHealth(player, 2);
@@ -175,7 +175,7 @@ void shop_buyItem(int obj, int price)
     }
 
     items = lbl_80327FD0 + 8;
-    boughtBit = *(s16*)(items + ((ShopBuyItemState*)state)->unk1 * 0xc);
+    boughtBit = *(s16*)(items + ((ShopBuyItemState*)state)->itemIndex * 0xc);
     if (boughtBit != -1)
     {
         GameBit_Set(boughtBit, 1);
