@@ -277,9 +277,9 @@ void Link_render(void)
     int textureIndex;
     int opacity;
     int alpha;
-    int red;
-    int green;
-    int blue;
+    s16 red;
+    s16 green;
+    s16 blue;
     u16 textId;
     int x;
     int y;
