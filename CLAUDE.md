@@ -459,6 +459,36 @@ actionable trigger→fix; **full detail, examples, negative-maps, and frontier a
     display) — a 96% variant was structurally CLOSER than the 98% baseline; the % hid the path.
     Read the emitted asm per variant. (fn_801B3DE4/dimexplosion: flagged impossible/"open frontier"
     across ~15 sessions → 100%.)
+132. **A CONDITIONAL POINTER REASSIGNMENT (phi/multi-def) is a SECOND, non-bitwise way to force the
+    surviving 2nd same-value saved reg + `mr` (#130/#131's "open frontier").** Reassign the pointer
+    in branches that already exist — e.g. the clamp arms: `if (v<0){v=0; p2=state+off;} else if
+    (v>0x3c){v=0x3c; p2=state+off;}` with `p2` first-defined as a COPY of the field pointer. The
+    multi-def web can't coalesce with the single-def field pointer → emits the extra saved reg + the
+    `mr`. Reproduces the EXACT instruction MULTISET (proven on fn_801B3DE4: 181/181 identical). The
+    web-SEPARATION needs a KIND MISMATCH across the defs: copy first-def + recompute arms (or vice
+    versa) stays separate; all-copy or all-recompute (same value) COALESCES back (#108 same-class).
+    LIMIT: a phi inherently SPLITS the value at the merge — pre-merge uses bind def0's register,
+    post-merge uses bind the phi register. So if the target uses ONE 2nd reg for ALL of a field's
+    accesses (a "single lazy copy", e.g. unclamped-store + reload + clamp-store + later reads all
+    via r29), the pre-merge accesses land in the WRONG reg → a 2-instr residual (~99.9%, base-reg-
+    only mismatch). For that exact shape #131's OR is still the only 100% (it makes ONE non-coalesced
+    web used by every access); the phi is the lever when the 2nd reg is used in a post-branch region
+    only. Census the field's accesses vs the branch BEFORE choosing phi-vs-OR.
+133. **COPY-vs-COMPUTATION placement controls WHERE a same-value `mr`/`add` lands.** A plain pointer
+    COPY (`p2 = p`) is COALESCER-placed → EAGER (emitted right after the source operand's def, e.g.
+    at `add r31` slot-creation, 0x40) regardless of its source-line position. A COMPUTATION
+    (recompute `state+off`, or #131's OR) is SCHEDULER-placed → LAZY (at its source line, after the
+    intervening call). To LAZY-place a phi-entry copy (#132) without #131's OR, embed a RECOMPUTE in
+    the consuming store (#116): `*(int*)((char*)(p2 = state + off) + 0x14) = v;` source-places the
+    assignment, dragging the phi-entry `mr` to the right slot — but the recompute's own value (the
+    CSE'd field reg) then feeds the pre-merge accesses (the #132 split). Embedding a COPY instead
+    (`(p2 = p)`) still HOISTS (copies don't respect the embed). The recompute folds to a `mr` (CSE to
+    the field reg) or a fresh `add` (no CSE, own reg) depending on whether the field value is already
+    live — `(int)(long)x` / char* launders to break CSE FAILED here (re-CSE'd or rejected by GC/2.0).
+    Diagnostic: build each variant, grep the `mr`/`add` ADDRESS + which reg the field's stores use;
+    a structural-distance (instr-multiset + per-access reg) read beats fuzzy% (a 99.94% E2 and a
+    98.9% E1 were both 1-displacement off — same multiset, different `mr` slot). (fn_801B3DE4: phi
+    E1 98.9% mr@0x40; phi+embed E2 99.94% mr@0x80 w/ 2-instr base-reg split; OR 100%.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
