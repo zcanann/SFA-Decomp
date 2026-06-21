@@ -1394,6 +1394,7 @@ extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d,
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
+#pragma optimization_level 3
 void boneParticleEffect_update(void* ctx, int p2, u8* o)
 {
     BoneFxVtx s;
@@ -1595,6 +1596,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
     }
     gBoneParticleBufferFlip = 1 - gBoneParticleBufferFlip;
 }
+#pragma optimization_level 4
 
 typedef struct
 {
