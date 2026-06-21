@@ -141,7 +141,19 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     void *desc;
 
     tbl = lbl_8030E8B0;
-    sfxTab = fn_8006F388(type);
+    switch (type) {
+        case 0:  sfxTab = (u16 *)tbl; break;
+        case 1:  sfxTab = (u16 *)(tbl + 0x14); break;
+        case 2:  sfxTab = (u16 *)(tbl + 0x3C); break;
+        case 3:  sfxTab = (u16 *)(tbl + 0x64); break;
+        case 4:  sfxTab = (u16 *)(tbl + 0x50); break;
+        case 5:  sfxTab = (u16 *)(tbl + 0x78); break;
+        case 6:  sfxTab = (u16 *)(tbl + 0x8C); break;
+        case 7:  sfxTab = (u16 *)(tbl + 0xA0); break;
+        case 10:
+        case 8:  sfxTab = (u16 *)(tbl + 0x28); break;
+        default: sfxTab = (u16 *)(tbl + 0x28); break;
+    }
     flags = 0;
     i = 0;
     for (i = 0; i < hits[0x1b]; i++) {
