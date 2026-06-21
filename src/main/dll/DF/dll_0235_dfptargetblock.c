@@ -387,7 +387,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
                 for (j = 0; j < pointCount; j = j + 1)
                 {
                     entry = (int)state + j * 12;
-                    if ((point.x == *(float*)(entry + 4)) && (point.z == *(float*)(entry + 12)))
+                    if ((point.z == *(float*)(entry + 12)) && (point.x == *(float*)(entry + 4)))
                     {
                         found = true;
                         j = pointCount;
