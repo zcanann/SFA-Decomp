@@ -41,7 +41,7 @@ float fastCastU16ToFloat(s16* p)
     return result;
 }
 
-void fastCastFloatToU16(s16* p, float x)
+void fastCastFloatToU16(float x, s16* p)
 {
     register s16* ptr = p;
     register float value = x;
@@ -53,7 +53,7 @@ void fastCastFloatToU16(s16* p, float x)
 }
 
 float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(s16* p, float x);
+void fastCastFloatToS16(float x, s16* p);
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
@@ -68,7 +68,7 @@ float exp2f(float x)
         return lbl_803E797C;
     }
 
-    fastCastFloatToS16(&exponent, x);
+    fastCastFloatToS16(x, &exponent);
     integer_part = fastCastS16ToFloat(&exponent);
     fraction = x - integer_part;
 
@@ -108,7 +108,7 @@ float fastCastS16ToFloat(s16* p)
     return result;
 }
 
-void fastCastFloatToS16(s16* p, float x)
+void fastCastFloatToS16(float x, s16* p)
 {
     register s16* ptr = p;
     register float value = x;
@@ -130,7 +130,7 @@ float fastFloorf(float x)
 
     abs_x = __fabsf(x);
     if (abs_x < lbl_803E79A0) {
-        fastCastFloatToU16(&short_value, abs_x);
+        fastCastFloatToU16(abs_x, &short_value);
         rounded = fastCastU16ToFloat(&short_value);
 
         if (x >= lbl_803E79A4) {
