@@ -433,14 +433,14 @@ void InitAllMessageQueue(void)
 
     if (lbl_803A5D60.audioExists != 0)
     {
-        j = 0;
+        i = 0;
         do
         {
             PushFreeAudioBuffer(q + 0x174);
             q += sizeof(AttractMovieAudioBuffer);
-            j++;
+            i++;
         }
-        while (j < 3);
+        while (i < 3);
     }
 
     OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);
