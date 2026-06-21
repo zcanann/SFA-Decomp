@@ -242,7 +242,8 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
             collision->surfaceCounter = 0;
         }
         dx = heights[3];
-        dz = collision->segmentLocalPoints[11] - collision->segmentLocalPoints[2];
+        dz = collision->segmentLocalPoints[11];
+        dz = dz - collision->segmentLocalPoints[2];
         dx = dx - heights[0];
         getAngle(dx, dz);
         ang = getAngle(dx, dz);
