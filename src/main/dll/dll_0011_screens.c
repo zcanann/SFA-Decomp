@@ -789,11 +789,9 @@ void gameBitFn_800ea2e0(u8 id)
 
     if (texts[6] == 0)
     {
-        i = 1;
-        taskMap = &lbl_803119E0[1];
-        for (; (s16)i < 0xce; i++)
+        for (i = 1; (s16)i < 0xce; i++)
         {
-            if ((*taskMap == 0xffff) || (*taskMap == -1))
+            if ((lbl_803119E0[i] == 0xffff) || (lbl_803119E0[i] == -1))
             {
                 mask = 1 << ((u8)i % 32);
                 bank = (s16)(((u32)(u8)i >> 5) + 0x12f
@@ -806,7 +804,6 @@ void gameBitFn_800ea2e0(u8 id)
                     GameBit_Set(bank, bits);
                 }
             }
-            taskMap++;
         }
     }
 
