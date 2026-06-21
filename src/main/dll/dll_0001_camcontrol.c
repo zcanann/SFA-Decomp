@@ -160,7 +160,7 @@ void camcontrol_updateTargetFeedback(void)
         gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
         if (target != NULL)
         {
-            ObjAnim_SetMoveProgress(gCamcontrolNormalizedMin, reticle);
+            ((int (*)(int, f32))ObjAnim_SetMoveProgress)((int)reticle, gCamcontrolNormalizedMin);
         }
         if (target == NULL)
         {
