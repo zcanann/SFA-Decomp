@@ -193,7 +193,7 @@ void pressureswitchfb_update(int obj)
     f32 target;
     f32 cur;
     int slots2;
-    u8 found;
+    s8 found;
     u32 j2;
     u32 ju2;
     u32 o;
