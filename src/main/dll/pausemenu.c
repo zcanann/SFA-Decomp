@@ -377,9 +377,9 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     lbl_803DBA8C = lbl_803E1E64;
                     gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
                     lbl_803DBA8C = lbl_803E20A0;
-                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, 0x258,
+                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, 0x100,
                                          alpha,
-                                         0x100, 0);
+                                         0x258, 0);
                     break;
                 }
             case 6:
