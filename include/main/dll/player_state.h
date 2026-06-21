@@ -157,10 +157,10 @@ typedef struct PlayerState {
     f32 groundNormalY;
     f32 groundNormalZ;
     f32 groundNormalW;
-    f32 unk57C;
-    f32 unk580;
-    f32 unk584;
-    f32 unk588;
+    f32 slopeTangentX; /* horizontal tangent to the ground plane (= -groundNormalZ); the (slopeTangentX, slopeTangentY, slopeTangentZ) vector is the ground normal rotated 90deg in XZ, used to project movement along the slope */
+    f32 slopeTangentY; /* ground-tangent Y component, always 0 (the tangent is horizontal) */
+    f32 slopeTangentZ; /* ground-tangent Z component (= groundNormalX) */
+    f32 slopePlaneD; /* signed plane-distance term for the slope-tangent plane: -(point . slopeTangent), computed when the ground tangent is captured */
     f32 unk58C;
     u8 pad590[0x594 - 0x590];
     f32 unk594;

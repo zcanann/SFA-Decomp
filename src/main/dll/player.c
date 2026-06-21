@@ -2788,13 +2788,13 @@ int fn_802A0680(int obj, int state)
                     ((PlayerState*)inner)->groundNormalY = hit.ny;
                     ((PlayerState*)inner)->groundNormalZ = hit.nz;
                     ((PlayerState*)inner)->groundNormalW = hit.nw;
-                    ((PlayerState*)inner)->unk57C = -hit.nz;
-                    ((PlayerState*)inner)->unk580 = 0.0f;
-                    ((PlayerState*)inner)->unk584 = hit.nx;
-                    ((PlayerState*)inner)->unk588 =
-                        -(pnt[2] * ((PlayerState*)inner)->unk584 +
-                            (pnt[0] * ((PlayerState*)inner)->unk57C +
-                                pnt[1] * ((PlayerState*)inner)->unk580));
+                    ((PlayerState*)inner)->slopeTangentX = -hit.nz;
+                    ((PlayerState*)inner)->slopeTangentY = 0.0f;
+                    ((PlayerState*)inner)->slopeTangentZ = hit.nx;
+                    ((PlayerState*)inner)->slopePlaneD =
+                        -(pnt[2] * ((PlayerState*)inner)->slopeTangentZ +
+                            (pnt[0] * ((PlayerState*)inner)->slopeTangentX +
+                                pnt[1] * ((PlayerState*)inner)->slopeTangentY));
                     ((PlayerState*)inner)->targetYaw =
                         (s16)getAngle(((PlayerState*)inner)->groundNormalX,
                                       ((PlayerState*)inner)->groundNormalZ);
@@ -2930,9 +2930,9 @@ int fn_802A0680(int obj, int state)
                 ObjModel_SampleJointTransform(jt, 1, 0, 1.0f,
                                               ((GameObject*)obj)->anim.rootMotionScale, out1, tmp);
                 ((GameObject*)obj)->anim.activeMove = -1;
-                ((PlayerState*)inner)->moveOffsetX = ((PlayerState*)inner)->unk57C * -out1[0];
+                ((PlayerState*)inner)->moveOffsetX = ((PlayerState*)inner)->slopeTangentX * -out1[0];
                 ((PlayerState*)inner)->moveOffsetY = out1[1];
-                ((PlayerState*)inner)->moveOffsetZ = ((PlayerState*)inner)->unk584 * -out1[0];
+                ((PlayerState*)inner)->moveOffsetZ = ((PlayerState*)inner)->slopeTangentZ * -out1[0];
                 if (b6 == 0 && b7 == 0)
                 {
                     ((PlayerState*)inner)->moveOffsetY = 0.0f;
@@ -2946,13 +2946,13 @@ int fn_802A0680(int obj, int state)
                 mask = 0;
                 if (out1[0] < 0.0f)
                 {
-                    dx = lbl_803E7FFC * ((PlayerState*)inner)->unk57C;
-                    dy = lbl_803E7FFC * ((PlayerState*)inner)->unk584;
+                    dx = lbl_803E7FFC * ((PlayerState*)inner)->slopeTangentX;
+                    dy = lbl_803E7FFC * ((PlayerState*)inner)->slopeTangentZ;
                 }
                 else
                 {
-                    dx = lbl_803E7FFC * -((PlayerState*)inner)->unk57C;
-                    dy = lbl_803E7FFC * -((PlayerState*)inner)->unk584;
+                    dx = lbl_803E7FFC * -((PlayerState*)inner)->slopeTangentX;
+                    dy = lbl_803E7FFC * -((PlayerState*)inner)->slopeTangentZ;
                 }
                 if (b6 != 0 || b7 != 0)
                 {
