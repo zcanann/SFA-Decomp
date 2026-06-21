@@ -647,8 +647,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `case 0xb: default: → X;`. That forces 0xc to stay a distinct binary-search node (cmpwi 12), AND
     keeping 0xb on the default arm supplies the lower pivot boundary (the dead cmpwi 11 that shifts
     the pivot 13→12) → reproduces retail's exact dispatch tree. Distinct from #13 (reorder) and #122
-    (dead empty case). (The residual peephole CROSS-JUMP of identical outcome blocks — 2 vs 3 blocks —
-    is not source-controllable.) (WorkerC: andross_update case set 12&14 recovered.)
+    (dead empty case). USE THIS where the dispatch TREE is the actual diff. CAVEAT from the first
+    application: on andross_update the un-fuse correctly matched the 12&14 pivots, BUT retail also
+    CROSS-JUMPS the identical case-0xc/default outcome blocks (2 vs our 3 blocks) — a peephole artifact
+    our build can't emit — so the net was a ~1-instr regression and it was REVERTED (compact fused
+    form kept). So the lever is sound for pivot-tree matching; just confirm no confounding cross-jump
+    of identical outcome blocks before committing (that's a separate open shape). (WorkerC: andross_update.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
