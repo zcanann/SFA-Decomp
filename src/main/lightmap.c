@@ -1472,7 +1472,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     state[4] = cursor;
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1515,7 +1515,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     state[4] = cursor;
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -1565,7 +1565,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     cursor = state[4];
     countShifted = cursor >> 3;
     v = ((u8*)state[0])[countShifted];
-    base = (int*)(state[0] + countShifted);
+    base = (int*)(countShifted + state[0]);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
