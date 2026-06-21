@@ -2590,7 +2590,8 @@ void expgfx_free(u32 sourceId)
             {
                 if (slot != NULL)
                 {
-                    tableEntry = &runtime->expTab[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
+                    tableEntry = (ExpgfxTableEntry*)((u8*)runtime->expTab +
+                        (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
                     if (tableEntry->sourceId == sourceId)
                     {
                         expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
