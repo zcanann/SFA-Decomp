@@ -3289,74 +3289,9 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     {
         if (-1 < (int)curve->linkIds[li])
         {
-            pc = visited;
-            zval = 0;
-            off = 0;
-            for (rem = 0x1b; rem != 0; rem--)
+            for (off = 0; off < 0x514; off++)
             {
-                pc[0] = zval;
-                pc[1] = zval;
-                pc[2] = zval;
-                pc[3] = zval;
-                pc[4] = zval;
-                pc[5] = zval;
-                pc[6] = zval;
-                pc[7] = zval;
-                pc[8] = zval;
-                pc[9] = zval;
-                pc[10] = zval;
-                pc[11] = zval;
-                pc[12] = zval;
-                pc[13] = zval;
-                pc[14] = zval;
-                pc[15] = zval;
-                pc[16] = zval;
-                pc[17] = zval;
-                pc[18] = zval;
-                pc[19] = zval;
-                pc[20] = zval;
-                pc[21] = zval;
-                pc[22] = zval;
-                pc[23] = zval;
-                pc[24] = zval;
-                pc[25] = zval;
-                pc[26] = zval;
-                pc[27] = zval;
-                pc[28] = zval;
-                pc[29] = zval;
-                pc[30] = zval;
-                pc[31] = zval;
-                pc[32] = zval;
-                pc[33] = zval;
-                pc[34] = zval;
-                pc[35] = zval;
-                pc[36] = zval;
-                pc[37] = zval;
-                pc[38] = zval;
-                pc[39] = zval;
-                pc[40] = zval;
-                pc[41] = zval;
-                pc[42] = zval;
-                pc[43] = zval;
-                pc[44] = zval;
-                pc[45] = zval;
-                pc[46] = zval;
-                pc[47] = zval;
-                pc = pc + 0x30;
-                off = off + 0x30;
-            }
-            pu = visited + off;
-            rem = 0x514 - off;
-            if (off < 0x514)
-            {
-                do
-                {
-                    *pu = 0;
-                    pu++;
-                    off++;
-                    rem--;
-                }
-                while (rem != 0);
+                visited[off] = 0;
             }
             visited[startIdx] = 1;
             node = RomCurve_findByIdWithIndex(curve->linkIds[li], &idx);
