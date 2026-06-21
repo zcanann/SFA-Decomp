@@ -822,6 +822,8 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     return hit;
 }
 
+typedef struct { u32 w0, w1; } IdPair;
+
 int dll_19_func15(u8* p1, int p2, int p3, int p4)
 {
     GameObject* source = (GameObject*)p1;
@@ -835,10 +837,8 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     f32 scale;
 
     scale = lbl_803E1C2C;
-    *(u32*)&ids1[0] = lbl_803E1C18;
-    *(u32*)&ids1[2] = lbl_803E1C1C;
-    *(u32*)&ids2[0] = lbl_803E1C20;
-    *(u32*)&ids2[2] = lbl_803E1C24;
+    *(IdPair*)ids1 = *(IdPair*)&lbl_803E1C18;
+    *(IdPair*)ids2 = *(IdPair*)&lbl_803E1C20;
     if (p2 == 0)
     {
         return 0;
