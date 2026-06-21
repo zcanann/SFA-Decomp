@@ -199,8 +199,8 @@ void SpiritDoorLock_update(int obj)
         int* orbitObjs;
         ObjTextureRuntimeSlot* tex;
         int i;
-        int angle;
-        int angleStep;
+        s16 angle;
+        s16 angleStep;
         f32 maxDist;
         camMode = (*gCameraInterface)->getMode();
         if (camMode != 0x51)
