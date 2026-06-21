@@ -22,8 +22,8 @@ extern f32 gRopeNodeDamping;
 extern f32 gRopeNodeBoundsMargin;
 
 
-extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
-                                       int param_6);
+extern void Camera_LoadModelViewMatrix(int unused0, int unused1, int obj, f32 scale, f32 unused,
+                                       int p6);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);

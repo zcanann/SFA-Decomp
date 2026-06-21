@@ -54,11 +54,11 @@ extern u32 ModelLightStruct_free();
 extern void Obj_FreeObject(u8* obj);
 extern u32 Obj_GetPlayerObject();
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
-extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 param_2, u32 param_3,
-                                 u32 param_4, u32 param_5, f32 scale);
+extern void objRenderFn_8003b8f4(DIMbossObject* obj, u32 p2, u32 p3,
+                                 u32 p4, u32 p5, f32 scale);
 
 extern void queueGlowRender(void* effect);
-extern void dll_2E_func06(DIMbossObject* obj, void* animController, int param_3);
+extern void dll_2E_func06(DIMbossObject* obj, void* animController, int p3);
 extern u32 dll_2E_func03();
 extern f32 timeDelta;
 extern u8 gDvdErrorPauseActive;
@@ -89,8 +89,8 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES 100
 #define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
-typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, u32 param_2, DIMbossRuntime* runtime,
-                                   int param_4, int param_5, int param_6, u8 param_7, float scale);
+typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, u32 p2, DIMbossRuntime* runtime,
+                                   int p4, int p5, int p6, u8 p7, float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
                                         void* hitDetectAnimTable, void* animTable);
 
@@ -105,7 +105,7 @@ typedef struct DIMbossBaddieControlInterface
 {
     u8 pad00[0x28];
     void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
-                      u8* hitReactMode, int param_6, int param_7, int param_8, int param_9);
+                      u8* hitReactMode, int p6, int p7, int p8, int p9);
     void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, int flag);
     int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
@@ -168,7 +168,7 @@ static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(v
     return (DIMbossObjectTriggerInterface*)*gObjectTriggerInterface;
 }
 
-int DIMboss_updateState(DIMbossObject* obj, u32 param_2, ObjAnimUpdateState* animUpdate)
+int DIMboss_updateState(DIMbossObject* obj, u32 p2, ObjAnimUpdateState* animUpdate)
 {
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
