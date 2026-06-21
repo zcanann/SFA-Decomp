@@ -45,7 +45,7 @@ typedef struct PlayerState {
     u8 flags3F4; /* state flag byte: bit6 = path-follow/scripted-move gate */
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
-    u8 unk3F7;
+    u8 fallSeverity; /* fall/landing severity tier (0-3) set from the fall height-difference (hdiff vs lbl_803E8104/8108/810C thresholds); selects the landing move/sfx (move 0xa/0x90) and at >=2 fires camera shake + a ground-impact ObjHits; reset to 0 on state change */
     int moveAnimTable; /* s16 anim/move-id table base; fed to ObjAnim_SetCurrentMove */
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
