@@ -178,6 +178,7 @@ void pressureswitch_update(int obj)
     GameObject* tricky;
     int ac;
     int v;
+    int off;
     s8 played;
     f32 cur;
     f32 lim;
@@ -199,7 +200,8 @@ void pressureswitch_update(int obj)
         sub->holdTimer = 0;
         sub->chimeLatch = 0;
     }
-    ((PressureSwitchFlags*)&sub->flags)->active = 0;
+    off = 0;
+    ((PressureSwitchFlags*)&sub->flags)->active = off;
     if (PSW_CONTACT_LIST(obj) != NULL &&
         PSW_CONTACT_LIST(obj)->count > 0)
     {
@@ -208,7 +210,7 @@ void pressureswitch_update(int obj)
         thr = lbl_803E5D60;
         for (; i < PSW_CONTACT_LIST(obj)->count; i++)
         {
-            GameObject* ent = PSW_CONTACT_LIST(obj)->objects[i];
+            GameObject* ent = *(GameObject**)((char*)PSW_CONTACT_LIST(obj) + off + 256);
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
                 ((PressureSwitchFlags*)&sub->flags)->active = 1;
@@ -225,6 +227,7 @@ void pressureswitch_update(int obj)
                 }
                 sub->chimeLatch = 1;
             }
+            off += 4;
         }
     }
     else
