@@ -365,7 +365,7 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     return;
 }
 
-void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
+void FUN_800e95e8(u32 groupId, u32 flagArg, int mode)
 {
     bool wasMinusTwo;
     char matchIdx;
