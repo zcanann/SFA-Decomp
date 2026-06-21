@@ -3051,7 +3051,7 @@ extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy,
 int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 {
     u8* base = gIntersectSegmentTypeTable;
-    TrackBlockDescriptor* desc;
+    TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
     TrackBlockDescriptor* end;
     u8* ptr;
     int i, j;
@@ -3076,8 +3076,8 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
     lbl_803DCF68 = (int)(base + 0xdc);
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
-    end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
-    for (desc = (TrackBlockDescriptor*)(base + 0x424); desc < end; desc++)
+    end = desc + gActiveTrackBlockCount;
+    for (; desc < end; desc++)
     {
         if (lbl_803DCF60 >= 0x23) break;
         if (desc->object != NULL)
