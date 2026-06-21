@@ -9,7 +9,7 @@
 typedef struct TrickyguardspotPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 triggerRange;   /* 0x1A: Tricky must be within this XZ distance to activate */
     u8 pad1C[0x1E - 0x1C];
     s16 trickyInRangeGameBit;
 } TrickyguardspotPlacement;
@@ -45,7 +45,7 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0)
         {
             if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)def)->unk1A)
+                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)def)->triggerRange)
             {
                 *(int*)sub = *(int*)sub - framesThisStep;
                 flags->trickyInRange = 1;
