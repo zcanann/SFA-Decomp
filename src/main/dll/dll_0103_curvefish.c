@@ -105,6 +105,7 @@ void curvefish_update(int obj)
     f32 dz;
     f32 mag;
     f32 distLimit;
+    f32 speedDelta;
     int targetYaw;
     int yawDelta;
 
@@ -179,10 +180,9 @@ void curvefish_update(int obj)
     }
     else
     {
-        state->speed += ((f32)(int)randomGetRange(-setup2->speedChange,
-                                                  setup2->speedChange << 1) *
-                         timeDelta) /
-                        lbl_803E38FC;
+        speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
+                                              setup2->speedChange << 1);
+        state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
         if (state->speed < lbl_803E38F0)
         {
             state->speed = lbl_803E38F0;
