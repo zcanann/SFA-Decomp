@@ -815,9 +815,8 @@ void arwarwing_updateRollAndEngine(int obj, int state)
     if ((u32)vec != 0)
     {
         s16 n;
-        ((ArwingState*)state)->wingFlexCur =
-            lbl_803E6EF8 * (((ArwingState*)state)->wingFlexTarget - ((ArwingState*)state)->wingFlexCur) + ((ArwingState
-                *)state)->wingFlexCur;
+        ((ArwingState*)state)->wingFlexCur +=
+            lbl_803E6EF8 * (((ArwingState*)state)->wingFlexTarget - ((ArwingState*)state)->wingFlexCur);
         n = (s16)((ArwingState*)state)->wingFlexCur;
         *(s16*)(vec + 0xa) = n;
         *(s16*)(vec + 0x8) = n;
