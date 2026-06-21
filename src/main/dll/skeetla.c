@@ -476,10 +476,10 @@ int trickyMove(u8* obj, f32* targetPos)
     if (moveSpeed < lbl_803E2420)
     {
         prospectivePos[0] =
-            lbl_803E2420 * ((TrickyState*)state)->dirX * timeDelta + ((GameObject*)obj)->anim.worldPosX;
+            lbl_803E2420 * (((TrickyState*)state)->dirX * timeDelta) + ((GameObject*)obj)->anim.worldPosX;
         prospectivePos[1] = ((GameObject*)obj)->anim.worldPosY;
         prospectivePos[2] =
-            lbl_803E2420 * ((TrickyState*)state)->dirZ * timeDelta + ((GameObject*)obj)->anim.worldPosZ;
+            lbl_803E2420 * (((TrickyState*)state)->dirZ * timeDelta) + ((GameObject*)obj)->anim.worldPosZ;
     }
     else
     {
