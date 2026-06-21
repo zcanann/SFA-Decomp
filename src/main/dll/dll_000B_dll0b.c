@@ -2294,7 +2294,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 aligned = 1;
             }
         }
-        if (*(int*)((char*)*p + 0xa4) & 0x4)
+        if (*(int*)((char*)p[slot] + 0xa4) & 0x4)
         {
             if (!aligned)
             {
