@@ -2660,12 +2660,11 @@ int RomCurve_func16(double x, double y, double z)
     curveList = (int*)romCurves;
     for (; i < nRomCurves && candidateCount < 20; i++)
     {
-        curve = *curveList;
+        curve = curveList[i];
         if (*(s8*)(curve + 0x19) == 0x17)
         {
             candidateIds[candidateCount++] = *(u32*)(curve + 0x14);
         }
-        curveList++;
     }
 
     top = &candidateIds[candidateCount];
