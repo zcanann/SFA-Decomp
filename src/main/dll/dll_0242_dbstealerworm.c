@@ -1428,6 +1428,7 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
     }
 }
 
+#pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0A(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -1529,6 +1530,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
         return 0;
     }
 }
+#pragma opt_common_subs reset
 
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
 {
