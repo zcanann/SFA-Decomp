@@ -727,6 +727,7 @@ void fn_80166444(int obj, int state)
         f32 hitRadius;
         u8 pad[0x10];
         u8 hitType;
+        u8 pad2[0x10];
     } hitScratch;
     f32 speed;
 
