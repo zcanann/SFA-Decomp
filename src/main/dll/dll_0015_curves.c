@@ -249,9 +249,10 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
         object->anim.rotY = -ang;
         if (((int)collision->flags & 0x400) != 0)
         {
-            object->anim.rotZ = getAngle(heights[1] - heights[0],
-                                         collision->segmentLocalPoints[3] -
-                                         collision->segmentLocalPoints[0]);
+            dx = heights[1];
+            dz = collision->segmentLocalPoints[3] - collision->segmentLocalPoints[0];
+            dx = dx - heights[0];
+            object->anim.rotZ = getAngle(dx, dz);
         }
     }
 }
