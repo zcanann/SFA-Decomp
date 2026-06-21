@@ -2803,8 +2803,8 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
     return NULL;
 }
 
-int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
-                                          f32 z, f32 unusedW);
+int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a,
+                                          RomCurveDef* b, f32 unusedW);
 
 u32
 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
@@ -2942,6 +2942,8 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     f32 dz;
     f32 distance;
 
+    previousCurveId = curveId;
+    previousCurveId |= curveId;
     curve = RomCurve_FindByIdInline(curveId);
     hitCount = 0;
     *outDistance = lbl_803E065C;
@@ -2964,7 +2966,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         if (nextCurveId != (int)ROMCURVE_LINK_ID_NONE)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
-            if (RomCurve_segmentIntersectsOriginRayXZ(curve, nextCurve, x, y, z, lbl_803E0660) != 0)
+            if (RomCurve_segmentIntersectsOriginRayXZ(x, y, z, curve, nextCurve, lbl_803E0660) != 0)
             {
                 dx = curve->x - x;
                 dy = curve->y - y;
@@ -4296,8 +4298,8 @@ int curves_findByAction(int act)
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
 #pragma opt_common_subs off
-int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY,
-                                          f32 z, f32 unusedW)
+int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a,
+                                          RomCurveDef* b, f32 unusedW)
 {
     f32 ax;
     f32 bx;
