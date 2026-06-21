@@ -2414,7 +2414,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 }
             }
         }
-        if (*(int*)((char*)p[slot] + 0xa4) & 0x8)
+        if (*(int*)((char*)p[slot] + 0xa4) & 0x10000000)
         {
             setTextColor(a0, ar, ag, ab, 0xff);
         }
