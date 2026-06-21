@@ -5537,7 +5537,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         *(u8*)((char*)state + 0x34a) = *(u8*)((char*)state + 0x34a) & ~0xef;
         ((PlayerState*)state)->baddie.moveSpeed = *(f32*)((inner->moveSlots + 0x1c) + (u32)inner->moveSlotIndex * 0xb0);
         inner->unk824 = ((PlayerState*)state)->baddie.moveSpeed;
-        inner->unk8CF = 0;
+        inner->cutsceneEnded = 0;
         ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
         ((PlayerState*)state)->baddie.moveEventFlags = 0;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
@@ -6204,7 +6204,7 @@ void playerUpdateWhileTimeStopped(int obj)
         if (v <= zero)
         {
             cutsceneEnterExit(0, 0);
-            inner->unk8CF = 1;
+            inner->cutsceneEnded = 1;
         }
         else if (lbl_803E7EF0 == v)
         {
@@ -7137,7 +7137,7 @@ void playerUpdate(int obj)
             if (((PlayerState*)inner)->cutsceneTimer <= zero)
             {
                 cutsceneEnterExit(0, 0);
-                ((PlayerState*)inner)->unk8CF = 1;
+                ((PlayerState*)inner)->cutsceneEnded = 1;
             }
             else if (limit == ((PlayerState*)inner)->cutsceneTimer)
             {

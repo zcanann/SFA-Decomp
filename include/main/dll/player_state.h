@@ -297,7 +297,7 @@ typedef struct PlayerState {
     s16 characterId;
     s16 pendingBoneEffectId; /* one-shot bone-particle effect id (set by fn_802960E8); spawned via gBoneParticleEffectInterface->spawnEffect then cleared to 0 */
     s16 unk81E;
-    f32 cutsceneTimer; /* time-stop/cutscene countdown (-= dt while >0); on expiry calls cutsceneEnterExit(0,0)+sets unk8CF, at threshold lbl_803E7EF0 calls cutsceneEnterExit(1,0)+setTimeStop */
+    f32 cutsceneTimer; /* time-stop/cutscene countdown (-= dt while >0); on expiry calls cutsceneEnterExit(0,0)+sets cutsceneEnded, at threshold lbl_803E7EF0 calls cutsceneEnterExit(1,0)+setTimeStop */
     f32 unk824;
     f32 hitTimer; /* per-hit countdown for multi-hit moves; -= dt, on <=0 records an ObjHits hit and reloads from hitInterval; gates hitCount */
     f32 targetAnimSpeed; /* interpolate() target for baddie.animSpeedA */
@@ -369,7 +369,7 @@ typedef struct PlayerState {
     s8 gaitLevel; /* locomotion gait level, stepped by 4 in [0,0x14] by speed thresholds; /4*2 indexes the move/gait tables (drives gaitStepLevel 1-4) */
     s8 activeHitWindow; /* index (0-2) of the currently-active hit window in the move's HitDesc list; -1 = none active */
     s8 hitWindowIndex; /* latched copy of activeHitWindow used to index per-window hit data (offset *4) */
-    u8 unk8CF;
+    u8 cutsceneEnded; /* one-shot flag set to 1 when cutsceneTimer expires and cutsceneEnterExit(0,0) runs (in playerUpdate / playerUpdateWhileTimeStopped); cleared to 0 on a new move start; signals the cutscene/time-stop just finished */
     u8 unk8D0;
     u8 unk8D1;
     u8 unk8D2;
