@@ -2198,25 +2198,32 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             )
             ;
         }
-        else
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
+        else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0 &&
+            (f32)(s32)slot->lifetimeFrame <= lifeFraction)
         {
-            f32 ratio;
-            if ((f32)(s32)slot->lifetimeFrame <= lifeFraction
+            f32 ratio = (f32)(s32)slot->lifetimeFrame / lifeFraction;
+            if (ratio < lbl_803DF35C)
+            {
+                ratio = lbl_803DF35C;
+            }
+            else if (ratio > lbl_803DF354)
+            {
+                ratio = lbl_803DF354;
+            }
+            alpha = (int)
+            ((f32)(u32)
+            slot->initialAlpha * ratio
             )
-            {
-                ratio = (f32)(s32)
-                slot->lifetimeFrame / lifeFraction;
-            }
-            else
-            {
-                ratio = (lifeFraction - ((f32)(s32)
-                slot->lifetimeFrame - lifeFraction
-                )
-                )
-                /
-                lifeFraction;
-            }
+            ;
+        }
+        else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
+        {
+            f32 ratio = (lifeFraction - ((f32)(s32)
+            slot->lifetimeFrame - lifeFraction
+            )
+            )
+            /
+            lifeFraction;
             if (ratio < lbl_803DF35C)
             {
                 ratio = lbl_803DF35C;
