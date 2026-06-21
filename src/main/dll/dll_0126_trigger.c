@@ -929,7 +929,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
-                    if ((u32)((TriggerPlacement*)def)->triggerDelayFrames <= ((TriggerState*)state)->timer)
+                    if (((TriggerState*)state)->timer >= (u32)((TriggerPlacement*)def)->triggerDelayFrames)
                     {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
@@ -937,8 +937,9 @@ void Trigger_hitDetect(int obj)
                 case 0x4d:
                     if (ok)
                     {
-                        inside = fn_80198B68(obj, (int)state + 0x28);
-                        wasInside = fn_80198B68(obj, (int)state + 0x1c);
+                        u8* st = ((GameObject*)obj)->extra;
+                        inside = fn_80198B68(obj, (int)st + 0x28);
+                        wasInside = fn_80198B68(obj, (int)st + 0x1c);
                         if (inside != 0)
                         {
                             if (wasInside == 0)
