@@ -549,6 +549,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
     dll_4e/optionsMenu_applyGameplaySetting is form (b); shop_init wants form (b) too.)
+    SIBLING FORM: a DO-WHILE loop with MANUAL counter/pointer bumps in the body → rewrite as a
+    `for` with comma-init increments (`for (i=0, p=base; cond; p+=stride, i++)`); the for+comma-init
+    induction shape fixes the induction-variable coloring the hand-bumped do-while misses. (WorkerC:
+    dll_0035 SaveSelectScreen_render 98.59→99.00.)
 137. **Reorder a function's PARAM LIST to match the target's fmr/mr emission order — register-
     neutral, so always safe to try.** The ABI assigns each arg to its register by TYPE (f32→f1..,
     int/ptr→r3..) independent of DECLARED order, so reordering the parameter list (and its shared-
