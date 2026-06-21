@@ -449,7 +449,7 @@ int Minimap_update(void)
                     }
                     uq = ox / gMinimapZoom;
                     u = uq;
-                    frac = gMinimapZoom * (uq - u);
+                    frac = gMinimapZoom * (uq - (f32)u);
                     vq = oy / gMinimapZoom;
                     vv = vq;
                     ((u8*)&col)[3] = gMinimapContentAlpha;

@@ -286,8 +286,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 if (lbl_803DD7A4 != 0 && *(u16*)((u8*)lbl_803DD7A4 + 2) >= 2)
                 {
                     acc = 0x96;
-                    i = 1;
                     idx = 4;
+                    i = 1;
                     while (i < *(u16*)((u8*)lbl_803DD7A4 + 2))
                     {
                         s32 sp28, sp24, sp20, sp1c;
@@ -300,17 +300,9 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                         )
                         ;
                         val = sp20 - sp1c;
-                        if (val > h)
-                        {
-                            acc += val;
-                        }
-                        else
-                        {
-                            acc += *(u16*)(lbl_802C8680 + (u32)(u8)
-                            sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
-                            )
-                            ;
-                        }
+                        acc += (val > h) ? val : *(u16*)(lbl_802C8680 + (u32)(u8)
+                        sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
+                        );
                         idx += 4;
                         i++;
                     }
