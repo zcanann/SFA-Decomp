@@ -71,7 +71,7 @@ extern f32 lbl_803DEFF8;
 extern f32 lbl_803DEFFC;
 extern u8 gObjSeqFovOverrideActive;
 extern u8 curSeqNo;
-extern void Obj_TransformWorldPointToLocal(f32* x, f32* y, f32* z, void* m, f32 wx, f32 wy, f32 wz);
+extern void Obj_TransformWorldPointToLocal(f32 wx, f32 wy, f32 wz, f32* x, f32* y, f32* z, void* m);
 extern u8 lbl_8039944C[];
 extern int lbl_803DD0C0;
 extern s16 lbl_803DD08A;
@@ -970,10 +970,10 @@ void ObjSeq_updateCamera(void)
             *(f32*)(camObj + 0x18) = x;
             *(f32*)(camObj + 0x1c) = y;
             *(f32*)(camObj + 0x20) = z;
-            Obj_TransformWorldPointToLocal((f32*)(camObj + 0xc), (f32*)(camObj + 0x10),
-                                           (f32*)(camObj + 0x14), *(void**)(camObj + 0x30),
-                                           *(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
-                                           *(f32*)(camObj + 0x20));
+            Obj_TransformWorldPointToLocal(*(f32*)(camObj + 0x18), *(f32*)(camObj + 0x1c),
+                                           *(f32*)(camObj + 0x20), (f32*)(camObj + 0xc),
+                                           (f32*)(camObj + 0x10), (f32*)(camObj + 0x14),
+                                           *(void**)(camObj + 0x30));
             *(s16*)camObj = (s16)(0x8000 - pitch);
             *(s16*)(camObj + 2) = (s16) - yaw;
             *(s16*)(camObj + 4) = roll;
