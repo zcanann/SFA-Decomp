@@ -233,7 +233,6 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 u8 vGroup, u8 studio, u32 itd)
 {
     u8* keymap;
-    KeymapEntry* entry;
     s32 idx;
     s32 p;
     s32 k;
@@ -248,10 +247,9 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
         idx = (key & 0x7F) * 8;
         if (*(u16*)(keymap + idx) != 0xFFFF)
         {
-            entry = (KeymapEntry*)(keymap + idx);
-            if ((entry->id & 0xC000) != 0x4000)
+            if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) != 0x4000)
             {
-                if ((entry->panning & 0x80) == 0)
+                if ((((KeymapEntry*)(keymap + idx))->panning & 0x80) == 0)
                 {
                     p = keymap[key * 8 + 3] - 0x40;
                     p += pan;
@@ -293,7 +291,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     prio = 0;
                 }
 
-                if ((entry->id & 0xC000) == 0)
+                if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) == 0)
                 {
                     if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80)
                     {
@@ -313,11 +311,11 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     {
                         return handle;
                     }
-                    return macStart(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
                                     pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                     studio, itd);
                 }
-                return audioLayerFn_8026f8b8(entry->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
                                              pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                              studio, itd);
             }
