@@ -228,6 +228,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ~0x80LL` → `li -129; and`; `x |= 0x100100LL` → `lis;addi;or`). Lvalue must be u32 (int widens
     signed + `srawi`). Convert ALL adjacent masks at once (partial conversion misaligns the burst).
     Bulk-sweep a recurring materialized flag word after mapping every site to its fn's fuzzy%.
+    CAVEAT (WorkerB, trickySelectQueuedCommandTarget + trickyGuardFindBaddieTarget): the LL fix is
+    CORRECT (target uses `li -1025; and`; codebase already uses `&= ~(u64)FLAG` elsewhere) BUT when an
+    adjacent `field = 0` store immediately follows the `flags &= ~Kll`, the materialized mask's extra
+    register (the `lwz`'d flags + the `li -K`) shifts allocation: the flags `lwz` moves off r3, freeing
+    r3, and MWCC hoists the `0` into r3 EARLY (reuse for the store) instead of `li r0,0` LATE — a net
+    regression (97.91→97.20, 95.44→94.74). The mask is reachable; the open part is forcing the flags
+    `lwz` to claim the low volatile (r3, as retail does) so the 0 can't reuse it. Verify no adjacent
+    const-store register-steal before committing #74; if present, the load-reg lever is still to find.
 75. **`union { f32 m[16]; f64 a8; }`** 8-aligns (fixes +4 offset); frame tracks the COUNT of homed
     locals (fold single-use block locals to shrink).
 76. **`int key = id;`** (u16 param widened to int local) fixes `cmpw` signedness AND a volatile
