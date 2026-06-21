@@ -2821,8 +2821,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
             bit = 1 << (pi >> 1);
-            *(u32*)(mb + 4116) = maskLowWord | bit;
-            *(u32*)(mb + 4112) = maskHighWord | (u32)((int)bit >> 0x1f);
+            maskLowWord = maskLowWord | bit;
+            maskHighWord = maskHighWord | (u32)((int)bit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord;
+            *(u32*)(mb + 4112) = maskHighWord;
         }
         else
         {
@@ -2830,8 +2832,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short sl
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
             inverseBit = ~(u32)(1 << (pi >> 1));
-            *(u32*)(mb + 4116) = maskLowWord & inverseBit;
-            *(u32*)(mb + 4112) = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            maskLowWord = maskLowWord & inverseBit;
+            maskHighWord = maskHighWord & (u32)((int)inverseBit >> 0x1f);
+            *(u32*)(mb + 4116) = maskLowWord;
+            *(u32*)(mb + 4112) = maskHighWord;
         }
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
