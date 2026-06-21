@@ -563,7 +563,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 slot++;
             }
             Sfx_RemoveLoopedObjectSound((int)obj, 0x3dc);
-            state = ((GameObject*)(int)obj)->extra;
+            state = ((GameObject*)obj)->extra;
             if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
@@ -602,7 +602,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         {
             objAnimFn_8013a3f0((int)obj, 0x33, lbl_803E2444, 0x4000000);
             trickyState->guardTimer = lbl_803E23DC;
-            state = ((GameObject*)(int)obj)->extra;
+            state = ((GameObject*)obj)->extra;
             if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
@@ -628,7 +628,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         trickyDebugPrint(strBase + 0x6b8);
         if (randomGetRange(0, 10) == 0)
         {
-            state = ((GameObject*)(int)obj)->extra;
+            state = ((GameObject*)obj)->extra;
             if ((((u32)((TrickyState*)state)->unk58 >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
