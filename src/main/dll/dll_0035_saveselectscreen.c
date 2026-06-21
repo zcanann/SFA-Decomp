@@ -524,19 +524,14 @@ void SaveSelectScreen_render(int param)
         if (lbl_803DB424 != 0)
         {
             saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
-            i = 0;
-            off = 0;
             arr = gSaveSelectTextBuffers;
             ptrs = gSaveSelectSlotTextIds;
-            do
+            for (i = 0, off = 0; i < 3; off += 0x24, i++)
             {
                 sprintf(arr[i], &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
                 gameTextAppendStr(arr[i], ptrs[i]);
-                off += 0x24;
-                i++;
             }
-            while (i < 3);
         }
         break;
     }
