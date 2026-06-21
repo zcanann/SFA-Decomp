@@ -278,7 +278,7 @@ void pressureswitchfb_update(int obj)
                 off += 4;
             }
         }
-        slots2 = *(int*)&((GameObject*)obj)->extra;
+        slots2 = *(volatile int*)&((GameObject*)obj)->extra;
         found = 0;
         for (j2 = 0; (j2 & 0xff) < 10; j2++)
         {
