@@ -2010,7 +2010,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x4LL;
+        gAudioPendingLoadFlags &= ~0x4;
         gAudioCompletedLoadFlags |= 0x4;
         s = gStreamsData;
         count = gStreamsCount;
