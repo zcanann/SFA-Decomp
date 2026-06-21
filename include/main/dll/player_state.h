@@ -270,7 +270,7 @@ typedef struct PlayerState {
     f32 aimInputX; /* smoothed aim-stick X (eased from baddie.moveInputX, clamped); drives aimScreenY and the world aim direction */
     f32 aimInputZ; /* smoothed aim-stick Z (eased from baddie.moveInputZ, clamped); drives aimScreenX and the world aim direction */
     u8 pad7C0[0x7C8 - 0x7C0];
-    f32 unk7C8;
+    f32 sinkOffsetY; /* vertical sink/bob offset added to localPosY (e.g. sinking into snow during the snowstep move); accumulates and clamps, decays back toward 0 */
     f32 unk7CC;
     f32 unk7D0;
     f32 chargeLevel; /* charge/breath meter: builds (+= K*fv) while a charge move's button is held, drains (-= K*dt) and floors at 0 otherwise; at capacity (unk41C) fires the charged attack; (u8) value fed to fn_8011F34C */

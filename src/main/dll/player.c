@@ -11095,13 +11095,13 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
         case 32:
             if (((PlayerState*)cfg)->baddie.animSpeedA > lbl_803E7E98)
             {
-                r = lbl_803E7F6C + ((PlayerState*)state)->unk7C8;
-                ((PlayerState*)state)->unk7C8 = (r < clamp) ? r : clamp;
+                r = lbl_803E7F6C + ((PlayerState*)state)->sinkOffsetY;
+                ((PlayerState*)state)->sinkOffsetY = (r < clamp) ? r : clamp;
             }
             else
             {
-                ((PlayerState*)state)->unk7C8 =
-                    -(lbl_803E7E90 * dt - ((PlayerState*)state)->unk7C8);
+                ((PlayerState*)state)->sinkOffsetY =
+                    -(lbl_803E7E90 * dt - ((PlayerState*)state)->sinkOffsetY);
                 if (lbl_803DE440 > clamp)
                 {
                     lbl_803DE440 = lbl_803DE440 - dt;
@@ -11115,7 +11115,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             }
             iv = hitDetectFn_80065e50(obj, (int***)&nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-            velMag = -((PlayerState*)state)->unk7C8;
+            velMag = -((PlayerState*)state)->sinkOffsetY;
             if (1 < iv &&
                 (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
             {
@@ -11142,12 +11142,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             break;
         default:
             *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0;
-            if (((PlayerState*)state)->unk7C8 < lbl_803E7EA4)
+            if (((PlayerState*)state)->sinkOffsetY < lbl_803E7EA4)
             {
                 fv2 = lbl_803E7EFC * ((PlayerState*)cfg)->baddie.animSpeedA +
-                    ((PlayerState*)state)->unk7C8;
-                ((PlayerState*)state)->unk7C8 = (fv2 < lbl_803E7EA4) ? fv2 : lbl_803E7EA4;
-                velMag = -((PlayerState*)state)->unk7C8;
+                    ((PlayerState*)state)->sinkOffsetY;
+                ((PlayerState*)state)->sinkOffsetY = (fv2 < lbl_803E7EA4) ? fv2 : lbl_803E7EA4;
+                velMag = -((PlayerState*)state)->sinkOffsetY;
             }
             break;
         }
@@ -13575,7 +13575,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
         ((GameObject*)obj)->anim.modelState->overrideWorldPosZ = sz;
     }
     ((GameObject*)obj)->anim.localPosY =
-        ((GameObject*)obj)->anim.localPosY + inner->unk7C8;
+        ((GameObject*)obj)->anim.localPosY + inner->sinkOffsetY;
     m = (u32)(mode & 0xff);
     if (m == 1)
     {
@@ -13591,7 +13591,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
     }
     objSetMtxFn_800412d4(0);
     ((GameObject*)obj)->anim.localPosY =
-        ((GameObject*)obj)->anim.localPosY - inner->unk7C8;
+        ((GameObject*)obj)->anim.localPosY - inner->sinkOffsetY;
     if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
     {
         ((GameObject*)obj)->anim.modelState->overrideWorldPosX = ((GameObject*)obj)->anim.localPosX;
@@ -14176,9 +14176,9 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.modelState->overrideWorldPosY;
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.modelState->overrideWorldPosZ;
         }
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->unk7C8;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->sinkOffsetY;
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, a, b, c, d, lbl_803E7EE0);
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->unk7C8;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->sinkOffsetY;
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
         {
             ((GameObject*)obj)->anim.localPosX = sx;
