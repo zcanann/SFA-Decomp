@@ -16,7 +16,7 @@ typedef struct MagiccavetopPlacement
     s16 visibleGameBit;
     s16 unk1E;
     s8 warpMapId;
-    s8 unk21;
+    s8 gameBitValue; /* value written to game bit 0x1B8 on warp transition */
     u8 pad22[0x28 - 0x22];
 } MagiccavetopPlacement;
 
@@ -27,7 +27,7 @@ typedef struct MagiccavetopObjectDef
     s16 visibleGameBit;
     s16 unk1E;
     s8 warpMapId;
-    s8 unk21;
+    s8 gameBitValue; /* value written to game bit 0x1B8 on warp transition */
     u8 pad22[0x24 - 0x22];
     s16 swapGameBit;
     u8 pad26[0x28 - 0x26];
@@ -202,7 +202,7 @@ void magiccavetop_update(int* obj)
             }
             break;
         case 2:
-            GameBit_Set(0x1b8, ((MagiccavetopPlacement*)def)->unk21);
+            GameBit_Set(0x1b8, ((MagiccavetopPlacement*)def)->gameBitValue);
             if (def[0x22] != 0)
             {
                 unlockLevel(0, 0, 1);
