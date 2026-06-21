@@ -958,8 +958,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.hw[5] = *(s16*)&base[434];
     buf.hw[6] = *(s16*)&base[436];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.flags = 0x4000084;
-    buf.flags |= flags;
+    buf.flags = 0x4000084 | flags;
     if ((buf.flags & 1) != 0)
     {
         if ((void*)ctx != NULL)
