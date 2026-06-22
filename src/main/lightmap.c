@@ -1073,26 +1073,34 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
 
 extern f32 CurrTiming_803DEC20;
 
-void fn_8005D3B4(u8* obj, u8* model, s32 b)
+void fn_8005D3B4(register u8* obj, u8* model, s32 b)
 {
     f32 stk[3];
     s32 t, v;
     f32 timing;
+    register f32 ps6, ps8, ps10, ps12, ps14, ps16;
+    f32 t1, t2, m28, m38;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
+    asm { psq_l ps12, 12(obj), 1, 5 }
+    asm { psq_l ps6, 6(obj), 1, 5 }
+    asm { psq_l ps14, 14(obj), 1, 5 }
     timing = CurrTiming_803DEC20;
+    m28 = *(f32*)(model + 0x28);
+    t1 = ps14 * timing + m28;
+    asm { psq_l ps8, 8(obj), 1, 5 }
+    asm { psq_l ps16, 16(obj), 1, 5 }
+    m38 = *(f32*)(model + 0x38);
+    t2 = ps16 * timing + m38;
+    asm { psq_l ps10, 10(obj), 1, 5 }
     stk[0] = displayOffsetH_803DEBFC *
-    (((f32)((GameObject*)obj)->anim.flags * timing + *(f32*)(model + 0x18)) +
-        ((f32) * (s16*)(obj + 12) * timing + *(f32*)(model + 0x18)));
-    stk[1] = displayOffsetH_803DEBFC *
-    (((f32) * (s16*)(obj + 8) * timing + *(f32*)(model + 0x28)) +
-        ((f32) * (s16*)(obj + 14) * timing + *(f32*)(model + 0x28)));
-    stk[2] = displayOffsetH_803DEBFC *
-    (((f32) * (s16*)(obj + 10) * timing + *(f32*)(model + 0x38)) +
-        ((f32) * (s16*)(obj + 16) * timing + *(f32*)(model + 0x38)));
+    ((ps6 * timing + *(f32*)(model + 0x18)) +
+        (ps12 * timing + *(f32*)(model + 0x18)));
+    stk[1] = displayOffsetH_803DEBFC * ((ps8 * timing + m28) + t1);
+    stk[2] = displayOffsetH_803DEBFC * ((ps10 * timing + m38) + t2);
     PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2];
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
