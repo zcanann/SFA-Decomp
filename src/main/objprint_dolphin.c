@@ -4050,7 +4050,7 @@ extern void GXSetTevColor(int id, u32* color);
 
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
-    f32 cm[12];
+    f32 cm[16];
     f32 wm[16];
     f32 im[16];
     MtxBitStream bs;
