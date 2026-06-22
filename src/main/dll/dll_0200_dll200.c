@@ -214,8 +214,12 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {
+    case 0:
+        break;
     case 1:
         fn_801F2974((int*)obj, unused, animUpdate, arg3);
+        break;
+    case 2:
         break;
     case 4:
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
