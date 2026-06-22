@@ -701,7 +701,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     because the reducer's counter/walker coloring is keyed on whether the counter's value is reused:
     a `*p = NULL` whose 0 materializes as `mr rNull,rCounter` reuses i, raising i's web priority so
     the reducer colors counter=higher (no comma-init, no extra copy) — read the target asm for the
-    reuse it already has and spell it. (The comma-init form on a global base adds an `mr walker,r0`
+    reuse it already has and spell it.
+    ✓VALUE-0 COPY-AFFINITY MECHANISM PINNED (3 oracles + A/B + groundanimator_free in-tree close — was
+    nearly mis-filed as a "compiler gap," it is NOT): the `mr rNull,rCounter` (reuse the counter's live 0
+    for a stored 0 instead of a fresh `li`) is a copy-COALESCE decision with TWO source paths —
+    (1) the stored-0 web is COUNTER-LIKE (itself incremented + compared, a real 2nd counter) → coalesces
+    at O4, no pragma (O4 oracles PlayControl/fn_801343CC); (2) a PURE stored-0 needs the value CHAINED to
+    the counter in the for-init (`for (val = counter = 0; ...)`, #43/#51) AND the fn at `#pragma
+    optimization_level 2` (at O4 copy-prop FOLDS the chain back to `li`; O2 oracle tumbleweed line 153).
+    The OR (#131) is INERT here — const-0 folds. DISCRIMINATOR: a fn matching retail EXCEPT the 1 mr is
+    O4-shaped → use path (1) [opt_level 2 would break the rest]; a broadly-coloring-mismatched fn is likely
+    a genuine O2 fn → path (2), verify the FULL fn match (opt_level 2 shifts ALL regs, #95). OPEN VARIANTS
+    (live targets — oracle-hunt the producing source, do NOT file as gaps): (a) ACCUMULATOR-master reuse
+    (the reused 0 belongs to a var used pre-loop + incremented, not the counter); (b) FIELD-STORE value-0
+    (`obj->f = 0` re-materializes `li` instead of reusing a live 0 reg). The chain reaches counter+LOCAL
+    value-0; (a)/(b) need a form still to find.
+    (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
     dll_4e/optionsMenu_applyGameplaySetting is form (b); shop_init wants form (b) too.)
