@@ -1835,8 +1835,7 @@ void initFn_8006d020(void)
                 if (tmp < mz) mz = tmp;
                 tmp = __fabsf((*p2 - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
-                d = mx * mx + mz * mz;
-                d = sqrtf(d);
+                d = sqrtf(mx * mx + mz * mz);
                 if (d < *p4 + o[3]) collide = 1;
                 o += 5;
                 j++;
