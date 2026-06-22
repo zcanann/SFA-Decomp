@@ -165,6 +165,7 @@ void runLoadingScreens(void)
 }
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void initLoadingScreenTextures(void)
 {
     GXTexFmt textureFormat;
@@ -202,6 +203,7 @@ void initLoadingScreenTextures(void)
     gTitleScreenInitLoadingFrameCounter = 0;
     gTitleScreenInitDvdErrorLatched = 0;
 }
+#pragma opt_common_subs reset
 #pragma opt_propagation reset
 
 void TitleScreenInit_render(void)
