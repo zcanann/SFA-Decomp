@@ -1706,16 +1706,22 @@ bulk saves, creation-order alloc. Confirmed: zlbDecompress (pi_dolphin), gap_03_
 Don't spend MWCC effort — flag for the owner's foreign-toolchain build-rule path. Compiler-emitted
 s64/fixed-point math (`__shl2i`/`__shr2u`, `addc`/`adde`, unrolled rounding loops) → apply #98/#109.
 
-## Paired-single (`psq_l`/`psq_st`) = INLINE-ASM ONLY in CW GC/2.0 → OWNER-DOMAIN (don't re-test intrinsics)
+## Paired-single (`psq_l`/`psq_st`) = INLINE-ASM ONLY in CW GC/2.0 — ✅ USER-AUTHORIZED inline asm (narrow exception)
 PROVEN (dbgtricky, gate-tested): MWCC GC/2.0 has NO paired-single INTRINSICS — `__PSQ_L(...)` compiles to
 `bl __PSQ_L` (a call to an undefined function, NOT the `psq_l` instruction); the compiler binary exposes only
 the `psq_l`/`psq_st` MNEMONICS for the inline-asm assembler. Every matched paired-single fn in the repo is
 inline asm (e.g. mtx.c `asm void PSMTXCopy(...){ nofralloc; psq_l f0,0(src),0,0; ... }`; model.c GQR setup is
 `asm{ mtspr GQR6,v }`). So a fn whose target uses `psq_l ...,W,GQR` (s16/u8→f32 dequant, the GQR-quantized
-load) is reachable ONLY via inline `asm{}` — which is BANNED. Therefore such fns (modelBoneTransforms_next 29%,
-lightmap fn_8005D3B4 38% / updateVisibleGeometry 83%, and the model/vec/psmtx paired-single bucket) are
-OWNER-DOMAIN (owner's inline-asm/build-rule path), NOT MWCC-clean-matchable. The user-approved "use `__PSQ_L`
-intrinsics if possible" resolved to "not possible in this compiler." DON'T re-test the intrinsic — flag and move on.
+load) is reachable ONLY via inline `asm{}` (the intrinsic path is confirmed dead — DON'T re-test `__PSQ_L`).
+✅ USER-AUTHORIZED (owner decision, overriding the ban for THIS case): use INLINE ASM for the paired-single
+`psq_l`/`psq_st` case — match the codebase convention (mtx.c `asm void f(){ nofralloc; psq_l f0,0(src),0,0; ... }`,
+model.c `asm{ mtspr GQRn,v }`). This is FAITHFUL (the repo + the original source already do paired-single this
+way), NOT a ban violation. So modelBoneTransforms_next 29%, lightmap fn_8005D3B4 38% / updateVisibleGeometry 83%,
+and the model/vec/psmtx paired-single bucket ARE now in-scope: decode the target's psq_l stream + the ps-SIMD
+ops (the disassembler may misrender them as VSX), find the GQR setup (a caller, an init fn, or in-fn — `mtspr
+GQRn` inline asm authorized too here), write the inline-asm form matching the target, byte-verify. ⚠️ NARROW:
+this exception is paired-single ONLY — the general inline-`asm{}` ban STILL HOLDS for everything else (no other
+exceptions; the owner still reverts non-paired-single asm).
 
 ## Build hygiene (don't break shared `main`)
 - `timeout 60 ninja; echo EXIT=$?` → confirm `EXIT=0` BEFORE every commit. In A/B batteries, gate
