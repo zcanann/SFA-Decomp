@@ -715,13 +715,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (CSE-confuses with the 28-stride → no `addi 64`, 95.98→89.24); a typed-INDEX (`T* vx = &arr[i*4]`) fixes the
     coloring but makes vx a walked pointer → hoists the base into 2 extra saved regs (frame +16, 95.98→92.6).
     The offset-int form is the GLOBAL-base analog of the validator's local-base relocate-lever. The RIPPLE loop
-    win (96.01) is confirmed in-tree. ⚠️ WAKE sub-case is OPEN (an isolation wake-derive — "create vtxDesc(32)
-    first" — was probe-promising but did NOT hold in-tree): the wake reducer FIXES 64→r29 regardless of decl
-    order (offsets-before-gate o32-first → 32→r27 not the target r29; decl-order INERT inside the gate). The
-    2-condition gate (`g->active && g->f18==0`) changes the wake's stride ordering vs ripple but NOT predictably
-    via source decl/creation order — so it's an in-tree-context-bound structure obstacle (validator re-derive or
-    park), NOT a simple per-loop reorder. (Lesson: even a probe-promising isolation reducer-order derive needs
-    the in-tree gate — this one was integrated as "cracked" prematurely and reverted to OPEN.) The
+    win (96.01) is confirmed in-tree. WAKE sub-case: the validator's "wake wants 32→r29 / vtxDesc-first" was a
+    MISREAD (it read a SIBLING loop's addi block in the multi-loop dump, RETRACTED) — the wake target is
+    actually 64→r29, the SAME shape as ripple. So the o32-first attempts that "failed" were the wrong direction;
+    the PROVEN ripple form (o64-first offset-int before the gate) was never tried on the wake — that's the
+    untried correct-direction retry (likely closes it; if o64-first ALSO doesn't land, then it's pressure-bound,
+    park). LESSONS: (a) even a probe-promising isolation reducer-order derive needs the in-tree gate (this was
+    integrated as "cracked" prematurely, reverted); (b) in a MULTI-LOOP fn, confirm you're reading the CORRECT
+    loop's addi block before pinning a target order. The
     counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
@@ -1189,7 +1190,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     web first → bias f29, const f28 = retail. (The const was previously a PRELOOP named local, created before the
     loop → before the bias → bias parked last at f31.) DISCRIMINATOR (per-fn verify, the lever is NOT universal):
     apply ONLY where retail's bias reg should OUTRANK a competing HOISTED const; check the bias reg + report.json,
-    KEEP only if the fn RISES. PROJECT-WIDE batch (sweeping the conversion-bias-hoist bucket now). (DeepDive2: dim2icicle 99.92,
+    KEEP only if the fn RISES. ✓BOUNDARY PINNED (validator probe — when the lever is INERT): the
+    conversion-position lever works when the conversion result feeds an FP MULTIPLY; it is INERT when the result
+    is STORED to a global field and RE-READ for a DIVISION (cv = the divisor, not a multiply operand) — the
+    STORE fixes the bias web's creation point, so repositioning the conversion can't move it (dim2icicle: bias
+    stays f30, conversion-first/named-local-first fold or add a saved reg). SWEEP DISCRIMINATOR: skip
+    store-to-global + re-read-for-division shapes (and the bias-LOWEST shape where the bias must be f24/f28
+    created-first but is lowered late — that one's the reloc-naming build-domain part, #70-neutral on score but
+    the register stays unreachable when stored). The lever's sweet spot = bias-above-a-pushable-preloop-const,
+    conversion-feeds-multiply (staffFn). PROJECT-WIDE batch (sweeping that shape). (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
     REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are explored so far): (1) the bias
