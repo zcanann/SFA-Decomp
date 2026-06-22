@@ -571,30 +571,30 @@ void arwarwing_update(int obj)
         *(s16*)(((ArwingState*)state)->wingVec[3] + 4) = p;
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = p;
 
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[0] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
+        throttle = (f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[0] + 4) =
-            (int)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[1] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
+        throttle = (f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[1] + 4) =
-            (int)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[2] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[2] + 4) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
+        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[3] + 4) =
-            (int)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
-                (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 4));
+            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 4));
     }
 
     arwarwing_updateRollAndEngine(obj, state);
