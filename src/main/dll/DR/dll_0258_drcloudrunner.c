@@ -44,7 +44,7 @@ typedef struct DRCloudRunnerPlacement
 typedef struct DRCloudRunnerState
 {
     u8 pad0[0xAD5 - 0x0];
-    u8 unkAD5;
+    u8 flagsAD5;
     u8 padAD6[0xB50 - 0xAD6];
     f32 unkB50;
     u8 padB54[0xBAE - 0xB54];
@@ -59,7 +59,7 @@ typedef struct DRCloudRunnerState
 
 STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, airMeterCapacity) == 0x1A);
 STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, enableGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkAD5) == 0xAD5);
+STATIC_ASSERT(offsetof(DRCloudRunnerState, flagsAD5) == 0xAD5);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkB50) == 0xB50);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBAE) == 0xBAE);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBB0) == 0xBB0);
@@ -271,7 +271,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
     case 0x20c:
         if (*(s8*)&((CloudRunnerState*)p2)->baddie.moveDone != 0)
         {
-            ((DRCloudRunnerState*)inner)->unkAD5 &= ~2;
+            ((DRCloudRunnerState*)inner)->flagsAD5 &= ~2;
             return 3;
         }
         break;
@@ -279,7 +279,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
         {
             f32 fz;
             ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E83A4, 0);
-            ((DRCloudRunnerState*)inner)->unkAD5 |= 2;
+            ((DRCloudRunnerState*)inner)->flagsAD5 |= 2;
             fz = lbl_803E83A4;
             ((CloudRunnerState*)p2)->baddie.animSpeedC = fz;
             ((CloudRunnerState*)p2)->baddie.animSpeedB = fz;
