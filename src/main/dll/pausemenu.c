@@ -195,7 +195,10 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16*)((u8*)model + 0x18) &= ~0x8;
         y = (s32)((f32)(s16)alpha * lbl_803DD850);
-        x = (s32)((double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
+        {
+            f64 tmp = (double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C);
+            x = (s32)(tmp * lbl_803E2088);
+        }
         if (gameTextFn_80019c00() != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
