@@ -914,9 +914,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
-        int skip = 0;
         f32 blend;
         int i2;
+        int skip = 0;
         if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b08)
         {
             skip = 1;
