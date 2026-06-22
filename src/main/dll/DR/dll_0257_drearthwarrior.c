@@ -686,7 +686,7 @@ void fn_802BCA10(int obj, int sub, int state)
     objModelGetVecFn_800395d8(obj, 5);
     if (vec0 != NULL)
     {
-        s16 sv;
+        int sv;
         vec0[0] = -((EarthWarriorSub*)sub)->unk4D6;
         vec0[1] = ((EarthWarriorSub*)sub)->unk4D4 / 2;
         sv = vec0[1];
@@ -703,7 +703,7 @@ void fn_802BCA10(int obj, int sub, int state)
     }
     if (vec9 != NULL)
     {
-        s16 sv;
+        int sv;
         int t;
         vec9[1] = ((EarthWarriorSub*)sub)->unk4D2;
         sv = vec9[1];
@@ -950,7 +950,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
                     ((EarthWarriorSub*)q)->attackPhase -= 4;
                 }
             }
-            else if (v294 >= *(f32*)((char*)&((f32*)tbl)[i2] + 4))
+            else if (v294 >= ((f32*)(tbl + i2 * 4))[1])
             {
                 if (((EarthWarriorSub*)q)->attackPhase < 0x14)
                 {
