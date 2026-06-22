@@ -58,7 +58,7 @@ extern f32 lbl_803DF664;
 extern f32 lbl_803DF668;
 extern f32 lbl_803DF66C;
 
-void objAnimFn_80038f38(int obj, char* p2)
+void objAnimFn_80038f38(int obj, char* state)
 {
     extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
     extern f32 lbl_803DE9A4;
@@ -70,7 +70,7 @@ void objAnimFn_80038f38(int obj, char* p2)
     void* m;
     int t;
 
-    t = (s32) * (f32*)(p2 + 0xc);
+    t = (s32) * (f32*)(state + 0xc);
     found = NULL;
     m = OBJPRINT_MODEL_INSTANCE(obj);
     if (m != NULL)
@@ -91,9 +91,9 @@ void objAnimFn_80038f38(int obj, char* p2)
         }
     }
 
-    if (*(s8*)p2 != 0)
+    if (*(s8*)state != 0)
     {
-        *(s8*)p2 = 0;
+        *(s8*)state = 0;
     }
     else if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
     {
@@ -103,20 +103,20 @@ void objAnimFn_80038f38(int obj, char* p2)
             if (t < 0)
             {
                 Sfx_StopObjectChannel((u32)obj, 0x10);
-                *(f32*)(p2 + 4) = lbl_803DE9A4;
-                *(s16*)(p2 + 0x14) = 0;
+                *(f32*)(state + 4) = lbl_803DE9A4;
+                *(s16*)(state + 0x14) = 0;
             }
-            *(f32*)(p2 + 0xc) = t;
+            *(f32*)(state + 0xc) = t;
         }
     }
     else
     {
-        *(f32*)(p2 + 0xc) = lbl_803DE9C8;
-        *(s16*)(p2 + 0x14) = 0;
-        if (*(f32*)(p2 + 4) > lbl_803DE9A4)
+        *(f32*)(state + 0xc) = lbl_803DE9C8;
+        *(s16*)(state + 0x14) = 0;
+        if (*(f32*)(state + 4) > lbl_803DE9A4)
         {
             int* pi;
-            *(f32*)(p2 + 4) = *(f32*)&lbl_803DE9A4;
+            *(f32*)(state + 4) = *(f32*)&lbl_803DE9A4;
             pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)(*pi + 0xf9) != 0)
             {
@@ -129,7 +129,7 @@ void objAnimFn_80038f38(int obj, char* p2)
 
     if (found != NULL)
     {
-        found[0] = (s16)((found[0] + *(s16*)(p2 + 0x14)) >> 1);
+        found[0] = (s16)((found[0] + *(s16*)(state + 0x14)) >> 1);
     }
 }
 
@@ -1417,7 +1417,7 @@ int fn_800399C0(s16* curve, s16* state)
 }
 #pragma dont_inline reset
 
-void fn_8003A168(int p1, int p2)
+void fn_8003A168(int obj, int state)
 {
     s16* found = NULL;
     int* table;
@@ -1426,7 +1426,7 @@ void fn_8003A168(int p1, int p2)
     int i;
     int j;
 
-    table = *(int**)(p1 + 0x50);
+    table = *(int**)(obj + 0x50);
     if (table != NULL)
     {
         int bank;
@@ -1436,10 +1436,10 @@ void fn_8003A168(int p1, int p2)
         for (k = 0; k < n; k++)
         {
             bank = *(int*)&((ObjDef*)table)->jointData;
-            if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(p1) + i + 1) != 0xff &&
+            if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                 (int)*(u8*)(bank + i) == 0)
             {
-                found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
             }
             i = i + ((ObjDef*)table)->modelCount + 1;
             j += 0x12;
@@ -1454,7 +1454,7 @@ void fn_8003A168(int p1, int p2)
     {
         found[1] = (s16)((s32)found[1] * 3 / 4);
     }
-    *(s16*)(p2 + 0x1a) = 0;
+    *(s16*)(state + 0x1a) = 0;
 }
 
 void objModelClearVecFn_8003aa40(int obj)
@@ -1695,7 +1695,7 @@ void fn_8003B228(int obj, int p2)
 extern void* ObjModel_GetJointMatrix(int* model, int joint);
 extern int lbl_803DCC48;
 
-void modelInitMtxs(int p1, int p2)
+void modelInitMtxs(int def, int model)
 {
     int cache;
     int mtx;
@@ -1703,14 +1703,14 @@ void modelInitMtxs(int p1, int p2)
     u8 rem;
 
     cache = (int)getCache();
-    if (*(u8*)(p1 + 0xf4) != 0)
+    if (*(u8*)(def + 0xf4) != 0)
     {
-        modelCalcVtxGroupMtxs(p1, p2);
+        modelCalcVtxGroupMtxs(def, model);
     }
-    count = (s32)(u32) * (u8*)(p1 + 0xf3) + (s32)(u32) * (u8*)(p1 + 0xf4);
+    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
     if (count >= 2 && count <= 0x64)
     {
-        mtx = (int)ObjModel_GetJointMatrix((int*)p2, 0);
+        mtx = (int)ObjModel_GetJointMatrix((int*)model, 0);
         DCFlushRange((void*)mtx, count << 6);
         rem = (u8)(count << 1);
         cache += 0x2700;
@@ -2030,7 +2030,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
 
 extern f32 lbl_803DE9E4;
 
-void fn_8003A230(int obj, void* p2, f32 val)
+void fn_8003A230(int obj, void* state, f32 val)
 {
     s16* found;
     int* table;
@@ -2072,13 +2072,13 @@ void fn_8003A230(int obj, void* p2, f32 val)
         }
         if (val <= lbl_803DE9E4)
         {
-            fn_80039DF8(obj, (s16*)p2, found, val);
+            fn_80039DF8(obj, (s16*)state, found, val);
         }
         else
         {
-            fn_80039B54(obj, (s16*)p2, found, val);
+            fn_80039B54(obj, (s16*)state, found, val);
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)p2 + 0x1a);
+        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
         if (val > lbl_803DE9E4)
         {
             flag = 1;
@@ -2087,14 +2087,14 @@ void fn_8003A230(int obj, void* p2, f32 val)
         {
             flag = 0;
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(*(s16*)((char*)p2 + 0x1a) | (flag << 8));
+        *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
     }
 }
 
 extern int getAngle(float y, float x);
 extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(int obj, int p2, int p3, int p4)
+void fn_8003B0D0(int obj, int target, int state, int maxAngle)
 {
     s16* found;
     int* table;
@@ -2125,21 +2125,21 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     }
     if (found != NULL)
     {
-        *(s16*)((char*)p3 + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
-                                                            *(f32*)((char*)p2 + 0xc),
+        *(s16*)((char*)state + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
+                                                            *(f32*)((char*)target + 0xc),
                                                         ((GameObject*)obj)->anim.localPosZ -
-                                                            *(f32*)((char*)p2 + 0x14)) -
+                                                            *(f32*)((char*)target + 0x14)) -
                                           ((GameObject*)obj)->anim.rotX);
-        limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)p4);
-        if (*(s16*)((char*)p3 + 0x14) > limit)
+        limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)maxAngle);
+        if (*(s16*)((char*)state + 0x14) > limit)
         {
-            *(s16*)((char*)p3 + 0x14) = limit;
+            *(s16*)((char*)state + 0x14) = limit;
         }
-        if (*(s16*)((char*)p3 + 0x14) < -limit)
+        if (*(s16*)((char*)state + 0x14) < -limit)
         {
-            *(s16*)((char*)p3 + 0x14) = -limit;
+            *(s16*)((char*)state + 0x14) = -limit;
         }
-        found[1] = *(s16*)((char*)p3 + 0x14);
+        found[1] = *(s16*)((char*)state + 0x14);
     }
 }
 
@@ -2773,7 +2773,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 }
 #pragma opt_propagation reset
 
-void characterDoEyeAnims(int obj, int p2)
+void characterDoEyeAnims(int obj, int state)
 {
     extern f32 lbl_803DE9A4;
     extern u8 framesThisStep;
@@ -2793,21 +2793,21 @@ void characterDoEyeAnims(int obj, int p2)
     else
     {
         int v = b->textureId;
-        int st = (s8) * (s8*)(p2 + 0x1e);
+        int st = (s8) * (s8*)(state + 0x1e);
 
         switch (st & 0xf)
         {
         case 0:
             {
-                s8 t = *(s8*)(p2 + 0x1f);
+                s8 t = *(s8*)(state + 0x1f);
                 if (t > 0)
                 {
-                    *(s8*)(p2 + 0x1f) = t - framesThisStep;
+                    *(s8*)(state + 0x1f) = t - framesThisStep;
                 }
                 else if ((int)randomGetRange(0, 1000) > 0x3de)
                 {
-                    *(u8*)(p2 + 0x1e) = 1;
-                    *(u8*)(p2 + 0x1f) = 0;
+                    *(u8*)(state + 0x1e) = 1;
+                    *(u8*)(state + 0x1f) = 0;
                 }
             }
             break;
@@ -2818,8 +2818,8 @@ void characterDoEyeAnims(int obj, int p2)
                 if (v < 0)
                 {
                     v = 0;
-                    *(u8*)(p2 + 0x1e) = 0;
-                    *(u8*)(p2 + 0x1f) = 0;
+                    *(u8*)(state + 0x1e) = 0;
+                    *(u8*)(state + 0x1f) = 0;
                 }
             }
             else
@@ -2830,21 +2830,21 @@ void characterDoEyeAnims(int obj, int p2)
                     if (v - 0x200 < 0)
                     {
                         v = 0;
-                        *(u8*)(p2 + 0x1e) = 0;
+                        *(u8*)(state + 0x1e) = 0;
                     }
                     else
                     {
                         v = 0x2ff;
-                        *(s8*)(p2 + 0x1e) = -127;
+                        *(s8*)(state + 0x1e) = -127;
                     }
-                    *(u8*)(p2 + 0x1f) = 0x28;
+                    *(u8*)(state + 0x1f) = 0x28;
                 }
             }
             a->textureId = v;
             b->textureId = v;
             break;
         }
-        characterDoEyeMovements(obj, p2, lbl_803DE9A4);
+        characterDoEyeMovements(obj, state, lbl_803DE9A4);
     }
 }
 
@@ -2903,7 +2903,7 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     }
 }
 
-void modelCalcVtxGroupMtxs(int p1, int p2)
+void modelCalcVtxGroupMtxs(int def, int model)
 {
     extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
     f32 ma[12];
@@ -2912,12 +2912,12 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
     int off;
     int i;
 
-    for (i = 0, off = 0; i < *(u8*)(p1 + 0xf4); i++)
+    for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
     {
-        u8* grp = (u8*)(*(int*)(p1 + 0x54) + off);
-        f32* out = ObjModel_GetJointMatrix((int*)p2, i + *(u8*)(p1 + 0xf3));
-        f32* m1 = ObjModel_GetJointMatrix((int*)p2, grp[0]);
-        f32* m2 = ObjModel_GetJointMatrix((int*)p2, grp[1]);
+        u8* grp = (u8*)(*(int*)(def + 0x54) + off);
+        f32* out = ObjModel_GetJointMatrix((int*)model, i + *(u8*)(def + 0xf3));
+        f32* m1 = ObjModel_GetJointMatrix((int*)model, grp[0]);
+        f32* m2 = ObjModel_GetJointMatrix((int*)model, grp[1]);
         f32 w;
         f32 wi;
         char* jd;
@@ -2926,10 +2926,10 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
         w *= 0.25f;
         wi = 1.0f - w;
 
-        jd = (char*)(*(int*)(p1 + 0x3c) + grp[0] * 0x1c);
+        jd = (char*)(*(int*)(def + 0x3c) + grp[0] * 0x1c);
         PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m1, trans, ma);
-        jd = (char*)(*(int*)(p1 + 0x3c) + grp[1] * 0x1c);
+        jd = (char*)(*(int*)(def + 0x3c) + grp[1] * 0x1c);
         PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m2, trans, mb);
 
@@ -3137,7 +3137,7 @@ typedef struct IndTexMtx23
     f32 m[6];
 } IndTexMtx23;
 
-int modelRenderCb_8003c268(int obj, int* p2, int p3)
+int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
@@ -3157,7 +3157,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32* m, int id, int type);
-    extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
+    extern void**ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
@@ -3220,7 +3220,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     kc = *(ObjPrintGXColor*)&lbl_803DE9FC;
     mtxA = lbl_802C1B40;
     mtxB = lbl_802C1B58;
-    rop = ObjModel_GetRenderOp(*p2, p3);
+    rop = ObjModel_GetRenderOp(*model, ropIdx);
     if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
     {
         if ((lbl_803DCC44 & 3) != 0)
@@ -3258,7 +3258,7 @@ int modelRenderCb_8003c268(int obj, int* p2, int p3)
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
-    selectTexture(*ObjModel_GetRenderOpTextureRefs(p2, p3), 1);
+    selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
     GXSetTevDirect(1);
     GXSetTevOrder(1, 0, 1, 4);
     GXSetTevSwapMode(1, 0, 0);
@@ -3370,7 +3370,7 @@ typedef struct ObjPrintS10Color
     s16 r, g, b, a;
 } ObjPrintS10Color;
 
-int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
+int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
     extern u8*ObjModel_GetRenderOp(int m, int p);
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
@@ -3391,7 +3391,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32* m, int id, int type);
-    extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
+    extern void**ObjModel_GetRenderOpTextureRefs(int* model, int ropIdx);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
@@ -3449,7 +3449,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     s10 = lbl_803DE9F4;
     mtxA = lbl_802C1B10;
     mtxB = lbl_802C1B28;
-    rop = ObjModel_GetRenderOp(*p2, p3);
+    rop = ObjModel_GetRenderOp(*model, ropIdx);
     if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
     {
         lbl_803DCC3E = 0;
@@ -3519,7 +3519,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
-    selectTexture(*ObjModel_GetRenderOpTextureRefs(p2, p3), 1);
+    selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
     GXSetTevDirect(1);
     GXSetTevOrder(1, 0, 1, 4);
     GXSetTevSwapMode(1, 0, 0);
@@ -3668,7 +3668,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
     }
     GXSetNumIndStages(2);
     GXSetCullMode(2);
-    if ((*(u16*)(*p2 + 2) & 0x100) != 0)
+    if ((*(u16*)(*model + 2) & 0x100) != 0)
     {
         GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
     }
