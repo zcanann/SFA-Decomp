@@ -9,7 +9,7 @@ typedef struct DbStealerwormControl
     f32 unk04;
     f32 unk08;
     f32 countdown; /* countdown; init randomGetRange(10, 300) */
-    f32 unk10;
+    f32 nextSfxTime; /* countdown threshold; on cross plays sfx, advances by randomGetRange(50,250) */
     u8 flags14; /* bits 1/2 */
     u8 flags15; /* bits 1/4 */
     u8 unk16[2];

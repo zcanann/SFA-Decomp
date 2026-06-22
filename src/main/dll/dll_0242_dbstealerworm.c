@@ -143,7 +143,7 @@ int dbstealerworm_stateHandlerB04(int obj, int p)
         b8 = *(int*)&((GroundBaddieState*)b8)->control;
         fz = lbl_803E62A8;
         ((DbStealerwormControl*)b8)->countdown = lbl_803E62A8;
-        ((DbStealerwormControl*)b8)->unk10 = fz;
+        ((DbStealerwormControl*)b8)->nextSfxTime = fz;
         ((DbStealerwormControl*)b8)->unk04 = fz;
     }
     return 0;
@@ -161,7 +161,7 @@ int dbstealerworm_stateHandlerB02(int obj, int p)
         b8 = *(int*)&((GroundBaddieState*)b8)->control;
         fz = lbl_803E62A8;
         ((DbStealerwormControl*)b8)->countdown = lbl_803E62A8;
-        ((DbStealerwormControl*)b8)->unk10 = fz;
+        ((DbStealerwormControl*)b8)->nextSfxTime = fz;
         ((DbStealerwormControl*)b8)->unk04 = fz;
         (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 6);
     }
@@ -1228,10 +1228,10 @@ void fn_80203144(int obj, int p2, int p3)
         {
             dist = lbl_803E6354;
         }
-        if (sub->countdown > sub->unk10 && dist < lbl_803E6384)
+        if (sub->countdown > sub->nextSfxTime && dist < lbl_803E6384)
         {
             Sfx_PlayFromObject(obj, lbl_80329640[1]);
-            sub->unk10 = sub->unk10 + (f32)(int)randomGetRange(0x32, 0xfa);
+            sub->nextSfxTime = sub->nextSfxTime + (f32)(int)randomGetRange(0x32, 0xfa);
         }
         sub->countdown += timeDelta;
     }
