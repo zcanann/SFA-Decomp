@@ -13,7 +13,7 @@ typedef void (*CameraSetFocusFn)(void *target, int unused);
 typedef void (*CameraOverridePosFn)(f32 x, f32 y, f32 z);
 typedef void (*CameraMoveByFn)(f32 x, f32 y, f32 z);
 typedef void (*CameraSetTargetReticleOverrideFn)(int target);
-typedef void (*CameraInitialiseFn)(f32 *dst, f32 numerator, f32 denominator, f32 minValue,
+typedef void (*CameraInitialiseFn)(f32 numerator, f32 *dst, f32 denominator, f32 minValue,
                                    f32 y, f32 z);
 typedef void (*CameraGetRelativePositionFn)(f32 heightOffset, int targetObj, f32 *outX,
                                             f32 *outY, f32 *outZ, f32 *outDistanceXZ,

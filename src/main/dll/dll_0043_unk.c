@@ -414,8 +414,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         }
 
         pathScale = gCamcontrolPathState->pathCurve.pathLength;
-        (*gCameraInterface)->initialise(&gCamcontrolPathState->initialiseCurve[0],
-                                        pathScale,
+        (*gCameraInterface)->initialise(pathScale,
+                                        &gCamcontrolPathState->initialiseCurve[0],
                                         lbl_803E1774, lbl_803E1770, lbl_803E1744,
                                         lbl_803E1778);
 

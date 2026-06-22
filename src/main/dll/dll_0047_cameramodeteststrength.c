@@ -162,7 +162,7 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
     dy = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
     dz = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
     lbl_803DD560->duration = sqrtf(dx * dx + dy * dy + dz * dz);
-    (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, lbl_803DD560->duration,
+    (*gCameraInterface)->initialise(lbl_803DD560->duration, lbl_803DD560->speedCurve,
                                     lbl_803E18B0, (f64)lbl_803E18B4,
                                     (f64)*(f32*)&lbl_803E18B4, lbl_803E18B8);
 }
