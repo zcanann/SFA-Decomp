@@ -381,12 +381,15 @@ u8 trickyBallMove(u8* obj)
 
     ObjHits_EnableObject((u32)obj);
 
-    dy = state->prevPos[1] - ((GameObject*)obj)->anim.localPosY;
-    dy = (dy >= 0.0f) ? dy : -dy;
-    dx = state->prevPos[0] - ((GameObject*)obj)->anim.localPosX;
-    dx = (dx >= 0.0f) ? dx : -dx;
-    dz = state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ;
-    dz = (dz >= 0.0f) ? dz : -dz;
+    dy = (state->prevPos[1] - ((GameObject*)obj)->anim.localPosY >= 0.0f)
+             ? state->prevPos[1] - ((GameObject*)obj)->anim.localPosY
+             : -(state->prevPos[1] - ((GameObject*)obj)->anim.localPosY);
+    dx = (state->prevPos[0] - ((GameObject*)obj)->anim.localPosX >= 0.0f)
+             ? state->prevPos[0] - ((GameObject*)obj)->anim.localPosX
+             : -(state->prevPos[0] - ((GameObject*)obj)->anim.localPosX);
+    dz = (state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ >= 0.0f)
+             ? state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ
+             : -(state->prevPos[2] - ((GameObject*)obj)->anim.localPosZ);
 
     if ((dx + dy + dz) < lbl_803E36B4)
     {
