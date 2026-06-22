@@ -1250,9 +1250,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the base STILL detoured — so base-above-neighbors is the WRONG perturbation. KEY UNTRIED-DEEPER lead for the
     fresh-eyes return: modellight has TWO r0-routed webs — the base (`addi r0,r3; mr r31`) AND a masked value
     (`clrlwi r0,r0,24; mr r29`, the `activeMask & 0xff` also routes via r0+copy). flameguard's dll_7B +0.55 came
-    from perturbing ONE web's neighbors; the untried cross-apply is perturbing BOTH r0-consumers together (the
-    masked-activeMask web is the 2nd r0 grabber and likely must be moved off r0 in tandem with the base). That
-    joint two-r0-web perturbation is the next concrete attack on case-3.
+    from perturbing ONE web's neighbors. DEFINITIVE READ (expgfx, modellight — case-3 SPLITS into two sub-shapes):
+    retail `li r29,0; li r30,0; lis r3; addi r31,r3; lbz 0(r31)` vs ours `…; addi r0,r3; mr r31,r0; lbz 0(r31)` —
+    the neighbor defs (r29/r30) are ALREADY BYTE-IDENTICAL to retail; the SOLE diff is the base materialization
+    (direct `addi r31,r3` vs `addi r0,r3; mr r31`). So on modellight there is NOTHING to perturb (neighbors match;
+    source init-reorder doesn't even change the EMITTED order — MWCC emits neighbors-first then routes the base via
+    r0 regardless). This is the PUREST #155 residual: identical source/O2/emission-order, MWCC just picks
+    r0-scratch+copy for the global-base-into-walker at O2 where retail picks direct — NO source handle (launder/
+    index/hybrid/init-reorder/neighbor-order all exhausted; O3/O4 fix the base but regress globally). So case-3 =
+    TWO sub-shapes: (a) NEIGHBOR-ORDER-DIFFERS (flameguard's dll_7B +0.55 materialization-order perturbation
+    applies — neighbors not yet matching); (b) NEIGHBORS-ALREADY-MATCH (modellight — sole diff is the raw base
+    addi-direct-vs-r0-detour, no current C lever). Sub-shape (b) is the rawest O2-allocator-choice nut; fresh-eyes
+    return needs a NEW handle on the base-init reg selection itself (not neighbor perturbation).
     **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
     within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
     one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
