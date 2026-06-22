@@ -185,10 +185,10 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     {
         buf.pos[1] = lbl_803E1570;
     }
-    buf.pos[2] = lbl_803E1570;
-    buf.col[0] = lbl_803E1570;
-    buf.col[1] = lbl_803E1570;
-    buf.col[2] = lbl_803E1570;
+    buf.pos[2] = *(f32*)&lbl_803E1570;
+    buf.col[0] = *(f32*)&lbl_803E1570;
+    buf.col[1] = *(f32*)&lbl_803E1570;
+    buf.col[2] = *(f32*)&lbl_803E1570;
     buf.scale = lbl_803E1580;
     buf.v40 = 1;
     buf.v3c = 0;
