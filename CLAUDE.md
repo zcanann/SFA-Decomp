@@ -720,12 +720,31 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     So the residual is precisely a #137 param-SAVE-ORDER disruption (target: curveId,floats,outDistance;
     mine-with-init: floats,outDistance,curveId). INERT here: decl-order, `(int)`/`(int)(long)` cast,
     opt_level 2/3, opt_propagation on/off, init placement (first/after-findbyid/before-do-while),
-    embedded-assign-in-call-arg `FindById(prev=curveId)`. BEST partial: a fully-decoupled named carried
-    value `int startId=curveId;` (use startId for binary-search + loop-tail + `prev=startId`, curveId
-    only its source) shrinks the cascade 29→11 regions (startId lands r29 not r31) — still outDistance@r27.
-    The transposition that saves curveId(r3) before the floats DESPITE the init is the open lever.
-    (WorkerB: dll_0014_unk curves_distFn15 — copy + full instr-multiset recovered T=C=148; reverted to
-    hold 96.32 baseline since the 11-region partial scores 95.11 < baseline. Strong seed for fresh eyes.)
+    embedded-assign-in-call-arg `FindById(prev=curveId)`. **SOLVED (DeepDive2): the init reclassifies
+    curveId from the PARAM pool (r27, low) into the COPY pool (r31, high) via the FRONT-END SAME-VALUE
+    MERGE — a plain `prev = curveId` coalesces curveId into prev's multi-def web, riding it to the top
+    class and rotating every saved reg. DEFEAT IT WITH #131's NO-OP OR, GENERALIZED FROM POINTERS TO
+    INTEGER COPIES: `previousCurveId = curveId; previousCurveId |= curveId;` AT THE TOP of the fn. The
+    `|` node blocks the merge (curveId stays a param → eager `mr r27,r3` BEFORE the fmrs) AND, being a
+    COMPUTATION (#133, scheduler-placed), emits the eager `mr r8,r27` copy at the top when its source
+    line is first. ZERO extra instructions — the redundant `or` is peephole-eliminated, the web split
+    persists. Final residual was then the segmentIntersect call's arg-emission order (target evals the
+    f32 x,y,z BEFORE the ptr args): reorder the callee sig `(x,unusedY,z,a,b,unusedW)` per #137
+    (register-neutral, single caller). 100%, segmentIntersect held 100%, no unit regressions.**
+    KEY REUSABLE FINDING: when a RECOVERED entry copy of a param rotates the whole saved-reg pool, the
+    cause is curveId being pulled into the copy-class; the `|=` keeps it in its original (param) class.
+    (DeepDive2: dll_0014_unk curves_distFn15 96.32→100, commit ca937fc9f. Task open for an even-cleaner
+    non-`|=` form: decl-order/cast/opt-level/init-placement/if-else/opt_lifetimes all INERT — the `|=`
+    (a sanctioned #131 idiom) is the cleanest found.)
+    **WITHIN-CLASS DIRECTION-FLIP COROLLARY (DeepDive2, the harder sibling): when two saved values of
+    the SAME or adjacent class are colored in REVERSED creation-order direction (target ascending
+    first→low reg; mine descending), and the streams are otherwise BYTE-IDENTICAL, source levers are
+    largely INERT — decl-order, ternary↔if/else (MWCC normalises to one select), opt_lifetimes off,
+    opt_level all fail to flip the pair. Confirmed on dll_0256 fn_802BB4B4 (matchFrame multi-def vs
+    state single-def, clean r29↔r30 swap, T=C=181) and the FP conversion-bias families below. These are
+    the genuine #108 "smallest residual" transpositions; the CLASS-reclassification lever above (OR/#131,
+    #130 deref-decouple) only helps when a value is in the WRONG CLASS, not merely the wrong within-class
+    order. Still open — needs a neighbor/interference lever not yet found.**
     OPEN family in dll_0014: the unrolled candidate-collection first-iter `count=1` materializes as
     `mr rCount,rMask` (reuse mask=1) in retail but `li rCount,1` here (curves_getPos, countRandomPoints;
     getControlPointId_2A/2B already match with `li` — the outer-loop/register-pressure context selects
@@ -749,6 +768,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     sum). Cracking ONE applies verbatim to all five — a strong fresh-eyes target. SEPARATE FP-coloring residuals
     (NOT this detour): dll_8B_func03's dominant diff is an 8-reg FP rotation f24..f31 off-by-one (#121/#82
     hoist-coloring); DFRope_Create is gRopeNodeS32ToDoubleBias conversion-bias coloring (#121).
+    **CONVERSION-BIAS COLORING — REFINED SEED (DeepDive2, still OPEN).** The recurring `(f32)(int/s16)x`
+    int→float conversion BIAS double (the `0x4330000080000000` magic, often a symbols.txt symbol mislabeled
+    `data:string "C0"` because 43 30… = "C0") colors at the LOWEST saved FP reg (f24/f28, created FIRST) in
+    RETAIL but the HIGHEST (f31/f30, created LAST) in our builds — rotating every hoisted const web by one.
+    ROOT: the bias web is synthesised during int→float LOWERING (a late pass) AFTER the front-end const
+    webs, so #108 "last-created → highest reg" parks it high; retail created it first. The bias is a NAMED
+    `.sdata2` ref in retail vs a local `@NNN` pool double in ours — CORRELATED but #70-SCORE-NEUTRAL (data
+    bytes match); not the lever, but it hints the named ref is created early (front-end) and the @NNN pool
+    double late. CONFIRMED INERT/REGRESSING (do not re-try): f32-local decl-order (#45, consts are hoisted
+    not the locals), un-naming the product (CSEs back), LITERAL operands (fixes the bias to f28 but FOLDS
+    the runtime fmul → 1 instr short, e.g. dim2icicle prod=-75*0.5), moving the const assignments INTO the
+    loop after the conversion (breaks hoisting → DSE), hoisting the conversion OUT of the loop (structure
+    breaks). The untried frontier: force the bias web EARLY (front-end) without folding the multiply, OR
+    make the const webs created AFTER the bias — likely needs the #121 "in-loop literal LICM" shape but the
+    real const values aren't clean literals. (DeepDive2: dim2icicle 99.92, dll_8B_func03 96.03 — both pure
+    bias-vs-const coloring, byte-identical streams.)
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
     The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
     before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
