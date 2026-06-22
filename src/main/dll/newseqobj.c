@@ -271,8 +271,8 @@ void fn_80150EDC(void* p1, void* p2)
     fn_8015039C(p1, p2);
 
     {
-        f32 zero;
-        if (*(f32*)((u8*)p2 + 0x328) != (zero = lbl_803E2740) &&
+        f32 zero = lbl_803E2740;
+        if (*(f32*)((u8*)p2 + 0x328) != zero &&
             *(u16*)((u8*)p2 + 0x338) != 0)
         {
             *(f32*)((u8*)p2 + 0x328) = *(f32*)((u8*)p2 + 0x328) - timeDelta;
