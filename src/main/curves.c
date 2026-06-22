@@ -412,7 +412,8 @@ f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 
     if (outTangent != NULL)
     {
-        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c;
+        f32 e = lbl_803DE664 * a;
+        *outTangent = t * (lbl_803DE660 * b + e * t) + c;
     }
     return lbl_803DE678 * (t * (t * (a * t + b) + c) + d);
 }
@@ -431,7 +432,8 @@ f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 
     if (outTangent != NULL)
     {
-        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c;
+        f32 e = lbl_803DE664 * a;
+        *outTangent = t * (lbl_803DE660 * b + e * t) + c;
     }
     return t * (t * (a * t + b) + c) + p0;
 }
@@ -460,7 +462,8 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 
     if (outTangent != NULL)
     {
-        *outTangent = t * (k660 * b + (lbl_803DE664 * a) * t) + tangent1;
+        f32 e = lbl_803DE664 * a;
+        *outTangent = t * (k660 * b + e * t) + tangent1;
     }
     return t * (t * (a * t + b) + tangent1) + p0;
 }
@@ -497,8 +500,9 @@ f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 
     if (outTangent != NULL)
     {
+        f32 e = lbl_803DE664 * a;
         *outTangent = lbl_803DE670 *
-            (t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c);
+            (t * (lbl_803DE660 * b + e * t) + c);
     }
     return lbl_803DE670 * (t * (t * (a * t + b) + c) + d);
 }
