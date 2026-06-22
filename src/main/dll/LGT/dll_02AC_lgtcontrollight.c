@@ -113,8 +113,9 @@ void controllight_update(int obj)
                 int invBit;
                 GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
                 GameObject** p;
+                i = 0, p = objs;
                 invBit = bit == 0;
-                for (i = 0, p = objs; i < count; i++)
+                for (; i < count; i++)
                 {
                     GameObject* lightObj = *p;
                     if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
