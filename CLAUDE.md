@@ -1097,9 +1097,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ISOLATION INGREDIENT (why batch-#1's minimal TU couldn't reproduce the rotation): the do-while's ~7 COMPETING
     SAVED-REG WEBS (curve/nextCurve/hitCount/…) — they're what make the curveId-pull rotate the WHOLE pool; a
     minimal TU with fewer webs doesn't rotate. So to reproduce the rotation in isolation (and then hunt the clean
-    copy-affinity-DEFEATER), ADD ~7 competing saved-reg webs across the do-while. This UNIFIES with the animobjd2
-    #126 copy-pull (same mechanism, opposite direction: animobjd2 WANTS the pull, curves wants to PREVENT it) —
-    crack the copy-pull trigger and you get BOTH the force (animobjd2) and the defeat (curves no-hack 100%) levers.
+    copy-affinity-DEFEATER no-hack form), ADD ~7 competing saved-reg webs across the do-while.
+    ⚠️ CORRECTION (lead-verified both-objs, retracting an earlier over-promise): animobjd2 fn_8013E0D0 is NOT a
+    copy-pull bed for this — its `u8* p = st;` (cases 3/4) is a WALKER INIT (`p += 4` in a 7-iter loop), NOT a
+    same-value copy, so there's nothing to coalesce. Verified: ours-vs-target opcode streams are IDENTICAL except
+    ours has +6 `srawi` (the #150 signed-LL form, 6 vs 0); animobjd2's obj/st param-low-vs-target-high coloring is
+    PURE COLORING DOWNSTREAM of that srawi pressure perturbing the interference graph — solving #150 cleanly likely
+    fixes both (diagnostic: apply the u32 form, accept the temporary 0-store-steal, check if obj/st flip to
+    r30/r31). So the copy-affinity-DEFEATER must be hunted via the 7-web ISOLATION (not animobjd2). The `|=`
+    placeholder is the working solution meanwhile; the no-hack defeater is a lower-priority open target.
     **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
     spending levers; it tells you which lever-family to reach for (both kinds are winnable):**
     **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
