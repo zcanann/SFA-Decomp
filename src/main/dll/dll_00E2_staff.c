@@ -731,12 +731,12 @@ typedef struct StaffState
     u8 pad8A[0x28];
     s16 fieldB2;
     u8 padB4[5];
-    s8 fieldB9;
+    s8 swipeTextureIndex;
 } StaffState;
 
 s16 staff_getHitReactValue(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->hitReactValue; }
 
-s32 staff_func16(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->fieldB9; }
+s32 staff_func16(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->swipeTextureIndex; }
 
 extern f32 lbl_803E3420;
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
