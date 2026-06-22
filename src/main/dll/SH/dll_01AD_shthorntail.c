@@ -507,8 +507,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
             obj->facingAngle += animEvents.rootPitch;
         }
-        eventId = (s8*)&animEvents;
-        for (i = 0; i < animEvents.triggerCount; i = i + 1)
+        for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1)
         {
             if (eventId[0x13] == '\0')
             {
@@ -539,7 +538,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         dll_2E_func03(obj, runtime);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
-            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0)
+            SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0)
         {
             fn_8003B228((int)obj, (int)runtime->collisionShapeState);
         }
