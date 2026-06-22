@@ -587,13 +587,13 @@ void Camera_ProjectWorldSphere(
 void viewportEffectFn_8000e380(void)
 {
     CameraViewSlot* slot;
-    f32 falloffTime;
-    f32 shakeTimer;
     f32 expTerm;
+    f32 one;
+    f32 factorial;
     f32 n;
     f32 term;
-    f32 factorial;
-    f32 one;
+    f32 falloffTime;
+    f32 shakeTimer;
     f32 sinePhase;
     s32 i;
 
