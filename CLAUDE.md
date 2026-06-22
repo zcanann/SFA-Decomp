@@ -102,6 +102,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     are correct; isolate a lone regressor with a block-scope fn-ptr cast.
 12. **Model a single-bit flag as a C bitfield** (`u8 x:1;` at the `rlwimi`-implied bit) → clean-C
     `li; rlwimi`. #39 extends to multiple bits at one byte offset via a bitfield-overlay struct.
+    SOURCE-TYPE discriminator (probe-confirmed byte-exact, fn_80138908): assigning a bitfield from an
+    INT source emits `clrlwi rV,rV,24` (narrow the int to the u8 container) THEN `lbz; rlwimi; stb` —
+    both the clrlwi-narrow AND the rlwimi-insert. A `u8`-typed source DROPS the clrlwi (just
+    `lbz; rlwimi; stb`). So when the target shows `clrlwi; lbz; rlwimi; stb`, write
+    `struct { ...; u8 field:1; }` with an INT-typed source value (`s->field = intExpr;`); count the
+    leading `:1` fields to land the rlwimi bit. A manual `|= mask` gives no rlwimi; a u8 source gives no clrlwi.
 13. **Reorder `case` labels to target block-address order** (read block addrs / the jump table from
     the unit's data `.s`). A dropped empty case shifts a binary-search pivot — count target's cmpwi
     values to recover the full case set and add `case K: break;`. Empty-case islands can be
