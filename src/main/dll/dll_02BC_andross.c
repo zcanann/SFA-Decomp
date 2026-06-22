@@ -315,12 +315,7 @@ void andross_update(int obj)
     SunVec3 thrustBArg;
     SunVec3 thrustA;
     SunVec3 thrustB;
-    f32 local_90;
-    f32 local_88;
-    f32 local_80;
-    f32 local_78;
     u32 randOffsetY;
-    f32 local_50;
     state = ((GameObject*)obj)->extra;
     moveChanged = 0;
     stateChanged = 0;
