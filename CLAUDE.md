@@ -714,10 +714,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     DON'T use the alternatives: a named-POINTER local (`char* vx = glob + i*0x40`) LOSES strength-reduction
     (CSE-confuses with the 28-stride → no `addi 64`, 95.98→89.24); a typed-INDEX (`T* vx = &arr[i*4]`) fixes the
     coloring but makes vx a walked pointer → hoists the base into 2 extra saved regs (frame +16, 95.98→92.6).
-    The offset-int form is the GLOBAL-base analog of the validator's local-base relocate-lever. OPEN sub-case:
-    a 2-CONDITION gate (`g->active && g->f18==0`, waterfx's WAKE loop) changes the reducer's stride order
-    (32→r29 not 64) → offset-int net-negative both orders there; that gate-changes-reducer-order variant is
-    still to map. The
+    The offset-int form is the GLOBAL-base analog of the validator's local-base relocate-lever. ★ PER-LOOP
+    ORDER (the wake sub-case, validator-cracked — the 2-condition-gate hypothesis DISPROVEN): each loop has its
+    OWN target stride→reg order, and the 2-condition gate (`g->active && g->f18==0`) does NOT change it. RIPPLE
+    target: 64→r29 (highest) → create vtx(64) FIRST. WAKE target: 32→r29 (highest), 64→r28 — 32/64 SWAPPED vs
+    ripple → create vtxDesc(32) FIRST. So DON'T blanket-apply one order; READ each loop's target stride→reg map
+    and create the offset-int strides in DESCENDING-TARGET-REG order (the stride retail puts highest, first).
+    (Probe: wake_32first → 32→r31/64→r30/28→r29 = wake target relative order ✓.) The
     counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
