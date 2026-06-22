@@ -100,7 +100,10 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
         q7++;
     }
 
-    if (pts[1] != NULL && pts[2] != NULL)
+    if (pts[1] == NULL || pts[2] == NULL)
+    {
+        return;
+    }
     {
         j = 0;
         w1 = o1;
