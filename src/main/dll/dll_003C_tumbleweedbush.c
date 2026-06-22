@@ -806,9 +806,9 @@ void linkDrawFn_801302c0(void)
 {
     extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
+    LinkMenuItemDB* base;
     LinkMenuItemDB* sel;
     LinkMenuItemDB* p;
-    LinkMenuItemDB* base;
     int four = 4;
     void* tex;
     int selLeft;
