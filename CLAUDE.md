@@ -751,28 +751,37 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     So the dev simply happened to write `previousCurveId = curveId`, and the exact `mr r8,r27` needs that
     curveId-valued COPY to materialize WITHOUT the copy-affinity cascade — which only a non-elidable op
     on curveId achieves: the `|=` (folds to mr, 100%) or a memory recompute `curve->id` (emits lwz +
-    rotates volatiles, 98.27%). No plain-C curveId-copy seed avoids the cascade (96.5%). VERDICT: the
-    seed=NONE form is the honest, behaviorally-identical, hack-free source at 99.56% (1 dead-instr off);
-    the `|=` is the only 100% but it's the cosmetic-copy hack. Recommend the integrity owner choose
-    seed=NONE (real C, 1 instr) over the fake 100 — the lost instr is a provably-dead seed materialization.
+    rotates volatiles, 98.27%). The forms tried SO FAR don't yet make the faithful `= curveId` copy emit
+    `mr r8,r27` without the copy-affinity cascade — that's the within-class copy-affinity lever (★ classifier),
+    OPEN and not yet found (this byte-identical-except-one-reg shape has always fallen to the right reframe,
+    e.g. #130/#131 — assume a clean source form exists and keep hunting). DECISION (integrity owner): KEEP
+    the `|=` committed at 100% as the working PLACEHOLDER; honest hack-free fallbacks are documented —
+    `= NONE` (99.56%, behaviorally identical, 1 provably-dead seed instr) and `= curveId` (96.5%, the true
+    source MWCC currently mis-renders). The genuine no-hack 100% awaits the copy-affinity reframe (task #5,
+    still open).
     **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
-    spending levers; it tells you tractable-vs-deepest-frontier:**
+    spending levers; it tells you which lever-family to reach for (both kinds are winnable):**
     **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
     vs multi-def). Tells: the whole pool ROTATES (curveId param→copy pushed everything up one). Levers:
     OR/#131 (keep a copy-source in its param class), #130 deref-decouple, #126 param-type, #137 reorder.
     This is curves_distFn15, and the detour family (#138/#143/#149). GO AFTER THESE.
-    **(2) PURE WITHIN-CLASS ORDER/FREE-REG CHOICE (DEEPEST-FRONTIER OPEN): right pool, wrong slot —
-    which of two FREE same-class regs, or reversed creation-order direction.** Signature: streams are
-    BYTE-IDENTICAL except the reg names; T=C instr count; no recovered copy. Source levers are INERT:
-    decl-order/#61b, ternary↔if/else (MWCC normalises to one select), opt_lifetimes off, opt_level,
-    block-scope re-decl, #131 |=, #134 (int)(long), re-derive — all confirmed inert (DeepDive2 on
-    dll_0256 fn_802BB4B4 r29↔r30 T=C=181 + the conversion-bias families; WorkerA on kaldachom control
-    r28↔r29 — block-scope was the ONLY mover and it shifted the swap to a DIFFERENT value, net worse).
-    The real lever is register PRESSURE / neighbor liveness, but extending a neighbor's range across the
-    value's span usually means MOVING A CALL (mismatches) — the open hard part. Likely needs a
-    compiler-internals/tooling angle (a cheap extra use that extends a neighbor WITHIN the existing
-    schedule?). PARK IT WELL (positive: "needs a not-yet-found lever"), do NOT grind it — pivot to
-    class-reclassification/detour/structural residuals where wins are clean.**
+    **(2) PURE WITHIN-CLASS ORDER/FREE-REG CHOICE (OPEN — clean source form not yet found): right pool,
+    wrong slot — which of two FREE same-class regs, or reversed creation-order direction.** Signature:
+    streams are BYTE-IDENTICAL except the reg names; T=C instr count; no recovered copy. This exact
+    "byte-identical-except-one-reg" shape has a PERFECT crack record once the reframe lands — #130
+    (dim2roofrub: five prior agents called it as-good-as-it-gets → 100%) and #131 both lived here. So a
+    clean source form EXISTS; it's just not mapped yet — treat this as not-yet-found, never as a wall.
+    TRIED-SO-FAR (a launchpad to skip, NOT evidence of impossibility): decl-order/#61b, ternary↔if/else
+    (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
+    #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
+    T=C=181 + conversion-bias families; WorkerA kaldachom control r28↔r29 — block-scope was the ONLY
+    mover, shifted the swap to a different value). UNTRIED LEADS to attack fresh: register PRESSURE /
+    neighbor liveness (find a cheap extra USE that extends a neighbor's range WITHIN the existing
+    schedule — no call-move needed); perturb a NEIGHBOR web's creation order rather than the value's;
+    a probe_battery A/B sweep; map which source construct makes MWCC create this value earlier. For
+    THROUGHPUT: bank the clean classes (class-reclassification/detour/structural) first, then return to
+    this with FRESH EYES (derive from the asm as if new) — it falls to the right reframe, as this shape
+    always has.**
     OPEN family in dll_0014: the unrolled candidate-collection first-iter `count=1` materializes as
     `mr rCount,rMask` (reuse mask=1) in retail but `li rCount,1` here (curves_getPos, countRandomPoints;
     getControlPointId_2A/2B already match with `li` — the outer-loop/register-pressure context selects
@@ -809,13 +818,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the runtime fmul → 1 instr short, e.g. dim2icicle prod=-75*0.5), moving the const assignments INTO the
     loop after the conversion (breaks hoisting → DSE), hoisting the conversion OUT of the loop (structure
     breaks), `prod = c34v * literal` (one named one literal — inert + a fmuls-operand-order regress),
-    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds, inert). ROOT (now
-    pinned): the bias web is synthesised during LATE int→float lowering REGARDLESS of source position
-    (the const webs are already created at the front-end), so #108 "last-created → highest" parks it
-    high; no source reordering moves a late-phase web before a front-end one without changing the
-    structure. This is the WITHIN-CLASS-ORDER frontier (★ classifier above) in FP form — PARK as
-    deepest-frontier; likely needs a compiler-internals/tooling angle (force conv-bias front-end
-    creation, or a probe of MWCC's lowering-pass web-creation counter). (DeepDive2: dim2icicle 99.92,
+    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds, inert). WORKING
+    HYPOTHESIS (a clue to attack, NOT a verdict): in the forms tried so far, the bias web gets
+    synthesised during int→float LOWERING (a late pass) AFTER the front-end const webs, so #108
+    "last-created → highest" parks it high while retail has it first. That tells us exactly WHAT to
+    change — we need the source shape whose bias double is created EARLY (front-end) — and we simply
+    haven't found it yet. This is the WITHIN-CLASS-ORDER shape (★ classifier) in FP form; a clean source
+    form is ASSUMED TO EXIST (same byte-identical-except-one-reg shape that #130/#131 cracked). UNTRIED
+    LEADS to attack fresh: find the C that makes the bias a front-end const — retail uses a NAMED
+    `.sdata2` ref (created early); the C that names it (vs our late `@NNN` pool double) likely creates
+    it first, so chase that spelling; restructure so the conversion is a front-end node; probe_battery
+    A/B + read MWCC's web-creation order to learn which construct creates the bias earliest. For
+    THROUGHPUT bank the clean classes first and come back FRESH — "lowered late" is a clue, not a
+    ceiling. (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
