@@ -1112,26 +1112,26 @@ int dbstealerworm_stateHandlerB05(int obj, int p2)
             Stack_Pop(sub->msgStack, buf);
         }
         base = sub->cfg;
-        n = (sub->unk20 - *(int*)base) / 12;
+        n = (sub->routeCursor - *(int*)base) / 12;
         if (n >= *(s16*)(base + 4))
         {
-            sub->unk20 = 0;
+            sub->routeCursor = 0;
         }
-        if (*(void**)&sub->unk20 == NULL)
+        if (*(void**)&sub->routeCursor == NULL)
         {
-            sub->unk20 = *(int*)sub->cfg;
+            sub->routeCursor = *(int*)sub->cfg;
             ((GameObject*)obj)->anim.localPosX = ((DbstealerwormPlacement*)data)->homePosX;
             ((GameObject*)obj)->anim.localPosY = ((DbstealerwormPlacement*)data)->homePosY;
             ((GameObject*)obj)->anim.localPosZ = ((DbstealerwormPlacement*)data)->homePosZ;
         }
-        if (*(int*)(sub->unk20 + 4) != 0)
+        if (*(int*)(sub->routeCursor + 4) != 0)
         {
             *(int*)&((BaddieState*)p2)->targetObj = ObjGroup_FindNearestObjectForObject(
-                *(int*)(sub->unk20 + 4), obj, &range);
+                *(int*)(sub->routeCursor + 4), obj, &range);
         }
         if (*(void**)&((BaddieState*)p2)->targetObj != NULL)
         {
-            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, p2, *(int*)sub->unk20);
+            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, p2, *(int*)sub->routeCursor);
         }
         return 0;
     }

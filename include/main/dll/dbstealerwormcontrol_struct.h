@@ -16,7 +16,7 @@ typedef struct DbStealerwormControl
     int linkedObj; /* ObjMsg target object */
     s16 unk1C;
     u8 unk1E[2];
-    int unk20; /* cursor into the cfg route list (12-byte entries) */
+    int routeCursor; /* cursor into the cfg route list (12-byte entries) */
     int msgStack; /* Stack_* handle; 3-word messages */
     int unk28;
     int unk2C;
