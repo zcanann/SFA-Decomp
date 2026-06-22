@@ -680,7 +680,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     E1 98.9% mr@0x40; phi+embed E2 99.94% mr@0x80 w/ 2-instr base-reg split; OR 100%.)
 134. **#131's OR no-op is NOT the only 100% — a NO-OP WIDTH CAST splits the VN and is PLAUSIBLE C.**
     `slotLife = state + (int)(long)off;` gives the 2nd same-value pointer a DISTINCT value-number
-    (#114: conversion nodes split VN) → MWCC keeps it as a non-coalesced LAZY copy (the target's
+    (#114-consistent, lead+validator verified: the cast makes the two address EXPRESSIONS syntactically
+    DIFFERENT so they don't CSE/coalesce — NOT a VN re-execution of identical sub-exprs) → MWCC keeps it as a non-coalesced LAZY copy (the target's
     `mr r29,r31`), a single web used by EVERY access of that field — exactly what #131/#132 needed,
     with NO bitwise op. KEY: cast a SUB-OPERAND of the address sum (`state + (int)(long)off`), NOT
     the pointer variable (`(int)(long)slot` FOLDS — cast-of-copy is simplified; this is why #133's
