@@ -1234,6 +1234,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     dll_7B base[0x128] is a CONSTANT offset yet DETOURS — contradicts "const-offset = direct"; the extra factor is
     likely the CONDITIONAL first-use (`if(...) base[0x128]=…`) routing base through volatile r3 for the guarded store.
     So a 2nd sub-trigger may be CONDITIONAL/guarded-first-use, not just runtime-index — open, worth pinning.
+    ✅ FINAL THREE-CASE SCOPING (expgfx, oracle hunt exhausted) — #155 splits cleanly, only ONE case is open:
+    (1) SCALAR / const-offset global → ALWAYS DIRECT (no fix needed). (2) SINGLE-USE array walk (one access/iter,
+    e.g. expgfx_release `mm_free(gPoolBases[poolIndex])`) → #143 INDEX FORM `glob[i]` gives the DIRECT walker —
+    SOLVED (confirmed in a matched fn; this is the #143 win). (3) MULTI-FIELD struct walk (`entry->f1; entry->f2;
+    …; entry++`, e.g. modellight) → the LONE OPEN CORE: SOURCE FORMS EXHAUSTED (pointer-walk → base-init detours
+    `addi r0,r3; mr rWalker`; index `glob[ch].field` → REGRESSES, recomputes base+ch*size per field 4×/iter;
+    hybrid `entry=&glob[ch]` per iter → REGRESSES). No source form escapes the base-init routing through r0 → it's
+    a PURE ALLOCATION-STATE residual (the allocator's base-init slot choice), NOT source-expressible by any tried
+    form. So #155's open core is narrowly "multi-field-struct-walk base-init detour" + the dll_7B conditional-
+    first-use sibling — both allocation-state, assumed-reachable but no clean source form found (a fresh-eyes
+    reframe or a future allocation-perturbation discovery, like the kind-2 frontier got #107). Cases 1+2 are
+    closed; only case 3 remains.
     **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
     within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
     one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
