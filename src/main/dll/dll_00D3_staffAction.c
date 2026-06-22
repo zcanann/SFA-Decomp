@@ -43,7 +43,7 @@ extern int* gBaddieControlInterface;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803E2FDC;
+extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
 extern f32 lbl_803E3020;
