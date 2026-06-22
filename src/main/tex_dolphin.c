@@ -818,11 +818,11 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
 {
     u32 shader;
     u32 shaderIdx;
-    u8 fogRgba[4];
-    u8 ambR;
-    u8 ambG;
-    u8 ambB;
     int fogColorWord;
+    u8 ambB;
+    u8 ambG;
+    u8 ambR;
+    u8 fogRgba[4];
     int _base;
     u32 _bits;
     u32 uPos;
