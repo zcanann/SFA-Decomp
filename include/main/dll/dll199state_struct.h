@@ -12,7 +12,7 @@ typedef struct Dll199State
     u8 phase;
     u8 unk10;
     u8 pad11[0x12 - 0x11];
-    u8 unk12;
+    u8 triggered; /* 0x12: one-shot latch for the timer-expiry menu action */
     u8 pad13[0x18 - 0x13];
 } Dll199State;
 

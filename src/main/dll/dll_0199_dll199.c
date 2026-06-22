@@ -63,20 +63,20 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     st = ((GameObject*)obj)->extra;
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    if (((Dll197State*)st)->unkA != 0)
+    if (((Dll197State*)st)->scrollVel != 0)
     {
-        ((Dll197State*)st)->unk8 += ((Dll197State*)st)->unkA;
-        if (((Dll197State*)st)->unk8 <= 1 && ((Dll197State*)st)->unkA <= 0)
+        ((Dll197State*)st)->scrollPos += ((Dll197State*)st)->scrollVel;
+        if (((Dll197State*)st)->scrollPos <= 1 && ((Dll197State*)st)->scrollVel <= 0)
         {
-            ((Dll197State*)st)->unk8 = 1;
-            ((Dll197State*)st)->unkA = 0;
+            ((Dll197State*)st)->scrollPos = 1;
+            ((Dll197State*)st)->scrollVel = 0;
         }
-        else if (((Dll197State*)st)->unk8 >= 0x46 && ((Dll197State*)st)->unkA >= 0)
+        else if (((Dll197State*)st)->scrollPos >= 0x46 && ((Dll197State*)st)->scrollVel >= 0)
         {
-            ((Dll197State*)st)->unk8 = 0x46;
-            ((Dll197State*)st)->unkA = 0;
+            ((Dll197State*)st)->scrollPos = 0x46;
+            ((Dll197State*)st)->scrollVel = 0;
         }
-        (**(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, ((Dll197State*)st)->unk8 & 0xff);
+        (**(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, ((Dll197State*)st)->scrollPos & 0xff);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -85,7 +85,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
         switch (eventId)
         {
         case 0xb:
-            ((Dll197State*)st)->unkF = 7;
+            ((Dll197State*)st)->menuState = 7;
             break;
         case 1:
             getEnvfxAct(obj, obj, 0xc3, 0);
@@ -104,16 +104,16 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             ((Dll197State*)st)->unk10 = 1;
             break;
         case 4:
-            ((Dll197State*)st)->unkF = 4;
+            ((Dll197State*)st)->menuState = 4;
             ((Dll197State*)st)->unk10 = 2;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x1cf, 0);
             GameBit_Set(0x126, 1);
-            ((Dll197State*)st)->unkA = -3;
+            ((Dll197State*)st)->scrollVel = -3;
             break;
         case 5:
             ((Dll197State*)st)->unk10 = 3;
-            ((Dll197State*)st)->unkA = -3;
+            ((Dll197State*)st)->scrollVel = -3;
             GameBit_Set(0x129, 1);
             break;
         case 6:
@@ -121,7 +121,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             break;
         case 7:
             GameBit_Set(0x1cf, 0);
-            ((Dll197State*)st)->unkA = -3;
+            ((Dll197State*)st)->scrollVel = -3;
             break;
         case 9:
             GameBit_Set(0x128, 1);
@@ -134,26 +134,26 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
             GameBit_Set(0x127, 1);
             break;
         case 10:
-            ((Dll197State*)st)->unk8 = 100;
+            ((Dll197State*)st)->scrollPos = 100;
             (**(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                3, 0x2d, 0x50, ((Dll197State*)st)->unk8 & 0xff, 0);
+                3, 0x2d, 0x50, ((Dll197State*)st)->scrollPos & 0xff, 0);
             break;
         }
         animUpdate->eventIds[i] = 0;
     }
-    switch ((int)((Dll197State*)st)->unkF)
+    switch ((int)((Dll197State*)st)->menuState)
     {
     case 7:
         if ((getButtonsHeld(0) & 0x100) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-            ((Dll197State*)st)->unkF = 8;
+            ((Dll197State*)st)->menuState = 8;
             ((Dll197State*)st)->unk2 = 0;
         }
         else if ((getButtonsHeld(0) & 0x200) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-            ((Dll197State*)st)->unkF = 7;
+            ((Dll197State*)st)->menuState = 7;
             ((Dll197State*)st)->unk2 = 0;
         }
         break;
@@ -243,11 +243,11 @@ void dll_199_update(int obj)
         if (state[1] <= 0)
         {
             state[1] = 0;
-            if (((Dll199State*)state)->unk12 == 0)
+            if (((Dll199State*)state)->triggered == 0)
             {
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface +
                     0x18))(3, 0x2c, 0x50, state[4], 0);
-                ((Dll199State*)state)->unk12 = 1;
+                ((Dll199State*)state)->triggered = 1;
             }
         }
     }

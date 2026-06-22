@@ -335,7 +335,7 @@ void dll_197_init(int obj, int data)
     }
     *(u8*)(st + 0xb) = *(u8*)(data + 0x19);
     ((Dll197State*)st)->unkC = 0;
-    ((Dll197State*)st)->unkF = 0;
+    ((Dll197State*)st)->menuState = 0;
     *(int*)st = *(s16*)(data + 0x1e);
     stk.f = lbl_803E513C;
     switch (*(u8*)(st + 0xb))
@@ -349,9 +349,9 @@ void dll_197_init(int obj, int data)
         }
         break;
     case 1:
-        ((Dll197State*)st)->unkF = *(s16*)(data + 0x1c);
+        ((Dll197State*)st)->menuState = *(s16*)(data + 0x1c);
         ((Dll197State*)st)->unkD = 0;
-        ((Dll197State*)st)->unk8 = ((Dll197State*)st)->unkF * 0x28 + 0x398;
+        ((Dll197State*)st)->scrollPos = ((Dll197State*)st)->menuState * 0x28 + 0x398;
         ((Dll197State*)st)->unkE = 0;
         break;
     }
