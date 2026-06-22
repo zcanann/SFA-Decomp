@@ -1440,7 +1440,7 @@ extern void memcpy(void* dst, void* src, int n);
 void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
-    u8 segCount;
+    int segCount;
     int seg;
     u8* sp;
     int li;
