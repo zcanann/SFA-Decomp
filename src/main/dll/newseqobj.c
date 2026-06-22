@@ -448,7 +448,8 @@ void fn_80150910(int* obj, u8* state)
             d = lbl_803E2778;
         }
         {
-            f32 spd = (lbl_803E2778 - d) * gSidekickToyDistToSpeedScale;
+            f32 diff = *(f32*)&lbl_803E2778 - d;
+            f32 spd = diff * gSidekickToyDistToSpeedScale;
             *(f32*)(state + 0x310) = spd * ((BaddieState*)state)->pathStep;
         }
         if (*(f32*)(state + 0x310) < lbl_803E2780)
