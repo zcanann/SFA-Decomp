@@ -60,12 +60,12 @@ typedef struct SnowBikeState {
     f32 unk3F4;             /* 0x3f4 */
     f32 unk3F8;             /* 0x3f8 */
     u8 pad3FC[0x10];
-    s16 unk40C;             /* 0x40c: yaw current */
+    s16 yawCurrent;             /* 0x40c: yaw current */
     s16 yaw;             /* 0x40e: yaw target */
     int unk410;             /* 0x410 */
     u8 pad414[0x8];
-    s16 unk41C;             /* 0x41c */
-    s16 unk41E;             /* 0x41e */
+    s16 savedRotY;             /* 0x41c: saved anim.rotY (restored after temp halo modify) */
+    s16 savedRotZ;             /* 0x41e: saved anim.rotZ (restored after temp halo modify) */
     u8 unk420;              /* 0x420 */
     s8 riderMode;              /* 0x421: rider mode */
     s8 unk422;              /* 0x422 */
@@ -73,7 +73,7 @@ typedef struct SnowBikeState {
     f32 impactShakeTimer;   /* 0x424: accumulates timeDelta while grounded; drives doRumble + CameraShake_SetAllMagnitudes */
     u8 flags428;            /* 0x428: SnowBikeFlags overlay byte */
     u8 pad429[0x3];
-    int unk42C;             /* 0x42c: linked object */
+    int linkedObj;             /* 0x42c: linked object */
     f32 unk430;             /* 0x430 */
     u8 bikeType;              /* 0x434: bike kind */
     u8 bikeVariant;              /* 0x435: variant */

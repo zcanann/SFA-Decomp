@@ -288,12 +288,12 @@ void fn_801EC7A0(int p1, int p2)
     v.angles[2] = 0;
     mtxRotateByVec3s((void*)(p2 + 0xac), v.angles);
 
-    v.angles[0] = ((SnowBikeState*)p2)->unk40C;
+    v.angles[0] = ((SnowBikeState*)p2)->yawCurrent;
     v.angles[1] = 0;
     v.angles[2] = 0;
     setMatrixFromObjectPos((void*)(p2 + 0xec), v.angles);
 
-    v.angles[0] = -((SnowBikeState*)p2)->unk40C;
+    v.angles[0] = -((SnowBikeState*)p2)->yawCurrent;
     v.angles[1] = 0;
     v.angles[2] = 0;
     mtxRotateByVec3s((void*)(p2 + 0x12c), v.angles);
@@ -525,8 +525,8 @@ void SnowBike_hitDetect(int obj)
     if (state->riderMode == 2)
     {
         fn_801EB940(obj, (u8*)state);
-        state->unk41C = ((GameObject*)obj)->anim.rotY;
-        state->unk41E = ((GameObject*)obj)->anim.rotZ;
+        state->savedRotY = ((GameObject*)obj)->anim.rotY;
+        state->savedRotZ = ((GameObject*)obj)->anim.rotZ;
         ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY + state->haloPitchDrift;
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + (state->unk410 + state->unk598);
     }
@@ -543,7 +543,7 @@ void SnowBike_hitDetect(int obj)
         }
         else
         {
-            if (*(void**)&state->unk42C == NULL)
+            if (*(void**)&state->linkedObj == NULL)
             {
                 goto clamp;
             }
@@ -584,13 +584,13 @@ void SnowBike_hitDetect(int obj)
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(mag * lbl_803E5AF8);
     }
-    if (*(void**)&state->unk42C != NULL)
+    if (*(void**)&state->linkedObj != NULL)
     {
         k = lbl_803E5C00;
         OSReport(&sSnowBikeVelDebugFmt, mag);
-        if (*(s16*)(state->unk42C + 0x46) == 909
-            || *(s16*)(state->unk42C + 0x46) == 910
-            || *(s16*)(state->unk42C + 0x46) == 1236)
+        if (*(s16*)(state->linkedObj + 0x46) == 909
+            || *(s16*)(state->linkedObj + 0x46) == 910
+            || *(s16*)(state->linkedObj + 0x46) == 1236)
         {
             k = lbl_803E5B88;
         }
@@ -679,7 +679,7 @@ clamp:
     state->refPosX = ((GameObject*)obj)->anim.localPosX;
     state->refPosY = ((GameObject*)obj)->anim.localPosY;
     state->refPosZ = ((GameObject*)obj)->anim.localPosZ;
-    state->unk42C = 0;
+    state->linkedObj = 0;
 }
 
 void SnowBike_release(void)
@@ -733,7 +733,7 @@ void SnowBike_init(int obj, u8* params, int flag)
         Obj_ClearModelSlotIndex(obj);
     }
     rot = params[0x18] << 8;
-    ((SnowBikeState*)state)->unk40C = rot;
+    ((SnowBikeState*)state)->yawCurrent = rot;
     ((SnowBikeState*)state)->yaw = rot;
     ((GameObject*)obj)->anim.rotX = rot;
     fn_801EC928(obj, state);
@@ -925,8 +925,8 @@ void SnowBike_update(int obj)
         }
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-    ((GameObject*)obj)->anim.rotY = ((SnowBikeState*)state)->unk41C;
-    ((GameObject*)obj)->anim.rotZ = ((SnowBikeState*)state)->unk41E;
+    ((GameObject*)obj)->anim.rotY = ((SnowBikeState*)state)->savedRotY;
+    ((GameObject*)obj)->anim.rotZ = ((SnowBikeState*)state)->savedRotZ;
     if (((SnowBikeFlags*)(state + 0x428))->b04 || GameBit_Get(((SnowBikeState*)state)->gameBitId) != 0)
     {
         ((SnowBikeFlags*)(state + 0x428))->b04 = 1;

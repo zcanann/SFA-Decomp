@@ -296,7 +296,7 @@ void fn_801EB334(int* obj)
         state->impactShakeTimer = fz;
         sv = *(s16*)obj;
         state->yaw = sv;
-        state->unk40C = sv;
+        state->yawCurrent = sv;
         state->unk430 = lbl_803E5B74;
     }
     ObjHits_EnableObject((u32)obj);
@@ -421,7 +421,7 @@ void fn_801EB634(int obj, int stateRaw)
         case 0xd:
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                st->unk42C = hitObj;
+                st->linkedObj = hitObj;
                 st->collisionFxDamping = lbl_803E5AEC;
             }
             break;
@@ -449,7 +449,7 @@ void fn_801EB634(int obj, int stateRaw)
         }
         hit = *(u32*)(hitReact + 0x50);
         if (((hit != 0) &&
-                (hitObj = hit, *(u32*)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
+                (hitObj = hit, *(u32*)&st->linkedObj = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
             fn_8009A8C8(obj, (double)lbl_803E5BB0);
@@ -555,7 +555,7 @@ void fn_801EB940(short* obj, int stateRaw)
         yawDelta = yawDelta + 0xffff;
     }
     st->yaw = *(s16*)((char*)st + 0x40e) + yawDelta;
-    st->unk40C = st->unk40C + yawDelta;
+    st->yawCurrent = st->yawCurrent + yawDelta;
     obj[1] = obj[1] + ((int)st->unk310 >> ival);
     obj[2] = obj[2] + ((int)st->unk312 >> ival);
     rotClamped = obj[1];
