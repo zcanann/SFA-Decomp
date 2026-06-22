@@ -291,21 +291,21 @@ int arwarwing_incrementCollectedRingCount(int arwing)
 #pragma peephole reset
 
 #pragma peephole off
-void arwarwing_addMaxShield(int arwing, int p2)
+void arwarwing_addMaxShield(int arwing, int amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
-    *(s8*)&state->maxShield = state->maxShield + p2;
+    *(s8*)&state->maxShield = state->maxShield + amount;
 }
 #pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off
-void arwarwing_addShield(int arwing, int p2)
+void arwarwing_addShield(int arwing, int amount)
 {
     ArwingState* state = ((GameObject*)arwing)->extra;
     int v;
 
-    *(s8*)&state->shield = state->shield + p2;
+    *(s8*)&state->shield = state->shield + amount;
     if (*(s8*)&state->shield < 0)
     {
         v = 0;
