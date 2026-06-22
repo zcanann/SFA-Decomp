@@ -332,15 +332,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
-            k = 0;
-            slot = state;
-            do
+            for (k = 0, slot = state; k < 7; slot = slot + 4, k = k + 1)
             {
                 objSetAnimSpeedTo1(*(int*)(slot + 0x700));
-                slot = slot + 4;
-                k = k + 1;
             }
-            while (k < 7);
             Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
@@ -371,15 +366,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x800;
                 ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x1000;
-                j = 0;
-                slot = state;
-                do
+                for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
                 {
                     objSetAnimSpeedTo1(*(int*)(slot + 0x700));
-                    slot = slot + 4;
-                    j = j + 1;
                 }
-                while (j < 7);
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
                 slot = *(int*)&((GameObject*)obj)->extra;
                 if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
@@ -392,9 +382,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             else if (Obj_IsLoadingLocked())
             {
                 ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x800;
-                j = 0;
-                slot = state;
-                do
+                for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8*)(setup + 4) = 2;
@@ -402,10 +390,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     *(s16*)(setup + 0x1a) = j;
                     *(int*)(slot + 0x700) = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                             *(int*)&((GameObject*)obj)->anim.parent);
-                    slot = slot + 4;
-                    j = j + 1;
                 }
-                while (j < 7);
                 Sfx_PlayFromObject(obj, 0x3db);
                 Sfx_AddLoopedObjectSound(obj, 0x3dc);
             }
