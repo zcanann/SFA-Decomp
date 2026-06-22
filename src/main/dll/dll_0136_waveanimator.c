@@ -153,15 +153,15 @@ void fn_801923F8(int* cfgArg)
                 if (v < colorSplitZero)
                 {
                     f32 t = (v - cfg->minHeight) / negMin;
-                    ((u8*)lbl_803DDAEC)[byte] = lbl_803E3F54 * t + lbl_803E3F50;
-                    ((u8*)lbl_803DDAEC)[byte + 1] = lbl_803E3F5C * t + lbl_803E3F58;
-                    ((u8*)lbl_803DDAEC)[byte + 2] = lbl_803E3F64 * t + lbl_803E3F60;
+                    *(u8*)((u8*)lbl_803DDAEC + byte) = lbl_803E3F54 * t + lbl_803E3F50;
+                    *(u8*)((u8*)lbl_803DDAEC + byte + 1) = lbl_803E3F5C * t + lbl_803E3F58;
+                    *(u8*)((u8*)lbl_803DDAEC + byte + 2) = lbl_803E3F64 * t + lbl_803E3F60;
                 }
                 else
                 {
-                    ((u8*)lbl_803DDAEC)[byte] = 255;
-                    ((u8*)lbl_803DDAEC)[byte + 1] = 255;
-                    ((u8*)lbl_803DDAEC)[byte + 2] = 255;
+                    *(u8*)((u8*)lbl_803DDAEC + byte) = 255;
+                    *(u8*)((u8*)lbl_803DDAEC + byte + 1) = 255;
+                    *(u8*)((u8*)lbl_803DDAEC + byte + 2) = 255;
                 }
             }
         }
