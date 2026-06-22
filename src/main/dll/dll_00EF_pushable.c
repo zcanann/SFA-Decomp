@@ -809,7 +809,7 @@ void pushable_init(s16* obj, char* def)
                 }
                 if (found == 0)
                 {
-                    *(f32*)((u8*)state + cnt * 0xc + 0x48) = vtx[0];
+                    *(f32*)((u8*)state + state->pointCount * 0xc + 0x48) = vtx[0];
                     *(f32*)((u8*)state + state->pointCount * 0xc + 0x4c) = vtx[1];
                     *(f32*)((u8*)state + state->pointCount * 0xc + 0x50) = vtx[2];
                     state->pointCount += 1;
