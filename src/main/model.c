@@ -1620,7 +1620,7 @@ void modelAnimResetState(void* m, void* data)
             LOADCOLOR_BLOCK(0x24)
             LOADCOLOR_BLOCK(0x28)
             *(u16*)(p2 + 0x44) = 0;
-            mdl = *(u8**)(p2 + *(u16*)(p2 + 0x44) * 4 + 0x1c) + 0x80;
+            mdl = ((u8**)(p2 + 0x1c))[*(u16*)(p2 + 0x44)] + 0x80;
         }
         else
         {
