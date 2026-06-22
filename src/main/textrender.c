@@ -778,7 +778,6 @@ void* gameTextGet(int textId)
     int slotIndex;
     u16* cachedEntry;
     f32 zero;
-    f32 fadeLimit;
     f32* cachedAlpha;
 
     gameTextBase = gGameTextBase;
@@ -840,12 +839,11 @@ void* gameTextGet(int textId)
             zero = lbl_803DE704;
             *(f32*)(gameTextBase + slotIndex * 4) = zero;
             cachedAlpha = (f32*)(gameTextBase + 0x20 + slotIndex * 4);
-            fadeLimit = gGameTextFadeLimit;
-            if (zero < fadeLimit)
+            if (zero < gGameTextFadeLimit)
             {
                 f32 av = zero + timeDelta;
                 *cachedAlpha = av;
-                if (av >= fadeLimit)
+                if (av >= gGameTextFadeLimit)
                 {
                     sprintf((char*)*(int*)*(int**)((u8*)cachedEntry + 8), strings + 0xefc, textId,
                             sMapDirectoryNameTable[(int)curGameTextDir]);
