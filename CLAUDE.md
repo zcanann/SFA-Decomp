@@ -1075,6 +1075,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     renderParticles (conditional single-use → `lhzx`), and BROKE onMapSetup to 0% (flat loop, 6 walkers). A/B PER FN,
     grep `mr.*r0$` to confirm the count drops, revert on regress. Strongest #155 lead — try it FIRST on any base-mr
     fn with a clean `glob[i]` walker.
+    **WHY IT'S LIMITED (confirmed by reading retail onMapSetup): retail's loop is an UNROLLED pointer-walk
+    (`addi rWalker,r3,0` DIRECT, then disp stores `0(r),4(r),8(r)…`, walker += 8) — i.e. the SOURCE form is already a
+    correct pointer-walk and the ONLY diff is the front-end materialization (direct vs r0+mr). The #143 index form
+    REWRITES the loop and BREAKS the unroll (→0%). The #138 struct-array / #149 compound-accumulator reframes also
+    DON'T apply — poolSlotTypeIds is a FLAT s16 array walked, not a struct array and not a fixed-stride single index.
+    So for FLAT-ARRAY POINTER-WALKS IN UNROLLED LOOPS (onMapSetup, initialise, renderParticles) the base-mr is the
+    PURE #155 front-end materialization with no source reframe yet found — the addi simply must target the walker reg
+    directly instead of r0. UNTRIED: read retail's prologue reg-alloc order and find the construct that makes the
+    walker reg the addi destination (it's the SECOND+ lis;addi into a saved/walker reg that detours; the first is
+    direct). Bank as fresh-eyes-return; the #143 crack only covers NON-unrolled single-walker loops.**
     **OTHER CLUES (dll_000A_expgfx deep-dive):** (1) the bug is BROADER than globals — it's a general "materialize a
     saved-reg value via VOLATILE TEMP r0 then `mr`/copy" vs retail's DIRECT-into-saved. Also hits `extsh r0,r3` then
     copy (vs retail `extsh r24,r3` direct into the saved reg, addremove resourceTableIndex). (2) The FIRST
