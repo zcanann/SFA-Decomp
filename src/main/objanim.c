@@ -992,17 +992,21 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
                         currentInterp += blendWeight * blendAxis[segmentCount];
                     }
                 }
+                value = currentInterp - previousInterp;
             }
-            else if (objAnim->currentMoveProgress > previousProgress)
+            else
             {
-                currentInterp -= moveWeight * axis[segmentCount];
-                if (blendAxis != NULL)
+                if (objAnim->currentMoveProgress > previousProgress)
                 {
-                    currentInterp += blendWeight * blendAxis[segmentCount];
+                    currentInterp -= moveWeight * axis[segmentCount];
+                    if (blendAxis != NULL)
+                    {
+                        currentInterp += blendWeight * blendAxis[segmentCount];
+                    }
                 }
+                value = currentInterp - previousInterp;
             }
 
-            value = currentInterp - previousInterp;
             if (axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT)
             {
                 (&events->rootDeltaX)[axisIndex] = value * rootScale;
