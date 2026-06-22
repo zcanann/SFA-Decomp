@@ -3364,8 +3364,8 @@ void mapDebugRender(int* state)
             else
                 step = 80;
             row = dy / step;
-            cx = wx / 80;
             cz = wz / 80;
+            cx = wx / 80;
             cell = row * 0x40;
             cell += cz * 8;
             cell += cx;
