@@ -565,11 +565,11 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     f32 zero;
     f32 floorSentinel;
 
+    foundBelow = 0;
     topSentinel = gCurvesBoundsMaxSeed;
     floorSentinel = gCurvesBoundsMinSeed;
     zero = lbl_803E0668;
     one = lbl_803E068C;
-    foundBelow = 0;
     points = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], (u32*)&hitCount, 0);
     collision->waterY[0] = topSentinel;
     collision->floorY[0] = topSentinel;
