@@ -2483,12 +2483,21 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             *(volatile f32*)0xCC008000 = outX;
             *(volatile f32*)0xCC008000 = outY;
             *(volatile f32*)0xCC008000 = outZ;
-            *(volatile u8*)0xCC008000 = ((u8*)slot)[12];
-            *(volatile u8*)0xCC008000 = ((u8*)slot)[13];
-            *(volatile u8*)0xCC008000 = ((u8*)slot)[14];
+            {
+                u8 colorR = ((u8*)slot)[12];
+                u8 colorG = ((u8*)slot)[13];
+                u8 colorB = ((u8*)slot)[14];
+                *(volatile u8*)0xCC008000 = colorR;
+                *(volatile u8*)0xCC008000 = colorG;
+                *(volatile u8*)0xCC008000 = colorB;
+            }
             *(volatile u8*)0xCC008000 = alpha;
-            *(volatile s16*)0xCC008000 = vtxStream[4];
-            *(volatile s16*)0xCC008000 = vtxStream[5];
+            {
+                s16 texU = vtxStream[4];
+                s16 texV = vtxStream[5];
+                *(volatile s16*)0xCC008000 = texU;
+                *(volatile s16*)0xCC008000 = texV;
+            }
             vtxStream += 8;
         }
 
