@@ -686,7 +686,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     counter lower (`e=r31, i=r30`). COMMA-init `for(i=0, e=base; i<N; e++, i++){...}` → COUNTER higher,
     walker lower (`i=r31, e=r29`). So: want counter-higher → comma-init; want walker-higher → body-computed.
     (decl-order is correctly inert here — induction webs, not top-loaded #108; the FORM is the induction-class
-    analog of #108's decl-order.) GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
+    analog of #108's decl-order.) SCOPE (probe-verified robust): the rule holds for a counter + one OR
+    MORE walkers, LOCAL or GLOBAL base — body-form always lands the counter LOWEST with the walkers
+    ascending above it. COUNTEREXAMPLE / open multi-induction case (func05): a body-form GLOBAL-base loop
+    whose strides are used as CALL ARGS (not just dereferenced) can color a WALKER below the counter,
+    violating the rule — that's a #155/web-count case with a specific structural trigger NOT reproducible
+    in a simple multi-walker loop; it's a live target the validator is isolating (name the differing web).
+    GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
     body-form for walker-high, and #136(b) counter-0-reuse / #143 typed-index for counter-high.
     (a) LOCAL/register base → comma-init walker `for (i = 0, p = base; i < N; p += stride, i++)`,
