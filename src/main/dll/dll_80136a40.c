@@ -906,7 +906,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
         va_start(args, fmt);
         vsprintf(buf, fmt, args);
         saved = debugDrawFrameBuffer;
-        p1 = (u8*)buf - 1;
+        p1 = (u8*)&buf[-1];
         p2 = (u8*)buf - 1;
         while (p1++, *++p2 != 0)
         {
