@@ -714,7 +714,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* entries = buf.entries;
+    GfxCmd* entries;
     GfxCmd* e;
     u8* base = gDll7BEffectResourceData;
     if (variant == 1)
@@ -727,6 +727,7 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     entries[0].layer = 0;
     entries[0].flags = 0xe;
+    entries = buf.entries;
     entries[0].tex = &base[0xf4];
     entries[0].mode = 4;
     entries[0].x = lbl_803E0D38;
