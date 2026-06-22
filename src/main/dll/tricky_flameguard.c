@@ -69,7 +69,7 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (TRICKY_RUNTIME(st)->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (*(s32*)&TRICKY_RUNTIME(st)->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st) \
     { \
@@ -715,7 +715,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
         if ((u32)trickyState->targetPosition != (best + 0x18))
         {
             trickyState->targetPosition = (f32*)(best + 0x18);
-            trickyState->flags &= ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+            *(s32*)&trickyState->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG;
             trickyState->targetTurnTimer = 0;
         }
         trickyState->guardState = 4;
