@@ -1887,12 +1887,12 @@ foundFirst:
 int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId)
 {
     ExpgfxTableEntry* entry;
+    ExpgfxTableEntry* table;
     int tableIndex;
     int freeIndex;
 
-    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++)
+    for (tableIndex = 0, entry = gExpgfxTableEntries, table = entry; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++)
     {
-        entry = &gExpgfxTableEntries[tableIndex];
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
             (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey))
         {
@@ -1906,9 +1906,9 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
         }
     }
 
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++, table++)
     {
-        if (gExpgfxTableEntries[freeIndex].refCount == 0)
+        if (table->refCount == 0)
         {
             gExpgfxTableEntries[freeIndex].refCount = 1;
             gExpgfxTableEntries[freeIndex].resource = resourceHandle;
