@@ -284,9 +284,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     field (addend lands mid-fn) is a literal constant; write the literal + add a `block_relocations`
     range in config.yml.
 74. **`LL`-suffixed constants force MATERIALIZED-constant codegen** (`x ^= 2LL` → `li; xor`; `x &=
-    ~0x80LL` → `li -129; and`; `x |= 0x100100LL` → `lis;addi;or`). Lvalue must be UNSIGNED — u8/u16/u32
-    all give the clean `li -K; and` (probe-confirmed); a SIGNED lvalue (int/s32) adds a dead high-word
-    `srawi rX,31` (sign-extension; the unsigned high word is constant 0 and DCE's). Convert ALL adjacent masks at once (partial conversion misaligns the burst).
+    ~0x80LL` → `li -129; and`; `x |= 0x100100LL` → `lis;addi;or`). The SIGNED-vs-UNSIGNED lvalue choice is
+    PEEPHOLE-STATE-DEPENDENT (lead-reproduced both modes, GC/2.0): under peephole-ON (`-O4,p` — expgfx, main
+    lib, all the O4 DLL/main units) signed `s32` and unsigned `u32` `~KLL` are BYTE-IDENTICAL (`li -K; and; stw`,
+    no srawi — MWCC DCEs the dead high word), so the lvalue sign is CODEGEN-NEUTRAL there; under
+    `-opt nopeephole,noschedule` (the flameguard/tricky/render/audio noopt units — where #150 lives) a SIGNED
+    lvalue adds a dead high-word `srawi rX,31` while the unsigned high word is constant 0 and DCE's. So: in an
+    O4,p unit pick either; in a NOPEEPHOLE unit the choice is real — use UNSIGNED (u8/u16/u32, clean `li -K; and`)
+    UNLESS #150's adjacent-`=0` steal makes the signed `~(u64)` form the net win (read #150). Convert ALL adjacent masks at once (partial conversion misaligns the burst).
     Bulk-sweep a recurring materialized flag word after mapping every site to its fn's fuzzy%.
     CAVEAT (WorkerB, trickySelectQueuedCommandTarget + trickyGuardFindBaddieTarget): the LL fix is
     CORRECT (target uses `li -1025; and`; codebase already uses `&= ~(u64)FLAG` elsewhere) BUT when an
