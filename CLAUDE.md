@@ -1101,9 +1101,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     direction). NOT ISOLABLE (probe_battery base.c won't reproduce — context-bound). The one oracle
     (boneBlendSlotLimit, model.c) has the shape but is INLINED/static (no standalone source to diff). So the
     whole ~35-fn kind-2(2) bucket reduces to ONE question: which SOURCE construct makes MWCC graph-coloring
-    RESERVE the higher free FP reg for a LATER-created value (look-ahead) vs picking highest-free-first? NEXT:
-    hunt a STANDALONE (non-inlined, real-`bl`) oracle with this shape; else a deeper allocator look-ahead derive
-    (validator). Live target — maximally narrowed, needs a NEW allocator-modeling insight, NOT another lever.
+    RESERVE the higher free FP reg for a LATER-created value (look-ahead) vs picking highest-free-first?
+    ✓DISCRIMINATOR RESOLVED (waterfx in-tree read, the look-ahead CONFIRMED over a creation-order hypothesis): it
+    is NOT creation-order. Retail AND ours have BYTE-IDENTICAL positions — moveLen `fmr` @0x8dc (right after the
+    Vec3_Length bl), zf `lfs` @0x994 (after 2 more bls) — in BOTH builds; the global is loaded AFTER the call in
+    BOTH. So a "load the global before the call" creation-order reorder does NOT match retail (retail loads it
+    late too) and regressed in-tree (99.90→99.28). The validator's isolation creation-order rule (gs-first→gs
+    gets f31) is REAL in isolation but OVERRIDDEN by the full fn's register PRESSURE in-tree (retail gives the
+    LATER-created zf→f31; ours the EARLIER moveLen→f31). So it's a genuine context-bound PRESSURE-driven free-reg
+    pick. NEXT: a STANDALONE (non-inlined) oracle with this shape; else a deeper IN-TREE pressure model (which
+    pressure ingredient flips the pick) — NOT a one-line reorder, NOT isolable. The hardest open coloring nut,
+    precisely characterized; fresh-eyes / oracle target.
     DOESN'T-APPLY shapes (pausemenu, verified — recognize fast, don't burn cycles): besides criteria 2/3/1
     failures, the naming lever is ALSO inert when the swapped values are (a) CONSTANTS — naming/inlining a
     literal is identical (a const colors the same either way), so a const↔const or const↔addr swap can't be
