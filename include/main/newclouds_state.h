@@ -46,9 +46,9 @@ typedef struct NewCloud {
     f32 flakeDrainRate;
     f32 activeFlakes;
     f32 driftScale;
-    f32 unk143C;
-    f32 unk1440;
-    f32 unk1444;
+    f32 driftLimit;
+    f32 driftOffset;
+    f32 driftRate;
     s16 unk1448;
 } NewCloud;
 

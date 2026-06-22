@@ -1627,8 +1627,8 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     }
     if (lbl_803DF1A0 != *(f32*)(params + 8))
     {
-        ((NewCloud*)NC_CLOUD)->unk1444 = lbl_803DF23C;
-        ((NewCloud*)NC_CLOUD)->unk143C =
+        ((NewCloud*)NC_CLOUD)->driftRate = lbl_803DF23C;
+        ((NewCloud*)NC_CLOUD)->driftLimit =
             (int)
         randomGetRange(1, *(f32*)(params + 8)) * lbl_803DF214;
     }
@@ -2191,24 +2191,24 @@ void dll_07_func06(void)
                     pos[2] = *(f32*)((u8*)cam + 0x4c);
                 }
             }
-            ((NewCloud*)D7_CLOUD)->unk1440 = framesThisStep * ((NewCloud*)D7_CLOUD)->unk1444 +
-                ((NewCloud*)D7_CLOUD)->unk1440;
+            ((NewCloud*)D7_CLOUD)->driftOffset = framesThisStep * ((NewCloud*)D7_CLOUD)->driftRate +
+                ((NewCloud*)D7_CLOUD)->driftOffset;
             if (lbl_803DF1A0 != ((NewCloud*)D7_CLOUD)->driftScale)
             {
-                if (((NewCloud*)D7_CLOUD)->unk1440 > ((NewCloud*)D7_CLOUD)->unk143C)
+                if (((NewCloud*)D7_CLOUD)->driftOffset > ((NewCloud*)D7_CLOUD)->driftLimit)
                 {
-                    ((NewCloud*)D7_CLOUD)->unk1444 =
-                        ((NewCloud*)D7_CLOUD)->unk1444 * lbl_803DF244;
-                    ((NewCloud*)D7_CLOUD)->unk1440 = ((NewCloud*)D7_CLOUD)->unk143C;
+                    ((NewCloud*)D7_CLOUD)->driftRate =
+                        ((NewCloud*)D7_CLOUD)->driftRate * lbl_803DF244;
+                    ((NewCloud*)D7_CLOUD)->driftOffset = ((NewCloud*)D7_CLOUD)->driftLimit;
                 }
-                else if (((NewCloud*)D7_CLOUD)->unk1440 < lbl_803DF1A0)
+                else if (((NewCloud*)D7_CLOUD)->driftOffset < lbl_803DF1A0)
                 {
-                    ((NewCloud*)D7_CLOUD)->unk1444 =
-                        ((NewCloud*)D7_CLOUD)->unk1444 * lbl_803DF244;
-                    ((NewCloud*)D7_CLOUD)->unk143C = (int)
+                    ((NewCloud*)D7_CLOUD)->driftRate =
+                        ((NewCloud*)D7_CLOUD)->driftRate * lbl_803DF244;
+                    ((NewCloud*)D7_CLOUD)->driftLimit = (int)
                     randomGetRange(
                         1, (lbl_803DF1C8 * ((NewCloud*)D7_CLOUD)->driftScale));
-                    ((NewCloud*)D7_CLOUD)->unk1440 = lbl_803DF1A0;
+                    ((NewCloud*)D7_CLOUD)->driftOffset = lbl_803DF1A0;
                 }
             }
             if (D7_CLOUD[0x144d] == 0)
@@ -2225,9 +2225,9 @@ void dll_07_func06(void)
                 else
                 {
                     ((NewCloud*)D7_CLOUD)->windVelX =
-                        -(wind[0] + ((NewCloud*)D7_CLOUD)->unk1440);
+                        -(wind[0] + ((NewCloud*)D7_CLOUD)->driftOffset);
                     ((NewCloud*)D7_CLOUD)->windVelZ =
-                        -(wind[2] + ((NewCloud*)D7_CLOUD)->unk1440);
+                        -(wind[2] + ((NewCloud*)D7_CLOUD)->driftOffset);
                     ((NewCloud*)D7_CLOUD)->unk1428 = lbl_803DF1A0;
                 }
                 ((NewCloud*)D7_CLOUD)->worldPosX = pos[0];
@@ -2240,8 +2240,8 @@ void dll_07_func06(void)
                 inpos[1] = ((NewCloud*)p)->worldPosY;
                 inpos[2] = ((NewCloud*)p)->worldPosZ;
                 snowCloudComputeDrift(wind, inpos, ((NewCloud*)p)->driftScale);
-                ((NewCloud*)D7_CLOUD)->windVelX = -wind[0] + ((NewCloud*)D7_CLOUD)->unk1440;
-                ((NewCloud*)D7_CLOUD)->windVelZ = -wind[2] + ((NewCloud*)D7_CLOUD)->unk1440;
+                ((NewCloud*)D7_CLOUD)->windVelX = -wind[0] + ((NewCloud*)D7_CLOUD)->driftOffset;
+                ((NewCloud*)D7_CLOUD)->windVelZ = -wind[2] + ((NewCloud*)D7_CLOUD)->driftOffset;
                 ((NewCloud*)D7_CLOUD)->unk1428 = lbl_803DF1A0;
             }
             if (D7_CLOUD[0x1453] != 0)
@@ -2474,7 +2474,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
         else if (p[0x1451] != 0)
         {
             gNewCloudFlashRotAngle =
-                lbl_803DF20C * (((NewCloud*)p)->unk1440 / lbl_803DF210) + lbl_803DF208;
+                lbl_803DF20C * (((NewCloud*)p)->driftOffset / lbl_803DF210) + lbl_803DF208;
             mtxB[0] = mathCosf((gNewCloudPi *  - gNewCloudFlashRotAngle) / lbl_803DF1F4);
             mtxB[1] = -mathSinf((gNewCloudPi *  - gNewCloudFlashRotAngle) / lbl_803DF1F4);
             mtxB[4] = mathSinf((gNewCloudPi *  - gNewCloudFlashRotAngle) / lbl_803DF1F4);
