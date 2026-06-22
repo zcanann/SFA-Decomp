@@ -118,13 +118,15 @@ void lightfoot_update(int obj)
     f32 snd[3];
     f32 buf[6];
     u8 i;
-    f32 zero;
+    f32 limit;
+    f32 fv;
 
-    if (*(f32*)((char*)anim + 0x10) != (zero = lbl_803E8180) &&
-        (*(f32*)((char*)anim + 0x10) = *(f32*)((char*)anim + 0x10) - timeDelta,
-            *(f32*)((char*)anim + 0x10) <= zero))
-    {
-        Obj_FreeObject(obj);
+    fv = *(f32*)((char*)anim + 0x10);
+    if (fv != (limit = lbl_803E8180)) {
+        *(f32*)((char*)anim + 0x10) = fv - timeDelta;
+        if (*(f32*)((char*)anim + 0x10) <= limit) {
+            Obj_FreeObject(obj);
+        }
     }
 
     if (((GameObject*)obj)->anim.seqId == 0x27c && ((GroundBaddieState*)inner)->gameBitA != -1)
@@ -254,22 +256,21 @@ void lightfoot_update(int obj)
         if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & 0x800))
         {
             int a40c = ((LightfootState*)inner)->unk40C;
-            int mode;
             *(f32*)((char*)a40c + 0xc) -= timeDelta;
             if (*(f32*)((char*)a40c + 0xc) <= lbl_803E8180)
             {
-                mode = 3;
+                p30 = 3;
                 *(f32*)((char*)a40c + 0xc) += lbl_803E81C0;
             }
             else
             {
-                mode = 0;
+                p30 = 0;
             }
             snd[0] = lbl_803E8180;
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
-            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, snd);
+            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, p30, 0, snd);
         }
         *(f32*)((char*)anim + 0x14) -= timeDelta;
     }
