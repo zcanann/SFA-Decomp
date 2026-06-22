@@ -7071,11 +7071,12 @@ int fn_802AD2F4(int obj, int inner, int state)
     {
         f32 a = lbl_803E7FBC;
         f32 b = lbl_803E7E98;
-        f32 c = lbl_803E7F14;
+        f32 c;
         ((PlayerState*)inner)->targetYawSmoothRate = a;
         ((PlayerState*)inner)->targetYawRateLimit = b;
         ((PlayerState*)inner)->yawSmoothRate = a;
         ((PlayerState*)inner)->yawRateLimit = b;
+        c = lbl_803E7F14;
         ((PlayerState*)inner)->targetAnimSpeed = c;
         ((PlayerState*)inner)->currentSpeed = ((PlayerState*)inner)->currentSpeed * c;
     }
