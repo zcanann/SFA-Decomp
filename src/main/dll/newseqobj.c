@@ -82,14 +82,15 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     u8* rowsB;
     u8* trig;
     int ret = 0;
+    u8 type = state[0x33b];
 
-    slot += state[0x33b] * 0x28;
+    slot += type * 0x28;
     animRows = *(u8**)(slot + 0x10);
     rowsC = *(u8**)(slot + 0x24);
     rowsB = *(u8**)(slot + 0x1c);
     trig = *(u8**)(slot + 0x20);
 
-    if (state[0x33b] == 5)
+    if (type == 5)
     {
         ((BaddieState*)state)->reactionFlags |= 0x10;
         return 0;
