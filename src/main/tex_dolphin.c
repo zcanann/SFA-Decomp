@@ -451,6 +451,7 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
     return 1;
 }
 
+#pragma opt_propagation off
 void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, float* mtx)
 {
     u8 dBig[16];
@@ -498,13 +499,19 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         if ((flags & 0x80000000) != 0)
         {
             fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
-            *(int*)(base + lbl_803DCE30 * 16 + 0xc) = 5;
+            {
+                int* row = (int*)(base + lbl_803DCE30 * 16);
+                *(int*)((char*)row + 0xc) = 5;
+            }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
         else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
         {
             fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
-            *(int*)(base + lbl_803DCE30 * 16 + 0xc) = 4;
+            {
+                int* row = (int*)(base + lbl_803DCE30 * 16);
+                *(int*)((char*)row + 0xc) = 4;
+            }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
     }
@@ -623,13 +630,17 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
             (mapBlockBounds_HasCornerPastDepthThreshold(ptr, mtx) != 0))
         {
             fn_8005D3B4(ptr, block, 0x17);
-            *(int*)(base + lbl_803DCE30 * 16 + 0xc) = 6;
+            {
+                int* row = (int*)(base + lbl_803DCE30 * 16);
+                *(int*)((char*)row + 0xc) = 6;
+            }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
     }
 end:
     return;
 }
+#pragma opt_propagation reset
 
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
