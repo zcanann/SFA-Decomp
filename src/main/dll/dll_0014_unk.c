@@ -1895,11 +1895,8 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         found = 0;
         do
         {
-            if (queueCount <= 0)
+            if (queueCount > 0)
             {
-                found = 1;
-                continue;
-            }
             queueCount--;
             queueIndex = queueIndices[queueCount];
             queueCurve = (int)romCurves[queueIndex];
@@ -1951,6 +1948,11 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 queueDistances[insertIndex] = linkDistance;
                 visited[directIndex] = 1;
                 queueCount++;
+            }
+            }
+            else
+            {
+                found = 1;
             }
         } while (!found);
     }
@@ -3098,7 +3100,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                     {
                         count--;
                         idx = queueIds[count];
-                        node = romCurves[queueIds[count]];
+                        node = romCurves[idx];
                         curDist = queueDist[count];
                         if ((((int)node->type == typeFilter) || (typeFilter == -1)) &&
                             ((*(u8*)((u8*)node + 0x31) == (int)maxDist ||
@@ -3243,7 +3245,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                     {
                         count--;
                         idx = queueIds[count];
-                        node = romCurves[queueIds[count]];
+                        node = romCurves[idx];
                         curDist = queueDist[count];
                         if (((int)node->type == typeFilter) &&
                             ((actionFilter == -1) || (actionFilter == node->action)))

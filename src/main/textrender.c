@@ -2451,7 +2451,7 @@ void setLanguageFn_8001ad64(void* reqp)
     strs2 = (int*)((u8*)strs + delta);
     for (i = 0; i < numStrings; i++)
     {
-        strs2[i] = strs2[i] + delta;
+        strs2[i] += delta;
     }
     mmSetFreeDelay(0);
     mm_free(*(void**)(req + 0x3c));
@@ -2804,8 +2804,8 @@ extern u16 lbl_802CA100[];
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
 {
-    s16* p;
     void** q;
+    s16* p;
     int i;
     int j;
     int x;
