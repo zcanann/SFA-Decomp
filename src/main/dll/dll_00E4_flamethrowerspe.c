@@ -612,7 +612,6 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
     int* state;
     double colorD;
     double clampedColor;
-    u64 local_18;
 
     state = ((GameObject*)obj)->extra;
     hits = FUN_80017a54(obj);
