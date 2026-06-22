@@ -390,11 +390,11 @@ poolSearchDone:
     foundPool = 0;
     if (preferredPoolIndex == EXPGFX_INVALID_POOL_INDEX)
     {
-        for (poolIndex = 0, activeCountWalk = poolActiveCounts;
+        for (poolIndex = 0;
              poolIndex < EXPGFX_POOL_COUNT - 1;
-             activeCountWalk++, poolIndex++)
+             poolActiveCounts++, poolIndex++)
         {
-            if (*activeCountWalk <= 0)
+            if (*poolActiveCounts <= 0)
             {
                 foundPoolIndex = (s16)poolIndex;
                 foundPool = 1;
