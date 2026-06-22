@@ -1507,10 +1507,10 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     u16 rotX;
     u16 rotY;
     u16 rotZ;
-    float local_d4;
-    u32 local_d0;
-    u32 local_cc;
-    u32 local_c8;
+    float tmpHeight;
+    u32 boneWord0;
+    u32 boneWord1;
+    u32 boneWord2;
     float afStack_c4[3];
     float posX;
     u32 posY;
@@ -1539,9 +1539,9 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         boneOff = ((u16)child[0x58] & 7) * 0x18;
         bonePtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
         jointIdx = (int)*(char*)(bonePtr + ((GameObject*)parent)->anim.bankIndex + 0x12);
-        local_d0 = *(u32*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
-        local_cc = *(u32*)(bonePtr + 4);
-        local_c8 = *(u32*)(bonePtr + 8);
+        boneWord0 = *(u32*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
+        boneWord1 = *(u32*)(bonePtr + 4);
+        boneWord2 = *(u32*)(bonePtr + 8);
         if (jointIdx == -1)
         {
             FUN_80017a50(parent, afStack_84, '\0');
@@ -1553,7 +1553,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         }
         if ((OBJPRINT_MODEL_DEF(child)->renderFlags & 8) == 0)
         {
-            local_d4 = lbl_803DF69C;
+            tmpHeight = lbl_803DF69C;
             boneOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
             rotX = *(u16*)(boneOff + 0xc);
             rotY = *(u16*)(boneOff + 0xe);
@@ -1564,7 +1564,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         else
         {
             cam = FUN_800069a8();
-            local_d4 = *(float*)(child + 4);
+            tmpHeight = *(float*)(child + 4);
             dx = (double)(*(float*)(child + 6) - *(float*)(cam + 6));
             dz = (double)(*(float*)(child + 10) - *(float*)(cam + 10));
             boneOff = FUN_80017730();
