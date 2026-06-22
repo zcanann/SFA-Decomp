@@ -855,6 +855,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     sibling — opposite opt-level: counter-tied wants O2-chain, standalone O4-keep.) REMAINING EDGES (live targets):
     the PRE-LOOP field store (entryCount=0 folds even at O4 — pre-loop position doesn't get the saved web) and
     Minimap's counter-copy `mr` at an O4-shaped size — both precisely bounded, not caps.
+    ✓REPRODUCING BED for the VALUE-1 REUSE (Validator, /tmp/vCP/p.c, curves_getPos pinpointed to ONE instr,
+    152=152): source `count=0; mask=1; for(k<4){ if(...&mask...) cand[count++]=n; mask<<=1; }` FULLY UNROLLS at
+    O4; on iter-0 `count++`→1 while mask is still 1 (1<<0), so retail REUSES the live mask reg (`mr r5,r4`) for
+    count's new value, where ours materializes fresh (`li r5,1`). The bed reproduces ours (`li r7,1` with mask=1
+    live in r6) — the reuse-able value is RIGHT THERE, MWCC just picks fresh. This is the value-1 analog of the
+    value-0 reuse above (same "copy-coalesce vs fresh-materialize" decision, FORCE direction). Forms tried:
+    opt_level 2 REMOVES the unroll (real loop, count via addi) — WRONG (target is unrolled O4), so the reuse must
+    be forced AT O4 keeping the unroll; the clean source lever is the open frontier (a clean form exists — A/B
+    candidates against /tmp/vCP, curveId/count reg = mr good / li fresh; try the #136(b) chained-counter forms +
+    deriving the increment from mask). UNIFIED with the #147 copy-PULL bed (/tmp/v147/faithful.c) — same mechanism,
+    #147 PREVENTS a coalesce / value-1 FORCES a reuse; pin both, the clean lever is open in both.
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
