@@ -715,14 +715,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (CSE-confuses with the 28-stride → no `addi 64`, 95.98→89.24); a typed-INDEX (`T* vx = &arr[i*4]`) fixes the
     coloring but makes vx a walked pointer → hoists the base into 2 extra saved regs (frame +16, 95.98→92.6).
     The offset-int form is the GLOBAL-base analog of the validator's local-base relocate-lever. The RIPPLE loop
-    win (96.01) is confirmed in-tree. WAKE sub-case: the validator's "wake wants 32→r29 / vtxDesc-first" was a
-    MISREAD (it read a SIBLING loop's addi block in the multi-loop dump, RETRACTED) — the wake target is
-    actually 64→r29, the SAME shape as ripple. So the o32-first attempts that "failed" were the wrong direction;
-    the PROVEN ripple form (o64-first offset-int before the gate) was never tried on the wake — that's the
-    untried correct-direction retry (likely closes it; if o64-first ALSO doesn't land, then it's pressure-bound,
-    park). LESSONS: (a) even a probe-promising isolation reducer-order derive needs the in-tree gate (this was
-    integrated as "cracked" prematurely, reverted); (b) in a MULTI-LOOP fn, confirm you're reading the CORRECT
-    loop's addi block before pinning a target order. The
+    win (96.01) is confirmed in-tree. ✓WAKE LANDED (96.05) — and it adds a key rule: the GATE CONDITION-COUNT
+    flips the induction ordering DIRECTION. RIPPLE (1-condition gate `e->active`, target 64→r29) → first-created
+    →HIGHEST: offset-ints BEFORE the gate, LARGEST-first (o64 first → 64→r29). WAKE (2-condition gate
+    `g->active && g->f18==0`, target 32→r29/64→r28/28→r27) → first-created→LOWEST: declare the gate-ptr `g`
+    FIRST, THEN the offset-ints (o64,o32) before the `if` → g→r27 (lowest), o64→r28, o32→r29 (highest). Both
+    verified in-tree on func05's two loops. So #136 per-loop offset-int ordering is GATE-DEPENDENT: 1-cond →
+    offsets-before-gate largest-first; 2-cond → gate-ptr-first then offsets. (READ LESSON: the wake target read
+    went original-32→r29 [right] → a "retraction" to 64→r29 [WRONG — grabbed the ripple block @e4c] → resolved
+    in-tree by reading the ACTUAL wake block @1054. In a multi-loop fn, confirm the CORRECT loop's addi block;
+    the in-tree gate is the final authority even over a "retraction.") The
     counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
@@ -1703,6 +1705,17 @@ Signature: `mflr` BEFORE `stwu`, `andi.` for contiguous masks, `mcrxr; addme.` l
 bulk saves, creation-order alloc. Confirmed: zlbDecompress (pi_dolphin), gap_03_80006C6C (render).
 Don't spend MWCC effort — flag for the owner's foreign-toolchain build-rule path. Compiler-emitted
 s64/fixed-point math (`__shl2i`/`__shr2u`, `addc`/`adde`, unrolled rounding loops) → apply #98/#109.
+
+## Paired-single (`psq_l`/`psq_st`) = INLINE-ASM ONLY in CW GC/2.0 → OWNER-DOMAIN (don't re-test intrinsics)
+PROVEN (dbgtricky, gate-tested): MWCC GC/2.0 has NO paired-single INTRINSICS — `__PSQ_L(...)` compiles to
+`bl __PSQ_L` (a call to an undefined function, NOT the `psq_l` instruction); the compiler binary exposes only
+the `psq_l`/`psq_st` MNEMONICS for the inline-asm assembler. Every matched paired-single fn in the repo is
+inline asm (e.g. mtx.c `asm void PSMTXCopy(...){ nofralloc; psq_l f0,0(src),0,0; ... }`; model.c GQR setup is
+`asm{ mtspr GQR6,v }`). So a fn whose target uses `psq_l ...,W,GQR` (s16/u8→f32 dequant, the GQR-quantized
+load) is reachable ONLY via inline `asm{}` — which is BANNED. Therefore such fns (modelBoneTransforms_next 29%,
+lightmap fn_8005D3B4 38% / updateVisibleGeometry 83%, and the model/vec/psmtx paired-single bucket) are
+OWNER-DOMAIN (owner's inline-asm/build-rule path), NOT MWCC-clean-matchable. The user-approved "use `__PSQ_L`
+intrinsics if possible" resolved to "not possible in this compiler." DON'T re-test the intrinsic — flag and move on.
 
 ## Build hygiene (don't break shared `main`)
 - `timeout 60 ninja; echo EXIT=$?` → confirm `EXIT=0` BEFORE every commit. In A/B batteries, gate
