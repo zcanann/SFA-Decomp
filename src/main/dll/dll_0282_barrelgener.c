@@ -24,8 +24,8 @@
 typedef struct ObjUpdateRomCurveFollowVelocityState
 {
     u8 pad0[0x28C - 0x0];
-    f32 unk28C;
-    f32 unk290;
+    f32 velX;
+    f32 velZ;
     u8 pad294[0x298 - 0x294];
 } ObjUpdateRomCurveFollowVelocityState;
 
@@ -242,8 +242,8 @@ int Obj_UpdateRomCurveFollowVelocity(int obj, int routePtr, f32 a, f32 b, f32 c,
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(d[0], d[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = c * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = c * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = c * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = c * -mathCosf(ang);
     }
     else
     {
@@ -286,8 +286,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int obj, int routePtr, f32 a, f32 b,
         d[2] = ((GameObject*)obj)->anim.localPosZ - ((RomCurveWalker*)routePtr)->posZ;
         raw = (s16)getAngle(d[0], d[2]);
         ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk290 = c * -mathSinf(ang);
-        ((ObjUpdateRomCurveFollowVelocityState*)state2)->unk28C = c * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velZ = c * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState*)state2)->velX = c * -mathCosf(ang);
     }
     else
     {
