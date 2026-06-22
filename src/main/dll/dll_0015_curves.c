@@ -433,20 +433,18 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             }
             if ((s32)(collision->flags & 0x200) != 0)
             {
-                secondArg = ((localZ[idx2] - localZ[idx1]) + (localZ[idx3] - localZ[0])) *
-                            lbl_803E0690;
-                angle = getAngle(((localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0])) *
-                                 lbl_803E0690,
-                                 secondArg);
+                f32 sumZ = (localZ[idx2] - localZ[idx1]) + (localZ[idx3] - localZ[0]);
+                f32 sumY = (localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0]);
+                secondArg = sumZ * lbl_803E0690;
+                angle = getAngle(sumY * lbl_803E0690, secondArg);
                 collision->tiltPitch = -angle;
             }
             if ((pointCount == 4) && ((s32)(collision->flags & 0x400) != 0))
             {
-                secondArg = ((localX[idx1] - localX[0]) + (localX[idx2] - localX[idx3])) *
-                            lbl_803E0690;
-                angle = getAngle(((localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3])) *
-                                 lbl_803E0690,
-                                 secondArg);
+                f32 sumX = (localX[idx1] - localX[0]) + (localX[idx2] - localX[idx3]);
+                f32 sumY = (localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3]);
+                secondArg = sumX * lbl_803E0690;
+                angle = getAngle(sumY * lbl_803E0690, secondArg);
                 collision->tiltRoll = angle;
             }
         }
