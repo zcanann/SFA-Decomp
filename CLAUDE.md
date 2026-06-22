@@ -1742,8 +1742,16 @@ prologue, SDA refs by symbol name (MWCC auto-emits `@sda21`), `lis r,sym@ha; add
 symbol` for calls, insert loop labels at `bdnz` targets; (3) build → byte-match. waterfx generated the 173-instr
 Quad fn PROGRAMMATICALLY (regex arg-rename + label-insert) → first-build 100%, zero hand-errors. GQR config is
 runtime state (set by existing matched OSContext/THPDec/setGQR) — not your concern for the byte-match.
-★ TOP NEXT-SESSION TARGET: grep the project for `psq_l`-bearing 0%/low-% fns — each is a near-free 0→100 via
-this recipe (the vein is OPEN + mechanical). Open the next session with this batch.
+⚠️ VEIN IS MINED — NOT a broad batch (dbgtricky byte-scan + per-fn verify, project-wide): fn_8005D3B4 was the
+ONLY genuine missing-psq_l-BODY function (now 100%); the model.c ObjModel_TransformVertices trio were the only
+0%-unimplemented PS cluster (now 100%). NO other genuine psq_l-BODY gaps exist: render.o's raw-byte "14 missing"
+were DATA false-positives (float tables matching the psq_l opcode), and every other unit (track_dolphin 8=8,
+lightmap 5=5, math 1=1) already MATCHES its psq_l. The DISCRIMINATOR that matters: a genuine asm case = TARGET
+has `psq_l fX,K(rDATA),W,GQR` BODY loads / ps-SIMD where OURS has the manual `lis 17200; xoris 0x8000` conversion
+(fn_8005D3B4's shape). NOT a case: psq_l/psq_st from `r1` (auto FP save/restore — both builds have it; the diff
+is coloring, e.g. updateVisibleGeometry 83% = f26-f31 + frame = #82/#67, validator-territory — do NOT brute-asm
+it, that abuses the exception to mask a coloring fix). So the recipe above stays for any FUTURE psq_l-BODY fn,
+but there is no current batch to grep — the vein is worked out.
 
 ## Build hygiene (don't break shared `main`)
 - `timeout 60 ninja; echo EXIT=$?` → confirm `EXIT=0` BEFORE every commit. In A/B batteries, gate
