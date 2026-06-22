@@ -165,6 +165,7 @@ void crrockfall_init(int* obj, u8* params)
     }
 }
 
+#pragma opt_propagation off
 void crrockfall_update(int* obj)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
@@ -341,3 +342,4 @@ void crrockfall_update(int* obj)
         ((GameObject*)obj)->anim.velocityZ = z;
     }
 }
+#pragma opt_propagation reset
