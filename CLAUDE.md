@@ -739,6 +739,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     was later retired for plausible typed-array C (#135). The real no-`|=` form still exists; decl-order/
     cast/opt-level/init-placement/if-else/opt_lifetimes are all INERT so far. OPEN (task #5, DeepDive1).
     This applies to ANY no-op-bitwise/VN-hack 100%: land it, mark placeholder, circle back for real C.**
+    **DeepDive1 REFINEMENT (task #5): the seed VALUE is the only irreducible diff, and it is provably
+    behaviorally DEAD.** Seeding `previousCurveId = ROMCURVE_LINK_ID_NONE;` (a CONSTANT, not a curveId
+    copy) keeps curveId in the param pool exactly like the `|=` (no copy → no same-value merge → no
+    pool rotation) → 99.56%, T=C=148, a SINGLE diff region: target `mr r8,r27` (seed = copy of curveId)
+    vs ours `li r8,-1` (seed = const). The ENTIRE register allocation otherwise matches (curveId→r27,
+    previousCurveId→r8, loop `mr r8,r30` all identical). PROOF the seed is dead: previousCurveId is read
+    only at the do-while tail `(previousCurveId != curveId) && (nextCurveId != NONE)`; on every path the
+    seed is either overwritten (`previousCurveId = nextCurveId` when a link is found) or the 2nd term
+    short-circuits (`nextCurveId == NONE`) — so seed ∈ {curveId, -1, anything} yields identical behavior.
+    So the dev simply happened to write `previousCurveId = curveId`, and the exact `mr r8,r27` needs that
+    curveId-valued COPY to materialize WITHOUT the copy-affinity cascade — which only a non-elidable op
+    on curveId achieves: the `|=` (folds to mr, 100%) or a memory recompute `curve->id` (emits lwz +
+    rotates volatiles, 98.27%). No plain-C curveId-copy seed avoids the cascade (96.5%). VERDICT: the
+    seed=NONE form is the honest, behaviorally-identical, hack-free source at 99.56% (1 dead-instr off);
+    the `|=` is the only 100% but it's the cosmetic-copy hack. Recommend the integrity owner choose
+    seed=NONE (real C, 1 instr) over the fake 100 — the lost instr is a provably-dead seed materialization.
     **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
     spending levers; it tells you tractable-vs-deepest-frontier:**
     **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
