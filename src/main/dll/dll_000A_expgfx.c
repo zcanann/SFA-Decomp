@@ -3149,10 +3149,10 @@ void expgfx_onMapSetup(void)
     ExpgfxTrackedSourceFrameMask* trackedFrameMasks;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
-    u8* poolSourceModes;
-    u32* poolSourceIds;
     s16* poolSlotTypeIds;
     u8* poolFrameFlags;
+    u8* poolSourceModes;
+    u32* poolSourceIds;
     int poolIndex;
     int resourceIndex;
 
