@@ -864,7 +864,7 @@ extern f32 gTrickyHudTexScaleX, gTrickyHudTexScaleY, gTrickyHudTexScaleZ;
 extern f32 gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane, gTrickyHudIconFarPlane;
 
 #pragma opt_propagation off
-void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4)
+void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
     char* base = lbl_803A87F0;
     char** objs;
