@@ -178,9 +178,8 @@ void initLoadingScreenTextures(void)
     int i;
 
     arenaHi = (int)OSGetArenaHi() - 0x40000;
-    for (i = 0; i < 3; i++)
+    for (i = 0, textureSlot = (LoadingScreenTexture**)gTitleScreenInitLoadingTextures; i < 3; textureSlot++, i++)
     {
-        textureSlot = &((LoadingScreenTexture**)gTitleScreenInitLoadingTextures)[i];
         *textureSlot = (LoadingScreenTexture*)arenaHi;
         textureHeader = *textureSlot;
         textureHeader->unk40 = 0;
