@@ -356,7 +356,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
             {
                 step = lbl_803E16E8;
             }
-            if (step < lbl_803E16EC)
+            if (step < *(f32*)&lbl_803E16EC)
             {
                 step = lbl_803E16EC;
             }
@@ -375,7 +375,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
             {
                 step = lbl_803E16E8;
             }
-            if (step < lbl_803E16EC)
+            if (step < *(f32*)&lbl_803E16EC)
             {
                 step = lbl_803E16EC;
             }
