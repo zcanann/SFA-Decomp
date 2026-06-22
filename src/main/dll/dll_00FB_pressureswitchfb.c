@@ -190,8 +190,8 @@ void pressureswitchfb_update(int obj)
     u32 ju;
     int base;
     ObjTextureRuntimeSlot* tex;
-    f32 target;
     f32 cur;
+    f32 target;
     int slots2;
     s8 found;
     u32 j2;
