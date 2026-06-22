@@ -3429,7 +3429,10 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                         outNrm[1] = hit[1] - tmp14[1];
                         outNrm[2] = hit[2] - tmp14[2];
                         Vec3_Normalize(outNrm);
-                        outNrm[3] = T[9] - (*(f32*)((u8*)hit + 4) * outNrm[1] + *(f32*)((u8*)hit + 0) * outNrm[0] + *(f32*)((u8*)hit + 8) * outNrm[2]);
+                        {
+                            f32 dh = *(f32*)((u8*)hit + 4) * outNrm[1];
+                            outNrm[3] = T[9] - (dh + *(f32*)((u8*)hit + 0) * outNrm[0] + *(f32*)((u8*)hit + 8) * outNrm[2]);
+                        }
                         out29[0] = *(f32*)((u8*)hit + 0);
                         out29[1] = *(f32*)((u8*)hit + 4);
                         out29[2] = *(f32*)((u8*)hit + 8);
