@@ -207,17 +207,17 @@ void groundanimator_init(int* obj, int* desc)
 void groundanimator_free(int* obj, int flag)
 {
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
-    GroundAnimatorState * w;
-    int* r21;
-    void* block;
     void* entry;
     void* vtx;
+    int innoff;
+    int midoff;
+    int off;
     int blkIdx;
     int mid;
     int inner;
-    int off;
-    int midoff;
-    int innoff;
+    void* block;
+    GroundAnimatorState * w;
+    int* r21;
     int* cell;
     f32 local[4];
     w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
@@ -229,18 +229,15 @@ void groundanimator_free(int* obj, int flag)
                                                 (double)((GameObject*)obj)->anim.localPosZ));
         if (block != NULL)
         {
-            off = 0;
-            for (blkIdx = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
+            for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, blkIdx);
                 if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
                 {
-                    midoff = off;
-                    for (mid = *(u16*)entry; mid < *(u16*)((char*)entry + 0x14); mid++)
+                    for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
                         vtx = fn_800606DC(block, mid);
-                        innoff = midoff;
-                        for (inner = 0; inner < 3; inner++)
+                        for (inner = 0, innoff = midoff; inner < 3; inner++)
                         {
                             cell = (int*)((char*)((MapBlockData*)block)->unk58 +
                                 *(u16*)vtx * 6);
