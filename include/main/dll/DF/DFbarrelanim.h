@@ -12,7 +12,7 @@ int dfropenode_func11(int obj);
 void dfropenode_func10(int obj,int value);
 void dfropenode_func13(int obj);
 int dfropenode_func0F(int obj);
-f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 *x, f32 *y,
-                f32 *z);
+f32 fn_801C1698(f32 *x, f32 *y, f32 *z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
+                f32 endZ);
 
 #endif /* MAIN_DLL_DF_DFBARRELANIM_H_ */

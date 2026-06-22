@@ -61,11 +61,11 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     int offset;
     int i;
     DFropenodeExtra* extra;
-    f32 localZ;
-    f32 localY;
-    f32 localX;
-    f32 best;
     f32 phase;
+    f32 best;
+    f32 localX;
+    f32 localY;
+    f32 localZ;
     f32 x;
     f32 y;
     f32 z;
@@ -106,9 +106,8 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
             y = localY;
             z = localZ;
             node = (int)extra->rope->nodes + offset;
-            phase = fn_801C1698(*(f32*)(node + 0), *(f32*)(node + 4), *(f32*)(node + 8),
-                                *(f32*)(node + 0x34), *(f32*)(node + 0x38), *(f32*)(node + 0x3c),
-                                &x, &y, &z);
+            phase = fn_801C1698(&x, &y, &z, *(f32*)(node + 0), *(f32*)(node + 4), *(f32*)(node + 8),
+                                *(f32*)(node + 0x34), *(f32*)(node + 0x38), *(f32*)(node + 0x3c));
             if (phase >= best && phase < lbl_803E4E18)
             {
                 dx = x - localX;

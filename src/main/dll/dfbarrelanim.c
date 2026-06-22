@@ -184,8 +184,8 @@ int dfropenode_func0F(int obj)
     return ((DFropenodeObject*)obj)->extra->angle;
 }
 
-f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32* x, f32* y,
-                f32* z)
+f32 fn_801C1698(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
+                f32 endZ)
 {
     f32 dx;
     f32 dy;
