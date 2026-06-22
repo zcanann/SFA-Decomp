@@ -27,6 +27,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   positive lever(s) to try, and "a clean source form exists — derive it fresh." NEVER write "banked",
   "exhausted", "not reachable", "capped", "as good as it gets", "do not re-try", or "impossible" — that
   phrasing has permanently blocked real solutions before. Frame every open residual as a live target.
+- **"Emergent / pressure-gated / not isolable" is ALSO a cop-out — banned as an explanation.** When an
+  allocation/coloring effect won't reproduce in a minimal TU, that does NOT mean it's some mystical
+  pressure phenomenon we can't pin — it means the minimal TU is MISSING the specific structural
+  ingredient that triggers it, and we haven't found which one YET. The fix is to ADD ingredients
+  (competing webs, a call across a live range, a phi, a second use, a specific creation order) one at a
+  time until the effect FIRES, then name the EXACT trigger. Write "trigger not yet pinned — here's the
+  minimal repro so far and the next ingredient to add," never "it's emergent under pressure." Every
+  MWCC behavior is deterministic; the allocator runs a concrete algorithm. If you don't know the rule,
+  that's a thing to reverse-engineer, not a label to apply.
 
 ## Method (do this every time)
 - **Read the WHOLE target fn before diffing.** Diffs show WHERE, not WHY, and bias you to a false
