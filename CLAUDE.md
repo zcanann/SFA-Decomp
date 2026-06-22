@@ -1716,12 +1716,17 @@ load) is reachable ONLY via inline `asm{}` (the intrinsic path is confirmed dead
 ✅ USER-AUTHORIZED (owner decision, overriding the ban for THIS case): use INLINE ASM for the paired-single
 `psq_l`/`psq_st` case — match the codebase convention (mtx.c `asm void f(){ nofralloc; psq_l f0,0(src),0,0; ... }`,
 model.c `asm{ mtspr GQRn,v }`). This is FAITHFUL (the repo + the original source already do paired-single this
-way), NOT a ban violation. So modelBoneTransforms_next 29%, lightmap fn_8005D3B4 38% / updateVisibleGeometry 83%,
-and the model/vec/psmtx paired-single bucket ARE now in-scope: decode the target's psq_l stream + the ps-SIMD
-ops (the disassembler may misrender them as VSX), find the GQR setup (a caller, an init fn, or in-fn — `mtspr
-GQRn` inline asm authorized too here), write the inline-asm form matching the target, byte-verify. ⚠️ NARROW:
-this exception is paired-single ONLY — the general inline-`asm{}` ban STILL HOLDS for everything else (no other
-exceptions; the owner still reverts non-paired-single asm).
+way), NOT a ban violation. IN-SCOPE PS targets (verify each has psq_l/ps_* in the target before diving):
+lightmap **fn_8005D3B4 38% / updateVisibleGeometry 83%**, and model.c **ObjModel_TransformVertices{Linear 372B,
+WithTranslation 388B, QuadVerticesLinear 692B} — all 0%, UNIMPLEMENTED** (extern-declared + called, no
+definition → write the missing defs from the target asm; confirmed psq_l/psq_lu/ps_madds). Method: decode the
+target's psq_l stream + ps-SIMD ops (the disassembler may misrender them as VSX), find the GQR setup (a caller,
+an init fn, or in-fn — `mtspr GQRn` inline asm authorized too here), write the inline-asm form matching the
+target, byte-verify. ⚠️ NOT paired-single (verified, asm exception does NOT apply): **modelBoneTransforms_next
+29% + modelApplyBoneTransform 12% = the #160 integer interprocedural-register-ABI** (ptr in/out r20, outX/Y/Z
+returned in volatiles r10/r12/r15, caller `stmw r14; mr r20`) — 0 PS instructions; validator/owner-domain, not
+asm-eligible. ⚠️ NARROW: this exception is paired-single ONLY — the general inline-`asm{}` ban STILL HOLDS for
+everything else (no other exceptions; the owner still reverts non-paired-single asm).
 
 ## Build hygiene (don't break shared `main`)
 - `timeout 60 ninja; echo EXIT=$?` → confirm `EXIT=0` BEFORE every commit. In A/B batteries, gate
