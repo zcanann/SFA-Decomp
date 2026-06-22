@@ -406,6 +406,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     THERE — that's the only place it's inert; use #130/#107 web-decouple). #5 holds exactly: DECL sets the
     home, INIT order sets only the load EMISSION order. So for a within-class swap of TOP-LOADED/reorderable
     values, REORDER THE DECLS first (cheap, real lever); reach for #130/#107 only for call-result/computed webs.
+    UNIFORM ACROSS GPR AND FP saved pools (verified): the same decl-order-descending rule governs the FP
+    saved regs — #45 ("first = f31") IS this rule. So an FP-pair swap (#82/#121) of decl-reorderable named
+    f32 locals held across a loop flips by DECL ORDER too; only computed/CSE'd/hoisted-conversion FP webs are
+    spread-pinned (then use the FP coalesce/launder levers #81/#82). Treat GPR-pair and FP-pair residuals with
+    ONE rule: reorder decls for reorderable webs, break the coalesce for spread/call-pinned webs.
     CLASS-MOVERS
     (the lever): first-def-split (a branch-consumed call result → its own var), last-def merge,
     `#pragma optimization_level 2` (creation-order alloc), block-scope per-arm re-decls, same-
