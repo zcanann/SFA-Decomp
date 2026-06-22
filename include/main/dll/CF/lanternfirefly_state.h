@@ -24,7 +24,7 @@ typedef struct LanternFireFlyState {
   f32 speed;        /* 0x44 */
   f32 field48;      /* 0x48 */
   f32 field4C;      /* 0x4c */
-  f32 field50;      /* 0x50 */
+  f32 driftRangeZ;  /* 0x50: per-placement Z drift distance (from placement unk1C); caps offZ excursion */
   f32 anchorX;      /* 0x54 */
   f32 anchorY;      /* 0x58 */
   f32 anchorZ;      /* 0x5c */

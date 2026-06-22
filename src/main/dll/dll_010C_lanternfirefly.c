@@ -17,7 +17,7 @@ typedef struct LanternFireFlyPlacement
     s8 wanderRange;
     u8 stateId;
     s16 timer;
-    s16 unk1C;
+    s16 driftRangeZ; /* 0x1C: -> state driftRangeZ (Z drift distance) */
     u8 pad1E[0x20 - 0x1E];
 } LanternFireFlyPlacement;
 
@@ -102,7 +102,7 @@ void LanternFireFly_func0B(int obj)
     state->wanderRange = ((LanternFireFlyPlacement*)setup)->wanderRange;
     state->stateId = ((LanternFireFlyPlacement*)setup)->stateId;
     state->field4C = lbl_803E3AA0;
-    state->field50 = (f32)(int)((LanternFireFlyPlacement*)setup)->unk1C;
+    state->driftRangeZ = (f32)(int)((LanternFireFlyPlacement*)setup)->driftRangeZ;
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
@@ -375,7 +375,7 @@ void LanternFireFly_init(int obj, int def)
     state->wanderRange = 4;
     state->stateId = 4;
     state->field4C = lbl_803E3AB8;
-    state->field50 = lbl_803E3AE0;
+    state->driftRangeZ = lbl_803E3AE0;
     state->anchorX = spawnDef->x;
     state->anchorY = spawnDef->y;
     state->anchorZ = spawnDef->z;
@@ -416,15 +416,15 @@ void fn_801868D0(int obj)
     state->offX = lbl_803E3AB8;
     state->offY = (f32)(int)
     randomGetRange(-state->wanderRange, state->wanderRange);
-    if (state->field50 < lbl_803E3ABC)
+    if (state->driftRangeZ < lbl_803E3ABC)
     {
         state->offZ = lbl_803E3AB8;
     }
     else
     {
-        state->offZ = state->field50 -
+        state->offZ = state->driftRangeZ -
             (f32)(int)
-        randomGetRange(0x14, (s16)(int)state->field50);
+        randomGetRange(0x14, (s16)(int)state->driftRangeZ);
     }
     r = randomGetRange(3000, 5000);
     state->randAngle += r;
