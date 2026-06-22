@@ -43,9 +43,9 @@ void fn_80198A00(u8* obj, int seqArg)
 
     queryType = 0x17;
     state = ((GameObject*)obj)->extra;
-    curveHit = (*gRomCurveInterface)->find(&queryType, 1,
-                                           *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38),
-                                           *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30));
+    curveHit = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30), &queryType, 1,
+        *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38));
     frontBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
         curveHit, *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30),
         &hitDistance);
