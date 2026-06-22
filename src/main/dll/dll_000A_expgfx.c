@@ -427,6 +427,7 @@ poolSearchDone:
                 return 1;
             }
         }
+        return EXPGFX_INVALID_POOL_INDEX;
     }
 
     return EXPGFX_INVALID_POOL_INDEX;
