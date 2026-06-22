@@ -502,16 +502,15 @@ void fn_801375A0(void)
 }
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
- * the rlwimi only uses bit 0 of r4. No C form found to force it. */
-#pragma scheduling on
-#pragma peephole on
-void fn_80138908(u8* obj, u8 v)
+ * #12: bitfield dest (rlwimi) + INT source (clrlwi narrow) at nopeephole. */
+struct Bits58 { u8 _pad[0x58]; u8 b7:1; u8 b6:1; u8 lo:6; };
+#pragma scheduling off
+#pragma peephole off
+void fn_80138908(u8* obj, int v)
 {
-    u8* x = ((GameObject*)obj)->extra;
-    u8 b = *(u8*)(x + 0x58);
-    *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v & 1) << 6));
+    ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }
+#pragma peephole on
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
