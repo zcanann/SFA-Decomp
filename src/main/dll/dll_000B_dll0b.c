@@ -1426,14 +1426,14 @@ void dll_0B_initialise(void)
 }
 
 #pragma peephole off
-void dll_0B_func0F(int p1, u8 p2, u8 p3, int p4, int p5)
+void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 {
     f32 fz;
     f32 fz2;
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
-    gModgfxSpawnContext.modeByte = p2;
-    gModgfxSpawnContext.attachedSource = (void*)p1;
-    gModgfxSpawnContext.sourceModeCopy = p2;
+    gModgfxSpawnContext.modeByte = mode;
+    gModgfxSpawnContext.attachedSource = (void*)source;
+    gModgfxSpawnContext.sourceModeCopy = mode;
     fz = lbl_803DF430;
     gModgfxSpawnContext.posX = fz;
     gModgfxSpawnContext.posY = fz;
@@ -1443,9 +1443,9 @@ void dll_0B_func0F(int p1, u8 p2, u8 p3, int p4, int p5)
     gModgfxSpawnContext.vecZ = fz;
     fz2 = lbl_803DF434;
     gModgfxSpawnContext.scale = fz2;
-    gModgfxSpawnContext.word40 = p4;
-    gModgfxSpawnContext.word3C = p5;
-    gModgfxSpawnContext.byte59 = p3;
+    gModgfxSpawnContext.word40 = word40;
+    gModgfxSpawnContext.word3C = word3C;
+    gModgfxSpawnContext.byte59 = flagByte;
     gModgfxSpawnContext.byte5A = 0;
     gModgfxSpawnContext.byte5B = 0;
 }
@@ -1466,40 +1466,40 @@ void dll_0B_func0A(s16* p)
     *p = -1;
 }
 
-void dll_0B_func0C(void* p1, char p2)
+void dll_0B_func0C(void* source, char value)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        if (arr[i] != NULL && arr[i]->sourceObject == p1)
+        if (arr[i] != NULL && arr[i]->sourceObject == source)
         {
-            arr[i]->byte13B = p2;
+            arr[i]->byte13B = value;
         }
     }
 }
 
-void dll_0B_func0D(void* p1)
+void dll_0B_func0D(void* source)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        if (arr[i] != NULL && arr[i]->sourceObject == p1)
+        if (arr[i] != NULL && arr[i]->sourceObject == source)
         {
             arr[i]->releaseRequested = 1;
         }
     }
 }
 
-void dll_0B_func07(void* p1)
+void dll_0B_func07(void* source)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         if (arr[i] == NULL) continue;
-        if (arr[i]->sourceObject != p1) continue;
+        if (arr[i]->sourceObject != source) continue;
         if (arr[i]->instanceObject != NULL)
         {
             Obj_FreeObject(arr[i]->instanceObject);
@@ -1519,14 +1519,14 @@ void dll_0B_func07(void* p1)
 }
 
 #pragma dont_inline on
-void fn_800A1040(s16 p1, int p2)
+void fn_800A1040(s16 sequenceId, int forceAll)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         if (arr[i] == NULL) continue;
-        if (p1 != arr[i]->sequenceId && p2 == 0) continue;
+        if (sequenceId != arr[i]->sequenceId && forceAll == 0) continue;
         if (arr[i]->auxAllocation != NULL)
         {
             mm_free(arr[i]->auxAllocation);
@@ -1690,7 +1690,7 @@ void fn_800A0478(ModgfxState* state)
 }
 
 #pragma peephole off
-void fn_800A081C(int p1, int p2, int mode)
+void fn_800A081C(int state, int cmd, int mode)
 {
     extern void vecRotateZXY(void*, f32*);
     extern f32 gModgfxMotionStep;
@@ -1699,10 +1699,10 @@ void fn_800A081C(int p1, int p2, int mode)
 
     if (mode == 1)
     {
-        s16* cf = ((ModgfxState*)p1)->channelFrames;
-        if (cf[((ModgfxState*)p1)->activeChannel] == 0)
+        s16* cf = ((ModgfxState*)state)->channelFrames;
+        if (cf[((ModgfxState*)state)->activeChannel] == 0)
         {
-            int flags = ((ModgfxState*)p1)->flags;
+            int flags = ((ModgfxState*)state)->flags;
             if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
             {
                 s16 buf[12];
@@ -1713,34 +1713,34 @@ void fn_800A081C(int p1, int p2, int mode)
                 fbuf[2] = fill;
                 fbuf[3] = fill;
                 fbuf[0] = lbl_803DF434;
-                v = *((ModgfxState*)p1)->unk04;
+                v = *((ModgfxState*)state)->unk04;
                 buf[0] = v;
                 buf[1] = v;
                 buf[2] = v;
-                vecRotateZXY(buf, (f32*)(p2 + 0x4));
+                vecRotateZXY(buf, (f32*)(cmd + 0x4));
             }
-            ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX;
-            ((ModgfxState*)p1)->posStepY = ((ModgfxVertexGroupCmd*)p2)->valueY;
-            ((ModgfxState*)p1)->posStepZ = ((ModgfxVertexGroupCmd*)p2)->valueZ;
+            ((ModgfxState*)state)->posStepX = ((ModgfxVertexGroupCmd*)cmd)->valueX;
+            ((ModgfxState*)state)->posStepY = ((ModgfxVertexGroupCmd*)cmd)->valueY;
+            ((ModgfxState*)state)->posStepZ = ((ModgfxVertexGroupCmd*)cmd)->valueZ;
         }
         else
         {
-            ((ModgfxState*)p1)->posStepX = ((ModgfxVertexGroupCmd*)p2)->valueX / (f32)(s32)((ModgfxState*)p1)->
+            ((ModgfxState*)state)->posStepX = ((ModgfxVertexGroupCmd*)cmd)->valueX / (f32)(s32)((ModgfxState*)state)->
                 blendFrameCount;
-            ((ModgfxState*)p1)->posStepY = ((ModgfxVertexGroupCmd*)p2)->valueY / (f32)(s32)((ModgfxState*)p1)->
+            ((ModgfxState*)state)->posStepY = ((ModgfxVertexGroupCmd*)cmd)->valueY / (f32)(s32)((ModgfxState*)state)->
                 blendFrameCount;
-            ((ModgfxState*)p1)->posStepZ = ((ModgfxVertexGroupCmd*)p2)->valueZ / (f32)(s32)((ModgfxState*)p1)->
+            ((ModgfxState*)state)->posStepZ = ((ModgfxVertexGroupCmd*)cmd)->valueZ / (f32)(s32)((ModgfxState*)state)->
                 blendFrameCount;
         }
-        ((ModgfxState*)p1)->posCurX = ((ModgfxState*)p1)->posCurX + ((ModgfxState*)p1)->posStepX;
-        ((ModgfxState*)p1)->posCurY = ((ModgfxState*)p1)->posCurY + ((ModgfxState*)p1)->posStepY;
-        ((ModgfxState*)p1)->posCurZ = ((ModgfxState*)p1)->posCurZ + ((ModgfxState*)p1)->posStepZ;
+        ((ModgfxState*)state)->posCurX = ((ModgfxState*)state)->posCurX + ((ModgfxState*)state)->posStepX;
+        ((ModgfxState*)state)->posCurY = ((ModgfxState*)state)->posCurY + ((ModgfxState*)state)->posStepY;
+        ((ModgfxState*)state)->posCurZ = ((ModgfxState*)state)->posCurZ + ((ModgfxState*)state)->posStepZ;
     }
     else
     {
-        ((ModgfxState*)p1)->posCurX = ((ModgfxState*)p1)->posStepX * gModgfxMotionStep + ((ModgfxState*)p1)->posCurX;
-        ((ModgfxState*)p1)->posCurY = ((ModgfxState*)p1)->posStepY * gModgfxMotionStep + ((ModgfxState*)p1)->posCurY;
-        ((ModgfxState*)p1)->posCurZ = ((ModgfxState*)p1)->posStepZ * gModgfxMotionStep + ((ModgfxState*)p1)->posCurZ;
+        ((ModgfxState*)state)->posCurX = ((ModgfxState*)state)->posStepX * gModgfxMotionStep + ((ModgfxState*)state)->posCurX;
+        ((ModgfxState*)state)->posCurY = ((ModgfxState*)state)->posStepY * gModgfxMotionStep + ((ModgfxState*)state)->posCurY;
+        ((ModgfxState*)state)->posCurZ = ((ModgfxState*)state)->posStepZ * gModgfxMotionStep + ((ModgfxState*)state)->posCurZ;
     }
 }
 
