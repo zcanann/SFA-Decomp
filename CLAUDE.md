@@ -632,7 +632,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     **~85 with inconsistent float-arg positions, but those are MOSTLY FALSE POSITIVES** — the
     "real-def-obj-first vs extern-float-first" heuristic ALONE is insufficient: ~4 in 5 are EMISSION-NEUTRAL
     (target already emits float-after-obj) or REGRESS, and the "real def" itself is unreliable (drift / FUN_
-    renames / multiple defs — e.g. fn_8010AC48 reorder REGRESSED 99.75→98.85). MANDATORY RULE: apply
+    renames / multiple defs — e.g. fn_8010AC48 reorder REGRESSED 99.75→98.85). DEEPER: even a CORRECT
+    ptr-first real-def does NOT predict the target's emission order — hudDrawTriangle is genuinely
+    `(u8* color, f32...)` in vecmath.c yet the target emits the ptr LAST (reorder regressed 95.42→94.45). So
+    real-def order is NOT a reliable signal at all; ONLY rebuild+measure is. MANDATORY RULE: apply
     PER-CANDIDATE, REBUILD + MEASURE report.json, KEEP only if the fn's % RISES, else REVERT. Do NOT blind-fix
     from the grep. The one productive SUB-PATTERN found: real-def obj-FIRST + the call passes obj as the LAST
     arg + a float-FIRST extern (narrow — only `objMove` hit: `int objMove(u8* obj,f32,f32,f32)` object.c, fixed
