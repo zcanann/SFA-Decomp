@@ -976,15 +976,15 @@ null_state:
     return 0;
 }
 
-void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
+void fn_8014D08C(int obj, int state, f32 mult, int a, int b, u8 c)
 {
     extern f32 lbl_803E256C;
     extern f32 lbl_803E2570;
     extern f32 lbl_803E2574;
     ObjHitsPriorityState* hitState;
 
-    ((BaddieState*)p2)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
-    *(u8*)(p2 + 0x323) = c;
+    ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * mult);
+    *(u8*)(state + 0x323) = c;
     ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
@@ -993,22 +993,22 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
     }
 }
 
-void baddieAfterUpdateBonesCb(int obj, int* p2)
+void baddieAfterUpdateBonesCb(int obj, int* bones)
 {
     int* state = ((GameObject*)obj)->extra;
-    int v = *p2;
+    int v = *bones;
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x7C8:
-        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, fn_8015983C);
+        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, fn_8015983C);
         break;
     default:
-        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, NULL);
+        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->unk36C, NULL);
         break;
     }
 }
 
-void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6)
+void fn_8014C540(int* obj, int* outIdx, f32* outA, f32* outB)
 {
     int* state;
     f32 fz;
@@ -1017,16 +1017,16 @@ void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6)
         state = ((GameObject*)obj)->extra;
         if (state != NULL)
         {
-            *p5 = (f32)(u32) * (u8*)((char*)state + 755) / lbl_803E257C;
-            *p6 = (f32)(u32) * (u8*)((char*)state + 756);
-            *p4 = *(u8*)((char*)state + 754);
+            *outA = (f32)(u32) * (u8*)((char*)state + 755) / lbl_803E257C;
+            *outB = (f32)(u32) * (u8*)((char*)state + 756);
+            *outIdx = *(u8*)((char*)state + 754);
             return;
         }
     }
     fz = lbl_803E2574;
-    *p5 = fz;
-    *p6 = fz;
-    *p4 = 0;
+    *outA = fz;
+    *outB = fz;
+    *outIdx = 0;
 }
 
 f32 fn_8014C5D0(register int obj)
@@ -1648,7 +1648,7 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
     }
 }
 
-void fn_8014CD1C(int* node, int* sub, u16 p3, f32 fa, f32 fb, u8 p5)
+void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledRoll)
 {
     f32 dt;
     int angle;
@@ -1657,7 +1657,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, f32 fa, f32 fb, u8 p5)
     s16 newVal;
 
     dt = timeDelta / (f32)(u32)
-    p3;
+    divisor;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
 
     angle = (u16)getAngle(-((TrickyState*)sub)->unk2B8, -((TrickyState*)sub)->unk2C0);
@@ -1671,7 +1671,7 @@ void fn_8014CD1C(int* node, int* sub, u16 p3, f32 fa, f32 fb, u8 p5)
 
     if (fa != lbl_803E2574)
     {
-        if (p5 != 0)
+        if (useScaledRoll != 0)
         {
             ((GameObject*)node)->anim.rotZ = (s16)(((GameObject*)node)->anim.rotZ + (s32)(fa * (delta_f * dt)));
         }
@@ -1768,7 +1768,7 @@ void fn_8014BC98(int* node, int* sub)
 }
 #pragma fp_contract on
 
-void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
+void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 fb)
 {
     s32 delta;
     f32 dt;
@@ -1779,9 +1779,9 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     delta = (s16)(delta - (u16)((GameObject*)node)->anim.rotX);
     if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
     if ((s16)delta < -0x8000) delta = (s16)(delta + 0xFFFF);
-    delta += p4;
+    delta += angleBias;
     dt = timeDelta / (f32)(u32)
-    p3;
+    divisor;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
     newVal = (s16)(*(s16*)(int)node + (s32)((f32)(s16)delta * dt));
     ((GameObject*)node)->anim.rotX = newVal;
