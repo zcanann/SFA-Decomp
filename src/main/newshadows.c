@@ -1755,8 +1755,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
                 if (b > p2lo) over = b - p2lo;
             }
 
-            d2 = mx * mx + mz * mz;
-            sq = sqrtf(d2);
+            sq = sqrtf(mx * mx + mz * mz);
 
             ratio = c / p[0];
             frac = sqrtf(ratio);
