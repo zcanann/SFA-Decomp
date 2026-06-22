@@ -271,9 +271,9 @@ void Link_render(void)
     extern LinkMenuItemDA gTumbleweedBushItems[40]; /* #57 */
     extern s8 gTumbleweedBushItemCount; /* #57 */
     LinkMenuItemDA* item;
-    LinkMenuItemDA* drawItem;
     int i;
     int slotIndex;
+    LinkMenuItemDA* drawItem;
     int textureIndex;
     int opacity;
     int alpha;
@@ -464,12 +464,13 @@ typedef struct LinkMenuItem
 #define LINK_IS_NAVIGABLE(index) ((gTumbleweedBushItems[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
 #pragma peephole off
+#pragma opt_propagation off
 u32 Link_update(void)
 {
     extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
     extern s8 gTumbleweedBushItemCount; /* #57 */
-    LinkMenuItem* item;
     int result;
+    LinkMenuItem* item;
     u32 buttons;
     u8 acceptPressed;
     s8 horizontalInput;
@@ -563,7 +564,11 @@ u32 Link_update(void)
     if (gTumbleweedBushInputEnabled != 0)
     {
         buttons = getButtonsJustPressed(0);
-        acceptPressed = (buttons & 0x1100) ? 1 : 0;
+        acceptPressed = 0;
+        if ((int)(buttons & 0x1100) != 0)
+        {
+            acceptPressed = 1;
+        }
         if (acceptPressed)
         {
             if (((gTumbleweedBushItems[linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
@@ -605,6 +610,7 @@ u32 Link_update(void)
     linkDrawFn_80130484();
     return result;
 }
+#pragma opt_propagation reset
 #pragma peephole reset
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
