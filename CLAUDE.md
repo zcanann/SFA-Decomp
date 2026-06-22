@@ -872,6 +872,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ceiling. (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
+    REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are exhausted): (1) the bias
+    only MIS-COLORS when it's HOISTED loop-invariant into a SAVED FP reg AND competes with many hoisted
+    saved-reg consts (CONTROL: hoodedZyck_update's bias sits in a VOLATILE reg → colors CORRECTLY, only the
+    #70-neutral @NNN-vs-named reloc differs; fn_80095164's bias is hoisted among 9 consts/31 FP loads → late
+    creation parks it f31, rotating all 9 = the loss). So a NON-hoisted/volatile bias is a non-issue; the
+    target is specifically the hoisted-competing case. (2) C-NAMING ROUTES TESTED-EXHAUSTED: `(f32)(int)x`
+    AND `(f32)((f64)i)` BOTH pool the bias as a LOCAL @NNN double (synthesised in the late int→float lowering
+    pass, after front-end consts) — the f64 cast does NOT name it AND adds a manual `fsub` (+1 instr, the #151
+    path, regressed 88.92→87.95). The only routes to a NAMED-early bias are (a) shared `.sdata2` magic-double
+    pooling = OWNER/BUILD-domain (per #151, retail's bias = named `lbl_803DF308` front-end const → f25), or
+    (b) the full manual union+fsub idiom (+1 instr, non-plausible-C). So the clean fix for the hoisted case is
+    the BUILD-SIDE shared-.sdata2-bias pooling (owner-domain) — FLAG it like the #151 flips. STILL-OPEN HOOK
+    (not closed): if a future C construct emits a SHARED named bias WITHOUT the extra instr (e.g. an inlined
+    shared-conversion helper that pools the bias once), that's the source lever — assumed-possible, in-repo
+    oracle (a 100%-matched fn that references a named bias from C) is the untried probe.
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
     The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
     before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
