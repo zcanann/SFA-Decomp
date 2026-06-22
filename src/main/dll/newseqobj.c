@@ -253,10 +253,9 @@ void fn_80150EDC(void* p1, void* p2)
 {
     u8* table = lbl_8031DD30;
     u8 idx = ((BaddieState*)p2)->inWhirlpoolGroup;
-    u8* entry = table + idx * 0x28;
-    void* animCtrl = *(void**)(entry + 0x143c);
-    void* idleSrc = *(void**)(entry + 0x1454);
-    u8* seqRows = *(u8**)(entry + 0x1458);
+    void* animCtrl = *(void**)(table + idx * 0x28 + 0x143c);
+    void* idleSrc = *(void**)(table + idx * 0x28 + 0x1454);
+    u8* seqRows = *(u8**)(table + idx * 0x28 + 0x1458);
 
     if (idx == 5 && (((BaddieState*)p2)->controlFlags & 0x800000) != 0)
     {
