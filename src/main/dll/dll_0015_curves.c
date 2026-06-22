@@ -350,10 +350,10 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     s8 idx2;
     s8 idx3;
     u8 pointCount;
-    s32 pointLimit;
-    s16 pointIndex;
     f32* pointX;
     f32* pointYZ;
+    s32 pointLimit;
+    s16 pointIndex;
     f32* point;
     f32* outZ;
     f32* outY;
@@ -904,10 +904,8 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        worldIdx = 0;
-        pointIndex = worldIdx;
+        pointOffset = pointIndex = worldIdx = 0;
         worldBase = (u8*)collision;
-        pointOffset = worldIdx;
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
             localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
@@ -921,13 +919,14 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
             pointIndex++;
         }
         pointIndex = 0;
+        worldBase = (u8*)collision;
         one = lbl_803E068C;
         for (; pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); pointIndex++)
         {
-            collision->localPointTarget[pointIndex][0] = collision->localPointWorld[pointIndex][0];
-            collision->localPointTarget[pointIndex][1] =
-                one + collision->localPointWorld[pointIndex][1];
-            collision->localPointTarget[pointIndex][2] = collision->localPointWorld[pointIndex][2];
+            *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
+            *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
+            *(f32*)(worldBase + 284) = *(f32*)(worldBase + 236);
+            worldBase += 0xc;
         }
         fn_80063368((short*)obj);
     }
@@ -1121,10 +1120,8 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             s1a.y = ((GameObject*)curveObj)->anim.localPosY;
             s1a.z = ((GameObject*)curveObj)->anim.localPosZ;
             setMatrixFromObjectPos(m1a, &s1a);
-            worldIdx = 0;
-            i = worldIdx;
+            byteOff = i = worldIdx = 0;
             worldBase = (u8*)collision;
-            byteOff = worldIdx;
             while (i < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
             {
                 pf = (f32*)((u8*)collision->localPointPositions + byteOff);
