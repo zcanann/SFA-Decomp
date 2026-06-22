@@ -73,6 +73,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   so keep hunting the form that produces it WITHOUT the pragma's collateral cost. "Config-inherent
   residual" is a hypothesis to disprove, not a verdict. Contrast: O1/O2 creation-order alloc (#108)
   and O1≈O4 small-loop fns (#110) ARE genuine climbs — measure, don't assume.
+- **Isolation-reproducible CORE vs context-bound COMPANION (triage tool, from a lead-reproduced 13-batch
+  re-validation pass).** A lever that reproduces in a minimal /tmp TU is dependable — apply it on faith (the
+  CORE: #3/#4/#7/#12-core/#18/#23/#25/#44/#51/#58-core/#74-core/#91/#95/#108-decl-order/#110/#113/#126/#131/
+  #136/#137-caller/#143/#155/#156, plus most numbered one-liners). A finer "companion/discriminator" sub-claim
+  marked "probe-confirmed" from ONE in-tree fn often carries a SURROUNDING-CONTEXT ingredient the bare lever
+  doesn't reproduce standalone — verified for #37-cast, #112 three-way grouping, #114 per-use re-exec, #58
+  vs-int-operand, #12 multi-bit discriminator, #15 deref-vs-index. This is NOT a downgrade: the in-tree fn DID
+  work, so the triggering ingredient EXISTS — the minimal TU just lacks it. For these, A/B IN-TREE per-site
+  (not blind), and when isolation doesn't reproduce, ADD ingredients until the effect fires and NAME the
+  trigger — never read "didn't reproduce isolated" as "broken." Each carries its own stated boundary in-entry.
 
 ## High-impact one-liners (try first at 80-95%)
 1. **`#pragma peephole off` + `scheduling off`** (matched with `reset`) around the fn — unfuses
@@ -188,7 +198,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     to SURVIVE; plain `g |= bits;` / `g = g | bits;` / `bits | g` DROP it (at O3/O4 MWCC value-tracks the
     just-stored value, proves it fits, and skips the redundant mask). So when the target keeps a
     store-forward `clrlwi` on a re-read global, write the explicit `(u16)g` on the read-back. (`volatile`
-    gives a real `lhz` reload instead — wrong direction.)
+    gives a real `lhz` reload instead — wrong direction.) CONTEXT-BOUND (lead+validator: the cast-vs-plain
+    DIFFERENCE did NOT reproduce standalone — in a minimal TU `g=(u16)g|bits` and `g|=bits` are byte-identical,
+    no clrlwi from the cast alone): the clrlwi survival is driven by fn_80136E00's exact STORE-FORWARD situation
+    (a live prior store whose value MWCC must mask), not by the cast in isolation. The in-tree fn worked, so the
+    triggering shape exists — A/B the `(u16)g` read-back IN-TREE per-site; don't expect the bare cast to force
+    the clrlwi where there's no store-forward to preserve.
 38. **`(x & N) ? 1 : 0` ternary** for branchy bool materialization; `(x & N) != 0` gives the
     arithmetic `neg/or/srwi` form.
 39. **Bitfield-overlay struct** for byte flags at a specific offset (generalizes #12 to multiple
