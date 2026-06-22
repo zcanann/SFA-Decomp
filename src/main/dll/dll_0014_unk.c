@@ -3128,7 +3128,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                                     newDist = SQ(node->z - cand->z) + ((curDist + SQ(node->x - cand->x)) +
                                         SQ(node->y - cand->y));
                                     pos = 0;
-                                    for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
+                                    while ((pos < count) && (queueDist[pos] > newDist))
                                     {
                                         pos++;
                                     }
