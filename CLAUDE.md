@@ -152,6 +152,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     nested `if{ if{} }` whose block-ends each "should" emit a `b` that retail keeps and ours merges/DCE's is the
     same not-source-reachable class. (cardShowMessage's #109d dispatch derive was CORRECT — `bne` confirmed
     in-tree — but the redundant-b + a jumptable reloc owner-domain block 100; kept the closer switch form 99.78.)
+    ⚠️ STORE/INIT-ORDER (#5/#51) IS RELIABLE ONLY IN NOSCHEDULE UNITS: in a `#pragma scheduling on` region the
+    SCHEDULER controls emission order and OVERRIDES the source statement swap (linkInitTextures: swapping the
+    `li 0`/`li 1` source order was INERT in isolation — scheduling-on, scheduler-driven). Check the unit's
+    scheduling pragma before deriving an init/store-order fix — #51/#5 only transfers where peephole/scheduling
+    are OFF. ★ NET (6 in-tree/isolation data points this session): the ONE reliably-transferring sub-class is a
+    CONTIGUOUS DROPPED REGION — real missing code (dropped if-block, dropped case body, dropped const-store run
+    #145, recovered fold #139) where the instrs are genuinely ABSENT regardless of allocation/scheduling.
+    EVERYTHING ELSE is context-dependent → hunter A/B: dispatch/block-layout (jump-threading/duplication),
+    clamp/value coalescing (pressure-dependent mr), init-order in scheduling-on units (scheduler), strength-
+    reduction/store-isel/coloring (full-fn pressure). DERIVE the contiguous-dropped-region fns; A/B the rest.
   • **ALLOCATION-SENSITIVE fixes REGRESS from isolation** (strength-reduction store-form, store-isel #112,
     register coloring #66/#107/#108, the #155 held-pointer detour): the FULL-FN register pressure overrides the
     isolated behavior, so a minimal — even substantially-faithful — TU can't carry it. 4 confirmed isolation
