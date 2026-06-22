@@ -195,17 +195,17 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     i = 0;
     k = lbl_803DEC2C;
     tbl = (u8*)&gTexIndMtxTable;
-    k24 = gTexIndMtxScale;
-    kH = displayOffsetH_803DEBFC;
     for (; i < count; i = i + 1)
     {
+        k24 = gTexIndMtxScale;
+        kH = displayOffsetH_803DEBFC;
         PSMTXTrans(m2, lbl_803DEBCC, k * (f32)(i + 1), lbl_803DEBCC);
         PSMTXConcat(viewMtx, m2, m2);
         GXLoadPosMtxImm(m2, 0);
         *(IndMtxCopy*)m = *(IndMtxCopy*)tbl;
         textureFn_8006c4e0(&la, &lb);
         selectTexture(*(int*)(la + (u8)i * 4), 1);
-        m[0][0] = (f32)((u8)i + 1) * k24 * kH;
+        m[0][0] = (f32)((i & 0xff) + 1) * k24 * kH;
         m[1][1] = m[0][0];
         GXSetIndTexMtx(1, (const float (*)[3])m, gTexIndMtxScaleExp);
         GXCallDisplayList(*(void**)ptr, (u32) * (u16*)(ptr + 4));
@@ -743,7 +743,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             layer = (int*)Shader_getLayer(shader, layerIdx);
             texId = *layer;
-            if (texId != 0)
+            if (*(void**)layer != NULL)
             {
                 int texVal = texId;
                 layerByte = *(u8*)((int)layer + 5);

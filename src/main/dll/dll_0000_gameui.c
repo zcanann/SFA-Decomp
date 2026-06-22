@@ -1604,9 +1604,9 @@ void drawWorldMapHud(void)
                     hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
                 }
             }
-            else if (cur == 0)
+            else
             {
-                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
+                if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                 {
                     hint = 0x51e2;
                 }
@@ -1614,10 +1614,6 @@ void drawWorldMapHud(void)
                 {
                     hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
                 }
-            }
-            else
-            {
-                hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
             }
         }
         if (hint != 0)
