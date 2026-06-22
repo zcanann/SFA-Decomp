@@ -2539,8 +2539,9 @@ int objShadowFn_80062498(int* obj, int param2)
         fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
 
         alpha = alphaOut;
-        idxOut = fn_80060C14((f32)(int)vtx[0], (f32)(int)vtx[2], obj, alpha,
-                             gShadowDrawScratch, gShadowVolumeBuffer, idxOut, param2,
+        idxOut = fn_80060C14(obj, alpha,
+                             gShadowDrawScratch, gShadowVolumeBuffer, idxOut,
+                             (f32)(int)vtx[0], (f32)(int)vtx[2], param2,
                              modelState->flags & 0x40000);
         lbl_803DCEE0 = alpha;
         lbl_803DCEF0 = idxOut;
@@ -2653,7 +2654,7 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
 
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 
-int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8, int p9)
+int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8, int p9)
 {
     int j;
     f32 lm[12];
