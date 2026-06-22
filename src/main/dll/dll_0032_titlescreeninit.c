@@ -167,14 +167,14 @@ void runLoadingScreens(void)
 #pragma opt_propagation off
 void initLoadingScreenTextures(void)
 {
-    int textureSize;
-    int arenaHi;
-    GXTexObj* texObj;
-    LoadingScreenTexture* textureHeader;
-    LoadingScreenTexture** textureSlot;
     GXTexFmt textureFormat;
     u16 textureHeight;
     u16 textureWidth;
+    int textureSize;
+    GXTexObj* texObj;
+    LoadingScreenTexture* textureHeader;
+    LoadingScreenTexture** textureSlot;
+    int arenaHi;
     int i;
 
     arenaHi = (int)OSGetArenaHi() - 0x40000;
