@@ -460,9 +460,13 @@ void tumbleweed_updateStateMachine(int obj)
             ((BackpackState*)aux)->speed = timeDelta * lbl_803E2F98 + ((BackpackState*)aux)->speed;
             {
                 f32 k = lbl_803E2FBC;
-                ((GameObject*)obj)->anim.velocityX = (k * vx) * ((BackpackState*)aux)->speed;
-                ((GameObject*)obj)->anim.velocityY = (k * vy) * ((BackpackState*)aux)->speed;
-                ((GameObject*)obj)->anim.velocityZ = (k * vz) * ((BackpackState*)aux)->speed;
+                f32 kv;
+                kv = k * vx;
+                ((GameObject*)obj)->anim.velocityX = kv * ((BackpackState*)aux)->speed;
+                kv = k * vy;
+                ((GameObject*)obj)->anim.velocityY = kv * ((BackpackState*)aux)->speed;
+                kv = k * vz;
+                ((GameObject*)obj)->anim.velocityZ = kv * ((BackpackState*)aux)->speed;
             }
             d = getXZDistance((f32*)(obj + 0xc), ((BackpackState*)aux)->targetPos);
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
