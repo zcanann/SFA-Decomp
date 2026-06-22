@@ -45,6 +45,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   first (`rm` it + `ninja` it explicitly); `ninja report.json` alone can serve a stale .o.
   `--diff`/`ndiff`/`rotmap` LOCATE divergence, never certify (they mask reorders/fusion). `rotmap`
   also invents phantom "structural" regions on misalignment — eyeball the raw stream.
+  GREP GOTCHA (cost a false master-key "recipe" once): when checking which register holds a value,
+  ANCHOR the grep to the actual instruction + offset (`stw rX,8(r27)`), NOT a bare `stw r0`/`li r0` —
+  a bare `stw r0` MATCHES the prologue mflr stack-save `stw r0,36(r1)` and a bare `li r0` matches any
+  scratch, producing false "folds to volatile" reads. Always dump the FULL fn and read the actual
+  store/use line, never conclude a reg-allocation fact from a loose grep.
 - **Pragma wrappers reproduce per-fn optimizer STATE**, not original source. Byte-verify
   (`md5sum` the .o) any pragma change. `reset` POPS a stack (restores surrounding state, not
   default) — model nested regions as a stack and emit each fn's *effective* state.
