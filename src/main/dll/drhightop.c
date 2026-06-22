@@ -712,7 +712,9 @@ void fn_801EBD60(int obj, int stateRaw)
     {
         target558 = lbl_803E5AF8;
     }
-    st->unk558 += timeDelta * (lbl_803E5C14 *
+    fb = timeDelta;
+    speed = lbl_803E5C14;
+    st->unk558 += fb * (speed *
         (((target558 < lbl_803E5BD8)
               ? lbl_803E5BD8
               : ((target558 > lbl_803E5AEC) ? lbl_803E5AEC : target558)) -
