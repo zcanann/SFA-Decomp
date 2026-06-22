@@ -61,7 +61,7 @@ extern void warpToMap(int idx, s8 transType);
 typedef struct Lavaball1bePlacement
 {
     u8 pad0[0x18 - 0x0];
-    s8 unk18;
+    s8 spawnRotX; /* spawn yaw byte, placed in anim.rotX high byte */
     u8 pad19[0x20 - 0x19];
 } Lavaball1bePlacement;
 
@@ -391,7 +391,7 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
     x = ((GameObject*)obj)->anim.localPosZ;
     ((GameObject*)obj)->anim.previousWorldPosZ = x;
     ((GameObject*)obj)->anim.previousLocalPosZ = x;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->unk18 << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->spawnRotX << 8);
     ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
         gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
     ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * p2;
