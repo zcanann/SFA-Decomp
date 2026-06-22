@@ -76,13 +76,11 @@ void magicdust_update(int obj)
 {
     extern u32 ObjHits_DisableObject(); /* #57 */
     float fval;
-    short sVar2;
     u8 flagsByte;
     int player;
     int ref;
     u32 val;
     int state;
-    double dVar9;
     char fxArg;
     u8 burstArg[1];
     int msg[1];
