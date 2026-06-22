@@ -509,9 +509,9 @@ u32 FUN_80057690(int obj)
     float screenH;
     float projRadius;
     float screenY;
-    u8 auStack_38[4];
-    u8 auStack_34[4];
-    u64 local_30;
+    u8 projOutA[4];
+    u8 projOutB[4];
+    u64 alphaScaled;
 
     if (((GameObject*)obj)->anim.alpha == 0)
     {
@@ -549,15 +549,15 @@ u32 FUN_80057690(int obj)
         {
             alpha = (u32)(lbl_803DF858 *
                 (lbl_803DF85C - (float)(dist - nearDist) / (float)(range - nearDist)));
-            local_30 = (double)(s64)(int)
+            alphaScaled = (double)(s64)(int)
             alpha;
         }
         FUN_8000693c((double)(((GameObject*)obj)->anim.worldPosX - lbl_803DDA58),
                      (double)((GameObject*)obj)->anim.worldPosY,
                      (double)(((GameObject*)obj)->anim.worldPosZ - lbl_803DDA5C),
                      (double)(((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
-                     auStack_34,
-                     auStack_38, &screenY, &projRadius, &screenH, &screenW);
+                     projOutB,
+                     projOutA, &screenY, &projRadius, &screenH, &screenW);
         projSize = ABS(projRadius) * lbl_803DF834;
         if (projSize < lbl_803DF860)
         {
@@ -566,8 +566,8 @@ u32 FUN_80057690(int obj)
         }
         if (projSize < lbl_803DF868)
         {
-            local_30 = (double)(int)alpha;
-            alpha = (u32)(((float)(local_30) * (projSize - lbl_803DF860)) /
+            alphaScaled = (double)(int)alpha;
+            alpha = (u32)(((float)(alphaScaled) * (projSize - lbl_803DF860)) /
                 lbl_803DF864);
         }
         *(char*)(obj + 0x37) = (char)(alpha * (((GameObject*)obj)->anim.alpha + 1) >> 8);

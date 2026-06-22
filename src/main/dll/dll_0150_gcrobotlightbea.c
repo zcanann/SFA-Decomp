@@ -473,7 +473,7 @@ void FUN_8019f1dc(void)
     double in_ps31_1;
     u64 context;
     int objCount;
-    u16 local_64[4];
+    u16 texQueryBuf[4];
     float local_5c;
     float local_58;
     float local_54;
@@ -511,10 +511,10 @@ void FUN_8019f1dc(void)
     local_54 = lbl_803E4F58;
     local_50 = lbl_803E4F58;
     local_5c = lbl_803E4F74;
-    local_64[2] = 0;
-    local_64[1] = 0;
-    local_64[0] = *(u16*)(model + 0x50);
-    FUN_80017748(local_64, (float*)(model + 0x20));
+    texQueryBuf[2] = 0;
+    texQueryBuf[1] = 0;
+    texQueryBuf[0] = *(u16*)(model + 0x50);
+    FUN_80017748(texQueryBuf, (float*)(model + 0x20));
     *(u8*)(model + 0x49) = *(u8*)(model + 0x49) | 1;
     FUN_80006824(obj, SFXsk_baptr6_c);
     *(u8*)(model + 0x49) = *(u8*)(model + 0x49) | 2;
