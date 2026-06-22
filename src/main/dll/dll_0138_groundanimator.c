@@ -218,6 +218,7 @@ void groundanimator_free(int* obj, int flag)
     void* block;
     GroundAnimatorState * w;
     int* r21;
+    void* nv;
     int* cell;
     f32 local[4];
     w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
@@ -236,8 +237,8 @@ void groundanimator_free(int* obj, int flag)
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
-                        vtx = fn_800606DC(block, mid);
-                        for (inner = 0, innoff = midoff; inner < 3; inner++)
+                        nv = fn_800606DC(block, mid);
+                        for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
                             cell = (int*)((char*)((MapBlockData*)block)->unk58 +
                                 *(u16*)vtx * 6);
