@@ -12,6 +12,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   shape, keep it on the active list.** Every fn is matchable — "not yet" just means the lever is
   still out there waiting. New C recipes land here as discovered; a documented partial is the seed
   for the next breakthrough.
+- **★ OWNER POLICY — FAITHFUL + 100% IS THE GOAL; favor % when forced, but matching-but-unfaithful = NOT DONE.**
+  When a CLEAN-C form reaches 100% but is UNFAITHFUL (a VN/coalesce hack like #147's `|=`; or a byte-optimal raw
+  cast where the dev likely wrote a struct), FAVOR THE % — keep the matching form committed — BUT it is a
+  PLACEHOLDER: "we'll be back later, the job's not done." FLAG it and keep hunting the form that is BOTH faithful
+  AND 100% (the exact-deterministic-rule reverse-engineering IS that hunt — find the plausible 2002 C that
+  produces retail's exact codegen). Do NOT apply a byte-WORSE "faithful" conversion (it breaks the % gate);
+  instead find the faithful form that ALSO matches. Apply byte-NEUTRAL faithful forms freely (both goals met,
+  e.g. the GX FIFO union). (This is clean-C-vs-clean-C + placeholder policy — `asm{}` is still banned outright;
+  the "80-99% clean beats 100% asm" rule above is unchanged.)
 - **FRESH-EYES PROTOCOL:** re-attack open residuals WITHOUT reading the prior notes — derive the
   lever from target asm as if the fn were new. Most "#108/#82 coloring caps" are MISLABELS; they
   keep falling to fresh eyes (struct fixes, dropped args, arg-eval order, widths). Assume a clean
