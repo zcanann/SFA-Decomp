@@ -680,22 +680,21 @@ extern s8 gShaderRomListSlotCount;
 void mapBlockFn_80059c2c(u8* outFlags)
 {
     int i;
-    int found;
+    BlockEntry* p;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
         s8 limit = gShaderRomListSlotCount;
-        for (i = 0; i < limit; i++)
+        for (i = 0, p = gShaderRomListSlots; i < limit; p++, i++)
         {
-            if (gShaderRomListSlots[i].field_0 != 0 && gShaderRomListSlots[i].field_4 == outer)
+            if (p->field_0 != 0 && outer == p->field_4)
             {
-                found = i;
                 goto checked;
             }
         }
-        found = -1;
+        i = -1;
     checked:
-        if (found == -1)
+        if (i == -1)
         {
             outFlags[outer] = 0;
         }
