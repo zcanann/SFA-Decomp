@@ -1846,24 +1846,24 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         ModelFileHeader*)p)->unk18 != NULL && ((ModelFileHeader*)p)->unk1C != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->unk14 = pos;
+        *(int*)&((ObjModel*)out)->jointWorkspace = pos;
         pos += 0x1c;
-        *(int*)(((ObjModel*)out)->unk14 + 0) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 0) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 0xc;
-        *(int*)(((ObjModel*)out)->unk14 + 4) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 4) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->unk14 + 8) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 8) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->unk14 + 0xc) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 0xc) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->unk14 + 0x10) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 0x10) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->unk14 + 0x18) = pos;
+        *(int*)(((ObjModel*)out)->jointWorkspace + 0x18) = pos;
         pos += ((ModelFileHeader*)p)->jointCount;
     }
     else
     {
-        *(int*)&((ObjModel*)out)->unk14 = 0;
+        *(int*)&((ObjModel*)out)->jointWorkspace = 0;
     }
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL)
     {

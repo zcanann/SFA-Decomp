@@ -116,7 +116,7 @@ typedef struct ObjModel {
     ModelFileHeader *file;
     u8 unk04[8];
     u8 *jointMatrices[2];
-    u8 *unk14; /* joint workspace, 0x1c header + per-joint tables */
+    u8 *jointWorkspace; /* 0x1c header + per-joint tables */
     u16 bufferFlags; /* 1 = mtx buffer select, 2 = vtx buffer select, 0x40 = textures loaded */
     u8 unk1A[2];
     u8 *vtxBuf0;
