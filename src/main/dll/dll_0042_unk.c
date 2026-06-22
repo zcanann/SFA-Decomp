@@ -255,8 +255,8 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     f32 outY;
     f32 outZ;
 
-    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &velX, &step, &velZ, &speed, 0, gCamcontrolModeSettings->targetHeight);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &velX, &step, &velZ, &speed, gCamcontrolModeSettings->targetHeight, 0);
     speed = velZ * velZ + (velX * velX + step * step);
     if (speed > *(f32*)&lbl_803E16AC)
     {
@@ -498,8 +498,8 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
     f32 ratio;
     f32 speed;
 
-    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
     dist = dy * dy + (dx * dx + dz * dz);
     if (dist > lbl_803E16AC)
     {
@@ -518,8 +518,8 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         camera->probePosX = camera->anim.worldPosX;
         camera->probePosY = camera->anim.worldPosY;
         camera->probePosZ = camera->anim.worldPosZ;
-        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-            (int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
+        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+            (int)camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
         dist = dy * dy + (dx * dx + dz * dz);
         if (dist > lbl_803E16AC)
         {
