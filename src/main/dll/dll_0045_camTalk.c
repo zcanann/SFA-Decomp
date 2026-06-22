@@ -78,25 +78,6 @@ void CameraModeBike_update(CameraObject* camera)
     float posX;
     CamTalkTransformInput xformIn;
     float mtxBuf[17];
-    s64 local_a0;
-    u32 local_98;
-    u32 uStack_94;
-    s64 local_90;
-    s64 local_88;
-    u32 local_80;
-    u32 uStack_7c;
-    u32 local_78;
-    u32 uStack_74;
-    u32 local_70;
-    u32 uStack_6c;
-    u32 local_68;
-    u32 uStack_64;
-    s64 local_60;
-    u32 local_58;
-    u32 uStack_54;
-    u32 local_50;
-    u32 uStack_4c;
-    s64 local_48;
 
     (*gCameraInterface)->getDefaultHandlerEntry();
     target = (GameObject*)camera->anim.targetObj;
@@ -108,8 +89,6 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
         xformIn.yaw = target->anim.rotX;
-        local_a0 = (s64)(int)
-        gCamTalkBikeState->pitchTarget;
         xformIn.pitch = (u16)(int)
         gCamTalkBikeState->pitchTarget;
         xformIn.roll = 0;
@@ -158,7 +137,6 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosY = posY + sinPitch;
         camera->anim.worldPosZ = posX + cosPitch;
         rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
-        local_60 = (s64)rotVal;
         angleDelta = rotVal - (u16)camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
