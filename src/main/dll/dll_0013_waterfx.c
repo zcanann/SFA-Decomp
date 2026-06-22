@@ -321,10 +321,10 @@ void waterfx_func05(int p1, int p2)
         {
             fn_8007CAF4((int)gWaterfxRippleTexture);
         }
-        for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
-            int o64 = i * 0x40;
-            int o32 = i * 0x20;
+        int o64, o32;
+        for (i = 0, o64 = 0, o32 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
+        {
             WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             if (e->active != 0)
             {
@@ -340,6 +340,7 @@ void waterfx_func05(int p1, int p2)
                 fn_8007D670();
                 drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
             }
+        }
         }
         if ((int)gWaterfxSplashCount != 0)
         {
