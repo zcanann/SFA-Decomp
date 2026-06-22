@@ -295,21 +295,23 @@ void fn_80239EAC(int p1, int p2)
     int count;
     int defNo;
 
-    objs = ObjGroup_GetObjects(2, &count);
-    for (i = 0; i < count; i++)
     {
-        obj = *objs;
-        defNo = *(s16*)(*(int*)&((GameObject*)obj)->anim.placementData);
-        if (defNo == 0x80d || defNo == 0x859)
+        int* t = ObjGroup_GetObjects(2, &count);
+        for (i = 0, objs = t; i < count; i++)
         {
-            dy = *(f32*)(p2 + 0xc4) - ((GameObject*)obj)->anim.localPosY;
-            dz = *(f32*)(p2 + 0xc8) - ((GameObject*)obj)->anim.localPosZ;
-            dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.rotX = getAngle(dx, dz);
-            ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
-            arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
+            obj = *objs;
+            defNo = *(s16*)(*(int*)&((GameObject*)obj)->anim.placementData);
+            if (defNo == 0x80d || defNo == 0x859)
+            {
+                dy = *(f32*)(p2 + 0xc4) - ((GameObject*)obj)->anim.localPosY;
+                dz = *(f32*)(p2 + 0xc8) - ((GameObject*)obj)->anim.localPosZ;
+                dx = *(f32*)(p2 + 0xc0) - ((GameObject*)obj)->anim.localPosX;
+                ((GameObject*)obj)->anim.rotX = getAngle(dx, dz);
+                ((GameObject*)obj)->anim.rotY = -(s16)getAngle(dy, dz);
+                arwprojectile_placeForward(obj, (f32)(int)lbl_803DC4E8);
+            }
+            objs++;
         }
-        objs++;
     }
 }
 
