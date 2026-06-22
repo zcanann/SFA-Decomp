@@ -849,13 +849,15 @@ int ktrex_stateHandlerB02(int obj, int runtime)
 {
     u16 dir;
     f32 tmpY;
+    int lane;
     ObjPosParams pos;
     f32 mtx[16];
 
     dir = ((KTRexArenaState*)gKTRexState)->timerFA & 1;
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
-        ObjAnim_SetCurrentMove(obj, lbl_8032A510[((KTRexArenaState*)gKTRexState)->unkFC * 2 + (((KTRexArenaState*)gKTRexState)->timerFA & 1)], lbl_803E67B8, 0);
+        lane = ((KTRexArenaState*)gKTRexState)->unkFC * 2;
+        ObjAnim_SetCurrentMove(obj, lbl_8032A510[lane + dir], lbl_803E67B8, 0);
         ((KTRexRuntime*)runtime)->unk2A0 = lbl_8032A528[((KTRexArenaState*)gKTRexState)->unkFC];
         ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }
