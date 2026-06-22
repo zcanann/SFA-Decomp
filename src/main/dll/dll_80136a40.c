@@ -1235,6 +1235,7 @@ int fn_80136E00(int p1, u8* p)
 void fn_80137DF8(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
+    int y;
     u32* sp;
     int depth;
     int hold;
@@ -1243,7 +1244,6 @@ void fn_80137DF8(void)
     u16* fbrow;
     int h, h2;
     int b;
-    int y;
     int n;
     u32 cnt;
     u32* p;
