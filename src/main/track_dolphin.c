@@ -560,14 +560,14 @@ u32
 FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
 )
 {
-    float fVar1;
+    float dot;
     double dVar2;
     double dVar3;
     double dVar4;
     double dVar5;
     double dVar6;
-    double dVar7;
-    double dVar8;
+    double segDy;
+    double segDx;
 
     dVar2 = (double)lbl_803DF934;
     if (dVar2 != r)
@@ -579,12 +579,12 @@ FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
             (double)((float)(dVar4 * dVar4) + (float)(dVar3 * dVar3)));
         if (dVar2 <= dVar6)
         {
-            dVar8 = (double)(float)((double)px[1] - dVar5);
-            dVar7 = (double)(float)((double)py[1] - (double)*py);
-            dVar5 = (double)(float)(dVar8 * dVar8 + (double)(float)(dVar7 * dVar7));
+            segDx = (double)(float)((double)px[1] - dVar5);
+            segDy = (double)(float)((double)py[1] - (double)*py);
+            dVar5 = (double)(float)(segDx * segDx + (double)(float)(segDy * segDy));
             if (dVar2 < dVar5)
             {
-                dVar4 = (double)(lbl_803DF938 * (float)(dVar8 * dVar4 + (double)(float)(dVar7 * dVar3)));
+                dVar4 = (double)(lbl_803DF938 * (float)(segDx * dVar4 + (double)(float)(segDy * dVar3)));
                 dVar3 = (double)(float)(dVar4 * dVar4 -
                     (double)(float)((double)(float)((double)lbl_803DF93C * dVar5) *
                         dVar6));
@@ -610,17 +610,17 @@ FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
                         lbl_803DDBD8 = (float)dVar2;
                         if (resolve != '\0')
                         {
-                            dVar3 = (double)(float)(dVar2 * dVar8 + (double)*px);
-                            dVar2 = (double)(float)(dVar2 * dVar7 + (double)*py);
+                            dVar3 = (double)(float)(dVar2 * segDx + (double)*px);
+                            dVar2 = (double)(float)(dVar2 * segDy + (double)*py);
                             dVar4 = (double)(float)((double)(float)(dVar3 - cx) / r);
                             dVar5 = (double)(float)((double)(float)(dVar2 - cy) / r);
-                            fVar1 = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
-                            dVar2 = (double)(fVar1 + (float)(dVar4 * (double)px[1] +
+                            dot = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
+                            dVar2 = (double)(dot + (float)(dVar4 * (double)px[1] +
                                 (double)(float)(dVar5 * (double)py[1])));
                             px[1] = -(float)(dVar2 * dVar4 - (double)px[1]);
                             py[1] = -(float)(dVar2 * dVar5 - (double)py[1]);
                             dVar2 = (double)lbl_803DF948;
-                            while ((double)(fVar1 + (float)((double)px[1] * dVar4 +
+                            while ((double)(dot + (float)((double)px[1] * dVar4 +
                                 (double)(float)((double)py[1] * dVar5))) < dVar2)
                             {
                                 px[1] = px[1] + (float)(dVar2 * dVar4);
