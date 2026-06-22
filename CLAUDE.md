@@ -381,8 +381,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     displacements). Descending loops fold without the pragma. Volatile-launder cracks just-stored-
     global call args (fresh `lbz`, base reused).
 97. **`int local + per-use (f32) cast`** when target re-converts per statement (load CSEs, cast
-    doesn't). f32→int direction: `(int)(f64)volf` re-executes `fctiwz` per site at zero cost (the
-    f64 promotion changes the VN key); `(int)(f32)(f64)x` does NOT (real frsp).
+    doesn't). f32→int direction: the per-statement re-execution of `fctiwz` comes from the VOLATILE/RE-READ
+    SOURCE, NOT the `(f64)` cast (lead+validator reproduced, GC/2.0 -O4,p: `(int)(double)vf` and `(int)vf` on a
+    `volatile float` BOTH emit 2 `fctiwz`; a NON-volatile `(int)(double)gv` used twice CSEs to ONE `fctiwz` — the
+    f64 cast is neither necessary nor sufficient). So to get per-site re-conversion, make the SOURCE genuinely
+    re-read (volatile field / distinct memory loads), not the cast. `(int)(f32)(f64)x` does a real `frsp`
+    (separate fact, unrelated to VN).
 98. **`#pragma opt_unroll_loops off` IS functional (GC/2.0).** s64 fixed-point: spell halvings
     through a pointer-to-local (`*q /= 2;`), wrap in opt_unroll_loops off. See #109.
 99. **O0-shaped body in an -O4 unit = per-fn `#pragma optimization_level 0`** + `optimize_for_size
@@ -486,9 +490,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     unroller-internal heuristic. UNTRIED (the only remaining angle): a SOURCE pre-check restructure that biases
     the unroller to guard-form (e.g. an explicit `if (n <= 8) {remainder-only} else {main+remainder}` / an
     n-8-based bound) — assumed-reachable, not yet found.
-114. **No-op CONVERSION NODES split VN webs at zero cost:** `(int)(f64)volf` re-executes fctiwz;
-    `e*48 + (int)(long)(c*48)` blocks distributive re-factoring; `(int)((long)x * 8)` splits a
-    shift's VN key. Runtime values only (constants fold); global re-reads still need `volatile`.
+114. **No-op CONVERSION NODES block ALGEBRAIC RE-FACTORING (the confirmed lever) — they do NOT split VN /
+    force re-execution of duplicate sub-expressions (mis-attribution corrected, lead+validator reproduced
+    GC/2.0 -O4,p).** WHAT IT DOES: a `(int)(long)`/`(int)(f64)` node BLOCKS distribution/re-association ACROSS
+    it — `e*48 + c*48` re-factors to `(e+c)*48` (ONE mulli), but `e*48 + (int)(long)(c*48)` keeps TWO mulli.
+    Use it to stop MWCC re-associating/distributing a sum or product the target keeps separate. WHAT IT DOES
+    NOT DO: it does NOT split VN to re-execute duplicate identical sub-expressions — `(int)((long)x*8)` used
+    twice still CSEs to ONE `slwi`; `(int)(double)gv` (non-volatile) twice still CSEs to ONE `fctiwz`. So it is
+    NOT a "re-execute a conversion per use" lever — for that you need a genuinely RE-READ source (volatile
+    field / distinct memory loads), NOT the cast (see #97). Runtime values only (constants fold).
 115. **Callee-decl PARAM WIDTHS shift the caller's WEB CREATION ORDER at zero cost** (a narrowing
     cast into a matching-width param is absorbed; into an int param it makes a persistent node).
     The first source-side lever on the #108 within-class scramble. Needs call-arg conversion sites;
