@@ -679,7 +679,6 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
     float deltaX;
     float deltaY;
     float deltaZ;
-    s64 local_30;
 
     ctx = FUN_8028682c();
     self = (u16*)(ctx >> 0x20);
@@ -700,8 +699,6 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
                 {
                     *out = objects[i];
                     distSq = FUN_80293900(distSq);
-                    local_30 = (s64)(int)
-                    distSq;
                     *(short*)(out + 1) = (short)(int)distSq;
                     if ((ctx & 2) != 0)
                     {
@@ -760,8 +757,6 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
         *out = found;
         if (found != 0)
         {
-            local_30 = (s64)(int)
-            radius;
             *(short*)(out + 1) = (short)(int)radius;
             if ((ctx & 2) != 0)
             {
