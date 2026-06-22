@@ -2246,20 +2246,20 @@ void dll_07_func06(void)
             }
             if (D7_CLOUD[0x1453] != 0)
             {
-                ((NewCloud*)D7_CLOUD)->unk13E4 = ((NewCloud*)D7_CLOUD)->unk13D8;
-                ((NewCloud*)D7_CLOUD)->unk13E8 = ((NewCloud*)D7_CLOUD)->unk13DC;
-                ((NewCloud*)D7_CLOUD)->unk13EC = ((NewCloud*)D7_CLOUD)->unk13E0;
+                ((NewCloud*)D7_CLOUD)->curPosX = ((NewCloud*)D7_CLOUD)->lastPosX;
+                ((NewCloud*)D7_CLOUD)->curPosY = ((NewCloud*)D7_CLOUD)->lastPosY;
+                ((NewCloud*)D7_CLOUD)->curPosZ = ((NewCloud*)D7_CLOUD)->lastPosZ;
             }
             else
             {
-                ((NewCloud*)D7_CLOUD)->unk13E4 = pos[0];
-                ((NewCloud*)D7_CLOUD)->unk13E8 = pos[1];
-                ((NewCloud*)D7_CLOUD)->unk13EC = pos[2];
+                ((NewCloud*)D7_CLOUD)->curPosX = pos[0];
+                ((NewCloud*)D7_CLOUD)->curPosY = pos[1];
+                ((NewCloud*)D7_CLOUD)->curPosZ = pos[2];
                 D7_CLOUD[0x1453] = 1;
             }
-            ((NewCloud*)D7_CLOUD)->unk13D8 = pos[0];
-            ((NewCloud*)D7_CLOUD)->unk13DC = pos[1];
-            ((NewCloud*)D7_CLOUD)->unk13E0 = pos[2];
+            ((NewCloud*)D7_CLOUD)->lastPosX = pos[0];
+            ((NewCloud*)D7_CLOUD)->lastPosY = pos[1];
+            ((NewCloud*)D7_CLOUD)->lastPosZ = pos[2];
             snowReposSnowCloud(((NewCloud*)D7_CLOUD)->cloudId);
             if (((NewCloud*)D7_CLOUD)->activeFlakes > lbl_803DF1A0)
             {
@@ -2514,13 +2514,13 @@ int snowPrintSnowCloud(int arg, int cloudId)
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xd, 1);
     hudHidden = getHudHiddenFrameCount();
-    driftX = gSnowFlakeSize * (((NewCloud*)p)->unk13E4 - ((NewCloud*)p)->unk13D8);
+    driftX = gSnowFlakeSize * (((NewCloud*)p)->curPosX - ((NewCloud*)p)->lastPosX);
     stepX = (driftX < lbl_803DF214 * ((NewCloud*)p)->flakeMinX)
                 ? lbl_803DF214 * ((NewCloud*)p)->flakeMinX
                 : ((driftX > lbl_803DF214 * ((NewCloud*)p)->unk1390)
                        ? lbl_803DF214 * ((NewCloud*)p)->unk1390
                        : driftX);
-    driftZ = gSnowFlakeSize * (((NewCloud*)p)->unk13EC - ((NewCloud*)p)->unk13E0);
+    driftZ = gSnowFlakeSize * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
     stepZ = (driftZ < lbl_803DF214 * ((NewCloud*)p)->flakeMinZ)
                 ? lbl_803DF214 * ((NewCloud*)p)->flakeMinZ
                 : ((driftZ > lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ)

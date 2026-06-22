@@ -22,12 +22,12 @@ typedef struct NewCloud {
     u8 unk13A0[0x10];
     f32 flakeMaxZ;
     u8 unk13B4[0x24];
-    f32 unk13D8;
-    f32 unk13DC;
-    f32 unk13E0;
-    f32 unk13E4;
-    f32 unk13E8;
-    f32 unk13EC;
+    f32 lastPosX;
+    f32 lastPosY;
+    f32 lastPosZ;
+    f32 curPosX;
+    f32 curPosY;
+    f32 curPosZ;
     s32 cloudId;
     s32 cloudType;
     s32 despawning;
