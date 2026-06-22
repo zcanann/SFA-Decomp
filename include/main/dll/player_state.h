@@ -308,8 +308,8 @@ typedef struct PlayerState {
     f32 speedScale; /* 0-1 movement-speed multiplier from terrain (water depth / slope); currentSpeed = (maxSpeed-K) * (t * speedScale) */
     f32 unk844;
     f32 prevWorldPosY;
-    f32 unk84C;
-    f32 unk850;
+    f32 groundRefY; /* 0x84C: worldPosY latched when grounded */
+    f32 fallThresholdY; /* 0x850: groundRefY minus a margin; worldPosY <= this triggers the fall path */
     f32 stateTimer; /* per-frame countdown (-= timeDelta), reset to a constant on expiry */
     int unk858;
     f32 turnDeadzoneScale;

@@ -16456,7 +16456,7 @@ int fn_802ADC08(int obj, int inner, int p3)
         ((ByteFlags*)((char*)inner + 0x3f1))->b08 = 1;
         ((ByteFlags*)((char*)inner + 0x3f2))->b10 = 1;
     }
-    if (((GameObject*)obj)->anim.worldPosY <= ((PlayerState*)inner)->unk850
+    if (((GameObject*)obj)->anim.worldPosY <= ((PlayerState*)inner)->fallThresholdY
         || ((*(s8*)((char*)p3 + 0x264) & 2) && (*(s8*)((char*)p3 + 0x264) & 0x20) == 0)
         || *(u8*)((char*)p3 + 0x262) != 0)
     {
@@ -18017,8 +18017,8 @@ void fn_802AE9C8(int obj, int inner, int state)
                    : ((GameObject*)obj)->anim.velocityY);
     ((PlayerState*)state)->baddie.moveSpeed =
         lbl_803E7EE0 / (lbl_803E7ED4 * lbl_803DC680 / lbl_803DC67C);
-    ((PlayerState*)inner)->unk84C = ((GameObject*)obj)->anim.worldPosY;
-    ((PlayerState*)inner)->unk850 = ((GameObject*)obj)->anim.worldPosY - lbl_803E7ED8;
+    ((PlayerState*)inner)->groundRefY = ((GameObject*)obj)->anim.worldPosY;
+    ((PlayerState*)inner)->fallThresholdY = ((GameObject*)obj)->anim.worldPosY - lbl_803E7ED8;
 
     ((ByteFlags*)((char*)inner + 0x3f0))->b08 = 1;
     ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 0;
