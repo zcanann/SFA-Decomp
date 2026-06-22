@@ -1924,14 +1924,7 @@ void Obj_UpdateAllObjects(u8 flags)
         next:;
         }
         obj2 = (u8*)ObjGroup_GetObjects(0, &count2);
-        if (count2 != 0)
-        {
-            obj2 = *(u8**)obj2;
-        }
-        else
-        {
-            obj2 = 0;
-        }
+        obj2 = (count2 != 0) ? *(u8**)obj2 : 0;
         if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
         {
             *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
