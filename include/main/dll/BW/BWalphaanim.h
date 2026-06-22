@@ -79,7 +79,7 @@ typedef struct SnowBikeState {
     u8 bikeVariant;              /* 0x435: variant */
     u8 pad436[0x2];
     f32 unk438;             /* 0x438 */
-    f32 unk43C;             /* 0x43c */
+    f32 timer;              /* 0x43c: countdown timer (decays by timeDelta, fires+resets at floor) */
     s16 modelId;             /* 0x440: model id */
     u8 pad442[0x6];
     s16 unk448;             /* 0x448 */

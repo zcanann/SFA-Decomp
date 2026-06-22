@@ -613,9 +613,9 @@ void fn_801EBD60(int obj, int stateRaw)
     speed = sqrtf(st->distanceScale * st->distanceScale +
         (st->unk494 * st->unk494 +
             st->unk498 * st->unk498));
-    st->unk43C -= timeDelta;
-    fa = st->unk43C;
-    st->unk43C =
+    st->timer -= timeDelta;
+    fa = st->timer;
+    st->timer =
         (fa < lbl_803E5AE8)
             ? lbl_803E5AE8
             : ((fa > lbl_803E5B1C) ? lbl_803E5B1C : fa);
@@ -634,9 +634,9 @@ void fn_801EBD60(int obj, int stateRaw)
             target540 = lbl_803E5BE8;
             target544 = lbl_803E5AF8;
             if (((u32)(flags >> 1 & 1) == 0) &&
-                (st->unk43C <= lbl_803E5AE8))
+                (st->timer <= lbl_803E5AE8))
             {
-                st->unk43C = (f32)(s32)
+                st->timer = (f32)(s32)
                 randomGetRange(5, 10);
                 if (PSVECMag((void*)(obj + 0x24)) > lbl_803E5BC4)
                 {
