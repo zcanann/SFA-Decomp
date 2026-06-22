@@ -844,7 +844,7 @@ extern void fn_8003B228(int obj, void* p);
   *(u32 *)((state) + 0x54) = *(u32 *)((state) + 0x54) & ~0x10000LL; \
   *(u32 *)((state) + 0x54) = *(u32 *)((state) + 0x54) & ~0x20000LL; \
   *(u32 *)((state) + 0x54) = *(u32 *)((state) + 0x54) & ~0x40000LL; \
-  *(s8 *)((state) + 0xd) = -1
+  *(u8 *)((state) + 0xd) = 0xFF
 
 #define TRICKY_VOICE(obj, st, sfx, vol) \
   st = *(int *)((obj) + 0xb8); \
