@@ -1855,6 +1855,7 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     } rewardTail;
     f32 nearestDistance;
     u32 rewardSpawnIds0;
+    int nearest;
     int parentSetup;
     int setup;
     int index;
@@ -1975,13 +1976,14 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
     *(u8*)(setup + 6) = *(u8*)(parentSetup + 6);
     *(u8*)(setup + 5) = *(u8*)(parentSetup + 5);
     *(u8*)(setup + 7) = *(u8*)(parentSetup + 7);
-    gTrickyNearestObject = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+    nearest = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                    *(int*)&((GameObject*)obj)->anim.parent);
-    if ((((GameObject*)gTrickyNearestObject)->anim.seqId == 0x3cd) ||
-        (((GameObject*)gTrickyNearestObject)->anim.seqId == 0xb))
+    gTrickyNearestObject = nearest;
+    if ((((GameObject*)nearest)->anim.seqId == 0x3cd) ||
+        (((GameObject*)nearest)->anim.seqId == 0xb))
     {
-        (*(void (**)(f32, f32, f32))(*(int*)(*(int*)&((GameObject*)gTrickyNearestObject)->anim.dll) + 0x2c))
-            (lbl_803E2574, lbl_803E256C, lbl_803E2574);
+        (*(void (**)(int, f32, f32, f32))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x2c))
+            (nearest, lbl_803E2574, lbl_803E256C, lbl_803E2574);
     }
     return gTrickyNearestObject;
 }
