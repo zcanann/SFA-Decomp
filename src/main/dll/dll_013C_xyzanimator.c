@@ -86,6 +86,7 @@ typedef struct EdgeVerts
     s16 f;
 } EdgeVerts;
 
+#pragma opt_lifetimes off
 void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block)
 {
     extern u32 mapBlockFn_80060678(int* block); /* #57 */
@@ -94,9 +95,9 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     u16* mapBlock;
     int blockLayer;
     int coordOffset;
+    int triangleOffset;
     VertexS16* vtx;
     int triangle;
-    int triangleOffset;
     int edge;
     int edgeOffset;
     int blockIndex;
@@ -153,7 +154,9 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
         edge += 2;
     }
 }
+#pragma opt_lifetimes reset
 
+#pragma opt_dead_assignments off
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
     extern u32 mapBlockFn_80060678(int* block); /* #57 */
@@ -239,6 +242,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     }
     *(int*)block = return0_80060B90();
 }
+#pragma opt_dead_assignments reset
 
 int xyzanimator_getExtraSize(void)
 {
