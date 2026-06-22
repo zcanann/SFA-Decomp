@@ -284,10 +284,10 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
         mtxRotateByVec3s(mtx, rot.angles);
         Matrix_TransformPoint(mtx, state->vectorX, state->vectorY,
                               state->vectorZ, &outX, &outY, &outZ);
-        angle = getAngle((f64)outY, outZ);
+        angle = 0x4000 - (getAngle((f64)outY, outZ) & 0xffff);
         cur = gCamcontrolModeSettings->slideAngle;
         gCamcontrolModeSettings->slideAngle =
-            cur + ((int)(framesThisStep * ((0x4000 - (angle & 0xffff)) - cur)) >> 5);
+            cur + ((int)(framesThisStep * ((int)angle - cur)) >> 5);
     }
     else
     {
