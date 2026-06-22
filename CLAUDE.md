@@ -1022,7 +1022,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (1) **chained-zero copy** `a=b=c=0` → retail `li;mr;mr`, O4 copy-prop folds to 3×`li` (curves
     preparePointCollisionFrame/updateLocalPointTransforms, dll_15_func0A, func04 `found=i`). Source already
     uses the copy form; opt_level-1 keeps it but regresses these call-bearing fns (#142) — the fresh-eyes win
-    is the source shape that survives O4 copy-prop (a #131/#136(b) integer analogue). (2) **#21 shared-block
+    is the source shape that survives O4 copy-prop (a #131/#136(b) integer analogue). CONFIRMED-INERT for the
+    LOOP-fn variant (flameguard, saveSelectSetupMenuItems `off2=off1` where off1=0 — NOT a #51 call-arg win):
+    chained `off2=off1=0` (const-props through), opt_level 1 (REGRESSED 98.89→79.81, while-loop O1 overhead
+    per #110/#142), #147 OR-analogue `off2|=off1` (INERT — off1 is a 0 CONST with no runtime value to split,
+    and nopeephole DCE's it). So the integer analogue must work on a CONST-0 copy, which the pointer #131-OR
+    and #136(b)-reuse forms don't cover — still open. (2) **#21 shared-block
     placement** (skeetla trickyFindPathRouteEntry 98.59 / trickySelectRouteEntry 98.81): retail emits `bne X; b Y`
     (both arms branch to a SHARED `entry=NULL` block placed LATE), our build emits `beq X` (the shared block lands
     EARLY, reached by fall-through). 1-instr each. TRIED + REGRESSED (don't repeat): merge the if/else-if into one
