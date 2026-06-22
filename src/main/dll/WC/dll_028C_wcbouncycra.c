@@ -73,9 +73,9 @@ void wcbouncycra_update(int obj)
 
     if ((state->flags & WBOUNCY_FLAG_ACTIVE) == 0)
     {
-        int n = (int)((f32)state->cooldown - timeDelta);
+        s16 n = (s16)((f32)state->cooldown - timeDelta);
         state->cooldown = n;
-        if ((s16)n <= 0)
+        if (n <= 0)
         {
             f32 v = gBouncyCrateTriggerSearchRadius;
             f32 dist;
