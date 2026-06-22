@@ -745,14 +745,20 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ✓MECHANISM PINNED (probe-confirmed, validator + lead): the IN-LOOP standalone-const-keep is an
     OPT-LEVEL decision — O4 (graph-coloring) KEEPS a standalone const-0 stored across an in-loop call in a
     SAVED reg (`li r31,0` in the preheader, reused via `stw r31` each iter); O2 (creation-order) RE-MATERIALIZES
-    `li r0` per iter (O2-impossibility confirmed by a whole-DLL scan). ⚠️ The "named var vs literal `0`" idea is
+    `li r0` per iter BY DEFAULT. ⚠️ The "named var vs literal `0`" idea is
     a RED HERRING — at O4, `arr[i]=0`/`g=0`/`vec[2]=0;vec[0]=0` (literal) and the same via a named `int z=0;` are
-    BYTE-IDENTICAL (both keep in saved r31; verified on global-scalar AND two-store shapes). So the lever is
-    O4-vs-O2 ALONE, not the spelling. CONCRETE #126 FIX: debugPrintDraw carries `#pragma optimization_level 2`
-    (the residual cause — pass=0 re-materializes at O2); retail keeps pass in saved r29 = O4 behaviour, so retail
-    is O4 here → DROP/raise that pragma to O4 and A/B the FULL fn (#95 — keep only if the whole fn rises; the O2
-    may've been a prior-agent choice for other parts). (The chained+opt_level lever is the COUNTER-TIED sibling
-    — opposite opt-level: counter-tied wants O2-chain, standalone wants O4-keep.) REMAINING EDGES (live targets):
+    BYTE-IDENTICAL (both keep in saved r31; verified on global-scalar AND two-store shapes). So the O4-keep is
+    O4-vs-O2 ALONE, not the spelling — use it ONLY for fns whose rest holds at O4.
+    ⚠️ "O2 ALWAYS re-materializes a const-0" is OVERSTATED (disproven by retail): retail's debugPrintDraw is O2
+    AND keeps pass=0 in saved r29. The earlier "O2-impossibility" whole-DLL scan hit SRC objs (which fold because
+    OUR source lacks retail's construct) — NOT the retail objs. So a const-0 CAN be kept in a saved reg AT O2;
+    retail does it; the O2-keep SOURCE FORM is a LIVE target (not a cap).
+    #126 debugPrintDraw: dropping its `#pragma optimization_level 2` REGRESSES 93.29→88.07 (dbgtricky-verified —
+    the rest of the fn is genuinely O2-bound), so the O4-drop does NOT apply here; the fix is to recover the O2
+    saved-reg web. LEAD: retail's `pass` is likely MULTI-DEF (a 2-pass loop variable, 0 then 1 — a multi-def web
+    GETS a saved reg at O2's creation-order #108) while ours is a single-def const-0 that folds → recover pass's
+    multi-def/loop-variable nature, don't treat it as a const. (The chained+opt_level lever is the COUNTER-TIED
+    sibling — opposite opt-level: counter-tied wants O2-chain, standalone O4-keep.) REMAINING EDGES (live targets):
     the PRE-LOOP field store (entryCount=0 folds even at O4 — pre-loop position doesn't get the saved web) and
     Minimap's counter-copy `mr` at an O4-shaped size — both precisely bounded, not caps.
     (The comma-init form on a global base adds an `mr walker,r0`
