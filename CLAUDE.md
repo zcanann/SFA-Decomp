@@ -843,12 +843,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     vs multi-def). Tells: the whole pool ROTATES (curveId param→copy pushed everything up one). Levers:
     OR/#131 (keep a copy-source in its param class), #130 deref-decouple, #126 param-type, #137 reorder.
     This is curves_distFn15, and the detour family (#138/#143/#149). GO AFTER THESE.
-    **(2) PURE WITHIN-CLASS ORDER/FREE-REG CHOICE (OPEN — clean source form not yet found): right pool,
-    wrong slot — which of two FREE same-class regs, or reversed creation-order direction.** Signature:
-    streams are BYTE-IDENTICAL except the reg names; T=C instr count; no recovered copy. This exact
-    "byte-identical-except-one-reg" shape has a PERFECT crack record once the reframe lands — #130
-    (dim2roofrub: five prior agents called it as-good-as-it-gets → 100%) and #131 both lived here. So a
-    clean source form EXISTS; it's just not mapped yet — treat this as not-yet-found, never as a wall.
+    **(2) PURE WITHIN-CLASS ORDER/FREE-REG CHOICE — ★ CRACKED for RE-DERIVABLE values via #107 UN-NAME
+    (expgfx, CameraModeTestStrength_update 99.88→99.98): right pool, wrong slot — which of two FREE same-class
+    regs.** Signature: streams BYTE-IDENTICAL except reg names; T=C; no recovered copy. THE LEVER (generalizes
+    #130's #107 mechanism to a kind-2 GPR TRANSPOSITION): UN-NAME (inline the defining expression of) the value
+    retail keeps in the LOWER reg — drop its `int x` decl and spell `(flags & 1)` / `obj->field` / the &-mask at
+    each use. That converts it from a NAMED SAVED-LOCAL web into an EXPRESSION TEMP, which colors LOWER
+    (compiler-temp webs color BEFORE named-local webs, #107's GPR clause) → the WHOLE r27↔r28 scramble (both
+    values AND any call-result copy) resolves in ONE edit. (expgfx case: two bit-extract locals `m1=flags&1`/
+    `m2=flags&2` used twice across calls — un-naming m1 flipped the lot.) SCOPE: applies to RE-DERIVABLE values
+    (bit-extract, field read, &-mask, global/deref address); does NOT apply to NON-re-derivable values (a
+    u16-from-CALL conversion — inlining re-executes/regresses; that sub-case stays open, use #130 web-decouple
+    or class-move). DIAGNOSE: of the two swapped regs, which value does retail hold LOWER? Un-name THAT one if
+    it's re-derivable. decl-order is INERT (the classic tried-so-far); un-naming is the mover. So the kind-2
+    frontier is NO LONGER a wall — #130 (dim2roofrub) and #131 lived here, and now #107-un-name is the general
+    crack for the re-derivable majority. Still: the non-re-derivable (call-result) sub-case is open — banked.
     TRIED-SO-FAR (a launchpad to skip, NOT evidence of impossibility): decl-order/#61b, ternary↔if/else
     (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
     #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
