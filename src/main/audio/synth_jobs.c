@@ -309,36 +309,34 @@ cancel:
 
 void synthRefreshJobVolumes(void)
 {
-    SynthJob* job;
     u32 i;
     f32 volumeScale;
 
     sndBegin();
     volumeScale = lbl_803E77D8;
-    job = synthJobTable;
     for (i = 0; i < lbl_803BD150[0x210]; i++)
     {
-        if (job->state != 0)
+        if (synthJobTable[i].state != 0)
         {
-            job->pan = job->savedPan;
-            job->surroundPan = job->savedSurroundPan;
+            synthJobTable[i].pan = synthJobTable[i].savedPan;
+            synthJobTable[i].surroundPan = synthJobTable[i].savedSurroundPan;
             if ((synthFlags & 1) != 0)
             {
-                job->pan = 0x40;
-                job->surroundPan = 0;
+                synthJobTable[i].pan = 0x40;
+                synthJobTable[i].surroundPan = 0;
             }
             else if ((synthFlags & 2) == 0)
             {
-                job->surroundPan = 0;
+                synthJobTable[i].surroundPan = 0;
             }
-            if (job->state != 3)
+            if (synthJobTable[i].state != 3)
             {
-                hwSetVolume(job->voice, 0, volumeScale * job->volume,
-                            volumeScale * job->leftVolume, volumeScale * job->rightVolume,
-                            job->pan << 0x10, job->surroundPan << 0x10);
+                hwSetVolume(synthJobTable[i].voice, 0, volumeScale * synthJobTable[i].volume,
+                            volumeScale * synthJobTable[i].leftVolume,
+                            volumeScale * synthJobTable[i].rightVolume,
+                            synthJobTable[i].pan << 0x10, synthJobTable[i].surroundPan << 0x10);
             }
         }
-        job++;
     }
     sndEnd();
 }
