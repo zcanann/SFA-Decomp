@@ -1057,7 +1057,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     source); model it as the #131 same-value/front-end materialization and look for the operand-level split that
     keeps the addi targeting the destination; perturb a NEIGHBOR web's creation order so r0 isn't the free temp
     at the materialization point. This is the single highest-leverage open nut in the unit (gates 6+ fns).
-    **NEW CLUES (dll_000A_expgfx deep-dive):** (1) the bug is BROADER than globals — it's a general "materialize a
+    **PARTIAL CRACK (the #143 INDEX FORM): for a global WALKED in a loop (`p = glob; *p=…; p++`), rewrite as the
+    INDEX form `glob[loopCounter] = …` (drop the pointer + its `++`) → MWCC strength-reduces to a walker inited with
+    a DIRECT `addi rSaved`, KILLING the r0+mr detour.** Took expgfx_free 95.6→97.2 (mr count 2→0, T=C). BUT it is
+    FUNCTION-SPECIFIC: it only works when MWCC actually strength-reduces `glob[i]` back to a walker — WORKED on
+    expgfx_free (nested loop, store inside inner loop), REGRESSED expgfxRemoveAll (kept mr + added `slwi;add`),
+    renderParticles (conditional single-use → `lhzx`), and BROKE onMapSetup to 0% (flat loop, 6 walkers). A/B PER FN,
+    grep `mr.*r0$` to confirm the count drops, revert on regress. Strongest #155 lead — try it FIRST on any base-mr
+    fn with a clean `glob[i]` walker.
+    **OTHER CLUES (dll_000A_expgfx deep-dive):** (1) the bug is BROADER than globals — it's a general "materialize a
     saved-reg value via VOLATILE TEMP r0 then `mr`/copy" vs retail's DIRECT-into-saved. Also hits `extsh r0,r3` then
     copy (vs retail `extsh r24,r3` direct into the saved reg, addremove resourceTableIndex). (2) The FIRST
     standalone-global-into-saved in a fn materializes DIRECT (e.g. `runtime` → `addi r31,r3,0`); SUBSEQUENT standalone
