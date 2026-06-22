@@ -712,7 +712,7 @@ void objFn_8002b67c(u8* obj)
         return;
     }
     src = ((GameObject *)obj)->anim.modelInstance->hitVolumes;
-    idx = ((GameObject *)obj)->unkE4;
+    idx = ((GameObject *)obj)->hitVolumeIndex;
     src += idx;
     dst += idx;
     dst->bounds[0] = src->bounds[0];
@@ -780,7 +780,7 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
     {
         return;
     }
-    bounds += obj->unkE4;
+    bounds += obj->hitVolumeIndex;
     if (xBound != 0)
     {
         bounds->bounds[0] = xBound >> 2;

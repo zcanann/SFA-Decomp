@@ -311,7 +311,7 @@ void staffactivated_init(int obj, int setup)
     switch (setupData->mode)
     {
     case 2:
-        ((GameObject*)obj)->unkE4 = modelVariant;
+        ((GameObject*)obj)->hitVolumeIndex = modelVariant;
         state->targetX = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *

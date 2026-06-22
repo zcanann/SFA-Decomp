@@ -3,7 +3,7 @@
  *
  * camdrakor_computeTargetOffset produces the vector from the camera's
  * focus object to the spot the camera should aim at while tracking the
- * target's currently-active hit-volume node (target->unkE4). When the
+ * target's currently-active hit-volume node (target->hitVolumeIndex). When the
  * active node changes between frames it kicks off a blend: the previous
  * node index is latched as the blend start and a blend weight is reset,
  * then each frame the weight is wound down (lbl_803E2548 * lbl_803DC074
@@ -40,7 +40,7 @@ void camdrakor_computeTargetOffset
     target = (GameObject*)camera->targetObj;
     focus = (GameObject*)camera->anim.targetObj;
     hitVolumes = target->anim.hitVolumeTransforms;
-    if (target->unkE4 != DAT_803de1e0->pathBlendTargetIndex)
+    if (target->hitVolumeIndex != DAT_803de1e0->pathBlendTargetIndex)
     {
         DAT_803de1e0->pathBlendStartIndex = DAT_803de1e0->pathBlendTargetIndex;
         DAT_803de1e0->pathBlendWeight = lbl_803E2540;
@@ -48,9 +48,9 @@ void camdrakor_computeTargetOffset
     weightFloor = lbl_803E2544;
     if (DAT_803de1e0->pathBlendWeight <= weightFloor)
     {
-        *outX = hitVolumes[target->unkE4].centerX - focus->anim.worldPosX;
-        *outY = hitVolumes[target->unkE4].centerY - *targetY;
-        *outZ = hitVolumes[target->unkE4].centerZ - focus->anim.worldPosZ;
+        *outX = hitVolumes[target->hitVolumeIndex].centerX - focus->anim.worldPosX;
+        *outY = hitVolumes[target->hitVolumeIndex].centerY - *targetY;
+        *outZ = hitVolumes[target->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
     }
     else
     {
@@ -59,10 +59,10 @@ void camdrakor_computeTargetOffset
         if (DAT_803de1e0->pathBlendWeight < weightFloor)
         {
             DAT_803de1e0->pathBlendWeight = weightFloor;
-            DAT_803de1e0->pathBlendStartIndex = target->unkE4;
+            DAT_803de1e0->pathBlendStartIndex = target->hitVolumeIndex;
         }
         startHitVolume = &hitVolumes[DAT_803de1e0->pathBlendStartIndex];
-        targetHitVolume = &hitVolumes[target->unkE4];
+        targetHitVolume = &hitVolumes[target->hitVolumeIndex];
         startCenterY = startHitVolume->centerY;
         targetCenterY = targetHitVolume->centerY;
         startCenterZ = startHitVolume->centerZ;
@@ -73,5 +73,5 @@ void camdrakor_computeTargetOffset
         *outY = ((startCenterY - targetCenterY) * weight + targetCenterY) - *targetY;
         *outZ = ((startCenterZ - targetCenterZ) * weight + targetCenterZ) - focus->anim.worldPosZ;
     }
-    DAT_803de1e0->pathBlendTargetIndex = target->unkE4;
+    DAT_803de1e0->pathBlendTargetIndex = target->hitVolumeIndex;
 }

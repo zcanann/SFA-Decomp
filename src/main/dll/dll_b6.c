@@ -82,19 +82,19 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
            || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
            || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
            || (obj->objectFlags & 0x40)
-           || (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->unkE4].flags & CAMCONTROL_TARGET_KIND_MASK))) == 0) {
+           || (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->hitVolumeIndex].flags & CAMCONTROL_TARGET_KIND_MASK))) == 0) {
             accept = 0;
         }
         if (accept == 0) {
             continue;
         }
-        if ((int)*(u8 *)&obj->anim.modelInstance->hitVolumes[obj->unkE4].priority < bestPri) {
+        if ((int)*(u8 *)&obj->anim.modelInstance->hitVolumes[obj->hitVolumeIndex].priority < bestPri) {
             continue;
         }
-        if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->unkE4].flags & 0x80)) {
+        if ((*(u8 *)&obj->anim.resetHitboxMode & 0x80) || (data[obj->hitVolumeIndex].flags & 0x80)) {
             dy = gCamcontrolNormalizedMin;
         } else {
-            dy = focus->worldPosY - obj->anim.hitVolumeTransforms[obj->unkE4].centerY;
+            dy = focus->worldPosY - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerY;
         }
         if (!(dy > lbl_803E1644)) {
             continue;
@@ -102,10 +102,10 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if (!(dy < lbl_803E1648)) {
             continue;
         }
-        dx = focus->worldPosX - obj->anim.hitVolumeTransforms[obj->unkE4].centerX;
-        dz = focus->worldPosZ - obj->anim.hitVolumeTransforms[obj->unkE4].centerZ;
+        dx = focus->worldPosX - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerX;
+        dz = focus->worldPosZ - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerZ;
         distsq = dx * dx + dz * dz;
-        entry = &data[obj->unkE4];
+        entry = &data[obj->hitVolumeIndex];
         range = (f32)(int)(entry->bounds[2] << 2);
         if (!(distsq < range * range)) {
             continue;
@@ -118,14 +118,14 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
         if (canTarget == 0) {
             continue;
         }
-        bestPri = *(u8 *)&obj->anim.modelInstance->hitVolumes[obj->unkE4].priority;
+        bestPri = *(u8 *)&obj->anim.modelInstance->hitVolumes[obj->hitVolumeIndex].priority;
         i = 0;
         while (i < count
-            && (int)*(u8 *)&targets[i]->anim.modelInstance->hitVolumes[targets[i]->unkE4].priority > bestPri) {
+            && (int)*(u8 *)&targets[i]->anim.modelInstance->hitVolumes[targets[i]->hitVolumeIndex].priority > bestPri) {
             i++;
         }
         while (i < count && dist[i] < distsq
-            && bestPri == (int)*(u8 *)&targets[i]->anim.modelInstance->hitVolumes[targets[i]->unkE4].priority) {
+            && bestPri == (int)*(u8 *)&targets[i]->anim.modelInstance->hitVolumes[targets[i]->hitVolumeIndex].priority) {
             i++;
         }
         for (k = count; k > i; k--) {
@@ -142,14 +142,14 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     if (count > 0) {
         best = targets[0];
         row = best->anim.modelInstance->hitVolumes;
-        row += best->unkE4;
+        row += best->hitVolumeIndex;
         if (row->flags & 0x20) {
             worldFrom[0] = focus->worldPosX;
             worldFrom[1] = lbl_803E1648 + focus->worldPosY;
             worldFrom[2] = focus->worldPosZ;
-            worldTo[0] = best->anim.hitVolumeTransforms[best->unkE4].jointX;
-            worldTo[1] = best->anim.hitVolumeTransforms[best->unkE4].jointY;
-            worldTo[2] = best->anim.hitVolumeTransforms[best->unkE4].jointZ;
+            worldTo[0] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointX;
+            worldTo[1] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointY;
+            worldTo[2] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointZ;
             voxmaps_worldToGrid(worldFrom, gridFrom);
             voxmaps_worldToGrid(worldTo, gridTo);
             if (voxmaps_traceLine(gridFrom, gridTo, traceOut, occOut, 0) == 0 && occOut[0] != 1) {

@@ -980,7 +980,7 @@ void crawler_update(int* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].nextA;
         }
     }
@@ -998,7 +998,7 @@ void crawler_update(int* obj, u8* state)
             Baddie_SetMove(obj, state, *(u8*)((char*)t6 + i + 8), *(f32*)((int)t6 + i), 0,
                         *(int*)((char*)t6 + i + 4) & 0xff);
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].next9;
         }
         else
@@ -1448,7 +1448,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         Baddie_SetMove((int*)obj, state, tbl[step].moveId, tbl[step].spd, 0,
                     tbl[step].mask & 0xff);
         *(u8*)(state + 0x33c) = tbl[step].flagC;
-        ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+        ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
         *(u8*)(state + 0x33f) = tbl[step].next9;
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
@@ -1494,7 +1494,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         u8 v;
         Baddie_SetMove((int*)obj, state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
         *(u8*)(state + 0x33c) = tbl[1].flagC;
-        ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+        ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
         *(u8*)(state + 0x33f) = tbl[1].next9;
         v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
@@ -1637,7 +1637,7 @@ void crawler_updateC(s16* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
         }
         if ((((BaddieState*)state)->controlFlags & 0xc0000000) == 0)
@@ -1736,7 +1736,7 @@ void crawler_updateC(s16* obj, u8* state)
                     Baddie_SetMove((int*)obj, state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
                                 *(int*)((char*)seq + i + 4) & 0xff);
                     *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                    ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                    ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
                     *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
                 }
                 else
@@ -1858,7 +1858,7 @@ void crawler_updateB(s16* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             ((BaddieState*)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
         }
     }
@@ -1874,7 +1874,7 @@ void crawler_updateB(s16* obj, u8* state)
                             seq[*(u8*)(state + 0x33f)].spd, 0,
                             seq[*(u8*)(state + 0x33f)].mask & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
             }
             else
@@ -1947,7 +1947,7 @@ void crawler_updateB(s16* obj, u8* state)
                             seq[*(u8*)(state + 0x33f)].spd, 0,
                             seq[*(u8*)(state + 0x33f)].mask & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                ((GameObject*)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
             }
             else

@@ -1140,7 +1140,7 @@ void fn_802AA4B0(int obj, int state, f32 unused)
         {
             int sp = *(int*)&((PlayerState*)state)->baddie.targetObj;
             ObjHitVolumeRuntimeTransform* pt =
-                &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->unkE4];
+                &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->hitVolumeIndex];
             f32 dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
             f32 dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
             f32 dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;

@@ -1143,7 +1143,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void fn_8016F260(int* obj, int* state, int* other)
 {
     ObjHitVolumeRuntimeTransform* hitVolume =
-        &((GameObject*)other)->anim.hitVolumeTransforms[((GameObject*)other)->unkE4];
+        &((GameObject*)other)->anim.hitVolumeTransforms[((GameObject*)other)->hitVolumeIndex];
     if (hitVolume != NULL)
     {
         f32 dx = hitVolume->jointX - ((FireballState*)state)->posX;

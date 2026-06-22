@@ -69,7 +69,7 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     target = (GameObject*)camera->targetObj;
     focus = (GameObject*)camera->anim.targetObj;
     hitVolumes = target->anim.hitVolumeTransforms;
-    curIdx = target->unkE4;
+    curIdx = target->hitVolumeIndex;
     if ((u32)curIdx != gCamCombatState->pathBlendTargetIndex)
     {
         gCamCombatState->pathBlendStartIndex = gCamCombatState->pathBlendTargetIndex;
@@ -84,11 +84,11 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
         if (gCamCombatState->pathBlendWeight < lim)
         {
             gCamCombatState->pathBlendWeight = lim;
-            gCamCombatState->pathBlendStartIndex = target->unkE4;
+            gCamCombatState->pathBlendStartIndex = target->hitVolumeIndex;
         }
         {
             u8 ci = gCamCombatState->pathBlendStartIndex;
-            u8 ti = target->unkE4;
+            u8 ti = target->hitVolumeIndex;
             float dx = hitVolumes[ci].centerX - hitVolumes[ti].centerX;
             float dy = hitVolumes[ci].centerY - hitVolumes[ti].centerY;
             float dz = hitVolumes[ci].centerZ - hitVolumes[ti].centerZ;
@@ -106,11 +106,11 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     }
     else
     {
-        *outX = hitVolumes[target->unkE4].centerX - focus->anim.worldPosX;
-        *outY = hitVolumes[target->unkE4].centerY - *targetY;
-        *outZ = hitVolumes[target->unkE4].centerZ - focus->anim.worldPosZ;
+        *outX = hitVolumes[target->hitVolumeIndex].centerX - focus->anim.worldPosX;
+        *outY = hitVolumes[target->hitVolumeIndex].centerY - *targetY;
+        *outZ = hitVolumes[target->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
     }
-    gCamCombatState->pathBlendTargetIndex = target->unkE4;
+    gCamCombatState->pathBlendTargetIndex = target->hitVolumeIndex;
 }
 
 typedef struct {
@@ -266,17 +266,17 @@ void CameraModeCombat_update(short* cam)
                             }
                             else
                             {
-                                dx = hitVolumes[tgt->unkE4].centerX - focus->anim.worldPosX;
-                                dy = hitVolumes[tgt->unkE4].centerY - ty;
-                                dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
+                                dx = hitVolumes[tgt->hitVolumeIndex].centerX - focus->anim.worldPosX;
+                                dy = hitVolumes[tgt->hitVolumeIndex].centerY - ty;
+                                dz = hitVolumes[tgt->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
                             }
                         }
                         else
                         {
                             ty = lbl_803E18D0 + focus->anim.worldPosY;
-                            dx = hitVolumes[tgt->unkE4].centerX - focus->anim.worldPosX;
-                            dy = hitVolumes[tgt->unkE4].centerY - ty;
-                            dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
+                            dx = hitVolumes[tgt->hitVolumeIndex].centerX - focus->anim.worldPosX;
+                            dy = hitVolumes[tgt->hitVolumeIndex].centerY - ty;
+                            dz = hitVolumes[tgt->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
                         }
                         fa = dx * dx;
                         fb = dz * dz;
@@ -518,7 +518,7 @@ void CameraModeCombat_init(CameraObject* camera, u32 arg2, GameObject** targetPt
             }
             else
             {
-                hitVolume = &target->anim.hitVolumeTransforms[target->unkE4];
+                hitVolume = &target->anim.hitVolumeTransforms[target->hitVolumeIndex];
                 dx = hitVolume->centerX - focus->anim.worldPosX;
                 dz = hitVolume->centerZ - focus->anim.worldPosZ;
             }

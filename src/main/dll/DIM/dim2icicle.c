@@ -598,10 +598,10 @@ void DIM2icicle_updateCombatState(DIMbossObject *obj, ObjAnimUpdateState *animUp
   }
   if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
     ((void (*)(u8 *, int, int, int))*(VtableFn **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, (int)obj, 1, 2);
-    gameObj->unkE4 = 1;
+    gameObj->hitVolumeIndex = 1;
   }
   else {
-    gameObj->unkE4 = 2;
+    gameObj->hitVolumeIndex = 2;
   }
   runtime->savedPendingParentObj = *(int *)&gameObj->pendingParentObj;
   *(int *)&gameObj->pendingParentObj = 0;

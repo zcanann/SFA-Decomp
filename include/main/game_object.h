@@ -48,7 +48,8 @@ typedef struct GameObject {
         Obj_*ModelColorFadeRecursive walks them (childScan += 4 loop) */
     void *unkDC;
     u8 unkE0[4];
-    u8 unkE4;
+    u8 hitVolumeIndex; /* index into anim.hitVolumeBounds/hitVolumeTransforms +
+        modelInstance->hitVolumes (active hit-volume node) */
     u8 colorFadeFlags; /* obj+0xE5 bits 1/2 queried by getters, 4 toggled, 8
         suppresses the fade tick (Obj_*ModelColorFade* family) */
     s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
@@ -72,7 +73,7 @@ typedef struct GameObject {
 
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
-STATIC_ASSERT(offsetof(GameObject, unkE4) == 0xE4);
+STATIC_ASSERT(offsetof(GameObject, hitVolumeIndex) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);

@@ -488,7 +488,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     *(u32*)((char*)state) |= 0x200000;
     inner = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    ((GameObject*)obj)->unkE4 = GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE) != 0;
+    ((GameObject*)obj)->hitVolumeIndex = GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE) != 0;
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
