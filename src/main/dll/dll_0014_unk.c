@@ -4138,6 +4138,8 @@ RomCurveDef* RomCurve_getById(u32 curveId)
 
 int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
 {
+    int curveIndex;
+    int typeIndex;
     RomCurveDef* curve;
     RomCurveDef* bestCurve;
     RomCurveDef* bestActionCurve;
@@ -4145,8 +4147,6 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     f32 bestActionDistance;
     f32 distance;
     f32 point[3];
-    int curveIndex;
-    int typeIndex;
 
     bestDistance = gRomCurveFindDistInit;
     bestCurve = NULL;
