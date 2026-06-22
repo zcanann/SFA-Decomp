@@ -255,7 +255,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     if (renderHandle != 0x0)
     {
         FUN_800175b0((int)renderHandle, 4);
-        FUN_800175d4((double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684, renderHandle);
+        FUN_800175d4(renderHandle, (double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684);
         FUN_8001759c((int)renderHandle, 0xff, 0xff, 0xff, 0xff);
         FUN_80017608(0);
         FUN_80017600(2, 0, 0);
@@ -273,7 +273,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     GXSetBlendMode(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
     FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + DAT_803dd8bd * shadowStride) * 4), 0);
-    FUN_80247a7c((double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C, mtx);
+    FUN_80247a7c(mtx, (double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C);
     FUN_8025d8c4(mtx, 0x40, 0);
     FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
     FUN_8025be80(0);
@@ -5251,11 +5251,11 @@ void defragMemory(int mode)
     }
     if (mode != 0)
     {
+        int i;
         char* p1;
         char* p2;
         char* p3;
         char* p4;
-        int i;
         testAndSet_onlyUseHeaps1and2(1);
         i = 0;
         {
