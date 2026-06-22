@@ -388,6 +388,8 @@ void waterfx_func05(int p1, int p2)
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
+            int o64 = i * 0x40;
+            int o32 = i * 0x20;
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor(p1, 0xff, 0xff, 0xff, (u8)g->active);
@@ -400,7 +402,7 @@ void waterfx_func05(int p1, int p2)
                 dp.fa = 0;
                 Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)gWaterfxWakeVtx + i * 0x40, (char*)gWaterfxWakeVtxDesc + i * 0x20, 2);
+                drawFn_8005cf8c((char*)gWaterfxWakeVtx + o64, (char*)gWaterfxWakeVtxDesc + o32, 2);
             }
         }
         fn_800542F4();
