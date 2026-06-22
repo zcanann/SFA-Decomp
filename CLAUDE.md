@@ -746,16 +746,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ✓SOLVED — the LOCAL-COPY half: `local = accum;` (PLAIN store of the accumulator VARIABLE, not literal
     `0` and not the `local = accum = 0` chain — the var-read doesn't const-fold) → `mr` at O4, in-tree-proven
     (fn_801932C8 `htOff = fallOff`). FIELD-STORE half — ✓TRIGGER PINNED (validator add-ingredients ladder,
-    disproves "folds even at O4"): the fold trigger is a NESTED LOOP, NOT the pre-loop position. SINGLE loop
-    (`int fallOff=0; state->entryCount=0; loop{gArr[i]=fallOff; fallOff+=4;}`) → `stb r31,42` REUSES fallOff's
-    saved reg = MATCHES retail; add htOff-copy / OR / FP body → still reuses; **NESTED loop** (fallOff
-    incremented OUTER, used INNER) → `stb r0,42` FOLDS (fallOff is inner-loop-invariant → its materialization
-    is DEFERRED → not in r31 at the pre-loop field store). Retail REUSES in the genuinely-nested fn_801932C8
-    (`stb r23`), so the nested-loop-reuse form EXISTS. OPEN (sharp bounded target): the source that keeps the
-    nested accumulator in r31 at the field store DESPITE the inner-loop invariance — force it to materialize
-    EARLY (an early non-folding use, or a structure the nesting doesn't defer). Tried+folds: reference fallOff
-    before the store, `entryCount = fallOff`. (1-instr-per-fn; unifies w/ #126 + Minimap as the O2 saved-anchor
-    family.) (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
+    disproves "folds even at O4"): the fold trigger is DEEP-NEST + INNER-LOOP COMPLEXITY pressure (NEITHER alone
+    folds), NOT the pre-loop position. Ladder (~12 probes, exact-reg): single / single+htOff+OR / single+FP /
+    double-nested-outer-top / TRIPLE-nested-SIMPLE-inner → all REUSE `stb r31` ✓ (match retail); but TRIPLE-nest
+    + (FP physics call OR a conditional) IN THE INNER loop → FOLD `stb r0` ✗. So a complex inner loop displaces
+    fallOff's early materialization → it's not in r31 at the pre-loop field store. Corrected framing: "folds
+    under deep-nest + inner-complexity PRESSURE; reuses otherwise." Retail KEEPS it under this exact pressure
+    (`stb r23` in the triple-nested-FP fn_801932C8), so the forcing form EXISTS. OPEN (sharp 1-instr edge):
+    force the nested accumulator to materialize EARLY despite the pressure. Tried+fold: ref-fallOff-first,
+    `entryCount=fallOff`, volatile early use. Best via fresh incremental attack or an in-tree oracle (a matched
+    triple-nested-FP fn keeping an accumulator-0 in a saved reg across a field store). (Unifies w/ #126 + Minimap
+    as the O2 saved-anchor family.) (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
     chained copy folds to `li` at O4 yet retail (STRUCTURALLY IDENTICAL, same instr count) has the `mr`
     (Minimap_release): NOT a pressure cap (identical structure = identical pressure), it's an unfound
     O4-surviving-copy source form. The chain reaches counter+LOCAL value-0; (c)/(d) need forms still to find.
