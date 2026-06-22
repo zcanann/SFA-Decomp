@@ -21,7 +21,7 @@
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 extern u8 hudTextures[0x198];
-extern void drawRect(int w, int h, f32 a, f32 b);
+extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextLoadDir(int dirId);
@@ -164,7 +164,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (pauseMenuState != 0)
     {
-        drawRect(0x280, 0x1e0, lbl_803E1E3C, lbl_803E1E3C);
+        drawRect(lbl_803E1E3C, lbl_803E1E3C, 0x280, 0x1e0);
     }
 
     switch (pauseMenuState)
