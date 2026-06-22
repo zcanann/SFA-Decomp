@@ -2467,7 +2467,7 @@ u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to)
     return visible;
 }
 
-void baddieFn_8014a304(f32 radius, int obj, int state)
+void baddieFn_8014a304(int obj, int state, f32 radius)
 {
     u8 traceHit[4];
     s16 probeGrid[4];
