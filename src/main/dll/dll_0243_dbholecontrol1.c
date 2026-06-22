@@ -555,7 +555,7 @@ void dbholecontrol1_update(int* obj)
 
 void dbholecontrol1_init(int* obj, u8* params)
 {
-    extern u32 ObjGroup_AddObject(); /* #57 */
+    extern u32 ObjGroup_AddObject();
     DbHoleControl1State* sub = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
@@ -573,7 +573,7 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6390);
 }
 
-void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
+void dbholecontrol1_free(int x) { extern u64 ObjGroup_RemoveObject(); ObjGroup_RemoveObject(x, 0x1e); }
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
@@ -680,8 +680,6 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2);
 
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
- * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
- */
+/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408). */
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */

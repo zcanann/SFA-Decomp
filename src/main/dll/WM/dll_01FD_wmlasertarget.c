@@ -61,7 +61,6 @@ void wmlasertarget_update(int* obj)
 {
     extern u8 framesThisStep;
 
- /* #57: u32 return -> cmplwi */
     u8* def;
     WmLaserTargetState* sub;
 

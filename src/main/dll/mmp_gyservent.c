@@ -60,15 +60,15 @@ extern void mtx44Transpose(void* m, void* out);
 extern void OSReport(const char* msg, ...);
 extern void objInterpretSeq(void* obj, int arg2, s8 legCode, int distanceSquared);
 extern char lbl_8032253C[]; /* OSReport format string (.data) */
-extern f32 lbl_803E40D8;     /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value, address-of spelling matches asm) */
+extern f32 lbl_803E40D8;     /* 0.0f - used both as a plain 0.0f and, via *(f32*)&lbl_803E40D8, as the y arg of Matrix_TransformPoint (same value) */
 extern f32 lbl_803E40DC;     /* 0.0625f (1/16) - reach scale per height byte */
 extern f32 lbl_803E40E0;     /* 1.0f */
 extern f32 lbl_803E40E4;     /* 100.0f - reach multiplier */
 extern f32 lbl_803E40E8;     /* 145.0f - near-radius multiplier */
 
 /* obj is the GameObject, but typed s16* so the rotX/rotY/rotZ word writes
- * (obj[0..2]) and the f32 scale at obj+4 land at the exact offsets the
- * target expects (CLAUDE.md #126); it is cast to GameObject* where needed. */
+ * (obj[0..2]) and the f32 scale at obj+4 land at the exact offsets; it is cast
+ * to GameObject* where needed. */
 void objFn_80198fa4(s16* obj, void* placement)
 {
     void* state;

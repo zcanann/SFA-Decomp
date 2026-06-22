@@ -94,8 +94,6 @@ typedef struct
     LightVec3 fog;
 } LightVecSet;
 
-/* Defined before update like retail (TU head); too large for MWCC's
- * auto-inliner, so update keeps the bl (stream-verified). */
 void fn_801F3F18(int obj)
 {
     LightVecSet L;

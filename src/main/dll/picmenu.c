@@ -67,11 +67,11 @@ enum {
 
 BOOL movieLoad(const char* fileName, void* onMemory)
 {
-    AttractMovieAudioInfo* audioInfo; /* r28 */
-    AttractMovieVideoInfo* videoInfo; /* r29 */
-    char* pb; /* r30 home for the isOpen read/write only; other accesses use the raw global */
-    THPFrameCompInfo* compInfo; /* r25 */
-    u32 readOff; /* r24 */
+    AttractMovieAudioInfo* audioInfo;
+    AttractMovieVideoInfo* videoInfo;
+    char* pb; /* holds the isOpen read/write only; other accesses use the raw global */
+    THPFrameCompInfo* compInfo;
+    u32 readOff;
     s32 result;
     u32 i;
 
@@ -377,11 +377,11 @@ void PushFreeTextureSet(OSMessage msg)
 
 void AttractMovieVideo_Decode(void* param)
 {
-    AttractMoviePlayer* player; /* 1st function-scope callee-saved → r31 */
-    char* db; /* 2nd → r30 */
-    u32 i; /* 3rd → r29 */
-    u32* compSizes; /* 4th → r28 */
-    char* dvdData; /* 5th → r27 */
+    AttractMoviePlayer* player;
+    char* db;
+    u32 i;
+    u32* compSizes;
+    char* dvdData;
 
     db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
@@ -390,9 +390,9 @@ void AttractMovieVideo_Decode(void* param)
         player->compInfo.mNumComponents * sizeof(u32) + 8;
 
     {
-        AttractMoviePlayer* player2; /* block-local → r25 */
-        void** readMsg; /* block-local → r24 */
-        u8* componentKind; /* block-local → r23 */
+        AttractMoviePlayer* player2;
+        void** readMsg;
+        u8* componentKind;
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
@@ -450,10 +450,10 @@ void AttractMovieVideo_Decode(void* param)
 
 void AttractMovieVideo_DecoderForOnMemory(void* param)
 {
-    AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
-    u32 frameSize = player->frameStride; /* r30 */
-    void* cur = param; /* at stack[8], address taken by &cur */
-    int i = 0; /* r29 */
+    AttractMoviePlayer* player = &lbl_803A5D60;
+    u32 frameSize = player->frameStride;
+    void* cur = param;
+    int i = 0;
 
     while (1)
     {
@@ -524,8 +524,8 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
 
 void AttractMovieVideo_Decoder(void)
 {
-    AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
-    void* msg; /* r30 */
+    AttractMoviePlayer* player = &lbl_803A5D60;
+    void* msg;
 
     while (1)
     {

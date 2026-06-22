@@ -269,8 +269,8 @@ extern void gameTimerRun(void* obj);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-/* The trailing sprintf into buf is dead in retail (the formatted string is
- * never displayed); target asm ends right after the sprintf call. */
+/* The trailing sprintf into buf is dead (the formatted string is
+ * never displayed). */
 void fn_80133F70(void* obj)
 {
     char buf[12];

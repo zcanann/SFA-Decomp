@@ -22,8 +22,6 @@
  *   EN v1.0 0x80206474  8b   trivial 0-returner.
  *   EN v1.0 0x80206484  8b   trivial 0-returner.
  *   EN v1.0 0x802064D0  48b  if (p6) objRenderFn_8003b8f4(lbl_803E6408).
- *                            Logic-only (~91%): retail uses extsb+cmpwi,
- *                            MWCC -O4,p folds to extsb.
  *   EN v1.0 0x80206500  44b  if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/dll/dll22cstate_struct.h"
@@ -414,7 +412,6 @@ int dbstealerworm_stateHandlerA03(int obj, int p)
 
 int dbstealerworm_stateHandlerA01(int obj, int p)
 {
- /* #57 */
     extern int lbl_80329640[];
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62F4;
@@ -475,9 +472,8 @@ void dbstealerworm_release(void)
 
 void dbstealerworm_init(int* obj, u8* def, int param3)
 {
- /* #57 */
-    extern u32 ObjGroup_AddObject(); /* #57 */
-    extern u32 ObjHits_EnableObject(); /* #57 */
+    extern u32 ObjGroup_AddObject();
+    extern u32 ObjHits_EnableObject();
     u8* sub;
     int* p40c;
     u8 mode;
@@ -517,7 +513,7 @@ void dbstealerworm_init(int* obj, u8* def, int param3)
 
 void dbstealerworm_free(int* obj)
 {
-    extern u64 ObjGroup_RemoveObject(); /* #57 */
+    extern u64 ObjGroup_RemoveObject();
     u8* sub = ((GameObject*)obj)->extra;
     int* p40c = *(int**)&((GroundBaddieState*)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
@@ -703,8 +699,7 @@ void fn_80203000(int obj, int param2)
 
 int dbstealerworm_stateHandlerA04(int obj, int param2)
 {
-    extern u32 ObjHits_EnableObject(); /* #57 */
- /* #57 */
+    extern u32 ObjHits_EnableObject();
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     BaddieState* bs = (BaddieState*)param2;
     u32 v;
@@ -2433,7 +2428,7 @@ int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t)
     }
     if ((u32)best != 0)
     {
-        sqrtf(bestD); /* result discarded; call kept to match target */
+        sqrtf(bestD);
     }
     if ((u32)best != 0)
     {
@@ -2577,8 +2572,6 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
 
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
- * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
- */
+/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408). */
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */

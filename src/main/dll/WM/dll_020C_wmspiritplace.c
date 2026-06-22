@@ -136,12 +136,8 @@ void wmspiritplace_onSeqFree(void)
 {
 }
 
-/* obj is a word here, not a pointer: MWCC pools integral params at the
-   bottom of the saved regs (obj=r28 under actor/state/i = the retail
-   coloring), where a pointer-typed param colors copy-class and steals r31
-   under every use spelling. The original signature really was untyped -
-   contrast update/init, whose retail coloring proves typed pointers
-   (CLAUDE.md recipe #126). */
+/* obj is a word here, not a pointer: the original signature was untyped
+   (contrast update/init, which take typed pointers). */
 int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
 {
     int i;

@@ -318,7 +318,7 @@ u16 getYButtonItem(s16* out)
     return yButtonState;
 }
 
-/* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null -- uses bitfield insert (rlwimi) */
+/* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null */
 typedef struct
 {
     char pad[0x44];

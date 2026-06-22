@@ -410,7 +410,7 @@ int fn_80152370(int obj, int p2)
     u8* setup;
 
     sub = *(int*)&((GameObject*)obj)->anim.placementData;
-    Obj_GetPlayerObject(); /* result discarded but the call is in target asm */
+    Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0) return 0;
     setup = Obj_AllocObjectSetup(36, p2);
     *(s16*)(setup + 0) = p2;
@@ -427,8 +427,6 @@ int fn_80152370(int obj, int p2)
                                 *(int*)&((GameObject*)obj)->anim.parent);
 }
 
-/* effective state below: scheduling off + peephole on (inherited by
- * fn_80152A94, fn_80152B2C, fn_80152040 until the next pragma block) */
 #pragma scheduling on
 #pragma peephole on
 #pragma scheduling off

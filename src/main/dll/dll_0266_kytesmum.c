@@ -192,7 +192,7 @@ void kytesmum_update(int obj)
 
 int kytesmum_idleCallback(void)
 {
-    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
+    Obj_GetPlayerObject();
     return 0;
 }
 
@@ -215,7 +215,7 @@ void kytesmum_free(int obj)
 
 int kytesmum_spawnInteractionCallback(int obj)
 {
-    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
+    Obj_GetPlayerObject();
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
     {
         buttonDisable(0, 0x100);
@@ -251,7 +251,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
     KytesMumSetup* setup;
     int i;
-    Obj_GetPlayerObject(); /* result unused; call required for register coloring */
+    Obj_GetPlayerObject();
     setup = ((KytesMumObject*)obj)->setup;
     ObjHits_EnableObject(obj);
     ObjHits_RegisterActiveHitVolumeObject(obj);

@@ -15,8 +15,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 
-/* pointer-typed param/return is load-bearing here (recipe #126); the int form from
-   player_80295318_shared.h changes codegen, and that header conflicts with game headers. */
 extern void* fn_802972A8(void* obj);
 
 #define PLAYER_VTABLE_GET_MODE 0x48

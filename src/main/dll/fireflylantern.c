@@ -111,7 +111,7 @@ void fn_80154870(int obj, int* state)
     }
     if (state[0xb7] & 0x40000000U)
     {
-        fval = *(f32*)&lbl_803E2990; /* launder to break CSE with the line-95/102 reads */
+        fval = *(f32*)&lbl_803E2990;
         if (fval == *(f32*)(state + 0xca))
         {
             if (flag == 0)

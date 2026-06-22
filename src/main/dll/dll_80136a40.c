@@ -501,8 +501,7 @@ void fn_801375A0(void)
     debugPrintXpos = xp;
 }
 
-/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
- * #12: bitfield dest (rlwimi) + INT source (clrlwi narrow) at nopeephole. */
+/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58. */
 struct Bits58 { u8 _pad[0x58]; u8 b7:1; u8 b6:1; u8 lo:6; };
 #pragma scheduling off
 #pragma peephole off
@@ -685,7 +684,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
 {
     int model;
     f32 target;
-    Obj_GetActiveModel(obj); /* discarded result, but target emits this bl */
+    Obj_GetActiveModel(obj);
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
     {
         model = (int)Obj_GetActiveModel(obj);
@@ -1020,9 +1019,9 @@ int fn_80136E00(int p1, u8* p)
     u8 c1;
     u8 c2;
     u8 c3;
-    u8 colb1[4]; /* four separate colb/colw pairs: distinct stack slots are load-bearing */
+    u8 colb1[4];
     u32 colw1;
-    u32 colw4; /* case 0x82 (declared first of the three hud buffers -> highest slot) */
+    u32 colw4; /* case 0x82 */
     u8 colb4[4];
     u32 colw2; /* case 0xa */
     u8 colb2[4];

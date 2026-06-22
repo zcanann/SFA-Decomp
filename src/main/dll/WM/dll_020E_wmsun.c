@@ -26,12 +26,6 @@
  * A third variant (type 0x2C2, mapped to no def by the retail
  * OBJINDEX, so unreachable in retail) allocates the WmSunGlareParams
  * flicker table and scroll-fades a texture once bit 0x38F is set.
- *
- * MATCHED-SPELLING WARNING: this TU is a hand-reconstruction full of
- * load-bearing forms - *(f32*)&lbl launders (#81), per-site
- * literal-vs-extern 0.0f choices (#71), s16-typed locals, #119
- * variable reuse and decl-order-tuned saved-FP coloring (see commit
- * 9397d81b0). Do not reorder declarations, inline, hoist or re-cast.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/WM/wm_shared.h"
@@ -211,8 +205,6 @@ void wmsun_updateGlare(int obj)
         {
             cosang = cz;
         }
-        /* volatile launders: fresh 0.0 loads (named symbol so the
-           unit's sdata2 pool stays claimable; a literal pools locally) */
         hy = *(volatile f32*)&lbl_803E5F20;
         if (cosang > hy)
         {

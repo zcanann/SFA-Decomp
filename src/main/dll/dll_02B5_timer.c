@@ -184,7 +184,7 @@ void timer_update(int obj)
             switch (state->mode)
             {
             case TIMER_MODE_GLOBAL:
-                if (state->mode == 0) /* load-bearing: target emits this beq; removing it changes codegen */
+                if (state->mode == 0)
                 {
                     break;
                 }

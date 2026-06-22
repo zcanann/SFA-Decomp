@@ -66,7 +66,7 @@ extern int Stack_Push(int stack, int* in);
 extern void hudFn_8011f38c(u8 x);
 
 /* this TU sees the title-menu interface under a differently-named extern; alias
- * to the canonical name (block-scope extern reconciliation, recipe #57) */
+ * to the canonical name */
 extern u32* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -81,7 +81,7 @@ typedef struct RomCurveSearchPair
     u32 b;
 } RomCurveSearchPair;
 
-/* timer object's query slot (vtable+0x54): fills elapsed/now/limit outparams (recipe #35) */
+/* timer object's query slot (vtable+0x54): fills elapsed/now/limit outparams */
 typedef void (*TimerQueryFn)(int timer, int* elapsed, int* now, int* limit);
 
 int TREX_Lazerwall_popQueuedState(int arg1, int arg2)

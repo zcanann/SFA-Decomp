@@ -15,9 +15,6 @@
  *
  * Per-mode timing/particle parameters come from lbl_8032B720[mode]
  * (RingTable); the optional glow is a ModelLightStruct.
- *
- * Callbacks take `int obj` rather than GameObject* intentionally: the
- * untyped handle is load-bearing for register coloring (CLAUDE.md #126).
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"

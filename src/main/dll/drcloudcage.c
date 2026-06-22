@@ -387,11 +387,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             {
                 gDrCloudCageWindVolume = -gDrCloudCageWindVolume;
             }
-            if (gDrCloudCageWindVolume < *(f32*)&lbl_803E5B10) /* #81 launder */
+            if (gDrCloudCageWindVolume < *(f32*)&lbl_803E5B10)
             {
                 gDrCloudCageWindVolume = lbl_803E5B10;
             }
-            if (gDrCloudCageWindVolume > *(f32*)&lbl_803E5B14) /* #81 launder */
+            if (gDrCloudCageWindVolume > *(f32*)&lbl_803E5B14)
             {
                 gDrCloudCageWindVolume = lbl_803E5B14;
             }
@@ -463,11 +463,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32*)(state + 0x3f8) = -(lbl_803E5B2C * timeDelta - *(f32*)(state + 0x3f8));
             }
         }
-        if (*(f32*)(state + 0x3f8) > *(f32*)&lbl_803E5B08) /* #81 launder */
+        if (*(f32*)(state + 0x3f8) > *(f32*)&lbl_803E5B08)
         {
             *(f32*)(state + 0x3f8) = lbl_803E5B08;
         }
-        if (*(f32*)(state + 0x3f8) < *(f32*)&lbl_803E5B30) /* #81 launder */
+        if (*(f32*)(state + 0x3f8) < *(f32*)&lbl_803E5B30)
         {
             *(f32*)(state + 0x3f8) = lbl_803E5B30;
         }
@@ -484,11 +484,11 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32*)(state + 0x3f4) = -(lbl_803E5AF8 * timeDelta - *(f32*)(state + 0x3f4));
             }
         }
-        if (*(f32*)(state + 0x3f4) > *(f32*)&lbl_803E5B40) /* #81 launder */
+        if (*(f32*)(state + 0x3f4) > *(f32*)&lbl_803E5B40)
         {
             *(f32*)(state + 0x3f4) = lbl_803E5B40;
         }
-        if (*(f32*)(state + 0x3f4) < *(f32*)&lbl_803E5B44) /* #81 launder */
+        if (*(f32*)(state + 0x3f4) < *(f32*)&lbl_803E5B44)
         {
             *(f32*)(state + 0x3f4) = lbl_803E5B44;
         }

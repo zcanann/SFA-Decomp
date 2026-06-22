@@ -15,10 +15,7 @@
  *
  * SB_CloudRunner_UpdateSteer (the analog-steer update) integrates the stick input into
  * the bird's body rotation and advances the flap animation; the two-op
- * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps
- * (must stay spelled that way - they keep the conversion pool in bump
- * mode, recipe #83). The ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(...))) idiom in the FX hook
- * is the int->double conversion bias; keep it verbatim.
+ * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"

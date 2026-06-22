@@ -142,7 +142,7 @@ extern u8 sWallCrawlerCollisionBone;
 extern f32 lbl_803E6030;
 extern f32 lbl_803E6034;
 
-/* overlay of state->hitBits; the bitfield assign emits the rlwimi form (#12) */
+/* overlay of state->hitBits */
 typedef struct
 {
     u8 hit : 1;
@@ -471,7 +471,7 @@ void wmwallcrawler_update(int obj)
                             for (k = 0; k < n; k++)
                             {
                                 d = *list[idx] - ((GameObject*)obj)->anim.localPosY;
-                                if (d < *(f32*)&lbl_803E5FB0 /* #81 launder */)
+                                if (d < *(f32*)&lbl_803E5FB0)
                                 {
                                     d = d * *(f32*)&lbl_803E5FE0;
                                 }

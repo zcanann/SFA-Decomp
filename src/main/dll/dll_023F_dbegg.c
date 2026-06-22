@@ -21,9 +21,8 @@
  * 17; subtypes 16-20).
  *
  * FUN_80200558 is a dbstealerworm sequence handler that genuinely lands in
- * this object's pool (load-bearing for the match); the remaining FUN_ drift
- * duplicates of the 0x80200740-0x80204320 sibling handlers were dead and
- * removed.
+ * this object's pool; the remaining FUN_ drift duplicates of the
+ * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -561,8 +560,8 @@ void dbegg_initialise(void)
 
 void dbegg_init(int obj)
 {
-    extern void dbegg_setupFromDef(int obj, int* state); /* #57 */
-    extern u32 ObjMsg_AllocQueue(); /* #57 */
+    extern void dbegg_setupFromDef(int obj, int* state);
+    extern u32 ObjMsg_AllocQueue();
     ObjModelState* modelState;
     dbegg_setupFromDef(obj, ((GameObject*)obj)->extra);
     ObjMsg_AllocQueue(obj, 8);
@@ -573,11 +572,9 @@ void dbegg_init(int obj)
     }
 }
 
-/* Inherits #pragma peephole off from FUN_80200558 (line ~521) by design:
-   restoring peephole on here de-matches dbegg_update (97.5->94.8). */
 void dbegg_update(int obj)
 {
-    extern void dbegg_setupFromDef(int obj, int* state); /* #57 */
+    extern void dbegg_setupFromDef(int obj, int* state);
     extern int Obj_GetPlayerObject(void);
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
     extern void dbegg_processMessages(int);

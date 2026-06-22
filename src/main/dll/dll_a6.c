@@ -18,8 +18,6 @@
 
 extern f32 lbl_803E1628; /* reticle rootMotionScale constant */
 
-/* pointer-typed first param (vs the header's int) is intentional: it sets the callee-saved
- * register class at the call site and is load-bearing for the match (recipes #126/#77) */
 extern void objRenderFn_8003b8f4(GameObject *reticle, u32 a, u32 b, u32 c,
                                  u32 d, f32 f);
 

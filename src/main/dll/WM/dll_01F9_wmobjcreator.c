@@ -18,13 +18,12 @@
 
 
 extern int lbl_803DDC68; /* live WM_WallCraw population counter */
-extern const f32 lbl_803E5CC8; /* 1.0 (#127 const: LICM-hoistable in case 6) */
+extern const f32 lbl_803E5CC8; /* 1.0 */
 extern f32 lbl_803E5CCC; /* 10.0: eastward drift base velocity */
 extern f32 lbl_803E5CD0; /* -30.0: westward drift base velocity */
 extern f32 lbl_803E5CD4; /* 0.1: burst velocity scale */
-extern const f32 lbl_803E5CD8; /* 0.0 (#127 const: keeps the case-4 load
-                                  CSE'd across the spawned-> stores) */
-extern const f32 lbl_803E5CDC; /* 200.0 (#127 const: LICM-hoistable in case 6) */
+extern const f32 lbl_803E5CD8; /* 0.0 */
+extern const f32 lbl_803E5CDC; /* 200.0 */
 
 /* romlist object types this creator spawns (names from the retail
    OBJECTS.bin; the handling DLL ids confirm the targets). */
@@ -387,9 +386,6 @@ void WM_ObjCreator_update(int obj)
                 ((WmRockSpawnSetup*)setup)->yawByte = ((GameObject*)obj)->anim.rotX >> 8;
                 Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
-                /* in-loop const externs: LICM hoists them into the retail
-                   preheader group (#121/#127; a plain extern cannot
-                   cross the call, a literal would pool locally) */
                 for (n = randomGetRange(2, 5); n != 0; n -= 1)
                 {
                     vec.pos[0] = lbl_803E5CC8;

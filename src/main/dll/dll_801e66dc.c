@@ -30,7 +30,7 @@ int fn_801E66EC(int arg1, int arg2)
     int nextState;
 
     state = *(int*)(arg1 + 0xb8);
-    spawnParam = lbl_803E59D8; /* hoisted before the branch in target asm (stfs precedes the test) */
+    spawnParam = lbl_803E59D8;
 
     if (*(s8*)(arg2 + 0x27a) != 0)
     {

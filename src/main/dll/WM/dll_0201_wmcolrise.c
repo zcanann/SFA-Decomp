@@ -61,7 +61,7 @@ void WM_colrise_hitDetect(void)
 
 
 extern f32 timeDelta;
-extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise (#127 const: hoistable past the timer store) */
+extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
 extern f32 lbl_803E5DD0; /* 20.0 */
 extern f32 lbl_803E5DD4; /* 100.0: raised height above placement */
 extern f32 lbl_803E5DD8; /* 0.5: settle speed when overshot */

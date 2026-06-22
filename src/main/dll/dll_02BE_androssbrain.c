@@ -132,7 +132,7 @@ void androssbrain_update(int obj)
     {
         stateChanged = 1;
     }
-    *(u8*)&state->prevState = currentState; /* #15 u8 store, no extsb */
+    *(u8*)&state->prevState = currentState;
     switch (state->brainState)
     {
     case BRAIN_SHIELDED:
