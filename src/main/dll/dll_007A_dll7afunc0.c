@@ -544,8 +544,6 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int mode)
     FUN_8028687c();
 }
 
-/* in_r6..in_r10/in_f4..in_f8/extraout_r4 are register-pass-through scaffolding -
-   live arg regs forwarded untouched into FUN_800176dc, not original locals. */
 void FUN_800e9e9c(void)
 {
     u32 slotIdx;

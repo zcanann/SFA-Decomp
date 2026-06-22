@@ -44,17 +44,14 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
  * Per-object extra state for the explosion effect
  * (explosion_getExtraSize == 0xA60). The flame pool (50 x 0x30 records)
  * and the debris pool (6 x 0x24 at 0x964) are walked with raw stride
- * pointers in update/render and stay untyped. REFERENCE-ONLY for now:
- * every consumer keeps raw derefs - retyping the state local (or adding
- *  casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
- * (recipe #36/#77); the layout is documented here for a future pass.
+ * pointers in update/render and stay untyped.
  */
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-/* dimwooddoor2 variant: trigger-init that loads a different float into the
- * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
+/* dimwooddoor2 variant: trigger-init that loads a different float
+ * (lbl_803E49F0) into the extra block's [4]. */
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,

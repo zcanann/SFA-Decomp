@@ -91,7 +91,7 @@ void MoonSeedBush_update(int obj)
         preemptSlot = -1;
     }
     {
-        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence;  load +  sign-extend is load-bearing */
+        s32 idx = (s32)(s8) * (u8*)(def + 0x1E); /* placement->sequence */
         if (idx != -1)
         {
             (*gObjectTriggerInterface)->runSequence(idx, (void*)obj, preemptSlot);

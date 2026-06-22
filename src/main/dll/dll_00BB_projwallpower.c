@@ -9,7 +9,7 @@
  *
  * Note: unlike the rest of the retired-projectile family (projlightning1,
  * projquakeshock, etc.) which return the -1 unsupported sentinel, wallpower
- * returns 0 (confirmed from target asm: li r3, 0).
+ * returns 0.
  */
 #include "main/dll/dll_64.h"
 #include "main/engine_shared.h"

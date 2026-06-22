@@ -138,7 +138,7 @@ check_decor_objects:
                 }
                 else
                 {
-                    term = *(f32*)&lbl_803E3B7C; /* #81: launder to flip FP reg vs plain load */
+                    term = *(f32*)&lbl_803E3B7C;
                 }
                 sum += term;
                 }
@@ -160,7 +160,7 @@ check_decor_objects:
                 }
                 else
                 {
-                    term = *(f32*)&lbl_803E3B7C; /* #81: launder to flip FP reg vs plain load */
+                    term = *(f32*)&lbl_803E3B7C;
                 }
                 sum += term;
                 }

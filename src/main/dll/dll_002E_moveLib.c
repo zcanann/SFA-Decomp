@@ -144,7 +144,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     {
         *(f32*)p4 = *(f32*)p4 + p5 * (f32)(u32)
         framesThisStep / *(f32*)(p3 + 0x34);
-        if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4) /* #81 launder: flips the reload FP reg pair */
+        if (*(f32*)p4 >= *(f32*)&lbl_803E1CA4)
         {
             ret = 1;
             *(f32*)p4 = lbl_803E1CA4;

@@ -91,10 +91,8 @@ void bombplantspore_free(void* obj)
     }
 }
 
-/* Keep the cross-TU bl: these two drift helpers' only callers
- * (bombplantspore_update/init) live in the BombPlantSpore TU
- * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
- * auto-inlining them into bombplantspore_update. */
+/* These two drift helpers' only callers (bombplantspore_update/init) live
+ * in the BombPlantSpore TU (SHrocketmushroom.c). */
 #pragma dont_inline on
 void bombplantspore_startDriftBurst(void* obj, void* state)
 {

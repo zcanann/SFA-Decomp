@@ -104,8 +104,7 @@ typedef struct MmShrineAnimEvents
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj)
 {
-    extern int getAngle(float y, float x); /* #57 */
- /* #57 */
+    extern int getAngle(float y, float x);
     u8* config;
     MmShrineAnimState* state;
     void* player;
@@ -176,9 +175,8 @@ void fn_801C5990(MmShrineAnimObj* obj)
 
 int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
 {
-    extern void fn_80296518(void* obj, int arg, int enable); /* #57 */
-    extern void modelLightStruct_setEnabled(int light, int mode, f32 value); /* #57 */
- /* #57 */
+    extern void fn_80296518(void* obj, int arg, int enable);
+    extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
     MmShrineAnimEvents* eventList;
@@ -236,7 +234,7 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
 
 void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 {
-    extern int gEcShShrineActiveObject; /* type varies per fn for coloring - #57 */
+    extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
@@ -247,7 +245,7 @@ void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 
 void ecsh_shrine_func0E(u8 v)
 {
-    extern int gEcShShrineActiveObject; /* #57 */
+    extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
@@ -270,8 +268,8 @@ typedef struct EcshRenderPair
 
 void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 {
-    extern EcshRenderPair gEcShShrinePuzzleState[]; /* #57 */
-    extern int gEcShShrineActiveObject; /* #57 */
+    extern EcshRenderPair gEcShShrinePuzzleState[];
+    extern int gEcShShrineActiveObject;
     int v;
     if ((int*)gEcShShrineActiveObject == NULL) return;
     v = gEcShShrineRuneIndexTable[idx];
@@ -281,8 +279,8 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
-    extern u8 gEcShShrinePuzzleState[]; /* #57 */
-    extern void* gEcShShrineActiveObject; /* #57 */
+    extern u8 gEcShShrinePuzzleState[];
+    extern void* gEcShShrineActiveObject;
     int j;
     if (gEcShShrineActiveObject == NULL) return;
     j = gEcShShrineRuneIndexTable[idx];
@@ -293,7 +291,7 @@ void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 
 void ecsh_shrine_setScale(s16* out)
 {
-    extern void* gEcShShrineActiveObject; /* #57 */
+    extern void* gEcShShrineActiveObject;
     int* obj = gEcShShrineActiveObject;
     int* state;
     if (obj == NULL) return;
@@ -317,9 +315,9 @@ void ecsh_shrine_hitDetect(void)
 
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h); /* #57 */
-    extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale); /* #57 */
-    extern void modelLightStruct_setEnabled(int handle, int flag, f32 v); /* #57 */
+    extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
+    extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
+    extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
     void** inner = ((GameObject*)obj)->extra;
     if (visible == 0)
     {
@@ -365,9 +363,9 @@ typedef struct EcshPuzzleState
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
-    extern void* Obj_GetPlayerObject(void); /* #57 */
-    extern void fn_801C5990(s16 * obj); /* #57 */
-    extern u8 gEcShShrinePuzzleState[]; /* #57 */
+    extern void* Obj_GetPlayerObject(void);
+    extern void fn_801C5990(s16 * obj);
+    extern u8 gEcShShrinePuzzleState[];
     f32 t[2];
     int msgC;
     int msgA;
@@ -783,7 +781,7 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
-    extern s16* gEcShShrineActiveObject; /* #57 */
+    extern s16* gEcShShrineActiveObject;
     int* sub = ((GameObject*)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;

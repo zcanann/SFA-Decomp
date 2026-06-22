@@ -52,7 +52,7 @@ typedef struct PswContactList
     s8 count;               /* 0x10F */
 } PswContactList;
 
-/* Re-derefs the +0x58 list pointer per use (matches the original codegen). */
+/* Re-derefs the +0x58 list pointer per use. */
 #define PSW_CONTACT_LIST(obj) ((PswContactList*)*(char**)((obj) + 0x58))
 
 /* seqIds of objects this pad reacts to (compared against ent->anim.seqId). */

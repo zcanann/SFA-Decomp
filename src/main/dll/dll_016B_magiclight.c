@@ -308,8 +308,6 @@ void magiclight_init(int* obj, u8* params)
 
 int magiclight_getObjectTypeId(void) { return 0x0; }
 
-/* peephole stays off (from magiclight_init) for every function below: the
-   target was built that way and restoring it regresses the rest of the TU. */
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {

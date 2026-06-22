@@ -81,7 +81,7 @@ void CameraModePerv_update(u8* obj)
     GameObject* target = (GameObject*)camera->anim.targetObj;
 
     lbl_803DD5C8->timer -= lbl_803E1B78 * timeDelta;
-    if (lbl_803DD5C8->timer < *(f32*)&lbl_803E1B7C) /* #81: launder forces reload/register swap */
+    if (lbl_803DD5C8->timer < *(f32*)&lbl_803E1B7C)
     {
         lbl_803DD5C8->timer = lbl_803E1B7C;
     }

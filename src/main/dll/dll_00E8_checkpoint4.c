@@ -17,9 +17,6 @@
  * descriptors + read-only data tables live here while the implementations live
  * in sibling DLLs. Only staticCamera_*, checkpoint4_*, and fn_801719F8 are
  * defined in this TU; the rest are extern callbacks wired into the descriptors.
- *
- * GXWGFifo + the swipe* WG-pipe inline helpers and the opt_common_subs pragma
- * pair reproduce the per-fn optimizer state for the in-TU draw path.
  */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"

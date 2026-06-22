@@ -9,10 +9,8 @@
  * effect 525 and rearms. The other entry points
  * (free/hitDetect/release/initialise/typeId) are stubs.
  *
- * The seqId==209 if/else in update assigns the same value in both arms but is NOT
- * dead code: the two arms emit the colorR/G/B stores through stack conversion-temp
- * slots in opposite order (ascending vs descending), which is what the target asm
- * does — collapsing to one assignment regresses the match.
+ * The seqId==209 if/else in update assigns the same value in both arms but is
+ * intentional and must not be collapsed to a single assignment.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

@@ -140,7 +140,7 @@ int gunpowderbarrel_getExtraSize(void)
 
 void gunpowderbarrel_free(int obj, int mode)
 {
-    extern int Obj_IsObjectAlive(int obj); /* #57 */
+    extern int Obj_IsObjectAlive(int obj);
     int extra;
     void* child;
     extra = *(int*)&((GameObject*)obj)->extra;
@@ -275,9 +275,6 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         ((GunpowderBarrelState*)sub)->fuseFrames = 1;
         ((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->held = 0;
         ObjGroup_RemoveObject((u32)obj, 0x19);
-        /* NOT a bug: retail keeps this parent!=0 branch with both arms storing
-         * the same constant (two separate stfs of lbl_803E42C4 at 0x970/0x97c).
-         * Reproducing the redundant branch is load-bearing for the match. */
         if (((GameObject*)obj)->anim.parent != 0)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
@@ -456,7 +453,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
 
 void gunpowderbarrel_hitDetect(int obj)
 {
-    extern int Obj_IsObjectAlive(int obj); /* #57 */
+    extern int Obj_IsObjectAlive(int obj);
     GameObject* barrel;
     GunpowderBarrelState* state;
     f32 sp1c[3];
@@ -637,7 +634,7 @@ void gunpowderbarrel_init(int obj, u8* def)
 void gunpowderbarrel_update(int obj)
 {
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
-    extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b); /* #57 */
+    extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
     u8* player = Obj_GetPlayerObject();
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
 

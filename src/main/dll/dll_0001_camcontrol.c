@@ -341,7 +341,7 @@ void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, f32* outX, 
         }
         if (*outDistanceXZ < gCamcontrolMinTargetDistance)
         {
-            *outDistanceXZ = *(f32*)&gCamcontrolMinTargetDistance; /* #81 launder: reload not CSE */
+            *outDistanceXZ = *(f32*)&gCamcontrolMinTargetDistance;
         }
     }
     return;

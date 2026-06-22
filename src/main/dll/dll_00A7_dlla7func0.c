@@ -204,7 +204,7 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     buf.hw[5] = *(s16*)&tab[0x82];
     buf.hw[6] = *(s16*)&tab[0x84];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.flags = 0x4040000; /* first store kept live for matching codegen */
+    buf.flags = 0x4040000;
     buf.flags |= (flags | 0x80);
     fl = buf.flags;
     if (fl & 1)

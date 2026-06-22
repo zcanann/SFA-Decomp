@@ -78,7 +78,7 @@ void Flag_update(int obj)
     }
     else if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_TIED)
     {
-        Obj_GetPlayerObject(); /* call kept to match target; return value unused */
+        Obj_GetPlayerObject();
         linkedObj = *(int*)&((GameObject*)obj)->anim.parent;
         if ((((GameObject*)linkedObj)->objectFlags & FLAG_PARENT_SLACK_FLAG) != 0)
         {

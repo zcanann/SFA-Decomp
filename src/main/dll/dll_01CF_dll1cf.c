@@ -69,7 +69,7 @@ void dll_1CF_free(void)
 
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 visibleInt = visible; /* widen to s32 for cmpwi */
+    s32 visibleInt = visible;
     if (visibleInt != 0) objRenderFn_8003b8f4(lbl_803E4A30);
 }
 
