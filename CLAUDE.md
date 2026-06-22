@@ -45,6 +45,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   the src-obj scan folded because our source lacked retail's construct; retail's own O2 fn kept it.)
 
 ## Method (do this every time)
+- **★ OWNER PRINCIPLE — DISTRUST RAW DEREFS/CASTS; the real 2002 code used STRUCTS/UNIONS EVERYWHERE.** Raw
+  derefs (`*(T*)(base + idx*size + off)`) and raw address casts (`*(volatile f32*)0xCC008000`) don't read like
+  human source — they're IMPORT ARTIFACTS. On ANY residual, BEFORE labeling it "coloring/allocator/pressure,"
+  try the FAITHFUL STRUCT/UNION FORM FIRST: `((Struct*)base)[idx].field` (#135), typed struct-array walkers
+  (#138/#143), bitfield/union overlays (#12/#39), and address-mapped union vars (the GX FIFO: a raw
+  `*(volatile f32*)0xADDR = v;` should be `volatile <UNION> X : (0xADDR); X.f = v;` — the CodeWarrior
+  write-gather-pipe idiom used in dimexplosion/minimap/lightmap/front). Many "allocator nuts" are missing-struct-
+  type artifacts — fn_801B3DE4 is the proof (an OR/cast/phi nightmare that dissolved into clean typed
+  struct-array C via #135). The struct/union reframe is SOURCE-fixable and higher-yield than the coloring grind.
+- **★ "PRESSURE" / "register pressure" is NEVER an explanation — it's an admission of not-knowing.** The
+  allocator is a DETERMINISTIC graph-coloring algorithm; "the compiler ran low and cut corners" makes no sense.
+  When `mr`-reuse vs `li`-fresh (or any coloring choice) correlates with fn size, that correlation is a CLUE to
+  the exact rule, NOT the rule. Reverse-engineer the concrete trigger: add ONE ingredient at a time to a bed,
+  find the PRECISE point where the choice flips, and name WHICH interference/coalesce fact changed there. Write
+  "the rule is X" or "trigger not yet pinned — next ingredient to add is Y," never "it's pressure-driven."
 - **Read the WHOLE target fn before diffing.** Diffs show WHERE, not WHY, and bias you to a false
   "#108 coloring" verdict. Dump full asm (`function_objdump.py <unit> <symbol>`, no `--diff`),
   note each `bl`'s real callee arg shape + field widths/compares, THEN diff.
