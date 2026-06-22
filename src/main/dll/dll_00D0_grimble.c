@@ -127,13 +127,7 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
         }
         ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->pathProgress - vel;
         f = ((GrimbleControl*)sub)->targetProgress;
-        if (f > lbl_803E2EBC)
-        {
-        }
-        else
-        {
-            f = lbl_803E2EBC;
-        }
+        f = (f < lbl_803E2EBC) ? lbl_803E2EBC : f;
         ((GrimbleControl*)sub)->targetProgress = f;
         f = ((GrimbleControl*)sub)->targetProgress;
         f = (f < lbl_803E2F0C) ? f : lbl_803E2F0C;
