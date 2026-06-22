@@ -14,8 +14,8 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern u8** ObjGroup_GetObjects(int kind, int* count);
-extern int trickyFn_8013b368(u8* arg1, u8* arg2, f32 dist);
-extern void objAnimFn_8013a3f0(u8* self, int a, int b, f32 f1);
+extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
+extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
 void trickyFn_8013d8f0(u8* self, u8* state)
 {
@@ -77,7 +77,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
             *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
-        if (trickyFn_8013b368(self, state, lbl_803E247C) == 1) return;
+        if (trickyFn_8013b368(self, lbl_803E247C, state) == 1) return;
     }
 
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -99,14 +99,14 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (waterFlag != 0)
     {
-        objAnimFn_8013a3f0(self, 8, 0, lbl_803E243C);
+        objAnimFn_8013a3f0(self, 8, lbl_803E243C, 0);
         ((TrickyState*)state)->unk79C = lbl_803E2440;
         ((TrickyState*)state)->unk838 = lbl_803E23DC;
         trickyDebugPrint(sInWaterMessage);
     }
     else
     {
-        objAnimFn_8013a3f0(self, 0, 0, lbl_803E2444);
+        objAnimFn_8013a3f0(self, 0, lbl_803E2444, 0);
         trickyDebugPrint(lbl_8031D478);
     }
 }
