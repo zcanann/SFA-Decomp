@@ -5265,7 +5265,7 @@ void defragMemory(int mode)
             p3 = hi - 0x6d68;
             p4 = hi - 0x6f20;
         }
-        for (; i <= 0x57; i++)
+        do
         {
             switch (i)
             {
@@ -5323,7 +5323,8 @@ void defragMemory(int mode)
             p2 += 2;
             p3 += 4;
             p4 += 1;
-        }
+            i++;
+        } while (i <= 0x57);
         testAndSet_onlyUseHeaps1and2(-1);
     }
     base += 0x20000;
@@ -5340,7 +5341,7 @@ void defragMemory(int mode)
         q2 = (char*)base - 0x68c8;
         q3 = (char*)base - 0x6d68;
         q4 = (char*)base - 0x6f20;
-        for (; i <= 0x57; i++)
+        do
         {
             switch (i)
             {
@@ -5434,7 +5435,8 @@ void defragMemory(int mode)
             q2 += 2;
             q3 += 4;
             q4 += 1;
-        }
+            i++;
+        } while (i <= 0x57);
         pass++;
     }
     texFlagFn_80023cbc(0);
