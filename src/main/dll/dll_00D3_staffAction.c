@@ -1089,7 +1089,6 @@ void dll_D3_init(int obj, int def, int flag)
 
 void dll_D3_initialise(void)
 {
-    extern void fn_801659B8(void); /* #57 */
     gLandedArwingStateHandlers[0] = fn_801659B8;
     gLandedArwingStateHandlers[1] = LandedArwing_UpdateFlightChase;
     gLandedArwingStateHandlers[2] = LandedArwing_UpdateRetreatChase;

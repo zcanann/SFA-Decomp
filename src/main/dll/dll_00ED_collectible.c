@@ -1085,7 +1085,6 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 void collectible_updateIdleMotion(int obj)
 {
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfx); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
 
     switch (((GameObject*)obj)->anim.seqId)

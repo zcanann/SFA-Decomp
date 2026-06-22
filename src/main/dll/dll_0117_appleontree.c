@@ -134,7 +134,6 @@ void appleontree_handleCollectableHit(int obj)
 {
     extern void playerAddHealth(int player, u16 amount); /* #57 */
     extern int Obj_GetPlayerObject(void); /* #57 */
-    extern u32 ObjHits_DisableObject(); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     int player = Obj_GetPlayerObject();
 
@@ -197,7 +196,6 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void fn_8017D854(int obj, int msg)
 {
-    extern u32 ObjHits_DisableObject(); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     int v;
 
@@ -574,7 +572,6 @@ void appleontree_update(int objArg)
     extern int FUN_8017e3c0(); /* #57 */
     extern int FUN_8017e15c(); /* #57 */
     extern u32 FUN_8017de58(); /* #57 */
-    extern u32 FUN_8017db40(); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     float fa;
     int obj;

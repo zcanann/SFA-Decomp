@@ -453,7 +453,6 @@ void gunpowderbarrel_updatePhysics(int* obj)
 
 void gunpowderbarrel_hitDetect(int obj)
 {
-    extern int Obj_IsObjectAlive(int obj);
     GameObject* barrel;
     GunpowderBarrelState* state;
     f32 sp1c[3];

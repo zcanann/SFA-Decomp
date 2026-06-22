@@ -39,9 +39,6 @@ extern void ObjMsg_SendToObjects();
 
 int fn_8015E3A0(int obj, int state)
 {
-    extern void ObjHits_EnableObject(int);
-    extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
-    extern void ObjHits_RegisterActiveHitVolumeObject(int);
 
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DD8;
@@ -161,7 +158,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 int fn_8015DC04(int obj, GroundBaddieState* p)
 {
 
-    extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
     extern f64 lbl_803E2DC0;
@@ -293,7 +289,6 @@ void fn_8015DAE8(void)
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
 
-    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DDC;
     extern f32 lbl_803E2DE0;
@@ -719,7 +714,6 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_CE_init(int obj, u8* p, int flags)
 {
-    extern int randomGetRange(int lo, int hi);
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
     extern f32 lbl_803E2DC8;
@@ -759,7 +753,6 @@ void dll_CE_update(int obj, int p2, int p3)
     extern void fn_8015EB6C(int obj, int p2, int p3);
     extern void fn_8015EA48(int obj, u8* p);
     extern int* gBaddieControlInterface;
-    extern MapEventInterface** gMapEventInterface;
     extern int* gPlayerInterface;
     extern void* gChukChukMoveHandlers[];
     extern void* gChukChukCheckHandlers[];

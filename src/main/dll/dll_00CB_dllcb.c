@@ -132,7 +132,6 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     extern int* gBaddieControlInterface;
     extern void* gDllCBStateHandlers[];
     extern void* gDllCBMoveHandlers[];
-    extern f32 timeDelta;
     extern f32 lbl_803E2E9C;
     int setup;
 

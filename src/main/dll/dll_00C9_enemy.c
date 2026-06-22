@@ -2309,7 +2309,6 @@ void enemy_update(int obj)
 void enemy_init(int obj, u8* setup, int flag)
 {
     extern f32 lbl_803DBC58;
-    extern void enemy_animEventCallback();
     u8* state = ((GameObject*)obj)->extra;
     f32 fz;
 

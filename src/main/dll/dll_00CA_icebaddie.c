@@ -1438,7 +1438,6 @@ void iceBaddie_update(int obj, int p2, int p3)
     extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
     extern void iceBaddie_updateTargetMotion(int obj, int sub, int sub2);
     extern int* gBaddieControlInterface;
-    extern MapEventInterface** gMapEventInterface;
     extern f32 gIceBaddieYOffset;
     extern f32 lbl_803E2DB8;
     GroundBaddieState* sub;

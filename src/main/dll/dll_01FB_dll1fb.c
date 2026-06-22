@@ -152,7 +152,6 @@ void dll_1FB_free_nop(void)
 
 void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderFn_8003b8f4(int* obj); /* #57 */
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (visible == 0 || state->hideModel != 0u)

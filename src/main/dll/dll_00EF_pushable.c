@@ -650,7 +650,6 @@ int pushable_getObjectTypeId(void) { return 0x48; }
 void pushable_update(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
     extern int saveGame_saveObjectPos(int* obj); /* #57 */
     PushableState* state;
     u8* def;
@@ -963,7 +962,6 @@ typedef struct
 
 void pushable_hitDetect(int* obj)
 {
-    extern void* Obj_GetPlayerObject(void); /* #57 */
     extern u32 fn_80174BFC(); /* #57 */
     PushableState* state;
     f32* w;
@@ -1195,7 +1193,6 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
     extern int objBboxFn_800640cc(f32* start, f32* end, f32 radius, int a, int b, int* obj, int c, int d, int e, int f); /* #57 */
     extern void Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
-    extern void* Obj_GetPlayerObject(void); /* #57 */
     extern u32 fn_80174BFC(); /* #57 */
     SetScaleParams* pp;
     PushableState* state;
