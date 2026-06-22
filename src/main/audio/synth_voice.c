@@ -446,7 +446,7 @@ void LowPrecisionHandler(int voice)
             continue;
         }
         sv->lfo[j].time += lowDeltaTime;
-        sv->lfo[j].value = sndSin((sv->lfo[j].time % sv->lfo[j].period * 16) / (sv->lfo[j].period / 256));
+        sv->lfo[j].value = sndSin((u16)((sv->lfo[j].time % sv->lfo[j].period * 16) / (sv->lfo[j].period / 256)));
         if (sv->lfo[j].value != sv->lfo[j].lastValue)
         {
             sv->lfo[j].lastValue = sv->lfo[j].value;
@@ -461,7 +461,7 @@ void LowPrecisionHandler(int voice)
     if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
     {
         sv->vibCurTime += lowDeltaTime;
-        sv->vibCurOffset = sndSin((sv->vibCurTime % sv->vibPeriod * 16) / (sv->vibPeriod / 256));
+        sv->vibCurOffset = sndSin((u16)((sv->vibCurTime % sv->vibPeriod * 16) / (sv->vibPeriod / 256)));
     }
 
     if (sv->sweepNum[0] | sv->sweepNum[1])
