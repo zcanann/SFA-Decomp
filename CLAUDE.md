@@ -1038,6 +1038,44 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     source); model it as the #131 same-value/front-end materialization and look for the operand-level split that
     keeps the addi targeting the destination; perturb a NEIGHBOR web's creation order so r0 isn't the free temp
     at the materialization point. This is the single highest-leverage open nut in the unit (gates 6+ fns).
+156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
+    the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
+    operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
+    a SAVED FP reg ONCE in the preheader, then materializes per-iter (`stfd fSaved; lwz rArg` for the int case, or
+    just reuses the saved reg). Three source forms, only ONE matches: (a) a NAMED f32 LOCAL `f32 m = lbl; … (s32)m`
+    → MWCC fully hoists to a GPR (gives the int a GPR home, wrong — regresses); (b) PLAIN inline `(s32)lbl` (global
+    NOT const) → recomputes the lfs+fctiwz EVERY iteration (no hoist); (c) **`extern const f32 lbl;` + inline
+    `(s32)lbl`** → the `const` enables cross-iteration load-CSE so MWCC hoists into a SAVED FP reg (matching retail's
+    f28/f31), and inlining (vs a pre-declared local) gets the FP web CREATION ORDER right — the const's web is created
+    at-use AFTER the conversion-bias web, landing the saved-FP pair in retail's order. This recovered 2 missing FP
+    saved regs (f27/f28) AND the hoisted fctiwz on pauseMenuDrawStatus_801274a0 (92.4→95→96.5). GENERALIZES #71/#127:
+    `const` is the lever for "retail CSE-hoists a loop-invariant float into a saved reg but our build recomputes/GPR-
+    hoists." Co-lever: a `f64 tmp` intermediate splits a chained `(double)…*A*B` so the LAST constant (B) loads LATE
+    (at the second `*`) into the arg reg, not hoisted early — matched pauseMenuDraw's x-calc (96.7→96.9). (pausemenu.c.)
+    METHOD NOTE — **objdiff largely NORMALIZES stack-displacement immediates**: a frame-size/stwu mismatch that ONLY
+    shifts every `N(r1)` offset by a constant is NEARLY score-neutral (pauseMenuDraw frame 336 vs retail 176 cost ~0).
+    The frame is worth fixing ONLY when the buf/local size change lands the conv-temp offsets on retail's EXACT values
+    (pauseMenuDrawStatus buf[0x50]→[0x38] hit retail's 224 frame AND its 64/72/80 conv slots, +0.15). Don't grind frame
+    size for its own sake; chase real opcode/reg diffs. (Import-undersized/oversized arrays #67/#145 still matter for
+    the STRUCTURAL features they unlock — just not for the raw offset cascade.)
+157. **IMPORT SWAPPED a callee's PARAM ORDER (int/float groups reversed) → recover from the canonical decl + reorder
+    the call.** pausemenu.c imported `drawRect` as `(int w, int h, f32 a, f32 b)` but the real def (track/intersect.c)
+    is `(f32 sx, f32 sy, int x, int y)`. The call `drawRect(0x280,0x1e0,lbl,lbl)` and `drawRect(lbl,lbl,0x280,0x1e0)`
+    pass the IDENTICAL registers (ABI assigns by type: ints→r3/r4, floats→f1/f2) — but the correct float-first decl
+    makes MWCC EMIT the float args first (`lfs f1; fmr f2,f1; li r3; li r4`) matching retail, vs the wrong decl's
+    `lfs f1; li r3; li r4; fmr f2` (#137 emission order). Register-neutral, so always safe. METHOD: grep the function's
+    REAL signature across the repo (`grep "void drawRect" include/ src/`) — local per-file externs are often the
+    floats-last import artifact; the canonical header/def has the true order. (pauseMenuDraw 96.9→97.3.)
+    OPEN residuals on pausemenu (clean forms ASSUMED to exist): (1) **fn_8011EF50 call arg-emission order** — retail
+    emits the const float args (f1=lbl_803E1E3C, f3=lbl_803DBA38) BEFORE the u16 args (a,b,c); ours emits a,b,c then
+    f1,f3. Signature is FIXED (tricky.c defines it u16,u16,u16,f32×4) so #137 reorder is unavailable; the eval-order
+    lever for the REMAINING args after the CSE'd computed ones is unfound (appears in every pauseMenuDraw case + status).
+    (2) **case-4 inner switch (6/8/10/default) dispatch tree** — retail binary-searches with 3 bge pivots (cmpwi 8/6/10
+    + range-bound bge to a skip block); ours collapses to 1 bge. default-FIRST is correct (default-last regressed 97.3→
+    95.9); the #13/#144 lever to add the bound checks is unfound. (3) lbl_8031BB90 k-loop walker base `addi r0; mr r6`
+    detour (volatile-reg base, call-free loop — the #140 volatile sub-case, index form regressed). (4) i/j and the
+    #108 within-class saved-reg permutations (decl-order/swap inert). (5) fn_80127F24 is byte-identical except an
+    i↔loop2-x r27/r28 swap (reverse creation-order #108; func-scope shared `s16 x` got 97.95→98.03, decl-order inert).
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
