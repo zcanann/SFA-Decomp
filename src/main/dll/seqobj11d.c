@@ -50,7 +50,7 @@ extern u32 FUN_800305c4();
 extern int FUN_8014c78c();
 extern u32 FUN_8014d4c8();
 extern void fn_8014D08C(int obj, u8* state, int a, f32 f, int b, int c);
-extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
+extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 extern void fn_8015039C(int obj, u8* state);
 extern u8 fn_8014FFB4(int obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
@@ -235,7 +235,7 @@ void fn_801513AC(int obj, u8* state)
     base = lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
-    if (fn_8014C11C(obj, 1, 16, gGroundBaddieTargetSearchResult, lbl_803E27AC) >= 1)
+    if (fn_8014C11C(obj, lbl_803E27AC, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
         if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40
             && *(u16*)(state + 0x2a0) != 3
@@ -335,7 +335,7 @@ void fn_8015165C(int obj, u8* state)
         if ((((GroundBaddieState*)state)->baddie.controlFlags & 0x40000000) != 0)
         {
             player = Obj_GetPlayerObject();
-            fn_8014C11C(obj, 3, 16, gGroundBaddieTargetSearchResult, lbl_803E27AC);
+            fn_8014C11C(obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
             if (*(u16*)(state + 0x338) != 0)
             {
                 *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
