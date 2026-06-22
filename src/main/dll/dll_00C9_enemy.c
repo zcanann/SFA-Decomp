@@ -1510,7 +1510,7 @@ void fn_8014B878(int* arg1, int* sub)
             ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
         }
         {
-            u16 mode = ((TrickyState*)sub)->unk2A0;
+            u16 mode = ((TrickyState*)sub)->turnOctant;
             if (mode < 2 || mode > 5)
             {
                 ((TrickyState*)sub)->flags2DC |= 0x400000LL;
@@ -1736,7 +1736,7 @@ void fn_8014BC98(int* node, int* sub)
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
         ((TrickyState*)sub)->unk2A2 = delta;
-        ((TrickyState*)sub)->unk2A0 = (u32)(u16)delta >> 13;
+        ((TrickyState*)sub)->turnOctant = (u32)(u16)delta >> 13;
 
         {
             f32 sqX;

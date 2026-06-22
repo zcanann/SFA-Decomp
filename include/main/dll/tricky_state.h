@@ -73,7 +73,7 @@ typedef struct TrickyState {
     s16 pathRotZ;
     u8 pad294[0x29C - 0x294];
     u32 actionTargetObj;
-    u16 unk2A0;
+    u16 turnOctant; /* (u16 angleDelta >> 13): which 1/8 sector the turn falls in; used as an anim mode */
     u16 unk2A2;
     u16 targetDist; /* distance to actionTargetObj: (s16)sqrt(dx^2+dy^2+dz^2) */
     u16 unk2A6;
