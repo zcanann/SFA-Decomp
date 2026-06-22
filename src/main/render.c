@@ -233,7 +233,6 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     u64 posA = *(u32*)(anim + 0x2c);
     u64 tp = *(u32*)(anim + 0x34) + 4;
     u64 end;
-    s64 frac;
     u64 bufA;
     u64 bufB;
     s64 tmp;
@@ -243,13 +242,14 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     u32 addrB;
     u64 maskConst = 0xFFF0;
     int i;
+    union { s64 v; int w[2]; } frac;
 
     addrB = posA + curB;
     curB = addrB;
     end = (u32)(dst + 3);
     t = t - floorf(t);
     t = t * lbl_803DE544;
-    frac = (int)t;
+    frac.v = (int)t;
 
     render_copyPackedU64Head(&bufA, posA);
     render_copyPackedU64Tail(&bufA, posA + 7);
@@ -281,7 +281,7 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
             {
                 *q /= 2;
             }
-            tmp = tmp * frac;
+            tmp = tmp * frac.v;
             for (i = 14; i != 0; i--)
             {
                 *q /= 2;
@@ -333,7 +333,7 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
                 vA = bufA >> (tmp & 0xFFFFFFFF);
                 tmp = bufB >> (tmp & 0xFFFFFFFF);
                 tmp = tmp - vA;
-                tmp = tmp * frac;
+                tmp = tmp * frac.v;
                 for (i = 14; i != 0; i--)
                 {
                     *q /= 2;
