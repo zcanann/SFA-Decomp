@@ -40,9 +40,9 @@ typedef struct TrickyImpressState
     u8 pad0[0x54 - 0x0];
     u32 flags54;
     u8 pad58[0x408 - 0x58];
-    f32 unk408;
-    f32 unk40C;
-    f32 unk410;
+    f32 renderPosX;
+    f32 renderPosY;
+    f32 renderPosZ;
     u8 pad414[0x7A8 - 0x414];
     s32 unk7A8;
     u8 pad7AC[0x7B0 - 0x7AC];
@@ -231,9 +231,9 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     u8 i = 0x14;
     u32 flags = ((TrickyImpressState*)b)->flags54;
     if ((flags & 0x1800) == 0) return;
-    stk.dx = ((TrickyImpressState*)b)->unk408 - *(f32*)(a + 0x18);
-    stk.dy = ((TrickyImpressState*)b)->unk40C - *(f32*)(a + 0x1c);
-    stk.dz = ((TrickyImpressState*)b)->unk410 - *(f32*)(a + 0x20);
+    stk.dx = ((TrickyImpressState*)b)->renderPosX - *(f32*)(a + 0x18);
+    stk.dy = ((TrickyImpressState*)b)->renderPosY - *(f32*)(a + 0x1c);
+    stk.dz = ((TrickyImpressState*)b)->renderPosZ - *(f32*)(a + 0x20);
     stk.fk = lbl_803E23E8;
     stk.hx = *(s16*)(a + 0);
     stk.hy = *(s16*)(a + 2);
