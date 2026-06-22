@@ -169,8 +169,8 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
         prev[2] = targetAnim->worldPosZ;
     }
     camcontrol_traceMove(prev, pos, outPos, box, 3, '\x01', '\x01', lbl_803E1688);
-    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)camera,
-                                             &a, &b, &c, &d2, 0);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &a, &b, &c, &d2, cameraMtxVar57->targetHeight, 0);
     b = camera->anim.worldPosY - (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
     ang = getAngle(b, d2);
     d = ang & 0xffff;
@@ -279,8 +279,8 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
 
     OSGetTick();      /* timing probe; return value intentionally unused */
     result = 0;
-    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)cam,
-                                             &spinB, &spinC, &spinD, &spinA, 0);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)cam, &spinB, &spinC, &spinD, &spinA, cameraMtxVar57->targetHeight, 0);
     tgt0 = *(int*)&((CameraObject*)cam)->anim.targetObj;
     *(int*)&probe[35] = tgt0;
     probe[1] = ((CameraObject*)cam)->anim.worldPosY;
