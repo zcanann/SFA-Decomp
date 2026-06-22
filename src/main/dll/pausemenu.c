@@ -128,7 +128,7 @@ extern f32 lbl_803E20A8;
 extern f32 lbl_803E20AC;
 extern f32 gPauseMenuSecsPerHour;
 extern f32 lbl_803E20B4;
-extern f32 lbl_803E20B8;
+extern const f32 lbl_803E20B8;
 extern f32 lbl_803E1E6C;
 extern f32 lbl_803E1EE4;
 extern f32 lbl_803E1F18;
@@ -660,43 +660,46 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             s16 px = (s16)(0xe6 - lbl_803DD75C);
             f32 scl = lbl_803E1FAC;
             f32 bse = lbl_803E1F30;
-            f32 mode = lbl_803E20B8;
             u16 ii;
             for (ii = 0; ii < 7; ii++)
             {
                 f32 fy = scl * (f32)(u32)(u16)ii
                 +bse;
                 pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
-                                     (s32)mode, 0);
+                                     (s32)lbl_803E20B8, 0);
             }
         }
-        for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
         {
-            s32 v = *(int*)lbl_803A9364;
-            s32 tex;
-            f32 fyj;
-            if ((s32)(u16)j < (v >> 2)
-            )
+            f32 scl = lbl_803E1FAC;
+            f32 bse = lbl_803E1F30;
+            for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
             {
-                tex = 0x16;
-            }
-            else
-            if ((s32)(u16)j > (v >> 2)
-            )
-            {
-                tex = 0x12;
-            }
-            else
-            {
-                tex = (v & 3) + 0x12;
-            }
-            fyj = lbl_803E1FAC * (f32)(u32)(u16)
-            j + lbl_803E1F30;
-            for (i8 = 0x14; i8 >= 0; i8 -= 4)
-            {
-                s16 px = (s16)((0xff - i8) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int**)((u8*)hudTextures + tex * 4), fyj, lbl_803E20B4, px, ty,
-                                     lbl_803E20B8, 0);
+                s32 v = *(int*)lbl_803A9364;
+                s32 tex;
+                f32 fyj;
+                if ((s32)(u16)j < (v >> 2)
+                )
+                {
+                    tex = 0x16;
+                }
+                else
+                if ((s32)(u16)j > (v >> 2)
+                )
+                {
+                    tex = 0x12;
+                }
+                else
+                {
+                    tex = (v & 3) + 0x12;
+                }
+                fyj = scl * (f32)(u32)(u16)
+                j + bse;
+                for (i8 = 0x14; i8 >= 0; i8 -= 4)
+                {
+                    s16 px = (s16)((0xff - i8) - lbl_803DD75C);
+                    pauseMenuDrawElement(*(int**)((u8*)hudTextures + tex * 4), fyj, lbl_803E20B4, px, ty,
+                                         (s32)lbl_803E20B8, 0);
+                }
             }
         }
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, lbl_803DBAD0, lbl_803DBAD4,
