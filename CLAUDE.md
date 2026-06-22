@@ -971,6 +971,23 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     flag masked on first compare, raw on second — find the producing C). DIAGNOSTICS: report.json absent
     `fuzzy_match_percent` = None (5 fns project-wide); `objdiff-cli report generate` confirms; per-fn diff
     via `function_objdump.py`/`ndiff.py`. (Flip + symbols.txt are owner/lead-domain; this is the source side.)
+152. **SIGNED-lvalue LL clear defeats the #74/#150 "0-store steal" — `*(s32*)&state->flags &= ~(u64)FLAG;`
+    (SIGNED int lvalue, NOT #74's u32 lvalue) when an adjacent `field = 0;` store FOLLOWS the clear.**
+    The #74/#150 open residual: in a noschedule unit, `flags &= ~Kll; field = 0;` regresses with the u32
+    lvalue because the AND's dead high-word materializes as a reusable `li 0` that the front-end value-numbers
+    and REUSES for the adjacent `=0` store — the `0` lands EARLY in the low reg (r3), stealing it from the
+    flags `lwz`, which then spills (flags→r4). Retail wants `lwz r3,flags; li -K; and; stw; li r0,0; sth`
+    (flags in r3, the 0 LATE in r0). FIX: make the lvalue a SIGNED int — `*(s32*)&state->flags &= ~(u64)FLAG;`
+    — so the dead high-word becomes a `srawi` (a sign-extend, NOT a `li 0`) which DCE survives but which the
+    `=0` store CANNOT value-number-reuse → the flags load keeps the low reg and the `0` stays late. RHS must
+    still be the 64-bit `~(u64)FLAG` (#74) to get `li -K; and`. Net win even with a residual dead
+    `srawi rX,rY,31` (+1 instr retail lacks). (flameguard: tricky_flameguard.c unit 95.83→96.21 — 0x400
+    TARGET_DIRTY clears across all 3 fns: trickyFlame 93.98→94.21, trickyGuardFindBaddieTarget 95.44→96.25,
+    trickyGuard 97.70→98.15.) OPEN (a clean srawi-FREE form is ASSUMED to exist — not yet found): the source
+    shape where the high-word genuinely never materializes (a 32-bit-only AND MWCC proves the top word dead),
+    or splitting the `=0` into its own basic block so its zero gets a DISTINCT value-number that can't CSE
+    with the AND's high-word. Trigger to sweep: any `flags &= ~Kll; field=0;` pair where #74's u32 form
+    regressed via register-steal.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
