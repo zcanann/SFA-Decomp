@@ -1929,6 +1929,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the load is a bare `lbz`/`lha`, no extsb/extsh). Residual narrow-store `clrlwi`/`extsh` on the volatile
     stores themselves is a peephole-OFF artifact in nopeephole units (peephole-on removes it but regresses the
     fn) — leave it. Sibling of #6/#45 (lift-to-local for hoisting) for the volatile-store-batch case.
+162. **WIDTH FIX THAT CASCADES → COMPLETE IT WITH THE CALLEE-PARAM-WIDTH 2ND EDIT (don't abandon on the
+    partial — the #145 "good news" principle applied to width).** When a narrow-field retype (`u8 field` / `s16
+    field`) makes the target's `clrlwi`/`extsh` APPEAR (the lever IS working — a NON-folded narrow RMW, e.g.
+    `int flags=0x16; flags|=1` const-folds to `li 0x17`, but `u8 flags; flags|=1` emits the target's `ori;
+    clrlwi`) BUT introduces a SMALL regression, the regression is almost always a u8/s16→int ZERO-EXTEND/SIGN-
+    EXTEND at a CALL ARG (the narrowed value widens when passed). The 2nd edit removes it: declare that CALL's
+    PARAM at the field width too (in the fn-ptr cast / prototype, #11/#126) so the value stays narrow END-TO-END
+    → cascade gone → exact match. (lightfoot_init 99.73→100: `u8 flags` got the clrlwi but cascaded -0.026 at the
+    baddie-control call's zero-extend; adding the call's 7th param `u8` landed 100.) ★ LESSON: a width retype
+    that makes the right instr APPEAR but nets a small loss is a PARTIAL, not a "resists" — the appearing
+    clrlwi/extsh PROVES the lever; hunt the SECOND edit (callee param width) that removes the introduced cascade.
+    Do NOT read the first-edit cascade as failure (cost a false "all-5-resist" report once — lightfoot was
+    winnable). Generalizes the #11/#126 callee-width family into the 2-edit (field + param) completion pattern.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
