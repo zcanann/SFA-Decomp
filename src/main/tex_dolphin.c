@@ -290,13 +290,17 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         f32 fldY = *(float*)((int)blockXform + 0x28);
         f32 fx = playerMapOffsetX;
         f32 fldX = *(float*)((int)blockXform + 0x18);
+        f32 ax0 = (f32)(*(short*)((int)bounds + 6) >> 3) + fldX;
+        f32 az0 = (f32)(*(short*)((int)bounds + 10) >> 3) + fldZ;
+        f32 ax1 = (f32)(*(short*)((int)bounds + 0xc) >> 3) + fldX;
+        f32 az1 = (f32)(*(short*)((int)bounds + 0x10) >> 3) + fldZ;
         modelLightStruct_selectBrightestAabbLights(
-            (f32)(*(short*)((int)bounds + 6) >> 3) + fldX + fx,
+            ax0 + fx,
             (f32)(*(short*)((int)bounds + 8) >> 3) + fldY,
-            (f32)(*(short*)((int)bounds + 10) >> 3) + fldZ + fz,
-            (f32)(*(short*)((int)bounds + 0xc) >> 3) + fldX + fx,
+            az0 + fz,
+            ax1 + fx,
             (f32)(*(short*)((int)bounds + 0xe) >> 3) + fldY,
-            (f32)(*(short*)((int)bounds + 0x10) >> 3) + fldZ + fz,
+            az1 + fz,
             (u8*)&gTexDimmedLightList, 2, &lightCount);
     }
     resetLotsOfRenderVars();
