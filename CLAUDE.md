@@ -1725,6 +1725,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     only p, x/y/z via a different mechanism) partially triggers it; the in-repo/MP4 oracle for a matched fn
     with a static leaf returning in volatiles. The lever is a different shape than struct-return/#99 — those are
     explored, so aim the fresh look elsewhere (the coordination is reachable).
+161. **PRE-LOAD byte/halfword fields into locals BEFORE a sequence of volatile GX-FIFO (or other volatile)
+    STORES → MWCC hoists the loads into retail's BATCHED-load pattern (hunter in-tree-confirmed, drawGlow
+    92.2→92.9).** When a draw/emit fn writes several narrow fields to a volatile FIFO (`*(vu8*)fifo = obj->r;
+    *(vu8*)fifo = obj->g; ...`), the volatile stores are emission-pinned in order, but retail BATCHES the source
+    `lbz`/`lha` loads up front. Lift each source field into a plain local FIRST (`u8 r=obj->r, g=obj->g; s16
+    u=obj->u; ... ; *(vu8*)fifo=r; *(vu8*)fifo=g; ...`) — the non-volatile loads then hoist/batch ahead of the
+    store burst, matching the target. Pairs with the width levers (#58/#20: type each local to the field width so
+    the load is a bare `lbz`/`lha`, no extsb/extsh). Residual narrow-store `clrlwi`/`extsh` on the volatile
+    stores themselves is a peephole-OFF artifact in nopeephole units (peephole-on removes it but regresses the
+    fn) — leave it. Sibling of #6/#45 (lift-to-local for hoisting) for the volatile-store-batch case.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
