@@ -1123,19 +1123,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the runtime fmul → 1 instr short, e.g. dim2icicle prod=-75*0.5), moving the const assignments INTO the
     loop after the conversion (breaks hoisting → DSE), hoisting the conversion OUT of the loop (structure
     breaks), `prod = c34v * literal` (one named one literal — and a fmuls-operand-order shift),
-    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds). WORKING
-    HYPOTHESIS (a clue to attack, NOT a verdict): in the forms tried so far, the bias web gets
-    synthesised during int→float LOWERING (a late pass) AFTER the front-end const webs, so #108
-    "last-created → highest" parks it high while retail has it first. That tells us exactly WHAT to
-    change — we need the source shape whose bias double is created EARLY (front-end) — and we simply
-    haven't found it yet. This is the WITHIN-CLASS-ORDER shape (★ classifier) in FP form; a clean source
-    form is ASSUMED TO EXIST (same byte-identical-except-one-reg shape that #130/#131 cracked). UNTRIED
-    LEADS to attack fresh: find the C that makes the bias a front-end const — retail uses a NAMED
-    `.sdata2` ref (created early); the C that names it (vs our late `@NNN` pool double) likely creates
-    it first, so chase that spelling; restructure so the conversion is a front-end node; probe_battery
-    A/B + read MWCC's web-creation order to learn which construct creates the bias earliest. For
-    THROUGHPUT bank the clean classes first and come back FRESH — "lowered late" is a clue pointing
-    straight at the lever. (DeepDive2: dim2icicle 99.92,
+    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds).
+    ✓LEVER FOUND (validator probe — the "lowered-late → source-position-inert / build-domain-only" framing is
+    DISPROVEN): the bias colors by the CONVERSION's SOURCE POSITION in the loop body (probe: conversion FIRST
+    in the body → bias `lfd f28`; conversion LAST → bias `lfd f31`). It is NOT inert — it's the FP analog of
+    func05's strides / the creation-order family. THE LEVER: relocate the `(f32)(int/u32)x` conversion EARLIER
+    among the loop body's FP ops → its bias web is created earlier → colors at a LOWER fXX (retail's f29 vs our
+    f31). The prior forms missed it because they moved the CONSTS or hoisted the conversion OUT of the loop —
+    NOT its position WITHIN the body. So naming the bias being build-domain (no C names it) is moot — you DON'T
+    need to name it; reposition the conversion. ⚠️ IN-TREE PENDING (waterfx, staffFn_80170380): moving the
+    conversion shifts the bias AND the consts around it, so find the position reproducing retail's FULL FP
+    arrangement (bias f29 AND consts at their regs), not just "bias moved" — match retail's conversion
+    computation-order. Integrate as SOLVED + project-wide batch once confirmed in-tree. (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
     REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are explored so far): (1) the bias
