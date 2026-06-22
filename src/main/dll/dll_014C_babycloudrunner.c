@@ -658,8 +658,8 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
     fn_8003ADC4((int*)a, (int*)b, c + 0x3c, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject(a, b, 0) >> 3;
-    *(s16*)a += (s16)shifted;
+    shifted = Obj_GetYawDeltaToObject(a, b, 0);
+    *(s16*)a += (shifted >>= 3);
     if (d == 0) return;
     if ((s16)shifted > -200 && (s16)shifted < 200)
     {
