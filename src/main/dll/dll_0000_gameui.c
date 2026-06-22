@@ -179,9 +179,9 @@ extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
 extern f32 lbl_803E213C;
 extern f32 lbl_803E2140;
-extern f64 lbl_803E2148;
-extern f64 lbl_803E2150;
-extern f64 lbl_803E2158;
+extern const f64 lbl_803E2148;
+extern const f64 lbl_803E2150;
+extern const f64 lbl_803E2158;
 extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
 extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
 extern int getNextTaskHintText(void);
@@ -1392,9 +1392,6 @@ void boxDrawFn_8012975c(void)
     int a;
     int u;
     f64 scaled;
-    f64 c2;
-    f64 c1;
-    f64 c0;
 
     if (lbl_803DD770 == 0)
     {
@@ -1404,16 +1401,13 @@ void boxDrawFn_8012975c(void)
     drawTexture(*(void**)(hudTextures + 0x110), lbl_803E213C, lbl_803E2140, 0xff, 0x100);
     j = 2;
     alpha = 0xaa;
-    c0 = lbl_803E2148;
-    c1 = lbl_803E2150;
-    c2 = lbl_803E2158;
     for (; j >= 0; j--)
     {
         i = idx;
-        drawTexture(*(void**)(hudTextures + 0x114), (f32)(c0 + (scaled = c1 * i)),
+        drawTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
                     (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
                     (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(c2 - scaled), t, (u8)a,
+        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2158 - scaled), t, (u8)a,
                           (u16)u, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
@@ -1421,16 +1415,13 @@ void boxDrawFn_8012975c(void)
     idx = (lbl_803DD770 & 0x1f) ^ 0x10;
     j = 2;
     alpha = 0xaa;
-    c0 = lbl_803E2148;
-    c1 = lbl_803E2150;
-    c2 = lbl_803E2158;
     for (; j >= 0; j--)
     {
         i = idx;
-        drawTexture(*(void**)(hudTextures + 0x114), (f32)(c0 + (scaled = c1 * i)),
+        drawTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
                     (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
                     (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(c2 - scaled), t, (u8)a,
+        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2158 - scaled), t, (u8)a,
                           (u16)u, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
