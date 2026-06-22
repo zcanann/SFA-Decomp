@@ -98,9 +98,9 @@ STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationZ) == 0x2C);
 typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 targetWeight;
-    f32 unk08;
-    s8 unk0C;
-    s8 unk0D;
+    f32 weightRate;   /* 0x08: per-dt weight delta (weight += weightRate * dt) */
+    s8 morphTargetA;  /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
+    s8 morphTargetB;  /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
     u8 flags0E;
     u8 unk0F;
 } ObjModelBlendChannel;

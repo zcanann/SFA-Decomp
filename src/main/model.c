@@ -857,7 +857,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     ch = ((ObjModel*)model)->blendChannels + channel;
     if (a == -1 && b == -1)
     {
-        if (ch[0].unk0C != -1 || ch[0].unk0D != -1)
+        if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1)
         {
             flags |= 6;
         }
@@ -866,18 +866,18 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
             return;
         }
     }
-    if (ch[0].unk0C == a && ch[0].unk0D == b)
+    if (ch[0].morphTargetA == a && ch[0].morphTargetB == b)
     {
         return;
     }
-    ch[0].unk0C = a;
-    ch[0].unk0D = b;
+    ch[0].morphTargetA = a;
+    ch[0].morphTargetB = b;
     if (!(flags & 0x10))
     {
         ch[0].weight = lbl_803DE828;
     }
     ch[0].targetWeight = lbl_803DE840;
-    ch[0].unk08 = weight;
+    ch[0].weightRate = weight;
     ch[0].flags0E = flags | 4;
 }
 
@@ -919,7 +919,7 @@ void ObjModel_ApplyBlendChannels(u8* model)
         }
         fl = ch[0].flags0E & 0xc;
         arrA[i] = fl;
-        if (ch[0].unk0C != -1 || ch[0].unk0D != -1 || fl != 0)
+        if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1 || fl != 0)
         {
             arrB[i] = 1;
         }
@@ -967,17 +967,17 @@ void ObjModel_ApplyBlendChannels(u8* model)
         }
         if (arrB[i] && arrA[i])
         {
-            if (ch[0].unk0C > -1)
+            if (ch[0].morphTargetA > -1)
             {
-                boneA = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].unk0C];
+                boneA = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].morphTargetA];
             }
             else
             {
                 boneA = &defFrame;
             }
-            if (ch[0].unk0D > -1)
+            if (ch[0].morphTargetB > -1)
             {
-                boneB = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].unk0D];
+                boneB = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].morphTargetB];
             }
             else
             {
@@ -1057,7 +1057,7 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
     for (i = 0; i < 3; i++)
     {
         ch = ((ObjModel*)model)->blendChannels + i;
-        if (ch[0].unk0C == -1 && ch[0].unk0D == -1)
+        if (ch[0].morphTargetA == -1 && ch[0].morphTargetB == -1)
         {
             continue;
         }
@@ -1065,17 +1065,17 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
         {
             continue;
         }
-        ch[0].weight = ch[0].unk08 * dt + ch[0].weight;
+        ch[0].weight = ch[0].weightRate * dt + ch[0].weight;
         if (ch[0].weight >= lbl_803DE874)
         {
             ch[0].weight = lbl_803DE874;
-            ch[0].unk08 = lbl_803DE878;
+            ch[0].weightRate = lbl_803DE878;
             ch[0].flags0E &= ~4;
         }
         else if (ch[0].weight <= lbl_803DE87C)
         {
             ch[0].weight = lbl_803DE87C;
-            ch[0].unk08 = lbl_803DE878;
+            ch[0].weightRate = lbl_803DE878;
             ch[0].flags0E &= ~4;
         }
     }
