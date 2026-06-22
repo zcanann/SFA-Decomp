@@ -4481,7 +4481,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevAlphaIn(0, 6, 7, 7, 4);
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(0, 0, 1, 2, 1, 0);
+    GXSetTevAlphaOp(0, 1, 0, 2, 1, 0);
 
     GXSetTevDirect(1);
     GXSetTevOrder(1, 1, 1, 0xFF);
@@ -4499,7 +4499,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevAlphaIn(2, 6, 7, 7, 4);
     GXSetTevSwapMode(2, 0, 0);
     GXSetTevColorOp(2, 0, 0, 0, 1, 1);
-    GXSetTevAlphaOp(2, 0, 1, 2, 1, 1);
+    GXSetTevAlphaOp(2, 1, 0, 2, 1, 1);
 
     GXSetTevDirect(3);
     GXSetTevOrder(3, 2, 1, 0xFF);
@@ -4507,7 +4507,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevAlphaIn(3, 7, 1, 4, 7);
     GXSetTevSwapMode(3, 0, 0);
     GXSetTevColorOp(3, 0, 0, 0, 1, 1);
-    GXSetTevAlphaOp(3, 0, 0, 1, 1, 1);
+    GXSetTevAlphaOp(3, 0, 0, 2, 1, 1);
 
     GXSetTevKAlphaSel(4, 0);
     GXSetTevDirect(4);
