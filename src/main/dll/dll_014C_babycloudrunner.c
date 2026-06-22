@@ -190,7 +190,6 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
     u32 uStack_44;
     u32 local_40;
     u32 uStack_3c;
-    s64 local_38;
 
     if (target == 0x0)
     {
@@ -231,7 +230,6 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
                     )) * (float)(dt * (double)lbl_803DC074)) / dist)
             )
             ;
-            local_38 = (s64)newAng;
             *self = newAng;
             dist = (double)*(float*)(self + 0x14);
             velZ = (double)*(float*)(self + 0x16);
@@ -566,11 +564,7 @@ void FUN_8019f1dc(void)
     double in_ps31_1;
     u64 objPair;
     int numObjects;
-    u16 local_64[4];
-    float local_5c;
-    float local_58;
-    float local_54;
-    float local_50;
+    u16 angles[4];
     float local_28;
     float fStack_24;
     float local_18;
@@ -600,14 +594,10 @@ void FUN_8019f1dc(void)
         *(float*)(subObj + 0x24) = lbl_803E4F60 * *(float*)(childOrTarget + 0x298) + lbl_803E4F5C;
         *(float*)(subObj + 0x28) = lbl_803E4F68 * *(float*)(childOrTarget + 0x298) + lbl_803E4F64;
     }
-    local_58 = lbl_803E4F58;
-    local_54 = lbl_803E4F58;
-    local_50 = lbl_803E4F58;
-    local_5c = lbl_803E4F74;
-    local_64[2] = 0;
-    local_64[1] = 0;
-    local_64[0] = *(u16*)(subObj + 0x50);
-    FUN_80017748(local_64, (float*)(subObj + 0x20));
+    angles[2] = 0;
+    angles[1] = 0;
+    angles[0] = *(u16*)(subObj + 0x50);
+    FUN_80017748(angles, (float*)(subObj + 0x20));
     *(u8*)(subObj + 0x49) = *(u8*)(subObj + 0x49) | 1;
     FUN_80006824(obj, SFXsk_baptr6_c);
     *(u8*)(subObj + 0x49) = *(u8*)(subObj + 0x49) | 2;
