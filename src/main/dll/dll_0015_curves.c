@@ -334,6 +334,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     }
 }
 
+#pragma opt_common_subs off
 void fn_800E58FC(int obj, CurvesCollisionState* collision)
 {
     CurvesTransformScratch transform;
@@ -457,6 +458,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
         ((GameObject*)obj)->anim.worldPosZ = collision->points[0][2];
     }
 }
+#pragma opt_common_subs reset
 
 #pragma dont_inline on
 #pragma opt_common_subs off
