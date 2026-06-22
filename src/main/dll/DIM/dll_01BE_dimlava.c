@@ -363,7 +363,7 @@ void lavaball1be_update(s16* obj)
     }
 }
 
-void lavaball1be_setScale(s16* obj, int p2, int p3)
+void lavaball1be_setScale(s16* obj, int vertSpeed, int horizSpeed)
 {
     Lavaball1beState* state;
     u8* setup;
@@ -372,7 +372,7 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    vxz = gDimLavaVelocityScale * p3;
+    vxz = gDimLavaVelocityScale * horizSpeed;
     x = ((GameObject*)state->targetObj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosX = x;
     ((GameObject*)obj)->anim.localPosX = x;
@@ -394,7 +394,7 @@ void lavaball1be_setScale(s16* obj, int p2, int p3)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->spawnRotX << 8);
     ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
         gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
-    ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * p2;
+    ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * vertSpeed;
     ((GameObject*)obj)->anim.velocityZ = vxz * -mathCosf(
         gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
     ((GameObject*)obj)->anim.flags &= ~0x4000;
