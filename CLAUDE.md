@@ -1245,7 +1245,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     form. So #155's open core is narrowly "multi-field-struct-walk base-init detour" + the dll_7B conditional-
     first-use sibling — both allocation-state, assumed-reachable but no clean source form found (a fresh-eyes
     reframe or a future allocation-perturbation discovery, like the kind-2 frontier got #107). Cases 1+2 are
-    closed; only case 3 remains.
+    closed; only case 3 remains. FINAL CONFIRM (expgfx, modellight): the materialization-order perturbation
+    (moving base-init up-front before its neighbor inits, keeping the pointer-walk) REGRESSED 98.81→96.28 AND
+    the base STILL detoured — so base-above-neighbors is the WRONG perturbation. KEY UNTRIED-DEEPER lead for the
+    fresh-eyes return: modellight has TWO r0-routed webs — the base (`addi r0,r3; mr r31`) AND a masked value
+    (`clrlwi r0,r0,24; mr r29`, the `activeMask & 0xff` also routes via r0+copy). flameguard's dll_7B +0.55 came
+    from perturbing ONE web's neighbors; the untried cross-apply is perturbing BOTH r0-consumers together (the
+    masked-activeMask web is the 2nd r0 grabber and likely must be moved off r0 in tandem with the base). That
+    joint two-r0-web perturbation is the next concrete attack on case-3.
     **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
     within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
     one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
