@@ -625,7 +625,7 @@ void dbegg_update(int obj)
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     int player;
     int blob;
-    int p2;
+    int playerObj;
     int b2;
     int d2;
     int n;
@@ -789,7 +789,7 @@ void dbegg_update(int obj)
         case 6:
             if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (((DbEggState*)blob)->flags119 & 2) == 0)
             {
-                p2 = Obj_GetPlayerObject();
+                playerObj = Obj_GetPlayerObject();
                 b2 = *(int*)&((GameObject*)obj)->extra;
                 d2 = *(int*)&((GameObject*)obj)->anim.placementData;
                 ObjGroup_RemoveObject(obj, 0x24);
@@ -801,7 +801,7 @@ void dbegg_update(int obj)
                 ((DbEggState*)b2)->msg11C = -1;
                 ((DbEggState*)b2)->msg11E = 0;
                 ((DbEggState*)b2)->msg120 = lbl_803E61CC;
-                ObjMsg_SendToObject(p2, 0x7000a, obj, b2 + 0x11c);
+                ObjMsg_SendToObject(playerObj, 0x7000a, obj, b2 + 0x11c);
                 ((GameObject*)obj)->unkF8 = 0;
             }
             else if (getButtonsJustPressed(0) & 0x100)
@@ -970,7 +970,7 @@ void dbegg_update(int obj)
                 {
                     if ((((DbEggState*)blob)->flags119 & 1) == 0)
                     {
-                        p2 = Obj_GetPlayerObject();
+                        playerObj = Obj_GetPlayerObject();
                         b2 = *(int*)&((GameObject*)obj)->extra;
                         d2 = *(int*)&((GameObject*)obj)->anim.placementData;
                         ObjGroup_RemoveObject(obj, 0x24);
@@ -982,7 +982,7 @@ void dbegg_update(int obj)
                         ((DbEggState*)b2)->msg11C = -1;
                         ((DbEggState*)b2)->msg11E = 0;
                         ((DbEggState*)b2)->msg120 = lbl_803E61CC;
-                        ObjMsg_SendToObject(p2, 0x7000a, obj, b2 + 0x11c);
+                        ObjMsg_SendToObject(playerObj, 0x7000a, obj, b2 + 0x11c);
                     }
                     else
                     {

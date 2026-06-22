@@ -419,7 +419,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     }
 }
 
-void fn_801CE2BC(int* obj, u8* st, short* p3)
+void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
@@ -433,7 +433,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
             Sfx_PlayFromObject((u32)obj, 0x150);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
-        if (state->playerDistanceSq < (f32)(s32)(p3[0xc] * p3[0xc]))
+        if (state->playerDistanceSq < (f32)(s32)(objDef[0xc] * objDef[0xc]))
         {
             st[0x408] = 0xa;
         }

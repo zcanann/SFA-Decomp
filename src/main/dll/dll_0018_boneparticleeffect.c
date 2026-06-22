@@ -1395,7 +1395,7 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
 #pragma opt_propagation off
-void boneParticleEffect_update(void* ctx, int p2, u8* o)
+void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
 {
     BoneFxVtx s;
     u8* base;
@@ -1573,7 +1573,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
     {
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
-    Camera_LoadModelViewMatrix(ctx, p2, &s, lbl_803DF4B8, lbl_803DF4A8, 0);
+    Camera_LoadModelViewMatrix(ctx, renderParam, &s, lbl_803DF4B8, lbl_803DF4A8, 0);
     GXSetCullMode(0);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();

@@ -138,7 +138,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 }
 
 #pragma scheduling reset
-void tree_updateAmbientEffects(int obj, int p2)
+void tree_updateAmbientEffects(int obj, int state)
 {
     int i;
 
@@ -146,26 +146,26 @@ void tree_updateAmbientEffects(int obj, int p2)
     {
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
         {
-            if ((void*)((TreeState*)p2)->ambientEffectHandles[i] == NULL)
+            if ((void*)((TreeState*)state)->ambientEffectHandles[i] == NULL)
             {
-                ((TreeState*)p2)->ambientSpawnTimers[i] -= timeDelta;
-                if (((TreeState*)p2)->ambientSpawnTimers[i] <= lbl_803E72F8)
+                ((TreeState*)state)->ambientSpawnTimers[i] -= timeDelta;
+                if (((TreeState*)state)->ambientSpawnTimers[i] <= lbl_803E72F8)
                 {
-                    ((TreeState*)p2)->ambientSpawnTimers[i] = randomGetRange(0x3c, 0x12c);
-                    tree_spawnAmbientEffect(obj, p2, i);
+                    ((TreeState*)state)->ambientSpawnTimers[i] = randomGetRange(0x3c, 0x12c);
+                    tree_spawnAmbientEffect(obj, state, i);
                 }
             }
             else
             {
-                if ((*(int (**)(int))(*(int*)(*(int*)(((TreeState*)p2)->ambientEffectHandles[i] + 0x68)) + 0x28))(
-                    ((TreeState*)p2)->ambientEffectHandles[i]) > 3)
+                if ((*(int (**)(int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x28))(
+                    ((TreeState*)state)->ambientEffectHandles[i]) > 3)
                 {
-                    ((TreeState*)p2)->ambientEffectHandles[i] = 0;
+                    ((TreeState*)state)->ambientEffectHandles[i] = 0;
                 }
                 else
                 {
-                    (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)p2)->ambientEffectHandles[i] + 0x68)) + 0x24))(
-                        ((TreeState*)p2)->ambientEffectHandles[i], (int)&((TreeState*)p2)->ambientEffectPos[i][0]);
+                    (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x24))(
+                        ((TreeState*)state)->ambientEffectHandles[i], (int)&((TreeState*)state)->ambientEffectPos[i][0]);
                 }
             }
         }
