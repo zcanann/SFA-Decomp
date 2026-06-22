@@ -5759,6 +5759,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
 
     descBase = gTrackBlockDescriptors;
     descEnd = descBase + gActiveTrackBlockCount;
+    eps = __AR_Callback;
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5770,7 +5771,6 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
     sp1 = (f32*)p2;
     sp2 = (f32*)p2;
     slotp = p5;
-    eps = __AR_Callback;
     for (; i < p4; i++)
     {
         cur[0] = ep1[0];
