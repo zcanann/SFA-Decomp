@@ -214,6 +214,7 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
 #pragma scheduling off
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
 {
+    int curveIndex;
     ObjfsaRomCurveDef* curve;
     ObjfsaRomCurveDef* bestCurve;
     ObjfsaRomCurveDef* bestActionCurve;
@@ -228,7 +229,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     s16 objGrid[4];
     u8 traceHit;
     int bboxHit[20];
-    int curveIndex;
     int typeIndex;
     u8 traceResult;
 
