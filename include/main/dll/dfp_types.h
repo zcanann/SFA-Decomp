@@ -18,7 +18,7 @@ typedef struct DfpLevelControlState
     u8 unk04[2];
     u8 sfxLatch; /* gamebit-1589 one-shot latch */
     u8 flags07; /* DfpFlags7 bitfield overlay */
-    u8 unk08[4];
+    u8 gameBitLatches[4]; /* persistent latch state for the 3 SCGameBitLatch_Update calls in update */
 } DfpLevelControlState;
 
 typedef struct DfpSeqPointState
