@@ -3004,7 +3004,104 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
     }
 }
 
-extern void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
+asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count)
+{
+    nofralloc
+    stwu r1, -160(r1)
+    stfd f14, 8(r1)
+    addi r9, count, -1
+    stfd f15, 16(r1)
+    stfd f16, 24(r1)
+    stfd f17, 32(r1)
+    stfd f18, 40(r1)
+    stfd f19, 48(r1)
+    stfd f20, 56(r1)
+    stfd f21, 64(r1)
+    stfd f22, 72(r1)
+    stfd f23, 80(r1)
+    stfd f24, 88(r1)
+    stfd f25, 96(r1)
+    stfd f26, 104(r1)
+    stfd f27, 112(r1)
+    mtctr r9
+    psq_l f0, 0(m1), 0, 0
+    addi d1, d1, -1
+    psq_l f1, 8(m1), 1, 0
+    addi d2, d2, -1
+    addi src, src, -2
+    psq_lu f8, 1(d1), 0, 7
+    psq_lu f9, 2(d1), 1, 7
+    psq_lu f27, 2(src), 0, 6
+    ps_muls0 f15, f0, f8
+    psq_l f2, 12(m1), 0, 0
+    ps_muls0 f16, f1, f8
+    psq_l f3, 20(m1), 1, 0
+    psq_l f5, 32(m1), 1, 0
+    ps_madds1 f15, f2, f8, f15
+    psq_l f19, 0(m2), 0, 0
+    ps_madds1 f16, f3, f8, f16
+    psq_l f4, 24(m1), 0, 0
+    psq_l f20, 8(m2), 1, 0
+    psq_l f21, 12(m2), 0, 0
+    ps_madds0 f15, f4, f9, f15
+    psq_l f22, 20(m2), 1, 0
+    ps_madds0 f16, f5, f9, f16
+    psq_l f23, 24(m2), 0, 0
+    psq_l f24, 32(m2), 1, 0
+    ps_muls0 f15, f15, f27
+    ps_muls0 f16, f16, f27
+    ps_muls0 f11, f19, f8
+    ps_muls0 f12, f20, f8
+    ps_madds1 f11, f21, f8, f11
+    ps_madds1 f12, f22, f8, f12
+    psq_lu f8, 1(d1), 0, 7
+    ps_madds0 f11, f23, f9, f11
+    ps_madds0 f12, f24, f9, f12
+    psq_lu f9, 2(d1), 1, 7
+    ps_madds1 f11, f11, f27, f15
+    ps_madds1 f12, f12, f27, f16
+lbl_TVL_loop:
+    ps_muls0 f15, f0, f8
+    psq_stu f11, 1(d2), 0, 7
+    ps_muls0 f16, f1, f8
+    psq_stu f12, 2(d2), 1, 7
+    ps_madds1 f15, f2, f8, f15
+    ps_madds1 f16, f3, f8, f16
+    ps_madds0 f15, f4, f9, f15
+    ps_madds0 f16, f5, f9, f16
+    psq_lu f27, 2(src), 0, 6
+    ps_muls0 f15, f15, f27
+    ps_muls0 f16, f16, f27
+    ps_muls0 f11, f19, f8
+    ps_muls0 f12, f20, f8
+    ps_madds1 f11, f21, f8, f11
+    ps_madds1 f12, f22, f8, f12
+    psq_lu f8, 1(d1), 0, 7
+    ps_madds0 f11, f23, f9, f11
+    ps_madds0 f12, f24, f9, f12
+    psq_lu f9, 2(d1), 1, 7
+    ps_madds1 f11, f11, f27, f15
+    ps_madds1 f12, f12, f27, f16
+    bdnz lbl_TVL_loop
+    psq_stu f11, 1(d2), 0, 7
+    psq_stu f12, 2(d2), 1, 7
+    lfd f14, 8(r1)
+    lfd f15, 16(r1)
+    lfd f16, 24(r1)
+    lfd f17, 32(r1)
+    lfd f18, 40(r1)
+    lfd f19, 48(r1)
+    lfd f20, 56(r1)
+    lfd f21, 64(r1)
+    lfd f22, 72(r1)
+    lfd f23, 80(r1)
+    lfd f24, 88(r1)
+    lfd f25, 96(r1)
+    lfd f26, 104(r1)
+    lfd f27, 112(r1)
+    addi r1, r1, 160
+    blr
+}
 extern void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
 
 void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
