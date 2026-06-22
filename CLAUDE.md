@@ -227,7 +227,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     TUs (per-file form is load-bearing for codegen). Pointer-return/no-file-scope redecls are
     accepted; object/void-vs-int return redecls are rejected; dedupe identical typedef/tag redefs.
 58. **Type the local to match the field width** (`u16 num = field` keeps `cmplwi`; `long` widens to
-    `cmpwi`). Keep the local for CSE; just type it right. Struct-FIELD width is the same lever —
+    `cmpwi`). Keep the local for CSE; just type it right. BOUNDARY (lead-reproduced GC/2.0 -O4,p, compare must
+    feed a BRANCH per #3): the width lever bites against a CONSTANT (u16→`cmplwi`, long→`cmpwi`) and
+    field-vs-field / field-vs-u16-value (u16→`cmplw`, long→`cmpw`) — but is INERT against a RUNTIME INT OPERAND
+    (an `int` param or `int` local: u16 and long BOTH give `cmpw`, the int operand fixes the opcode). So only
+    reach for the local-retype when the other operand is a constant or another narrow-unsigned value; against an
+    int operand it does nothing. Struct-FIELD width is the same lever —
     A/B project-wide before flipping a shared typedef; launder minority sites with a cast pointer.
 59. **Lift the term you want computed FIRST to its own statement, to control commutative-FP
     reassociation.** MWCC's DEFAULT for `t0 + t1 (+ t2...)` computes the LAST source term first
