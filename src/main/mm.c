@@ -435,12 +435,12 @@ void mmFreeTick(int arg)
         {
             mmFree(d->ptr);
             {
-                DeferredFree* a = (DeferredFree*)((char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8);
-                d->ptr = a[-1].ptr;
+                char* a = (char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8;
+                d->ptr = ((DeferredFree*)(a + 0x78))->ptr;
             }
             {
-                DeferredFree* b = (DeferredFree*)((char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8);
-                d->delay = b[-1].delay;
+                char* b = (char*)g + *(volatile s16*)&gMmDeferredFreeCount * 8;
+                d->delay = ((DeferredFree*)(b + 0x78))->delay;
             }
             gMmDeferredFreeCount--;
         }
