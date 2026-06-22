@@ -51,6 +51,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
 {
     int i;
     u8** pwNode;
+    int* np;
     u8** ppNode;
     f32 *q1, *q2, *q3, *q4, *q5, *q6, *q7;
     u8* node;
@@ -64,6 +65,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     u8* pts[4];
 
     i = 0;
+    np = nodes;
     pwNode = pts;
     ppNode = pwNode;
     q1 = o1;
@@ -75,7 +77,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     q7 = o7;
     for (; i < 4; i++)
     {
-        *ppNode = (u8*)(*gRomCurveInterface)->getById(*nodes);
+        *ppNode = (u8*)(*gRomCurveInterface)->getById(*np);
         node = *ppNode;
         if (node != NULL)
         {
@@ -87,7 +89,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
             *q6 = (f32) * (s16*)(node + NODE_SAMPLE_C);
             *q7 = (f32) * (s8*)(node + NODE_SAMPLE_D);
         }
-        nodes++;
+        np++;
         ppNode++;
         q1++;
         q2++;
