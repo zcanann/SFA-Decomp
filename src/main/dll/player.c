@@ -7798,11 +7798,11 @@ int fn_802A6694(int obj, int state, f32 fv)
                     move = gPlayerStopMoves[i];
                     if (((PlayerState*)inner)->characterId == 0)
                     {
-                        fv = *(f32*)((tbl + 0x170) + i * 4);
+                        fv = ((f32*)(tbl + 0x170))[i];
                     }
                     else
                     {
-                        fv = *(f32*)((tbl + 0x180) + i * 4);
+                        fv = ((f32*)(tbl + 0x180))[i];
                     }
                     ((PlayerState*)inner)->stopMoveIndex += 1;
                     ((PlayerState*)inner)->stopMoveIndex =
