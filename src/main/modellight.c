@@ -1606,20 +1606,20 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 a, f32 b, 
 }
 #pragma opt_common_subs reset
 
+#pragma opt_propagation off
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 a, f32 b)
 {
     u8* lightObj;
     f32 zero;
-    f32 one;
     f32 atten;
 
     obj->specularAttenuationScale = a;
     obj->specularBrightness = b;
-    lightObj = (u8*)obj + 0xc0;
     atten = obj->specularAttenuationScale * lbl_803DE790;
+    lightObj = (u8*)obj + 0xc0;
     zero = lbl_803DE75C;
-    one = lbl_803DE760;
-    GXInitLightAttn(lightObj, zero, zero, one, atten, zero, *(f32*)&lbl_803DE760 - atten);
+    GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
+#pragma opt_propagation reset
 void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
 
