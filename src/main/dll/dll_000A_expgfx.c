@@ -227,6 +227,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
     }
 }
 
+#pragma opt_propagation off
 void expgfxRemoveAll(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -283,8 +284,11 @@ void expgfxRemoveAll(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
-                *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
+                {
+                    u32 currentMaskValue = *poolActiveMasks;
+                    inactiveBitMask = ~activeBit;
+                    *poolActiveMasks = currentMaskValue & inactiveBitMask;
+                }
             }
 
             slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
@@ -301,6 +305,7 @@ void expgfxRemoveAll(void)
         poolIndex++;
     }
 }
+#pragma opt_propagation reset
 
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
