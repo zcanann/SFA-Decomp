@@ -893,7 +893,7 @@ void gunpowderbarrel_update(int obj)
         state->launchYaw = ((GameObject*)player)->anim.rotX;
         gunpowderbarrel_triggerExplosion((int*)obj);
     }
-    if (((GpbHeldFlags*)&state->heldFlags)->held != 0)
+    if (((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         if (((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture != 0 && ((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
