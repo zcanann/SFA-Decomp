@@ -37,7 +37,7 @@ extern void ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject();
 extern void ObjMsg_SendToObjects();
 
-int fn_8015E3A0(int obj, int p2)
+int fn_8015E3A0(int obj, int state)
 {
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
@@ -49,7 +49,7 @@ int fn_8015E3A0(int obj, int p2)
     int count;
     int idx;
 
-    if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
+    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
     {
         ObjHits_EnableObject(obj);
     }
@@ -58,7 +58,7 @@ int fn_8015E3A0(int obj, int p2)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
-    if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
+    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
     {
         int* objs = ObjList_GetObjects(&idx, &count);
         while (idx < count)
@@ -72,19 +72,19 @@ int fn_8015E3A0(int obj, int p2)
         }
     }
 
-    ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_803E2DD8;
+    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2DD8;
 
-    if ((s32)(s8) * (u8*)(p2 + 0x27a) != 0)
+    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 10, lbl_803E2DC8, 0);
-        ((GroundBaddieState*)p2)->baddie.moveDone = 0;
+        ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)p2)->baddie.unk34D = 1;
+    ((GroundBaddieState*)state)->baddie.unk34D = 1;
 
-    if ((((GroundBaddieState*)p2)->baddie.eventFlags & 0x1) != 0U)
+    if ((((GroundBaddieState*)state)->baddie.eventFlags & 0x1) != 0U)
     {
         int child = *(int*)&sub->control;
-        ((GroundBaddieState*)p2)->baddie.eventFlags = ((GroundBaddieState*)p2)->baddie.eventFlags & ~0x1;
+        ((GroundBaddieState*)state)->baddie.eventFlags = ((GroundBaddieState*)state)->baddie.eventFlags & ~0x1;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
         Sfx_PlayFromObject(obj, SFXfoxcom_heel);
     }
@@ -568,7 +568,7 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015EB6C(int obj, int p2, int p3)
+void fn_8015EB6C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
     extern void* Obj_GetPlayerObject(void);
@@ -576,20 +576,20 @@ void fn_8015EB6C(int obj, int p2, int p3)
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
     extern f32 lbl_803E2E00;
-    int sub = *(int*)&((GroundBaddieState*)p2)->control;
+    int sub = *(int*)&((GroundBaddieState*)state)->control;
     char* r;
 
     r = (char*)(**(int (**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-        obj, p3, (f32)(u32)((GroundBaddieState*)p2)->aggroRange, 0x8000);
+        obj, target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
 
-    if (r != NULL && (((GroundBaddieState*)p2)->configFlags & 0x4) == 0)
+    if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
     {
         int v = -1;
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, 0, 0, 0, 8, v);
-        *(int*)&((GroundBaddieState*)p3)->baddie.targetObj = (int)r;
-        ((GroundBaddieState*)p3)->baddie.hasTarget = 0;
-        ((GroundBaddieState*)p2)->targetState = 1;
+            obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8, v);
+        *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
+        ((GroundBaddieState*)target)->baddie.hasTarget = 0;
+        ((GroundBaddieState*)state)->targetState = 1;
     }
     else
     {
@@ -626,7 +626,7 @@ void fn_8015EB6C(int obj, int p2, int p3)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015ED1C(int p1, int p2, int p3)
+void fn_8015ED1C(int obj, int state, int target)
 {
     extern int* gBaddieControlInterface;
     extern void* Obj_GetPlayerObject(void);
@@ -644,27 +644,27 @@ void fn_8015ED1C(int p1, int p2, int p3)
     f32* dp = &d.x;
 
     player = Obj_GetPlayerObject();
-    t = *(char**)&((GroundBaddieState*)p3)->baddie.targetObj;
+    t = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
     if (t != NULL)
     {
-        d.x = *(f32*)(t + 0x18) - ((GameObject*)p1)->anim.worldPosX;
-        d.y = *(f32*)(t + 0x1c) - ((GameObject*)p1)->anim.worldPosY;
-        d.z = *(f32*)(t + 0x20) - ((GameObject*)p1)->anim.worldPosZ;
-        ((GroundBaddieState*)p3)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        d.x = *(f32*)(t + 0x18) - ((GameObject*)obj)->anim.worldPosX;
+        d.y = *(f32*)(t + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
+        d.z = *(f32*)(t + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        ((GroundBaddieState*)target)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
 
-    if ((((GroundBaddieState*)p2)->configFlags & 0x20) == 0)
+    if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
     {
         (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            p1, p3, p2 + 0x400, 2, 3, (s32)((GroundBaddieState*)p2)->unk3FA, (s32)((GroundBaddieState*)p2)->unk3FC);
+            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->unk3FA, (s32)((GroundBaddieState*)state)->unk3FC);
     }
 
     (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
-        p1, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, 0, 0, 0, 8);
+        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
 
     r = (int)
     (**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
-        p1, p3, p2 + 0x35c, (s32)((GroundBaddieState*)p2)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
+        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
     if (r != 0)
     {
