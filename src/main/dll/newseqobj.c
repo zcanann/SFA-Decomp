@@ -81,7 +81,7 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
     u8* rowsC;
     u8* rowsB;
     u8* trig;
-    int ret = 0;
+    int ret;
     u8 type = state[0x33b];
 
     slot += type * 0x28;
@@ -89,6 +89,7 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
     rowsC = *(u8**)(slot + 0x24);
     rowsB = *(u8**)(slot + 0x1c);
     trig = *(u8**)(slot + 0x20);
+    ret = 0;
 
     if (type == 5)
     {
