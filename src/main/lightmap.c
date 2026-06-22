@@ -118,7 +118,7 @@ extern f32 changeMode_803DEC00;
 extern f32 gLightmapDegToBamScale;
 extern F32Pair changed_803DEC08;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 gViewFrustumPlanes[];
+extern FrustumPlane gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);
 extern f32 sqrtf(f32 v);
@@ -164,10 +164,10 @@ void updateVisibleGeometry(void)
     st.rz = *(s16*)(cam + 0x54);
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
-    gViewFrustumPlanes[n * 5] = ox;
-    gViewFrustumPlanes[n * 5 + 1] = oy;
-    gViewFrustumPlanes[n * 5 + 2] = oz;
-    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
+    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     n++;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
@@ -178,29 +178,29 @@ void updateVisibleGeometry(void)
     ss = fn_802943F4(tt);
     negff = -ff;
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, negff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n * 5] = ox;
-    gViewFrustumPlanes[n * 5 + 1] = oy;
-    gViewFrustumPlanes[n * 5 + 2] = oz;
-    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
+    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     n++;
     negss = -ss;
     Matrix_TransformPoint(m, negss, lbl_803DEBCC, negff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n * 5] = ox;
-    gViewFrustumPlanes[n * 5 + 1] = oy;
-    gViewFrustumPlanes[n * 5 + 2] = oz;
-    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
+    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, negss, negff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n * 5] = ox;
-    gViewFrustumPlanes[n * 5 + 1] = oy;
-    gViewFrustumPlanes[n * 5 + 2] = oz;
-    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
+    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, ss, negff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n * 5] = ox;
-    gViewFrustumPlanes[n * 5 + 1] = oy;
-    gViewFrustumPlanes[n * 5 + 2] = oz;
-    gViewFrustumPlanes[n * 5 + 3] = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
+    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
@@ -1884,9 +1884,8 @@ void sceneDraw(void)
     }
     {
         u32* b8 = (u32*)(q + 8);
-        u32* b12 = (u32*)(q + 12);
         b8[lbl_803DCE30 * 4] = 0x78000000;
-        b12[lbl_803DCE30 * 4] = 8;
+        ((u32*)(q + 12))[lbl_803DCE30 * 4] = 8;
         lbl_803DCE30++;
         if (lbl_803DCE30 == 1000)
         {
@@ -1894,7 +1893,7 @@ void sceneDraw(void)
             lbl_803DCE30 = 0;
         }
         b8[lbl_803DCE30 * 4] = 0x50000000;
-        b12[lbl_803DCE30 * 4] = 9;
+        ((u32*)(q + 12))[lbl_803DCE30 * 4] = 9;
         lbl_803DCE30++;
     }
     sceneDrawTransparentPolys();
