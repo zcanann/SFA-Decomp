@@ -305,6 +305,7 @@ void expgfxRemoveAll(void)
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
 #pragma ppc_unroll_instructions_limit 120
+#pragma opt_strength_reduction off
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
                   int preferredPoolIndex, u32 sourceId)
 {
@@ -313,6 +314,8 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     u32* poolSourceIds;
     u32* poolActiveMasks;
     s16* poolSlotTypeIds;
+    u32* sourceIdWalk;
+    s8* activeCountWalk;
     u32* activeMaskPtr;
     u32 currentMask;
     u32 activeBit;
@@ -320,6 +323,8 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     int foundPoolIndex;
     int poolIndex;
     int slotIndex;
+    int batchGroup;
+    int batchSlot;
 
     runtime = EXPGFX_RUNTIME_DATA;
     poolActiveCounts = runtime->poolActiveCounts;
@@ -328,17 +333,28 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     foundPool = 0;
     foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
 
-    for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++)
+    poolIndex = 0;
+    sourceIdWalk = poolSourceIds;
+    activeCountWalk = poolActiveCounts;
+    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT; batchGroup++)
     {
-        if ((poolSourceIds[poolIndex] == sourceId) &&
-            (poolSlotTypeIds[poolIndex] == slotType) &&
-            (poolActiveCounts[poolIndex] < EXPGFX_SLOTS_PER_POOL))
+        for (batchSlot = 0; batchSlot < EXPGFX_POOL_SEARCH_BATCH_SIZE; batchSlot++)
         {
-            foundPoolIndex = (s16)poolIndex;
-            foundPool = 1;
-            break;
+            if ((sourceIdWalk[batchSlot] == sourceId) &&
+                (slotType == *poolSlotTypeIds) &&
+                (activeCountWalk[batchSlot] < EXPGFX_SLOTS_PER_POOL))
+            {
+                foundPoolIndex = (s16)poolIndex;
+                foundPool = 1;
+                goto poolSearchDone;
+            }
+            poolSlotTypeIds++;
+            poolIndex++;
         }
+        sourceIdWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE;
+        activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE;
     }
+poolSearchDone:
 
     if (foundPool)
     {
