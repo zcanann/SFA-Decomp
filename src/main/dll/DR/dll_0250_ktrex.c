@@ -562,14 +562,14 @@ void ktrex_update(int obj)
     f32 d[3];
     f32* dp;
     u32 tmp;
+    s16* bitA;
+    s16* bitB;
     u8 maskA;
     u8 maskB;
     u8 flags;
     int phase;
     int i;
     f32 dx, dz, frac;
-    s16* bitA;
-    s16* bitB;
 
     if (((GameObject*)obj)->unkF4 != 0)
     {
@@ -1239,8 +1239,7 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     if ((s8)((KTRexRuntime*)runtime)->hitCountdown != 0 && (hitType == 3 || hitType == 2) &&
         (((KTRexArenaState*)gKTRexState)->timerFA & 0x10) != 0 && hit == 5)
     {
-        pt = contactPoints + hitType * 4;
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + pt[1];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + (pt = contactPoints + hitType * 4)[1];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
         ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
