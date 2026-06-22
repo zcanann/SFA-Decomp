@@ -128,8 +128,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 21. **Invert `if(c){A}else{B}` → `if(!c){B}else{A}`** to flip then/else block layout. Dispatch
     FORM: `if/else-if` chain = linear `bne`; `switch` = binary-search/jump-table — pick what
     target uses. Cloned-call-per-arm: write the call in BOTH arms literally (not a ternary arg).
-22. **Wrap body in `if (cond) { ... } return 0;`** not `if (!cond) return 0; <body>` (drops an
-    extra `li r3,0; b` island).
+22. **Wrap body in `if (cond) { ... } return 0;`** vs `if (!cond) return 0; <body>` SELECTS BLOCK
+    LAYOUT — which return is fall-through vs out-of-line, plus the branch sense (ble↔bgt). Probe-confirmed
+    it is NOT an instruction-count win: both forms emit exactly one `li r3,0`, one branch, one body — no
+    extra island in the simple single-path case. Pick the form whose block order matches the target.
+    (A genuine 2-island case may need a `return 0` shared by multiple paths — that shape is still to be
+    pinned; if you hit it, grab the real-fn structure.)
 23. **`!x` for the `==0` non-zero materialization** (single `cntlzw; srwi ,5`); plain `!=0` AND `!!x`
     BOTH give `neg; or; srwi` (probe-confirmed `!!x` is identical to `!=0`, NOT a distinct double-
     `cntlzw` — if a target shows `cntlzw;cntlzw`, its source C is still to find, `!!x` isn't it).
