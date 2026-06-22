@@ -1218,14 +1218,13 @@ void gameTextLoadTaskText(int taskId)
         if (gSubtitlesEnabled == 0)
         {
             taskList = gGameTextTaskTextAllowList;
-            for (count = 0xb; count != 0; count--)
+            for (count = 0; count < 0xb; count++)
             {
-                if (taskId == *taskList)
+                if (taskId == taskList[count])
                 {
                     allowed = 1;
                     goto checkAllowed;
                 }
-                taskList++;
             }
             allowed = 0;
         checkAllowed:
