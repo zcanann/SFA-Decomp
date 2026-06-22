@@ -2088,7 +2088,6 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
     {
         int cur = sizes[0];
-        int n = ((ModelFileHeader*)hdr)->normalCount;
         int k;
         if (((ModelFileHeader*)hdr)->flags24 & 8)
         {
@@ -2099,7 +2098,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
             k = 3;
         }
         {
-            int prod = n * k;
+            int prod = ((ModelFileHeader*)hdr)->normalCount * k;
             cur = prod + cur;
         }
         sizes[0] = cur + 0x40;
