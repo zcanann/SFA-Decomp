@@ -1089,6 +1089,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `= NONE` (99.56%, behaviorally identical, 1 provably-dead seed instr) and `= curveId` (96.5%, the true
     source MWCC currently mis-renders). The genuine no-hack 100% awaits the copy-affinity reframe (task #5,
     still open).
+    ✓IN-TREE CONFIRMED + MISSING ISOLATION INGREDIENT NAMED (HunterB, decisive A/B on dll_0014_unk): plain
+    `=curveId` = 96.544% in-tree, T=C=136, the ONLY diff is `mr r27,r3` (target, curveId→r27) vs `mr r27,r4`
+    (ours) WITH a full saved-reg pool rotation (r27→r31/r28→r27/r29→r28/r30→r29/r31→r30). So the copy-affinity
+    pool rotation #147's mechanism describes is REAL IN-TREE (the `|=` STAYS load-bearing — do NOT retire it), and
+    the segmentIntersect-residual hypothesis is DISPROVEN in-tree (those args are NOT in the diff). ★ THE MISSING
+    ISOLATION INGREDIENT (why batch-#1's minimal TU couldn't reproduce the rotation): the do-while's ~7 COMPETING
+    SAVED-REG WEBS (curve/nextCurve/hitCount/…) — they're what make the curveId-pull rotate the WHOLE pool; a
+    minimal TU with fewer webs doesn't rotate. So to reproduce the rotation in isolation (and then hunt the clean
+    copy-affinity-DEFEATER), ADD ~7 competing saved-reg webs across the do-while. This UNIFIES with the animobjd2
+    #126 copy-pull (same mechanism, opposite direction: animobjd2 WANTS the pull, curves wants to PREVENT it) —
+    crack the copy-pull trigger and you get BOTH the force (animobjd2) and the defeat (curves no-hack 100%) levers.
     **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
     spending levers; it tells you which lever-family to reach for (both kinds are winnable):**
     **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
