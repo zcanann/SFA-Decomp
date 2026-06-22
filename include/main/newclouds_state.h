@@ -16,7 +16,7 @@ typedef struct NewCloud {
     u8 unk1384[0x4];
     f32 unk1388;
     u8 unk138C[0x4];
-    f32 unk1390;
+    f32 driftSpeed;
     u8 unk1394[0x8];
     f32 flakeMaxX;
     u8 unk13A0[0x10];
@@ -32,7 +32,7 @@ typedef struct NewCloud {
     s32 cloudType;
     s32 despawning;
     s32 flakeCount;
-    s32 unk1400;
+    s32 active;
     u8 unk1404[0x8];
     f32 worldPosX;
     f32 worldPosY;

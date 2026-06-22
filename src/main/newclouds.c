@@ -1632,7 +1632,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
             (int)
         randomGetRange(1, *(f32*)(params + 8)) * lbl_803DF214;
     }
-    ((NewCloud*)NC_CLOUD)->unk1400 = 1;
+    ((NewCloud*)NC_CLOUD)->active = 1;
     fl = NC_CLOUD[0x144b];
     if (fl & 8)
     {
@@ -2125,7 +2125,7 @@ void dll_07_func06(void)
             snowFreeSnowCloud(((NewCloud*)p)->cloudId);
             continue;
         }
-        if (p != NULL && ((NewCloud*)p)->unk1400 != 0)
+        if (p != NULL && ((NewCloud*)p)->active != 0)
         {
             snowCloudInitFlakes((f32*)(p + 8), i, ((NewCloud*)p)->cloudHeight,
                                 ((NewCloud*)p)->scale);
@@ -2517,8 +2517,8 @@ int snowPrintSnowCloud(int arg, int cloudId)
     driftX = gSnowFlakeSize * (((NewCloud*)p)->curPosX - ((NewCloud*)p)->lastPosX);
     stepX = (driftX < lbl_803DF214 * ((NewCloud*)p)->flakeMinX)
                 ? lbl_803DF214 * ((NewCloud*)p)->flakeMinX
-                : ((driftX > lbl_803DF214 * ((NewCloud*)p)->unk1390)
-                       ? lbl_803DF214 * ((NewCloud*)p)->unk1390
+                : ((driftX > lbl_803DF214 * ((NewCloud*)p)->driftSpeed)
+                       ? lbl_803DF214 * ((NewCloud*)p)->driftSpeed
                        : driftX);
     driftZ = gSnowFlakeSize * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
     stepZ = (driftZ < lbl_803DF214 * ((NewCloud*)p)->flakeMinZ)
@@ -2554,11 +2554,11 @@ int snowPrintSnowCloud(int arg, int cloudId)
             *(f32*)(part + 8) = ((NewCloud*)p)->windVelZ * timeDelta + *(f32*)(part + 8);
             if (*(f32*)part < ((NewCloud*)p)->flakeMinX)
             {
-                *(f32*)part = lbl_803DF1C8 * ((NewCloud*)p)->unk1390 + *(f32*)part;
+                *(f32*)part = lbl_803DF1C8 * ((NewCloud*)p)->driftSpeed + *(f32*)part;
             }
-            else if (*(f32*)part > ((NewCloud*)p)->unk1390)
+            else if (*(f32*)part > ((NewCloud*)p)->driftSpeed)
             {
-                *(f32*)part = *(f32*)part - lbl_803DF1C8 * ((NewCloud*)p)->unk1390;
+                *(f32*)part = *(f32*)part - lbl_803DF1C8 * ((NewCloud*)p)->driftSpeed;
             }
             if (*(f32*)(part + 8) < ((NewCloud*)p)->flakeMinZ)
             {
