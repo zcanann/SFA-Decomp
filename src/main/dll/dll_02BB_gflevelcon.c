@@ -431,12 +431,12 @@ void fn_8023A3E4(int objArg, int hitState)
         u8 j;
         for (j = 0; j < 4; j++)
         {
-            u8* sb = (u8*)s;
+            int fts = framesThisStep;
             int off = j + 178;
-            int v = sb[off] - framesThisStep;
+            int v = ((u8*)s)[off] - fts;
             if (v < 0)
                 v = 0;
-            sb[off] = v;
+            ((u8*)s)[off] = v;
         }
     }
     if (got != 0)
