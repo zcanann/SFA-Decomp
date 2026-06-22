@@ -316,7 +316,7 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 int DR_CloudRunner_stateHandler00(int obj)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
-    switch (inner->unkBB4)
+    switch (inner->spawnVariant)
     {
     case 0:
         return 2;
@@ -417,7 +417,7 @@ void DR_CloudRunner_init(int obj, int p2)
     ((GameObject*)obj)->animEventCallback = DR_CloudRunner_SeqFn;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(int*)&((GameObject*)obj)->extra;
-    ((DRCloudRunnerState*)inner)->unkBB4 = *(u8*)((char*)p2 + 0x19);
+    ((DRCloudRunnerState*)inner)->spawnVariant = *(u8*)((char*)p2 + 0x19);
     ((DRCloudRunnerState*)inner)->unkBAE = 5;
     ((DRCloudRunnerState*)inner)->unkBB0 = *(s16*)((char*)p2 + 0x1a);
     ((DRCloudRunnerState*)inner)->unkBC4 = -1;
@@ -926,7 +926,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         } s1;
         void* newObj;
         int setup;
-        inner->unkBB6 &= ~8;
+        inner->flagsBB6 &= ~8;
         ((ObjHitsPriorityState*)q)->flags = ((ObjHitsPriorityState*)q)->flags | 0x200;
         ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E83A4, 0);
         ((CloudRunnerState*)p2)->baddie.moveSpeed = lbl_803E83B8;
@@ -940,9 +940,9 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         ((ObjPlacement*)setup)->unk04[3] = 0xff;
         ((ObjPlacement*)setup)->unk04[0] = 2;
         ((ObjPlacement*)setup)->unk04[1] = 1;
-        ((ObjPlacement*)setup)->posX = inner->unkAE8;
-        ((ObjPlacement*)setup)->posY = inner->unkAEC;
-        ((ObjPlacement*)setup)->posZ = inner->unkAF0;
+        ((ObjPlacement*)setup)->posX = inner->spawnPosX;
+        ((ObjPlacement*)setup)->posY = inner->spawnPosY;
+        ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;
         newObj = (void*)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (newObj != NULL)
         {
@@ -1128,7 +1128,7 @@ void DR_CloudRunner_update(int obj)
                 }
                 (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
                 inner->unkB04 = 0;
-                inner->unkBB6 |= 4;
+                inner->flagsBB6 |= 4;
                 inner->moveFlags |= 1;
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 4);
             }
@@ -1175,9 +1175,9 @@ void fn_802BF4D8(int obj)
     ((ObjPlacement*)setup)->unk04[3] = 0xff;
     ((ObjPlacement*)setup)->unk04[0] = 2;
     ((ObjPlacement*)setup)->unk04[1] = 1;
-    ((ObjPlacement*)setup)->posX = inner->unkAE8;
-    ((ObjPlacement*)setup)->posY = inner->unkAEC;
-    ((ObjPlacement*)setup)->posZ = inner->unkAF0;
+    ((ObjPlacement*)setup)->posX = inner->spawnPosX;
+    ((ObjPlacement*)setup)->posY = inner->spawnPosY;
+    ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;
     newObj = (void*)Obj_SetupObject(setup, 5, -1, -1, 0);
     if (newObj == NULL)
     {

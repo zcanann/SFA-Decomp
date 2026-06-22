@@ -18,9 +18,9 @@ typedef struct CloudRunnerState {
     u8 pad465[0xad5 - 0x465];
     u8 moveFlags;
     u8 padAD6[0xae8 - 0xad6];
-    f32 unkAE8;
-    f32 unkAEC;
-    f32 unkAF0;
+    f32 spawnPosX; /* 0xae8: stored position fed to a spawned object's ObjPlacement.pos */
+    f32 spawnPosY;
+    f32 spawnPosZ;
     f32 lastPosX;
     f32 lastPosY;
     f32 lastPosZ;
@@ -33,9 +33,9 @@ typedef struct CloudRunnerState {
     s16 airTimeRemaining;
     u8 flightState;
     u8 padBB3;
-    u8 unkBB4;
+    u8 spawnVariant; /* 0xbb4: variant selector from spawn-setup byte +0x19; gates init (case 0 = early-out) */
     u8 padBB5;
-    u8 unkBB6;
+    u8 flagsBB6; /* 0xbb6: bit flags (|=4, &=~8) */
     u8 unkBB7;
     u8 unkBB8;
     u8 padBB9;
