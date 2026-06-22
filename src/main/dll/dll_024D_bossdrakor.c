@@ -371,6 +371,7 @@ void bossdrakor_update(int obj)
 }
 
 #pragma opt_propagation reset
+#pragma opt_propagation off
 void bossdrakor_updateHeadTracking(int obj, int state)
 {
     s16* neck;
@@ -436,6 +437,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
         }
     }
 }
+#pragma opt_propagation reset
 
 int bossdrakor_chooseNextMove(int obj, f32* speedOut)
 {
