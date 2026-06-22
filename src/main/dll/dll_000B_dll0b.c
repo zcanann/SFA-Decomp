@@ -2226,13 +2226,13 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     int** p;
     int slot;
     void* view;
-    void* buf1;
     void* buf2;
+    void* buf1;
     u8 aligned;
     void* tex;
     int texCount;
-    int n131;
     int n131p1;
+    int n131;
     f32 dirX;
     f32 dirZ;
     f32 dscale;
