@@ -90,18 +90,18 @@ typedef struct Sky2Config {
     u8 unk26[4];
     u16 unk2A;
     u16 unk2C;
-    u16 unk2E;
-    u16 unk30;
-    u16 unk32;
-    u16 unk34;
+    u16 unk2E;       /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
+    u16 skyTexId1;   /* sky texture id slot 1 (+0xc38) */
+    u16 skyTexId2;   /* sky texture id slot 2 (+0xc38) */
+    u16 skyTexId3;   /* sky texture id slot 3 (+0xc38) */
     u8 unk36[8];
-    u16 unk3E;
-    u16 unk40;
-    u16 unk42;
-    u16 unk44;
+    u16 skyTexId4;   /* sky texture id slot 4 (+0xc38) */
+    u16 skyTexId5;   /* sky texture id slot 5 (+0xc38) */
+    u16 skyTexId6;   /* sky texture id slot 6 (+0xc38) */
+    u16 skyTexId7;   /* sky texture id slot 7 (+0xc38) */
     u8 unk46[0xE];
     u16 cloudMode;
-    u16 unk56;
+    u16 visibility;  /* 0x56: drives the sky blend-state bit20 visibility flag */
     u8 flags;
     u8 flags2;
     u8 unk5A[3];

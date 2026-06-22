@@ -3179,7 +3179,7 @@ void Sky_func03(int a, int b, u8* cfg)
         {
             skyFn_80088c94(mask, (u8)(((Sky2Config*)cfg)->unk5D > 2 ? 1 : 0));
         }
-        vis = ((Sky2Config*)cfg)->unk56;
+        vis = ((Sky2Config*)cfg)->visibility;
         for (i = 0; i < 2; i++)
         {
             if ((mask & (1 << i)) != 0)
@@ -3192,13 +3192,13 @@ void Sky_func03(int a, int b, u8* cfg)
         if ((((Sky2Config*)cfg)->flags & 1) == 0)
         {
             ((SkyState*)gSkyState)->skyTextureIds[0] = ((Sky2Config*)cfg)->unk2E + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[1] = ((Sky2Config*)cfg)->unk30 + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[2] = ((Sky2Config*)cfg)->unk32 + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[3] = ((Sky2Config*)cfg)->unk34 + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[4] = ((Sky2Config*)cfg)->unk3E + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[5] = ((Sky2Config*)cfg)->unk40 + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[6] = ((Sky2Config*)cfg)->unk42 + 0xc38;
-            ((SkyState*)gSkyState)->skyTextureIds[7] = ((Sky2Config*)cfg)->unk44 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[1] = ((Sky2Config*)cfg)->skyTexId1 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[2] = ((Sky2Config*)cfg)->skyTexId2 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[3] = ((Sky2Config*)cfg)->skyTexId3 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[4] = ((Sky2Config*)cfg)->skyTexId4 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[5] = ((Sky2Config*)cfg)->skyTexId5 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[6] = ((Sky2Config*)cfg)->skyTexId6 + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[7] = ((Sky2Config*)cfg)->skyTexId7 + 0xc38;
             tmp = *(int*)&((SkyState*)gSkyState)->texture1;
             p4 = gSkyState + ((SkyState*)gSkyState)->unk251 * 4;
             *(int*)&((SkyState*)gSkyState)->texture1 = *(int*)(p4 + 8);
