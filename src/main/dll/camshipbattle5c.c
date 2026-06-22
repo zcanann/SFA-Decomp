@@ -297,8 +297,8 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     f32 dz1;
     f32 sx;
     f32 sz;
-    f32 nsx;
     f32 nsz;
+    f32 nsx;
     f32 nx;
     f32 nz;
     f32 len;
