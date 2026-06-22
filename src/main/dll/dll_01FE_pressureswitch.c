@@ -172,6 +172,7 @@ void pressureswitch_update(int obj)
     PressureswitchPlacement* t;
     GameObject* self;
     PressureSwitchState* sub;
+    PswContactList* list;
     s8 far;
     int i;
     GameObject* player;
@@ -208,9 +209,9 @@ void pressureswitch_update(int obj)
         sub->retriggerTimer = (s16)(t->retriggerDelay * 60);
         i = 0;
         thr = lbl_803E5D60;
-        for (; i < PSW_CONTACT_LIST(obj)->count; i++)
+        for (; i < (list = PSW_CONTACT_LIST(obj))->count; i++)
         {
-            GameObject* ent = *(GameObject**)((char*)PSW_CONTACT_LIST(obj) + off + 256);
+            GameObject* ent = *(GameObject**)((char*)list + off + 256);
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
                 ((PressureSwitchFlags*)&sub->flags)->active = 1;
