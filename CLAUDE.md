@@ -1046,6 +1046,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     source); model it as the #131 same-value/front-end materialization and look for the operand-level split that
     keeps the addi targeting the destination; perturb a NEIGHBOR web's creation order so r0 isn't the free temp
     at the materialization point. This is the single highest-leverage open nut in the unit (gates 6+ fns).
+    **NEW CLUES (dll_000A_expgfx deep-dive):** (1) the bug is BROADER than globals — it's a general "materialize a
+    saved-reg value via VOLATILE TEMP r0 then `mr`/copy" vs retail's DIRECT-into-saved. Also hits `extsh r0,r3` then
+    copy (vs retail `extsh r24,r3` direct into the saved reg, addremove resourceTableIndex). (2) The FIRST
+    standalone-global-into-saved in a fn materializes DIRECT (e.g. `runtime` → `addi r31,r3,0`); SUBSEQUENT standalone
+    globals take the r0+`mr` detour — so it's allocation-state-dependent (after the first lis;addi, r0 becomes the
+    "free" temp the allocator grabs). This points the fix at perturbing the allocation state at the 2nd+ materialization,
+    NOT at the global's spelling. (3) DISPROVEN here too: the staticData-base reform (derive the globals from a struct
+    base) — it removes the `mr` but the reloc change (gExpgfxStaticData+off vs the standalone gExpgfxStaticPool* symbol)
+    costs MORE than the mr saves (expgfx_free 95.6→92.5), so the standalone-global reloc is load-bearing. Still a clean
+    source form is ASSUMED to exist; the "first-direct/rest-via-temp" asymmetry is the freshest lead.
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
