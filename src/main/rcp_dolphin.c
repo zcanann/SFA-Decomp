@@ -737,8 +737,8 @@ void fn_80053ED0(u32 bits) { gRcpRenderFlags = gRcpRenderFlags | bits; }
 #pragma opt_propagation off
 void fn_80053EBC(u32 bits)
 {
-    u32 v;
     u32 nb;
+    u32 v;
     v = gRcpRenderFlags;
     nb = ~bits;
     gRcpRenderFlags = v & nb;
