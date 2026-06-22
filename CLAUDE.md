@@ -1188,6 +1188,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     strength-reduced induction init `mr rK,rCounter` (retail copies i=0 into the i*0xd48 / i*0x7d0 reduced vars) vs
     our `li 0` (#136/#110 — opt_level 1 unavailable, call-bearing fn); a waveAmp↔wave f27/f28 FP swap (#82/#121);
     and the #108 GPR rotation. All assumed to have clean forms, not yet found.
+159. **CONTROL-BRANCH UNFOLD via ELSE-RETURN SPLIT — a guard-wrapped body that retail emits with 2 extra
+    front-end branches (`b skip-else; else: b end; skip-else: ...`) but ours FOLDS to one fall-through.** When
+    an `if (cond) { ENTIRE tail }` wraps the whole function tail (cond-false ⟹ fall through to the end = an
+    implicit return) and the target has 2 extra branches our build collapses, split the guard into
+    `if (cond) { HEAD } else { return; } TAIL` — HEAD = the part up to where retail emits the branch pair,
+    TAIL = the rest, moved OUT of the if. SEMANTICALLY IDENTICAL (the else-return gates TAIL to cond-true
+    exactly as the wrapping-if did) but the else-return makes MWCC emit retail's UNFOLDED
+    `b skip-else; else: b end(return); skip-else: TAIL` layout instead of folding to a single fall-through.
+    The split point = where retail emits the branch pair. This is the #21/#22/#33 family applied to a
+    guard-wrapped body — DISTINCT from #150/#151's empty-then clamp fold. DIAGNOSE: a nopeephole/noschedule
+    unit that's T=C+2 (or +N) with the missing instrs being consecutive `b`s after a shared block ⟹ pure
+    source-structure block-layout artifact; trace the full CFG to confirm the branches are dead/redundant
+    (block-layout, not real code), then apply the identity. METHOD: the wrapping-if ≡ if/else-return identity
+    reproduces it at ZERO behavior cost. This is the branch-target/block-layout structural bucket's core lever
+    — the #151-FREE fns in that bucket are real 99→100s. (flameguard: dll_029C arwarwingbo_update 98.86→100,
+    whole unit 10/10 = 100%, flip-ready.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
