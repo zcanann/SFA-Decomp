@@ -1172,6 +1172,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     base) — it removes the `mr` but the reloc change (gExpgfxStaticData+off vs the standalone gExpgfxStaticPool* symbol)
     costs MORE than the mr saves (expgfx_free 95.6→92.5), so the standalone-global reloc is load-bearing. Still a clean
     source form is ASSUMED to exist; the "first-direct/rest-via-temp" asymmetry is the freshest lead.
+    **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
+    within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
+    one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
+    mr rSaved,r3` (detour) where retail does `lis r3; addi rSaved,r3,@lo` (DIRECT), THAT detour is what forces
+    base→the-wrong-saved-reg and pushes the neighbor (&buf/entries) to the other reg = the "swap." So the lever is
+    the #155 direct-materialization (above), NOT a coloring trick — don't spend ★#147 coloring leads on it.
+    DIAGNOSE every kind-2 swap for a global-base detour FIRST. CASCADE-REDUCER (real, faithful, +partial): the
+    #5/#108 SPLIT-DECL-INIT — a `T* x = obj->field;` at the top materializes x's web BEFORE base, inflating the
+    cascade; split to `T* x;` + init right before first use → base's web is created first → smaller cascade
+    (flameguard dll_7B 98.86→99.21, pushed). But the CORE swap stays gated on the #155 direct-materialization.
+    TRIED+INERT on dll_7B's detour (don't re-spend): #80 launder, decl-order swap (regressed 69 regions), early
+    local copy (copy-prop folds), #128 opt_propagation off. CONVERGENCE: flameguard (dll_7B kind-2) + expgfx
+    (modellight modelLightChannels_applyGXControls, task #21 detour sweep) hit the SAME open sub-variant —
+    global-into-saved-reg-via-scratch+mr → wants direct `addi rSaved`. Cracking THIS ONE #155 direct-materialization
+    lever is the convergent multiplier: it un-caps both the detour hard-variants AND the kind-2 within-class-order
+    frontier. Highest-leverage open C-side nut.
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
