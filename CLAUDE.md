@@ -884,6 +884,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     result in a fresh fp reg (`fmr`) where retail negates in-place (`fneg fX,fX`). OPEN: a clean form keeping
     the ternary result in x's own fp reg is assumed to exist — untried: #107/#108 decl/use reorder, in-place
     spelling (schedule/peephole both tried, inert).
+151. **CONTROL BRANCH-FOLD on an empty-then FP CLAMP → rewrite as the STRICT-INVERSE TERNARY (#91).**
+    An empty-then clamp `if (f > lo) {} else { f = lo; }` FOLDS in our build to the compact inverted
+    `bgt skip; fmr` — 1 instr SHORT of retail's UNFOLDED two-branch `ble else; b skip; else: fmr`
+    (front-end fold, persists at opt_level 1/2/3, noschedule unit). The lever: spell the clamp as the
+    STRICT-INVERSE ternary `f = (f < lo) ? lo : f;` (semantically identical — boundary f==lo gives lo
+    either way). This UNFOLDS the branch and the instruction count matches retail (grimble_stateHandlerA02
+    98.72→99.09, T=C=268). Use STRICT `<` (clean `bge`, no `cror`); the non-strict `<=`/`>=` inverse adds
+    a `cror` (#25). Mirror the SIBLING ternary clamp in the same fn if one already matches (grimble's upper
+    clamp `f=(f<hi)?f:hi` was already a matching ternary — the lower was the folding if-else). DISTINCT
+    from #150's FP-negate sibling (`bne;b` vs `fneg`) and from the value-select empty-then (fn_8017D854
+    `if(r>K){}else{r=r2}`, where the inverse needs `<=`+cror — that one's clean strict form is an open lead).
+    Residual after the unfold: an `fmr`/compare-sense fp-reg swap (retail `fmr f1,f0`+`ble` vs ours
+    `fmr f0,f1`+`bge`) — a within-clamp FP-coloring follow-on (#82/#91), a clean source assumed to exist
+    (untried: operand-order / #107 result-reg reorder). SWEEP: try the strict-inverse ternary FIRST on each
+    located empty-then clamp instance (appleontree fn_8017DCD4 ×2, grimble) before any other angle.
 145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch has
     THREE causes — two are recoverable source, the third is a coloring trap. CHECK WHICH before investing.**
     (a) **Import-UNDERSIZED matrix/array** (#67b) — a `mtx44Transpose`/4x4 op fed a `f32 m[12]` that must be
