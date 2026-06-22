@@ -437,14 +437,13 @@ void waterfx_run(void)
         }
     }
     {
-        f32 thr = lbl_803DF2EC;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
         {
             WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
-            if (s->f10 < thr)
+            if (s->f10 < 1.0f)
             {
                 s->f10 += s->f14 * timeDelta;
-                if (s->f10 >= thr)
+                if (s->f10 >= 1.0f)
                 {
                     gWaterfxSplashCount = (void*)((int)gWaterfxSplashCount - 1);
                 }
