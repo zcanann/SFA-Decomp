@@ -3023,13 +3023,13 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
-            f32 step;
             slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_BACKDATE_MOTION + 0LL);
-            step = lbl_803DF41C * (f32)(s32)
-            slot->lifetimeFrame;
-            slot->posX.value = slot->velocityX * step + slot->posX.value;
-            slot->posY.value = slot->velocityY * step + slot->posY.value;
-            slot->posZ.value = slot->velocityZ * step + slot->posZ.value;
+            slot->posX.value = slot->velocityX * (lbl_803DF41C * (f32)(s32)
+            slot->lifetimeFrame) + slot->posX.value;
+            slot->posY.value = slot->velocityY * (lbl_803DF41C * (f32)(s32)
+            slot->lifetimeFrame) + slot->posY.value;
+            slot->posZ.value = slot->velocityZ * (lbl_803DF41C * (f32)(s32)
+            slot->lifetimeFrame) + slot->posZ.value;
             slot->velocityX = slot->velocityX * lbl_803DF420;
             slot->velocityY = slot->velocityY * lbl_803DF420;
             slot->velocityZ = slot->velocityZ * lbl_803DF420;
