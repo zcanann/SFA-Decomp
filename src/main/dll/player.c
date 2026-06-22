@@ -16712,11 +16712,11 @@ void fn_802B0920(int obj, int state)
 
 void fn_802ADE80(int obj, int inner, int state)
 {
-    f32 waterZ;
-    f32 waterX;
-    f32 tx;
-    f32 ty;
     f32 tz;
+    f32 ty;
+    f32 tx;
+    f32 waterX;
+    f32 waterZ;
     struct
     {
         u8 pad[6];
