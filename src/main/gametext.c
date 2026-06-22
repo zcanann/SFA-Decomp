@@ -290,6 +290,7 @@ char* gameStrcpy(char* dst, char* src)
 
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
+    GlyphEntry* e;
     GameTextFont* font = gameTextFonts;
     int found;
     if (font->mode != 2)
@@ -298,9 +299,9 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
     }
     else
     {
-        GlyphEntry* e = font->entries;
         int count = font->count;
         int i;
+        e = font->entries;
         for (i = 0; i != count; i++)
         {
             if (e->id == id)

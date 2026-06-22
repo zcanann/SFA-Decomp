@@ -745,8 +745,8 @@ void fn_80095164(WaterParticle* s)
 void waterfx_drawFn_800953fc(void)
 {
     int k;
-    int i;
     int j;
+    int i;
     int m;
     f32 idiv;
     f32 jdiv;

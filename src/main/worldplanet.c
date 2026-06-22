@@ -112,8 +112,8 @@ void worldplanet_initialise(void)
 void worldplanet_init(int obj)
 {
     WorldPlanetState* state;
-    int mask;
     int i;
+    int mask;
     int flag;
     int layer;
     int j;
