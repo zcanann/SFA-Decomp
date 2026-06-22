@@ -17,7 +17,7 @@ typedef struct ExplosionDebris
     s32 spawnInterval; /* 0x24: reload value copied into spawnTimer after each spawn */
     s16 spinAngle; /* 0x28: rotation accumulator fed to PSMTXRotRad */
     s16 spinSpeed; /* 0x2A: per-frame rotation increment (signed; can be negated) */
-    u8 unk2C;
+    u8 texVariant; /* 0x2C: texture-chain index (random 0-3 at spawn, wraps mod 4); selects which texture in the linked-list chain is drawn */
     u8 generation; /* 0x2D: spawn recursion depth (gen 0 = root; sub-flames stop at >= 5) */
     u8 alpha;      /* 0x2E: render alpha byte */
     u8 active;     /* 0x2F: nonzero while this debris slot is live */

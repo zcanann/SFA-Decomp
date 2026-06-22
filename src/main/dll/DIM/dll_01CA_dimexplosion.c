@@ -193,7 +193,7 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     {
         flames[idx].spinSpeed = -flames[idx].spinSpeed;
     }
-    flames[idx].unk2C = randomGetRange(0, 3);
+    flames[idx].texVariant = randomGetRange(0, 3);
     {
         f32 sp = flames[idx].speed;
         f32 ev = expf((lbl_803E4934 * ((f32)flames[idx].lifetime - (f32)flames[idx].age)) / (f32)flames[idx].lifetime);
@@ -339,7 +339,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                             (f32)((ExplosionDebris*)p)->lifetime,
                             ((ExplosionState*)state)->modelKind, (u8*)&colA);
                 tex = (void**)((int*)gExplosionTextures)[((ExplosionState*)state)->modelKind];
-                for (k = 0; k < ((ExplosionDebris*)p)->unk2C; k++)
+                for (k = 0; k < ((ExplosionDebris*)p)->texVariant; k++)
                 {
                     tex = (void**)*tex;
                 }
@@ -437,9 +437,9 @@ void explosion_update(int obj)
             else
             {
                 *(s16*)&((ExplosionDebris*)p)->spinAngle += framesThisStep * *(s16*)&((ExplosionDebris*)p)->spinSpeed;
-                if (((ExplosionDebris*)p)->unk2C >= 4)
+                if (((ExplosionDebris*)p)->texVariant >= 4)
                 {
-                    ((ExplosionDebris*)p)->unk2C -= 4;
+                    ((ExplosionDebris*)p)->texVariant -= 4;
                 }
                 if (((ExplosionDebris*)p)->generation < 5)
                 {
