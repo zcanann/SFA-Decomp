@@ -164,7 +164,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 typedef struct Dll199ObjectDef
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 initStateOverride; /* 0x1A: if >0, high byte (>>8) overrides the object's initial state (default 10) */
     u8 pad1C[0x20 - 0x1C];
 } Dll199ObjectDef;
 
@@ -421,9 +421,9 @@ void dll_199_init(int obj, int def)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
     *state = 10;
-    if (((Dll199ObjectDef*)def)->unk1A > 0)
+    if (((Dll199ObjectDef*)def)->initStateOverride > 0)
     {
-        *state = ((Dll199ObjectDef*)def)->unk1A >> 8;
+        *state = ((Dll199ObjectDef*)def)->initStateOverride >> 8;
     }
     ((Dll199State*)state)->phase = 0;
     *(u8*)(state + 8) = 0;
