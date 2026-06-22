@@ -5495,7 +5495,7 @@ void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
     extern f32 lbl_803DEF40, lbl_803DEF88;
-    extern u8 lbl_803DEF81;
+    extern u8 lbl_803DEF81[7];
     extern u32 lbl_803DB67C;
     extern GXColor gFogColor;
     extern u8 lbl_803DB678;
@@ -5548,11 +5548,11 @@ void gxTextureSetupFn_8007cf7c(void)
     GXLoadTexMtxImm(mtx_9c, 0x2a, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x2a, 0, 0x7d);
 
-    indMtx_3c[0] = *(f32*)((u8*)&lbl_803DEF81 + 3);
-    indMtx_3c[1] = *(f32*)((u8*)&lbl_803DEF81 + 3);
+    indMtx_3c[0] = *(f32*)&lbl_803DEF81[3];
+    indMtx_3c[1] = *(f32*)&lbl_803DEF81[3];
     indMtx_3c[2] = lbl_803DEEDC;
     indMtx_3c[3] = lbl_803DEF88;
-    indMtx_3c[4] = *(f32*)((u8*)&lbl_803DEF81 + 3);
+    indMtx_3c[4] = *(f32*)&lbl_803DEF81[3];
     indMtx_3c[5] = lbl_803DEEDC;
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
