@@ -201,9 +201,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 58. **Type the local to match the field width** (`u16 num = field` keeps `cmplwi`; `long` widens to
     `cmpwi`). Keep the local for CSE; just type it right. Struct-FIELD width is the same lever —
     A/B project-wide before flipping a shared typedef; launder minority sites with a cast pointer.
-59. **Lift the LEADING term to its own statement before a dot/sum** to defeat commutative-FP
-    reassociation (`f32 yy = a[1]*n[1]; f32 dot = yy + a[0]*n[0] + ...`). `scheduling off` does NOT
-    fix reassociation.
+59. **Lift the term you want computed FIRST to its own statement, to control commutative-FP
+    reassociation.** MWCC's DEFAULT for `t0 + t1 (+ t2...)` computes the LAST source term first
+    (probe-confirmed: `a[0]*n[0] + a[1]*n[1]` → `fmuls a1,n1; fmadds a0,n0` — a[1]*n[1] first). So
+    lifting the last term (`f32 yy=a[1]*n[1]; dot=yy+a[0]*n[0]`) is a NO-OP — it matches the default.
+    To force a DIFFERENT term first, lift THAT term: `f32 xx=a[0]*n[0]; dot=xx+a[1]*n[1]` makes
+    a[0]*n[0] compute first (probe-confirmed). Pick the lifted term to match the target's first fmuls.
+    `scheduling off` does NOT fix reassociation.
 60. **At 99.9% with `--diff` showing "identical," byte-compare before assuming a pool artifact** —
     most hide a real constant/operand/loop-bound bug. Use `cosmetic_audit.py`. Single-instr real-
     bug signatures: missing vtable deref (`lwz r12` vs `addi r12`), wrongly-guarded store
