@@ -705,15 +705,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     strides (e=i*28, vtx=i*64, vtxDesc=i*32, the latter two consumed as drawFn CALL ARGS), RETAIL's reducer
     orders the strides ASCENDING BY STRIDE VALUE (28→r27, 32→r28, 64→r29) while OURS orders them by
     CREATION order → the i*28↔i*64 registers SWAP. decl-order / comma-init / #136(a)/(b) all INERT (it's
-    the reducer's stride-register assignment, not source decl order). ✓MECHANISM PROVEN IN-TREE (validator
-    derive + waterfx apply): RELOCATE the stride exprs BEFORE the gate in DESCENDING value order (64 first →
-    highest) → the reducer assigns first-created→highest, and 28→r27 / 32→r28 LANDED in-tree (the ordering
-    works!). ⚠️ BUT a NAMED GLOBAL-base stride local before the gate LOSES strength-reduction (CSE-confuses with
-    the 28-stride → drawFn arg emits `add r3,r0,r27`, no `addi 64`) → regressed 95.98→89.24, reverted. The
-    isolation derive used a LOCAL base (reduces fine relocated); the in-tree GLOBAL base needs a
-    REDUCTION-PRESERVING form: the #143/#155 INDEX form — pass `&((T*)glob)[i]` index expressions (NOT named
-    pre-gate locals), the 64-index evaluated FIRST → keeps the direct-base reduction AND orders 64 high. Live
-    target: confirm the index form holds reduction + the 28→r27 ordering together. The
+    the reducer's stride-register assignment, not source decl order). ✓SOLVED IN-TREE (validator derive +
+    waterfx, ripple loop 95.98→96.01, strides EXACTLY match retail 64→r29/32→r28/28→r27): RELOCATE the stride
+    exprs BEFORE the gate in DESCENDING value order (64 first → highest); the reducer assigns first-created→
+    highest. ★ FORM MATTERS for a GLOBAL base (the key refinement): use **OFFSET-INT locals** — `int o64 =
+    i*0x40; int o32 = i*0x20;` before the gate (descending value), then `(char*)glob + o64` in the call. The
+    offsets become the induction vars (base re-derived per use, NO hoisted base reg) AND control creation order.
+    DON'T use the alternatives: a named-POINTER local (`char* vx = glob + i*0x40`) LOSES strength-reduction
+    (CSE-confuses with the 28-stride → no `addi 64`, 95.98→89.24); a typed-INDEX (`T* vx = &arr[i*4]`) fixes the
+    coloring but makes vx a walked pointer → hoists the base into 2 extra saved regs (frame +16, 95.98→92.6).
+    The offset-int form is the GLOBAL-base analog of the validator's local-base relocate-lever. OPEN sub-case:
+    a 2-CONDITION gate (`g->active && g->f18==0`, waterfx's WAKE loop) changes the reducer's stride order
+    (32→r29 not 64) → offset-int net-negative both orders there; that gate-changes-reducer-order variant is
+    still to map. The
     counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
