@@ -1234,6 +1234,25 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     reproduces it at ZERO behavior cost. This is the branch-target/block-layout structural bucket's core lever
     — the #151-FREE fns in that bucket are real 99→100s. (flameguard: dll_029C arwarwingbo_update 98.86→100,
     whole unit 10/10 = 100%, flip-ready.)
+160. **CUSTOM INTERPROCEDURAL STATIC-LEAF REGISTER-ABI — the obvious source levers are PROBE-DISPROVEN; a
+    clean form is ASSUMED to exist but is not yet found (treat as a documented boundary, keep hunting).** When
+    retail's STATIC leaf helper uses a non-standard ABI — borrows the caller's SAVED regs (e.g. stream ptr
+    in/out r20, r21/r22) and RETURNS values in VOLATILES (r10/r12/r15) with NO memory writes — that is MWCC's
+    interprocedural register coordination, and the standard C/pragma levers do NOT trigger it (expgfx,
+    model modelBoneTransforms_next/modelApplyBoneTransform, evidence-based): (1) struct-return
+    `static BoneDelta nx(...)` returning {x,y,z,p} → MWCC GC/2.0 returns a 16-byte struct via a HIDDEN POINTER
+    (writes 0/4/8/12(r3), caller passes a stack buffer) — NOT register-return; and the target's `nx` is
+    `dont_inline` (real `bl`), so MWCC can't inline-eliminate the buffer → no coordination. Keep-the-call AND
+    return-in-registers are mutually exclusive under struct/pointer returns. (2) #99 `optimize_for_size on` +
+    `optimization_level 0` REGRESSED (12.1→6.07) and did NOT produce the target's `stmw r14` — the stmw is a
+    CONSEQUENCE of the fn using r14-r31 (18 saved regs, which only happens once the custom coordination fills
+    them), NOT from optimize_for_size; so #99 is the wrong lever for THIS prologue. OPEN (assumed-reachable,
+    per the prime directive — the original Rare source DID compile to this): the source/config form that makes
+    MWCC apply interprocedural register-coordination to a real-`bl` static leaf is unmapped. UNTRIED LEADS:
+    other opt-level/inline-threshold combos that might enable the coordination; whether a tiny return (return
+    only p, x/y/z via a different mechanism) partially triggers it; the in-repo/MP4 oracle for a matched fn
+    with a static leaf returning in volatiles. Don't grind struct-return/#99 (disproven) — the lever is a
+    different shape.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
