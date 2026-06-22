@@ -2704,8 +2704,8 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         }
         else
         {
-            u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             u8* buf2;
+            u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             state = (char*)state + ((ModgfxState*)state)->activeVertexBufferIndex * 4;
             buf2 = *(u8**)((char*)state + 0x78);
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
@@ -2732,8 +2732,8 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         *(f32*)(bp + 0x34) = *(f32*)(bp + 0x34) + *(f32*)(bp + 0x40) * gModgfxMotionStep;
         *(f32*)(bp + 0x38) = *(f32*)(bp + 0x38) + *(f32*)(bp + 0x44) * gModgfxMotionStep;
         {
-            u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             u8* buf2;
+            u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             f32 noChange = lbl_803DF434;
             state = (char*)state + ((ModgfxState*)state)->activeVertexBufferIndex * 4;
             buf2 = *(u8**)((char*)state + 0x78);
