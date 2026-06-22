@@ -870,6 +870,20 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     un-name-down by web kind is the general crack for the re-derivable majority). Still open: the
     non-re-derivable call-result sub-case, and the #155 MULTI-USE global-base detour (a base held whole-fn
     can't be un-named — that needs the #155 @lo-direct-into-saved core, the convergent multiplier).
+    ✅ APPLICABILITY CHECKLIST (pausemenu, verified each with a failing case) — the value to flip must meet ALL:
+    (1) RE-DERIVABLE: deref/field/mask/bit-extract — NOT a param (drawHudBox w/h↔x/y are params, fail), NOT a
+    call-result. (2) NOT MUTATED: a pure read, not an accumulator (MagicPlant `alpha-=k; if(<0)alpha=0` can't
+    inline, fail). (3) NOT LIVE ACROSS A CALL / NOT a call ARG (THE BIG ONE): un-naming RE-DERIVES per use, so
+    if a use follows a call OR the value is passed to a call, CSE can't keep one load → adds reloads → REGRESSES
+    (dfptargetblock_hitDetect `obj->home` passed to resetToHome() → 99.85→98.53, fail). So #107's sweet spot =
+    a re-derivable unmutated read used in a CALL-FREE stretch (expgfx CameraModeTestStrength). (5) retail keeps
+    it LOWER (un-name path) or HIGHER (name path) per the bi-directional rule. (4) CLASS: ⚠️ UNDER RECONCILIATION
+    — pausemenu read it as "SAVED-reg swaps only, volatile swaps are #66" BUT expgfx's dll_1D6 WIN (full-unit
+    100%) was an r4↔r5 VOLATILE swap cracked via NAME — so the naming-kind trick appears to work in BOTH the
+    saved class (#107) and the volatile class (#66), i.e. #66 and #107 are likely the SAME mechanism (web-kind
+    colors below named-locals) applied per reg-class. Treat the trick as class-general; route the residual label
+    by which class swapped (saved=#107, volatile=#66) but use the SAME name/un-name fix. (Criteria 1-3+5 are the
+    real gates; criterion 4 is a labeling note, not a blocker.)
     TRIED-SO-FAR (a launchpad to skip, NOT evidence of impossibility): decl-order/#61b, ternary↔if/else
     (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
     #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
