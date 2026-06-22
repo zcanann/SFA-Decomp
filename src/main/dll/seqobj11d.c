@@ -303,8 +303,8 @@ void fn_8015165C(int obj, u8* state)
     f32 fz;
     char* base;
 
-    t = state[0x33b];
     base = lbl_8031F16C;
+    t = state[0x33b];
     base += t * 40;
     p20 = *(u8**)(base + 20);
     p28 = *(u8**)(base + 28);
