@@ -1796,7 +1796,7 @@ typedef struct EnemyPlacement
     u8 pad29[0x2A - 0x29];
     s8 rotXByte;
     u8 pad2B[0x2C - 0x2B];
-    s16 unk2C;
+    s16 respawnEnabled; /* 0x2C: when 0, the off-screen respawn path is skipped */
     s8 triggerSeqId;
     u8 pad2F[0x34 - 0x2F];
     u16 unk34;
@@ -2224,7 +2224,7 @@ void enemy_update(int obj)
             {
                 return;
             }
-            if (((EnemyPlacement*)setup)->unk2C == 0)
+            if (((EnemyPlacement*)setup)->respawnEnabled == 0)
             {
                 return;
             }
