@@ -848,6 +848,27 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     so prefer the no-reorder form (compound / in-place) even when it leaves a base reg "wrong" — a lower
     raw-instr-distance variant can score WORSE if it reorders. The base→r0 multi-use tail (b) == the same nut
     as SaveGame_gplayAddTime (99.41% pure 2-reg base/idx eval-order swap), still open as a true #108 residual.
+150. **NOSCHEDULE-UNIT single-bit AND-clear: retail picks `li -K; and` vs `rlwinm` PER-CLEAR — match it
+    with `~KLL` (li+and) vs `~K` (rlwinm); the LL needs BOTH lvalue AND RHS u32; blocked by an adjacent
+    `=0` store.** In the `cflags_dll_noopt` (`-opt nopeephole,noschedule`) units (tricky_substates,
+    dll_00C4_tricky, …) MWCC's AND isel is SCHEDULE-coupled: at noschedule, plain `field &= ~K` → `rlwinm`
+    (1-bit clear); `field &= ~KLL` (#74) → `li -K; and` (the materialized 2-instr form). Scheduling ON also
+    emits li+and but reorders the whole fn (unusable); peephole/opt_level are INERT on this. CRITICAL: retail
+    itself uses BOTH forms — e.g. tricky_SeqFn's stateFlags clears are li+and (source has LL), but
+    Tricky_updateSideCommandPrompts' commandMask clear is rlwinm (source has no LL) — so the source is tuned
+    PER-CLEAR and is already correct in most places; adding/removing LL against retail's choice REGRESSES (A/B
+    both directions). #74's "lvalue must be u32" is necessary-not-sufficient: the RHS value must ALSO be u32 —
+    a `result & ~KLL` with an `int result` sign-extends (dead `srawi`); cast/retype the RHS to u32. THE
+    BLOCKER (open, VN-class): the 64-bit LL emits a dead high-word (`li 0` for u32 RHS) that DCEs cleanly ONLY
+    if not reused — an adjacent `field = 0;` store right after the clear CSE-reuses that `li 0` for the zero
+    (keeping it alive + a reg cascade), so the LL nets WORSE than the rlwinm baseline there (trickyFn_80143c04
+    L1321: 98.58 rlwinm > 98.09 LL). Couldn't break the high-word CSE (volatile `=0`, neg-literal/explicit-u32
+    masks, local-mask-var all inert; reordering the `=0` before the clear DCEs the high-word but swaps the two
+    asm blocks → reorder penalty). So: the u32-LL lever is clean ONLY for clears with a u32 RHS and NO adjacent
+    zero-store; the adjacent-`=0` clears stay at their lower-distance form (often the dead `srawi`/rlwinm). The
+    SIBLING branch-fold (empty-then `if(x>=K){}else{x=-x}` → retail `bne;b` vs our folded `beq`) is NOT
+    schedule/peephole-controllable; the #63 ternary `x=(x>=K)?x:-x` DOES emit retail's `bne;b` but lands the
+    result in a fresh fp reg (`fmr`) vs retail's in-place `fneg fX,fX` — a pure FP within-class coloring residual.
 145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch has
     THREE causes — two are recoverable source, the third is a coloring trap. CHECK WHICH before investing.**
     (a) **Import-UNDERSIZED matrix/array** (#67b) — a `mtx44Transpose`/4x4 op fed a `f32 m[12]` that must be
