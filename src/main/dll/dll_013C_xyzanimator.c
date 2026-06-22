@@ -32,7 +32,7 @@ extern void* Shader_getLayer(char* base, int idx);
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4004;
 extern f32 lbl_803E4008;
-extern f32 lbl_803E4018;
+extern const f32 lbl_803E4018;
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
