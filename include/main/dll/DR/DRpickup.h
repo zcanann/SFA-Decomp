@@ -59,7 +59,7 @@ typedef struct DRPickupState {
     u8 unk55C[0x570 - 0x55C];
     f32 unk570;
     u8 unk574[0x584 - 0x574];
-    f32 unk584;
+    f32 spinVel; /* 0x584: angular velocity, += -unk570*dt, clamped, integrated into anim.rotY */
     u8 unk588[4];
 } DRPickupState;
 
@@ -67,7 +67,7 @@ STATIC_ASSERT(offsetof(DRPickupState, angle40C) == 0x40C);
 STATIC_ASSERT(offsetof(DRPickupState, flags) == 0x428);
 STATIC_ASSERT(offsetof(DRPickupState, flags458) == 0x458);
 STATIC_ASSERT(offsetof(DRPickupState, accumX) == 0x494);
-STATIC_ASSERT(offsetof(DRPickupState, unk584) == 0x584);
+STATIC_ASSERT(offsetof(DRPickupState, spinVel) == 0x584);
 
 void fn_801EC1AC(int param_1,int param_2);
 

@@ -149,16 +149,16 @@ void fn_801EC1AC(int obj, int state)
 
     if (flags->b7 != 0)
     {
-        ((DRPickupState*)state)->unk584 =
-            (-((DRPickupState*)state)->unk570) * timeDelta + ((DRPickupState*)state)->unk584;
+        ((DRPickupState*)state)->spinVel =
+            (-((DRPickupState*)state)->unk570) * timeDelta + ((DRPickupState*)state)->spinVel;
         {
-            f32 v = ((DRPickupState*)state)->unk584;
-            ((DRPickupState*)state)->unk584 = (v < lbl_803E5C30)
+            f32 v = ((DRPickupState*)state)->spinVel;
+            ((DRPickupState*)state)->spinVel = (v < lbl_803E5C30)
                                          ? lbl_803E5C30
                                          : ((v > lbl_803E5B48) ? lbl_803E5B48 : v);
         }
         *(s16*)(obj + 0x2) = (f32)(s32) * (s16*)(obj + 0x2) +
-            ((DRPickupState*)state)->unk584 * timeDelta;
+            ((DRPickupState*)state)->spinVel * timeDelta;
     }
 
     if (flags->b1 == 0)
