@@ -86,7 +86,6 @@ typedef struct CameraModeNpcSpeakInitParams
     u8 mode;
 } CameraModeNpcSpeakInitParams;
 
-#pragma opt_common_subs off
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
 {
     CameraObject* camera = (CameraObject*)obj;
