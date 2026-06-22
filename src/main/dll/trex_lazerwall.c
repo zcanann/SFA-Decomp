@@ -53,7 +53,7 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
     u8 curveNodeTag;            /* 0x9D3: current curve node tag */
     u8 flags;            /* 0x9D4: status flags (LAZERWALL_FLAG_*) */
     u8 pad9D5[0x9D6 - 0x9D5];
-    u8 unk9D6;            /* 0x9D6: gates the queued-state pop (0xff = pop enabled) */
+    u8 popStateEnabled;   /* 0x9D6: gates the queued-state pop (0xff = pop enabled) */
     u8 pad9D7[0x9D8 - 0x9D7];
 } TREXLazerwallUpdateTimedChallengeState;
 
@@ -147,8 +147,8 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
         }
     }
 
-    ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0xff;
-    if (((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 == 0xff)
+    ((TREXLazerwallUpdateTimedChallengeState*)state)->popStateEnabled = 0xff;
+    if (((TREXLazerwallUpdateTimedChallengeState*)state)->popStateEnabled == 0xff)
     {
         stackHandle = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
         popOut = 0;
@@ -179,7 +179,7 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
     state = *(int*)&((GameObject*)arg1)->extra;
     *(u8*)&((GameObject*)arg1)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)arg1)->anim.resetHitboxMode | 8);
-    ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0;
+    ((TREXLazerwallUpdateTimedChallengeState*)state)->popStateEnabled = 0;
     ObjHits_DisableObject(arg1);
 
     (*(TimerQueryFn*)(*(int*)*(int*)(((TREXLazerwallUpdateTimedChallengeState*)state)->timerObj + 0x68)
