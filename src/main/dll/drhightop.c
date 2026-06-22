@@ -293,7 +293,7 @@ void fn_801EB334(int* obj)
         state->unk498 = fz;
         state->distanceScale = lbl_803E5B9C;
         ((HightopFlags*)&state->flags428)->resetLatch = 0;
-        state->unk424 = fz;
+        state->impactShakeTimer = fz;
         sv = *(s16*)obj;
         state->yaw = sv;
         state->unk40C = sv;
@@ -487,13 +487,13 @@ void fn_801EB940(short* obj, int stateRaw)
     ival = 2;
     if (*(char*)(stateRaw + 0x3d9) == '\0')
     {
-        st->unk424 = st->unk424 + timeDelta;
-        fa = st->unk424;
-        st->unk424 =
+        st->impactShakeTimer = st->impactShakeTimer + timeDelta;
+        fa = st->impactShakeTimer;
+        st->impactShakeTimer =
             (fa < lbl_803E5AE8)
                 ? lbl_803E5AE8
                 : ((fa > lbl_803E5BB4) ? lbl_803E5BB4 : fa);
-        if (st->unk424 >= lbl_803E5BB8)
+        if (st->impactShakeTimer >= lbl_803E5BB8)
         {
             if ((u32)(st->flags428 >> 7 & 1) == 0)
             {
@@ -512,39 +512,39 @@ void fn_801EB940(short* obj, int stateRaw)
             obj[1];
             st->unk590 = fa * (f32)(s32)
             obj[2];
-            st->unk588 = ival;
-            st->unk58A = ival;
+            st->haloDriftPhaseA = ival;
+            st->haloDriftPhaseB = ival;
             if ((u32)(st->flags428 >> 1 & 1) == 0)
             {
-                doRumble(st->unk424 * fa);
+                doRumble(st->impactShakeTimer * fa);
                 Camera_EnableViewYOffset();
-                CameraShake_SetAllMagnitudes(st->unk424 / lbl_803E5BC0);
+                CameraShake_SetAllMagnitudes(st->impactShakeTimer / lbl_803E5BC0);
                 Sfx_PlayFromObject((u32)obj, 0x3bc);
-                fb = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
+                fb = (lbl_803E5B40 < lbl_803E5BC4 * st->impactShakeTimer)
                          ? lbl_803E5B40
-                         : lbl_803E5BC4 * st->unk424;
+                         : lbl_803E5BC4 * st->impactShakeTimer;
                 {
                     Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
                 }
             }
         }
         ((HightopFlags*)&st->flags428)->resetLatch = 0;
-        st->unk424 = lbl_803E5AE8;
+        st->impactShakeTimer = lbl_803E5AE8;
         st->unk4B4 = st->unk230;
     }
     fa = lbl_803E5BC8;
-    st->unk588 = fa * timeDelta + (f32)(s32)st->unk588;
-    st->unk58A = fa * timeDelta + (f32)(s32)st->unk58A;
+    st->haloDriftPhaseA = fa * timeDelta + (f32)(s32)st->haloDriftPhaseA;
+    st->haloDriftPhaseB = fa * timeDelta + (f32)(s32)st->haloDriftPhaseB;
     st->haloYawDrift =
         st->haloYawDrift * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->unk590 =
         st->unk590 * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->haloPitchDrift =
         st->haloYawDrift *
-        mathSinf((gDrHighTopPi * (f32)(s32)st->unk588) / lbl_803E5BD4);
+        mathSinf((gDrHighTopPi * (f32)(s32)st->haloDriftPhaseA) / lbl_803E5BD4);
     st->unk598 =
         st->unk590 *
-        mathSinf((gDrHighTopPi * (f32)(s32)st->unk58A) / lbl_803E5BD4);
+        mathSinf((gDrHighTopPi * (f32)(s32)st->haloDriftPhaseB) / lbl_803E5BD4);
     yawDelta = (int)*obj - ((int)st->yaw & 0xffffU);
     if (0x8000 < yawDelta)
     {

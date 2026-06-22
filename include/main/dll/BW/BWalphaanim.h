@@ -70,7 +70,7 @@ typedef struct SnowBikeState {
     s8 riderMode;              /* 0x421: rider mode */
     s8 unk422;              /* 0x422 */
     u8 pad423;
-    f32 unk424;             /* 0x424 */
+    f32 impactShakeTimer;   /* 0x424: accumulates timeDelta while grounded; drives doRumble + CameraShake_SetAllMagnitudes */
     u8 flags428;            /* 0x428: SnowBikeFlags overlay byte */
     u8 pad429[0x3];
     int unk42C;             /* 0x42c: linked object */
@@ -137,8 +137,8 @@ typedef struct SnowBikeState {
     f32 unk57C;             /* 0x57c */
     f32 unk580;             /* 0x580 */
     f32 unk584;             /* 0x584 */
-    s16 unk588;             /* 0x588 */
-    s16 unk58A;             /* 0x58a */
+    s16 haloDriftPhaseA;    /* 0x588: integrated phase, fed to mathSinf for halo-light drift */
+    s16 haloDriftPhaseB;    /* 0x58a: integrated phase, fed to mathSinf for halo-light drift */
     f32 haloYawDrift;             /* 0x58c */
     f32 unk590;             /* 0x590 */
     f32 haloPitchDrift;             /* 0x594: halo-light yaw drift */
@@ -147,7 +147,7 @@ typedef struct SnowBikeState {
 STATIC_ASSERT(offsetof(SnowBikeState, refPosX) == 0x16C);
 STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
 STATIC_ASSERT(offsetof(SnowBikeState, collisionFxDamping) == 0x3E0);
-STATIC_ASSERT(offsetof(SnowBikeState, unk424) == 0x424);
+STATIC_ASSERT(offsetof(SnowBikeState, impactShakeTimer) == 0x424);
 STATIC_ASSERT(offsetof(SnowBikeState, flags428) == 0x428);
 STATIC_ASSERT(offsetof(SnowBikeState, unk4AC) == 0x4AC);
 STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
