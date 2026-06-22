@@ -552,9 +552,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     what TYPED PER-STATEMENT ARRAY INDEXING produces for free.** DISCRIMINATOR (pausemenu): #135 fits
     ARRAY-OF-STRUCTS (`arr[idx].field`, ONE base) — do NOT apply it to STRUCT-OF-ARRAYS (parallel member
     arrays at fixed offsets, e.g. `obj+0x448`, `obj+0x948`, `obj+0x9c8` each a separate `T arr[N]`). On SoA,
-    the typed `arr[i].field` form COLLAPSES the two-base+`mr` the target wants (regressed gameui textureFreeFn
-    93→74.65). The SoA two-base-copy clean form is a SEPARATE open puzzle (assumed-exists, not yet found) —
-    don't force #135 there. When retail holds a struct base in
+    the typed `arr[i].field` form COLLAPSES the layout the target wants (regressed gameui textureFreeFn
+    93→74.65). SoA CLEAN FORM DISCOVERED (pausemenu, textureFreeFn): retail uses ONE base (`r28 = lbl`) for
+    ALL parallel arrays via DISPLACEMENT stores — the puzzle was MISFRAMED as "two-base" (ours has two bases =
+    a BUG; retail has one). Root of ours' two bases: the source MIXES a LOCAL `u8* base = lbl` (for one array)
+    with the GLOBAL `lbl` DIRECTLY (for the others) → MWCC materializes the global TWICE (local copy + global
+    ref don't CSE). FIX: use the GLOBAL DIRECTLY everywhere (DROP the local `base` pointer), single-expression
+    per access: `void** tex=(void**)(lbl + j*4 + 2504); *(s16*)(lbl + 2376 + j*2) = -1; lbl[1096+j] = 1;`. KEY
+    MWCC RULE: a GLOBAL-symbol address ref → DISPLACEMENT `sth K`/`stb K` (one base, matches retail); a LOCAL
+    pointer var → INDEXED `sthx` (wrong). So for a GLOBAL-based SoA loop the #135 local/typed-pointer instinct
+    is BACKWARDS — use the bare global. RESIDUAL (open #108/#136, lands 90.92 < the 93.0 two-base baseline — so
+    structurally-correct but coloring-capped, the dimexplosion good-news pattern: the one-base structure IS
+    reachable, finish via coloring): (1) #136(b) counter-0-reuse — retail `mr r29,r27` (NULL-store 0 = copy of
+    counter i's initial 0) vs ours `li r29,0` (not triggered by hoisted-null / `void* zero=NULL`); (2) #108
+    j↔tex within-class swap — retail colors `tex` (live-across-call) HIGHER than the masked index `j`, ours
+    colors j higher (single-def→higher). When retail holds a struct base in
     TWO saved regs (one for the setup stores, one for a field read back across calls), the PLAUSIBLE
     source is `T *arr = (T*)base; arr[idx].field = ...` with the index RE-SPELLED every statement —
     NOT a cached `T *p = &arr[idx]`. MWCC then (a) CSEs the consecutive setup stores onto one saved
