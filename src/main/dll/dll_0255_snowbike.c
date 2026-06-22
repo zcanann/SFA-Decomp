@@ -34,8 +34,8 @@ typedef struct SnowBikeMountState
     u8 pad421[0x428 - 0x421];
     u8 flags;
     u8 pad429[0x434 - 0x429];
-    u8 unk434;
-    u8 unk435;
+    u8 romListGroupIndex;
+    u8 romListItemIndex;
     u8 pad436[0x494 - 0x436];
     f32 velocityX;
     f32 velocityY;
@@ -224,11 +224,11 @@ void SnowBike_func15(int obj)
     void* found;
     f32 zero;
 
-    table = (int*)((int)gSnowBikeMountRomListTable + (int)(((SnowBikeMountState*)t)->unk434) * 12);
-    found = mapRomListFindItem(table[((SnowBikeMountState*)t)->unk435], 0, 0, 0, 0);
+    table = (int*)((int)gSnowBikeMountRomListTable + (int)(((SnowBikeMountState*)t)->romListGroupIndex) * 12);
+    found = mapRomListFindItem(table[((SnowBikeMountState*)t)->romListItemIndex], 0, 0, 0, 0);
     if (found != NULL)
     {
-        if (((SnowBikeMountState*)t)->unk434 != 0)
+        if (((SnowBikeMountState*)t)->romListGroupIndex != 0)
         {
             ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)found + 0x8);
             ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)found + 0xc);
