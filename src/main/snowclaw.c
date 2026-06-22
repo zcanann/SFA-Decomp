@@ -34,7 +34,7 @@ typedef struct SnowclawState
     u8 tickCounter;
     u8 padA7[0xA8 - 0xA7];
     s16 moveIdBase;
-    u8 unkAA;
+    u8 flags;
     u8 padAB[0xAC - 0xAB];
     f32 particleAlpha;
 } SnowclawState;
@@ -192,7 +192,7 @@ void snowclaw_init(int* obj, u8* init)
     s16toFloat((char*)((int)inner + 0x98), (s16) * (int*)(table + 0x3c));
     objSeqInitFn_80080078((u8*)(int)gSnowClawMoveTable, 6);
     gSnowClawDropBombAngle = 0x96;
-    ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 = 0;
+    ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 0;
 }
 
 #pragma dont_inline on
@@ -403,7 +403,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
             *(u8*)((char*)obj + 0x37) = ((SnowclawState*)inner)->unkA0;
         }
         if (((GameObject*)obj)->childCount == 0 && ((GameObject*)obj)->anim.seqId == 0x389 &&
-            ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 != 0)
+            ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
         {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if ((u32)near != 0 &&
@@ -417,7 +417,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
         ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
                                       &((SnowclawState*)inner)->posZ, 0);
         *(u8*)((char*)obj + 0x37) = oldFlag;
-        if (((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 != 0)
+        if (((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 != 0)
         {
             if (((SnowclawState*)inner)->particleAlpha != lbl_803E66F0)
             {
@@ -426,7 +426,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis)
             }
             else
             {
-                ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 = 0;
+                ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 = 0;
             }
             objParticleFn_80099d84(obj, lbl_803E670C, 3, ((SnowclawState*)inner)->particleAlpha, 0);
         }
@@ -489,7 +489,7 @@ void snowclaw_hitDetect(int obj)
                 {
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 3);
                 }
-                ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->flag6 = 1;
+                ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 = 1;
                 ((SnowclawState*)inner)->particleAlpha = lbl_803E670C;
                 ((SnowclawState*)inner)->velX = lbl_803E6728 * mathSinf(
                     gSnowClawPi * (f32)((GameObject*)obj)->anim.rotX / lbl_803E6730);
@@ -547,7 +547,7 @@ void snowclaw_update(int obj)
 
     pulseTable = gSnowClawPulseTable;
     inner = ((GameObject*)obj)->extra;
-    if (((SnowclawState*)inner)->hitFlag != 0 && (u32)((((SnowclawState*)inner)->unkAA >> 6) & 1) != 0)
+    if (((SnowclawState*)inner)->hitFlag != 0 && (u32)((((SnowclawState*)inner)->flags >> 6) & 1) != 0)
     {
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
     }
@@ -763,7 +763,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
                 if (found != 0)
                 {
                     (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 2);
-                    ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 = 0;
+                    ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 0;
                 }
                 break;
             }
@@ -773,7 +773,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
                 if (found != 0)
                 {
                     (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)found)->anim.dll) + 0x20)))(found, 0);
-                    ((SnowclawAaFlags*)&((SnowclawState*)inner)->unkAA)->b0 = 1;
+                    ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 = 1;
                 }
                 break;
             }
