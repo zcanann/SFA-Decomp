@@ -760,11 +760,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     AND keeps pass=0 in saved r29. The earlier "O2-impossibility" whole-DLL scan hit SRC objs (which fold because
     OUR source lacks retail's construct) — NOT the retail objs. So a const-0 CAN be kept in a saved reg AT O2;
     retail does it; the O2-keep SOURCE FORM is a LIVE target (not a cap).
-    #126 debugPrintDraw: dropping its `#pragma optimization_level 2` REGRESSES 93.29→88.07 (dbgtricky-verified —
-    the rest of the fn is genuinely O2-bound), so the O4-drop does NOT apply here; the fix is to recover the O2
-    saved-reg web. LEAD: retail's `pass` is likely MULTI-DEF (a 2-pass loop variable, 0 then 1 — a multi-def web
-    GETS a saved reg at O2's creation-order #108) while ours is a single-def const-0 that folds → recover pass's
-    multi-def/loop-variable nature, don't treat it as a const. (The chained+opt_level lever is the COUNTER-TIED
+    #126 debugPrintDraw (PRECISELY CHARACTERIZED — both dbgtricky + validator read the RETAIL obj): dropping its
+    `#pragma optimization_level 2` REGRESSES 93.29→88.07 (fn is genuinely O2-bound); the multi-def hypothesis is
+    DISPROVEN (`pass++`/`pass=pass+1` const-prop to the same `li`; a `for(pass=0;pass<2;pass++)` 2-pass loop adds
+    pass-conditional branches retail lacks → 79.40). RETAIL's actual shape: r29 is a MULTI-VALUE saved reg reused
+    in creation-order across TWO SEPARATE sequential loops — `li r29,0`(pass=0, loop1) → `addi r29,r3,10`(an x1
+    address in the rect block) → `li r29,1`(pass=1, loop2). So pass=0 isn't a multi-def web; it's a SEPARATE
+    const-0 that lands in saved r29 because r29 is ALREADY-ANCHORED as a saved web by the competing x1 address,
+    and at O2 pass=0 is created AFTER the ctx-copy (→ higher reg). OURS folds pass=0 (`li r0` ×8 in loop1) because
+    the ctx-copy grabs r29 first and NOTHING anchors a saved reg at pass's position. So the lever = ADD THE
+    ANCHORING INGREDIENT (a saved-reg value, e.g. the x1 address, live across pass's lifetime so creation-order
+    parks pass=0 on a saved reg) / perturb the ctx-vs-pass creation order — an in-tree add-ingredients pin, NOT
+    multi-def-ness. (dbgtricky owns the in-tree case + has the retail-read; parked as a live target while it banks
+    higher-throughput dll_000B — the anchoring add-ingredient is the next lever for the circle-back.) (The chained+opt_level lever is the COUNTER-TIED
     sibling — opposite opt-level: counter-tied wants O2-chain, standalone O4-keep.) REMAINING EDGES (live targets):
     the PRE-LOOP field store (entryCount=0 folds even at O4 — pre-loop position doesn't get the saved web) and
     Minimap's counter-copy `mr` at an O4-shaped size — both precisely bounded, not caps.
