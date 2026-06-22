@@ -108,10 +108,10 @@ extern f32 lbl_803E1E94;
 extern f32 lbl_803E1E80;
 extern f32 lbl_803E1EC8;
 extern f32 lbl_803E1ECC;
-extern f32 lbl_803E1F30;
+extern const f32 lbl_803E1F30;
 extern f32 lbl_803E1F34;
 extern double lbl_803E1F60;
-extern f32 lbl_803E1FAC;
+extern const f32 lbl_803E1FAC;
 extern f32 lbl_803E2018;
 extern f32 lbl_803E2020;
 extern double lbl_803E2070;
@@ -658,20 +658,16 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            f32 scl = lbl_803E1FAC;
-            f32 bse = lbl_803E1F30;
             u16 ii;
             for (ii = 0; ii < 7; ii++)
             {
-                f32 fy = scl * (f32)(u32)(u16)ii
-                +bse;
+                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)ii
+                +lbl_803E1F30;
                 pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, ty,
                                      (s32)lbl_803E20B8, 0);
             }
         }
         {
-            f32 scl = lbl_803E1FAC;
-            f32 bse = lbl_803E1F30;
             for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
             {
                 s32 v = *(int*)lbl_803A9364;
@@ -692,8 +688,8 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
                 {
                     tex = (v & 3) + 0x12;
                 }
-                fyj = scl * (f32)(u32)(u16)
-                j + bse;
+                fyj = lbl_803E1FAC * (f32)(u32)(u16)
+                j + lbl_803E1F30;
                 for (i8 = 0x14; i8 >= 0; i8 -= 4)
                 {
                     s16 px = (s16)((0xff - i8) - lbl_803DD75C);
