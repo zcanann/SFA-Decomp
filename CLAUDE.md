@@ -680,6 +680,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 136. **Strength-reduced loop COUNTER/WALKER coloring is a SOURCE lever — two clean forms, pick by
     base kind.** When the target puts the loop COUNTER in the higher saved reg and the WALKER in the
     lower but MWCC's index form `arr[i]` does the opposite, there's a clean C form that matches:
+    ✓DIRECTION RULE PINNED (probe-confirmed, LOCAL/param base): the counter↔walker relative home is set
+    by the SOURCE FORM, and the INCREMENT ORDER (`e++,i++` vs `i++,e++`) is INERT — only body-vs-comma
+    flips the pair. BODY-computed `for(i=0;i<N;i++){ T *e=&base[i]; ...use i... }` → WALKER higher,
+    counter lower (`e=r31, i=r30`). COMMA-init `for(i=0, e=base; i<N; e++, i++){...}` → COUNTER higher,
+    walker lower (`i=r31, e=r29`). So: want counter-higher → comma-init; want walker-higher → body-computed.
+    (decl-order is correctly inert here — induction webs, not top-loaded #108; the FORM is the induction-class
+    analog of #108's decl-order.) GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
+    r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
+    body-form for walker-high, and #136(b) counter-0-reuse / #143 typed-index for counter-high.
     (a) LOCAL/register base → comma-init walker `for (i = 0, p = base; i < N; p += stride, i++)`,
     increment order `p += stride, i++` (walker bump FIRST) to match the target's `addi walker; addi
     counter; cmpwi`. (b) GLOBAL base → keep the index form and give the COUNTER an incidental REUSE,
