@@ -1689,6 +1689,7 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
     }
 }
 
+#pragma opt_strength_reduction off
 int musicInitMidiWad(void)
 {
     MusicTrackSlot* table;
@@ -1769,6 +1770,7 @@ int musicInitMidiWad(void)
     }
     return 0;
 }
+#pragma opt_strength_reduction reset
 
 void poolDataMLoadedCallback(int status, void* fileInfo)
 {
