@@ -1728,6 +1728,23 @@ returned in volatiles r10/r12/r15, caller `stmw r14; mr r20`) — 0 PS instructi
 asm-eligible. ⚠️ NARROW: this exception is paired-single ONLY — the general inline-`asm{}` ban STILL HOLDS for
 everything else (no other exceptions; the owner still reverts non-paired-single asm).
 
+### ✅ PROVEN RECIPE (mechanical — fn_8005D3B4 38→100, ObjModel_TransformVertices{Linear,WithTranslation,QuadVerticesLinear} 0→100 each, model.c +5.74%)
+⚠️ TOOLING — CRITICAL: the default objdump / `function_objdump.py` MISDECODES Gekko paired-single as modern
+POWER9 VSX (`psq_l`→`lq`, `ps_madds`→`xsmsubmsp`/`xxsel` garbage) — you CANNOT transcribe from it. Use
+`build/binutils/powerpc-eabi-objdump -M gekko -drz --disassemble=<fn> build/GSAE01/obj/main/<unit>.o` — the
+`-M gekko` flag gives the correct `psq_l`/`ps_*` decode (or decode from the `e0`/`f0`/`10` opcode bytes).
+FORM — FULL `asm void`, not a C+asm hybrid: the hybrid (`register f32` + `asm{ psq_l }` blocks + C fmadds)
+plateaus ~89% because inline-asm blocks are SCHEDULING BARRIERS (can't interleave loads/fmadds like the target's
+scheduler → wrong FP alloc). The full function `asm void Fn(register u8 *m1, ...){ nofralloc; psq_l ...; ...;
+blr }` (mtx.c convention) controls exact reg-alloc + scheduling → byte-match. STEPS (proven, ~mechanical):
+(1) `-M gekko` dump; (2) `asm void` wrapper with `nofralloc`, HARDWARE reg names, rename args r3→m1.. by the
+prologue, SDA refs by symbol name (MWCC auto-emits `@sda21`), `lis r,sym@ha; addi r,r,sym@l` for ADDR16, `bl
+symbol` for calls, insert loop labels at `bdnz` targets; (3) build → byte-match. waterfx generated the 173-instr
+Quad fn PROGRAMMATICALLY (regex arg-rename + label-insert) → first-build 100%, zero hand-errors. GQR config is
+runtime state (set by existing matched OSContext/THPDec/setGQR) — not your concern for the byte-match.
+★ TOP NEXT-SESSION TARGET: grep the project for `psq_l`-bearing 0%/low-% fns — each is a near-free 0→100 via
+this recipe (the vein is OPEN + mechanical). Open the next session with this batch.
+
 ## Build hygiene (don't break shared `main`)
 - `timeout 60 ninja; echo EXIT=$?` → confirm `EXIT=0` BEFORE every commit. In A/B batteries, gate
   every variant on compile exit (a failed compile leaves the previous .o and the diff lies).
