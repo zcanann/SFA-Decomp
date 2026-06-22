@@ -441,6 +441,7 @@ ret1:
 }
 
 #pragma opt_common_subs off
+#pragma fp_contract off
 void drakorhoverpad_updateMain(int obj)
 {
     u8* p = ((GameObject*)obj)->extra;
@@ -532,18 +533,19 @@ void drakorhoverpad_updateMain(int obj)
     }
     if (((DrakorHoverpadUpdateMainState*)p)->verticalVel < lbl_803E6A3C)
     {
-        (*gRomCurveInterface)->setClosed(curve, 1);
+        (*gRomCurveInterface)->setClosed(&((DrakorHoverpadState*)p)->curve, 1);
     }
     else
     {
-        (*gRomCurveInterface)->setClosed(curve, 0);
+        (*gRomCurveInterface)->setClosed(&((DrakorHoverpadState*)p)->curve, 0);
     }
     ((DrakorHoverpadUpdateMainState*)p)->unk114 = lbl_803E6A3C;
     if (lbl_803E6A3C != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
     {
         Curve_AdvanceAlongPath(curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
-        if ((curve->reverse == 0 && curve->atSegmentEnd != 0) ||
-            (curve->reverse != 0 && curve->atSegmentEnd == 0))
+        c = curve->reverse;
+        if ((c == 0 && curve->atSegmentEnd != 0) ||
+            (c != 0 && curve->atSegmentEnd == 0))
         {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8*)((u8*)curve->nodeA0 + 0x18),
                                                     *(u8*)((u8*)curve->nodeA4 + 0x18),
@@ -575,21 +577,22 @@ void drakorhoverpad_updateMain(int obj)
             {
                 yawDelta = 0x200;
             }
-            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + yawDelta);
+            c = (s16)yawDelta;
+            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + c);
             if (((GameObject*)obj)->anim.rotY != 0)
             {
-                c = ((GameObject*)obj)->anim.rotY;
-                if (c < -0x100)
+                yawDelta = ((GameObject*)obj)->anim.rotY;
+                if (yawDelta < -0x100)
                 {
-                    c = -0x100;
+                    yawDelta = -0x100;
                 }
-                else if (c > 0x100)
+                else if (yawDelta > 0x100)
                 {
-                    c = 0x100;
+                    yawDelta = 0x100;
                 }
-                ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY - c);
+                ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY - yawDelta);
             }
-            ((GameObject*)obj)->anim.rotZ = (s16)(yawDelta * lbl_803DC2FC);
+            ((GameObject*)obj)->anim.rotZ = (s16)(c * lbl_803DC2FC);
         }
     }
     else
@@ -607,15 +610,15 @@ void drakorhoverpad_updateMain(int obj)
         {
             yawDelta = 0x800;
         }
+        c = (s16)yawDelta;
         if (((DrakorHoverpadUpdateMainState*)p)->verticalVel < lbl_803E6A3C)
         {
-            ((GameObject*)obj)->anim.rotZ = yawDelta;
+            ((GameObject*)obj)->anim.rotZ = c;
         }
         else
         {
-            ((GameObject*)obj)->anim.rotZ = -yawDelta;
+            ((GameObject*)obj)->anim.rotZ = -c;
         }
-        c = yawDelta;
         if (c < -0x100)
         {
             c = -0x100;
@@ -642,6 +645,7 @@ void drakorhoverpad_updateMain(int obj)
     PSVECAdd(&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.velocityX,
              &((GameObject*)obj)->anim.localPosX);
 }
+#pragma fp_contract reset
 #pragma opt_common_subs reset
 
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
