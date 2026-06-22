@@ -1639,8 +1639,11 @@ void flamethrowerspe_update(int* obj)
         }
         ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot(obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
-        objMove(obj, timeDelta * ((GameObject*)obj)->anim.velocityX, timeDelta * ((GameObject*)obj)->anim.velocityY,
-                timeDelta * ((GameObject*)obj)->anim.velocityZ);
+        {
+            f32 dt = (f32)(f64)timeDelta;
+            objMove(obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
+                    ((GameObject*)obj)->anim.velocityZ * dt);
+        }
         ObjHitbox_SetSphereRadius(obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
                                       (((f32)lbl_803DBD64 - *(f32*)((char*)state + 4)) / lbl_803DBD64)));
         break;
