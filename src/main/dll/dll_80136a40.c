@@ -1107,7 +1107,7 @@ int fn_80136E00(int p1, u8* p)
                 }
             }
             debugPrintYpos = p[0];
-            debugPrintYpos |= p[1] << 8;
+            debugPrintYpos = (u16)debugPrintYpos | (p[1] << 8);
             debugPrintXpos = p[2];
             c0 = p[3];
             p += 4;
