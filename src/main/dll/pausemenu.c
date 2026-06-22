@@ -729,6 +729,7 @@ void fn_80127F24(s32 alpha)
     f32 phase;
     f32 brightness;
     s8 i;
+    s16 x;
 
     phase = lbl_803E1F18 *
         mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
@@ -736,7 +737,6 @@ void fn_80127F24(s32 alpha)
 
     for (i = 10; i >= 0; i -= 2)
     {
-        s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                              lbl_803E20BC, lbl_803E1EE4,
                              x = (s16)((0xf5 - i) - lbl_803DD75C),
@@ -751,7 +751,6 @@ void fn_80127F24(s32 alpha)
     for (i = 10; i >= 0; i -= 10)
     {
         f32 off = phase * (40.0f - (f32)(s32)(s8)i) / 40.0f;
-        s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                              595.0f + off, lbl_803E20CC,
                              x = (s16)((0xff - i) - lbl_803DD75C),
