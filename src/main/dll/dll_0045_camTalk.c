@@ -136,7 +136,7 @@ void CameraModeBike_update(CameraObject* camera)
         {
             angleDelta = angleDelta + 0xFFFF;
         }
-        camera->anim.rotY = camera->anim.rotY + (angleDelta >> 3);
+        camera->anim.rotY += (angleDelta >> 3);
         sinYaw = mathSinf(gCamTalkPi * (f32)(s32)((int)camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
         cosYaw = mathCosf(gCamTalkPi * (f32)(s32)((int)camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
         cosPitch = mathCosf(gCamTalkPi * (f32)(s32)camera->anim.rotY / gCamTalkAngleUnitScale);
