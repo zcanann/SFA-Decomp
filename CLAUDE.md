@@ -921,6 +921,41 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (99.975%): a 64B `f32[16]`/union sits at stack-offset 28/32, never 112 where retail puts it (only a 72B m[18]
     lands at 112) — the conv-temp wants 176; likely a #120 split where the 4x4 was adjacent to another local in
     one bigger struct (rejoin to size it onto 112).
+151. **objdiff scores a fn `None` (= 0% in the unit measure, field ABSENT in report.json) when a MATCHED
+    instr's reloc pairs a base-LOCAL-defined data symbol against a target-UNDEFINED external — the
+    "#70 / flip-held conversion-bias" case. The fn is asm-matched; recover it by FLIP, not objdiff %.**
+    dll_0032_titlescreeninit/runLoadingScreens was the whole unit's 31.67% (verified: weight the other
+    fns with runLoadingScreens=0 → exactly 31.67%) yet is ~99% byte-matched (T=C=261). Root cause: the
+    u32→f64 conversion bias `0x4330000000000000`. Retail's `.sdata2` SPLITS it into lbl_803E1CE8(0x43300000)
+    +lbl_803E1CEC(0) referenced as one 8-byte `lfd`, and the target .o leaves lbl_803E1CE8 UNDEFINED
+    (defined cross-object in auto_11_803DE500_sdata2.o). Our idiomatic `(f32)(u32)counter` pools it as ONE
+    8-byte LOCAL `@54`. objdiff can't content-match 8-byte-local ↔ split-4-byte-undefined → None for the
+    whole fn. CONFIRMED: removing the conversion → fn SCORES (1.99%, not None); the symbols.txt mis-tag fix
+    (lbl_803E1CE8 0x3/string→0x4/float) did NOT un-None it (verified in main repo). The `(f32)(u32)` idiom
+    that byte-matches the target's `fsubs` ALWAYS pools the bias locally; a manual `t - lbl_803E1CE8` (extern
+    bias) references the external but emits `fsub;frsp` (+1 instr, non-idiomatic) — so keep the idiom and
+    take the FLIP path (the asm matches; objdiff-content-match is the limitation). Census: same None on
+    model/ObjModel_TransformVertices{WithTranslation,Linear,QuadVerticesLinear} + dll_00E2_staff/staff_initialise
+    (staff's is SOURCE-fixable: its lbl_803208A0 .data array is base-DEFINED but should be `extern`).
+    **runLoadingScreens flip-readiness (handoff): asm-byte-identical EXCEPT (i) the 8 flip-held bias relocs
+    (@54 vs lbl_803E1CE8, content-equal) and (ii) TWO single-instr conversion-node diffs that CANCEL in
+    count (T=C=261).** LANDED a clean half: a block-local `u8 alpha` in the `<0xf0` HUD branch makes
+    `colorBuf.bytes[3]=alpha` a bare `stb r4` (matches retail) — but it RELOCATES the `clrlwi` from the store
+    to the alpha load (`lwz r0,28; clrlwi r4,r0,24` vs retail `lwz r4,28`), net-neutral; the narrowing
+    conversion is CONSERVED (store for `int` alpha, load for `u8` alpha), retail's HUD branch has it at
+    NEITHER. Diff B (the mirror): retail's FIRST `gDvdErrorPauseActive != 0` test emits `clrlwi r0,r3,24;
+    cmplwi r0,0` (masked), the SECOND `==0` uses raw `cmplwi r3,0`; ours masks NEITHER. A clean form for both
+    is ASSUMED to exist (record on these is perfect). Tried so far (a launchpad to SKIP, not proof): A — `int`
+    alpha (clrlwi at store), `u8` alpha global/block-local (clrlwi at load), `s8`/`char` byte (extsb not
+    clrlwi), `*(s8*)&bytes[3]`/struct-`s8`-a-field (extsb), `u8`-drawTexture-param (draw branch still masks),
+    union/array/u8*-pointer stores (all narrow); B — `int` local (signed `cmpwi`, wrong), `u32` local,
+    direct-global-read both, asymmetric global-first/local-second read, truthiness (all mask NEITHER). Untried
+    leads: A — find the source/struct that makes the byte the *unconverted* low slice of an int web (the
+    conversion node is front-end/type-driven; a form where alpha's web is byte-typed from a NON-converting
+    source); B — the in-repo/MP4 oracle for `clrlwi rX,rY,24; cmplwi rX,0` + later raw `cmplwi rY` (a u8
+    flag masked on first compare, raw on second — find the producing C). DIAGNOSTICS: report.json absent
+    `fuzzy_match_percent` = None (5 fns project-wide); `objdiff-cli report generate` confirms; per-fn diff
+    via `function_objdump.py`/`ndiff.py`. (Flip + symbols.txt are owner/lead-domain; this is the source side.)
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
