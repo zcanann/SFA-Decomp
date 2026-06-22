@@ -359,7 +359,7 @@ poolSearchDone:
     if (foundPool)
     {
         poolIndex = (s16)foundPoolIndex;
-        activeMaskPtr = &runtime->poolActiveMasks[poolIndex];
+        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + poolIndex * 4);
         currentMask = *activeMaskPtr;
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
@@ -398,7 +398,7 @@ poolSearchDone:
     if (foundPool)
     {
         poolIndex = (s16)foundPoolIndex;
-        activeMaskPtr = &runtime->poolActiveMasks[poolIndex];
+        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + poolIndex * 4);
         currentMask = *activeMaskPtr;
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
