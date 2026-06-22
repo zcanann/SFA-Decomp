@@ -2805,7 +2805,7 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
 }
 
 #pragma dont_inline on
-int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short slotType,
+int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType,
                      u8 boundsTemplateId)
 {
     ExpgfxSlot* slot;
