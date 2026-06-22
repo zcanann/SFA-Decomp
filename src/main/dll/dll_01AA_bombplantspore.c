@@ -32,7 +32,7 @@ extern void Sfx_PlayFromObject(void* obj, int sndId);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern const f32 lbl_803E5390;
-extern f32 lbl_803E5394;
+extern const f32 lbl_803E5394;
 extern const f32 gBombPlantSporePi;
 extern const f32 gBombPlantSporeAngleHalfPeriod;
 extern const f32 lbl_803E53A8;
@@ -341,18 +341,21 @@ void bombplantspore_update(void* obj)
         {
             bombplantspore_startDriftBurst(obj, state);
         }
-        state->spinTimer -= timeDelta;
-        if (state->spinTimer <= lbl_803E5394)
         {
-            state->driftSin *= gBombPlantSporeVelocityDamping;
-            state->driftCos *= gBombPlantSporeVelocityDamping;
-            state->spinTimer = lbl_803E5394;
-        }
-        else
-        {
-            f32 driftSpeed = state->driftSpeed;
-            f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
-            state->driftSpeed = driftStep * timeDelta + driftSpeed;
+            f32 st = state->spinTimer - timeDelta;
+            state->spinTimer = st;
+            if (st <= lbl_803E5394)
+            {
+                state->driftSin *= gBombPlantSporeVelocityDamping;
+                state->driftCos *= gBombPlantSporeVelocityDamping;
+                state->spinTimer = lbl_803E5394;
+            }
+            else
+            {
+                f32 driftSpeed = state->driftSpeed;
+                f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+                state->driftSpeed = driftStep * timeDelta + driftSpeed;
+            }
         }
         ((GameObject*)obj)->anim.velocityX =
             state->driftSin * state->driftSpeed +
