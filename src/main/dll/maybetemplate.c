@@ -512,6 +512,7 @@ void pauseMenuDrawStatus(void)
     int sv;
     f32 thresh;
     f32 prev;
+    f32 newOp;
     int statuses[13];
 
     base = (u8*)lbl_803A87F0;
@@ -677,8 +678,9 @@ void pauseMenuDrawStatus(void)
             ji = i;
             op = ((f32*)(base + 0xAFC)) + ji;
             prev = *op;
-            *op = prev - timeDelta;
-            if ((prev > thresh) && (*op <= thresh))
+            newOp = prev - timeDelta;
+            *op = newOp;
+            if ((prev > thresh) && (newOp <= thresh))
             {
                 switch (ji)
                 {
