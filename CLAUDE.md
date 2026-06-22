@@ -877,13 +877,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     if a use follows a call OR the value is passed to a call, CSE can't keep one load → adds reloads → REGRESSES
     (dfptargetblock_hitDetect `obj->home` passed to resetToHome() → 99.85→98.53, fail). So #107's sweet spot =
     a re-derivable unmutated read used in a CALL-FREE stretch (expgfx CameraModeTestStrength). (5) retail keeps
-    it LOWER (un-name path) or HIGHER (name path) per the bi-directional rule. (4) CLASS: ⚠️ UNDER RECONCILIATION
-    — pausemenu read it as "SAVED-reg swaps only, volatile swaps are #66" BUT expgfx's dll_1D6 WIN (full-unit
-    100%) was an r4↔r5 VOLATILE swap cracked via NAME — so the naming-kind trick appears to work in BOTH the
-    saved class (#107) and the volatile class (#66), i.e. #66 and #107 are likely the SAME mechanism (web-kind
-    colors below named-locals) applied per reg-class. Treat the trick as class-general; route the residual label
-    by which class swapped (saved=#107, volatile=#66) but use the SAME name/un-name fix. (Criteria 1-3+5 are the
-    real gates; criterion 4 is a labeling note, not a blocker.)
+    it LOWER (un-name path) or HIGHER (name path) per the bi-directional rule. (4) CLASS: ✅ CONFIRMED
+    CLASS-GENERAL (expgfx verified dll_1D6's win was an r4↔r5 VOLATILE swap cracked via NAME) — the naming-kind
+    trick works in BOTH the saved class AND the volatile class; **#66 (volatile) and #107 (saved) are the SAME
+    mechanism** (an expression-temp colors below a named-local within whichever class the value lands in). So
+    criterion 4 is DROPPED as a blocker — it's only a label (saved=#107, volatile=#66), the fix is identical;
+    sweep BOTH saved and volatile re-derivable-web swaps. (Criteria 1-3+5 are the real gates.)
     ROUTING BY SHAPE — #107 is a NARROW lever, not a broad sweep (expgfx scanned 140+ DLL 99%+ fns: only ~2
     were clean #107-fits, both won). Most 99%+ GPR-coloring residuals are OTHER shapes needing EXISTING levers —
     triage the bucket by shape FIRST, don't burn #107 on non-fits: NAME-vs-inline of a re-derivable read = #107;
