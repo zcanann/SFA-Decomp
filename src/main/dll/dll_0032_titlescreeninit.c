@@ -164,6 +164,7 @@ void runLoadingScreens(void)
     }
 }
 
+#pragma opt_propagation off
 void initLoadingScreenTextures(void)
 {
     int textureSize;
@@ -202,6 +203,7 @@ void initLoadingScreenTextures(void)
     gTitleScreenInitLoadingFrameCounter = 0;
     gTitleScreenInitDvdErrorLatched = 0;
 }
+#pragma opt_propagation reset
 
 void TitleScreenInit_render(void)
 {
