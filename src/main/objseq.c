@@ -4506,8 +4506,8 @@ void objSeq_onMapSetup(void)
             marks2[0x3bf4 - 0x338c] = 0;
             marks2[0x3a40 - 0x338c] = 0;
             marks2[0x39e8 - 0x338c] = 0;
-            *(f32*)((u8*)handles2 + (0x3894 - 0x33e4)) = lbl_803DEFB0;
-            *(f32*)((u8*)handles2 + (0x3740 - 0x33e4)) = lbl_803DEFF0;
+            *(f32*)(marks2 + (0x3894 - 0x338c)) = lbl_803DEFB0;
+            *(f32*)(marks2 + (0x3740 - 0x338c)) = lbl_803DEFF0;
             marks2[0x3590 - 0x338c] = 0;
             handles2[0] = 0;
             marks2[0] = 0;
