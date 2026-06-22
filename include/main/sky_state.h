@@ -76,15 +76,15 @@ typedef struct Sky2Config {
     u8 lightColorB;
     u8 lightColorA;
     u8 unk10[4];
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
+    u8 color2R;
+    u8 color2G;
+    u8 color2B;
+    u8 color2A;
     u8 unk18[4];
-    u8 unk1C;
-    u8 unk1D;
-    u8 unk1E;
-    u8 unk1F;
+    u8 color3R;
+    u8 color3G;
+    u8 color3B;
+    u8 color3A;
     u8 unk20[4];
     u16 unk24;
     u8 unk26[4];
@@ -102,15 +102,15 @@ typedef struct Sky2Config {
     u8 unk46[0xE];
     u16 cloudMode;
     u16 unk56;
-    u8 unk58;
-    u8 unk59;
+    u8 flags;
+    u8 flags2;
     u8 unk5A[3];
     u8 unk5D;
     u8 unk5E[2];
 } Sky2Config;
 
 STATIC_ASSERT(offsetof(Sky2Config, unk2A) == 0x2A);
-STATIC_ASSERT(offsetof(Sky2Config, unk58) == 0x58);
+STATIC_ASSERT(offsetof(Sky2Config, flags) == 0x58);
 
 int getSkyStructField24C(void);
 void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue);
