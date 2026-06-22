@@ -80,13 +80,13 @@ extern int hudTextures[];
 extern f32 timeDelta;
 extern f32 lbl_803E1E3C;
 extern f32 lbl_803E1E68;
-extern f32 lbl_803E2010;
+extern const f32 lbl_803E2010;
 extern f32 lbl_803E2024;
 extern f32 lbl_803E2040;
 extern f32 lbl_803E2044;
 extern f32 lbl_803E2048;
-extern f32 lbl_803E204C;
-extern f32 lbl_803E2050;
+extern const f32 lbl_803E204C;
+extern const f32 lbl_803E2050;
 extern f32 lbl_803E2054;
 extern f32 lbl_803E2058;
 extern void Obj_FreeObject(int* obj);
@@ -147,9 +147,6 @@ void drawFn_80125424(void)
     int xLeft;
     f32 wave;
     f32 camPos;
-    f32 waveBase2;
-    f32 waveBase1;
-    f32 waveAmp;
 
     if (gHeadDisplayActive != 0)
     {
@@ -248,20 +245,17 @@ void drawFn_80125424(void)
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
-        waveAmp = lbl_803E204C;
-        waveBase1 = lbl_803E2050;
-        waveBase2 = lbl_803E2010;
         for (i = 0; i < (int)height; i += 4)
         {
-            wave = waveAmp * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
-            wave = waveAmp * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
-            alphaTmp = (int)((f32)alpha * (waveBase1 + wave));
+            wave = lbl_803E204C * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
+            wave = lbl_803E204C * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
+            alphaTmp = (int)((f32)alpha * (lbl_803E2050 + wave));
             alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
                                (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
-            alphaI = (int)((f32)alpha * (waveBase2 + wave));
+            alphaI = (int)((f32)alpha * (lbl_803E2010 + wave));
             if (alphaI < 0)
             {
                 alphaI = 0;
