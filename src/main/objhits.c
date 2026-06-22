@@ -2519,15 +2519,13 @@ void ObjHits_Update(int objectCount)
                         }
                         if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ)
                         {
-                            diff = ((GameObject*)obj)->anim.worldPosY -
-                                ((GameObject*)candObj)->anim.worldPosY;
-                            if (diff > *(const f32*)&gObjHitsScalarZero)
-                            {
-                            }
-                            else
-                            {
-                                diff = -diff;
-                            }
+                            diff = (((GameObject*)obj)->anim.worldPosY -
+                                        ((GameObject*)candObj)->anim.worldPosY >
+                                    *(const f32*)&gObjHitsScalarZero)
+                                       ? ((GameObject*)obj)->anim.worldPosY -
+                                             ((GameObject*)candObj)->anim.worldPosY
+                                       : -(((GameObject*)obj)->anim.worldPosY -
+                                           ((GameObject*)candObj)->anim.worldPosY);
                             if ((diff < objState->primaryRadiusY + candState->primaryRadiusY) &&
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
@@ -2569,15 +2567,13 @@ void ObjHits_Update(int objectCount)
                         }
                         if (diff < objState->secondaryRadiusXZ + candState->secondaryRadiusXZ)
                         {
-                            axisDiff = ((GameObject*)obj)->anim.worldPosY -
-                                ((GameObject*)candObj)->anim.worldPosY;
-                            if (axisDiff > gObjHitsScalarZero)
-                            {
-                            }
-                            else
-                            {
-                                axisDiff = -axisDiff;
-                            }
+                            axisDiff = (((GameObject*)obj)->anim.worldPosY -
+                                            ((GameObject*)candObj)->anim.worldPosY >
+                                        gObjHitsScalarZero)
+                                           ? ((GameObject*)obj)->anim.worldPosY -
+                                                 ((GameObject*)candObj)->anim.worldPosY
+                                           : -(((GameObject*)obj)->anim.worldPosY -
+                                               ((GameObject*)candObj)->anim.worldPosY);
                             if ((axisDiff < objState->secondaryRadiusY + candState->secondaryRadiusY) &&
                                 ((objState->flags & 0x100) == 0) && ((candState->flags & 0x100) == 0) &&
                                 ((objState->sourceMask & candState->targetMask) != 0) &&
