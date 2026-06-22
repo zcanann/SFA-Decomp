@@ -3795,7 +3795,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     vec3[0] = mtx[0][3];
     vec3[1] = mtx[1][3];
     vec3[2] = mtx[2][3];
-    PSMTXMultVec((f32(*)[4])((u8*)obj + 0x30), (Vec*)vec3, (Vec*)vec3);
+    PSMTXMultVec((f32(*)[4])((u8*)(int)obj + 0x30), (Vec*)vec3, (Vec*)vec3);
     f31_val = -vec3[2];
 
     fn_8006C5B8(&handle);
