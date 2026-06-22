@@ -575,7 +575,6 @@ void FUN_8016e8cc(u64 arg1, u64 arg2, double arg3, u64 arg4,
     int* extra;
     double computed;
     double clamped;
-    u64 local_18;
 
     extra = ((GameObject*)obj)->extra;
     scratch = FUN_80017a54(obj);
