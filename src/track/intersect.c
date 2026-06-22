@@ -245,10 +245,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
 }
 
 /* EN v1.0 Size: 256b. Per-iteration byte decrement of two parallel
- * arrays. Target recomputes the full stw/lfd/fsubs conversion in the
- * else-branch instead of reusing the compare's value -> opt_common_subs
- * off reproduces it (76.9 -> 92.6%). Residual: two clrlwi at the int->u8
- * stores the target lacks. */
+ * arrays. */
 #pragma opt_common_subs off
 void timeFn_8006f400(f32 step)
 {
@@ -695,13 +692,7 @@ void normalize(f32* x, f32* y, f32* z)
 extern f32 lbl_803DEE98;
 extern f32 lbl_803DEE9C;
 
-/* EN v1.0 Size: 132b - 74% match. 4x4 identity fill. Remaining diff:
- * target uses 'li r0, N; cmpw r4, r0' per column, mine uses 'cmpwi
- * r4, N' -- MWCC always folds the integer literal into the compare
- * immediate form. The +4 extra li instructions explain the 116 vs
- * 132 byte discrepancy. Not crackable without materializing the
- * comparison indices via a global/volatile, which would break other
- * matches. */
+/* EN v1.0 Size: 132b. 4x4 identity fill. */
 void fn_80070234(f32* mat)
 {
     int i = 0, j;
@@ -4756,7 +4747,7 @@ void doHeatEffect(u8 alpha)
 
 /*
  * Fullscreen 640x480 textured quad with caller-supplied alpha. The alpha
- * is multiplied by lbl_803DEF20 (a 0..255 scale), fctiwz'd to int and
+ * is multiplied by lbl_803DEF20 (a 0..255 scale), converted to int and
  * stamped into byte 3 of the K0 GXColor cache (lbl_803DB6A0). Sets up
  * one TEV stage that K-multiplies the texture by alpha; uses fixed UVs
  * 0..0x80 so the texture maps once across the screen. Used when fading
@@ -5647,11 +5638,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
-/* EN v1.0 Size: 108b - 92% match. f32* base + byte-offset args hoists
- * &lbl_803967C0 into r31 (callee-save) and reuses it across both calls,
- * matching the target. Residual: target loads the LO directly into r31
- * (addi r31,r3,0); MWCC lands it in r4 then copies (mr r31,r4) -- a
- * single within-class allocator choice (#108). */
+/* EN v1.0 Size: 108b. */
 void fn_8007D670(void)
 {
     f32* base = (f32*)&lbl_803967C0;
@@ -5664,8 +5651,7 @@ void fn_8007D670(void)
 
 /*
  * Retail ships a locally-defined empty OSReport that disables debug
- * output. MWCC generates a varargs prologue saving r3-r10 and, if
- * cr1 indicates FP args, f1-f8 -- exactly what the empty body emits.
+ * output.
  */
 void OSReport(const char* msg, ...)
 {

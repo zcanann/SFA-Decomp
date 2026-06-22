@@ -607,8 +607,8 @@ void seqpoint_update(int* obj)
 #pragma peephole off
 void vfpdraghead_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj); /* #57 */
-    extern int randomGetRange(int lo, int hi); /* #57 signed return -> cmpwi */
+    extern void Obj_FreeObject(int* obj);
+    extern int randomGetRange(int lo, int hi);
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 

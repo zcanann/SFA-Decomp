@@ -1208,8 +1208,7 @@ void playerShadowFn_80062a30(int* obj)
     p->flags &= ~0x2020;
 }
 
-/* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte
- * (target uses rlwinm 8,15 + srwi 16). */
+/* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte. */
 #pragma dont_inline on
 u32 fn_80060668(int* obj)
 {
@@ -1220,7 +1219,7 @@ u32 fn_80060668(int* obj)
 #pragma dont_inline reset
 
 /* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
- * two more bytes. r3 stays at 0 through the whole sequence. */
+ * two more bytes. */
 extern s16 lbl_803DCEF6;
 extern s16 lbl_803DCEFA;
 extern s8 lbl_803DCEEA;
@@ -1239,8 +1238,7 @@ void fn_80062894(void)
 }
 
 /* fn_80069968 -- read s16 at gTrackBlockDescriptors[idx*0x18 + 4] into *out1, and
- * the sbss u32 gTrackTriangleBuffer into *out2. Asm form locks the lis/addi
- * pair so MWCC doesn't route the table base through r0. */
+ * the sbss u32 gTrackTriangleBuffer into *out2. */
 #pragma dont_inline on
 void fn_80069968(s32* out1, u32* out2)
 {

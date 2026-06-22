@@ -195,7 +195,6 @@ void OSInit(void)
         - loading debug info and setting up heap bounds largely happen here
         - a lot of OS reporting also gets controlled here
     */
-    // pretty sure this is the min(/max) amount of pointers etc for the stack to match
     BI2Debug *DebugInfo;
     void *debugArenaLo;
     u32 inputConsoleType;
@@ -286,7 +285,6 @@ void OSInit(void)
         OSReport("Kernel built : %s %s\n", "Jun  5 2002", "02:09:12");
         OSReport("Console Type : ");
 
-        // this is a function in the same file, but it doesn't seem to match
         // inputConsoleType = OSGetConsoleType();
 
         // inputConsoleType = (BootInfo == NULL || (inputConsoleType = BootInfo->consoleType) == 0) ?

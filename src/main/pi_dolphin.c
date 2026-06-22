@@ -7948,9 +7948,7 @@ extern u8 lbl_8036F880[];
 #define ZGB16() (ZROT8(src[0]) | src[1] << (8 - pos) | src[2] << (0x10 - pos))
 #define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
 
-/* NOT MWCC: retail zlbDecompress is a foreign GCC (SN ProDG family) object
-   (mflr-first prologue, stmw, andi. masks, mcrxr/addme. loops). 42.5% is the
-   MWCC cap; do not recipe-grind. Evidence: task #19 metadata. */
+/* zlbDecompress is a foreign-compiler (GCC / SN ProDG family) object, not MWCC. */
 int zlbDecompress(void* srcv, int size, int dstv, void* outp)
 {
     u8* src;

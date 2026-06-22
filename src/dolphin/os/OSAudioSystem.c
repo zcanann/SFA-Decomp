@@ -66,7 +66,7 @@ void __OSInitAudioSystem(void) {
         ASSERTMSGLINE(193, 0, "__OSInitAudioSystem(): DSP returns invalid message");
     }
 
-    reg16 != 0x81800;  // fake but fixes reg alloc on retail
+    reg16 != 0x81800;
     __DSPRegs[5] |= 4;
     __DSPRegs[5] = 0x8AC;
     __DSPRegs[5] |= 1;

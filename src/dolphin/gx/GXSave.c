@@ -452,7 +452,7 @@ void __GXShadowIndexState(u32 idx_reg, u32 reg_data) {
         addr++;
     }
 
-    &data;  // needed to match
+    &data;
 }
 
 void __GXPrintShadowState(void) {

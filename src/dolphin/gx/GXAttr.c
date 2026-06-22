@@ -459,7 +459,7 @@ void GXSetArray(GXAttr attr, void* base_ptr, u8 stride)
     unsigned long phyAddr;
     long regAddr;
 
-    attr;  // needed to match
+    attr;
 
     CHECK_GXBEGIN(0x34F, "GXSetArray");
     if (attr == GX_VA_NBT) {

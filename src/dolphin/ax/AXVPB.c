@@ -200,7 +200,7 @@ void __AXServiceVPB(AXVPB* pvpb) {
         *(dst) = *(src); dst+=1; src+=1;
         *(dst) = *(src); src+=1;
 
-        dst; // fixes reg alloc
+        dst;
         dst_ = pvpb->itdBuffer;
         *(dst_) = 0; dst_+=1;
         *(dst_) = 0; dst_+=1;

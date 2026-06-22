@@ -120,7 +120,6 @@ s32 THPVideoDecode(void *file, void *tileY, void *tileU, void *tileV, void *work
                 all_done = TRUE;
             }
             else if (status == 216) {
-                // empty but required for match
             }
             else {
                 goto _err_unsupported_marker;

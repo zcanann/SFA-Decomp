@@ -483,7 +483,7 @@ u32 GXDecompressZ16(u32 z16, GXZFmt16 zfmt) {
     s32 exp;
     s32 shift;
 
-    cb1; cb1; cb1; z16; z16; z16;  // needed to match
+    cb1; cb1; cb1; z16; z16; z16;
 
     switch (zfmt) {
     case GX_ZC_LINEAR:

@@ -409,8 +409,6 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     mtx[15] = lbl_803DE7C4;
 }
 
-/* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
-   and fresh-web restructures -- recipe #82 named-local cap. */
 #pragma fp_contract on
 void mtx44_mult(f32* a, f32* b, f32* out)
 {
