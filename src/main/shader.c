@@ -2218,6 +2218,7 @@ extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
 extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 
+#pragma opt_propagation off
 void mapLoadUnloadObjects(int flag)
 {
     char* base;
@@ -2493,6 +2494,7 @@ void mapLoadUnloadObjects(int flag)
         }
     }
 }
+#pragma opt_propagation reset
 
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
