@@ -59,7 +59,7 @@ extern f32 lbl_803E82CC;
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
 extern int *gPlayerInterface;
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
+int fn_802BC3F0(int obj, int state, ObjAnimUpdateState *animUpdate);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
@@ -130,41 +130,41 @@ void dim2prisonmammoth_initialise(void)
 }
 
 #pragma peephole off
-int dim2prisonmammoth_stateHandler03(int obj, int p2)
+int dim2prisonmammoth_stateHandler03(int obj, int state)
 {
     f32 fz = lbl_803E82C0;
-    ((BaddieState*)p2)->animSpeedC = fz;
-    ((BaddieState*)p2)->animSpeedB = fz;
-    ((BaddieState*)p2)->animSpeedA = fz;
+    ((BaddieState*)state)->animSpeedC = fz;
+    ((BaddieState*)state)->animSpeedB = fz;
+    ((BaddieState*)state)->animSpeedA = fz;
     ((GameObject*)obj)->anim.velocityX = fz;
     ((GameObject*)obj)->anim.velocityY = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
-    *(int*)((char*)p2 + 0) |= 0x200000;
-    if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
+    *(int*)((char*)state + 0) |= 0x200000;
+    if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         int k = randomGetRange(0, 1);
-        ((BaddieState*)p2)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
+        ((BaddieState*)state)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
         ObjAnim_SetCurrentMove(obj, (&gPrisonMammothMoveIdTable)[k], lbl_803E82C0, 0);
     }
-    if (*(s8*)&((BaddieState*)p2)->moveDone != 0)
+    if (*(s8*)&((BaddieState*)state)->moveDone != 0)
     {
         return -1;
     }
     return 0;
 }
 
-int dim2prisonmammoth_stateHandler02(int obj, int p2)
+int dim2prisonmammoth_stateHandler02(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState*)p2)->animSpeedC = fz;
-    ((BaddieState*)p2)->animSpeedB = fz;
-    ((BaddieState*)p2)->animSpeedA = fz;
+    ((BaddieState*)state)->animSpeedC = fz;
+    ((BaddieState*)state)->animSpeedB = fz;
+    ((BaddieState*)state)->animSpeedA = fz;
     ((GameObject*)obj)->anim.velocityX = fz;
     ((GameObject*)obj)->anim.velocityY = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
-    *(int*)((char*)p2 + 0) |= 0x200000;
-    ((BaddieState*)p2)->moveSpeed = gPrisonMammothMoveSpeed;
+    *(int*)((char*)state + 0) |= 0x200000;
+    ((BaddieState*)state)->moveSpeed = gPrisonMammothMoveSpeed;
     if (((GameObject*)obj)->anim.currentMove != 0)
     {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
@@ -179,20 +179,20 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
     return 0;
 }
 
-int dim2prisonmammoth_stateHandler01(int obj, int p2)
+int dim2prisonmammoth_stateHandler01(int obj, int state)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState*)p2)->animSpeedC = fz;
-    ((BaddieState*)p2)->animSpeedB = fz;
-    ((BaddieState*)p2)->animSpeedA = fz;
+    ((BaddieState*)state)->animSpeedC = fz;
+    ((BaddieState*)state)->animSpeedB = fz;
+    ((BaddieState*)state)->animSpeedA = fz;
     ((GameObject*)obj)->anim.velocityX = fz;
     ((GameObject*)obj)->anim.velocityY = fz;
     ((GameObject*)obj)->anim.velocityZ = fz;
-    *(int*)((char*)p2 + 0) |= 0x200000;
-    if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
+    *(int*)((char*)state + 0) |= 0x200000;
+    if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
-        ((BaddieState*)p2)->moveSpeed = gPrisonMammothMoveSpeed;
+        ((BaddieState*)state)->moveSpeed = gPrisonMammothMoveSpeed;
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
@@ -211,10 +211,10 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
     return 0;
 }
 
-void dim2prisonmammoth_init(int obj, int p2)
+void dim2prisonmammoth_init(int obj, int params)
 {
     int inner;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.modelState != NULL)
@@ -227,7 +227,7 @@ void dim2prisonmammoth_init(int obj, int p2)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate)
+int fn_802BC3F0(int obj, int state, ObjAnimUpdateState* animUpdate)
 {
     struct
     {
