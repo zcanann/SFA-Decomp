@@ -96,10 +96,10 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     int blockLayer;
     int coordOffset;
     int triangleOffset;
-    VertexS16* vtx;
-    int triangle;
     int edge;
     int edgeOffset;
+    VertexS16* vtx;
+    int triangle;
     int blockIndex;
 
     triangleOffset = 0;
