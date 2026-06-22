@@ -2783,8 +2783,11 @@ void Tricky_hitDetect(int obj)
     }
     if ((((TrickyState*)state)->statusFlags >> 5 & 1) != 0u)
     {
-        objects = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
-        i = 0;
+        {
+            int* t = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
+            i = 0;
+            objects = t;
+        }
         for (; i < count[0]; i++)
         {
             height = objFn_801948c0(*objects,TRICKY_HEIGHT_TRACK_MODEL_SLOT);
