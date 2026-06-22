@@ -444,9 +444,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `cmplwi`); a call/vtable result cast to int then null-checked → `(u32)x != 0`.
 125. **Loop-tail guard polarity** — spell the positive continue guard (`if (i < 8) continue;`) to
     get `cmpwi 8; blt` not `cmpwi 7; ble`.
-126. **Param-TYPE pool classing: a POINTER param colors into the COPY pool (high); an INTEGRAL param
-    into the PARAM pool (low)** — independent of use spelling. Read target's prologue to RECOVER the
-    original param type (per-fn cast noise on an int obj is then faithful). `#pragma
+126. **Param-TYPE pool classing — TEST it per-fn, don't assume the type reclasses.** Probe-confirmed
+    (validator + lead): in isolation a POINTER param classes IDENTICALLY to an INTEGRAL param — both
+    sit in the PARAM pool by declaration order (`f(void*,int)`, `f(int,void*)`, `f(int,int)`,
+    `f(void*,void*)` all give `mr r30,r3; mr r31,r4`; a ptr param even sits BELOW a real call-result
+    copy). So param type does NOT reclass on its own in simple/low-pressure fns. In HIGH-PRESSURE fns
+    with cross-web competition the type CAN shift the classing (kind-1, emergent — not reproducible in a
+    toy TU); use the retype as a 1-build TEST (below) to find out per-fn. Read target's prologue to
+    RECOVER the original param type (per-fn cast noise on an int obj is then faithful). `#pragma
     optimization_level 2` can land the typed-pointer form even in call-bearing fns.
     DISCRIMINATOR (use the retype as a 1-build TEST to split ★#147 kind-1 vs kind-2): retype the
     suspect `u8*` param to the family struct pointer and rebuild. If the params MOVE up into the copy
