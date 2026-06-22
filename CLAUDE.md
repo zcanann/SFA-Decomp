@@ -36,6 +36,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   minimal repro so far and the next ingredient to add," never "it's emergent under pressure." Every
   MWCC behavior is deterministic; the allocator runs a concrete algorithm. If you don't know the rule,
   that's a thing to reverse-engineer, not a label to apply.
+- **An "impossibility" scan over OUR objs is self-confirming — prove UNachievability only against RETAIL.**
+  Scanning `build/GSAE01/src/**/*.o` (our compiled source) for a shape and finding zero hits proves
+  "our current source doesn't produce it," NOT "it's impossible" — our source lacking the construct is
+  the BUG, not evidence. To claim a shape is unachievable you'd have to find it absent from the RETAIL/
+  matched objs — but if retail HAS it, it's achievable BY DEFINITION (retail used this exact compiler),
+  so the only honest conclusion is "source form not found yet." (Cost a false "O2-impossibility" once:
+  the src-obj scan folded because our source lacked retail's construct; retail's own O2 fn kept it.)
 
 ## Method (do this every time)
 - **Read the WHOLE target fn before diffing.** Diffs show WHERE, not WHY, and bias you to a false
