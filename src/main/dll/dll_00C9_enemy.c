@@ -548,7 +548,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     if ((((((TrickyState*)state)->controlFlags & 0x20) != 0) && ((((TrickyState*)state)->controlFlags & 0x400000) == 0))
         && (((((TrickyState*)state)->flags2DC & 0x1800) == 0) && ((((TrickyState*)state)->flags323 & 4) == 0)))
     {
-        vy = -(((TrickyState*)state)->unk300 * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        vy = -(((TrickyState*)state)->gravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
     }
     v = ((GameObject*)obj)->anim.velocityX;
     ((GameObject*)obj)->anim.velocityX = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
@@ -643,7 +643,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     else if ((((TrickyState*)state)->controlFlags & 0x20) != 0)
     {
         f32 newY = (((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY)
-            - lbl_803E25D4 * (((TrickyState*)state)->unk300 * (timeDelta * timeDelta));
+            - lbl_803E25D4 * (((TrickyState*)state)->gravity * (timeDelta * timeDelta));
         if ((((TrickyState*)state)->flags2F1 & 0x80) == 0)
         {
             objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, newY - ((GameObject*)obj)->anim.localPosY,

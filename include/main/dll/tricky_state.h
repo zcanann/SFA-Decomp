@@ -101,7 +101,7 @@ typedef struct TrickyState {
     u8 pad2F6[0x2F8 - 0x2F6];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
-    f32 unk300;
+    f32 gravity; /* fall acceleration: velocityY -= gravity*dt, posY -= K*gravity*dt^2 */
     f32 base;
     f32 animPlaySpeed;
     f32 currentMoveProgress;
