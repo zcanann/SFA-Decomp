@@ -2647,6 +2647,7 @@ void expgfx_resetAllPools(void)
     ExpgfxSlot* slot;
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTableEntry* tableEntry;
+    u16* refCountPtr;
     u32* slotPoolBases;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
@@ -2685,11 +2686,12 @@ void expgfx_resetAllPools(void)
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                tableEntry = &runtime->expTab[Expgfx_GetSlotTableIndex(slot)];
-                if (tableEntry->refCount != 0)
+                tableEntry = (ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
+                refCountPtr = &tableEntry->refCount;
+                if (*refCountPtr != 0)
                 {
-                    tableEntry->refCount--;
-                    if (tableEntry->refCount == 0)
+                    (*refCountPtr)--;
+                    if (*refCountPtr == 0)
                     {
                         tableEntry->resource = 0;
                         tableEntry->sourceId = 0;
