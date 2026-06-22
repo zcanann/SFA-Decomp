@@ -727,6 +727,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     chained copy folds to `li` at O4 yet retail (STRUCTURALLY IDENTICAL, same instr count) has the `mr`
     (Minimap_release): NOT a pressure cap (identical structure = identical pressure), it's an unfound
     O4-surviving-copy source form. The chain reaches counter+LOCAL value-0; (c)/(d) need forms still to find.
+    ★UNIFICATION (validator): the whole value-0 family is really TWO cases. COUNTER-TIED (the stored-0 rides
+    an incremented counter/accumulator) = SOLVED (paths 1/2 + the (c) COPY half). STANDALONE-CONST-KEPT (a
+    const-0 NOT tied to any live counter, that retail keeps in a SAVED reg and reuses, vs ours re-materializing
+    `li r0`) = the ONE remaining open nut — and it UNIFIES (c)-field-store (`entryCount=0`), (d) Minimap
+    (`null=NULL`), AND #126 (`pass=0` kept in r29). All three are "make MWCC keep a standalone const-0 in a
+    saved-reg web instead of re-materializing `li` per use." Crack that one and all three close. FRESH-EYES
+    ORACLE: scan matched .o's for `li rSAVED,0` (saved reg) kept across calls + reused, NOT counter-tied; read
+    its source. (The chained+opt_level lever is the counter-tied sibling; this is its standalone counterpart.)
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
@@ -1102,9 +1110,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     pooling = OWNER/BUILD-domain (per #151, retail's bias = named `lbl_803DF308` front-end const → f25), or
     (b) the full manual union+fsub idiom (+1 instr). A cleaner source route for the hoisted case is
     ASSUMED to exist and is the live target; the BUILD-SIDE shared-.sdata2-bias pooling (owner-domain) is one
-    known path — FLAG it like the #151 flips. OPEN HOOK: a C construct that emits a SHARED named bias WITHOUT
-    the extra instr (e.g. an inlined shared-conversion helper that pools the bias once) is the source lever —
-    the in-repo oracle (a 100%-matched fn that references a named bias from C) is the next probe to run.
+    known path — FLAG it like the #151 flips. ORACLE PROBE RUN (waterfx, definitive): grepped EVERY
+    build/GSAE01/src/**/*.o for a `lfd lbl_` bias paired with `lis,17200` → ZERO hits; every conversion bias
+    our build emits from C is a LOCAL `@NNN`. So NO current C form names the bias — the named-front-end-bias
+    path is BUILD-DOMAIN (shared `.sdata2` pooling, owner-side), not a source lever today. The remaining SOURCE
+    targets (both live): (1) the @NNN CREATION-ORDER sub-lever for the HOISTED-CONST variant — when the
+    surrounding consts hoist to saved regs (loop has calls), the @NNN bias colors LAST and the #156-reload
+    lever can't reach it; find the construct that orders the hoisted @NNN bias into the retail reg (staffFn_80170380);
+    (2) UNTRIED long-shot: an inlined shared-conversion helper that pools the bias once (might name it without
+    the extra instr — no current obj has it, so it'd be a new construct). Don't re-run the named-bias grep — it's
+    answered (absent); chase the hoisted-const creation-order sub-lever.
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
     The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
     before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
