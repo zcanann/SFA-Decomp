@@ -85,6 +85,7 @@ u8 wallanimator_modelMtxFn(int* obj)
     return (u8)((WallanimatorPlacement*)(((GameObject*)obj)->anim.placementData))->unk1C;
 }
 
+#pragma scheduling on
 f32 wallanimator_setScale(int obj, int target)
 {
     struct
@@ -157,6 +158,7 @@ f32 wallanimator_setScale(int obj, int target)
     return scale;
 }
 
+#pragma scheduling reset
 int wallanimator_getExtraSize(void)
 {
     return sizeof(WallanimatorState);
