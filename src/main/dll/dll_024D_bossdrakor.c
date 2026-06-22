@@ -84,6 +84,7 @@ int bossdrakor_getExtraSize(void)
 
 #pragma opt_common_subs off
 
+#pragma opt_propagation off
 void bossdrakor_update(int obj)
 {
     int state;
@@ -94,7 +95,7 @@ void bossdrakor_update(int obj)
     int i;
     int moveId;
     s8* p;
-    u16* uvec;
+    s16* uvec;
     int* tbl;
     int shakeX;
     int shakeY;
@@ -319,7 +320,7 @@ void bossdrakor_update(int obj)
         i = 0;
         do
         {
-            uvec = (u16*)objModelGetVecFn_800395d8(obj, tbl[0]);
+            uvec = (s16*)objModelGetVecFn_800395d8(obj, tbl[0]);
             if (uvec != NULL)
             {
                 uvec[1] = shakeY;
@@ -369,6 +370,7 @@ void bossdrakor_update(int obj)
     }
 }
 
+#pragma opt_propagation reset
 void bossdrakor_updateHeadTracking(int obj, int state)
 {
     s16* neck;
@@ -416,8 +418,9 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                     step2 = (d < -lbl_803DC198 * framesThisStep)
                                 ? -lbl_803DC198 * framesThisStep
                                 : ((d > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : d);
-                    vecF[1] += (s16)step2;
-                    vec10[1] -= (s16)step2;
+                    d = (s16)step2;
+                    vecF[1] += d;
+                    vec10[1] -= d;
                     if (timerCountDown(&((BossDrakorState*)state)->unk18) != 0)
                     {
                         storeZeroToFloatParam(&((BossDrakorState*)state)->unk18);
