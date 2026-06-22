@@ -378,7 +378,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
  *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
 #pragma peephole off
-int fn_80138920(u8* obj, int arg1, int arg2)
+int fn_80138920(u8* obj, int sfxId, int vol)
 {
     u8* b = ((GameObject*)obj)->extra;
     s16 v;
@@ -392,7 +392,7 @@ int fn_80138920(u8* obj, int arg1, int arg2)
         }
     }
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
-    objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
+    objAudioFn_800393f8(obj, b + 936, sfxId, vol, -1, 0);
     return 1;
 }
 
@@ -823,7 +823,7 @@ void objAnimFreeChildren(int a, int b, void** c)
 }
 
 #pragma opt_strength_reduction off
-void fn_80137A00(int p1, int p2, u8* grid, int p4)
+void fn_80137A00(int x, int y, u8* grid, int unused)
 {
     int i;
     int bit;
@@ -839,15 +839,15 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
     if (enableDebugText != 0)
     {
         i = 0;
-        row1 = (p2 + 1) * 0x280;
-        row0 = p2 * 0x280;
+        row1 = (y + 1) * 0x280;
+        row0 = y * 0x280;
         for (; i < 5; i++)
         {
             bit = 0;
-            c0 = p1 + row0;
+            c0 = x + row0;
             a0 = c0;
             a1 = c0 + 1;
-            c1 = p1 + row1;
+            c1 = x + row1;
             a2 = c1;
             a3 = c1 + 1;
             for (; bit < 8; bit++)
@@ -881,8 +881,8 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     int yy;
     u16* saved;
     int x0 = x;
-    u8* p1;
-    u8* p2;
+    u8* ch;
+    u8* scan;
     u8* glyph;
     va_list args;
     char buf[272];
@@ -894,11 +894,11 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
         va_start(args, fmt);
         vsprintf(buf, fmt, args);
         saved = debugDrawFrameBuffer;
-        p1 = (u8*)&buf[-1];
-        p2 = (u8*)buf - 1;
-        while (p1++, *++p2 != 0)
+        ch = (u8*)&buf[-1];
+        scan = (u8*)buf - 1;
+        while (ch++, *++scan != 0)
         {
-            switch (*p1)
+            switch (*ch)
             {
             case 0xa:
                 yy += 0xc;
@@ -911,14 +911,14 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
                 xx += 8;
                 break;
             default:
-                if (*p1 >= 0x61 && *p1 <= 0x7a)
+                if (*ch >= 0x61 && *ch <= 0x7a)
                 {
-                    *p1 -= 0x20;
+                    *ch -= 0x20;
                 }
-                if (*p1 >= 0x21 && *p1 <= 0x5a)
+                if (*ch >= 0x21 && *ch <= 0x5a)
                 {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    fn_80137A00(xx, yy, glyph = gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
+                    fn_80137A00(xx, yy, glyph = gDebugFontGlyphs + (*ch - 0x21) * 5, -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
                     fn_80137A00(xx, yy, glyph, -1);
                     xx += 0xf;

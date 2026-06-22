@@ -74,7 +74,7 @@ typedef struct
     u16 padA;  /* 0xa */
 } IdleRow;
 
-int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
+int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
 {
     u8* slot = lbl_8031F16C;
     u8* animRows;
@@ -97,7 +97,7 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     }
     if (msgId == 0xe)
     {
-        p6 = p6 * 0xa;
+        damage = damage * 0xa;
     }
     if (((GameObject*)obj)->anim.currentMove == animRows[0x128])
     {
@@ -113,8 +113,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
     {
         if (msgId != 0x11)
         {
-            if (msgId != 0x1a && *(s16*)((char*)p3 + 0x46) != 0x6d &&
-                *(s16*)((char*)p3 + 0x46) != 0x754)
+            if (msgId != 0x1a && *(s16*)((char*)attacker + 0x46) != 0x6d &&
+                *(s16*)((char*)attacker + 0x46) != 0x754)
             {
                 Sfx_PlayFromObject(obj, 0x255);
                 Sfx_PlayFromObject(obj, 0x16);
@@ -203,12 +203,12 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
         ((BaddieState*)state)->reactionFlags |= 8;
-        if (((GameObject*)p3)->anim.classId == 0x1c)
+        if (((GameObject*)attacker)->anim.classId == 0x1c)
         {
             return 0;
         }
         {
-            int* other = *(int**)((char*)p3 + 0xc4);
+            int* other = *(int**)((char*)attacker + 0xc4);
             if (other != 0 && ((GameObject*)other)->anim.classId == 0x1c)
             {
                 return 0;
@@ -216,19 +216,19 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
         }
         if (state[0x2f1] & 0x10)
         {
-            p6 = 0x14;
+            damage = 0x14;
         }
         else
         {
             state[0x2f5] = 0;
         }
-        if (p6 > ((BaddieState*)state)->hitCounter)
+        if (damage > ((BaddieState*)state)->hitCounter)
         {
             ((BaddieState*)state)->hitCounter = 0;
         }
         else
         {
-            ((BaddieState*)state)->hitCounter = ((BaddieState*)state)->hitCounter - p6;
+            ((BaddieState*)state)->hitCounter = ((BaddieState*)state)->hitCounter - damage;
         }
         if (((BaddieState*)state)->hitCounter == 0)
         {
@@ -238,8 +238,8 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
         {
             Sfx_PlayFromObject(obj, 0x14);
         }
-        if (msgId != 0x1a && msgId != 0x1f && *(s16*)((char*)p3 + 0x46) != 0x6d &&
-            *(s16*)((char*)p3 + 0x46) != 0x754)
+        if (msgId != 0x1a && msgId != 0x1f && *(s16*)((char*)attacker + 0x46) != 0x6d &&
+            *(s16*)((char*)attacker + 0x46) != 0x754)
         {
             Sfx_PlayFromObject(obj, 0x22);
         }
@@ -250,116 +250,116 @@ int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 /* EN v1.0 0x80150EDC  size: 870b  sidekick-toy anim-chain advance: timer-driven
  * 16-stride SeqRow16 chain + curve-follow speed shaping, called from the
  * fn_80150910 update path. */
-void fn_80150EDC(void* p1, void* p2)
+void fn_80150EDC(void* obj, void* state)
 {
     u8* table = lbl_8031DD30;
-    u8 idx = ((BaddieState*)p2)->inWhirlpoolGroup;
+    u8 idx = ((BaddieState*)state)->inWhirlpoolGroup;
     void* animCtrl = *(void**)(table + idx * 0x28 + 0x143c);
     void* idleSrc = *(void**)(table + idx * 0x28 + 0x1454);
     u8* seqRows = *(u8**)(table + idx * 0x28 + 0x1458);
 
-    if (idx == 5 && (((BaddieState*)p2)->controlFlags & 0x800000) != 0)
+    if (idx == 5 && (((BaddieState*)state)->controlFlags & 0x800000) != 0)
     {
         GameBit_Set(0x1c8, 1);
     }
 
-    if (((BaddieState*)p2)->trackedObj != NULL &&
-        ((GameObject*)((BaddieState*)p2)->trackedObj)->anim.classId == 1)
+    if (((BaddieState*)state)->trackedObj != NULL &&
+        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
         fn_8001FEA8();
     }
 
-    fn_8015039C(p1, p2);
+    fn_8015039C(obj, state);
 
     {
         f32 zero = lbl_803E2740;
-        if (*(f32*)((u8*)p2 + 0x328) != zero &&
-            *(u16*)((u8*)p2 + 0x338) != 0)
+        if (*(f32*)((u8*)state + 0x328) != zero &&
+            *(u16*)((u8*)state + 0x338) != 0)
         {
-            *(f32*)((u8*)p2 + 0x328) = *(f32*)((u8*)p2 + 0x328) - timeDelta;
-            if (*(f32*)((u8*)p2 + 0x328) <= zero)
+            *(f32*)((u8*)state + 0x328) = *(f32*)((u8*)state + 0x328) - timeDelta;
+            if (*(f32*)((u8*)state + 0x328) <= zero)
             {
-                *(f32*)((u8*)p2 + 0x328) = zero;
-                ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
+                *(f32*)((u8*)state + 0x328) = zero;
+                ((BaddieState*)state)->controlFlags |= 0x40000000LL;
                 {
                     SeqRow16* seqRow16 = (SeqRow16*)seqRows;
-                    *(u16*)((u8*)p2 + 0x338) =
-                        seqRow16[*(u16*)((u8*)p2 + 0x338)].alt;
+                    *(u16*)((u8*)state + 0x338) =
+                        seqRow16[*(u16*)((u8*)state + 0x338)].alt;
                 }
             }
         }
     }
 
-    if ((u8)fn_8014FFB4(p1, p2, 0) != 0)
+    if ((u8)fn_8014FFB4(obj, state, 0) != 0)
     {
         return;
     }
 
-    if ((((BaddieState*)p2)->controlFlags & 0x20000000) != 0 &&
-        (*(u32*)((u8*)p2 + 0x2e0) & 0x20000000) == 0)
+    if ((((BaddieState*)state)->controlFlags & 0x20000000) != 0 &&
+        (*(u32*)((u8*)state + 0x2e0) & 0x20000000) == 0)
     {
-        Sfx_PlayFromObject(p1, SFXdn_boar5_c);
-        ((BaddieState*)p2)->controlFlags |= 0x40000000LL;
+        Sfx_PlayFromObject(obj, SFXdn_boar5_c);
+        ((BaddieState*)state)->controlFlags |= 0x40000000LL;
     }
 
-    if ((((BaddieState*)p2)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         SeqRow16* seqRow16 = (SeqRow16*)seqRows;
-        if (*(u16*)((u8*)p2 + 0x338) != 0)
+        if (*(u16*)((u8*)state + 0x338) != 0)
         {
             SeqRow16* row;
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            *(u8*)((u8*)p2 + 0x2f2) = row->extra;
-            row = &seqRow16[*(u16*)((u8*)p2 + 0x338)];
-            Baddie_SetMove(p1, p2, row->anim,
-                        *(f32*)(seqRows + (*(u16*)((u8*)p2 + 0x338) << 4)), 0,
+            row = &seqRow16[*(u16*)((u8*)state + 0x338)];
+            *(u8*)((u8*)state + 0x2f2) = row->extra;
+            row = &seqRow16[*(u16*)((u8*)state + 0x338)];
+            Baddie_SetMove(obj, state, row->anim,
+                        *(f32*)(seqRows + (*(u16*)((u8*)state + 0x338) << 4)), 0,
                         (u8)row->flags);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)p1,
-                *(f32*)(table + (seqRow16[*(u16*)((u8*)p2 + 0x338)].anim << 2)));
-            *(u16*)((u8*)p2 + 0x338) = seqRow16[*(u16*)((u8*)p2 + 0x338)].next;
+                (ObjAnimComponent*)obj,
+                *(f32*)(table + (seqRow16[*(u16*)((u8*)state + 0x338)].anim << 2)));
+            *(u16*)((u8*)state + 0x338) = seqRow16[*(u16*)((u8*)state + 0x338)].next;
         }
         else
         {
             IdleRow* idleRows = (IdleRow*)idleSrc;
             u8 v8;
-            *(u8*)((u8*)p2 + 0x2f2) = 0;
-            *(u8*)((u8*)p2 + 0x2f3) = 0;
-            *(u8*)((u8*)p2 + 0x2f4) = 0;
-            v8 = idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim;
+            *(u8*)((u8*)state + 0x2f2) = 0;
+            *(u8*)((u8*)state + 0x2f3) = 0;
+            *(u8*)((u8*)state + 0x2f4) = 0;
+            v8 = idleRows[*(u16*)((u8*)state + 0x2a0)].anim;
             if (v8 == 0)
             {
-                *(u8*)((u8*)p2 + 0x323) = 3;
-                ObjAnim_SetCurrentMove((int)p1, *(u8*)((u8*)animCtrl + 0x2c), lbl_803E2740, 0);
+                *(u8*)((u8*)state + 0x323) = 3;
+                ObjAnim_SetCurrentMove((int)obj, *(u8*)((u8*)animCtrl + 0x2c), lbl_803E2740, 0);
             }
             else
             {
-                Baddie_SetMove(p1, p2, v8,
-                            idleRows[*(u16*)((u8*)p2 + 0x2a0)].speed, 0, 0xb);
+                Baddie_SetMove(obj, state, v8,
+                            idleRows[*(u16*)((u8*)state + 0x2a0)].speed, 0, 0xb);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)p1,
-                    *(f32*)(table + (idleRows[*(u16*)((u8*)p2 + 0x2a0)].anim << 2)));
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(table + (idleRows[*(u16*)((u8*)state + 0x2a0)].anim << 2)));
             }
         }
     }
 
-    if ((s32)((GameObject*)p1)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
+    if ((s32)((GameObject*)obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
     {
-        ((BaddieState*)p2)->unk308 =
-            ((BaddieState*)p2)->pathStep *
-            (((f32)(u32)*(u16*)((u8*)p2 + 0x2a4) /
-                    ((BaddieState*)p2)->unk2A8 / lbl_803E274C) *
-                ((f32*)(table + 0x1538))[((BaddieState*)p2)->inWhirlpoolGroup]);
-        if (((BaddieState*)p2)->unk308 < lbl_803E27A0)
+        ((BaddieState*)state)->unk308 =
+            ((BaddieState*)state)->pathStep *
+            (((f32)(u32)*(u16*)((u8*)state + 0x2a4) /
+                    ((BaddieState*)state)->unk2A8 / lbl_803E274C) *
+                ((f32*)(table + 0x1538))[((BaddieState*)state)->inWhirlpoolGroup]);
+        if (((BaddieState*)state)->unk308 < lbl_803E27A0)
         {
-            ((BaddieState*)p2)->unk308 = *(f32*)&lbl_803E27A0;
+            ((BaddieState*)state)->unk308 = *(f32*)&lbl_803E27A0;
         }
     }
 
-    if ((*(u8*)((u8*)p2 + 0x323) & 8) == 0)
+    if ((*(u8*)((u8*)state + 0x323) & 8) == 0)
     {
-        void* p_29c = ((BaddieState*)p2)->trackedObj;
-        fn_8014CF7C(p1, p2, *(f32*)((u8*)p_29c + 0xc), *(f32*)((u8*)p_29c + 0x14), 0xf, 0);
+        void* p_29c = ((BaddieState*)state)->trackedObj;
+        fn_8014CF7C(obj, state, *(f32*)((u8*)p_29c + 0xc), *(f32*)((u8*)p_29c + 0x14), 0xf, 0);
     }
 }
 

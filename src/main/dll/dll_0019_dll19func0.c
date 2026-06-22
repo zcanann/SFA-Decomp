@@ -589,7 +589,7 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
 }
 
 #pragma opt_loop_invariants off
-int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
+int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 {
     extern f32 lbl_803E1C68; /* #57 */
     extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
@@ -605,7 +605,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     int* list;
     int obj;
     int found = 0;
-    int negP4;
+    int negHalfAngle;
     int newangle;
     int delta;
     u8 traced;
@@ -613,25 +613,25 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     objs[0] = Obj_GetPlayerObject();
     objs[1] = 0;
     list = objs;
-    negP4 = -p4;
+    negHalfAngle = -halfAngle;
 
     while ((void*)(obj = *list) != NULL)
     {
-        dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)p1)->anim.worldPosX;
-        dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)p1)->anim.worldPosY;
-        dp[2] = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)p1)->anim.worldPosZ;
+        dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)self)->anim.worldPosX;
+        dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)self)->anim.worldPosY;
+        dp[2] = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)self)->anim.worldPosZ;
         if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange)
         {
-            if ((s8)((BaddieState*)p2)->hitPoints != 0)
+            if ((s8)((BaddieState*)state)->hitPoints != 0)
             {
                 if (fn_8029610C(obj) > lbl_803E1C64)
                 {
                     found = 1;
                 }
                 newangle = (u16)getAngle(-dp[0], -dp[2]);
-                if (*(void**)(p1 + 0x30) != NULL)
+                if (*(void**)(self + 0x30) != NULL)
                 {
-                    delta = newangle - (u16)(*(s16*)p1 + *(s16*)(*(int*)&((GameObject*)p1)->anim.parent));
+                    delta = newangle - (u16)(*(s16*)self + *(s16*)(*(int*)&((GameObject*)self)->anim.parent));
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -643,7 +643,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                 }
                 else
                 {
-                    delta = newangle - (u16) * (s16*)p1;
+                    delta = newangle - (u16) * (s16*)self;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -653,7 +653,7 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                         delta += 0xffff;
                     }
                 }
-                if (delta < p4 && delta > negP4)
+                if (delta < halfAngle && delta > negHalfAngle)
                 {
                     found = 1;
                 }
@@ -667,9 +667,9 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                 }
                 else
                 {
-                    gridIn[0] = ((GameObject*)p1)->anim.localPosX;
-                    gridIn[1] = lbl_803E1C68 + ((GameObject*)p1)->anim.localPosY;
-                    gridIn[2] = ((GameObject*)p1)->anim.localPosZ;
+                    gridIn[0] = ((GameObject*)self)->anim.localPosX;
+                    gridIn[1] = lbl_803E1C68 + ((GameObject*)self)->anim.localPosY;
+                    gridIn[2] = ((GameObject*)self)->anim.localPosZ;
                     voxmaps_worldToGrid(gridIn, gridA);
                     gridIn[0] = ((GameObject*)obj)->anim.localPosX;
                     gridIn[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
@@ -678,8 +678,8 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
                     traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((int)p1 + 12, gridIn, lbl_803E1C48, 0, bboxOut,
-                                               (int)p1, 4, -1, 0, 0) != 0)
+                        if (objBboxFn_800640cc((int)self + 12, gridIn, lbl_803E1C48, 0, bboxOut,
+                                               (int)self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
                         }
@@ -701,9 +701,9 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 }
 #pragma opt_loop_invariants reset
 
-int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p8)
+int dll_19_func16(u8* obj, u8* baddieState, int p3, int p4, int* tableA, u8* tableB, s16 substate, u8* hitPosOut)
 {
-    u8* state = *(u8**)(p1 + 184);
+    u8* state = *(u8**)(obj + 184);
     int player = Obj_GetPlayerObject();
     int hit;
     int v28;
@@ -730,13 +730,13 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             if (((Dll19Placement*)state)->oscValue > lbl_803E1C40)
             {
-                int other = *(int*)&((GameObject*)p1)->anim.placementData;
+                int other = *(int*)&((GameObject*)obj)->anim.placementData;
                 ((Dll19Placement*)state)->oscValue = lbl_803E1C2C;
                 ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~0x40;
-                ((BaddieState*)p2)->hitPoints = 0;
-                p1[54] = 0;
-                ((GameObject*)p1)->unkF4 = 1;
-                ((GameObject*)p1)->anim.flags = ((GameObject*)p1)->anim.flags | 0x4000;
+                ((BaddieState*)baddieState)->hitPoints = 0;
+                obj[54] = 0;
+                ((GameObject*)obj)->unkF4 = 1;
+                ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
                 (*gMapEventInterface)->addTime(
                     *(int*)(other + 20),
                     (f32)(s32)(*(s16*)(other + 44) * 60));
@@ -756,23 +756,23 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         }
     }
 
-    if (*(s8*)&((BaddieState*)p2)->hitPoints == 0)
+    if (*(s8*)&((BaddieState*)baddieState)->hitPoints == 0)
     {
         return 0;
     }
-    hit = ObjHits_GetPriorityHitWithPosition(p1, &hitId, &v28, &v24, &posX, &posY, &posZ);
+    hit = ObjHits_GetPriorityHitWithPosition(obj, &hitId, &v28, &v24, &posX, &posY, &posZ);
     *(s8*)(state + 1034) = v28;
     if (hit != 0)
     {
-        if (p8 != NULL)
+        if (hitPosOut != NULL)
         {
-            *(f32*)(p8 + 12) = posX + playerMapOffsetX;
-            *(f32*)(p8 + 16) = posY;
-            *(f32*)(p8 + 20) = posZ + playerMapOffsetZ;
+            *(f32*)(hitPosOut + 12) = posX + playerMapOffsetX;
+            *(f32*)(hitPosOut + 16) = posY;
+            *(f32*)(hitPosOut + 20) = posZ + playerMapOffsetZ;
         }
-        if (p6 != NULL)
+        if (tableB != NULL)
         {
-            int hitVal = ((s8*)p6)[hit - 2];
+            int hitVal = ((s8*)tableB)[hit - 2];
             if (hitVal != -1)
             {
                 v24 = hitVal;
@@ -782,41 +782,41 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
         {
             v24 = 0;
         }
-        *(s8*)&((BaddieState*)p2)->hitPoints = (s8)(((BaddieState*)p2)->hitPoints - v24);
-        if (*(s8*)&((BaddieState*)p2)->hitPoints < 1)
+        *(s8*)&((BaddieState*)baddieState)->hitPoints = (s8)(((BaddieState*)baddieState)->hitPoints - v24);
+        if (*(s8*)&((BaddieState*)baddieState)->hitPoints < 1)
         {
             ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags | 0x20;
             ((Dll19Placement*)state)->oscValue = lbl_803E1C48;
             ((Dll19Placement*)state)->oscVelocity = lbl_803E1C4C;
-            ((BaddieState*)p2)->substate = p7;
-            ((BaddieState*)p2)->hitPoints = 0;
+            ((BaddieState*)baddieState)->substate = substate;
+            ((BaddieState*)baddieState)->hitPoints = 0;
         }
         else
         {
             if (v24 != 0)
             {
-                if (((BaddieState*)p2)->targetObj == NULL)
+                if (((BaddieState*)baddieState)->targetObj == NULL)
                 {
                     if (fn_80295A04(player, 1) != 0)
                     {
-                        ((BaddieState*)p2)->targetObj = (void*)player;
-                        p2[841] = 0;
+                        ((BaddieState*)baddieState)->targetObj = (void*)player;
+                        baddieState[841] = 0;
                     }
                 }
                 ((Dll19Placement*)state)->oscValue = lbl_803E1C48;
                 ((Dll19Placement*)state)->oscVelocity = lbl_803E1C50;
-                if (p5 != NULL)
+                if (tableA != NULL)
                 {
-                    if (p5[hit - 2] != -1)
+                    if (tableA[hit - 2] != -1)
                     {
-                        (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(p1, p2);
-                        ((BaddieState*)p2)->substate = p7;
+                        (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(obj, baddieState);
+                        ((BaddieState*)baddieState)->substate = substate;
                     }
                 }
-                *(s8*)(p2 + 847) = hit;
+                *(s8*)(baddieState + 847) = hit;
             }
-            Sfx_StopObjectChannel((int*)p1, 16);
-            ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
+            Sfx_StopObjectChannel((int*)obj, 16);
+            ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
         }
     }
     return hit;

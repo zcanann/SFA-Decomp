@@ -376,7 +376,7 @@ void fn_8023A268(int p1, int p2, int p3)
     }
 }
 
-void fn_80239FCC(int p1, int p2)
+void fn_80239FCC(int obj, int state)
 {
     f32 ang;
     int yaw;
@@ -393,15 +393,15 @@ void fn_80239FCC(int p1, int p2)
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
         ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
-        *(f32*)(newObj + 8) = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)p2 + 0xc);
-        ((GameObject*)newObj)->anim.localPosX = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)p2 + 0x10);
-        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8) - lbl_803E74A8;
-        *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
+        *(f32*)(newObj + 8) = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
+        ((GameObject*)newObj)->anim.localPosX = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
+        ((GameObject*)newObj)->anim.localPosY = *(f32*)(state + 0xc8) - lbl_803E74A8;
+        *(u8*)(newObj + 0x1a) = (*(s16*)obj + yaw) >> 8;
         *(u8*)(newObj + 0x19) = lbl_803DDDC0;
         *(u8*)(newObj + 0x18) = 0;
         *(u8*)(newObj + 4) = 1;
         *(u8*)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((u32)proj != 0)
         {
             *(f32*)(proj + 8) = lbl_803DC4E4;
@@ -412,21 +412,21 @@ void fn_80239FCC(int p1, int p2)
 }
 
 #pragma optimization_level 1
-void fn_8023A3E4(int p1, int p2)
+void fn_8023A3E4(int objArg, int hitState)
 {
     u8 i;
     u32 hitVol;
     int hitType;
     int hitObj;
     int got;
-    GfHitState* s = (GfHitState*)p2;
-    int obj = p1;
+    GfHitState* s = (GfHitState*)hitState;
+    int obj = objArg;
     u8 adjusted;
     int texIdx;
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
-    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
+    got = ObjHits_GetPriorityHit(objArg, &hitObj, &hitType, &hitVol);
     {
         u8 j;
         for (j = 0; j < 4; j++)

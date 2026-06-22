@@ -992,7 +992,7 @@ extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
 #pragma opt_propagation off
-void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
+void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
     int xb;
     int yb;
@@ -1023,7 +1023,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         tex = (Texture*)gTitleScreenTextures[4];
         drawScaledTexture((char*)tex,
                           (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
-                          (f32)(int)(yb - 0x10), p1, 0x100, tex->width,
+                          (f32)(int)(yb - 0x10), alpha, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = (Texture*)gTitleScreenTextures[6];
         drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a), (f32)(int)(yb - 0x10), 0xff, 0x100,
@@ -1057,7 +1057,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     gameTextShow(0x3da);
     drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
-    if (gTitleScreenCursorY >= lbl_803E2338 && (p2 & 0xff) == 0u)
+    if (gTitleScreenCursorY >= lbl_803E2338 && (hideHighlight & 0xff) == 0u)
     {
         xb = (int)mtx[3] - 0x32;
         yb = (int)mtx[7] - 0x10;
@@ -1082,10 +1082,10 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         box = (int)gameTextGetBox(v);
         xb = (int)mtx[3];
         yb = *(s16*)(box + 0x16) + (int)mtx[7];
-        if ((p2 & 0xff) == 0u)
+        if ((hideHighlight & 0xff) == 0u)
         {
             drawTexture(gTitleScreenTextures[5], (f32)(int)(xb + 0x2f),
-                        (f32)(int)(yb - 1), p2, 0xff);
+                        (f32)(int)(yb - 1), hideHighlight, 0xff);
         }
     }
     idx = (int)((u32)lbl_803DD9C0 << 3) / 0x100;
@@ -1120,7 +1120,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawTexture(gTitleScreenMainTex,
                 (f32)(int)((0x280 - (((int)((Texture*)gTitleScreenMainTex)->width * 0xbe) / 0x100)) / 2),
                 (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
-    if ((p3 & 0xff) != 0u)
+    if ((showArrows & 0xff) != 0u)
     {
         xb = (int)mtx[3];
         yb = (int)mtx[7];

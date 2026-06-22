@@ -238,7 +238,7 @@ void Trigger_init(u8* obj, u8* params)
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
 
-void objInterpretSeq(int obj, int p2, int p3, int p4)
+void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = ((GameObject*)obj)->extra;
@@ -267,7 +267,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
             b = *p;
             if ((b & 0x10) == 0)
             {
-                if ((s8)p3 == 1)
+                if ((s8)legCode == 1)
                 {
                     if ((b & 1) != 0)
                     {
@@ -281,7 +281,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         goto run;
                     }
                 }
-                else if ((s8)p3 == -1 && (b & 2) != 0)
+                else if ((s8)legCode == -1 && (b & 2) != 0)
                 {
                     if ((sflags & 2) != 0)
                     {
@@ -295,13 +295,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
             }
             else if ((b & 1) != 0)
             {
-                if ((s8)p3 < 0)
+                if ((s8)legCode < 0)
                 {
                     goto next;
                 }
                 goto run;
             }
-            else if ((b & 2) == 0 || (s8)p3 <= 0)
+            else if ((b & 2) == 0 || (s8)legCode <= 0)
             {
             run:
                 switch (p[1])
@@ -340,7 +340,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 4:
-                    if ((s8)p3 >= 0)
+                    if ((s8)legCode >= 0)
                     {
                         Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
                     }
@@ -437,11 +437,11 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 10:
-                    getEnvfxAct(obj, p2, (u16)((p[2] << 8) | p[3]), p4);
-                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], p4);
+                    getEnvfxAct(obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
+                    OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], distSq);
                     break;
                 case 0xd:
-                    getLActions(obj, p2, (u16)((p[2] << 8) | p[3]), p3, p4, 0);
+                    getLActions(obj, seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
                     break;
                 case 0xb:
                     switch (p[2])
@@ -495,7 +495,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     match:
                         if (*(s16*)((char*)tbl + 0x38) == id)
                         {
-                            objInterpretSeq(t2, p2, p3, p4);
+                            objInterpretSeq(t2, seqArg, legCode, distSq);
                         }
                     }
                     break;
@@ -750,7 +750,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x2c:
-                    **(f32**)(p2 + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
+                    **(f32**)(seqArg + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = Obj_GetPlayerObject();
@@ -770,12 +770,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
         i++;
         p += 4;
     }
-    if ((s8)p3 > 0)
+    if ((s8)legCode > 0)
     {
         *state |= 1;
         GameBit_Set(((TriggerState*)state)->gameBit, 1);
     }
-    else if ((s8)p3 < 0)
+    else if ((s8)legCode < 0)
     {
         *state |= 2;
     }
