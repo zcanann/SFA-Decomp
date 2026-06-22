@@ -257,7 +257,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     }
     else
     {
-        maxAlpha = (int)(lbl_803E0544 * screenTransitionAlpha);
+        maxAlpha = lbl_803E0544 * screenTransitionAlpha;
         inset = 0;
     }
     halfSpan = (u16)(span >> 1);
