@@ -22,7 +22,9 @@ typedef struct EnemyState {
                        shared BaddieState+0x2A8 is a generic per-type radius/distance
                        param (magicplant/seqobj: circular-motion radius; baskets:
                        per-state config) - hence the per-type struct view here. */
-    f32 unk2AC;
+    f32 sightRange; /* 0x2AC patrol/detection range, clamped to enemySightRange
+                       (the global sight extent) just like aggroRange; passed to
+                       RomCurve initCurve as the wander-curve radius. */
     s16 unk2B0;
     u16 unk2B2;
     s16 unk2B4;

@@ -2494,7 +2494,7 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             memset(*(void**)state, 0, 264);
         }
-        if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, ((EnemyState*)state)->unk2AC,
+        if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, ((EnemyState*)state)->sightRange,
                                              (int*)&lbl_803DBC58, -1) == 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x2000;
@@ -2544,8 +2544,8 @@ void enemy_init(int obj, u8* setup, int flag)
     {
         ((EnemyState*)state)->aggroRange = enemySightRange;
     }
-    if (((EnemyState*)state)->unk2AC > *(f32*)&enemySightRange)
+    if (((EnemyState*)state)->sightRange > *(f32*)&enemySightRange)
     {
-        ((EnemyState*)state)->unk2AC = enemySightRange;
+        ((EnemyState*)state)->sightRange = enemySightRange;
     }
 }
