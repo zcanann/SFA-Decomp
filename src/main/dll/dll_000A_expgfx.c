@@ -454,7 +454,8 @@ void expgfx_initSlotQuad(void* slotPtr)
 
     slot = (ExpgfxSlot*)slotPtr;
     staticData = EXPGFX_STATIC_DATA;
-    entry = Expgfx_GetTableEntry(((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK);
+    entry = gExpgfxTableEntries;
+    entry += ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
     resource = entry->resource;
 
     slot->stateBits.bits.frameParity = 0;
