@@ -103,14 +103,14 @@ void fn_801EC1AC(int obj, int state)
         (-((DRPickupState*)state)->unk45C * ((DRPickupState*)state)->unk52C) * timeDelta +
         ((DRPickupState*)state)->angVel414;
     ((DRPickupState*)state)->angVel414 =
-        powfBitEstimate(((DRPickupState*)state)->unk530, timeDelta) *
+        powfBitEstimate(((DRPickupState*)state)->angVelDamping, timeDelta) *
         ((DRPickupState*)state)->angVel414;
 
     {
         f32 lim;
         f32 v;
         v = ((DRPickupState*)state)->angVel414;
-        lim = ((DRPickupState*)state)->unk534;
+        lim = ((DRPickupState*)state)->angVelLimit;
         ((DRPickupState*)state)->angVel414 = (v < -lim) ? -lim : ((v > lim) ? lim : v);
     }
 

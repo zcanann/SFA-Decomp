@@ -48,8 +48,8 @@ typedef struct DRPickupState {
     f32 localOffsetZ; /* 0x4A8 */
     u8 unk4AC[0x52C - 0x4AC];
     f32 unk52C;
-    f32 unk530;
-    f32 unk534; /* clamp limit for angVel414 */
+    f32 angVelDamping; /* 0x530 per-frame powf damping base for angVel414 */
+    f32 angVelLimit; /* 0x534 clamp limit for angVel414 */
     f32 unk538; /* target for unk430 */
     f32 unk53C;
     u8 unk540[0x550 - 0x540];
