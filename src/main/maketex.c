@@ -697,8 +697,8 @@ int saveGame_doWrite(int slot)
     for (i = 0; (int)i < 0x3ff; i++)
     {
         u64 v = p[i];
-        x ^= v;
-        a += v;
+        x = x ^ v;
+        a = v + a;
     }
     chk = x ^ (a + 13);
     ((u32*)p)[0x7ff] = (u32)chk;
@@ -721,8 +721,8 @@ int saveGame_doWrite(int slot)
             for (i = 0; (int)i < 0x3ff; i++)
             {
                 u64 v = p[i];
-                x ^= v;
-                a += v;
+                x = x ^ v;
+                a = v + a;
             }
             chk2 = x ^ (a + 13);
             if (chk != chk2)
