@@ -4443,10 +4443,13 @@ void GameUI_update(void)
     }
 }
 
+#pragma opt_propagation off
 void textureFreeFn_8012fcec(void)
 {
     u8* base = lbl_803A87F0;
     u8 i;
+    s16* rowS16;
+    u8* rowU8;
 
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
@@ -4459,8 +4462,10 @@ void textureFreeFn_8012fcec(void)
             textureFree(*tex);
             *tex = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + j * 2) = -1;
-        lbl_803A87F0[1096 + j] = 1;
+        rowS16 = (s16*)(base + j * 2);
+        rowS16[1188] = -1;
+        rowU8 = base + j;
+        rowU8[1096] = 1;
     }
     if (lbl_803DD7C8 != NULL)
     {
@@ -4474,6 +4479,7 @@ void textureFreeFn_8012fcec(void)
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 }
+#pragma opt_propagation reset
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
