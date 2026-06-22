@@ -216,7 +216,6 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
 
 int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
 {
-    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E2EF0;
     extern f32 lbl_803E2EF4;
     extern f32 lbl_803E2EF8;

@@ -314,7 +314,6 @@ void Obj_SpawnHitLightAndFade(int obj, f32* p2)
 
 int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity, void** light)
 {
-    extern void* lightningCreate(f32* a, f32* b, f32 c, f32 d, s16 e, u8 f, u8 g); /* #57 */
     int spawned;
     int i;
     f32 pos[3];

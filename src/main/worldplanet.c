@@ -433,7 +433,6 @@ void worldplanet_update(int obj)
             {
                 if ((int)i == state->selectedPlanet)
                 {
-                    extern int getAngle(float y, float x);
                     u32 fi = (int)gWorldPlanetPathProgress & 0xff;
                     u32 ni = (fi + 2) & 0xff;
                     f32 frac = gWorldPlanetPathProgress - fi;

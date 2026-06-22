@@ -2359,7 +2359,6 @@ int fn_8003BB84(f32* m, f32* out)
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E4;
-    extern u8 framesThisStep;
     int masked;
     int flag;
 
@@ -2461,7 +2460,6 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E4;
     extern f32 lbl_803DE9E8;
-    extern u8 framesThisStep;
     int masked;
     int flag;
 
@@ -2776,7 +2774,6 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 void characterDoEyeAnims(int obj, int state)
 {
     extern f32 lbl_803DE9A4;
-    extern u8 framesThisStep;
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
 
@@ -2963,7 +2960,6 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     extern f32 lbl_803DE9DC;
     extern int lbl_803DB460;
     extern ObjPrintFlipFlag lbl_803DCC00;
-    extern u8 framesThisStep;
     s16 ang[4];
     s16* sp1;
     s16* sp2;

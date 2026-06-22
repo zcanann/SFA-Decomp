@@ -583,9 +583,7 @@ void dbegg_update(int obj)
     extern void objMove(int, f32, f32, f32);
 
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
-    extern int randomGetRange(int lo, int hi);
     extern f32 Vec_xzDistance(int, int);
-    extern void ObjMsg_SendToObject(int, int, int, int);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void fn_80137948(char* fmt, ...);
