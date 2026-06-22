@@ -150,25 +150,25 @@ void CameraModeForceBehind_update(u8* obj)
     yaw = (s16)(yaw - (u16)camera->anim.rotX);
     if (yaw > 0x8000)
     {
-        yaw -= 0xffff;
+        yaw = yaw - 0xffff;
     }
     if (yaw < -0x8000)
     {
-        yaw += 0xffff;
+        yaw = yaw + 0xffff;
     }
-    camera->anim.rotX = (s16)(s32)((f32)(s32)camera->anim.rotX + interpolate((f32)yaw, gCamForceBehindEaseRate, timeDelta));
+    camera->anim.rotX = (f32)(s32)camera->anim.rotX + interpolate((f32)yaw, gCamForceBehindEaseRate, timeDelta);
 
     pitch = (s16)(pitch - (u16)camera->anim.rotY);
     if (pitch > 0x8000)
     {
-        pitch -= 0xffff;
+        pitch = pitch - 0xffff;
     }
     if (pitch < -0x8000)
     {
-        pitch += 0xffff;
+        pitch = pitch + 0xffff;
     }
-    camera->anim.rotY = (s16)(s32)((f32)(s32)camera->anim.rotY +
-                                   interpolate((f32)pitch, gCamForceBehindEaseRate, timeDelta));
+    camera->anim.rotY = (f32)(s32)camera->anim.rotY +
+                        interpolate((f32)pitch, gCamForceBehindEaseRate, timeDelta);
 
     cosYaw = mathSinf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);
     sinYaw = mathCosf(gCamForceBehindPi * (f32)(s32)(camera->anim.rotX - 0x4000) / gCamForceBehindBamsToRadDivisor);
@@ -176,8 +176,8 @@ void CameraModeForceBehind_update(u8* obj)
     cosPitch = mathSinf(gCamForceBehindPi * (f32)(s32)camera->anim.rotY / gCamForceBehindBamsToRadDivisor);
     radius = gCamForceBehindPlacementRadius;
     {
-        f32 ry = radius * cosPitch;
         f32 rh = radius * sinPitch;
+        f32 ry = radius * cosPitch;
         f32 rx = rh * sinYaw;
         f32 rz = rh * cosYaw;
         camera->anim.worldPosX = baseX + rx;
