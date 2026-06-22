@@ -696,7 +696,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     by the SOURCE FORM, and the INCREMENT ORDER (`e++,i++` vs `i++,e++`) is INERT — only body-vs-comma
     flips the pair. BODY-computed `for(i=0;i<N;i++){ T *e=&base[i]; ...use i... }` → WALKER higher,
     counter lower (`e=r31, i=r30`). COMMA-init `for(i=0, e=base; i<N; e++, i++){...}` → COUNTER higher,
-    walker lower (`i=r31, e=r29`). So: want counter-higher → comma-init; want walker-higher → body-computed.
+    walker lower (`i=r31, e=r29`). (Re-verified in isolation: the ABSOLUTE reg numbers are CONTEXT-DEPENDENT
+    — set by whatever else is live, e.g. the bound `n` can claim r29 and push the walker to r30; match the
+    RELATIVE counter↔walker order, never a literal reg number.) So: want counter-higher → comma-init; want
+    walker-higher → body-computed.
     (decl-order is correctly inert here — induction webs, not top-loaded #108; the FORM is the induction-class
     analog of #108's decl-order.) SCOPE (probe-verified robust): the rule holds for a counter + one OR
     MORE walkers, LOCAL or GLOBAL base — body-form always lands the counter LOWEST with the walkers
