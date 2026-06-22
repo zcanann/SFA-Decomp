@@ -1373,8 +1373,7 @@ void playerUpdateFn_8005649c(void)
     *(f32*)(lbl_80386648 + 4) = *(f32*)(cam + 0x48);
     *(f32*)(lbl_80386648 + 8) = *(f32*)&((GameObject*)cam)->anim.placementData;
     *(int*)(lbl_80386648 + 0xc) = 1;
-    e = objs;
-    for (i = 0; i < count; i++)
+    for (i = 0, e = objs; i < count; i++, e++)
     {
         int* obj = *e;
         slot = *(s8*)((char*)obj + 0x35) + 1;
@@ -1393,7 +1392,6 @@ void playerUpdateFn_8005649c(void)
             *(f32*)(lbl_80386648 + slot * 0x10 + 8) = lz;
         }
         *(int*)(lbl_80386648 + slot * 0x10 + 0xc) = 1;
-        e++;
     }
 }
 
