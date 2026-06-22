@@ -512,6 +512,8 @@ void dfropenode_hitDetect(void)
 void dfropenode_update(DFropenodeObject* obj)
 {
     extern int getAngle(float y, float x);
+    extern struct DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
+                                        f32 endZ, f32 unused, s32 count, f32 tickScale);
 
     DFropenodeExtra* extra;
     u8* objDef;
@@ -586,7 +588,7 @@ void dfropenode_update(DFropenodeObject* obj)
         extra->angle = angle;
 
         extra->rope =
-            DFRope_Create(0x10, lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length,
+            DFRope_Create(lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length, 0x10,
                           (&lbl_803DBF50)[*(u8*)(objDef + 0x1b)]);
 
         extra->minX = obj->posX;
