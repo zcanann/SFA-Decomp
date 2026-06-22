@@ -3499,11 +3499,11 @@ void FUN_80049910(u32* obj)
 {
     float scaleZ;
     float* viewMtx;
-    u32 local_100;
-    float local_fc;
-    float local_f8;
-    int local_f4;
-    int local_f0;
+    u32 objHeader;
+    float noiseScrollY;
+    float noiseScrollX;
+    int noiseTex;
+    int blankShadowTex;
     float local_ec;
     u32 local_e8;
     u32 local_e4;
@@ -3570,18 +3570,18 @@ void FUN_80049910(u32* obj)
     local_18 = lbl_803DF748;
     FUN_8025d8c4(&local_44, DAT_803dda00, 0);
     FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
-    local_100 = *obj;
-    FUN_8025c510(DAT_803dd9f4, (u8*)&local_100);
-    newshadows_getBlankShadowTexture(&local_f0);
-    if (local_f0 != 0)
+    objHeader = *obj;
+    FUN_8025c510(DAT_803dd9f4, (u8*)&objHeader);
+    newshadows_getBlankShadowTexture(&blankShadowTex);
+    if (blankShadowTex != 0)
     {
-        if (*(char*)(local_f0 + 0x48) == '\0')
+        if (*(char*)(blankShadowTex + 0x48) == '\0')
         {
-            FUN_8025b054((u32*)(local_f0 + 0x20), DAT_803dda0c);
+            FUN_8025b054((u32*)(blankShadowTex + 0x20), DAT_803dda0c);
         }
         else
         {
-            FUN_8025aeac((u32*)(local_f0 + 0x20), *(u32**)(local_f0 + 0x40), DAT_803dda0c);
+            FUN_8025aeac((u32*)(blankShadowTex + 0x20), *(u32**)(blankShadowTex + 0x40), DAT_803dda0c);
         }
     }
     if (DAT_803dd9b1 == '\0')
@@ -3604,15 +3604,15 @@ void FUN_80049910(u32* obj)
     }
     else
     {
-        newshadows_getShadowNoiseScroll(&local_f8, &local_fc);
-        local_fc = local_fc * lbl_803DF760;
-        local_f8 = local_f8 * lbl_803DF788;
+        newshadows_getShadowNoiseScroll(&noiseScrollX, &noiseScrollY);
+        noiseScrollY = noiseScrollY * lbl_803DF760;
+        noiseScrollX = noiseScrollX * lbl_803DF788;
         FUN_8025b9e8(2, &local_ec, -2);
         FUN_8025bd1c(DAT_803dd9fc, DAT_803dda08 + 1, DAT_803dda0c + 1);
         local_74 = lbl_803DD9B4;
         local_70 = lbl_803DF74C;
         local_6c = lbl_803DF74C;
-        local_68 = lbl_803DDA58 * lbl_803DD9B4 + local_f8;
+        local_68 = lbl_803DDA58 * lbl_803DD9B4 + noiseScrollX;
         local_64 = lbl_803DF74C;
         local_60 = lbl_803DD9B4;
         local_5c = lbl_803DF74C;
@@ -3632,7 +3632,7 @@ void FUN_80049910(u32* obj)
         local_a4 = lbl_803DF74C;
         local_a0 = lbl_803DF74C;
         local_9c = lbl_803DD9B4;
-        local_98 = lbl_803DDA5C * lbl_803DD9B4 + local_fc;
+        local_98 = lbl_803DDA5C * lbl_803DD9B4 + noiseScrollY;
         local_94 = lbl_803DF74C;
         local_90 = lbl_803DD9B4;
         local_8c = lbl_803DF74C;
@@ -3661,16 +3661,16 @@ void FUN_80049910(u32* obj)
         FUN_8025c65c(DAT_803dda10 + 1, 0, 0);
         FUN_8025c2a8(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
         FUN_8025c368(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
-        newshadows_getShadowNoiseTexture(&local_f4);
-        if (local_f4 != 0)
+        newshadows_getShadowNoiseTexture(&noiseTex);
+        if (noiseTex != 0)
         {
-            if (*(char*)(local_f4 + 0x48) == '\0')
+            if (*(char*)(noiseTex + 0x48) == '\0')
             {
-                FUN_8025b054((u32*)(local_f4 + 0x20), DAT_803dda0c + 1);
+                FUN_8025b054((u32*)(noiseTex + 0x20), DAT_803dda0c + 1);
             }
             else
             {
-                FUN_8025aeac((u32*)(local_f4 + 0x20), *(u32**)(local_f4 + 0x40), DAT_803dda0c + 1);
+                FUN_8025aeac((u32*)(noiseTex + 0x20), *(u32**)(noiseTex + 0x40), DAT_803dda0c + 1);
             }
         }
         GXSetBlendMode(DAT_803dda10 + 1, DAT_803dd9f0);
