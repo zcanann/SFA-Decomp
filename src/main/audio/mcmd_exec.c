@@ -62,7 +62,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
     u8 k1;
     u8 k2;
-    int t;
+    u8 t;
     s32 i1;
     s32 i2;
     u8 detune;
@@ -71,7 +71,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     {
         k2 = args->flags >> 0x18;
         k1 = (args->flags >> 8) & 0xff;
-        if (k1 > (args->flags >> 0x18))
+        if (((args->flags >> 8) & 0xff) > (args->flags >> 0x18))
         {
             t = k1;
             k1 = k2;
