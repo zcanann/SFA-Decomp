@@ -317,9 +317,9 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
         debugPrintf(sSnowKillSnowCloudInvalidCloudId, cloudId);
         return;
     }
-    ((NewCloud*)p)->unk13F8 = 1;
+    ((NewCloud*)p)->despawning = 1;
     p = gNewClouds[i];
-    ((NewCloud*)p)->unk1430 =
+    ((NewCloud*)p)->flakeDrainRate =
         -((f32)flag / (f32) * (int*)((char*)p + 0x13fc));
 }
 
@@ -1594,21 +1594,21 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     }
     if (*(u16*)(params + 0x2a) != 0)
     {
-        ((NewCloud*)NC_CLOUD)->unk142C =
+        ((NewCloud*)NC_CLOUD)->flakeFillRate =
             (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2a);
     }
     else
     {
-        ((NewCloud*)NC_CLOUD)->unk142C = ((NewCloud*)NC_CLOUD)->flakeCount;
+        ((NewCloud*)NC_CLOUD)->flakeFillRate = ((NewCloud*)NC_CLOUD)->flakeCount;
     }
     if (*(u16*)(params + 0x2c) != 0)
     {
-        ((NewCloud*)NC_CLOUD)->unk1430 =
+        ((NewCloud*)NC_CLOUD)->flakeDrainRate =
             (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2c);
     }
     else
     {
-        ((NewCloud*)NC_CLOUD)->unk1430 = ((NewCloud*)NC_CLOUD)->flakeCount;
+        ((NewCloud*)NC_CLOUD)->flakeDrainRate = ((NewCloud*)NC_CLOUD)->flakeCount;
     }
     ((NewCloud*)NC_CLOUD)->driftScale = *(f32*)(params + 8);
     if (((NewCloud*)NC_CLOUD)->cloudType == 0)
@@ -2015,24 +2015,24 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
         {
             NC_CLOUD[0x144f] = 0;
         }
-        ((NewCloud*)NC_CLOUD)->unk13F8 = 1 - ((NewCloud*)NC_CLOUD)->unk13F8;
+        ((NewCloud*)NC_CLOUD)->despawning = 1 - ((NewCloud*)NC_CLOUD)->despawning;
         if (*(u16*)(params + 0x2a) != 0)
         {
-            ((NewCloud*)NC_CLOUD)->unk142C =
+            ((NewCloud*)NC_CLOUD)->flakeFillRate =
                 (f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2a);
         }
         else
         {
-            ((NewCloud*)NC_CLOUD)->unk142C = (((NewCloud*)NC_CLOUD)->flakeCount - 1);
+            ((NewCloud*)NC_CLOUD)->flakeFillRate = (((NewCloud*)NC_CLOUD)->flakeCount - 1);
         }
         if (*(u16*)(params + 0x2c) != 0)
         {
-            ((NewCloud*)NC_CLOUD)->unk1430 =
+            ((NewCloud*)NC_CLOUD)->flakeDrainRate =
                 -((f32)((NewCloud*)NC_CLOUD)->flakeCount / (f32) * (u16*)(params + 0x2c));
         }
         else
         {
-            ((NewCloud*)NC_CLOUD)->unk1430 = (-(((NewCloud*)NC_CLOUD)->flakeCount - 1));
+            ((NewCloud*)NC_CLOUD)->flakeDrainRate = (-(((NewCloud*)NC_CLOUD)->flakeCount - 1));
         }
     }
 }
@@ -2136,30 +2136,30 @@ void dll_07_func06(void)
             {
                 gNewCloudBlizzardActive = 1;
             }
-            if (((NewCloud*)p)->unk13F8 != 0)
+            if (((NewCloud*)p)->despawning != 0)
             {
-                ((NewCloud*)p)->unk1434 =
-                    framesThisStep * ((NewCloud*)p)->unk1430 + ((NewCloud*)p)->unk1434;
-                if (((NewCloud*)D7_CLOUD)->unk1434 <= lbl_803DF1A0)
+                ((NewCloud*)p)->activeFlakes =
+                    framesThisStep * ((NewCloud*)p)->flakeDrainRate + ((NewCloud*)p)->activeFlakes;
+                if (((NewCloud*)D7_CLOUD)->activeFlakes <= lbl_803DF1A0)
                 {
                     D7_CLOUD[0x144f] = 1;
                 }
             }
             else
             {
-                if ((int)((NewCloud*)p)->unk1434 < ((NewCloud*)p)->flakeCount)
+                if ((int)((NewCloud*)p)->activeFlakes < ((NewCloud*)p)->flakeCount)
                 {
-                    ((NewCloud*)p)->unk1434 = framesThisStep * ((NewCloud*)p)->unk142C +
-                        ((NewCloud*)p)->unk1434;
+                    ((NewCloud*)p)->activeFlakes = framesThisStep * ((NewCloud*)p)->flakeFillRate +
+                        ((NewCloud*)p)->activeFlakes;
                 }
             }
-            if ((int)((NewCloud*)D7_CLOUD)->unk1434 > ((NewCloud*)D7_CLOUD)->flakeCount)
+            if ((int)((NewCloud*)D7_CLOUD)->activeFlakes > ((NewCloud*)D7_CLOUD)->flakeCount)
             {
-                ((NewCloud*)D7_CLOUD)->unk1434 = ((NewCloud*)D7_CLOUD)->flakeCount;
+                ((NewCloud*)D7_CLOUD)->activeFlakes = ((NewCloud*)D7_CLOUD)->flakeCount;
             }
-            if (((NewCloud*)D7_CLOUD)->unk1434 < *(f32*)&lbl_803DF1A0)
+            if (((NewCloud*)D7_CLOUD)->activeFlakes < *(f32*)&lbl_803DF1A0)
             {
-                ((NewCloud*)D7_CLOUD)->unk1434 = lbl_803DF1A0;
+                ((NewCloud*)D7_CLOUD)->activeFlakes = lbl_803DF1A0;
             }
             if (*(u8**)D7_CLOUD != NULL)
             {
@@ -2261,7 +2261,7 @@ void dll_07_func06(void)
             ((NewCloud*)D7_CLOUD)->unk13DC = pos[1];
             ((NewCloud*)D7_CLOUD)->unk13E0 = pos[2];
             snowReposSnowCloud(((NewCloud*)D7_CLOUD)->cloudId);
-            if (((NewCloud*)D7_CLOUD)->unk1434 > lbl_803DF1A0)
+            if (((NewCloud*)D7_CLOUD)->activeFlakes > lbl_803DF1A0)
             {
                 d[0] = ((NewCloud*)D7_CLOUD)->worldPosX - *(f32*)((u8*)cam + 0xc);
                 d[1] = ((NewCloud*)D7_CLOUD)->worldPosY - *(f32*)((u8*)cam + 0x10);

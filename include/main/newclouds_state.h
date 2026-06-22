@@ -30,7 +30,7 @@ typedef struct NewCloud {
     f32 unk13EC;
     s32 cloudId;
     s32 cloudType;
-    s32 unk13F8;
+    s32 despawning;
     s32 flakeCount;
     s32 unk1400;
     u8 unk1404[0x8];
@@ -42,9 +42,9 @@ typedef struct NewCloud {
     f32 windVelX;
     f32 windVelZ;
     f32 unk1428;
-    f32 unk142C;
-    f32 unk1430;
-    f32 unk1434;
+    f32 flakeFillRate;
+    f32 flakeDrainRate;
+    f32 activeFlakes;
     f32 driftScale;
     f32 unk143C;
     f32 unk1440;
