@@ -716,7 +716,8 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
             *(u8*)(state + 0x2f3) = 0;
             *(u8*)(state + 0x2f4) = 0;
             Baddie_SetMove(obj, state, row[8], blendScale * *(f32*)row, 0, *(u32*)(row + 4) & 0xff);
-            ObjAnim_SetMoveProgress(*(f32*)(base + row[8] * 4), (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)obj, *(f32*)(base + row[8] * 4));
             *(u8*)(state + 0x33c) = eventIndex;
             return 1;
         }
@@ -741,9 +742,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
             Baddie_SetMove(obj, state, row[8],
                         *(f32*)(eventRows + *(u8*)(state + 0x33c) * 0xc), 0,
                         *(u32*)(row + 4) & 0xff);
-            ObjAnim_SetMoveProgress(
-                *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4),
-                (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)obj,
+                *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4));
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
         if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
