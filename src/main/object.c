@@ -234,8 +234,7 @@ void Obj_ClearModelColorFadeRecursive(u8* obj)
     childScan = obj;
     while (i < ((GameObject*)obj)->childCount)
     {
-        Obj_ClearModelColorFadeRecursive(((GameObject*)childScan)->childObjs[0]);
-        childScan += 4;
+        Obj_ClearModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i]);
         i++;
     }
 }
@@ -280,8 +279,7 @@ void Obj_TickModelColorFadeRecursive(u8* obj)
     childScan = obj;
     while (i < ((GameObject*)obj)->childCount)
     {
-        Obj_TickModelColorFadeRecursive(((GameObject*)childScan)->childObjs[0]);
-        childScan += 4;
+        Obj_TickModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i]);
         i++;
     }
 }
@@ -319,8 +317,7 @@ void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 bl
     childScan = obj;
     while (i < ((GameObject*)obj)->childCount)
     {
-        Obj_SetModelColorFadeRecursive(((GameObject*)childScan)->childObjs[0], frames, red, green, blue, startAtHalf);
-        childScan += 4;
+        Obj_SetModelColorFadeRecursive(((GameObject*)childScan)->childObjs[i], frames, red, green, blue, startAtHalf);
         i++;
     }
 }
@@ -348,8 +345,7 @@ void Obj_SetModelColorOverrideRecursive(u8* obj, u8 red, u8 green, u8 blue, u8 a
     childScan = obj;
     while (i < ((GameObject*)obj)->childCount)
     {
-        Obj_SetModelColorOverrideRecursive(((GameObject*)childScan)->childObjs[0], red, green, blue, alpha, enabled);
-        childScan += 4;
+        Obj_SetModelColorOverrideRecursive(((GameObject*)childScan)->childObjs[i], red, green, blue, alpha, enabled);
         i++;
     }
 }
