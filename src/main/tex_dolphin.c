@@ -163,9 +163,9 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     u32 flags;
     u8 count;
     int i;
-    f32 k;
     f32 k24;
     f32 kH;
+    f32 k;
     u8* tbl;
 
     pos = bitReader[4];
