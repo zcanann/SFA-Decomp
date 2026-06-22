@@ -3806,7 +3806,7 @@ int fn_8004B148(int* p)
 
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
+int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {
     int i = 0;
     int o4;
@@ -3852,8 +3852,8 @@ int fn_8004B31C(int* queue, int startNode, int targetPos, int param_4, u8 flag)
     }
     queue[6] = startNode;
     queue[3] = targetPos;
-    queue[4] = param_4;
-    *(u8*)((char*)queue + 0x28) = flag & 1;
+    queue[4] = pathId;
+    *(u8*)((char*)queue + 0x28) = routeFlags & 1;
     queue[9] = 10000;
     s = *(s16*)((char*)queue + 0x20);
     if (s == 0xfe)
@@ -5260,7 +5260,7 @@ extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, int wrap_s
 extern void GXInitTexObjLOD(void* obj, int min_filt, int mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias,
                             int bias_clamp, int do_edge_lod, int max_aniso);
 
-void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
+void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
 {
     u8 buf5c[0x20];
     u8 buf3c[0x20];
@@ -5326,13 +5326,13 @@ void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
         GXSetTevKColor(lbl_803DCD74 + 1, &ck2);
         ck3 = lbl_803DEAC0;
         GXSetTevKColor(lbl_803DCD74 + 2, &ck3);
-        GXInitTexObj(buf5c, p1, w, h, 1, 0, 0, 0);
+        GXInitTexObj(buf5c, tex0, w, h, 1, 0, 0, 0);
         GXInitTexObjLOD(buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj(buf5c, lbl_803DCD8C);
-        GXInitTexObj(buf3c, p2, w2 = (s16)w >> 1, h2 = (s16)h >> 1, 1, 0, 0, 0);
+        GXInitTexObj(buf3c, tex1, w2 = (s16)w >> 1, h2 = (s16)h >> 1, 1, 0, 0, 0);
         GXInitTexObjLOD(buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj(buf3c, lbl_803DCD8C + 1);
-        GXInitTexObj(buf1c, p3, w2, h2, 1, 0, 0, 0);
+        GXInitTexObj(buf1c, tex2, w2, h2, 1, 0, 0, 0);
         GXInitTexObjLOD(buf1c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj(buf1c, lbl_803DCD8C + 2);
         lbl_803DCD90 = lbl_803DCD90 + 5;
