@@ -137,24 +137,28 @@ void arwarwingbo_update(int obj)
                                          &objAnim->velocityX);
         (*gPartfxInterface)->spawnObject((void*)obj, 0x79e, NULL, 1, -1,
                                          &objAnim->velocityX);
-        ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
-        if ((*(ObjHitsPriorityState**)&objAnim->hitReactState)->lastHitObject != 0 ||
-            (*(ObjHitsPriorityState**)&objAnim->hitReactState)->contactFlags != 0 ||
-            (getButtonsJustPressed(0) & 0x200))
-        {
-            state = ((GameObject*)obj)->extra;
-            arwarwing_clearActiveBomb(getArwing());
-            Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
-            state->explosionTimer = lbl_803E7040;
-            state->control.fuseTimer = lbl_803E7044;
-            objAnim->alpha = 0;
-            (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~0x200;
-            spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
-            ObjHitbox_SetSphereRadius(obj, 0x280);
-            ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
-            objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
-        }
-        objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
-                objAnim->velocityZ * timeDelta);
     }
+    else
+    {
+        return;
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
+    if ((*(ObjHitsPriorityState**)&objAnim->hitReactState)->lastHitObject != 0 ||
+        (*(ObjHitsPriorityState**)&objAnim->hitReactState)->contactFlags != 0 ||
+        (getButtonsJustPressed(0) & 0x200))
+    {
+        state = ((GameObject*)obj)->extra;
+        arwarwing_clearActiveBomb(getArwing());
+        Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
+        state->explosionTimer = lbl_803E7040;
+        state->control.fuseTimer = lbl_803E7044;
+        objAnim->alpha = 0;
+        (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~0x200;
+        spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+        ObjHitbox_SetSphereRadius(obj, 0x280);
+        ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
+        objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
+    }
+    objMove(obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
+            objAnim->velocityZ * timeDelta);
 }
