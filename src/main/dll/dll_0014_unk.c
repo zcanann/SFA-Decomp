@@ -3772,14 +3772,14 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
     RomCurveDef* windowCurves[4];
 
     idCursor = curveIds;
-    outXStart = outX;
     outXCursor = outX;
+    outXStart = outX;
     foundCount = 0;
     resolveCursor = windowCurves;
     windowCursor = resolveCursor;
     remaining = 4;
-    outZCursor = outZ;
     outYCursor = outY;
+    outZCursor = outZ;
     for (remaining = 4; remaining != 0; remaining--)
     {
         curveId = *idCursor;
