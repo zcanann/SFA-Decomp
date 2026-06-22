@@ -168,7 +168,7 @@ static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(v
     return (DIMbossObjectTriggerInterface*)*gObjectTriggerInterface;
 }
 
-int DIMboss_updateState(DIMbossObject* obj, u32 p2, ObjAnimUpdateState* animUpdate)
+int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animUpdate)
 {
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
@@ -597,7 +597,7 @@ void DIMboss_update(DIMbossObject* obj)
     }
 }
 
-void DIMboss_init(DIMbossObject* obj, u32 p2, int isAltVariant)
+void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
 {
     DIMbossRuntime* runtime;
     DIMbossTopState* topState;
@@ -618,7 +618,7 @@ void DIMboss_init(DIMbossObject* obj, u32 p2, int isAltVariant)
         animFlags |= 1;
     }
     DIMboss_GetBaddieControlInterface()->setupAnim(
-        obj, p2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
+        obj, params, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
     obj->updateState = DIMboss_updateState;
     runtime->phase = DIMBOSS_PHASE_START;
     DIMboss_GetPlayerInterface()->init(obj, runtime, 0);
