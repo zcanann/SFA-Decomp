@@ -1738,15 +1738,13 @@ int musicInitMidiWad(void)
         for (track = 0; track <= 0x63; track++)
         {
             found = NULL;
-            table = (MusicTrackSlot*)sMusicTrackTable;
-            for (j = 0; j < 0x64; j++)
+            for (j = 0, table = (MusicTrackSlot*)sMusicTrackTable; j < 0x64; table++, j++)
             {
                 if (track == table->id)
                 {
                     found = (MusicTrackSlot*)sMusicTrackTable + j;
                     break;
                 }
-                table++;
             }
             if (found != NULL)
             {
@@ -2012,7 +2010,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~0x4;
+        *(s32*)&gAudioPendingLoadFlags &= ~(u64)0x4;
         gAudioCompletedLoadFlags |= 0x4;
         s = gStreamsData;
         count = gStreamsCount;
