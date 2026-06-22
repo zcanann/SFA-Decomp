@@ -120,9 +120,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     target uses. Cloned-call-per-arm: write the call in BOTH arms literally (not a ternary arg).
 22. **Wrap body in `if (cond) { ... } return 0;`** not `if (!cond) return 0; <body>` (drops an
     extra `li r3,0; b` island).
-23. **`!!x` for the double-`cntlzw` non-zero materialization**; `!x` for the `==0` form; plain
-    `!=0` gives `neg; or; srwi`. `break` (fall to common return) instead of case-body `return 0`
-    drops a spurious cntlzw. `li 1; cntlzw; rlwnm ,31,31` = MWCC's `x <= 0` (signed) materialization.
+23. **`!x` for the `==0` non-zero materialization** (single `cntlzw; srwi ,5`); plain `!=0` AND `!!x`
+    BOTH give `neg; or; srwi` (probe-confirmed `!!x` is identical to `!=0`, NOT a distinct double-
+    `cntlzw` — if a target shows `cntlzw;cntlzw`, its source C is still to find, `!!x` isn't it).
+    `break` (fall to common return) instead of case-body `return 0` drops a spurious cntlzw. `li 1;
+    cntlzw; rlwnm ,31,31` = MWCC's `x <= 0` (signed) materialization.
 24. **`f32 fn(f32)` not `double fn(double)`** for single-precision helpers (avoids `fmul`+`frsp`).
     `#pragma fp_contract off` per-fn controls fmadds fusion (not eval-order/coloring).
 25. **FP compare feeding a BRANCH = write the plain operator** (`if (a >= b)` → `fcmpo`+`cror`); a
