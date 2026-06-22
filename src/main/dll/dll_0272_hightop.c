@@ -409,8 +409,8 @@ void hightop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         dll_2E_func06((int)obj, runtime->lookController, 0);
         if (runtime->flagsC49.b1 != 0)
         {
-            list = (int**)ObjGroup_GetObjects(55, &count);
-            for (i = 0; i < count; i++)
+            int** t = (int**)ObjGroup_GetObjects(55, &count);
+            for (i = 0, list = t; i < count; i++)
             {
                 int idx = (*(int (**)(int*))((char*)**(int***)((char*)*list + 0x68) + 0x24))(*list);
                 void (*dispatch)(int*, void*, int, int, int, int, int) =
