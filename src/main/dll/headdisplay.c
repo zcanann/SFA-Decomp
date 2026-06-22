@@ -408,7 +408,7 @@ void drawArwingHud(void)
     {
         if (arwingHudVisible != 0)
         {
-            arwingHudAlpha = (int)(lbl_803E1FA0 * (f32)(u32)framesThisStep + arwingHudAlpha);
+            arwingHudAlpha = lbl_803E1FA0 * (f32)(u32)framesThisStep + arwingHudAlpha;
             if ((s16)arwingHudAlpha > 0xff)
             {
                 arwingHudAlpha = 0xff;
@@ -416,7 +416,7 @@ void drawArwingHud(void)
         }
         else
         {
-            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)framesThisStep - arwingHudAlpha);
+            arwingHudAlpha = -(lbl_803E1FA0 * (f32)(u32)framesThisStep - arwingHudAlpha);
             if ((s16)arwingHudAlpha < 0)
             {
                 arwingHudAlpha = 0;
