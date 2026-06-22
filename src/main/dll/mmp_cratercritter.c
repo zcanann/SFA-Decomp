@@ -28,8 +28,10 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     int count;
     int i;
     int waterFlag;
+    u8* best;
 
     nearest = NULL;
+    best = NULL;
     minDist = lbl_803E2418;
 
     if (trickyFoodFn_8013db3c(self, state) == 0)
@@ -58,13 +60,14 @@ void trickyFn_8013d8f0(u8* self, u8* state)
             dist = getXZDistance((f32*)(self + 0x18), (f32*)(*objs + 0x18));
             if (dist < minDist)
             {
-                nearest = *objs;
+                best = *objs;
                 minDist = dist;
             }
         }
         objs++;
     }
 
+    nearest = best;
     if (nearest != NULL)
     {
         ((TrickyState*)state)->followObj = nearest;
