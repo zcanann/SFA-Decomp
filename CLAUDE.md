@@ -733,18 +733,30 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (register-neutral, single caller). 100%, segmentIntersect held 100%, no unit regressions.**
     KEY REUSABLE FINDING: when a RECOVERED entry copy of a param rotates the whole saved-reg pool, the
     cause is curveId being pulled into the copy-class; the `|=` keeps it in its original (param) class.
-    (DeepDive2: dll_0014_unk curves_distFn15 96.32→100, commit ca937fc9f. Task open for an even-cleaner
-    non-`|=` form: decl-order/cast/opt-level/init-placement/if-else/opt_lifetimes all INERT — the `|=`
-    (a sanctioned #131 idiom) is the cleanest found.)
-    **WITHIN-CLASS DIRECTION-FLIP COROLLARY (DeepDive2, the harder sibling): when two saved values of
-    the SAME or adjacent class are colored in REVERSED creation-order direction (target ascending
-    first→low reg; mine descending), and the streams are otherwise BYTE-IDENTICAL, source levers are
-    largely INERT — decl-order, ternary↔if/else (MWCC normalises to one select), opt_lifetimes off,
-    opt_level all fail to flip the pair. Confirmed on dll_0256 fn_802BB4B4 (matchFrame multi-def vs
-    state single-def, clean r29↔r30 swap, T=C=181) and the FP conversion-bias families below. These are
-    the genuine #108 "smallest residual" transpositions; the CLASS-reclassification lever above (OR/#131,
-    #130 deref-decouple) only helps when a value is in the WRONG CLASS, not merely the wrong within-class
-    order. Still open — needs a neighbor/interference lever not yet found.**
+    (DeepDive2: dll_0014_unk curves_distFn15 96.32→100, commit ca937fc9f.)
+    **⚠️ PLACEHOLDER, NOT RECOVERED SOURCE: the `|= a` no-op is a COMPILER HACK (no 2002 Rare dev wrote a
+    random mid-fn self-OR) — bank the 100% but mark it a placeholder, exactly as #131's OR on fn_801B3DE4
+    was later retired for plausible typed-array C (#135). The real no-`|=` form still exists; decl-order/
+    cast/opt-level/init-placement/if-else/opt_lifetimes are all INERT so far. OPEN (task #5, DeepDive1).
+    This applies to ANY no-op-bitwise/VN-hack 100%: land it, mark placeholder, circle back for real C.**
+    **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
+    spending levers; it tells you tractable-vs-deepest-frontier:**
+    **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
+    vs multi-def). Tells: the whole pool ROTATES (curveId param→copy pushed everything up one). Levers:
+    OR/#131 (keep a copy-source in its param class), #130 deref-decouple, #126 param-type, #137 reorder.
+    This is curves_distFn15, and the detour family (#138/#143/#149). GO AFTER THESE.
+    **(2) PURE WITHIN-CLASS ORDER/FREE-REG CHOICE (DEEPEST-FRONTIER OPEN): right pool, wrong slot —
+    which of two FREE same-class regs, or reversed creation-order direction.** Signature: streams are
+    BYTE-IDENTICAL except the reg names; T=C instr count; no recovered copy. Source levers are INERT:
+    decl-order/#61b, ternary↔if/else (MWCC normalises to one select), opt_lifetimes off, opt_level,
+    block-scope re-decl, #131 |=, #134 (int)(long), re-derive — all confirmed inert (DeepDive2 on
+    dll_0256 fn_802BB4B4 r29↔r30 T=C=181 + the conversion-bias families; WorkerA on kaldachom control
+    r28↔r29 — block-scope was the ONLY mover and it shifted the swap to a DIFFERENT value, net worse).
+    The real lever is register PRESSURE / neighbor liveness, but extending a neighbor's range across the
+    value's span usually means MOVING A CALL (mismatches) — the open hard part. Likely needs a
+    compiler-internals/tooling angle (a cheap extra use that extends a neighbor WITHIN the existing
+    schedule?). PARK IT WELL (positive: "needs a not-yet-found lever"), do NOT grind it — pivot to
+    class-reclassification/detour/structural residuals where wins are clean.**
     OPEN family in dll_0014: the unrolled candidate-collection first-iter `count=1` materializes as
     `mr rCount,rMask` (reuse mask=1) in retail but `li rCount,1` here (curves_getPos, countRandomPoints;
     getControlPointId_2A/2B already match with `li` — the outer-loop/register-pressure context selects
