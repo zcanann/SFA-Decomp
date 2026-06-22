@@ -164,7 +164,7 @@ void dll_71_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[13].y = lbl_803E0B44;
     e[13].z = lbl_803E0B38;
     buf.v58 = 0;
-    ctx = sourceObj; /* copy required for MWCC saved-reg coloring (#126) */
+    ctx = sourceObj;
     buf.ctx = ctx;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0B58;

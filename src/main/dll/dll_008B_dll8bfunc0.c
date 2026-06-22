@@ -68,7 +68,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     {
         if (i == 1)
         {
-            v60 = lbl_803E1060; /* reload: re-reads the same lbl; load-bearing for matching */
+            v60 = lbl_803E1060;
             v64 = lbl_803E1070;
         }
         e[0].layer = 0;

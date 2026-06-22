@@ -6,7 +6,7 @@
  * randomGetRange, texture id, lifetime, alpha and behavior/render flag words -
  * then hands it to gExpgfxInterface->spawnEffect. Effect5_func05 advances the
  * global per-frame scroll-phase accumulators (texture u/v scroll and two sine
- * oscillator angles) and is wrapped scheduling/peephole-off to match. The three
+ * oscillator angles). The three
  * Effect5_func03_nop / Effect5_release / Effect5_initialise stubs and the
  * projgfx_funcs object descriptor complete the TU.
  */

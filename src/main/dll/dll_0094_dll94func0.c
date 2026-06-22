@@ -170,7 +170,7 @@ void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     buf.v59 = 6;
     buf.v5a = 0;
     buf.v5b = 0;
-    buf.count = (GfxCmd*)((u8*)e + 0xd8) - e; /* 9 entries; pointer-diff form is load-bearing for matching */
+    buf.count = (GfxCmd*)((u8*)e + 0xd8) - e;
     buf.hw[0] = *(s16*)(base + 0x6c);
     buf.hw[1] = *(s16*)(base + 0x6e);
     buf.hw[2] = *(s16*)(base + 0x70);

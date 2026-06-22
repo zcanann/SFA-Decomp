@@ -13,9 +13,6 @@
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/VF/vf_shared.h"
 
-/* single f32 arg (not the 6-arg render signature) is load-bearing here:
-   only f1 is set up at the call site, matching retail; same as dll_0134. */
-
 extern f32 lbl_803E3F38;
 
 void texscroll_free(void)
@@ -61,6 +58,6 @@ void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loa
 
 void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 v = visible; /* widen to s32 for cmpwi 0 - matches retail compare form */
+    s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3F38);
 }

@@ -237,7 +237,7 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
                     {
                         out[0] = *(int*)(cur + NODE_NEIGHBOURS);
                     }
-                    else if (forward == 0) /* explicit compare: target emits the second beq */
+                    else if (forward == 0)
                     {
                         out[2] = *(int*)(cur + NODE_NEIGHBOURS);
                     }

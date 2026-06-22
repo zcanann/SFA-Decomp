@@ -190,7 +190,7 @@ void curves_countRandomPoints(int obj, CurvesCollisionState* collision)
     f32 sum3;
     RomCurvePoint** hitOut;
     f32 heights[5];
-    extern int getAngle(f32 deltaX, f32 deltaZ); /* #11/#57 int return drops post-bl extsh */
+    extern int getAngle(f32 deltaX, f32 deltaZ);
 
     object = (GameObject*)obj;
     if ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT == 4)
@@ -359,7 +359,7 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
     f32* outY;
     f32* outX;
     int angle;
-    extern int getAngle(f32 deltaX, f32 deltaZ); /* #11/#57 int return drops post-bl extsh */
+    extern int getAngle(f32 deltaX, f32 deltaZ);
 
     collision->surfaceNormalX = collision->segmentHitPlanes[0][0];
     collision->surfaceNormalY = collision->segmentHitPlanes[0][1];

@@ -571,7 +571,6 @@ u32 GXResetOverflowCount(void) {
 }
 #endif
 
-// NONMATCHING
 #if SDK_REVISION >= 1
 volatile void* GXRedirectWriteGatherPipe(void* ptr) {
     u32 reg = 0;
@@ -604,7 +603,6 @@ volatile void* GXRedirectWriteGatherPipe(void* ptr) {
     return (volatile void*)GXFIFO_ADDR;
 }
 
-// NONMATCHING
 void GXRestoreWriteGatherPipe(void) {
     u32 reg = 0;
     u32 i;

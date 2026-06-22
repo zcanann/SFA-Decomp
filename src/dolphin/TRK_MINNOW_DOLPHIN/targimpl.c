@@ -1222,9 +1222,9 @@ static inline DSError TRKPPCAccessPairedSingleRegister(void* srcDestPtr, u32 psr
 	    = { INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP };
 
 	if (read) {
-		instructionData[0] = INSTR_PSQ_ST(psr, 0, 3, 0, 0); // psq_st psr, 0(r3), 0, 0
+		instructionData[0] = INSTR_PSQ_ST(psr, 0, 3, 0, 0);
 	} else {
-		instructionData[0] = INSTR_PSQ_L(psr, 0, 3, 0, 0); // psq_l psr, 0(r3), 0, 0
+		instructionData[0] = INSTR_PSQ_L(psr, 0, 3, 0, 0);
 	}
 
 	return TRKPPCAccessSpecialReg(srcDestPtr, instructionData, read);
@@ -1244,9 +1244,9 @@ DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read)
 
 	if (fpr < 0x20) {
 		if (read) {
-			instructionData1[0] = INSTR_STFD(fpr, 0, 3); // stfd fpr, 0(r3)
+			instructionData1[0] = INSTR_STFD(fpr, 0, 3);
 		} else {
-			instructionData1[0] = INSTR_LFD(fpr, 0, 3); // lfd fpr, 0(r3)
+			instructionData1[0] = INSTR_LFD(fpr, 0, 3);
 		}
 
 		error = TRKPPCAccessSpecialReg(srcDestPtr, instructionData1, read);

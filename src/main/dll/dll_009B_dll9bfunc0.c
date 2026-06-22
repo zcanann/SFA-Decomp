@@ -33,7 +33,7 @@ extern f32 lbl_803E13C4;
 void dll_9B_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenFxHdr hdr;
-    u8 buf[440]; /* layout anchor declared before parts[] so MWCC places it above them; buf - pp == 14 * 0x18 */
+    u8 buf[440];
     ScreenFxPart parts[SCREENFX_PART_COUNT];
     ScreenFxPart* pp = parts;
     u8* base = (u8*)lbl_80317BD8;

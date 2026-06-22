@@ -92,10 +92,6 @@ void Fall_Ladders_free(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-/* obj is kept an integral param (not GameObject*): MWCC pools integral
-   params low in the saved regs, which is the retail coloring here - a
-   pointer-typed param colors copy-class and shifts the allocation
-   (CLAUDE.md recipe #126). Hence the per-access (GameObject*) casts. */
 void Fall_Ladders_update(int obj)
 {
     int def;

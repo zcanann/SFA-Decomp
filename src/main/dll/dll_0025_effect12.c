@@ -315,7 +315,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
   p.flagsA = p.flagsA | flags;
   if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
   {
-    p.flagsA ^= 2LL; /* LL forces a materialized XOR (li;xor) - recipe #74 */
+    p.flagsA ^= 2LL;
   }
   if ((p.flagsA & 1) != 0)
   {

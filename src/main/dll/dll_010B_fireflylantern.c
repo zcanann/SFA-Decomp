@@ -1,7 +1,5 @@
 /*
  * FireFlyLantern (DLL 0x10B). TU = 0x801871C8..0x80187640.
- * FireFlyLantern_spawnFireFly is placed LAST so MWCC cannot auto-inline it
- * into init; the target keeps it as an extern call.
  */
 #include "main/dll/CF/CFcrystal.h"
 #include "main/game_object.h"

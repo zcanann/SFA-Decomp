@@ -428,7 +428,7 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     ModgfxState* state;
     double biasS;
     u16 rotAngle0;
-    u16 rotAngle1; /* dead stores: reproduce coloring */
+    u16 rotAngle1;
     u16 rotAngle2;
     float unusedW;
     float unusedX;

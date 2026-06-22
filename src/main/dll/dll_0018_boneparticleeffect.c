@@ -269,7 +269,7 @@ void modgfx_initExpgfxSpawnConfig(u32 param_1, u32 param_2, u8 colorLowByte,
                                   u32 textureWord, u32 scaleBits)
 {
     u32 setupWord;
-    u16 setupValue; /* target reads this uninitialised (callee-saved r30) and stores it; load-bearing */
+    u16 setupValue;
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
@@ -914,7 +914,7 @@ void modgfx_resetActiveEffectRegistry(u64 param_1, u64 param_2, u64 param_3,
         activeEffects[i] = (ModgfxActiveEffect*)0x0;
     }
     i = 2;
-    { /* target re-nulls the last two slots; load-bearing (matches the original double-clear) */
+    {
         ModgfxActiveEffect** tailEffects;
 
         tailEffects = &activeEffects[MODGFX_ACTIVE_EFFECT_COUNT - 2];
@@ -1483,7 +1483,7 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                 dy = dy - ((GameObject*)o)->anim.localPosY;
                 dz = dz - ((GameObject*)o)->anim.localPosZ;
                 dx = dx * 20.02f;
-                if (id == 0x1d || id == 0x1d) /* duplicate term is load-bearing: emits target's beq;bne pair */
+                if (id == 0x1d || id == 0x1d)
                 {
                     dy = lbl_803DF4BC * (lbl_803DF4C0 + dy);
                 }

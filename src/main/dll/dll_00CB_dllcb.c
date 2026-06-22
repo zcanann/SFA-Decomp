@@ -180,7 +180,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* p)
     {
         f32 x, y, z;
     } d;
-    f32* dp = &d.x; /* address-taken: keeps d in its stack slot (load-bearing) */
+    f32* dp = &d.x;
 
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {

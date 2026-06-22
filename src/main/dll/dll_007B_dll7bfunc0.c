@@ -687,7 +687,6 @@ void dll_7B_func00_nop(void)
 {
 }
 
-/* unreferenced, but its presence is byte-load-bearing for this unit's .o */
 enum
 {
     SAVEGAME_SLOT_NONE = -1,

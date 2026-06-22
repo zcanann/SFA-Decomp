@@ -1619,7 +1619,7 @@ int Effect9_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(-0x258, 0x258);
         cfg.startPosX = lbl_803DFE2C * (f32)(s32)
         randomGetRange(-0xa, 0xa);
-        cfg.startPosX = 0.0f; /* dead store kept: the randomGetRange above must run for RNG parity (matches target) */
+        cfg.startPosX = 0.0f;
         cfg.scale = lbl_803DFE78;
         cfg.lifetimeFrames = 0x28;
         cfg.behaviorFlags = 0x1080006;

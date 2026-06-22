@@ -343,7 +343,7 @@ static void CheckBumpmapTextures(void) {
         }
     }
 
-    lightRAMOffset; lightRAMOffset;  // needed to match
+    lightRAMOffset; lightRAMOffset;
 }
 
 static void CheckTextureTransformMatrices(void) {
@@ -423,7 +423,6 @@ static void CheckTextureTransformMatrices(void) {
         }
     }
 
-    // needed to match
     StartingAddress;
     StartingAddress;
     StartingAddress;
@@ -498,7 +497,6 @@ static void CheckLight(u32 lightSource) {
     }
 }
 
-// NONMATCHING
 static void CheckColor0(void) {
     char Preamble[256];
     u8 haveLight;
@@ -603,7 +601,6 @@ static void CheckColor0(void) {
     }
 }
 
-// NONMATCHING
 static void CheckColor1(void) {
     u8 usingColor1;
     char Preamble[256];
@@ -846,7 +843,7 @@ static void CheckLightRAMRanges(void) {
 
     }
 
-    i; lightSource;  // needed to match
+    i; lightSource;
 }
 
 static void CheckControlRAMRanges(void) {

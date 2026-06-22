@@ -52,7 +52,7 @@ extern void* gameTextGetPhrase(int textId, int phraseIndex);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 extern void gameTextAppendStr(char* str, int arg2);
-extern void mm_free(void); /* no-arg: r3 forwarded from caller to match target */
+extern void mm_free(void);
 extern void* mmAlloc(int size, int type, int flag);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)
@@ -254,7 +254,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             {
                 previewVolume = 0;
             }
-            else if (previewVolume > 0x7f) /* dead upper clamp — matches target */
+            else if (previewVolume > 0x7f)
             {
                 previewVolume = 0x7f;
             }

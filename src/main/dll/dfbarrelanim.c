@@ -76,7 +76,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     rope->step = lbl_803E4DF8;
     if (rope->step * length > lbl_803E4E04)
     {
-        rope->step = *(f32*)&lbl_803E4E04 / length; /* launder forces a reload (no CSE with the guard above) */
+        rope->step = *(f32*)&lbl_803E4E04 / length;
     }
     rope->maxSlack = lbl_803E4E08;
     rope->stepPerTick = rope->step / tickScale;
@@ -203,7 +203,7 @@ f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ
     {
         t = (dx * (*x - startX) + dz * (*z - startZ)) / (dx * dx + dz * dz);
     }
-    if (t < *(f32*)&lbl_803E4DFC) /* launder forces a reload of the constant (load-bearing for the match) */
+    if (t < *(f32*)&lbl_803E4DFC)
     {
         *x = startX;
         *y = startY;

@@ -49,8 +49,6 @@ void chukchuk_initialise(void)
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-/* scheduling/peephole off spans chukchuk_init, fn_8015F5B0 and chukchuk_update
-   (all three need it to match); restored after chukchuk_update. */
 #pragma scheduling off
 #pragma peephole off
 void chukchuk_init(u8* obj, u8* params)

@@ -238,8 +238,6 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 #pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
- /* #57 */
- /* #57 */
     f32 ang, vx, vz, q, w, dist, c, s;
 
     *(s8*)((char*)state + 0x34c) |= 1;
@@ -808,8 +806,6 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 
 void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
 {
-    /* #57: char* param spelling here is load-bearing for this caller's codegen;
-     * the file-scope defs use int* - per-file extern type controls arg setup */
     extern void player_applyVelocityStep(char* pos, char* state, f32 dt);
     extern void fn_800D8414(char* pos, char* state);
     struct
@@ -985,10 +981,6 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
 void player_updateVel(char* p, char* obj, int unused)
 {
-    /* #57: this site needs the double-param spelling (fmul+frsp setup) to match;
-     * dll_0F_func13 needs the f32-param spelling - asymmetry is load-bearing per call site */
-
-
     float fcos, fsin;
     if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
     {

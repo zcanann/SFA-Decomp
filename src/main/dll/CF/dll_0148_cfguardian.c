@@ -71,10 +71,8 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 
 /* cfguardianPlayEventSfx/cfguardianFlyAlongPath are defined below taking
- * obj as an int (the form their bodies want); cfguardian_updateMain
- * originally saw them with a pointer-first signature, reproduced via these
- * call-site fn-ptr casts so its saved-reg coloring matches retail
- * (CLAUDE.md #57/#115). */
+ * obj as an int; cfguardian_updateMain calls them through these pointer-first
+ * fn-ptr casts. */
 typedef void (*CfPlayEventSfxFn)(int* obj, void* evbuf, void* sfxIds);
 typedef int (*CfFlyAlongPathFn)(int* obj, void* path, f32 f, int phase, void* spd);
 

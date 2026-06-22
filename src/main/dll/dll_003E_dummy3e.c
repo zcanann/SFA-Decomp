@@ -3,10 +3,7 @@
 
 /* EN v1.0 0x80131570  size: 12b  Read changed bit from item->flags. */
 
-/* EN v1.0 0x8013157C  size: 20b  Set item->value and item->frameDelay = 2.
- * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
- * strips the redundant extsh before sth (same family as GameUI_func0F /
- * CMenu_SetShouldClose). */
+/* EN v1.0 0x8013157C  size: 20b  Set item->value and item->frameDelay = 2. */
 
 /* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
 

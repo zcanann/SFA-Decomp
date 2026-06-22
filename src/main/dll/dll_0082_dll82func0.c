@@ -22,7 +22,7 @@ void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315770;
-    FbCmd* e; /* decl split from init below is load-bearing for codegen */
+    FbCmd* e;
     if (variant == 1 || variant == 4)
     {
         *(s16*)(base + 0x1fc) = 0x50;

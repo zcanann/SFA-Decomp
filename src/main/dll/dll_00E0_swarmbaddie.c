@@ -243,7 +243,7 @@ void swarmbaddie_update(int obj)
     {
         f32 x, y, z;
     } d;
-    f32* dp = &d.x; /* unread, but coloring-critical: removing it changes the .o */
+    f32* dp = &d.x;
     f32 volume;
     int oldTarget;
     int hitD;

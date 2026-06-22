@@ -1,7 +1,6 @@
 /*
  * Scarab (DLL 0x106) - GreenScarab/RedScarab/GoldScarab/RainScarab money
- * beetles. TU = 0x801843C0..0x80185868. Helper defs sit after their callers
- * so MWCC keeps them as extern bls (the target does not inline them).
+ * beetles. TU = 0x801843C0..0x80185868.
  */
 #include "main/dll/CF/CFguardian.h"
 #include "main/dll/windlift107state_struct.h"

@@ -274,7 +274,7 @@ void modgfx_initExpgfxSpawnConfig(u32 unused1, u32 unused2, u8 colorLowByte,
                                   u32 textureWord, u32 scaleBits)
 {
     u32 setupWord;
-    u16 setupValue; /* uninitialised - matches target */
+    u16 setupValue;
 
     setupWord = FUN_80286840();
     FUN_800033a8((int)&gExpgfxSpawnConfig, 0, EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);

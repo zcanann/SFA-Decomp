@@ -14,7 +14,7 @@
  *
  * Most file-scope FUN_/DAT_ symbols live in this DLL but are exported by
  * name to the sibling savegame DLLs (dll_005E..dll_007B, dll_00A3,
- * dll_0017); the per-file extern spellings are load-bearing for codegen.
+ * dll_0017).
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

@@ -27,8 +27,6 @@ extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidth
 extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,
                                    int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 extern f32 lbl_803E3F30;
-/* single f32 arg (not the 6-arg render signature) is load-bearing here:
-   only f1 is set up at the call site, matching retail; same as dll_0135. */
 
 void texscroll2_setScale(TexScroll2Object* obj, s8 stepY)
 {

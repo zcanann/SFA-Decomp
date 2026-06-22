@@ -39,7 +39,7 @@ typedef struct VoicePrioPrev
     u16 pad;
 } VoicePrioPrev;
 
-/* prev links viewed as their own table at +0xAC2 (matches target addressing) */
+/* prev links viewed as their own table at +0xAC2 */
 #define ROOT_PREV(idx) (((VoicePrioPrev *)((u8 *)vb + 0xAC2))[idx].prev)
 
 void voiceSetPriority(McmdVoiceState* svoice, u8 prio)

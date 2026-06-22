@@ -92,11 +92,6 @@ typedef struct SAMPLE_INFO
     u8 compType;
 } SAMPLE_INFO;
 
-/*
- * The original TU's static tables live in one contiguous .bss block; MWCC
- * addressed them all off the block base, so model them as one overlay
- * struct cast over the first table's symbol.
- */
 typedef struct SynthDataTables
 {
     SDIR_TAB sdir[128]; /* 0x0000 dataSmpSDirTable */

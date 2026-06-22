@@ -39,7 +39,7 @@ extern f32 gCamDebugOrbitRadiusInit;
 #pragma opt_propagation off
 void CameraModeDebug_update(short* camObj)
 {
-    extern u16 getButtonsJustPressed(int port); /* u16 override: & 2 must produce cmplwi, not cmpwi */
+    extern u16 getButtonsJustPressed(int port);
     u8* cam = (u8*)camObj;
     u8* state;
     u16 held;
