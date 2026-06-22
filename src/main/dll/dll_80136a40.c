@@ -44,11 +44,11 @@ typedef struct TrickyImpressState
     f32 renderPosY;
     f32 renderPosZ;
     u8 pad414[0x7A8 - 0x414];
-    s32 unk7A8;
+    s32 childObj0; /* 0x7A8: attached child object handle (slot 0) */
     u8 pad7AC[0x7B0 - 0x7AC];
-    s32 unk7B0;
+    s32 childObj1; /* 0x7B0: attached child object handle (slot 1) */
     u8 pad7B4[0x7B8 - 0x7B4];
-    s32 unk7B8;
+    s32 childObj2; /* 0x7B8: attached child object handle (slot 2) */
     u8 unk7BC;
     u8 pad7BD[0x808 - 0x7BD];
     f32 unk808;
@@ -803,19 +803,19 @@ void objAnimFreeChildren(int a, int b, void** c)
         if (v0 != NULL)
         {
             ObjLink_DetachChild(a, v0);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7A8, 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj0, 0);
             ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
         else if (v1 != NULL)
         {
             ObjLink_DetachChild(a, v1);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B0, 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj1, 0);
             ((AnimSlots*)(b + 0x7bc))->s1 = 0;
         }
         else if (v2 != NULL)
         {
             ObjLink_DetachChild(a, v2);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->unk7B8, 0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj2, 0);
             ((AnimSlots*)(b + 0x7bc))->s2 = 0;
         }
     }
