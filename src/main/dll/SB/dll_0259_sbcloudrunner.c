@@ -166,7 +166,7 @@ extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
-void FUN_801ee668(u16 *param_1, int param_2)
+void FUN_801ee668(u16 *unused, int state)
 {
     f32 target;
     f64 negTilt;
@@ -174,22 +174,22 @@ void FUN_801ee668(u16 *param_1, int param_2)
     f64 sinA;
     f64 height;
 
-    (**(VtableFn **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(param_2 + 0x6a));
+    (**(VtableFn **)(*DAT_803dd6e4 + 0x20))((int)*(s16 *)(state + 0x6a));
     cosA = FUN_80294964();
     sinA = FUN_80293f90();
     target = lbl_803E6908;
-    if (((SBCloudRunnerState *)param_2)->targetObj != 0)
+    if (((SBCloudRunnerState *)state)->targetObj != 0)
     {
-        target = (f32)((f64)(int)((SBCloudRunnerState *)param_2)->rotZ) / lbl_803E6924;
+        target = (f32)((f64)(int)((SBCloudRunnerState *)state)->rotZ) / lbl_803E6924;
     }
-    ((SBCloudRunnerState *)param_2)->steerSmoothed =
-        lbl_803DC074 * (target - ((SBCloudRunnerState *)param_2)->steerSmoothed) * lbl_803E6928 +
-        ((SBCloudRunnerState *)param_2)->steerSmoothed;
+    ((SBCloudRunnerState *)state)->steerSmoothed =
+        lbl_803DC074 * (target - ((SBCloudRunnerState *)state)->steerSmoothed) * lbl_803E6928 +
+        ((SBCloudRunnerState *)state)->steerSmoothed;
     target = lbl_803E692C;
     height = lbl_803E692C;
-    negTilt = -(f64)((SBCloudRunnerState *)param_2)->steerSmoothed;
-    ((SBCloudRunnerState *)param_2)->steerX = ((SBCloudRunnerState *)param_2)->steerSmoothed;
-    ((SBCloudRunnerState *)param_2)->steerZ = target;
+    negTilt = -(f64)((SBCloudRunnerState *)state)->steerSmoothed;
+    ((SBCloudRunnerState *)state)->steerX = ((SBCloudRunnerState *)state)->steerSmoothed;
+    ((SBCloudRunnerState *)state)->steerZ = target;
     (**(VtableFn **)(*DAT_803dd6e4 + 0x28))
     ((f64)(((f32)(sinA * negTilt + (f64)(f32)(height * -cosA)) * lbl_803DC074) /
          lbl_803E6930),
