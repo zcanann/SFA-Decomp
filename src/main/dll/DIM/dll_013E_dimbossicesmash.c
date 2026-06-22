@@ -14,30 +14,30 @@ extern void objRenderFn_8003b8f4(f32);
 typedef struct DimbossicesmashPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;  /* launch speed (homing) or velocity X (*100) */
-    s16 unk22;  /* velocity Y (*100) */
-    s16 unk24;  /* velocity Z (*100) */
-    s16 unk26;  /* gravity X (*1000) */
-    s16 unk28;  /* gravity Y (*1000) */
-    s16 unk2A;  /* gravity Z (*1000) */
-    s16 unk2C;  /* rotation velocity X */
-    s16 unk2E;  /* rotation velocity Y */
-    s16 unk30;  /* rotation velocity Z */
-    s16 unk32;  /* rotation gravity X (*10) */
-    s16 unk34;  /* rotation gravity Y (*10) */
-    s16 unk36;  /* rotation gravity Z (*10) */
+    s16 spawnRotX;
+    s16 spawnRotY;
+    s16 spawnRotZ;
+    s16 velocityX;  /* launch speed (homing) or velocity X (*100) */
+    s16 velocityY;  /* velocity Y (*100) */
+    s16 velocityZ;  /* velocity Z (*100) */
+    s16 gravityX;  /* gravity X (*1000) */
+    s16 gravityY;  /* gravity Y (*1000) */
+    s16 gravityZ;  /* gravity Z (*1000) */
+    s16 rotVelX;  /* rotation velocity X */
+    s16 rotVelY;  /* rotation velocity Y */
+    s16 rotVelZ;  /* rotation velocity Z */
+    s16 rotGravityX;  /* rotation gravity X (*10) */
+    s16 rotGravityY;  /* rotation gravity Y (*10) */
+    s16 rotGravityZ;  /* rotation gravity Z (*10) */
     u16 lifetime;  /* lifetime in frames */
     u16 fadeStartFrame;  /* fade start frame */
     u8 flags;   /* bit0=homing, bit1=path-control, bit2=trail particles */
     u8 pad3D[0x3E - 0x3D];
     s16 activateGameBit;  /* gamebit to set on activation */
     s16 triggerGameBit;  /* gamebit to test for activation */
-    s16 unk42;  /* homing target X */
-    s16 unk44;  /* homing target Y */
-    s16 unk46;  /* homing target Z */
+    s16 homingTargetX;  /* homing target X */
+    s16 homingTargetY;  /* homing target Y */
+    s16 homingTargetZ;  /* homing target Z */
 } DimbossicesmashPlacement;
 
 extern f32 timeDelta;
@@ -321,9 +321,9 @@ void fn_80196520(u8* obj, u8* state, u8* setup)
         rootMotionScale + ((ObjPlacement*)setup)->posY;
     ((GameObject*)obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * ((GameObject*)obj)->anim.
         rootMotionScale + ((ObjPlacement*)setup)->posZ;
-    ((GameObject*)obj)->anim.rotX = ((DimbossicesmashPlacement*)setup)->unk1A;
-    ((GameObject*)obj)->anim.rotY = ((DimbossicesmashPlacement*)setup)->unk1C;
-    ((GameObject*)obj)->anim.rotZ = ((DimbossicesmashPlacement*)setup)->unk1E;
+    ((GameObject*)obj)->anim.rotX = ((DimbossicesmashPlacement*)setup)->spawnRotX;
+    ((GameObject*)obj)->anim.rotY = ((DimbossicesmashPlacement*)setup)->spawnRotY;
+    ((GameObject*)obj)->anim.rotZ = ((DimbossicesmashPlacement*)setup)->spawnRotZ;
     if ((((DimbossicesmashPlacement*)setup)->flags & 1) != 0)
     {
         spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
