@@ -4237,7 +4237,6 @@ void* ObjSeq_FindTargetObject(u8* obj)
     void** objects;
     int targetId;
     int objectType;
-    f32 bestDistSq;
     u8* candidate;
     void* bestObj;
     int i;
@@ -4245,6 +4244,7 @@ void* ObjSeq_FindTargetObject(u8* obj)
     f32 dy;
     f32 dz;
     f32 distSq;
+    f32 bestDistSq;
 
     targetId = *(int*)(*(u8**)&((GameObject*)obj)->extra + 0x10c);
     if (targetId != 0)
