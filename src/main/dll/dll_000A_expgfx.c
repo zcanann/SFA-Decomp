@@ -697,9 +697,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         camScale = lbl_803DF3D0;
     }
     getAmbientColor(sky, &ambR8, &ambG8, &ambB8);
-    ambScaled[2] = (int)((f32)ambR8 * camScale);
-    ambScaled[1] = (int)((f32)ambG8 * camScale);
-    ambScaled[0] = (int)((f32)ambB8 * camScale);
+    ambScaled[2] = (f32)ambR8 * camScale;
+    ambScaled[1] = (f32)ambG8 * camScale;
+    ambScaled[0] = (f32)ambB8 * camScale;
 
     next = 0;
     scan = runtime->poolActiveCounts;
