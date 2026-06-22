@@ -3664,12 +3664,12 @@ void fn_8012C000(void)
     int kk;
     s16 delta;
     u32 watermark;
-    f32 c2010;
-    f32 c2050;
-    f32 c1E64;
-    f32 c1E94;
-    f32 c1EC8;
     f32 c2190;
+    f32 c1EC8;
+    f32 c1E94;
+    f32 c1E64;
+    f32 c2050;
+    f32 c2010;
     f32 base;
     ObjAnimEventList animEvents;
 
