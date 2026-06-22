@@ -273,10 +273,10 @@ void fn_80150EDC(void* obj, void* state)
     fn_8015039C(obj, state);
 
     {
-        f32 zero = lbl_803E2740;
-        if (*(f32*)((u8*)state + 0x328) != zero &&
+        if (*(f32*)((u8*)state + 0x328) != lbl_803E2740 &&
             *(u16*)((u8*)state + 0x338) != 0)
         {
+            f32 zero = lbl_803E2740;
             *(f32*)((u8*)state + 0x328) = *(f32*)((u8*)state + 0x328) - timeDelta;
             if (*(f32*)((u8*)state + 0x328) <= zero)
             {
