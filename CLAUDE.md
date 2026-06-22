@@ -323,7 +323,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 84. **What looks like a "const-hoist-above-addr-arg" snag is usually just #29** — the callee's REAL arg order puts the
     obj/pointer FIRST. Cross-caller arbitrate (majority decl wins); cast at the CALL SITE only,
     never flip the definition. Expression-operand hoist → embedded `x / (sc = lbl)`; call-arg hoist
-    is open. ⚠️ Embedded-assign in a call arg whose value is REUSED by later args MISCOMPILES.
+    is open. ⚠️ Embedded-assign in a call arg whose value is REUSED by later args MISCOMPILES — and it's a
+    REAL silent miscompile, not just a mismatch (probe-confirmed: `f4((t=lbl),0.0f,t,t*2.0f)` → arg3 f3 is
+    NEVER materialized (garbage reg), arg4 = `2.0*garbage`; the propagation to later args is dropped). TELL:
+    MWCC emits `variable 't' is not initialized before being used` on that call — that warning IS the
+    miscompile fingerprint (build still exits 0, so it's silent). If you see it after an embedded-assign-in-arg,
+    the output is wrong C — back it out. (The #128 safe case differs: the assigned value is reused by a later
+    identical CALL, not a later ARG of the same call.)
 85. **Self-reassign chain `fr = conv; fr = lbl + fr; dst = fr;`** pins eval order + reg (a fresh
     temp copy-propagates away). Web-TERMINATION: shape the LAST statement to target's endpoint
     (fold the final op into the store / use store-expression form).
