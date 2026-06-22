@@ -1084,6 +1084,20 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     detour (volatile-reg base, call-free loop — the #140 volatile sub-case, index form regressed). (4) i/j and the
     #108 within-class saved-reg permutations (decl-order/swap inert). (5) fn_80127F24 is byte-identical except an
     i↔loop2-x r27/r28 swap (reverse creation-order #108; func-scope shared `s16 x` got 97.95→98.03, decl-order inert).
+158. **`s16var = (int)(floatExpr);` emits a SPURIOUS `extsh` before the `sth` — drop the `(int)` cast.** When
+    storing a float-derived value into a narrow (s16) lvalue, the explicit `(int)` cast creates an int node that
+    MWCC narrows to s16 with an `extsh` BEFORE the `sth` (which already truncates) — a redundant instruction. Writing
+    `s16var = floatExpr;` (or `s16var = -(floatExpr);`) lets the float→s16 store emit `fctiwz; …; sth` directly (no
+    pre-store extsh), matching retail. The subsequent `(s16)s16var` compare still reuses the stored reg with ONE
+    extsh (correct). KEEP the `(s16)` cast on the READ/compare (`if ((s16)s16var > 0xff)`) — removing THAT regresses
+    (it's the real signed compare). Only the `(int)` on the float→s16 STORE is spurious. (headdisplay drawArwingHud
+    97.86→98.61, two `arwingHudAlpha = (int)(…)` alpha stores.) Generalizes the #20/#53 narrow-store extsh family to
+    the float-conversion case. OPEN on drawFn_80125424 (the unit's other fn, 92.66→94.24 via #156 inline+const wave
+    consts): a MISSING `extsh r0,r26` on `(f32)alpha` (s16 alpha kept in a saved reg — retail re-extends it, ours
+    tracks it as already-extended from the clamp and skips; value-range-tracking diff, clean form unfound); the
+    strength-reduced induction init `mr rK,rCounter` (retail copies i=0 into the i*0xd48 / i*0x7d0 reduced vars) vs
+    our `li 0` (#136/#110 — opt_level 1 unavailable, call-bearing fn); a waveAmp↔wave f27/f28 FP swap (#82/#121);
+    and the #108 GPR rotation. All assumed to have clean forms, not yet found.
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
