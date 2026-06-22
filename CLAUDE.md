@@ -1089,6 +1089,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `const` is the lever for "retail CSE-hoists a loop-invariant float into a saved reg but our build recomputes/GPR-
     hoists." Co-lever: a `f64 tmp` intermediate splits a chained `(double)…*A*B` so the LAST constant (B) loads LATE
     (at the second `*`) into the arg reg, not hoisted early — matched pauseMenuDraw's x-calc (96.7→96.9). (pausemenu.c.)
+    GENERALIZED to f64 consts (dll_0000_gameui boxDrawFn_8012975c 94.18→98.48: `f64 c0/c1/c2 = lbl;` → `extern const
+    f64 lbl;` + inline). **DISCRIMINATOR (hit-or-miss — A/B it):** inline+const HELPS when the named locals color
+    CONSECUTIVE (f27/f28/f29) but retail SPREADS them (f27/f30/f31 with the conversion-bias/computed webs interleaved)
+    — i.e. retail creates the const webs AT-USE, after the bias/computed webs. It REGRESSES when retail keeps the
+    HOISTED named-local form and the consecutive coloring is already closer (dll_0000_gameui fn_8012C000 94.9→89.1 with
+    6 consts inlined — retail wants them hoisted, f26-f31). Read retail's preheader: consts loaded together at the top
+    → keep named locals; consts loaded spread/at-use → inline+const. boxDrawFn (2 consts each in 2 short loops) spread →
+    inline won; fn_8012C000 (6 consts, one big loop) hoisted-together → inline lost.
     METHOD NOTE — **objdiff largely NORMALIZES stack-displacement immediates**: a frame-size/stwu mismatch that ONLY
     shifts every `N(r1)` offset by a constant is NEARLY score-neutral (pauseMenuDraw frame 336 vs retail 176 cost ~0).
     The frame is worth fixing ONLY when the buf/local size change lands the conv-temp offsets on retail's EXACT values
