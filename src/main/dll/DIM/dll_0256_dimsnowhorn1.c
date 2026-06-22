@@ -25,13 +25,13 @@ typedef struct DIMSnowHorn1State
     u8 pad96E[0x980 - 0x96E];
     u8 unk980;
     u8 pad981[3];
-    f32 unk984;
-    f32 unk988;
-    f32 unk98C;
+    f32 spawnPosX;
+    f32 spawnPosY;
+    f32 spawnPosZ;
     u8 pad990[0x9E8 - 0x990];
-    f32 unk9E8; /* model-matrix offset vec */
-    f32 unk9EC;
-    f32 unk9F0;
+    f32 pathPosX; /* model-matrix offset vec */
+    f32 pathPosY;
+    f32 pathPosZ;
     u8 pad9F4[0xA84 - 0x9F4];
     s16 countdownTimer;
     s16 unkA86;
@@ -900,9 +900,9 @@ int DIMSnowHorn1_render2(int obj)
 void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
 {
     DIMSnowHorn1State* state = ((GameObject*)obj)->extra;
-    *out_x = state->unk9E8;
-    *out_y = state->unk9EC;
-    *out_z = state->unk9F0;
+    *out_x = state->pathPosX;
+    *out_y = state->pathPosY;
+    *out_z = state->pathPosZ;
 }
 
 int DIMSnowHorn1_func11(int obj)
@@ -1132,16 +1132,16 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == -1)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E8258);
-        ObjPath_GetPointWorldPosition(obj, 1, &state->unk9E8, &state->unk9EC,
-                                      &state->unk9F0, 0);
+        ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY,
+                                      &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32*)((char*)state + 0x9b0));
     }
 
     if ((state->mountMode != 2) && (visible != 0))
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E8258);
-        ObjPath_GetPointWorldPosition(obj, 1, &state->unk9E8, &state->unk9EC,
-                                      &state->unk9F0, 0);
+        ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY,
+                                      &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32*)((char*)state + 0x9b0));
     }
 }
@@ -1310,9 +1310,9 @@ void DIMSnowHorn1_update(int obj)
             && ((DIMSnowHorn1State*)inner)->mountMode == 0)
         {
             ((DIMSnowHorn1State*)inner)->unk980 = 1;
-            ((DIMSnowHorn1State*)inner)->unk984 = ((GameObject*)p2)->anim.localPosX;
-            ((DIMSnowHorn1State*)inner)->unk988 = ((GameObject*)p2)->anim.localPosY;
-            ((DIMSnowHorn1State*)inner)->unk98C = ((GameObject*)p2)->anim.localPosZ;
+            ((DIMSnowHorn1State*)inner)->spawnPosX = ((GameObject*)p2)->anim.localPosX;
+            ((DIMSnowHorn1State*)inner)->spawnPosY = ((GameObject*)p2)->anim.localPosY;
+            ((DIMSnowHorn1State*)inner)->spawnPosZ = ((GameObject*)p2)->anim.localPosZ;
         }
         else
         {
