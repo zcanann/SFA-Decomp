@@ -1902,7 +1902,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     int base0;
     f32 fz430;
     f32 fz434;
-    void** scan;
 
     total = 0;
     for (i = 0, found = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
@@ -2572,6 +2571,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 animate:
     {
         int k4 = k * 4;
+        int ofs = k4 + 0xb0;
         char* kb = (char*)state + k4;
         *(f32*)(kb + 0xb0) =
             *(f32*)(kb + 0xb0) +
@@ -2585,7 +2585,6 @@ animate:
             *(f32*)(kb + 0xb0) = gModgfxColorClampMax;
         }
         {
-            int ofs = k4 + 0xb0;
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
                 bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + ofs);
