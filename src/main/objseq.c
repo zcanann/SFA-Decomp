@@ -4498,16 +4498,16 @@ void objSeq_onMapSetup(void)
         s16* modes2 = (s16*)(base + 0x3a98) + i;
         for (; i < 0x55; i++)
         {
-            marks2[0x3b9c - 0x338c] = 0;
-            marks2[0x3b44 - 0x338c] = 0;
+            *(marks2 + (0x3b9c - 0x338c)) = 0;
+            *(marks2 + (0x3b44 - 0x338c)) = 0;
             modes2[0] = 0;
-            marks2[0x3c4c - 0x338c] = 0;
-            marks2[0x3bf4 - 0x338c] = 0;
-            marks2[0x3a40 - 0x338c] = 0;
-            marks2[0x39e8 - 0x338c] = 0;
-            *(f32*)(marks2 + (0x3894 - 0x338c)) = lbl_803DEFB0;
-            *(f32*)(marks2 + (0x3740 - 0x338c)) = lbl_803DEFF0;
-            marks2[0x3590 - 0x338c] = 0;
+            *(marks2 + (0x3c4c - 0x338c)) = 0;
+            *(marks2 + (0x3bf4 - 0x338c)) = 0;
+            *(marks2 + (0x3a40 - 0x338c)) = 0;
+            *(marks2 + (0x39e8 - 0x338c)) = 0;
+            *(f32*)(handles2 + (0x3894 - 0x33e4)/4) = lbl_803DEFB0;
+            *(f32*)(handles2 + (0x3740 - 0x33e4)/4) = lbl_803DEFF0;
+            *(marks2 + (0x3590 - 0x338c)) = 0;
             handles2[0] = 0;
             marks2[0] = 0;
             modes2++;
