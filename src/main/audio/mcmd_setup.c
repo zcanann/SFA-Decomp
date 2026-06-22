@@ -416,7 +416,7 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     McmdAdsrData adsr;
     McmdAdsrCurve* adsr_ptr;
-    u32 sl;
+    s32 sl;
     s32 ascale;
     s32 dscale;
 
