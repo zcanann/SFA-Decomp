@@ -4405,6 +4405,7 @@ void textureFreeFn_8012fcec(void)
     u8 i;
     s16* rowS16;
     u8* rowU8;
+    void* nullTex = NULL;
 
     gameUiResetMenuState();
     for (i = 0; i < 64; i++)
@@ -4415,7 +4416,7 @@ void textureFreeFn_8012fcec(void)
         if (*tex != NULL)
         {
             textureFree(*tex);
-            *tex = NULL;
+            *tex = nullTex;
         }
         rowS16 = (s16*)(base + j * 2);
         rowS16[1188] = -1;
