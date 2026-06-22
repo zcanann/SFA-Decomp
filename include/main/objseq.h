@@ -121,7 +121,7 @@ struct ObjSeqState {
     s16 animCount;
     s16 cmdCursor;
     s16 unk68;
-    s16 unk6A;
+    s16 gameBit;
     s16 unk6C;
     s16 flags;
     s16 unk70;

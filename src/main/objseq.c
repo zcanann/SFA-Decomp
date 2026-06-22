@@ -853,7 +853,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                     gObjSeqBoolFlags[(s8)((ObjSeqState*)seq)->slot] = top16;
                     break;
                 case 6:
-                    GameBit_Set(((ObjSeqState*)seq)->unk6A, top16 != 0);
+                    GameBit_Set(((ObjSeqState*)seq)->gameBit, top16 != 0);
                     break;
                 case 2:
                     break;

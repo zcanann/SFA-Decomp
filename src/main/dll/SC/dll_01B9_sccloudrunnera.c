@@ -197,7 +197,7 @@ void sc_cloudrunnera_init(int obj, int p2)
 
     objSetSlot(obj, 0x64);
     seq = ((GameObject*)obj)->extra;
-    seq->unk6A = ((ScCloudrunneraPlacement*)p2)->unk1A;
+    seq->gameBit = ((ScCloudrunneraPlacement*)p2)->unk1A;
     seq->flags = -1;
     base = lbl_803E55E0;
     seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)p2)->unk24);
