@@ -728,6 +728,7 @@ void fn_802BCA10(int obj, int sub, int state)
 
 int DR_EarthWarrior_stateHandler02(int obj, int state)
 {
+    extern int ObjAnim_GetCurrentEventCountdown();
     int inner = *(int*)&((GameObject*)obj)->extra;
     int q = inner + 0xb58;
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
