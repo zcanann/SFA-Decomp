@@ -95,15 +95,6 @@ playbook, no confirmation noise, reproduce disproofs before integrating, and the
 gate. When a hunter or validator says "build-domain / unreachable / capped," push back with the
 specific untried form — that verdict has been wrong nearly every time it came up.
 
-**Recurring frontier classes** (so you recognize them fast): creation-order coloring (#108/#136 — source
-declaration/creation order sets within-class register homes; relocate the creating expression), the
-conversion-bias FP register (#148 — conversion source-position; inert when the result is stored+re-read),
-value-0 / const-keep (O4 graph-coloring keeps a const in a saved reg, O2 re-materializes), and the
-genuinely-hard pressure-driven free-reg picks (context-bound, not isolable — fresh-eyes/oracle targets).
-Structural/drift/extern-type/width bugs are higher-yield-per-fn but get mined out early; after that the
-work is the allocator/conversion coloring frontier, plus a small owner-domain pile (paired-single
-inline-asm, foreign-compiler objects, symbols.txt sizes).
-
 **Scope notes:** `report.json fuzzy_match_percent` is the gate, NOT byte-identity (renames/struct
 consolidation are fine if % holds). When a fn's only diff is an `@NNN`-vs-named pool/reloc, that's
 usually score-neutral (#70) — don't chase it. A lever that DROPS the headline % but surfaces a needed
