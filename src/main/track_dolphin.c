@@ -3861,9 +3861,9 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         for (i = 0; i < slot; i++)
         {
             f32* v0 = (f32*)((char*)cache + off);
-            f32 a2 = v0[2];
-            f32 a1 = v0[1];
             f32 a0 = v0[0];
+            f32 a1 = v0[1];
+            f32 a2 = v0[2];
             GXWGFifo.f32 = a0;
             GXWGFifo.f32 = a1;
             GXWGFifo.f32 = a2;
