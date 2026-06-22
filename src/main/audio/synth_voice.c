@@ -435,9 +435,8 @@ void LowPrecisionHandler(int voice)
         goto end;
     }
 
-    lowDeltaTime = synthRealTimeLo - sv->lastLowCallTimeLo;
-    sv->lastLowCallTimeLo = synthRealTimeLo;
-    sv->lastLowCallTimeHi = synthRealTimeHi;
+    lowDeltaTime = (u32)(*(u64*)&synthRealTimeHi - *(u64*)&sv->lastLowCallTimeHi);
+    *(u64*)&sv->lastLowCallTimeHi = *(u64*)&synthRealTimeHi;
 
     for (j = 0; j < 2; ++j)
     {
@@ -682,9 +681,8 @@ void ZeroOffsetHandler(int voice)
         goto end;
     }
 
-    lowDeltaTime = synthRealTimeLo - sv->lastZeroCallTimeLo;
-    sv->lastZeroCallTimeLo = synthRealTimeLo;
-    sv->lastZeroCallTimeHi = synthRealTimeHi;
+    lowDeltaTime = (u32)(*(u64*)&synthRealTimeHi - *(u64*)&sv->lastZeroCallTimeHi);
+    *(u64*)&sv->lastZeroCallTimeHi = *(u64*)&synthRealTimeHi;
 
     if ((HWVOICE_FLAGS(sv) & 0x8000) != 0)
     {
