@@ -3377,17 +3377,24 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     e[0] = rayOrig[0] - T[0];
     e[1] = rayOrig[1] - T[1];
     e[2] = rayOrig[2] - T[2];
-    f29 = nrm[1] * e[1] + nrm[0] * e[0] + nrm[2] * e[2];
+    {
+        f32 d0 = nrm[1] * e[1];
+        f29 = d0 + nrm[0] * e[0] + nrm[2] * e[2];
+    }
     f29 = f29 * f29;
     if (f29 <= T[10])
     {
         Vec3_Cross(e, T + 6, tmp14);
-        len = -(tmp14[1] * nrm[1] + tmp14[0] * nrm[0] + tmp14[2] * nrm[2]) / len;
+        {
+            f32 dl = tmp14[1] * nrm[1];
+            len = -(dl + tmp14[0] * nrm[0] + tmp14[2] * nrm[2]) / len;
+        }
         Vec3_Cross(nrm, T + 6, tmp14);
         Vec3_Normalize(tmp14);
         {
             f32 s = sqrtf(T[10] - f29);
-            f32 dn = rayDir[1] * tmp14[1] + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
+            f32 dd = rayDir[1] * tmp14[1];
+            f32 dn = dd + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
             if (r < *(f32*)&__AR_Callback) r = -r;
             len = len - r;
@@ -3402,8 +3409,12 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                 hit[0] = rayOrig[0] + hit[0];
                 hit[1] = rayOrig[1] + hit[1];
                 hit[2] = rayOrig[2] + hit[2];
-                f12 = (hit[1] * T[7] + hit[0] * T[6] + hit[2] * T[8]) -
-                    (T[7] * T[1] + T[6] * T[0] + T[8] * T[2]);
+                {
+                    f32 d1 = hit[1] * T[7];
+                    f32 d2 = T[7] * T[1];
+                    f12 = (d1 + hit[0] * T[6] + hit[2] * T[8]) -
+                        (d2 + T[6] * T[0] + T[8] * T[2]);
+                }
                 if (f12 >= __AR_Callback)
                 {
                     if (f12 <= T[11])
