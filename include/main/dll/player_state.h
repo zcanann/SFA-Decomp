@@ -121,7 +121,7 @@ typedef struct PlayerState {
     u8 pad4E2[0x4E4 - 0x4E2];
     s8 climbStep; /* discrete climb/step level (++ up, -- down by moveInputZ); climbTargetY = climbStep*climbStepHeight + climbBaseY; >3 switches A-button icon */
     s8 unk4E5;
-    u8 unk4E6;
+    u8 climbingUp; /* 0x4e6: climb direction, 1 while ascending (forward Y lerp start->target), 0 while descending (reverse lerp) */
     s8 unk4E7;
     f32 unk4E8;
     f32 climbBaseY; /* base local-Y for the climb-step lerp: climbTargetY = climbStep*climbStepHeight + climbBaseY */

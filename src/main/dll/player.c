@@ -2269,7 +2269,7 @@ int fn_802A1CA8(int obj, int state)
     case 13:
         ((GameObject*)obj)->anim.localPosY = ((PlayerState*)inner)->climbTargetY;
         ((GameObject*)obj)->anim.activeMove = -1;
-        ((PlayerState*)inner)->unk4E6 = 0;
+        ((PlayerState*)inner)->climbingUp = 0;
         ((PlayerState*)inner)->climbStartY = ((PlayerState*)inner)->climbTargetY;
         spd = lbl_803E7EA4;
         ph = spd;
@@ -2385,7 +2385,7 @@ int fn_802A1CA8(int obj, int state)
         {
             if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
             {
-                ((PlayerState*)inner)->unk4E6 = 0;
+                ((PlayerState*)inner)->climbingUp = 0;
                 ph = -(lbl_803E7EF8 * t + lbl_803E7F20);
                 if ((s16)gPlayerCurrentMoveId <= 1)
                 {
@@ -2396,7 +2396,7 @@ int fn_802A1CA8(int obj, int state)
             else
             {
                 *(u8*)&((PlayerState*)inner)->climbStep += 1;
-                ((PlayerState*)inner)->unk4E6 = 1;
+                ((PlayerState*)inner)->climbingUp = 1;
                 ph = lbl_803E7EA4;
                 if ((s16)gPlayerCurrentMoveId <= 1)
                 {
@@ -2417,7 +2417,7 @@ int fn_802A1CA8(int obj, int state)
             {
                 if (((PlayerState*)state)->baddie.moveInputZ > lbl_803E7F10)
                 {
-                    ((PlayerState*)inner)->unk4E6 = 1;
+                    ((PlayerState*)inner)->climbingUp = 1;
                     if ((int)((PlayerState*)inner)->climbStep >=
                         ((PlayerState*)inner)->unk4E5 - 3)
                     {
@@ -2462,7 +2462,7 @@ int fn_802A1CA8(int obj, int state)
                 else if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
                 {
                     *(u8*)&((PlayerState*)inner)->climbStep -= 1;
-                    ((PlayerState*)inner)->unk4E6 = 0;
+                    ((PlayerState*)inner)->climbingUp = 0;
                     if (((PlayerState*)inner)->climbStep < 1)
                     {
                         if (((PlayerState*)inner)->curAnimId != 0x48 &&
@@ -2592,7 +2592,7 @@ int fn_802A1CA8(int obj, int state)
         {
             ph = lbl_803E7F84 * t + lbl_803E7F20;
         }
-        if (*(s8*)&((PlayerState*)inner)->unk4E6 != 0)
+        if (*(s8*)&((PlayerState*)inner)->climbingUp != 0)
         {
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.currentMoveProgress *
