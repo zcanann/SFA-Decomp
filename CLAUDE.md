@@ -549,7 +549,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     covers NODE-level splits; an OPERAND-level conversion-node split is a second family — but it
     permutes the saved regs, so always pair it with a creation-order fix.)
 135. **The "2nd saved reg for one field" puzzle (#131/#132/#134) is usually NOT a trick — it is
-    what TYPED PER-STATEMENT ARRAY INDEXING produces for free.** When retail holds a struct base in
+    what TYPED PER-STATEMENT ARRAY INDEXING produces for free.** DISCRIMINATOR (pausemenu): #135 fits
+    ARRAY-OF-STRUCTS (`arr[idx].field`, ONE base) — do NOT apply it to STRUCT-OF-ARRAYS (parallel member
+    arrays at fixed offsets, e.g. `obj+0x448`, `obj+0x948`, `obj+0x9c8` each a separate `T arr[N]`). On SoA,
+    the typed `arr[i].field` form COLLAPSES the two-base+`mr` the target wants (regressed gameui textureFreeFn
+    93→74.65). The SoA two-base-copy clean form is a SEPARATE open puzzle (assumed-exists, not yet found) —
+    don't force #135 there. When retail holds a struct base in
     TWO saved regs (one for the setup stores, one for a field read back across calls), the PLAUSIBLE
     source is `T *arr = (T*)base; arr[idx].field = ...` with the index RE-SPELLED every statement —
     NOT a cached `T *p = &arr[idx]`. MWCC then (a) CSEs the consecutive setup stores onto one saved
@@ -623,15 +628,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     and `(int obj, int p2, f32 f, int p4)` → fixing externs + call arg order 92.48→96.56, +4.08.) SWEEP: grep
     other units' externs of the same shared helpers; an empty K&R proto `extern int fn();` on a float-taking
     helper is also suspect (the float's reg assignment is then unprototyped — give it the real signature).
-    PROJECT-WIDE VEIN (pausemenu sweep): grepping ALL dll externs of float-taking shared helpers vs their real
-    defs found **85 helpers with inconsistent float-arg POSITIONS across files** — this lever is far from
-    tapped. SWEEP METHOD: (1) real def `grep '^\w.*\bNAME(' src/`; (2) files with a mispositioned extern;
-    (3) unit sub-100 + STALE/unowned (`git log -1 --format=%cr -- <file>`, re-check right before editing);
-    (4) reorder extern + call args to the real def order; (5) verify report.json no-regress. CAVEAT: it's
-    EMISSION-NEUTRAL (no win) when the caller is already 100% OR the target already emits float-after-obj —
-    verify PER-CALL in the asm, don't blind-fix (pausemenu hit this on the gameui draw helpers
-    drawTexture/drawScaledTexture). VERIFIED win shape: `objMove` real `int objMove(u8* obj,f32,f32,f32)`
-    (object.c) vs float-first artifact externs in dll_00FF_magicdust / dll_01AA_bombplantspore.
+    SWEEP REALITY (pausemenu, verified-by-score): grepping all dll externs of float-taking helpers flags
+    **~85 with inconsistent float-arg positions, but those are MOSTLY FALSE POSITIVES** — the
+    "real-def-obj-first vs extern-float-first" heuristic ALONE is insufficient: ~4 in 5 are EMISSION-NEUTRAL
+    (target already emits float-after-obj) or REGRESS, and the "real def" itself is unreliable (drift / FUN_
+    renames / multiple defs — e.g. fn_8010AC48 reorder REGRESSED 99.75→98.85). MANDATORY RULE: apply
+    PER-CANDIDATE, REBUILD + MEASURE report.json, KEEP only if the fn's % RISES, else REVERT. Do NOT blind-fix
+    from the grep. The one productive SUB-PATTERN found: real-def obj-FIRST + the call passes obj as the LAST
+    arg + a float-FIRST extern (narrow — only `objMove` hit: `int objMove(u8* obj,f32,f32,f32)` object.c, fixed
+    in dll_00FF_magicdust 97.03→97.39 + dll_01AA_bombplantspore 98.05→98.58). Use the CALLER's existing obj
+    type in the reordered extern (a `void*`/`int` obj mismatch breaks the build; register-neutral either way).
 138. **Global-base WALKED array with a `mr rWalker,r0` detour → index it as a TYPED STRUCT ARRAY.**
     When a loop walks a global array and the base routes through r0 (`lis r3; addi r0,r3,LO; mr
     rWalker,r0`) instead of the target's direct `addi rWalker,r3,LO`, the clean form is
