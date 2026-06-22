@@ -131,6 +131,7 @@ void camclimb_update(CameraObject* cam)
     f32 relY;
     f32 relZ;
     f32 relDistXZ;
+    f32 *pYaddr;
 
     if (gCamcontrolPathState->active != 0)
     {
@@ -157,8 +158,8 @@ void camclimb_update(CameraObject* cam)
             gCamcontrolPathState->localFrameObj = *(int*)&cam->anim.parent;
         }
         target = (GameObject*)cam->anim.targetObj;
-        localPosY = cam->anim.localPosY;
-        needsReset = camcontrol_samplePathState(&localPosX, &localPosY, localPosZ, target, cam);
+        *(pYaddr = &localPosY) = cam->anim.localPosY;
+        needsReset = camcontrol_samplePathState(&localPosX, pYaddr, localPosZ, target, cam);
         cam->anim.localPosX = localPosX;
         cam->anim.localPosZ = localPosZ[0];
         defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
