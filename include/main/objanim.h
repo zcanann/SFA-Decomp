@@ -31,7 +31,7 @@ extern char gObjAnimMissingCachedMoveWarning[];
 #define OBJANIM_STATE_WORD_PREV_EVENT_STATE 2
 
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
-                          u32 moveId,s16 eventState);
+                          u32 moveId,int eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
 /* ABI-facing callbacks pass object pointers through int; implementations cast to ObjAnimComponent. */

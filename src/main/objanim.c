@@ -31,7 +31,7 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 #pragma scheduling off
 #pragma peephole off
 void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state,
-                          u32 moveId, s16 eventState)
+                          u32 moveId, int eventState)
 {
     int requestedEventState;
     int moveIndex;
@@ -40,6 +40,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     float blendFrameLength;
 
     requestedEventState = eventState;
+    requestedEventState |= eventState;
     moveIndex = animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
         (moveId & OBJANIM_MOVE_INDEX_MASK);
     if (moveIndex >= animDef->moveCount)
@@ -107,7 +108,7 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, in
     bank = ObjAnim_GetActiveBank(objAnim);
     if (bank->animDef->moveCount != 0)
     {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->activeState, moveId, eventState);
+        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->activeState, moveId, (s16)eventState);
     }
     return;
 }
@@ -119,7 +120,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
     bank = ObjAnim_GetActiveBank(objAnim);
     if (bank->animDef->moveCount != 0)
     {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->currentState, moveId, eventState);
+        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->currentState, moveId, (s16)eventState);
     }
     return;
 }
