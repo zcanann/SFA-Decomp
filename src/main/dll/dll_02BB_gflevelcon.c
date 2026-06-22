@@ -39,25 +39,25 @@
 
 /* The next two typedefs are two views over the SAME 0x10-byte obj->extra
    allocation (gf_levelcon_getExtraSize returns 0x10). findLinkedObjects
-   caches the three linked object handles as s32 ids (unk0=light,
-   unk4=scrollA, unk8=scrollB); handleScriptEvents reads unk4/unk8 back as
+   caches the three linked object handles as s32 ids (light, scrollA,
+   scrollB); handleScriptEvents reads scrollA/scrollB back as
    s16* scroll-offset pointers and promptTimer as the prompt countdown. The split
-   into two casts (with differing field types at unk4/unk8) is
+   into two casts (with differing field types at scrollA/scrollB) is
    matching-required: collapsing to one struct changes the cast keys and
    the codegen. */
 typedef struct GfLevelconFindLinkedObjectsState
 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
+    s32 light;
+    s32 scrollA;
+    s32 scrollB;
     u8 padC[0x10 - 0xC];
 } GfLevelconFindLinkedObjectsState;
 
 typedef struct GfLevelconHandleScriptEventsState
 {
-    s32 unk0;
-    void* unk4;
-    void* unk8;
+    s32 light;
+    void* scrollA;
+    void* scrollB;
     f32 promptTimer;
 } GfLevelconHandleScriptEventsState;
 
@@ -168,14 +168,14 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState* ani
     }
 
     {
-        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk4;
+        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollA;
         if (p != NULL)
         {
             *p += (s16)(lbl_803E748C * timeDelta);
         }
     }
     {
-        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->unk8;
+        s16* p = *(s16**)&((GfLevelconHandleScriptEventsState*)state)->scrollB;
         if (p != NULL)
         {
             *p -= (s16)(lbl_803E748C * timeDelta);
@@ -232,9 +232,9 @@ void gf_levelcon_findLinkedObjects(int obj)
     int objectCount;
     int o;
 
-    ((GfLevelconFindLinkedObjectsState*)state)->unk0 = 0;
-    ((GfLevelconFindLinkedObjectsState*)state)->unk4 = 0;
-    ((GfLevelconFindLinkedObjectsState*)state)->unk8 = 0;
+    ((GfLevelconFindLinkedObjectsState*)state)->light = 0;
+    ((GfLevelconFindLinkedObjectsState*)state)->scrollA = 0;
+    ((GfLevelconFindLinkedObjectsState*)state)->scrollB = 0;
     objects = ObjList_GetObjects(&objectIndex, &objectCount);
     for (; objectIndex < objectCount; objectIndex++)
     {
@@ -244,13 +244,13 @@ void gf_levelcon_findLinkedObjects(int obj)
             switch (*(int*)(*(int*)(o + 0x4c) + 0x14))
             {
             case GFLEVELCON_LINK_LIGHT:
-                ((GfLevelconFindLinkedObjectsState*)state)->unk0 = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->light = o;
                 break;
             case GFLEVELCON_LINK_SCROLL_A:
-                ((GfLevelconFindLinkedObjectsState*)state)->unk4 = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->scrollA = o;
                 break;
             case GFLEVELCON_LINK_SCROLL_B:
-                ((GfLevelconFindLinkedObjectsState*)state)->unk8 = o;
+                ((GfLevelconFindLinkedObjectsState*)state)->scrollB = o;
                 break;
             }
         }
