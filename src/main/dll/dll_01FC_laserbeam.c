@@ -216,7 +216,7 @@ void LaserBeam_update(int obj2)
             }
             b->active = 0;
         }
-        else if (b->fireTimer < b->unk2E)
+        else if (b->fireTimer < b->fireTimerLimit)
         {
             if (b->active == 0)
             {
@@ -500,7 +500,7 @@ void LaserBeam_free(s16* obj, char* arg)
     b->active = 0;
     b->sweepPhase = lbl_803E5D10;
     b->beamKind = *(u8*)(arg + 0x19);
-    b->unk2E = 0x118;
+    b->fireTimerLimit = 0x118;
     b->emitterSlot = -1;
     if (b->beamKind == 30)
     {

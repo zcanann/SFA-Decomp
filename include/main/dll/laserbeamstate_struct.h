@@ -22,7 +22,7 @@ typedef struct LaserBeamState
     s16 unk28;
     s16 sweepYaw; /* 0x2a */
     s16 fireTimer; /* 0x2c */
-    s16 unk2E;
+    s16 fireTimerLimit; /* 0x2e: fireTimer must stay below this to keep the beam active (=0x118) */
     s16 firePeriod; /* 0x30 */
     s16 emitterSlot; /* 0x32: modgfx handle head */
     u8 pad34[0xc];
