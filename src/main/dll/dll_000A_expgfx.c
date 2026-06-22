@@ -1903,7 +1903,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
     int tableIndex;
     int freeIndex;
 
-    for (tableIndex = 0, entry = gExpgfxTableEntries, table = entry; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++)
+    for (tableIndex = 0, entry = gExpgfxTableEntries, table = entry; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++)
     {
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
             (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey))
@@ -1918,7 +1918,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
         }
     }
 
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++, table++)
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; table++, freeIndex++)
     {
         if (table->refCount == 0)
         {
