@@ -6118,9 +6118,9 @@ int mapUnload(int mapId, int flags)
                                 }
                                 if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5)
                                 {
-                                    int* slot = &MAPTBL32(j, -0x6C08);
-                                    mm_free((void*)*slot);
-                                    *slot = 0;
+                                    int* slot = (int*)((char*)base + (j * 4 + 0x20000));
+                                    mm_free((void*)slot[-0x6C08 / 4]);
+                                    slot[-0x6C08 / 4] = 0;
                                 }
                                 break;
                             }
