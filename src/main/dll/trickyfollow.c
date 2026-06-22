@@ -1316,8 +1316,8 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
     f32 sum;
     f32 v;
     f32 dec;
-    f32 thresh;
     f32 distSq;
+    f32 thresh;
     f32 dist;
     f32 dx;
     f32 dz;
