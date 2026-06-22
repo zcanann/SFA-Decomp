@@ -2597,8 +2597,6 @@ void expgfx_free(u32 sourceId)
     u32* slotPoolBases;
     u32* poolSourceIds;
     s8* poolActiveCounts;
-    s16* poolSlotTypeIds;
-    u8* poolFrameFlags;
     int tableIndex;
     int poolIndex;
     int slotIndex;
@@ -2613,8 +2611,6 @@ void expgfx_free(u32 sourceId)
     slotPoolBases = runtime->slotPoolBases;
     poolSourceIds = runtime->poolSourceIds;
     poolActiveCounts = runtime->poolActiveCounts;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
@@ -2635,18 +2631,16 @@ void expgfx_free(u32 sourceId)
                 slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
                 if (*poolActiveCounts == 0)
                 {
-                    *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
+                    gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
                 }
             }
             *poolSourceIds = 0;
-            *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
+            gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
 
         poolSourceIds++;
         slotPoolBases++;
         poolActiveCounts++;
-        poolSlotTypeIds++;
-        poolFrameFlags++;
         poolIndex++;
     }
 }
