@@ -167,10 +167,10 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     int modelState;
     int* extra;
     int linkedObj;
-    u16 uStack_2a;
-    u32 local_28;
-    u32 local_24;
-    u16 local_20;
+    u16 setupTable;
+    u32 setupData0;
+    u32 setupData1;
+    u16 setupData2;
 
     extra = ((GameObject*)obj)->extra;
     *(u8*)(extra + 8) = 0xff;
@@ -180,9 +180,9 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         *(u8*)((int)extra + 0x21) = 0xff;
         animUpdate->triggerCommand = 0;
     }
-    local_28 = DAT_802c2a88;
-    local_24 = DAT_802c2a8c;
-    local_20 = DAT_802c2a90;
+    setupData0 = DAT_802c2a88;
+    setupData1 = DAT_802c2a8c;
+    setupData2 = DAT_802c2a90;
     if (*(char*)((int)extra + 0x21) != *(char*)((int)extra + 0x22))
     {
         if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
@@ -201,7 +201,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         {
             if (0 < *(char*)((int)extra + 0x21))
             {
-                setup = FUN_80017aa4(0x18, (&uStack_2a)[*(char*)((int)extra + 0x21)]);
+                setup = FUN_80017aa4(0x18, (&setupTable)[*(char*)((int)extra + 0x21)]);
                 param_12 = 0xffffffff;
                 param_13 = *(u32**)&((GameObject*)obj)->anim.parent;
                 spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
