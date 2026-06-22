@@ -737,14 +737,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `li r0`) = the ONE remaining open nut — and it UNIFIES (c)-field-store (`entryCount=0`), (d) Minimap
     (`null=NULL`), AND #126 (`pass=0` kept in r29). All three are "make MWCC keep a standalone const-0 in a
     saved-reg web instead of re-materializing `li` per use." Crack that one and all three close.
-    PRECISE MECHANISM (validator, #126): the standalone-const-keep nut IS the #121 LICM-hoist decision but for
-    an INTEGER loop-invariant const-0 — retail HOISTS the loop-invariant 0 to a saved reg (`li r29,0` kept
-    across the loop[s], reused for the stores); ours RE-MATERIALIZES `li r0` (volatile) each iter. MWCC does NOT
-    hoist an int-const-0 to a saved reg by default, and a named `pass`/`null` folds. So the lever = "make MWCC's
-    LICM hoist an int loop-invariant const-0 into a saved reg" (= #121-for-int). DLL-set oracle is EXHAUSTED (no
-    clean match — all loose: counter / outside-loop stores). NEXT: oracle the BROADER units (game/track/baddie/
-    MP4 — NOT scanned yet) for an int-const-0 LICM-hoisted to a saved reg, read its source; OR a fresh int-LICM
-    reframe. (The chained+opt_level lever is the counter-tied sibling; this is its standalone counterpart.)
+    ✓MECHANISM PINNED (probe-confirmed, validator + lead): the IN-LOOP standalone-const-keep is an
+    OPT-LEVEL decision — O4 (graph-coloring) KEEPS a standalone const-0 stored across an in-loop call in a
+    SAVED reg (`li r31,0` in the preheader, reused via `stw r31` each iter); O2 (creation-order) RE-MATERIALIZES
+    `li r0` per iter (O2-impossibility confirmed by a whole-DLL scan). ⚠️ The "named var vs literal `0`" idea is
+    a RED HERRING — at O4, `arr[i]=0`/`g=0`/`vec[2]=0;vec[0]=0` (literal) and the same via a named `int z=0;` are
+    BYTE-IDENTICAL (both keep in saved r31; verified on global-scalar AND two-store shapes). So the lever is
+    O4-vs-O2 ALONE, not the spelling. CONCRETE #126 FIX: debugPrintDraw carries `#pragma optimization_level 2`
+    (the residual cause — pass=0 re-materializes at O2); retail keeps pass in saved r29 = O4 behaviour, so retail
+    is O4 here → DROP/raise that pragma to O4 and A/B the FULL fn (#95 — keep only if the whole fn rises; the O2
+    may've been a prior-agent choice for other parts). (The chained+opt_level lever is the COUNTER-TIED sibling
+    — opposite opt-level: counter-tied wants O2-chain, standalone wants O4-keep.) REMAINING EDGES (live targets):
+    the PRE-LOOP field store (entryCount=0 folds even at O4 — pre-loop position doesn't get the saved web) and
+    Minimap's counter-copy `mr` at an O4-shaped size — both precisely bounded, not caps.
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
