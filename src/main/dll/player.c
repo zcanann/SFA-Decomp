@@ -15223,9 +15223,16 @@ int fn_802A2918(int obj, int state, f32 fv)
         inner->unk544 =
             fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
-        fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
-                    (int*)((char*)inner + 0x51c), lbl_803E7EA4,
-                    ((PlayerState*)state)->baddie.moveSpeed, 0, 0x34 | (flag ? 0x40 : 0));
+        {
+            int f9 = 0x34;
+            if (flag)
+            {
+                f9 |= 0x40;
+            }
+            fn_802A71E0(obj, t[0], t[1], (int*)((char*)inner + 0x538),
+                        (int*)((char*)inner + 0x51c), lbl_803E7EA4,
+                        ((PlayerState*)state)->baddie.moveSpeed, 0, f9);
+        }
         fn_802A71E0(obj, t[2], t[3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
