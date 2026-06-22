@@ -48,7 +48,7 @@ typedef struct XyzAnimatorState {
     f32 offsetY;
     f32 offsetZ;
     s8 gameBitValue;
-    s8 unk4D;
+    s8 loopCount; /* 0x4D: animation-pass counter; > 2 stops/wraps the update */
     u16 loopSfxId;
 } XyzAnimatorState;
 

@@ -309,7 +309,7 @@ void xyzanimator_update(int obj)
                                                  ((GameObject*)obj)->anim.localPosZ));
     if ((u32)block == 0)
     {
-        ((XyzAnimatorState*)state)->unk4D = 0;
+        ((XyzAnimatorState*)state)->loopCount = 0;
         goto no_update;
     }
     if ((*(u16*)(block + 4) & 8) == 0)
@@ -404,12 +404,12 @@ void xyzanimator_update(int obj)
                     GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 0);
                 }
             }
-            if (((XyzAnimatorState*)state)->unk4D > 2)
+            if (((XyzAnimatorState*)state)->loopCount > 2)
             {
-                ((XyzAnimatorState*)state)->unk4D = 0;
+                ((XyzAnimatorState*)state)->loopCount = 0;
             }
         }
-        if (((XyzAnimatorState*)state)->unk4D > 2)
+        if (((XyzAnimatorState*)state)->loopCount > 2)
         {
             goto no_update;
         }
@@ -420,7 +420,7 @@ void xyzanimator_update(int obj)
     }
     else
     {
-        if (((XyzAnimatorState*)state)->unk4D > 2)
+        if (((XyzAnimatorState*)state)->loopCount > 2)
         {
             goto no_update;
         }
@@ -510,7 +510,7 @@ void xyzanimator_update(int obj)
             {
                 GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
             }
-            ((XyzAnimatorState*)state)->unk4D += 1;
+            ((XyzAnimatorState*)state)->loopCount += 1;
         }
         break;
     case 1:
@@ -664,7 +664,7 @@ void xyzanimator_update(int obj)
                 {
                     GameBit_Set(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
                 }
-                ((XyzAnimatorState*)state)->unk4D += 1;
+                ((XyzAnimatorState*)state)->loopCount += 1;
             }
         }
         else
@@ -737,7 +737,7 @@ void xyzanimator_update(int obj)
             }
             if (done == 3)
             {
-                ((XyzAnimatorState*)state)->unk4D += 1;
+                ((XyzAnimatorState*)state)->loopCount += 1;
             }
         }
         break;
