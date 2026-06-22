@@ -35,16 +35,13 @@ void fn_80204320(int obj)
     player = Obj_GetPlayerObject();
     if (lbl_803DC182 != 0)
     {
-        s16* walk;
         s16 i;
         lbl_80329848[6] = 0;
         lbl_80329848[7] = 0;
         lbl_80329848[8] = 0;
-        walk = lbl_80329848;
         for (i = 0; i < 6; i++)
         {
-            *walk = (s16)randomGetRange(1, 4);
-            walk++;
+            lbl_80329848[i] = (s16)randomGetRange(1, 4);
         }
         GameBit_Set(1508, 0);
         sub->timer = 0;
@@ -62,12 +59,10 @@ void fn_80204320(int obj)
         if (GameBit_Get(1589) != 0 && sub->sfxLatch == 0)
         {
             s16 i;
-            s16* arr;
             Sfx_PlayFromObject(0, 1095);
-            for (i = 0, arr = lbl_80329848; i < 6; i++)
+            for (i = 0; i < 6; i++)
             {
-                *arr = (s16)randomGetRange(1, 4);
-                arr++;
+                lbl_80329848[i] = (s16)randomGetRange(1, 4);
             }
             GameBit_Set(1508, 1);
             sub->sfxLatch = 1;
@@ -242,17 +237,15 @@ void fn_80204098(int obj)
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     void* player;
     s16 i;
-    s16* p;
 
     player = Obj_GetPlayerObject();
     if (lbl_803DC183 != 0)
     {
         GameBit_Set(0x2d, 1);
         GameBit_Set(0x1d7, 1);
-        for (i = 0, p = lbl_80329848; i < 9; i++)
+        for (i = 0; i < 9; i++)
         {
-            *p = (s16)randomGetRange(1, 4);
-            p++;
+            lbl_80329848[i] = (s16)randomGetRange(1, 4);
         }
         GameBit_Set(0x5e4, 0);
         state->timer = 0;
@@ -273,10 +266,9 @@ void fn_80204098(int obj)
         if (GameBit_Get(0x635) != 0 && state->sfxLatch == 0)
         {
             Sfx_PlayFromObject(0, SFXfoot_wood_run_2);
-            for (i = 0, p = lbl_80329848; i < 9; i++)
+            for (i = 0; i < 9; i++)
             {
-                *p = (s16)randomGetRange(1, 4);
-                p++;
+                lbl_80329848[i] = (s16)randomGetRange(1, 4);
             }
             GameBit_Set(0x5e4, 1);
             state->sfxLatch = 1;
