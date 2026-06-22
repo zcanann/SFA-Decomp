@@ -937,7 +937,6 @@ int fn_80136A40(int p1, int c)
     u8 first;
     int px;
     int py;
-    f32 sc;
 
     if (c <= 0x3f)
     {
@@ -989,13 +988,12 @@ int fn_80136A40(int p1, int c)
         px = (int)((f32)debugPrintYpos * (gDebugScaleX + gDebugScaleBiasX));
         py = (int)((f32)debugPrintXpos * (gDebugScaleY + gDebugScaleBiasY));
         gxDebugTextureFn_80078c1c();
-        sc = gDebugGlyphUScale;
         textRenderChar(px << 2, py << 2,
-                       (int)(lbl_803E2398 * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
+                       (int)(*(f32*)&lbl_803E2398 * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
                        (int)(lbl_803E2398 * (lbl_803E239C * (gDebugScaleY + gDebugScaleBiasY) + py)),
-                       (f32)(first << 5) * sc,
+                       (f32)(first << 5) * gDebugGlyphUScale,
                        lbl_803E23A0,
-                       sc * (f32)((first + c) << 5),
+                       gDebugGlyphUScale * (f32)((first + c) << 5),
                        lbl_803E23A4 * gDebugGlyphVScale);
     }
     return c;
