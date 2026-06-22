@@ -275,7 +275,7 @@ extern f32 lbl_803E33B4;
 extern f32 lbl_803E33B8;
 extern f32 lbl_803E33BC;
 extern f32 lbl_803E33C0;
-extern f32 lbl_803E33C8;
+extern const f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
 
 void staticCamera_free(int obj)
@@ -1147,7 +1147,7 @@ void staffFn_80170380(int* obj, int cmd)
                 f32* t0;
                 f32* t1;
                 f32 k;
-                f32 kc;
+                /* kc inlined as lbl_803E33C8 (created after bias) */
                 ((ShieldState*)state)->unkC = amp;
                 i = 0;
                 hw = state;
@@ -1155,7 +1155,7 @@ void staffFn_80170380(int* obj, int cmd)
                 t0 = tbl;
                 t1 = (f32*)((char*)tbl + 0x10);
                 k = lbl_803E33A8;
-                kc = lbl_803E33C8;
+                /* kc inlined below */
                 for (; i < 4; i++)
                 {
                     f32 c;
@@ -1166,7 +1166,7 @@ void staffFn_80170380(int* obj, int cmd)
                     c = sum * k;
                     *(f32*)(w + 0x24) = *t0 * c;
                     *(f32*)(w + 0x14) = *t1;
-                    *(s16*)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
+                    *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
                     w += 4;
                     t0 += 1;
@@ -1278,14 +1278,14 @@ void staffFn_80170380(int* obj, int cmd)
                 f32* t0;
                 f32* t1;
                 f32 k;
-                f32 kc;
+                /* kc inlined as lbl_803E33C8 (created after bias) */
                 i = 0;
                 hw = state;
                 t0 = (f32*)((char*)tbl + 0x20);
                 w = state;
                 t1 = (f32*)((char*)tbl + 0x30);
                 k = lbl_803E33A8;
-                kc = lbl_803E33C8;
+                /* kc inlined below */
                 for (; i < 4; i++)
                 {
                     f32 c;
@@ -1296,7 +1296,7 @@ void staffFn_80170380(int* obj, int cmd)
                     c = sum * k;
                     *(f32*)(w + 0x24) = *t0 * c;
                     *(f32*)(w + 0x14) = *t1;
-                    *(s16*)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
+                    *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
                     t0 += 1;
                     w += 4;
