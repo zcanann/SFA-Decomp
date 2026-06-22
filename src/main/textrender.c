@@ -1783,10 +1783,10 @@ void gameTextRun(void)
         {
         case 3:
             {
-                u8 c3 = cmd->f10;
-                u8 c2 = cmd->fc;
-                u8 c1 = cmd->f8;
                 u8 c0 = cmd->f4;
+                u8 c1 = cmd->f8;
+                u8 c2 = cmd->fc;
+                u8 c3 = cmd->f10;
                 lbl_803DC9A7 = c0;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
