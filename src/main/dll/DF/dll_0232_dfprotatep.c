@@ -749,18 +749,17 @@ void sfxplayer_update(int obj)
                 handles = (u32*)gSfxplayerEffectHandles;
                 for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
                 {
-                    if (handles[0] != 0)
+                    if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                     {
-                        Obj_FreeObject(handles[0]);
+                        Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
                     }
-                    handles[0] = 0;
-                    if (handles[1] != 0)
+                    handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
+                    if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
                     {
-                        Obj_FreeObject(handles[1]);
+                        Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                     }
-                    handles[1] = 0;
+                    handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
                     Sfx_PlayFromObject(obj,SFXPLAYER_SFX_TIMEOUT_RESET);
-                    handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
                 }
                 state->ringCount = 0;
                 flags->bit40 = 0;
@@ -771,31 +770,30 @@ void sfxplayer_update(int obj)
             handles = (u32*)gSfxplayerEffectHandles;
             for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)
             {
-                if (handles[0] != 0)
+                if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                 {
                     hitObj = 0;
-                    hitType = ObjHits_GetPriorityHit(handles[1], &hitObj, 0x0, 0x0);
+                    hitType = ObjHits_GetPriorityHit(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1], &hitObj, 0x0, 0x0);
                     if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
                         if ((mode == SFXPLAYER_MODE_SINGLE) || (*(int*)((int)hitObj + 0xf4) == i))
                         {
-                            if (handles[0] != 0)
+                            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                             {
-                                Obj_FreeObject(handles[0]);
+                                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
                             }
-                            handles[0] = 0;
-                            if (handles[1] != 0)
+                            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
+                            if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
                             {
-                                Obj_FreeObject(handles[1]);
+                                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                             }
-                            handles[1] = 0;
+                            handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
                             Sfx_PlayFromObject(0,SFXPLAYER_SFX_RING_HIT);
                             state->ringCount++;
                         }
                     }
                 }
-                handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
             }
         }
     }
