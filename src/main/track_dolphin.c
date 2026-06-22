@@ -2775,7 +2775,7 @@ extern f32 lbl_803DCF54;
 extern f32 lbl_803DCF50;
 extern f32 lbl_803DCF58;
 
-int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
+int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
     f32 px;
     f32 dx, dy, sum, cc;
@@ -5510,12 +5510,12 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 {
                     if (m[0] & 1)
                     {
-                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
                         dist = __AR_Callback;
                     }
                     else if (m[0] & 2)
                     {
-                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (lineType != 0)
@@ -5528,12 +5528,12 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 {
                     if (ma & 1)
                     {
-                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
                         dist = __AR_Callback;
                     }
                     else if (ma & 2)
                     {
-                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (m[0] & 4)
@@ -5558,13 +5558,13 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                         ok = 1;
                         if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback)
                         {
-                            found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                            found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
                             ok = 0;
                             dist = __AR_Callback;
                         }
                         if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback)
                         {
-                            found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                            found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
                             ok = 0;
                             dist = lbl_803DECC4;
                         }
