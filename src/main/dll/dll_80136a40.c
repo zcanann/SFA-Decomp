@@ -49,7 +49,7 @@ typedef struct TrickyImpressState
     s32 childObj1; /* 0x7B0: attached child object handle (slot 1) */
     u8 pad7B4[0x7B8 - 0x7B4];
     s32 childObj2; /* 0x7B8: attached child object handle (slot 2) */
-    u8 unk7BC;
+    u8 childSlotMap; /* 0x7BC: packed 2-bit slot index per impress child (childObj0/1/2 via >>6/>>4/>>2 & 3) */
     u8 pad7BD[0x808 - 0x7BD];
     f32 unk808;
     u8 pad80C[0x810 - 0x80C];
@@ -786,17 +786,17 @@ void objAnimFreeChildren(int a, int b, void** c)
     v0 = *(void**)(b + 0x7a8);
     if (v0 != NULL)
     {
-        buf[((TrickyImpressState*)b)->unk7BC >> 6 & 3] = 1;
+        buf[((TrickyImpressState*)b)->childSlotMap >> 6 & 3] = 1;
     }
     v1 = *(void**)(b + 0x7b0);
     if (v1 != NULL)
     {
-        buf[((TrickyImpressState*)b)->unk7BC >> 4 & 3] = 1;
+        buf[((TrickyImpressState*)b)->childSlotMap >> 4 & 3] = 1;
     }
     v2 = *(void**)(b + 0x7b8);
     if (v2 != NULL)
     {
-        buf[((TrickyImpressState*)b)->unk7BC >> 2 & 3] = 1;
+        buf[((TrickyImpressState*)b)->childSlotMap >> 2 & 3] = 1;
     }
     if (buf[0] == -1)
     {
