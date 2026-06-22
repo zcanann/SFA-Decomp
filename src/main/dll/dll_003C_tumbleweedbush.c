@@ -691,10 +691,11 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
     extern void linkInitTextures(LinkMenuItemDB* item); /* #57 */
     extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
     extern s8 gTumbleweedBushItemCount; /* #57 */
-    const char* defaultText;
-    LinkMenuItem* item;
-    int linkedIndex;
     int i;
+    int linkedIndex;
+    LinkMenuItem* item;
+    LinkMenuItem* ip;
+    const char* defaultText;
 
     defaultText = sTumbleweedBushNavLinkRangeErr;
     if (count <= 40)
@@ -707,6 +708,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
         memcpy(gTumbleweedBushItems, items, count * sizeof(LinkMenuItem));
 
+        ip = items;
         for (i = 0; i < count; i++)
         {
             item = &gTumbleweedBushItems[i];
@@ -730,9 +732,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 OSReport(defaultText + 0xe8, item->rightLink);
             }
 
-            if (items->textureAssetId != -1)
+            if (ip->textureAssetId != -1)
             {
-                item->texture = textureLoadAsset(items->textureAssetId);
+                item->texture = textureLoadAsset(ip->textureAssetId);
             }
             else
             {
@@ -765,7 +767,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             }
 
             item->timer = 4;
-            items++;
+            ip++;
         }
 
         gTumbleweedBushBaseColorR = baseRed;
