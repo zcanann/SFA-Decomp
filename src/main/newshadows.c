@@ -2531,6 +2531,7 @@ extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 
 #pragma opt_common_subs off
+#pragma opt_loop_invariants off
 void renderShadows(void)
 {
     char* B = (char*)gNewShadowEntries;
@@ -2818,4 +2819,5 @@ void renderShadows(void)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
+#pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
