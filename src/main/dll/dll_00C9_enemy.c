@@ -1384,12 +1384,12 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
             (*gObjectTriggerInterface)->setCamVars(0x49, 4, (int)node, 0x3c);
             break;
         case 6:
-            if (*(int**)&((TrickyState*)sub)->unk36C != NULL)
-                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->unk36C, 1);
+            if (*(int**)&((TrickyState*)sub)->modelChain != NULL)
+                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->modelChain, 1);
             break;
         case 7:
-            if (*(int**)&((TrickyState*)sub)->unk36C != NULL)
-                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->unk36C, 0);
+            if (*(int**)&((TrickyState*)sub)->modelChain != NULL)
+                ObjModelChain_SetEnabled(*(ObjModelChain**)&((TrickyState*)sub)->modelChain, 0);
             break;
         }
     }

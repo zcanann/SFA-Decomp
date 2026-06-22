@@ -121,7 +121,7 @@ typedef struct TrickyState {
     void *lastContactObj;
     f32 contactTimer;
     int light; /* object link */
-    int unk36C; /* object link */
+    int modelChain; /* ObjModelChain handle toggled via ObjModelChain_SetEnabled */
     f32 hitCooldown;
     u8 unk374;
     u8 pad375[0x378 - 0x375];
