@@ -951,7 +951,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
                     ((EarthWarriorSub*)q)->attackPhase -= 4;
                 }
             }
-            else if (v294 >= ((f32*)(tbl + i2 * 4))[1])
+            else if (v294 >= *(f32*)((char*)(tbl + 4) + i2 * 4))
             {
                 if (((EarthWarriorSub*)q)->attackPhase < 0x14)
                 {
