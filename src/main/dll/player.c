@@ -10571,7 +10571,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
     {
         if (*(s16*)((char*)animState + 0x28) > 0)
         {
-            setup = Obj_AllocObjectSetup(0x20);
+            setup = Obj_AllocObjectSetup(0x20, *(s16*)((char*)animState + 0x28));
             setup = Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                     *(int*)&((GameObject*)obj)->anim.parent);
             ObjLink_AttachChild(obj, setup, 0);

@@ -2395,7 +2395,7 @@ void baddieInstantiateWeapon(int obj, int state)
         {
             if (*(s16*)(state + 0x2b6) > 0)
             {
-                setup = Obj_AllocObjectSetup(0x20);
+                setup = Obj_AllocObjectSetup(0x20, *(s16*)(state + 0x2b6));
                 *(u8*)(setup + 5) = *(u8*)(setup + 5) | (((BaddieInstantiateWeaponPlacement*)parentSetup)->unk5 & 0x18);
                 child = (void*)Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                *(int*)&((GameObject*)obj)->anim.parent);
