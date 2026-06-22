@@ -34,7 +34,7 @@ typedef struct DIMSnowHorn1State
     f32 pathPosZ;
     u8 pad9F4[0xA84 - 0x9F4];
     s16 countdownTimer;
-    s16 unkA86;
+    s16 advanceCountThreshold; /* 0xA86: push-count at state+0x334 must reach this (=5) to advance state */
     s16 airMeterValue;
     u8 mountMode; /* 0=unmounted, 2=riding */
     u8 padA8B;
@@ -42,7 +42,7 @@ typedef struct DIMSnowHorn1State
     u8 triggerMode;
     u8 flags; /* 0xA8E: bit0x2 riding (GAMEBIT_SNOWHORN_RIDING), bit0x8 hitvol-priority, bit0x20 sequence-triggered */
     u8 padA8F[2];
-    u8 unkA91;
+    u8 proximityPhase; /* 0xA91: 0/1/2 phase toggling linked objects by player distance (stateHandler05) */
     u8 padA92[0xD00 - 0xA92];
     u8 hitReactState; /* 0xD00: ObjHitReact_Update persistent state (in/out), gates fn_8003A168 */
     u8 padD01[0xB];
@@ -301,7 +301,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     inner = ((GameObject*)obj)->extra;
     *(u32*)((char*)state) |= 0x200000;
 
-    if (*(s16*)((char*)state + 0x334) < inner->unkA86 ||
+    if (*(s16*)((char*)state + 0x334) < inner->advanceCountThreshold ||
         lbl_803E8234 == ((DIMSnowHorn1State*)state)->baddie.inputMagnitude)
     {
         return 8;
@@ -446,12 +446,12 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     {
         f32 v = *(f32*)&((DIMSnowHorn1State*)state)->baddie.trackedObj;
         if (v > lbl_803E8234 && ((DIMSnowHorn1State*)state)->baddie.inputMagnitude > lbl_803E8234 &&
-            *(s16*)((char*)state + 0x334) >= inner->unkA86)
+            *(s16*)((char*)state + 0x334) >= inner->advanceCountThreshold)
         {
             return 0xa;
         }
         if (v > lbl_803E8288 && ((DIMSnowHorn1State*)state)->baddie.inputMagnitude > lbl_803E8288 &&
-            *(s16*)((char*)state + 0x334) < inner->unkA86)
+            *(s16*)((char*)state + 0x334) < inner->advanceCountThreshold)
         {
             return 0xb;
         }
@@ -620,7 +620,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        v = inner->unkA91;
+        v = inner->proximityPhase;
         switch (v)
         {
         case 1:
@@ -630,7 +630,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
                 if (o1 != NULL) fn_8014C63C(o1);
                 o1 = ObjList_FindObjectById(id_b);
                 if (o1 != NULL) fn_8014C63C(o1);
-                inner->unkA91 = 2;
+                inner->proximityPhase = 2;
             }
             break;
         case 0:
@@ -644,7 +644,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
                 o1 = ObjList_FindObjectById(id_b);
                 o2 = ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL) fn_8014C66C(o1, (int)o2);
-                inner->unkA91 = 1;
+                inner->proximityPhase = 1;
             }
             else
             {
@@ -1244,7 +1244,7 @@ void DIMSnowHorn1_update(int obj)
     int flags;
 
     data = *(int*)&((GameObject*)obj)->extra;
-    ((DIMSnowHorn1State*)data)->unkA86 = 5;
+    ((DIMSnowHorn1State*)data)->advanceCountThreshold = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
     {
@@ -1499,7 +1499,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     ObjGroup_AddObject(obj, 0xa);
     inner = ((GameObject*)obj)->extra;
     inner->mode = *(u8*)((char*)p2 + 0x19);
-    inner->unkA86 = 5;
+    inner->advanceCountThreshold = 5;
     inner->airMeterValue = 0x3e8;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
