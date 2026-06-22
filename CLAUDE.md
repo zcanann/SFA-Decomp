@@ -482,26 +482,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `cmplwi`); a call/vtable result cast to int then null-checked → `(u32)x != 0`.
 125. **Loop-tail guard polarity** — spell the positive continue guard (`if (i < 8) continue;`) to
     get `cmpwi 8; blt` not `cmpwi 7; ble`.
-126. **Param-TYPE pool classing — TEST it per-fn, don't assume the type reclasses.** Probe-confirmed
-    (validator + lead): in isolation a POINTER param classes IDENTICALLY to an INTEGRAL param — both
-    sit in the PARAM pool by declaration order (`f(void*,int)`, `f(int,void*)`, `f(int,int)`,
-    `f(void*,void*)` all give `mr r30,r3; mr r31,r4`; a ptr param even sits BELOW a real call-result
-    copy). So param type does NOT reclass on its own in simple/low-pressure fns. In HIGH-PRESSURE fns
-    with cross-web competition the type CAN shift the classing (kind-1, emergent — not reproducible in a
-    toy TU); use the retype as a 1-build TEST (below) to find out per-fn. Read target's prologue to
-    RECOVER the original param type (per-fn cast noise on an int obj is then faithful). `#pragma
-    optimization_level 2` can land the typed-pointer form even in call-bearing fns.
-    DISCRIMINATOR (use the retype as a 1-build TEST to split ★#147 kind-1 vs kind-2): retype the
-    suspect `u8*` param to the family struct pointer and rebuild. If the params MOVE up into the copy
-    pool → it WAS class-reclassification (kind 1, tractable) — keep the retype. If BYTE-IDENTICAL/INERT
-    (`u8*` and `StructPtr` class the SAME because the params are ALREADY copy-pool-classed alongside the
-    copy locals) → it's the within-class ORDER kind (kind 2): retail orders params-above-locals, ours
-    locals-above-params. The lever there is NOT the value itself (decl-order/scope/un-name/register/
-    launder/retype all inert on the value) — it's perturbing the NEIGHBOR web that occupies the param's
-    target slot (neighbor-liveness / creation-order). A clean source form is ASSUMED to exist; this is the
-    open within-class-order shape (#130/#147 record: it falls to the right reframe). (flameguard:
-    animobjd2 fn_8013E0D0 — kind-2 within-class-order shape; the neighbor-perturbation lead is wide open,
-    and a clean source form exists — re-derive it fresh from the asm.)
+126. **Param pool classing — RULE PINNED (probe-confirmed): all incoming params occupy ONE pool ordered
+    by ARGUMENT REGISTER (r3 → lowest saved reg, ascending; the last arg → highest saved reg); param
+    TYPE is IRRELEVANT.** `mixed(int a, void *p, int b, void *q)` all live across a call → a=r28, p=r29,
+    b=r30, q=r31 (the pointer p sits BELOW the int b). The copy-pool ABOVE the param pool (#108) is for
+    SINGLE-DEF COPIES only — so retyping a param is class-NEUTRAL. When a param appears to "reclass," it
+    is NOT the declared type; it is one of two real causes:
+    (a) the param's VALUE flows into a surviving COPY, so it rides the copy class (#147 integer
+    class-pull / #131) — defeat or force that copy;
+    (b) within-class ORDER — retail orders the param pool relative to the local/copy pools differently
+    than ours (the #108 within-class-order rule; the exact creation-order trigger is being pinned).
+    Read target's prologue to RECOVER the original param type (per-fn cast noise on an int obj is then
+    faithful). `#pragma optimization_level 2` can land the typed-pointer form even in call-bearing fns.
+    The animobjd2 fn_8013E0D0 residual is case (b) — re-derive the clean source form fresh from the asm.
 127. **`extern const f32 lbl_X;` = a store-aliasing exemption** — cross-statement load CSE without
     naming a local (a named local CSEs too but flips the FP pair). A/B per unit (check writers
     first); can CSE-overshoot a sibling fn (fix per-site with the #81 launder, don't revert const).
@@ -547,7 +540,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     hunt the asm — you'll find it.**
 131. **The front-end SAME-VALUE MERGE is breakable: a no-op bitwise op forces a surviving `mr`
     copy + a SEPARATE web (a clean-C source for "two overlapping same-value saved regs joined by a
-    copy" — and #135 later found an even cleaner one).** Two identical `state+off` (one base for
+    copy" — and #135 later found an even cleaner one).**
+    ✓TRIGGER PINNED (probe-confirmed, reproduced standalone): the OR fires iff ALL THREE hold —
+    (1) two pointer locals of the SAME value, (2) BOTH used (both webs live, e.g. across a call),
+    (3) the OR applied to one. Baseline without the OR: two same-value pointers COALESCE to one
+    base+displacement (`stw K(r31)` for both). Add `p2 = (int*)((u32)p2 | (u32)p1)` → the `|` gives p2
+    a distinct value-number, blocking the coalesce → TWO webs: `addi` (real pointer) + `mr` (surviving
+    copy), stores split across the two regs. Two DISTINCT merge phenomena both use the OR: (i) POINTER
+    coalesce (this — same-address pointers fold to base+disp); (ii) INTEGER class-pull (#147 — a
+    `prev=curveId` copy pulls curveId into the COPY class, rotating the pool; the OR keeps it in the
+    PARAM class). Same tool, different mechanism.
+    Two identical `state+off` (one base for
     most fields, a second for ONE field) get value-numbered into ONE web by the FRONT-END *before
     any optimizer pass* — proven by ret-patching IroCSE/IroPropagate/IroRangeProp/AddProp/VN, all
     survive; every `opt_*`/pragma/opt-level/compiler-version (1.0–3.0a5) folds it; a plain second
