@@ -1335,25 +1335,24 @@ void gameTextInitFn_8001bd14(void)
 {
     int i;
     int zero;
-    int* scratch;
+    int (*scratch)[8];
 
     zero = 0;
     gSubtitleActive = zero;
     gSubtitlesEnabled = 1;
     gGameTextSavedDir = -1;
 
-    scratch = (int*)gSubtitleLineTable;
+    scratch = (int(*)[8])gSubtitleLineTable;
     for (i = 0; i < 32; i++)
     {
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
+        scratch[i][0] = zero;
+        scratch[i][1] = zero;
+        scratch[i][2] = zero;
+        scratch[i][3] = zero;
+        scratch[i][4] = zero;
+        scratch[i][5] = zero;
+        scratch[i][6] = zero;
+        scratch[i][7] = zero;
     }
 }
 #pragma opt_unroll_loops on
