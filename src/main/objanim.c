@@ -1021,10 +1021,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
         axisIndex++;
     } while (axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT);
-        return wrapped;
     }
-
-    events->rootCurveValid = 0;
+    else
+    {
+        events->rootCurveValid = 0;
+    }
     return wrapped;
 }
 
