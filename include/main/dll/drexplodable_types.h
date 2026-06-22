@@ -28,7 +28,7 @@ typedef struct DrExplodableChunk
     f32 posY; /* 0x50 */
     f32 posZ; /* 0x54 */
     f32 height;
-    int unk5C;
+    int launchDelayBase; /* 0x5c: raw def launch-delay base, forwarded to the spawned fragment */
     int launchDelay; /* 0x60: per-fragment delay roll, -1 = none */
     s16 rotZ; /* 0x64: fragment spawn rotation, from def+0x1e */
     s16 rotY; /* 0x66: from def+0x1c */
