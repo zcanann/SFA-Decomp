@@ -19,11 +19,11 @@
 typedef struct GrimbleState
 {
     u8 pad0[0x38 - 0x0];
-    s32 unk38;
+    s32 pathObject;
     u8 pad3C[0x45 - 0x3C];
     s8 directionSign;
     u8 pad46[0x48 - 0x46];
-    f32 unk48;
+    f32 pathParam;
     u8 pad4C[0x58 - 0x4C];
     s16 yaw;
     u8 pad5A[0x60 - 0x5A];
@@ -252,23 +252,23 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
     (*(void (**)(short*, u8*, f32, int))((char*)*gPlayerInterface + 0x20))((short*)obj, (u8*)p, spd, 1);
-    (*(void (**)(void*, void*, f32))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) + 0x28))(
-        *(void**)&((GrimbleState*)hit)->unk38, (void*)(hit + 0x48),
+    (*(void (**)(void*, void*, f32))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) + 0x28))(
+        *(void**)&((GrimbleState*)hit)->pathObject, (void*)(hit + 0x48),
         p->baddie.animSpeedA * (f32)(1 - (((GrimbleState*)hit)->directionSign << 1)));
-    if (((GrimbleState*)hit)->unk48 < lbl_803E2EF4)
+    if (((GrimbleState*)hit)->pathParam < lbl_803E2EF4)
     {
-        ((GrimbleState*)hit)->unk48 = lbl_803E2EF4;
+        ((GrimbleState*)hit)->pathParam = lbl_803E2EF4;
     }
-    else if (((GrimbleState*)hit)->unk48 > lbl_803E2EF8)
+    else if (((GrimbleState*)hit)->pathParam > lbl_803E2EF8)
     {
-        ((GrimbleState*)hit)->unk48 = lbl_803E2EF8;
+        ((GrimbleState*)hit)->pathParam = lbl_803E2EF8;
     }
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, ((GrimbleState*)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+        *(void**)&((GrimbleState*)hit)->pathObject, ((GrimbleState*)hit)->pathParam - lbl_803E2EFC, &a.x, &a.y, &a.z);
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, lbl_803E2EFC + ((GrimbleState*)hit)->unk48, &b.x, &b.y, &b.z);
+        *(void**)&((GrimbleState*)hit)->pathObject, lbl_803E2EFC + ((GrimbleState*)hit)->pathParam, &b.x, &b.y, &b.z);
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
@@ -353,12 +353,12 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, ((GrimbleState*)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+        *(void**)&((GrimbleState*)hit)->pathObject, ((GrimbleState*)hit)->pathParam - lbl_803E2EFC, &a.x, &a.y, &a.z);
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, lbl_803E2EFC + ((GrimbleState*)hit)->unk48, &b.x, &b.y, &b.z);
+        *(void**)&((GrimbleState*)hit)->pathObject, lbl_803E2EFC + ((GrimbleState*)hit)->pathParam, &b.x, &b.y, &b.z);
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
@@ -395,12 +395,12 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, ((GrimbleState*)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+        *(void**)&((GrimbleState*)hit)->pathObject, ((GrimbleState*)hit)->pathParam - lbl_803E2EFC, &a.x, &a.y, &a.z);
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, lbl_803E2EFC + ((GrimbleState*)hit)->unk48, &b.x, &b.y, &b.z);
+        *(void**)&((GrimbleState*)hit)->pathObject, lbl_803E2EFC + ((GrimbleState*)hit)->pathParam, &b.x, &b.y, &b.z);
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
@@ -441,12 +441,12 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EE4;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, ((GrimbleState*)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) +
+        *(void**)&((GrimbleState*)hit)->pathObject, ((GrimbleState*)hit)->pathParam - lbl_803E2EFC, &a.x, &a.y, &a.z);
+    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(((GrimbleState*)hit)->pathObject + 0x68) +
         0x24))(
-        *(void**)&((GrimbleState*)hit)->unk38, lbl_803E2EFC + ((GrimbleState*)hit)->unk48, &b.x, &b.y, &b.z);
+        *(void**)&((GrimbleState*)hit)->pathObject, lbl_803E2EFC + ((GrimbleState*)hit)->pathParam, &b.x, &b.y, &b.z);
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
