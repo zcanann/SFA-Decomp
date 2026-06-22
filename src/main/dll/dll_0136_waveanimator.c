@@ -145,9 +145,9 @@ void fn_801923F8(int* cfgArg)
         colorSplitZero = lbl_803E3F44;
         for (; i < cfg->period; i++)
         {
-            int src = heightIdx;
-            int byte = x;
-            for (j = 0; j < cfg->period; j++)
+            int src;
+            int byte;
+            for (j = 0, src = heightIdx, byte = x; j < cfg->period; j++, src += 4, byte += 3)
             {
                 f32 v = *(f32*)((u8*)lbl_803DDAF4 + src);
                 if (v < colorSplitZero)
@@ -163,8 +163,6 @@ void fn_801923F8(int* cfgArg)
                     ((u8*)lbl_803DDAEC)[byte + 1] = 255;
                     ((u8*)lbl_803DDAEC)[byte + 2] = 255;
                 }
-                src += 4;
-                byte += 3;
                 heightIdx += 4;
                 x += 3;
             }
