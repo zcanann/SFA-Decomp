@@ -2650,6 +2650,7 @@ void expgfx_free(u32 sourceId)
 }
 #pragma dont_inline reset
 
+#pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
     ExpgfxStaticDataLayout* staticData;
@@ -2713,8 +2714,11 @@ void expgfx_resetAllPools(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                inactiveBitMask = activeBit ^ 0xFFFFFFFF;
-                *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
+                {
+                    u32 currentMaskValue = *poolActiveMasks;
+                    inactiveBitMask = ~activeBit;
+                    *poolActiveMasks = currentMaskValue & inactiveBitMask;
+                }
             }
 
             slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
@@ -2753,6 +2757,7 @@ void expgfx_resetAllPools(void)
         resourceEntry++;
     }
 }
+#pragma opt_propagation reset
 
 void expgfx_updateFrameState(int sourceMode, int sourceId)
 {
