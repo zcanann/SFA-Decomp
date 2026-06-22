@@ -893,6 +893,7 @@ typedef struct
     f32 quad[4];
 } SBRotQuad;
 
+#pragma opt_common_subs off
 void SnowBike_update(int obj)
 {
     extern void fn_801EC7A0(int obj, u8* state); /* #57 */
@@ -1099,3 +1100,4 @@ void SnowBike_update(int obj)
         break;
     }
 }
+#pragma opt_common_subs reset
