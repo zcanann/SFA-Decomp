@@ -71,7 +71,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         if (((TrickyState*)state)->unk28 != nearest + 0x18)
         {
             ((TrickyState*)state)->unk28 = nearest + 0x18;
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0xFFFFFBFF;
+            *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
         if (trickyFn_8013b368(self, state, lbl_803E247C) == 1) return;
