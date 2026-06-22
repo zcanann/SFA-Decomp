@@ -339,6 +339,7 @@ void pollenfragment_update(int obj)
     int i;
     f32 m;
     f32 w;
+    f32 t;
     XyzVec dir;
     XyzVec sc;
     XyzVec pos;
@@ -441,8 +442,9 @@ void pollenfragment_update(int obj)
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E3174;
     if ((((PollenFragmentExtra*)extra)->def)->noVertical)
     {
+        t = lbl_803E3178 * timeDelta;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY -
-            (lbl_803E3178 * timeDelta * *(f32*)(extra + 8)) / lbl_803E317C;
+            (t * *(f32*)(extra + 8)) / lbl_803E317C;
     }
     if ((((PollenFragmentExtra*)extra)->def)->smoothTurn)
     {
@@ -451,8 +453,9 @@ void pollenfragment_update(int obj)
     }
     else if (((GameObject*)obj)->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)
     {
+        t = lbl_803E3180 * lbl_803DBD48;
         ((GameObject*)obj)->anim.rotX =
-            lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
+            t * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
         ((GameObject*)obj)->anim.rotY =
             lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY;
     }
