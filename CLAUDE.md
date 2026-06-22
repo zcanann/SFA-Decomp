@@ -135,10 +135,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 - **★ THE ISOLATION→IN-TREE GATE SPLITS BY FIX TYPE (evidence-based — Validator's 4 in-tree regressions + the
   missing-code win-stream). This tells you when a both-objs isolation derive is TRUSTWORTHY vs must be a
   hunter-A/B HYPOTHESIS:**
-  • **MISSING-CODE fixes TRANSFER reliably** (dropped block #159, dropped arg #65, dropped case, control-flow
-    fold #139, dropped const-store #145): they recover instructions that are MISSING regardless of register
-    allocation, so an isolation/both-objs read converts in-tree. DERIVE these confidently. (This is where the
-    owner's win-stream lives.)
+  • **GENUINELY-MISSING-CODE fixes TRANSFER reliably** (dropped block #159, dropped arg #65, dropped case,
+    control-flow fold #139 that RECOVERS a block, dropped const-store #145, store/init-ORDER #5/#51): they
+    recover/reorder instructions that are MISSING/mis-ordered regardless of register allocation, so an
+    isolation/both-objs read converts in-tree. DERIVE these confidently. (This is where the owner's win-stream
+    lives.) ⚠️ BUT a DISPATCH-FORM / BLOCK-LAYOUT PERMUTATION is NOT in this class — it has JUMP-THREADING
+    collateral that does NOT transfer (in-tree confirmed: cardShowMessage switch→if regressed 99.78→99.11 — the
+    if FLIPPED the dispatch to `bne` correctly but then jump-threaded away the outer `b` target keeps, netting
+    1 short; loadTextureFiles same). So: a fn whose diff is a `beq;b`-vs-`bne` DISPATCH or a branch-TARGET
+    reorder is jump-threading (full-fn block-ordering pass, surrounding-context-dependent), treat it as
+    allocation-form-adjacent (hypothesis, not reliable). The reliable sub-class is a CONTIGUOUS missing/extra
+    REGION (real dropped code) or a STORE/INIT-ORDER swap — NOT a dispatch/layout permutation.
   • **ALLOCATION-SENSITIVE fixes REGRESS from isolation** (strength-reduction store-form, store-isel #112,
     register coloring #66/#107/#108, the #155 held-pointer detour): the FULL-FN register pressure overrides the
     isolated behavior, so a minimal — even substantially-faithful — TU can't carry it. 4 confirmed isolation
