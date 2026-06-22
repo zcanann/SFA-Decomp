@@ -658,7 +658,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     u8 layerByte;
     TexOverride* pE;
     u32 colorWord;
-    Mtx afStack_44;
+    Mtx texMatrix;
 
     colorWord = lbl_803DEBB0;
     if ((*(u8*)(shader + 0x41) == 2) &&
@@ -694,11 +694,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (*(u8*)((int)layer + 6) != 0xff)
         {
             layerIdx = (u32) * (u8*)((int)layer + 6) * 0x10;
-            PSMTXTrans(afStack_44,
+            PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            texMtx = (float*)afStack_44;
+            texMtx = (float*)texMatrix;
         }
         else
         {
@@ -739,11 +739,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (*(u8*)((int)layer + 6) != 0xff)
         {
             layerIdx = (u32) * (u8*)((int)layer + 6) * 0x10;
-            PSMTXTrans(afStack_44,
+            PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            texMtx = (float*)afStack_44;
+            texMtx = (float*)texMatrix;
         }
         else
         {
@@ -781,11 +781,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 if (*(u8*)((int)layer + 6) != 0xff)
                 {
                     int mtxOff = (u32) * (u8*)((int)layer + 6) * 0x10;
-                    PSMTXTrans(afStack_44,
+                    PSMTXTrans(texMatrix,
                                *(float*)(lbl_803DCE68 + mtxOff) / lbl_803DEBC8,
                                *(float*)(lbl_803DCE68 + mtxOff + 4) / lbl_803DEBC8,
                                lbl_803DEBCC);
-                    texMtx = (float*)afStack_44;
+                    texMtx = (float*)texMatrix;
                 }
                 else
                 {
