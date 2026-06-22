@@ -602,9 +602,9 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
     u8 losOut;
     f32* dp = diff;
     int* list;
+    int negHalfAngle;
     int obj;
     int found = 0;
-    int negHalfAngle;
     int newangle;
     int delta;
     u8 traced;
