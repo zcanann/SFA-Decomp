@@ -1391,16 +1391,14 @@ int fn_8029A76C(int obj, int state, f32 fv)
             getCurSeqNo() != 0)
         {
             int i;
-            void** p;
             lbl_803DE42C = 0;
-            for (i = 0, p = gPlayerSpawnedObjects; i < 7; i++)
+            for (i = 0; i < 7; i++)
             {
-                if (*p != NULL)
+                if (gPlayerSpawnedObjects[i] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)gPlayerSpawnedObjects[i]);
+                    gPlayerSpawnedObjects[i] = NULL;
                 }
-                p++;
             }
             if (gPlayerResource != NULL)
             {
