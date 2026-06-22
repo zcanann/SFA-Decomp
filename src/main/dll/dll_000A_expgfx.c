@@ -165,6 +165,7 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_propagation off
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -218,14 +219,18 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);
     }
 
-    inactiveBitMask = ~activeBit;
-    runtime->poolActiveMasks[poolIndex] = runtime->poolActiveMasks[poolIndex] & inactiveBitMask;
+    {
+        u32 currentMaskValue = runtime->poolActiveMasks[poolIndex];
+        inactiveBitMask = ~activeBit;
+        runtime->poolActiveMasks[poolIndex] = currentMaskValue & inactiveBitMask;
+    }
     runtime->poolActiveCounts[poolIndex]--;
     if (runtime->poolActiveCounts[poolIndex] == 0)
     {
         gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
     }
 }
+#pragma opt_propagation reset
 
 #pragma opt_propagation off
 void expgfxRemoveAll(void)
