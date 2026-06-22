@@ -1572,10 +1572,10 @@ extern const f32 lbl_803DF438;
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
     extern f32 gModgfxMotionStep;
-    s32 dx, dy;
+    s32 dy, dx;
     ModgfxVertexData* cur;
     ModgfxVertexData* prev;
-    u8 ovx, ovy;
+    u8 ovy, ovx;
     int i;
     int j;
     ModgfxVertexData* slot;
