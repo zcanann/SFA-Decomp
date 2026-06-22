@@ -989,6 +989,58 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     with the AND's high-word. Trigger to sweep: any `flags &= ~Kll; field=0;` pair where #74's u32 form
     regressed via register-steal.
 
+152. **SINGLE-BIT MASK-CLEAR: retail's separate `not`+`and` (NOT `andc`, NOT `xor`) → `opt_propagation off`
+    + LOAD THE MASK INTO A TEMP ON ITS OWN STATEMENT BEFORE the `~`.** When retail clears a bit with two
+    instrs `lwz mask; not r0,bit; and r0,mask,r0; stw` but our build either FUSES to `andc r0,mask,bit`
+    (source `mask &= ~bit`) or emits `xor r0,bit,r0` reusing a nearby `-1` (source `mask &= bit ^ 0xFFFFFFFF`),
+    the clean form is: `{ u32 m = *maskPtr; inv = ~bit; *maskPtr = m & inv; }` wrapped in `#pragma
+    opt_propagation off … reset`. WHY each piece: (a) `~bit` (not `^0xFFFFFFFF`) is needed so the complement
+    is a `not`/`nor` not an `xor`; (b) opt_propagation off keeps `inv` a SEPARATE value so it is NOT folded
+    into the AND (folding → isel picks `andc`, a 1-instr fusion retail never uses — confirmed 0 `andc` in the
+    whole target unit); (c) loading the mask into its OWN temp `m` BEFORE the `~` statement reproduces retail's
+    emission ORDER `lwz; not; and` (opt_propagation off alone keeps source order, which puts the `not` BEFORE
+    the mask load → an objdiff-penalised reorder, #149). The temp+pragma is plausible 2002 C and clean.
+    Landed three fns in dll_000A_expgfx with ZERO collateral (the pragma is per-fn, scheduling/peephole already
+    off in these units): expgfxRemove 97.2→98.87 (count went T=C, the andc was the 1 missing instr),
+    expgfxRemoveAll 98.2→98.8, resetAllPools refactor +0.4. SWEEP: any near-miss whose first diff is `andc`/`xor`
+    where the target shows `not`+`and` — apply the temp+pragma. (DISTINCT from #74's materialized-mask LL form,
+    which is for `li -K; and` not `not; and`.)
+153. **RECOVER A SEPARATE FIELD-POINTER: `T* p = &obj->field; if(*p){(*p)--; ...}` reproduces retail's
+    `addi pAddr,objBase,K; lhz 0(pAddr)` where direct `obj->field` (accessed 3×) emits `lhz K(objBase)`
+    every time.** When retail hoists `&struct->refCount` (or any field accessed read+write+read) into its own
+    register and accesses it via `0(p)`, while our build re-uses the struct base with the field displacement,
+    write the field pointer explicitly. ALSO grouped-cast the struct address the same way the sibling fn does:
+    `tableEntry = (T*)((u8*)base->arr + idx*size); refCountPtr = &tableEntry->refCount;` — this matched retail's
+    `add objBase,idx; addi K; lhz 0(refPtr)` grouping AND the field pointer in one edit. (resetAllPools
+    86.8→89.1; the matching sibling expgfxRemoveAll already used this exact `refCountPtr` form — when one fn in
+    a unit matches a struct-access shape and a sibling doesn't, COPY the matching fn's spelling.)
+154. **TWO-LOOP global-array scan where retail KEEPS THE BASE in one reg, COPIES it for loop1's walker, and
+    REUSES it directly as loop2's walker → `table = global; for(i=0,entry=table; …; i++,entry++){…}
+    for(j=0; …; j++,table++){…}`.** Loop1 walks the COPY `entry` (so the base survives loop1), loop2 walks the
+    PRESERVED base `table` directly (destroying it — fine, it's not needed after). Put the base materialization
+    IN loop1's comma-init AFTER the index init (`for(i=0, table=global, entry=table; …)`) so the index `li`
+    emits first (matches retail's prologue order). Took expgfx_addToTable 82.4→97.9 (pointer-walk vs the raw
+    `arr[i]` offset-accumulator form that strength-reduced to an extra `add` per iteration). RESIDUAL: the
+    front-end SAME-VALUE MERGE (#131) still routes the base+copy through one temp `addi r0; mr rBase; mr
+    rWalker` vs retail's `addi rBase; mr rWalker` (1 extra `mr`) — see #155.
+155. **THE "global address materialized into a SAVED reg via `lis r3; addi r0,r3,0; mr rSaved,r0`" (1 extra
+    `mr`) vs retail's DIRECT `lis r3; addi rSaved,r3,0` is a PERVASIVE front-end residual in dll_000A_expgfx
+    (renderParticles 99.1, expgfx_free, expgfx_initialise, expgfxRemoveAll, resetAllPools, addToTable all hit
+    it) — a clean source form is ASSUMED to exist, NOT yet found.** Diagnostic: retail materializes the LOW
+    half of a `lis;addi` global address DIRECTLY into the destination saved/volatile reg (often REUSING the
+    `lis` temp: `lis r3; addi r3,r3,0`); ours computes into `r0` then copies. The FIRST global a fn materializes
+    usually goes direct (e.g. `runtime` → `addi r31,r3,0`); SUBSEQUENT standalone globals (`gExpgfxStatic…`)
+    take the `r0`+`mr` detour. It is tied to the walker/value's COLORING (in expgfx_initialise retail colors the
+    walker into the low volatile r3 and the loop-invariant `0` into saved r29; ours swaps them → the `mr`).
+    CONFIRMED INERT/REGRESSING (a launchpad to SKIP, not proof): `register` keyword, init-statement reorder,
+    decl-order swap, `#80` `(T*)(int)lbl` launder, `#pragma peephole on/off`, `#pragma opt_propagation off`
+    (none remove the `mr`; peephole-on and init-reorder REGRESS via global coloring shuffle). UNTRIED LEADS to
+    attack FRESH: find the in-repo/MP4 oracle C that emits `addi rSaved,r3,0` direct for a standalone global
+    into a saved reg (grep matched `.o` for `addi r2[0-9],r3,0`/`addi r3[01],r3,0` with a global reloc, read its
+    source); model it as the #131 same-value/front-end materialization and look for the operand-level split that
+    keeps the addi targeting the destination; perturb a NEIGHBOR web's creation order so r0 isn't the free temp
+    at the materialization point. This is the single highest-leverage open nut in the unit (gates 6+ fns).
+
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
   cast at use (pushes extension to use side). `s16[]` element → `extsh`; `u16[]` → `clrlwi`.
