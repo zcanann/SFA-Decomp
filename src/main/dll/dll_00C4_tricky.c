@@ -1695,14 +1695,14 @@ void Tricky_resumeAfterCommand(int obj, int state)
     ObjHitsPriorityState* hitState;
     u8 moveId;
 
-    ((TrickyState*)state)->unk2EF = 1;
+    ((TrickyState*)state)->actionId = 1;
     if (((((TrickyState*)state)->flags2DC & 0x1000) != 0) &&
         ((((TrickyState*)state)->unk2E0 & 0x1000) == 0))
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
         moveId = ((TrickyState*)state)->moveId0;
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale0);
-        ((TrickyState*)state)->unk323 = 1;
+        ((TrickyState*)state)->flags323 = 1;
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
@@ -1716,7 +1716,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
     if ((((TrickyState*)state)->flags2DC & 0x40000000) != 0)
     {
         ((TrickyState*)state)->animPlaySpeed = lbl_803E2578;
-        ((TrickyState*)state)->unk323 = 0;
+        ((TrickyState*)state)->flags323 = 0;
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2574, 0);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
@@ -1745,7 +1745,7 @@ void trickyFn_80148d8c(int obj, int state)
     u8 moveId;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    ((TrickyState*)state)->unk2EF = 0;
+    ((TrickyState*)state)->actionId = 0;
     if (((((TrickyState*)state)->flags2DC & 0x800) != 0) &&
         ((((TrickyState*)state)->unk2E0 & 0x800) == 0))
     {
@@ -1770,7 +1770,7 @@ void trickyFn_80148d8c(int obj, int state)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
         moveId = ((TrickyState*)state)->moveId1;
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale1);
-        ((TrickyState*)state)->unk323 = 1;
+        ((TrickyState*)state)->flags323 = 1;
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0);
         if (*(void**)&((GameObject*)obj)->anim.hitReactState != NULL)
         {
@@ -2294,11 +2294,11 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 1, (void*)((TrickyState*)state)->light);
             }
-            else if ((((TrickyState*)state)->unk2F1 & 0x10) != 0)
+            else if ((((TrickyState*)state)->flags2F1 & 0x10) != 0)
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 3, (void*)((TrickyState*)state)->light);
             }
-            else if ((((TrickyState*)state)->unk2F1 & 8) != 0)
+            else if ((((TrickyState*)state)->flags2F1 & 8) != 0)
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 2, (void*)((TrickyState*)state)->light);
             }

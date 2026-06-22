@@ -93,9 +93,9 @@ typedef struct TrickyState {
     u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
     u32 unk2E8;
     u8 pad2EC[0x2EF - 0x2EC];
-    u8 unk2EF;
-    u8 unk2F0;
-    u8 unk2F1;
+    u8 actionId; /* current action/move selector (0..5); compared against prevActionId to detect change */
+    u8 prevActionId; /* previous frame's actionId */
+    u8 flags2F1; /* bit flags (0x8/0x10/0x80) gating the spawn/anim paths */
     u8 pad2F2[0x2F5 - 0x2F2];
     u8 spawnBits;
     u8 pad2F6[0x2F8 - 0x2F6];
@@ -112,7 +112,7 @@ typedef struct TrickyState {
     u8 moveId0; /* ObjAnim_SetCurrentMove move id */
     u8 moveId1;
     u8 moveId2;
-    u8 unk323;
+    u8 flags323; /* anim-active bit flags (0x1/0x2/0x4/0x8) */
     u8 pad324[0x353 - 0x324];
     u8 unk353;
     u8 pad354[0x358 - 0x354];
