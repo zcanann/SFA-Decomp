@@ -101,32 +101,24 @@ f32 wallanimator_setScale(int obj, int target)
     int count;
     WallanimatorState* state;
     f32 scale;
-    f32 riseY;
-    f32 dropZ;
-    f32 baseSpread;
-    f32 jitterX;
 
     placementDesc = *(int*)&((GameObject*)obj)->anim.placementData;
     count = 6;
     do
     {
-        jitterX = gWallAnimatorJitterScale;
-        baseSpread = lbl_803E3FD4;
-        dropZ = lbl_803E3FD8;
-        riseY = lbl_803E3FDC;
-        offset[0] = jitterX * (f32)(int)randomGetRange(-0x64, 0x64);
-        offset[1] = baseSpread;
-        offset[2] = baseSpread;
+        offset[0] = gWallAnimatorJitterScale * (f32)(int)randomGetRange(-0x64, 0x64);
+        offset[1] = lbl_803E3FD4;
+        offset[2] = lbl_803E3FD4;
         spawn.rot[2] = randomGetRange(-0x7fff, 0x8000);
         spawn.rot[1] = 0;
         spawn.rot[0] = 0;
         vecRotateZXY(spawn.rot, offset);
-        offset[2] -= dropZ;
+        offset[2] -= lbl_803E3FD8;
         vecRotateZXY((void*)obj, offset);
         spawn.rot[2] = ((WallanimatorPlacement*)placementDesc)->unk1C;
         spawn.rot[0] = ((GameObject*)obj)->anim.rotX;
         spawn.pos[0] = ((GameObject*)obj)->anim.worldPosX + offset[0];
-        spawn.pos[1] = riseY + (((GameObject*)obj)->anim.worldPosY + offset[1]);
+        spawn.pos[1] = lbl_803E3FDC + (((GameObject*)obj)->anim.worldPosY + offset[1]);
         spawn.pos[2] = ((GameObject*)obj)->anim.worldPosZ + offset[2];
         (*gPartfxInterface)->spawnObject((void*)obj, 0xca, spawn.rot, 0x200001, -1, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, 0xcb, spawn.rot, 0x200001, -1, NULL);
