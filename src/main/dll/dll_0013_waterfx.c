@@ -35,7 +35,7 @@ extern void GXBeginDisplayList(void* list, u32 size);
 extern int GXEndDisplayList(void);
 extern void GXResetWriteGatherPipe(void);
 extern u16 gWaterfxSplashDisplayListSize;
-extern f32 lbl_803DF2E0;
+extern const f32 lbl_803DF2E0;
 extern f32 lbl_803DF2E4;
 extern f32 lbl_803DF2F0;
 extern f32 lbl_803DF2F4;
@@ -675,62 +675,43 @@ void fn_80095164(WaterParticle* s)
     f32 scale[12];
     f32 mtxB[12];
     f32 mtxC[12];
-    u8* p;
     int mtxIdx;
+    u8* p;
     int i;
-    f32 c2FC;
-    f32 c2F4;
-    f32 c2EC;
-    f32 c2F0;
-    f32 c2E8;
-    f32 c2F8;
-    f32 c2E4;
-    f32 c2E0;
     f32 fade;
     f32 t;
-    f32 c304;
 
     PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
     i = 0;
     mtxIdx = 0;
     p = (u8*)s;
-    c2E0 = lbl_803DF2E0;
-    c2E4 = lbl_803DF2E4;
-    c2F8 = lbl_803DF2F8;
-    c2E8 = lbl_803DF2E8;
-    c2F0 = lbl_803DF2F0;
-    c2EC = lbl_803DF2EC;
-    c2F4 = lbl_803DF2F4;
-    c2FC = lbl_803DF2FC;
-    c304 = lbl_803DF304;
     for (; i < 8; i++)
     {
         f32 h = s->f10;
-        f32 a = c2E4 * ((f32)i / c2F8);
-        f32 ph = (c2E0 + a) * h;
-        f32 dd = ph - c2E8;
+        f32 ph = (lbl_803DF2E0 + 0.9f * ((f32)i / 7.0f)) * h;
+        f32 dd = ph - 0.5f;
         f32 lim;
         f32 sc;
-        fade = -(c2F0 * (dd * dd) - c2EC);
-        lim = c2F4 + a;
+        fade = -(4.0f * (dd * dd) - 1.0f);
+        lim = 0.05f + 0.9f * ((f32)i / 7.0f);
         if (h < lim)
         {
-            t = c2EC;
+            t = 1.0f;
         }
         else
         {
-            t = (c2EC - h) / (c2EC - lim);
+            t = (1.0f - h) / (1.0f - lim);
         }
-        sc = c2FC * ph + c2EC;
-        PSMTXScale(mtxB, sc, c2EC, sc);
-        PSMTXTrans(mtxC, lbl_803DF300, c2FC * fade, lbl_803DF300);
+        sc = 2.0f * ph + 1.0f;
+        PSMTXScale(mtxB, sc, 1.0f, sc);
+        PSMTXTrans(mtxC, lbl_803DF300, 2.0f * fade, lbl_803DF300);
         PSMTXConcat(mtxC, mtxB, mtxD);
         PSMTXConcat(scale, mtxD, mtxD);
         PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
         GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(p + 0x18) = (u8)(int)(c304 * t);
+        *(u32*)(p + 0x18) = (u8)(int)(255.0f * t);
         mtxIdx += 3;
         p += 4;
     }
