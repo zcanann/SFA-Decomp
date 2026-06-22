@@ -226,10 +226,10 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
     u32 done;
     double clamped;
     double ratio;
-    float local_48;
-    float local_44;
-    float local_40;
-    float local_3c;
+    float coeff0;
+    float coeff1;
+    float coeff2;
+    float coeff3;
     u32 local_38;
     u32 uStack_34;
     u32 local_30;
@@ -238,10 +238,10 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
     u32 local_20;
     u32 uStack_1c;
 
-    local_48 = (float)a;
-    local_44 = (float)a;
-    local_40 = (float)b;
-    local_3c = (float)-b;
+    coeff0 = (float)a;
+    coeff1 = (float)a;
+    coeff2 = (float)b;
+    coeff3 = (float)-b;
     if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
         done = 1;
@@ -272,7 +272,7 @@ u32 FUN_8003988c(double a, double b, int curve, short* outAngle)
             clamped = (double)lbl_803DF624;
         }
         uStack_1c = uStack_2c;
-        ratio = FUN_80006a30(clamped, &local_48, (float*)0x0);
+        ratio = FUN_80006a30(clamped, &coeff0, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
             ratio = -ratio;
@@ -297,10 +297,10 @@ u32 FUN_80039a28(int curve, int state)
     u32 done;
     double clamped;
     double ratio;
-    float local_48;
-    float local_44;
-    float local_40;
-    float local_3c;
+    float coeff0;
+    float coeff1;
+    float coeff2;
+    float coeff3;
     u32 local_38;
     u32 uStack_34;
     u32 local_30;
@@ -309,10 +309,10 @@ u32 FUN_80039a28(int curve, int state)
     u32 local_20;
     u32 uStack_1c;
 
-    local_48 = lbl_803DF658;
-    local_44 = lbl_803DF658;
-    local_40 = lbl_803DF65C;
-    local_3c = lbl_803DF660;
+    coeff0 = lbl_803DF658;
+    coeff1 = lbl_803DF658;
+    coeff2 = lbl_803DF65C;
+    coeff3 = lbl_803DF660;
     if ((int)*(short*)(curve + 0x14) == (int)*(short*)(curve + 0x16))
     {
         done = 1;
@@ -343,7 +343,7 @@ u32 FUN_80039a28(int curve, int state)
             clamped = (double)lbl_803DF624;
         }
         uStack_1c = uStack_2c;
-        ratio = FUN_80006a30(clamped, &local_48, (float*)0x0);
+        ratio = FUN_80006a30(clamped, &coeff0, (float*)0x0);
         if (*(short*)(curve + 0x14) < *(short*)(curve + 0x16))
         {
             ratio = -ratio;
