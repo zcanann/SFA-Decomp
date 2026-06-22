@@ -543,6 +543,7 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
     f32 cosv, sinv, cos2, sin2;
     f32 dist, dist2, nx, nz, offs, dz;
     f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
+    f32 cpX, cpZ, cp2X, cp2Z;
 
     if (state->currentCheckpointId < 0)
     {
@@ -589,13 +590,17 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
         state->linkDepth = state->linkDepth + 1;
         return ang;
     }
-    distA = offs + (cosv * cp2->posX + sinv * cp2->posZ);
-    distB = offs2 + (cos2 * cp->posX + sin2 * cp->posZ);
+    cp2X = cp2->posX;
+    cp2Z = cp2->posZ;
+    distA = offs + (cosv * cp2X + sinv * cp2Z);
+    cpX = cp->posX;
+    cpZ = cp->posZ;
+    distB = offs2 + (cos2 * cpX + sin2 * cpZ);
     if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
         ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
     {
-        dx = cp->posX - cp2->posX;
-        dz = cp->posZ - cp2->posZ;
+        dx = cpX - cp2X;
+        dz = cpZ - cp2Z;
         dy = cp->posY - cp2->posY;
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (len > lbl_803E04E8)
