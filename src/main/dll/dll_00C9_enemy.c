@@ -414,7 +414,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     else if ((flags & 0x100) != 0)
     {
         ((TrickyState*)state)->actionId = 2;
-        if (((((TrickyState*)state)->flags2DC & 0x100) != 0) && ((((TrickyState*)state)->unk2E0 & 0x100) == 0))
+        if (((((TrickyState*)state)->flags2DC & 0x100) != 0) && ((((TrickyState*)state)->flags2E0 & 0x100) == 0))
         {
             int moveId = ((TrickyState*)state)->moveId2;
             ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale2);

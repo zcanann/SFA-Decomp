@@ -1697,7 +1697,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
 
     ((TrickyState*)state)->actionId = 1;
     if (((((TrickyState*)state)->flags2DC & 0x1000) != 0) &&
-        ((((TrickyState*)state)->unk2E0 & 0x1000) == 0))
+        ((((TrickyState*)state)->flags2E0 & 0x1000) == 0))
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
         moveId = ((TrickyState*)state)->moveId0;
@@ -1747,7 +1747,7 @@ void trickyFn_80148d8c(int obj, int state)
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     ((TrickyState*)state)->actionId = 0;
     if (((((TrickyState*)state)->flags2DC & 0x800) != 0) &&
-        ((((TrickyState*)state)->unk2E0 & 0x800) == 0))
+        ((((TrickyState*)state)->flags2E0 & 0x800) == 0))
     {
         tricky = (void*)getTrickyObject();
         if (tricky != NULL)
@@ -2308,14 +2308,14 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             }
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         }
-        ((TrickyState*)state)->unk2D0 -= timeDelta;
-        if (((TrickyState*)state)->unk2D0 < *(f32*)&lbl_803E2574)
+        ((TrickyState*)state)->freezeEffectTimer -= timeDelta;
+        if (((TrickyState*)state)->freezeEffectTimer < *(f32*)&lbl_803E2574)
         {
-            ((TrickyState*)state)->unk2D0 = lbl_803E2574;
+            ((TrickyState*)state)->freezeEffectTimer = lbl_803E2574;
         }
         if ((((TrickyState*)state)->flags2E8 & 0x10) != 0)
         {
-            if (((TrickyState*)state)->unk2D0 <= lbl_803E2574)
+            if (((TrickyState*)state)->freezeEffectTimer <= lbl_803E2574)
             {
                 params.pos.x = hitPos.x;
                 params.pos.y = hitPos.y;
@@ -2329,7 +2329,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     ((void (**)(int, int, void*, int, int, void*))*(int*)lbl_803DDA50)[1](
                         0, 1, &params, 0x401, -1, &colors);
                 }
-                ((TrickyState*)state)->unk2D0 = lbl_803E25A0;
+                ((TrickyState*)state)->freezeEffectTimer = lbl_803E25A0;
                 if (*(void**)&((TrickyState*)state)->light == NULL)
                 {
                     ((TrickyState*)state)->light = objCreateLight(0, 1);

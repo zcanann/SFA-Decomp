@@ -85,11 +85,11 @@ typedef struct TrickyState {
     f32 unk2BC;
     f32 unk2C0;
     u8 pad2C4[0x2D0 - 0x2C4];
-    f32 unk2D0;
+    f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
     f32 freezeStunTimer;
     f32 freezeRecoverTimer;
     u32 flags2DC; /* flag word */
-    u32 unk2E0;
+    u32 flags2E0; /* flag word tested alongside flags2DC (bits 0x100/0x800/0x1000) */
     u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
     u32 flags2E8; /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
     u8 pad2EC[0x2EF - 0x2EC];
