@@ -1713,6 +1713,7 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* p2, u8* hdr)
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
     u8* out;
+    u8* out2;
     int szs[7];
     int pos;
     int end;
@@ -1728,6 +1729,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         return 0;
     }
     modelLoad_calcSizes(p, b, szs, 0);
+    out2 = (u8*)((int)out | (int)out);
     pos = roundUpTo32((int)out + 0x64);
     *(int*)&((ObjModel*)out)->jointMatrices[0] = pos;
     pos += szs[6] >> 1;
@@ -1738,21 +1740,21 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         ModelFileHeader*)p)->flags & 0x10))
     {
         pos = roundUpTo32(pos);
-        *(int*)&((ObjModel*)out)->vtxBuf0 = pos;
+        *(int*)&((ObjModel*)out2)->vtxBuf0 = pos;
         pos = roundUpTo32(pos + ((ModelFileHeader*)p)->vertexCount * 6);
-        *(int*)&((ObjModel*)out)->vtxBuf1 = pos;
+        *(int*)&((ObjModel*)out2)->vtxBuf1 = pos;
         end = pos + ((ModelFileHeader*)p)->vertexCount * 6;
-        memcpy(((ObjModel*)out)->vtxBuf0, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
-        DCFlushRange(((ObjModel*)out)->vtxBuf0, ((ModelFileHeader*)p)->vertexCount * 6);
-        memcpy(((ObjModel*)out)->vtxBuf1, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
-        DCFlushRange(((ObjModel*)out)->vtxBuf1, ((ModelFileHeader*)p)->vertexCount * 6);
+        memcpy(((ObjModel*)out2)->vtxBuf0, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel*)out2)->vtxBuf0, ((ModelFileHeader*)p)->vertexCount * 6);
+        memcpy(((ObjModel*)out2)->vtxBuf1, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel*)out2)->vtxBuf1, ((ModelFileHeader*)p)->vertexCount * 6);
         pos = roundUpTo32(end);
     }
     else
     {
         end = *(int*)&((ModelFileHeader*)p)->vertices;
         *(int*)&((ObjModel*)out)->vtxBuf1 = end;
-        *(int*)&((ObjModel*)out)->vtxBuf0 = end;
+        *(int*)&((ObjModel*)out2)->vtxBuf0 = end;
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
@@ -1765,28 +1767,28 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
             n = 3;
         }
         pos = roundUpTo32(pos);
-        *(int*)&((ObjModel*)out)->normalBuf = pos;
+        *(int*)&((ObjModel*)out2)->normalBuf = pos;
         end = pos + ((ModelFileHeader*)p)->normalCount * n;
-        memcpy(((ObjModel*)out)->normalBuf, ((ModelFileHeader*)p)->normals, ((ModelFileHeader*)p)->normalCount * n);
-        DCFlushRange(((ObjModel*)out)->normalBuf, n * ((ModelFileHeader*)p)->normalCount);
+        memcpy(((ObjModel*)out2)->normalBuf, ((ModelFileHeader*)p)->normals, ((ModelFileHeader*)p)->normalCount * n);
+        DCFlushRange(((ObjModel*)out2)->normalBuf, n * ((ModelFileHeader*)p)->normalCount);
         pos = roundUpTo32(end);
     }
     else
     {
-        *(int*)&((ObjModel*)out)->normalBuf = *(int*)&((ModelFileHeader*)p)->normals;
+        *(int*)&((ObjModel*)out2)->normalBuf = *(int*)&((ModelFileHeader*)p)->normals;
     }
     pos = roundUpTo4(pos);
-    *(int*)&((ObjModel*)out)->animStateA = pos;
+    *(int*)&((ObjModel*)out2)->animStateA = pos;
     pos += 0x68;
     if (b & 0x80)
     {
-        *(int*)&((ObjModel*)out)->animStateB = pos;
+        *(int*)&((ObjModel*)out2)->animStateB = pos;
         pos += 0x68;
     }
     if (((ModelFileHeader*)p)->flags & 0x40)
     {
         pos = roundUpTo8(pos);
-        q = ((ObjModel*)out)->animStateA;
+        q = ((ObjModel*)out2)->animStateA;
         *(int*)(q + 0x1c) = pos;
         pos += szs[5];
         *(int*)(q + 0x20) = pos;
@@ -1795,7 +1797,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         pos += szs[5];
         *(int*)(q + 0x28) = pos;
         pos += szs[5];
-        q = ((ObjModel*)out)->animStateB;
+        q = ((ObjModel*)out2)->animStateB;
         if (q != 0)
         {
             *(int*)(q + 0x1c) = pos;
@@ -1811,22 +1813,22 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     if (((ModelFileHeader*)p)->morphTargetCount != 0)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->blendChannels = pos;
+        *(int*)&((ObjModel*)out2)->blendChannels = pos;
         pos += 0x30;
-        q = (u8*)((ObjModel*)out)->blendChannels;
+        q = (u8*)((ObjModel*)out2)->blendChannels;
         *(s8*)(q + 0xc) = -1;
         *(s8*)(q + 0xd) = -1;
         f = lbl_803DE828;
         *(f32*)(q + 0) = f;
         *(f32*)(q + 4) = f;
         *(f32*)(q + 8) = f;
-        q = (u8*)((ObjModel*)out)->blendChannels;
+        q = (u8*)((ObjModel*)out2)->blendChannels;
         *(s8*)(q + 0x1c) = -1;
         *(s8*)(q + 0x1d) = -1;
         *(f32*)(q + 0x10) = f;
         *(f32*)(q + 0x14) = f;
         *(f32*)(q + 0x18) = f;
-        q = (u8*)((ObjModel*)out)->blendChannels;
+        q = (u8*)((ObjModel*)out2)->blendChannels;
         *(s8*)(q + 0x2c) = -1;
         *(s8*)(q + 0x2d) = -1;
         *(f32*)(q + 0x20) = f;
@@ -1836,67 +1838,67 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     if (szs[1] > 0)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->unk48 = pos;
+        *(int*)&((ObjModel*)out2)->unk48 = pos;
         pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
-        *(int*)&((ObjModel*)out)->unk4C = pos;
+        *(int*)&((ObjModel*)out2)->unk4C = pos;
         pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
-        *(int*)&((ObjModel*)out)->unk50 = *(int*)&((ObjModel*)out)->unk48;
+        *(int*)&((ObjModel*)out2)->unk50 = *(int*)&((ObjModel*)out2)->unk48;
     }
     if (((ModelFileHeader*)p)->jointData != NULL && ((ModelFileHeader*)p)->jointCount != 0 && ((
         ModelFileHeader*)p)->unk18 != NULL && ((ModelFileHeader*)p)->unk1C != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->jointWorkspace = pos;
+        *(int*)&((ObjModel*)out2)->jointWorkspace = pos;
         pos += 0x1c;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 0) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 0) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 0xc;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 4) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 4) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 8) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 8) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 0xc) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 0xc) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 0x10) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 0x10) = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)(((ObjModel*)out)->jointWorkspace + 0x18) = pos;
+        *(int*)(((ObjModel*)out2)->jointWorkspace + 0x18) = pos;
         pos += ((ModelFileHeader*)p)->jointCount;
     }
     else
     {
-        *(int*)&((ObjModel*)out)->jointWorkspace = 0;
+        *(int*)&((ObjModel*)out2)->jointWorkspace = 0;
     }
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->unk40 = pos;
+        *(int*)&((ObjModel*)out2)->unk40 = pos;
         pos += ((ModelFileHeader*)p)->vertexAnimCount * 4;
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out)->unk44 = pos;
+        *(int*)&((ObjModel*)out2)->unk44 = pos;
         pos += ((ModelFileHeader*)p)->blendAnimCount * 4;
     }
     pos = roundUpTo4(pos);
-    *(int*)&((ObjModel*)out)->textureRefs = pos;
+    *(int*)&((ObjModel*)out2)->textureRefs = pos;
     pos += ((ModelFileHeader*)p)->renderOpCount * 0xc;
     k = 0;
     o2 = 0;
     for (; k < (int)((ModelFileHeader*)p)->renderOpCount; k++)
     {
-        *(u8*)(((ObjModel*)out)->textureRefs + o2 + 8) = 0;
+        *(u8*)(((ObjModel*)out2)->textureRefs + o2 + 8) = 0;
         o2 += 0xc;
     }
     if (b & 0x8000)
     {
         pos = alignUp2(pos);
-        *(int*)&((ObjModel*)out)->unk54 = pos;
-        *(u8*)(((ObjModel*)out)->unk54 + 0x18) = 0;
+        *(int*)&((ObjModel*)out2)->unk54 = pos;
+        *(u8*)(((ObjModel*)out2)->unk54 + 0x18) = 0;
     }
-    *(int*)&((ObjModel*)out)->renderAttachment = 0;
-    ((ObjModel*)out)->file = (ModelFileHeader*)p;
-    ((ObjModel*)out)->unk60 = 0;
-    return out;
+    *(int*)&((ObjModel*)out2)->renderAttachment = 0;
+    ((ObjModel*)out2)->file = (ModelFileHeader*)p;
+    ((ObjModel*)out2)->unk60 = 0;
+    return out2;
 }
 
 extern char sModelAnimationBufferOverflowWarning[];
