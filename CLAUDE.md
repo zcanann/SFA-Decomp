@@ -1200,8 +1200,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     strength-reduced induction init `mr rK,rCounter` (retail copies i=0 into the i*0xd48 / i*0x7d0 reduced vars) vs
     our `li 0` (#136/#110 — opt_level 1 unavailable, call-bearing fn); a waveAmp↔wave f27/f28 FP swap (#82/#121);
     and the #108 GPR rotation. All assumed to have clean forms, not yet found.
-159. **CONTROL-BRANCH UNFOLD via ELSE-RETURN SPLIT — a guard-wrapped body that retail emits with 2 extra
-    front-end branches (`b skip-else; else: b end; skip-else: ...`) but ours FOLDS to one fall-through.** When
+159. **RECOVER AN EARLY-RETURN / BLOCK-SKIP BRANCH retail emits when a later block is provably UNREACHABLE on
+    this path — the general family; ELSE-RETURN SPLIT is one variant.** Retail emits extra front-end branch(es)
+    (`b skip; ...; b end`) that our build FOLDS to a fall-through; the fix is a `return;` placed where retail
+    skips a provably-unreachable later block (semantically free → ZERO behavior cost). TWO confirmed variants:
+    (A) ELSE-RETURN SPLIT (guard-wrapped body) — below; (B) RETURN-TO-SKIP-MUTUALLY-EXCLUSIVE-BLOCK: two
+    SEQUENTIAL mutually-exclusive ifs (`if(active!=0){fade-up} if(active==0){fade-down}`) where retail exits
+    (`b end`) after the first block rather than falling through to the second's check — add a `return;` inside
+    the first if after its body (the second block provably can't run on this path). (flameguard: dll_02B3
+    vortex_update 98.65→100, return after the fade-up clamp.) Both = "spell the early-return retail uses to
+    skip a block that can't execute on this path." VARIANT A: When
     an `if (cond) { ENTIRE tail }` wraps the whole function tail (cond-false ⟹ fall through to the end = an
     implicit return) and the target has 2 extra branches our build collapses, split the guard into
     `if (cond) { HEAD } else { return; } TAIL` — HEAD = the part up to where retail emits the branch pair,
