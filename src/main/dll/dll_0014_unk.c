@@ -706,11 +706,11 @@ int getPatchGroup(float* point, int patchGroupIndex)
     char* base;
     u8* active;
     char* wg;
-    ObjfsaPatch* patch;
     u8 k;
     u32 pidx;
     u8 i;
     u8 j;
+    ObjfsaPatch* patch;
     f32 y;
 
     base = (char*)gObjfsaPatches;
@@ -757,12 +757,12 @@ int getPatchGroup(float* point, int patchGroupIndex)
 #pragma peephole on
 u32 isInWalkGroupOrPatch(float* point)
 {
-    s16 idx;
-    s16 i;
-    ObjfsaPatch* patch;
     s16* nz;
     s16* nx;
     char* offs;
+    ObjfsaPatch* patch;
+    s16 idx;
+    s16 i;
     int count;
     f32 y;
 
@@ -3755,16 +3755,16 @@ int RomCurve_countRandomPoints(RomCurveDef* curve)
 int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 {
     u32* idCursor;
+    RomCurveDef** windowCursor;
     float* outXStart;
     float* outXCursor;
-    RomCurveDef** windowCursor;
+    float* outYCursor;
+    float* outZCursor;
     int foundCount;
     int low;
     int mid;
     int high;
     RomCurveDef* resolvedCurve;
-    float* outZCursor;
-    float* outYCursor;
     RomCurveDef** resolveCursor;
     RomCurveDef* reloaded;
     u32 curveId;
