@@ -2862,7 +2862,7 @@ extern f32 __PADFixBits;
 
 
 #pragma optimization_level 2
-void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
+void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 {
     u32 fmt;
     u32 w, h;
@@ -2872,44 +2872,44 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
     u8 redA, redB;
     int rf, gf, bf;
 
-    if (a == NULL) return;
-    if (b == NULL) return;
-    if (c == NULL) return;
-    fmt = *(u8*)(a + 0x16);
+    if (src1 == NULL) return;
+    if (src2 == NULL) return;
+    if (dst == NULL) return;
+    fmt = *(u8*)(src1 + 0x16);
     if (fmt != 4 && fmt != 6) return;
-    if (*(u8*)(b + 0x16) != fmt) return;
-    if (*(u8*)(c + 0x16) != fmt) return;
-    w = *(u16*)(a + 0xa);
-    if (w != *(u16*)(b + 0xa)) return;
-    h = *(u16*)(a + 0xc);
-    if (h != *(u16*)(b + 0xc)) return;
-    if (w != *(u16*)(c + 0xa) || h != *(u16*)(c + 0xc))
+    if (*(u8*)(src2 + 0x16) != fmt) return;
+    if (*(u8*)(dst + 0x16) != fmt) return;
+    w = *(u16*)(src1 + 0xa);
+    if (w != *(u16*)(src2 + 0xa)) return;
+    h = *(u16*)(src1 + 0xc);
+    if (h != *(u16*)(src2 + 0xc)) return;
+    if (w != *(u16*)(dst + 0xa) || h != *(u16*)(dst + 0xc))
     {
         return;
     }
     {
-        wA = (int)(__PADFixBits * t) & 0xff;
+        wA = (int)(__PADFixBits * blend) & 0xff;
         wB = (0xff - wA) & 0xff;
         if (fmt == 4)
         {
-            for (i = 0; i < (int)*(u16*)(a + 0xc); i++)
+            for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
             {
                 int im, i5;
                 j = 0;
                 im = i & 0xfffffffc;
                 i5 = (i & 3) * 8;
-                for (; j < (int)*(u16*)(a + 0xa); j++)
+                for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
                     int i12;
                     u8 *p;
-                    p = a + i6; p += i4; p += i5;
-                    i12 = (int)*(u16*)(a + 0xa) * im * 2;
+                    p = src1 + i6; p += i4; p += i5;
+                    i12 = (int)*(u16*)(src1 + 0xa) * im * 2;
                     p += i12;
                     texA = *(u16*)(p + 0x60);
                     redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
-                    p = b + i6; p += i4; p += i5; p += i12;
+                    p = src2 + i6; p += i4; p += i5; p += i12;
                     texB = *(u16*)(p + 0x60);
                     redB = ((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13);
                     bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8)
@@ -2917,45 +2917,45 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
                         + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
-                    p = c + i6; p += i4; p += i5; p += i12;
+                    p = dst + i6; p += i4; p += i5; p += i12;
                     *(u16*)(p + 0x60) = bf | (rf | gf);
                 }
             }
         }
         else
         {
-            for (i = 0; i < (int)*(u16*)(a + 0xc); i++)
+            for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
             {
                 int i5, i4;
                 j = 0;
                 i5 = (i >> 2) * 8;
                 i4 = (i & 3) * 8;
-                for (; j < (int)*(u16*)(a + 0xa); j++)
+                for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
                     int i9 = (j & 3) * 2;
                     int i12 = (j >> 2) * 0x40;
                     int i6;
                     u8 *ad, *bd, *cd;
                     u8 aLo, bLo, aHi, bHi;
-                    ad = a + i9; ad += i12; ad += i4;
-                    i6 = (int)*(u16*)(a + 0xa) * i5 * 2;
+                    ad = src1 + i9; ad += i12; ad += i4;
+                    i6 = (int)*(u16*)(src1 + 0xa) * i5 * 2;
                     ad += i6;
-                    bd = b + i9; bd += i12; bd += i4; bd += i6;
+                    bd = src2 + i9; bd += i12; bd += i4; bd += i6;
                     aLo = *(u16*)(ad + 0x60);
                     bLo = *(u16*)(bd + 0x60);
                     texA = *(u16*)(ad + 0x80);
                     aHi = (int)(texA & 0xff00) >> 8;
                     texB = *(u16*)(bd + 0x80);
                     bHi = (int)(texB & 0xff00) >> 8;
-                    cd = c + i9 + i12 + i4 + 0x60;
+                    cd = dst + i9 + i12 + i4 + 0x60;
                     *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
-                    *(u16*)(cd + (int)*(u16*)(a + 0xa) * i5 * 2 + 0x20) =
+                    *(u16*)(cd + (int)*(u16*)(src1 + 0xa) * i5 * 2 + 0x20) =
                         ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8)
                         | (u8)(((int)(wA * (u8)texA) >> 8) + ((int)(wB * (u8)texB) >> 8));
                 }
             }
         }
-        DCStoreRange(c + 0x60, *(int*)(c + 0x44));
+        DCStoreRange(dst + 0x60, *(int*)(dst + 0x44));
     }
 }
 #pragma optimization_level reset
@@ -3446,7 +3446,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     return 0;
 }
 
-extern u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z);
+extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
 #pragma ppc_unroll_speculative on
@@ -5725,7 +5725,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
 extern char sTrackHitOverflowError[];
 extern void fn_80137948(char* fmt, ...);
 
-u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z)
+u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
 {
     TrackBlockDescriptor* descBase;
     f32 *ep1, *ep2;
@@ -5780,12 +5780,12 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
     retLo = 0;
     retHi = 0;
     curBit = 1;
-    ep1 = (f32*)p3;
-    ep2 = (f32*)p3;
-    sp1 = (f32*)p2;
-    sp2 = (f32*)p2;
-    slotp = p5;
-    for (; i < p4; i++)
+    ep1 = (f32*)endPos;
+    ep2 = (f32*)endPos;
+    sp1 = (f32*)startPos;
+    sp2 = (f32*)startPos;
+    slotp = slots;
+    for (; i < count; i++)
     {
         cur[0] = ep1[0];
         cur[1] = ep2[1];
@@ -5794,7 +5794,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
         sv[7] = sp2[1];
         sv[8] = sp2[2];
         radius = *(f32*)(slotp + 0x40);
-        slotByte = (int)p5 + i;
+        slotByte = (int)slots + i;
         type = *(u8*)(slotByte + 0x54);
         maxStep = radius + lbl_803DB660;
         rdata[0] = radius;
@@ -6090,7 +6090,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                     found = 1;
                     if (type == 7)
                     {
-                        f32* out4 = (f32*)((u8*)p5 + i * 0x10);
+                        f32* out4 = (f32*)((u8*)slots + i * 0x10);
                         out4[0] = norm4[0];
                         out4[1] = norm4[1];
                         out4[2] = norm4[2];
@@ -6141,7 +6141,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         cur[0] = cur[0] + offX;
                         cur[2] = cur[2] + offZ;
                     }
-                    out4 = (f32*)((u8*)p5 + i * 0x10);
+                    out4 = (f32*)((u8*)slots + i * 0x10);
                     out4[0] = norm4[0];
                     out4[1] = norm4[1];
                     out4[2] = norm4[2];
@@ -6163,7 +6163,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
             ep1[0] = cur[0];
             ep2[1] = cur[1];
             ep2[2] = cur[2];
-            *(s16*)((u8*)p5 + 0x6c) = *(s16*)((u8*)p5 + 0x6c) + 1;
+            *(s16*)((u8*)slots + 0x6c) = *(s16*)((u8*)slots + 0x6c) + 1;
             retLo = retLo | curBit;
         }
         curBit = (u8)(curBit << 1);

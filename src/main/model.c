@@ -1400,7 +1400,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 
 #pragma ppc_unroll_factor_limit 8
 #pragma ppc_unroll_instructions_limit 256
-void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
+void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 blend)
 {
     u8 stk[0x64];
     int px;
@@ -1415,22 +1415,22 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
     f32 fb;
     f32 fa;
 
-    hdr = *(u8**)b;
+    hdr = *(u8**)model;
     {
-        u8* pb = b + 12;
-        px = *(int*)(pb + (*(u16*)(b + 0x18) & 1) * 4);
+        u8* pb = model + 12;
+        px = *(int*)(pb + (*(u16*)(model + 0x18) & 1) * 4);
     }
-    *(f32*)(c + 4) = e * ((GameObject*)c)->anim.localPosZ;
+    *(f32*)(channel + 4) = blend * ((GameObject*)channel)->anim.localPosZ;
     fl = 0;
     if (((ModelFileHeader*)hdr)->flags & 8)
     {
-        *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)c)->anim.worldPosY;
-        *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)c)->anim.worldPosZ;
-        *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)c)->anim.velocityX;
-        *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)c)->anim.velocityY;
+        *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)channel)->anim.worldPosY;
+        *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)channel)->anim.worldPosZ;
+        *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)channel)->anim.velocityX;
+        *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)channel)->anim.velocityY;
         for (j = 0; j < 2; j++)
         {
-            if (*(u16*)(c + 0x58))
+            if (*(u16*)(channel + 0x58))
             {
                 idx = j;
             }
@@ -1438,15 +1438,15 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
             {
                 idx = 0;
             }
-            *(u16*)(stk + j * 2 + 0x44) = *(u16*)(c + idx * 2 + 0x44);
-            *(u8*)(stk + j + 0x60) = *(u8*)(c + idx + 0x60);
-            *(f32*)(stk + j * 4 + 0x14) = *(f32*)(c + idx * 4 + 0x14);
-            *(f32*)(stk + j * 4 + 4) = *(f32*)(c + idx * 4 + 4);
-            *(u32*)(stk + j * 4 + 0x34) = *(u32*)(c + idx * 4 + 0x34);
+            *(u16*)(stk + j * 2 + 0x44) = *(u16*)(channel + idx * 2 + 0x44);
+            *(u8*)(stk + j + 0x60) = *(u8*)(channel + idx + 0x60);
+            *(f32*)(stk + j * 4 + 0x14) = *(f32*)(channel + idx * 4 + 0x14);
+            *(f32*)(stk + j * 4 + 4) = *(f32*)(channel + idx * 4 + 4);
+            *(u32*)(stk + j * 4 + 0x34) = *(u32*)(channel + idx * 4 + 0x34);
         }
-        *(u16*)(stk + 0x58) = *(u16*)(c + 0x58);
+        *(u16*)(stk + 0x58) = *(u16*)(channel + 0x58);
         modelAnimUpdateChannels(hdr, stk, 2);
-        sv = *(s8*)(c + 0x63);
+        sv = *(s8*)(channel + 0x63);
         if (sv & 1)
         {
             fl |= 0x10;
@@ -1455,7 +1455,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
         {
             fl |= 0x20;
         }
-        lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, d, fl | 0x40);
+        lbl_80006C6C(&px, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, fl | 0x40);
     }
     else
     {
@@ -1465,21 +1465,21 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
         int m;
 
         i = 0;
-        p4 = c;
-        p2 = c;
+        p4 = channel;
+        p2 = channel;
         for (; i < 2; i++)
         {
             if (i != 0)
             {
-                v = *(u16*)(c + 0x5c);
+                v = *(u16*)(channel + 0x5c);
             }
             else
             {
-                v = *(u16*)(c + 0x5a);
+                v = *(u16*)(channel + 0x5a);
             }
             if (v != 0)
             {
-                if (*(u16*)(c + 0x58))
+                if (*(u16*)(channel + 0x58))
                 {
                     m = 4 << i;
                 }
@@ -1487,7 +1487,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                 {
                     m = 0;
                 }
-                bvv = *(u8*)(c + i + 0x60);
+                bvv = *(u8*)(channel + i + 0x60);
                 *(u8*)(stk + 0x60) = bvv;
                 fa = *(f32*)(p4 + 0x14);
                 *(f32*)(stk + 0x14) = fa;
@@ -1502,8 +1502,8 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                 {
                     *(u16*)(stk + 0x44) = 0;
                     *(u16*)(stk + 0x46) = 1;
-                    *(u32*)(stk + 0x1c) = *(u32*)(c + *(u16*)(p2 + 0x44) * 4 + 0x1c);
-                    *(u32*)(stk + 0x20) = *(u32*)(c + *(u16*)(p2 + 0x48) * 4 + 0x24);
+                    *(u32*)(stk + 0x1c) = *(u32*)(channel + *(u16*)(p2 + 0x44) * 4 + 0x1c);
+                    *(u32*)(stk + 0x20) = *(u32*)(channel + *(u16*)(p2 + 0x48) * 4 + 0x24);
                 }
                 else
                 {
@@ -1512,7 +1512,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
                 }
                 *(u16*)(stk + 0x58) = v;
                 modelAnimUpdateChannels(hdr, stk, 2);
-                lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, d, m);
+                lbl_80006C6C(&px, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, m);
                 if (m != 0)
                 {
                     fl |= 1 << i;
@@ -1521,31 +1521,31 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
             p4 += 4;
             p2 += 2;
         }
-        if ((*(u16*)(c + 0x5a) == 0 && *(u16*)(c + 0x5c) == 0) || fl != 0)
+        if ((*(u16*)(channel + 0x5a) == 0 && *(u16*)(channel + 0x5c) == 0) || fl != 0)
         {
             n = 1;
-            if (*(u16*)(c + 0x58) != 0)
+            if (*(u16*)(channel + 0x58) != 0)
             {
                 n = 2;
             }
-            *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)c)->anim.worldPosY;
-            *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)c)->anim.worldPosZ;
-            *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)c)->anim.velocityX;
-            *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)c)->anim.velocityY;
+            *(u32*)(stk + 0x1c) = *(u32*)&((GameObject*)channel)->anim.worldPosY;
+            *(u32*)(stk + 0x20) = *(u32*)&((GameObject*)channel)->anim.worldPosZ;
+            *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)channel)->anim.velocityX;
+            *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)channel)->anim.velocityY;
             {
-                u8* bp = c + 0x60;
+                u8* bp = channel + 0x60;
                 for (j = 0; j < n; j++)
                 {
-                    *(u16*)(stk + j * 2 + 0x44) = *(u16*)(c + j * 2 + 0x44);
+                    *(u16*)(stk + j * 2 + 0x44) = *(u16*)(channel + j * 2 + 0x44);
                     *(u8*)(stk + j + 0x60) = bp[j];
-                    *(f32*)(stk + j * 4 + 0x14) = *(f32*)(c + j * 4 + 0x14);
-                    *(f32*)(stk + j * 4 + 4) = *(f32*)(c + j * 4 + 4);
-                    *(u32*)(stk + j * 4 + 0x34) = *(u32*)(c + j * 4 + 0x34);
+                    *(f32*)(stk + j * 4 + 0x14) = *(f32*)(channel + j * 4 + 0x14);
+                    *(f32*)(stk + j * 4 + 4) = *(f32*)(channel + j * 4 + 4);
+                    *(u32*)(stk + j * 4 + 0x34) = *(u32*)(channel + j * 4 + 0x34);
                 }
             }
-            *(u16*)(stk + 0x58) = *(u16*)(c + 0x58);
+            *(u16*)(stk + 0x58) = *(u16*)(channel + 0x58);
             modelAnimUpdateChannels(hdr, stk, n);
-            sv = *(s8*)(c + 0x63);
+            sv = *(s8*)(channel + 0x63);
             if (sv & 1)
             {
                 fl |= 0x10;
@@ -1554,7 +1554,7 @@ void modelWalkAnimFn_800248b8(u8* a, u8* b, u8* c, int d, f32 e)
             {
                 fl |= 0x20;
             }
-            lbl_80006C6C(&px, a, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, d, fl);
+            lbl_80006C6C(&px, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, fl);
         }
     }
 }

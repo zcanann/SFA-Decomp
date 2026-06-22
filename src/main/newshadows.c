@@ -553,7 +553,7 @@ void newshadows_renderQueuedShadowCasters(void)
     u16* light;
     u16 visibility;
     u32 randVal;
-    int* piVar7;
+    int* entryPtr;
     int pivot;
     float* viewMtx;
     float* shadowMtx;
@@ -563,7 +563,7 @@ void newshadows_renderQueuedShadowCasters(void)
     u32 texSize;
     char casterIdx;
     u8 dirShadowCount;
-    u32 uVar18;
+    u32 shadowSlot;
     int* queueEntry;
     double invSqrt;
     double savedZParam;
@@ -701,7 +701,7 @@ void newshadows_renderQueuedShadowCasters(void)
         FUN_80060710((double)lbl_803DF9B4, &defaultDirX, lightMtx);
         FUN_800606a4(&uStack_25c, &uStack_260);
         dirShadowCount = 0;
-        uVar18 = 0;
+        shadowSlot = 0;
         queueEntry = &DAT_8038ef08;
         for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)DAT_803ddbf8 && (casterIdx < 100));
              casterIdx = casterIdx + '\x01')
@@ -720,7 +720,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     FUN_80003494(obj + 0xc, (u32)(model + 8), 0xc);
                     FUN_80003494(obj + 0x18, (u32)(model + 8), 0xc);
                 }
-                slotByte = uVar18 & 0xff;
+                slotByte = shadowSlot & 0xff;
                 slotOff = slotByte * 0x68;
                 shadowMtx = (float*)(&DAT_8038fd18 + slotOff);
                 (&DAT_8038fd7c)[slotOff] = visibility;
@@ -804,8 +804,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     model[6] = -dirY;
                     model[7] = -dirZ;
                     FUN_8006f788(texSize);
-                    piVar7 = (int*)FUN_80017a54(obj);
-                    pivot = FUN_80017970(piVar7, 0);
+                    entryPtr = (int*)FUN_80017a54(obj);
+                    pivot = FUN_80017970(entryPtr, 0);
                     *(float*)(light + 6) = (float)(dVar27 + (double)*(float*)(pivot + 0xc));
                     *(float*)(light + 8) = (float)(dVar29 + (double)*(float*)(pivot + 0x1c));
                     *(float*)(light + 10) = (float)(dVar28 + (double)*(float*)(pivot + 0x2c));
@@ -840,8 +840,8 @@ void newshadows_renderQueuedShadowCasters(void)
                     FUN_802475e4(viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                     FUN_80247618(shadowMtx, viewMtx, shadowMtx);
                     ((ObjModelState*)model)->shadowCastSlot = shadowMtx;
-                    piVar7 = &DAT_803925b8 + dirShadowCount;
-                    (&DAT_8038fd78)[slotByte * 0x1a] = *piVar7;
+                    entryPtr = &DAT_803925b8 + dirShadowCount;
+                    (&DAT_8038fd78)[slotByte * 0x1a] = *entryPtr;
                     (&DAT_8038fd7d)[slotOff] = (&DAT_803dc2c8)[dirShadowCount];
                     FUN_8003b7dc(obj);
                     if (*(char*)(queueEntry + 2) == '\x02')
@@ -868,8 +868,8 @@ void newshadows_renderQueuedShadowCasters(void)
                             gxSetZMode_(1, 3, 1);
                             FUN_80259400(0, 0, texSize, texSize);
                             FUN_80259504((u16)baseTexSize, (u16)baseTexSize, 0x20, 1);
-                            FUN_80259c0c(*piVar7 + 0x60, 1);
-                            (&DAT_8038fd78)[slotByte * 0x1a] = *piVar7;
+                            FUN_80259c0c(*entryPtr + 0x60, 1);
+                            (&DAT_8038fd78)[slotByte * 0x1a] = *entryPtr;
                         }
                         dirShadowCount = dirShadowCount + 1;
                     }
@@ -903,7 +903,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     model[7] = defaultDirZ;
                     ((ObjModelState*)model)->shadowCastSlot = shadowMtx;
                 }
-                uVar18 = uVar18 + 1;
+                shadowSlot = shadowSlot + 1;
                 if ((((ObjModelState*)model)->flags & 0x20) != 0)
                 {
                     FUN_80003494(obj + 0xc, savedRow0, 0xc);
@@ -929,11 +929,11 @@ void newshadows_renderQueuedShadowCasters(void)
         light[1] = savedFlag;
         *light = savedWord0;
         light[2] = savedWord2;
-        uVar18 = FUN_8005d00c();
-        if (uVar18 == 0)
+        shadowSlot = FUN_8005d00c();
+        if (shadowSlot == 0)
         {
-            uVar18 = FUN_8005d06c();
-            if (uVar18 == 0)
+            shadowSlot = FUN_8005d06c();
+            if (shadowSlot == 0)
             {
                 FUN_80006954(0);
                 FUN_80006a00(savedZParam);
@@ -952,8 +952,8 @@ void newshadows_renderQueuedShadowCasters(void)
         {
             FUN_80006954(0);
             FUN_80006a00(savedZParam);
-            uVar18 = FUN_8005d06c();
-            if (uVar18 == 0)
+            shadowSlot = FUN_8005d06c();
+            if (shadowSlot == 0)
             {
                 FUN_800069f4((double)lbl_803DF9FC);
             }

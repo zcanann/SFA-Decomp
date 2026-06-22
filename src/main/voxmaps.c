@@ -639,7 +639,7 @@ static void heapSiftUp(CurveHeapNode* q, int i)
     q[i].value = val;
 }
 
-void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 count, s16* box)
+void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
     VoxState* vs;
     VoxActiveMap* map;
@@ -671,7 +671,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* a2, int a3, u16 cou
             n->z = box[1];
             n->y = box[2];
             n->gCost = count;
-            n->parentDir = (u8)(u16)a3;
+            n->parentDir = (u8)(u16)parentDir;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
             n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -852,7 +852,7 @@ searched:
         {
             return;
         }
-        n->parentDir = a3;
+        n->parentDir = parentDir;
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
@@ -896,7 +896,7 @@ searched:
         n->z = box[1];
         n->y = box[2];
         n->gCost = count;
-        n->parentDir = (u8)(u16)a3;
+        n->parentDir = (u8)(u16)parentDir;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
         n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
