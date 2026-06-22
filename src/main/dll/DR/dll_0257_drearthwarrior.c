@@ -145,12 +145,12 @@ typedef struct EarthWarriorSub
     u8 pad8D5[3];
     u16 flags8D8;
     u8 pad8DA[6];
-    f32 unk8E0;
-    f32 unk8E4;
-    f32 unk8E8;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     f32 unk8EC;
     u8 pad8F0[0x90];
-    int unk980;
+    int savedControlMode;
     u8 pad984[2];
     s16 unk986;
     u8 pad988[2];
@@ -168,7 +168,7 @@ typedef struct EarthWarriorSub
     s8 unk99C;
     u8 unk99D;
     u8 pad99E[2];
-    int unk9A0; /* spawned helper object */
+    int modelChain; /* spawned helper object */
 } EarthWarriorSub;
 
 STATIC_ASSERT(sizeof(EarthWarriorSub) == 0x9a4);
@@ -285,9 +285,9 @@ int DR_EarthWarrior_stateHandler00(int obj)
 void DR_EarthWarrior_modelMtxFn(int obj, f32* x, f32* y, f32* z)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    *x = inner->sub.unk8E0;
-    *y = inner->sub.unk8E4;
-    *z = inner->sub.unk8E8;
+    *x = inner->sub.posX;
+    *y = inner->sub.posY;
+    *z = inner->sub.posZ;
 }
 
 int DR_EarthWarrior_func11(int obj)
@@ -364,7 +364,7 @@ int DR_EarthWarrior_stateHandler03(int obj, int p2)
                 playerAddHealth((int)Obj_GetPlayerObject(), -1);
                 inner->sub.health = 0;
             }
-            return inner->sub.unk980 + 1;
+            return inner->sub.savedControlMode + 1;
         }
     }
     return 0;
@@ -414,9 +414,9 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 void DR_EarthWarrior_free(int obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
-    if (*(void* *)&inner->sub.unk9A0 != NULL)
+    if (*(void* *)&inner->sub.modelChain != NULL)
     {
-        ObjModelChain_Free((ObjModelChain*)inner->sub.unk9A0);
+        ObjModelChain_Free((ObjModelChain*)inner->sub.modelChain);
     }
     ObjGroup_RemoveObject(obj, 0xa);
     if (((ByteFlags*)&inner->sub.flags994)->b02)
@@ -1170,7 +1170,7 @@ void DR_EarthWarrior_hitDetect(int obj)
                         ((ByteFlags*)&inner->sub.flags994)->b80 = 1;
                     }
                 }
-                inner->sub.unk980 = inner->baddie.controlMode;
+                inner->sub.savedControlMode = inner->baddie.controlMode;
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
                 }
             }
@@ -1222,7 +1222,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         }
         if ((void*)inner != NULL)
         {
-            ObjModelChain_AdvancePhase((ObjModelChain*)inner->sub.unk9A0);
+            ObjModelChain_AdvancePhase((ObjModelChain*)inner->sub.modelChain);
         }
     }
 }
