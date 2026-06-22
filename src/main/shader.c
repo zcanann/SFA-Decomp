@@ -822,7 +822,7 @@ extern u8* lbl_803DCE78;
 extern int mapCoordsToId(int x, int z, int layer);
 extern u32 getDataFileSize(int idx);
 
-void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
+void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
 {
     int layer;
     u8* tabEntry;
