@@ -247,11 +247,11 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
         sd = (s16)(yawB - (u16)tgt->anim.rotX);
         if (sd > 0x8000)
         {
-            sd -= 0xffff;
+            sd = (s16)(sd - 0xffff);
         }
         if (sd < -0x8000)
         {
-            sd += 0xffff;
+            sd = (s16)(sd + 0xffff);
         }
         dd = sd - (u16)(s16)
         Obj_GetYawDeltaToObject((int)tgt, npc, 0);
