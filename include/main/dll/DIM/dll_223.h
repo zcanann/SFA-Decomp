@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
-int DIMbosstonsil_updateHitReaction(void *obj,DIMbosstonsilState *state,int param_3);
+int DIMbosstonsil_updateHitReaction(void *obj,DIMbosstonsilState *state,int unused);
 int DIMbosstonsil_enableHitReaction(void *obj,DIMbosstonsilState *state);
 int DIMbosstonsil_chooseHitReaction(void *obj,DIMbosstonsilState *state);
 int DIMbosstonsil_startIdleHitReaction(void *obj,DIMbosstonsilState *state);

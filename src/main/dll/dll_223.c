@@ -41,7 +41,7 @@ extern f32 lbl_803E4CB0;
 /* particle-spawn flag word: bit 0x200000 | bit 0x1 */
 #define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
 
-int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int param_3)
+int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int unused)
 {
     if (state->active != 0)
     {
