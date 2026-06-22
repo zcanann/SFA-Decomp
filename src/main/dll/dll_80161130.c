@@ -165,7 +165,7 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
 
     if (*(void**)&p->baddie.targetObj != NULL && p->baddie.controlMode != 2)
     {
-        if ((f32)p->baddie.unk32E > lbl_803E2ED0 * timeDelta)
+        if ((f32)p->baddie.stateTimer > lbl_803E2ED0 * timeDelta)
         {
             (*(void (**)(int, int, int, u16*, u16*, u16*))((char*)*gBaddieControlInterface + 0x14))(
                 obj, *(int*)&p->baddie.targetObj, 16, &a, &b, &c);

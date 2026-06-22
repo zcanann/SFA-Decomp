@@ -110,7 +110,7 @@ typedef struct BaddieState {
      * at 0x338 where the published s16 fields below (mediumbasket whirlpool
      * evidence) overlap them; those families keep RAW spellings here. */
     u8 unk323[0x32E - 0x323];
-    s16 unk32E; /* compared > 0x78 */
+    s16 stateTimer; /* count-up dt-accumulating timer, gated > 0x78, reset to 0 on state entry */
     s16 cameraYaw;
     u8 unk332[4];
     s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */

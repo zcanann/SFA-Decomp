@@ -785,7 +785,7 @@ int iceBaddie_stateHandlerB06(int obj, int state)
             obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), lbl_803E2D1C,
             lbl_803E2D20, lbl_803E2D18);
     }
-    if (((GroundBaddieState*)state)->baddie.unk32E > 0x78 &&
+    if (((GroundBaddieState*)state)->baddie.stateTimer > 0x78 &&
         ((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(
             obj, state, sub->aggroRange, 1) != 0)
     {

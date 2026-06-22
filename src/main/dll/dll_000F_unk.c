@@ -850,10 +850,10 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
         fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
-        ((BaddieState*)state)->unk32E = (s16)((f32)((BaddieState*)state)->unk32E + dt);
-        if ((f32)((BaddieState*)state)->unk32E > lbl_803E05C4)
+        ((BaddieState*)state)->stateTimer = (s16)((f32)((BaddieState*)state)->stateTimer + dt);
+        if ((f32)((BaddieState*)state)->stateTimer > lbl_803E05C4)
         {
-            ((BaddieState*)state)->unk32E = 10000;
+            ((BaddieState*)state)->stateTimer = 10000;
         }
     }
 
@@ -1048,7 +1048,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
     if (((BaddieState*)obj)->substate != ((BaddieState*)obj)->prevSubstate)
     {
         ((BaddieState*)obj)->moveJustStartedB = 1;
-        ((BaddieState*)obj)->unk32E = 0;
+        ((BaddieState*)obj)->stateTimer = 0;
     }
     do
     {
@@ -1060,7 +1060,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
             ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
             ((BaddieState*)obj)->substate = result - 1;
             ((BaddieState*)obj)->moveJustStartedB = 1;
-            ((BaddieState*)obj)->unk32E = 0;
+            ((BaddieState*)obj)->stateTimer = 0;
         }
         else if (result < 0)
         {
@@ -1069,7 +1069,7 @@ void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable)
             {
                 ((BaddieState*)obj)->prevSubstate = (s16)(int)startState;
                 ((BaddieState*)obj)->moveJustStartedB = 1;
-                ((BaddieState*)obj)->unk32E = 0;
+                ((BaddieState*)obj)->stateTimer = 0;
             }
             else
             {
