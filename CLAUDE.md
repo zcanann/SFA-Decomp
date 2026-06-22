@@ -53,7 +53,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   `*(volatile f32*)0xADDR = v;` should be `volatile <UNION> X : (0xADDR); X.f = v;` — the CodeWarrior
   write-gather-pipe idiom used in dimexplosion/minimap/lightmap/front). Many "allocator nuts" are missing-struct-
   type artifacts — fn_801B3DE4 is the proof (an OR/cast/phi nightmare that dissolved into clean typed
-  struct-array C via #135). The struct/union reframe is SOURCE-fixable and higher-yield than the coloring grind.
+  struct-array C via #135). ⚠️ SCOPE (lead+validator, GX FIFO): the union vs raw cast is CODEGEN-NEUTRAL — both
+  emit identical `lis;stfs -32768(r)`; MWCC treats the address-mapped volatile object and the raw volatile cast
+  the same. So the union is the FAITHFUL source form (apply it for source quality, zero regression — raw casts
+  ARE the artifact), but it is NOT a % win by itself. The struct-pattern % WINS are specifically the cases where
+  the TYPED FORM CHANGES the addressing/coloring toward the target (a raw deref the typed `arr[idx].field`
+  re-folds to indexed `stwx`/`lha disp`, a raw-pointer-walk the typed struct-array walker lands base-direct,
+  #135/#138/#143) — sweep for THOSE, not codegen-neutral conversions. The reframe is SOURCE-fixable and
+  higher-yield than the coloring grind where it changes codegen.
 - **★ "PRESSURE" / "register pressure" is NEVER an explanation — it's an admission of not-knowing.** The
   allocator is a DETERMINISTIC graph-coloring algorithm; "the compiler ran low and cut corners" makes no sense.
   When `mr`-reuse vs `li`-fresh (or any coloring choice) correlates with fn size, that correlation is a CLUE to
