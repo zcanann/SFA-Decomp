@@ -2865,8 +2865,8 @@ void doPendingMapLoads(void)
                                 ent[0] = -1;
                                 ent[1] = -1;
                                 ent[2] = -1;
-                                cell++;
-                                col++;
+                                cell = cell + 1;
+                                col = col + 1;
                                 c = g[1];
                                 if (c > -1)
                                 {
@@ -2886,9 +2886,9 @@ void doPendingMapLoads(void)
                                 ent[7] = -1;
                                 ent[8] = -1;
                                 ent += 12;
-                                cell++;
+                                cell = cell + 1;
                                 g += 2;
-                                col++;
+                                col = col + 1;
                             }
                             p5 = p7;
                         }
