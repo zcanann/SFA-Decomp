@@ -507,7 +507,8 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         }
         else
         {
-            glyphLang = ((u8*)sLanguageNameTable)[curLanguage * 8 + 4];
+            tbl = (u8*)sLanguageNameTable;
+            glyphLang = tbl[curLanguage * 8 + 4];
         }
     }
     tbl = &lbl_802C8680[glyphLang * 16];
