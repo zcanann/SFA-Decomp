@@ -219,14 +219,9 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         Sfx_PlayFromObject(obj, 0x4a3);
     }
     {
-        f32 vol = lbl_803E5108 * state->spinSpeed;
-        if (vol >= lbl_803E50EC)
-        {
-        }
-        else
-        {
-            vol = -vol;
-        }
+        f32 vol = (lbl_803E5108 * state->spinSpeed >= lbl_803E50EC)
+                      ? lbl_803E5108 * state->spinSpeed
+                      : -(lbl_803E5108 * state->spinSpeed);
         v = (int)vol;
         if (v > 100)
         {
