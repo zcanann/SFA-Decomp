@@ -1229,12 +1229,21 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     at the materialization point. This is the single highest-leverage open nut in the unit (gates 6+ fns).
     **PARTIAL CRACK (the #143 INDEX FORM): for a global WALKED in a loop (`p = glob; *p=…; p++`), rewrite as the
     INDEX form `glob[loopCounter] = …` (drop the pointer + its `++`) → MWCC strength-reduces to a walker inited with
-    a DIRECT `addi rSaved`, KILLING the r0+mr detour.** Took expgfx_free 95.6→97.2 (mr count 2→0, T=C). BUT it is
-    FUNCTION-SPECIFIC: it only works when MWCC actually strength-reduces `glob[i]` back to a walker — WORKED on
-    expgfx_free (nested loop, store inside inner loop), REGRESSED expgfxRemoveAll (kept mr + added `slwi;add`),
-    renderParticles (conditional single-use → `lhzx`), and BROKE onMapSetup to 0% (flat loop, 6 walkers). A/B PER FN,
-    grep `mr.*r0$` to confirm the count drops, revert on regress. Strongest #155 lead — try it FIRST on any base-mr
-    fn with a clean `glob[i]` walker.
+    a DIRECT `addi rSaved`, KILLING the r0+mr detour.** Took expgfx_free 95.6→97.2 (mr count 2→0, T=C).
+    ✓ISOLATED (validator + lead, probe-confirmed) — the index form RELIABLY makes the base go DIRECT:
+    confirmed for single-walker, multi-walker (2 globals → both direct), WITH-call (no unroll), WITHOUT-call
+    (unrolled by 8), AND non-unit stride (struct array, stride 8 → `addi rWalker,8`, base still direct). The
+    pointer-walk source (`p=glob; p++`) is what forces the r0 detour; the index form is the crack and it is
+    NOT base-specific. So the documented real-fn regressions (expgfxRemoveAll kept mr+`slwi;add`,
+    renderParticles→`lhzx`, onMapSetup→0%) are NOT the base materialization failing — the base STILL goes
+    direct. They are COLLATERAL load/store isel the index form perturbs when the walker is NOT cleanly
+    strength-reducible: a non-strength-reducible stride → `slwi;add`, a conditional/single use → `lhzx`. So the
+    precise win is: index form on a walker whose stride strength-reduces (unit or clean fixed stride) AND whose
+    uses are unconditional → clean 1-instr base fix. For non-reducible-stride / conditional-use walkers, the
+    index form fixes the base but shifts the load/store isel, so pair it with a stride/use spelling that keeps
+    the original isel (the narrow remaining frontier). A/B PER FN, grep `mr.*r0$` to confirm the base mr drops
+    AND watch the load/store opcode; this is the strongest #155 lead — try it FIRST on any base-mr fn with a
+    `glob[i]` walker.
     **WHY IT'S LIMITED (confirmed by reading retail onMapSetup): retail's loop is an UNROLLED pointer-walk
     (`addi rWalker,r3,0` DIRECT, then disp stores `0(r),4(r),8(r)…`, walker += 8) — i.e. the SOURCE form is already a
     correct pointer-walk and the ONLY diff is the front-end materialization (direct vs r0+mr). The #143 index form
