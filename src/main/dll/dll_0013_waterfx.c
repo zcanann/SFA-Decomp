@@ -39,10 +39,10 @@ extern const f32 lbl_803DF2E0;
 extern f32 lbl_803DF2E4;
 extern f32 lbl_803DF2F0;
 extern f32 lbl_803DF2F4;
-extern f32 lbl_803DF2F8;
+extern const f32 lbl_803DF2F8;
 extern const f32 lbl_803DF304;
 extern f32 gWaterfxPi;
-extern f32 lbl_803DF314;
+extern const f32 lbl_803DF314;
 extern f32 fn_802942EC(f32);
 extern f32 fn_80293F7C(f32);
 
@@ -732,15 +732,11 @@ void waterfx_drawFn_800953fc(void)
     int j;
     int i;
     int m;
-    f32 idiv;
-    f32 jdiv;
     void* dl;
 
     GXSetMisc(1, 0);
     gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
     gWaterfxSplashTexCoordArray = mmAlloc(1024, 0, 0);
-    jdiv = lbl_803DF314;
-    idiv = lbl_803DF2F8;
     for (i = 0; i < 8; i++)
     {
         for (j = 0; j < 16; j++)
@@ -758,8 +754,8 @@ void waterfx_drawFn_800953fc(void)
             {
                 int idx = i * 16 + j;
                 f32* tex = (f32*)((u8*)gWaterfxSplashTexCoordArray + idx * 8);
-                tex[0] = j / jdiv;
-                tex[1] = i / idiv;
+                tex[0] = j / lbl_803DF314;
+                tex[1] = i / lbl_803DF2F8;
             }
         }
     }
