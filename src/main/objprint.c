@@ -730,7 +730,7 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
     int iVar1;
     float fVar2;
     float fVar3;
-    u32 uVar4;
+    u32 count;
     short sVar5;
     short sVar6;
     int iVar7;
@@ -738,7 +738,7 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
     short* psVar9;
     int iVar10;
     int iVar11;
-    short* psVar12;
+    short* foundEntry;
     double in_f28;
     double in_f29;
     double in_f30;
@@ -774,29 +774,29 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
     uVar13 = FUN_8028683c();
     psVar9 = (short*)((u64)uVar13 >> 0x20);
     iVar7 = uVar13;
-    psVar12 = 0x0;
+    foundEntry = 0x0;
     iVar8 = *(int*)(psVar9 + 0x28);
     if (iVar8 != 0)
     {
         iVar10 = 0;
         iVar11 = 0;
-        for (uVar4 = (u32) * (u8*)(iVar8 + 0x5a); uVar4 != 0; uVar4 = uVar4 - 1)
+        for (count = (u32) * (u8*)(iVar8 + 0x5a); count != 0; count = count - 1)
         {
             if ((*(char*)(*(int*)(iVar8 + 0x10) + *(char*)((int)psVar9 + 0xad) + iVar10 + 1) != -1) &&
                 (*(char*)(*(int*)(iVar8 + 0x10) + iVar10) == '\0'))
             {
-                psVar12 = (short*)(*(int*)(psVar9 + 0x36) + iVar11);
+                foundEntry = (short*)(*(int*)(psVar9 + 0x36) + iVar11);
             }
             iVar10 = *(char*)(iVar8 + 0x55) + iVar10 + 1;
             iVar11 = iVar11 + 0x12;
         }
     }
-    if (psVar12 != 0x0)
+    if (foundEntry != 0x0)
     {
         if (iVar7 == 0)
         {
-            psVar12[1] = psVar12[1] >> 1;
-            *psVar12 = *psVar12 >> 1;
+            foundEntry[1] = foundEntry[1] >> 1;
+            *foundEntry = *foundEntry >> 1;
         }
         else
         {
@@ -866,8 +866,8 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
                 iVar11 = iVar11 + -1;
             }
             while (iVar11 != 0);
-            psVar12[1] = *(short*)(state + 0x14);
-            *psVar12 = *(short*)(state + 0x44);
+            foundEntry[1] = *(short*)(state + 0x14);
+            *foundEntry = *(short*)(state + 0x44);
         }
     }
     FUN_80286888();
