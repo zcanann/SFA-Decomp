@@ -3361,7 +3361,8 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
             }
             else
             {
-                dot = (lbl_803DE818 - dot) * *(f32*)(blend + 8) + dot;
+                f32 sub = lbl_803DE818 - dot;
+                dot = sub * *(f32*)(blend + 8) + dot;
             }
             PSMTXTranspose(tmp, mt);
             PSMTXMultVecSR(mt, axis, axis);
