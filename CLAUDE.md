@@ -12,6 +12,16 @@ retail binary. Main lib compiled with MWCC GC/2.0; audio/MSL with 1.2.5n.
   derive it yourself. Every function is matchable; an unsolved one is a lever not-yet-found, never an
   impossibility.
 
+## The project itself is the playbook
+The real knowledge lives in matched code, not in this file — that's why this file stays short. To
+produce a particular asm shape, find code that already emits it and read the C behind it:
+- **This repo's own matched functions** — grep `src/` for the construct, or disassemble a matched
+  `.o` that has the shape you want (objdump command below) and open its source.
+- **The MP4 reference decomp** (`reference_projects/marioparty4`, fully matched, same MWCC family) —
+  a large known-good C↔asm corpus; read its source for how a given shape was written.
+A fix derived from a real matched example beats any written recipe, and the corpus only grows as the
+project matches more.
+
 ## Build & verify
 - Rebuild one unit + the report:
   `rm build/GSAE01/src/main/<path>.o && ninja build/GSAE01/src/main/<path>.o && ninja build/GSAE01/report.json`
