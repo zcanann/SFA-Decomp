@@ -38,6 +38,7 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAD0;
 extern void* lbl_803DDAD4;
 
+#pragma opt_common_subs off
 void fn_80185868(int obj, f32 arg)
 {
     extern void* lbl_803DDAD0;
@@ -78,6 +79,7 @@ void fn_80185868(int obj, f32 arg)
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
     ObjHits_EnableObject(obj);
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
