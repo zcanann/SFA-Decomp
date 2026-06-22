@@ -760,7 +760,6 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     u8* worldBase;
     int pointOffset;
     f32* localPoint;
-    f32 raisedPointOffset;
     f32 resetMin;
     f32 resetRange;
     f32 resetZero;
@@ -830,14 +829,13 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
                 worldIdx += 3;
                 pointIndex++;
             }
-            raisedPointOffset = lbl_803E06B8;
             for (pointIndex = 0;
                  pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
                  pointIndex++)
             {
                 collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
                 collision->traceStart[pointIndex][1] =
-                    raisedPointOffset +
+                    lbl_803E06B8 +
                     (collision->points[pointIndex][1] + collision->segmentRadii[pointIndex]);
                 collision->traceStart[pointIndex][2] = collision->points[pointIndex][2];
             }
