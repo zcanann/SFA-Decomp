@@ -60,7 +60,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   the TYPED FORM CHANGES the addressing/coloring toward the target (a raw deref the typed `arr[idx].field`
   re-folds to indexed `stwx`/`lha disp`, a raw-pointer-walk the typed struct-array walker lands base-direct,
   #135/#138/#143) — sweep for THOSE, not codegen-neutral conversions. The reframe is SOURCE-fixable and
-  higher-yield than the coloring grind where it changes codegen.
+  higher-yield than the coloring grind where it changes codegen. ⚠️ SCOPE PINNED (HunterB, in-tree both nuts):
+  the struct reframe CHANGES codegen (= a % win) ONLY for GLOBAL-BASE walked/indexed arrays (the raw form
+  mis-materializes the global → #135/#138/#143 fix it). It is BYTE-NEUTRAL for STATE/PARAM-RELATIVE struct-field
+  access (`state->slotPos[i]` == raw `*(T*)(state+0xa0+i*K)` — the base is already a held reg, typing it adds
+  nothing; caching `T* arr=(T*)(state+off)` REGRESSES by adding a saved-reg competitor), and it does NOT touch
+  local-var coloring nuts (a value-reuse/index-coloring residual is a real allocator decision, not a missing
+  struct). So: GLOBAL-base array → try the typed form; state/param-relative field or local-var coloring → it's
+  genuinely the allocator rule (name it, don't struct-convert).
 - **★ "PRESSURE" / "register pressure" is NEVER an explanation — it's an admission of not-knowing.** The
   allocator is a DETERMINISTIC graph-coloring algorithm; "the compiler ran low and cut corners" makes no sense.
   When `mr`-reuse vs `li`-fresh (or any coloring choice) correlates with fn size, that correlation is a CLUE to
@@ -884,16 +891,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     live in r6) — the reuse-able value is RIGHT THERE, MWCC just picks fresh. This is the value-1 analog of the
     value-0 reuse above (same "copy-coalesce vs fresh-materialize" decision, FORCE direction). Forms tried:
     opt_level 2 REMOVES the unroll (real loop, count via addi) — WRONG (target is unrolled O4), so the reuse must
-    be forced AT O4 keeping the unroll. ✓ORACLE CONTRAST (Validator, both-objs in dll_0014): RETAIL DOES BOTH —
-    `mr`-reuse in RomCurve_countRandomPoints (172 instr, higher pressure), `li`-fresh in getControlPointId_2A (87
-    instr, lower pressure, OURS MATCHES). So the reuse is a REGISTER-PRESSURE-CONTEXT decision, NOT a source-
-    spelling choice (~10 1-line levers all inert). This is NOT a "pressure-gated, can't crack" cop-out — it's a
-    DETERMINISTIC pressure rule to reverse-engineer: the NEXT INGREDIENT is to ADD register pressure to /tmp/vCP
-    (extra live values across the reuse point) ONE AT A TIME until `li`→`mr` flips, NAME the threshold (it's
-    between 87 and 172 instrs of pressure), then find the source construct that pushes curves_getPos's allocation
-    over it. The bed is ready; the threshold-and-nudge is the open work (a live target, lower-priority = 0.4%/fn).
-    UNIFIED with the #147 copy-PULL bed (/tmp/v147/faithful.c) — same coalesce mechanism, #147 PREVENTS / value-1
-    FORCES; both are pressure-gated, both have the same reverse-engineer-the-threshold path.
+    be forced AT O4 keeping the unroll. ✓RULE NAMED — it is a REGISTER-USE-COUNT THRESHOLD, NOT "pressure"
+    (HunterB reverse-engineered the oracle contrast in dll_0014; this is the owner-mandated exact-rule, replacing
+    the earlier "pressure-context" hand-wave): the allocator reuses the live value (`mr`) vs re-materializes
+    (`li`) based on HOW MANY TIMES the reused-into value is USED AFTER the collection point. getControlPointId_2A
+    (87 instr, RETURNS IMMEDIATELY after collection → LOW post-collection use of count) → retail `li` (OURS
+    MATCHES); curves_getPos / countRandomPoints (HIGH post-collection use — count feeds FP math / an outer loop,
+    keeping the reg live longer) → retail `mr`-reuse. So the flip is a deterministic post-collection use-count
+    threshold. THE OPEN WORK (Validator, /tmp/vCP): add ONE post-collection use of count at a time, find the
+    PRECISE use-count N where `li`→`mr` flips, then find the source construct that raises curves_getPos's
+    count-use past N (it's already high in-tree, so the question is WHY ours still picks `li` at that use-count —
+    a coalesce-eligibility fact to pin, not "pressure"). Lower-priority (0.4%/fn). UNIFIED with the #147 copy-PULL
+    bed (/tmp/v147/faithful.c) — same coalesce mechanism; #147 PREVENTS / value-1 FORCES; both governed by the
+    use-count/liveness coalesce rule, both with the same name-the-exact-threshold path.
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
