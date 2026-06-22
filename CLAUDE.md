@@ -397,7 +397,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     subtraction → leave the result named.
 108. **Saved-reg assignment is CLASS-POOLED, not weight-ranked.** Single-def copies → top
     (last-created → r31); multi-def/phi → descend in creation order; params → bottom; all-const
-    flags → very bottom. Use-count/first-use/loop-depth are INERT within a class. CLASS-MOVERS
+    flags → very bottom. Use-count/first-use/loop-depth are INERT within a class.
+    WITHIN-CLASS ORDER RULE (probe-pinned — "decl-order inert" is only HALF true): definition order DOES
+    set the within-class home for REORDERABLE defs. Field-reads / up-front loads at the function top color
+    FIRST-declared → HIGHEST reg (DESCENDING: `int x=s->a,y=s->b,z=s->c` → x=r31,y=r30,z=r29; reverse the
+    decl order to swap the homes — verified). Call-results / spread defs color creation-order ASCENDING
+    (last → r31) and are PINNED by the call structure (you can't reorder the calls, so decl-order IS inert
+    THERE — that's the only place it's inert; use #130/#107 web-decouple). #5 holds exactly: DECL sets the
+    home, INIT order sets only the load EMISSION order. So for a within-class swap of TOP-LOADED/reorderable
+    values, REORDER THE DECLS first (cheap, real lever); reach for #130/#107 only for call-result/computed webs.
+    CLASS-MOVERS
     (the lever): first-def-split (a branch-consumed call result → its own var), last-def merge,
     `#pragma optimization_level 2` (creation-order alloc), block-scope per-arm re-decls, same-
     variable recycle (#119), and #131 (no-op `|=` to force a surviving same-value copy + own web —
@@ -925,8 +934,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     • target keeps it HIGHER + ours has it INLINE/CSE'd → NAME it (`T x = expr;`) → named-local web colors
       higher. (dll_1D6 `void* p28 = *(void**)((char*)model+0x28);` → r5, leaving the inline `flags1D` at r4.)
     DIAGNOSE: of the two swapped regs, which value does retail hold LOWER vs HIGHER, and is each currently
-    named or inline? Flip the naming of the one that must MOVE to match its target reg height. decl-order is
-    INERT (class-pooled, not decl-ranked — the classic tried-so-far); NAMING-KIND is the mover. RE-DERIVABLE
+    named or inline? Flip the naming of the one that must MOVE to match its target reg height. NOTE: decl-order
+    is NOT universally inert — per the #108 WITHIN-CLASS ORDER RULE it controls the home for TOP-LOADED/
+    reorderable defs (field-reads/up-front loads, first-declared→highest), so for those just REORDER THE
+    DECLS. decl-order is inert only for CALL-PINNED/computed webs — and THAT is where NAMING-KIND is the
+    mover. So: reorderable defs → decl-order; call-pinned/computed re-derivable values → naming-kind. RE-DERIVABLE
     values only (bit-extract/field/mask/deref); NON-re-derivable (call-result conversion) doesn't take it
     (#130 web-decouple / class-move instead). This is now a proven SWEEP TOOL for the GPR-coloring near-miss
     bucket (~35 fns at 99%+) — the kind-2 frontier is NO LONGER a wall (#130/#131 lived here; #107 name-up/
