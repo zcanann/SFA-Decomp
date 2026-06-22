@@ -1073,40 +1073,91 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
 
 extern f32 CurrTiming_803DEC20;
 
-void fn_8005D3B4(register u8* obj, u8* model, s32 b)
+asm void fn_8005D3B4(u8* obj, u8* model, s32 b)
 {
-    f32 stk[3];
-    s32 t, v;
-    f32 timing;
-    register f32 ps6, ps8, ps10, ps12, ps14, ps16;
-    f32 t1, t2, m28, m38;
-    if (lbl_803DCE30 == 1000)
-    {
-        sceneDrawTransparentPolys();
-        lbl_803DCE30 = 0;
-    }
-    asm { psq_l ps12, 12(obj), 1, 5 }
-    asm { psq_l ps6, 6(obj), 1, 5 }
-    asm { psq_l ps14, 14(obj), 1, 5 }
-    timing = CurrTiming_803DEC20;
-    m28 = *(f32*)(model + 0x28);
-    t1 = ps14 * timing + m28;
-    asm { psq_l ps8, 8(obj), 1, 5 }
-    asm { psq_l ps16, 16(obj), 1, 5 }
-    m38 = *(f32*)(model + 0x38);
-    t2 = ps16 * timing + m38;
-    asm { psq_l ps10, 10(obj), 1, 5 }
-    stk[0] = displayOffsetH_803DEBFC *
-    ((ps6 * timing + *(f32*)(model + 0x18)) +
-        (ps12 * timing + *(f32*)(model + 0x18)));
-    stk[1] = displayOffsetH_803DEBFC * ((ps8 * timing + m28) + t1);
-    stk[2] = displayOffsetH_803DEBFC * ((ps10 * timing + m38) + t2);
-    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
-    t = (s32) - stk[2];
-    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
-    lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | ((b & 0xff) << 27);
+    nofralloc
+    stwu r1, -48(r1)
+    mflr r0
+    stw r0, 52(r1)
+    stw r31, 44(r1)
+    stw r30, 40(r1)
+    stw r29, 36(r1)
+    mr r29, r3
+    mr r30, r4
+    mr r31, r5
+    lwz r0, lbl_803DCE30
+    cmpwi r0, 1000
+    bne _psq
+    bl sceneDrawTransparentPolys
+    li r0, 0
+    stw r0, lbl_803DCE30
+_psq:
+    psq_l f0, 12(r29), 1, 5
+    psq_l f1, 6(r29), 1, 5
+    psq_l f2, 14(r29), 1, 5
+    lfs f3, CurrTiming_803DEC20
+    lfs f6, 40(r30)
+    fmadds f9, f2, f3, f6
+    psq_l f4, 8(r29), 1, 5
+    psq_l f2, 16(r29), 1, 5
+    lfs f7, 56(r30)
+    fmadds f10, f2, f3, f7
+    psq_l f5, 10(r29), 1, 5
+    lfs f2, displayOffsetH_803DEBFC
+    lfs f8, 24(r30)
+    fmadds f1, f1, f3, f8
+    fmadds f0, f0, f3, f8
+    fadds f0, f1, f0
+    fmuls f0, f2, f0
+    stfs f0, 8(r1)
+    fmadds f0, f4, f3, f6
+    fadds f0, f0, f9
+    fmuls f0, f2, f0
+    stfs f0, 12(r1)
+    fmadds f0, f5, f3, f7
+    fadds f0, f0, f10
+    fmuls f0, f2, f0
+    stfs f0, 16(r1)
+    bl Camera_GetViewMatrix
+    addi r4, r1, 8
+    mr r5, r4
+    bl PSMTXMultVec
+    lfs f0, 16(r1)
+    fneg f0, f0
+    fctiwz f0, f0
+    stfd f0, 24(r1)
+    lwz r0, 28(r1)
+    cmpwi r0, 0
+    bge _pos
+    li r4, 0
+    b _store
+_pos:
+    lis r3, 2048
+    addi r4, r3, -1
+    cmpw r0, r4
+    ble _clamp
+    b _store
+_clamp:
+    mr r4, r0
+_store:
+    lwz r0, lbl_803DCE30
+    slwi r0, r0, 4
+    lis r3, lbl_8037E0C0@ha
+    addi r3, r3, lbl_8037E0C0@l
+    stwx r29, r3, r0
+    add r3, r3, r0
+    stw r30, 4(r3)
+    clrlwi r0, r31, 24
+    slwi r0, r0, 27
+    or r0, r4, r0
+    stw r0, 8(r3)
+    lwz r31, 44(r1)
+    lwz r30, 40(r1)
+    lwz r29, 36(r1)
+    lwz r0, 52(r1)
+    mtlr r0
+    addi r1, r1, 48
+    blr
 }
 
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
