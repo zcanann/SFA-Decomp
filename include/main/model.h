@@ -32,8 +32,8 @@ typedef struct ModelFileHeader {
     u8 unk44[0x10];
     u8 *unk54;
     u8 *unk58;
-    u8 *unk5C;
-    u8 *unk60;
+    u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
+    u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), count at +0xf0 */
     u8 *animationModelPtrs;
     u8 *animationDataSection;
     u8 *animationHeaderBuffer; /* per-joint s16 table */

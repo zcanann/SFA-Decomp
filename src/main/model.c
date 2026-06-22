@@ -65,12 +65,12 @@ int return0_8002A5B8(void) { return 0x0; }
 #pragma peephole off
 void* fn_80028354(u8* modelFile, int index)
 {
-    return ((ModelFileHeader*)modelFile)->unk5C + index * 8;
+    return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
 }
 
 void* fn_80028364(u8* modelFile, int index)
 {
-    return ((ModelFileHeader*)modelFile)->unk60 + index * 0x14;
+    return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
 }
 
 void* modelFileGetDisplayList(u8* modelFile, int displayListIndex)
@@ -455,13 +455,13 @@ void ObjModel_RelocateModelData(u8* m)
         *(u8**)(((ModelFileHeader*)m)->morphTargetPtrs + i * 4) = m + *(u32*)(((ModelFileHeader*)m)->morphTargetPtrs + i
             * 4);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->unk5C)
+    if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles)
     {
-        ((ModelFileHeader*)m)->unk5C = m + *(u32*)&((ModelFileHeader*)m)->unk5C;
+        ((ModelFileHeader*)m)->collisionTriangles = m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->unk60)
+    if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks)
     {
-        ((ModelFileHeader*)m)->unk60 = m + *(u32*)&((ModelFileHeader*)m)->unk60;
+        ((ModelFileHeader*)m)->collisionBlocks = m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks;
     }
 }
 
