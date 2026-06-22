@@ -1722,9 +1722,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     The @lo-direct-into-saved is the live core (find it via the oracle source-form or a deeper reframe — it exists).
     ✓TYPED-GLOBAL ANGLE RULED OUT + CORE CLEANLY ISOLATED (Validator /tmp/vts, owner struct-directive test): a typed
     global OBJECT (`extern CMenuHud gMenuHud; gMenuHud.anims[k]`) does NOT reproduce retail — it RE-MATERIALIZES
-    the base ~14× (DIRECT but re-derivable per access, +13 instrs); a HELD POINTER (`(CMenuHud*)lbl; hud->anims[k]`)
-    HOLDS the base 1× (where the r0+mr detour happens); RETAIL holds 1× DIRECT — so RETAIL USED A HELD POINTER,
-    same as ours, NOT a typed global. So the #155 detour is NOT a missing-struct artifact; it is the PURE
+    the base ~14× (DIRECT but re-derivable per access, +13 instrs); ★ DECISIVE: even a HELD POINTER TO the typed
+    global (`CMenuHud *h = &gMenuHud; h->anims[k]`) ALSO RE-DERIVES per use (MWCC treats `&gMenuHud` as
+    re-materializable and won't hold it). ONLY the INCOMPLETE-LABEL CAST (`extern char lbl[]; (CMenuHud*)lbl;
+    h->anims[k]`) HOLDS the base 1× (where the r0+mr detour happens). RETAIL holds 1× DIRECT — so RETAIL USED THE
+    LABEL-CAST held pointer, same as ours, NOT a typed global. NAMED RULE (#47/#80-adjacent, NOT pressure):
+    hold-vs-rederive is determined by the SYMBOL FORM — a TYPED GLOBAL OBJECT's address is RE-DERIVABLE (MWCC
+    re-materializes it per use, never holds); an INCOMPLETE-LABEL extern + cast produces a HELD pointer. So a
+    typed-global retype would REGRESS #155 (~14 re-mats), never fix it. So the #155 detour is NOT a missing-struct artifact; it is the PURE
     held-pointer base-init choice, now cleanly isolated: when materializing a held GLOBAL POINTER's @lo into a
     SAVED reg, ours emits `addi r0,r3,@lo; mr rSaved,r0` (via-r0-scratch+copy), retail `addi rSaved,r3,@lo`
     (direct-into-saved). NAME the exact deterministic rule for THAT one choice (add ingredients to /tmp/vts until
