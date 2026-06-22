@@ -3924,12 +3924,15 @@ void fn_8012FA70(int idx, s8 flag)
 
 /* EN v1.0 0x8012FB9C  size: 336b  Frees all cached HUD/item textures and
  * resets the item slot tables. */
+#pragma opt_propagation off
 void GameUI_release(void)
 {
     GameUiHud* g = (GameUiHud*)lbl_803A87F0;
     void** p;
     int i;
     u8 j;
+    s16* rowS16;
+    u8* rowU8;
 
     for (i = 0, p = g->hudTextures; i < 102; i++)
     {
@@ -3943,7 +3946,7 @@ void GameUI_release(void)
      * and again after the icon-cache teardown below (both loops are in the asm). */
     for (j = 0; j < 64; j++)
     {
-        u8 k = j;
+        int k = j;
         void** tex = (void**)((u8*)g + k * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
@@ -3951,8 +3954,10 @@ void GameUI_release(void)
             textureFree(*tex);
             *tex = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + k * 2) = -1;
-        lbl_803A87F0[1096 + k] = 1;
+        rowS16 = (s16*)((u8*)g + k * 2);
+        rowS16[1188] = -1;
+        rowU8 = (u8*)g + k;
+        rowU8[1096] = 1;
     }
 
     if (lbl_803DD7C8 != 0)
@@ -3969,7 +3974,7 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
-        u8 k = j;
+        int k = j;
         void** tex = (void**)((u8*)g + k * 4);
         tex = (void**)((u8*)tex + 2504);
         if (*tex != NULL)
@@ -3977,12 +3982,15 @@ void GameUI_release(void)
             textureFree(*tex);
             *tex = NULL;
         }
-        *(s16*)(lbl_803A87F0 + 2376 + k * 2) = -1;
-        lbl_803A87F0[1096 + k] = 1;
+        rowS16 = (s16*)((u8*)g + k * 2);
+        rowS16[1188] = -1;
+        rowU8 = (u8*)g + k;
+        rowU8[1096] = 1;
     }
 
     textureFree(gGameUiBlinkTexture);
 }
+#pragma opt_propagation reset
 
 /* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
 void GameUI_hudDraw(int a, int b, int c)
