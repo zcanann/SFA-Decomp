@@ -11918,7 +11918,7 @@ int fn_80298184(int obj, int state, f32 fv)
         {
             doRumble(lbl_803E7ED8);
             ObjAnim_SetCurrentMove(obj, 0x455, lbl_803E7EA4, 0);
-            ((PlayerState*)state)->baddie.animSpeedA = -inner->unk88C;
+            ((PlayerState*)state)->baddie.animSpeedA = -inner->animSpeedStart;
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -11937,7 +11937,7 @@ int fn_80298184(int obj, int state, f32 fv)
     }
     ((PlayerState*)state)->baddie.animSpeedA =
         ((PlayerState*)state)->baddie.animSpeedA *
-        powfBitEstimate(inner->unk888, timeDelta);
+        powfBitEstimate(inner->animSpeedDecay, timeDelta);
     return 0;
 }
 
@@ -12180,7 +12180,7 @@ int fn_8029D250(int obj, int state, f32 fv)
             }
             ObjAnim_SetCurrentMove(obj, mt->moves[idx], mt->blend[idx], 0);
             ((PlayerState*)state)->baddie.moveSpeed = mt->angles[idx];
-            ((PlayerState*)state)->baddie.animSpeedA = -inner->unk88C;
+            ((PlayerState*)state)->baddie.animSpeedA = -inner->animSpeedStart;
         }
         else
         {
@@ -12197,7 +12197,7 @@ int fn_8029D250(int obj, int state, f32 fv)
     }
     ((PlayerState*)state)->baddie.animSpeedA =
         ((PlayerState*)state)->baddie.animSpeedA *
-        powfBitEstimate(inner->unk888, fv);
+        powfBitEstimate(inner->animSpeedDecay, fv);
     (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 2);
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {

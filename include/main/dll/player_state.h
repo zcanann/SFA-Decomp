@@ -324,8 +324,8 @@ typedef struct PlayerState {
     f32 targetSuppressTimer; /* f32 countdown decremented by frame-time each tick, floored to 0; set on a state transition (flag 0x3f2:b40); while active (>0, queried via fn_80295C24) suppresses A-button-hint camera targeting */
     f32 idleDelayTimer; /* idle-eligibility countdown (f32); set positive at state init (lbl_803E7FA4), decremented by frame-time in fn_802B18BC and floored at 0; the default-idle "stay" path requires it == 0 */
     u32 unk884;
-    f32 unk888;
-    f32 unk88C;
+    f32 animSpeedDecay; /* 0x888: per-frame decay rate for baddie.animSpeedA via powfBitEstimate(rate, dt) */
+    f32 animSpeedStart; /* 0x88c: initial baddie.animSpeedA magnitude at move start (set as animSpeedA = -animSpeedStart) */
     f32 pushVelX; /* planar push/displacement velocity X: eased toward a target push via interpolate, decayed by powfBitEstimate, snapped to 0 near zero; added to the transformed world position */
     f32 pushVelZ;
     int stateHandler; /* staged state/anim handler fn-ptr (stored as int); copied into baddie.unk304 handler slot on anim change */
