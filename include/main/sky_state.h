@@ -47,8 +47,8 @@ typedef struct SkyState {
     f32 timeOfDayRate;
     s32 timer;
     s32 skyTextureIds[8]; /* 0x21C: texture asset ids (id + 0xc38 -> textureLoadAsset) */
-    f32 unk23C;
-    f32 unk240;
+    f32 fadeFactor; /* 0x23C: sky transition fade, 1.0->0.0 over fadeRate, clamped [0,1] */
+    f32 fadeRate;   /* 0x240: 1/duration; fadeFactor -= fadeRate * dt */
     f32 lightBlendFactor;
     f32 lightBlendRate;
     u8 currentLightIndex;

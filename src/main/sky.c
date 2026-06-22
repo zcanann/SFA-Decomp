@@ -1693,9 +1693,9 @@ void timeOfDayFn_8008b964(void)
                     (val < *(f32*)&pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
                 i += 0xa4;
             }
-            ((SkyState*)gSkyState)->unk23C -= ((SkyState*)gSkyState)->unk240 * timeDelta;
-            val = ((SkyState*)gSkyState)->unk23C;
-            ((SkyState*)gSkyState)->unk23C =
+            ((SkyState*)gSkyState)->fadeFactor -= ((SkyState*)gSkyState)->fadeRate * timeDelta;
+            val = ((SkyState*)gSkyState)->fadeFactor;
+            ((SkyState*)gSkyState)->fadeFactor =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
             ((SkyState*)gSkyState)->lightBlendFactor += ((SkyState*)gSkyState)->lightBlendRate * timeDelta;
             val = ((SkyState*)gSkyState)->lightBlendFactor;
@@ -3207,20 +3207,20 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyState*)gSkyState)->unk250 = -1;
             if ((((u32)(u8)((SkyState*)gSkyState)->unk255 >> 7) & 1) != 0)
             {
-                ((SkyState*)gSkyState)->unk23C = EXIInputFlag;
+                ((SkyState*)gSkyState)->fadeFactor = EXIInputFlag;
                 if (((Sky2Config*)cfg)->unk2A != 0)
                 {
-                    ((SkyState*)gSkyState)->unk240 =
+                    ((SkyState*)gSkyState)->fadeRate =
                         EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->unk2A);
                 }
                 else
                 {
-                    ((SkyState*)gSkyState)->unk240 = EXIInputFlag;
+                    ((SkyState*)gSkyState)->fadeRate = EXIInputFlag;
                 }
             }
             else
             {
-                ((SkyState*)gSkyState)->unk23C = pEXIInputFlag;
+                ((SkyState*)gSkyState)->fadeFactor = pEXIInputFlag;
             }
         }
         cloudMode = ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->
