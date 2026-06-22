@@ -1670,7 +1670,7 @@ extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 void renderSceneGeometry(int* p1, s8* order);
 extern u8 CameraShake_IsActive(void);
-extern s8 bEnableMotionBlur;
+extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
 extern int getHudHiddenFrameCount(void);
@@ -1790,7 +1790,7 @@ void sceneDraw(void)
     renderSceneGeometry((int*)0, lbl_8030E65C);
     renderResetFn_8003fc60();
     renderObjects(buf);
-    if (CameraShake_IsActive() != 0 || bEnableMotionBlur != 0)
+    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0)
     {
         renderMotionBlur(lbl_803DB62C);
     }
