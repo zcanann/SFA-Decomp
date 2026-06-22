@@ -711,11 +711,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     optimization_level 2` (at O4 copy-prop FOLDS the chain back to `li`; O2 oracle tumbleweed line 153).
     The OR (#131) is INERT here — const-0 folds. DISCRIMINATOR: a fn matching retail EXCEPT the 1 mr is
     O4-shaped → use path (1) [opt_level 2 would break the rest]; a broadly-coloring-mismatched fn is likely
-    a genuine O2 fn → path (2), verify the FULL fn match (opt_level 2 shifts ALL regs, #95). OPEN VARIANTS
-    (live targets — oracle-hunt the producing source, do NOT file as gaps): (a) ACCUMULATOR-master reuse
-    (the reused 0 belongs to a var used pre-loop + incremented, not the counter); (b) FIELD-STORE value-0
-    (`obj->f = 0` re-materializes `li` instead of reusing a live 0 reg). The chain reaches counter+LOCAL
-    value-0; (a)/(b) need a form still to find.
+    a genuine O2 fn → path (2), verify the FULL fn match (opt_level 2 shifts ALL regs, #95). KEY
+    DISCRIMINATOR (waterfx oracle hunt) for path (1): the stored-0 web qualifies at O4 ONLY if it's a true
+    COUNTER = incremented AND COMPARED to a bound; an ACCUMULATOR (incremented but NOT compared, e.g.
+    `off += 4`) does NOT qualify. OPEN VARIANTS (live targets — oracle-or-DERIVE the source, never file as
+    gaps): (c) reuse an incr-NOT-compared ACCUMULATOR's 0 for a pre-loop const-0 copy AND/OR a FIELD store
+    (`obj->f = 0` re-materializes `li`) in an O4 fn (OR-inert, chain-folds, O2-regresses — fn_801932C8 /
+    groundanimator_update); (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
+    chained copy folds to `li` at O4 yet retail (STRUCTURALLY IDENTICAL, same instr count) has the `mr`
+    (Minimap_release): NOT a pressure cap (identical structure = identical pressure), it's an unfound
+    O4-surviving-copy source form. The chain reaches counter+LOCAL value-0; (c)/(d) need forms still to find.
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
