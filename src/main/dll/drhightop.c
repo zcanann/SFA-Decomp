@@ -221,17 +221,17 @@ void fn_801EB0D4(u32 obj, int stateRaw)
                 td * lbl_803DC0D8 + (f32)(s32)(st->airDrainRate *
                     (td * PSVECMag(&st->unk494)));
             lim = lbl_803E5AE8;
-            if (lim != st->unk4C4)
+            if (lim != st->airMeterRefillTimer)
             {
                 rate = lbl_803E5B14;
                 st->airMeterCurrent =
                     rate * timeDelta + st->airMeterCurrent;
-                st->unk4C4 =
-                    st->unk4C4 - (f32)(s32)(rate * timeDelta);
-                st->unk4C4 =
-                    (st->unk4C4 < lim)
+                st->airMeterRefillTimer =
+                    st->airMeterRefillTimer - (f32)(s32)(rate * timeDelta);
+                st->airMeterRefillTimer =
+                    (st->airMeterRefillTimer < lim)
                         ? lim
-                        : ((st->unk4C4 > lbl_803E5B80) ? lbl_803E5B80 : st->unk4C4);
+                        : ((st->airMeterRefillTimer > lbl_803E5B80) ? lbl_803E5B80 : st->airMeterRefillTimer);
                 st->airMeterCurrent =
                     (st->airMeterCurrent < lbl_803E5AE8)
                         ? lbl_803E5AE8
@@ -443,7 +443,7 @@ void fn_801EB634(int obj, int stateRaw)
                 setMotionBlur(1, lbl_803E5BAC);
                 st->collisionFxTimer = (f32)(s32)lbl_803DC0D0;
                 st->collisionFxDamping = lbl_803DC0C8;
-                st->unk4C4 = (f32)(s32)lbl_803DC0CC;
+                st->airMeterRefillTimer = (f32)(s32)lbl_803DC0CC;
             }
             break;
         }

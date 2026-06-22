@@ -862,7 +862,7 @@ void SnowBike_init(int obj, u8* params, int flag)
         if (!((SnowBikeFlags*)(state + 0x428))->b02)
         {
             ((SnowBikeFlags*)(state + 0x428))->b20 = 1;
-            ((SnowBikeState*)state)->unk4C4 = lbl_803E5AE8;
+            ((SnowBikeState*)state)->airMeterRefillTimer = lbl_803E5AE8;
         }
         ((SnowBikeState*)state)->unk538 = lbl_803E5C64;
     }

@@ -113,7 +113,7 @@ typedef struct SnowBikeState {
     f32 airMeterMax;             /* 0x4b8 */
     f32 airMeterCurrent;             /* 0x4bc */
     f32 airDrainRate;             /* 0x4c0 */
-    f32 unk4C4;             /* 0x4c4 */
+    f32 airMeterRefillTimer; /* 0x4c4: counts down by rate*timeDelta (clamped [0,K]); while non-zero, refills airMeterCurrent */
     u8 pad4C8[0x54];        /* 0x4c8: 9 path allocation slots (stride 8) */
     f32 homePosX;             /* 0x51c: home X */
     f32 homePosY;             /* 0x520: home Y */
