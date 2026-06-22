@@ -2938,7 +2938,7 @@ int trickyFn_801451d8(int obj, int state)
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10000LL;
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x20000LL;
         *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x40000LL;
-        ((TrickyState*)state)->unkD = -1;
+        *(u8*)&((TrickyState*)state)->unkD = 0xFF;
     }
     if (gTrickyHelperObject == 0)
     {
