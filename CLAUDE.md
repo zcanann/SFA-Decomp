@@ -1522,6 +1522,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the original isel (the narrow remaining frontier). A/B PER FN, grep `mr.*r0$` to confirm the base mr drops
     AND watch the load/store opcode; this is the strongest #155 lead — try it FIRST on any base-mr fn with a
     `glob[i]` walker.
+    ⚠️ IN-TREE BOUNDARY (HunterA, expgfxRemoveAll store-index 98.83→96.72 REGRESSED — refines the "RELIABLY makes
+    base direct" isolation claim above): under MULTI-WALKER + INNER-LOOP STRENGTH-REDUCTION COMPETITION the index
+    form does NOT make the base direct — the lone explicit `glob[i]` LOSES the SR competition to the competing
+    pointer-walks, so it stays UN-reduced as the #149 index-FIRST detour (`slwi i; addi r0,r3,@lo; add walker,r0`,
+    base STILL via r0) AND adds an instr. So the clean-base-direct result holds ONLY for a SOLE/simple-counter loop
+    (the isolation shape); the expgfx detour fns (removeAll/resetAllPools = outer+inner loop + 3 competing walks
+    with `poolActiveMasks` r/w INSIDE the inner loop so it can't be index-formed; onMapSetup = 6 unrolled walkers;
+    getSlot = nested) are NONE of them sole-counter. For multi-walker fns the OPEN CORE is the deeper lever: make
+    the global walker base materialize `addi rWalker,r3,@lo` DIRECT while KEEPING the pointer-walk (no restructure)
+    — still to find. So: store-index form = SOLE/simple-counter store loops only; multi-walker = the deeper lever.
     **WHY IT'S LIMITED (confirmed by reading retail onMapSetup): retail's loop is an UNROLLED pointer-walk
     (`addi rWalker,r3,0` DIRECT, then disp stores `0(r),4(r),8(r)…`, walker += 8) — i.e. the SOURCE form is already a
     correct pointer-walk and the ONLY diff is the front-end materialization (direct vs r0+mr). The #143 index form
