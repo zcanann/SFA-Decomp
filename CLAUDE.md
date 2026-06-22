@@ -768,11 +768,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     address in the rect block) → `li r29,1`(pass=1, loop2). So pass=0 isn't a multi-def web; it's a SEPARATE
     const-0 that lands in saved r29 because r29 is ALREADY-ANCHORED as a saved web by the competing x1 address,
     and at O2 pass=0 is created AFTER the ctx-copy (→ higher reg). OURS folds pass=0 (`li r0` ×8 in loop1) because
-    the ctx-copy grabs r29 first and NOTHING anchors a saved reg at pass's position. So the lever = ADD THE
-    ANCHORING INGREDIENT (a saved-reg value, e.g. the x1 address, live across pass's lifetime so creation-order
-    parks pass=0 on a saved reg) / perturb the ctx-vs-pass creation order — an in-tree add-ingredients pin, NOT
-    multi-def-ness. (dbgtricky owns the in-tree case + has the retail-read; parked as a live target while it banks
-    higher-throughput dll_000B — the anchoring add-ingredient is the next lever for the circle-back.) (The chained+opt_level lever is the COUNTER-TIED
+    the ctx-copy grabs r29 first and NOTHING anchors a saved reg at pass's position. ⚠️ The "add an anchoring
+    ingredient" hypothesis does NOT reproduce (validator probed 4 forms at O2 — multi-def 0→1, simultaneously-live
+    competing address, SEQUENTIAL reg-reuse mirroring retail's r29 exactly, high pressure — ALL fold to volatile
+    `stw r0`). ★ THE REAL DIVERGENCE IS STRUCTURAL (validator, reading retail): retail has **2** pass-stores
+    (c60, c70); OUR build emits **8** `stw r0` pass-stores. So our decomp's debugPrintDraw is structurally
+    divergent — extra `gPass=pass`/`=0` stores or an unrolled/duplicated loop / different control structure —
+    and the fold likely FOLLOWS from that, not from a missing anchor. LEAD (dbgtricky, structural): find WHY our
+    build emits 8 pass-stores vs retail's 2, match retail's 2-store loop structure (the keep may follow). The
+    2-store minimal still folds in pure isolation (necessary-not-sufficient), but the 8-vs-2 is the real source
+    divergence to fix first. (dbgtricky owns the in-tree case + the retail-read.) (The chained+opt_level lever is the COUNTER-TIED
     sibling — opposite opt-level: counter-tied wants O2-chain, standalone O4-keep.) REMAINING EDGES (live targets):
     the PRE-LOOP field store (entryCount=0 folds even at O4 — pre-loop position doesn't get the saved web) and
     Minimap's counter-copy `mr` at an O4-shaped size — both precisely bounded, not caps.
