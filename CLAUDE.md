@@ -16,6 +16,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   lever from target asm as if the fn were new. Most "#108/#82 coloring caps" are MISLABELS; they
   keep falling to fresh eyes (struct fixes, dropped args, arg-eval order, widths). Assume a clean
   source form exists and go find it.
+- **A "forms explored so far" list is an INVITATION, never a verdict.** When this playbook says a
+  lever was tried, that almost always means ONE low-effort attempt in ONE surrounding shape — it has
+  repeatedly turned out that the "explored" lever WAS the answer all along, once paired with the right
+  neighbouring change, decl order, or reframe. So: never skip a function because the notes list prior
+  attempts, and never read "didn't move it" as "can't work." Re-run any listed lever with fresh eyes,
+  read the FULL asm at every step, and remember a regression in one direction is itself a clue you can
+  fix from another. There is no such thing as an unmatchable function here — only a lever not yet found.
+- **Adding a playbook entry?** Write it with ZERO pessimism. Document the target asm shape, the
+  positive lever(s) to try, and "a clean source form exists — derive it fresh." NEVER write "banked",
+  "exhausted", "not reachable", "capped", "as good as it gets", "do not re-try", or "impossible" — that
+  phrasing has permanently blocked real solutions before. Frame every open residual as a live target.
 
 ## Method (do this every time)
 - **Read the WHOLE target fn before diffing.** Diffs show WHERE, not WHY, and bias you to a false
@@ -442,7 +453,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     launder/retype all inert on the value) — it's perturbing the NEIGHBOR web that occupies the param's
     target slot (neighbor-liveness / creation-order). A clean source form is ASSUMED to exist; this is the
     open within-class-order shape (#130/#147 record: it falls to the right reframe). (flameguard:
-    animobjd2 fn_8013E0D0 — retype inert, ruled out kind-1, banked with the neighbor-perturbation lead.)
+    animobjd2 fn_8013E0D0 — kind-2 within-class-order shape; the neighbor-perturbation lead is wide open,
+    and a clean source form exists — re-derive it fresh from the asm.)
 127. **`extern const f32 lbl_X;` = a store-aliasing exemption** — cross-statement load CSE without
     naming a local (a named local CSEs too but flips the FP pair). A/B per unit (check writers
     first); can CSE-overshoot a sibling fn (fix per-site with the #81 launder, don't revert const).
@@ -814,8 +826,9 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (DeepDive2: dll_0014_unk curves_distFn15 96.32→100, commit ca937fc9f.)
     **⚠️ PLACEHOLDER, NOT RECOVERED SOURCE: the `|= a` no-op is a COMPILER HACK (no 2002 Rare dev wrote a
     random mid-fn self-OR) — bank the 100% but mark it a placeholder, exactly as #131's OR on fn_801B3DE4
-    was later retired for plausible typed-array C (#135). The real no-`|=` form still exists; decl-order/
-    cast/opt-level/init-placement/if-else/opt_lifetimes are all INERT so far. OPEN (task #5, DeepDive1).
+    was later retired for plausible typed-array C (#135). The real no-`|=` form still exists; forms explored so
+    far (re-derive each fresh — any may be the answer): decl-order, cast, opt-level, init-placement, if-else,
+    opt_lifetimes. The clean form is still out there — OPEN, live target (task #5, DeepDive1).
     This applies to ANY no-op-bitwise/VN-hack 100%: land it, mark placeholder, circle back for real C.**
     **DeepDive1 REFINEMENT (task #5): the seed VALUE is the only irreducible diff, and it is provably
     behaviorally DEAD.** Seeding `previousCurveId = ROMCURVE_LINK_ID_NONE;` (a CONSTANT, not a curveId
@@ -923,11 +936,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     base-first); then `lwz off(r3)`. OURS evaluates the INDEX first and routes the base through a temp:
     `lbz r0,K(state); mulli r4,r0,40; lis r3; addi r0,r3,@lo` (base→r0!); `add r3,r0,r4` (idx-first) — an
     extra working reg and the `addi r0` detour. Both TUs are `-opt nopeephole,noschedule`, so this is the
-    FRONT-END's operand-eval order for `base + idx*40`, NOT the scheduler and NOT peephole. CONFIRMED INERT
-    (do not re-try): #80 `(u8*)(int)lbl` / `(char*)(int)lbl` launder (detour byte-identical), K-grouping
+    FRONT-END's operand-eval order for `base + idx*40`, NOT the scheduler and NOT peephole. Forms explored
+    so far (re-derive each FRESH from the asm — any of these may be the answer once framed right): #80
+    `(u8*)(int)lbl` / `(char*)(int)lbl` launder (detour byte-identical), K-grouping
     `base+(idx*40+K)` / `(base+K)+idx*40`, `&lbl[idx*40+K]`, named-base-alias local, idx-precomputed-to-local,
-    #135 typed-struct-array `((Slot40*)lbl)[idx].field`, decl reorder. Best partial: `&arr[...]` / `base+(idx*40+K)`
-    nudge +0.05%. The untried frontier: an eval-order forcing lever (probe_battery.py A/B in isolation;
+    #135 typed-struct-array `((Slot40*)lbl)[idx].field`, decl reorder. Best partial so far: `&arr[...]` /
+    `base+(idx*40+K)` nudge +0.05%. The frontier: an eval-order forcing lever (probe_battery.py A/B in isolation;
     or find the source shape where MWCC evaluates the `+`'s LEFT operand first for a global-base + memory-load-index
     sum). Cracking ONE applies verbatim to all five — a strong fresh-eyes target. SEPARATE FP-coloring residuals
     (NOT this detour): dll_8B_func03's dominant diff is an 8-reg FP rotation f24..f31 off-by-one (#121/#82
@@ -940,12 +954,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     webs, so #108 "last-created → highest reg" parks it high; retail created it first. The bias is a NAMED
     `.sdata2` ref in retail vs a local `@NNN` pool double in ours — CORRELATED but #70-SCORE-NEUTRAL (data
     bytes match); not the lever, but it hints the named ref is created early (front-end) and the @NNN pool
-    double late. CONFIRMED INERT/REGRESSING (do not re-try): f32-local decl-order (#45, consts are hoisted
+    double late. Forms explored so far (re-derive each FRESH — any may crack it with the right framing):
+    f32-local decl-order (#45, consts are hoisted
     not the locals), un-naming the product (CSEs back), LITERAL operands (fixes the bias to f28 but FOLDS
     the runtime fmul → 1 instr short, e.g. dim2icicle prod=-75*0.5), moving the const assignments INTO the
     loop after the conversion (breaks hoisting → DSE), hoisting the conversion OUT of the loop (structure
-    breaks), `prod = c34v * literal` (one named one literal — inert + a fmuls-operand-order regress),
-    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds, inert). WORKING
+    breaks), `prod = c34v * literal` (one named one literal — and a fmuls-operand-order shift),
+    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds). WORKING
     HYPOTHESIS (a clue to attack, NOT a verdict): in the forms tried so far, the bias web gets
     synthesised during int→float LOWERING (a late pass) AFTER the front-end const webs, so #108
     "last-created → highest" parks it high while retail has it first. That tells us exactly WHAT to
@@ -956,25 +971,26 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `.sdata2` ref (created early); the C that names it (vs our late `@NNN` pool double) likely creates
     it first, so chase that spelling; restructure so the conversion is a front-end node; probe_battery
     A/B + read MWCC's web-creation order to learn which construct creates the bias earliest. For
-    THROUGHPUT bank the clean classes first and come back FRESH — "lowered late" is a clue, not a
-    ceiling. (DeepDive2: dim2icicle 99.92,
+    THROUGHPUT bank the clean classes first and come back FRESH — "lowered late" is a clue pointing
+    straight at the lever. (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
-    REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are exhausted): (1) the bias
+    REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are explored so far): (1) the bias
     only MIS-COLORS when it's HOISTED loop-invariant into a SAVED FP reg AND competes with many hoisted
     saved-reg consts (CONTROL: hoodedZyck_update's bias sits in a VOLATILE reg → colors CORRECTLY, only the
     #70-neutral @NNN-vs-named reloc differs; fn_80095164's bias is hoisted among 9 consts/31 FP loads → late
     creation parks it f31, rotating all 9 = the loss). So a NON-hoisted/volatile bias is a non-issue; the
-    target is specifically the hoisted-competing case. (2) C-NAMING ROUTES TESTED-EXHAUSTED: `(f32)(int)x`
+    target is specifically the hoisted-competing case. (2) C-naming routes explored so far (re-derive each
+    fresh — any may be the answer): `(f32)(int)x`
     AND `(f32)((f64)i)` BOTH pool the bias as a LOCAL @NNN double (synthesised in the late int→float lowering
     pass, after front-end consts) — the f64 cast does NOT name it AND adds a manual `fsub` (+1 instr, the #151
-    path, regressed 88.92→87.95). The only routes to a NAMED-early bias are (a) shared `.sdata2` magic-double
+    path). Two known routes to a NAMED-early bias: (a) shared `.sdata2` magic-double
     pooling = OWNER/BUILD-domain (per #151, retail's bias = named `lbl_803DF308` front-end const → f25), or
-    (b) the full manual union+fsub idiom (+1 instr, non-plausible-C). So the clean fix for the hoisted case is
-    the BUILD-SIDE shared-.sdata2-bias pooling (owner-domain) — FLAG it like the #151 flips. STILL-OPEN HOOK
-    (not closed): if a future C construct emits a SHARED named bias WITHOUT the extra instr (e.g. an inlined
-    shared-conversion helper that pools the bias once), that's the source lever — assumed-possible, in-repo
-    oracle (a 100%-matched fn that references a named bias from C) is the untried probe.
+    (b) the full manual union+fsub idiom (+1 instr). A cleaner source route for the hoisted case is
+    ASSUMED to exist and is the live target; the BUILD-SIDE shared-.sdata2-bias pooling (owner-domain) is one
+    known path — FLAG it like the #151 flips. OPEN HOOK: a C construct that emits a SHARED named bias WITHOUT
+    the extra instr (e.g. an inlined shared-conversion helper that pools the bias once) is the source lever —
+    the in-repo oracle (a 100%-matched fn that references a named bias from C) is the next probe to run.
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
     The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
     before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
@@ -985,8 +1001,9 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
        the use, sum reuses base. EXACT match. (seqobj11d fn_801511E8 96.3→100; the playbook's #135-family form
        for a global base that is NOT walked.)
     (b) **SUM USED 2+ TIMES (held pointer / multi-deref) → still use the COMPOUND accumulator, but it lands
-       base IN-PLACE where retail keeps base→r0 + index-reuses-lis-scratch + sum-reuses-index.** That base→r0
-       multi-use shape is a GENUINE MWCC coupling and is NOT source-reachable: base-first only comes from the
+       base IN-PLACE where retail keeps base→r0 + index-reuses-lis-scratch + sum-reuses-index.** The forms tried
+       so far show a tight MWCC coupling for this base→r0 multi-use shape — a clean source form is ASSUMED to
+       exist and is still to be found: base-first only comes from the
        compound (⟹ base in-place); base→r0 only comes from the fresh sum (⟹ index-first). The fresh sum's
        index-first REORDER is penalised by objdiff far more than the 1-register base/idx transposition, so the
        COMPOUND is the net-best (no reorder; only a 2-reg swap left). It still fixes the hoist + index register
@@ -1029,22 +1046,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     is in a SEPARATE BASIC BLOCK from the clear (`if(realcond){clear;} timer=0;` or `clear; if(realcond){timer=0;}`
     → perfect `li -K; and; ...; li r0,0; sth`, no srawi, no steal). The CSE only fires when clear+`=0` share a BB.
     BUT retail has them in the SAME bb and is still clean — so retail's MWCC didn't CSE same-bb where ours does;
-    the source nuance that suppresses the same-bb CSE is still unmapped. Tried+FAILED to make a no-branch BB
-    boundary: `if(1){...}`, `do{...}while(0)` both FOLD AWAY (no bb, still steal); only a REAL runtime branch
-    (`if(g())`, `if(best&1)`) creates the bb — but that adds an instruction/changes semantics, so it's not the
-    faithful form. ROOT CAUSE (flameguard, precisely characterized): it is a DCE-vs-CSE pass-ORDER artifact —
+    the source nuance that suppresses the same-bb CSE is the next thing to map. Forms explored so far for a
+    no-branch BB boundary (re-derive each fresh): `if(1){...}`, `do{...}while(0)` both FOLD AWAY (no bb, still
+    steal); a REAL runtime branch (`if(g())`, `if(best&1)`) creates the bb but adds an instruction. A faithful
+    form exists — keep hunting the construct that gives the BB boundary cost-free. ROOT CAUSE (flameguard, precisely characterized): it is a DCE-vs-CSE pass-ORDER artifact —
     retail's MWCC DCEs the dead high-word `li 0` BEFORE CSE sees it, so the adjacent `=0` has nothing to merge
     with (stays fresh+late); OUR build runs CSE first, so `=0` reuses the high-word `li 0` (hoisted early →
     steals r3 from flags). Verified retail is clean SAME-BB at FindBaddieTarget @9d0 and trickyGuard case2 @198
-    (`lwz r3; li -1025; and; stw; li r0,0; sth`, no srawi). PROVEN-ELIMINATED leads (don't re-try): there is NO
-    32-bit-only AND that yields `li -K` — exhaustively probed `& 0xFFFFFBFF`, `& -1025`, `& ~(u32)0x400`,
-    `& (~0u^0x400u)`, XOR-mask, local-mask-var, sub-form — ALL emit `rlwinm` (or `lwz`+`and` for a global mask),
-    so the high-word node is UNAVOIDABLE with li-K; and `best*0`/volatile/`~0xFFFF` zeros all FOLD to the same VN
-    as the zero-extension 0. NARROWED untried leads (a clean form is ASSUMED to exist): (a) a `timer=0` whose 0
+    (`lwz r3; li -1025; and; stw; li r0,0; sth`, no srawi). Forms explored so far for the 32-bit AND (re-derive
+    each fresh — any may be the answer with the right surrounding shape): `& 0xFFFFFBFF`, `& -1025`, `& ~(u32)0x400`,
+    `& (~0u^0x400u)`, XOR-mask, local-mask-var, sub-form — these emit `rlwinm` (or `lwz`+`and` for a global mask)
+    in the forms tried; `best*0`/volatile/`~0xFFFF` zeros all FOLD to the same VN
+    as the zero-extension 0 so far. NARROWED leads (a clean form EXISTS): (a) a `timer=0` whose 0
     carries a genuinely distinct value-number from the zero-extension 0 WITHOUT a branch; (b) a source shape that
     makes MWCC schedule DCE before CSE for this clear+store pair. `#pragma peephole on` DCEs the dead srawi → exact match, but the unit
     is genuinely nopeephole (whole-unit peephole-on REGRESSES trickyFlame 94.21→90.75 / trickyGuard 98.15→97.20),
-    so the pragma is a non-faithful hack here — keep the signed-LL form. Asm at
+    so the pragma is a non-faithful shortcut here — keep the signed-LL form while hunting the faithful one. Asm at
     trickyFn_80143c04 L1321 + trickyFoodFn_80142d2c. SIBLING branch-fold (empty-then `if(x>=K){}else{x=-x}` →
     retail `bne; b` vs our folded `beq`): the #63 ternary `x=(x>=K)?x:-x` emits retail's `bne; b` but lands the
     result in a fresh fp reg (`fmr`) where retail negates in-place (`fneg fX,fX`). OPEN: a clean form keeping
@@ -1096,14 +1113,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     and #136(b)-reuse forms don't cover — still open. (2) **#21 shared-block
     placement** (skeetla trickyFindPathRouteEntry 98.59 / trickySelectRouteEntry 98.81): retail emits `bne X; b Y`
     (both arms branch to a SHARED `entry=NULL` block placed LATE), our build emits `beq X` (the shared block lands
-    EARLY, reached by fall-through). 1-instr each. TRIED + REGRESSED (don't repeat): merge the if/else-if into one
+    EARLY, reached by fall-through). 1-instr each. Forms explored so far (re-derive each fresh — any may be the
+    answer reframed): merge the if/else-if into one
     `||` guard (folds the dead `entry==NULL`); drop the early `return NULL` (that island IS in retail); nested-invert
     `if(entry!=NULL){if(...)x=NULL}else{x=NULL}`. The if/else-if baseline is closest — the lever is whatever forces
     the shared `entry=NULL` block to the LATE position (a block-layout/#21 control, not a guard rewrite). (3) **address re-derive vs CSE-hoist** (pushable_savePos): retail
     re-materializes `&gSaveGameData` per use (3×lis) reusing the offset; forcing it (form-asymmetry/launder/
     opt_common_subs-off) reproduces the exact instr MULTISET but frees the addr's saved reg → a #108 coloring
     permutation underneath. The clean win pins that one freed reg. (4) #108 within-class perms (fn_800A02DC FP
-    f1/f2 swap immune to source-order/named-local/const/launder; fn_800A0C78 buf/buf2). (5) objFn_80198fa4
+    f1/f2 swap — source-order/named-local/const/launder explored so far, the right reframe still to find;
+    fn_800A0C78 buf/buf2). (5) objFn_80198fa4
     (99.975%): a 64B `f32[16]`/union sits at stack-offset 28/32, never 112 where retail puts it (only a 72B m[18]
     lands at 112) — the conv-temp wants 176; likely a #120 split where the 4x4 was adjacent to another local in
     one bigger struct (rejoin to size it onto 112).
@@ -1131,7 +1150,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     conversion is CONSERVED (store for `int` alpha, load for `u8` alpha), retail's HUD branch has it at
     NEITHER. Diff B (the mirror): retail's FIRST `gDvdErrorPauseActive != 0` test emits `clrlwi r0,r3,24;
     cmplwi r0,0` (masked), the SECOND `==0` uses raw `cmplwi r3,0`; ours masks NEITHER. A clean form for both
-    is ASSUMED to exist (record on these is perfect). Tried so far (a launchpad to SKIP, not proof): A — `int`
+    EXISTS (record on these is perfect). Forms explored so far (a launchpad for the next attempt — re-derive each
+    fresh, any may be the answer): A — `int`
     alpha (clrlwi at store), `u8` alpha global/block-local (clrlwi at load), `s8`/`char` byte (extsb not
     clrlwi), `*(s8*)&bytes[3]`/struct-`s8`-a-field (extsb), `u8`-drawTexture-param (draw branch still masks),
     union/array/u8*-pointer stores (all narrow); B — `int` local (signed `cmpwi`, wrong), `u32` local,
@@ -1185,9 +1205,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     usually goes direct (e.g. `runtime` → `addi r31,r3,0`); SUBSEQUENT standalone globals (`gExpgfxStatic…`)
     take the `r0`+`mr` detour. It is tied to the walker/value's COLORING (in expgfx_initialise retail colors the
     walker into the low volatile r3 and the loop-invariant `0` into saved r29; ours swaps them → the `mr`).
-    CONFIRMED INERT/REGRESSING (a launchpad to SKIP, not proof): `register` keyword, init-statement reorder,
-    decl-order swap, `#80` `(T*)(int)lbl` launder, `#pragma peephole on/off`, `#pragma opt_propagation off`
-    (none remove the `mr`; peephole-on and init-reorder REGRESS via global coloring shuffle). UNTRIED LEADS to
+    Forms explored so far (re-derive each FRESH — a low-effort pass that "didn't move it" is NOT proof; any of
+    these may be the answer once the surrounding shape is right): `register` keyword, init-statement reorder,
+    decl-order swap, `#80` `(T*)(int)lbl` launder, `#pragma peephole on/off`, `#pragma opt_propagation off`.
+    LEADS to
     attack FRESH: find the in-repo/MP4 oracle C that emits `addi rSaved,r3,0` direct for a standalone global
     into a saved reg (grep matched `.o` for `addi r2[0-9],r3,0`/`addi r3[01],r3,0` with a global reloc, read its
     source); model it as the #131 same-value/front-end materialization and look for the operand-level split that
@@ -1207,8 +1228,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     REWRITES the loop and BREAKS the unroll (→0%). The #138 struct-array / #149 compound-accumulator reframes also
     DON'T apply — poolSlotTypeIds is a FLAT s16 array walked, not a struct array and not a fixed-stride single index.
     So for FLAT-ARRAY POINTER-WALKS IN UNROLLED LOOPS (onMapSetup, initialise, renderParticles) the base-mr is the
-    PURE #155 front-end materialization with no source reframe yet found — the addi simply must target the walker reg
-    directly instead of r0. UNTRIED: read retail's prologue reg-alloc order and find the construct that makes the
+    PURE #155 front-end materialization — the source reframe is still out there waiting (the addi simply must target
+    the walker reg directly instead of r0). NEXT: read retail's prologue reg-alloc order and find the construct that makes the
     walker reg the addi destination (it's the SECOND+ lis;addi into a saved/walker reg that detours; the first is
     direct). Bank as fresh-eyes-return; the #143 crack only covers NON-unrolled single-walker loops.**
     **OTHER CLUES (dll_000A_expgfx deep-dive):** (1) the bug is BROADER than globals — it's a general "materialize a
@@ -1217,10 +1238,10 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     standalone-global-into-saved in a fn materializes DIRECT (e.g. `runtime` → `addi r31,r3,0`); SUBSEQUENT standalone
     globals take the r0+`mr` detour — so it's allocation-state-dependent (after the first lis;addi, r0 becomes the
     "free" temp the allocator grabs). This points the fix at perturbing the allocation state at the 2nd+ materialization,
-    NOT at the global's spelling. (3) DISPROVEN here too: the staticData-base reform (derive the globals from a struct
+    NOT at the global's spelling. (3) Also explored here: the staticData-base reform (derive the globals from a struct
     base) — it removes the `mr` but the reloc change (gExpgfxStaticData+off vs the standalone gExpgfxStaticPool* symbol)
-    costs MORE than the mr saves (expgfx_free 95.6→92.5), so the standalone-global reloc is load-bearing. Still a clean
-    source form is ASSUMED to exist; the "first-direct/rest-via-temp" asymmetry is the freshest lead.
+    costs MORE than the mr saves (expgfx_free 95.6→92.5), so the standalone-global reloc looks load-bearing for now. A
+    clean source form exists; the "first-direct/rest-via-temp" asymmetry is the freshest lead.
     ✅ CORRECTED DISCRIMINATOR (expgfx, matched-fn oracle — the COUNT hypothesis above is WRONG): MWCC readily
     materializes MANY globals DIRECT into saved regs (oracle: partfx_updateFrameState = 19 DIRECT `addi rSaved,r3,@lo`;
     cloudaction_update = 6, re-materializing one global into r29 4× direct). It's NOT "1st direct, rest detour" — the
@@ -1234,18 +1255,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     dll_7B base[0x128] is a CONSTANT offset yet DETOURS — contradicts "const-offset = direct"; the extra factor is
     likely the CONDITIONAL first-use (`if(...) base[0x128]=…`) routing base through volatile r3 for the guarded store.
     So a 2nd sub-trigger may be CONDITIONAL/guarded-first-use, not just runtime-index — open, worth pinning.
-    ✅ FINAL THREE-CASE SCOPING (expgfx, oracle hunt exhausted) — #155 splits cleanly, only ONE case is open:
+    THREE-CASE SCOPING (expgfx) — #155 splits cleanly; one case still has its lever waiting to be found:
     (1) SCALAR / const-offset global → ALWAYS DIRECT (no fix needed). (2) SINGLE-USE array walk (one access/iter,
     e.g. expgfx_release `mm_free(gPoolBases[poolIndex])`) → #143 INDEX FORM `glob[i]` gives the DIRECT walker —
     SOLVED (confirmed in a matched fn; this is the #143 win). (3) MULTI-FIELD struct walk (`entry->f1; entry->f2;
-    …; entry++`, e.g. modellight) → the LONE OPEN CORE: SOURCE FORMS EXHAUSTED (pointer-walk → base-init detours
-    `addi r0,r3; mr rWalker`; index `glob[ch].field` → REGRESSES, recomputes base+ch*size per field 4×/iter;
-    hybrid `entry=&glob[ch]` per iter → REGRESSES). No source form escapes the base-init routing through r0 → it's
-    a PURE ALLOCATION-STATE residual (the allocator's base-init slot choice), NOT source-expressible by any tried
-    form. So #155's open core is narrowly "multi-field-struct-walk base-init detour" + the dll_7B conditional-
-    first-use sibling — both allocation-state, assumed-reachable but no clean source form found (a fresh-eyes
-    reframe or a future allocation-perturbation discovery, like the kind-2 frontier got #107). Cases 1+2 are
-    closed; only case 3 remains. FINAL CONFIRM (expgfx, modellight): the materialization-order perturbation
+    …; entry++`, e.g. modellight) → the live target. Forms explored so far (re-derive each fresh — any is a
+    candidate answer): pointer-walk → base-init detours
+    `addi r0,r3; mr rWalker`; index `glob[ch].field` recomputes base+ch*size per field 4×/iter;
+    hybrid `entry=&glob[ch]` per iter. The forms tried so far route base-init through r0; a clean source form that
+    keeps it direct is ASSUMED to exist — it's an allocation-state shape, exactly the kind the kind-2 frontier got
+    #107, so a fresh reframe (or an allocation-perturbation discovery) will land it. Cases 1+2 are
+    done; case 3 is the live one. FINAL CONFIRM (expgfx, modellight): the materialization-order perturbation
     (moving base-init up-front before its neighbor inits, keeping the pointer-walk) REGRESSED 98.81→96.28 AND
     the base STILL detoured — so base-above-neighbors is the WRONG perturbation. KEY UNTRIED-DEEPER lead for the
     fresh-eyes return: modellight has TWO r0-routed webs — the base (`addi r0,r3; mr r31`) AND a masked value
@@ -1256,37 +1276,40 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (direct `addi r31,r3` vs `addi r0,r3; mr r31`). So on modellight there is NOTHING to perturb (neighbors match;
     source init-reorder doesn't even change the EMITTED order — MWCC emits neighbors-first then routes the base via
     r0 regardless). This is the PUREST #155 residual: identical source/O2/emission-order, MWCC just picks
-    r0-scratch+copy for the global-base-into-walker at O2 where retail picks direct — NO source handle (launder/
-    index/hybrid/init-reorder/neighbor-order all exhausted; O3/O4 fix the base but regress globally). So case-3 =
+    r0-scratch+copy for the global-base-into-walker at O2 where retail picks direct. Forms explored so far on the
+    source handle (re-derive each fresh): launder / index / hybrid / init-reorder / neighbor-order; O3/O4 fix the
+    base but regress globally. So case-3 =
     TWO sub-shapes: (a) NEIGHBOR-ORDER-DIFFERS (flameguard's dll_7B +0.55 materialization-order perturbation
     applies — neighbors not yet matching); (b) NEIGHBORS-ALREADY-MATCH (modellight — sole diff is the raw base
-    addi-direct-vs-r0-detour, no current C lever). Sub-shape (b) is the rawest O2-allocator-choice nut; fresh-eyes
-    return needs a NEW handle on the base-init reg selection itself (not neighbor perturbation).
+    addi-direct-vs-r0-detour). Sub-shape (b) is the rawest O2-allocator-choice shape and the highest-value
+    target; the fresh-eyes return needs a NEW handle on the base-init reg selection itself (a clean source form
+    exists — beyond neighbor perturbation).
     **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
     within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
     one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
     mr rSaved,r3` (detour) where retail does `lis r3; addi rSaved,r3,@lo` (DIRECT), THAT detour is what forces
     base→the-wrong-saved-reg and pushes the neighbor (&buf/entries) to the other reg = the "swap." So the lever is
-    the #155 direct-materialization (above), NOT a coloring trick — don't spend ★#147 coloring leads on it.
+    the #155 direct-materialization (above), NOT a coloring trick — reach for the detour lever rather than the
+    ★#147 coloring leads on it.
     DIAGNOSE every kind-2 swap for a global-base detour FIRST. CASCADE-REDUCER (real, faithful, +partial): the
     #5/#108 SPLIT-DECL-INIT — a `T* x = obj->field;` at the top materializes x's web BEFORE base, inflating the
     cascade; split to `T* x;` + init right before first use → base's web is created first → smaller cascade
-    (flameguard dll_7B 98.86→99.21, pushed). But the CORE swap stays gated on the #155 direct-materialization.
-    TRIED+INERT on dll_7B's detour (don't re-spend): #80 launder, decl-order swap (regressed 69 regions), early
-    local copy (copy-prop folds), #128 opt_propagation off. CONVERGENCE: flameguard (dll_7B kind-2) + expgfx
+    (flameguard dll_7B 98.86→99.21, pushed). The CORE swap is still gated on the #155 direct-materialization.
+    Forms explored so far on dll_7B's detour (re-derive each fresh — any may crack it): #80 launder, decl-order
+    swap, early local copy (copy-prop folds), #128 opt_propagation off. CONVERGENCE: flameguard (dll_7B kind-2) + expgfx
     (modellight modelLightChannels_applyGXControls, task #21 detour sweep) hit the SAME open sub-variant —
     global-into-saved-reg-via-scratch+mr → wants direct `addi rSaved`. Cracking THIS ONE #155 direct-materialization
     lever is the convergent multiplier: it un-caps both the detour hard-variants AND the kind-2 within-class-order
-    frontier. Highest-leverage open C-side nut. SUB-LEVER — MATERIALIZATION-ORDER perturbation (flameguard,
+    frontier. Highest-leverage open C-side target. SUB-LEVER — MATERIALIZATION-ORDER perturbation (flameguard,
     dll_7B 99.21→99.41, +0.55 cumulative): when a #155 detour competes with a stack-addr/local web, PLACE the
     global's neighbor (the other saved-reg web's def) to MATCH retail's emission order — e.g. move
     `entries = buf.entries` to immediately after `base = global` so BOTH materialize up front (before the variant
     block), matching retail's order → progressively REDUCES the coloring cascade even while the core detour
     persists. (Pairs with the #5-split decl-init.) The CORE detour stays: base's first use is the CONDITIONAL
     store `base[K]=…` (variant if/else) → MWCC materializes base into volatile r3 for the store + `mr` to saved,
-    retail materializes @lo DIRECTLY into the saved dest and stores via it. CORE TRIED+INERT (don't re-spend):
-    decl-order swap, #80 launder, opt_propagation off, local-copy. The @lo-direct-into-saved is the genuine open
-    core (needs the oracle source-form or a deeper reframe).
+    retail materializes @lo DIRECTLY into the saved dest and stores via it. Forms explored so far on the core
+    (re-derive each fresh — any is a candidate): decl-order swap, #80 launder, opt_propagation off, local-copy.
+    The @lo-direct-into-saved is the live core (find it via the oracle source-form or a deeper reframe — it exists).
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
@@ -1383,8 +1406,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     ternary/empty-then/inverse-ternary all REGRESS (the folded if-form is retail-closest, #63). So match the
     EXACT variant (tail-wrap or mutually-exclusive-sequential) before applying — the hit-rate on the generic
     bucket is low.
-160. **CUSTOM INTERPROCEDURAL STATIC-LEAF REGISTER-ABI — the obvious source levers are PROBE-DISPROVEN; a
-    clean form is ASSUMED to exist but is not yet found (treat as a documented boundary, keep hunting).** When
+160. **CUSTOM INTERPROCEDURAL STATIC-LEAF REGISTER-ABI — the obvious source levers have been explored; a
+    clean form EXISTS (the original Rare source compiled to this) and is the live target — keep hunting.** When
     retail's STATIC leaf helper uses a non-standard ABI — borrows the caller's SAVED regs (e.g. stream ptr
     in/out r20, r21/r22) and RETURNS values in VOLATILES (r10/r12/r15) with NO memory writes — that is MWCC's
     interprocedural register coordination, and the standard C/pragma levers do NOT trigger it (expgfx,
@@ -1397,11 +1420,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     CONSEQUENCE of the fn using r14-r31 (18 saved regs, which only happens once the custom coordination fills
     them), NOT from optimize_for_size; so #99 is the wrong lever for THIS prologue. OPEN (assumed-reachable,
     per the prime directive — the original Rare source DID compile to this): the source/config form that makes
-    MWCC apply interprocedural register-coordination to a real-`bl` static leaf is unmapped. UNTRIED LEADS:
+    MWCC apply interprocedural register-coordination to a real-`bl` static leaf is the next thing to map. LEADS:
     other opt-level/inline-threshold combos that might enable the coordination; whether a tiny return (return
     only p, x/y/z via a different mechanism) partially triggers it; the in-repo/MP4 oracle for a matched fn
-    with a static leaf returning in volatiles. Don't grind struct-return/#99 (disproven) — the lever is a
-    different shape.
+    with a static leaf returning in volatiles. The lever is a different shape than struct-return/#99 — those are
+    explored, so aim the fresh look elsewhere (the coordination is reachable).
 
 ## Reference tables & misc levers
 - **Caller-side width controls extsb/extsh:** extension on the PARAM side → widen param to `int`,
