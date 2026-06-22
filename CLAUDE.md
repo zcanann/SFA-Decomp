@@ -745,12 +745,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     gaps): (c) reuse an incr-NOT-compared ACCUMULATOR's 0 in an O4 fn — SPLITS into two halves:
     ✓SOLVED — the LOCAL-COPY half: `local = accum;` (PLAIN store of the accumulator VARIABLE, not literal
     `0` and not the `local = accum = 0` chain — the var-read doesn't const-fold) → `mr` at O4, in-tree-proven
-    (fn_801932C8 `htOff = fallOff`). OPEN — the FIELD-STORE half: `obj->f = 0` re-materializes `li r0` instead
-    of storing the accumulator's saved-0 reg; `= accum` FOLDS for a memory store (MWCC materializes the
-    store-value 0 in a volatile regardless), OR/chain/O2 all fail, and no clean oracle located yet (the obvious
-    sibling fn_801923F8 is itself only 96.4%, not a usable oracle). Retail does `stb saved0,field` — so it's a
-    live target needing a DIFFERENT matched-fn oracle (a const-0 FIELD store reusing a saved-0) or a fresh-eyes
-    reframe (1-instr-per-fn; fn_801932C8 `entryCount=0` / groundanimator_update). (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
+    (fn_801932C8 `htOff = fallOff`). FIELD-STORE half — ✓TRIGGER PINNED (validator add-ingredients ladder,
+    disproves "folds even at O4"): the fold trigger is a NESTED LOOP, NOT the pre-loop position. SINGLE loop
+    (`int fallOff=0; state->entryCount=0; loop{gArr[i]=fallOff; fallOff+=4;}`) → `stb r31,42` REUSES fallOff's
+    saved reg = MATCHES retail; add htOff-copy / OR / FP body → still reuses; **NESTED loop** (fallOff
+    incremented OUTER, used INNER) → `stb r0,42` FOLDS (fallOff is inner-loop-invariant → its materialization
+    is DEFERRED → not in r31 at the pre-loop field store). Retail REUSES in the genuinely-nested fn_801932C8
+    (`stb r23`), so the nested-loop-reuse form EXISTS. OPEN (sharp bounded target): the source that keeps the
+    nested accumulator in r31 at the field store DESPITE the inner-loop invariance — force it to materialize
+    EARLY (an early non-folding use, or a structure the nesting doesn't defer). Tried+folds: reference fallOff
+    before the store, `entryCount = fallOff`. (1-instr-per-fn; unifies w/ #126 + Minimap as the O2 saved-anchor
+    family.) (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
     chained copy folds to `li` at O4 yet retail (STRUCTURALLY IDENTICAL, same instr count) has the `mr`
     (Minimap_release): NOT a pressure cap (identical structure = identical pressure), it's an unfound
     O4-surviving-copy source form. The chain reaches counter+LOCAL value-0; (c)/(d) need forms still to find.
@@ -1161,12 +1166,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     among the loop body's FP ops → its bias web is created earlier → colors at a LOWER fXX (retail's f29 vs our
     f31). The prior forms missed it because they moved the CONSTS or hoisted the conversion OUT of the loop —
     NOT its position WITHIN the body. So naming the bias being build-domain (no C names it) is moot — you DON'T
-    need to name it; reposition the conversion. ⚠️ IN-TREE: blind "move to loop-body TOP" REGRESSED staffFn
-    95.91→84.94 (reverted) — it reshuffled ALL the loop's FP ops (fcos16/amp/sum/products), breaking far more
-    than the bias. The mechanism (position→bias reg) holds, but the position must be SURGICAL: read RETAIL's
-    loop FP-op computation order and slot the conversion at the EXACT position retail computes it (relative to
-    the other FP ops), NOT the top. So it's a per-fn surgical match of retail's computation order, not a blanket
-    "move early." Integrate as SOLVED + project-wide batch once a surgical placement confirms in-tree. (DeepDive2: dim2icicle 99.92,
+    need to name it; reposition the conversion. ✓SOLVED IN-TREE (waterfx, staffFn_80170380 95.91→96.73, 0
+    regressions) — and the clean actionable form (NOT blind "move to top," which REGRESSED staffFn to 84.94 by
+    reshuffling all the FP ops). THE FORM: to raise the bias ABOVE a competing HOISTED const (retail bias=f29,
+    const=f28 → bias must be created BEFORE the const), **INLINE the competing const and reference it AFTER the
+    conversion** — swap the add to `(f32)(int)(...) + lbl_constK` so the conversion/bias is the LEFT operand
+    (created first) and the const is the RIGHT (created after); AND mark the const `extern const f32` so the
+    inlined const still LICM-hoists to its saved reg (f28) instead of reloading. Front-end then creates the bias
+    web first → bias f29, const f28 = retail. (The const was previously a PRELOOP named local, created before the
+    loop → before the bias → bias parked last at f31.) DISCRIMINATOR (per-fn verify, the lever is NOT universal):
+    apply ONLY where retail's bias reg should OUTRANK a competing HOISTED const; check the bias reg + report.json,
+    KEEP only if the fn RISES. PROJECT-WIDE batch (sweeping the conversion-bias-hoist bucket now). (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
     REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are explored so far): (1) the bias
