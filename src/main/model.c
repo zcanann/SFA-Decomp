@@ -1565,8 +1565,8 @@ extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 
 #define LOADCOLOR_BLOCK(OFF)                                                          \
     {                                                                                 \
-        u32 v;                                                                        \
         int idx;                                                                      \
+        u32 v;                                                                        \
         int sz4;                                                                      \
         u8 buf[4];                                                                    \
         int sz;                                                                       \
