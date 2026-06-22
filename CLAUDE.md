@@ -69,7 +69,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
    note was wrong). cmpwi/cmplwi only appear when the compare feeds a BRANCH; a returned/materialized
    bool uses the neg/cntlzw form (#23/#38). If a CSE-merge with a nearby signed int read still wins
    signed at a SITE, a struct-field pointer retype is the per-site lever.
-4. **`if (v > K) v = K; return v;`** not the inverse → target's `blelr` clamp.
+4. **`if (v > K) v = K; return v;`** → target's `blelr` clamp. (For an int RETURN-clamp the inverse
+   `if (v <= K) return v; return K;` emits the SAME `blelr` — probe-confirmed; either spelling works.)
 5. **Swap local decl order to control stack offsets / coloring.** DECL position sets register home;
    INIT position sets emission — split `int x = e;` into `int x;` + `x = e;` to place each
    independently. Address-taken locals sometimes color in REVERSE decl order — flip if needed.
@@ -174,7 +175,9 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 49. **Switch with case-FALLTHROUGH** (`case 0: case 1: case 2: { body; break; }`) for sequential
     shared-body dispatch.
 50. **Nested `outer(inner(x), y)`** keeps r3 live across calls (vs a spilled local).
-51. **Chained `x = y = z = K;`** CSEs ONE constant load across stores.
+51. **Chained `x = y = z = K;`** controls STORE ORDER (it stores z,y,x = reverse) — that, not the CSE,
+    is the lever (probe-confirmed: separate stores `a=K;b=K;c=K;` ALSO CSE to one constant load; the
+    chain's real effect is the reversed store sequence). Write the chain to get the reverse order.
 52. **Ternary `(a >= b) ? b : a` clamp** for a `mr; clrlwi; stb` store shape (vs if/else split).
 53. **`(s16)` cast on a compound `-=` subtrahend** drops the spurious `extsh`.
 54. **Two locals = same base** when target holds one pointer in two different saved regs (only when
@@ -240,8 +243,9 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     field (addend lands mid-fn) is a literal constant; write the literal + add a `block_relocations`
     range in config.yml.
 74. **`LL`-suffixed constants force MATERIALIZED-constant codegen** (`x ^= 2LL` → `li; xor`; `x &=
-    ~0x80LL` → `li -129; and`; `x |= 0x100100LL` → `lis;addi;or`). Lvalue must be u32 (int widens
-    signed + `srawi`). Convert ALL adjacent masks at once (partial conversion misaligns the burst).
+    ~0x80LL` → `li -129; and`; `x |= 0x100100LL` → `lis;addi;or`). Lvalue must be UNSIGNED — u8/u16/u32
+    all give the clean `li -K; and` (probe-confirmed); a SIGNED lvalue (int/s32) adds a dead high-word
+    `srawi rX,31` (sign-extension; the unsigned high word is constant 0 and DCE's). Convert ALL adjacent masks at once (partial conversion misaligns the burst).
     Bulk-sweep a recurring materialized flag word after mapping every site to its fn's fuzzy%.
     CAVEAT (WorkerB, trickySelectQueuedCommandTarget + trickyGuardFindBaddieTarget): the LL fix is
     CORRECT (target uses `li -1025; and`; codebase already uses `&= ~(u64)FLAG` elsewhere) BUT when an
