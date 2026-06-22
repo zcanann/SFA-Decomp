@@ -3212,7 +3212,7 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
                     ny *= s;
                     nz *= s;
                 }
-                if ((nx * arrA[i] + ny * arrB[i] - nz * arrC[i]) +
+                if (-(nx * arrA[i] + ny * arrB[i] + nz * arrC[i]) +
                     (nx * a + ny * planeC + nz * b) > c24)
                 {
                     inside = 0;
@@ -3222,7 +3222,7 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
         }
         if (inside == 0) continue;
         if ((s8)lbl_803DCF60 >= 0x23) break;
-        if (*(int*)desc != 0)
+        if (*(void**)desc != NULL)
         {
             Matrix_TransformPoint(*(void**)((char*)desc + 0xc), a, planeC, b, &ox, &planeC, &oz);
             Matrix_TransformVector(*(void**)((char*)desc + 0xc), vec, vec);
