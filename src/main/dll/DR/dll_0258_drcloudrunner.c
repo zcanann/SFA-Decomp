@@ -51,7 +51,7 @@ typedef struct DRCloudRunnerState
     s16 unkBAE;
     s16 unkBB0;
     u8 padBB2[0xBB4 - 0xBB2];
-    u8 unkBB4;
+    u8 spawnVariant;
     u8 padBB5[0xBC4 - 0xBB5];
     s8 unkBC4;
     u8 padBC5[0xBC8 - 0xBC5];
@@ -63,7 +63,7 @@ STATIC_ASSERT(offsetof(DRCloudRunnerState, unkAD5) == 0xAD5);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkB50) == 0xB50);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBAE) == 0xBAE);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBB0) == 0xBB0);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBB4) == 0xBB4);
+STATIC_ASSERT(offsetof(DRCloudRunnerState, spawnVariant) == 0xBB4);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBC4) == 0xBC4);
 STATIC_ASSERT(sizeof(DRCloudRunnerState) == 0xBC8);
 
