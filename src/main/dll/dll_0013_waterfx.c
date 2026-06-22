@@ -323,6 +323,8 @@ void waterfx_func05(int p1, int p2)
         }
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
+            int o64 = i * 0x40;
+            int o32 = i * 0x20;
             WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             if (e->active != 0)
             {
@@ -336,7 +338,7 @@ void waterfx_func05(int p1, int p2)
                 dp.fa = 0;
                 Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)gWaterfxRippleVtx + i * 0x40, (char*)gWaterfxRippleVtxDesc + i * 0x20, 2);
+                drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
             }
         }
         if ((int)gWaterfxSplashCount != 0)
