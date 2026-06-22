@@ -291,6 +291,7 @@ void vortex_update(int obj)
             {
                 state->alpha = hi;
             }
+            return;
         }
     }
     if (active == 0)
