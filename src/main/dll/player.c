@@ -2419,7 +2419,7 @@ int fn_802A1CA8(int obj, int state)
                 {
                     ((PlayerState*)inner)->climbingUp = 1;
                     if ((int)((PlayerState*)inner)->climbStep >=
-                        ((PlayerState*)inner)->unk4E5 - 3)
+                        ((PlayerState*)inner)->climbStepCount - 3)
                     {
                         spd = z2;
                         ph = lbl_803E8020;
@@ -2613,14 +2613,14 @@ finish:
     if (gPlayerPrevMoveId != gPlayerCurrentMoveId)
     {
         ObjAnim_SetCurrentMove(obj, lbl_80332F2C[gPlayerCurrentMoveId], spd, 1);
-        if ((s16)gPlayerCurrentMoveId <= 1 && ((PlayerState*)inner)->unk4E7 == 0)
+        if ((s16)gPlayerCurrentMoveId <= 1 && ((PlayerState*)inner)->climbSampleDone == 0)
         {
             ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EA4,
                                           ((GameObject*)obj)->anim.rootMotionScale, buf1, tmp);
             ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EE0,
                                           ((GameObject*)obj)->anim.rootMotionScale, buf2, tmp);
             ((PlayerState*)inner)->moveStartPosY = buf2[1] - buf1[1];
-            *(u8*)&((PlayerState*)inner)->unk4E7 = 1;
+            *(u8*)&((PlayerState*)inner)->climbSampleDone = 1;
         }
     }
     {
@@ -10010,8 +10010,8 @@ int fn_80299BB0(int obj, int p2)
             break;
         case 0:
         default:
-            inner->unk8AA = (u8)(inner->unk8AA ^ 1);
-            if (inner->unk8AA != 0)
+            inner->altMoveToggle = (u8)(inner->altMoveToggle ^ 1);
+            if (inner->altMoveToggle != 0)
             {
                 state29 = 0x1a;
             }
@@ -10020,8 +10020,8 @@ int fn_80299BB0(int obj, int p2)
     }
     else
     {
-        inner->unk8AA = (u8)(inner->unk8AA ^ 1);
-        if (inner->unk8AA != 0)
+        inner->altMoveToggle = (u8)(inner->altMoveToggle ^ 1);
+        if (inner->altMoveToggle != 0)
         {
             state29 = 0x1a;
         }
@@ -12158,10 +12158,10 @@ int fn_8029D250(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         if (((PlayerState*)state)->baddie.targetObj != NULL &&
-            (inner->unk884 & 1))
+            (inner->flags884 & 1))
         {
             doRumble(lbl_803E7ED8);
-            flags = inner->unk884;
+            flags = inner->flags884;
             if (flags & 2)
             {
                 idx = 3;

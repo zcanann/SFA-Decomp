@@ -120,9 +120,9 @@ typedef struct PlayerState {
     s16 unk4E0;
     u8 pad4E2[0x4E4 - 0x4E2];
     s8 climbStep; /* discrete climb/step level (++ up, -- down by moveInputZ); climbTargetY = climbStep*climbStepHeight + climbBaseY; >3 switches A-button icon */
-    s8 unk4E5;
+    s8 climbStepCount; /* 0x4e5: total number of climb steps for the current climbable; climbStep >= climbStepCount-3 (within 3 of the top) selects the top-of-climb transition */
     u8 climbingUp; /* 0x4e6: climb direction, 1 while ascending (forward Y lerp start->target), 0 while descending (reverse lerp) */
-    s8 unk4E7;
+    s8 climbSampleDone; /* 0x4e7: one-shot latch for the climb move's initial joint-transform sampling; while 0 (and moveId<=1) samples the start/end root motion into moveStartPosY then sets to 1 */
     f32 unk4E8;
     f32 climbBaseY; /* base local-Y for the climb-step lerp: climbTargetY = climbStep*climbStepHeight + climbBaseY */
     f32 climbStepHeight; /* per-step vertical rise; multiplied by climbStep to form climbTargetY */
@@ -323,7 +323,7 @@ typedef struct PlayerState {
     f32 particleBurstCooldown; /* f32 countdown decremented by frame-time each tick, floored to 0; while moving fast, on expiry (<=0) spawns a burst of particle FX (spawnObject 0x804) then resets to the burst interval */
     f32 targetSuppressTimer; /* f32 countdown decremented by frame-time each tick, floored to 0; set on a state transition (flag 0x3f2:b40); while active (>0, queried via fn_80295C24) suppresses A-button-hint camera targeting */
     f32 idleDelayTimer; /* idle-eligibility countdown (f32); set positive at state init (lbl_803E7FA4), decremented by frame-time in fn_802B18BC and floored at 0; the default-idle "stay" path requires it == 0 */
-    u32 unk884;
+    u32 flags884; /* 0x884: directional-response flag word (set in another TU); bit0 gates the rumble + directional anim branch, bits 2/4/8 select the directional move index (idx 3/1/2) into the move table */
     f32 animSpeedDecay; /* 0x888: per-frame decay rate for baddie.animSpeedA via powfBitEstimate(rate, dt) */
     f32 animSpeedStart; /* 0x88c: initial baddie.animSpeedA magnitude at move start (set as animSpeedA = -animSpeedStart) */
     f32 pushVelX; /* planar push/displacement velocity X: eased toward a target push via interpolate, decayed by powfBitEstimate, snapped to 0 near zero; added to the transformed world position */
@@ -340,7 +340,7 @@ typedef struct PlayerState {
     u8 altAnimSoundId; /* anim-sound-set id copied into animSoundId for specific moves (e.g. turn/launch); init 6 */
     u8 moveSlotCount;
     u8 moveSlotIndex;
-    u8 unk8AA;
+    u8 altMoveToggle; /* 0x8aa: alternating selector XOR-toggled each invocation; when nonzero picks the alternate approach move (0x1a) — sibling of moveAltToggle */
     u8 hitCount; /* hits dealt so far in the current multi-hit move; ++ per hit, stops when >= hitCountMax */
     u8 hitCountMax; /* max hits for the move (HitDesc.valsB[0]) */
     u8 hitInterval; /* frames between hits (HitDesc.valsA[0]); reloads hitTimer */
