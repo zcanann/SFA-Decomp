@@ -626,7 +626,7 @@ void FUN_800537a0(u32 param_1, u32 param_2, int param_3, char param_4, u32 param
     if (tex != 0)
     {
         FUN_800033a8(tex, 0, 100);
-        *(char*)&((Texture*)tex)->unk16 = (char)param_3;
+        *(char*)&((Texture*)tex)->format = (char)param_3;
         *(short*)(tex + 10) = (short)((u64)dims >> 0x20);
         *(short*)(tex + 0xc) = (short)dims;
         *(u16*)(tex + 0x10) = 1;

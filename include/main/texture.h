@@ -28,7 +28,7 @@ typedef struct Texture {
     u16 height;
     u16 refCount;
     u8 unk10[6];
-    u8 unk16;
+    u8 format;
     u8 wrapS;
     u8 wrapT;
     u8 minFilter;

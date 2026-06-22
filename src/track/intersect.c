@@ -851,7 +851,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     wrapBit = (((Texture *)tex2)->maxLod - ((Texture *)tex2)->minLod > 0) ? 1 : 0;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60,
                  ((Texture *)tex2)->width, ((Texture *)tex2)->height,
-                 ((Texture *)tex2)->unk16, 1, 1, wrapBit);
+                 ((Texture *)tex2)->format, 1, 1, wrapBit);
     selectTexture(tex2, 2);
     GXLoadTexMtxImm(lbl_80396850, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
