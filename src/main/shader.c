@@ -892,7 +892,7 @@ extern void MapBlock_initShaders(void* blk);
 extern int return0_80060B90(void* blk);
 
 
-int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
+int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
     int blockId;
     char* entry;
@@ -905,10 +905,10 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 
     entry = (char*)lbl_803822A0[layer];
     statusArr = (s8*)gMapBlockLayerTables[layer];
-    slotIdx = p1 + (p2 << 4);
+    slotIdx = cellX + (cellZ << 4);
     entry += slotIdx * 12;
 
-    mapBlockFn_80059354(p3, p4, (s16*)entry, layer);
+    mapBlockFn_80059354(worldX, worldZ, (s16*)entry, layer);
 
     blockId = *(s16*)(entry + 6);
     if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1)
