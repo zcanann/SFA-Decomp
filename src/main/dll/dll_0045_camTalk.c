@@ -58,6 +58,7 @@ void CameraModeBike_free(void)
 }
 
 #pragma peephole on
+#pragma opt_propagation off
 void CameraModeBike_update(CameraObject* camera)
 {
     int rotVal;
@@ -127,7 +128,7 @@ void CameraModeBike_update(CameraObject* camera)
         ;
         camera->anim.rotX = rotVal;
         rotVal = (int)(lbl_803E1798 - gCamTalkBikeState->pitchTarget);
-        angleDelta = (short)rotVal - camera->anim.rotY;
+        angleDelta = rotVal - (u16)camera->anim.rotY;
         if (0x8000 < angleDelta)
         {
             angleDelta = angleDelta - 0xFFFF;
@@ -158,7 +159,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosZ = posX + cosPitch;
         rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         local_60 = (s64)rotVal;
-        angleDelta = (short)rotVal - camera->anim.rotZ;
+        angleDelta = rotVal - (u16)camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
             angleDelta = angleDelta - 0xFFFF;
@@ -180,6 +181,7 @@ void CameraModeBike_update(CameraObject* camera)
     }
     return;
 }
+#pragma opt_propagation reset
 
 #pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
