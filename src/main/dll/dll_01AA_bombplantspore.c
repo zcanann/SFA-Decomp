@@ -43,7 +43,7 @@ extern const f32 lbl_803E53B4;
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
 extern void Obj_FreeObject(u8* obj);
-extern void objMove(f32 x, f32 y, f32 z, void* obj);
+extern void objMove(void* obj, f32 x, f32 y, f32 z);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void modelLightStruct_setLightKind(void* light, int value);
@@ -362,9 +362,9 @@ void bombplantspore_update(void* obj)
         ((GameObject*)obj)->anim.velocityZ =
             state->driftCos * state->driftSpeed +
             state->driftBaseZ;
-        objMove(((GameObject*)obj)->anim.velocityX * timeDelta,
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                 ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
+                ((GameObject*)obj)->anim.velocityZ * timeDelta);
         (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
         (*gPathControlInterface)->apply(obj, state->pathState);
         (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
