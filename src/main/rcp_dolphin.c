@@ -733,12 +733,18 @@ extern u32 lbl_803DCDB4;
 
 void fn_80053ED0(u32 bits) { gRcpRenderFlags = gRcpRenderFlags | bits; }
 #pragma scheduling off
+#pragma peephole off
+#pragma opt_propagation off
 void fn_80053EBC(u32 bits)
 {
-    u32 v = gRcpRenderFlags;
-    u32 nb = -bits - 1;
+    u32 v;
+    u32 nb;
+    v = gRcpRenderFlags;
+    nb = ~bits;
     gRcpRenderFlags = v & nb;
 }
+#pragma opt_propagation reset
+#pragma peephole reset
 
 void fn_800542F4(void)
 {
