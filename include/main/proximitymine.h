@@ -59,7 +59,7 @@ typedef struct ProximityMineObject {
   u8 unk50[4];
   ProximityMineCollider *collider;
   u8 unk58[0x50];
-  f32 unkA8;
+  f32 lightPosY; /* 0xA8: Y position of the proximity-mine glow point light */
   u8 unkAC[0xc];
   ProximityMineState *state;
   u8 unkBC[8];
