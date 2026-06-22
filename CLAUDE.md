@@ -602,6 +602,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     DIRECTLY spills the param at its declaration-order home slot, interleaving the store between the
     adjacent param-saves (matches target) AND drops the redundant local. (WorkerC: objfx
     objParticleFn_80099d84 99.28→100 via `&extraScale`.)
+    COROLLARY (WRONG-EXTERN-SIGNATURE — a CALLER-side structural bug worth ~4%, NOT coloring): a unit's
+    local `extern` of a SHARED HELPER often has the float arg shoved LAST (the Ghidra floats-last import
+    artifact) while the REAL definition has it 2nd/3rd. The wrong float POSITION corrupts THIS caller's
+    arg-emission order (it sets up the wrong registers for the call) → a big structural loss, not a coloring
+    nit. FIX: check each suspect extern against the REAL definition (grep the defining .c) and reorder the
+    extern + the call args to match. HEURISTIC: when a tricky/shared-helper extern is float-last, distrust
+    it — verify vs the def. (flameguard: mmp_cratercritter trickyFn_8013d8f0 — `trickyFn_8013b368(u8*,u8*,f32)`
+    and `objAnimFn_8013a3f0(u8*,int,int,f32)` were both float-last; real defs are `(u8* obj, f32 vel, u8* state)`
+    and `(int obj, int p2, f32 f, int p4)` → fixing externs + call arg order 92.48→96.56, +4.08.) SWEEP: grep
+    other units' externs of the same shared helpers; an empty K&R proto `extern int fn();` on a float-taking
+    helper is also suspect (the float's reg assignment is then unprototyped — give it the real signature).
 138. **Global-base WALKED array with a `mr rWalker,r0` detour → index it as a TYPED STRUCT ARRAY.**
     When a loop walks a global array and the base routes through r0 (`lis r3; addi r0,r3,LO; mr
     rWalker,r0`) instead of the target's direct `addi rWalker,r3,LO`, the clean form is
