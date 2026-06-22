@@ -387,6 +387,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `#pragma ppc_unroll_speculative on|off`, `ppc_unroll_factor_limit N`,
     `ppc_unroll_instructions_limit N`, `opt_unroll_count N`. `reset` is a SYNTAX ERROR for these —
     restore with explicit values. Factor mismatch needs factor_limit + instructions_limit TOGETHER.
+    LIMIT (expgfx, model modelWalkAnimFn): the unroller's MAIN/REMAINDER SPLIT STRATEGY is NOT pragma-exposed.
+    When BOTH builds unroll at the SAME factor (e.g. 8) but retail uses the GUARD-form split (`addi r9,r5,-8;
+    cmpwi r5,8; ble remainder` — branch around the dead main loop when n≤8) and ours uses the CTR-form
+    (`srwi n,3; mtctr` — main runs 0× for small n), NO #113 pragma flips it: opt_unroll_loops off / opt_unroll_count
+    8|2|1 = INERT (ppc speculative unroller is what's active, opt_unroll doesn't touch it); ppc_unroll_speculative
+    off REGRESSES; factor/instr A/B (8,256)/(8,512) = pragma-optimal, others worse. The guard-vs-ctr CHOICE is an
+    unroller-internal heuristic. UNTRIED (the only remaining angle): a SOURCE pre-check restructure that biases
+    the unroller to guard-form (e.g. an explicit `if (n <= 8) {remainder-only} else {main+remainder}` / an
+    n-8-based bound) — assumed-reachable, not yet found.
 114. **No-op CONVERSION NODES split VN webs at zero cost:** `(int)(f64)volf` re-executes fctiwz;
     `e*48 + (int)(long)(c*48)` blocks distributive re-factoring; `(int)((long)x * 8)` splits a
     shift's VN key. Runtime values only (constants fold); global re-reads still need `volatile`.
@@ -1239,6 +1248,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     reproduces it at ZERO behavior cost. This is the branch-target/block-layout structural bucket's core lever
     — the #151-FREE fns in that bucket are real 99→100s. (flameguard: dll_029C arwarwingbo_update 98.86→100,
     whole unit 10/10 = 100%, flip-ready.)
+    SCOPE (pausemenu, verified by score — #159 is variant-A/B SPECIFIC, NOT a generic branch-fold cure): the
+    categorizer's "branch-layout" bucket is mostly NOT #159 (many are extsb/lfs/extsh diffs mislabeled), and
+    even genuine `bXX;b` vs `bYY` folds only yield to #159 when they ARE variant A (guard wrapping the function
+    TAIL) or variant B (two sequential MUTUALLY-EXCLUSIVE ifs). Three OTHER fold shapes RESIST (don't waste
+    time forcing #159/#21/#63 on them): (1) MID-FUNCTION guard `if(x!=K){body}` where an inner block FOLLOWS
+    the body (not the tail) → #21 inversion is INERT (MWCC normalizes); (2) LOOP jump-to-condition (retail's
+    test-first `while`/`for` emits `b cond` first, ours is `do-while`) → do-while→while ADDS the `b` but
+    REGRESSES because MWCC's LICM places the loop-invariant consts in the preheader AFTER the `b`, retail has
+    them BEFORE (LICM-preheader ordering, separate open puzzle); (3) integer CLAMP `if((u32)x>=K)x=K` →
+    ternary/empty-then/inverse-ternary all REGRESS (the folded if-form is retail-closest, #63). So match the
+    EXACT variant (tail-wrap or mutually-exclusive-sequential) before applying — the hit-rate on the generic
+    bucket is low.
 160. **CUSTOM INTERPROCEDURAL STATIC-LEAF REGISTER-ABI — the obvious source levers are PROBE-DISPROVEN; a
     clean form is ASSUMED to exist but is not yet found (treat as a documented boundary, keep hunting).** When
     retail's STATIC leaf helper uses a non-standard ABI — borrows the caller's SAVED regs (e.g. stream ptr
