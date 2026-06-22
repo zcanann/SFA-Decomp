@@ -649,6 +649,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 124. **`categorize_near_misses.py` buckets every <100% fn by first-diff symptom.** The compare-
     width/sign bucket is a reliable vein — audit callee return/param signedness (`cmpwi` vs
     `cmplwi`); a call/vtable result cast to int then null-checked → `(u32)x != 0`.
+    ⚠️ LABELS OVER-PROMISE (lead + both hunters, exhaustive in-tree, this session): the bucket NAMES
+    systematically MIS-SELL the 99.x tail as clean source wins. Verified false positives — "off-by-one/
+    immediate" = mostly REGISTER-swaps (coloring, same immediates); "branch target/block layout" = mostly
+    jump-threading/duplication (cardShowMessage) not invertible blocks; "compare width/sign" on a 99.x fn =
+    often a peephole-asymmetric extsb (ecsh_cup), a constant-FOLD diff (lightfoot: target keeps a value runtime,
+    ours folds `flags=0x16|1`→`li 0x17`), a value-0 materialization (smallbasket, #136b), or a type-cascade —
+    ALL context-dependent (the source lever regresses), NOT clean width fixes. So READ EACH fn's real diff and
+    classify against the gate-split BEFORE deriving; for the 99.x bucket derive ONLY a CONTIGUOUS-DROPPED-REGION
+    (the one reliably-transferring sub-class). Use the buckets to find FAMILIES to read, never as a clean-win list.
 125. **Loop-tail guard polarity** — spell the positive continue guard (`if (i < 8) continue;`) to
     get `cmpwi 8; blt` not `cmpwi 7; ble`.
 126. **Param pool classing — RULE PINNED (probe-confirmed): all incoming params occupy ONE pool ordered
