@@ -11,11 +11,11 @@ typedef struct WaveanimatorObjectDef
     s8 spanX;
     s8 spanY;
     s16 modelVariant;
-    s8 unk20;
+    s8 sinkDepthScale; /* 0x20: scales the sink depth (K * (u8)this) */
     s8 period;
     s8 gridN;
     u8 pad23[0x25 - 0x23];
-    u8 unk25;
+    u8 sinkEnable; /* 0x25: gates the GameBit-driven sink behavior */
     u8 radius;
     u8 yOffset;
 } WaveanimatorObjectDef;

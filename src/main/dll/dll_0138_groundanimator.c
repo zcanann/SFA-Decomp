@@ -189,11 +189,11 @@ void groundanimator_init(int* obj, int* desc)
     vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
     vstate->lastDepth = lbl_803E3FB8;
     vstate->radius = (f32)((WaveanimatorObjectDef*)desc)->radius;
-    if (((WaveanimatorObjectDef*)desc)->unk25 != 0)
+    if (((WaveanimatorObjectDef*)desc)->sinkEnable != 0)
     {
         if (GameBit_Get(((WaveanimatorObjectDef*)desc)->originX) != 0)
         {
-            vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->unk20;
+            vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
             vstate->flags |= 2;
         }
         ObjGroup_AddObject(obj, 49);
