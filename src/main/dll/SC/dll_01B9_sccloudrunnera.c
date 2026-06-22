@@ -18,7 +18,7 @@ extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 typedef struct ScCloudrunneraPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 animDataIndex; /* anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
     s16 unk1A;
     u8 pad1C[0x24 - 0x1C];
     u8 unk24;
@@ -77,7 +77,7 @@ void sc_cloudrunnera_update(int obj)
 
     sub = ((GameObject*)obj)->anim.placementData;
     if (sub == NULL) return;
-    if (((ScCloudrunneraPlacement*)sub)->unk18 == -1) return;
+    if (((ScCloudrunneraPlacement*)sub)->animDataIndex == -1) return;
     idx = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)lbl_803DB411);
     if (idx != 0 && ((GameObject*)obj)->seqIndex == -2)
     {
@@ -205,21 +205,21 @@ void sc_cloudrunnera_init(int obj, int p2)
     ((GameObject*)obj)->unkF8 = 0;
 
     objF4 = ((GameObject*)obj)->unkF4;
-    if (objF4 == 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != 1)
+    if (objF4 == 0 && ((ScCloudrunneraPlacement*)p2)->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)p2);
-        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->animDataIndex + 1;
     }
-    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)p2)->unk18 != objF4 - 1)
+    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)p2)->animDataIndex != objF4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
-        if (((ScCloudrunneraPlacement*)p2)->unk18 != -1)
+        if (((ScCloudrunneraPlacement*)p2)->animDataIndex != -1)
         {
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)seq, (u8*)p2);
         }
-        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->unk18 + 1;
+        ((GameObject*)obj)->unkF4 = ((ScCloudrunneraPlacement*)p2)->animDataIndex + 1;
     }
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
