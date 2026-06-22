@@ -15,12 +15,12 @@ typedef struct DrExplodableChunk
     f32 spinX; /* 0x1c */
     f32 spinY; /* 0x20 */
     f32 spinZ; /* 0x24 */
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
-    f32 unk38;
-    f32 unk3C;
+    f32 spin2X; /* 0x28: secondary random spin triplet -> fragment setup unk32/34/36 */
+    f32 spin2Y; /* 0x2c */
+    f32 spin2Z; /* 0x30 */
+    f32 vel2X; /* 0x34: secondary launch velocity (dx*scale) -> fragment setup unk26/28/2a */
+    f32 vel2Y; /* 0x38: dy*scale - gravity bias */
+    f32 vel2Z; /* 0x3c: dz*scale */
     f32 velX; /* 0x40 */
     f32 velY; /* 0x44 */
     f32 velZ; /* 0x48 */

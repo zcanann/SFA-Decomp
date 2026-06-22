@@ -231,13 +231,13 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->spinZ = c->spinZ * (f32)(u32)
     c->spinScale;
     f1 = lbl_803E4354;
-    s->unk32 = lbl_803E4354 * c->unk28;
-    s->unk36 = f1 * c->unk30;
-    s->unk34 = f1 * c->unk2C;
+    s->unk32 = lbl_803E4354 * c->spin2X;
+    s->unk36 = f1 * c->spin2Z;
+    s->unk34 = f1 * c->spin2Y;
     f1 = lbl_803E4358;
-    s->unk26 = lbl_803E4358 * c->unk34;
-    s->unk28 = f1 * c->unk38;
-    s->unk2A = f1 * c->unk3C;
+    s->unk26 = lbl_803E4358 * c->vel2X;
+    s->unk28 = f1 * c->vel2Y;
+    s->unk2A = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
     s->scale = (s8)(int)(
         lbl_803E435C * (((GameObject*)obj)->anim.rootMotionScale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance
@@ -389,15 +389,15 @@ void explodable_computeFragmentLaunch(int obj, int chunkSlot, int def)
             c->launchFlags |= 0x10;
         }
         max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        c->unk28 = (f32)(int)
+        c->spin2X = (f32)(int)
         randomGetRange(0, max2) / lbl_803E4374;
-        c->unk2C = (f32)(int)
+        c->spin2Y = (f32)(int)
         randomGetRange(0, max2) / lbl_803E4374;
-        c->unk30 = (f32)(int)
+        c->spin2Z = (f32)(int)
         randomGetRange(0, max2) / lbl_803E4374;
-        c->unk34 = dx * scale;
-        c->unk38 = dy * scale - lbl_803E4380;
-        c->unk3C = dz * scale;
+        c->vel2X = dx * scale;
+        c->vel2Y = dy * scale - lbl_803E4380;
+        c->vel2Z = dz * scale;
         {
             int height = ((ExplodablePlacement*)def)->fragmentHeight;
             if (height != 0)
