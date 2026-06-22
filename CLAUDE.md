@@ -1106,6 +1106,27 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     fixes both (diagnostic: apply the u32 form, accept the temporary 0-store-steal, check if obj/st flip to
     r30/r31). So the copy-affinity-DEFEATER must be hunted via the 7-web ISOLATION (not animobjd2). The `|=`
     placeholder is the working solution meanwhile; the no-hack defeater is a lower-priority open target.
+    ✓✓ NOW ISOLATED + MECHANISM PINNED (Validator, /tmp/v147/faithful.c — disproves the old "NOT YET ISOLATED";
+    the earlier failure was just <5 webs). A faithful 6-GPR-web reconstruction (inline binary search returning a
+    POINTER + the do-while + segmentIntersect) REPRODUCES the rotation and matches the in-tree facts: plain
+    `previousCurveId = curveId;` → curveId pulled to r31 (HIGH, whole-pool rotation = the 96.5%); `|=` → curveId
+    stays r27 (LOW, the 100%). MECHANISM: plain `prev=curveId` makes the FRONT-END COALESCE prev+curveId (same
+    value) into ONE web; prev is MULTI-DEF (seed + `prev=nextCurveId` in the loop) AND used across the loop (the
+    `prev!=curveId` condition) → that web is HIGH-PRIORITY → colors r31 → curveId rides up → whole-pool rotation.
+    The `|=` makes the seed a #133 COMPOUND-OR COMPUTATION (scheduler-placed) → the seed copy lands in VOLATILE
+    r8 (`or r8,r27,r27`) and curveId stays in its own param web (r27) — no coalesce. DEFEATER BATTERY (curveId reg
+    measured on the bed): KEEP-curveId-LOW = ONLY `|=`/`&=` (exact 100%, the non-coalescing register-copy seed
+    `mr r8,r27`), `=NONE` const seed (99.56%, 1 dead instr), `prev=curve[0]` mem-reread (#130, 98.27% lwz seed).
+    FOLD→ROTATE (all became plain coalescing copies): binary `curveId|curveId`/`&`/`(curveId)|(curveId)`/`+0`/
+    `*1`/`^0`/`|0`/`(int)curveId`/register-qualify/decl-order. So the compound SELF-op `|=`/`&=` is (so far)
+    UNIQUELY the exact-100% form — a genuine compiler artifact (`x|=x` isn't folded where `x|x`-binary and `x|0`
+    ARE). RESOLUTION: `=NONE`@99.56% (1 provably-dead instr) is the honest hack-free best; the `|=` stays the
+    accepted 100% placeholder; the ONLY remaining clean-100% path is a STRUCTURAL pressure-reduction to the REST
+    of the fn (fewer competing webs / change the condition's curveId use so plain `=curveId` doesn't coalesce) —
+    open, lower-priority. The BED IS REUSABLE: A/B any clean-form candidate against /tmp/v147/faithful.c instantly
+    (curveId=r27 good / r31 rotated). ★ This SAME coalesce mechanism is the value-copy-affinity nut — applied in
+    the INVERSE (FORCE the coalesce) it's the #136(b) value-reuse / #126 param-pull / curves_getPos `mr r5,r4`
+    reuse-live-1 lever; the bed + mechanism crack one and inform all.
     **★ CLASSIFIER (DeepDive2) — split every saved-reg-permutation residual into two kinds BEFORE
     spending levers; it tells you which lever-family to reach for (both kinds are winnable):**
     **(1) CLASS-RECLASSIFICATION (TRACTABLE): a value sits in the WRONG saved-reg POOL** (param vs copy
