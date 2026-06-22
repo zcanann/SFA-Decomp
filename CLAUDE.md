@@ -732,8 +732,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     copy-vs-rematerialize). Plus systemic FP f2/f3 volatile swaps (#82) and f28/f30 hoist-coloring
     (#121 conversion-bias sub-case) across effect9/dim2icicle/arwsquadron/xyzanimator/dimsnowhorn1 —
     each a near-100 with the lever still being mapped.
-148. *(OPEN SEED — high-value, 5-fn payoff)* **Global-base INDEXED-array detour `base + state[K]*0x28 + off`
-    — front-end EVAL-ORDER (idx-first vs base-first), a NEW lever still to find.** Signature across the
+148. *(CRACKED → see #149 for the source forms)* **Global-base INDEXED-array detour `base + state[K]*0x28 + off`
+    — front-end EVAL-ORDER (idx-first vs base-first).** Signature across the
     newseqobj-family (newseqobj fn_80150EDC/fn_80150910/fn_801504F8, seqobj11d fn_801511E8/fn_8015165C):
     target materializes the global base FIRST into its final reg and re-derives the index after —
     `lis r3; addi r3,r3,@lo` (base→r3 direct); `lbz r0,K(state); mulli r0,r0,40; add r3,r3,r0` (entry,
@@ -749,6 +749,36 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     sum). Cracking ONE applies verbatim to all five — a strong fresh-eyes target. SEPARATE FP-coloring residuals
     (NOT this detour): dll_8B_func03's dominant diff is an 8-reg FP rotation f24..f31 off-by-one (#121/#82
     hoist-coloring); DFRope_Create is gRopeNodeS32ToDoubleBias conversion-bias coloring (#121).
+149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
+    The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
+    before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
+    base through r0 (`lbz idx; mulli; lis r3; addi r0; add r3,r0,rIdx` — base detour). Retail wants the base
+    materialized FIRST. THREE clean source forms, chosen by how many times the `base+idx*K` sum is used:
+    (a) **SUM USED ONCE (single deref) → COMPOUND ACCUMULATOR.** `T* p = lbl; p += idx*K;` then `*(p+off)`.
+       Compiles to `lis;addi rP (base direct, IN-PLACE); lbz idx; mulli; add rP,rP,idx` — base-first, index at
+       the use, sum reuses base. EXACT match. (seqobj11d fn_801511E8 96.3→100; the playbook's #135-family form
+       for a global base that is NOT walked.)
+    (b) **SUM USED 2+ TIMES (held pointer / multi-deref) → still use the COMPOUND accumulator, but it lands
+       base IN-PLACE where retail keeps base→r0 + index-reuses-lis-scratch + sum-reuses-index.** That base→r0
+       multi-use shape is a GENUINE MWCC coupling and is NOT source-reachable: base-first only comes from the
+       compound (⟹ base in-place); base→r0 only comes from the fresh sum (⟹ index-first). The fresh sum's
+       index-first REORDER is penalised by objdiff far more than the 1-register base/idx transposition, so the
+       COMPOUND is the net-best (no reorder; only a 2-reg swap left). It still fixes the hoist + index register
+       vs the raw fresh sum (seqobj11d fn_8015165C 95.2→96.3, newseqobj fn_801504F8 94.6→95.4, fn_80150910
+       95.9→96.9). Treat the residual base↔idx transposition as the #108 within-class tail (document, move on).
+    (c) **WALKED global array (loop) with the `addi r0; mr rWalker` detour → TYPED STRUCT-ARRAY INDEX FORM**
+       (extends #138 to fixed-count loops): replace the pointer-walk `p = glob; ...; p += stride` with
+       `for (i=0; ...; i++) ((Image*)glob)->arr[i].field` — MWCC strength-reduces to the same walker but inits
+       it with a DIRECT `addi rWalker` (no r0 detour). The walker base keeps its field offset as the load
+       DISPLACEMENT (`lwz off(rWalker)`), matching retail. CAVEAT: if a later block (e.g. a found-handler)
+       must RE-DERIVE the global fresh, do NOT reference the same typed pointer there — it CSEs onto the walker
+       and collapses the re-derive (regresses hard). Use a SEPARATE compound accumulator for that block, which
+       also folds its struct+field offset into the load displacement (e.g. 0x168+4→`lfs 364`).
+       (dll_0017_savegame restoreObjectPos 91.2→99.2, saveObjectPos 95.3→96.4, unsaveObjectPos 98.4→99.2.)
+    METHOD: objdiff penalises an instruction REORDER (index-first) much harder than a single wrong register,
+    so prefer the no-reorder form (compound / in-place) even when it leaves a base reg "wrong" — a lower
+    raw-instr-distance variant can score WORSE if it reorders. The base→r0 multi-use tail (b) == the same nut
+    as SaveGame_gplayAddTime (99.41% pure 2-reg base/idx eval-order swap), still open as a true #108 residual.
 145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch is
     almost always recoverable source, not coloring.** Two confirmed sub-cases, both clean 2002-C fixes:
     (a) **Import-UNDERSIZED matrix/array** (#67b) — a `mtx44Transpose`/4x4 op fed a `f32 m[12]` that must be
