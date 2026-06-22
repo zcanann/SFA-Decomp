@@ -886,8 +886,9 @@ int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4)
     }
     if (yawF < p1)
     {
-        dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10);
-        if (dy >= zero) {} else { dy = -dy; }
+        dy = (((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10) >= zero)
+                 ? ((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10)
+                 : -(((GameObject*)obj)->anim.localPosY - *(f32*)(p6 + 0x10));
         if (dy < lbl_803E6378)
         {
             return 1;
