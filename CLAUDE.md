@@ -736,9 +736,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     const-0 NOT tied to any live counter, that retail keeps in a SAVED reg and reuses, vs ours re-materializing
     `li r0`) = the ONE remaining open nut — and it UNIFIES (c)-field-store (`entryCount=0`), (d) Minimap
     (`null=NULL`), AND #126 (`pass=0` kept in r29). All three are "make MWCC keep a standalone const-0 in a
-    saved-reg web instead of re-materializing `li` per use." Crack that one and all three close. FRESH-EYES
-    ORACLE: scan matched .o's for `li rSAVED,0` (saved reg) kept across calls + reused, NOT counter-tied; read
-    its source. (The chained+opt_level lever is the counter-tied sibling; this is its standalone counterpart.)
+    saved-reg web instead of re-materializing `li` per use." Crack that one and all three close.
+    PRECISE MECHANISM (validator, #126): the standalone-const-keep nut IS the #121 LICM-hoist decision but for
+    an INTEGER loop-invariant const-0 — retail HOISTS the loop-invariant 0 to a saved reg (`li r29,0` kept
+    across the loop[s], reused for the stores); ours RE-MATERIALIZES `li r0` (volatile) each iter. MWCC does NOT
+    hoist an int-const-0 to a saved reg by default, and a named `pass`/`null` folds. So the lever = "make MWCC's
+    LICM hoist an int loop-invariant const-0 into a saved reg" (= #121-for-int). DLL-set oracle is EXHAUSTED (no
+    clean match — all loose: counter / outside-loop stores). NEXT: oracle the BROADER units (game/track/baddie/
+    MP4 — NOT scanned yet) for an int-const-0 LICM-hoisted to a saved reg, read its source; OR a fresh int-LICM
+    reframe. (The chained+opt_level lever is the counter-tied sibling; this is its standalone counterpart.)
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
