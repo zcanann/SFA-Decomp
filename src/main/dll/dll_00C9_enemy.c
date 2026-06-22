@@ -1439,7 +1439,7 @@ void fn_8014B878(int* arg1, int* sub)
             ((TrickyState*)sub)->flags2DC |= 0x800200LL;
         }
         {
-            u16 dist = ((TrickyState*)sub)->unk2A4;
+            u16 dist = ((TrickyState*)sub)->targetDist;
             u16 near = (u16)(int)((TrickyState*)sub)->waterLevel;
             if (dist < near)
             {
@@ -1751,7 +1751,7 @@ void fn_8014BC98(int* node, int* sub)
             sqY = t * t;
             dist = sqrtf(sqZ + (sqX + sqY));
         }
-        *(s16*)&((TrickyState*)sub)->unk2A4 = (s16)
+        *(s16*)&((TrickyState*)sub)->targetDist = (s16)
         dist;
 
         {

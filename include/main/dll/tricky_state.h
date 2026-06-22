@@ -61,7 +61,7 @@ typedef struct TrickyState {
     u8 padEC[0xF8 - 0xEC];
     u32 pathControlFlags; /* head word of the embedded gPathControlInterface record */
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
-    f32 unk1B8;
+    f32 nearestSpecialDeltaY; /* signed dy to the nearest special-surface (type 0xe) floor hit */
     u8 pad1BC[0x25F - 0x1BC];
     u8 physicsActive; /* same actor-record slot as BaddieState.physicsActive (free-fall physics enable) */
     u8 unk260;
@@ -75,7 +75,7 @@ typedef struct TrickyState {
     u32 actionTargetObj;
     u16 unk2A0;
     u16 unk2A2;
-    u16 unk2A4;
+    u16 targetDist; /* distance to actionTargetObj: (s16)sqrt(dx^2+dy^2+dz^2) */
     u16 unk2A6;
     u8 pad2A8[0x2AC - 0x2A8];
     f32 waterLevel;
