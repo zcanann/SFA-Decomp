@@ -2519,7 +2519,7 @@ u32 objCallback_80074d04(int handle, void* model)
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_ec, hudScale, hudScale, hudScale);
-    mtx_ec[2][2] = f1;
+    mtx_ec[0][3] = f1;
     GXLoadTexMtxImm(mtx_ec, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
 
@@ -2540,8 +2540,8 @@ u32 objCallback_80074d04(int handle, void* model)
     PSMTXScale(mtx_bc, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
     PSMTXRotRad(mtx_5c, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_5c, mtx_bc, mtx_bc);
-    mtx_bc[2][2] = f2;
-    mtx_bc[3][2] = f2;
+    mtx_bc[0][3] = f2;
+    mtx_bc[1][3] = f2;
     GXLoadTexMtxImm(mtx_bc, 0x24, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x24, 0, 0x7d);
 
