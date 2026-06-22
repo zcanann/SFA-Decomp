@@ -19,7 +19,7 @@ typedef struct ScCloudrunneraPlacement
 {
     u8 pad0[0x18 - 0x0];
     s16 animDataIndex; /* anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
-    s16 unk1A;
+    s16 gameBit; /* GameBit id -> seq->gameBit */
     u8 pad1C[0x24 - 0x1C];
     u8 unk24;
     u8 pad25[0x28 - 0x25];
@@ -197,7 +197,7 @@ void sc_cloudrunnera_init(int obj, int p2)
 
     objSetSlot(obj, 0x64);
     seq = ((GameObject*)obj)->extra;
-    seq->gameBit = ((ScCloudrunneraPlacement*)p2)->unk1A;
+    seq->gameBit = ((ScCloudrunneraPlacement*)p2)->gameBit;
     seq->flags = -1;
     base = lbl_803E55E0;
     seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)p2)->unk24);
