@@ -454,7 +454,7 @@ void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5,
 }
 
 #pragma optimization_level 1
-void crawler_handleHitStateEvent(int obj, int* st, int p3, int cmd)
+void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
 {
     if (cmd == 0x11)
     {
@@ -495,7 +495,7 @@ void crawler_initVariant(int* obj, int* st)
     *(u16*)((char*)st + 0x338) = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
 }
 
-void fn_80157CDC(int obj, int p2)
+void fn_80157CDC(int obj, int state)
 {
     extern void CameraShake_ApplyRadial(f32, f32, f32, f32, f32);
     extern f32 Vec_distance(int, int);
@@ -512,14 +512,14 @@ void fn_80157CDC(int obj, int p2)
     } CrawlerDescE;
     char* sub;
     CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
-    char* entry = d[((BaddieState*)p2)->inWhirlpoolGroup].p;
+    char* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
     u8 i;
 
     gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
 
     for (i = 0; i <= 12; i++)
     {
-        if ((*(u16*)(p2 + 0x2f8) & (1 << i)) != 0)
+        if ((*(u16*)(state + 0x2f8) & (1 << i)) != 0)
         {
             sub = entry + i * 12;
             if (*(u32*)(sub + 4) != 0)
@@ -548,12 +548,12 @@ void fn_80157CDC(int obj, int p2)
             {
                 if ((*(u8*)(sub + 11) & 1) != 0)
                 {
-                    *(u8*)(p2 + 0x33d) = (u8)(*(u8*)(p2 + 0x33d) ^ 0x40);
-                    if ((*(u8*)(p2 + 0x33d) & 0x40) != 0)
+                    *(u8*)(state + 0x33d) = (u8)(*(u8*)(state + 0x33d) ^ 0x40);
+                    if ((*(u8*)(state + 0x33d) & 0x40) != 0)
                     {
                         if (((GameObject*)obj)->childObjs[0] == NULL)
                         {
-                            firecrawler_spawnFirepipe(obj, p2);
+                            firecrawler_spawnFirepipe(obj, state);
                         }
                         else
                         {
@@ -567,7 +567,7 @@ void fn_80157CDC(int obj, int p2)
                 }
                 if ((*(u8*)(sub + 11) & 2) != 0)
                 {
-                    fn_80157B58(obj, p2);
+                    fn_80157B58(obj, state);
                 }
             }
         }
