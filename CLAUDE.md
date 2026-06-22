@@ -854,10 +854,22 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     `m2=flags&2` used twice across calls — un-naming m1 flipped the lot.) SCOPE: applies to RE-DERIVABLE values
     (bit-extract, field read, &-mask, global/deref address); does NOT apply to NON-re-derivable values (a
     u16-from-CALL conversion — inlining re-executes/regresses; that sub-case stays open, use #130 web-decouple
-    or class-move). DIAGNOSE: of the two swapped regs, which value does retail hold LOWER? Un-name THAT one if
-    it's re-derivable. decl-order is INERT (the classic tried-so-far); un-naming is the mover. So the kind-2
-    frontier is NO LONGER a wall — #130 (dim2roofrub) and #131 lived here, and now #107-un-name is the general
-    crack for the re-derivable majority. Still: the non-re-derivable (call-result) sub-case is open — banked.
+    or class-move). **BI-DIRECTIONAL (expgfx, dll_01D6 dll_1D6_update 99.86→100, FULL UNIT): the lever flips
+    EITHER way by web KIND — expression-temps color BELOW named-locals, so move whichever value needs to move by
+    flipping its naming:**
+    • target keeps it LOWER + ours has it NAMED → UN-NAME it (inline the defining expr) → expression-temp colors
+      lower. (CameraModeTestStrength m1=`flags&1`.)
+    • target keeps it HIGHER + ours has it INLINE/CSE'd → NAME it (`T x = expr;`) → named-local web colors
+      higher. (dll_1D6 `void* p28 = *(void**)((char*)model+0x28);` → r5, leaving the inline `flags1D` at r4.)
+    DIAGNOSE: of the two swapped regs, which value does retail hold LOWER vs HIGHER, and is each currently
+    named or inline? Flip the naming of the one that must MOVE to match its target reg height. decl-order is
+    INERT (class-pooled, not decl-ranked — the classic tried-so-far); NAMING-KIND is the mover. RE-DERIVABLE
+    values only (bit-extract/field/mask/deref); NON-re-derivable (call-result conversion) doesn't take it
+    (#130 web-decouple / class-move instead). This is now a proven SWEEP TOOL for the GPR-coloring near-miss
+    bucket (~35 fns at 99%+) — the kind-2 frontier is NO LONGER a wall (#130/#131 lived here; #107 name-up/
+    un-name-down by web kind is the general crack for the re-derivable majority). Still open: the
+    non-re-derivable call-result sub-case, and the #155 MULTI-USE global-base detour (a base held whole-fn
+    can't be un-named — that needs the #155 @lo-direct-into-saved core, the convergent multiplier).
     TRIED-SO-FAR (a launchpad to skip, NOT evidence of impossibility): decl-order/#61b, ternary↔if/else
     (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
     #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
@@ -1196,7 +1208,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (modellight modelLightChannels_applyGXControls, task #21 detour sweep) hit the SAME open sub-variant —
     global-into-saved-reg-via-scratch+mr → wants direct `addi rSaved`. Cracking THIS ONE #155 direct-materialization
     lever is the convergent multiplier: it un-caps both the detour hard-variants AND the kind-2 within-class-order
-    frontier. Highest-leverage open C-side nut.
+    frontier. Highest-leverage open C-side nut. SUB-LEVER — MATERIALIZATION-ORDER perturbation (flameguard,
+    dll_7B 99.21→99.41, +0.55 cumulative): when a #155 detour competes with a stack-addr/local web, PLACE the
+    global's neighbor (the other saved-reg web's def) to MATCH retail's emission order — e.g. move
+    `entries = buf.entries` to immediately after `base = global` so BOTH materialize up front (before the variant
+    block), matching retail's order → progressively REDUCES the coloring cascade even while the core detour
+    persists. (Pairs with the #5-split decl-init.) The CORE detour stays: base's first use is the CONDITIONAL
+    store `base[K]=…` (variant if/else) → MWCC materializes base into volatile r3 for the store + `mr` to saved,
+    retail materializes @lo DIRECTLY into the saved dest and stores via it. CORE TRIED+INERT (don't re-spend):
+    decl-order swap, #80 launder, opt_propagation off, local-copy. The @lo-direct-into-saved is the genuine open
+    core (needs the oracle source-form or a deeper reframe).
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
