@@ -4787,24 +4787,34 @@ u8 doEdges;
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            int m;
-            for (m = 4; m != 0; m--)
-            {
-                if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-                bit = (s16)(bit << 1);
-                pos += 0x50;
-            }
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
         }
         pos = 0;
         for (k = 2; k != 0; k--)
         {
-            int m;
-            for (m = 4; m != 0; m--)
-            {
-                if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-                bit = (s16)(bit << 1);
-                pos += 0x50;
-            }
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
         }
         tri = *(u8**)(blk + 0x50);
         triEnd = (u32)tri + *(u16*)(blk + 0x9a) * 0x14;
