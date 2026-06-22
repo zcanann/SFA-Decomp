@@ -19,7 +19,7 @@ extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
 extern f32 gRopeNodeMaxDistance;
 extern f32 gRopeNodeDamping;
-extern f32 gRopeNodeBoundsMargin;
+extern const f32 gRopeNodeBoundsMargin;
 
 
 extern void Camera_LoadModelViewMatrix(int unused0, int unused1, int obj, f32 scale, f32 unused,
@@ -608,11 +608,10 @@ void dfropenode_update(DFropenodeObject* obj)
             extra->maxZ = temp;
         }
         {
-            f32 m = gRopeNodeBoundsMargin;
-            extra->minX -= m;
-            extra->minZ -= m;
-            extra->maxX += m;
-            extra->maxZ += m;
+            extra->minX -= gRopeNodeBoundsMargin;
+            extra->minZ -= gRopeNodeBoundsMargin;
+            extra->maxX += gRopeNodeBoundsMargin;
+            extra->maxZ += gRopeNodeBoundsMargin;
         }
 
         baseX = obj->posX;
