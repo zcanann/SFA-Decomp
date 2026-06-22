@@ -606,10 +606,10 @@ typedef struct
 #pragma dont_inline on
 void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 {
-    int j;
     int i;
-    int val;
     int key;
+    int val;
+    int j;
     int h;
 
     h = 1;
