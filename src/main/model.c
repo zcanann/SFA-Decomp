@@ -2932,11 +2932,11 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
             int sv = *(s8*)(c + 0x63);
             if (sv & 1)
             {
-                h = (u8)(hm | 0x10);
+                h = (hm | 0x10) & 0xFF;
             }
             if (sv & 4)
             {
-                h = (u8)(h | 0x20);
+                h = (h | 0x20) & 0xFF;
             }
         }
     }
