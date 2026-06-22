@@ -836,11 +836,11 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                     }
                     else
                     {
-                        frac = 0.0f;
+                        frac = lbl_803E04E8;
                     }
-                    if (frac < 0.0f)
+                    if (frac < lbl_803E04E8)
                     {
-                        frac = 0.0f;
+                        frac = lbl_803E04E8;
                     }
                     if (frac >= lbl_803E0518)
                     {
