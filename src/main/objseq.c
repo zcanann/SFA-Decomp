@@ -1389,7 +1389,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         if (lbl_803DB720 == (s8)((ObjSeqState*)seq)->slot)
         {
             lbl_803DB728 = (int)((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
-            gObjSeqStreamStopped = seqStreamFn_8008023c((s8)((ObjSeqState*)seq)->slot) == 0;
+            gObjSeqStreamStopped = seqStreamFn_8008023c(*(s8*)&((ObjSeqState*)seq)->slot) == 0;
         }
         break;
     case 40:
