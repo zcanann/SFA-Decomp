@@ -705,8 +705,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     strides (e=i*28, vtx=i*64, vtxDesc=i*32, the latter two consumed as drawFn CALL ARGS), RETAIL's reducer
     orders the strides ASCENDING BY STRIDE VALUE (28→r27, 32→r28, 64→r29) while OURS orders them by
     CREATION order → the i*28↔i*64 registers SWAP. decl-order / comma-init / #136(a)/(b) all INERT (it's
-    the reducer's stride-register assignment, not source decl order). Live target: find the source that
-    makes the reducer assign strides ascending-by-value (or that reorders stride CREATION to match). The
+    the reducer's stride-register assignment, not source decl order). ✓MECHANISM PROVEN IN-TREE (validator
+    derive + waterfx apply): RELOCATE the stride exprs BEFORE the gate in DESCENDING value order (64 first →
+    highest) → the reducer assigns first-created→highest, and 28→r27 / 32→r28 LANDED in-tree (the ordering
+    works!). ⚠️ BUT a NAMED GLOBAL-base stride local before the gate LOSES strength-reduction (CSE-confuses with
+    the 28-stride → drawFn arg emits `add r3,r0,r27`, no `addi 64`) → regressed 95.98→89.24, reverted. The
+    isolation derive used a LOCAL base (reduces fine relocated); the in-tree GLOBAL base needs a
+    REDUCTION-PRESERVING form: the #143/#155 INDEX form — pass `&((T*)glob)[i]` index expressions (NOT named
+    pre-gate locals), the 64-index evaluated FIRST → keeps the direct-base reduction AND orders 64 high. Live
+    target: confirm the index form holds reduction + the 28→r27 ordering together. The
     counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
@@ -1150,10 +1157,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     among the loop body's FP ops → its bias web is created earlier → colors at a LOWER fXX (retail's f29 vs our
     f31). The prior forms missed it because they moved the CONSTS or hoisted the conversion OUT of the loop —
     NOT its position WITHIN the body. So naming the bias being build-domain (no C names it) is moot — you DON'T
-    need to name it; reposition the conversion. ⚠️ IN-TREE PENDING (waterfx, staffFn_80170380): moving the
-    conversion shifts the bias AND the consts around it, so find the position reproducing retail's FULL FP
-    arrangement (bias f29 AND consts at their regs), not just "bias moved" — match retail's conversion
-    computation-order. Integrate as SOLVED + project-wide batch once confirmed in-tree. (DeepDive2: dim2icicle 99.92,
+    need to name it; reposition the conversion. ⚠️ IN-TREE: blind "move to loop-body TOP" REGRESSED staffFn
+    95.91→84.94 (reverted) — it reshuffled ALL the loop's FP ops (fcos16/amp/sum/products), breaking far more
+    than the bias. The mechanism (position→bias reg) holds, but the position must be SURGICAL: read RETAIL's
+    loop FP-op computation order and slot the conversion at the EXACT position retail computes it (relative to
+    the other FP ops), NOT the top. So it's a per-fn surgical match of retail's computation order, not a blanket
+    "move early." Integrate as SOLVED + project-wide batch once a surgical placement confirms in-tree. (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
     REFINEMENT (expgfx, strong evidence — narrows WHEN it bites + which C routes are explored so far): (1) the bias
