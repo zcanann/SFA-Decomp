@@ -1934,6 +1934,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
 }
 #pragma dont_inline reset
 
+#pragma opt_propagation off
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
     ExpgfxSourceObject* source;
@@ -1998,6 +1999,7 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
 
     return result;
 }
+#pragma opt_propagation reset
 
 #pragma scheduling on
 #pragma peephole on
