@@ -2581,14 +2581,14 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
     descEnd = &gTrackBlockDescriptors[20];
     gTrackTriangleBufferEnd = gTrackTriangleBuffer + 0x16440;
     masked = a & 0xffff;
-    if ((masked & 0x10) == 0)
+    if ((masked & 0x10) != 0)
     {
-        cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27,
-                                       f30, f28, f26, a, b);
+        cur = gTrackTriangleBuffer;
     }
     else
     {
-        cur = gTrackTriangleBuffer;
+        cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27,
+                                       f30, f28, f26, a, b);
     }
     if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
     {
