@@ -391,9 +391,6 @@ extern int cameraGetTargetType(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int trickyBitFn_801241cc(int bit, int x);
 extern int getHudHiddenFrameCount(void);
-extern void pauseMenuDrawStatus(void);
-extern void cMenuUpdateAnims(void);
-extern void minimapFn_8012310c(void);
 
 
 

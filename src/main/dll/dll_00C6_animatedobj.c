@@ -1142,47 +1142,22 @@ LAB_801725bc:
     return;
 }
 
-void staff_func0F(void);
 
-void staff_func0B(void);
 
-void staff_setScale(void);
 
-void staff_render(void);
 
-void staff_hitDetect(void);
 
-void fireball_release(void);
 
-void fireball_initialise(void);
 
-void flamethrowerspe_modelMtxFn(void);
 
-void flamethrowerspe_free(void);
 
-void flamethrowerspe_hitDetect(void);
 
-void flamethrowerspe_release(void);
 
-void flamethrowerspe_initialise(void);
 
-void shield_hitDetect(void);
 
-void shield_release(void);
 
-void shield_initialise(void);
 
 int animatedobj_getExtraSize(void) { return 0x140; }
-int dim2roofrub_getExtraSize(void);
-int depthoffieldpoint_getExtraSize(void);
-int staff_getExtraSize(void);
-int staff_getObjectTypeId(void);
-int fireball_getExtraSize(void);
-int fireball_getObjectTypeId(void);
-int flamethrowerspe_getExtraSize(void);
-int flamethrowerspe_getObjectTypeId(void);
-int shield_getExtraSize(void);
-int shield_getObjectTypeId(void);
 
 void dim2roofrub_free(int* obj);
 
@@ -1191,7 +1166,6 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -1589,17 +1563,13 @@ void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
 void gcbaddieshield_update(int* obj);
 
-void fireball_free(int* obj);
 
-void depthoffieldpoint_init(int* obj);
 
-void depthoffieldpoint_update(int* obj);
 
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-void flamethrowerspe_init(int* obj, int* params);
 
 void animatedobj_free(int* obj, int seqFlag)
 {
@@ -1622,7 +1592,6 @@ void animatedobj_free(int* obj, int seqFlag)
 
 void dll_F7_init(int* obj, int* params);
 
-void fireball_hitDetect(int* obj);
 
 void animatedobj_init(int* obj, int* params)
 {
@@ -1670,7 +1639,6 @@ void animatedobj_init(int* obj, int* params)
     Obj_SetModelRenderOpAlpha(obj, 0xff);
 }
 
-void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
 
@@ -1813,9 +1781,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void fireball_init(int* obj);
 
-void fireball_update(int* obj);
 
 void shield_update(int* obj);
 
