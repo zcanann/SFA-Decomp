@@ -29,7 +29,7 @@ typedef struct LaserBeamState
     f32 targetX; /* 0x40 */
     u8 pad44[4];
     f32 targetZ; /* 0x48 */
-    u8 unk4C;
+    u8 sourceAttached; /* 0x4c: 1 while the modgfx emitter source is attached; cleared on detachSource */
     u8 active; /* 0x4d */
     u8 beamKind; /* 0x4e: 30/1/other texture pick */
 } LaserBeamState;

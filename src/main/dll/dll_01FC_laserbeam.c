@@ -378,10 +378,10 @@ void LaserBeam_update(int obj2)
                 tt = *(f32*)&lbl_803E5D30 - a;
                 tt = lbl_803E5D34 * tt;
                 b->unk28 = (s16)(int)tt;
-                if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->unk4C == 1)
+                if (!(lat < lbl_803E5D38 && lat > lbl_803E5D3C) && b->sourceAttached == 1)
                 {
                     (*gModgfxInterface)->detachSource((void*)obj2);
-                    b->unk4C = 0;
+                    b->sourceAttached = 0;
                 }
                 if (lat < range && lat > -range)
                 {
@@ -440,10 +440,10 @@ void LaserBeam_update(int obj2)
         {
             (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
         }
-        if (b->unk4C == 1)
+        if (b->sourceAttached == 1)
         {
             (*gModgfxInterface)->detachSource((void*)obj2);
-            b->unk4C = 0;
+            b->sourceAttached = 0;
         }
     }
     fz = lbl_803E5D10;
