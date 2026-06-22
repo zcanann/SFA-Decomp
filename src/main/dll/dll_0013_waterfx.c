@@ -96,7 +96,7 @@ int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist)
     return 0;
 }
 
-void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2)
+void waterfx_spawnRipple(f32 x, f32 y, f32 z, s16 rotParam, f32 w, int intensity)
 {
     int i = 0;
     WaterEntry7* p = gWaterfxRipplePool;
@@ -142,21 +142,21 @@ void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2)
     q->u = 0x7f;
     q->v = 0;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->w = d;
+    e->w = w;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->active = 0xff;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->x = a;
+    e->x = x;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->y = b;
+    e->y = y;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->z = c;
+    e->z = z;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->f14 = p1;
+    e->f14 = rotParam;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
     e->f10 = gWaterfxRippleScale;
     e = (WaterEntry7*)gWaterfxRipplePool + i;
-    e->f18 = lbl_803DF2E8 * p2;
+    e->f18 = lbl_803DF2E8 * intensity;
     gWaterfxRippleCount = (void*)((int)gWaterfxRippleCount + 1);
 }
 
@@ -308,7 +308,7 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
     return count;
 }
 
-void waterfx_func05(int p1, int p2)
+void waterfx_func05(int obj, int renderParam)
 {
     int i;
     f32 thr;
@@ -328,7 +328,7 @@ void waterfx_func05(int p1, int p2)
             WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             if (e->active != 0)
             {
-                setTextColor(p1, 0xff, 0xff, 0xff, (u8)e->active);
+                setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
                 dp.x = e->x;
                 dp.y = e->y;
                 dp.z = e->z;
@@ -336,7 +336,7 @@ void waterfx_func05(int p1, int p2)
                 dp.f8 = e->f14;
                 dp.fc = 0;
                 dp.fa = 0;
-                Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
                 drawFn_8005cf8c((char*)gWaterfxRippleVtx + o64, (char*)gWaterfxRippleVtxDesc + o32, 2);
             }
@@ -393,7 +393,7 @@ void waterfx_func05(int p1, int p2)
             int o32 = i * 0x20;
             if (g->active != 0 && g->f18 == 0)
             {
-                setTextColor(p1, 0xff, 0xff, 0xff, (u8)g->active);
+                setTextColor(obj, 0xff, 0xff, 0xff, (u8)g->active);
                 dp.x = g->x;
                 dp.y = g->y;
                 dp.z = g->z;
@@ -401,7 +401,7 @@ void waterfx_func05(int p1, int p2)
                 dp.f8 = g->f16;
                 dp.fc = 0;
                 dp.fa = 0;
-                Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
                 drawFn_8005cf8c((char*)gWaterfxWakeVtx + o64, (char*)gWaterfxWakeVtxDesc + o32, 2);
             }

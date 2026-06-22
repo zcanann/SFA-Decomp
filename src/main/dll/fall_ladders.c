@@ -238,9 +238,9 @@ void fn_80154328(int obj, int p)
 
 #pragma optimization_level 1
 #pragma peephole on
-void fn_801544E8(int obj, u8* state, int p3, int p4)
+void fn_801544E8(int obj, u8* state, int unused, int cmd)
 {
-    if (p4 == 17 || p4 == 16) return;
+    if (cmd == 17 || cmd == 16) return;
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29A4)
     {
         *(int*)&((BaddieState*)state)->reactionFlags |= 8;
