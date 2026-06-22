@@ -424,6 +424,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     into the PARAM pool (low)** — independent of use spelling. Read target's prologue to RECOVER the
     original param type (per-fn cast noise on an int obj is then faithful). `#pragma
     optimization_level 2` can land the typed-pointer form even in call-bearing fns.
+    DISCRIMINATOR (use the retype as a 1-build TEST to split ★#147 kind-1 vs kind-2): retype the
+    suspect `u8*` param to the family struct pointer and rebuild. If the params MOVE up into the copy
+    pool → it WAS class-reclassification (kind 1, tractable) — keep the retype. If BYTE-IDENTICAL/INERT
+    (`u8*` and `StructPtr` class the SAME because the params are ALREADY copy-pool-classed alongside the
+    copy locals) → it's the within-class ORDER kind (kind 2): retail orders params-above-locals, ours
+    locals-above-params. The lever there is NOT the value itself (decl-order/scope/un-name/register/
+    launder/retype all inert on the value) — it's perturbing the NEIGHBOR web that occupies the param's
+    target slot (neighbor-liveness / creation-order). A clean source form is ASSUMED to exist; this is the
+    open within-class-order shape (#130/#147 record: it falls to the right reframe). (flameguard:
+    animobjd2 fn_8013E0D0 — retype inert, ruled out kind-1, banked with the neighbor-perturbation lead.)
 127. **`extern const f32 lbl_X;` = a store-aliasing exemption** — cross-statement load CSE without
     naming a local (a named local CSEs too but flips the FP pair). A/B per unit (check writers
     first); can CSE-overshoot a sibling fn (fix per-site with the #81 launder, don't revert const).
