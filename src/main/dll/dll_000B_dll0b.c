@@ -1580,7 +1580,7 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     int j;
     ModgfxVertexData* slot;
 
-    dx = (s32)(lbl_803DF438 * (in[1] * gModgfxMotionStep));
+    dx = (s32)(*(f32*)&lbl_803DF438 * (in[1] * gModgfxMotionStep));
     dy = (s32)(lbl_803DF438 * (in[2] * gModgfxMotionStep));
 
     cur = state->vertexBuffers[state->activeVertexBufferIndex];
