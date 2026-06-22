@@ -2340,12 +2340,12 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 #pragma opt_strength_reduction off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
+    int n = 0;
     int outCount = 0;
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
-    int n;
 
     gShadowVisibleCount = 0;
-    for (n = 0; n < count; n++)
+    for (; n < count; n++)
     {
         int vis = 1;
         int i = n * 3;
