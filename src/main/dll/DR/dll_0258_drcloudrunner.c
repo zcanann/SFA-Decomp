@@ -49,7 +49,7 @@ typedef struct DRCloudRunnerState
     f32 unkB50;
     u8 padB54[0xBAE - 0xB54];
     s16 unkBAE;
-    s16 unkBB0;
+    s16 altMoveEnabled; /* 0xBB0: from placement+0x1a; when set, move 0x203 switches to alternate move 0x20c */
     u8 padBB2[0xBB4 - 0xBB2];
     u8 spawnVariant;
     u8 padBB5[0xBC4 - 0xBB5];
@@ -62,7 +62,7 @@ STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, enableGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, flagsAD5) == 0xAD5);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkB50) == 0xB50);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBAE) == 0xBAE);
-STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBB0) == 0xBB0);
+STATIC_ASSERT(offsetof(DRCloudRunnerState, altMoveEnabled) == 0xBB0);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, spawnVariant) == 0xBB4);
 STATIC_ASSERT(offsetof(DRCloudRunnerState, unkBC4) == 0xBC4);
 STATIC_ASSERT(sizeof(DRCloudRunnerState) == 0xBC8);
@@ -262,7 +262,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 0x203:
-        if (((DRCloudRunnerState*)inner)->unkBB0 != 0)
+        if (((DRCloudRunnerState*)inner)->altMoveEnabled != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0x20c, lbl_803E83A4, 0);
             ((CloudRunnerState*)p2)->baddie.moveSpeed = lbl_803E8408;
@@ -419,7 +419,7 @@ void DR_CloudRunner_init(int obj, int p2)
     inner = *(int*)&((GameObject*)obj)->extra;
     ((DRCloudRunnerState*)inner)->spawnVariant = *(u8*)((char*)p2 + 0x19);
     ((DRCloudRunnerState*)inner)->unkBAE = 5;
-    ((DRCloudRunnerState*)inner)->unkBB0 = *(s16*)((char*)p2 + 0x1a);
+    ((DRCloudRunnerState*)inner)->altMoveEnabled = *(s16*)((char*)p2 + 0x1a);
     ((DRCloudRunnerState*)inner)->unkBC4 = -1;
     ((DRCloudRunnerState*)inner)->unkB50 = (f32) * (s16*)((char*)p2 + 0x1c) / lbl_803E8414;
     if (((GameObject*)obj)->anim.modelState != NULL)
