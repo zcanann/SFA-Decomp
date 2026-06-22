@@ -2126,7 +2126,7 @@ void cMenuRun(void)
                     if (vel > 0)
                     {
                         int count;
-                        gCMenuScrollVel = (s16)(vel - 1);
+                        gCMenuScrollVel -= 1;
                         count = gCMenuItemCount;
                         if (count > 1)
                         {
@@ -2150,7 +2150,7 @@ void cMenuRun(void)
                     else
                     {
                         int count;
-                        gCMenuScrollVel = (s16)(vel + 1);
+                        gCMenuScrollVel += 1;
                         count = gCMenuItemCount;
                         if (count > 1)
                         {
