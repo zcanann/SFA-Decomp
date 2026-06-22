@@ -88,7 +88,7 @@ typedef struct HighTopRuntime
     f32 pathPoint0Y;
     f32 pathPoint0Z;
     u8 padB84[0xc16 - 0xb84];
-    s16 unkC16;
+    s16 turnRateThreshold;
     s16 airMeterRemaining; /* seeded from placement airMeterCapacity; -=1 on hit; 0 -> airMeterSetShutdown */
     u8 padC1A[2];
     f32 lookTargetX;
@@ -113,7 +113,7 @@ typedef struct HighTopRuntime
 
 STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
 STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
-STATIC_ASSERT(offsetof(HighTopRuntime, unkC16) == 0xC16);
+STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
 
 typedef struct HighTopObject
@@ -441,7 +441,7 @@ void hightop_init(void* obj, u8* arg)
     ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
-    runtime->unkC16 = 5;
+    runtime->turnRateThreshold = 5;
     *(s8*)&runtime->unkC4B = -1;
     node = *(int**)&((GameObject*)obj)->anim.modelState;
     if (node != 0)
@@ -946,7 +946,7 @@ int hightop_stateHandler02(int obj, int p, f32 t)
     {
         absd = -d336;
     }
-    if (absd > state->unkC16)
+    if (absd > state->turnRateThreshold)
     {
         conv = (int)(gHighTopDegToAngle * ((f32)d336 * t));
         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + ((s16)conv >> 5));
