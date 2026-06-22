@@ -12,7 +12,7 @@
 typedef struct DrcagewithPlacement
 {
     u8 pad0[0x5 - 0x0];
-    u8 unk5;
+    u8 flags; /* 0x5: low flag bits copied into spawned object (mask 0x18) */
     u8 pad6[0x1E - 0x6];
     s16 openedGameBit; /* 0x1E: game bit set when this cage is opened */
 } DrcagewithPlacement;
@@ -92,7 +92,7 @@ void drcagewith_hitDetect(int obj)
             spawned = Obj_AllocObjectSetup(32, 1143);
             *(u8*)(spawned + 4) = 2;
             *(u8*)(spawned + 5) = 1;
-            *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->unk5 & 0x18));
+            *(u8*)(spawned + 5) = (u8)(*(u8*)(spawned + 5) | (((DrcagewithPlacement*)placement)->flags & 0x18));
             ((GameObject*)spawned)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)spawned)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
             ((GameObject*)spawned)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
