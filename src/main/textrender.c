@@ -1636,6 +1636,7 @@ void gameTextInitFn_8001a234(void)
 
 void gameTextRun(void)
 {
+    GameTextSlot* cmd;
     u8* gameTextBase;
     GameTextLoadSlot* slot;
     GameTextLoadSlot* freeSlot;
@@ -1644,13 +1645,13 @@ void gameTextRun(void)
     int dirId;
     int languageId;
     int i;
-    GameTextSlot* cmd;
     u8* textWindow;
     int color;
     double fadeLimit;
     double zero;
 
     gameTextBase = gGameTextBase;
+    cmd = (GameTextSlot*)(gameTextBase + 0xbc0);
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
@@ -1775,7 +1776,6 @@ void gameTextRun(void)
     lbl_803DC9AA = 0;
     lbl_803DC9A8 = 0;
 
-    cmd = (GameTextSlot*)(gameTextBase + 0xbc0);
     i = lbl_803DC9C8;
     while (i-- != 0)
     {
