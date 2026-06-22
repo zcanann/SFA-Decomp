@@ -390,7 +390,7 @@ u8 trickyBallMove(u8* obj)
     else
     {
         PSVECSubtract((f32*)(obj + 0x0c), state->prevPos, collisionNormal);
-        speed = restitution;
+        speed = restitution = gSidekickBallRestitution;
         hasCollisionNormal = 1;
         movedFromCache = 1;
     }
