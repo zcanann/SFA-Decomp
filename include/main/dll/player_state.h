@@ -238,7 +238,7 @@ typedef struct PlayerState {
     f32 warpDeltaX; /* local-space displacement to the warp target (start->target); paired with warpStart for the move/camera lerp */
     f32 warpDeltaY;
     f32 warpDeltaZ;
-    u8 unk6CC;
+    u8 warpKind; /* 0x6cc: warp-point kind from the pad/warp vtable query; ==1 exits +90deg, else -90deg */
     u8 pad6CD[0x6D0 - 0x6CD];
     s32 stickX;
     s32 stickY;

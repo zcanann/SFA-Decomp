@@ -6023,7 +6023,7 @@ int fn_8029F108(int obj, int state)
         inner->warpStartY = t;
         inner->warpStartZ = pos2[2];
         inner->warpDeltaY = ((GameObject*)obj)->anim.localPosY - t;
-        inner->unk6CC = (u8)kind;
+        inner->warpKind = (u8)kind;
         ((GameObject*)obj)->anim.flags &= ~0x8;
         ((GameObject*)obj)->anim.activeMove = -1;
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7FE8;
@@ -6067,7 +6067,7 @@ int fn_8029F108(int obj, int state)
                                        &((GameObject*)obj)->anim.localPosX, &localPt,
                                        &((GameObject*)obj)->anim.localPosZ,
                                        (int)((GameObject*)obj)->anim.parent);
-        if (inner->unk6CC == 1)
+        if (inner->warpKind == 1)
         {
             inner->targetYaw += 0x4000;
             inner->yaw = inner->targetYaw;
