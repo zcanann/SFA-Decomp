@@ -80,25 +80,25 @@ typedef struct XyzAnimatorPlacement {
  * at 0x29C. 0x0-0x68 region untyped (only float trio observed). */
 typedef struct DimBossIceSmashState {
     u8 unk0[0x68 - 0x0];
-    f32 unk68;
-    f32 unk6C;
-    f32 unk70;
+    f32 homingDirX;     /* 0x68: surface/contact normal used by homing reflect */
+    f32 homingDirY;
+    f32 homingDirZ;
     u8 unk74[0x261 - 0x74];
-    s8 unk261;
+    s8 homingEnabled;   /* 0x261: gate for the homing-reflection velocity block */
     u8 unk262[0x26C - 0x262];
-    f32 unk26C;
-    f32 unk270;
-    f32 unk274;
-    f32 unk278;
-    f32 unk27C;
-    f32 unk280;
-    f32 unk284;
-    f32 unk288;
-    f32 unk28C;
-    f32 unk290;
-    f32 unk294;
-    f32 unk298;
-    s16 unk29C;
+    f32 spawnScaleX;    /* 0x26C: spawn offset scaled by rootMotionScale */
+    f32 spawnScaleY;
+    f32 spawnScaleZ;
+    f32 angVelX;        /* 0x278: angular velocity (integrated into rot) */
+    f32 angVelY;
+    f32 angVelZ;
+    f32 angAccelX;      /* 0x284: angular acceleration (integrates angVel) */
+    f32 angAccelY;
+    f32 angAccelZ;
+    f32 accelX;         /* 0x290: linear acceleration (integrates velocity) */
+    f32 accelY;
+    f32 accelZ;
+    s16 timer;          /* 0x29C: frame timer vs placement lifetime */
     u8 unk29E[0x2A0 - 0x29E];
 } DimBossIceSmashState;
 
