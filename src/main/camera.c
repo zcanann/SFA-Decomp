@@ -694,8 +694,9 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     u32 clipped;
 
     clipped = getScreenResolution();
+    viewportY = clipped >> 16;
     height = clipped;
-    clipped = clipped >> 16;
+    clipped = viewportY;
     viewportY = gCameraViewportYOffset + 6;
     clipped = clipped - viewportY;
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
