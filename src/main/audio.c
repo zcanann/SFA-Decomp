@@ -2296,7 +2296,6 @@ static inline MusicTrigger* Music_FindTriggerById(int id)
 
 void Music_Trigger(int id, int arg)
 {
-    extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
     MusicTrigger* trigger;
     MusicChannel* channel;
     int i;

@@ -175,7 +175,6 @@ void dfplevelcontrol_update(int obj)
     extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
     extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
     extern s16 lbl_803DC180;
-    extern f32 timeDelta;
     DfpLevelControlState* state = ((GameObject*)obj)->extra;
     char* player;
     u8 b1;
@@ -229,9 +228,7 @@ void dfplevelcontrol_update(int obj)
 
 void fn_80204098(int obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void ObjMsg_SendToObject(void*, int, int, int);
     extern u8 lbl_803DC183;
     extern s16 lbl_80329848[];
     DfpLevelControlState* state = ((GameObject*)obj)->extra;

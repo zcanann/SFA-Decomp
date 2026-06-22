@@ -120,7 +120,6 @@ void dfpobjcreator_update(int obj)
 
     extern void* Obj_AllocObjectSetup(int size, int b);
     extern u8*Obj_SetupObject(u8*, int, int, int, int);
-    extern f32 timeDelta;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     DfpObjCreatorState* state = ((GameObject*)obj)->extra;
     u8* setup;

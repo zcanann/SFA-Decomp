@@ -84,7 +84,6 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     extern int mapGetDirIdx(int idx);
     extern int lockLevel(s32 val, int idx);
     extern void warpToMap(int idx, s8 transType);
-    extern MapEventInterface** gMapEventInterface;
     int blob = *(int*)&((GameObject*)obj)->extra;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     int i;

@@ -166,9 +166,6 @@ void dimtruthhornice_init(int* obj, int* def);
 
 void dim2pathgenerator_update(int* obj)
 {
-    extern u8 Obj_IsLoadingLocked(void);
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-    extern void* Obj_AllocObjectSetup(int size, int b);
     int* def;
     int* extra = ((GameObject*)obj)->extra;
     int toggle;
