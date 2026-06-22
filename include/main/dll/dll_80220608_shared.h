@@ -628,7 +628,7 @@ STATIC_ASSERT(offsetof(VortexSetup, invertGameBit) == 0x1e);
 STATIC_ASSERT(offsetof(VortexSetup, activeGameBit) == 0x20);
 
 extern f32 lbl_803E73E0;
-extern f32 lbl_803E73D0;
+extern const f32 lbl_803E73D0;
 extern f32 lbl_803E73D4;
 extern f32 lbl_803E73D8;
 extern f32 gVortexRadiusParamScale;

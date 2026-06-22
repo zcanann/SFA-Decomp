@@ -17,10 +17,10 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 dt;
     ObjTextureRuntimeSlot* texture;
     int model;
-    f32 objScale;
     f32 objZ;
-    u8 objAlpha;
+    f32 objScale;
     s16 objRotY;
+    u8 objAlpha;
     u8 i;
     f32 particleArgs[6];
     u8 hudHidden;
@@ -51,7 +51,11 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            u8 reverse = setup->reverseTextureScroll != 0 ? 1 : 0;
+            u8 reverse;
+            if (setup->reverseTextureScroll != 0)
+                reverse = 1;
+            else
+                reverse = 0;
             if (setup->invertGameBit != -1 && GameBit_Get(setup->invertGameBit) != 0)
             {
                 reverse = !reverse;
@@ -134,7 +138,10 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
-            ((GameObject*)obj)->anim.localPosY = objZ - radiusScaleDiv * state->radiusScale[i] * state->alpha;
+            {
+                f32 r = radiusScaleDiv * state->radiusScale[i];
+                ((GameObject*)obj)->anim.localPosY = objZ - r * state->alpha;
+            }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
@@ -175,7 +182,10 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject*)obj)->anim.rootMotionScale = state->alpha * (state->radiusScale[i] * objScale);
             *(u8*)(obj + 0x37) =
                 state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
-            ((GameObject*)obj)->anim.localPosY = radiusScaleDiv * state->radiusScale[i] * state->alpha + objZ;
+            {
+                f32 r = radiusScaleDiv * state->radiusScale[i];
+                ((GameObject*)obj)->anim.localPosY = r * state->alpha + objZ;
+            }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
