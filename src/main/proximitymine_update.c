@@ -125,9 +125,9 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
 
 typedef struct MineLaunchParams
 {
-    s16 angle;
-    s16 unk2;
-    s16 unk4;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
     f32 scale;
     f32 x;
     f32 y;
@@ -273,9 +273,9 @@ void proximitymine_update(ProximityMineObject* obj)
                 params.y = zero;
                 params.z = zero;
                 params.scale = lbl_803E6778;
-                params.unk4 = 0;
-                params.unk2 = 0;
-                params.angle = obj->angle;
+                params.rotZ = 0;
+                params.rotY = 0;
+                params.rotX = obj->angle;
                 vecRotateZXY(&params, &obj->velocityX);
                 Sfx_PlayFromObject((u32)obj, 0xf0);
             }
