@@ -213,11 +213,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
 
     if (source != NULL)
     {
-        if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0))
-        {
-            memcpy(destination, source, sampleCount << 2);
-        }
-        else
+        if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.internalState == 2) && (lbl_803A5D60.audioExists != 0))
         {
             do
             {
@@ -292,12 +288,12 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
             }
             while (sampleCount != 0);
         }
+        else
+        {
+            memcpy(destination, source, sampleCount << 2);
+        }
     }
-    else if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0))
-    {
-        memset(destination, 0, sampleCount << 2);
-    }
-    else
+    else if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.internalState == 2) && (lbl_803A5D60.audioExists != 0))
     {
         do
         {
@@ -366,6 +362,10 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
             }
         }
         while (sampleCount != 0);
+    }
+    else
+    {
+        memset(destination, 0, sampleCount << 2);
     }
 }
 
