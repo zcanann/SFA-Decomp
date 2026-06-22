@@ -5,7 +5,7 @@
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 airMeterMax;
     u8 pad1C[0xB18 - 0x1C];
     f32 unkB18;
     f32 unkB1C;
@@ -463,7 +463,7 @@ void DR_EarthWarrior_func17(int obj, int param)
         EarthWarriorState* inner2 = ((GameObject*)obj)->extra;
         int p = *(int*)&((GameObject*)obj)->anim.placementData;
         ((ByteFlags*)&inner2->sub.flags994)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)p)->unk1A, 0x5cf);
+        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement*)p)->airMeterMax, 0x5cf);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         GameBit_Set(0x7bc, 1);
         GameBit_Set(0x7d4, 0);

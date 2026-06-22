@@ -34,7 +34,7 @@ typedef struct BossdrakorPlacement
 {
     u8 pad0[0x19 - 0x0];
     u8 unk19;
-    s16 unk1A;
+    s16 airMeterMax;
     s16 unk1C;
     s16 defeatedGameBit;
 } BossdrakorPlacement;
@@ -851,14 +851,14 @@ void bossdrakor_init(int obj, BossdrakorPlacement* init)
     {
         init->unk19 = 0xa;
     }
-    if (init->unk1A <= 0)
+    if (init->airMeterMax <= 0)
     {
-        init->unk1A = 0x1e;
+        init->airMeterMax = 0x1e;
     }
     ((BossDrakorState*)inner)->unk0C = 0;
     ((DrakorFlags*)((char*)inner + 0x198))->b80 = 0;
     ((BossDrakorState*)inner)->unk00 = (f32)(u32)init->unk19;
-    ((BossDrakorState*)inner)->airMeterHandle = init->unk1A;
+    ((BossDrakorState*)inner)->airMeterHandle = init->airMeterMax;
     fz = lbl_803E6510;
     ((BossDrakorState*)inner)->attackTimerDuration = fz;
     ((BossDrakorState*)inner)->moveState = 0;
