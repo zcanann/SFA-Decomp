@@ -428,8 +428,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     WITHIN-CLASS ORDER RULE (probe-pinned — "decl-order inert" is only HALF true): definition order DOES
     set the within-class home for REORDERABLE defs. Field-reads / up-front loads at the function top color
     FIRST-declared → HIGHEST reg (DESCENDING: `int x=s->a,y=s->b,z=s->c` → x=r31,y=r30,z=r29; reverse the
-    decl order to swap the homes — verified). Call-results / spread defs color creation-order ASCENDING
-    (last → r31) and are PINNED by the call structure (you can't reorder the calls, so decl-order IS inert
+    decl order to swap the homes — verified). Call-results / spread defs color in creation-order, but the
+    DIRECTION is CONSUMER-DEPENDENT (lead+validator reproduced, GC/2.0 -O4,p — do NOT blindly assume last→r31):
+    three call results live across a barrier, consumed by STORES/general-use → ASCENDING (first-created→r29,
+    last-created→r31); consumed as ARGS to a LATER CALL → DESCENDING (first-created→r31, last→r29 — the
+    allocator biases toward the arg-reg assignment a→r3,b→r4,c→r5). So READ the target asm for the actual
+    direction before predicting a reg; the call-arg-consumed case is common and flips the prediction. Either
+    way they're PINNED by the call structure (you can't reorder the calls, so decl-order IS inert
     THERE — that's the only place it's inert; use #130/#107 web-decouple). #5 holds exactly: DECL sets the
     home, INIT order sets only the load EMISSION order. So for a within-class swap of TOP-LOADED/reorderable
     values, REORDER THE DECLS first (cheap, real lever); reach for #130/#107 only for call-result/computed webs.
