@@ -2790,7 +2790,7 @@ int ObjSeq_update(u8* obj, f32 t)
             }
             else
             {
-                *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3740) = (f32)((ObjSeqState*)seq)->curFrame;
+                ((f32*)(base + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
                 return 0;
             }
         }
@@ -3097,10 +3097,10 @@ int ObjSeq_update(u8* obj, f32 t)
             {
                 *(s16*)(base + slot * 2 + 0x3694) = ((ObjSeqState*)seq)->curFrame;
                 (base + (s8)((ObjSeqState*)seq)->slot)[0x338c] = 2;
-                *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3740) = (f32)((ObjSeqState*)seq)->curFrame;
+                ((f32*)(base + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
             }
             slot = (s8)((ObjSeqState*)seq)->slot;
-            if (lbl_803DEFF0 == *(f32*)(base + slot * 4 + 0x3740))
+            if (lbl_803DEFF0 == ((f32*)(base + 0x3740))[slot])
             {
                 if (lbl_803DB724 == slot)
                 {
@@ -3117,8 +3117,8 @@ int ObjSeq_update(u8* obj, f32 t)
                         }
                     }
                 }
-                *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3740) =
-                    step + *(f32*)(base + (s8)((ObjSeqState*)seq)->slot * 4 + 0x3894);
+                ((f32*)(base + 0x3740))[(s8)((ObjSeqState*)seq)->slot] =
+                    step + ((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
             }
         }
 
@@ -4511,9 +4511,9 @@ void objSeq_onMapSetup(void)
             marks2[0x3590 - 0x338c] = 0;
             handles2[0] = 0;
             marks2[0] = 0;
-            marks2++;
-            handles2++;
             modes2++;
+            handles2++;
+            marks2++;
         }
     }
 

@@ -457,7 +457,7 @@ void worldplanet_update(int obj)
                         char* nseg = WorldObj_GetPathPointWork(pstate, ni);
                         dyaw = getAngle(*(f32*)(nseg + 0x10) - x1, *(f32*)(nseg + 0x18) - z1);
                     }
-                    dyaw = dyaw - yaw;
+                    dyaw = dyaw - (u16)yaw;
                     if (dyaw > 0x8000)
                     {
                         dyaw -= 0xffff;

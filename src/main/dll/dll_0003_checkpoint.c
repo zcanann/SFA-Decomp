@@ -811,10 +811,10 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                 dist2 = offs2 + (cos2 * obj->anim.localPosX + sin2 * obj->anim.localPosZ);
                 distA = offs1 + (cos1 * n->posX + sin1 * n->posZ);
                 distB = offs2 + (cos2 * cp->posX + sin2 * cp->posZ);
-                if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8))
+                if (((distA <= 0.0f && dist1 <= 0.0f) || (distA > 0.0f && dist1 > 0.0f))
                     &&
-                    ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 >
-                        lbl_803E04E8)))
+                    ((distB <= 0.0f && dist2 <= 0.0f) || (distB > 0.0f && dist2 >
+                        0.0f)))
                 {
                     dx = cp->posX - n->posX;
                     dy = cp->posY - n->posY;
@@ -835,11 +835,11 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                     }
                     else
                     {
-                        frac = lbl_803E04E8;
+                        frac = 0.0f;
                     }
-                    if (frac < lbl_803E04E8)
+                    if (frac < 0.0f)
                     {
-                        frac = lbl_803E04E8;
+                        frac = 0.0f;
                     }
                     if (frac >= lbl_803E0518)
                     {
