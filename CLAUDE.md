@@ -814,24 +814,36 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     so prefer the no-reorder form (compound / in-place) even when it leaves a base reg "wrong" — a lower
     raw-instr-distance variant can score WORSE if it reorders. The base→r0 multi-use tail (b) == the same nut
     as SaveGame_gplayAddTime (99.41% pure 2-reg base/idx eval-order swap), still open as a true #108 residual.
-145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch is
-    almost always recoverable source, not coloring.** Two confirmed sub-cases, both clean 2002-C fixes:
+145. **IMPORT-ARTIFACT SWEEP (the highest-yield first pass on a fresh unit): a `stwu` frame-size mismatch has
+    THREE causes — two are recoverable source, the third is a coloring trap. CHECK WHICH before investing.**
     (a) **Import-UNDERSIZED matrix/array** (#67b) — a `mtx44Transpose`/4x4 op fed a `f32 m[12]` that must be
     `[16]`; the −16B frame is the tell (dll_0B_func09: mtxB[12]→[16], frame −256→−272). (b) **DROPPED function
     ARG surfacing as a write-only/dead local** — a filled-but-never-read local (identity quaternion `f32 q[4]`)
     is DSE'd, shrinking the frame; it was the `spawnObject` `extraArg` the import passed as `NULL`. Pass the
     local → reserves the slot, matches the frame, and CASCADES coloring fixes (dll_0B_func05 94.8→95.7, +0.85%
-    from one arg). METHOD: scan every near-miss for `stwu` mismatch FIRST; then grep each fn's locals for
+    from one arg). (c) **CONVERSION-TEMP POOL size (#83) — NOT recoverable, SKIP.** Retail keeps N more 8-byte
+    `(f32)(s32)`/`(s16)` magic-conversion doubles live across calls; shows as a frame mismatch but is a
+    scheduling/statement-granularity coloring diff, not an artifact (CameraModeForceBehind_update, expgfx_addremove,
+    drawGlow were all this). **DISCRIMINATOR:** look at the shifted/extra stack region — an *address-taken buffer*
+    accessed PAST its declared size ⇒ (a)/(b) fixable; the region being conversion magic (`lis 17200` / `xoris
+    0x8000` / `lfd bias`) ⇒ (c), skip. SIBLING WIDTH LEVER (no frame change, also high-yield): **`int` locals
+    stored into `s16`/`u8` struct fields emit a spurious `extsh`/`clrlwi` before the store — declare the local at
+    the field's width** (expgfx_addremove: `int texS0/S1/T0/T1` → `s16`, drops the per-store extsh, 90.2→90.9;
+    confirmed faithful by sibling expgfx_initSlotQuad already using s16). METHOD: scan every near-miss for `stwu`
+    mismatch FIRST (classify a/b/c); then grep each fn's locals for
     write-only names (declared + assigned, never on a RHS/`&local`/call-arg) — those are dropped uses/args
     waiting to be restored. `cosmetic_audit.py`/`width_audit.py` cover the no-frame-change cases (wrong const,
     field width). OPEN residuals on the dll0b set, each a lever-still-to-find (target-vs-yours shape noted):
     (1) **chained-zero copy** `a=b=c=0` → retail `li;mr;mr`, O4 copy-prop folds to 3×`li` (curves
     preparePointCollisionFrame/updateLocalPointTransforms, dll_15_func0A, func04 `found=i`). Source already
     uses the copy form; opt_level-1 keeps it but regresses these call-bearing fns (#142) — the fresh-eyes win
-    is the source shape that survives O4 copy-prop (a #131/#136(b) integer analogue). (2) **dead-branch
-    self-assign** `if(x==NULL){x=NULL}` retail keeps the `li`, O4 folds to `beq` (trickySelect/FindPathRouteEntry;
-    cosmetic_audit SIZE-MISMATCH −4B). Smells like a redundant-looking assignment the import flattened — re-derive
-    "what would a Rare dev have typed." (3) **address re-derive vs CSE-hoist** (pushable_savePos): retail
+    is the source shape that survives O4 copy-prop (a #131/#136(b) integer analogue). (2) **#21 shared-block
+    placement** (skeetla trickyFindPathRouteEntry 98.59 / trickySelectRouteEntry 98.81): retail emits `bne X; b Y`
+    (both arms branch to a SHARED `entry=NULL` block placed LATE), our build emits `beq X` (the shared block lands
+    EARLY, reached by fall-through). 1-instr each. TRIED + REGRESSED (don't repeat): merge the if/else-if into one
+    `||` guard (folds the dead `entry==NULL`); drop the early `return NULL` (that island IS in retail); nested-invert
+    `if(entry!=NULL){if(...)x=NULL}else{x=NULL}`. The if/else-if baseline is closest — the lever is whatever forces
+    the shared `entry=NULL` block to the LATE position (a block-layout/#21 control, not a guard rewrite). (3) **address re-derive vs CSE-hoist** (pushable_savePos): retail
     re-materializes `&gSaveGameData` per use (3×lis) reusing the offset; forcing it (form-asymmetry/launder/
     opt_common_subs-off) reproduces the exact instr MULTISET but frees the addr's saved reg → a #108 coloring
     permutation underneath. The clean win pins that one freed reg. (4) #108 within-class perms (fn_800A02DC FP
