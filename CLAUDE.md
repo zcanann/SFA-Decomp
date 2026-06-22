@@ -890,9 +890,17 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     the source nuance that suppresses the same-bb CSE is still unmapped. Tried+FAILED to make a no-branch BB
     boundary: `if(1){...}`, `do{...}while(0)` both FOLD AWAY (no bb, still steal); only a REAL runtime branch
     (`if(g())`, `if(best&1)`) creates the bb — but that adds an instruction/changes semantics, so it's not the
-    faithful form. Untried leads: a source form where the `=0`'s 0 is a genuinely distinct VN from the
-    zero-extension 0 without a branch; or the construct that makes MWCC not zero-extend flags at all (a 32-bit
-    `li -K; and` with no high-word node). `#pragma peephole on` DCEs the dead srawi → exact match, but the unit
+    faithful form. ROOT CAUSE (flameguard, precisely characterized): it is a DCE-vs-CSE pass-ORDER artifact —
+    retail's MWCC DCEs the dead high-word `li 0` BEFORE CSE sees it, so the adjacent `=0` has nothing to merge
+    with (stays fresh+late); OUR build runs CSE first, so `=0` reuses the high-word `li 0` (hoisted early →
+    steals r3 from flags). Verified retail is clean SAME-BB at FindBaddieTarget @9d0 and trickyGuard case2 @198
+    (`lwz r3; li -1025; and; stw; li r0,0; sth`, no srawi). PROVEN-ELIMINATED leads (don't re-try): there is NO
+    32-bit-only AND that yields `li -K` — exhaustively probed `& 0xFFFFFBFF`, `& -1025`, `& ~(u32)0x400`,
+    `& (~0u^0x400u)`, XOR-mask, local-mask-var, sub-form — ALL emit `rlwinm` (or `lwz`+`and` for a global mask),
+    so the high-word node is UNAVOIDABLE with li-K; and `best*0`/volatile/`~0xFFFF` zeros all FOLD to the same VN
+    as the zero-extension 0. NARROWED untried leads (a clean form is ASSUMED to exist): (a) a `timer=0` whose 0
+    carries a genuinely distinct value-number from the zero-extension 0 WITHOUT a branch; (b) a source shape that
+    makes MWCC schedule DCE before CSE for this clear+store pair. `#pragma peephole on` DCEs the dead srawi → exact match, but the unit
     is genuinely nopeephole (whole-unit peephole-on REGRESSES trickyFlame 94.21→90.75 / trickyGuard 98.15→97.20),
     so the pragma is a non-faithful hack here — keep the signed-LL form. Asm at
     trickyFn_80143c04 L1321 + trickyFoodFn_80142d2c. SIBLING branch-fold (empty-then `if(x>=K){}else{x=-x}` →
