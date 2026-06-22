@@ -5951,7 +5951,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
-                        rr = rdata[1];
+                        rr = *(volatile f32*)&rdata[1];
                         PSVECSubtract(va, ws, tmp1);
                         dotv = PSVECDotProduct(tmp1, dir);
                         sq = PSVECSquareMag(tmp1);
@@ -6003,7 +6003,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        rr = rdata[1];
+                        rr = *(volatile f32*)&rdata[1];
                         PSVECSubtract(vb, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
