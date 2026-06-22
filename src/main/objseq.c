@@ -4943,7 +4943,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         }
     }
 
-    if ((((u32)((ObjSeqState*)seq)->unk136[0] >> 2) & 1U) != 0U)
+    if ((((u32)((ObjSeqState*)seq)->flags136[0] >> 2) & 1U) != 0U)
     {
         player = Obj_GetPlayerObject();
         (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0,
@@ -4954,7 +4954,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
             {
                 u8 b80 : 1, b40 : 1, b20 : 1, b10 : 1, b08 : 1, b04 : 1, b02 : 1, b01 : 1;
             };
-            ((struct SeqByte136*)&((ObjSeqState*)seq)->unk136[0])->b04 = clearBit;
+            ((struct SeqByte136*)&((ObjSeqState*)seq)->flags136[0])->b04 = clearBit;
         }
     }
 

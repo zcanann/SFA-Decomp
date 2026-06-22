@@ -157,7 +157,7 @@ struct ObjSeqState {
     s16 unk116;
     s16 conditionFrames[10];
     u8 conditionOpcodes[10];
-    u8 unk136[2];
+    u8 flags136[2]; /* 0x136 flags byte; bit 0x04 = record a save-point on free */
 };
 
 STATIC_ASSERT(sizeof(ObjSeqState) == 0x138);
