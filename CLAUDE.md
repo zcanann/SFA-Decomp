@@ -402,10 +402,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     FIELD CONSTANT onto base: `u8 *p = base + K; flags = p[idx];`** — single-use `p` is fine here (the
     constant grouping pins it; only `p = base+idx` single-use re-folds to lbzx). Both `(T*)(base+idx)
     ->field` and `p=base+idx; p[K]` re-fold to lbzx. (DIMSnowHorn1_update 99.5→99.84.)
-113. **The SPECULATIVE unroller (`srwi ,1; mtctr; ... andi. ,1`) is pragma-controllable:**
-    `#pragma ppc_unroll_speculative on|off`, `ppc_unroll_factor_limit N`,
-    `ppc_unroll_instructions_limit N`, `opt_unroll_count N`. `reset` is a SYNTAX ERROR for these —
-    restore with explicit values. Factor mismatch needs factor_limit + instructions_limit TOGETHER.
+113. **The SPECULATIVE unroller (`srwi ,1; mtctr; ... andi. ,1`) is gated at O3+ — to SUPPRESS it use
+    `#pragma optimization_level ≤2`** (probe-confirmed: a byte-sum loop unrolls at O3/O4 = ~16 lbz,
+    NOT at O2 = 1 lbz). The `#pragma ppc_unroll_speculative on|off` / `ppc_unroll_factor_limit N` /
+    `ppc_unroll_instructions_limit N` / `opt_unroll_count N` pragmas are RECOGNIZED (no illegal-pragma
+    warning) but do NOT turn the speculative unroll OFF — `ppc_unroll_speculative off` leaves the loop
+    unrolled by 8 (probe-confirmed inert for suppression; it only perturbs the unroller's STRATEGY in
+    some real fns, see the regress below). Use them to TUNE the factor when it IS unrolling; reach for
+    opt_level≤2 to turn it off. `reset` is a SYNTAX ERROR for these — restore with explicit values.
+    Factor mismatch needs factor_limit + instructions_limit TOGETHER.
     LIMIT (expgfx, model modelWalkAnimFn): the unroller's MAIN/REMAINDER SPLIT STRATEGY is NOT pragma-exposed.
     When BOTH builds unroll at the SAME factor (e.g. 8) but retail uses the GUARD-form split (`addi r9,r5,-8;
     cmpwi r5,8; ble remainder` — branch around the dead main loop when n≤8) and ours uses the CTR-form
