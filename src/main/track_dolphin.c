@@ -5245,7 +5245,7 @@ void trackIntersect(void)
 extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
-extern const f32 lbl_803DB660;
+extern f32 lbl_803DB660;
 
 #pragma optimization_level 2
 int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
@@ -5757,8 +5757,8 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
     u8 found;
     s16 hit;
 
-    descEnd = &gTrackBlockDescriptors[gActiveTrackBlockCount];
     descBase = gTrackBlockDescriptors;
+    descEnd = descBase + gActiveTrackBlockCount;
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5814,7 +5814,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                 }
                 PSVECSubtract(we, ws, delta);
                 mag = PSVECMag(delta);
-                if (mag > (*(f32*)&__AR_Callback))
+                if (mag > eps)
                 {
                     PSVECNormalize(delta, dir);
                 }
@@ -6007,7 +6007,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         PSVECSubtract(vb, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
-                        if (sq < eps && dotv > rr)
+                        if (sq < (*(f32*)&__AR_Callback) && dotv > rr)
                         {
                             ok = 0;
                         }
@@ -6029,7 +6029,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                                 {
                                     sq = sq + root;
                                 }
-                                if (sq >= eps && sq <= mag)
+                                if (sq >= (*(f32*)&__AR_Callback) && sq <= mag)
                                 {
                                     PSVECScale(dir, hitpt, sq);
                                     PSVECAdd(ws, hitpt, hitpt);
