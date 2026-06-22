@@ -2813,7 +2813,6 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                                       float* outLateralOffset, float* outVerticalOffset,
                                       float* outPhase)
 {
-    extern int RomCurve_projectPointToAdjacentWindow(); /* #57 */
     RomCurveDef* curves[4];
     f32 segmentDx;
     f32 segmentDy;
@@ -2932,7 +2931,6 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
 int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
-    extern int curves_distFn15(); /* #57 */
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
     int nextCurveId;
@@ -3833,7 +3831,6 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
 {
-    extern u32 RomCurve_getAdjacentWindow(); /* #57 */
     int linkId;
     int adjacentId;
     int low;

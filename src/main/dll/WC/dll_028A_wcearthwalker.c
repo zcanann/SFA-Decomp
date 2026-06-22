@@ -534,7 +534,6 @@ int earthwalker_animEventCallback(int obj, int unused, ObjAnimUpdateState* animU
 
 void earthwalker_init(int obj, int setup)
 {
-    extern int GameBit_Get(int eventId);
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     int state = (int)ewObj->state;
     EarthWalkerState* ewState = (EarthWalkerState*)state;

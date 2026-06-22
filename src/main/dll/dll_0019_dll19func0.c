@@ -1097,7 +1097,6 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
 
 int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg1, s16 controlMode)
 {
-    extern int* gPlayerInterface;
     extern f32 gDll19SeqMinDist;
     extern s8 gDll19SeqStallCount;
     extern const f32 lbl_803E1C2C;
@@ -1107,7 +1106,6 @@ int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg
     extern const f32 lbl_803E1C5C;
     extern f32 timeDelta;
     extern f32 sqrtf(f32 x);
-    extern u8 framesThisStep;
     f32 dist;
     f32 nx;
     f32 nz;

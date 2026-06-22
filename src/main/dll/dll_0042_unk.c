@@ -683,7 +683,6 @@ void CameraModeNormal_free(CameraObject* camera)
 
 void camstatic_update(CameraObject* camera)
 {
-    extern s16 getAngle(f32 dx, f32 dz);
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     GameObject* target;
     float fa;
@@ -885,7 +884,6 @@ void camstatic_update(CameraObject* camera)
 
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 {
-    extern int getAngle(f32 dx, f32 dz);
     GameObject* target;
     f32 vOutA;
     f32 vOutB;

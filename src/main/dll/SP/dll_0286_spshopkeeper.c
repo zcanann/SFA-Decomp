@@ -98,7 +98,6 @@ void fn_801E7DC8(int p1, int p2, int count)
     extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
     extern int Obj_AllocObjectSetup(int, int);
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-    extern MapEventInterface** gMapEventInterface;
     int i;
     int local;
     int o;

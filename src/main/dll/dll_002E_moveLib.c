@@ -622,7 +622,6 @@ void dll_2E_func03(u16* obj, int state, int unused)
     extern int objFn_8003acfc(); /* #57 */
     extern int fn_8003AC14(); /* #57 */
     extern int fn_8003A9C0(); /* #57 */
-    extern int Obj_GetPlayerObject(void); /* #57 */
     register u32 target;
     register int seqHandle;
     register int yawDelta;

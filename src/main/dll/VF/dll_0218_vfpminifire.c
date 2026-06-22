@@ -85,7 +85,6 @@ void vfpminifire_update(int obj)
 {
     /* local override: this TU treats randomGetRange's result as signed
        (vf_shared declares it u32); the int return is load-bearing. */
-    extern int randomGetRange(int lo, int hi);
     VfpMinifireState* state = ((GameObject*)obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;
