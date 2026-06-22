@@ -145,7 +145,13 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     1 short; loadTextureFiles same). So: a fn whose diff is a `beq;b`-vs-`bne` DISPATCH or a branch-TARGET
     reorder is jump-threading (full-fn block-ordering pass, surrounding-context-dependent), treat it as
     allocation-form-adjacent (hypothesis, not reliable). The reliable sub-class is a CONTIGUOUS missing/extra
-    REGION (real dropped code) or a STORE/INIT-ORDER swap — NOT a dispatch/layout permutation.
+    REGION (real dropped code) or a STORE/INIT-ORDER swap — NOT a dispatch/layout permutation. SIBLING ARTIFACT
+    (cardShowMessage, HunterA): the inverse of jump-threading is JUMP-DUPLICATION — retail KEEPS a redundant DEAD
+    `b` (two consecutive branches to the same target) that OUR build DCE's. Forcing our build to NOT-DCE a dead
+    branch is NOT source-reachable (a block-layout/DCE-pass difference, likely compiler-version). Park these — a
+    nested `if{ if{} }` whose block-ends each "should" emit a `b` that retail keeps and ours merges/DCE's is the
+    same not-source-reachable class. (cardShowMessage's #109d dispatch derive was CORRECT — `bne` confirmed
+    in-tree — but the redundant-b + a jumptable reloc owner-domain block 100; kept the closer switch form 99.78.)
   • **ALLOCATION-SENSITIVE fixes REGRESS from isolation** (strength-reduction store-form, store-isel #112,
     register coloring #66/#107/#108, the #155 held-pointer detour): the FULL-FN register pressure overrides the
     isolated behavior, so a minimal — even substantially-faithful — TU can't carry it. 4 confirmed isolation
