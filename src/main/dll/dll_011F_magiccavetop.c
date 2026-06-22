@@ -4,7 +4,6 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/objseq.h"
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"

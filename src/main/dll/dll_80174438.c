@@ -9,7 +9,6 @@
 
 /* render-with-fn(lbl) (no visibility check). */
 
-#include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
 #include "main/dll/pushable.h"
 #include "main/objtexture.h"

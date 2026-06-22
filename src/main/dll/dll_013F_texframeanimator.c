@@ -1,7 +1,6 @@
 /* DLL 0x13F - TexFrameAnimator [801948C0-80195008) */
 #include "main/game_object.h"
 #include "main/map_block.h"
-#include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 

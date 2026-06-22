@@ -14,7 +14,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 
-#include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim.h"
 #include "main/objseq.h"

@@ -4,7 +4,6 @@ extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"

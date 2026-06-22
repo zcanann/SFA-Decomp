@@ -4,7 +4,6 @@
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 #include "main/game_object.h"
-#include "main/screen_transition.h"
 #include "main/dll/VF/vf_shared.h"
 extern f32 lbl_803E5058;
 

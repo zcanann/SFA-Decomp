@@ -50,7 +50,6 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/game_object.h"
-#include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"

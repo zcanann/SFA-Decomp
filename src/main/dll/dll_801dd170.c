@@ -4,7 +4,6 @@
 
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
-#include "main/obj_placement.h"
 #include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);

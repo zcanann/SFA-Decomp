@@ -30,7 +30,6 @@ extern void Music_Trigger(int id, int arg);
 extern void objRenderFn_8003b8f4(f32);
 
 extern int getSaveGameLoadStatus(void);
-#include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
