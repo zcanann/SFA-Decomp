@@ -171,6 +171,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     priority. Scales to whole-quad rotations, but ALL the no-op casts must drop at once (a partial
     drop shows nothing). Diagnose with per-use-class deletion probes.
 37. **`(u16)` on the WHOLE OR-expression** → one `clrlwi` at the store (vs per-operand).
+    COMPANION (probe-confirmed, fn_80136E00): for a read-modify-write assembling into a NARROW GLOBAL,
+    `g = (u16)g | bits;` (EXPLICIT cast on the read-back) forces the store-forward mask `clrlwi r,r0,16`
+    to SURVIVE; plain `g |= bits;` / `g = g | bits;` / `bits | g` DROP it (at O3/O4 MWCC value-tracks the
+    just-stored value, proves it fits, and skips the redundant mask). So when the target keeps a
+    store-forward `clrlwi` on a re-read global, write the explicit `(u16)g` on the read-back. (`volatile`
+    gives a real `lhz` reload instead — wrong direction.)
 38. **`(x & N) ? 1 : 0` ternary** for branchy bool materialization; `(x & N) != 0` gives the
     arithmetic `neg/or/srwi` form.
 39. **Bitfield-overlay struct** for byte flags at a specific offset (generalizes #12 to multiple
