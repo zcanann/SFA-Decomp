@@ -1515,7 +1515,7 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
     return -1;
 }
 
-int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase)
+int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* outPhase)
 {
     extern u32 RomCurve_getAdjacentWindow(); /* #57 */
     extern int RomCurve_projectPointToAdjacentWindow(); /* #57 */
