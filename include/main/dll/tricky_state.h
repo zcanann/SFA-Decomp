@@ -106,12 +106,12 @@ typedef struct TrickyState {
     f32 animPlaySpeed;
     f32 currentMoveProgress;
     f32 unk310;
-    f32 unk314;
-    f32 unk318;
-    f32 unk31C;
-    u8 unk320;
-    u8 unk321;
-    u8 unk322;
+    f32 moveSpeedScale0; /* animPlaySpeed = K / (K2 * scale) for moveId0 */
+    f32 moveSpeedScale1; /* paired with moveId1 */
+    f32 moveSpeedScale2; /* paired with moveId2 */
+    u8 moveId0; /* ObjAnim_SetCurrentMove move id */
+    u8 moveId1;
+    u8 moveId2;
     u8 unk323;
     u8 pad324[0x353 - 0x324];
     u8 unk353;

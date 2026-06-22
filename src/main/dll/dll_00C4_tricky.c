@@ -1700,8 +1700,8 @@ void Tricky_resumeAfterCommand(int obj, int state)
         ((((TrickyState*)state)->unk2E0 & 0x1000) == 0))
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
-        moveId = ((TrickyState*)state)->unk320;
-        ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->unk314);
+        moveId = ((TrickyState*)state)->moveId0;
+        ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale0);
         ((TrickyState*)state)->unk323 = 1;
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
@@ -1768,8 +1768,8 @@ void trickyFn_80148d8c(int obj, int state)
         ((TrickyState*)state)->actionTargetObj = 0;
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-        moveId = ((TrickyState*)state)->unk321;
-        ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->unk318);
+        moveId = ((TrickyState*)state)->moveId1;
+        ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale1);
         ((TrickyState*)state)->unk323 = 1;
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0);
         if (*(void**)&((GameObject*)obj)->anim.hitReactState != NULL)
