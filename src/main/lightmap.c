@@ -2023,11 +2023,11 @@ void renderSceneGeometry(int* p1, s8* order)
     int oi, ii;
     s8 *op, *ip;
     int row, col;
+    f32 ws;
     f32 rowF, colF;
     int cell;
     int idx;
     u8* blk;
-    f32 ws;
 
     layer = 4;
     lt = &gMapBlockLayerTables[4];
