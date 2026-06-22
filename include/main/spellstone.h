@@ -25,7 +25,10 @@ typedef struct SpellStoneObject {
   f32 posX;
   f32 posY;
   f32 posZ;
-  u8 unk18[0x34];
+  f32 worldPosX; /* 0x18: world position, distance-checked against the player (Vec_distance vs playerObj+0x18) */
+  f32 worldPosY; /* 0x1c */
+  f32 worldPosZ; /* 0x20 */
+  u8 unk24[0x28];
   SpellStoneDef *def;
   u8 unk50[0x68];
   SpellStoneState *state;

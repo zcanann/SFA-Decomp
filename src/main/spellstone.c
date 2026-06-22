@@ -106,7 +106,7 @@ void spellstone_update(SpellStoneObject* obj)
         if (state->state == 2)
         {
             playerObj = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->unk18, (u8*)playerObj + 0x18) < lbl_803E6758)
+            if (Vec_distance(&obj->worldPosX, (u8*)playerObj + 0x18) < lbl_803E6758)
             {
                 GameBit_Set(def->completeEvent, 1);
             }
