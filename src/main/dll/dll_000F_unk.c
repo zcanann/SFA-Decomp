@@ -538,13 +538,9 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
         {
             ((BaddieState*)ctx)->moveSpeed = tmp;
         }
-        tmp = lbl_803E0570;
-        if (lbl_803E0570 != mag)
-        {
-            tmp = ((BaddieState*)ctx)->animSpeedB / mag;
-        }
+        tmp = (lbl_803E0570 != mag) ? ((BaddieState*)ctx)->animSpeedB / mag : lbl_803E0570;
         ratio = tmp;
-        idx = (int)((f32)ratio * lbl_803E05A0);
+        idx = (int)(lbl_803E05A0 * (f32)ratio);
         if (idx < 0)
         {
             idx = -idx;
