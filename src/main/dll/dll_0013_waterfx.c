@@ -509,11 +509,7 @@ void waterfx_onMapSetup(void)
     int i;
     VtxDesc* vd;
     {
-        f32 initScale;
-        f32 initPos;
         vd = (VtxDesc*)gWaterfxRippleVtxDesc;
-        initPos = lbl_803DF300;
-        initScale = lbl_803DF318;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry7* e;
@@ -525,11 +521,11 @@ void waterfx_onMapSetup(void)
             vd[1].b3 = 1;
             vd += 2;
             e = &((WaterEntry7*)gWaterfxRipplePool)[i];
-            e->x = initPos;
-            e->y = initPos;
-            e->z = initPos;
-            e->w = initPos;
-            e->f10 = initScale;
+            e->x = 0.0f;
+            e->y = 0.0f;
+            e->z = 0.0f;
+            e->w = 0.0f;
+            e->f10 = 0.01f;
             e->active = 0;
         }
     }
