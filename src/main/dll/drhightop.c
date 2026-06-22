@@ -219,7 +219,7 @@ void fn_801EB0D4(u32 obj, int stateRaw)
             td = timeDelta;
             st->airMeterCurrent -=
                 td * lbl_803DC0D8 + (f32)(s32)(st->airDrainRate *
-                    (td * PSVECMag(&st->unk494)));
+                    (td * PSVECMag(&st->localVelX)));
             lim = lbl_803E5AE8;
             if (lim != st->airMeterRefillTimer)
             {
@@ -248,18 +248,18 @@ void fn_801EB0D4(u32 obj, int stateRaw)
         else
         {
             Sfx_StopObjectChannel((u32)obj, 0x7f);
-            if (st->unk464 > lbl_803E5B20)
+            if (st->velLimitX > lbl_803E5B20)
             {
                 if (randomGetRange(0, 10) == 0)
                 {
                     Sfx_PlayFromObject(0, SFXsp_lfoot_taunt7);
                 }
-                PSVECScale(&st->unk464, &st->unk464, lbl_803E5B88);
+                PSVECScale(&st->velLimitX, &st->velLimitX, lbl_803E5B88);
                 if ((u32)(st->flags428 >> 7 & 1) != 0)
                 {
-                    if (st->unk464 < lbl_803E5B20)
+                    if (st->velLimitX < lbl_803E5B20)
                     {
-                        st->unk464 = *(f32 *)&lbl_803E5B20;
+                        st->velLimitX = *(f32 *)&lbl_803E5B20;
                     }
                 }
             }
@@ -268,9 +268,9 @@ void fn_801EB0D4(u32 obj, int stateRaw)
                 (*gGameUIInterface)->airMeterSetShutdown();
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 lim = lbl_803E5B8C;
-                st->unk464 = lbl_803E5B8C;
-                st->unk468 = lim;
-                st->unk46C = lim;
+                st->velLimitX = lbl_803E5B8C;
+                st->velLimitY = lim;
+                st->velLimitZ = lim;
             }
         }
     }
@@ -289,8 +289,8 @@ void fn_801EB334(int* obj)
     {
         s16 sv;
         f32 fz = lbl_803E5AE8;
-        state->unk494 = fz;
-        state->unk498 = fz;
+        state->localVelX = fz;
+        state->localVelY = fz;
         state->distanceScale = lbl_803E5B9C;
         ((HightopFlags*)&state->flags428)->resetLatch = 0;
         state->impactShakeTimer = fz;
@@ -430,9 +430,9 @@ void fn_801EB634(int obj, int stateRaw)
             {
                 PSVECNormalize((float*)(obj + 0x24), velNrm);
                 dot = PSVECDotProduct(velNrm, (float*)(hitObj + 0x24));
-                PSVECScale(&st->unk494, &st->unk494,
+                PSVECScale(&st->localVelX, &st->localVelX,
                            dot * st->unk4AC + lbl_803E5AEC);
-                st->unk498 = st->unk498 * lbl_803E5BA8;
+                st->localVelY = st->localVelY * lbl_803E5BA8;
                 st->collisionFxTimer = lbl_803E5AF4;
                 st->collisionFxDamping = lbl_803E5AEC;
             }
@@ -611,8 +611,8 @@ void fn_801EBD60(int obj, int stateRaw)
     HightopPartfxTransform effect;
 
     speed = sqrtf(st->distanceScale * st->distanceScale +
-        (st->unk494 * st->unk494 +
-            st->unk498 * st->unk498));
+        (st->localVelX * st->localVelX +
+            st->localVelY * st->localVelY));
     st->timer -= timeDelta;
     fa = st->timer;
     st->timer =

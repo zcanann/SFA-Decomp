@@ -92,18 +92,18 @@ typedef struct SnowBikeState {
     f32 stickX;             /* 0x45c */
     s8 stickY;              /* 0x460 */
     u8 pad461[0x3];
-    f32 unk464;             /* 0x464 */
-    f32 unk468;             /* 0x468 */
-    f32 unk46C;             /* 0x46c */
+    f32 velLimitX;             /* 0x464 */
+    f32 velLimitY;             /* 0x468 */
+    f32 velLimitZ;             /* 0x46c */
     f32 unk470;             /* 0x470 */
     f32 unk474;             /* 0x474 */
     f32 unk478;             /* 0x478 */
-    f32 unk47C;             /* 0x47c */
-    f32 unk480;             /* 0x480 */
+    f32 localVelXLimit;             /* 0x47c */
+    f32 localVelYLimit;             /* 0x480 */
     f32 distanceScaleLimit; /* 0x484: symmetric clamp bound applied to distanceScale */
     u8 pad488[0xc];
-    f32 unk494;             /* 0x494 */
-    f32 unk498;             /* 0x498 */
+    f32 localVelX;             /* 0x494 */
+    f32 localVelY;             /* 0x498 */
     f32 distanceScale;             /* 0x49c */
     u8 pad4A0[0xC];
     f32 unk4AC;             /* 0x4ac */
