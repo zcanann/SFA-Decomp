@@ -1210,7 +1210,7 @@ extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, 
 extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
 extern void fn_80069958(int** out);
-void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b);
+void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx);
 
 #pragma peephole off
 void playerShadow_setMode(u8 v)
@@ -1320,9 +1320,9 @@ void playerShadow_renderObject(void* obj)
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);
-    fn_800A3AF0((void*)hitTableValue, hitCount, obj,
+    fn_800A3AF0((void*)hitTableValue, hitCount,
                 ((GameObject*)obj)->anim.localPosX - tileInfo[0],
-                ((GameObject*)obj)->anim.localPosZ - tileInfo[2]);
+                ((GameObject*)obj)->anim.localPosZ - tileInfo[2], obj);
 }
 
 
@@ -1334,7 +1334,7 @@ extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
 
-void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
+void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
 {
     extern int randomGetRange(int min, int max);
     BoneSpawnData data;
@@ -1371,8 +1371,8 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
     dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
-        int t = *(s8*)((char*)table + i * 0x4c + 0x48);
-        if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17)
+        u8 t = *(u8*)((char*)table + i * 0x4c + 0x48);
+        if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
         {
             gPlayerShadowCamDelta[0] = dx;
             gPlayerShadowCamDelta[1] = dy;
@@ -1408,8 +1408,8 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
         char* e = table;
         for (j = 0; j < count; j++)
         {
-            int t = *(s8*)(e + 0x48);
-            if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17)
+            u8 t = *(u8*)(e + 0x48);
+            if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
             {
                 int rt;
                 p0x = ((GameObject*)ctx)->anim.localPosX + ((f32) * (s16*)(e + 0x10) - a);
