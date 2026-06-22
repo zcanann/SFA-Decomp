@@ -862,10 +862,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     live in r6) — the reuse-able value is RIGHT THERE, MWCC just picks fresh. This is the value-1 analog of the
     value-0 reuse above (same "copy-coalesce vs fresh-materialize" decision, FORCE direction). Forms tried:
     opt_level 2 REMOVES the unroll (real loop, count via addi) — WRONG (target is unrolled O4), so the reuse must
-    be forced AT O4 keeping the unroll; the clean source lever is the open frontier (a clean form exists — A/B
-    candidates against /tmp/vCP, curveId/count reg = mr good / li fresh; try the #136(b) chained-counter forms +
-    deriving the increment from mask). UNIFIED with the #147 copy-PULL bed (/tmp/v147/faithful.c) — same mechanism,
-    #147 PREVENTS a coalesce / value-1 FORCES a reuse; pin both, the clean lever is open in both.
+    be forced AT O4 keeping the unroll. ✓ORACLE CONTRAST (Validator, both-objs in dll_0014): RETAIL DOES BOTH —
+    `mr`-reuse in RomCurve_countRandomPoints (172 instr, higher pressure), `li`-fresh in getControlPointId_2A (87
+    instr, lower pressure, OURS MATCHES). So the reuse is a REGISTER-PRESSURE-CONTEXT decision, NOT a source-
+    spelling choice (~10 1-line levers all inert). This is NOT a "pressure-gated, can't crack" cop-out — it's a
+    DETERMINISTIC pressure rule to reverse-engineer: the NEXT INGREDIENT is to ADD register pressure to /tmp/vCP
+    (extra live values across the reuse point) ONE AT A TIME until `li`→`mr` flips, NAME the threshold (it's
+    between 87 and 172 instrs of pressure), then find the source construct that pushes curves_getPos's allocation
+    over it. The bed is ready; the threshold-and-nudge is the open work (a live target, lower-priority = 0.4%/fn).
+    UNIFIED with the #147 copy-PULL bed (/tmp/v147/faithful.c) — same coalesce mechanism, #147 PREVENTS / value-1
+    FORCES; both are pressure-gated, both have the same reverse-engineer-the-threshold path.
     (The comma-init form on a global base adds an `mr walker,r0`
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
