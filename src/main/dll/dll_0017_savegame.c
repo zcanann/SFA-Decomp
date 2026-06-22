@@ -566,9 +566,9 @@ int saveSelect_getInfo(void* outPtr)
     u8 newFileFlag;
 
     slot = 0;
-    info = (SaveSelectInfo*)outPtr;
     do
     {
+        info = (SaveSelectInfo*)outPtr + slot;
         if (loadSaveGame((u8)slot, save) != 0)
         {
             newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
@@ -658,7 +658,6 @@ int saveSelect_getInfo(void* outPtr)
             return 0;
         }
 
-        info++;
         slot++;
     }
     while (slot < 3);
