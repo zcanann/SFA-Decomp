@@ -362,25 +362,13 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     gDebugRecordCount = n;
     if (n > 0xfa) return;
     tag = 0x81;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = tag;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = r;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = g;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = b;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = a;
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = tag; }
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = r; }
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = g; }
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = b; }
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = a; }
     term = 0;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = term;
+    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = term; }
 }
 #pragma optimization_level reset
 
