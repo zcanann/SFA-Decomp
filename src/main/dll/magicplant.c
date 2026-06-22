@@ -113,28 +113,28 @@ void fn_80152EC0(int obj, int state)
     ((GameObject*)obj)->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
 
-void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
+void fn_80152FA8(int obj, int state, int unused, int msgFlag)
 {
-    if (((BaddieState*)p2)->inWhirlpoolGroup != 0)
+    if (((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
         if (msgFlag == 16)
         {
-            ((BaddieState*)p2)->reactionFlags = ((BaddieState*)p2)->reactionFlags | 0x28;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x28;
             Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
-            *(s16*)&((BaddieState*)p2)->hitCounter = 0;
+            *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
     }
     else if (msgFlag != 17)
     {
         if (msgFlag == 16)
         {
-            ((BaddieState*)p2)->reactionFlags = ((BaddieState*)p2)->reactionFlags | 0x20;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         }
         else
         {
-            ((BaddieState*)p2)->reactionFlags = ((BaddieState*)p2)->reactionFlags | 0x8;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
             Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
-            *(s16*)&((BaddieState*)p2)->hitCounter = 0;
+            *(s16*)&((BaddieState*)state)->hitCounter = 0;
         }
     }
 }
@@ -302,7 +302,7 @@ void fn_801534D8(int obj, int state)
 }
 
 #pragma dont_inline on
-void fn_8015355C(int obj, int p2)
+void fn_8015355C(int obj, int state)
 {
     u8 count = 0;
     switch (((GameObject*)obj)->anim.currentMove)
@@ -317,7 +317,7 @@ void fn_8015355C(int obj, int p2)
         count = 1;
         break;
     case 5:
-        if ((((BaddieState*)p2)->controlFlags & 0x80000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
         {
             count = 0xa;
         }
@@ -325,7 +325,7 @@ void fn_8015355C(int obj, int p2)
     case 7:
         break;
     }
-    if (count != 0 && (((BaddieState*)p2)->controlFlags & 0x40000000) == 0)
+    if (count != 0 && (((BaddieState*)state)->controlFlags & 0x40000000) == 0)
     {
         u8 spawn = count;
         while (spawn != 0)
@@ -380,7 +380,7 @@ void fn_80153640(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
+void fn_80153790(int obj, int state, int attacker, int msgFlag, int hitId, int damage)
 {
     if (((GameObject*)obj)->anim.currentMove == 1)
     {
@@ -396,7 +396,7 @@ void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
     else
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
-        if (p6 > (s32)((BaddieState*)state)->hitCounter)
+        if (damage > (s32)((BaddieState*)state)->hitCounter)
         {
             Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt1);
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
@@ -404,7 +404,7 @@ void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
         else
         {
             Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt2);
-            ((BaddieState*)state)->hitCounter = (u16)(((BaddieState*)state)->hitCounter - p6);
+            ((BaddieState*)state)->hitCounter = (u16)(((BaddieState*)state)->hitCounter - damage);
         }
     }
 }
@@ -527,41 +527,41 @@ sharedTail:
     fn_8015355C(obj, state);
 }
 
-void fn_80153BFC(int obj, int p2)
+void fn_80153BFC(int obj, int state)
 {
-    ((BaddieState*)p2)->inWhirlpoolGroup = ((BaddieState*)p2)->inWhirlpoolGroup & 0xbf;
-    if ((((BaddieState*)p2)->controlFlags & 0x40000000) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
+    ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0xbf;
+    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
-        Baddie_SetMove(obj, p2, 1, lbl_803E290C, 0, 0);
+        Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
     }
-    fn_8015355C(obj, p2);
+    fn_8015355C(obj, state);
 }
 
-void fn_80153C90(int unused, int p2)
+void fn_80153C90(int unused, int state)
 {
     f32 eventFlagsVal;
     f32 pathStepInit;
-    ((BaddieState*)p2)->speedScale = lbl_803E2924;
-    ((BaddieState*)p2)->unk2E4 = 1;
-    ((BaddieState*)p2)->unk308 = lbl_803E28F4;
-    ((BaddieState*)p2)->unk300 = lbl_803E2928;
-    ((BaddieState*)p2)->unk304 = lbl_803E292C;
-    ((BaddieState*)p2)->unk320 = 0;
+    ((BaddieState*)state)->speedScale = lbl_803E2924;
+    ((BaddieState*)state)->unk2E4 = 1;
+    ((BaddieState*)state)->unk308 = lbl_803E28F4;
+    ((BaddieState*)state)->unk300 = lbl_803E2928;
+    ((BaddieState*)state)->unk304 = lbl_803E292C;
+    ((BaddieState*)state)->unk320 = 0;
     eventFlagsVal = lbl_803E2910;
-    *(f32*)&((BaddieState*)p2)->eventFlags = eventFlagsVal;
-    ((BaddieState*)p2)->unk321 = 7;
+    *(f32*)&((BaddieState*)state)->eventFlags = eventFlagsVal;
+    ((BaddieState*)state)->unk321 = 7;
     pathStepInit = lbl_803E290C;
-    ((BaddieState*)p2)->unk318 = pathStepInit;
-    ((BaddieState*)p2)->unk322 = 0;
-    ((BaddieState*)p2)->unk31C = eventFlagsVal;
-    ((BaddieState*)p2)->seqEntryIndex = 0;
-    ((BaddieState*)p2)->inWhirlpoolGroup = 0;
-    *(f32*)(p2 + 0x324) = lbl_803E2930;
-    ((BaddieState*)p2)->pathStep = pathStepInit;
+    ((BaddieState*)state)->unk318 = pathStepInit;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = eventFlagsVal;
+    ((BaddieState*)state)->seqEntryIndex = 0;
+    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    *(f32*)(state + 0x324) = lbl_803E2930;
+    ((BaddieState*)state)->pathStep = pathStepInit;
 }
 
-void fn_80153CF8(int obj, int state, int p3, int msgFlag)
+void fn_80153CF8(int obj, int state, int attacker, int msgFlag)
 {
     u8 cond = 0;
     int kind = ((GameObject*)obj)->anim.currentMove;
