@@ -319,13 +319,13 @@ void fn_801EC870(int p1, register int p2_int)
     flags = (DRcradleSnowBikeFlags*)(p2_int + 0x428);
     flags->resetLatch = 0;
     ((SnowBikeState*)p2_int)->unk430 = fz;
-    fa = ((SnowBikeState*)p2_int)->unk470;
+    fa = ((SnowBikeState*)p2_int)->baseVelLimitX;
     ((SnowBikeState*)p2_int)->velLimitX = fa;
     ((SnowBikeState*)p2_int)->localVelXLimit = fa;
-    fb = ((SnowBikeState*)p2_int)->unk474;
+    fb = ((SnowBikeState*)p2_int)->baseVelLimitY;
     ((SnowBikeState*)p2_int)->velLimitY = fb;
     ((SnowBikeState*)p2_int)->localVelYLimit = fb;
-    fc = ((SnowBikeState*)p2_int)->unk478;
+    fc = ((SnowBikeState*)p2_int)->baseVelLimitZ;
     ((SnowBikeState*)p2_int)->velLimitZ = fc;
     ((SnowBikeState*)p2_int)->distanceScaleLimit = fc;
     flags->pathActive = 0;
@@ -849,13 +849,13 @@ void SnowBike_init(int obj, u8* params, int flag)
     }
     fv = ((SnowBikeState*)state)->velLimitX;
     ((SnowBikeState*)state)->localVelXLimit = fv;
-    ((SnowBikeState*)state)->unk470 = fv;
+    ((SnowBikeState*)state)->baseVelLimitX = fv;
     fv = ((SnowBikeState*)state)->velLimitY;
     ((SnowBikeState*)state)->localVelYLimit = fv;
-    ((SnowBikeState*)state)->unk474 = fv;
+    ((SnowBikeState*)state)->baseVelLimitY = fv;
     fv = ((SnowBikeState*)state)->velLimitZ;
     ((SnowBikeState*)state)->distanceScaleLimit = fv;
-    ((SnowBikeState*)state)->unk478 = fv;
+    ((SnowBikeState*)state)->baseVelLimitZ = fv;
     ((SnowBikeState*)state)->unk060 = &base[((SnowBikeState*)state)->bikeType * 6 + 0xa4];
     if (((SnowBikeState*)state)->bikeType == 0)
     {

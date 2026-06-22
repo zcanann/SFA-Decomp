@@ -95,9 +95,9 @@ typedef struct SnowBikeState {
     f32 velLimitX;             /* 0x464 */
     f32 velLimitY;             /* 0x468 */
     f32 velLimitZ;             /* 0x46c */
-    f32 unk470;             /* 0x470 */
-    f32 unk474;             /* 0x474 */
-    f32 unk478;             /* 0x478 */
+    f32 baseVelLimitX;             /* 0x470: persistent base velocity limit; copied into velLimit*+localVel*Limit on reset */
+    f32 baseVelLimitY;             /* 0x474 */
+    f32 baseVelLimitZ;             /* 0x478 */
     f32 localVelXLimit;             /* 0x47c */
     f32 localVelYLimit;             /* 0x480 */
     f32 distanceScaleLimit; /* 0x484: symmetric clamp bound applied to distanceScale */
