@@ -275,6 +275,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v59 = 0x12;
     buf.v5a = 0;
     buf.v5b = 0xc;
+    buf.flags = 0x1000082;
     buf.count = 27;
     buf.hw[0] = *(s16*)&base[404];
     buf.hw[1] = *(s16*)&base[406];
@@ -284,7 +285,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.hw[5] = *(s16*)&base[414];
     buf.hw[6] = *(s16*)&base[416];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.flags = 0x1000082 | flags;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if ((void*)sourceObj != NULL)
