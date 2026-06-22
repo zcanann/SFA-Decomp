@@ -665,7 +665,7 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     MWCC RULE: a GLOBAL-symbol address ref → DISPLACEMENT `sth K`/`stb K` (one base, matches retail); a LOCAL
     pointer var → INDEXED `sthx` (wrong). So for a GLOBAL-based SoA loop the #135 local/typed-pointer instinct
     is BACKWARDS — use the bare global. RESIDUAL (open #108/#136, lands 90.92 < the 93.0 two-base baseline — so
-    structurally-correct but coloring-capped, the dimexplosion good-news pattern: the one-base structure IS
+    structurally-correct, coloring-bound — the dimexplosion good-news pattern: the one-base structure IS
     reachable, finish via coloring): (1) #136(b) counter-0-reuse — retail `mr r29,r27` (NULL-store 0 = copy of
     counter i's initial 0) vs ours `li r29,0` (not triggered by hoisted-null / `void* zero=NULL`); (2) #108
     j↔tex within-class swap — retail colors `tex` (live-across-call) HIGHER than the masked index `j`, ours
@@ -1096,7 +1096,8 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     FP pair = #82 (CameraModeCloudRunner); const-load POSITION = scheduling/eval-order. The PURE FREE-REG-CHOICE
     kind-2(2) — same value NAMED/typed identically in both builds, both regs free, only the SLOT differs (no
     name-vs-inline distinction to flip, e.g. groundanimator `s8 bi`, MagicPlant `alpha`) — is the residual
-    #107 does NOT crack; that's the genuinely-open creation-order/neighbor-perturbation/register-pressure nut.
+    #107 doesn't reach; the live target is the creation-order/neighbor-perturbation/register-pressure lever (a
+    clean source form exists — the next ingredient to add is named below).
     ✦CRUX PINNED (waterfx, objhits ObjHits_CalcSkeletonResponseXZ — the cleanest kind-2(2) repro, maximally
     narrowed): it's a PURE FREE-REG LOOK-AHEAD, not creation-order or naming. PROOF: the deciding `fmr fXX,f1`
     is at the IDENTICAL instruction offset in both builds (same web, same creation point) — ONLY the reg differs.
@@ -1105,20 +1106,24 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     LOOK-AHEAD-RESERVING f31 for the later-created zf — OURS picks highest-free-first (f31). RULED OUT (all RAN):
     #45 decl-swap, #130 block-temp on the call-result, #81 launder, opt_level2 (regress, O4-in-retail), neighbor-
     perturb (zf-early regress); #107 N/A (moveLen is a non-re-derivable call-result; un-naming zf is wrong-
-    direction). NOT ISOLABLE (probe_battery base.c won't reproduce — context-bound). The one oracle
-    (boneBlendSlotLimit, model.c) has the shape but is INLINED/static (no standalone source to diff). So the
-    whole ~35-fn kind-2(2) bucket reduces to ONE question: which SOURCE construct makes MWCC graph-coloring
-    RESERVE the higher free FP reg for a LATER-created value (look-ahead) vs picking highest-free-first?
+    direction). NOT YET ISOLATED in a minimal TU (probe_battery base.c hasn't reproduced it — the minimal TU
+    is missing the in-tree pressure ingredient; ADD ingredients one at a time until the pick flips, then name
+    the trigger). The one oracle (boneBlendSlotLimit, model.c) has the shape but is INLINED/static (no
+    standalone source to diff — find a non-inlined sibling). So the whole ~35-fn kind-2(2) bucket reduces to
+    ONE answerable question: which SOURCE construct makes MWCC graph-coloring RESERVE the higher free FP reg
+    for a LATER-created value (look-ahead) vs picking highest-free-first? (deterministic allocator → there IS
+    a concrete trigger; reverse-engineer it.)
     ✓DISCRIMINATOR RESOLVED (waterfx in-tree read, the look-ahead CONFIRMED over a creation-order hypothesis): it
     is NOT creation-order. Retail AND ours have BYTE-IDENTICAL positions — moveLen `fmr` @0x8dc (right after the
     Vec3_Length bl), zf `lfs` @0x994 (after 2 more bls) — in BOTH builds; the global is loaded AFTER the call in
     BOTH. So a "load the global before the call" creation-order reorder does NOT match retail (retail loads it
     late too) and regressed in-tree (99.90→99.28). The validator's isolation creation-order rule (gs-first→gs
     gets f31) is REAL in isolation but OVERRIDDEN by the full fn's register PRESSURE in-tree (retail gives the
-    LATER-created zf→f31; ours the EARLIER moveLen→f31). So it's a genuine context-bound PRESSURE-driven free-reg
-    pick. NEXT: a STANDALONE (non-inlined) oracle with this shape; else a deeper IN-TREE pressure model (which
-    pressure ingredient flips the pick) — NOT a one-line reorder, NOT isolable. The hardest open coloring nut,
-    precisely characterized; fresh-eyes / oracle target.
+    LATER-created zf→f31; ours the EARLIER moveLen→f31). So it's an in-tree PRESSURE-driven free-reg pick (the
+    rule is deterministic — the in-tree pressure ingredient that flips it is the thing to pin). NEXT: a
+    STANDALONE (non-inlined) oracle with this shape; else a deeper IN-TREE pressure model — add pressure
+    ingredients one at a time until the pick flips, then name the trigger. The highest-value open coloring
+    target, precisely characterized; fresh-eyes / oracle target.
     DOESN'T-APPLY shapes (pausemenu, verified — recognize fast, don't burn cycles): besides criteria 2/3/1
     failures, the naming lever is ALSO inert when the swapped values are (a) CONSTANTS — naming/inlining a
     literal is identical (a const colors the same either way), so a const↔const or const↔addr swap can't be
@@ -1198,8 +1203,9 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     STORE fixes the bias web's creation point, so repositioning the conversion can't move it (dim2icicle: bias
     stays f30, conversion-first/named-local-first fold or add a saved reg). SWEEP DISCRIMINATOR: skip
     store-to-global + re-read-for-division shapes (and the bias-LOWEST shape where the bias must be f24/f28
-    created-first but is lowered late — that one's the reloc-naming build-domain part, #70-neutral on score but
-    the register stays unreachable when stored). The lever's sweet spot = bias-above-a-pushable-preloop-const,
+    created-first but is lowered late — that one's the reloc-naming part, #70-neutral on score; the conversion-
+    position lever hasn't moved the stored shape YET, so its source form is still to find). The lever's sweet
+    spot = bias-above-a-pushable-preloop-const,
     conversion-feeds-multiply (staffFn). PROJECT-WIDE batch (sweeping that shape). (DeepDive2: dim2icicle 99.92,
     dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
     100% via #127 was a SEPARATE store-aliasing reload, not this.)
@@ -1543,7 +1549,7 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     swap, early local copy (copy-prop folds), #128 opt_propagation off. CONVERGENCE: flameguard (dll_7B kind-2) + expgfx
     (modellight modelLightChannels_applyGXControls, task #21 detour sweep) hit the SAME open sub-variant —
     global-into-saved-reg-via-scratch+mr → wants direct `addi rSaved`. Cracking THIS ONE #155 direct-materialization
-    lever is the convergent multiplier: it un-caps both the detour hard-variants AND the kind-2 within-class-order
+    lever is the convergent multiplier: it unblocks both the detour hard-variants AND the kind-2 within-class-order
     frontier. Highest-leverage open C-side target. SUB-LEVER — MATERIALIZATION-ORDER perturbation (flameguard,
     dll_7B 99.21→99.41, +0.55 cumulative): when a #155 detour competes with a stack-addr/local web, PLACE the
     global's neighbor (the other saved-reg web's def) to MATCH retail's emission order — e.g. move
