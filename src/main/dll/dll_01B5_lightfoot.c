@@ -118,14 +118,13 @@ void lightfoot_update(int obj)
     f32 snd[3];
     f32 buf[6];
     u8 i;
+    f32 zero;
 
-    if (*(f32*)((char*)anim + 0x10) != lbl_803E8180)
+    if (*(f32*)((char*)anim + 0x10) != (zero = lbl_803E8180) &&
+        (*(f32*)((char*)anim + 0x10) = *(f32*)((char*)anim + 0x10) - timeDelta,
+            *(f32*)((char*)anim + 0x10) <= zero))
     {
-        *(f32*)((char*)anim + 0x10) -= timeDelta;
-        if (*(f32*)((char*)anim + 0x10) <= lbl_803E8180)
-        {
-            Obj_FreeObject(obj);
-        }
+        Obj_FreeObject(obj);
     }
 
     if (((GameObject*)obj)->anim.seqId == 0x27c && ((GroundBaddieState*)inner)->gameBitA != -1)
