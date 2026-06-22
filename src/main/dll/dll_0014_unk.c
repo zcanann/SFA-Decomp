@@ -1966,35 +1966,34 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         *previousCurveId = *(s32*)(startCurve + 0x14);
         return candidateIds[0];
     }
-    if (candidateCount <= 1)
+    if (candidateCount > 1)
     {
-        return -1;
-    }
-
-    for (i = 0; i < candidateCount; i++)
-    {
-        if (*previousCurveId == candidateIds[i])
+        for (i = 0; i < candidateCount; i++)
         {
-            for (j = i; j < candidateCount - 1; j++)
+            if (*previousCurveId == candidateIds[i])
             {
-                candidateIds[j] = candidateIds[j + 1];
-                candidateDistances[j] = candidateDistances[j + 1];
+                for (j = i; j < candidateCount - 1; j++)
+                {
+                    candidateIds[j] = candidateIds[j + 1];
+                    candidateDistances[j] = candidateDistances[j + 1];
+                }
+                candidateCount--;
+                i--;
             }
-            candidateCount--;
-            i--;
         }
-    }
 
-    *previousCurveId = *(s32*)(startCurve + 0x14);
-    selectedIndex = 0;
-    for (i = 0; i < candidateCount; i++)
-    {
-        if (candidateDistances[i] < candidateDistances[selectedIndex])
+        *previousCurveId = *(s32*)(startCurve + 0x14);
+        selectedIndex = 0;
+        for (i = 0; i < candidateCount; i++)
         {
-            selectedIndex = i;
+            if (candidateDistances[i] < candidateDistances[selectedIndex])
+            {
+                selectedIndex = i;
+            }
         }
+        return candidateIds[selectedIndex];
     }
-    return candidateIds[selectedIndex];
+    return -1;
 }
 
 #pragma peephole on
