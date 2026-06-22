@@ -2775,14 +2775,9 @@ void Tricky_hitDetect(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     y = ((GameObject*)obj)->anim.localPosY;
-    dy = y - ((GameObject*)obj)->anim.previousLocalPosY;
-    if (dy >= lbl_803E23DC)
-    {
-    }
-    else
-    {
-        dy = -dy;
-    }
+    dy = (y - ((GameObject*)obj)->anim.previousLocalPosY >= lbl_803E23DC)
+             ? y - ((GameObject*)obj)->anim.previousLocalPosY
+             : -(y - ((GameObject*)obj)->anim.previousLocalPosY);
     if (lbl_803E23E8 == dy)
     {
         if (y == ((GameObject*)obj)->anim.worldPosY)
@@ -2812,14 +2807,9 @@ void Tricky_hitDetect(int obj)
             height = objFn_801948c0(*objects,TRICKY_HEIGHT_TRACK_MODEL_SLOT);
             if (*(s32*)&((TrickyState*)state)->heightTrackObjId == -1)
             {
-                dy = height - ((GameObject*)obj)->anim.localPosY;
-                if (dy >= lbl_803E23DC)
-                {
-                }
-                else
-                {
-                    dy = -dy;
-                }
+                dy = (height - ((GameObject*)obj)->anim.localPosY >= lbl_803E23DC)
+                         ? height - ((GameObject*)obj)->anim.localPosY
+                         : -(height - ((GameObject*)obj)->anim.localPosY);
                 if (dy < lbl_803E24B8)
                 {
                     ((TrickyState*)state)->heightTrackObjId = *(u32*)(*(int*)(*objects + 0x4c) + 0x14);
