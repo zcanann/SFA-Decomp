@@ -129,31 +129,30 @@ void wctempledia_hitDetect(void)
 
 void wctempledia_update(int obj)
 {
-    WCTempleDiaState* state = ((GameObject*)obj)->extra;
-    WCTempleDiaSetup* setup = (WCTempleDiaSetup*)((GameObject*)obj)->anim.placementData;
-    int i;
+    GameObject* go = (GameObject*)obj;
+    WCTempleDiaState* state = go->extra;
+    WCTempleDiaSetup* setup = (WCTempleDiaSetup*)go->anim.placementData;
     int j;
     int k;
+    int i;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
-        wctempledia_syncPartVisibility(obj, state->stageMask);
+        wctempledia_syncPartVisibility((int)go, state->stageMask);
         return;
     }
-    state->currentSpeed = timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed)) +
-        state->currentSpeed;
-    ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
-    Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
+    state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
+    go->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)go->anim.rotZ);
+    Sfx_KeepAliveLoopedObjectSound((u32)go, SFXmn_sml_trex_roar);
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         f32 ratio = state->currentSpeed / state->targetTable[2];
-        Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
+        Sfx_SetObjectSfxVolume((u32)go, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
     {
-        int bit = 1 << i;
-        if ((state->stageMask & bit) == 0 &&
+        if ((state->stageMask & (1 << i)) == 0 &&
             GameBit_Get(state->gamebits[i]) != 0)
         {
             int found = 0;
@@ -176,7 +175,7 @@ void wctempledia_update(int obj)
                 state->targetSpeed = state->targetTable[0];
                 break;
             }
-            state->stageMask |= bit;
+            state->stageMask |= (1 << i);
             if (i == 0)
             {
                 state->targetSpeed = state->targetTable[1];
@@ -189,7 +188,7 @@ void wctempledia_update(int obj)
             }
         }
     }
-    wctempledia_syncPartVisibility(obj, state->stageMask);
+    wctempledia_syncPartVisibility((int)go, state->stageMask);
     if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK)
     {
         GameBit_Set(setup->solvedBit, 1);
