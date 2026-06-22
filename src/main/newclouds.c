@@ -1110,9 +1110,10 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     cur[1] = py;
     cur[2] = pz;
     progress = *(f32*)&lbl_803DF1A0;
+    i = 0;
     oddFlag = (u8)flags & 1;
     halfWidth = (u8)width >> 1;
-    for (i = 0; i <= segs; i++)
+    for (; i <= segs; i++)
     {
         if (i < segs)
         {
