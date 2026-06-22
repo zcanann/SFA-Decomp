@@ -892,7 +892,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     kind-2(2) — same value NAMED/typed identically in both builds, both regs free, only the SLOT differs (no
     name-vs-inline distinction to flip, e.g. groundanimator `s8 bi`, MagicPlant `alpha`) — is the residual
     #107 does NOT crack; that's the genuinely-open creation-order/neighbor-perturbation/register-pressure nut.
-    (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
+    DOESN'T-APPLY shapes (pausemenu, verified — recognize fast, don't burn cycles): besides criteria 2/3/1
+    failures, the naming lever is ALSO inert when the swapped values are (a) CONSTANTS — naming/inlining a
+    literal is identical (a const colors the same either way), so a const↔const or const↔addr swap can't be
+    flipped (DR_EarthWarrior_init 0x29↔inline-addr, Sky_func03 `li 0` pairs); (b) ALREADY-INLINE-CSE'd on BOTH
+    sides — both are already expression-temps at their natural height, so there's no name-vs-inline to flip; the
+    swap is then the pure free-reg-choice open nut above. So the lever needs exactly ONE side to be a NAMED
+    re-derivable value (un-name→lower) or an INLINE re-derivable value retail NAMES (name→higher) — a genuine
+    kind-MISMATCH to flip. (Plus #66's commutative-op-with-block-localable-operand variant.)
     #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
     T=C=181 + conversion-bias families; WorkerA kaldachom control r28↔r29 — block-scope was the ONLY
     mover, shifted the swap to a different value). UNTRIED LEADS to attack fresh: register PRESSURE /
@@ -1214,6 +1221,19 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     base) — it removes the `mr` but the reloc change (gExpgfxStaticData+off vs the standalone gExpgfxStaticPool* symbol)
     costs MORE than the mr saves (expgfx_free 95.6→92.5), so the standalone-global reloc is load-bearing. Still a clean
     source form is ASSUMED to exist; the "first-direct/rest-via-temp" asymmetry is the freshest lead.
+    ✅ CORRECTED DISCRIMINATOR (expgfx, matched-fn oracle — the COUNT hypothesis above is WRONG): MWCC readily
+    materializes MANY globals DIRECT into saved regs (oracle: partfx_updateFrameState = 19 DIRECT `addi rSaved,r3,@lo`;
+    cloudaction_update = 6, re-materializing one global into r29 4× direct). It's NOT "1st direct, rest detour" — the
+    real discriminator is ACCESS PATTERN: a SCALAR global (`gX=…`) or CONSTANT-OFFSET access (`gStruct.field`,
+    `gArr[K]` const K) → ALWAYS materializes DIRECT (even multi-use, re-materialized by name each use). A RUNTIME-
+    INDEXED / WALKED base (`p=gArr; p[runtime_idx]` / `p->f; p++`) → the r0+`mr` DETOUR (the runtime index/walk forces
+    the base through a reg via r0). So the #155 detour CORE is narrowly the RUNTIME-base case ONLY; scalar/const-offset
+    are already direct. (Explains task-21: dfsh global-direct REGRESSED = `gArr[runtime_idx]`; modellight WALKS.) The
+    open core = "make a RUNTIME-INDEXED/WALKED global base materialize `addi rWalker,r3` direct" — the by-name oracle
+    doesn't cover it; hunt a matched fn that materializes a RUNTIME-indexed base direct. ⚠️ RECONCILE: flameguard's
+    dll_7B base[0x128] is a CONSTANT offset yet DETOURS — contradicts "const-offset = direct"; the extra factor is
+    likely the CONDITIONAL first-use (`if(...) base[0x128]=…`) routing base through volatile r3 for the guarded store.
+    So a 2nd sub-trigger may be CONDITIONAL/guarded-first-use, not just runtime-index — open, worth pinning.
     **MAJOR REFRAME (flameguard, dll_7B_func03) — a chunk of the ★#147 "kind-2 byte-identical-except-one-reg
     within-class-ORDER" residuals are #155 DETOURS IN DISGUISE, not generic coloring.** When a kind-2 swap has
     one of the two swapped regs being a GLOBAL BASE, check its materialization: if base goes `lis r3; addi r3,r3,@lo;
