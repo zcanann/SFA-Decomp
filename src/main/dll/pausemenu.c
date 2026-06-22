@@ -580,7 +580,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     else
     {
         MapEventInterface* mapEvents = *gMapEventInterface;
-        char buf[0x50];
+        char buf[0x38];
         s32 hintCount;
         s32 gbCount;
         s32 h24;
