@@ -884,6 +884,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     int x0 = x;
     u8* p1;
     u8* p2;
+    u8* glyph;
     va_list args;
     char buf[272];
 
@@ -918,9 +919,9 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
                 if (*p1 >= 0x21 && *p1 <= 0x5a)
                 {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    fn_80137A00(xx, yy, gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
+                    fn_80137A00(xx, yy, glyph = gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
-                    fn_80137A00(xx, yy, gDebugFontGlyphs + (*p1 - 0x21) * 5, -1);
+                    fn_80137A00(xx, yy, glyph, -1);
                     xx += 0xf;
                 }
                 break;
