@@ -21,11 +21,11 @@ typedef struct GrimbleState
     u8 pad0[0x38 - 0x0];
     s32 unk38;
     u8 pad3C[0x45 - 0x3C];
-    s8 unk45;
+    s8 directionSign;
     u8 pad46[0x48 - 0x46];
     f32 unk48;
     u8 pad4C[0x58 - 0x4C];
-    s16 unk58;
+    s16 yaw;
     u8 pad5A[0x60 - 0x5A];
 } GrimbleState;
 
@@ -254,7 +254,7 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     (*(void (**)(short*, u8*, f32, int))((char*)*gPlayerInterface + 0x20))((short*)obj, (u8*)p, spd, 1);
     (*(void (**)(void*, void*, f32))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) + 0x28))(
         *(void**)&((GrimbleState*)hit)->unk38, (void*)(hit + 0x48),
-        p->baddie.animSpeedA * (f32)(1 - (((GrimbleState*)hit)->unk45 << 1)));
+        p->baddie.animSpeedA * (f32)(1 - (((GrimbleState*)hit)->directionSign << 1)));
     if (((GrimbleState*)hit)->unk48 < lbl_803E2EF4)
     {
         ((GrimbleState*)hit)->unk48 = lbl_803E2EF4;
@@ -277,7 +277,7 @@ int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
     a.x = r;
     {
         int ang = (s16)getAngle(a.y, d);
-        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
+        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->directionSign << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
     {
@@ -305,7 +305,7 @@ int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
         Sfx_PlayFromObject(obj, SFXsc_attack04);
     }
     p->baddie.moveSpeed = lbl_803E2EEC;
-    yaw = ((GrimbleState*)hit)->unk58;
+    yaw = ((GrimbleState*)hit)->yaw;
     diff = *obj - (yaw & 0xffff);
     if (diff > 0x8000)
     {
@@ -367,7 +367,7 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
     a.x = r;
     {
         int ang = (s16)getAngle(a.y, d);
-        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
+        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->directionSign << 1) - 1);
     }
     return 0;
 }
@@ -409,7 +409,7 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
     a.x = r;
     {
         int ang = (s16)getAngle(a.y, d);
-        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
+        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->directionSign << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
     {
@@ -455,7 +455,7 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     a.x = r;
     {
         int ang = (s16)getAngle(a.y, d);
-        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->unk45 << 1) - 1);
+        ((GameObject*)obj)->anim.rotY = ang * ((((GrimbleState*)hit)->directionSign << 1) - 1);
     }
     if (*(char*)&p->baddie.moveDone != '\0')
     {
