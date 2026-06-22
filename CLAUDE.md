@@ -792,10 +792,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     not the locals), un-naming the product (CSEs back), LITERAL operands (fixes the bias to f28 but FOLDS
     the runtime fmul → 1 instr short, e.g. dim2icicle prod=-75*0.5), moving the const assignments INTO the
     loop after the conversion (breaks hoisting → DSE), hoisting the conversion OUT of the loop (structure
-    breaks). The untried frontier: force the bias web EARLY (front-end) without folding the multiply, OR
-    make the const webs created AFTER the bias — likely needs the #121 "in-loop literal LICM" shape but the
-    real const values aren't clean literals. (DeepDive2: dim2icicle 99.92, dll_8B_func03 96.03 — both pure
-    bias-vs-const coloring, byte-identical streams.)
+    breaks), `prod = c34v * literal` (one named one literal — inert + a fmuls-operand-order regress),
+    #114 no-op conversion node `(f32)(int)(long)x` on the conversion input (folds, inert). ROOT (now
+    pinned): the bias web is synthesised during LATE int→float lowering REGARDLESS of source position
+    (the const webs are already created at the front-end), so #108 "last-created → highest" parks it
+    high; no source reordering moves a late-phase web before a front-end one without changing the
+    structure. This is the WITHIN-CLASS-ORDER frontier (★ classifier above) in FP form — PARK as
+    deepest-frontier; likely needs a compiler-internals/tooling angle (force conv-bias front-end
+    creation, or a probe of MWCC's lowering-pass web-creation counter). (DeepDive2: dim2icicle 99.92,
+    dll_8B_func03 96.03 — both pure bias-vs-const coloring, byte-identical streams. xyzanimator_update
+    100% via #127 was a SEPARATE store-aliasing reload, not this.)
 149. **GLOBAL-BASE INDEXED-ARRAY DETOUR (#148 CRACKED) — pick the form by USE-COUNT of the base+idx sum.**
     The detour `entry = *(T**)(lbl + idx*K + off)` is a FRESH SUM: MWCC evaluates the index FIRST (operator-
     before-leaf: the multiply/load is an operator node, the global address a deferrable leaf) and routes the
