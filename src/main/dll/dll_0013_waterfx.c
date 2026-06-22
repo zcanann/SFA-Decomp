@@ -40,7 +40,7 @@ extern f32 lbl_803DF2E4;
 extern f32 lbl_803DF2F0;
 extern f32 lbl_803DF2F4;
 extern f32 lbl_803DF2F8;
-extern f32 lbl_803DF304;
+extern const f32 lbl_803DF304;
 extern f32 gWaterfxPi;
 extern f32 lbl_803DF314;
 extern f32 fn_802942EC(f32);
@@ -688,12 +688,13 @@ void fn_80095164(WaterParticle* s)
     for (; i < 8; i++)
     {
         f32 h = s->f10;
-        f32 ph = (lbl_803DF2E0 + 0.9f * ((f32)i / 7.0f)) * h;
+        f32 a;
+        f32 ph = (lbl_803DF2E0 + (a = 0.9f * ((f32)i / 7.0f))) * h;
         f32 dd = ph - 0.5f;
         f32 lim;
         f32 sc;
         fade = -(4.0f * (dd * dd) - 1.0f);
-        lim = 0.05f + 0.9f * ((f32)i / 7.0f);
+        lim = 0.05f + a;
         if (h < lim)
         {
             t = 1.0f;
@@ -711,7 +712,7 @@ void fn_80095164(WaterParticle* s)
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
         GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(p + 0x18) = (u8)(int)(255.0f * t);
+        *(u32*)(p + 0x18) = (u8)(int)(lbl_803DF304 * t);
         mtxIdx += 3;
         p += 4;
     }
