@@ -60,7 +60,7 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     int step;
     f32* axisOut;
     f32* wp;
-    f32 upper, near, lower, wrap, v0, v1, d;
+    f32 near, lower, wrap, upper, v0, v1, d;
     u8* pts[4];
 
     i = 0;
