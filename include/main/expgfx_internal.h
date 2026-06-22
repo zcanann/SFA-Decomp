@@ -535,7 +535,7 @@ extern u8 gExpgfxStaticPoolFrameFlags[];
 extern u32 gExpgfxSlotActiveMasks[];
 extern u32 gExpgfxSlotPoolBases[];
 extern int gExpgfxTextureFreeInProgress;
-extern volatile s16 gExpgfxSequenceCounter;
+extern s16 gExpgfxSequenceCounter;
 extern volatile u8 gExpgfxFrameParityBit;
 extern u8 gExpgfxUpdatingActivePools;
 extern u8 gExpgfxRenderResetPending;
