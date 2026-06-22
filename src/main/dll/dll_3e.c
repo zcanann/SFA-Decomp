@@ -100,6 +100,7 @@ void PlayControl(void)
     AttractMovieTextureSet* decodedTexture;
     s32 frame;
     int allowPop;
+    s32 modResult;
 
     if (lbl_803DD664 != NULL)
     {
@@ -240,10 +241,14 @@ void PlayControl(void)
             lbl_803A5D60.state = 3;
         }
     }
-    else if (((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-        lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1))
+    else
     {
-        gAttractMovieLoopCompleted = 1;
+        modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+            lbl_803A5D60.header.mNumFrames;
+        if (modResult == (lbl_803A5D60.header.mNumFrames - 1))
+        {
+            gAttractMovieLoopCompleted = 1;
+        }
     }
 }
 
