@@ -1162,16 +1162,13 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
         e += 0x10;
     }
     slot = -1;
-    idx = 0;
-    e2 = base;
-    for (; idx < 0x3a; idx++)
+    for (idx = 0, e2 = base; idx < 0x3a; idx++, e2 += 0x10)
     {
         if (*(u8*)(e2 + 0xc) == 0)
         {
             slot = idx;
             break;
         }
-        e2 += 0x10;
     }
     if (slot == -1)
         return -1;
