@@ -44,7 +44,7 @@ extern int gObjUpdateList;
 extern f32 sqrtf(f32 x);
 extern int gObjCount;
 extern void* gObjList;
-extern f32 lbl_803DE890;
+extern const f32 lbl_803DE890;
 extern void mtx44Transpose(f32* src, f32* dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void OSReport(const char* msg, ...);
@@ -2672,7 +2672,7 @@ void fn_8002A5DC(u8* obj)
 void modelInitBones(f32 scale, void* model)
 {
     extern f32 lbl_803DE88C;
-    extern f32 lbl_803DE890;
+    extern const f32 lbl_803DE890;
     extern f32 lbl_803DE8D4;
     extern f32 lbl_803DE8D8;
     f32* srcP;
@@ -2687,7 +2687,6 @@ void modelInitBones(f32 scale, void* model)
     u8* bone;
     f32 zero;
     f32 sc;
-    f32 minScale;
     f32 w;
     f32 len;
     f32 vx;
@@ -2722,7 +2721,6 @@ void modelInitBones(f32 scale, void* model)
             off = 4;
             boneOff = 0x1c;
             sumP = &sums[1];
-            minScale = lbl_803DE890;
             for (; i < *(u8*)(*(u8**)m + 0xf3); srcP++, off += 4, boneOff += 0x1c, sumP++, i++)
             {
                 *(f32*)(*(u8**)(tbl + 4) + off) = sc * *srcP;
@@ -2740,7 +2738,7 @@ void modelInitBones(f32 scale, void* model)
                     *(f32*)(*(u8**)(tbl + 0xc) + off) = lbl_803DE8D8;
                 }
                 w = *(f32*)(*(u8**)(hdr + 0x1c) + off);
-                if (w >= minScale)
+                if (w >= lbl_803DE890)
                 {
                     *(f32*)(*(u8**)(tbl + 0xc) + off) *= w;
                 }
