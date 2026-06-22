@@ -100,15 +100,16 @@ extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int a, int b);
 extern ObjHitReactEntry gEarthWalkerHitReactEntries[];
-extern f32 lbl_803E6CE4;
-extern f32 lbl_803E6CDC;
+extern f32 gEarthWalkerMoveStartProgress;
+extern f32 gEarthWalkerAnimAdvanceRate;
 
 typedef struct EarthWalkerState {
     u8 pad000[0x600];
     u8 animPhase;
     u8 pad601[0x610 - 0x601];
     u8 hitTriggerId;
-    u8 pad611[0x624 - 0x611];
+    u8 moveLibFlags611; /* 0x611: moveLib flag byte, OR-set with bit 2 at init */
+    u8 pad612[0x624 - 0x612];
     u8 eyeAnimState[0x654 - 0x624];
     f32 hitReactStepScale;
     u8 interactionState;
@@ -1178,19 +1179,19 @@ extern void doNothing_80062A50(int obj, f32 x, f32 y, f32 z);
 extern void dll_2E_func03(int obj, int p2);
 extern void dll_2E_func05(int obj, int p2, int p3, int p4, int p5);
 extern void dll_2E_func09(int p1, void *p2, void *p3, int p4);
-extern int lbl_802C25B8[];
-extern int lbl_802C25C8[];
+extern int gDll28BMoveBlendDataA[];
+extern int gDll28BMoveBlendDataB[];
 extern void *gDll28BSubstateHandlers[];
 extern void *gDll28BStateHandlers[];
 extern f32 gWcEarthWalkerFarPlayerDistance;
 extern f32 gWcEarthWalkerNearPlayerDistance;
-extern f32 lbl_803E6CF8;
-extern f32 lbl_803E6D08;
+extern f32 gWcEarthWalkerIdleTimerThreshold;
+extern f32 gWcEarthWalkerCurveAdvanceStep;
 extern f32 gWcEarthWalkerApproachPlayerDistance;
 extern f32 gWcEarthWalkerChaseMoveSpeed;
 extern f32 gWcEarthWalkerWalkMoveSpeed;
 extern f32 lbl_803E6D18;
-extern f32 lbl_803E6D1C;
+extern f32 gDll28BCurveInitParam;
 
 typedef struct Blob16 { int a, b, c, d; } Blob16;
 typedef struct ObjXform {
@@ -1211,11 +1212,10 @@ typedef struct ObjXform {
 
 
 extern int dll_2E_func07(int obj, int p2, int state, int p4, int p5);
-extern void fn_80113F94(int state, f32 a);
+extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern int lbl_803E6CD8;
-extern f32 lbl_803E6CDC;
-extern f32 lbl_803E6CE8;
+extern int gEarthWalkerMoveBlendData;
+extern f32 gEarthWalkerLookAtMaxDistance;
 
 
 

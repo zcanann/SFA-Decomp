@@ -181,7 +181,7 @@ void FUN_801149b8(u64 param_1, double param_2, double param_3, u64 param_4,
 
 int dll_2E_func0F_ret_0(void) { return 0x0; }
 
-void fn_80113F94(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
+void dll_2E_setLookAtMaxDistance(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int* p, int v) { *(int*)((char*)p + 0x608) = v; }
 
 #pragma scheduling off

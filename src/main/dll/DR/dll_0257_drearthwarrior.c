@@ -236,7 +236,7 @@ extern EWColorTbl gDREarthWarriorColors;
 extern char gEarthWarriorTailChainDesc;
 extern void setAButtonIcon(int x);
 extern void dll_2E_func09(int p, void* a, void* b, int c);
-extern void fn_80113F94(int p, f32 f);
+extern void dll_2E_setLookAtMaxDistance(int p, f32 f);
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SpawnHitLightAndFade(int obj, void* pos, f32 v);
@@ -1374,7 +1374,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
-    fn_80113F94(inner + 0x3ec, lbl_803E8388);
+    dll_2E_setLookAtMaxDistance(inner + 0x3ec, lbl_803E8388);
     ((DREarthWarriorState*)inner)->unk9FD |= 2;
     ((DREarthWarriorState*)inner)->unk1444 = lbl_803E82E8;
     ((DREarthWarriorState*)inner)->airMeterCapacity = *(s16*)((char*)p2 + 0x1a);

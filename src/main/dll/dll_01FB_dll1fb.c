@@ -170,11 +170,11 @@ void dll_1FB_update(int* obj)
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
     if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&
-        (GameBit_Get(0x9ad) == 0))
+        (GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
         buttonDisable(0, 0x100);
-        GameBit_Set(0x9ad, 1);
+        GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         ((int)obj, lbl_803E5D04, timeDelta, NULL);

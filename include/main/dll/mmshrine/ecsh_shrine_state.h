@@ -22,7 +22,7 @@ typedef struct EcshShrineState
     u8 unk2F;
     u8 unk30;
     u8 pad31[0x32 - 0x31];
-    u8 unk32;
+    u8 introTextLatch; /* 0x32: latches GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER (0x58b); once set, the intro dialogue has been kicked off and won't replay */
     u8 pad33[0x34 - 0x33];
     s32 gameBitLatchState;
 } EcshShrineState;

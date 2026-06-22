@@ -359,7 +359,7 @@ void transporter_init(int obj, u8* params)
         state->flags = (u8)(state->flags | 0x10);
         break;
     case 0x43F83:
-        if (GameBit_Get(0xBA8) != 0 || GameBit_Get(0x316) != 0 || GameBit_Get(0x511) != 0)
+        if (GameBit_Get(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || GameBit_Get(0x316) != 0 || GameBit_Get(0x511) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
         }

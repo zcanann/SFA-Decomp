@@ -15,7 +15,11 @@
  * setScale) read the active instance through the gEcShShrineActiveObject singleton.
  *
  * The DLL owns a cluster of GameBits set on init/free/transition (0xefa,
- * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...) and a torch GameBit (0x58b).
+ * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...). It also reads the entrance-intro
+ * trigger GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER (0x58b), set by the shrine's
+ * entrance trigger volume, and on the first frame it sees it set plays the
+ * "found your way into a KRAZOA SHRINE" dialogue (0x285), latching
+ * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
 #include "main/dll/mmshrineanimobj_struct.h"
@@ -205,7 +209,7 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
             case 7:
                 fn_80296518(player, 8, 1);
                 GameBit_Set(0x143, 1);
-                GameBit_Set(0xBA8, 1);
+                GameBit_Set(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;
             case 13:
                 (*gObjectTriggerInterface)->setCamVars(0x48, 100, 0, 0x50);
@@ -386,7 +390,7 @@ void ecsh_shrine_update(s16* obj)
     *(EcshIntPair*)&t[0] = *(EcshIntPair*)&lbl_803E8470;
     if (sub[0x32] == 0)
     {
-        gv = GameBit_Get(0x58b);
+        gv = GameBit_Get(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
         sub[0x32] = gv;
         if (sub[0x32] != 0)
         {
@@ -806,8 +810,8 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
     ((EcshShrineState*)sub)->unk1A = 0;
     ((EcshShrineState*)sub)->unk1E = 0;
-    gv = GameBit_Get(0x58b);
-    ((EcshShrineState*)sub)->unk32 = gv;
+    gv = GameBit_Get(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
+    ((EcshShrineState*)sub)->introTextLatch = gv;
     gEcShShrineActiveObject = obj;
     ObjGroup_AddObject(obj, 0xb);
     ((GameObject*)obj)->unkF4 = 1;

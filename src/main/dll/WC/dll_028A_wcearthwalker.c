@@ -14,13 +14,20 @@
  * (gMapEventInterface map-act 2 plus quest bits 0xc90/0xc36/0xc55/0x7fc/
  * 0x235/0x9ad/0xc92) and runs it via gObjectTriggerInterface (objRunSeq),
  * remembering it in lastTriggeredState. Confirmed live (Dolphin): contact
- * on an encounterType-6 instance sets game bit 0x7fb and runs sequence 2.
+ * on an encounterType-6 instance sets game bit 0x7fb and runs sequence 2;
+ * the encounterType-8 instance (the Krazoa Shrine door dino) runs sequence 4,
+ * disables the A-button and latches GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE
+ * (0x9ad) - that sequence is the dialogue that unlocks the Krazoa Shrine door
+ * (lastTriggeredState observed -1 -> 4).
  *
  * The dll_28B_stateHandlerN / dll_28B_substateHandlerN functions below are
  * compiled into this TU but belong to DLL 0x28B's state machine (a separate
  * player-following NPC): dll_028B.c installs them into gDll28BStateHandlers /
  * gDll28BSubstateHandlers and drives them via gPlayerInterface->update().
  * They operate on Dll28BAiState (earthwalker_state.h), NOT EarthWalkerState.
+ * The gWcEarthWalker{Far,Near,Approach}PlayerDistance / {Chase,Walk}MoveSpeed
+ * and gWcEarthWalker{IdleTimerThreshold,CurveAdvanceStep} constants are read
+ * only by those 0x28B handlers (the follower AI), not by earthwalker_update.
  * Exact game-bit meanings and several encounter sub-states are inferred
  * from use, not confirmed.
  */
@@ -88,14 +95,14 @@ void earthwalker_update(int obj)
     {
         if (ewObj->currentMove != 0x203)
         {
-            ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E6CE4, 0);
+            ObjAnim_SetCurrentMove(obj, 0x203, gEarthWalkerMoveStartProgress, 0);
         }
     }
     else
     {
         if (ewObj->currentMove != 2)
         {
-            ObjAnim_SetCurrentMove(obj, 2, lbl_803E6CE4, 0);
+            ObjAnim_SetCurrentMove(obj, 2, gEarthWalkerMoveStartProgress, 0);
         }
     }
 
@@ -351,11 +358,11 @@ void earthwalker_update(int obj)
                 newState = 3;
                 break;
             case 8:
-                if ((u32)GameBit_Get(0x9ad) == 0)
+                if ((u32)GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0)
                 {
                     newState = 4;
                     buttonDisable(0, 0x100);
-                    GameBit_Set(0x9ad, 1);
+                    GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
                 }
                 else
                 {
@@ -374,7 +381,7 @@ void earthwalker_update(int obj)
         break;
     }
 
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
 }
 
 /*
@@ -399,11 +406,11 @@ int dll_28B_stateHandler0(void) { return 0x2; }
 
 int dll_28B_substateHandler3(int obj, int ai)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    Dll28BAiState* state = *(Dll28BAiState**)&((GameObject*)obj)->extra;
 
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
-        ((Dll28BAiState*)state)->flagsAC0 &= ~1;
+        state->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
     }
     else if (*(s8*)&((BaddieState*)ai)->moveDone != 0)
@@ -415,25 +422,25 @@ int dll_28B_substateHandler3(int obj, int ai)
 
 int dll_28B_substateHandler2(int obj, int ai)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    Dll28BAiState* state = *(Dll28BAiState**)&((GameObject*)obj)->extra;
     f32 dist;
 
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
-        ((Dll28BAiState*)state)->flagsAC0 |= 1;
+        state->flagsAC0 |= 1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 1);
     }
-    ((Dll28BAiState*)state)->randomTimer -= timeDelta;
-    dist = ((Dll28BAiState*)state)->playerDistance;
+    state->randomTimer -= timeDelta;
+    dist = state->playerDistance;
     if (dist > gWcEarthWalkerFarPlayerDistance)
     {
         return 2;
     }
     if (dist < gWcEarthWalkerNearPlayerDistance)
     {
-        if (((Dll28BAiState*)state)->randomTimer <= lbl_803E6CF8)
+        if (state->randomTimer <= gWcEarthWalkerIdleTimerThreshold)
         {
-            ((Dll28BAiState*)state)->randomTimer = randomGetRange(0x78, 0xfa);
+            state->randomTimer = randomGetRange(0x78, 0xfa);
             return 4;
         }
     }
@@ -450,7 +457,7 @@ int dll_28B_substateHandler1(int obj, int ai)
         state->flagsAC0 &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
-    if (Curve_AdvanceAlongPath(route, lbl_803E6D08) != 0 || route->atSegmentEnd != 0)
+    if (Curve_AdvanceAlongPath(route, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
     {
         (*gRomCurveInterface)->goNextPoint(route);
     }
@@ -487,7 +494,7 @@ int dll_28B_stateHandler2(int obj, int ai)
     ObjAnim_SampleRootCurvePhase(
         sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
-        (ObjAnimComponent*)obj, (f32*)(ai + 0x2a0));
+        (ObjAnimComponent*)obj, &((BaddieState*)ai)->moveSpeed);
     return 0;
 }
 
@@ -515,7 +522,7 @@ int earthwalker_animEventCallback(int obj, int unused, ObjAnimUpdateState* animU
     }
     if ((s8)shouldAdvanceMove != 0)
     {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -539,12 +546,15 @@ void earthwalker_init(int obj, int setup)
     EarthWalkerState* ewState = (EarthWalkerState*)state;
     int local;
 
-    local = lbl_803E6CD8;
+    local = gEarthWalkerMoveBlendData;
     ewObj->animEventCallback = earthwalker_animEventCallback;
     dll_2E_func05(obj, state, -8192, 12743, 2);
     dll_2E_func09(state, 0, &local, 2);
-    fn_80113F94(state, lbl_803E6CE8);
-    ((Dll28BAiState*)state)->unk611 |= 2;
+    /* moveLib state+0x614: head look-at only engages while the target is
+     * within this distance (live-verified in Dolphin - drop it below the
+     * player distance and the head snaps back to neutral). */
+    dll_2E_setLookAtMaxDistance(state, gEarthWalkerLookAtMaxDistance);
+    ewState->moveLibFlags611 |= 2;
     ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
     ewState->encounterType = *(u8*)(setup + 0x19);
     if (ewState->encounterType == 1)

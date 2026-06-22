@@ -14,9 +14,7 @@
  * through its private Dll28BState. Field widths mirror the observed deref
  * widths; unobserved ranges are padded. */
 typedef struct Dll28BAiState {
-    u8 unk0[0x611 - 0x0];
-    u8 unk611; /* OR-set with bit 2 at init */
-    u8 unk612[0x9B0 - 0x612];
+    u8 unk0[0x9B0 - 0x0];
     RomCurveWalker route;
     f32 playerDistance; /* 0xAB8: planar distance to the player (== Dll28BState.playerDistance) */
     f32 randomTimer;
@@ -24,7 +22,6 @@ typedef struct Dll28BAiState {
     u8 unkAC1[0xAC8 - 0xAC1];
 } Dll28BAiState;
 
-STATIC_ASSERT(offsetof(Dll28BAiState, unk611) == 0x611);
 STATIC_ASSERT(offsetof(Dll28BAiState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BAiState, route.posX) == 0xA18);
 STATIC_ASSERT(offsetof(Dll28BAiState, playerDistance) == 0xAB8);
