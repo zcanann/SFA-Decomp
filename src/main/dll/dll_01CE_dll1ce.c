@@ -223,17 +223,17 @@ void fn_explosion_release_v11_unused(u32 obj)
     state = ((GameObject*)obj)->extra;
     FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
-        *)state)->unk8;
+        *)state)->velZ;
     clampedSpeed = lbl_803E566C;
-    if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
+    if (((FnExplosionReleaseV11UnusedState*)state)->velZ != lbl_803E566C)
     {
-        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = ((FnExplosionReleaseV11UnusedState*)state)->unk8 *
+        ((FnExplosionReleaseV11UnusedState*)state)->velZ = ((FnExplosionReleaseV11UnusedState*)state)->velZ *
             lbl_803E5670;
-        if (((FnExplosionReleaseV11UnusedState*)state)->unk8 < clampedSpeed)
+        if (((FnExplosionReleaseV11UnusedState*)state)->velZ < clampedSpeed)
         {
-            clampedSpeed = ((FnExplosionReleaseV11UnusedState*)state)->unk8;
+            clampedSpeed = ((FnExplosionReleaseV11UnusedState*)state)->velZ;
         }
-        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = clampedSpeed;
+        ((FnExplosionReleaseV11UnusedState*)state)->velZ = clampedSpeed;
     }
     if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E5674))
     {
@@ -258,7 +258,7 @@ void fn_explosion_release_v11_unused(u32 obj)
         if (found)
         {
             ((FnExplosionReleaseV11UnusedState*)state)->unk4 = lbl_803E5678;
-            ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
+            ((FnExplosionReleaseV11UnusedState*)state)->velZ = lbl_803E567C;
             *state = '\0';
             GameBit_Set((int)placement[0xf], 1);
             FUN_80006824(obj, 0x3e1);
