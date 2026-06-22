@@ -322,8 +322,8 @@ void waterfx_func05(int obj, int renderParam)
             fn_8007CAF4((int)gWaterfxRippleTexture);
         }
         {
-        int o64, o32;
-        for (i = 0, o64 = 0, o32 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
+        int o32, o64;
+        for (i = 0, o32 = 0, o64 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
         {
             WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
             if (e->active != 0)
