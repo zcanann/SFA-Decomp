@@ -688,10 +688,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     (decl-order is correctly inert here — induction webs, not top-loaded #108; the FORM is the induction-class
     analog of #108's decl-order.) SCOPE (probe-verified robust): the rule holds for a counter + one OR
     MORE walkers, LOCAL or GLOBAL base — body-form always lands the counter LOWEST with the walkers
-    ascending above it. COUNTEREXAMPLE / open multi-induction case (func05): a body-form GLOBAL-base loop
-    whose strides are used as CALL ARGS (not just dereferenced) can color a WALKER below the counter,
-    violating the rule — that's a #155/web-count case with a specific structural trigger NOT reproducible
-    in a simple multi-walker loop; it's a live target the validator is isolating (name the differing web).
+    ascending above it. OPEN MULTI-STRIDE REDUCER-DIRECTION case (func05, asm-pinned by waterfx — this is
+    NOT call-arg-eval-order/#137; the call args are ALREADY matched in both builds): with 3+ competing
+    strides (e=i*28, vtx=i*64, vtxDesc=i*32, the latter two consumed as drawFn CALL ARGS), RETAIL's reducer
+    orders the strides ASCENDING BY STRIDE VALUE (28→r27, 32→r28, 64→r29) while OURS orders them by
+    CREATION order → the i*28↔i*64 registers SWAP. decl-order / comma-init / #136(a)/(b) all INERT (it's
+    the reducer's stride-register assignment, not source decl order). Live target: find the source that
+    makes the reducer assign strides ascending-by-value (or that reorders stride CREATION to match). The
+    counter is already lowest in both — it's purely the stride-register ordering among the walkers.
     GLOBAL-base caveat: comma-init on a GLOBAL base adds the #155 `lis;addi
     r0;mr` detour (the explicit `e=glob` routes through r0), so it's NOT clean there — on a global base use
     body-form for walker-high, and #136(b) counter-0-reuse / #143 typed-index for counter-high.
