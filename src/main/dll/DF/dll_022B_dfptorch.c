@@ -88,15 +88,12 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     extern void voxmaps_worldToGrid(f32* in, s16* out);
     extern int voxmaps_traceLine(s16*, s16*, void*, int, int);
-    extern f32 sqrtf(f32 x);
-    extern int randomGetRange(int lo, int hi);
     extern f32 lbl_803E63C8;
     extern f32 gDfpTorchOcclusionCheckDistMin;
     extern f32 lbl_803E63D0;
     extern f32 lbl_803E63D4;
     extern f32 lbl_803E63D8;
     extern f32 lbl_803E63DC;
-    extern f32 timeDelta;
     DfpTorchState* state = ((GameObject*)obj)->extra;
     char* cam;
     f32 dist;
@@ -186,8 +183,6 @@ void DFP_Torch_update(int obj)
 
     extern void objUpdateOpacity(int);
     extern u8 gDfpTorchSequenceState;
-    extern f32 timeDelta;
-    extern f32 lbl_803E63E0;
     extern int gDfpTorchEffectParams[];
     typedef struct
     {
