@@ -81,9 +81,9 @@ typedef struct TrickyState {
     f32 waterLevel;
     f32 unk2B0;
     f32 unk2B4; /* collectable.c reads an s16 pair at 2B4/2B6 - launder those */
-    f32 unk2B8;
-    f32 unk2BC;
-    f32 unk2C0;
+    f32 lookDirX; /* look/aim direction: yaw = getAngle(-X,-Z), pitch = getAngle(Y, hyp(X,Z)) */
+    f32 lookDirY;
+    f32 lookDirZ;
     u8 pad2C4[0x2D0 - 0x2C4];
     f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
     f32 freezeStunTimer;

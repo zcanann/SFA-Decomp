@@ -1655,7 +1655,7 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
     divisor;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
 
-    angle = (u16)getAngle(-((TrickyState*)sub)->unk2B8, -((TrickyState*)sub)->unk2C0);
+    angle = (u16)getAngle(-((TrickyState*)sub)->lookDirX, -((TrickyState*)sub)->lookDirZ);
     delta = angle - (u16)((GameObject*)node)->anim.rotX;
     delta_f = delta;
     if (delta_f > lbl_803E25B8) delta_f = lbl_803E25EC + delta_f;
@@ -1683,10 +1683,10 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
 
     if (lbl_803E2574 != fb)
     {
-        f32 dz2 = ((TrickyState*)sub)->unk2C0 * ((TrickyState*)sub)->unk2C0;
-        f32 dx2 = ((TrickyState*)sub)->unk2B8 * ((TrickyState*)sub)->unk2B8;
+        f32 dz2 = ((TrickyState*)sub)->lookDirZ * ((TrickyState*)sub)->lookDirZ;
+        f32 dx2 = ((TrickyState*)sub)->lookDirX * ((TrickyState*)sub)->lookDirX;
         f32 hyp = sqrtf(dz2 + dx2);
-        int angle2 = (u16)getAngle(((TrickyState*)sub)->unk2BC * fb, hyp);
+        int angle2 = (u16)getAngle(((TrickyState*)sub)->lookDirY * fb, hyp);
         s32 d2 = angle2 - (u16)((GameObject*)node)->anim.rotY;
         f32 d2f = d2;
         s16 newVal2;
