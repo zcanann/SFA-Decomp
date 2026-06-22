@@ -723,6 +723,7 @@ extern f32 lbl_803E0538;
 
 /* Flood-search the route graph (filtered by group) for the segment the object
  * lies within, recording the matched checkpoint and local coordinates. */
+#pragma opt_propagation off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
     extern CheckpointSlot gCheckpointRouteTable[]; /* #57 */
@@ -887,3 +888,4 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
     }
 }
+#pragma opt_propagation reset
