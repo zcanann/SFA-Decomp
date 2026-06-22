@@ -1966,12 +1966,12 @@ void dbstealerworm_update(u8* objp)
     extern f32 lbl_803E638C;
     extern u8 lbl_803AD0C0[];
     extern u8 lbl_803293B8[];
-    char* st = (char*)(int)lbl_803AD0C0;
-    char* tbl = (char*)lbl_803293B8;
-    int blob = *(int*)(objp + 0xb8);
-    int data = *(int*)(objp + 0x4c);
-    int sub = *(int*)&((GroundBaddieState*)blob)->control;
-    int obj = (int)objp;
+    char* st;
+    char* tbl;
+    int blob;
+    int data;
+    int sub;
+    int obj;
     int off;
     char* entry;
     int n;
@@ -1986,6 +1986,12 @@ void dbstealerworm_update(u8* objp)
         f32 v[3];
     } stk;
 
+    obj = (int)objp;
+    st = (char*)(int)lbl_803AD0C0;
+    tbl = (char*)lbl_803293B8;
+    blob = *(int*)(obj + 0xb8);
+    data = *(int*)(obj + 0x4c);
+    sub = *(int*)&((GroundBaddieState*)blob)->control;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
@@ -2047,7 +2053,7 @@ void dbstealerworm_update(u8* objp)
                 stk.msg = 0;
                 stk.argA = 0;
                 sub2 = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-                while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, &stk.argA) != 0)
+                while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, (int*)(&stk.msg + 1)) != 0)
                 {
                     if (stk.msg == 0x11 && ((DbStealerwormControl*)sub2)->unk1C != -1)
                     {
