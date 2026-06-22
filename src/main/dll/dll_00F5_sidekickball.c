@@ -199,13 +199,17 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     ((GameObject*)lcl)->anim.rootMotionScale = lbl_803E36A0;
     ((GameObject*)lcl)->anim.rotZ = 0;
     ((GameObject*)lcl)->anim.rotY = 0;
-    if (((GameObject*)player)->anim.parent != NULL)
     {
-        *(s16*)lcl = (s16)(*(s16*)*(int**)&((GameObject*)player)->anim.parent + ((GameObject*)player)->anim.rotX);
-    }
-    else
-    {
-        *(s16*)lcl = ((GameObject*)player)->anim.rotX;
+        s16 rotVal;
+        if (((GameObject*)player)->anim.parent != NULL)
+        {
+            rotVal = (s16)(*(s16*)*(int**)&((GameObject*)player)->anim.parent + ((GameObject*)player)->anim.rotX);
+        }
+        else
+        {
+            rotVal = ((GameObject*)player)->anim.rotX;
+        }
+        *(s16*)lcl = rotVal;
     }
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
