@@ -464,7 +464,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0xc:
-                    id = (p[2] << 8) | p[3];
+                    id = (u16)((p[2] << 8) | p[3]);
                     t = ObjList_GetObjects(&first, &count);
                     for (; first < count; first++)
                     {
