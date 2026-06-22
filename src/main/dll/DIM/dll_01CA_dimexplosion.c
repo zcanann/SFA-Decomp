@@ -135,10 +135,10 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     flames[idx].posX = x;
     flames[idx].posY = y;
     flames[idx].posZ = z;
-    flames[idx].unk18 = lbl_803E492C;
-    flames[idx].scale = flames[0].unk18;
-    flames[idx].unk1C = spd;
-    flames[idx].unk2D = gen;
+    flames[idx].baseScale = lbl_803E492C;
+    flames[idx].scale = flames[0].baseScale;
+    flames[idx].speed = spd;
+    flames[idx].generation = gen;
     flames[idx].age = 0;
     flames[idx].lifetime = (int)(lbl_803E4930 * sqrtf(spd));
     {
@@ -153,7 +153,7 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
         }
         flames[idx].lifetime = life;
     }
-    if (flames[idx].unk2D < 1)
+    if (flames[idx].generation < 1)
     {
         s8 c = *(s8*)((char*)placement + 0x19);
         if (c != 0)
@@ -195,9 +195,9 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     }
     flames[idx].unk2C = randomGetRange(0, 3);
     {
-        f32 sp = flames[idx].unk1C;
+        f32 sp = flames[idx].speed;
         f32 ev = expf((lbl_803E4934 * ((f32)flames[idx].lifetime - (f32)flames[idx].age)) / (f32)flames[idx].lifetime);
-        f32 d = sp - flames[idx].unk18;
+        f32 d = sp - flames[idx].baseScale;
         f32 t = d * ev;
         flames[idx].scale = sp - gExplosionDebrisSpeedScale * t;
         ev = expf((lbl_803E493C * (f32)flames[idx].age) / (f32)flames[idx].lifetime);
@@ -420,11 +420,11 @@ void explosion_update(int obj)
         ((ExplosionDebris*)p)->age += framesThisStep;
         if (((ExplosionDebris*)p)->active != 0)
         {
-            f32 sp = ((ExplosionDebris*)p)->unk1C;
+            f32 sp = ((ExplosionDebris*)p)->speed;
             f32 ev = expf(
                 (lbl_803E4934 * ((f32)((ExplosionDebris*)p)->lifetime - (f32)((ExplosionDebris*)p)->age)) / (
                     f32)(int)((ExplosionDebris*)p)->lifetime);
-            f32 d = sp - ((ExplosionDebris*)p)->unk18;
+            f32 d = sp - ((ExplosionDebris*)p)->baseScale;
             f32 t = d * ev;
             ((ExplosionDebris*)p)->scale = sp - gExplosionDebrisSpeedScale * t;
             ev = expf((lbl_803E493C * (f32)((ExplosionDebris*)p)->age) / (f32)((ExplosionDebris*)p)->lifetime);
@@ -441,7 +441,7 @@ void explosion_update(int obj)
                 {
                     ((ExplosionDebris*)p)->unk2C -= 4;
                 }
-                if (((ExplosionDebris*)p)->unk2D < 5)
+                if (((ExplosionDebris*)p)->generation < 5)
                 {
                     if ((f32)((ExplosionDebris*)p)->age / (f32)((ExplosionDebris*)p)->lifetime < lbl_803E4998
                         &&
@@ -451,8 +451,8 @@ void explosion_update(int obj)
                         u8 c;
                         f32 sp2;
                         f32 sv;
-                        c = ((ExplosionDebris*)p)->unk2D;
-                        sp2 = ((ExplosionDebris*)p)->unk1C;
+                        c = ((ExplosionDebris*)p)->generation;
+                        sp2 = ((ExplosionDebris*)p)->speed;
                         st2 = *(int*)&((GameObject*)obj)->extra;
                         vpos[0] = ((ExplosionDebris*)p)->scale * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
