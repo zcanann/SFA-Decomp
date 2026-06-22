@@ -113,7 +113,7 @@ typedef struct KTRexRuntime
     u8 pad288[0xc];
     f32 unk294;
     u8 pad298[8];
-    f32 unk2A0;
+    f32 curvePhase;
     u8 pad2A4[0x1c];
     f32 unk2C0;
     u8 pad2C4[0xc];
@@ -664,7 +664,7 @@ int ktrex_stateHandlerB05(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC250)[((KTRexArenaState*)gKTRexState)->laneIndex], lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_803E6810;
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_803E6810;
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
         ((KTRexRuntime*)runtime)->unk284 = z;
@@ -682,7 +682,7 @@ int ktrex_stateHandlerB07(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
         ObjAnim_SetCurrentMove(obj, 12, lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_803E6808;
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_803E6808;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 1) != 0)
     {
@@ -702,7 +702,7 @@ int ktrex_stateHandlerB08(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
         ObjAnim_SetCurrentMove(obj, 13, lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 =
+        ((KTRexRuntime*)runtime)->curvePhase =
             lbl_803E67F4 + lbl_803E67F8 * (f32)(int)(((KTRexArenaState*)gKTRexState)->phaseCounter >> 1);
         Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
     }
@@ -721,7 +721,7 @@ int ktrex_stateHandlerB06(int obj, int runtime)
     {
         ObjAnim_SetCurrentMove(obj, 11, lbl_803E67B8, 0);
         Sfx_PlayFromObject(obj, 1108);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_803E680C;
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_803E680C;
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
         ((KTRexRuntime*)runtime)->unk284 = z;
@@ -747,7 +747,7 @@ int ktrex_stateHandlerB03(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
         ObjAnim_SetCurrentMove(obj, 15, lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_803E6810;
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_803E6810;
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
         ((KTRexRuntime*)runtime)->unk284 = z;
@@ -773,7 +773,7 @@ int ktrex_stateHandlerB04(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27A != 0)
     {
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC260)[((KTRexArenaState*)gKTRexState)->unkFD], lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_8032A51C[((KTRexArenaState*)gKTRexState)->unkFD];
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_8032A51C[((KTRexArenaState*)gKTRexState)->unkFD];
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
         ((KTRexRuntime*)runtime)->unk284 = z;
@@ -839,7 +839,7 @@ int ktrex_stateHandlerB01(int obj, int runtime)
     }
     dx = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->posX - ((GameObject*)obj)->anim.localPosX);
     dz = oneOverTimeDelta * (((KTRexArenaState*)gKTRexState)->posZ - ((GameObject*)obj)->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj, &((KTRexRuntime*)runtime)->unk2A0);
+    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj, &((KTRexRuntime*)runtime)->curvePhase);
     ((GameObject*)obj)->anim.localPosX = ((KTRexArenaState*)gKTRexState)->posX;
     ((GameObject*)obj)->anim.localPosZ = ((KTRexArenaState*)gKTRexState)->posZ;
     return 0;
@@ -858,7 +858,7 @@ int ktrex_stateHandlerB02(int obj, int runtime)
     {
         lane = ((KTRexArenaState*)gKTRexState)->laneIndex * 2;
         ObjAnim_SetCurrentMove(obj, lbl_8032A510[lane + dir], lbl_803E67B8, 0);
-        ((KTRexRuntime*)runtime)->unk2A0 = lbl_8032A528[((KTRexArenaState*)gKTRexState)->laneIndex];
+        ((KTRexRuntime*)runtime)->curvePhase = lbl_8032A528[((KTRexArenaState*)gKTRexState)->laneIndex];
         ((KTRexArenaState*)gKTRexState)->homeYaw = ((GameObject*)obj)->anim.rotX;
     }
     if ((((KTRexRuntime*)gKTRexRuntime)->handlerState & 4) != 0)
