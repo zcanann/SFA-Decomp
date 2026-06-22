@@ -2618,7 +2618,7 @@ void Tricky_applyFloorResponse(int obj, int state)
     if ((((TrickyState*)state)->controlFlags & 0x00200000) != 0)
     {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioFn_8006edcc(obj, ((TrickyState*)state)->unk2F8, 7, points, (void*)(state + 4),
+        objAudioFn_8006edcc(obj, ((TrickyState*)state)->animEventMask, 7, points, (void*)(state + 4),
                             ((TrickyState*)state)->unk310, lbl_803E256C);
     }
 }

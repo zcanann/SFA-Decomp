@@ -99,7 +99,7 @@ typedef struct TrickyState {
     u8 pad2F2[0x2F5 - 0x2F2];
     u8 spawnBits;
     u8 pad2F6[0x2F8 - 0x2F6];
-    u16 unk2F8;
+    u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
     f32 unk300;
     f32 base;

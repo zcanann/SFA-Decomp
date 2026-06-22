@@ -539,10 +539,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         ((TrickyState*)state)->flags2DC &= ~0x40000000LL;
     }
-    ((TrickyState*)state)->unk2F8 = 0;
+    ((TrickyState*)state)->animEventMask = 0;
     for (i = 0; i < res.eventCount; i++)
     {
-        ((TrickyState*)state)->unk2F8 |= 1 << res.events[i];
+        ((TrickyState*)state)->animEventMask |= 1 << res.events[i];
     }
     vy = lbl_803E2574;
     if ((((((TrickyState*)state)->controlFlags & 0x20) != 0) && ((((TrickyState*)state)->controlFlags & 0x400000) == 0))
