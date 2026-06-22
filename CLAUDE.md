@@ -63,18 +63,12 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
    compile both passes ON — never wrap them (regresses hard).
 2. **`& ~0x80` not `& 0xff7f`** for single-bit clears → `rlwinm` not `andi`. Materialized-mask
    inverse (target does `li -K; and`): **`x &= ~0x80LL`** (LL suffix) — see #74.
-   ✓PROBE-VERIFIED (validator): `& ~K` emits `rlwinm` for BOTH `int` and `u32` lvalues (signedness is
-   irrelevant for the `~K` form). The #74 `~KLL` materialized form needs a `u32` lvalue — an `int`
-   lvalue adds a dead high-word `srawi r0,rX,31` before the `li;and`.
 3. **`*(void **)ptr != NULL` not `*(int *)ptr != 0`** → `cmplwi` (pointer) not `cmpwi`. `x == 0u`
-   (u-suffix) forces `cmplwi` on u8/bit-extract compares. ✓PROBE-VERIFIED (validator + lead, GC/2.0
-   DLL flags, isolation): `(u32)x != 0` / `x != 0u` reliably emits `cmplwi` — it is a WORKING unsigned-
-   compare lever, NOT inert (the old "folds back to signed" note was wrong; treat `(u32)x` as a live
-   way to get `cmplwi`). `*(int*)p`→`cmpwi`, `*(void**)p`→`cmplwi`, `(unsigned)x`→`cmplwi`, plain
-   `int x`→`cmpwi`, all confirmed. NOTE: cmpwi/cmplwi only appear when the compare feeds a BRANCH; a
-   returned/materialized bool uses the neg/cntlzw form (see #23/#38). If a CSE-merge with a nearby
-   signed int read still wins signed at a SITE, a struct-field pointer retype is the per-site lever —
-   verify per-site, don't assume.
+   (u-suffix) forces `cmplwi` on u8/bit-extract compares. `(u32)x != 0` / `x != 0u` is a WORKING way
+   to get `cmplwi` (probe-confirmed it reliably emits `cmplwi`; earlier "INERT/folds back to signed"
+   note was wrong). cmpwi/cmplwi only appear when the compare feeds a BRANCH; a returned/materialized
+   bool uses the neg/cntlzw form (#23/#38). If a CSE-merge with a nearby signed int read still wins
+   signed at a SITE, a struct-field pointer retype is the per-site lever.
 4. **`if (v > K) v = K; return v;`** not the inverse → target's `blelr` clamp.
 5. **Swap local decl order to control stack offsets / coloring.** DECL position sets register home;
    INIT position sets emission — split `int x = e;` into `int x;` + `x = e;` to place each
@@ -84,11 +78,6 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
    grow); inline the global when a use crosses a call — UNLESS target itself keeps it in f31
    across the call (then hoist to reproduce the save).
 7. **`u8` not `char`** for byte arrays you load+assign without arithmetic (drops spurious `extsb`).
-   ✓PROBE-VERIFIED (validator): `char` is SIGNED by default in BOTH the GC/2.0 (main) and 1.2.5n
-   (audio) domains (the audio `-char signed` flag is redundant). The `extsb` is a PROMOTION-TO-INT
-   artifact — a pure byte→byte copy never `extsb`s for `char` OR `u8`; the spurious `extsb` appears
-   only when the byte is widened to `int` (arithmetic, int compare, int arg). So the lever bites on
-   promotion, not on the bare load — reach for `u8` wherever the byte gets promoted.
 8. **Wrap dead-stored stack locals in a `struct`** when only the buffer head is passed to a callee
    (keeps the per-field stores alive). Pairs with `scheduling off`.
 9. **Declare dispatchers with the FULL arg signature** when an intermediate call sits between entry
@@ -110,10 +99,6 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
 14. **`int` param (not `u32`) for `(arg & bit)` flag tests** → `cmpwi`.
 15. **`*(s8 *)(p + off)` not `(s8)p[off]`** to land the byte in the target/arg register directly.
     Array-index form (`(s8)arr[off]`) gives `lbz; extsb r3,r0`; deref gives `lbz r3; extsb r3,r3`.
-    ✓PROBE-VERIFIED + NUANCE (validator): the lever is specifically the EXPLICIT `(s8)` CAST on the
-    index — a NATURAL uncast `arr[off]` (when the array element type already lands the byte) behaves
-    like the deref form (`lbz r3; extsb r3,r3`, no r0 detour). So the r0 detour is induced by the
-    explicit cast node; drop the cast (use the right element type) or use the deref form to avoid it.
 16. **Clean-C local decl order controls volatile-register coloring** (MWCC colors roughly in decl
     order). Also: making the base a real typed PARAM (not `void*`+copy) often flips r29/r30/r31;
     `f32 m[16]` (64B) vs `Mtx m` (48B) controls frame size; hoist a repeatedly-used base address
