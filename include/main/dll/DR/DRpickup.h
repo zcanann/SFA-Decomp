@@ -57,9 +57,9 @@ typedef struct DRPickupState {
     f32 unk554;
     f32 unk558;
     u8 unk55C[0x570 - 0x55C];
-    f32 unk570;
+    f32 spinDecel; /* 0x570: angular deceleration rate, spinVel += -spinDecel*timeDelta */
     u8 unk574[0x584 - 0x574];
-    f32 spinVel; /* 0x584: angular velocity, += -unk570*dt, clamped, integrated into anim.rotY */
+    f32 spinVel; /* 0x584: angular velocity, += -spinDecel*dt, clamped, integrated into anim.rotY */
     u8 unk588[4];
 } DRPickupState;
 

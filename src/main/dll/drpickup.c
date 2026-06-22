@@ -150,7 +150,7 @@ void fn_801EC1AC(int obj, int state)
     if (flags->b7 != 0)
     {
         ((DRPickupState*)state)->spinVel =
-            (-((DRPickupState*)state)->unk570) * timeDelta + ((DRPickupState*)state)->spinVel;
+            (-((DRPickupState*)state)->spinDecel) * timeDelta + ((DRPickupState*)state)->spinVel;
         {
             f32 v = ((DRPickupState*)state)->spinVel;
             ((DRPickupState*)state)->spinVel = (v < lbl_803E5C30)
