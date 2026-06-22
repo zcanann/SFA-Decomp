@@ -266,7 +266,8 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     }
     {
         int move2 = runtime->moveSet->moves[2];
-        return !!dll_2E_func07(obj, (u8*)animUpdate, (char*)runtime, move2, move2);
+        int result = !dll_2E_func07(obj, (u8*)animUpdate, (char*)runtime, move2, move2);
+        return !result;
     }
 }
 
