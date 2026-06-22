@@ -1096,9 +1096,9 @@ void skeetla_spawnLinkedSparks(u8* obj)
     state = ((GameObject*)obj)->extra;
     linkedObj = *(u8**)&((TrickyState*)state)->followObj;
 
-    args.x = ((TrickyState*)state)->unk3D8;
-    args.y = ((TrickyState*)state)->unk3DC;
-    args.z = ((TrickyState*)state)->unk3E0;
+    args.x = ((TrickyState*)state)->sparkPos0X;
+    args.y = ((TrickyState*)state)->sparkPos0Y;
+    args.z = ((TrickyState*)state)->sparkPos0Z;
     args.objectId = ((GameObject*)obj)->anim.rotX;
     if (((GameObject*)linkedObj)->anim.seqId == SKEETLA_LINKED_SOURCE_ID_OBJ_A)
     {
@@ -1126,9 +1126,9 @@ void skeetla_spawnLinkedSparks(u8* obj)
                                          SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 
-    args.x = ((TrickyState*)state)->unk3E4;
-    args.y = ((TrickyState*)state)->unk3E8;
-    args.z = ((TrickyState*)state)->unk3EC;
+    args.x = ((TrickyState*)state)->sparkPos1X;
+    args.y = ((TrickyState*)state)->sparkPos1Y;
+    args.z = ((TrickyState*)state)->sparkPos1Z;
     args.objectId = ((GameObject*)obj)->anim.rotX;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0)

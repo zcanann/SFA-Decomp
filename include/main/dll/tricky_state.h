@@ -131,16 +131,16 @@ typedef struct TrickyState {
     f32 unk380;
     f32 unk384;
     u8 pad388[0x3D8 - 0x388];
-    f32 unk3D8;
-    f32 unk3DC;
-    f32 unk3E0;
-    f32 unk3E4;
-    f32 unk3E8;
-    f32 unk3EC;
+    f32 sparkPos0X; /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
+    f32 sparkPos0Y;
+    f32 sparkPos0Z;
+    f32 sparkPos1X; /* spark particle emit point 1 */
+    f32 sparkPos1Y;
+    f32 sparkPos1Z;
     u8 pad3F0[0x408 - 0x3F0];
-    f32 unk408;
-    f32 unk40C;
-    f32 unk410;
+    f32 renderPosX; /* copied to a child object's localPos during Tricky_render */
+    f32 renderPosY;
+    f32 renderPosZ;
     u8 pad414[0x418 - 0x414];
     void *routeSeedNode; /* candidate route node chosen before seeding route */
     u8 routeSeedDir;
