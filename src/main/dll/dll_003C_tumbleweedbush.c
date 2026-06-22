@@ -707,9 +707,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
         memcpy(gTumbleweedBushItems, items, count * sizeof(LinkMenuItem));
 
-        item = gTumbleweedBushItems;
         for (i = 0; i < count; i++)
         {
+            item = &gTumbleweedBushItems[i];
             if ((item->upLink < -1) || (item->upLink >= count))
             {
                 OSReport(defaultText + 0xa4, item->upLink);
@@ -765,7 +765,6 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             }
 
             item->timer = 4;
-            item++;
             items++;
         }
 
