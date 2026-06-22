@@ -1152,7 +1152,7 @@ void Camera_InitState(void)
     }
     GXSetProjection((f32*)(base + 5824), gCameraProjectionMode);
 
-    matrixFn_8006ff0c(gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane,
-                      lbl_803DE5F0, (f32*)(base + 0x1080), &lbl_803DC88A);
+    matrixFn_8006ff0c((f32*)(base + 0x1080), &lbl_803DC88A, gCameraFovY, gCameraAspectRatio,
+                      gCameraNearPlane, gCameraFarPlane, lbl_803DE5F0);
     copyMatrix44((f32*)((int)base + 0x1080), (f32*)(base + 0x0FC0));
 }

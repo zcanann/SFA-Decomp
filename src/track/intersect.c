@@ -642,8 +642,8 @@ extern int lbl_803968C0[];
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
-void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
-                       float *mat, short *out)
+void matrixFn_8006ff0c(float *mat, short *out, f32 fov, f32 aspect, f32 near, f32 far,
+                       f32 scale)
 {
     f32 angle;
     f32 tan;

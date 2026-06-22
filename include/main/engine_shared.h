@@ -621,7 +621,7 @@ extern void GXSetProjection(f32* matrix, s32 projectionMode);
 extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 extern u8 pauseMenuGetState(void);
-extern void matrixFn_8006ff0c(f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale, f32* matrix, s16* out);
+extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);

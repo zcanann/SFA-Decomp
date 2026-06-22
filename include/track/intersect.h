@@ -15,8 +15,8 @@ int depthReadRequestPoll(int x, int y, int id);
 u32 getScreenResolution(void);
 void setScreenWidth(u32 param_1);
 void clearScreenWidth(void);
-void matrixFn_8006ff0c(f32 param_1,f32 param_2,f32 param_3,f32 param_4,f32 param_5,
-                 float *param_6,short *param_7);
+void matrixFn_8006ff0c(float *param_6,short *param_7,f32 param_1,f32 param_2,f32 param_3,f32 param_4,
+                 f32 param_5);
 void normalize(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
 void gxSetPeControl_ZCompLoc_(u32 param_1);
