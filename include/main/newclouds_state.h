@@ -45,7 +45,7 @@ typedef struct NewCloud {
     f32 unk142C;
     f32 unk1430;
     f32 unk1434;
-    f32 unk1438;
+    f32 driftScale;
     f32 unk143C;
     f32 unk1440;
     f32 unk1444;

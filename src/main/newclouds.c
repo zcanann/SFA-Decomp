@@ -1610,7 +1610,7 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     {
         ((NewCloud*)NC_CLOUD)->unk1430 = ((NewCloud*)NC_CLOUD)->flakeCount;
     }
-    ((NewCloud*)NC_CLOUD)->unk1438 = *(f32*)(params + 8);
+    ((NewCloud*)NC_CLOUD)->driftScale = *(f32*)(params + 8);
     if (((NewCloud*)NC_CLOUD)->cloudType == 0)
     {
         ((NewCloud*)NC_CLOUD)->cloudHeight = gNewCloudType0Height;
@@ -1983,14 +1983,14 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
             ((NewCloud*)NC_CLOUD)->worldPosX = vec[0] + *(f32*)(objA + 0x18);
             ((NewCloud*)NC_CLOUD)->worldPosY = vec[1] + *(f32*)(objA + 0x1c);
             ((NewCloud*)NC_CLOUD)->worldPosZ = vec[2] + *(f32*)(objA + 0x20);
-            if (((NewCloud*)NC_CLOUD)->unk1438 > lbl_803DF27C)
+            if (((NewCloud*)NC_CLOUD)->driftScale > lbl_803DF27C)
             {
                 Music_Trigger(gNewCloudMusicIdByType[((NewCloud*)NC_CLOUD)->cloudType], 0);
             }
         }
         else
         {
-            if (((NewCloud*)NC_CLOUD)->unk1438 > lbl_803DF27C)
+            if (((NewCloud*)NC_CLOUD)->driftScale > lbl_803DF27C)
             {
                 Music_Trigger(gNewCloudMusicIdByType[((NewCloud*)NC_CLOUD)->cloudType], 1);
             }
@@ -2193,7 +2193,7 @@ void dll_07_func06(void)
             }
             ((NewCloud*)D7_CLOUD)->unk1440 = framesThisStep * ((NewCloud*)D7_CLOUD)->unk1444 +
                 ((NewCloud*)D7_CLOUD)->unk1440;
-            if (lbl_803DF1A0 != ((NewCloud*)D7_CLOUD)->unk1438)
+            if (lbl_803DF1A0 != ((NewCloud*)D7_CLOUD)->driftScale)
             {
                 if (((NewCloud*)D7_CLOUD)->unk1440 > ((NewCloud*)D7_CLOUD)->unk143C)
                 {
@@ -2207,7 +2207,7 @@ void dll_07_func06(void)
                         ((NewCloud*)D7_CLOUD)->unk1444 * lbl_803DF244;
                     ((NewCloud*)D7_CLOUD)->unk143C = (int)
                     randomGetRange(
-                        1, (lbl_803DF1C8 * ((NewCloud*)D7_CLOUD)->unk1438));
+                        1, (lbl_803DF1C8 * ((NewCloud*)D7_CLOUD)->driftScale));
                     ((NewCloud*)D7_CLOUD)->unk1440 = lbl_803DF1A0;
                 }
             }
@@ -2216,7 +2216,7 @@ void dll_07_func06(void)
                 inpos[0] = pos[0];
                 inpos[1] = pos[1];
                 inpos[2] = pos[2];
-                snowCloudComputeDrift(wind, inpos, ((NewCloud*)D7_CLOUD)->unk1438);
+                snowCloudComputeDrift(wind, inpos, ((NewCloud*)D7_CLOUD)->driftScale);
                 if (((NewCloud*)D7_CLOUD)->cloudType == 0)
                 {
                     ((NewCloud*)D7_CLOUD)->windVelX = -wind[0];
@@ -2239,7 +2239,7 @@ void dll_07_func06(void)
                 inpos[0] = ((NewCloud*)p)->worldPosX;
                 inpos[1] = ((NewCloud*)p)->worldPosY;
                 inpos[2] = ((NewCloud*)p)->worldPosZ;
-                snowCloudComputeDrift(wind, inpos, ((NewCloud*)p)->unk1438);
+                snowCloudComputeDrift(wind, inpos, ((NewCloud*)p)->driftScale);
                 ((NewCloud*)D7_CLOUD)->windVelX = -wind[0] + ((NewCloud*)D7_CLOUD)->unk1440;
                 ((NewCloud*)D7_CLOUD)->windVelZ = -wind[2] + ((NewCloud*)D7_CLOUD)->unk1440;
                 ((NewCloud*)D7_CLOUD)->unk1428 = lbl_803DF1A0;
