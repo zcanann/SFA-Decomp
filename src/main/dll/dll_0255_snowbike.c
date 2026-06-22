@@ -32,7 +32,7 @@ typedef struct SnowBikeMountState
     u8 pad418[0x420 - 0x418];
     u8 unk420;
     u8 pad421[0x428 - 0x421];
-    u8 unk428;
+    u8 flags;
     u8 pad429[0x434 - 0x429];
     u8 unk434;
     u8 unk435;
@@ -65,7 +65,7 @@ typedef struct SnowBikeSetTypeState
     u8 unk420;
     s8 bikeType;
     u8 pad422[0x428 - 0x422];
-    u8 unk428;
+    u8 flags;
     u8 pad429[0x434 - 0x429];
     u8 unk434;
     u8 unk435;
@@ -371,7 +371,7 @@ void SnowBike_setType(int obj, int type)
     {
         GameBit_Set(((SnowBikeSetTypeState*)t)->completionGameBit, 1);
         fn_801EC870(obj, t);
-        bit = (((SnowBikeSetTypeState*)t)->unk428 >> 5) & 1;
+        bit = (((SnowBikeSetTypeState*)t)->flags >> 5) & 1;
         if (bit != 0)
         {
             ((SnowBikeSetTypeState*)t)->unk4B8 = lbl_803E5B90;
@@ -420,7 +420,7 @@ f32 SnowBike_func13(int obj, f32* out)
 u32 SnowBike_setScale(int obj)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
-    u32 bit = (((SnowBikeMountState*)t)->unk428 >> 1) & 1;
+    u32 bit = (((SnowBikeMountState*)t)->flags >> 1) & 1;
     if (bit != 0)
     {
         return 0;
@@ -465,7 +465,7 @@ void SnowBike_free(int obj)
         mm_free(*(void**)(p + 0x4c8));
         p += 8;
     }
-    bit = (((SnowBikeMountState*)t)->unk428 >> 5) & 1;
+    bit = (((SnowBikeMountState*)t)->flags >> 5) & 1;
     if (bit != 0)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
