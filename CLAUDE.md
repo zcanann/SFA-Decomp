@@ -64,7 +64,11 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   A/B of 3 instances) — the struct reframe is CASE-BY-CASE, NOT a blanket "raw cast → struct = win":
   • WALKED / MULTI-ACCESS-ACROSS-CALLS array on a GLOBAL base → WINS (the raw pointer-walk mis-materializes the
     global / re-indexes per call; the typed `arr[idx].field` per-statement produces the right web/coloring +
-    base-direct — #135/#138/#143). THIS is the target (the #155 detour core fits it).
+    base-direct — #135/#138/#143). The WIN case is OURS doing a raw POINTER-WALK that re-indexes (#135 fn_801B3DE4).
+    ⚠️ NOT the #155 held-pointer detour: TESTED (Validator /tmp/vts) — a typed GLOBAL OBJECT (`gMenuHud.anims[k]`)
+    RE-MATERIALIZES the base ~14× (re-derivable per access, +13 instrs) while retail HOLDS it 1× direct; retail
+    used a HELD POINTER (same as ours), so the #155 detour is NOT a missing typed global — it's the held-pointer
+    base-init choice (see #155), not a struct artifact.
   • SINGLE-INDEX MULTI-FIELD WRITE (`*(T*)(base+idx*stride+fieldoff)`, one index, fields written once) → the RAW
     form is ALREADY OPTIMAL: `mulli idx,stride; add base; stfs fieldoff(base); stfs +4; stfs +8` (one base + 3
     displacement stores). The typed `((T*)base)[idx].field` REGRESSES (+1 instr — emits an indexed `stfsx` for
@@ -1716,6 +1720,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     retail materializes @lo DIRECTLY into the saved dest and stores via it. Forms explored so far on the core
     (re-derive each fresh — any is a candidate): decl-order swap, #80 launder, opt_propagation off, local-copy.
     The @lo-direct-into-saved is the live core (find it via the oracle source-form or a deeper reframe — it exists).
+    ✓TYPED-GLOBAL ANGLE RULED OUT + CORE CLEANLY ISOLATED (Validator /tmp/vts, owner struct-directive test): a typed
+    global OBJECT (`extern CMenuHud gMenuHud; gMenuHud.anims[k]`) does NOT reproduce retail — it RE-MATERIALIZES
+    the base ~14× (DIRECT but re-derivable per access, +13 instrs); a HELD POINTER (`(CMenuHud*)lbl; hud->anims[k]`)
+    HOLDS the base 1× (where the r0+mr detour happens); RETAIL holds 1× DIRECT — so RETAIL USED A HELD POINTER,
+    same as ours, NOT a typed global. So the #155 detour is NOT a missing-struct artifact; it is the PURE
+    held-pointer base-init choice, now cleanly isolated: when materializing a held GLOBAL POINTER's @lo into a
+    SAVED reg, ours emits `addi r0,r3,@lo; mr rSaved,r0` (via-r0-scratch+copy), retail `addi rSaved,r3,@lo`
+    (direct-into-saved). NAME the exact deterministic rule for THAT one choice (add ingredients to /tmp/vts until
+    the choice flips; HunterA confirms instantly — the typed-global form is an obvious ~14-remat regression on
+    pauseMenuFn). This is the CONVERGENT MULTIPLIER — the rule cracks ALL #155 detour fns at once.
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
