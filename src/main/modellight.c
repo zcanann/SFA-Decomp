@@ -1409,6 +1409,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
     }
 
     *outCount = 0;
+    dist = lbl_803DE75C;
     while (*outCount < maxLights)
     {
         intensity = lbl_803DE75C;
@@ -1421,7 +1422,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
             }
         }
         outLights[(*outCount)++] = light;
-        ((ModelLightStruct*)light)->selectionScore = lbl_803DE75C;
+        ((ModelLightStruct*)light)->selectionScore = dist;
     }
 }
 
