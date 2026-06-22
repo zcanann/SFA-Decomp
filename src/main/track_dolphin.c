@@ -3089,17 +3089,15 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
         if (desc->object != NULL)
         {
             Matrix_TransformPoint(desc->currentMatrix, b, __AR_Callback, d, &tx, &ty, &tz);
-            fn_800659A8(tx, tz,
-                        (void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+            fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
                         (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, e);
+                        desc, tx, tz, e);
         }
         else
         {
-            fn_800659A8(b, d,
-                        (void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+            fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
                         (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c),
-                        desc, e);
+                        desc, b, d, e);
         }
     }
 
@@ -3138,7 +3136,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
 extern f32 lbl_803DECE0[2];
 
-void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
+void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
 {
     u8* v;
     f32 oz;
@@ -4205,7 +4203,7 @@ extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, 
 extern char sTrackNoFreeLastLineError[];
 extern u8 lbl_803DCF4C;
 
-void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8)
+void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, int slot, u8 arg8)
 {
     f32 w0[3];
     f32 w1[3];
