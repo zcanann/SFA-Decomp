@@ -599,6 +599,16 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     from the explicit `p = base` init, so form (b) is the matching one there.) Both are ordinary
     2002 C; choose the one whose emitted asm lands the counter high. (WorkerB:
     dll_4e/optionsMenu_applyGameplaySetting is form (b); shop_init wants form (b) too.)
+    SCOPE of form (b) counter-0-reuse (pausemenu, in-repo-oracle verified): the `mr rNull,rCounter` reuse
+    fires on a bare `arr[i] = NULL` DIRECT SUBSCRIPT of a STANDALONE global array (confirmed: dll_4e's
+    `lbl_803A87D0[i]=NULL` → `li r29,0; mr r30,r29; stw`). It does NOT transfer to an OFFSET MEMBER ARRAY
+    (SoA, e.g. `((void**)(lbl+0x9c8))[j]=NULL`) — the offset breaks the clean subscript, loses the held
+    element ptr, and the reuse doesn't fire (regressed gameui textureFreeFn to 81.33). All other null
+    spellings (hoisted-null, `void* zero=NULL`, comma-init, single-expr) also fail to trigger it; the counter
+    MUST stay u8 (int-counter kills the clrlwi bound). The offset-member-array SoA counter-0-reuse is a
+    DISTINCT OPEN sub-puzzle (the #135-SoA residual: bare-global-direct + tex-first decl lands 91.61, one base
+    + displacement + counter=r27 correct, held under baseline only by this unreused null + a j/tex color —
+    structure reachable, this last piece unsolved).
     SIBLING FORM: a DO-WHILE loop with MANUAL counter/pointer bumps in the body → rewrite as a
     `for` with comma-init increments (`for (i=0, p=base; cond; p+=stride, i++)`); the for+comma-init
     induction shape fixes the induction-variable coloring the hand-bumped do-while misses. (WorkerC:
