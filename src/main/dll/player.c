@@ -17869,11 +17869,11 @@ int fn_802985FC(int obj, int state, f32 fv)
         ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 0;
         if (inner->animState == 0xc55)
         {
-            ((PlayerState*)inner)->unk41C = 0x14;
+            ((PlayerState*)inner)->chargeCapacity = 0x14;
         }
         else
         {
-            ((PlayerState*)inner)->unk41C = 0xa;
+            ((PlayerState*)inner)->chargeCapacity = 0xa;
         }
         ObjHits_MarkObjectPositionDirty(obj);
     }
@@ -17905,7 +17905,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             int v;
             int hi;
             Sfx_PlayFromObject(obj, SFXmammoth_breath2);
-            amt = -((PlayerState*)inner)->unk41C;
+            amt = -((PlayerState*)inner)->chargeCapacity;
             r35c = *(int*)((char*)(*(int*)&((GameObject*)obj)->extra) + 0x35c);
             v = *(s16*)((char*)r35c + 4) + amt;
             if (v < 0)
