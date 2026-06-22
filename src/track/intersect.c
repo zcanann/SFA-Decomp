@@ -4425,8 +4425,8 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     int handle1;
     int handle2;
     f32 ratio1;
-    f32 ratio2;
     f32 angle;
+    f32 ratio2;
     GXColor c_K2;
     GXColor c_K0;
     GXColor c_K1;
