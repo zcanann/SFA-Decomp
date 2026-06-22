@@ -162,11 +162,11 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
     float deltaZ;
     float deltaY;
     float deltaX[2];
-    u32 local_48;
-    u32 uStack_44;
-    u32 local_40;
-    u32 uStack_3c;
-    s64 local_38;
+    u32 cvtSelfHi;
+    u32 cvtSelfLo;
+    u32 cvtDeltaHi;
+    u32 cvtDeltaLo;
+    s64 yawWide;
 
     if (target == 0x0)
     {
@@ -195,19 +195,19 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
             {
                 yawDelta = yawDelta + -1;
             }
-            uStack_44 = (int)*self ^ 0x80000000;
-            local_48 = 0x43300000;
-            uStack_3c = yawDelta ^ 0x80000000;
-            local_40 = 0x43300000;
+            cvtSelfLo = (int)*self ^ 0x80000000;
+            cvtSelfHi = 0x43300000;
+            cvtDeltaLo = yawDelta ^ 0x80000000;
+            cvtDeltaHi = 0x43300000;
             newYaw = (int)
             ((f32)(s32)
-            uStack_44 +
+            cvtSelfLo +
                 (float)((double)((lbl_803E4DC0 +
-                    (float)((double)(u32)uStack_3c
+                    (float)((double)(u32)cvtDeltaLo
                     )) * (float)(dt * (double)lbl_803DC074)) / dirY)
             )
             ;
-            local_38 = (s64)newYaw;
+            yawWide = (s64)newYaw;
             *self = newYaw;
             dirY = (double)*(float*)(self + 0x14);
             dirZ = (double)*(float*)(self + 0x16);
@@ -473,23 +473,23 @@ void FUN_8019f1dc(void)
     u64 context;
     int objCount;
     u16 texQueryBuf[4];
-    float local_5c;
-    float local_58;
-    float local_54;
-    float local_50;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    float texParam3;
+    float texParam2;
+    float texParam1;
+    float texParam0;
+    float saveF29;
+    float saveF29Ps;
+    float saveF30;
+    float saveF30Ps;
+    float saveF31;
+    float saveF31Ps;
 
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    local_18 = (float)in_f30;
-    fStack_14 = (float)in_ps30_1;
-    local_28 = (float)in_f29;
-    fStack_24 = (float)in_ps29_1;
+    saveF31 = (float)in_f31;
+    saveF31Ps = (float)in_ps31_1;
+    saveF30 = (float)in_f30;
+    saveF30Ps = (float)in_ps30_1;
+    saveF29 = (float)in_f29;
+    saveF29Ps = (float)in_ps29_1;
     context = FUN_8028683c();
     obj = (u32)(context >> 0x20);
     model = *(int*)&((GameObject*)obj)->extra;
@@ -506,10 +506,10 @@ void FUN_8019f1dc(void)
         *(float*)(model + 0x24) = lbl_803E4F60 * *(float*)(otherObj + 0x298) + lbl_803E4F5C;
         *(float*)(model + 0x28) = lbl_803E4F68 * *(float*)(otherObj + 0x298) + lbl_803E4F64;
     }
-    local_58 = lbl_803E4F58;
-    local_54 = lbl_803E4F58;
-    local_50 = lbl_803E4F58;
-    local_5c = lbl_803E4F74;
+    texParam2 = lbl_803E4F58;
+    texParam1 = lbl_803E4F58;
+    texParam0 = lbl_803E4F58;
+    texParam3 = lbl_803E4F74;
     texQueryBuf[2] = 0;
     texQueryBuf[1] = 0;
     texQueryBuf[0] = *(u16*)(model + 0x50);
