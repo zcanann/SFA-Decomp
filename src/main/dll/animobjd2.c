@@ -195,7 +195,7 @@ typedef struct
         u32 px = (u32)&((GameObject *)(X))->anim.worldPosX; \
         if (*(u32 *)((st) + 0x28) != px) { \
             *(u32 *)((st) + 0x28) = px; \
-            *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG; \
+            *(s32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG; \
             *(u16 *)((st) + 0xd2) = 0; \
         } \
     }
