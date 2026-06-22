@@ -469,9 +469,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     inside a U8-ARRAY subscript (`&table->flags[(i<<2)+384]`) for `slwi; add base; addi 384`.
     Arg-eval anchor: embed a DEF inside the size/arg statement (`sz = (u16)((count - (index =
     (u16)i)) << 2)`). Apply embedded defs BEFORE an (int)-base launder (order-dependent).
-112. **K-grouping picks the displacement isel:** `p = base + K; *(p + idx)` = `add base,idx; lbz
-    K(rT)` (base first); `base + (idx + K)` = idx first; flat `base+idx+K` = `addi idx,K; lbzx`
-    (fold-onto-index). Named `p` needs MULTI-use (single-use re-folds); for symbol-array bases skip
+112. **K-grouping — the BASE-GROUPED `add base,idx; lbz K(rT)` form is ROBUST; the idx-first/lbzx VARIANTS are
+    NOT reliably source-selectable standalone (caution, lead+validator reproduced GC/2.0 -O4,p).** Getting the
+    base-grouped displacement load (`p = base + K; *(p + idx)` → `add base,idx; lbz K(rT)` — the DIMSnowHorn1
+    win below) is EASY: in isolation single-use, ALL three spellings (`p=base+K;p[idx]`, `base[idx+K]`,
+    `base+idx+K`) produce the IDENTICAL `add base,idx; lbz K(r)` — so any of them lands that form. The claimed
+    DISTINCT variants — `base+(idx+K)` → idx-first, flat `base+idx+K` → `addi idx,K; lbzx` (fold-onto-index) —
+    did NOT reproduce in isolation; the lbzx/index-fold direction needs an in-tree ingredient (a reused index
+    web / reduction / pressure) not yet isolated, so **A/B per-site in-tree for the lbzx direction; don't assume
+    the source grouping flips the isel by itself**. Named `p` needs MULTI-use to keep its base-bump (single-use re-folds); for symbol-array bases skip
     the alias and use the direct form `tbl[i*4+K]`. Wide deref re-folds to lwzx — `(u8*)` launder the grouped base.
     **Field-load `(T*)(base+idx)->field` (field at const K) → `add base,idx; lbz K` via grouping the
     FIELD CONSTANT onto base: `u8 *p = base + K; flags = p[idx];`** — single-use `p` is fine here (the
