@@ -2325,7 +2325,6 @@ void skyFn_8008a04c(void)
     int part;
     int red;
     int green;
-    f32 t;
     f32 tc;
     f32 blend;
     f32 time2;
@@ -2344,8 +2343,7 @@ void skyFn_8008a04c(void)
     }
     else
     {
-        t = ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay;
-        tc = (t < *(f32*)&pEXIInputFlag) ? *(f32*)&pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
+        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < *(f32*)&pEXIInputFlag) ? *(f32*)&pEXIInputFlag : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > EXIInputFlag) ? EXIInputFlag : ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay);
         if (tc <= lbl_803DF07C)
         {
             frac = tc / lbl_803DF07C;
