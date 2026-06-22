@@ -257,7 +257,7 @@ int cfguardian_setScale(int* obj)
  * curve walker; thereafter it advances the walker, snaps the object to
  * the sampled position, sticks to the ground and blends the yaw toward
  * the heading of travel. Returns 1 once the path is exhausted. */
-int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
+int cfguardianFlyAlongPath(int obj, int walker, f32 t, int pointId, int outPhase)
 {
     int ret;
     int moved;
@@ -277,17 +277,17 @@ int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
     }
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        sel = p3;
+        sel = pointId;
         pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
         tgt.x = ((RomCurvePlacementDef*)pt)->base.x;
         tgt.y = ((RomCurvePlacementDef*)pt)->base.y;
         tgt.z = ((RomCurvePlacementDef*)pt)->base.z;
         tgt.angle = ((RomCurvePlacementDef*)pt)->rotZ << 8;
-        if (cfguardianSteerToward((int*)obj, (int*)&tgt.angle, t, p4) != 0)
+        if (cfguardianSteerToward((int*)obj, (int*)&tgt.angle, t, outPhase) != 0)
         {
             cmd[0] = 0x19;
             cmd[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)p2, (void*)obj, lbl_803E4120, cmd, sel);
+            (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, lbl_803E4120, cmd, sel);
             ((GameObject*)obj)->unkF4 = 1;
             moved = 1;
         }
@@ -295,13 +295,13 @@ int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
     else
     {
         ret = 0;
-        if (Curve_AdvanceAlongPath(p2) != 0 || ((CfCurveWalker*)p2)->atEnd != 0)
+        if (Curve_AdvanceAlongPath(walker) != 0 || ((CfCurveWalker*)walker)->atEnd != 0)
         {
-            ret = (*gRomCurveInterface)->goNextPoint((void*)p2);
+            ret = (*gRomCurveInterface)->goNextPoint((void*)walker);
         }
-        ((GameObject*)obj)->anim.localPosX = ((CfCurveWalker*)p2)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((CfCurveWalker*)p2)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((CfCurveWalker*)p2)->posZ;
+        ((GameObject*)obj)->anim.localPosX = ((CfCurveWalker*)walker)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((CfCurveWalker*)walker)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((CfCurveWalker*)walker)->posZ;
         if (ret != 0)
         {
             ((GameObject*)obj)->unkF4 = -1;
@@ -312,7 +312,7 @@ int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ground;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)p4);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, t, (float*)outPhase);
     if (moved != 0)
     {
         v = (s16)(getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
@@ -340,7 +340,7 @@ int cfguardianFlyAlongPath(int obj, int p2, f32 t, int p3, int p4)
  * move it and keep the chase move playing. Returns 1 when already
  * within the closing threshold. */
 #pragma dont_inline on
-int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4)
+int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
 {
     f32 dist;
     f32 dx;
@@ -379,19 +379,19 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4)
     {
         ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
     }
-    ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
+    ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, outPhase);
     return 0;
 }
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
+int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
 {
     int* result = NULL;
     int local[2];
     int found;
 
-    if (p4 == 1)
+    if (mode == 1)
     {
         local[0] = 0;
         local[1] = 0;
@@ -406,7 +406,7 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
         ((GameObject*)obj)->anim.localPosX,
         ((GameObject*)obj)->anim.localPosY,
         ((GameObject*)obj)->anim.localPosZ,
-        local, 2, p2);
+        local, 2, curveGroup);
 
     if (found > -1)
     {
@@ -615,7 +615,7 @@ int cfguardian_updateMain(int obj)
                     f32 v1;
                     f32 v0;
                     f32 v2;
-                    f32 p2;
+                    f32 v3;
                     v0 = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
                     stk.v[0] = v0;
                     v1 = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
@@ -627,11 +627,11 @@ int cfguardian_updateMain(int obj)
                     stk.v[0] = v0;
                     v1 = v1 * k;
                     stk.v[1] = v1;
-                    p2 = v2 * k;
-                    stk.v[2] = p2;
+                    v3 = v2 * k;
+                    stk.v[2] = v3;
                     ((GameObject*)obj)->anim.velocityX = v0 + ((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityY = v1 + ((GameObject*)obj)->anim.velocityY;
-                    ((GameObject*)obj)->anim.velocityZ = p2 + ((GameObject*)obj)->anim.velocityZ;
+                    ((GameObject*)obj)->anim.velocityZ = v3 + ((GameObject*)obj)->anim.velocityZ;
                 }
                 {
                     f32 fd = lbl_803E4138;
