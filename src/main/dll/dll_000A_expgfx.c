@@ -2340,11 +2340,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         angleToVec2((u16)angleB, &cosB, &sinB);
         if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0)
         {
-            angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
+            angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
         }
         else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0)
         {
-            angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
+            angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
         }
         if (sourceObject != NULL && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0)
         {
