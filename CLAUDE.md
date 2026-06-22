@@ -884,7 +884,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     colors below named-locals) applied per reg-class. Treat the trick as class-general; route the residual label
     by which class swapped (saved=#107, volatile=#66) but use the SAME name/un-name fix. (Criteria 1-3+5 are the
     real gates; criterion 4 is a labeling note, not a blocker.)
-    TRIED-SO-FAR (a launchpad to skip, NOT evidence of impossibility): decl-order/#61b, ternary↔if/else
+    ROUTING BY SHAPE — #107 is a NARROW lever, not a broad sweep (expgfx scanned 140+ DLL 99%+ fns: only ~2
+    were clean #107-fits, both won). Most 99%+ GPR-coloring residuals are OTHER shapes needing EXISTING levers —
+    triage the bucket by shape FIRST, don't burn #107 on non-fits: NAME-vs-inline of a re-derivable read = #107;
+    WALKER/COUNTER swap (2-counter, loop-bound placement) = #136 (Carryable_updateHeld, fn_8010A104); STACK-ADDR
+    decl-order rotation = #16 (smallbasket_resolveCollision); in-place-bump re-fold = #61; s16-extsh = width lever;
+    FP pair = #82 (CameraModeCloudRunner); const-load POSITION = scheduling/eval-order. The PURE FREE-REG-CHOICE
+    kind-2(2) — same value NAMED/typed identically in both builds, both regs free, only the SLOT differs (no
+    name-vs-inline distinction to flip, e.g. groundanimator `s8 bi`, MagicPlant `alpha`) — is the residual
+    #107 does NOT crack; that's the genuinely-open creation-order/neighbor-perturbation/register-pressure nut.
     (MWCC normalises to one select), opt_lifetimes off, opt_level, block-scope re-decl, #131 |=,
     #134 (int)(long), re-derive — none moved these specific webs (DeepDive2 dll_0256 fn_802BB4B4 r29↔r30
     T=C=181 + conversion-bias families; WorkerA kaldachom control r28↔r29 — block-scope was the ONLY
