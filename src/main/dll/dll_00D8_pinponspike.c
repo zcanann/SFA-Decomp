@@ -214,7 +214,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
+int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
 {
     f32 a;
     f32 dist;
