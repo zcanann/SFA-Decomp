@@ -729,10 +729,10 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
 {
     int iVar1;
     float fVar2;
-    float fVar3;
+    float deltaZ;
     u32 count;
-    short sVar5;
-    short sVar6;
+    short clampHi;
+    short stepVal;
     int iVar7;
     int iVar8;
     short* psVar9;
@@ -801,8 +801,8 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
         else
         {
             fVar2 = *(float*)(psVar9 + 6) - *(float*)(iVar7 + 0xc);
-            fVar3 = *(float*)(psVar9 + 10) - *(float*)(iVar7 + 0x14);
-            FUN_80293900((double)(fVar2 * fVar2 + fVar3 * fVar3));
+            deltaZ = *(float*)(psVar9 + 10) - *(float*)(iVar7 + 0x14);
+            FUN_80293900((double)(fVar2 * fVar2 + deltaZ * deltaZ));
             iVar7 = FUN_80017730();
             local_88[0] = iVar7 - *psVar9;
             if (0x8000 < local_88[0])
@@ -824,38 +824,38 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
             iVar7 = (int)(lbl_803DF66C *
                 (f32)(s32)(param_4));
             local_78 = (s64)iVar7;
-            sVar5 = iVar7;
+            clampHi = iVar7;
             psVar9 = local_88;
             fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
             iVar7 = fVar2;
             local_68 = (double)(s64)iVar7;
             iVar8 = -(int)(short)iVar7;
-            iVar10 = -sVar5;
+            iVar10 = -clampHi;
             iVar11 = 2;
             iVar7 = state;
             do
             {
                 *psVar9 = *psVar9 - *(short*)(iVar7 + 0x14);
-                sVar6 = *psVar9;
-                if (sVar6 < iVar8)
+                stepVal = *psVar9;
+                if (stepVal < iVar8)
                 {
-                    sVar6 = iVar8;
+                    stepVal = iVar8;
                 }
                 else
                 {
                     iVar1 = fVar2;
                     local_68 = (double)(s64)iVar1;
-                    if ((int)(short)iVar1 < sVar6)
+                    if ((int)(short)iVar1 < stepVal)
                     {
                         local_70 = (double)(s64)iVar1;
-                        sVar6 = iVar1;
+                        stepVal = iVar1;
                     }
                 }
-                *psVar9 = sVar6;
+                *psVar9 = stepVal;
                 *(short*)(iVar7 + 0x14) = *(short*)(iVar7 + 0x14) + *psVar9;
-                if ((int)sVar5 < (int)*(short*)(iVar7 + 0x14))
+                if ((int)clampHi < (int)*(short*)(iVar7 + 0x14))
                 {
-                    *(short*)(iVar7 + 0x14) = sVar5;
+                    *(short*)(iVar7 + 0x14) = clampHi;
                 }
                 if (*(short*)(iVar7 + 0x14) < iVar10)
                 {
