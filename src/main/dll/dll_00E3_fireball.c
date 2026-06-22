@@ -900,8 +900,7 @@ void fireball_init(int* obj)
             }
         }
         ((GameObject*)obj)->anim.alpha = 200;
-        p = (u8*)state;
-        for (i = 0; i < 5; i++)
+        for (i = 0, p = (u8*)state; i < 5; i++)
         {
             *(u16*)(p + 0x48) = randomGetRange(-32767, 32767);
             *(u16*)(p + 0x52) = randomGetRange(-1024, 1024);
