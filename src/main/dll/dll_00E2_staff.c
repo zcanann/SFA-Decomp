@@ -1468,7 +1468,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
             f32 sw;
             slot = *(u8**)(swipe + 0x48);
             count = (int)(lbl_803E330C * *(f32*)(model2 + 0x14));
-            prog = *(f32*)(slot + 8) * *(f32*)(model2 + 0x14);
+            angle = *(f32*)(slot + 8) * *(f32*)(model2 + 0x14);
             if (slot[0x14] & 1)
             {
                 *(f32*)(swipe + 0x8c) = ((GameObject*)obj)->anim.worldPosX;
@@ -1479,14 +1479,14 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
             }
             sw = *(f32*)(swipe + 0x98);
             tmax = *(f32*)(model2 + 4);
-            if (sw > prog)
+            if (sw > angle)
             {
                 *(f32*)(swipe + 0x98) = tmax;
                 return;
             }
-            if (tmax > prog)
+            if (tmax > angle)
             {
-                tmax = prog;
+                tmax = angle;
             }
             tbl = ((GameObject*)obj)->anim.weaponDaTable->entries;
             if (sw >= lbl_803E32B4)
@@ -1501,7 +1501,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                 count2 = (int)((flb - fla) / lbl_803E32AC);
                 if (count2 == 0)
                 {
-                    if (*(f32*)(model2 + 4) > prog)
+                    if (*(f32*)(model2 + 4) > angle)
                     {
                         *(f32*)(swipe + 0x98) = *(f32*)(model2 + 4);
                     }
@@ -1658,7 +1658,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
             }
             else
             {
-                if (*(f32*)(model2 + 4) > prog)
+                if (*(f32*)(model2 + 4) > angle)
                 {
                     *(f32*)(swipe + 0x98) = *(f32*)(model2 + 4);
                     return;
