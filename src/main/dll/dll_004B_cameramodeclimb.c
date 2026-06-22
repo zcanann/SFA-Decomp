@@ -119,9 +119,9 @@ void CameraModeClimb_update(CameraObject* camObj)
     camObj->anim.worldPosX = traceOut[0];
     camObj->anim.worldPosY = traceOut[1];
     camObj->anim.worldPosZ = traceOut[2];
-    (*gCameraInterface)->getRelativePosition((f32)(u32)(u16)gCamClimbState->relativePosition,
-                                             (int)camObj, &relX, &clamped,
-                                             &relZ, &dist, 0);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)camObj, &relX, &clamped, &relZ, &dist,
+        (f32)(u32)(u16)gCamClimbState->relativePosition, 0);
     {
         int t = 0x8000 - (u16)getAngle(relX, relZ);
         yawDelta = t - (u16)camObj->anim.rotX;
@@ -190,8 +190,8 @@ void CameraModeClimb_init(int arg1, int mode, s8* args)
         handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         (*(VtableFn*)(**(int**)(handler + 4) + 0x20))(&defaultDistB, &defaultDistA, &defaultMinHeight,
                                                   &defaultMaxHeight, &defaultRelPos);
-        (*gCameraInterface)->getRelativePosition((f32)(u16)gCamClimbState->relativePosition,
-                                                 arg1, &outX, &outY, &outZ, &defaultDistXZ, 0);
+        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+            arg1, &outX, &outY, &outZ, &defaultDistXZ, (f32)(u16)gCamClimbState->relativePosition, 0);
         gCamClimbState->startRelativePosition = defaultRelPos;
         gCamClimbState->startMinHeight = defaultMinHeight;
         gCamClimbState->startMaxHeight = defaultMaxHeight;
