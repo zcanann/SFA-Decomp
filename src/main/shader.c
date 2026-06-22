@@ -1266,8 +1266,8 @@ int mapProcessRomList(int slot)
                 ((GameObject*)obj)->anim.localPosY += dz;
             }
             step = *(u8*)(obj + 2) * 4;
-            j += step;
             obj += step;
+            j += step;
         }
     }
     lbl_803DB620 = slot;
