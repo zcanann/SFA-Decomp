@@ -1424,7 +1424,7 @@ extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;
 extern f32 lbl_803E32AC;
 
-void staff_setupSwipe(int p1, int p2, int p3, int p4)
+void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
 {
     u8* model2;
     u8* slot;
@@ -1447,8 +1447,8 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
     f32 sinv, cosv, vidx, flb, fla, frac, tmax, prog, angle, acc, step;
     int ang;
 
-    swipe = (u8*)p2;
-    obj = (u8*)p4;
+    swipe = (u8*)swipeArg;
+    obj = (u8*)objArg;
     if (*(int**)(swipe + 0x48) != NULL)
     switch (swipe[0xbc])
     {

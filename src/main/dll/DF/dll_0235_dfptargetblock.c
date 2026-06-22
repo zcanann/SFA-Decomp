@@ -343,7 +343,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     return;
 }
 
-void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
+void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
 {
     char pointCount;
     bool found;
@@ -404,8 +404,8 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
         }
         state->mode = DFPTARGETBLOCK_MODE_RAISING;
         obj->y = obj->y - lbl_803E64AC;
-        state->completionSfxId = *(short*)(arg2 + 0x1e);
-        state->stateSfxId = *(short*)(arg2 + 0x20);
+        state->completionSfxId = *(short*)(placementData + 0x1e);
+        state->stateSfxId = *(short*)(placementData + 0x20);
         bitVal = GameBit_Get((int)state->completionSfxId);
         state->completionSfxReady = bitVal;
         bitVal = GameBit_Get((int)state->stateSfxId);
