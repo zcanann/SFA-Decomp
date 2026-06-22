@@ -862,11 +862,12 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
 u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 {
     int n;
-    ObjfsaPatch* patch = gObjfsaPatches;
+    ObjfsaPatch* patch;
 
-    for (n = gObjfsaPatchCount; n > 0; n--)
+    for (n = 0; n < gObjfsaPatchCount; n++)
     {
         f32 y = point[1];
+        patch = &gObjfsaPatches[n];
         if (y < patch->maxY && y > patch->minY)
         {
             f32 x;
@@ -890,7 +891,6 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
                 return patch->groupId;
             }
         }
-        patch++;
     }
     return 0;
 }
