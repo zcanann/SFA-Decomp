@@ -12399,8 +12399,9 @@ void fn_802AC32C(int p1, int p2, int p3)
         }
         ratio = lbl_803E7EE0 - (((PlayerState*)p2)->baddie.animSpeedC - lbl_803E7E9C) /
             (((PlayerState*)p3)->maxSpeed - lbl_803E7E9C);
+        f5 = lbl_803E80C4;
         clamped = (ratio < lbl_803E7EA4) ? lbl_803E7EA4 : ((ratio > lbl_803E7EE0) ? lbl_803E7EE0 : ratio);
-        f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
+        f5 = f5 * clamped + lbl_803E80F4;
         result = ((f32)delta < lbl_803E80F8 * -f5) ? lbl_803E80F8 * -f5
             : (((f32)delta > lbl_803E80F8 * f5) ? lbl_803E80F8 * f5 : (f32)delta);
         angle1 = (int)result;
