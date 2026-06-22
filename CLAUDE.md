@@ -623,6 +623,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     and `(int obj, int p2, f32 f, int p4)` → fixing externs + call arg order 92.48→96.56, +4.08.) SWEEP: grep
     other units' externs of the same shared helpers; an empty K&R proto `extern int fn();` on a float-taking
     helper is also suspect (the float's reg assignment is then unprototyped — give it the real signature).
+    PROJECT-WIDE VEIN (pausemenu sweep): grepping ALL dll externs of float-taking shared helpers vs their real
+    defs found **85 helpers with inconsistent float-arg POSITIONS across files** — this lever is far from
+    tapped. SWEEP METHOD: (1) real def `grep '^\w.*\bNAME(' src/`; (2) files with a mispositioned extern;
+    (3) unit sub-100 + STALE/unowned (`git log -1 --format=%cr -- <file>`, re-check right before editing);
+    (4) reorder extern + call args to the real def order; (5) verify report.json no-regress. CAVEAT: it's
+    EMISSION-NEUTRAL (no win) when the caller is already 100% OR the target already emits float-after-obj —
+    verify PER-CALL in the asm, don't blind-fix (pausemenu hit this on the gameui draw helpers
+    drawTexture/drawScaledTexture). VERIFIED win shape: `objMove` real `int objMove(u8* obj,f32,f32,f32)`
+    (object.c) vs float-first artifact externs in dll_00FF_magicdust / dll_01AA_bombplantspore.
 138. **Global-base WALKED array with a `mr rWalker,r0` detour → index it as a TYPED STRUCT ARRAY.**
     When a loop walks a global array and the base routes through r0 (`lis r3; addi r0,r3,LO; mr
     rWalker,r0`) instead of the target's direct `addi rWalker,r3,LO`, the clean form is
