@@ -440,6 +440,7 @@ ret1:
     return 1;
 }
 
+#pragma opt_common_subs off
 void drakorhoverpad_updateMain(int obj)
 {
     u8* p = ((GameObject*)obj)->extra;
@@ -641,6 +642,7 @@ void drakorhoverpad_updateMain(int obj)
     PSVECAdd(&((GameObject*)obj)->anim.localPosX, &((GameObject*)obj)->anim.velocityX,
              &((GameObject*)obj)->anim.localPosX);
 }
+#pragma opt_common_subs reset
 
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
 {
