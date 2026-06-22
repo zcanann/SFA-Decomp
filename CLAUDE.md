@@ -132,6 +132,25 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
   work, so the triggering ingredient EXISTS — the minimal TU just lacks it. For these, A/B IN-TREE per-site
   (not blind), and when isolation doesn't reproduce, ADD ingredients until the effect fires and NAME the
   trigger — never read "didn't reproduce isolated" as "broken." Each carries its own stated boundary in-entry.
+- **★ THE ISOLATION→IN-TREE GATE SPLITS BY FIX TYPE (evidence-based — Validator's 4 in-tree regressions + the
+  missing-code win-stream). This tells you when a both-objs isolation derive is TRUSTWORTHY vs must be a
+  hunter-A/B HYPOTHESIS:**
+  • **MISSING-CODE fixes TRANSFER reliably** (dropped block #159, dropped arg #65, dropped case, control-flow
+    fold #139, dropped const-store #145): they recover instructions that are MISSING regardless of register
+    allocation, so an isolation/both-objs read converts in-tree. DERIVE these confidently. (This is where the
+    owner's win-stream lives.)
+  • **ALLOCATION-SENSITIVE fixes REGRESS from isolation** (strength-reduction store-form, store-isel #112,
+    register coloring #66/#107/#108, the #155 held-pointer detour): the FULL-FN register pressure overrides the
+    isolated behavior, so a minimal — even substantially-faithful — TU can't carry it. 4 confirmed isolation
+    derives regressed in-tree: #155 store-walk, slot-cascade slotPtr, #155 substate-cache, curves_lengthFn24
+    `arr[count++]`. For these, an isolation derive is a FLAGGED HYPOTHESIS ONLY (low hit-rate) — they need the
+    HUNTERS' in-tree A/B iteration (with the real full-fn context), NOT an isolation-derived "answer."
+  REFINE THE TRIAGE one level: within the structural-divergence (T≠C) bucket, split MISSING-CODE (recover it —
+  derive reliable) vs ALLOCATION-FORM (strength-reduction/store-isel/coloring — hunter A/B, derive = hypothesis).
+  These ALLOCATION-FORM nuts on large coloring-bound fns are documented-hard (the only source levers are
+  WHOLE-FN pragmas whose collateral nets negative, or isolation-forms the full-fn context overrides) — park them
+  at baseline ON THE LIST (lower-priority, untried per-region forms noted), NOT "irreducible." The % converts in
+  the MISSING-CODE bucket — aim there.
 
 ## High-impact one-liners (try first at 80-95%)
 1. **`#pragma peephole off` + `scheduling off`** (matched with `reset`) around the fn — unfuses
@@ -1741,9 +1760,18 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     typed-global retype would REGRESS #155 (~14 re-mats), never fix it. So the #155 detour is NOT a missing-struct artifact; it is the PURE
     held-pointer base-init choice, now cleanly isolated: when materializing a held GLOBAL POINTER's @lo into a
     SAVED reg, ours emits `addi r0,r3,@lo; mr rSaved,r0` (via-r0-scratch+copy), retail `addi rSaved,r3,@lo`
-    (direct-into-saved). NAME the exact deterministic rule for THAT one choice (add ingredients to /tmp/vts until
-    the choice flips; HunterA confirms instantly — the typed-global form is an obvious ~14-remat regression on
-    pauseMenuFn). This is the CONVERGENT MULTIPLIER — the rule cracks ALL #155 detour fns at once.
+    (direct-into-saved). ⚠️ "MISSING-HELD-VALUE" LEVER RETRACTED (HunterA in-tree, pauseMenuFn): the hypothesis
+    "retail holds ONE MORE recoverable value in its extra saved reg — cache it as a local → grow the pool →
+    resolve the detour" FAILED — caching regressed 92.39→90.88. HunterA's FULL r24 read: retail's extra saved
+    reg is a MULTI-VALUE allocator-assigned reg (state consts + an s16 timer global + bytes + copies + base+
+    offset address math across 1800 instrs), NOT a single cacheable field. So the pool-size gap is the OVERALL
+    allocation, not a recoverable dropped value. This is the 3rd #155-detour SOURCE lever to fail in-tree
+    (store-walk, substate-cache) — the #155 held-pointer detour on COMPLEX/multi-value-reg fns is an
+    ALLOCATION-FORM nut (full-fn pressure overrides isolation; see the gate-splits-by-fix-type Method note):
+    DOCUMENTED-HARD, hunter-A/B-territory (low hit-rate), park at baseline ON THE LIST (NOT irreducible), not an
+    isolation-derivable rule. (The "cache the missing value" lever MIGHT still work on a SIMPLE detour fn whose
+    extra reg holds ONE reloaded field — but no in-tree-confirmed bed exists, so it does NOT generalize; don't
+    claim it.) The % is in the MISSING-CODE bucket, not these allocation-form detours.
 156. **LOOP-INVARIANT FP CONSTANT / `(s32)<global float>` ARG → mark the global `const f32` and INLINE it at
     the use (NOT a cached named local).** When a loop passes a loop-invariant float constant (as a fcmps/fmadds
     operand) or a `(s32)<loop-invariant global float>` arg, retail HOISTS the load (and the float→int fctiwz) into
