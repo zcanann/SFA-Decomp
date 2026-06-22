@@ -715,9 +715,15 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     DISCRIMINATOR (waterfx oracle hunt) for path (1): the stored-0 web qualifies at O4 ONLY if it's a true
     COUNTER = incremented AND COMPARED to a bound; an ACCUMULATOR (incremented but NOT compared, e.g.
     `off += 4`) does NOT qualify. OPEN VARIANTS (live targets — oracle-or-DERIVE the source, never file as
-    gaps): (c) reuse an incr-NOT-compared ACCUMULATOR's 0 for a pre-loop const-0 copy AND/OR a FIELD store
-    (`obj->f = 0` re-materializes `li`) in an O4 fn (OR-inert, chain-folds, O2-regresses — fn_801932C8 /
-    groundanimator_update); (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
+    gaps): (c) reuse an incr-NOT-compared ACCUMULATOR's 0 in an O4 fn — SPLITS into two halves:
+    ✓SOLVED — the LOCAL-COPY half: `local = accum;` (PLAIN store of the accumulator VARIABLE, not literal
+    `0` and not the `local = accum = 0` chain — the var-read doesn't const-fold) → `mr` at O4, in-tree-proven
+    (fn_801932C8 `htOff = fallOff`). OPEN — the FIELD-STORE half: `obj->f = 0` re-materializes `li r0` instead
+    of storing the accumulator's saved-0 reg; `= accum` FOLDS for a memory store (MWCC materializes the
+    store-value 0 in a volatile regardless), OR/chain/O2 all fail, and no clean oracle located yet (the obvious
+    sibling fn_801923F8 is itself only 96.4%, not a usable oracle). Retail does `stb saved0,field` — so it's a
+    live target needing a DIFFERENT matched-fn oracle (a const-0 FIELD store reusing a saved-0) or a fresh-eyes
+    reframe (1-instr-per-fn; fn_801932C8 `entryCount=0` / groundanimator_update). (d) LOW-PRESSURE single counter-0-reuse — a tiny fn (~47 instrs) where the
     chained copy folds to `li` at O4 yet retail (STRUCTURALLY IDENTICAL, same instr count) has the `mr`
     (Minimap_release): NOT a pressure cap (identical structure = identical pressure), it's an unfound
     O4-surviving-copy source form. The chain reaches counter+LOCAL value-0; (c)/(d) need forms still to find.
