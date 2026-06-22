@@ -1068,6 +1068,20 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     kind-2(2) — same value NAMED/typed identically in both builds, both regs free, only the SLOT differs (no
     name-vs-inline distinction to flip, e.g. groundanimator `s8 bi`, MagicPlant `alpha`) — is the residual
     #107 does NOT crack; that's the genuinely-open creation-order/neighbor-perturbation/register-pressure nut.
+    ✦CRUX PINNED (waterfx, objhits ObjHits_CalcSkeletonResponseXZ — the cleanest kind-2(2) repro, maximally
+    narrowed): it's a PURE FREE-REG LOOK-AHEAD, not creation-order or naming. PROOF: the deciding `fmr fXX,f1`
+    is at the IDENTICAL instruction offset in both builds (same web, same creation point) — ONLY the reg differs.
+    Two adjacent saved FP webs (a CALL-RESULT `moveLen`=Vec3_Length + a GLOBAL-scalar `zf`=gObjHitsScalarZero,
+    both live across the clamp): at moveLen's creation BOTH regs are free; RETAIL picks the LOWER (f30) —
+    LOOK-AHEAD-RESERVING f31 for the later-created zf — OURS picks highest-free-first (f31). RULED OUT (all RAN):
+    #45 decl-swap, #130 block-temp on the call-result, #81 launder, opt_level2 (regress, O4-in-retail), neighbor-
+    perturb (zf-early regress); #107 N/A (moveLen is a non-re-derivable call-result; un-naming zf is wrong-
+    direction). NOT ISOLABLE (probe_battery base.c won't reproduce — context-bound). The one oracle
+    (boneBlendSlotLimit, model.c) has the shape but is INLINED/static (no standalone source to diff). So the
+    whole ~35-fn kind-2(2) bucket reduces to ONE question: which SOURCE construct makes MWCC graph-coloring
+    RESERVE the higher free FP reg for a LATER-created value (look-ahead) vs picking highest-free-first? NEXT:
+    hunt a STANDALONE (non-inlined, real-`bl`) oracle with this shape; else a deeper allocator look-ahead derive
+    (validator). Live target — maximally narrowed, needs a NEW allocator-modeling insight, NOT another lever.
     DOESN'T-APPLY shapes (pausemenu, verified — recognize fast, don't burn cycles): besides criteria 2/3/1
     failures, the naming lever is ALSO inert when the swapped values are (a) CONSTANTS — naming/inlining a
     literal is identical (a const colors the same either way), so a const↔const or const↔addr swap can't be
