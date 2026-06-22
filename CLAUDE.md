@@ -618,6 +618,14 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     DISTINCT OPEN sub-puzzle (the #135-SoA residual: bare-global-direct + tex-first decl lands 91.61, one base
     + displacement + counter=r27 correct, held under baseline only by this unreused null + a j/tex color —
     structure reachable, this last piece unsolved).
+    OPEN SUB-CASE — INDUCTION-VAR SURVIVAL on a LOCAL base, no-reuse, short loop (flameguard, sh_staff_free
+    dll_01B1 T=46 C=44): retail KEEPS the idx counter + walker (`li r5,0; addi r5,r5,4` alongside the walker
+    bump), ours `opt_strength_reduction` ELIMINATES idx as redundant (walker-only) → the 2 missing instrs read
+    like dropped code but are induction-var elimination, NOT #79/#139. Tried+REGRESSED: opt_strength_reduction
+    off (92.48, over-applies), comma-init walker BOTH increment orders (92.61, idx still eliminated), off+comma-init
+    (92.61). The LOCAL-base / no-reuse / short-count idx-survival form (the counter has no value-reuse to keep it
+    alive, unlike form-(b)'s `*p=NULL` reuse) is UNMAPPED — assumed-reachable, open. (DLL "ours-short" candidates
+    in the mixed-drift bucket are mostly THIS, not dropped code — count before assuming #79/#139.)
     SIBLING FORM: a DO-WHILE loop with MANUAL counter/pointer bumps in the body → rewrite as a
     `for` with comma-init increments (`for (i=0, p=base; cond; p+=stride, i++)`); the for+comma-init
     induction shape fixes the induction-variable coloring the hand-bumped do-while misses. (WorkerC:
