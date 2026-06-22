@@ -1723,10 +1723,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
     if (flag != 0)
     {
         ptr = seqFn_800394a0();
-        q = 1;
-        ptr = ptr + 1;
         zero = 0;
-        for (; q < 9; q++)
+        for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
         {
             vec = objModelGetVecFn_800395d8(obj, *ptr);
             if (vec != 0)
@@ -1734,7 +1732,6 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
                 vec[2] = zero;
                 vec[0] = zero;
             }
-            ptr++;
         }
         player = Obj_GetPlayerObject();
         *(int*)&((BaddieState*)p2)->targetObj = player;
@@ -1888,10 +1885,8 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
         if (flag != 0)
         {
             ptr = seqFn_800394a0();
-            q = 1;
-            ptr = ptr + 1;
             zero = 0;
-            for (; q < 9; q++)
+            for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
             {
                 vec = objModelGetVecFn_800395d8(obj, *ptr);
                 if (vec != 0)
@@ -1899,7 +1894,6 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
                     vec[2] = zero;
                     vec[0] = zero;
                 }
-                ptr++;
             }
             player = Obj_GetPlayerObject();
             *(int*)&((BaddieState*)p2)->targetObj = player;
@@ -1927,10 +1921,8 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
     if (((u32)sub->flags44 >> 6 & 1) != 0)
     {
         ptr = seqFn_800394a0();
-        q = 1;
-        ptr = ptr + 1;
         zero = 0;
-        for (; q < 9; q++)
+        for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
         {
             vec = objModelGetVecFn_800395d8(obj, *ptr);
             if (vec != 0)
@@ -1938,7 +1930,6 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
                 vec[2] = zero;
                 vec[0] = zero;
             }
-            ptr++;
         }
     }
     else if (*(void**)&sub->linkedObj == NULL)
@@ -2233,10 +2224,8 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
         if (flag != 0)
         {
             ptr = seqFn_800394a0();
-            q = 1;
-            ptr = ptr + 1;
             zero = 0;
-            for (; q < 9; q++)
+            for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
             {
                 vec = objModelGetVecFn_800395d8(obj, *ptr);
                 if (vec != 0)
@@ -2244,7 +2233,6 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
                     vec[2] = zero;
                     vec[0] = zero;
                 }
-                ptr++;
             }
             player = Obj_GetPlayerObject();
             *(int*)&((BaddieState*)p2)->targetObj = player;
@@ -2272,10 +2260,8 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
     if (((u32)sub->flags44 >> 6 & 1) != 0)
     {
         ptr = seqFn_800394a0();
-        q = 1;
-        ptr = ptr + 1;
         zero = 0;
-        for (; q < 9; q++)
+        for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
         {
             vec = objModelGetVecFn_800395d8(obj, *ptr);
             if (vec != 0)
@@ -2283,7 +2269,6 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
                 vec[2] = zero;
                 vec[0] = zero;
             }
-            ptr++;
         }
     }
     else if (*(void**)&sub->linkedObj == NULL)
