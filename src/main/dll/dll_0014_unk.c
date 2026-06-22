@@ -3267,7 +3267,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                         ((curDist + SQ(node->x - cand->x)) +
                                             SQ(node->y - cand->y));
                                     pos = 0;
-                                    for (probe = queueDist; (pos < count) && (*probe > newDist); probe++)
+                                    while ((pos < count) && (queueDist[pos] > newDist))
                                     {
                                         pos++;
                                     }
