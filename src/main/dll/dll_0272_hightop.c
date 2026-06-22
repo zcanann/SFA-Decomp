@@ -99,7 +99,7 @@ typedef struct HighTopRuntime
     f32 stateTimer; /* per-state countdown; -= framesThisStep, re-armed from random */
     u8 padC34[4];
     f32 unkC38;
-    s32 unkC3C;
+    s32 savedControlMode;
     u16 flagsC40;
     u8 idleSeqIndex; /* index into gHighTopIdleSequenceIds/Weights */
     u8 unkC43;
@@ -257,7 +257,7 @@ int hightop_stateHandler03(int obj, u8* state)
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
-        if (*(u32*)&p->unkC3C == 4)
+        if (*(u32*)&p->savedControlMode == 4)
         {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
             ((HighTopRuntime*)state)->baddie.moveSpeed = lbl_803E6AC8;
@@ -270,7 +270,7 @@ int hightop_stateHandler03(int obj, u8* state)
     }
     if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E6B00)
     {
-        return p->unkC3C + 1;
+        return p->savedControlMode + 1;
     }
     return 0;
 }
@@ -623,7 +623,7 @@ void hightop_hitDetect(int obj)
     st = p->baddie.controlMode;
     if (st != 3)
     {
-        p->unkC3C = st;
+        p->savedControlMode = st;
     }
     st = p->baddie.controlMode;
     if (st == 2 || st == 8)
@@ -1075,7 +1075,7 @@ int hightop_stateHandler09(int obj, int p)
         }
         ((HightopPlacement*)p)->unk2A0 = lbl_803E6AAC;
         prevCount = GameBit_Get(0x3f0) - 1;
-        state->unkC3C = 9;
+        state->savedControlMode = 9;
         for (i = 0; i < 4; i++)
         {
             GameBit_Set((&gHighTopProgressGameBitIds)[i], i > prevCount);
