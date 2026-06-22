@@ -220,7 +220,9 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 
     out[1] = *(int*)(node + NODE_SELF_ID);
 
-    for (i = 0, cur = node; i < 5; cur += 4, i++)
+    i = 0;
+    cur = node;
+    for (; i < 5; i++)
     {
         idx = *(int*)(cur + NODE_NEIGHBOURS);
         if (idx > -1)
@@ -242,6 +244,7 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
                 }
             }
         }
+        cur += 4;
     }
 
     idx = out[2];
