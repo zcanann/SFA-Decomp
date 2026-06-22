@@ -707,8 +707,8 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         sf2 = ((BaddieState*)state)->controlFlags;
         if ((sf2 & 0x800080) != 0 || (*(u8*)(state + 0x2f1) & 0x20) != 0)
         {
-            row = eventRows + eventIndex * 0xc;
-            blendTimer = lbl_803E274C * (blendScale * *(f32*)row);
+            blendTimer = lbl_803E274C *
+                (blendScale * *(f32*)(row = eventRows + eventIndex * 0xc));
             *(f32*)(state + 0x330) = blendTimer;
             *(f32*)(state + 0x32c) = blendTimer;
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40;
