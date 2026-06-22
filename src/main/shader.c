@@ -1927,10 +1927,10 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++)
     {
-        f32 p0 = plane->normalX;
-        f32 p1 = plane->normalY;
-        f32 p2 = plane->normalZ;
-        p3 = plane->distance;
+        f32 p0 = plane[i].normalX;
+        f32 p1 = plane[i].normalY;
+        f32 p2 = plane[i].normalZ;
+        p3 = plane[i].distance;
         j = 0;
         hit = 0;
         a1 = fx * p0;
@@ -1960,7 +1960,6 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
         }
         if (j == 8 && hit == 0)
             return 0;
-        plane++;
     }
     return 1;
 }
