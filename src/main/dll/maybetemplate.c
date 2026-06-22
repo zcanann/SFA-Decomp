@@ -559,7 +559,11 @@ void pauseMenuDrawStatus(void)
     statuses[10] = GameBit_Get(0x13D);
     if (statuses[10] != ((PauseMenuHud*)base)->spiritBitState)
     {
-        u8 flag = statuses[10] == 0 ? 1 : 0;
+        u8 flag = 0;
+        if (statuses[10] == 0)
+        {
+            flag = 1;
+        }
         GameBit_Set(0x967, flag);
     }
     statuses[11] = GameBit_Get(0x86A);
