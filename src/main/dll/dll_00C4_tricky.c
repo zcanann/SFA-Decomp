@@ -1709,7 +1709,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
-        ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 4;
+        ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 4;
         Sfx_PlayFromObjectLimited(obj, 1099, 2);
         ObjHits_EnableObject(obj);
     }
@@ -1724,7 +1724,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
             hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & 0xffffef7f;
-        ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~(u64)0x4;
+        ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~(u64)0x4;
         ((TrickyState*)state)->currentMoveProgress = lbl_803E2574;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
@@ -1777,7 +1777,7 @@ void trickyFn_80148d8c(int obj, int state)
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
-        ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 1;
+        ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 1;
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         if (randomGetRange(0, 100) > 50)
         {
@@ -1840,7 +1840,7 @@ void trickyFn_80148d8c(int obj, int state)
                                                        lbl_803E2570 * (f32) * (s16*)(setup + 0x2c));
             }
             ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~(u64)0x800;
-            ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~3LL;
+            ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~3LL;
         }
     }
 }
@@ -2137,13 +2137,13 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                                                                  0x32, NULL);
                     Obj_ResetModelColorState(obj);
                     *(u16*)&((TrickyState*)state)->unk2B0 = 0;
-                    ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~0x20LL;
-                    ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 0x200;
+                    ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~0x20LL;
+                    ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x200;
                     Sfx_PlayFromObject(obj, 0x47b);
                 }
                 else
                 {
-                    ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 0x10;
+                    ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x10;
                 }
             }
             else
@@ -2281,7 +2281,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~0x4000LL;
             }
         }
-        if ((((TrickyState*)state)->unk2E8 & 0x208) != 0)
+        if ((((TrickyState*)state)->flags2E8 & 0x208) != 0)
         {
             params.pos.x = hitPos.x;
             params.pos.y = hitPos.y;
@@ -2290,7 +2290,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
             {
                 ((TrickyState*)state)->light = objCreateLight(0, 1);
             }
-            if ((((TrickyState*)state)->unk2E8 & 0x200) != 0)
+            if ((((TrickyState*)state)->flags2E8 & 0x200) != 0)
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 1, (void*)((TrickyState*)state)->light);
             }
@@ -2313,7 +2313,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             ((TrickyState*)state)->unk2D0 = lbl_803E2574;
         }
-        if ((((TrickyState*)state)->unk2E8 & 0x10) != 0)
+        if ((((TrickyState*)state)->flags2E8 & 0x10) != 0)
         {
             if (((TrickyState*)state)->unk2D0 <= lbl_803E2574)
             {
@@ -2342,7 +2342,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 fn_802961FC(proj, result);
             }
         }
-        else if ((((TrickyState*)state)->unk2E8 & 0x20) != 0)
+        else if ((((TrickyState*)state)->flags2E8 & 0x20) != 0)
         {
             if (((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter == 0)
             {
@@ -2358,7 +2358,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                 ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter--;
             }
         }
-        ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & 0xfffffdc7;
+        ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & 0xfffffdc7;
     }
 }
 

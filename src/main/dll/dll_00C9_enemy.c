@@ -1396,7 +1396,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     baddieInstantiateWeapon(node, (int*)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
-        ((TrickyState*)sub)->unk2E8 &= ~3LL;
+        ((TrickyState*)sub)->flags2E8 &= ~3LL;
         ObjHits_DisableObject((u32)node);
         return 0;
     }

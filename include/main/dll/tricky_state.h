@@ -91,7 +91,7 @@ typedef struct TrickyState {
     u32 flags2DC; /* flag word */
     u32 unk2E0;
     u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
-    u32 unk2E8;
+    u32 flags2E8; /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
     u8 pad2EC[0x2EF - 0x2EC];
     u8 actionId; /* current action/move selector (0..5); compared against prevActionId to detect change */
     u8 prevActionId; /* previous frame's actionId */
