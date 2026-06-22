@@ -872,13 +872,29 @@ actionable trigger→fix; **full detail, examples, and worked analyses live in
     "lvalue u32" is necessary-not-sufficient: the RHS must ALSO be u32 — `result & ~KLL` with `int result`
     sign-extends to a high-word `srawi`; cast/retype the RHS to u32. The dead 64-bit high-word (`li 0` for u32
     RHS) DCEs cleanly when the clear is STANDALONE or the `=0` store PRECEDES it → those are clean wins, LAND
-    them. OPEN (a clean 2002-C form is ASSUMED to exist — not yet found): when a `field = 0;` store immediately
-    FOLLOWS the clear, MWCC's VN reuses the AND's dead high-word `li 0` for the zero, keeping it live. Tried so
-    far (a launchpad to SKIP these spellings, NOT proof of impossibility): volatile-qualify the `=0`,
-    negative-literal / explicit-u32 mask, local-mask-var (each keeps rlwinm or the reuse); reordering the `=0`
-    before the clear DCEs the high-word but swaps the two asm blocks. Untried leads: split the `=0` into a
-    separate basic block; give the `=0` a distinct value-number (a 0 that doesn't constant-fold-CSE); or find
-    the source form that emits li+and as a genuine 32-bit AND (no high-word) at noschedule. Asm at
+    them. **0-STORE STEAL — NET-WIN PARTIAL FOUND (flameguard, tricky_flameguard.c): when a `field = 0;` store
+    immediately FOLLOWS the clear, the u32 `&= ~Kll` form makes MWCC's VN reuse the AND's dead high-word `li 0`
+    for the zero (materialized EARLY into r3, stealing it from flags → flags spills to r4, 0 to r3 early — the
+    regression). FIX: use a SIGNED lvalue — `*(s32*)&state->flags &= ~(u64)FLAG;` — NOT the u32 form. The signed
+    promotion makes the high-word a `srawi` (a DEAD value, not a reusable `0`), so the `=0` can't CSE with it →
+    flags lands in r3 and the 0 stays LATE in r0 (EXACTLY retail's `lwz r3; li -K; and; stw; li r0,0; sth`).
+    NET WIN despite a residual dead `srawi r0,rX,31` retail lacks (+1 instr, but fixes the flags-reg AND the
+    0-position — bigger gains). Landed the 0x400 TARGET_DIRTY clears across all 3 fns: trickyFlame 93.98→94.21,
+    trickyGuardFindBaddieTarget 95.44→96.25, trickyGuard 97.70→98.15 (commit on main). Spell it via the field's
+    accessor: `#define CLEAR(st) (*(s32*)&(st)->flags &= ~(u64)FLAG)`.
+    OPEN (the dead-srawi-free retail form, ASSUMED to exist): retail emits NO srawi and NO high-word at all.
+    PROVEN via /tmp probe (mwcc nopeephole,noschedule): the u32 high-word `li 0` IS DCE'd cleanly when the `=0`
+    is in a SEPARATE BASIC BLOCK from the clear (`if(realcond){clear;} timer=0;` or `clear; if(realcond){timer=0;}`
+    → perfect `li -K; and; ...; li r0,0; sth`, no srawi, no steal). The CSE only fires when clear+`=0` share a BB.
+    BUT retail has them in the SAME bb and is still clean — so retail's MWCC didn't CSE same-bb where ours does;
+    the source nuance that suppresses the same-bb CSE is still unmapped. Tried+FAILED to make a no-branch BB
+    boundary: `if(1){...}`, `do{...}while(0)` both FOLD AWAY (no bb, still steal); only a REAL runtime branch
+    (`if(g())`, `if(best&1)`) creates the bb — but that adds an instruction/changes semantics, so it's not the
+    faithful form. Untried leads: a source form where the `=0`'s 0 is a genuinely distinct VN from the
+    zero-extension 0 without a branch; or the construct that makes MWCC not zero-extend flags at all (a 32-bit
+    `li -K; and` with no high-word node). `#pragma peephole on` DCEs the dead srawi → exact match, but the unit
+    is genuinely nopeephole (whole-unit peephole-on REGRESSES trickyFlame 94.21→90.75 / trickyGuard 98.15→97.20),
+    so the pragma is a non-faithful hack here — keep the signed-LL form. Asm at
     trickyFn_80143c04 L1321 + trickyFoodFn_80142d2c. SIBLING branch-fold (empty-then `if(x>=K){}else{x=-x}` →
     retail `bne; b` vs our folded `beq`): the #63 ternary `x=(x>=K)?x:-x` emits retail's `bne; b` but lands the
     result in a fresh fp reg (`fmr`) where retail negates in-place (`fneg fX,fX`). OPEN: a clean form keeping
