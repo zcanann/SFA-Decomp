@@ -28,7 +28,7 @@ typedef struct S3DMixGroup
 } S3DMixGroup;
 
 extern u8 lbl_803CC8C0[];
-extern u8 lbl_803CC910[];
+extern S3DMixGroup lbl_803CC910[];
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
@@ -464,7 +464,6 @@ int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 ar
 
 void s3dStartQueuedEmitters(void)
 {
-    S3DMixGroup* group;
     int groupIndex;
     S3DActiveNode* node;
     Snd3DEmitter* emitter;
@@ -477,29 +476,27 @@ void s3dStartQueuedEmitters(void)
     f32 lowerWindow;
     f32 distanceDelta;
 
-    groupIndex = 0;
-    group = (S3DMixGroup*)lbl_803CC910;
     zero = lbl_803E7880;
     one = lbl_803E78A4;
     upperWindow = lbl_803E78C0;
     lowerWindow = lbl_803E78BC;
 
-    while (groupIndex < lbl_803DE36B)
+    for (groupIndex = 0; groupIndex < lbl_803DE36B; groupIndex++)
     {
-        node = group->activeHead;
+        node = lbl_803CC910[groupIndex].activeHead;
         while (node != (S3DActiveNode*)0x0)
         {
-            if (group->sortedHead == (S3DSortedNode*)0x0)
+            if (lbl_803CC910[groupIndex].sortedHead == (S3DSortedNode*)0x0)
             {
                 goto start_voice;
             }
-            if ((lbl_803DE36A != 0) && ((group->key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
-                (group->sortedCount < group->activeHead->emitter->maxVoices))
+            if ((lbl_803DE36A != 0) && ((lbl_803CC910[groupIndex].key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
+                (lbl_803CC910[groupIndex].sortedCount < lbl_803CC910[groupIndex].activeHead->emitter->maxVoices))
             {
                 goto start_voice;
             }
 
-            distanceDelta = node->distance - group->sortedHead->distance;
+            distanceDelta = node->distance - lbl_803CC910[groupIndex].sortedHead->distance;
             if (distanceDelta <= lowerWindow)
             {
                 goto next_node;
@@ -563,16 +560,14 @@ void s3dStartQueuedEmitters(void)
             s3dApplyEmitterControls(emitter, node->distance, node->arg1,
                                     node->arg2, node->arg3, node->arg4);
             emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-            group->sortedCount++;
-            if (group->sortedHead != (S3DSortedNode*)0x0)
+            lbl_803CC910[groupIndex].sortedCount++;
+            if (lbl_803CC910[groupIndex].sortedHead != (S3DSortedNode*)0x0)
             {
-                group->sortedHead = group->sortedHead->next;
+                lbl_803CC910[groupIndex].sortedHead = lbl_803CC910[groupIndex].sortedHead->next;
             }
 
         next_node:
             node = node->next;
         }
-        group++;
-        groupIndex++;
     }
 }
