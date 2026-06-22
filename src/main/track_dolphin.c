@@ -5943,7 +5943,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         s16* vs;
                         u8 k;
                         int ok;
-                        f32 dotv, sq, disc, root, tt, rr;
+                        f32 dotv, sq, disc, root, tt, rr, rr2;
                         if ((tri[0x4b] & (1 << bit)) == 0) continue;
                         k = bit + 1;
                         if (k > 2) k = 0;
@@ -6003,25 +6003,25 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        rr = *(volatile f32*)&rdata[1];
+                        rr2 = *(volatile f32*)&rdata[1];
                         PSVECSubtract(vb, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
-                        if (sq < (*(f32*)&__AR_Callback) && dotv > rr)
+                        if (sq < (*(f32*)&__AR_Callback) && dotv > rr2)
                         {
                             ok = 0;
                         }
                         else
                         {
                             disc = -(sq * sq - dotv);
-                            if (disc > rr)
+                            if (disc > rr2)
                             {
                                 ok = 0;
                             }
                             else
                             {
-                                root = sqrtf(rr - disc);
-                                if (dotv > rr)
+                                root = sqrtf(rr2 - disc);
+                                if (dotv > rr2)
                                 {
                                     sq = sq - root;
                                 }
@@ -6035,7 +6035,7 @@ u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p
                                     PSVECAdd(ws, hitpt, hitpt);
                                     PSVECSubtract(hitpt, vb, plane);
                                     PSVECNormalize(plane, plane);
-                                    root = sqrtf(rr);
+                                    root = sqrtf(rr2);
                                     plane[3] = -PSVECDotProduct(hitpt, plane) + root;
                                     frac = sq;
                                     ok = 1;
