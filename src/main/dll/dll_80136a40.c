@@ -304,7 +304,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            ((TrickyState*)state)->stateFlags &= ~0x400;
+            *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
