@@ -583,36 +583,36 @@ extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E1E80;
 
 
-void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, u8 p5, int p6, int p7)
+void pauseMenuDrawElement(void *element, f32 fx, f32 fy, int depthZ, u8 paletteIndex, int scalePercent, int flags)
 {
     int dx, dy;
     f32 c0, c1;
-    pauseMenuMapFn_8011de20(this, p5, p4, p7 & 4);
-    dx = (*(u16*)((char*)this + 0xa) << 2) * (u16)p6 / 256;
-    dy = (*(u16*)((char*)this + 0xc) << 2) * (u16)p6 / 256;
+    pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, flags & 4);
+    dx = (*(u16*)((char*)element + 0xa) << 2) * (u16)scalePercent / 256;
+    dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
     fx = lbl_803E1E80 * fx;
     fy = lbl_803E1E80 * fy;
     GXBegin(0x80, 1, 4);
     GXWGFifo.s16 = fx;
     GXWGFifo.s16 = fy;
-    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.s16 = (s16)(depthZ << 2);
     c0 = lbl_803E1E3C;
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
     GXWGFifo.s16 = fy;
-    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.s16 = (s16)(depthZ << 2);
     c1 = lbl_803E1E68;
     GXWGFifo.f32 = c1;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
     GXWGFifo.s16 = (s16)(fy + (f32)(u32)dy);
-    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.s16 = (s16)(depthZ << 2);
     GXWGFifo.f32 = c1;
     GXWGFifo.f32 = c1;
     GXWGFifo.s16 = fx;
     GXWGFifo.s16 = (s16)(fy + (f32)(u32)dy);
-    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.s16 = (s16)(depthZ << 2);
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c1;
 }
