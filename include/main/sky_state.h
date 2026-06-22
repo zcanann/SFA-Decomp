@@ -35,22 +35,22 @@ typedef struct SkyState {
     u8 unk01;
     u8 unk02[2];
     u8 *handle;
-    u8 *unk08;
+    u8 *texture0;
     u8 unk0C[4];
-    u8 *unk10;
-    s32 unk14;
-    s32 unk18;
+    u8 *texture1;
+    s32 textureId0;
+    s32 textureId1;
     f32 unk1C;
     SkyLight lights[3];
     f32 timeOfDay;
     s32 clockTime;
     f32 timeOfDayRate;
-    s32 unk218;
+    s32 timer;
     s32 skyTextureIds[8]; /* 0x21C: texture asset ids (id + 0xc38 -> textureLoadAsset) */
     f32 unk23C;
     f32 unk240;
     f32 lightBlendFactor;
-    f32 unk248;
+    f32 lightBlendRate;
     u8 currentLightIndex;
     u8 previousLightIndex;
     u8 transitionLatch;

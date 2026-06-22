@@ -536,7 +536,7 @@ void fn_8008B88C(int* outTimer)
         *outTimer = 0;
         return;
     }
-    *outTimer = ((SkyState*)sky)->unk218;
+    *outTimer = ((SkyState*)sky)->timer;
 }
 
 #pragma opt_loop_invariants off
@@ -1582,13 +1582,13 @@ void skyFn_80088e54(int mode, f32 brightness)
         unset = pEXIInputFlag;
         if (brightness != unset)
         {
-            ((SkyState*)gSkyState)->unk248 = EXIInputFlag / (lbl_803DF060 * brightness);
+            ((SkyState*)gSkyState)->lightBlendRate = EXIInputFlag / (lbl_803DF060 * brightness);
             ((SkyState*)gSkyState)->lightBlendFactor = unset;
         }
         else
         {
             fullBlend = EXIInputFlag;
-            ((SkyState*)gSkyState)->unk248 = fullBlend;
+            ((SkyState*)gSkyState)->lightBlendRate = fullBlend;
             ((SkyState*)gSkyState)->lightBlendFactor = fullBlend;
         }
         cloudMode = ((SkyBlendStateFlags*)(gSkyState + (idx = mode * 0xa4) + 0xc1))->cloud;
@@ -1666,11 +1666,11 @@ void timeOfDayFn_8008b964(void)
             {
                 if (((SkyState*)gSkyState)->transitionLatch != 0)
                 {
-                    timer = ((SkyState*)gSkyState)->unk218 + 1;
-                    ((SkyState*)gSkyState)->unk218 = timer;
+                    timer = ((SkyState*)gSkyState)->timer + 1;
+                    ((SkyState*)gSkyState)->timer = timer;
                     if (timer > 0x1e)
                     {
-                        ((SkyState*)gSkyState)->unk218 = 0;
+                        ((SkyState*)gSkyState)->timer = 0;
                     }
                     ((SkyState*)gSkyState)->transitionLatch = 0;
                 }
@@ -1697,7 +1697,7 @@ void timeOfDayFn_8008b964(void)
             val = ((SkyState*)gSkyState)->unk23C;
             ((SkyState*)gSkyState)->unk23C =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
-            ((SkyState*)gSkyState)->lightBlendFactor += ((SkyState*)gSkyState)->unk248 * timeDelta;
+            ((SkyState*)gSkyState)->lightBlendFactor += ((SkyState*)gSkyState)->lightBlendRate * timeDelta;
             val = ((SkyState*)gSkyState)->lightBlendFactor;
             ((SkyState*)gSkyState)->lightBlendFactor =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
@@ -2219,8 +2219,8 @@ void fn_8008BDA8(void)
             {
                 textureFree(((SkyState*)gSkyState)->handle);
             }
-            mm_free(((SkyState*)gSkyState)->unk08);
-            mm_free(((SkyState*)gSkyState)->unk10);
+            mm_free(((SkyState*)gSkyState)->texture0);
+            mm_free(((SkyState*)gSkyState)->texture1);
             mm_free(gSkyState);
         }
         gSkyState = NULL;
@@ -2228,7 +2228,7 @@ void fn_8008BDA8(void)
     gSkyState = mmAlloc(600, 0x17, 0);
     memset(gSkyState, 0, 600);
     ((SkyState*)gSkyState)->unk250 = -1;
-    ((SkyState*)gSkyState)->unk218 = randomGetRange(0, 0x1c);
+    ((SkyState*)gSkyState)->timer = randomGetRange(0, 0x1c);
     ((SkyState*)gSkyState)->unk252 = 0xc;
     ((SkyState*)gSkyState)->unk253 = 0;
     ((SkyState*)gSkyState)->timeOfDay = gSkyInitialTimeOfDay;
@@ -2245,11 +2245,11 @@ void fn_8008BDA8(void)
     ((SkyState*)gSkyState)->skyTextureIds[7] = 0xc38;
     *(u8**)gSkyState = textureLoadAsset(((SkyState*)gSkyState)->skyTextureIds[0]);
     ((SkyState*)gSkyState)->handle = textureLoadAsset(((SkyState*)gSkyState)->skyTextureIds[1]);
-    ((SkyState*)gSkyState)->unk14 = 0xc38;
-    ((SkyState*)gSkyState)->unk18 = 0xc38;
+    ((SkyState*)gSkyState)->textureId0 = 0xc38;
+    ((SkyState*)gSkyState)->textureId1 = 0xc38;
     tex0 = *(u8**)gSkyState;
-    ((SkyState*)gSkyState)->unk08 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
-    ((SkyState*)gSkyState)->unk10 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState*)gSkyState)->texture0 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState*)gSkyState)->texture1 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
     i = 0;
     iofs = 0;
     do
@@ -3201,9 +3201,9 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyState*)gSkyState)->skyTextureIds[5] = ((Sky2Config*)cfg)->unk40 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[6] = ((Sky2Config*)cfg)->unk42 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[7] = ((Sky2Config*)cfg)->unk44 + 0xc38;
-            tmp = *(int*)&((SkyState*)gSkyState)->unk10;
+            tmp = *(int*)&((SkyState*)gSkyState)->texture1;
             p4 = gSkyState + ((SkyState*)gSkyState)->unk251 * 4;
-            *(int*)&((SkyState*)gSkyState)->unk10 = *(int*)(p4 + 8);
+            *(int*)&((SkyState*)gSkyState)->texture1 = *(int*)(p4 + 8);
             p4 = gSkyState + ((SkyState*)gSkyState)->unk251 * 4;
             *(int*)(p4 + 8) = tmp;
             ((SkyState*)gSkyState)->unk250 = -1;
