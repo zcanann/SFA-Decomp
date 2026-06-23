@@ -1141,15 +1141,11 @@ void DR_EarthWarrior_hitDetect(int obj)
                     return;
                 }
                 Obj_SpawnHitLightAndFade(obj, &hx, lbl_803E8368);
-                if (hit == 0x1a)
+                if (hit == 0x1a || hitObj == Obj_GetPlayerObject() ||
+                    ((GameObject*)hitObj)->anim.seqId == 0x23)
                 {
                     return;
                 }
-                if (hitObj == Obj_GetPlayerObject())
-                {
-                    return;
-                }
-                if (((GameObject*)hitObj)->anim.seqId != 0x23)
                 {
                 objAudioFn_800393f8(obj, (void*)((int)((char*)inner + 0x3bc)), 0x28e, 0x1000, -1, 1);
                 {
