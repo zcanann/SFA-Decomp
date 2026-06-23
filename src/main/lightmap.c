@@ -1196,17 +1196,19 @@ typedef struct
 void renderObjects(s8* arg0)
 {
     int i;
+    u32 flags;
     int idx;
     u8* obj;
     u8* state;
-    u32 flags;
     int* p;
     int slot;
     int* objects;
     u32* keys;
     LightmapDrawQueue* qbase;
+    LightmapQEnt* q;
 
     qbase = (LightmapDrawQueue*)lbl_8037E0C0;
+    q = (LightmapQEnt*)lbl_8037E0C0;
     objects = ObjList_GetObjects((int*)0, 0);
     keys = (u32*)((u8*)qbase + 0x8818);
     for (i = 1; i < gVisibleObjectSortKeyCount; i++)
@@ -1220,7 +1222,7 @@ void renderObjects(s8* arg0)
             {
                 slot = gLightmapDeferredObjectCount;
                 gLightmapDeferredObjectCount = slot + 1;
-                qbase->deferred[slot] = (u32)obj;
+                *(u32*)((u8*)qbase->deferred + slot * 4) = (u32)obj;
             }
         }
         else
@@ -1234,7 +1236,7 @@ void renderObjects(s8* arg0)
             if (p != NULL && ((GameObject*)obj)->anim.modelState->shadowCastSlot != NULL)
             {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
+                *(u32*)((u8*)&q->d + lbl_803DCE30 * 16) = 2;
                 lbl_803DCE30++;
             }
             else if (((GameObject*)obj)->anim.modelInstance->shadowType == 3 && (((GameObject*)obj)->anim.flags
@@ -1242,7 +1244,7 @@ void renderObjects(s8* arg0)
                 OBJ_MODEL_STATE_SHADOW_VISIBLE))
             {
                 renderShadowType3(obj, 0x13, 0);
-                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
+                *(u32*)((u8*)&q->d + lbl_803DCE30 * 16) = 3;
                 lbl_803DCE30++;
             }
         }
