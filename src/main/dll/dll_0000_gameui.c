@@ -3576,11 +3576,15 @@ void fn_80128A7C(u8 i, int p2, int p3)
         {
             int idv = lbl_803DD824[i].id;
             u32 tex;
-            if (hud->texIds358[idv] == 0xbf0)
+            int* t3a8;
+            s16* t358;
+            t358 = (s16*)((u8*)&hud->texIds358[0] + idv * 2);
+            if (*t358 == 0xbf0)
             {
                 ofs -= 0x14;
             }
-            tex = hud->textures3A8[idv];
+            t3a8 = (int*)((u8*)&hud->textures3A8[0] + idv * 4);
+            tex = *t3a8;
             if (tex == 0)
             {
                 continue;
@@ -3590,6 +3594,7 @@ void fn_80128A7C(u8 i, int p2, int p3)
         else
         {
             int idv = lbl_803DD824[i].id;
+            int* t1c0;
             if (idv == 0)
             {
                 continue;
@@ -3598,7 +3603,8 @@ void fn_80128A7C(u8 i, int p2, int p3)
             {
                 ofs -= 0x14;
             }
-            pauseMenuDrawElement(hud->textures1C0[idv], x, y, ofs,
+            t1c0 = (int*)((u8*)&hud->textures1C0[0] + idv * 4);
+            pauseMenuDrawElement(*t1c0, x, y, ofs,
                                  (u8)v, spd, p3);
         }
     }
