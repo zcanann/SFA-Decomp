@@ -3205,7 +3205,7 @@ void Sky_func03(int a, int b, u8* cfg)
             p4 = gSkyState + ((SkyState*)gSkyState)->swapTexIndex * 4;
             *(int*)(p4 + 8) = tmp;
             ((SkyState*)gSkyState)->unk250 = -1;
-            if ((((u32)(u8)((SkyState*)gSkyState)->unk255 >> 7) & 1) != 0)
+            if ((((u32)(u8)((SkyState*)gSkyState)->flags255 >> 7) & 1) != 0)
             {
                 ((SkyState*)gSkyState)->fadeFactor = EXIInputFlag;
                 if (((Sky2Config*)cfg)->unk2A != 0)

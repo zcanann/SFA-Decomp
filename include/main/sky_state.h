@@ -60,7 +60,7 @@ typedef struct SkyState {
     u8 unk252;
     u8 unk253;
     u8 unk254;
-    s8 unk255;
+    s8 flags255; /* 0x255: sky-fade flags byte; bit7 selects computed fadeRate vs instant flag */
     u8 unk256[2];
 } SkyState;
 
