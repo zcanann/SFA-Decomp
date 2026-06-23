@@ -2806,7 +2806,7 @@ void gameTextInitFn_8001c794(void)
     int i;
     int j;
     int x;
-    int xb;
+    int x0;
     int y;
     int x1;
     int x2;
@@ -2833,67 +2833,66 @@ void gameTextInitFn_8001c794(void)
     for (i = 0; i < 4; i++)
     {
         x = 0;
-        xb = 0;
         for (j = 0; j < 2; j++)
         {
+            x0 = (x + 0) * 2;
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
             off = y * 32;
             rowBase = (u8*)src + off;
-            dst[0] = *(u16*)(rowBase + xb);
+            dst[0] = *(u16*)(rowBase + x0);
             dst[1] = *(u16*)(rowBase + x1);
             dst[2] = *(u16*)(rowBase + x2);
             dst[3] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[4] = *(u16*)(rowBase + xb);
+            dst[4] = *(u16*)(rowBase + x0);
             dst[5] = *(u16*)(rowBase + x1);
             dst[6] = *(u16*)(rowBase + x2);
             dst[7] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[8] = *(u16*)(rowBase + xb);
+            dst[8] = *(u16*)(rowBase + x0);
             dst[9] = *(u16*)(rowBase + x1);
             dst[10] = *(u16*)(rowBase + x2);
             dst[11] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[12] = *(u16*)(rowBase + xb);
+            dst[12] = *(u16*)(rowBase + x0);
             dst[13] = *(u16*)(rowBase + x1);
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
-            xb += 8;
+            x0 = (x + 4) * 2;
             x1 = (x + 5) * 2;
             x2 = (x + 6) * 2;
             x3 = (x + 7) * 2;
             off = y * 32;
             rowBase = (u8*)src + off;
-            dst[16] = *(u16*)(rowBase + xb);
+            dst[16] = *(u16*)(rowBase + x0);
             dst[17] = *(u16*)(rowBase + x1);
             dst[18] = *(u16*)(rowBase + x2);
             dst[19] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[20] = *(u16*)(rowBase + xb);
+            dst[20] = *(u16*)(rowBase + x0);
             dst[21] = *(u16*)(rowBase + x1);
             dst[22] = *(u16*)(rowBase + x2);
             dst[23] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[24] = *(u16*)(rowBase + xb);
+            dst[24] = *(u16*)(rowBase + x0);
             dst[25] = *(u16*)(rowBase + x1);
             dst[26] = *(u16*)(rowBase + x2);
             dst[27] = *(u16*)(rowBase + x3);
             off += 32;
             rowBase = (u8*)src + off;
-            dst[28] = *(u16*)(rowBase + xb);
+            dst[28] = *(u16*)(rowBase + x0);
             dst[29] = *(u16*)(rowBase + x1);
             dst[30] = *(u16*)(rowBase + x2);
             dst[31] = *(u16*)(rowBase + x3);
             dst += 32;
             x += 8;
-            xb += 8;
         }
         y += 4;
     }
@@ -2907,39 +2906,38 @@ void gameTextInitFn_8001c794(void)
     for (i = 0; i < 5; i++)
     {
         x = 0;
-        xb = 0;
         for (j = 0; j < 5; j++)
         {
+            x0 = (x + 0) * 2;
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
             off = y * 40;
             rowBase = (u8*)src + off;
-            dst[0] = *(u16*)(rowBase + xb);
+            dst[0] = *(u16*)(rowBase + x0);
             dst[1] = *(u16*)(rowBase + x1);
             dst[2] = *(u16*)(rowBase + x2);
             dst[3] = *(u16*)(rowBase + x3);
             off += 40;
             rowBase = (u8*)src + off;
-            dst[4] = *(u16*)(rowBase + xb);
+            dst[4] = *(u16*)(rowBase + x0);
             dst[5] = *(u16*)(rowBase + x1);
             dst[6] = *(u16*)(rowBase + x2);
             dst[7] = *(u16*)(rowBase + x3);
             off += 40;
             rowBase = (u8*)src + off;
-            dst[8] = *(u16*)(rowBase + xb);
+            dst[8] = *(u16*)(rowBase + x0);
             dst[9] = *(u16*)(rowBase + x1);
             dst[10] = *(u16*)(rowBase + x2);
             dst[11] = *(u16*)(rowBase + x3);
             off += 40;
             rowBase = (u8*)src + off;
-            dst[12] = *(u16*)(rowBase + xb);
+            dst[12] = *(u16*)(rowBase + x0);
             dst[13] = *(u16*)(rowBase + x1);
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
             dst += 16;
             x += 4;
-            xb += 8;
         }
         y += 4;
     }
