@@ -3190,6 +3190,8 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     int best;
     f32* distRead;
     f32* distWrite;
+    f32* qscan;
+    f32* pq;
     int linkWord;
     char* pc;
     char* pu;
@@ -3215,7 +3217,8 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     }
     found = 0;
     distRead = bestDists;
-    distWrite = distRead;
+    probe = distRead;
+    qscan = queueDist;
     for (li = 0; li < 4; li++)
     {
         if (-1 < (int)curve->linkIds[li])
@@ -3231,9 +3234,10 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                 queueDist[0] = SQ(node->z - curve->z) + (SQ(node->x - curve->x) + SQ(node->y - curve->y));
                 pos = 0;
                 count = 1;
-                queueIds[pos] = idx;
+                queueIds[pos++] = idx;
                 visited[idx] = 1;
                 done = 0;
+                distWrite = probe;
                 do
                 {
                     if (count > 0)
@@ -3247,6 +3251,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                         {
                             done = 1;
                             *distWrite = queueDist[count];
+                            probe++;
                             distWrite++;
                             results[found++] = curve->linkIds[li];
                         }
@@ -3262,9 +3267,11 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                         ((curDist + SQ(node->x - cand->x)) +
                                             SQ(node->y - cand->y));
                                     pos = 0;
-                                    while ((pos < count) && (queueDist[pos] > newDist))
+                                    pq = qscan;
+                                    while ((pos < count) && (*pq > newDist))
                                     {
                                         pos++;
+                                        pq++;
                                     }
                                     for (m = count; m > pos; m--)
                                     {
