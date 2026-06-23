@@ -578,7 +578,7 @@ extern void staffFn_80170380(int a, int b);
 extern f32 PSVECMag(f32 *v);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
-extern int hitDetectFn_80065e50(int obj, int ***out, int a, int b, f32 x, f32 y, f32 z);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int ***out, int a, int b);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 gPlayerPi;

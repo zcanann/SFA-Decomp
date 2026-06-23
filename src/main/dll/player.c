@@ -11122,8 +11122,9 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                     randomGetRange(0x27, 0x3c);
                 }
             }
-            iv = hitDetectFn_80065e50(obj, (int***)&nearList, 0, 0x20, ((GameObject*)obj)->anim.localPosX,
-                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+            iv = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+                                      (int***)&nearList, 0, 0x20);
             velMag = -((PlayerState*)state)->sinkOffsetY;
             if (1 < iv &&
                 (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
@@ -14851,7 +14852,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
             &dists[2], &dists[3], &z9c, *(int*)&((GameObject*)obj)->anim.parent);
         {
-            int cnt = hitDetectFn_80065e50(obj, (int***)&list, 0, 0x201, dists[2], dists[3], z9c);
+            int cnt = hitDetectFn_80065e50(obj, dists[2], dists[3], z9c, (int***)&list, 0, 0x201);
             if (cnt != 0)
             {
                 f32 best = lbl_803E80AC;
@@ -18746,7 +18747,7 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
     PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
     y = *(f32*)((char*)src + 0x3c);
     pos[1] = y;
-    count = hitDetectFn_80065e50(obj, &hits, 0, HITQUERY_CLIMB_SURFACE, pos[0], y, pos[2]);
+    count = hitDetectFn_80065e50(obj, pos[0], y, pos[2], &hits, 0, HITQUERY_CLIMB_SURFACE);
 
     minDist = lbl_803E80AC;
     best = -1;
