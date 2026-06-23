@@ -62,6 +62,8 @@ void trickyGrowl(void* obj, void* trickyState)
     int i;
     void** slot;
     void* setup;
+    void** slot2;
+    int j;
     char* strBase = lbl_8031D2E8;
 
     switch (((TrickyState*)trickyState)->substate)
@@ -149,9 +151,9 @@ void trickyGrowl(void* obj, void* trickyState)
         {
             ((TrickyState*)trickyState)->stateFlags &= ~0x800LL;
             ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x1000;
-            for (i = 0, slot = trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
+            for (j = 0, slot2 = trickyState; j < CHILD_OBJECT_COUNT; slot2++, j++)
             {
-                objSetAnimSpeedTo1(slot[0x700 / 4]);
+                objSetAnimSpeedTo1(slot2[0x700 / 4]);
             }
             Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
             state = ((GameObject*)obj)->extra;
