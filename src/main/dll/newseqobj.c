@@ -281,7 +281,7 @@ void fn_80150EDC(void* obj, void* state)
             if (*(f32*)((u8*)state + 0x328) <= zero)
             {
                 *(f32*)((u8*)state + 0x328) = zero;
-                ((BaddieState*)state)->controlFlags |= 0x40000000LL;
+                ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
                 {
                     SeqRow16* seqRow16 = (SeqRow16*)seqRows;
                     *(u16*)((u8*)state + 0x338) =
@@ -300,10 +300,10 @@ void fn_80150EDC(void* obj, void* state)
         (*(u32*)((u8*)state + 0x2e0) & 0x20000000) == 0)
     {
         Sfx_PlayFromObject(obj, SFXdn_boar5_c);
-        ((BaddieState*)state)->controlFlags |= 0x40000000LL;
+        ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
     }
 
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         SeqRow16* seqRow16 = (SeqRow16*)seqRows;
         if (*(u16*)((u8*)state + 0x338) != 0)
@@ -395,7 +395,7 @@ void fn_80150910(int* obj, u8* state)
             if (*(f32*)(state + 0x328) <= z)
             {
                 *(f32*)(state + 0x328) = z;
-                ((BaddieState*)state)->controlFlags |= 0x40000000LL;
+                ((BaddieState*)state)->controlFlags |= 0x40000000LL; /* BADDIE_CONTROL_SEQUENCE_DRIVEN (LL form preserves codegen) */
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 0xa];
             }
         }
@@ -406,7 +406,7 @@ void fn_80150910(int* obj, u8* state)
     }
     if (state[0x33d] != 0)
     {
-        if (((BaddieState*)state)->controlFlags & 0x40000000)
+        if (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
         {
             f32 z = lbl_803E2740;
             ((GameObject*)obj)->anim.velocityZ = z;
@@ -480,7 +480,7 @@ void fn_80150910(int* obj, u8* state)
         {
             *(f32*)(state + 0x308) = *(f32*)&lbl_803E2754;
         }
-        if ((((BaddieState*)state)->controlFlags & 0x40000000) && state[0x33d] == 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) && state[0x33d] == 0)
         {
             if (*(u16*)(state + 0x338) != 0)
             {

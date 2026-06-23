@@ -89,6 +89,11 @@ typedef struct BaddieState {
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */
     u8 pad2D4[0x2DC - 0x2D4];
+/* controlFlags bit: baddie is currently driven by the sequence-object / script
+ * move system (set by newseqobj.c when a seq timer expires; gates the scripted
+ * anim-chain moves, and makes the defeat handler skip the death gamebits so
+ * scripted/cutscene deaths don't count). */
+#define BADDIE_CONTROL_SEQUENCE_DRIVEN 0x40000000
     u32 controlFlags; /* control flag word: 0x2000 path-follow, 0x2000_0000/0x4000_0000/0x8000_0000 move gates */
     u8 pad2E0[4];
     int unk2E4; /* whirlpool: 0x42001 flag word */

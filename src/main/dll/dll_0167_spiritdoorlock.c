@@ -6,13 +6,20 @@
  *  - Init places the lock, scales the model from the placement scale, hides
  *    its hits and (in mode 0) starts invisible with a red point light.
  *  - Update arms the lock when the player walks within range
- *    (SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) and the placement's
+ *    (GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED) and the placement's
  *    activeGameBit is set: once active it drives a loop sfx, spins, and lays
  *    out the SPIRITDOORLOCK_ORBIT_OBJECT_GROUP objects evenly around itself
  *    (one step = 0x10000 / orbitCount), fades the model in, and scrolls its
  *    texture. When the orbit group empties the lock clears its active flag,
  *    sets the placement's doneGameBit and disables. While inactive-but-done
  *    it fades out, dims the point light and frees it.
+ *
+ * In-game this is the red "life force" seal in front of a gate: a
+ * skull-and-crossbones at the centre (this lock) ringed by orbiting skulls.
+ * Each skull is a group-SPIRITDOORLOCK_ORBIT_OBJECT_GROUP SpiritDoorSpirit
+ * (DLL 0x157) and marks one monster you must kill in the area; killing the
+ * monster sets that spirit's gateGameBit so its skull leaves the ring, and
+ * when the ring empties the seal breaks (doneGameBit) and the gate opens.
  *
  * State lives in the obj extra block (SpiritDoorLockState); placement data is
  * SpiritDoorLockMapData. Both are defined in IMspacecraft.h.
@@ -49,11 +56,11 @@ extern s16 gSpiritDoorLockSpinSpeed;
 extern s32 gSpiritDoorLockTexScrollSpeed;
 extern s32 gSpiritDoorLockTexScrollWrap;
 extern f32 lbl_803E4430;
-extern f32 lbl_803E4440;
+extern f32 gSpiritDoorLockDefaultScale;
 extern f32 gSpiritDoorLockApproachRange;
 extern f32 gSpiritDoorLockScaleFactor;
 extern f32 gSpiritDoorLockScaleDecay;
-extern f32 lbl_803E4450;
+extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
 extern f32 gSpiritDoorLockOrbitMaxDist;
 
@@ -77,7 +84,7 @@ int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4440);
+    if (v != 0) objRenderFn_8003b8f4(gSpiritDoorLockDefaultScale);
 }
 
 void SpiritDoorLock_free(int obj)
@@ -104,7 +111,7 @@ void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
     atDefault = !atDefault;
     if (atDefault)
     {
-        scale = lbl_803E4440;
+        scale = gSpiritDoorLockDefaultScale;
     }
     ((GameObject*)obj)->anim.rootMotionScale = (*(f32**)&((GameObject*)obj)->anim.modelInstance)[1] * scale;
     state->spinAngle = 0;
@@ -136,7 +143,7 @@ void SpiritDoorLock_update(int obj)
 
     player = Obj_GetPlayerObject();
 
-    if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0)
+    if (GameBit_Get(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED) == 0)
     {
         if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gSpiritDoorLockApproachRange)
         {
@@ -144,7 +151,7 @@ void SpiritDoorLock_update(int obj)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             }
-            GameBit_Set(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED, 1);
+            GameBit_Set(GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED, 1);
         }
     }
 
@@ -182,7 +189,7 @@ void SpiritDoorLock_update(int obj)
                 }
                 ((GameObject*)obj)->anim.rootMotionScale *= gSpiritDoorLockScaleDecay;
                 ((GameObject*)obj)->anim.rotZ =
-                    (f32)(int)((GameObject*)obj)->anim.rotZ - lbl_803E4450 * timeDelta;
+                    (f32)(int)((GameObject*)obj)->anim.rotZ - gSpiritDoorLockSpinDownRate * timeDelta;
             }
             else
             {

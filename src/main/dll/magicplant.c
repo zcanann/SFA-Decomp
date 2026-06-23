@@ -325,7 +325,7 @@ void fn_8015355C(int obj, int state)
     case 7:
         break;
     }
-    if (count != 0 && (((BaddieState*)state)->controlFlags & 0x40000000) == 0)
+    if (count != 0 && (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) == 0)
     {
         u8 spawn = count;
         while (spawn != 0)
@@ -384,7 +384,7 @@ void fn_80153790(int obj, int state, int attacker, int msgFlag, int hitId, int d
 {
     if (((GameObject*)obj)->anim.currentMove == 1)
     {
-        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             return;
         }
@@ -467,7 +467,7 @@ void fn_8015383C(int obj, int state)
         ((BaddieState*)state)->inWhirlpoolGroup = (u8)((((BaddieState*)state)->inWhirlpoolGroup) | 0x40);
         ((BaddieState*)state)->seqEntryIndex = 0;
     }
-    else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         u8 mode;
         if ((u8)hit != 0)
@@ -530,7 +530,7 @@ sharedTail:
 void fn_80153BFC(int obj, int state)
 {
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0xbf;
-    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
+    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
         Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
@@ -674,12 +674,12 @@ void fn_80153E0C(int obj, int state)
             Baddie_SetMove(obj, state, 6, lbl_803E2948, 0, 3);
             *(f32*)(state + 0x32c) = lbl_803E294C;
         }
-        else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+        else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Baddie_SetMove(obj, state, 5, lbl_803E2954, 0, 3);
         }
     }
-    else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
+    else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         Baddie_SetMove(obj, state, 0, lbl_803E2958, 0, 3);
     }

@@ -7,6 +7,7 @@
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
+#include "main/dll/baddie_state.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
@@ -23,6 +24,10 @@
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
+/* ObjPlacement offsets read by the defeat handler to fire the baddie's
+ * death gamebits. */
+#define BADDIE_PLACEMENT_DEATH_GAMEBIT 0x18          /* s16: gamebit incremented on defeat */
+#define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -1735,7 +1740,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
     }
 }
 
-void trickyFn_80148d8c(int obj, int state)
+void tricky_handleDefeat(int obj, int state)
 {
     ObjHitsPriorityState* hitState;
     int setup;
@@ -1754,15 +1759,17 @@ void trickyFn_80148d8c(int obj, int state)
         {
             trickyImpress((int)tricky);
         }
-        if ((((TrickyState*)state)->controlFlags & 0x40000000) == 0)
+        /* Skip the death gamebits when the baddie is sequence-driven so
+         * scripted/cutscene deaths don't count. */
+        if ((((TrickyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) == 0)
         {
-            if (*(s16*)(setup + 0x18) != -1)
+            if (*(s16*)(setup + BADDIE_PLACEMENT_DEATH_GAMEBIT) != -1)
             {
-                gameBitIncrement(*(s16*)(setup + 0x18));
+                gameBitIncrement(*(s16*)(setup + BADDIE_PLACEMENT_DEATH_GAMEBIT));
             }
-            if (*(s16*)(setup + 0x1a) != -1)
+            if (*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT) != -1)
             {
-                GameBit_Set(*(s16*)(setup + 0x1a), 0);
+                GameBit_Set(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
             }
         }
         ((TrickyState*)state)->actionTargetObj = 0;
@@ -1812,15 +1819,17 @@ void trickyFn_80148d8c(int obj, int state)
         lbl_803E256C + (f32)(0xff - ((GameObject*)obj)->anim.alpha) / lbl_803E257C;
     if (((GameObject*)obj)->anim.alpha < 5)
     {
-        if ((((TrickyState*)state)->controlFlags & 0x40000000) != 0)
+        /* Fire the death gamebits for the sequence-driven path (the
+         * faded-out branch). */
+        if ((((TrickyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            if (*(s16*)(setup + 0x18) != -1)
+            if (*(s16*)(setup + BADDIE_PLACEMENT_DEATH_GAMEBIT) != -1)
             {
-                gameBitIncrement(*(s16*)(setup + 0x18));
+                gameBitIncrement(*(s16*)(setup + BADDIE_PLACEMENT_DEATH_GAMEBIT));
             }
-            if (*(s16*)(setup + 0x1a) != -1)
+            if (*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT) != -1)
             {
-                GameBit_Set(*(s16*)(setup + 0x1a), 0);
+                GameBit_Set(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
             }
         }
         ((TrickyState*)state)->currentMoveProgress = lbl_803E2574;

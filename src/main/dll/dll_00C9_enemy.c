@@ -88,7 +88,7 @@ typedef struct
 extern void* memcpy(void* dst, void* src, int n);
 extern void characterDoEyeAnims(short* obj, void* p);
 extern void fn_8003B0D0(short* obj, int b, void* c, int d);
-extern void trickyFn_80148d8c(short* obj, int state);
+extern void tricky_handleDefeat(short* obj, int state);
 extern void Tricky_resumeAfterCommand(short* obj, int state);
 extern void Tricky_applyFloorResponse(short* obj, int state);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -248,7 +248,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     flags = ((TrickyState*)state)->flags2DC;
     if ((flags & 0x800) != 0)
     {
-        trickyFn_80148d8c(obj, state);
+        tricky_handleDefeat(obj, state);
     }
     else if ((flags & 0x1000) != 0)
     {

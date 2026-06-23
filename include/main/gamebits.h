@@ -49,13 +49,32 @@ enum GameBitId {
      * makes the shrine play the intro on the spot (it is the trigger, and the
      * one-shot behaviour lives in the shrine's latch, not in this bit).
      */
-    GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER = 0x58b
+    GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER = 0x58b,
 
     /*
      * NOTE: the other two K1-pad guard bits, 0x316 and 0x511, have no setter in
      * code (set from save/level-event data), so their exact meaning is not yet
      * established - left as raw literals in dll_012C_transporter.c until traced.
      */
+
+    /*
+     * One-shot latch set the first time the player walks within
+     * gSpiritDoorLockApproachRange of a SpiritDoorLock (dll_0167); gates the
+     * lock's intro text (object sequence 0) so it plays once, game-wide. NOT
+     * Krazoa-spirit related: a SpiritDoorLock is a life-force GATE lock that
+     * holds a gate shut until enough of the area's enemies are defeated, and
+     * appears in normal levels too (not just shrines). Live-verified: walking
+     * up to the door flips this 0 -> 1 (region 2, bit start 36) and runs the
+     * intro sequence; set by SpiritDoorLock_update. (Was the per-DLL define
+     * SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED in IMspacecraft.h.) This bit is
+     * actually GENERIC: SpiritDoorLock_update (dll_0167) uses this one
+     * hard-coded id for ANY SpiritDoorLock, so it is a global "first
+     * spirit-door-lock approached -> play intro once" latch. In practice it
+     * only ever flips at this K1 instance because that is the FIRST
+     * spirit-door-lock in the game and the linear critical path forces the
+     * player through it, which is why the K1 prefix is acceptable here.
+     */
+    GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED = 0xab9
 };
 
 
