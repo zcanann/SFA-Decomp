@@ -98,7 +98,13 @@ The pipeline per register class is: build interference graph → coalesce copies
    point and the two webs interfere, so the `mr` survives. Killing the source
    right after the copy makes them non-interfering ⇒ coalesced ⇒ no `mr`.
 
-## A copy / `mr` has TWO independent ways to die (don't confuse them)
+## A copy / `mr` has THREE independent ways to die (don't confuse them)
+5a. **Propagation (`IroPropagate.c` 0x470060, EARLIEST — `opt_propagation`).** A
+   `x = y` / `x = const` is folded away (uses of x → y/const) unless a side is
+   **volatile or ADDRESS-TAKEN**, or types mismatch (`IsPropagatable` 0x4709f0).
+   To KEEP a copy, make a side address-taken (`&x`) / volatile / type-straddling —
+   that blocks propagation so the copy survives downstream. This is the mechanism
+   under the CLAUDE.md "typed-local / distrust raw derefs" idiom.
 5b. **Value-number fold (`ValueNumbering.c` 0x509010 — the blog's pass).** A copy
    `dst = src` is DELETED iff `dst` and `src` carry the **same value number** at
    the copy point (`valTab[cls][web]` equal; 0x5090f2 → `Instr_Delete`). It

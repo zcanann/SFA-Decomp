@@ -93,7 +93,14 @@ Peephole (`#pragma peephole`, the single most-used pragma, 358 sites) has **no
       auto-inline iff callee body in-TU + ≤30 stmts + ≤1024 cost + not dont_inline +
       not recursive (InlineSizeOK 0x55c2e0). "Extra bl to a fn_ the target inlined"
       ⟹ wrong TU split. (LEVERS.md lever 10.)
-- [ ] Locate the peephole pass.
+- [x] **`IroPropagate.c` (0x470060) — copy/const propagation decoded**
+      (`recovered/IroPropagate.c`): folds `x=y`/`x=const` unless a side is
+      volatile/address-taken or type-mismatched (IsPropagatable 0x4709f0). The
+      EARLIEST of 3 copy-elimination stages (propagation→VN-fold→coalescer);
+      LEVERS.md 5a.
+- [~] Peephole pass located at the pragma/option level (strings @ .data, pragma
+      table entry file-off 0x1a4a42) but OFF for the DLL game code -> low priority;
+      pass-gate trace deferred.
 
 ## Tools
 - `tools/mwcc_re/mwcc_assert_map.py <mwcceppc.exe>` → regenerates `assert_map_GC2.0.txt`
