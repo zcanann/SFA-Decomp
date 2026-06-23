@@ -97,7 +97,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.rotX = 0x8000 - target->anim.rotX;
         gCamTalkBikeState->smoothedYawOffset +=
             lbl_803E1790 *
-            ((lbl_803E1794 * gCamTalkBikeState->turnInput) - gCamTalkBikeState->smoothedYawOffset);
+            ((f32)(lbl_803E1794 * gCamTalkBikeState->turnInput) - gCamTalkBikeState->smoothedYawOffset);
         rotVal = (int)
         ((f32)(s32)
         camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset
