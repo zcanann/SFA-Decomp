@@ -409,7 +409,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, int obj, ObjHitsSkeleto
                                                     jointPoints->jointRadii[bestHit->pointIndexB],
                                                     jointPoints->jointLengths[bestHit->pointIndexA], normalOut));
     pPtr = pj.out;
-    zf = gObjHitsScalarZero;
+    zf = 0.0f;
     for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1)
     {
         pb = ObjHits_ProjectPointToTaperedCapsuleXZ(&projPos.x, radius, hits->capsuleAxial,
@@ -539,7 +539,7 @@ int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, int obj, ObjHitsSkeleto
                                                     jointPoints->jointRadii[bestHit->pointIndexB],
                                                     jointPoints->jointLengths[bestHit->pointIndexA], normalOut));
     pPtr = pj.out;
-    zf = gObjHitsScalarZero;
+    zf = 0.0f;
     for (; (idxA = hits->pointIndexA) != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1)
     {
         pb = ObjHits_ProjectPointToTaperedCapsule3D(&projPos.x, radius, hits->capsuleAxial,
