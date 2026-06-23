@@ -113,7 +113,7 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
     }
     if (((GameObject*)obj)->anim.velocityX < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityX > lbl_803E4AEC &&
-        ((GameObject*)obj)->anim.velocityZ < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityZ > lbl_803E4AEC)
+        ((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4AEC)
     {
         ((GameObject*)obj)->anim.velocityX = (k = lbl_803E4AF0);
         ((GameObject*)obj)->anim.velocityZ = k;
@@ -154,7 +154,7 @@ void dll_1DA_update(int obj)
     p = list;
     for (; n > 0; n--)
     {
-        if (((GameObject*)obj)->anim.localPosY < lbl_803E4B04 + **(f32**)p)
+        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + **(f32**)p)
         {
             ((GameObject*)obj)->anim.localPosY = **(f32**)(list + i * 4);
             ObjHits_AddContactObject(*(int*)(*(int*)(list + i * 4) + 0x10), obj);
