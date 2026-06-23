@@ -1889,9 +1889,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
                 (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) +
             distance;
-        queueIndices[0] = directIndex;
+        queueCount = 0;
+        queueIndices[queueCount++] = directIndex;
         visited[directIndex] = 1;
-        queueCount = 1;
 
         found = 0;
         do
@@ -1899,8 +1899,8 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             if (queueCount > 0)
             {
             queueCount--;
-            queueIndex = queueIndices[queueCount];
-            queueCurve = (int)romCurves[queueIndex];
+            directIndex = queueIndices[queueCount];
+            queueCurve = (int)romCurves[directIndex];
             distance = queueDistances[queueCount];
 
             if (*(u8*)(queueCurve + 0x34) == 1)
