@@ -62,14 +62,12 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
     lastDst = NULL;
     n = 0;
     k = 0;
-    idp = ids;
     for (; k < count; k++)
     {
-        if ((u32)GameBit_Get(*(s16*)idp) != 0)
+        if ((u32)GameBit_Get(*(s16*)(ids + k * 4)) != 0)
         {
             n++;
         }
-        idp += 4;
     }
     yoff = (count - n) * 0x2a / 2 + 0x52;
     k = 0;
