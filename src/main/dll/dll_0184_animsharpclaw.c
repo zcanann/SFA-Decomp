@@ -140,6 +140,7 @@ void animsharpclaw_update(int* obj)
     int* inner;
     int* placement;
     int kind;
+    int kind2;
     int matchCount;
     int* objects;
     int i;
@@ -168,6 +169,7 @@ void animsharpclaw_update(int* obj)
         return;
     }
     kind = *(s8*)&((AnimsharpclawState*)inner)->unk57;
+    kind2 = *(s8*)&((AnimsharpclawState*)inner)->unk57;
     found = NULL;
     objects = (int*)ObjList_GetObjects(&i, &count);
     matchCount = 0;
@@ -179,7 +181,7 @@ void animsharpclaw_update(int* obj)
             found = o;
         }
         if (((GameObject*)o)->seqIndex == -2 && ((GameObject*)o)->anim.classId == 0x10 &&
-            kind == (s8) * (u8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
+            kind2 == (s8) * (u8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
         {
             matchCount++;
         }
@@ -187,7 +189,7 @@ void animsharpclaw_update(int* obj)
     if (matchCount <= 1 && found != NULL && ((GameObject*)found)->seqIndex != -1)
     {
         ((GameObject*)found)->seqIndex = -1;
-        (*gObjectTriggerInterface)->endSequence(kind);
+        (*gObjectTriggerInterface)->endSequence(kind2);
     }
     ((GameObject*)obj)->seqIndex = -1;
 }
