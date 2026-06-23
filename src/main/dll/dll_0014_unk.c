@@ -1946,10 +1946,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                     queueIndices[j] = queueIndices[j - 1];
                     queueDistances[j] = queueDistances[j - 1];
                 }
-                queueIndices[insertIndex] = directIndex;
-                queueDistances[insertIndex] = linkDistance;
-                visited[directIndex] = 1;
                 queueCount++;
+                queueDistances[insertIndex] = linkDistance;
+                queueIndices[insertIndex] = directIndex;
+                visited[directIndex] = 1;
             }
             }
             else
