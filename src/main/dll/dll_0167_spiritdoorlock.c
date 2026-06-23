@@ -62,7 +62,7 @@ extern f32 gSpiritDoorLockScaleFactor;
 extern f32 gSpiritDoorLockScaleDecay;
 extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
-extern f32 gSpiritDoorLockOrbitMaxDist;
+extern const f32 gSpiritDoorLockOrbitMaxDist;
 
 typedef struct { int a, b, c; } Vec3i;
 
@@ -218,10 +218,9 @@ void SpiritDoorLock_update(int obj)
         angleStep = 0x10000 / state->orbitCount;
         angle = state->spinAngle;
         orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;
-        maxDist = gSpiritDoorLockOrbitMaxDist;
         for (i = 0; i < orbitCount; i++)
         {
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)orbitObjs[i] + 0x18)) > maxDist)
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)orbitObjs[i] + 0x18)) > gSpiritDoorLockOrbitMaxDist)
             {
                 continue;
             }
