@@ -1915,7 +1915,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 
             for (linkSlot = 0; linkSlot < 4; linkSlot++)
             {
-                linkId = *(s32*)(queueCurve + 0x1c + linkSlot * 4);
+                linkId = *(s32*)((queueCurve + linkSlot * 4) + 0x1c);
                 if (linkId <= -1)
                 {
                     continue;
