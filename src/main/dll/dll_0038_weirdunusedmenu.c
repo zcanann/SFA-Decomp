@@ -122,8 +122,7 @@ int WeirdUnusedMenu_run(void)
         {
             saveGame_save();
         }
-        *(s8*)&gWeirdMenuSaveTimer = ((f32)(s8)gWeirdMenuSaveTimer + timeDelta);
-        if ((f32)(s8)gWeirdMenuSaveTimer >= gWeirdMenuSaveTimerLimit)
+        if ((f32)(s8)(gWeirdMenuSaveTimer = ((f32)(s8)gWeirdMenuSaveTimer + timeDelta)) >= gWeirdMenuSaveTimerLimit)
         {
             gWeirdMenuPhase = 0;
             gWeirdMenuWidgetWork.widgetFlagsA =
