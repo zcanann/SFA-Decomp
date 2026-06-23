@@ -376,7 +376,7 @@ void padUpdate(void)
     PADClamp(readPad);
     if (rumbleEnabled != 0)
     {
-        if (gRumbleTimer > lbl_803DE6E8)
+        if (lbl_803DE6E8 < gRumbleTimer)
         {
             gRumbleTimer = gRumbleTimer - timeDelta;
             if (gRumbleTimer <= lbl_803DE6E8)
