@@ -122,3 +122,22 @@ The DUMP (web→register, +0x14, recipe above) — validated twice. Use it to TR
 inversion: dump the webs, identify by register/IR-region, and classify usage-bound (recoverable
 clean-C) vs interference-bound (bank with proof). The exact coalescer decision read needs a
 careful re-trace of which fn actually colors (the search path, when global 0x5e9900==0) — not done.
+
+## GENERALIZABLE LEVER: param-inversion = consumed-early vs used-throughout
+Validated by dumping multiple functions: a PARAM web (always the first-created web, distinct
+0x6c12xxxx IR heap region) colors to a saved register by the same priority rule as any value:
+- Param **consumed EARLY into a derived typed local, then dead** → param is COLD → LOW saved reg;
+  the derived local is hot → HIGH reg. (retail's usual shape — see drshackle_update: `p=obj->extra;
+  q=obj->placementData;` then obj unused.)
+- Param **used as a VALUE throughout** (passed to calls / field-address every block) → HOT → HIGH reg.
+  (our common over-reconstruction — see drshackle_hitDetect: obj in two Sfx_* calls + &obj->pos.)
+
+So a param-vs-derived-local register inversion is usually because our reconstruction scatters raw
+`((T*)obj)->field` through the function while retail derived ONE typed local (`T* x = obj;`) early
+and let the param die. **FIX = recover the typed-local derivation** (= the CLAUDE.md "distrust raw
+derefs / use a typed pointer" idiom, now mechanically explained). PLAUSIBLE C, and it's exactly
+what a Rare dev wrote.
+
+TRIAGE with the dump: if the param is used ONLY for field derefs → usage-bound, apply the lever.
+If the param is genuinely needed as a VALUE late (call arg, returned, address-escaped) → it can't
+be made cold without changing behavior → interference-bound, BANK (drshackle_hitDetect, controllight).
