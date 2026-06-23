@@ -220,8 +220,7 @@ void SpiritPrize_update(int obj)
         prizeId = *(s8*)&state->prizeId;
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
-        duplicateCount = 0;
-        objectIndex = 0;
+        duplicateCount = objectIndex = 0;
         while (objectIndex < objectCount)
         {
             childObj = objects[objectIndex];
