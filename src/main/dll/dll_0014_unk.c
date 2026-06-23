@@ -3086,7 +3086,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                 queueDist[0] = SQ(node->z - start->z) + (SQ(node->x - start->x) + SQ(node->y - start->y));
                 pos = 0;
                 count = 1;
-                queueIds[pos] = idx;
+                queueIds[pos++] = idx;
                 visited[idx] = 1;
                 done = 0;
                 idWrite = idRead;
