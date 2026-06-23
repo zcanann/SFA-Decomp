@@ -74,7 +74,34 @@ enum GameBitId {
      * spirit-door-lock in the game and the linear critical path forces the
      * player through it, which is why the K1 prefix is acceptable here.
      */
-    GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED = 0xab9
+    GAMEBIT_K1_SPIRITDOORLOCK_PLAYER_APPROACHED = 0xab9,
+
+    /*
+     * The K1 life-force gate's "monster defeated" bit. Unlike the approach
+     * latch above this is NOT hard-coded - it is level data, read as BOTH the
+     * gate enemy's deathGamebit (placement +0x18, BADDIE_PLACEMENT_DEATH_GAMEBIT)
+     * AND the orbiting skull's (SpiritDoorSpirit, dll_0157) gateGameBit
+     * (placement +0x1E); the level designer wires them to the same id so killing
+     * the monster dismisses its skull. Set on defeat by tricky_handleDefeat ->
+     * gameBitIncrement (skipped when the baddie is BADDIE_CONTROL_SEQUENCE_DRIVEN).
+     * Live-verified: killing the monster flips this 0 -> 1 (region 2, start 2560)
+     * via the caught GameBit_Set; it also gates the enemy's respawn (clearing it
+     * respawns the monster and re-shows the skull). Per-placement - this is the
+     * K1 (first, mandatory) gate's value; other gates carry their own.
+     */
+    GAMEBIT_K1_GATE_MONSTER_DEFEATED = 0xecb,
+
+    /*
+     * The K1 life-force gate's "seal broken / gate open" latch - the
+     * SpiritDoorLock's doneGameBit (placement +0x1E). SpiritDoorLock_update sets
+     * it the frame the orbiting skull ring empties (all the gate's monsters
+     * defeated), after which the lock disables and the gate stays open. Also
+     * level data, not hard-coded. Live-verified: appears at region 2, start 1341
+     * when the ring empties; clearing it re-arms the lock (its activeGameBit is
+     * 0x95, a hard-coded always-1 id, so the lock is always armed) and re-forms
+     * the seal. Per-placement - the K1 gate's value.
+     */
+    GAMEBIT_K1_LIFEFORCE_GATE_OPENED = 0xa5e
 };
 
 
