@@ -530,7 +530,7 @@ void fn_801EB940(short* obj, int stateRaw)
         }
         ((HightopFlags*)&st->flags428)->resetLatch = 0;
         st->impactShakeTimer = lbl_803E5AE8;
-        st->dampPresetMode = st->unk230;
+        st->dampPresetMode = st->dampPresetModeRaw;
     }
     fa = lbl_803E5BC8;
     st->haloDriftPhaseA = fa * timeDelta + (f32)(s32)st->haloDriftPhaseA;

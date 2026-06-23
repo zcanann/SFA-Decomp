@@ -45,7 +45,7 @@ typedef struct SnowBikeState {
     f32 refPosY;             /* 0x170: position reference Y */
     f32 refPosZ;             /* 0x174: position reference Z */
     u8 pad178[0xB8];
-    u8 unk230;              /* 0x230 */
+    u8 dampPresetModeRaw;   /* 0x230: un-latched preset selector copied into dampPresetMode */
     u8 pad231[0xDF];
     s16 unk310;             /* 0x310 */
     s16 unk312;             /* 0x312 */
