@@ -249,8 +249,11 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     sum = state->bobPhase + framesThisStep * 0x100;
     if (sum > 0xffff)
     {
+        float rngf;
         rng = randomGetRange(0xf, 0x23);
-        state->bobAmplitude = (float)rng * lbl_803E59F0;
+        rngf = (float)rng;
+        rngf = lbl_803E59F0 * rngf;
+        state->bobAmplitude = rngf;
     }
     state->bobPhase = sum;
     if (ObjTrigger_IsSet(obj) != 0)
