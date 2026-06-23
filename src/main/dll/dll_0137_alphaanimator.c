@@ -330,8 +330,7 @@ void alphaanimator_update(int* obj)
         {
             rate = -rate;
         }
-        absRate = rate;
-        absRate = absRate / lbl_803E3F80;
+        absRate = (f32)rate / lbl_803E3F80;
         s->fadeA =
             absRate * timeDelta + s->fadeA;
         if (s->fadeA > s->fadeMax)
