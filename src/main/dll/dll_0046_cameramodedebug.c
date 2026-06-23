@@ -99,7 +99,10 @@ void CameraModeDebug_update(short* camObj)
         px = h * sinYaw;
         pz = h * cosYaw;
         *(f32*)(cam + 24) = *(f32*)(state + 24) + px;
-        *(f32*)(cam + 28) = gCamDebugOrbitRadiusMin + *(f32*)(state + 28) + vy;
+        {
+            f32 base28 = gCamDebugOrbitRadiusMin + *(f32*)(state + 28);
+            *(f32*)(cam + 28) = base28 + vy;
+        }
         *(f32*)(cam + 32) = *(f32*)(state + 32) + pz;
     }
     Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
