@@ -558,8 +558,7 @@ void SaveSelectScreen_render(int param)
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[4](param);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(0);
-    gSaveSelectRefreshCounter -= 1;
-    if (gSaveSelectRefreshCounter < 0)
+    if ((gSaveSelectRefreshCounter -= 1) < 0)
     {
         gSaveSelectRefreshCounter = 0;
     }
