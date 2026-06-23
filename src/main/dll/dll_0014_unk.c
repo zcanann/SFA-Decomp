@@ -1832,7 +1832,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int directLinkId;
     u32 directCurve;
     int queueCount;
-    int queueIndex;
     int queueCurve;
     int linkSlot;
     int linkId;
