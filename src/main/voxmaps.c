@@ -773,8 +773,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
         }
         if (!blocked)
         {
-            sumCur = occ[dir][0] + occ[dir][1] + occ[dir][2] + occ[dir][3];
-            sumNext = occ[next][0] + occ[next][1] + occ[next][2] + occ[next][3];
+            sumCur = occ[dir][0];
+            sumNext = occ[next][0];
+            sumCur += occ[dir][1];
+            sumNext += occ[next][1];
+            sumCur += occ[dir][2];
+            sumNext += occ[next][2];
+            sumCur += occ[dir][3];
+            sumNext += occ[next][3];
             if (next == 2 && sumNext == 0)
             {
                 blocked = 1;
