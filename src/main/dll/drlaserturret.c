@@ -127,6 +127,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     void* playerObj;
     DRLaserTurretState* state;
     void* stack;
+    void** arr;
     int pushState;
     int sum;
     int rng;
@@ -134,7 +135,6 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     float dist;
     int count;
     int idx;
-    void** arr;
     double t;
     float rate;
     float target;
