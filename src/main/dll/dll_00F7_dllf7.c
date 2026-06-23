@@ -880,11 +880,11 @@ void dll_F7_update(int* obj)
             near = (int*)ObjGroup_FindNearestObject(4, obj, &radius);
             if (near != NULL)
             {
-                ((GameObject*)near)->anim.worldPosX = ((GameObject*)near)->anim.localPosX = ((GameObject*)obj)->anim.
+                ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX = ((GameObject*)obj)->anim.
                     localPosX;
-                ((GameObject*)near)->anim.worldPosY = ((GameObject*)near)->anim.localPosY = lbl_803E3410 + ((GameObject
+                ((GameObject*)near)->anim.localPosY = ((GameObject*)near)->anim.worldPosY = lbl_803E3410 + ((GameObject
                     *)obj)->anim.localPosY;
-                ((GameObject*)near)->anim.worldPosZ = ((GameObject*)near)->anim.localPosZ = ((GameObject*)obj)->anim.
+                ((GameObject*)near)->anim.localPosZ = ((GameObject*)near)->anim.worldPosZ = ((GameObject*)obj)->anim.
                     localPosZ;
                 *(s16*)near = *(s16*)obj;
             }
