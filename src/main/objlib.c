@@ -2001,11 +2001,11 @@ void ObjPath_GetPointModelMtx(int obj, int pointIndex)
 void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                    int useInputPosition)
 {
+    int pointOffset;
     ObjPathPoint* pathPoint;
     int* model;
     float* jointMtx;
     int jointIndex;
-    int pointOffset;
     ObjPathTransform transform;
     float rootMtx[16];
     float transposedMtx[12];
