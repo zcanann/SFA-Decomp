@@ -3112,8 +3112,7 @@ void Sky_func03(int a, int b, u8* cfg)
             mask = 6;
             break;
         }
-        iofs = 0;
-        for (i = 0; i < 2; i++)
+        for (i = 0, iofs = 0; i < 2; i++)
         {
             if ((mask & (1 << i)) != 0)
             {
