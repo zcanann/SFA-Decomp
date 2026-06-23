@@ -12661,8 +12661,7 @@ void objLoadPlayerFromSave(int obj)
         *(int*)(((PlayerState*)inner)->moveSlots + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
         da = ((PlayerState*)inner)->moveSlots + off;
         objGetWeaponDa((u8*)obj, ((GameObject*)obj)->anim.seqId, (ObjWeaponDaTable*)(da + 0x60),
-                       *(s16*)(base + 0x7fc +
-                           *(s16*)((char*)da + 0x2) * 2),
+                       ((s16*)(base + 0x7fc))[*(s16*)((char*)da + 0x2)],
                        0);
         off += 0xb0;
     }
