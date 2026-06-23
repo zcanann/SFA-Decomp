@@ -1501,10 +1501,10 @@ u32 fn_80143DD4(int obj, int* trickyState)
 void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
-    u8* found;
     u8* ptr;
     u8 lo;
     u8 hi;
+    u8* found;
     int sv;
     f32 ang;
 
