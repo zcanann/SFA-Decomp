@@ -30,8 +30,8 @@ extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern int hitDetectFn_80065e50(int obj, void* outHits, int param_3, int param_4,
-                                f32 x, f32 y, f32 z);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z,
+                                void* outHits, int param_3, int param_4);
 extern int fn_8029622C(int obj);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern f32 lbl_803E38B0;
@@ -230,8 +230,9 @@ void duster_update(int obj)
     state->priorityHit = 0;
     if (state->flags.floorCached == 0)
     {
-        floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
+        floorHitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+                                             ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+                                             &floorHits, 0, 0);
         bestFloorDelta = gDusterObjFloorSearchMaxDelta;
         bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
