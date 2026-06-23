@@ -5272,7 +5272,10 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
     int ck3;
     int h2;
     int w2;
-    if (lbl_803DCD6A <= 0xb && lbl_803DCD69 <= 6 && lbl_803DCD8C <= 5 && lbl_803DCD74 <= 1)
+    if (lbl_803DCD6A > 0xb || lbl_803DCD69 > 6 || lbl_803DCD8C > 5 || lbl_803DCD74 > 1)
+    {
+        return;
+    }
     {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, 0x7d);
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 4, 0x3c, 0, 0x7d);
