@@ -56,7 +56,7 @@ typedef struct SkyState {
     u8 transitionLatch;
     u8 unk24F;
     s8 unk250;
-    u8 unk251;
+    u8 swapTexIndex; /* 0x251: slot index into the sky texture pointers swapped into texture1 (gSkyState + idx*4) */
     u8 unk252;
     u8 unk253;
     u8 unk254;

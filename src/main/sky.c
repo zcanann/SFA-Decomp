@@ -3200,9 +3200,9 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyState*)gSkyState)->skyTextureIds[6] = ((Sky2Config*)cfg)->skyTexId6 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[7] = ((Sky2Config*)cfg)->skyTexId7 + 0xc38;
             tmp = *(int*)&((SkyState*)gSkyState)->texture1;
-            p4 = gSkyState + ((SkyState*)gSkyState)->unk251 * 4;
+            p4 = gSkyState + ((SkyState*)gSkyState)->swapTexIndex * 4;
             *(int*)&((SkyState*)gSkyState)->texture1 = *(int*)(p4 + 8);
-            p4 = gSkyState + ((SkyState*)gSkyState)->unk251 * 4;
+            p4 = gSkyState + ((SkyState*)gSkyState)->swapTexIndex * 4;
             *(int*)(p4 + 8) = tmp;
             ((SkyState*)gSkyState)->unk250 = -1;
             if ((((u32)(u8)((SkyState*)gSkyState)->unk255 >> 7) & 1) != 0)
