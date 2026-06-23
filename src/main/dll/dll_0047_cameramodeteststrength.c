@@ -183,16 +183,16 @@ void CameraModeTestStrength_update(short* cam)
     extern int fn_8010AEA8(short* cam, int flags); /* #57 */
     int m4;
     int obj;
+    int m1;
     int m2;
     int node;
-    int m1;
     int flags;
-    int yaw;
     f32 t;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 t2;
+    int yaw;
     int node2;
     int w2[4];
     int w1[4];
