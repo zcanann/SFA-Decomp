@@ -9,11 +9,11 @@
  * patterns each round - and the player walks up to a cup to make their guess.
  * A wrong guess teleports the player out; a correct guess advances to the next
  * round; 3 correct guesses in a row obtains the spirit (sets
- * GAMEBIT_K1_SPIRIT_COLLECTED via anim-event 7 in fn_801C5CE4).
+ * GAMEBIT_K1_SPIRIT_COLLECTED via anim-event 7 in ecsh_shrine_SeqFn).
  *
  * Drives the floating shrine object: a bobbing model that orbits/wobbles
- * toward the player (fn_801C5990) and fades with distance, plus its anim-event
- * callback (fn_801C5CE4) which reacts to torch signals, sets camera vars, and
+ * toward the player (ecsh_shrine_updateMotion) and fades with distance, plus its
+ * anim-event callback (ecsh_shrine_SeqFn) which reacts to torch signals, sets camera vars, and
  * toggles the model light.
  *
  * ecsh_shrine_update is the main state machine. The puzzle working set lives in
@@ -40,6 +40,7 @@
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
+#include "main/dll/mmshrine/ecsh_shrine.h"
 #include "main/game_ui_interface.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
@@ -121,7 +122,7 @@ typedef struct MmShrineAnimEvents
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801C5990(MmShrineAnimObj* obj)
+void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
     extern int getAngle(float y, float x);
     u8* config;
@@ -192,7 +193,7 @@ void fn_801C5990(MmShrineAnimObj* obj)
     }
 }
 
-int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
+int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
 {
     extern void fn_80296518(void* obj, int arg, int enable);
     extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
@@ -251,25 +252,25 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
     return 0;
 }
 
-void ecsh_shrine_getPhaseAndSpiritCup(int* p1, u8* p2)
+void ecsh_shrine_getPhaseAndSpiritCup(int* outAnimState, u8* outSpiritCup)
 {
     extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
-    *p2 = ((EcshShrineState*)inner)->spiritCup;
-    *p1 = ((EcshShrineState*)inner)->animState;
+    *outSpiritCup = ((EcshShrineState*)inner)->spiritCup;
+    *outAnimState = ((EcshShrineState*)inner)->animState;
 }
 
-void ecsh_shrine_checkCupPick(u8 v)
+void ecsh_shrine_checkCupPick(u8 cupIndex)
 {
     extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
-    if ((u32)(u8)v == ((EcshShrineState*)inner)->spiritCup)
+    if ((u32)(u8)cupIndex == ((EcshShrineState*)inner)->spiritCup)
     {
         ((EcshShrineState*)inner)->matchFlag = 1;
     }
@@ -285,27 +286,27 @@ typedef struct EcshRenderPair
     f32 b;
 } EcshRenderPair;
 
-void ecsh_shrine_setCupPos(u8 idx, f32 a, f32 b)
+void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
 {
     extern EcshRenderPair gEcShShrinePuzzleState[];
     extern int gEcShShrineActiveObject;
-    int v;
+    int slot;
     if ((int*)gEcShShrineActiveObject == NULL) return;
-    v = gEcShShrineCupSlotMap[idx];
-    gEcShShrinePuzzleState[v].a = a;
-    gEcShShrinePuzzleState[v].b = b;
+    slot = gEcShShrineCupSlotMap[cupIndex];
+    gEcShShrinePuzzleState[slot].a = x;
+    gEcShShrinePuzzleState[slot].b = z;
 }
 
-void ecsh_shrine_getCupPos(u8 idx, f32* out1, f32* out2)
+void ecsh_shrine_getCupPos(u8 cupIndex, f32* outX, f32* outZ)
 {
     extern u8 gEcShShrinePuzzleState[];
     extern void* gEcShShrineActiveObject;
-    int j;
+    int slot;
     if (gEcShShrineActiveObject == NULL) return;
-    j = gEcShShrineCupSlotMap[idx];
-    *out1 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8);
-    j = gEcShShrineCupSlotMap[idx];
-    *out2 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8 + 4);
+    slot = gEcShShrineCupSlotMap[cupIndex];
+    *outX = *(f32*)((char*)gEcShShrinePuzzleState + slot * 8);
+    slot = gEcShShrineCupSlotMap[cupIndex];
+    *outZ = *(f32*)((char*)gEcShShrinePuzzleState + slot * 8 + 4);
 }
 
 void ecsh_shrine_setScale(s16* out)
@@ -403,7 +404,7 @@ typedef struct EcshPuzzleState
 void ecsh_shrine_update(s16* obj)
 {
     extern void* Obj_GetPlayerObject(void);
-    extern void fn_801C5990(s16 * obj);
+    extern void ecsh_shrine_updateMotion(s16 * obj);
     extern u8 gEcShShrinePuzzleState[];
     f32 t[2];
     int msgC;
@@ -443,7 +444,7 @@ void ecsh_shrine_update(s16* obj)
             getEnvfxAct(obj, player, 0x222, 0);
         }
     }
-    fn_801C5990(obj);
+    ecsh_shrine_updateMotion(obj);
     if (player != NULL && objIsCurModelNotZero(player) == 0)
     {
         fn_80295CF4(player, 0);
@@ -843,7 +844,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->matchFlag = -1;
     ((EcshShrineState*)sub)->spiritCup = 0;
     ((EcshShrineState*)sub)->gameBitLatchState = 0;
-    ((GameObject*)obj)->animEventCallback = fn_801C5CE4;
+    ((GameObject*)obj)->animEventCallback = ecsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0xba5, 1);
     GameBit_Set(0x129, 1);
