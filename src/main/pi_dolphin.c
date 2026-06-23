@@ -4036,6 +4036,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
             else
             {
                 char fileInfo[0x3c];
+                int v;
                 char* buf;
                 DVDOpen(sResourceFileNameTable[idx], fileInfo);
                 buf = mmAlloc(0x400, 0x7f7f7fff, 0);
@@ -4057,7 +4058,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
                 }
                 else
                 {
-                    int v = *(int*)(buf + 0xc);
+                    v = *(int*)(buf + 0xc);
                     *outA = *(int*)(buf + 8);
                     if (strncmp(&sDirBlockTag, buf, 3) == 0)
                     {
