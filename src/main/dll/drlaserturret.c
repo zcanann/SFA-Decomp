@@ -44,8 +44,8 @@ extern f32 timeDelta;
 extern s16 gDrLaserTurretIdleAnimMoves[1];
 __declspec(section ".sdata") extern f32 gDrLaserTurretIdleAnimStepScales[3];
 
-extern f32 lbl_803E59DC;
-extern f32 lbl_803E59E0;
+extern const f32 lbl_803E59DC;
+extern const f32 lbl_803E59E0;
 extern f32 gDrLaserTurretDefaultAnimStepScale;
 extern f32 gDrLaserTurretPi;
 extern f32 gDrLaserTurretBobPhaseScale;
@@ -139,8 +139,6 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     float rate;
     float target;
     float d;
-    float zero;
-    float bias;
 
     playerObj = Obj_GetPlayerObject();
     state = obj->state;
@@ -228,18 +226,16 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     animState->aimBlend = lbl_803E59DC;
     count = hitDetectFn_80065e50(obj, obj->x, obj->y, obj->z, &arr, 0, 0);
     minDist = lbl_803E5A20;
-    zero = lbl_803E59DC;
-    bias = lbl_803E59E0;
     for (idx = 0; idx < count; idx++)
     {
         dist = *(f32*)arr[idx] - obj->y;
-        if (dist < zero)
+        if (dist < lbl_803E59DC)
         {
             dist = -dist;
         }
         if (dist < minDist)
         {
-            state->bobBaseY = bias + *(f32*)arr[idx];
+            state->bobBaseY = lbl_803E59E0 + *(f32*)arr[idx];
             minDist = dist;
         }
     }
