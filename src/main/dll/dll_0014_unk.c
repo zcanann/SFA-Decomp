@@ -1845,8 +1845,8 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     f32 distance;
     f32 linkDistance;
     f32* scanBase;
-    f32 candidateDistances[4];
     int candidateIds[4];
+    f32 candidateDistances[4];
     int queueIndices[40];
     f32 queueDistances[40];
     u8 visited[0x514];
