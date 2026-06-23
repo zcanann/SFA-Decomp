@@ -70,3 +70,26 @@ Map web→source variable: follow `+0x04` IR ptr to a name/symbol (if O4 keeps o
 register against the known .o assignment. And read the PRIORITY the colorer assigns by
 (creation-order vs spill-cost) from the per-class colorer (0x4fe520). With those, the inversion
 becomes directed. METHOD only — not a lever list.
+
+## MODEL (front-and-center for hunterb/hunterc): register = PRIORITY, not a decl knob
+A GPR/FPR web's saved-register rank is set by the allocator's PRIORITY ordering (≈ spill cost
+= usage × loop depth + live-range), NOT by declaration order (decl-order A/B is structurally
+inert, confirmed). This is PLAUSIBLE-C-aligned: a value's register follows how the source
+genuinely USES it — so to match the target you recover the original USAGE pattern, never game
+a knob. NOTE: register COALESCING (copy-elimination, e.g. iceblast def→r5) is a SEPARATE pass
+from this priority ranking — read the coalescer separately when chasing those.
+
+### web→source identification (no name strings at O4)
+O4 strips local names, so the web IR node (+0x04) carries no name. Map instead by:
+- (a) REGISTER: cross-reference the web's +0x14 reg against the known .o assignment.
+- (b) IR HEAP REGION: PARAMS' IR nodes live in a DISTINCT heap region from locals' — in
+  controllight, obj(param) ir=0x6c12xxxx while all locals ir=0x6c62xxxx. Lets you pick the
+  param web out instantly.
+
+### Verdict gotcha (controllight_update — BANKED fn-context-bound)
+"most-used wins" is NECESSARY but NOT SUFFICIENT. Ground truth: obj (param web32) is used
+inline every iteration in BOTH case-loops AND is the earliest-created web, yet retail ranks it
+r29 (LOW) while bit (web42, used in only one loop) gets r31. Hotter+earlier → lower contradicts
+pure usage/creation order. The residual factor is interference-graph structure from the two
+near-identical DIRECT/INVERTED loops sharing r25-r28. No plausible usage recovery flips it
+(hoisting obj's loop address halved the reg-perm but added a web target lacks). Banked.
