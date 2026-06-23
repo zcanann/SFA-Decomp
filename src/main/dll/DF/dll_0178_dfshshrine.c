@@ -401,7 +401,7 @@ void dfsh_shrine_update(int obj)
         anyMissing = 0;
         for (i = 0; i < 10; i++)
         {
-            if (GameBit_Get(DFSH_REQUIRED_BIT(i)) == 0u)
+            if (GameBit_Get(*(u16*)((u8*)&base[20] + i * 2)) == 0u)
             {
                 anyMissing = 1;
                 i = 10;
