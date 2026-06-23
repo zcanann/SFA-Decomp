@@ -1,5 +1,7 @@
 /*
- * DLL 0x18F - ECSH (EarthWalker/Cape Krazoa) Shrine: the "Test of Observation".
+ * DLL 0x18F - ECSH Krazoa Spirit Shrine: the "Test of Observation". ("ECSH" is
+ * the retail prefix for this shrine - one of the MMSH/ECSH/DFSH/DBSH/GPSH Krazoa
+ * shrine family; the "EC" area code is unidentified, so it's left undecoded.)
  *
  * This is a 3-round cup shell-game. The Krazoa Spirit hides in one of 6 cups
  * (the golden urns; the cup objects themselves are DLL 0x190 ECSH_Cup). Each
