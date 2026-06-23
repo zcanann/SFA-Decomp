@@ -363,8 +363,8 @@ s8 fn_801631C8(int* obj)
     {
         int* setup = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                      ((GameObject*)obj)->anim.parent);
-        u8* slotBase = state + freeSlot * 4;
-        *(int**)(slotBase + 0xc) = setup;
+        u8* slotBase = state + 0xc;
+        *(int**)(slotBase + freeSlot * 4) = setup;
         ((void(*)(f64, f64))*(int*)(*(int*)(*(int*)((char*)setup + 0x68)) + 0x24))(
             (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
     }
