@@ -291,6 +291,9 @@ void drbarrelgr_update(int obj)
 
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
+    f32* vp2;
+    f32* vp1;
+    f32* vp;
     int state = *(int*)&((GameObject*)obj)->extra;
     int objRef;
     int nearest;
@@ -299,9 +302,6 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     f32 dval;
     f32 vec[3];
     DrBarrelGrRenderParams params;
-    f32* vp;
-    f32* vp1;
-    f32* vp2;
     extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void* params);
 
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6CA0);
