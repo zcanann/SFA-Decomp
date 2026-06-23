@@ -128,6 +128,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
 
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
+    int i;
     DfpTargetBlockAudioState* state;
     DfpTargetBlockHome* home;
     DfpTargetBlockObject* hitObj;
@@ -139,7 +140,6 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     f32 velZ;
     f32 dx;
     f32 dz;
-    int i;
 
     priority = -1;
     state = obj->state;
