@@ -208,7 +208,6 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         curve->t = t;
         curve->segmentDistance = step;
         curve->dir = 0;
-        return 0;
     }
     else if (step < lbl_803DE658)
     {
