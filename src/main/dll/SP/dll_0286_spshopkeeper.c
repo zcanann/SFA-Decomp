@@ -420,7 +420,7 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     }
     if (dist > lbl_803E5A24)
     {
-        diff = (u16)getAngle(dx, dz);
+        diff = getAngle(dx, dz) & 0xffff;
         if (mode != 0)
         {
             *obj = diff;
