@@ -108,9 +108,9 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         s32 out[2];
         s16 g2[4];
         s16 g1[4];
-        f32 b[3];
-        f32 a[3];
         f32 d[3];
+        f32 a[3];
+        f32 b[3];
     } stk2;
 
     if (visible == 0)
