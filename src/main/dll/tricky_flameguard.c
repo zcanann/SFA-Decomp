@@ -426,6 +426,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     char* strBase = lbl_8031D2E8;
     int i;
     void** slot;
+    int i2;
+    void** slot2;
     void* setup;
     void* state;
     int found;
@@ -557,10 +559,10 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         if ((double)obj->currentMoveProgress >= (double)lbl_803E24D0)
         {
             TRICKY_MARK_HELPERS_FINISHED(trickyState);
-            for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
+            for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++)
             {
-                objSetAnimSpeedTo1(slot[0x700 / 4]);
-                slot++;
+                objSetAnimSpeedTo1(slot2[0x700 / 4]);
+                slot2++;
             }
             Sfx_RemoveLoopedObjectSound((int)obj, 0x3dc);
             state = ((GameObject*)obj)->extra;
