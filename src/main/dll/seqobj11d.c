@@ -338,7 +338,10 @@ void fn_8015165C(int obj, u8* state)
             fn_8014C11C(obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
             if (*(u16*)(state + 0x338) != 0)
             {
-                *(u8*)(state + 0x2f2) = (u8) * (u32*)((p28 + *(u16*)(state + 0x338) * 16) + 12);
+                {
+                    u8* p28c = p28 + 12;
+                    *(u8*)(state + 0x2f2) = (u8) * (u32*)(p28c + *(u16*)(state + 0x338) * 16);
+                }
                 fn_8014D08C(obj, state, (p28 + *(u16*)(state + 0x338) * 16)[8],
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
                             (u8) * &(p28 + *(u16*)(state + 0x338) * 16)[4]);
