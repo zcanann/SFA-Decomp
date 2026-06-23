@@ -2699,7 +2699,8 @@ void renderShadows(void)
                 PSMTXConcat((f32*)castSlot, vm, (f32*)castSlot);
                 ((ObjModelState*)of64)->shadowCastSlot = castSlot;
                 {
-                    char* texSlot = B + (u8)r23 * 4 + 0x3a10;
+                    char* texPool = B + 0x3a10;
+                    char* texSlot = texPool + (u8)r23 * 4;
                     *(int*)(castSlot + 0x60) = *(int*)texSlot;
                     *(u8*)(castSlot + 0x65) = lbl_803DB668[(u8)r23];
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
