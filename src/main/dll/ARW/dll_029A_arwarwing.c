@@ -450,6 +450,7 @@ void arwarwing_updateWeaponFire(int obj, int state)
 #pragma scheduling reset
 #pragma peephole reset
 
+#pragma peephole off
 #pragma scheduling off
 void arwarwing_update(int obj)
 {
@@ -457,7 +458,7 @@ void arwarwing_update(int obj)
     s16 camRot[3];
     f32 camPos[2];
     u8 mode;
-    int p;
+    s16 p;
     f32 t;
     f32 throttle;
 
@@ -536,11 +537,9 @@ void arwarwing_update(int obj)
             throttle = lbl_803E6FFC * timeDelta +
                 (f32)(u32)((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha;
             if (throttle > lbl_803E7000) throttle = lbl_803E7000;
-            ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = (u8)(int)(f64)
-            throttle;
+            ((GameObject*)((ArwingState*)state)->thrusterL)->anim.alpha = throttle;
             ((GameObject*)((ArwingState*)state)->thrusterR)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)((ArwingState*)state)->thrusterR)->anim.alpha = (u8)(int)(f64)
-            throttle;
+            ((GameObject*)((ArwingState*)state)->thrusterR)->anim.alpha = throttle;
         }
         ((ArwingState*)state)->velTargetX = -((ArwingState*)state)->stickX * ((ArwingState*)state)->maxSpeedX;
         ((ArwingState*)state)->velTargetY = -((ArwingState*)state)->stickY * ((ArwingState*)state)->maxSpeedY;
@@ -557,44 +556,44 @@ void arwarwing_update(int obj)
         arwarwing_updateBombFire(obj, state);
 
         *(s16*)(((ArwingState*)state)->wingVec[0] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotZCur) * ((ArwingState*)state)->wingFlexScale);
+            (s16)((f32)(-((ArwingState*)state)->rotZCur) * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[0] + 4) =
-            (int)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+            (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[1] + 0) =
-            (int)((f32)(-((ArwingState*)state)->rotZCur) * ((ArwingState*)state)->wingFlexScale);
+            (s16)((f32)(-((ArwingState*)state)->rotZCur) * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[1] + 4) =
-            (int)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
-        p = (int)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+            (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+        p = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[2] + 4) = p;
         *(s16*)(((ArwingState*)state)->wingVec[2] + 0) = p;
-        p = (int)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
+        p = (s16)((f32)((ArwingState*)state)->rotZCur * ((ArwingState*)state)->wingFlexScale);
         *(s16*)(((ArwingState*)state)->wingVec[3] + 4) = p;
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) = p;
 
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
         *(s16*)(((ArwingState*)state)->wingVec[0] + 0) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
-        throttle = (f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[0] + 4) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[0] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[1] + 0) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
-        throttle = (f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[1] + 4) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)((ArwingState*)state)->rotYCur * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[1] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[2] + 0) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[2] + 4) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[2] + 4));
         *(s16*)(((ArwingState*)state)->wingVec[3] + 0) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
-        throttle = (f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale;
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 0));
         *(s16*)(((ArwingState*)state)->wingVec[3] + 4) =
-            (int)(throttle + (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 4));
+            (s16)((f32)(-((ArwingState*)state)->rotYCur) * ((ArwingState*)state)->wingFlexScale +
+                  (f32) * (s16*)(((ArwingState*)state)->wingVec[3] + 4));
     }
 
     arwarwing_updateRollAndEngine(obj, state);
@@ -611,6 +610,7 @@ void arwarwing_update(int obj)
     arwarwing_emitDamageEffects(obj, state);
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
