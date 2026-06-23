@@ -708,7 +708,12 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         GfxCmd entries[32];
     } buf;
     u8* base = (u8*)(int)lbl_80312790;
-    GfxCmd* e = buf.entries;
+    GfxCmd* e;
+    GfxCmd* entries;
+    f32 z4;
+    entries = buf.entries;
+    e = entries;
+    e = (GfxCmd*)((int)e | (int)entries);
     e[0].layer = 0;
     e[0].flags = 0xe;
     e[0].tex = &base[244];
@@ -740,7 +745,7 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[3].x = lbl_803E0830;
     e[3].y = lbl_803E0830;
     e[3].z = lbl_803E0830;
-    e[4].z = (f32)(int)
+    z4 = (f32)(int)
     randomGetRange(0, 0xfffe);
     e[4].layer = 0;
     e[4].flags = 0;
@@ -748,6 +753,7 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[4].mode = 0x80;
     e[4].x = lbl_803E0830;
     e[4].y = lbl_803E0830;
+    e[4].z = z4;
     e[5].layer = 1;
     e[5].flags = 0xa;
     e[5].tex = &base[272];
@@ -819,7 +825,7 @@ void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x10;
-    buf.count = (e + 13) - buf.entries;
+    buf.count = (e + 13) - entries;
     buf.hw[0] = *(s16*)&base[292];
     buf.hw[1] = *(s16*)&base[294];
     buf.hw[2] = *(s16*)&base[296];
