@@ -1423,7 +1423,7 @@ void sky2_run(void)
             flags = *(u16*)&((GameObject*)p)->anim.rotZ;
             if ((flags & 8) == 0)
             {
-                scale = (f32)(blue + green + red) / lbl_803DF184;
+                scale = (f32)(red + green + blue) / lbl_803DF184;
                 r *= scale;
                 g *= scale;
                 b *= scale;
