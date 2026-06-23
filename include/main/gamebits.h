@@ -41,13 +41,6 @@ enum GameBitId {
     GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER = 0x58b,
 
     /*
-     * NOTE: 0x511 - the last K1 return-pad guard bit - still has no traced
-     * setter (set from save/level-event data), left as a raw literal in
-     * dll_012C_transporter.c until traced. (0x316 was the other untraced one;
-     * now traced as GAMEBIT_K1_SPIRIT_DEPOSITED below.)
-     */
-
-    /*
      * One-shot latch set the first time the player walks within
      * gSpiritDoorLockApproachRange of a SpiritDoorLock (dll_0167); gates the
      * lock's intro text (object sequence 0) so it plays once, game-wide. NOT

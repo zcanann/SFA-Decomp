@@ -359,6 +359,11 @@ void transporter_init(int obj, u8* params)
         state->flags = (u8)(state->flags | 0x10);
         break;
     case 0x43F83:
+        /*
+         * NOTE: 0x511 - the last K1 return-pad guard bit - still has no traced
+         * setter (set from save/level-event data), left as a raw literal in
+         * dll_012C_transporter.c until traced.
+         */
         if (GameBit_Get(GAMEBIT_K1_SPIRIT_COLLECTED) != 0 || GameBit_Get(GAMEBIT_K1_SPIRIT_DEPOSITED) != 0 || GameBit_Get(0x511) != 0)
         {
             state->flags = (u8)(state->flags | 0x20);
