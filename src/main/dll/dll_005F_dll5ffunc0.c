@@ -826,7 +826,7 @@ void dll_5F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x10;
-    buf.count = 13;
+    buf.count = 0;
     buf.hw[0] = *(s16*)&base[272];
     buf.hw[1] = *(s16*)&base[274];
     buf.hw[2] = *(s16*)&base[276];
