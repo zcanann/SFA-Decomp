@@ -123,10 +123,10 @@ typedef struct SnowBikeState {
     f32 unk534;             /* 0x534 */
     f32 unk538;             /* 0x538 */
     u8 pad53C[0x4];
-    f32 unk540;             /* 0x540 */
-    f32 unk544;             /* 0x544 */
-    f32 unk548;             /* 0x548 */
-    f32 unk54C;             /* 0x54c */
+    f32 turnVelScale;       /* 0x540: smoothed scale on the strafe/turn velocity delta */
+    f32 turnForceGain;      /* 0x544: smoothed gain (* unk4B0) on the strafe/turn force input */
+    f32 localVelXDamp;      /* 0x548: smoothed base of powfBitEstimate(.,dt) damping localVelX */
+    f32 distanceScaleDamp;  /* 0x54c: smoothed base of powfBitEstimate(.,dt) damping distanceScale */
     u8 pad550[0x8];
     f32 unk558;             /* 0x558 */
     u8 pad55C[0x10];
@@ -134,8 +134,8 @@ typedef struct SnowBikeState {
     u8 pad570[0x4];
     f32 unk574;             /* 0x574 */
     f32 unk578;             /* 0x578 */
-    f32 unk57C;             /* 0x57c */
-    f32 unk580;             /* 0x580 */
+    f32 localVelXDampTarget;     /* 0x57c: held target for localVelXDamp (riding-paused state) */
+    f32 distanceScaleDampTarget; /* 0x580: held target for distanceScaleDamp (riding-paused state) */
     f32 unk584;             /* 0x584 */
     s16 haloDriftPhaseA;    /* 0x588: integrated phase, fed to mathSinf for halo-light drift */
     s16 haloDriftPhaseB;    /* 0x58a: integrated phase, fed to mathSinf for halo-light drift */

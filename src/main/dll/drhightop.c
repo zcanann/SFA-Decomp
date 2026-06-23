@@ -702,8 +702,8 @@ void fn_801EBD60(int obj, int stateRaw)
         target558 = st->unk578;
         target534 = st->unk574;
         target530 = st->unk56C;
-        target548 = st->unk57C;
-        target54c = st->unk580;
+        target548 = st->localVelXDampTarget;
+        target54c = st->distanceScaleDampTarget;
         target540 = lbl_803E5B20;
         target544 = lbl_803E5AF8;
     }
@@ -721,8 +721,8 @@ void fn_801EBD60(int obj, int stateRaw)
             st->unk558));
     st->unk534 += timeDelta * (lbl_803E5BBC * (target534 - st->unk534));
     st->unk530 += timeDelta * (lbl_803E5C14 * (target530 - st->unk530));
-    st->unk548 += timeDelta * ((k = lbl_803E5B20) * (target548 - st->unk548));
-    st->unk54C += timeDelta * (k * (target54c - st->unk54C));
-    st->unk540 += timeDelta * (k * (target540 - st->unk540));
-    st->unk544 += timeDelta * (k * (target544 - st->unk544));
+    st->localVelXDamp += timeDelta * ((k = lbl_803E5B20) * (target548 - st->localVelXDamp));
+    st->distanceScaleDamp += timeDelta * (k * (target54c - st->distanceScaleDamp));
+    st->turnVelScale += timeDelta * (k * (target540 - st->turnVelScale));
+    st->turnForceGain += timeDelta * (k * (target544 - st->turnForceGain));
 }

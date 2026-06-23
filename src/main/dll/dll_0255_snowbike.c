@@ -310,10 +310,10 @@ void fn_801EC870(int p1, register int p2_int)
     fz = lbl_803E5AE8;
     ((SnowBikeSetTypeState*)p2_int)->unk414 = fz;
     ((SnowBikeState*)p2_int)->unk584 = fz;
-    ((SnowBikeState*)p2_int)->unk548 = lbl_803E5BFC;
-    ((SnowBikeState*)p2_int)->unk54C = lbl_803E5BE4;
-    ((SnowBikeState*)p2_int)->unk540 = lbl_803E5B20;
-    ((SnowBikeState*)p2_int)->unk544 = lbl_803E5AF8;
+    ((SnowBikeState*)p2_int)->localVelXDamp = lbl_803E5BFC;
+    ((SnowBikeState*)p2_int)->distanceScaleDamp = lbl_803E5BE4;
+    ((SnowBikeState*)p2_int)->turnVelScale = lbl_803E5B20;
+    ((SnowBikeState*)p2_int)->turnForceGain = lbl_803E5AF8;
     ((SnowBikeState*)p2_int)->unk558 = lbl_803E5BA8;
     ((SnowBikeState*)p2_int)->unk56C = lbl_803E5C00;
     flags = (DRcradleSnowBikeFlags*)(p2_int + 0x428);
@@ -344,13 +344,13 @@ void fn_801EC928(int p1, int p2)
     ((SnowBikeState*)p2)->unk534 = lbl_803E5BF4;
     ((SnowBikeState*)p2)->unk538 = lbl_803E5B74;
     *(f32*)(p2 + 0x53c) = lbl_803E5C14;
-    ((SnowBikeState*)p2)->unk548 = lbl_803E5BFC;
-    ((SnowBikeState*)p2)->unk54C = lbl_803E5BE4;
-    ((SnowBikeState*)p2)->unk540 = lbl_803E5B20;
-    ((SnowBikeState*)p2)->unk544 = lbl_803E5AF8;
+    ((SnowBikeState*)p2)->localVelXDamp = lbl_803E5BFC;
+    ((SnowBikeState*)p2)->distanceScaleDamp = lbl_803E5BE4;
+    ((SnowBikeState*)p2)->turnVelScale = lbl_803E5B20;
+    ((SnowBikeState*)p2)->turnForceGain = lbl_803E5AF8;
     fa = lbl_803E5C40;
-    ((SnowBikeState*)p2)->unk57C = fa;
-    ((SnowBikeState*)p2)->unk580 = fa;
+    ((SnowBikeState*)p2)->localVelXDampTarget = fa;
+    ((SnowBikeState*)p2)->distanceScaleDampTarget = fa;
     *(f32*)(p2 + 0x554) = lbl_803E5C44;
     *(f32*)(p2 + 0x550) = lbl_803E5C10;
     *(f32*)(p2 + 0x570) = lbl_803E5BB8;
@@ -992,17 +992,17 @@ void SnowBike_update(int obj)
                     rq1.rot[2] = -((GameObject*)obj)->anim.rotZ;
                     mtxRotateByVec3s(mtx1, rq1.rot);
                     Matrix_TransformPoint(mtx1, lbl_803E5AE8,
-                                          ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->unk544,
+                                          ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->turnForceGain,
                                           lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
-                    vec1[0] = vec1[0] * ((SnowBikeState*)state)->unk540;
+                    vec1[0] = vec1[0] * ((SnowBikeState*)state)->turnVelScale;
                     vec1[1] = lbl_803E5AE8;
                     PSVECScale(vec1, vec1, timeDelta);
                     PSVECAdd((f32*)(state + 0x494), vec1, (f32*)(state + 0x494));
                     ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->unk4B0 * timeDelta + ((SnowBikeState*)
                         state)->localVelY;
-                    p = powfBitEstimate(((SnowBikeState*)state)->unk548, timeDelta);
+                    p = powfBitEstimate(((SnowBikeState*)state)->localVelXDamp, timeDelta);
                     ((SnowBikeState*)state)->localVelX *= p;
-                    p = powfBitEstimate(((SnowBikeState*)state)->unk54C, timeDelta);
+                    p = powfBitEstimate(((SnowBikeState*)state)->distanceScaleDamp, timeDelta);
                     ((SnowBikeState*)state)->distanceScale *= p;
                     fn_801EC1AC(obj, (int)state);
                     Matrix_TransformPoint((f32*)(state + 0xec), ((SnowBikeState*)state)->localVelX,
@@ -1072,17 +1072,17 @@ void SnowBike_update(int obj)
                 rq2.rot[2] = -((GameObject*)obj)->anim.rotZ;
                 mtxRotateByVec3s(mtx2, rq2.rot);
                 Matrix_TransformPoint(mtx2, lbl_803E5AE8,
-                                      ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->unk544, lbl_803E5AE8,
+                                      ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->turnForceGain, lbl_803E5AE8,
                                       &vec2[0], &dummy2, &vec2[2]);
-                vec2[0] = vec2[0] * ((SnowBikeState*)state)->unk540;
+                vec2[0] = vec2[0] * ((SnowBikeState*)state)->turnVelScale;
                 vec2[1] = lbl_803E5AE8;
                 PSVECScale(vec2, vec2, timeDelta);
                 PSVECAdd((f32*)(state + 0x494), vec2, (f32*)(state + 0x494));
                 ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->unk4B0 * timeDelta + ((SnowBikeState*)state)
                     ->localVelY;
-                p = powfBitEstimate(((SnowBikeState*)state)->unk548, timeDelta);
+                p = powfBitEstimate(((SnowBikeState*)state)->localVelXDamp, timeDelta);
                 ((SnowBikeState*)state)->localVelX *= p;
-                p = powfBitEstimate(((SnowBikeState*)state)->unk54C, timeDelta);
+                p = powfBitEstimate(((SnowBikeState*)state)->distanceScaleDamp, timeDelta);
                 ((SnowBikeState*)state)->distanceScale *= p;
                 fn_801EC1AC(obj, (int)state);
                 Matrix_TransformPoint((f32*)(state + 0xec), ((SnowBikeState*)state)->localVelX,
