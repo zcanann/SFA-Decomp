@@ -510,7 +510,7 @@ void fn_801EB940(short* obj, int stateRaw)
             fa = lbl_803E5BBC;
             st->haloYawDrift = fa * (f32)(s32)
             obj[1];
-            st->unk590 = fa * (f32)(s32)
+            st->haloDriftAmpB = fa * (f32)(s32)
             obj[2];
             st->haloDriftPhaseA = ival;
             st->haloDriftPhaseB = ival;
@@ -537,13 +537,13 @@ void fn_801EB940(short* obj, int stateRaw)
     st->haloDriftPhaseB = fa * timeDelta + (f32)(s32)st->haloDriftPhaseB;
     st->haloYawDrift =
         st->haloYawDrift * powfBitEstimate(lbl_803E5BCC, timeDelta);
-    st->unk590 =
-        st->unk590 * powfBitEstimate(lbl_803E5BCC, timeDelta);
+    st->haloDriftAmpB =
+        st->haloDriftAmpB * powfBitEstimate(lbl_803E5BCC, timeDelta);
     st->haloPitchDrift =
         st->haloYawDrift *
         mathSinf((gDrHighTopPi * (f32)(s32)st->haloDriftPhaseA) / lbl_803E5BD4);
-    st->unk598 =
-        st->unk590 *
+    st->haloDriftB =
+        st->haloDriftAmpB *
         mathSinf((gDrHighTopPi * (f32)(s32)st->haloDriftPhaseB) / lbl_803E5BD4);
     yawDelta = (int)*obj - ((int)st->yaw & 0xffffU);
     if (0x8000 < yawDelta)

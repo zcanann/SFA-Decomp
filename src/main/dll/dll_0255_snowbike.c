@@ -528,7 +528,7 @@ void SnowBike_hitDetect(int obj)
         state->savedRotY = ((GameObject*)obj)->anim.rotY;
         state->savedRotZ = ((GameObject*)obj)->anim.rotZ;
         ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY + state->haloPitchDrift;
-        ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + (state->unk410 + state->unk598);
+        ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + (state->unk410 + state->haloDriftB);
     }
     if (state->unk3D9 == 4 || state->unk3D6 != 0)
     {

@@ -140,9 +140,9 @@ typedef struct SnowBikeState {
     s16 haloDriftPhaseA;    /* 0x588: integrated phase, fed to mathSinf for halo-light drift */
     s16 haloDriftPhaseB;    /* 0x58a: integrated phase, fed to mathSinf for halo-light drift */
     f32 haloYawDrift;             /* 0x58c */
-    f32 unk590;             /* 0x590 */
+    f32 haloDriftAmpB;      /* 0x590: halo drift channel-B amplitude (decays via powfBitEstimate) */
     f32 haloPitchDrift;             /* 0x594: halo-light yaw drift */
-    f32 unk598;             /* 0x598: halo-light pitch drift */
+    f32 haloDriftB;         /* 0x598: halo drift channel-B output (haloDriftAmpB * sin(phaseB)); added to anim.rotZ */
 } SnowBikeState; /* extends to at least 0x59C (DRhightop/DRhalolight tail) */
 STATIC_ASSERT(offsetof(SnowBikeState, refPosX) == 0x16C);
 STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
