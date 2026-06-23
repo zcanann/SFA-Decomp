@@ -653,8 +653,8 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
             f32 dx, dz, d;
-            player = (GameObject*)((BackpackState*)aux)->targetObj;
-            player = player ? player : (GameObject*)Obj_GetPlayerObject();
+            player = ((BackpackState*)aux)->targetObj ? (GameObject*)((BackpackState*)aux)->targetObj
+                                                      : (GameObject*)Obj_GetPlayerObject();
             dx = ((GameObject*)obj)->anim.localPosX - player->anim.localPosX;
             dz = ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
@@ -672,8 +672,8 @@ void tumbleweed_updateTargetedStateMachine(int obj)
     {
         f32 dx, dz, d;
         u32 dist;
-        player = (GameObject*)((BackpackState*)aux)->targetObj;
-        player = player ? player : (GameObject*)Obj_GetPlayerObject();
+        player = ((BackpackState*)aux)->targetObj ? (GameObject*)((BackpackState*)aux)->targetObj
+                                                  : (GameObject*)Obj_GetPlayerObject();
         dx = ((GameObject*)obj)->anim.localPosX - player->anim.localPosX;
         dz = ((GameObject*)obj)->anim.localPosZ - player->anim.localPosZ;
         d = sqrtf(dx * dx + dz * dz);
