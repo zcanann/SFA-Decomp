@@ -3885,10 +3885,9 @@ void GameUI_release(void)
     s16* rowS16;
     u8* rowU8;
 
-    for (i = 0, p = g->hudTextures; i < 102; i++)
+    for (i = 0, p = g->hudTextures; i < 102; p++, i++)
     {
         if (*p != 0) textureFree(*p);
-        p++;
     }
 
     gameUiResetMenuState();
@@ -3897,9 +3896,9 @@ void GameUI_release(void)
      * and again after the icon-cache teardown below (both loops are in the asm). */
     for (j = 0; j < 64; j++)
     {
+        void** tex;
         int k = j;
-        void** tex = (void**)((u8*)g + k * 4);
-        tex = (void**)((u8*)tex + 2504);
+        tex = (void**)((u8*)&g->itemTextures + k * 4);
         if (*tex != NULL)
         {
             textureFree(*tex);
@@ -3925,9 +3924,9 @@ void GameUI_release(void)
 
     for (j = 0; j < 64; j++)
     {
+        void** tex;
         int k = j;
-        void** tex = (void**)((u8*)g + k * 4);
-        tex = (void**)((u8*)tex + 2504);
+        tex = (void**)((u8*)&g->itemTextures + k * 4);
         if (*tex != NULL)
         {
             textureFree(*tex);
