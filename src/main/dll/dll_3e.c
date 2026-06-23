@@ -243,9 +243,10 @@ void PlayControl(void)
     }
     else
     {
+        u32 numFrames;
         modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-            lbl_803A5D60.header.mNumFrames;
-        if (modResult == (lbl_803A5D60.header.mNumFrames - 1))
+            (numFrames = lbl_803A5D60.header.mNumFrames);
+        if (modResult == (numFrames - 1))
         {
             gAttractMovieLoopCompleted = 1;
         }
