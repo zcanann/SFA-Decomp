@@ -1176,9 +1176,9 @@ void iceBaddie_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visibl
         return;
     }
 
-    if (state->unk3E8 != lbl_803E2D14)
+    if (state->glowAlpha != lbl_803E2D14)
     {
-        fn_8003B5E0(0xc8, 0, 0, state->unk3E8);
+        fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
     }
     objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
     iceBaddie_updateEffectAnchors(obj, (int)state);

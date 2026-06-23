@@ -960,14 +960,14 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == 0 || ((GameObject*)obj)->unkF4 != 0 || state->targetState == 0) { return; }
     {
         {
-            if (state->unk3E8 != lbl_803E62A8)
+            if (state->glowAlpha != lbl_803E62A8)
             {
-                fn_8003B5E0(0xc8, 0, 0, state->unk3E8);
+                fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
             }
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E62C8);
             if ((state->flags400 & 0x60) != 0)
             {
-                objParticleFn_80099d84(obj, lbl_803E62C8, 3, state->unk3E8, 0);
+                objParticleFn_80099d84(obj, lbl_803E62C8, 3, state->glowAlpha, 0);
             }
             path = *(char**)&sub->linkedObj;
             if (path != NULL && *(void**)(path + 0x50) != NULL)

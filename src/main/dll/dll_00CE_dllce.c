@@ -703,7 +703,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    t = sub->unk3E8;
+    t = sub->glowAlpha;
     if (t != lbl_803E2DC8)
     {
         fn_8003B5E0(200, 0, 0, t);

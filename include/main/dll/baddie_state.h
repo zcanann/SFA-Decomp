@@ -161,7 +161,7 @@ typedef struct GroundBaddieState {
     void *path; /* rom-curve/path record */
     int savedObjC0; /* obj+0xC0 swap slot around the player-interface update */
     u8 unk3E4[4];
-    f32 unk3E8; /* CE render: forwarded to fn_8003B5E0(0xC8,...) */
+    f32 glowAlpha; /* 0x3e8: alpha of the red glow tint RGBA(200,0,0,glowAlpha), passed to fn_8003B5E0 + objParticleFn alpha arg in baddie render */
     u8 unk3EC[4];
     s16 unk3F0; /* id passed to gBaddieControlInterface[19]/+0x4C */
     s16 gameBitA; /* set 1 on trigger */

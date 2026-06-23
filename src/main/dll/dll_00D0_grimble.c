@@ -359,11 +359,11 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     if ((((GroundBaddieState*)state)->flags400 & 0x60) != 0)
     {
-        objParticleFn_80099d84(obj, lbl_803E2EBC, 3, ((GroundBaddieState*)state)->unk3E8, 0);
+        objParticleFn_80099d84(obj, lbl_803E2EBC, 3, ((GroundBaddieState*)state)->glowAlpha, 0);
     }
     if ((((GroundBaddieState*)state)->flags400 & 0x100) != 0)
     {
-        objParticleFn_80099d84(obj, lbl_803E2EBC, 4, ((GroundBaddieState*)state)->unk3E8, 0);
+        objParticleFn_80099d84(obj, lbl_803E2EBC, 4, ((GroundBaddieState*)state)->glowAlpha, 0);
         ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 & ~0x100;
     }
 }
