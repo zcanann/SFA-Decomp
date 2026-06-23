@@ -89,6 +89,10 @@ Peephole (`#pragma peephole`, the single most-used pragma, 358 sites) has **no
       intervening call/aliasing store (0x46aaa0) → recomputed/volatile; a cached
       register local survives the call → saved. Handed to `matcher-2` to finish
       PlayControl's last 4 regions. (LEVERS.md lever 5c.)
+- [x] **`CInline.c` (0x55bcb0) — inlining decision decoded** (`recovered/CInline.c`):
+      auto-inline iff callee body in-TU + ≤30 stmts + ≤1024 cost + not dont_inline +
+      not recursive (InlineSizeOK 0x55c2e0). "Extra bl to a fn_ the target inlined"
+      ⟹ wrong TU split. (LEVERS.md lever 10.)
 - [ ] Locate the peephole pass.
 
 ## Tools

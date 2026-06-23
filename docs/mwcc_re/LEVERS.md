@@ -169,6 +169,17 @@ The pipeline per register class is: build interference graph → coalesce copies
    (0x50815d) skips GPR operands r2 (SDA2) and r13 (SDA), and r0-as-literal-zero.
    Don't expect deps or register pressure from SDA-based accesses.
 
+## Inlining (CInline.c)
+10. **A call is auto-inlined (`-inline auto`) iff: callee body is available in
+   THIS TU + ≤30 statements + ≤1024 cost units + not `dont_inline` + not recursive**
+   (`InlineSizeOK` 0x55c2e0, `CanInlineCall` 0x55c350).
+   - **Extra `bl`/RELOC to a `fn_` the target inlined** ⟹ the callee is in a
+     DIFFERENT `.c` in our split but was in the SAME TU originally. FIX = move the
+     callee into the same `.c` (a split/file-org fix, not a code fix). A trivial
+     accessor called-not-inlined is the classic "wrong TU" tell.
+   - **Target calls where we inline** ⟹ callee just over 30 stmts / 1024 cost, or
+     the original had `#pragma dont_inline on`.
+
 ## Triage recipe for a stuck function
 - **Wrong register, same shape** → interference/creation-order problem (levers
   1-3). Recover the real live ranges: typed local derived early vs raw derefs
