@@ -107,7 +107,7 @@ typedef struct SnowBikeState {
     f32 distanceScale;             /* 0x49c */
     u8 pad4A0[0xC];
     f32 unk4AC;             /* 0x4ac */
-    f32 unk4B0;             /* 0x4b0 */
+    f32 liftAccel;          /* 0x4b0: vertical accel integrated into localVelY (localVelY += liftAccel*dt); also scales turn force */
     u8 unk4B4;              /* 0x4b4 */
     u8 pad4B5[0x3];
     f32 airMeterMax;             /* 0x4b8 */

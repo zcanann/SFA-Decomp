@@ -339,7 +339,7 @@ void fn_801EC870(int p1, register int p2_int)
 void fn_801EC928(int p1, int p2)
 {
     f32 fa, fz;
-    ((SnowBikeState*)p2)->unk4B0 = lbl_803E5C3C;
+    ((SnowBikeState*)p2)->liftAccel = lbl_803E5C3C;
     ((SnowBikeState*)p2)->unk530 = lbl_803E5C38;
     ((SnowBikeState*)p2)->unk534 = lbl_803E5BF4;
     ((SnowBikeState*)p2)->unk538 = lbl_803E5B74;
@@ -992,13 +992,13 @@ void SnowBike_update(int obj)
                     rq1.rot[2] = -((GameObject*)obj)->anim.rotZ;
                     mtxRotateByVec3s(mtx1, rq1.rot);
                     Matrix_TransformPoint(mtx1, lbl_803E5AE8,
-                                          ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->turnForceGain,
+                                          ((SnowBikeState*)state)->liftAccel * ((SnowBikeState*)state)->turnForceGain,
                                           lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
                     vec1[0] = vec1[0] * ((SnowBikeState*)state)->turnVelScale;
                     vec1[1] = lbl_803E5AE8;
                     PSVECScale(vec1, vec1, timeDelta);
                     PSVECAdd((f32*)(state + 0x494), vec1, (f32*)(state + 0x494));
-                    ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->unk4B0 * timeDelta + ((SnowBikeState*)
+                    ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->liftAccel * timeDelta + ((SnowBikeState*)
                         state)->localVelY;
                     p = powfBitEstimate(((SnowBikeState*)state)->localVelXDamp, timeDelta);
                     ((SnowBikeState*)state)->localVelX *= p;
@@ -1072,13 +1072,13 @@ void SnowBike_update(int obj)
                 rq2.rot[2] = -((GameObject*)obj)->anim.rotZ;
                 mtxRotateByVec3s(mtx2, rq2.rot);
                 Matrix_TransformPoint(mtx2, lbl_803E5AE8,
-                                      ((SnowBikeState*)state)->unk4B0 * ((SnowBikeState*)state)->turnForceGain, lbl_803E5AE8,
+                                      ((SnowBikeState*)state)->liftAccel * ((SnowBikeState*)state)->turnForceGain, lbl_803E5AE8,
                                       &vec2[0], &dummy2, &vec2[2]);
                 vec2[0] = vec2[0] * ((SnowBikeState*)state)->turnVelScale;
                 vec2[1] = lbl_803E5AE8;
                 PSVECScale(vec2, vec2, timeDelta);
                 PSVECAdd((f32*)(state + 0x494), vec2, (f32*)(state + 0x494));
-                ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->unk4B0 * timeDelta + ((SnowBikeState*)state)
+                ((SnowBikeState*)state)->localVelY = ((SnowBikeState*)state)->liftAccel * timeDelta + ((SnowBikeState*)state)
                     ->localVelY;
                 p = powfBitEstimate(((SnowBikeState*)state)->localVelXDamp, timeDelta);
                 ((SnowBikeState*)state)->localVelX *= p;
