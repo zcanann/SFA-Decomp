@@ -168,7 +168,7 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     buf.unk_58 = 0;
     buf.ctx = sourceObj;
     buf.unk_44 = variant;
-    buf.pos[0] = lbl_803E1318;
+    buf.pos[0] = *(f32*)&lbl_803E1318;
     if ((u32)extraArgs != 0)
     {
         buf.pos[1] = lbl_803E1338;
