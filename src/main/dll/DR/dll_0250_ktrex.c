@@ -121,7 +121,7 @@ typedef struct KTRexRuntime
     u8 pad2D4[0x40];
     int handlerState; /* 0x314 */
     u8 pad318[0x2e];
-    u8 unk346;
+    u8 moveDone; /* 0x346: set when current move completes; state handlers advance off it (BaddieState.moveDone) */
     u8 pad347[2];
     u8 unk349;
     u8 pad34A[2];
@@ -247,7 +247,7 @@ int ktrex_stateHandlerA06(int obj, int runtime)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 5);
     }
-    else if (*(s8*)&((KTRexRuntime*)runtime)->unk346 != 0)
+    else if (*(s8*)&((KTRexRuntime*)runtime)->moveDone != 0)
     {
         slot = 0;
         if (Stack_IsEmpty(((KTRexArenaState*)gKTRexState)->stack) == 0)
@@ -1432,7 +1432,7 @@ int ktrex_stateHandlerA03(int obj, int runtime)
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
         goto ret0;
     }
-    if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+    if ((s8)((KTRexRuntime*)runtime)->moveDone != 0)
     {
         phase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         f5 = ((f32*)*(int*)&((KTRexArenaState*)gKTRexState)->rowBX)[phase] - ((f32*)*(int*)&((KTRexArenaState*)
@@ -1478,7 +1478,7 @@ int ktrex_stateHandlerA07(int obj, int runtime)
         Music_Trigger(40, 0);
         Music_Trigger(147, 1);
     }
-    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0 || (((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->moveDone != 0 || (((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
     {
         return 9;
     }
@@ -1505,7 +1505,7 @@ int ktrex_stateHandlerA04(int obj, int runtime)
         {
             ((KTRexArenaState*)gKTRexState)->stateTimer = lbl_803E67B8;
         }
-        if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+        if ((s8)((KTRexRuntime*)runtime)->moveDone != 0)
         {
             if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67B8)
             {
@@ -1667,7 +1667,7 @@ int ktrex_stateHandlerA09(int obj, int runtime)
             (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
         }
     }
-    else if ((s8)((KTRexRuntime*)runtime)->unk346 != 0)
+    else if ((s8)((KTRexRuntime*)runtime)->moveDone != 0)
     {
         ((KTRexArenaState*)gKTRexState)->lastPhase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         ((KTRexArenaState*)gKTRexState)->stateTimer = lbl_803E67D8;
