@@ -175,7 +175,10 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
         yaw = ((CameraModeStaticPlacement*)setup)->yaw + 0x8000;
     }
     if ((setup[27] & 2) != 0)
-        pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - ((CameraModeStaticPlacement*)setup)->pitch;
+    {
+        pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+        pitch -= ((CameraModeStaticPlacement*)setup)->pitch;
+    }
     else
     {
         pitch = ((CameraModeStaticPlacement*)setup)->pitch;
