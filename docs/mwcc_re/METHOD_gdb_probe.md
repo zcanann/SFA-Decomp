@@ -94,22 +94,23 @@ pure usage/creation order. The residual factor is interference-graph structure f
 near-identical DIRECT/INVERTED loops sharing r25-r28. No plausible usage recovery flips it
 (hoisting obj's loop address halved the reg-perm but added a web target lacks). Banked.
 
-## COALESCER pass (separate from priority) — mechanism READABLE
+## COALESCER pass (separate from priority) — PARTIAL (apply confirmed, decision not yet)
 The mr-copy / "def coalesced into slot-result reg" class is the COALESCER, distinct from the
-priority ranking above. Disassembled (capstone i386):
-- `0x508c10` = per-class coalesce APPLY/reset: resets web `+0x14`=index, then walks the
-  move/copy lists `0x5e9b00`,`0x5e99c4`,`0x5e98f4`; for each move node it checks `node+0x24 &2`
-  (coalesceable) and `&4`, propagates the surviving web into `web+0x04` and sets web flags
-  `0x20`(loop-region)/`0x10`. This is where a copy's two webs get merged into one register.
-- driver `0x508da0` → `0x508e40` (calls ValueNumbering 0x509010, counts coalesceable webs) →
-  **`0x508f10` = the MERGE DECISION**: walks the web buckets (`0x5e08c0`, 0x1d5 of them) and
-  keeps a web as a coalesce candidate only while `web->+0x0c (interference DEGREE) <
-  threshold [0x5e08a4]`; webs at/over the bound are unlinked (NOT coalesced).
+priority ranking. Status (capstone i386, controllight unit):
+- **CONFIRMED:** `0x508c10` = per-class coalesce APPLY (called per class from the alloc main
+  loop at 0x508753). Resets web `+0x14`=index, then walks the move/copy lists
+  `0x5e9b00`,`0x5e99c4`,`0x5e98f4`; for each move node ALREADY FLAGGED coalesceable
+  (`node+0x24 &2`, class match `node+0x25`), it propagates the surviving register into the
+  coalesced web's `+0x04` and sets web flags `0x20`/`0x10`. So the move's coalesce flag is set
+  UPSTREAM; 0x508c10 only applies it.
+- **NOT YET READ:** the coalesce DECISION (which moves get the `node+0x24 &2` flag) is made
+  before 0x508c10 — most likely inside the per-class colorer `0x4fe520` (called at 0x50871a,
+  before the apply). Disassembling 0x4fe520 is the next step to read WHY a copy is/ isn't merged.
+- **RETRACTED:** `0x508f10` (degree-vs-threshold bucket walk, `web+0x0c` vs `0x5e08a4`) did NOT
+  execute on the controllight compile (bp 0x508f2c never hit) — so it's a CONDITIONAL path
+  (likely spill bucketing), NOT the main coalesce decision. Earlier claim corrected.
 
-**MODEL for the coalesce class:** a copy (mr) is eliminated iff merging its two webs keeps the
-combined interference DEGREE under the conservative bound. So "target coalesces def→slot-reg but
-ours keeps the mr" ⇒ our merged degree is over the bound (more live values interfere at that
-point). Readable coalesce decision: break `*0x508f2c` (the `cmp degree,threshold; jl keep`) and
-print `degree=esi threshold=*(uint*)0x5e08a4` per web. Plausible-C lever = reduce live values
-around the copy point so the merged degree drops under the bound (same interference-graph
-caveat as priority — recoverable only when a genuine usage/lifetime change does it, never a hack).
+To finish this milestone: disasm 0x4fe520, find where it sets `node+0x24 |= 2` (or clears it),
+read the predicate. Then a coalesce case (e.g. nw_mammoth/dll_94 global-base `mr` that retail
+eliminates but ours keeps) can be classified. Plausible-C only when a genuine usage/lifetime
+change flips it; otherwise bank with the degree note.
