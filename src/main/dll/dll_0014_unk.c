@@ -1905,10 +1905,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 
             if (*(u8*)(queueCurve + 0x34) == 1)
             {
-                candidateDistances[candidateCount] = distance;
-                candidateIds[candidateCount] = *(s32*)(cur + 0x1c);
-                candidateCount++;
                 found = 1;
+                candidateDistances[candidateCount] = distance;
+                candidateIds[candidateCount++] = *(s32*)(cur + 0x1c);
                 continue;
             }
 
