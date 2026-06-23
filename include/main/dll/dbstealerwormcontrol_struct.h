@@ -23,7 +23,7 @@ typedef struct DbStealerwormControl
     int unk30; /* ObjGroup id */
     u8 unk34;
     u8 unk35[3];
-    f32 unk38;
+    f32 spawnAccumulator; /* 0x38: accumulates on worm move-done; when over threshold, triggers a spawn-search and subtracts the threshold */
     int unk3C;
     u8 unk40[4];
     u8 flags44; /* bits 0x10/0x20 */

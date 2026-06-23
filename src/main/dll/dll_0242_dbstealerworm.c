@@ -572,7 +572,7 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
     if ((s8)((BaddieState*)p2)->hitPoints < 1) return 3;
     if ((s8)((BaddieState*)p2)->moveDone != 0)
     {
-        ((DbStealerwormControl*)state->control)->unk38 += lbl_803E62BC;
+        ((DbStealerwormControl*)state->control)->spawnAccumulator += lbl_803E62BC;
         return 7;
     }
     return 0;
@@ -1130,9 +1130,9 @@ int dbstealerworm_stateHandlerB05(int obj, int p2)
     else
     {
         f32 t;
-        if (*(void**)&sub->linkedObj == NULL && (t = sub->unk38) > lbl_803E62B0)
+        if (*(void**)&sub->linkedObj == NULL && (t = sub->spawnAccumulator) > lbl_803E62B0)
         {
-            sub->unk38 = t - lbl_803E62B0;
+            sub->spawnAccumulator = t - lbl_803E62B0;
             range = lbl_803E62B4;
             i = 3;
             found = 0;
