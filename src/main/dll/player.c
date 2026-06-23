@@ -14272,7 +14272,15 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
         }
-        if (((PlayerState*)inner)->waterDepth <= lbl_803E7EA4)
+        if (((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
+        {
+            if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
+            {
+                ((PlayerState*)inner)->flags360 |= 0x20000;
+                ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
+            }
+        }
+        else
         {
             if (gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 6 ||
                 gPlayerSurfacePfxModeTable[((PlayerState*)inner)->surfaceType] == 3)
@@ -14324,11 +14332,6 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
                 }
             }
-        }
-        else if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
-        {
-            ((PlayerState*)inner)->flags360 |= 0x20000;
-            ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
         }
     }
 }
