@@ -1842,9 +1842,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int found;
     int i;
     int j;
+    f32* scanBase;
     f32 distance;
     f32 linkDistance;
-    f32* scanBase;
     int candidateIds[4];
     f32 candidateDistances[4];
     int queueIndices[40];
@@ -1861,8 +1861,8 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     }
 
     candidateCount = 0;
-    scanBase = queueDistances;
-    for (directSlot = 0, cur = startCurve; directSlot < 4; directSlot++, cur += 4)
+    for (directSlot = 0, cur = startCurve, scanBase = queueDistances; directSlot < 4;
+         directSlot++, cur += 4)
     {
         directLinkId = *(s32*)(cur + 0x1c);
         if (directLinkId <= -1)
