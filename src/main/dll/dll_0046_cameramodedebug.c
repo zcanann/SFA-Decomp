@@ -67,10 +67,11 @@ void CameraModeDebug_update(short* camObj)
     }
     absMove = (move < lbl_803E1840) ? -move : move;
     {
-        f32 vel = gCamDebugState->radiusVelocity;
+        CameraModeDebugState* st = gCamDebugState;
+        f32 vel = st->radiusVelocity;
         absVel = (vel < lbl_803E1840) ? -vel : vel;
         factor = (absVel > absMove) ? gCamDebugRadiusDampFast : gCamDebugRadiusDampSlow;
-        gCamDebugState->radiusVelocity = factor * (move - vel) + gCamDebugState->radiusVelocity;
+        st->radiusVelocity = factor * (move - vel) + st->radiusVelocity;
     }
     gCamDebugState->orbitRadius = gCamDebugState->orbitRadius + gCamDebugState->radiusVelocity;
     if (gCamDebugState->orbitRadius < gCamDebugOrbitRadiusMin)
