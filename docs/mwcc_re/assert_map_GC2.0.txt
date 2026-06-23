@@ -1,0 +1,937 @@
+# mwcceppc assert-string function map
+# binary: build/compilers/GC/2.0/mwcceppc.exe  image base: 0x400000
+# 127 source-file strings, 3636 candidate function starts
+# 1082 (file,function) attributions
+
+============================================================
+BACKEND TUs (the matching-relevant passes)
+============================================================
+# 'band' = inferred TU address range from assert anchors.
+# Functions without an anchor tag are inferred-same-TU (call-targets in band).
+
+## Coloring.c: band 0x00508680-0x00508da0  (3 assert-anchored, 5 total funcs in band)
+   func @ 0x00508680 <-- assert anchor
+   func @ 0x005087d0
+   func @ 0x00508900 <-- assert anchor
+   func @ 0x00508a20
+   func @ 0x00508c10 <-- assert anchor
+
+## InterferenceGraph.c: band 0x0057b680-0x0057c060  (2 assert-anchored, 2 total funcs in band)
+   func @ 0x0057b680 <-- assert anchor
+   func @ 0x0057bad0 <-- assert anchor
+
+## SpillCode.c: band 0x0057c290-0x0057cd00  (5 assert-anchored, 6 total funcs in band)
+   func @ 0x0057c290 <-- assert anchor
+   func @ 0x0057c3d0
+   func @ 0x0057c480 <-- assert anchor
+   func @ 0x0057c590 <-- assert anchor
+   func @ 0x0057c770 <-- assert anchor
+   func @ 0x0057ca00 <-- assert anchor
+
+## RegisterInfo.c: band 0x004d0150-0x004d10f0  (7 assert-anchored, 17 total funcs in band)
+   func @ 0x004d0150 <-- assert anchor
+   func @ 0x004d01f0
+   func @ 0x004d0220
+   func @ 0x004d0270 <-- assert anchor
+   func @ 0x004d03a0 <-- assert anchor
+   func @ 0x004d0560
+   func @ 0x004d0850
+   func @ 0x004d08c0
+   func @ 0x004d0900
+   func @ 0x004d0970 <-- assert anchor
+   func @ 0x004d0d30 <-- assert anchor
+   func @ 0x004d0d70
+   func @ 0x004d0db0
+   func @ 0x004d0e00
+   func @ 0x004d0e30
+   func @ 0x004d0ea0 <-- assert anchor
+   func @ 0x004d0fe0 <-- assert anchor
+
+## Scheduler.c: band 0x00508100-0x00508350  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00508100 <-- assert anchor
+
+## ValueNumbering.c: band 0x00509010-0x00509570  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00509010 <-- assert anchor
+
+## PCodeListing.c: band 0x00500c40-0x00500c60  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00500c40 <-- assert anchor
+
+## IroCSE.c: band 0x0046a360-0x0046be30  (8 assert-anchored, 16 total funcs in band)
+   func @ 0x0046a360 <-- assert anchor
+   func @ 0x0046a5f0
+   func @ 0x0046a790
+   func @ 0x0046a860
+   func @ 0x0046aaa0
+   func @ 0x0046abf0 <-- assert anchor
+   func @ 0x0046af40 <-- assert anchor
+   func @ 0x0046b1d0 <-- assert anchor
+   func @ 0x0046b230
+   func @ 0x0046b2e0
+   func @ 0x0046b400
+   func @ 0x0046b430
+   func @ 0x0046b460 <-- assert anchor
+   func @ 0x0046b660 <-- assert anchor
+   func @ 0x0046b870 <-- assert anchor
+   func @ 0x0046bb70 <-- assert anchor
+   !! WARNING: band also contains anchors from: ['BitVector.h']
+
+## IroPropagate.c: band 0x00470060-0x004709f0  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00470060 <-- assert anchor
+   !! WARNING: band also contains anchors from: ['BitVector.h']
+
+## IroUnrollLoop.c: band 0x004a1080-0x004a4390  (5 assert-anchored, 11 total funcs in band)
+   func @ 0x004a1080 <-- assert anchor
+   func @ 0x004a1430 <-- assert anchor
+   func @ 0x004a1a10
+   func @ 0x004a1bd0 <-- assert anchor
+   func @ 0x004a1f80
+   func @ 0x004a2200 <-- assert anchor
+   func @ 0x004a2550
+   func @ 0x004a2d40
+   func @ 0x004a2e60
+   func @ 0x004a3b10
+   func @ 0x004a3f80 <-- assert anchor
+
+## LoopOptimization.c: band 0x00572e90-0x00575520  (6 assert-anchored, 12 total funcs in band)
+   func @ 0x00572e90 <-- assert anchor
+   func @ 0x00573460
+   func @ 0x00573650
+   func @ 0x00573720 <-- assert anchor
+   func @ 0x00574300
+   func @ 0x00574410
+   func @ 0x00574490
+   func @ 0x00574a80 <-- assert anchor
+   func @ 0x00575110
+   func @ 0x00575220 <-- assert anchor
+   func @ 0x00575290 <-- assert anchor
+   func @ 0x00575440 <-- assert anchor
+
+## LoopDetection.c: band 0x0056d360-0x0056d900  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x0056d360 <-- assert anchor
+
+## CodeGen.c: band 0x0042ebb0-0x004362a0  (12 assert-anchored, 36 total funcs in band)
+   func @ 0x0042ebb0 <-- assert anchor
+   func @ 0x0042ed20
+   func @ 0x0042ee30
+   func @ 0x0042f750
+   func @ 0x0042f7b0
+   func @ 0x0042f820
+   func @ 0x0042f840
+   func @ 0x0042f860
+   func @ 0x0042f8a0
+   func @ 0x0042f8f0
+   func @ 0x0042f910
+   func @ 0x0042f970
+   func @ 0x0042f980
+   func @ 0x0042fb00
+   func @ 0x00431430
+   func @ 0x00431980
+   func @ 0x00432460
+   func @ 0x004326e0 <-- assert anchor
+   func @ 0x00432840
+   func @ 0x00432850
+   func @ 0x00432ce0
+   func @ 0x00433230 <-- assert anchor
+   func @ 0x004333c0 <-- assert anchor
+   func @ 0x00434180 <-- assert anchor
+   func @ 0x00434490
+   func @ 0x004344c0 <-- assert anchor
+   func @ 0x00434640
+   func @ 0x004349b0
+   func @ 0x00434ac0
+   func @ 0x00434bf0
+   func @ 0x00434c40 <-- assert anchor
+   func @ 0x00435650 <-- assert anchor
+   func @ 0x00435810 <-- assert anchor
+   func @ 0x00435a10 <-- assert anchor
+   func @ 0x00435d20 <-- assert anchor
+   func @ 0x00436060 <-- assert anchor
+
+## ObjGen_PPC_EABI.c: band 0x004b28d0-0x004b5740  (24 assert-anchored, 43 total funcs in band)
+   func @ 0x004b28d0 <-- assert anchor
+   func @ 0x004b2950
+   func @ 0x004b2a60
+   func @ 0x004b2bd0 <-- assert anchor
+   func @ 0x004b2c00 <-- assert anchor
+   func @ 0x004b2de0
+   func @ 0x004b2ef0 <-- assert anchor
+   func @ 0x004b2f40 <-- assert anchor
+   func @ 0x004b2ff0 <-- assert anchor
+   func @ 0x004b3030
+   func @ 0x004b3040 <-- assert anchor
+   func @ 0x004b34d0 <-- assert anchor
+   func @ 0x004b3500 <-- assert anchor
+   func @ 0x004b3570 <-- assert anchor
+   func @ 0x004b3600 <-- assert anchor
+   func @ 0x004b38a0 <-- assert anchor
+   func @ 0x004b38e0 <-- assert anchor
+   func @ 0x004b3a00 <-- assert anchor
+   func @ 0x004b3a20 <-- assert anchor
+   func @ 0x004b3c20 <-- assert anchor
+   func @ 0x004b3d20
+   func @ 0x004b3f30
+   func @ 0x004b40e0
+   func @ 0x004b4180 <-- assert anchor
+   func @ 0x004b4390 <-- assert anchor
+   func @ 0x004b43f0 <-- assert anchor
+   func @ 0x004b4670 <-- assert anchor
+   func @ 0x004b46f0
+   func @ 0x004b4b10
+   func @ 0x004b4f10
+   func @ 0x004b4f80
+   func @ 0x004b5000
+   func @ 0x004b51c0
+   func @ 0x004b5240
+   func @ 0x004b5270 <-- assert anchor
+   func @ 0x004b53d0 <-- assert anchor
+   func @ 0x004b5410
+   func @ 0x004b54a0
+   func @ 0x004b5530
+   func @ 0x004b5560
+   func @ 0x004b55e0
+   func @ 0x004b55f0 <-- assert anchor
+   func @ 0x004b5660 <-- assert anchor
+
+## COptimizer.c: band 0x004fd9d0-0x004fe130  (5 assert-anchored, 9 total funcs in band)
+   func @ 0x004fd9d0 <-- assert anchor
+   func @ 0x004fda80
+   func @ 0x004fdb70
+   func @ 0x004fdbf0
+   func @ 0x004fdc60 <-- assert anchor
+   func @ 0x004fdd40 <-- assert anchor
+   func @ 0x004fdea0 <-- assert anchor
+   func @ 0x004fdf00
+   func @ 0x004fe040 <-- assert anchor
+
+## IrOptimizer.c: band 0x0042dde0-0x0042e980  (4 assert-anchored, 4 total funcs in band)
+   func @ 0x0042dde0 <-- assert anchor
+   func @ 0x0042e400 <-- assert anchor
+   func @ 0x0042e680 <-- assert anchor
+   func @ 0x0042e8e0 <-- assert anchor
+
+## CIRTransform.c: band 0x0052baf0-0x0052bd20  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x0052baf0 <-- assert anchor
+
+## IroFlowgraph.c: band 0x00471680-0x00471b60  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00471680 <-- assert anchor
+
+## IroLinearForm.c: band 0x0046bef0-0x0046f560  (16 assert-anchored, 26 total funcs in band)
+   func @ 0x0046bef0 <-- assert anchor
+   func @ 0x0046c070 <-- assert anchor
+   func @ 0x0046c1a0
+   func @ 0x0046c1e0 <-- assert anchor
+   func @ 0x0046ca50 <-- assert anchor
+   func @ 0x0046cd10
+   func @ 0x0046cd40 <-- assert anchor
+   func @ 0x0046d490 <-- assert anchor
+   func @ 0x0046d5e0 <-- assert anchor
+   func @ 0x0046db40 <-- assert anchor
+   func @ 0x0046e070 <-- assert anchor
+   func @ 0x0046e320
+   func @ 0x0046e3d0 <-- assert anchor
+   func @ 0x0046e680
+   func @ 0x0046e730
+   func @ 0x0046e850
+   func @ 0x0046e940
+   func @ 0x0046e9e0 <-- assert anchor
+   func @ 0x0046eb20 <-- assert anchor
+   func @ 0x0046ec80 <-- assert anchor
+   func @ 0x0046ede0
+   func @ 0x0046ef40
+   func @ 0x0046efe0
+   func @ 0x0046f090 <-- assert anchor
+   func @ 0x0046f1f0 <-- assert anchor
+   func @ 0x0046f350 <-- assert anchor
+
+## IROUseDef.c: band 0x0045deb0-0x00460a90  (5 assert-anchored, 19 total funcs in band)
+   func @ 0x0045deb0 <-- assert anchor
+   func @ 0x0045e030
+   func @ 0x0045e190
+   func @ 0x0045e1c0 <-- assert anchor
+   func @ 0x0045e250
+   func @ 0x0045e3b0
+   func @ 0x0045ebc0
+   func @ 0x0045ecc0
+   func @ 0x0045ed40
+   func @ 0x0045edd0
+   func @ 0x0045ee70 <-- assert anchor
+   func @ 0x0045f1d0 <-- assert anchor
+   func @ 0x0045f430
+   func @ 0x0045f720
+   func @ 0x0045fa70
+   func @ 0x00460150
+   func @ 0x004604f0
+   func @ 0x00460790
+   func @ 0x004608f0 <-- assert anchor
+   !! WARNING: band also contains anchors from: ['BitVector.h']
+
+## IroRangePropagation.c: band 0x0049ea50-0x0049eea0  (2 assert-anchored, 2 total funcs in band)
+   func @ 0x0049ea50 <-- assert anchor
+   func @ 0x0049ec80 <-- assert anchor
+
+## VectorArraysToRegs.c: band 0x00577160-0x005772c0  (1 assert-anchored, 1 total funcs in band)
+   func @ 0x00577160 <-- assert anchor
+
+============================================================
+BACKEND TUs — EXTENDED bands (whole-.text partition)
+============================================================
+# Band runs to the next TU's first anchor (absorbs un-asserted funcs).
+# '~' = inferred (no assert); interleaved bands flagged as AMBIGUOUS.
+
+## Coloring.c: band 0x00508680-0x00509010  (3 anchored / 8 total)
+   A 0x00508680
+   ~ 0x005087d0
+   A 0x00508900
+   ~ 0x00508a20
+   A 0x00508c10
+   ~ 0x00508da0
+   ~ 0x00508e40
+   ~ 0x00508f10
+
+## InterferenceGraph.c: band 0x0057b680-0x0057c290  (2 anchored / 3 total)
+   A 0x0057b680
+   A 0x0057bad0
+   ~ 0x0057c060
+
+## SpillCode.c: band 0x0057c290-0x0057d2a0  (5 anchored / 15 total)
+   A 0x0057c290
+   ~ 0x0057c3d0
+   A 0x0057c480
+   A 0x0057c590
+   A 0x0057c770
+   A 0x0057ca00
+   ~ 0x0057cd00
+   ~ 0x0057ce20
+   ~ 0x0057ce70
+   ~ 0x0057ceb0
+   ~ 0x0057cef0
+   ~ 0x0057cf20
+   ~ 0x0057cf60
+   ~ 0x0057cfa0
+   ~ 0x0057d0b0
+
+## RegisterInfo.c: band 0x004d0150-0x004d11b0  (7 anchored / 18 total)
+   A 0x004d0150
+   ~ 0x004d01f0
+   ~ 0x004d0220
+   A 0x004d0270
+   A 0x004d03a0
+   ~ 0x004d0560
+   ~ 0x004d0850
+   ~ 0x004d08c0
+   ~ 0x004d0900
+   A 0x004d0970
+   A 0x004d0d30
+   ~ 0x004d0d70
+   ~ 0x004d0db0
+   ~ 0x004d0e00
+   ~ 0x004d0e30
+   A 0x004d0ea0
+   A 0x004d0fe0
+   ~ 0x004d10f0
+
+## Scheduler.c: band 0x00508100-0x00508680  (1 anchored / 5 total)
+   A 0x00508100
+   ~ 0x00508350
+   ~ 0x00508400
+   ~ 0x005084f0
+   ~ 0x005085c0
+
+## ValueNumbering.c: band 0x00509010-0x0050a6e0  (1 anchored / 15 total)
+   A 0x00509010
+   ~ 0x00509570
+   ~ 0x005097a0
+   ~ 0x00509970
+   ~ 0x00509c50
+   ~ 0x00509d40
+   ~ 0x00509ee0
+   ~ 0x00509ff0
+   ~ 0x0050a180
+   ~ 0x0050a2c0
+   ~ 0x0050a350
+   ~ 0x0050a460
+   ~ 0x0050a4b0
+   ~ 0x0050a4d0
+   ~ 0x0050a4f0
+
+## PCodeListing.c: band 0x00500c40-0x00508100  (1 anchored / 24 total)
+   A 0x00500c40
+   ~ 0x00500c60
+   ~ 0x00500c70
+   ~ 0x00500c80
+   ~ 0x00500c90
+   ~ 0x00500ca0
+   ~ 0x00500cf0
+   ~ 0x00500ef0
+   ~ 0x005019a0
+   ~ 0x005028b0
+   ~ 0x00502920
+   ~ 0x00502c00
+   ~ 0x00503df0
+   ~ 0x00507480
+   ~ 0x005075e0
+   ~ 0x00507660
+   ~ 0x00507820
+   ~ 0x00507a50
+   ~ 0x00507ad0
+   ~ 0x00507c20
+   ~ 0x00507c60
+   ~ 0x00507ce0
+   ~ 0x00507df0
+   ~ 0x00507fc0
+
+## IroCSE.c: band 0x0046a360-0x0046bef0  (8 anchored / 17 total)
+   A 0x0046a360
+   ~ 0x0046a5f0
+   ~ 0x0046a790
+   ~ 0x0046a860
+   ~ 0x0046aaa0
+   A 0x0046abf0
+   A 0x0046af40
+   A 0x0046b1d0
+   ~ 0x0046b230
+   ~ 0x0046b2e0
+   ~ 0x0046b400
+   ~ 0x0046b430
+   A 0x0046b460
+   A 0x0046b660
+   A 0x0046b870
+   A 0x0046bb70
+   ~ 0x0046be30
+
+## IroPropagate.c: band 0x00470060-0x00471680  (1 anchored / 10 total)
+   A 0x00470060
+   ~ 0x004709f0
+   ~ 0x00470b30
+   ~ 0x00470b60
+   ~ 0x00470c70
+   ~ 0x00470ed0
+   ~ 0x00471030
+   ~ 0x004712e0
+   ~ 0x00471320
+   ~ 0x004714e0
+
+## IroUnrollLoop.c: band 0x004a1080-0x004a5cf0  (5 anchored / 25 total)
+   A 0x004a1080
+   A 0x004a1430
+   ~ 0x004a1a10
+   A 0x004a1bd0
+   ~ 0x004a1f80
+   A 0x004a2200
+   ~ 0x004a2550
+   ~ 0x004a2d40
+   ~ 0x004a2e60
+   ~ 0x004a3b10
+   A 0x004a3f80
+   ~ 0x004a4390
+   ~ 0x004a4760
+   ~ 0x004a4780
+   ~ 0x004a4950
+   ~ 0x004a4a00
+   ~ 0x004a4b30
+   ~ 0x004a4d60
+   ~ 0x004a4fa0
+   ~ 0x004a5080
+   ~ 0x004a50c0
+   ~ 0x004a5920
+   ~ 0x004a59c0
+   ~ 0x004a5b00
+   ~ 0x004a5ba0
+
+## LoopOptimization.c: band 0x00572e90-0x00577160  (6 anchored / 22 total)
+   A 0x00572e90
+   ~ 0x00573460
+   ~ 0x00573650
+   A 0x00573720
+   ~ 0x00574300
+   ~ 0x00574410
+   ~ 0x00574490
+   A 0x00574a80
+   ~ 0x00575110
+   A 0x00575220
+   A 0x00575290
+   A 0x00575440
+   ~ 0x00575520
+   ~ 0x005756e0
+   ~ 0x005758f0
+   ~ 0x005759a0
+   ~ 0x00576b20
+   ~ 0x00576ba0
+   ~ 0x00576c20
+   ~ 0x00576db0
+   ~ 0x00576ec0
+   ~ 0x00576fd0
+
+## LoopDetection.c: band 0x0056d360-0x0056f3d0  (1 anchored / 19 total)
+   A 0x0056d360
+   ~ 0x0056d900
+   ~ 0x0056da70
+   ~ 0x0056db00
+   ~ 0x0056de20
+   ~ 0x0056de60
+   ~ 0x0056def0
+   ~ 0x0056e0b0
+   ~ 0x0056e200
+   ~ 0x0056e310
+   ~ 0x0056e420
+   ~ 0x0056e8d0
+   ~ 0x0056edf0
+   ~ 0x0056ef80
+   ~ 0x0056f000
+   ~ 0x0056f160
+   ~ 0x0056f1d0
+   ~ 0x0056f210
+   ~ 0x0056f250
+
+## CodeGen.c: band 0x0042ebb0-0x00436e50  (12 anchored / 45 total)
+   A 0x0042ebb0
+   ~ 0x0042ed20
+   ~ 0x0042ee30
+   ~ 0x0042f750
+   ~ 0x0042f7b0
+   ~ 0x0042f820
+   ~ 0x0042f840
+   ~ 0x0042f860
+   ~ 0x0042f8a0
+   ~ 0x0042f8f0
+   ~ 0x0042f910
+   ~ 0x0042f970
+   ~ 0x0042f980
+   ~ 0x0042fb00
+   ~ 0x00431430
+   ~ 0x00431980
+   ~ 0x00432460
+   A 0x004326e0
+   ~ 0x00432840
+   ~ 0x00432850
+   ~ 0x00432ce0
+   A 0x00433230
+   A 0x004333c0
+   A 0x00434180
+   ~ 0x00434490
+   A 0x004344c0
+   ~ 0x00434640
+   ~ 0x004349b0
+   ~ 0x00434ac0
+   ~ 0x00434bf0
+   A 0x00434c40
+   A 0x00435650
+   A 0x00435810
+   A 0x00435a10
+   A 0x00435d20
+   A 0x00436060
+   ~ 0x004362a0
+   ~ 0x00436380
+   ~ 0x004363c0
+   ~ 0x004363d0
+   ~ 0x00436450
+   ~ 0x004364a0
+   ~ 0x004364b0
+   ~ 0x00436900
+   ~ 0x00436d40
+
+## ObjGen_PPC_EABI.c: band 0x004b28d0-0x004b5b70  (24 anchored / 50 total)
+   A 0x004b28d0
+   ~ 0x004b2950
+   ~ 0x004b2a60
+   A 0x004b2bd0
+   A 0x004b2c00
+   ~ 0x004b2de0
+   A 0x004b2ef0
+   A 0x004b2f40
+   A 0x004b2ff0
+   ~ 0x004b3030
+   A 0x004b3040
+   A 0x004b34d0
+   A 0x004b3500
+   A 0x004b3570
+   A 0x004b3600
+   A 0x004b38a0
+   A 0x004b38e0
+   A 0x004b3a00
+   A 0x004b3a20
+   A 0x004b3c20
+   ~ 0x004b3d20
+   ~ 0x004b3f30
+   ~ 0x004b40e0
+   A 0x004b4180
+   A 0x004b4390
+   A 0x004b43f0
+   A 0x004b4670
+   ~ 0x004b46f0
+   ~ 0x004b4b10
+   ~ 0x004b4f10
+   ~ 0x004b4f80
+   ~ 0x004b5000
+   ~ 0x004b51c0
+   ~ 0x004b5240
+   A 0x004b5270
+   A 0x004b53d0
+   ~ 0x004b5410
+   ~ 0x004b54a0
+   ~ 0x004b5530
+   ~ 0x004b5560
+   ~ 0x004b55e0
+   A 0x004b55f0
+   A 0x004b5660
+   ~ 0x004b5740
+   ~ 0x004b5750
+   ~ 0x004b5760
+   ~ 0x004b5790
+   ~ 0x004b5870
+   ~ 0x004b5970
+   ~ 0x004b59a0
+
+## COptimizer.c: band 0x004fd9d0-0x004fe710  (5 anchored / 18 total)
+   A 0x004fd9d0
+   ~ 0x004fda80
+   ~ 0x004fdb70
+   ~ 0x004fdbf0
+   A 0x004fdc60
+   A 0x004fdd40
+   A 0x004fdea0
+   ~ 0x004fdf00
+   A 0x004fe040
+   ~ 0x004fe130
+   ~ 0x004fe380
+   ~ 0x004fe3c0
+   ~ 0x004fe440
+   ~ 0x004fe470
+   ~ 0x004fe4d0
+   ~ 0x004fe520
+   ~ 0x004fe550
+   ~ 0x004fe610
+
+## IrOptimizer.c: band 0x0042dde0-0x0042ebb0  (4 anchored / 6 total)
+   A 0x0042dde0
+   A 0x0042e400
+   A 0x0042e680
+   A 0x0042e8e0
+   ~ 0x0042e980
+   ~ 0x0042ea20
+
+## CIRTransform.c: band 0x0052baf0-0x0052bf70  (1 anchored / 13 total)
+   A 0x0052baf0
+   ~ 0x0052bd20
+   ~ 0x0052bd30
+   ~ 0x0052bd40
+   ~ 0x0052bd70
+   ~ 0x0052bdb0
+   ~ 0x0052bdd0
+   ~ 0x0052bdf0
+   ~ 0x0052be20
+   ~ 0x0052be50
+   ~ 0x0052be80
+   ~ 0x0052bec0
+   ~ 0x0052bf50
+
+## IroFlowgraph.c: band 0x00471680-0x00471c20  (1 anchored / 2 total)
+   A 0x00471680
+   ~ 0x00471b60
+
+## IroLinearForm.c: band 0x0046bef0-0x00470060  (16 anchored / 33 total)
+   A 0x0046bef0
+   A 0x0046c070
+   ~ 0x0046c1a0
+   A 0x0046c1e0
+   A 0x0046ca50
+   ~ 0x0046cd10
+   A 0x0046cd40
+   A 0x0046d490
+   A 0x0046d5e0
+   A 0x0046db40
+   A 0x0046e070
+   ~ 0x0046e320
+   A 0x0046e3d0
+   ~ 0x0046e680
+   ~ 0x0046e730
+   ~ 0x0046e850
+   ~ 0x0046e940
+   A 0x0046e9e0
+   A 0x0046eb20
+   A 0x0046ec80
+   ~ 0x0046ede0
+   ~ 0x0046ef40
+   ~ 0x0046efe0
+   A 0x0046f090
+   A 0x0046f1f0
+   A 0x0046f350
+   ~ 0x0046f560
+   ~ 0x0046f5f0
+   ~ 0x0046f680
+   ~ 0x0046f740
+   ~ 0x0046f7d0
+   ~ 0x0046f970
+   ~ 0x0046f9d0
+
+## IROUseDef.c: band 0x0045deb0-0x00461220  (5 anchored / 22 total)
+   A 0x0045deb0
+   ~ 0x0045e030
+   ~ 0x0045e190
+   A 0x0045e1c0
+   ~ 0x0045e250
+   ~ 0x0045e3b0
+   ~ 0x0045ebc0
+   ~ 0x0045ecc0
+   ~ 0x0045ed40
+   ~ 0x0045edd0
+   A 0x0045ee70
+   A 0x0045f1d0
+   ~ 0x0045f430
+   ~ 0x0045f720
+   ~ 0x0045fa70
+   ~ 0x00460150
+   ~ 0x004604f0
+   ~ 0x00460790
+   A 0x004608f0
+   ~ 0x00460a90
+   ~ 0x00460d90
+   ~ 0x00460e20
+
+## IroRangePropagation.c: band 0x0049ea50-0x0049f070  (2 anchored / 3 total)
+   A 0x0049ea50
+   A 0x0049ec80
+   ~ 0x0049eea0
+
+## VectorArraysToRegs.c: band 0x00577160-0x00577b40  (1 anchored / 6 total)
+   A 0x00577160
+   ~ 0x005772c0
+   ~ 0x00577340
+   ~ 0x00577540
+   ~ 0x00577720
+   ~ 0x00577990
+
+============================================================
+FULL TU LAYOUT (.c files, address order)
+============================================================
+  0x00407400-0x00408f50    30 funcs  Resources.c
+  0x00408f50-0x0040d973    84 funcs  CLPlugins.c
+  0x0040d973-0x0040ed20    19 funcs  ParserHelpers-cc.c
+  0x0040ed20-0x0040feb1    38 funcs  StringUtils.c
+  0x0040feb1-0x0040ff7c     3 funcs  Arguments.c
+  0x0040ff7c-0x00413790    87 funcs  Targets.c
+  0x00413790-0x00413a80     6 funcs  MsDos.c
+  0x00413a80-0x00415310    49 funcs  MacSpecs.c
+  0x00415310-0x004161d0    27 funcs  Files.c
+  0x004161d0-0x00417600    30 funcs  CLIO.c
+  0x00417600-0x00418310    15 funcs  CLPrefs.c
+  0x00418310-0x00418a10    13 funcs  CLLicenses.c
+  0x00418a10-0x00419e80    17 funcs  CLToolExec.c
+  0x00419e80-0x0041b340    16 funcs  CLProj.c
+  0x0041b340-0x0041c130     5 funcs  CLFileOps.c
+  0x0041c130-0x0041c97e    32 funcs  CLTarg.c
+  0x0041c97e-0x00422cc0   114 funcs  Option.c
+  0x00422cc0-0x00423ca0    12 funcs  MacFileTypes.c
+  0x00423ca0-0x00423f60    12 funcs  CLFiles.c
+  0x00423f60-0x00428550    41 funcs  CLOverlays.c
+  0x00428550-0x00428be0    17 funcs  CLAccessPaths.c
+  0x00428be0-0x00429070    14 funcs  CLSegs.c
+  0x00429070-0x00429b00    12 funcs  CLDependencies.c
+  0x00429b00-0x00429de0     6 funcs  CLWriteObjectFile.c
+  0x00429de0-0x0042bd4c    20 funcs  CLBrowser.c
+  0x0042bd4c-0x0042dde0    28 funcs  Parameter.c
+  0x0042dde0-0x0042ebb0     6 funcs  IrOptimizer.c
+  0x0042ebb0-0x00436e50    45 funcs  CodeGen.c
+  0x00436e50-0x004424e0   180 funcs  CPrep.c
+  0x004424e0-0x00444370    20 funcs  ELF_Endian.c
+  0x00444370-0x00458700    85 funcs  InstrSelection.c
+  0x00458700-0x0045deb0    22 funcs  IroTransform.c
+  0x0045deb0-0x00461220    22 funcs  IROUseDef.c
+  0x00461220-0x004637c0    27 funcs  IroVars.c
+  0x004637c0-0x004683a0    46 funcs  CError.c
+  0x004683a0-0x0046a360    40 funcs  IroUtil.c
+  0x0046a360-0x0046bef0    17 funcs  IroCSE.c
+  0x0046bef0-0x00470060    33 funcs  IroLinearForm.c
+  0x00470060-0x00471680    10 funcs  IroPropagate.c
+  0x00471680-0x00471c20     2 funcs  IroFlowgraph.c
+  0x00471c20-0x00471c20     0 funcs  IroPointerAnalysis.c AMBIG
+  0x00471c20-0x0049ea50   184 funcs  IroPointerAnalysisADTs.c
+  0x0049ea50-0x0049f070     3 funcs  IroRangePropagation.c
+  0x0049f070-0x004a1080    15 funcs  IroEmptyLoop.c
+  0x004a1080-0x004a5cf0    25 funcs  IroUnrollLoop.c
+  0x004a5cf0-0x004acba0    36 funcs  IroLoop.c
+  0x004acba0-0x004b28d0    25 funcs  InlineAsmPPC.c
+  0x004b28d0-0x004b5b70    50 funcs  ObjGen_PPC_EABI.c
+  0x004b5b70-0x004b5e00     4 funcs  PPCError.c
+  0x004b5e00-0x004bf320    87 funcs  CExpr2.c
+  0x004bf320-0x004c9590    94 funcs  CMachine.c
+  0x004c9590-0x004d0150    33 funcs  Intrinsics.c
+  0x004d0150-0x004d11b0    18 funcs  RegisterInfo.c
+  0x004d11b0-0x004d2120    20 funcs  BE_symbol.c
+  0x004d2120-0x004d7230    23 funcs  CPrepTokenizer.c
+  0x004d7230-0x004db8c0    65 funcs  CScope.c
+  0x004db8c0-0x004dda30    41 funcs  BE_elf.c
+  0x004dda30-0x004e0f60    25 funcs  TOC.c
+  0x004e0f60-0x004e4840    35 funcs  Operands.c
+  0x004e4840-0x004ea500    81 funcs  CParser.c
+  0x004ea500-0x004eba30    21 funcs  PCodeUtilities.c
+  0x004eba30-0x004ed340     4 funcs  PCodeAssembly.c
+  0x004ed340-0x004ef4b0     8 funcs  SFPE_PPC_EABI.c
+  0x004ef4b0-0x004f7150    49 funcs  CFunc.c
+  0x004f7150-0x004fa450    38 funcs  StackFrame.c
+  0x004fa450-0x004fb900     8 funcs  Switch.c
+  0x004fb900-0x004fd9d0    11 funcs  Exceptions.c
+  0x004fd9d0-0x004fe710    18 funcs  COptimizer.c
+  0x004fe710-0x00500c40    21 funcs  CMangler.c
+  0x00500c40-0x00508100    24 funcs  PCodeListing.c
+  0x00508100-0x00508680     5 funcs  Scheduler.c
+  0x00508680-0x00509010     8 funcs  Coloring.c
+  0x00509010-0x0050a6e0    15 funcs  ValueNumbering.c
+  0x0050a6e0-0x005100d0    43 funcs  CInit.c
+  0x005100d0-0x00511a30    10 funcs  StructMoves.c
+  0x00511a30-0x00513490    17 funcs  Alias.c
+  0x00513490-0x00514cf0    21 funcs  CBrowse.c
+  0x00514cf0-0x005162d0     7 funcs  CPreprocess.c
+  0x005162d0-0x0051ffc0    84 funcs  CPrec.c
+  0x0051ffc0-0x00523040    40 funcs  CException.c
+  0x00523040-0x00525f50    37 funcs  CSOM.c
+  0x00525f50-0x00529570    20 funcs  FuncLevelAsmPPC.c
+  0x00529570-0x00529be0     2 funcs  FunctionCalls.c
+  0x00529be0-0x0052baf0    21 funcs  PCodeInfo.c
+  0x0052baf0-0x0052bf70    13 funcs  CIRTransform.c
+  0x0052bf70-0x0052c440     4 funcs  IroBitVect.c
+  0x0052c440-0x00530a60    84 funcs  CClass.c
+  0x00530a60-0x00530c10     4 funcs  InlineAsm.c
+  0x00530c10-0x00533a20    24 funcs  CTemplateNew.c
+  0x00533a20-0x0053cd30    89 funcs  CDecl.c
+  0x0053cd30-0x00547f90    92 funcs  CExpr.c
+  0x00547f90-0x0054cb30    33 funcs  DWARF.c
+  0x0054cb30-0x00552300    32 funcs  CExprConvMatch.c
+  0x00552300-0x00556f10    48 funcs  CObjC.c
+  0x00556f10-0x00557160     2 funcs  CObjCModern.c
+  0x00557160-0x0055bcb0    38 funcs  CABI.c
+  0x0055bcb0-0x005624a0    55 funcs  CInline.c
+  0x005624a0-0x005658d0    41 funcs  CTemplateTools.c
+  0x005658d0-0x00567f10    25 funcs  CTemplateFunc.c
+  0x00567f10-0x0056ba20    39 funcs  CTemplateClass.c
+  0x0056ba20-0x0056d360    11 funcs  AddPropagation.c
+  0x0056d360-0x0056f3d0    19 funcs  LoopDetection.c
+  0x0056f3d0-0x00571730    20 funcs  CodeMotion.c
+  0x00571730-0x00572e90    17 funcs  StrengthReduction.c
+  0x00572e90-0x00577160    22 funcs  LoopOptimization.c
+  0x00577160-0x00577b40     6 funcs  VectorArraysToRegs.c
+  0x00577b40-0x0057b680     9 funcs  MachineSimulationAltiVec.c
+  0x0057b680-0x0057c290     3 funcs  InterferenceGraph.c
+  0x0057c290-0x0057d2a0    15 funcs  SpillCode.c
+  0x0057d2a0-0x0057e7c0    13 funcs  CRTTI.c
+  0x0057e7c0-0xc341a633    23 funcs  GCCInlineAsm.c
+
+============================================================
+ALL source files by assert-reference count
+============================================================
+   166 funcs   IroPointerAnalysisADTs.c
+    76 funcs   IroPointerAnalysis.c
+    43 funcs   CExpr.c
+    38 funcs   CInline.c
+    35 funcs   BitVector.h
+    30 funcs   CExpr2.c
+    25 funcs   InstrSelection.c
+    25 funcs   CTemplateTools.c
+    24 funcs   ObjGen_PPC_EABI.c
+    23 funcs   CClass.c
+    22 funcs   CPrec.c
+    20 funcs   CException.c
+    19 funcs   CBrowse.c
+    19 funcs   DWARF.c
+    18 funcs   CABI.c
+    17 funcs   CLOverlays.c
+    17 funcs   CScope.c
+    17 funcs   Operands.c
+    16 funcs   IroLinearForm.c
+    16 funcs   CMachine.c
+    16 funcs   CTemplateClass.c
+    13 funcs   CLPlugins.c
+    12 funcs   CodeGen.c
+    12 funcs   IroUtil.c
+    12 funcs   CDecl.c
+    12 funcs   CTemplateFunc.c
+    11 funcs   Intrinsics.c
+    11 funcs   CParser.c
+    11 funcs   CInit.c
+    11 funcs   CExprConvMatch.c
+    10 funcs   CError.c
+    10 funcs   StackFrame.c
+    10 funcs   CSOM.c
+     9 funcs   CLAccessPaths.c
+     9 funcs   TOC.c
+     9 funcs   CTemplateNew.c
+     8 funcs   CPrep.c
+     8 funcs   IroVars.c
+     8 funcs   IroCSE.c
+     8 funcs   CFunc.c
+     7 funcs   RegisterInfo.c
+     7 funcs   CMangler.c
+     7 funcs   Alias.c
+     7 funcs   PCodeInfo.c
+     7 funcs   CObjC.c
+     7 funcs   CodeMotion.c
+     6 funcs   InlineAsmPPC.c
+     6 funcs   PCodeUtilities.c
+     6 funcs   SFPE_PPC_EABI.c
+     6 funcs   StructMoves.c
+     6 funcs   LoopOptimization.c
+     5 funcs   CLFiles.c
+     5 funcs   CLSegs.c
+     5 funcs   IROUseDef.c
+     5 funcs   IroUnrollLoop.c
+     5 funcs   IroLoop.c
+     5 funcs   COptimizer.c
+     5 funcs   SpillCode.c
+     4 funcs   CLDropinCallbacks_V10.cpp
+     4 funcs   IrOptimizer.c
+     4 funcs   BE_symbol.c
+     4 funcs   BE_elf.c
+     4 funcs   Switch.c
+     3 funcs   CLLicenses.c
+     3 funcs   Option.c
+     3 funcs   IroEmptyLoop.c
+     3 funcs   PPCError.c
+     3 funcs   PCodeAssembly.c
+     3 funcs   Coloring.c
+     2 funcs   MacSpecs.c
+     2 funcs   CLToolExec.c
+     2 funcs   CLFileOps.c
+     2 funcs   CLCompilerLinkerDropin_V10.cpp
+     2 funcs   CLDependencies.c
+     2 funcs   CLBrowser.c
+     2 funcs   IroTransform.c
+     2 funcs   IroRangePropagation.c
+     2 funcs   IroFlowgraph.h
+     2 funcs   CPrepTokenizer.c
+     2 funcs   Exceptions.c
+     2 funcs   CPreprocess.c
+     2 funcs   InterferenceGraph.c
+     2 funcs   CRTTI.c
+     1 funcs   Resources.c
+     1 funcs   ParserHelpers-cc.c
+     1 funcs   StringUtils.c
+     1 funcs   Arguments.c
+     1 funcs   Targets.c
+     1 funcs   MsDos.c
+     1 funcs   Files.c
+     1 funcs   CLIO.c
+     1 funcs   CLPrefs.c
+     1 funcs   CLPluginRequests.cpp
+     1 funcs   CLProj.c
+     1 funcs   CLTarg.c
+     1 funcs   MacFileTypes.c
+     1 funcs   CLWriteObjectFile.c
+     1 funcs   Parameter.c
+     1 funcs   ELF_Endian.c
+     1 funcs   IroPropagate.c
+     1 funcs   IroFlowgraph.c
+     1 funcs   PCodeListing.c
+     1 funcs   Scheduler.c
+     1 funcs   ValueNumbering.c
+     1 funcs   FuncLevelAsmPPC.c
+     1 funcs   FunctionCalls.c
+     1 funcs   CIRTransform.c
+     1 funcs   IroBitVect.c
+     1 funcs   InlineAsm.c
+     1 funcs   CObjCModern.c
+     1 funcs   AddPropagation.c
+     1 funcs   LoopDetection.c
+     1 funcs   StrengthReduction.c
+     1 funcs   VectorArraysToRegs.c
+     1 funcs   MachineSimulationAltiVec.c
+     1 funcs   GCCInlineAsm.c

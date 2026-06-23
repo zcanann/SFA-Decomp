@@ -1,0 +1,503 @@
+
+build/compilers/GC/2.0/mwcceppc.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+00508100 <.text+0x107100>:
+  508100:	53                   	push   %ebx
+  508101:	56                   	push   %esi
+  508102:	57                   	push   %edi
+  508103:	55                   	push   %ebp
+  508104:	83 ec 08             	sub    $0x8,%esp
+  508107:	8b 5c 24 20          	mov    0x20(%esp),%ebx
+  50810b:	8b 6b 0c             	mov    0xc(%ebx),%ebp
+  50810e:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
+  508115:	00 
+  508116:	8d 75 24             	lea    0x24(%ebp),%esi
+  508119:	e9 a4 00 00 00       	jmp    0x5081c2
+  50811e:	89 c0                	mov    %eax,%eax
+  508120:	0f b6 06             	movzbl (%esi),%eax
+  508123:	83 f8 03             	cmp    $0x3,%eax
+  508126:	0f 87 8f 00 00 00    	ja     0x5081bb
+  50812c:	ff 24 85 d4 cb 5b 00 	jmp    *0x5bcbd4(,%eax,4)
+  508133:	66 8b 56 04          	mov    0x4(%esi),%dx
+  508137:	66 85 d2             	test   %dx,%dx
+  50813a:	7c 10                	jl     0x50814c
+  50813c:	0f be 46 01          	movsbl 0x1(%esi),%eax
+  508140:	0f bf ca             	movswl %dx,%ecx
+  508143:	3b 0c 85 04 9b 5e 00 	cmp    0x5e9b04(,%eax,4),%ecx
+  50814a:	7e 11                	jle    0x50815d
+  50814c:	68 d6 01 00 00       	push   $0x1d6
+  508151:	68 c8 cb 5b 00       	push   $0x5bcbc8
+  508156:	e8 05 b6 f5 ff       	call   0x463760
+  50815b:	59                   	pop    %ecx
+  50815c:	59                   	pop    %ecx
+  50815d:	80 3e 00             	cmpb   $0x0,(%esi)
+  508160:	75 21                	jne    0x508183
+  508162:	80 7e 01 04          	cmpb   $0x4,0x1(%esi)
+  508166:	75 1b                	jne    0x508183
+  508168:	0f bf 46 04          	movswl 0x4(%esi),%eax
+  50816c:	83 f8 02             	cmp    $0x2,%eax
+  50816f:	74 4a                	je     0x5081bb
+  508171:	83 f8 0d             	cmp    $0xd,%eax
+  508174:	74 45                	je     0x5081bb
+  508176:	85 c0                	test   %eax,%eax
+  508178:	75 09                	jne    0x508183
+  50817a:	0f b7 46 02          	movzwl 0x2(%esi),%eax
+  50817e:	83 e0 03             	and    $0x3,%eax
+  508181:	74 38                	je     0x5081bb
+  508183:	0f b7 46 02          	movzwl 0x2(%esi),%eax
+  508187:	83 e0 02             	and    $0x2,%eax
+  50818a:	50                   	push   %eax
+  50818b:	0f bf 7e 04          	movswl 0x4(%esi),%edi
+  50818f:	8d 3c bd 00 00 00 00 	lea    0x0(,%edi,4),%edi
+  508196:	0f be 46 01          	movsbl 0x1(%esi),%eax
+  50819a:	8b 14 85 7e 08 5e 00 	mov    0x5e087e(,%eax,4),%edx
+  5081a1:	01 fa                	add    %edi,%edx
+  5081a3:	52                   	push   %edx
+  5081a4:	8b 0c 85 6a 08 5e 00 	mov    0x5e086a(,%eax,4),%ecx
+  5081ab:	01 f9                	add    %edi,%ecx
+  5081ad:	51                   	push   %ecx
+  5081ae:	53                   	push   %ebx
+  5081af:	8a 46 01             	mov    0x1(%esi),%al
+  5081b2:	50                   	push   %eax
+  5081b3:	e8 48 02 00 00       	call   0x508400
+  5081b8:	83 c4 14             	add    $0x14,%esp
+  5081bb:	ff 44 24 04          	incl   0x4(%esp)
+  5081bf:	83 c6 0c             	add    $0xc,%esi
+  5081c2:	0f bf 45 22          	movswl 0x22(%ebp),%eax
+  5081c6:	39 44 24 04          	cmp    %eax,0x4(%esp)
+  5081ca:	0f 8c 50 ff ff ff    	jl     0x508120
+  5081d0:	8b 45 14             	mov    0x14(%ebp),%eax
+  5081d3:	89 c2                	mov    %eax,%edx
+  5081d5:	81 e2 02 00 02 00    	and    $0x20002,%edx
+  5081db:	74 53                	je     0x508230
+  5081dd:	8b 35 62 08 5e 00    	mov    0x5e0862,%esi
+  5081e3:	85 f6                	test   %esi,%esi
+  5081e5:	74 2b                	je     0x508212
+  5081e7:	8b 46 04             	mov    0x4(%esi),%eax
+  5081ea:	8b 48 0c             	mov    0xc(%eax),%ecx
+  5081ed:	51                   	push   %ecx
+  5081ee:	8b 43 0c             	mov    0xc(%ebx),%eax
+  5081f1:	50                   	push   %eax
+  5081f2:	e8 c9 9d 00 00       	call   0x511fc0
+  5081f7:	59                   	pop    %ecx
+  5081f8:	59                   	pop    %ecx
+  5081f9:	84 c0                	test   %al,%al
+  5081fb:	74 0f                	je     0x50820c
+  5081fd:	6a 01                	push   $0x1
+  5081ff:	8b 46 04             	mov    0x4(%esi),%eax
+  508202:	50                   	push   %eax
+  508203:	53                   	push   %ebx
+  508204:	e8 e7 02 00 00       	call   0x5084f0
+  508209:	83 c4 0c             	add    $0xc,%esp
+  50820c:	8b 36                	mov    (%esi),%esi
+  50820e:	85 f6                	test   %esi,%esi
+  508210:	75 d5                	jne    0x5081e7
+  508212:	6a 08                	push   $0x8
+  508214:	e8 c7 8a f3 ff       	call   0x440ce0
+  508219:	59                   	pop    %ecx
+  50821a:	89 58 04             	mov    %ebx,0x4(%eax)
+  50821d:	8b 15 66 08 5e 00    	mov    0x5e0866,%edx
+  508223:	89 10                	mov    %edx,(%eax)
+  508225:	a3 66 08 5e 00       	mov    %eax,0x5e0866
+  50822a:	eb 12                	jmp    0x50823e
+  50822c:	8d 44 20 00          	lea    0x0(%eax,%eiz,1),%eax
+  508230:	25 04 00 04 00       	and    $0x40004,%eax
+  508235:	74 07                	je     0x50823e
+  508237:	53                   	push   %ebx
+  508238:	e8 13 01 00 00       	call   0x508350
+  50823d:	59                   	pop    %ecx
+  50823e:	8b 45 14             	mov    0x14(%ebp),%eax
+  508241:	25 80 00 00 00       	and    $0x80,%eax
+  508246:	74 3b                	je     0x508283
+  508248:	8b 35 5a 08 5e 00    	mov    0x5e085a,%esi
+  50824e:	85 f6                	test   %esi,%esi
+  508250:	74 19                	je     0x50826b
+  508252:	8b 46 04             	mov    0x4(%esi),%eax
+  508255:	39 d8                	cmp    %ebx,%eax
+  508257:	74 0c                	je     0x508265
+  508259:	6a 00                	push   $0x0
+  50825b:	50                   	push   %eax
+  50825c:	53                   	push   %ebx
+  50825d:	e8 8e 02 00 00       	call   0x5084f0
+  508262:	83 c4 0c             	add    $0xc,%esp
+  508265:	8b 36                	mov    (%esi),%esi
+  508267:	85 f6                	test   %esi,%esi
+  508269:	75 e7                	jne    0x508252
+  50826b:	6a 08                	push   $0x8
+  50826d:	e8 6e 8a f3 ff       	call   0x440ce0
+  508272:	59                   	pop    %ecx
+  508273:	89 58 04             	mov    %ebx,0x4(%eax)
+  508276:	8b 35 5a 08 5e 00    	mov    0x5e085a,%esi
+  50827c:	89 30                	mov    %esi,(%eax)
+  50827e:	a3 5a 08 5e 00       	mov    %eax,0x5e085a
+  508283:	8b 45 14             	mov    0x14(%ebp),%eax
+  508286:	89 c1                	mov    %eax,%ecx
+  508288:	83 e1 08             	and    $0x8,%ecx
+  50828b:	83 c9 01             	or     $0x1,%ecx
+  50828e:	74 0a                	je     0x50829a
+  508290:	89 c2                	mov    %eax,%edx
+  508292:	81 e2 00 00 00 01    	and    $0x1000000,%edx
+  508298:	75 16                	jne    0x5082b0
+  50829a:	25 00 01 00 00       	and    $0x100,%eax
+  50829f:	75 0f                	jne    0x5082b0
+  5082a1:	55                   	push   %ebp
+  5082a2:	8b 35 50 08 5e 00    	mov    0x5e0850,%esi
+  5082a8:	ff 56 20             	call   *0x20(%esi)
+  5082ab:	59                   	pop    %ecx
+  5082ac:	85 c0                	test   %eax,%eax
+  5082ae:	74 32                	je     0x5082e2
+  5082b0:	8b 74 24 1c          	mov    0x1c(%esp),%esi
+  5082b4:	85 f6                	test   %esi,%esi
+  5082b6:	74 12                	je     0x5082ca
+  5082b8:	6a 00                	push   $0x0
+  5082ba:	56                   	push   %esi
+  5082bb:	53                   	push   %ebx
+  5082bc:	e8 2f 02 00 00       	call   0x5084f0
+  5082c1:	83 c4 0c             	add    $0xc,%esp
+  5082c4:	8b 36                	mov    (%esi),%esi
+  5082c6:	85 f6                	test   %esi,%esi
+  5082c8:	75 ee                	jne    0x5082b8
+  5082ca:	6a 08                	push   $0x8
+  5082cc:	e8 0f 8a f3 ff       	call   0x440ce0
+  5082d1:	59                   	pop    %ecx
+  5082d2:	89 58 04             	mov    %ebx,0x4(%eax)
+  5082d5:	8b 0d 5e 08 5e 00    	mov    0x5e085e,%ecx
+  5082db:	89 08                	mov    %ecx,(%eax)
+  5082dd:	a3 5e 08 5e 00       	mov    %eax,0x5e085e
+  5082e2:	83 3d 5e 08 5e 00 00 	cmpl   $0x0,0x5e085e
+  5082e9:	74 23                	je     0x50830e
+  5082eb:	8b 35 5e 08 5e 00    	mov    0x5e085e,%esi
+  5082f1:	85 f6                	test   %esi,%esi
+  5082f3:	74 19                	je     0x50830e
+  5082f5:	8b 46 04             	mov    0x4(%esi),%eax
+  5082f8:	39 d8                	cmp    %ebx,%eax
+  5082fa:	74 0c                	je     0x508308
+  5082fc:	6a 00                	push   $0x0
+  5082fe:	50                   	push   %eax
+  5082ff:	53                   	push   %ebx
+  508300:	e8 eb 01 00 00       	call   0x5084f0
+  508305:	83 c4 0c             	add    $0xc,%esp
+  508308:	8b 36                	mov    (%esi),%esi
+  50830a:	85 f6                	test   %esi,%esi
+  50830c:	75 e7                	jne    0x5082f5
+  50830e:	83 7b 08 00          	cmpl   $0x0,0x8(%ebx)
+  508312:	75 1a                	jne    0x50832e
+  508314:	83 3d 56 08 5e 00 00 	cmpl   $0x0,0x5e0856
+  50831b:	74 11                	je     0x50832e
+  50831d:	6a 00                	push   $0x0
+  50831f:	a1 56 08 5e 00       	mov    0x5e0856,%eax
+  508324:	50                   	push   %eax
+  508325:	53                   	push   %ebx
+  508326:	e8 c5 01 00 00       	call   0x5084f0
+  50832b:	83 c4 0c             	add    $0xc,%esp
+  50832e:	66 8b 43 16          	mov    0x16(%ebx),%ax
+  508332:	66 3b 05 54 08 5e 00 	cmp    0x5e0854,%ax
+  508339:	76 06                	jbe    0x508341
+  50833b:	66 a3 54 08 5e 00    	mov    %ax,0x5e0854
+  508341:	83 c4 08             	add    $0x8,%esp
+  508344:	5d                   	pop    %ebp
+  508345:	5f                   	pop    %edi
+  508346:	5e                   	pop    %esi
+  508347:	5b                   	pop    %ebx
+  508348:	c3                   	ret
+  508349:	00 00                	add    %al,(%eax)
+  50834b:	00 00                	add    %al,(%eax)
+  50834d:	00 00                	add    %al,(%eax)
+  50834f:	00 53 56             	add    %dl,0x56(%ebx)
+  508352:	8b 5c 24 0c          	mov    0xc(%esp),%ebx
+  508356:	8b 35 66 08 5e 00    	mov    0x5e0866,%esi
+  50835c:	85 f6                	test   %esi,%esi
+  50835e:	74 2b                	je     0x50838b
+  508360:	8b 46 04             	mov    0x4(%esi),%eax
+  508363:	8b 48 0c             	mov    0xc(%eax),%ecx
+  508366:	51                   	push   %ecx
+  508367:	8b 43 0c             	mov    0xc(%ebx),%eax
+  50836a:	50                   	push   %eax
+  50836b:	e8 50 9c 00 00       	call   0x511fc0
+  508370:	59                   	pop    %ecx
+  508371:	59                   	pop    %ecx
+  508372:	84 c0                	test   %al,%al
+  508374:	74 0f                	je     0x508385
+  508376:	6a 01                	push   $0x1
+  508378:	8b 46 04             	mov    0x4(%esi),%eax
+  50837b:	50                   	push   %eax
+  50837c:	53                   	push   %ebx
+  50837d:	e8 6e 01 00 00       	call   0x5084f0
+  508382:	83 c4 0c             	add    $0xc,%esp
+  508385:	8b 36                	mov    (%esi),%esi
+  508387:	85 f6                	test   %esi,%esi
+  508389:	75 d5                	jne    0x508360
+  50838b:	8b 35 62 08 5e 00    	mov    0x5e0862,%esi
+  508391:	85 f6                	test   %esi,%esi
+  508393:	74 2b                	je     0x5083c0
+  508395:	8b 46 04             	mov    0x4(%esi),%eax
+  508398:	8b 50 0c             	mov    0xc(%eax),%edx
+  50839b:	52                   	push   %edx
+  50839c:	8b 43 0c             	mov    0xc(%ebx),%eax
+  50839f:	50                   	push   %eax
+  5083a0:	e8 1b 9c 00 00       	call   0x511fc0
+  5083a5:	59                   	pop    %ecx
+  5083a6:	59                   	pop    %ecx
+  5083a7:	84 c0                	test   %al,%al
+  5083a9:	74 0f                	je     0x5083ba
+  5083ab:	6a 01                	push   $0x1
+  5083ad:	8b 46 04             	mov    0x4(%esi),%eax
+  5083b0:	50                   	push   %eax
+  5083b1:	53                   	push   %ebx
+  5083b2:	e8 39 01 00 00       	call   0x5084f0
+  5083b7:	83 c4 0c             	add    $0xc,%esp
+  5083ba:	8b 36                	mov    (%esi),%esi
+  5083bc:	85 f6                	test   %esi,%esi
+  5083be:	75 d5                	jne    0x508395
+  5083c0:	6a 08                	push   $0x8
+  5083c2:	e8 19 89 f3 ff       	call   0x440ce0
+  5083c7:	59                   	pop    %ecx
+  5083c8:	89 58 04             	mov    %ebx,0x4(%eax)
+  5083cb:	8b 0d 62 08 5e 00    	mov    0x5e0862,%ecx
+  5083d1:	89 08                	mov    %ecx,(%eax)
+  5083d3:	a3 62 08 5e 00       	mov    %eax,0x5e0862
+  5083d8:	8b 53 0c             	mov    0xc(%ebx),%edx
+  5083db:	8b 42 14             	mov    0x14(%edx),%eax
+  5083de:	25 00 00 04 00       	and    $0x40000,%eax
+  5083e3:	74 18                	je     0x5083fd
+  5083e5:	6a 08                	push   $0x8
+  5083e7:	e8 f4 88 f3 ff       	call   0x440ce0
+  5083ec:	59                   	pop    %ecx
+  5083ed:	89 58 04             	mov    %ebx,0x4(%eax)
+  5083f0:	8b 0d 66 08 5e 00    	mov    0x5e0866,%ecx
+  5083f6:	89 08                	mov    %ecx,(%eax)
+  5083f8:	a3 66 08 5e 00       	mov    %eax,0x5e0866
+  5083fd:	5e                   	pop    %esi
+  5083fe:	5b                   	pop    %ebx
+  5083ff:	c3                   	ret
+  508400:	53                   	push   %ebx
+  508401:	56                   	push   %esi
+  508402:	57                   	push   %edi
+  508403:	55                   	push   %ebp
+  508404:	8b 6c 24 18          	mov    0x18(%esp),%ebp
+  508408:	8b 74 24 1c          	mov    0x1c(%esp),%esi
+  50840c:	8b 5c 24 20          	mov    0x20(%esp),%ebx
+  508410:	83 7c 24 24 00       	cmpl   $0x0,0x24(%esp)
+  508415:	74 7a                	je     0x508491
+  508417:	8b 1b                	mov    (%ebx),%ebx
+  508419:	85 db                	test   %ebx,%ebx
+  50841b:	74 1c                	je     0x508439
+  50841d:	8d 40 00             	lea    0x0(%eax),%eax
+  508420:	8b 43 04             	mov    0x4(%ebx),%eax
+  508423:	39 e8                	cmp    %ebp,%eax
+  508425:	74 0c                	je     0x508433
+  508427:	6a 01                	push   $0x1
+  508429:	50                   	push   %eax
+  50842a:	55                   	push   %ebp
+  50842b:	e8 c0 00 00 00       	call   0x5084f0
+  508430:	83 c4 0c             	add    $0xc,%esp
+  508433:	8b 1b                	mov    (%ebx),%ebx
+  508435:	85 db                	test   %ebx,%ebx
+  508437:	75 e7                	jne    0x508420
+  508439:	8b 1e                	mov    (%esi),%ebx
+  50843b:	85 db                	test   %ebx,%ebx
+  50843d:	74 39                	je     0x508478
+  50843f:	90                   	nop
+  508440:	8b 7b 04             	mov    0x4(%ebx),%edi
+  508443:	39 ef                	cmp    %ebp,%edi
+  508445:	74 2b                	je     0x508472
+  508447:	b8 01 00 00 00       	mov    $0x1,%eax
+  50844c:	80 7c 24 14 00       	cmpb   $0x0,0x14(%esp)
+  508451:	74 14                	je     0x508467
+  508453:	31 c9                	xor    %ecx,%ecx
+  508455:	8b 15 50 08 5e 00    	mov    0x5e0850,%edx
+  50845b:	39 4a 04             	cmp    %ecx,0x4(%edx)
+  50845e:	75 01                	jne    0x508461
+  508460:	41                   	inc    %ecx
+  508461:	85 c9                	test   %ecx,%ecx
+  508463:	75 02                	jne    0x508467
+  508465:	31 c0                	xor    %eax,%eax
+  508467:	50                   	push   %eax
+  508468:	57                   	push   %edi
+  508469:	55                   	push   %ebp
+  50846a:	e8 81 00 00 00       	call   0x5084f0
+  50846f:	83 c4 0c             	add    $0xc,%esp
+  508472:	8b 1b                	mov    (%ebx),%ebx
+  508474:	85 db                	test   %ebx,%ebx
+  508476:	75 c8                	jne    0x508440
+  508478:	6a 08                	push   $0x8
+  50847a:	e8 61 88 f3 ff       	call   0x440ce0
+  50847f:	59                   	pop    %ecx
+  508480:	c7 00 00 00 00 00    	movl   $0x0,(%eax)
+  508486:	89 68 04             	mov    %ebp,0x4(%eax)
+  508489:	8b 2e                	mov    (%esi),%ebp
+  50848b:	89 28                	mov    %ebp,(%eax)
+  50848d:	89 06                	mov    %eax,(%esi)
+  50848f:	eb 55                	jmp    0x5084e6
+  508491:	8b 36                	mov    (%esi),%esi
+  508493:	85 f6                	test   %esi,%esi
+  508495:	74 38                	je     0x5084cf
+  508497:	8b 7e 04             	mov    0x4(%esi),%edi
+  50849a:	39 ef                	cmp    %ebp,%edi
+  50849c:	74 2b                	je     0x5084c9
+  50849e:	b8 01 00 00 00       	mov    $0x1,%eax
+  5084a3:	80 7c 24 14 00       	cmpb   $0x0,0x14(%esp)
+  5084a8:	74 14                	je     0x5084be
+  5084aa:	31 c9                	xor    %ecx,%ecx
+  5084ac:	8b 15 50 08 5e 00    	mov    0x5e0850,%edx
+  5084b2:	39 4a 04             	cmp    %ecx,0x4(%edx)
+  5084b5:	75 01                	jne    0x5084b8
+  5084b7:	41                   	inc    %ecx
+  5084b8:	85 c9                	test   %ecx,%ecx
+  5084ba:	75 02                	jne    0x5084be
+  5084bc:	31 c0                	xor    %eax,%eax
+  5084be:	50                   	push   %eax
+  5084bf:	57                   	push   %edi
+  5084c0:	55                   	push   %ebp
+  5084c1:	e8 2a 00 00 00       	call   0x5084f0
+  5084c6:	83 c4 0c             	add    $0xc,%esp
+  5084c9:	8b 36                	mov    (%esi),%esi
+  5084cb:	85 f6                	test   %esi,%esi
+  5084cd:	75 c8                	jne    0x508497
+  5084cf:	6a 08                	push   $0x8
+  5084d1:	e8 0a 88 f3 ff       	call   0x440ce0
+  5084d6:	59                   	pop    %ecx
+  5084d7:	c7 00 00 00 00 00    	movl   $0x0,(%eax)
+  5084dd:	89 68 04             	mov    %ebp,0x4(%eax)
+  5084e0:	8b 0b                	mov    (%ebx),%ecx
+  5084e2:	89 08                	mov    %ecx,(%eax)
+  5084e4:	89 03                	mov    %eax,(%ebx)
+  5084e6:	5d                   	pop    %ebp
+  5084e7:	5f                   	pop    %edi
+  5084e8:	5e                   	pop    %esi
+  5084e9:	5b                   	pop    %ebx
+  5084ea:	c3                   	ret
+  5084eb:	00 00                	add    %al,(%eax)
+  5084ed:	00 00                	add    %al,(%eax)
+  5084ef:	00 53 56             	add    %dl,0x56(%ebx)
+  5084f2:	57                   	push   %edi
+  5084f3:	55                   	push   %ebp
+  5084f4:	8b 74 24 14          	mov    0x14(%esp),%esi
+  5084f8:	8b 6c 24 18          	mov    0x18(%esp),%ebp
+  5084fc:	8b 5c 24 1c          	mov    0x1c(%esp),%ebx
+  508500:	39 ee                	cmp    %ebp,%esi
+  508502:	75 0c                	jne    0x508510
+  508504:	5d                   	pop    %ebp
+  508505:	5f                   	pop    %edi
+  508506:	5e                   	pop    %esi
+  508507:	5b                   	pop    %ebx
+  508508:	c3                   	ret
+  508509:	8d 84 20 00 00 00 00 	lea    0x0(%eax,%eiz,1),%eax
+  508510:	84 db                	test   %bl,%bl
+  508512:	74 0c                	je     0x508520
+  508514:	0f b7 7e 10          	movzwl 0x10(%esi),%edi
+  508518:	eb 08                	jmp    0x508522
+  50851a:	8d 80 00 00 00 00    	lea    0x0(%eax),%eax
+  508520:	31 ff                	xor    %edi,%edi
+  508522:	8b 56 08             	mov    0x8(%esi),%edx
+  508525:	85 d2                	test   %edx,%edx
+  508527:	74 3d                	je     0x508566
+  508529:	8d 84 20 00 00 00 00 	lea    0x0(%eax,%eiz,1),%eax
+  508530:	39 6a 04             	cmp    %ebp,0x4(%edx)
+  508533:	75 2b                	jne    0x508560
+  508535:	0f b7 42 08          	movzwl 0x8(%edx),%eax
+  508539:	39 f8                	cmp    %edi,%eax
+  50853b:	7d 1a                	jge    0x508557
+  50853d:	66 89 7a 08          	mov    %di,0x8(%edx)
+  508541:	0f b7 5a 08          	movzwl 0x8(%edx),%ebx
+  508545:	0f b7 45 16          	movzwl 0x16(%ebp),%eax
+  508549:	01 c3                	add    %eax,%ebx
+  50854b:	0f b7 46 16          	movzwl 0x16(%esi),%eax
+  50854f:	39 c3                	cmp    %eax,%ebx
+  508551:	7e 04                	jle    0x508557
+  508553:	66 89 5e 16          	mov    %bx,0x16(%esi)
+  508557:	5d                   	pop    %ebp
+  508558:	5f                   	pop    %edi
+  508559:	5e                   	pop    %esi
+  50855a:	5b                   	pop    %ebx
+  50855b:	c3                   	ret
+  50855c:	8d 44 20 00          	lea    0x0(%eax,%eiz,1),%eax
+  508560:	8b 12                	mov    (%edx),%edx
+  508562:	85 d2                	test   %edx,%edx
+  508564:	75 ca                	jne    0x508530
+  508566:	6a 0a                	push   $0xa
+  508568:	e8 73 87 f3 ff       	call   0x440ce0
+  50856d:	59                   	pop    %ecx
+  50856e:	89 68 04             	mov    %ebp,0x4(%eax)
+  508571:	8b 4e 08             	mov    0x8(%esi),%ecx
+  508574:	89 08                	mov    %ecx,(%eax)
+  508576:	89 46 08             	mov    %eax,0x8(%esi)
+  508579:	66 89 78 08          	mov    %di,0x8(%eax)
+  50857d:	84 db                	test   %bl,%bl
+  50857f:	74 1c                	je     0x50859d
+  508581:	8b 50 04             	mov    0x4(%eax),%edx
+  508584:	8b 4a 0c             	mov    0xc(%edx),%ecx
+  508587:	8b 79 14             	mov    0x14(%ecx),%edi
+  50858a:	83 e7 01             	and    $0x1,%edi
+  50858d:	74 0e                	je     0x50859d
+  50858f:	8b 15 50 08 5e 00    	mov    0x5e0850,%edx
+  508595:	66 8b 4a 08          	mov    0x8(%edx),%cx
+  508599:	66 01 48 08          	add    %cx,0x8(%eax)
+  50859d:	66 ff 45 18          	incw   0x18(%ebp)
+  5085a1:	0f b7 58 08          	movzwl 0x8(%eax),%ebx
+  5085a5:	0f b7 45 16          	movzwl 0x16(%ebp),%eax
+  5085a9:	01 c3                	add    %eax,%ebx
+  5085ab:	0f b7 46 16          	movzwl 0x16(%esi),%eax
+  5085af:	39 c3                	cmp    %eax,%ebx
+  5085b1:	7e 04                	jle    0x5085b7
+  5085b3:	66 89 5e 16          	mov    %bx,0x16(%esi)
+  5085b7:	5d                   	pop    %ebp
+  5085b8:	5f                   	pop    %edi
+  5085b9:	5e                   	pop    %esi
+  5085ba:	5b                   	pop    %ebx
+  5085bb:	c3                   	ret
+  5085bc:	00 00                	add    %al,(%eax)
+  5085be:	00 00                	add    %al,(%eax)
+  5085c0:	53                   	push   %ebx
+  5085c1:	55                   	push   %ebp
+  5085c2:	83 ec 08             	sub    $0x8,%esp
+  5085c5:	c6 44 24 04 00       	movb   $0x0,0x4(%esp)
+  5085ca:	80 7c 24 04 05       	cmpb   $0x5,0x4(%esp)
+  5085cf:	7d 71                	jge    0x508642
+  5085d1:	0f be 5c 24 04       	movsbl 0x4(%esp),%ebx
+  5085d6:	8b 04 9d 04 9b 5e 00 	mov    0x5e9b04(,%ebx,4),%eax
+  5085dd:	8d 04 85 00 00 00 00 	lea    0x0(,%eax,4),%eax
+  5085e4:	50                   	push   %eax
+  5085e5:	e8 f6 86 f3 ff       	call   0x440ce0
+  5085ea:	59                   	pop    %ecx
+  5085eb:	89 04 9d 7e 08 5e 00 	mov    %eax,0x5e087e(,%ebx,4)
+  5085f2:	8b 04 9d 04 9b 5e 00 	mov    0x5e9b04(,%ebx,4),%eax
+  5085f9:	8d 04 85 00 00 00 00 	lea    0x0(,%eax,4),%eax
+  508600:	50                   	push   %eax
+  508601:	e8 da 86 f3 ff       	call   0x440ce0
+  508606:	59                   	pop    %ecx
+  508607:	89 04 9d 6a 08 5e 00 	mov    %eax,0x5e086a(,%ebx,4)
+  50860e:	31 ed                	xor    %ebp,%ebp
+  508610:	eb 1c                	jmp    0x50862e
+  508612:	8b 14 9d 6a 08 5e 00 	mov    0x5e086a(,%ebx,4),%edx
+  508619:	c7 04 aa 00 00 00 00 	movl   $0x0,(%edx,%ebp,4)
+  508620:	8b 0c 9d 7e 08 5e 00 	mov    0x5e087e(,%ebx,4),%ecx
+  508627:	8b 04 aa             	mov    (%edx,%ebp,4),%eax
+  50862a:	89 04 a9             	mov    %eax,(%ecx,%ebp,4)
+  50862d:	45                   	inc    %ebp
+  50862e:	3b 2c 9d 04 9b 5e 00 	cmp    0x5e9b04(,%ebx,4),%ebp
+  508635:	7c db                	jl     0x508612
+  508637:	fe 44 24 04          	incb   0x4(%esp)
+  50863b:	80 7c 24 04 05       	cmpb   $0x5,0x4(%esp)
+  508640:	7c 8f                	jl     0x5085d1
+  508642:	c7 05 62 08 5e 00 00 	movl   $0x0,0x5e0862
+  508649:	00 00 00 
+  50864c:	a1 62 08 5e 00       	mov    0x5e0862,%eax
+  508651:	a3 66 08 5e 00       	mov    %eax,0x5e0866
+  508656:	c7 05 5e 08 5e 00 00 	movl   $0x0,0x5e085e
+  50865d:	00 00 00 
+  508660:	c7 05 5a 08 5e 00 00 	movl   $0x0,0x5e085a
+  508667:	00 00 00 
+  50866a:	66 c7 05 54 08 5e 00 	movw   $0x0,0x5e0854
+  508671:	00 00 
+  508673:	83 c4 08             	add    $0x8,%esp
+  508676:	5d                   	pop    %ebp
+  508677:	5b                   	pop    %ebx
+  508678:	c3                   	ret
+  508679:	00 00                	add    %al,(%eax)
+  50867b:	00 00                	add    %al,(%eax)
+  50867d:	00 00                	add    %al,(%eax)
+	...
