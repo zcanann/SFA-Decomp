@@ -1,18 +1,31 @@
 /*
- * DLL 0x18F - ECSH shrine animated object controller.
+ * DLL 0x18F - ECSH (EarthWalker/Cape Krazoa) Shrine: the "Test of Observation".
  *
- * Drives the floating shrine object at the EarthWalker/Cape Shrine: a
- * bobbing model that orbits/wobbles toward the player (fn_801C5990) and
- * fades with distance, plus its anim-event callback (fn_801C5CE4) which
- * reacts to torch signals, sets camera vars, and toggles the model light.
+ * This is a 3-round cup shell-game. The Krazoa Spirit hides in one of 6 cups
+ * (the golden urns; the cup objects themselves are DLL 0x190 ECSH_Cup). Each
+ * round the cups shuffle around the player - faster and with more shuffle
+ * patterns each round - and the player walks up to a cup to make their guess.
+ * A wrong guess teleports the player out; a correct guess advances to the next
+ * round; 3 correct guesses in a row obtains the spirit (sets
+ * GAMEBIT_K1_SPIRIT_COLLECTED via anim-event 7 in fn_801C5CE4).
  *
- * ecsh_shrine_update is the main state machine: it runs a six-slot rune
- * puzzle whose working set lives in a shared scratch buffer (EcshPuzzleState
- * at gEcShShrinePuzzleState - color floats plus current/next rune arrays that are
- * rotated/swapped per round), and sequences the screen transitions, object
- * sequences and looping SFX as the puzzle advances through its phases.
- * Several render/query helpers (modelMtxFn, func0E, render2, func0B,
- * setScale) read the active instance through the gEcShShrineActiveObject singleton.
+ * Drives the floating shrine object: a bobbing model that orbits/wobbles
+ * toward the player (fn_801C5990) and fades with distance, plus its anim-event
+ * callback (fn_801C5CE4) which reacts to torch signals, sets camera vars, and
+ * toggles the model light.
+ *
+ * ecsh_shrine_update is the main state machine. The puzzle working set lives in
+ * a shared scratch buffer (EcshPuzzleState at gEcShShrinePuzzleState - the 6
+ * cups' (x,z) positions plus current/next slot->cup maps that are rotated or
+ * swapped per shuffle step). It sequences the screen transitions, object
+ * sequences and looping SFX as the test advances through its phases.
+ *
+ * Helpers, all reaching the active instance through the gEcShShrineActiveObject
+ * singleton: ecsh_shrine_getPhaseAndSpiritCup (outputs animState + spiritCup),
+ * ecsh_shrine_checkCupPick (the PICK CHECK: sets matchFlag = guess==spiritCup,
+ * called from ecsh_cup_update), ecsh_shrine_getCupPos / ecsh_shrine_setCupPos
+ * (read/write a cup's (x,z) via the slot->cup map gEcShShrineCupSlotMap), plus
+ * modelMtxFn and setScale.
  *
  * The DLL owns a cluster of GameBits set on init/free/transition (0xefa,
  * 0xcbb, 0xa7f, 0xb9d, 0x129, 0x143, ...). It also reads the entrance-intro
@@ -63,7 +76,7 @@ extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern EcshIntPair lbl_803E8470;
-extern s16 gEcShShrineRuneIndexTable[];
+extern s16 gEcShShrineCupSlotMap[];
 extern void Music_Trigger(int id, int arg);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
@@ -236,25 +249,25 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
     return 0;
 }
 
-void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
+void ecsh_shrine_getPhaseAndSpiritCup(int* p1, u8* p2)
 {
     extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
-    *p2 = ((EcshShrineState*)inner)->targetSlot;
+    *p2 = ((EcshShrineState*)inner)->spiritCup;
     *p1 = ((EcshShrineState*)inner)->animState;
 }
 
-void ecsh_shrine_func0E(u8 v)
+void ecsh_shrine_checkCupPick(u8 v)
 {
     extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL) return;
     inner = ((GameObject*)obj)->extra;
-    if ((u32)(u8)v == ((EcshShrineState*)inner)->targetSlot)
+    if ((u32)(u8)v == ((EcshShrineState*)inner)->spiritCup)
     {
         ((EcshShrineState*)inner)->matchFlag = 1;
     }
@@ -270,26 +283,26 @@ typedef struct EcshRenderPair
     f32 b;
 } EcshRenderPair;
 
-void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
+void ecsh_shrine_setCupPos(u8 idx, f32 a, f32 b)
 {
     extern EcshRenderPair gEcShShrinePuzzleState[];
     extern int gEcShShrineActiveObject;
     int v;
     if ((int*)gEcShShrineActiveObject == NULL) return;
-    v = gEcShShrineRuneIndexTable[idx];
+    v = gEcShShrineCupSlotMap[idx];
     gEcShShrinePuzzleState[v].a = a;
     gEcShShrinePuzzleState[v].b = b;
 }
 
-void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
+void ecsh_shrine_getCupPos(u8 idx, f32* out1, f32* out2)
 {
     extern u8 gEcShShrinePuzzleState[];
     extern void* gEcShShrineActiveObject;
     int j;
     if (gEcShShrineActiveObject == NULL) return;
-    j = gEcShShrineRuneIndexTable[idx];
+    j = gEcShShrineCupSlotMap[idx];
     *out1 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8);
-    j = gEcShShrineRuneIndexTable[idx];
+    j = gEcShShrineCupSlotMap[idx];
     *out2 = *(f32*)((char*)gEcShShrinePuzzleState + j * 8 + 4);
 }
 
@@ -359,11 +372,31 @@ void ecsh_shrine_free(int* obj)
 
 typedef struct EcshPuzzleState
 {
-    f32 f[12]; /* 0x00 */
-    s16 cur[6]; /* 0x30 */
-    s16 next[7]; /* 0x3c */
+    f32 cupPos[12]; /* 0x00: the 6 cups' (x,z) positions */
+    s16 cupSlotMap[6]; /* 0x30: current slot->cup index map (== gEcShShrineCupSlotMap) */
+    s16 nextCupSlotMap[7]; /* 0x3c: next round's slot->cup map */
 } EcshPuzzleState;
 
+/*
+ * Main state machine.
+ *
+ * Outer phase = the raw byte sub[0x2F] (== EcshShrineState.testPhase):
+ *   0  idle / waiting for player to engage
+ *   1  intro screen transition
+ *   2  spirit hides + pick the target cup (spiritCup = randomGetRange(0,5))
+ *   3  round 1 (5 shuffles, pattern randomGetRange(0,1))
+ *   4  round 2 (7 shuffles, pattern randomGetRange(0,5))
+ *   5  round 3 (9 shuffles, pattern randomGetRange(0,7))
+ *   6  win cutscene (all 3 rounds passed)
+ *   7  reset step
+ *   8  reset step (clears state back to idle)
+ *   10 fail / teleport player out
+ *
+ * Inner shuffle-animation state = EcshShrineState.animState (0x24), values 0-9:
+ *   drives the per-step cup shuffle animation and SFX; transitions cycle
+ *   8->2->5/0->1->4->2 etc. as each shuffle iteration plays out, with 7/9
+ *   used as round-entry/exit and 5 as the guess-resolution state.
+ */
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
@@ -430,6 +463,14 @@ void ecsh_shrine_update(s16* obj)
     }
     else
     {
+        /*
+         * Raw byte accesses below (kept raw to preserve codegen):
+         *   sub[0x2e] = EcshShrineState.spiritCup        (target cup, 0-5)
+         *   sub[0x2f] = EcshShrineState.testPhase        (outer phase, see above)
+         *   sub[0x30] = EcshShrineState.transitionReady  (intro transition done)
+         *   sub[0x31] = pad31 scratch flag (one-shot "near-miss SFX played" latch
+         *               for the current shuffle step; no named field in the struct)
+         */
         switch (sub[0x2f])
         {
         case 0:
@@ -450,26 +491,26 @@ void ecsh_shrine_update(s16* obj)
                 Music_Trigger(0xd8, 1);
                 {
                     f32 fz = lbl_803E4FCC;
-                    ps->f[0] = fz;
-                    ps->f[1] = fz;
-                    ps->f[2] = fz;
-                    ps->f[3] = fz;
-                    ps->f[4] = fz;
-                    ps->f[5] = fz;
-                    ps->f[6] = fz;
-                    ps->f[7] = fz;
-                    ps->f[8] = fz;
-                    ps->f[9] = fz;
-                    ps->f[10] = fz;
-                    ps->f[11] = fz;
+                    ps->cupPos[0] = fz;
+                    ps->cupPos[1] = fz;
+                    ps->cupPos[2] = fz;
+                    ps->cupPos[3] = fz;
+                    ps->cupPos[4] = fz;
+                    ps->cupPos[5] = fz;
+                    ps->cupPos[6] = fz;
+                    ps->cupPos[7] = fz;
+                    ps->cupPos[8] = fz;
+                    ps->cupPos[9] = fz;
+                    ps->cupPos[10] = fz;
+                    ps->cupPos[11] = fz;
                 }
-                ps->cur[0] = ps->next[0];
-                ps->cur[1] = ps->next[1];
-                ps->cur[2] = ps->next[2];
-                ps->cur[3] = ps->next[3];
-                ps->cur[4] = ps->next[4];
-                ps->cur[5] = ps->next[5];
-                ps->next[0] = ps->next[6];
+                ps->cupSlotMap[0] = ps->nextCupSlotMap[0];
+                ps->cupSlotMap[1] = ps->nextCupSlotMap[1];
+                ps->cupSlotMap[2] = ps->nextCupSlotMap[2];
+                ps->cupSlotMap[3] = ps->nextCupSlotMap[3];
+                ps->cupSlotMap[4] = ps->nextCupSlotMap[4];
+                ps->cupSlotMap[5] = ps->nextCupSlotMap[5];
+                ps->nextCupSlotMap[0] = ps->nextCupSlotMap[6];
             }
             break;
         case 1:
@@ -490,7 +531,7 @@ void ecsh_shrine_update(s16* obj)
             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD4;
             ((EcshShrineState*)sub)->animState = 8;
             ((EcshShrineState*)sub)->animTimer = lbl_803E4FD8;
-            ((EcshShrineState*)sub)->timer = 5;
+            ((EcshShrineState*)sub)->shuffleCount = 5;
             gv = randomGetRange(0, 5);
             sub[0x2e] = gv;
             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -535,8 +576,8 @@ void ecsh_shrine_update(s16* obj)
                     ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FDC;
                     break;
                 case 2:
-                    ((EcshShrineState*)sub)->timer -= 1;
-                    if (((EcshShrineState*)sub)->timer <= 0)
+                    ((EcshShrineState*)sub)->shuffleCount -= 1;
+                    if (((EcshShrineState*)sub)->shuffleCount <= 0)
                     {
                         Sfx_PlayFromObject(0, 0x3a8);
                         ((EcshShrineState*)sub)->animState = 5;
@@ -577,10 +618,10 @@ void ecsh_shrine_update(s16* obj)
                         {
                             for (n = 0; n < 6; n++)
                             {
-                                ps->cur[n] += 1;
-                                if (ps->cur[n] > 5)
+                                ps->cupSlotMap[n] += 1;
+                                if (ps->cupSlotMap[n] > 5)
                                 {
-                                    ps->cur[n] = 0;
+                                    ps->cupSlotMap[n] = 0;
                                 }
                             }
                         }
@@ -588,66 +629,66 @@ void ecsh_shrine_update(s16* obj)
                         {
                             for (n = 0; n < 6; n++)
                             {
-                                ps->cur[n] -= 1;
-                                if (ps->cur[n] < 0)
+                                ps->cupSlotMap[n] -= 1;
+                                if (ps->cupSlotMap[n] < 0)
                                 {
-                                    ps->cur[n] = 5;
+                                    ps->cupSlotMap[n] = 5;
                                 }
                             }
                         }
                         else if (pick == 2)
                         {
-                            sc = ps->cur[0];
-                            ps->cur[0] = ps->cur[2];
-                            ps->cur[2] = ps->cur[4];
-                            ps->cur[4] = sc;
+                            sc = ps->cupSlotMap[0];
+                            ps->cupSlotMap[0] = ps->cupSlotMap[2];
+                            ps->cupSlotMap[2] = ps->cupSlotMap[4];
+                            ps->cupSlotMap[4] = sc;
                         }
                         else if (pick == 3)
                         {
-                            sc = ps->cur[4];
-                            ps->cur[4] = ps->cur[0];
-                            ps->cur[0] = ps->cur[2];
-                            ps->cur[2] = sc;
+                            sc = ps->cupSlotMap[4];
+                            ps->cupSlotMap[4] = ps->cupSlotMap[0];
+                            ps->cupSlotMap[0] = ps->cupSlotMap[2];
+                            ps->cupSlotMap[2] = sc;
                         }
                         else if (pick == 4)
                         {
-                            sc = ps->cur[1];
-                            ps->cur[1] = ps->cur[3];
-                            ps->cur[3] = ps->cur[5];
-                            ps->cur[5] = sc;
+                            sc = ps->cupSlotMap[1];
+                            ps->cupSlotMap[1] = ps->cupSlotMap[3];
+                            ps->cupSlotMap[3] = ps->cupSlotMap[5];
+                            ps->cupSlotMap[5] = sc;
                         }
                         else if (pick == 5)
                         {
-                            sc = ps->cur[5];
-                            ps->cur[5] = ps->cur[1];
-                            ps->cur[1] = ps->cur[3];
-                            ps->cur[3] = sc;
+                            sc = ps->cupSlotMap[5];
+                            ps->cupSlotMap[5] = ps->cupSlotMap[1];
+                            ps->cupSlotMap[1] = ps->cupSlotMap[3];
+                            ps->cupSlotMap[3] = sc;
                         }
                         else if (pick == 6)
                         {
-                            t[0] = ps->f[2];
-                            t[1] = ps->f[3];
-                            ps->f[2] = ps->f[4];
-                            ps->f[3] = ps->f[5];
-                            ps->f[4] = ps->f[8];
-                            ps->f[5] = ps->f[9];
-                            ps->f[8] = ps->f[10];
-                            ps->f[9] = ps->f[11];
-                            ps->f[10] = t[0];
-                            ps->f[11] = t[1];
+                            t[0] = ps->cupPos[2];
+                            t[1] = ps->cupPos[3];
+                            ps->cupPos[2] = ps->cupPos[4];
+                            ps->cupPos[3] = ps->cupPos[5];
+                            ps->cupPos[4] = ps->cupPos[8];
+                            ps->cupPos[5] = ps->cupPos[9];
+                            ps->cupPos[8] = ps->cupPos[10];
+                            ps->cupPos[9] = ps->cupPos[11];
+                            ps->cupPos[10] = t[0];
+                            ps->cupPos[11] = t[1];
                         }
                         else if (pick == 7)
                         {
-                            t[0] = ps->f[10];
-                            t[1] = ps->f[11];
-                            ps->f[10] = ps->f[8];
-                            ps->f[11] = ps->f[9];
-                            ps->f[8] = ps->f[4];
-                            ps->f[9] = ps->f[5];
-                            ps->f[4] = ps->f[2];
-                            ps->f[5] = ps->f[3];
-                            ps->f[2] = t[0];
-                            ps->f[3] = t[1];
+                            t[0] = ps->cupPos[10];
+                            t[1] = ps->cupPos[11];
+                            ps->cupPos[10] = ps->cupPos[8];
+                            ps->cupPos[11] = ps->cupPos[9];
+                            ps->cupPos[8] = ps->cupPos[4];
+                            ps->cupPos[9] = ps->cupPos[5];
+                            ps->cupPos[4] = ps->cupPos[2];
+                            ps->cupPos[5] = ps->cupPos[3];
+                            ps->cupPos[2] = t[0];
+                            ps->cupPos[3] = t[1];
                         }
                     }
                     break;
@@ -683,7 +724,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animState = 9;
                             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FEC;
                             ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
-                            ((EcshShrineState*)sub)->timer = 7;
+                            ((EcshShrineState*)sub)->shuffleCount = 7;
                             ((EcshShrineState*)sub)->matchFlag = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -696,7 +737,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animState = 9;
                             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FEC;
                             ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
-                            ((EcshShrineState*)sub)->timer = 9;
+                            ((EcshShrineState*)sub)->shuffleCount = 9;
                             ((EcshShrineState*)sub)->matchFlag = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -755,7 +796,7 @@ void ecsh_shrine_update(s16* obj)
             sub[0x2f] = 0;
             ((EcshShrineState*)sub)->animTimer = z;
             ((EcshShrineState*)sub)->unk20 = 0;
-            ((EcshShrineState*)sub)->timer = 0;
+            ((EcshShrineState*)sub)->shuffleCount = 0;
             ((EcshShrineState*)sub)->animState = 0;
             ((EcshShrineState*)sub)->matchFlag = -1;
             sub[0x2e] = 0;
@@ -791,14 +832,14 @@ void ecsh_shrine_init(s16* obj, s8* def)
     lbl_803DDBC0 = 0;
     gEcShShrineActiveObject = 0;
     *obj = (s16)((s32)def[0x18] << 8);
-    ((EcshShrineState*)sub)->unk2F = 0;
-    ((EcshShrineState*)sub)->unk30 = 0;
+    ((EcshShrineState*)sub)->testPhase = 0;
+    ((EcshShrineState*)sub)->transitionReady = 0;
     ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
     ((EcshShrineState*)sub)->unk20 = 0;
-    ((EcshShrineState*)sub)->timer = 0;
+    ((EcshShrineState*)sub)->shuffleCount = 0;
     ((EcshShrineState*)sub)->animState = 0;
     ((EcshShrineState*)sub)->matchFlag = -1;
-    ((EcshShrineState*)sub)->targetSlot = 0;
+    ((EcshShrineState*)sub)->spiritCup = 0;
     ((EcshShrineState*)sub)->gameBitLatchState = 0;
     ((GameObject*)obj)->animEventCallback = fn_801C5CE4;
     ObjMsg_AllocQueue(obj, 4);

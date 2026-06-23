@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void ecsh_shrine_func0B(u8 idx, f32 *out1, f32 *out2);
+void ecsh_shrine_getCupPos(u8 idx, f32 *out1, f32 *out2);
 void ecsh_shrine_setScale(s16 *out);
 void FUN_801c5f28(u16 *param_1);
 void FUN_801c61f4(u32 param_1,u32 param_2,ObjAnimUpdateState *animUpdate);
