@@ -3104,11 +3104,11 @@ void pauseMenuFn_80129ee0(void)
                     {
                         lbl_803DD824[lbl_803DD8E0].id = 0x4b;
                         lbl_803DD824[lbl_803DD7D6].id = 0x4a;
-                        *(u8*)((char*)&lbl_803DD824[lbl_803DD7D6] + 0x8) = 0x14;
-                        *(u8*)((char*)&lbl_803DD824[lbl_803DD7D6] + 0x9) = 0x10;
+                        lbl_803DD824[lbl_803DD7D6].trailX = 0x14;
+                        lbl_803DD824[lbl_803DD7D6].trailY = 0x10;
                     }
-                    *(u8*)((char*)&lbl_803DD824[lbl_803DD8E0] + 0x8) = 0x1a;
-                    *(u8*)((char*)&lbl_803DD824[lbl_803DD8E0] + 0x9) = 0x18;
+                    lbl_803DD824[lbl_803DD8E0].trailX = 0x1a;
+                    lbl_803DD824[lbl_803DD8E0].trailY = 0x18;
                 }
                 else
                 {
