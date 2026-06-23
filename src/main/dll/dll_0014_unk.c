@@ -1536,7 +1536,7 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
     do
     {
         RomCurve_getAdjacentWindow(curve, adjacentWindow);
-        projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
+        projected = RomCurve_projectPointToAdjacentWindow(adjacentWindow, x, y, z,
                                                           &lateralOffset, &verticalOffset, &phase);
         if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
             verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654)
