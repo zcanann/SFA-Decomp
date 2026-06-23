@@ -30,7 +30,7 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
     work.localX = work.sampleX;
     work.localY = work.sampleY;
     work.localZ = work.sampleZ;
-    Obj_TransformLocalPointToWorld((double)work.sampleX, (double)work.sampleY, (double)work.sampleZ,
+    Obj_TransformLocalPointToWorld((double)work.localX, (double)work.localY, (double)work.localZ,
                                    &work.worldX, &work.worldY, work.worldZ, work.model);
     work.targetObj = target;
     handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
