@@ -72,8 +72,8 @@ extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int prim, int fmt, int n);
 extern int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
+extern const f32 lbl_803E5AE8;
+extern const f32 lbl_803E5AEC;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
@@ -87,7 +87,6 @@ void fn_801E991C(int p1, char* table)
     f32* verts;
     char* p;
     int i;
-    f32 u1, u0;
     int j;
 
     color = lbl_803E5AE4;
@@ -116,26 +115,24 @@ void fn_801E991C(int p1, char* table)
         {
             j = 0;
             verts = *(f32**)(p + 0x4c8);
-            do
+            while (j < *(s16*)(p + 0x4cc) - 2)
             {
-                u0 = lbl_803E5AE8;
-                u1 = lbl_803E5AEC;
                 GXBegin(0x80, 2, 4);
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0xc));
-                shTexCoord2f32(u0, u0);
+                shTexCoord2f32(lbl_803E5AE8, lbl_803E5AE8);
                 shPos3f32(verts[4] - playerMapOffsetX, verts[4 + 1], verts[4 + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x1c));
-                shTexCoord2f32(u1, u0);
+                shTexCoord2f32(lbl_803E5AEC, lbl_803E5AE8);
                 shPos3f32(verts[0xc] - playerMapOffsetX, verts[0xc + 1], verts[0xc + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x3c));
-                shTexCoord2f32(u1, u0);
+                shTexCoord2f32(lbl_803E5AEC, lbl_803E5AE8);
                 shPos3f32(verts[8] - playerMapOffsetX, verts[8 + 1], verts[8 + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0x2c));
-                shTexCoord2f32(u0, u0);
+                shTexCoord2f32(lbl_803E5AE8, lbl_803E5AE8);
                 verts += 8;
                 j += 2;
-            } while (j < *(s16*)(p + 0x4cc) - 2);
+            }
         }
         p += 8;
     }
