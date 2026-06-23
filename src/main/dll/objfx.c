@@ -296,7 +296,6 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
     params.f8 = f8val;
     params.f6 = tA.v[kind];
     params.pad[1] = 0x3c;
-    fdelta = angBase - lo;
     for (i = 0; i < 4; i++)
     {
         u16 val;
@@ -346,6 +345,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
             params.vec[0] = lbl_803DF354 - f30 * (f30 * (f30 * (f30 * f30)));
             break;
         }
+        fdelta = angBase - lo;
         params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
         vecRotateZXY(rvec, params.vec);
         {
