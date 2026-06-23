@@ -203,7 +203,6 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
 void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 {
     int i;
-    u8* cur;
     u8* neighbour;
     int idx;
     int forward;
@@ -221,10 +220,9 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
     out[1] = *(int*)(node + NODE_SELF_ID);
 
     i = 0;
-    cur = node;
     for (; i < 5; i++)
     {
-        idx = *(int*)(cur + NODE_NEIGHBOURS);
+        idx = *(int*)(node + i * 4 + NODE_NEIGHBOURS);
         if (idx > -1)
         {
             neighbour = (u8*)(*gRomCurveInterface)->getById(idx);
@@ -235,16 +233,15 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
                     forward = (s8)node[NODE_DIR_MASK] & (1 << i);
                     if (forward != 0)
                     {
-                        out[0] = *(int*)(cur + NODE_NEIGHBOURS);
+                        out[0] = *(int*)(node + i * 4 + NODE_NEIGHBOURS);
                     }
                     else if (forward == 0)
                     {
-                        out[2] = *(int*)(cur + NODE_NEIGHBOURS);
+                        out[2] = *(int*)(node + i * 4 + NODE_NEIGHBOURS);
                     }
                 }
             }
         }
-        cur += 4;
     }
 
     idx = out[2];
@@ -256,10 +253,9 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
             if (node2[NODE_TAG0] == tag || node2[NODE_TAG1] == tag || node2[NODE_TAG2] == tag)
             {
                 i = 0;
-                cur = node2;
                 for (; i < 5; i++)
                 {
-                    idx = *(int*)(cur + NODE_NEIGHBOURS);
+                    idx = *(int*)(node2 + i * 4 + NODE_NEIGHBOURS);
                     if (idx > -1)
                     {
                         forward = (s8)node2[NODE_DIR_MASK] & (1 << i);
@@ -270,12 +266,11 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
                             {
                                 if (neighbour[NODE_TAG0] == tag || neighbour[NODE_TAG1] == tag || neighbour[NODE_TAG2] == tag)
                                 {
-                                    out[3] = *(int*)(cur + NODE_NEIGHBOURS);
+                                    out[3] = *(int*)(node2 + i * 4 + NODE_NEIGHBOURS);
                                 }
                             }
                         }
                     }
-                    cur += 4;
                 }
             }
         }

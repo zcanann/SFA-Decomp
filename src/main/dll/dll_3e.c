@@ -222,23 +222,31 @@ void PlayControl(void)
     {
         if (lbl_803A5D60.audioExists != 0)
         {
-            if ((((lbl_803A5D60.curVideoNumber + lbl_803A5D60.initReadFrame) %
-                    lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
-                (lbl_803A5D60.dispTextureSet == NULL) &&
-                (((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-                    lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
-                (decodedTexture == NULL))
+            modResult = (lbl_803A5D60.curVideoNumber + lbl_803A5D60.initReadFrame) %
+                lbl_803A5D60.header.mNumFrames;
+            if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) &&
+                (lbl_803A5D60.dispTextureSet == NULL))
+            {
+                modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+                    lbl_803A5D60.header.mNumFrames;
+                if ((modResult == (lbl_803A5D60.header.mNumFrames - 1)) &&
+                    (decodedTexture == NULL))
+                {
+                    lbl_803A5D60.internalState = 3;
+                    lbl_803A5D60.state = 3;
+                }
+            }
+        }
+        else
+        {
+            u32 numFrames;
+            modResult = (lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+                (numFrames = lbl_803A5D60.header.mNumFrames);
+            if ((modResult == (numFrames - 1)) && (decodedTexture == NULL))
             {
                 lbl_803A5D60.internalState = 3;
                 lbl_803A5D60.state = 3;
             }
-        }
-        else if ((((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
-                lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
-            (decodedTexture == NULL))
-        {
-            lbl_803A5D60.internalState = 3;
-            lbl_803A5D60.state = 3;
         }
     }
     else
@@ -408,31 +416,25 @@ void PrepareReady(void* msg)
 
 void InitAllMessageQueue(void)
 {
-    char* buf;
-    s32 i;
+    AttractMoviePlayer* buf;
     char* q;
-    s32 j;
+    s32 i;
 
-    buf = (char*)&lbl_803A5D60;
-    if (lbl_803A5D60.isOnMemory == 0)
+    buf = &lbl_803A5D60;
+    if (buf->isOnMemory == 0)
     {
-        i = 0;
-        do
+        for (i = 0; i < 10; i++)
         {
-            PushFreeReadBuffer((OSMessage)(buf + 0xf4));
-            buf += sizeof(AttractMovieReadBuffer);
-            i++;
+            PushFreeReadBuffer((OSMessage)&buf->readBuffer[i]);
         }
-        while (i < 10);
     }
 
     i = 0;
-    q = (char*)&lbl_803A5D60;
-    buf = q;
+    buf = &lbl_803A5D60;
+    q = (char*)buf;
     do
     {
-        PushFreeTextureSet((OSMessage)(buf + 0x144));
-        buf += sizeof(AttractMovieTextureSet);
+        PushFreeTextureSet((OSMessage)&buf->textureSet[i]);
         i++;
     }
     while (i < 3);
@@ -442,7 +444,7 @@ void InitAllMessageQueue(void)
         i = 0;
         do
         {
-            PushFreeAudioBuffer(q + 0x174);
+            PushFreeAudioBuffer((OSMessage)(q + 0x174));
             q += sizeof(AttractMovieAudioBuffer);
             i++;
         }
