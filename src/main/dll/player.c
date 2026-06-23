@@ -4471,7 +4471,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             {
                 continue;
             }
-            if (fn_802A8350(obj, state, (int)&buf, state + 0x4e4, i == 3) == 0)
+            if (player_probeClimbable(obj, state, (int)&buf, state + 0x4e4, i == 3) == 0)
             {
                 continue;
             }
@@ -18647,7 +18647,32 @@ int fn_80295A04(int obj, int sel)
     return 0;
 }
 
-int fn_802A8350(int obj, int p4, int src, int dst, int flag)
+/*
+ * Mask passed to hitDetectFn_80065e50 / hitDetectFn_800691c0 to pick what a
+ * collision query tests. Low byte = behaviour flags (decoded from
+ * hitDetectFn_800691c0); the high bits select the map-surface type (consumed by
+ * mapLoadBlocksFn_800685cc; per-type meanings not yet decoded). Only the climb
+ * mask is meaning-confirmed so far (live-verified ladder probe); the others are
+ * left as raw literals at their call sites until traced.
+ */
+enum HitQueryMask {
+    HITQUERY_TEST_OBJECT_HITBOXES  = 0x01, /* also test reset-object hitboxes, not just map triangles */
+    HITQUERY_REUSE_TRIANGLE_BUFFER = 0x10, /* reuse the loaded map-triangle buffer (skip block reload) */
+    HITQUERY_SKIP_CULLED_OBJECTS   = 0x80, /* skip objects whose modelInstance flag 0x01000000 is set */
+    /* Composite the player's ladder/climb probe issues: a climb-typed map
+     * surface, map triangles only (no 0x01 -> no object hitboxes). Live-verified
+     * in Dolphin as the query that detects a ladder and seeds the climb state. */
+    HITQUERY_CLIMB_SURFACE = 0x204,
+};
+
+/*
+ * Probe for a climbable map surface (a HITQUERY_CLIMB_SURFACE collision hit) and,
+ * if one is found near the player, seed the climb state at `dst` (PlayerState's
+ * climb block: climbStepCount = surface height / step size, climbStepHeight,
+ * climbStep) and return 1; return 0 when no ladder is in range. Called per
+ * candidate direction from the player move handler.
+ */
+int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
 {
     int** hits;
     f32 pos[3];
@@ -18719,7 +18744,7 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
     PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
     y = *(f32*)((char*)src + 0x3c);
     pos[1] = y;
-    count = hitDetectFn_80065e50(obj, &hits, 0, 0x204, pos[0], y, pos[2]);
+    count = hitDetectFn_80065e50(obj, &hits, 0, HITQUERY_CLIMB_SURFACE, pos[0], y, pos[2]);
 
     minDist = lbl_803E80AC;
     best = -1;
