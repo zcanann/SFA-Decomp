@@ -19,7 +19,7 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern float mathSinf(float x);
-extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
+extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
 extern u8 hudTextures[0x198];
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
@@ -224,7 +224,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 }
                 if (lbl_803DD7C8 != 0)
                 {
-                    pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, (s16)(0x96 - lbl_803DD75C), x,
+                    pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, 0x96 - lbl_803DD75C, x,
                                          lbl_803E209C, 0);
                 }
             }
