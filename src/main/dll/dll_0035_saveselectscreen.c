@@ -282,13 +282,11 @@ void saveSelectGoToChapterSelect(void)
             if (i > *(u8*)((char*)saveFileSelect_saveSlots +
                 saveFileSelect_currentSlotIndex * 36 + 33))
             {
-                *(u16*)((char*)panel->entries + off + 22) =
-                    (u16)(*(u16*)((char*)panel->entries + off + 22) | 0x4000);
+                *(u16*)((char*)panel->entries + off + 22) |= 0x4000;
             }
             else
             {
-                *(u16*)((char*)panel->entries + off + 22) =
-                    (u16)(*(u16*)((char*)panel->entries + off + 22) & ~0x4000);
+                *(u16*)((char*)panel->entries + off + 22) &= ~0x4000;
             }
             if (i <= *(u8*)((char*)saveFileSelect_saveSlots +
                 saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5)
