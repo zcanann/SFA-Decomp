@@ -2317,8 +2317,9 @@ void Obj_FreeObject(u8* obj)
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
         i = 0;
+        n = gObjCount;
         p = gObjList;
-        for (n = gObjCount; n > 0; n--)
+        for (; n > 0; n--)
         {
             if (*p == obj)
             {
