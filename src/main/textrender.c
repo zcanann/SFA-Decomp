@@ -2994,6 +2994,7 @@ void subtitleBuildLineTable(void)
     int count;
     int args[3];
     f32 ftotal;
+    void** blk;
 
     total = 0;
     curTime = lbl_803DE730;
@@ -3026,13 +3027,16 @@ void subtitleBuildLineTable(void)
             {
                 s->lines[gSubtitleLineCount++] = strLines[k];
             }
-            if (s->blocks[gSubtitleBlockCount] != NULL)
+            blk = (void**)((u8*)s + gSubtitleBlockCount * 4);
+            if (*blk != NULL)
             {
                 oldDelay = mmSetFreeDelay(0);
-                mm_free(s->blocks[gSubtitleBlockCount]);
+                blk = (void**)((u8*)s + gSubtitleBlockCount * 4);
+                mm_free(*blk);
                 mmSetFreeDelay(oldDelay);
             }
-            s->blocks[gSubtitleBlockCount++] = strLines;
+            blk = (void**)((u8*)s + gSubtitleBlockCount++ * 4);
+            *blk = strLines;
         }
     }
     for (k = 0; k < gSubtitleLineCount; k++)
