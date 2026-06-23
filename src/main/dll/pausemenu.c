@@ -472,7 +472,10 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 gameTextFn_80016810(0x440, 0, 0x78);
                 gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
                 acc = (bc - b8) + 5;
-                sprintf(buf, &lbl_803DBB58, (u8) * (u8*)(statusTable + lbl_803DD756 * 8 + 0x214));
+                {
+                    u8* p214 = statusTable + 0x214;
+                    sprintf(buf, &lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
+                }
                 gameTextShowStr(buf, 0x79, 0, acc + 0x78);
                 gameTextMeasureFn_800163c4(buf, 0x79, 0, 0, &b14, &b10, &bc, &b8);
                 acc = ((bc - b8) + acc) + 5;
