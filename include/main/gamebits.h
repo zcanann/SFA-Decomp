@@ -29,17 +29,6 @@ enum GameBitId {
     GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE = 0x9ad,
 
     /*
-     * Set when the player collects the K1 Krazoa Spirit at its shrine (the ECSH
-     * shrine, dll_018F, anim-event 7 - the same event that calls
-     * fn_80296518(player, 0x08, 1) to set the spirit bit in playerStatus). It is
-     * one of the three guard bits (with 0x316 and 0x511) that disable the K1
-     * Krazoa Shrine return transporter pad (dll_012C destinationId 0x43F83 ->
-     * map 0x21): once the spirit is taken, the pad locks out. Live-verified that
-     * setting this disable path kills the pad's A-prompt.
-     */
-    GAMEBIT_K1_SPIRIT_COLLECTED = 0xBA8,
-
-    /*
      * Entrance-intro signal for the K1 (ECSH) Krazoa Shrine. The shrine-entrance
      * trigger volume sets this (via objInterpretSeq, dll_0126) when the player
      * crosses it; ecsh_shrine_update polls it once and, the first frame it sees
@@ -103,6 +92,17 @@ enum GameBitId {
      * the seal. Per-placement - the K1 gate's value.
      */
     GAMEBIT_K1_LIFEFORCE_GATE_OPENED = 0xa5e,
+
+    /*
+     * Set when the player collects the K1 Krazoa Spirit at its shrine (the ECSH
+     * shrine, dll_018F, anim-event 7 - the same event that calls
+     * fn_80296518(player, 0x08, 1) to set the spirit bit in playerStatus). It is
+     * one of the three guard bits (with 0x316 and 0x511) that disable the K1
+     * Krazoa Shrine return transporter pad (dll_012C destinationId 0x43F83 ->
+     * map 0x21): once the spirit is taken, the pad locks out. Live-verified that
+     * setting this disable path kills the pad's A-prompt.
+     */
+    GAMEBIT_K1_SPIRIT_COLLECTED = 0xBA8,
 
     /*
      * K1 Krazoa Spirit DEPOSITED at its place in Krazoa Palace (on Warlock
