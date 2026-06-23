@@ -103,9 +103,8 @@ priority ranking. Status (capstone i386, controllight unit):
   (`node+0x24 &2`, class match `node+0x25`), it propagates the surviving register into the
   coalesced web's `+0x04` and sets web flags `0x20`/`0x10`. So the move's coalesce flag is set
   UPSTREAM; 0x508c10 only applies it.
-- **NOT YET READ:** the coalesce DECISION (which moves get the `node+0x24 &2` flag) is made
-  before 0x508c10 — most likely inside the per-class colorer `0x4fe520` (called at 0x50871a,
-  before the apply). Disassembling 0x4fe520 is the next step to read WHY a copy is/ isn't merged.
+- **DECISION:** set upstream in the colorer `0x4fe520` (called at 0x50871a, before the apply) —
+  fully disassembled below.
 - **RETRACTED:** `0x508f10` (degree-vs-threshold bucket walk, `web+0x0c` vs `0x5e08a4`) did NOT
   execute on the controllight compile (bp 0x508f2c never hit) — so it's a CONDITIONAL path
   (likely spill bucketing), NOT the main coalesce decision. Earlier claim corrected.
