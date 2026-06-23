@@ -2269,8 +2269,7 @@ int fn_802A1CA8(int obj, int state)
         ((GameObject*)obj)->anim.activeMove = -1;
         ((PlayerState*)inner)->climbingUp = 0;
         ((PlayerState*)inner)->climbStartY = ((PlayerState*)inner)->climbTargetY;
-        spd = lbl_803E7EA4;
-        ph = spd;
+        ph = spd = lbl_803E7EA4;
         if ((gPlayerCurrentMoveId & 1) != 0)
         {
             gPlayerCurrentMoveId = 1;
