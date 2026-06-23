@@ -64,11 +64,12 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     } buf;
     u8* base = (u8*)(int)gDll79EffectModelBlock;
     GfxCmd* e;
-    GfxCmd* entries = buf.entries;
+    GfxCmd* entries;
     int ret;
+    ret = 0;
+    entries = buf.entries;
     e = entries;
     e = (GfxCmd*)((int)e | (int)entries);
-    ret = 0;
     if (variant == 0)
     {
         e[0].layer = 0;
