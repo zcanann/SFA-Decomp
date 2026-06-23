@@ -37,7 +37,7 @@ typedef struct
 } TrickyNibblePair;
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (*(s32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
