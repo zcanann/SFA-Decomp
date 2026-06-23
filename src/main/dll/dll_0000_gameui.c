@@ -2750,14 +2750,14 @@ void pauseMenuFn_80129ee0(void)
             u8 i;
             for (i = 0; i < 0x2d; i++)
             {
-                if (cell == tbl->cellMap[i].cell)
+                if (cell == *(u16*)((u8*)&tbl->cellMap[0].cell + i * 4))
                 {
                     break;
                 }
             }
             if (i != 0x2d)
             {
-                int code = tbl->cellMap[i].code;
+                int code = *(u16*)((u8*)&tbl->cellMap[0].code + i * 4);
                 lbl_803DD8E0 = code;
                 GameBit_Set(code + 0xf10, 1);
             }
@@ -3156,15 +3156,15 @@ void pauseMenuFn_80129ee0(void)
                 {
                     u8 i = 0;
                     int k = 0;
-                    while (tbl->list740[(u8)k] > -1)
+                    while (*(int*)((u8*)&tbl->list740[0] + (u8)k * 4) > -1)
                     {
                         s16 texId = 0xbf0;
                         if (GameBit_Get(0xbf0))
                         {
                             texId = tbl->alts[(u8)k].alt;
                         }
-                        hud->textures3A8[i] = (int)textureLoadAsset(texId);
-                        hud->texIds358[i] = texId;
+                        *(int*)((u8*)&hud->textures3A8[0] + i * 4) = (int)textureLoadAsset(texId);
+                        *(s16*)((u8*)&hud->texIds358[0] + i * 2) = texId;
                         i++;
                         k++;
                     }
@@ -3179,8 +3179,8 @@ void pauseMenuFn_80129ee0(void)
                         {
                             texId = tbl->items[(u8)k].alt;
                         }
-                        hud->textures3A8[(u8)i] = (int)textureLoadAsset(texId);
-                        hud->texIds358[(u8)i] = texId;
+                        *(int*)((u8*)&hud->textures3A8[0] + (u8)i * 4) = (int)textureLoadAsset(texId);
+                        *(s16*)((u8*)&hud->texIds358[0] + (u8)i * 2) = texId;
                         i++;
                         k++;
                     }
@@ -3215,11 +3215,11 @@ void pauseMenuFn_80129ee0(void)
                 u8 k;
                 for (k = 0; k < 0x28; k++)
                 {
-                    if ((void*)hud->textures3A8[k] != NULL)
+                    if (*(void**)((u8*)&hud->textures3A8[0] + k * 4) != NULL)
                     {
-                        textureFree((void*)hud->textures3A8[k]);
-                        hud->textures3A8[k] = 0;
-                        hud->texIds358[k] = 0;
+                        textureFree(*(void**)((u8*)&hud->textures3A8[0] + k * 4));
+                        *(int*)((u8*)&hud->textures3A8[0] + k * 4) = 0;
+                        *(s16*)((u8*)&hud->texIds358[0] + k * 2) = 0;
                     }
                 }
                 pauseMenuSetupTitle(0x3a9, 0, 2, 0);
