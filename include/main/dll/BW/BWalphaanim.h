@@ -84,7 +84,7 @@ typedef struct SnowBikeState {
     u8 pad442[0x6];
     s16 unk448;             /* 0x448 */
     s16 gameBitId;             /* 0x44a: gamebit id */
-    s16 unk44C;             /* 0x44c */
+    s16 steerAngleDeg;      /* 0x44c: stick steering angle in deg (getAngle/gSnowBikeBamToDeg); gates partfx in angle bands */
     u8 pad44E[0x2];
     u32 buttonsJustPressed;             /* 0x450 */
     u32 buttonsJustPressedIfNotBusy;             /* 0x454 */

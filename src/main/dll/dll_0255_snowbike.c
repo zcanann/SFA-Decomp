@@ -1021,7 +1021,7 @@ void SnowBike_update(int obj)
                 ((SnowBikeState*)state)->buttonsHeld = getButtonsHeld(0);
                 ((SnowBikeState*)state)->buttonsJustPressed = getButtonsJustPressed(0);
                 ((SnowBikeState*)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);
-                ((SnowBikeState*)state)->unk44C = (f32)(u16)
+                ((SnowBikeState*)state)->steerAngleDeg = (f32)(u16)
                 getAngle(((SnowBikeState*)state)->stickX, (f32) - (int)((SnowBikeState*)state)->stickY) / gSnowBikeBamToDeg;
                 ((SnowBikeState*)state)->stickX = ((SnowBikeState*)state)->stickX / lbl_803E5B6C;
                 v = ((SnowBikeState*)state)->stickX;

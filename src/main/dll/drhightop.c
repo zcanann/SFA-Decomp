@@ -680,7 +680,7 @@ void fn_801EBD60(int obj, int stateRaw)
             break;
         }
 
-        motionFrame = st->unk44C;
+        motionFrame = st->steerAngleDeg;
         if (((motionFrame >= 0x1e) && (motionFrame <= 0x3c)) ||
             ((motionFrame >= 0x12c) && (motionFrame <= 0x14a)))
         {
