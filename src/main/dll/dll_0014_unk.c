@@ -1974,13 +1974,12 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         {
             if (*previousCurveId == candidateIds[i])
             {
-                for (j = i; j < candidateCount - 1; j++)
+                for (; i < candidateCount - 1; i++)
                 {
-                    candidateIds[j] = candidateIds[j + 1];
-                    candidateDistances[j] = candidateDistances[j + 1];
+                    candidateIds[i] = candidateIds[i + 1];
+                    candidateDistances[i] = candidateDistances[i + 1];
                 }
                 candidateCount--;
-                i--;
             }
         }
 
