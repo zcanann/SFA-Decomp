@@ -1364,8 +1364,11 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
 
     found = 0;
     cam = Camera_GetCurrentViewSlot();
-    lbl_803DD29A = *(s16*)cam;
-    gPlayerShadowCamRotY = ((GameObject*)cam)->anim.rotY;
+    {
+        s16 camRotY = ((GameObject*)cam)->anim.rotY;
+        lbl_803DD29A = *(s16*)cam;
+        gPlayerShadowCamRotY = camRotY;
+    }
     dx = ((GameObject*)cam)->anim.localPosX - ((GameObject*)ctx)->anim.localPosX;
     dy = ((GameObject*)cam)->anim.localPosY - ((GameObject*)ctx)->anim.localPosY;
     dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
