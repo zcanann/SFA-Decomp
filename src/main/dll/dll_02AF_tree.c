@@ -284,6 +284,7 @@ void tree_update(int obj)
     int hit;
     int player;
     int i;
+    u16 playerDist;
     f32 dx, dz, dist;
     int hitObject;      /* out-params required by API, not read by this fn */
     int hitSphereIndex; /* out-params required by API, not read by this fn */
@@ -373,8 +374,8 @@ void tree_update(int obj)
             dx = object->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = object->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
-            hit = dist;
-            if ((u16)hit < state->proximityRadius)
+            playerDist = dist;
+            if (playerDist < state->proximityRadius)
             {
                 if ((state->flags & TREE_FLAG_PLAYER_PROXIMITY_BURST) &&
                     state->lastPlayerDistance >= state->proximityRadius &&
@@ -402,7 +403,7 @@ void tree_update(int obj)
                     state->ambientBurstTimer += lbl_803E7324;
                 }
             }
-            state->lastPlayerDistance = hit;
+            state->lastPlayerDistance = playerDist;
         }
     }
 }
