@@ -1214,7 +1214,7 @@ int fn_80136E00(int p1, u8* p)
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma ppc_unroll_speculative off
+#pragma ppc_unroll_speculative on
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
 void fn_80137DF8(void)
@@ -1382,12 +1382,11 @@ void fn_80137DF8(void)
                 cnt = rows - 0x3b;
                 if (rows > 0x3b)
                 {
-                    do
+                    for (; cnt != 0; cnt--)
                     {
                         *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = 0xc080;
                         b += 0x500;
                     }
-                    while (--cnt != 0);
                 }
             }
             y += 0x51;
