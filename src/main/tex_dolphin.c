@@ -648,9 +648,9 @@ end:
 
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
-    int texId;
-    int* layer;
     int layerIdx;
+    int* layer;
+    int texId;
     float* texMtx;
     int* ovr;
     int overrideIdx;
@@ -757,10 +757,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         for (layerIdx = 0; layerIdx < (int)(u32) * (u8*)(shader + 0x41); layerIdx = layerIdx + 1)
         {
             layer = (int*)Shader_getLayer(shader, layerIdx);
-            texId = *layer;
             if (*(void**)layer != NULL)
             {
-                int texVal = texId;
+                int texVal = *layer;
                 layerByte = *(u8*)((int)layer + 5);
                 if (layerByte != '\0')
                 {
@@ -772,12 +771,14 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                             ((int)layerByte == (int)*(u8*)((int)ovr + 0xe)))
                         {
                             texId = textureCrazyPointerFollowFn_80054c30(texVal, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
-                            break;
+                            goto layerN_done;
                         }
                         ovr = ovr + 4;
                         overrideIdx = overrideIdx + 1;
                     }
                 }
+                texId = texVal;
+            layerN_done:
                 if (*(u8*)((int)layer + 6) != 0xff)
                 {
                     int mtxOff = (u32) * (u8*)((int)layer + 6) * 0x10;
