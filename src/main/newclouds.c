@@ -307,20 +307,18 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
             break;
         }
     }
-    p = gNewClouds[i];
-    if (p == NULL || i == 8)
+    if (gNewClouds[i] == NULL || i == 8)
     {
         return;
     }
-    if (cloudId != ((NewCloud*)p)->cloudId)
+    if (cloudId != ((NewCloud*)gNewClouds[i])->cloudId)
     {
         debugPrintf(sSnowKillSnowCloudInvalidCloudId, cloudId);
         return;
     }
-    ((NewCloud*)p)->despawning = 1;
-    p = gNewClouds[i];
-    ((NewCloud*)p)->flakeDrainRate =
-        -((f32)flag / (f32) * (int*)((char*)p + 0x13fc));
+    ((NewCloud*)gNewClouds[i])->despawning = 1;
+    ((NewCloud*)gNewClouds[i])->flakeDrainRate =
+        -((f32)flag / (f32) * (int*)((char*)gNewClouds[i] + 0x13fc));
 }
 
 extern int ObjModel_GetRenderOp(int model, int x);
