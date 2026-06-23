@@ -12385,9 +12385,9 @@ void fn_802AC32C(int p1, int p2, int p3)
             *(s16*)&((PlayerState*)p3)->unk4A0 = (s16)randomGetRange(0x78, 0xf0);
             *(s16*)&((PlayerState*)p3)->unk4A2 = (s16)randomGetRange(0, 0x28);
         }
-        delta = (u16)getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
-                              -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) -
-            (u16) * (s16*)((char*)p3 + 0x478);
+        delta = getAngle(-(*(f32*)((char*)near + 0xc) - ((GameObject*)p1)->anim.localPosX),
+                         -(*(f32*)((char*)near + 0x14) - ((GameObject*)p1)->anim.localPosZ)) & 0xffff;
+        delta -= (u16) * (s16*)((char*)p3 + 0x478);
         if (delta > 0x8000)
         {
             delta -= 0xFFFF;
