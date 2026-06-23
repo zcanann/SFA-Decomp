@@ -12969,20 +12969,19 @@ void fn_802AF7F8(int obj, int state)
         ((PlayerState*)state)->stateTimer = ((PlayerState*)state)->stateTimer - timeDelta;
         if (((PlayerState*)state)->stateTimer <= lbl_803E7EA4)
         {
-            int r35c = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
-            if (*(s16*)((char*)r35c + 4) < 0)
+            if (*(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4) < 0)
             {
                 v = 0;
             }
-            else if (*(s16*)((char*)r35c + 4) > *(s16*)((char*)r35c + 6))
+            else if (*(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4) > *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 6))
             {
-                v = *(s16*)((char*)r35c + 6);
+                v = *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 6);
             }
             else
             {
-                v = *(s16*)((char*)r35c + 4);
+                v = *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4);
             }
-            *(s16*)((char*)r35c + 4) = v;
+            *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 4) = v;
             ((PlayerState*)state)->stateTimer = lbl_803E7EDC;
         }
         break;
