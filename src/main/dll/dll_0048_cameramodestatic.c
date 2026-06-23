@@ -138,11 +138,11 @@ void CameraModeStatic_update(short* camObj)
 
 void CameraModeStatic_init(u8* cam, int p2, int* p3)
 {
+    u8* setup;
     GameObject* state;
     GameObject* best;
-    u8* setup;
     s16 yaw;
-    int pitch;
+    s16 pitch;
     s16 roll;
     f32 dx;
     f32 dy;
@@ -175,9 +175,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
         yaw = ((CameraModeStaticPlacement*)setup)->yaw + 0x8000;
     }
     if ((setup[27] & 2) != 0)
-    {
         pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - ((CameraModeStaticPlacement*)setup)->pitch;
-    }
     else
     {
         pitch = ((CameraModeStaticPlacement*)setup)->pitch;
