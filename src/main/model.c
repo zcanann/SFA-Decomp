@@ -576,7 +576,7 @@ void ObjModel_RelocateAnimData(u8* m, u8* dst)
     ((ModelFileHeader*)m)->vertexAnimEntriesRaw = ((ModelFileHeader*)m)->vertexAnimEntries;
     for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimCount; i++)
     {
-        ((ObjModel*)dst)->unk40[i] = *(int*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x60);
+        ((ObjModel*)dst)->vertexAnimData[i] = *(int*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x60);
         if (*(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
             vertexAnimBase)
         {
@@ -588,7 +588,7 @@ void ObjModel_RelocateAnimData(u8* m, u8* dst)
     ((ModelFileHeader*)m)->blendAnimEntriesRaw = ((ModelFileHeader*)m)->blendAnimEntries;
     for (i = 0; i < ((ModelFileHeader*)m)->blendAnimCount; i++)
     {
-        ((ObjModel*)dst)->unk44[i] =
+        ((ObjModel*)dst)->blendAnimData[i] =
             *(int*)&((ObjModel*)dst)->normalBuf + *(int*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x60);
         if (*(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
             blendAnimBase)
@@ -1862,13 +1862,13 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->unk40 = pos;
+        *(int*)&((ObjModel*)out2)->vertexAnimData = pos;
         pos += ((ModelFileHeader*)p)->vertexAnimCount * 4;
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->unk44 = pos;
+        *(int*)&((ObjModel*)out2)->blendAnimData = pos;
         pos += ((ModelFileHeader*)p)->blendAnimCount * 4;
     }
     pos = roundUpTo4(pos);

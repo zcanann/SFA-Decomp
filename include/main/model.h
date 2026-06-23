@@ -128,8 +128,8 @@ typedef struct ObjModel {
     u8 *textureRefs;   /* 0xc each, renderOpCount */
     void *renderCallback;
     void *postRenderCallback;
-    s32 *unk40; /* per-entry ints, file->vertexAnimCount */
-    s32 *unk44; /* per-entry ints, file->blendAnimCount */
+    s32 *vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
+    s32 *blendAnimData;  /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
     u8 *unk48;
     u8 *unk4C;
     u8 *unk50;
