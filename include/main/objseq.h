@@ -116,7 +116,7 @@ struct ObjSeqState {
     s16 prevFrame;
     s16 endFrame;
     s16 unk5E;
-    s16 unk60;
+    s16 seqCounter; /* signed script register: set/added by sequence opcodes, sign-tested by ObjSeq_EvaluateCondition */
     s16 cmdCount;
     s16 animCount;
     s16 cmdCursor;

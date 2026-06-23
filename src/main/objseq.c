@@ -841,7 +841,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                     }
                     break;
                 case 1:
-                    ((ObjSeqState*)seq)->unk60 = top16;
+                    ((ObjSeqState*)seq)->seqCounter = top16;
                     break;
                 case 3:
                     seqGlobal1 = top16;
@@ -867,7 +867,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
                 switch (subId)
                 {
                 case 0:
-                    ((ObjSeqState*)seq)->unk60 = ((ObjSeqState*)seq)->unk60 + top16;
+                    ((ObjSeqState*)seq)->seqCounter = ((ObjSeqState*)seq)->seqCounter + top16;
                     break;
                 case 1:
                     break;
@@ -3300,13 +3300,13 @@ int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
     switch (condition)
     {
     case 0:
-        if (((ObjSeqState*)seq)->unk60 <= 0)
+        if (((ObjSeqState*)seq)->seqCounter <= 0)
         {
             result = 1;
         }
         break;
     case 1:
-        if (((ObjSeqState*)seq)->unk60 > 0)
+        if (((ObjSeqState*)seq)->seqCounter > 0)
         {
             result = 1;
         }
