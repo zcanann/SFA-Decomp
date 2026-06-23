@@ -134,7 +134,7 @@ void alphaanimator_update(int* obj)
         {
             return;
         }
-        s->fadeA = s->fadeB = lbl_803E3F7C;
+        s->fadeB = s->fadeA = lbl_803E3F7C;
         s->fadeMax = (f32)(u32)((AlphaanimatorPlacement*)d)->fadeMax;
         if (((AlphaanimatorPlacement*)d)->gateBit == -1)
         {
