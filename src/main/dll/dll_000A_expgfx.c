@@ -14,7 +14,6 @@
 extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
-extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
 extern volatile f32 timeDelta;
@@ -136,7 +135,7 @@ static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex)
 
 static inline ExpgfxBounds* Expgfx_GetBoundsTemplate(int templateIndex)
 {
-    return &gExpgfxBoundsTemplates[templateIndex];
+    return &((ExpgfxBounds*)gExpgfxStaticData)[templateIndex];
 }
 
 static inline ExpgfxBounds* Expgfx_GetPoolBounds(int poolIndex)
