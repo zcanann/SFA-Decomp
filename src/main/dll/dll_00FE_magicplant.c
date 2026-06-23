@@ -227,6 +227,7 @@ void fn_8017F7B8(int obj, int objectId)
 
 void MagicPlant_update(int obj)
 {
+    s32 alpha;
     MagicPlantObject* plant;
     MagicPlantSetup* setup;
     MagicPlantState* state;
@@ -236,7 +237,6 @@ void MagicPlant_update(int obj)
     f32 hitPos[3];
     u8 lightPos[0x0c];
     int hitKind;
-    s32 alpha;
     f32 progress;
     f32 resetProgress;
     int divisor;
