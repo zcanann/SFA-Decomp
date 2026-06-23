@@ -224,7 +224,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
                     ((TrickyState*)state)->unk704 =
                         (u8*)(*gRomCurveInterface)->getById(
-                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
+                            ((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
                     break;
                 }
                 off += 4;
@@ -259,7 +259,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                     ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
                     ((TrickyState*)state)->unk704 =
                         (u8*)(*gRomCurveInterface)->getById(
-                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
+                            ((int*)((char*)((TrickyState*)state)->unk704 + 0x1c))[idx]);
                     break;
                 }
                 off += 4;
