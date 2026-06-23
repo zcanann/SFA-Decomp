@@ -15477,14 +15477,16 @@ void fn_802ABFBC(int obj, int state, int inner)
         dy = pos2[1] - y1;
         dz = pos2[2] - z1;
 
-        d = (u16)getAngle(-dy, sqrtf(dx * dx + dz * dz)) - (u16)((PlayerState*)inner)->headYaw;
+        d = getAngle(-dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
+        d -= (u16)((PlayerState*)inner)->headYaw;
         if (d > 0x8000) d -= 0xffff;
         if (d < -0x8000) d += 0xffff;
         adj = (int)((f32)d * lbl_803E7EB4);
         ((PlayerState*)inner)->headYaw =
             (f32)adj * timeDelta + (f32) * (s16*)((int)inner + 0x4d6);
 
-        d = (u16)getAngle(-dx, -dz) - (u16)((PlayerState*)inner)->targetYaw;
+        d = getAngle(-dx, -dz) & 0xffff;
+        d -= (u16)((PlayerState*)inner)->targetYaw;
         if (d > 0x8000) d -= 0xffff;
         if (d < -0x8000) d += 0xffff;
         if (d < -0x1c70) d = -0x1c70;
