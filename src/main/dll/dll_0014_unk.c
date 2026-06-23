@@ -2446,7 +2446,7 @@ void walkgroupFindExitPointFn_800dc398(void)
 
                         found = 1;
                         sp = &patchBase[1];
-                        for (searchCount = gObjfsaPatchCount - 1; searchCount != 0; searchCount--)
+                        for (searchCount = 1; searchCount < gObjfsaPatchCount; searchCount++)
                         {
                             if (pairId == sp->groupId)
                             {
