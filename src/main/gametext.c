@@ -558,8 +558,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         }
                         if (charLen2 != 0)
                         {
-                            int j;
-                            for (j = 0; j < charLen2; j++)
+                            int j = charLen2;
+                            while (j-- != 0)
                             {
                                 *--dst = 0;
                             }
