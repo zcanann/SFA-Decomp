@@ -131,8 +131,8 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     int pushState;
     int sum;
     int rng;
-    float minDist;
     float dist;
+    float minDist;
     int count;
     int idx;
     double t;
