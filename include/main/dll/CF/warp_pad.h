@@ -25,7 +25,11 @@ typedef struct WarpPadState {
     s16 unk0A;
     u8 countdownActive;
     u8 triggerMode; /* 0 = proximity warp, 1 = trigger/gamebit warp */
-    u8 flags; /* 0x80 gamebit-disabled, 0x40/0x10/0x8 warp fx type, 4 pulse fx, 2 latch */
+    u8 flags; /* 0x20 disabled/non-interactive (gamebit gate; hitDetect &0x20),
+                 0x40/0x10/0x8 warp fx class (A/C/B), 4 pulse fx active, 2 pulse latch,
+                 1 runtime interactive bit (set per-frame in hitDetect). 0x80 is set/cleared
+                 from the enableGameBit in warpPadPlayerStandingOn but only selects a burst
+                 particle variant (the 0xa0 test) - it does NOT disable the pad. */
     u8 pad0F;
 } WarpPadState;
 

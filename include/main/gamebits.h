@@ -52,9 +52,10 @@ enum GameBitId {
     GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER = 0x58b,
 
     /*
-     * NOTE: the other two K1-pad guard bits, 0x316 and 0x511, have no setter in
-     * code (set from save/level-event data), so their exact meaning is not yet
-     * established - left as raw literals in dll_012C_transporter.c until traced.
+     * NOTE: 0x511 - the last K1 return-pad guard bit - still has no traced
+     * setter (set from save/level-event data), left as a raw literal in
+     * dll_012C_transporter.c until traced. (0x316 was the other untraced one;
+     * now traced as GAMEBIT_K1_SPIRIT_DEPOSITED below.)
      */
 
     /*
@@ -101,7 +102,21 @@ enum GameBitId {
      * 0x95, a hard-coded always-1 id, so the lock is always armed) and re-forms
      * the seal. Per-placement - the K1 gate's value.
      */
-    GAMEBIT_K1_LIFEFORCE_GATE_OPENED = 0xa5e
+    GAMEBIT_K1_LIFEFORCE_GATE_OPENED = 0xa5e,
+
+    /*
+     * K1 Krazoa Spirit DEPOSITED at its place in Krazoa Palace (on Warlock
+     * Mountain - the 'warlock' map, hence the WM dll prefix). Set when the
+     * deposit sequence completes at the wmspiritplace pedestal (DLL 0x20C): it
+     * is that pedestal's placement sequenceGameBit (+0x1E), written via
+     * GameBit_Set(state->sequenceGameBit) in wmspiritplace_update - i.e.
+     * DATA-DRIVEN, so no GameBit_Set(0x316) literal exists (which is why a code
+     * grep finds no setter; traced live in Dolphin by catching the write, with
+     * r28 == 0x316*4 and the wmspiritplace object in r27). Read as a code
+     * literal by dll_012C_transporter.c - one of the three 0xBA8/0x316/0x511
+     * guard bits that lock out the K1 return pad once you progress.
+     */
+    GAMEBIT_K1_SPIRIT_DEPOSITED = 0x316
 };
 
 
