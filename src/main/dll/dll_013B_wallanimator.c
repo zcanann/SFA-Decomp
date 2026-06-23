@@ -216,6 +216,7 @@ void wallanimator_update(int obj)
 }
 
 #pragma optimization_level 1
+#pragma peephole on
 void wallanimator_init(s16* obj, s16* placement)
 {
     WallanimatorState* state;
@@ -230,4 +231,5 @@ void wallanimator_init(s16* obj, s16* placement)
         state->timer = WALLANIMATOR_DONE_TIMER;
     }
 }
+#pragma peephole reset
 #pragma optimization_level reset
