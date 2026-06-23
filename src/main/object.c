@@ -1887,9 +1887,9 @@ void Obj_UpdateAllObjects(u8 flags)
     {
         obj2 = 0;
     }
-    if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
+    if (obj2 != 0 && (u32)(child = (int)((GameObject*)obj2)->childObjs[0]) != 0)
     {
-        *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+        *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
         Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
     }
     if (timeStop == 0)
