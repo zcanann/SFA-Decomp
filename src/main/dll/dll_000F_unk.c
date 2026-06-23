@@ -122,7 +122,7 @@ void player_render2(s16* obj, int* state, f32 f1, f32 f2)
         f32 delta = new_ - cur;
         if (delta > lbl_803E0570)
         {
-            *obj += (s16)(((BaddieState*)state)->unk300 * delta);
+            *obj += (s16)(((BaddieState*)state)->animDeltaScale * delta);
             ((BaddieState*)state)->unk2A8 = new_;
         }
     }

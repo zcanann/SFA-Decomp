@@ -264,7 +264,7 @@ void fn_801542AC(int unused, u8* state)
     ((BaddieState*)state)->speedScale = lbl_803E2978;
     ((BaddieState*)state)->unk2E4 = 173;
     ((BaddieState*)state)->unk308 = lbl_803E297C;
-    ((BaddieState*)state)->unk300 = lbl_803E2954;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2954;
     ((BaddieState*)state)->unk304 = lbl_803E2980;
     state[800] = 0;
     fz = lbl_803E2984;

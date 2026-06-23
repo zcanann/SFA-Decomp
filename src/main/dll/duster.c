@@ -372,7 +372,7 @@ void rachnopInit(u32 unused, int state)
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     fa = lbl_803E2A38;
     ((BaddieState*)state)->unk308 = lbl_803E2A38;
-    ((BaddieState*)state)->unk300 = fa;
+    ((BaddieState*)state)->animDeltaScale = fa;
     ((BaddieState*)state)->unk304 = lbl_803E2A3C;
     ((BaddieState*)state)->unk320 = 0;
     fb = lbl_803E2A40;
@@ -601,7 +601,7 @@ void baddieInit_80156188(u32 unused, int state)
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
-    ((BaddieState*)state)->unk300 = lbl_803E2A88;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
     ((BaddieState*)state)->unk320 = 0;
     fb = lbl_803E2A90;
@@ -851,7 +851,7 @@ void wbInit(u32 unused, int state)
     ((BaddieState*)state)->speedScale = lbl_803E2AE8;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
     ((BaddieState*)state)->unk308 = lbl_803E2ACC;
-    ((BaddieState*)state)->unk300 = lbl_803E2AEC;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2AEC;
     ((BaddieState*)state)->unk304 = lbl_803E2AF0;
     ((BaddieState*)state)->unk320 = 0;
     fa = lbl_803E2AF4;
@@ -1011,7 +1011,7 @@ void mutatedEbaInit(u32 unused, int state)
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2A58;
-    ((BaddieState*)state)->unk300 = lbl_803E2A88;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
     ((BaddieState*)state)->unk320 = 0;
     fa = lbl_803E2A54;

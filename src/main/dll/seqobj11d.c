@@ -398,7 +398,7 @@ void fn_80151954(int obj, u8* state)
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0x40300000LL;
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0xC00;
     ((GroundBaddieState*)state)->baddie.unk308 = lbl_803E2754;
-    ((GroundBaddieState*)state)->baddie.unk300 = lbl_803E27B0;
+    ((GroundBaddieState*)state)->baddie.animDeltaScale = lbl_803E27B0;
     ((GroundBaddieState*)state)->baddie.unk304 = lbl_803E27B4;
     state[0x320] = 35;
     fz = lbl_803E2748;

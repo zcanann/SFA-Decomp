@@ -40,7 +40,7 @@ typedef struct EnemyState {
     s16 unk2F8;
     u8 unk2FA[0x2FC - 0x2FA];
     f32 unk2FC;
-    f32 unk300;
+    f32 animDeltaScale;
     f32 unk304;
     f32 unk308;
     f32 particleScale;

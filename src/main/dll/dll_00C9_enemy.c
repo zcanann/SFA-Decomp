@@ -2378,7 +2378,7 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->unk2EC = 0;
         state[0x2f5] = 0;
         fz = lbl_803E2574;
-        ((EnemyState*)state)->unk300 = fz;
+        ((EnemyState*)state)->animDeltaScale = fz;
         ((EnemyState*)state)->unk304 = fz;
         ((EnemyState*)state)->unk308 = fz;
         ((EnemyState*)state)->particleScale = fz;

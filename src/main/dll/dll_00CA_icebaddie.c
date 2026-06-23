@@ -1200,7 +1200,7 @@ void iceBaddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.unk2A8 = lbl_803E2CEC;
     state->baddie.unk2E4 = 0x42001;
     state->baddie.unk308 = lbl_803E2CF0;
-    state->baddie.unk300 = lbl_803E2CF4;
+    state->baddie.animDeltaScale = lbl_803E2CF4;
     state->baddie.unk304 = lbl_803E2CF8;
     state->baddie.unk320 = 0;
     fz = lbl_803E2CFC;

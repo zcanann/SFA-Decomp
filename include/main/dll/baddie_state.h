@@ -100,7 +100,7 @@ typedef struct BaddieState {
     u32 reactionFlags; /* event/reaction flag word: bits 8/0x10/0x20/0x28/0x80 */
     u8 pad2EC[0x2FC - 0x2EC];
     f32 pathStep; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */
-    f32 unk300;
+    f32 animDeltaScale;
     f32 unk304;
     f32 unk308;
     u8 unk30C[8];

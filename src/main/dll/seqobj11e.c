@@ -444,7 +444,7 @@ void fn_80152A94(int obj, int p)
     *(u32*)&((BaddieState*)p)->unk2E4 |= 0x7000;
     *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20000LL;
     ((BaddieState*)p)->unk308 = lbl_803E2854;
-    ((BaddieState*)p)->unk300 = lbl_803E2858;
+    ((BaddieState*)p)->animDeltaScale = lbl_803E2858;
     ((BaddieState*)p)->unk304 = lbl_803E285C;
     ((BaddieState*)p)->unk320 = 0;
     fz = lbl_803E2820;
@@ -488,7 +488,7 @@ void fn_801522E0(int* obj, u8* state)
     ((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk2E4 |= 0xC80;
     ((BaddieState*)state)->unk308 = lbl_803E2800;
-    ((BaddieState*)state)->unk300 = lbl_803E2804;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2804;
     ((BaddieState*)state)->unk304 = lbl_803E2808;
     ((BaddieState*)state)->unk320 = 0;
     fz = lbl_803E280C;

@@ -611,7 +611,7 @@ void fn_8014FF58(int unused, char* p)
     ((BaddieState*)p)->unk2E4 = 1;
     ((BaddieState*)p)->unk2E4 |= 0x80;
     ((BaddieState*)p)->unk308 = lbl_803E272C;
-    ((BaddieState*)p)->unk300 = lbl_803E2730;
+    ((BaddieState*)p)->animDeltaScale = lbl_803E2730;
     ((BaddieState*)p)->unk304 = lbl_803E2734;
     ((BaddieState*)p)->unk320 = 0;
     v1c = lbl_803E2738;

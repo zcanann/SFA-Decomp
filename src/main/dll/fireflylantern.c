@@ -171,7 +171,7 @@ void fn_80154C24(int obj, int state)
     ((BaddieState*)state)->speedScale = lbl_803E29E8;
     ((BaddieState*)state)->unk2E4 = 0x8000009;
     ((BaddieState*)state)->unk308 = lbl_803E29D0;
-    ((BaddieState*)state)->unk300 = lbl_803E29B4;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E29B4;
     ((BaddieState*)state)->unk304 = lbl_803E29EC;
     ((BaddieState*)state)->unk320 = 0;
     fval = lbl_803E29F0;

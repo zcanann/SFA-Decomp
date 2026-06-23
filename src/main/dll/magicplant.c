@@ -89,7 +89,7 @@ void fn_80152EC0(int obj, int state)
     ((BaddieState*)state)->speedScale = zero;
     ((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E28A0;
-    ((BaddieState*)state)->unk300 = lbl_803E28A4;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E28A4;
     lblA = lbl_803E2894;
     ((BaddieState*)state)->unk304 = lblA;
     ((BaddieState*)state)->unk320 = 1;
@@ -275,7 +275,7 @@ void fn_801534D8(int obj, int state)
     ((BaddieState*)state)->speedScale = lbl_803E28DC;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x1009;
     ((BaddieState*)state)->unk308 = lbl_803E28E0;
-    ((BaddieState*)state)->unk300 = lbl_803E28E4;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E28E4;
     ((BaddieState*)state)->unk304 = lbl_803E28E8;
     ((BaddieState*)state)->unk320 = 0;
     initSpeed = lbl_803E28BC;
@@ -545,7 +545,7 @@ void fn_80153C90(int unused, int state)
     ((BaddieState*)state)->speedScale = lbl_803E2924;
     ((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = lbl_803E28F4;
-    ((BaddieState*)state)->unk300 = lbl_803E2928;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2928;
     ((BaddieState*)state)->unk304 = lbl_803E292C;
     ((BaddieState*)state)->unk320 = 0;
     eventFlagsVal = lbl_803E2910;

@@ -422,7 +422,7 @@ void crawler_initScaledVariant(int* obj, int* st)
     *(u32*)&((BaddieState*)st)->unk2E4 = v | 0x20;
     ((BaddieState*)st)->unk308 = lbl_803E2B68 * ratio;
     base_v = lbl_803E2B40;
-    ((BaddieState*)st)->unk300 = base_v;
+    ((BaddieState*)st)->animDeltaScale = base_v;
     ((BaddieState*)st)->unk304 = lbl_803E2B6C;
     *((u8*)st + 0x320) = 0;
     *(f32*)&((BaddieState*)st)->eventFlags = lbl_803E2B70;
@@ -480,7 +480,7 @@ void crawler_initVariant(int* obj, int* st)
     ((BaddieState*)st)->unk2A8 = lbl_803E2CC4;
     *(u32*)&((BaddieState*)st)->unk2E4 = 0x42003;
     ((BaddieState*)st)->unk308 = lbl_803E2CC8;
-    ((BaddieState*)st)->unk300 = lbl_803E2CCC;
+    ((BaddieState*)st)->animDeltaScale = lbl_803E2CCC;
     ((BaddieState*)st)->unk304 = lbl_803E2CD0;
     *((u8*)st + 0x320) = 0;
     {
@@ -627,7 +627,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         break;
     }
     ((BaddieState*)state)->unk308 = lbl_803E2BD4;
-    ((BaddieState*)state)->unk300 = lbl_803E2BFC;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2BFC;
     ((BaddieState*)state)->unk304 = lbl_803E2C00;
     ((BaddieState*)state)->pathStep = ((BaddieState*)state)->pathStep * lbl_803E2C04;
     if ((s8)params[0x2e] != -1)
