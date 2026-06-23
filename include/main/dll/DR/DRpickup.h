@@ -31,7 +31,7 @@ typedef struct DRPickupState {
     u8 unk418[0x428 - 0x418];
     PickupFlags flags; /* 0x428 */
     u8 unk429[0x430 - 0x429];
-    f32 unk430; /* lerp toward unk538 when flags.b6 */
+    f32 liftZVel; /* eased vertical-offset velocity; lerps toward liftZVelTarget when flags.b6, drives localOffsetZ */
     u8 unk434[0x458 - 0x434];
     u32 flags458; /* bit 0x100 -> b6, 0x200 -> b4 */
     f32 unk45C;
@@ -50,8 +50,8 @@ typedef struct DRPickupState {
     f32 unk52C;
     f32 angVelDamping; /* 0x530 per-frame powf damping base for angVel414 */
     f32 angVelLimit; /* 0x534 clamp limit for angVel414 */
-    f32 unk538; /* target for unk430 */
-    f32 unk53C;
+    f32 liftZVelTarget; /* target for liftZVel */
+    f32 settleVelMax;   /* 0x53c: max settle velocity magnitude clamping the Z offset against accumZ */
     u8 unk540[0x550 - 0x540];
     f32 unk550;
     f32 unk554;

@@ -55,9 +55,9 @@ void fn_801EC1AC(int obj, int state)
     target = lbl_803E5AE8;
     if (flags->b6 != 0)
     {
-        target = ((DRPickupState*)state)->unk538;
+        target = ((DRPickupState*)state)->liftZVelTarget;
     }
-    rate = (target - ((DRPickupState*)state)->unk430) * lbl_803E5C28;
+    rate = (target - ((DRPickupState*)state)->liftZVel) * lbl_803E5C28;
     clampedRate = (rate < lbl_803E5C2C)
                       ? lbl_803E5C2C
                       : ((rate > lbl_803E5B8C) ? lbl_803E5B8C : rate);
@@ -66,7 +66,7 @@ void fn_801EC1AC(int obj, int state)
     target = lbl_803E5AE8;
     if (flags->b4 != 0)
     {
-        f32 vy53c = ((DRPickupState*)state)->unk53C;
+        f32 vy53c = ((DRPickupState*)state)->settleVelMax;
         f32 v49c = ((DRPickupState*)state)->accumZ;
         if (v49c >= target)
         {
