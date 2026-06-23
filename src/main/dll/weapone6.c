@@ -39,6 +39,9 @@ typedef struct
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
     (*(s32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
 
+#define TRICKY_CLEAR_TARGET_DIRTY_U32(st) \
+    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
+
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10; \
@@ -326,7 +329,7 @@ void fn_8013F100(int obj, register int state)
             if (((TrickyState*)state)->unk28 != targetPos)
             {
                 ((TrickyState*)state)->unk28 = targetPos;
-                TRICKY_CLEAR_TARGET_DIRTY(state);
+                TRICKY_CLEAR_TARGET_DIRTY_U32(state);
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
         }
@@ -384,7 +387,7 @@ void fn_8013F100(int obj, register int state)
             if (((TrickyState*)state)->unk28 != targetPos)
             {
                 ((TrickyState*)state)->unk28 = targetPos;
-                TRICKY_CLEAR_TARGET_DIRTY(state);
+                TRICKY_CLEAR_TARGET_DIRTY_U32(state);
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
             ((TrickyState*)state)->substate = 5;
