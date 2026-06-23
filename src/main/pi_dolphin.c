@@ -238,11 +238,11 @@ u32 mapLoadDataFile(int mapId, int fileId)
 {
     struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
+    int fi;
     int sync = 0;
     u32 result;
     int adj;
     int slot;
-    int fi;
     int ok;
     u32 tmp;
     char buf[56];
