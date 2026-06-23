@@ -894,6 +894,7 @@ extern void fn_8003B228(int obj, void* p);
 void Tricky_update(int obj)
 {
     char* base;
+    void (**handlerBase)(int obj, int state);
     int state;
     int found;
     int p;
@@ -1349,7 +1350,8 @@ void Tricky_update(int obj)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
     ((TrickyState*)state)->unk353 = 1;
-    ((TrickyHandlerTable*)base)->handlers[((TrickyState*)state)->unk08](obj, state);
+    handlerBase = ((TrickyHandlerTable*)base)->handlers;
+    handlerBase[((TrickyState*)state)->unk08](obj, state);
     ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x2;
     ((TrickyState*)state)->animTransitionTimer += timeDelta;
     if (((TrickyState*)state)->animTransitionTimer > lbl_803E247C)
