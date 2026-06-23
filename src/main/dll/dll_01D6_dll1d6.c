@@ -319,10 +319,12 @@ void dll_1D6_update(int* obj)
     }
     else
     {
+        void* p28;
         model = DIM2snowball_GetActiveModel(obj);
-        if (*(void**)((char*)model + 0x28) != NULL && (extra->flags1D & 4) != 0)
+        p28 = *(void**)((char*)model + 0x28);
+        if (p28 != NULL && (extra->flags1D & 4) != 0)
         {
-            if (*(f32*)*(int**)((char*)model + 0x28) >= lbl_803E4A78)
+            if (*(f32*)p28 >= lbl_803E4A78)
             {
                 extra->flags1D &= ~4;
             }
