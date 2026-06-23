@@ -2909,7 +2909,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                   nextSegmentDz * nextSegmentDz);
         lateralX = nextSegmentDx;
         lateralZ = nextSegmentDz;
-        if ((*(volatile f32 *)&gFloatZero) < segmentLen)
+        if (segmentLen > (*(volatile f32 *)&gFloatZero))
         {
             lateralX = -nextSegmentDx * (gFloatOne / segmentLen);
             lateralZ = -nextSegmentDz * (gFloatOne / segmentLen);
