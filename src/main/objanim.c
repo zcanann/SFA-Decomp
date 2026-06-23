@@ -751,17 +751,17 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         {
             if (state->prevFramePhase < gObjAnimProgressZero)
             {
-                do
+                while (state->prevFramePhase < gObjAnimProgressZero)
                 {
                     state->prevFramePhase += prevFrameLength;
-                } while (state->prevFramePhase < gObjAnimProgressZero);
+                }
             }
             if (state->prevFramePhase >= prevFrameLength)
             {
-                do
+                while (state->prevFramePhase >= prevFrameLength)
                 {
                     state->prevFramePhase -= prevFrameLength;
-                } while (state->prevFramePhase >= prevFrameLength);
+                }
             }
         }
         else
@@ -841,7 +841,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     if (eventTable != NULL)
     {
         events->triggerCount = 0;
-        eventCount = eventTable->byteCount >> 1;
+        eventCount = objAnim->eventTable->byteCount >> 1;
         if (eventCount != 0)
         {
             previousFrame = (int)(gObjAnimEventFrameScale * previousProgress);
