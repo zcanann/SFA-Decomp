@@ -94,7 +94,7 @@ pure usage/creation order. The residual factor is interference-graph structure f
 near-identical DIRECT/INVERTED loops sharing r25-r28. No plausible usage recovery flips it
 (hoisting obj's loop address halved the reg-perm but added a web target lacks). Banked.
 
-## COALESCER pass (separate from priority) — PARTIAL (apply confirmed, decision not yet)
+## COALESCER + COMPLETE allocation mechanism (READABLE end-to-end)
 The mr-copy / "def coalesced into slot-result reg" class is the COALESCER, distinct from the
 priority ranking. Status (capstone i386, controllight unit):
 - **CONFIRMED:** `0x508c10` = per-class coalesce APPLY (called per class from the alloc main
@@ -110,7 +110,29 @@ priority ranking. Status (capstone i386, controllight unit):
   execute on the controllight compile (bp 0x508f2c never hit) — so it's a CONDITIONAL path
   (likely spill bucketing), NOT the main coalesce decision. Earlier claim corrected.
 
-To finish this milestone: disasm 0x4fe520, find where it sets `node+0x24 |= 2` (or clears it),
-read the predicate. Then a coalesce case (e.g. nw_mammoth/dll_94 global-base `mr` that retail
-eliminates but ours keeps) can be classified. Plausible-C only when a genuine usage/lifetime
-change flips it; otherwise bank with the degree note.
+### DECISION FOUND (0x4fe520 disassembled) — coalesce + register pick are ONE step
+The colorer's inner fn `0x4fe552` ("color a web that is a move target") makes both:
+- `0x5e3e68` = priority-ordered register CANDIDATE list (try-order for the class).
+- `0x5e5c78` = interference/availability table, indexed `reg + class*0x20`; non-zero = taken by
+  an already-colored interfering web.
+- It assigns the FIRST candidate reg whose interference byte is 0 (highest-priority register that
+  doesn't clash with already-colored neighbors), then `0x4fe5ef: or byte [moveNode+0x24], 2`
+  sets the coalesce flag, `+0x25`=class, `+0x26`=chosen reg. 0x508c10 later applies it.
+
+### COMPLETE allocation model
+1. Webs colored in PRIORITY order (≈ spill cost/usage); first-colored wins the first free reg
+   (why controllight's early-colored obj param takes r31).
+2. Each web gets the first candidate reg not interfering with already-colored webs (0x5e5c78).
+3. A copy COALESCES (mr eliminated) iff its two webs can share a reg — i.e. they do NOT interfere
+   (not simultaneously live). A SURVIVING mr means source/dest interfere at the copy point.
+
+### Plausible-C levers this unlocks
+- Priority inversion: recover the original USAGE/lifetime that makes the target web higher
+  priority (not a decl knob). Bank if interference-bound (controllight).
+- Coalesce miss (surviving mr, e.g. global-base load): make the copy SOURCE dead right after the
+  copy (don't keep the address temp live) → source/dest stop interfering → coalesce. Plausible
+  only via a genuine lifetime change; bank otherwise.
+
+### Read it live
+- Coalesce/colour decision: break `*0x4fe5ef`; moveNode=`ebx`, chosen reg=`bp`, class=`*(char*)(esp+0x20)`.
+- Per-web reg result: the web-list dump loop at `0x50886d` above.
