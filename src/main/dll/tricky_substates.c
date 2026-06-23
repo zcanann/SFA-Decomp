@@ -515,7 +515,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                         if (((TrickyState*)other)->unk28 != target + 0x18)
                         {
                             ((TrickyState*)other)->unk28 = target + 0x18;
-                            ((TrickyState*)other)->stateFlags &= ~0x400;
+                            *(s32*)&((TrickyState*)other)->stateFlags &= ~0x400LL;
                             ((TrickyState*)other)->unkD2 = 0;
                         }
                         other[0xa] = 0;
