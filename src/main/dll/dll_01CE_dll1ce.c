@@ -477,11 +477,14 @@ void dll_1CE_update(int* obj)
     }
     if (((GameObject*)obj)->anim.seqId == 0x334) return;
     {
-        int off = 0;
-        int found = 0;
+        int off;
         int i;
-        int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)list + 0x10f);
+        int* list;
+        int n;
+        int found = 0;
+        off = 0;
+        list = *(int**)((char*)obj + 0x58);
+        n = (s8) * (s8*)((char*)list + 0x10f);
         for (i = 0; i < n; i++)
         {
             int* o = *(int**)((char*)list + off + 0x100);
