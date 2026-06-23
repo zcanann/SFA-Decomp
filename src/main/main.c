@@ -313,7 +313,7 @@ void vfpflamepoint_update(int obj)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void fn_801FD6B4(int obj)
 {
     u8* extra;
@@ -322,6 +322,7 @@ void fn_801FD6B4(int obj)
     f32 c;
     ObjTextureRuntimeSlot* tex;
     f32 v;
+    f32 wave;
     struct
     {
         u8 pad[8];
@@ -345,9 +346,9 @@ void fn_801FD6B4(int obj)
         Sfx_PlayFromObject((u32)obj, 0x111);
         speed = lbl_803E6170;
     }
-    gVfpLavaPoolWaveSin = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
+    gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E617C * *(f32*)(extra + 8) + lbl_803E6180 * *(f32*)(extra + 8) *
-        *(volatile f32*)&gVfpLavaPoolWaveSin;
+        wave;
     c = *(f32*)(extra + 0xc);
     if (c > lbl_803E6184 && c < lbl_803E6188)
     {
@@ -366,9 +367,9 @@ void fn_801FD6B4(int obj)
     {
         speed = lbl_803E6170 * (c / lbl_803E6190);
     }
-    *(s8*)&((GameObject*)obj)->anim.alpha = (int)((speed < lbl_803E616C)
-                                                      ? lbl_803E616C
-                                                      : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    ((GameObject*)obj)->anim.alpha = ((speed < lbl_803E616C)
+                                          ? lbl_803E616C
+                                          : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
     tex = objFindTexture((void*)obj, 0, 0);
     if (tex != NULL)
     {
@@ -377,7 +378,7 @@ void fn_801FD6B4(int obj)
         {
             v -= lbl_803E6194;
         }
-        tex->offsetT = (s16)(int)v;
+        tex->offsetT = (s16)v;
     }
     tex = objFindTexture((void*)obj, 1, 0);
     if (tex != NULL)
@@ -387,7 +388,7 @@ void fn_801FD6B4(int obj)
         {
             v -= lbl_803E6194;
         }
-        tex->offsetT = (s16)(int)v;
+        tex->offsetT = (s16)v;
     }
 }
 
