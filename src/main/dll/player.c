@@ -18121,8 +18121,8 @@ int fn_8029D4C0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ >
             lbl_803E7EE0)
         {
-            d = (u16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) -
-                (u16) * (s16*)((char*)inner + 0x478);
+            d = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) & 0xffff;
+            d -= (u16) * (s16*)((char*)inner + 0x478);
             if (d > 0x8000)
             {
                 d -= 0xffff;
@@ -18155,8 +18155,8 @@ int fn_8029D4C0(int obj, int state, f32 fv)
             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ >
             lbl_803E7EE0)
         {
-            d = (u16)getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) -
-                (u16) * (s16*)((char*)inner + 0x478);
+            d = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) & 0xffff;
+            d -= (u16) * (s16*)((char*)inner + 0x478);
             if (d > 0x8000)
             {
                 d -= 0xffff;
