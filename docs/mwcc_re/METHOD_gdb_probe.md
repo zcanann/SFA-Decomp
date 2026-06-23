@@ -35,3 +35,38 @@ Counting hits is trivial. Reading the *allocation order* (which web gets which s
 why) needs the Coloring.c arg/struct layout (web list, interference graph) — that is genuine
 mwcceppc data-structure RE (the README's "Coloring.c under-covered" frontier), not yet mapped.
 Static disasm of 0x508680 + IDA/Ghidra on the anchors is the next step for that.
+
+## BREAKTHROUGH 2026-06-23: reading the web→register RANKING (MILESTONE)
+The allocator data structures ARE crackable. Recipe (capstone for i386 disasm since gdb
+defaults to 64-bit and desyncs on `mov [disp32],reg`):
+
+### Coloring.c structures (GC/2.0, image base 0x400000)
+- `0x508680` = register-allocation main loop: iterates register CLASS 0..4 (`cmpb $5`),
+  stores current class to global byte **`0x5ea299`**, per class loads start/end web indices
+  from `0x5e9800[class*4]` (start) and `0x5e9b04[class*4]` (end), calls the per-class colorer.
+- **`0x5e9858`** = pointer to the WEB ARRAY (array of web pointers). Populated DURING the pass
+  (it's 0 at 0x508680 entry — read it inside the per-class walk, not before).
+- Per-class apply/walk loop at `0x508864`: `web = webArray[esi]`, `esi` in `[start,end)`.
+
+### Web struct (per node)
+- **`+0x04` = IR node ptr** (value identity; 0 for synthetic/precolored temps)
+- **`+0x14` (word) = ASSIGNED PPC register** (0,3,4 volatiles; 25..31 saved)
+- **`+0x16` (word) = flags** (0x2 normal var, 0x4 precolored/temp, 0x40 loop-region, combos)
+- web ARRAY INDEX = creation order (web 32 created before web 33 …)
+
+### Dump recipe (gdb)
+`break call_EntryProc; run; delete 1`; counter-break `*0x508680` (function #); break
+`*0x50886d` and print `fn / cls=*(char*)0x5ea299 / web[esi] / reg=*(short*)(ebp+0x14) /
+flags=*(ushort*)(ebp+0x16) / ir=*(uint*)(ebp+4)`.
+
+### First real read — controllight_update (class 4 = GPR saved-reg webs)
+web32→r31, web33→r25, web36→r27, web38→r26, web42→r29, web43→r30 (flags 0x2 = real vars);
+web34/37/39/41 = the two-case loop webs (flags 0x42) sharing r26-r28. The first-created
+function-scope web (web32 = the `obj` param, referenced at entry) takes **r31** — that IS the
+"param-at-top" inversion, captured as ground truth.
+
+### Still needed to make it CLEAN-C-actionable (next layer)
+Map web→source variable: follow `+0x04` IR ptr to a name/symbol (if O4 keeps one), or match by
+register against the known .o assignment. And read the PRIORITY the colorer assigns by
+(creation-order vs spill-cost) from the per-class colorer (0x4fe520). With those, the inversion
+becomes directed. METHOD only — not a lever list.
