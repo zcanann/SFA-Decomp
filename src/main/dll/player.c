@@ -14951,6 +14951,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     f32* pbz;
     void* hit;
     int tbl1, tbl2;
+    int idxA, idxB;
     int i;
 
     ((PlayerState*)b)->groundObject = 0;
@@ -15006,12 +15007,14 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 return 0;
             }
-            ax = ((VecXYZ*)tbl2)[*(s16*)((char*)face + 0x4)].x;
+            idxA = *(s16*)((char*)face + 0x4) * 12;
+            ax = *(f32*)((char*)tbl2 + idxA);
             ay = lbl_803E7EA4;
-            az = ((VecXYZ*)tbl2)[*(s16*)((char*)face + 0x4)].z;
-            bx = ((VecXYZ*)tbl2)[*(s16*)((char*)face + 0x6)].x;
+            az = *(f32*)((char*)tbl2 + (idxA + 8));
+            idxB = *(s16*)((char*)face + 0x6) * 12;
+            bx = *(f32*)((char*)tbl2 + idxB);
             by = lbl_803E7EA4;
-            bz = ((VecXYZ*)tbl2)[*(s16*)((char*)face + 0x6)].z;
+            bz = *(f32*)((char*)tbl2 + (idxB + 8));
             if (hit != NULL)
             {
                 ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, (int)hit);
