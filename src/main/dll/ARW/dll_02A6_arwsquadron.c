@@ -595,11 +595,11 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = leaderAnim->rotX;
     src.rot[1] = leaderAnim->rotY;
     src.rot[2] = leaderAnim->rotZ;
-    out[0] = lbl_803E7190 * mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
-        lbl_803E718C * setup->leaderOffsetX;
-    out[1] = lbl_803E7190 * mathSinf(gArwingSquadronPi * state->swayPhaseY / gArwingSquadronSwayPhaseToAngleDiv) +
-        lbl_803E718C * setup->leaderOffsetY;
-    out[2] = lbl_803E718C * setup->leaderOffsetZ;
+    out[0] = 15.0f * mathSinf(gArwingSquadronPi * state->swayPhaseX / gArwingSquadronSwayPhaseToAngleDiv) +
+        5.0f * setup->leaderOffsetX;
+    out[1] = 15.0f * mathSinf(gArwingSquadronPi * state->swayPhaseY / gArwingSquadronSwayPhaseToAngleDiv) +
+        5.0f * setup->leaderOffsetY;
+    out[2] = 5.0f * setup->leaderOffsetZ;
     setMatrixFromObjectTransposed(&src, mtx);
     PSMTXMultVec(mtx, out, &objAnim->localPosX);
     objAnim->velocityX = leaderAnim->velocityX;
