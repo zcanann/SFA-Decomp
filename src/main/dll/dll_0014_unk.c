@@ -3109,8 +3109,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                                 *idWrite = node->id;
                                 distWrite++;
                                 idWrite++;
-                                resultLinks[found] = li;
-                                found++;
+                                resultLinks[found++] = li;
                             }
                         }
                         else
