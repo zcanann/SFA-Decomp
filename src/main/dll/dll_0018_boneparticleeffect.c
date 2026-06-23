@@ -1502,7 +1502,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     u8* t;
                     u8* t4;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
-                    cls = *(u8*)(base + id + 0x590);
+                    t = base + id;
+                    cls = *(u8*)(t + 0x590);
                     if (cls == 0)
                     {
                         s.vx = pa[0] * *(f32*)((base + 0x5d8) + id * 4);
