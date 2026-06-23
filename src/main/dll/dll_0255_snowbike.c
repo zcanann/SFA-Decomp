@@ -792,7 +792,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->unk01C = fz;
     ((SnowBikeState*)state)->unk020 = lbl_803E5BC4;
     ((SnowBikeState*)state)->unk024 = lbl_803E5C50;
-    ((SnowBikeState*)state)->unk065 = -1;
+    ((SnowBikeState*)state)->collisionHitType = -1;
     fv = lbl_803E5B98;
     ((SnowBikeState*)state)->velLimitX = fv;
     ((SnowBikeState*)state)->velLimitY = fv;
@@ -810,14 +810,14 @@ void SnowBike_init(int obj, u8* params, int flag)
         ((SnowBikeState*)state)->bikeVariant = 0;
         ((SnowBikeState*)state)->unk01C = lbl_803E5B14;
         ((SnowBikeState*)state)->unk018 = lbl_803E5C54;
-        ((SnowBikeState*)state)->unk065 = 1;
+        ((SnowBikeState*)state)->collisionHitType = 1;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5AF0;
         break;
     case 0x16f:
         ((SnowBikeState*)state)->bikeType = 1;
         ((SnowBikeState*)state)->unk058 = 1;
         ((SnowBikeState*)state)->bikeVariant = 1;
-        ((SnowBikeState*)state)->unk065 = 2;
+        ((SnowBikeState*)state)->collisionHitType = 2;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5AF0;
         break;
     case 0x38c:
@@ -874,10 +874,10 @@ void SnowBike_init(int obj, u8* params, int flag)
     path[0x25b] = 1;
     (*gPathControlInterface)->init(path, 0, 0x48607, 1);
     (*gPathControlInterface)->setup(path, 4, base, base + 0x30, &pathParam);
-    if (((SnowBikeFlags*)(state + 0x428))->b02 && ((SnowBikeState*)state)->unk065 != -1)
+    if (((SnowBikeFlags*)(state + 0x428))->b02 && ((SnowBikeState*)state)->collisionHitType != -1)
     {
         curves_setLocalPointCollisionEx((CurvesCollisionState*)path, 1, (f32*)(base + 0x40),
-                                        &lbl_803DC0B8, 8, ((SnowBikeState*)state)->unk065);
+                                        &lbl_803DC0B8, 8, ((SnowBikeState*)state)->collisionHitType);
     }
     else
     {

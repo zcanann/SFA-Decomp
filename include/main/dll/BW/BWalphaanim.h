@@ -37,7 +37,7 @@ typedef struct SnowBikeState {
     u8 pad05E[0x2];
     char *unk060;           /* 0x060 */
     u8 pad064[0x1];
-    s8 unk065;              /* 0x065: collision channel (-1 none) */
+    s8 collisionHitType;    /* 0x065: path-collision secondaryHitType (-1 = use plain non-Ex setup) */
     u8 pad066[0x2];
     f32 pathProgress;             /* 0x068 */
     u8 pad06C[0x100];       /* 0x178: path-control block lives in here */
