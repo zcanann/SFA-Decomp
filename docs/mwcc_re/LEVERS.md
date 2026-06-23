@@ -67,6 +67,24 @@ The pipeline per register class is: build interference graph → coalesce copies
    bit-matrix row built in 0x57b470 from the per-block live sets; web+0x12 = a
    working copy of it. To move a register, change what's simultaneously live.)*
 
+4a. **Web index = IR-definition order (the saved-register tie-break, completed).**
+   Web numbers are assigned sequentially by `0x4fe552` (`web = webEnd[class]++`) in
+   the order values are numbered = the order they're DEFINED in the post-optimization
+   instruction stream. With no spillCost (lever 4), this index IS the coloring/Select
+   order, so when two saved-lived webs compete for r31 vs r30, **the one defined
+   earlier in the IR gets the lower index → r31**. Verified across two functions
+   (matcher-2 InitAllMessageQueue: loop3-base vs counter; matcher-3 fn_800A3AF0:
+   param-saved-copy vs LICM-hoisted `&global`). The catch: **IR-definition order is
+   set by front-end passes (LICM hoisting a loop-invariant address before the loop,
+   param materialization point), NOT by C declaration order** — exhaustively
+   confirmed inert. So a saved-register swap between two such webs whose only
+   difference is IR-definition order is **interference/index-bound and irreducible
+   from plausible C** with the currently-decompiled passes → BANK with the index
+   analysis as proof. (A future decomp of the front-end web-numbering/LICM ordering
+   is the only thing that could turn this into a lever; matcher-3 showed de-hoisting
+   the invariant or materializing the param earlier always adds an instruction or
+   makes the web volatile, so it diverges.)
+
 ## How a copy / `mr` survives or dies (Coloring.c coalescer)
 5. **A copy is coalesced (the `mr` disappears) iff its move is on a coalesce list
    with the descriptor flags set.** `Color_Coalesce` (0x508c10) walks
