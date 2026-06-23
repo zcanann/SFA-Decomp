@@ -106,9 +106,9 @@ typedef struct SnowBikeState {
     f32 localVelY;             /* 0x498 */
     f32 distanceScale;             /* 0x49c */
     u8 pad4A0[0xC];
-    f32 unk4AC;             /* 0x4ac */
+    f32 collisionBounceScale; /* 0x4ac: collision velocity-retention scalar (localVel *= dot*collisionBounceScale + K on hit) */
     f32 liftAccel;          /* 0x4b0: vertical accel integrated into localVelY (localVelY += liftAccel*dt); also scales turn force */
-    u8 unk4B4;              /* 0x4b4 */
+    u8 dampPresetMode;      /* 0x4b4: latched mode (copied from unk230) selecting the spring-target preset in the damp update switch */
     u8 pad4B5[0x3];
     f32 airMeterMax;             /* 0x4b8 */
     f32 airMeterCurrent;             /* 0x4bc */
@@ -149,7 +149,7 @@ STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
 STATIC_ASSERT(offsetof(SnowBikeState, collisionFxDamping) == 0x3E0);
 STATIC_ASSERT(offsetof(SnowBikeState, impactShakeTimer) == 0x424);
 STATIC_ASSERT(offsetof(SnowBikeState, flags428) == 0x428);
-STATIC_ASSERT(offsetof(SnowBikeState, unk4AC) == 0x4AC);
+STATIC_ASSERT(offsetof(SnowBikeState, collisionBounceScale) == 0x4AC);
 STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
 STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 

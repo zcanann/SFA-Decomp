@@ -359,7 +359,7 @@ void fn_801EC928(int p1, int p2)
     ((SnowBikeState*)p2)->unk578 = lbl_803E5B8C;
     ((SnowBikeState*)p2)->unk574 = lbl_803E5BB0;
     ((SnowBikeState*)p2)->unk56C = lbl_803E5C00;
-    ((SnowBikeState*)p2)->unk4AC = fz;
+    ((SnowBikeState*)p2)->collisionBounceScale = fz;
 }
 
 void SnowBike_setType(int obj, int type)

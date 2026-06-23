@@ -431,7 +431,7 @@ void fn_801EB634(int obj, int stateRaw)
                 PSVECNormalize((float*)(obj + 0x24), velNrm);
                 dot = PSVECDotProduct(velNrm, (float*)(hitObj + 0x24));
                 PSVECScale(&st->localVelX, &st->localVelX,
-                           dot * st->unk4AC + lbl_803E5AEC);
+                           dot * st->collisionBounceScale + lbl_803E5AEC);
                 st->localVelY = st->localVelY * lbl_803E5BA8;
                 st->collisionFxTimer = lbl_803E5AF4;
                 st->collisionFxDamping = lbl_803E5AEC;
@@ -530,7 +530,7 @@ void fn_801EB940(short* obj, int stateRaw)
         }
         ((HightopFlags*)&st->flags428)->resetLatch = 0;
         st->impactShakeTimer = lbl_803E5AE8;
-        st->unk4B4 = st->unk230;
+        st->dampPresetMode = st->unk230;
     }
     fa = lbl_803E5BC8;
     st->haloDriftPhaseA = fa * timeDelta + (f32)(s32)st->haloDriftPhaseA;
@@ -623,7 +623,7 @@ void fn_801EBD60(int obj, int stateRaw)
     flags = st->flags428;
     if ((u32)(flags >> 7 & 1) == 0)
     {
-        switch (st->unk4B4)
+        switch (st->dampPresetMode)
         {
         case 0xd:
             target558 = lbl_803E5BD8;
