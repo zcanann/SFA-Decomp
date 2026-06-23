@@ -24,7 +24,7 @@ extern const f32 lbl_803E2F88;
 extern const f32 lbl_803E2F98;
 extern const f32 lbl_803E2F9C;
 
-#pragma peephole on
+#pragma peephole off
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern const f32 lbl_803E2FC8;
 extern const f32 lbl_803E2FCC;
@@ -106,18 +106,9 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-    hitCount = (int)((f32)(int) * (s16*)(state + 0x27c) * timeDelta + (f32)(int)
-    ((short*)obj)[2]
-    )
-    ;
-    ((short*)obj)[2] = hitCount;
-    hitCount = (int)((f32)(int) * (s16*)(state + 0x27e) * timeDelta + (f32)(int)
-    ((short*)obj)[1]
-    )
-    ;
-    ((short*)obj)[1] = hitCount;
-    hitCount = (int)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (short*)obj);
-    *(short*)obj = hitCount;
+    ((s16*)obj)[2] = (s16)((f32)(int) * (s16*)(state + 0x27c) * timeDelta + (f32)(int)((s16*)obj)[2]);
+    ((s16*)obj)[1] = (s16)((f32)(int) * (s16*)(state + 0x27e) * timeDelta + (f32)(int)((s16*)obj)[1]);
+    *(s16*)obj = (s16)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (s16*)obj);
     if (hitList[0] != 0x0)
     {
         if (((GameObject*)obj)->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
