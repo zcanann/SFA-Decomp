@@ -217,12 +217,12 @@ void wctemplebri_initialise(void)
 void wctemplebri_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
-    WCTempleBriSetup* setup = (WCTempleBriSetup*)((GameObject*)obj)->anim.placementData;
-    WCTempleBriState* state;
     int model;
     int modelBase;
     int i;
     f32 waveScale;
+    WCTempleBriState* state;
+    WCTempleBriSetup* setup = (WCTempleBriSetup*)((GameObject*)obj)->anim.placementData;
 
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
