@@ -1992,7 +1992,7 @@ void dbstealerworm_update(u8* objp)
     blob = *(int*)(obj + 0xb8);
     data = *(int*)(obj + 0x4c);
     sub = *(int*)&((GroundBaddieState*)blob)->control;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
         entry = tbl + ((DbstealerwormPlacement*)data)->cfgTableIndex * 8;
@@ -2024,7 +2024,7 @@ void dbstealerworm_update(u8* objp)
                 ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0x10);
                 ((GroundBaddieState*)blob)->baddie.moveDone = 0;
                 ((GameObject*)obj)->anim.alpha = 0xff;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
         else if (((GameObject*)obj)->unkF8 == 0)
