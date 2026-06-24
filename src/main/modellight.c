@@ -1235,7 +1235,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         {
             return 0;
         }
-        return 1;
+        goto found;
     }
 
     if (localPos[2] - ((GameObject*)obj)->anim.hitboxScale > ((ModelLightStruct*)light)->projectionFarZ ||
@@ -1295,6 +1295,9 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     }
 
     return 0;
+
+found:
+    return 1;
 }
 
 #pragma dont_inline on
