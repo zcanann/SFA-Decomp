@@ -11,8 +11,8 @@ int adsrStartRelease(int state, u32 divisor)
     ADSR_VARS* adsr = (ADSR_VARS*)state;
     switch (adsr->mode)
     {
-    case 0:
-        adsr->state = 4;
+    case ADSR_MODE_LINEAR:
+        adsr->state = ADSR_STATE_RELEASE;
         adsr->cnt = divisor;
         if (divisor == 0)
         {
@@ -22,8 +22,8 @@ int adsrStartRelease(int state, u32 divisor)
         }
         adsr->currentDelta = -(adsr->currentVolume / divisor);
         break;
-    case 1:
-        if (adsr->aMode == 0 && adsr->state == 1)
+    case ADSR_MODE_DLS:
+        if (adsr->aMode == 0 && adsr->state == ADSR_STATE_DECAY)
         {
             adsr->currentIndex = (u32)(193 - voiceAdsrDecayTable[*(int*)&adsr->currentVolume >> 21]) << 16;
         }
@@ -31,7 +31,7 @@ int adsrStartRelease(int state, u32 divisor)
             f32 ci = lbl_803E7848 * (f32)(s32)adsr->currentIndex;
             adsr->cnt = __cvt_fp2unsigned(ci * (f32)(u32)divisor) >> 12;
         }
-        adsr->state = 4;
+        adsr->state = ADSR_STATE_RELEASE;
         if (adsr->cnt == 0)
         {
             adsr->cnt = 1;
@@ -56,8 +56,8 @@ int adsrRelease(int state)
     ADSR_VARS* adsr = (ADSR_VARS*)state;
     switch (adsr->mode)
     {
-    case 0:
-    case 1:
+    case ADSR_MODE_LINEAR:
+    case ADSR_MODE_DLS:
         return adsrStartRelease(state, *(int*)&adsr->rTime);
     }
     return 0;
@@ -74,8 +74,8 @@ int adsrHandle(int state, u16* out1, u16* out2)
 
     switch (m)
     {
-    case 0:
-        if (adsr->state != 3)
+    case ADSR_MODE_LINEAR:
+        if (adsr->state != ADSR_STATE_HOLD)
         {
             v8 = *(int*)&adsr->currentVolume;
             *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
@@ -103,12 +103,12 @@ int adsrHandle(int state, u16* out1, u16* out2)
             *out2 = 0;
         }
         break;
-    case 1:
+    case ADSR_MODE_DLS:
     {
-        if (adsr->state != 3)
+        if (adsr->state != ADSR_STATE_HOLD)
         {
             v8 = *(int*)&adsr->currentVolume;
-            if (adsr->aMode == 0 && adsr->state == 1)
+            if (adsr->aMode == 0 && adsr->state == ADSR_STATE_DECAY)
             {
                 *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
             }
