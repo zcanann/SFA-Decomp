@@ -1580,7 +1580,7 @@ void drawReflectionTexture(void)
     char* texture = gNewShadowReflectionTexture;
     drawTexture(texture, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
-    GXSetTexCopyDst(0x50, 0x3c, 4, 0);
+    GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
     GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, 1);
     if (*(u8*)(gNewShadowReflectionSmallTexture + 0x48) != 0)
     {
@@ -1594,10 +1594,10 @@ extern void GXInvalidateTexAll(void);
 void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
-    GXSetTexCopyDst(0x140, 0xf0, 4, 1);
+    GXSetTexCopyDst(0x140, 0xf0, GX_TF_RGB565, GX_TRUE);
     GXCopyTex((char*)gNewShadowReflectionTexture + 0x60, 0);
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
-    GXSetTexCopyDst(0x140, 0xf0, 0x11, 1);
+    GXSetTexCopyDst(0x140, 0xf0, GX_TF_Z8, GX_TRUE);
     GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, 0);
     if (*(u8*)(gNewShadowReflectionTexture + 0x48) != 0)
     {
@@ -2430,7 +2430,7 @@ void shadowRenderFn_8006b558(int* obj)
         *(u16*)((char*)model + 0x18) &= ~0x8;
         gxSetZMode_(1, 3, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
-        GXSetTexCopyDst(0x80, 0x80, 0x2a, 0);
+        GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), 1);
         fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
         *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
@@ -2721,7 +2721,7 @@ void renderShadows(void)
                         *(f32*)(castSlot + 0x5c) = lbl_803DED2C;
                         PSMTXConcat((f32*)(castSlot + 0x30), vm, (f32*)(castSlot + 0x30));
                         GXSetTexCopySrc(0, 0, screenW, screenW);
-                        GXSetTexCopyDst(screenW, screenW, 0x11, 0);
+                        GXSetTexCopyDst(screenW, screenW, GX_TF_Z8, GX_FALSE);
                         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
                         GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), 1);
                         setDisplayCopyFilter();
@@ -2733,7 +2733,7 @@ void renderShadows(void)
                         {
                             gxSetZMode_(1, 3, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
-                            GXSetTexCopyDst(w, w, 0x20, 1);
+                            GXSetTexCopyDst(w, w, GX_CTF_R4, GX_TRUE);
                             GXCopyTex((void*)(*(int*)texSlot + 0x60), 1);
                             *(int*)(castSlot + 0x60) = *(int*)texSlot;
                         }
@@ -2787,7 +2787,7 @@ void renderShadows(void)
         gxSetZMode_(1, 3, 1);
         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
-        GXSetTexCopyDst(0x100, 0x100, 0x28, 0);
+        GXSetTexCopyDst(0x100, 0x100, GX_CTF_R8, GX_FALSE);
         GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), 1);
         GXPixModeSync();
         setDisplayCopyFilter();
