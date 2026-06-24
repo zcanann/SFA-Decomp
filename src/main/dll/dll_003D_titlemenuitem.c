@@ -34,6 +34,9 @@
 #define TITLE_MENU_KIND_TOGGLE 1
 #define TITLE_MENU_KIND_WINDOW 2
 
+/* count of shared title-menu-item textures (and their asset-id table) */
+#define TITLE_MENU_ITEM_TEXTURE_COUNT 6
+
 extern u8 padGetStickX(int port);
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
@@ -41,8 +44,8 @@ extern s8 lbl_803DD920;
 extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
-extern void* lbl_803A9DB8[6];   /* cached menu textures */
-extern s16 lbl_8031C2A8[6];     /* texture asset ids for the cache */
+extern void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* cached menu textures */
+extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];     /* texture asset ids for the cache */
 
 
 
@@ -421,7 +424,7 @@ void fn_80131F0C(void)
 {
     int i;
 
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < TITLE_MENU_ITEM_TEXTURE_COUNT; i++)
     {
         if (lbl_803A9DB8[i] == NULL)
         {
@@ -434,7 +437,7 @@ void TitleMenuItem_release(void)
 {
     int i;
 
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < TITLE_MENU_ITEM_TEXTURE_COUNT; i++)
     {
         textureFree(lbl_803A9DB8[i]);
         lbl_803A9DB8[i] = NULL;
