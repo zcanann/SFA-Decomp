@@ -139,7 +139,7 @@ int fn_80174668(int obj, PushableState* state)
             {
                 ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3528;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E354C;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
         return 1;
