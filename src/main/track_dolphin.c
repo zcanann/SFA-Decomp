@@ -47,7 +47,9 @@
 #define GX_LO_NOOP 5
 #define GX_FOG_NONE 0
 #define GX_VA_POS 9
+#define GX_VA_CLR0 11
 #define GX_VA_TEX0 13
+#define GX_VA_TEX1 14
 #define GX_DIRECT 1
 #define GX_QUADS 0x80
 #define GX_TRIANGLES 0x90
@@ -295,10 +297,10 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXLoadNrmMtxImm(tmp, 0);
     PSMTXConcat(lbl_803967F0, posMtx, out);
     GXLoadTexMtxImm(out, 0x24, 0);
-    GXSetArray(9, *(void**)((char*)block + 0x58), 6);
-    GXSetArray(11, *(void**)((char*)block + 0x5C), 2);
-    GXSetArray(13, *(void**)((char*)block + 0x60), 4);
-    GXSetArray(14, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
+    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
 }
 #pragma dont_inline reset
 
