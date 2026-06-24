@@ -412,9 +412,9 @@ void trickyFn_80141fec(u8* obj, u8* state)
             ptr = ((TrickyState*)state)->unk70C;
             if (ptr != NULL)
             {
-                ((TrickyState*)state)->dirX = *(f32*)(ptr + 8) - *(f32*)(((TrickyState*)state)->followObj + 0x18);
-                ((TrickyState*)state)->dirZ = ((TrickyState*)ptr)->prevSpeed - *(f32*)(((TrickyState*)state)->followObj
-                    + 0x20);
+                pc = ((TrickyState*)state)->followObj;
+                ((TrickyState*)state)->dirX = *(f32*)(ptr + 8) - *(f32*)(pc + 0x18);
+                ((TrickyState*)state)->dirZ = ((TrickyState*)ptr)->prevSpeed - *(f32*)(pc + 0x20);
                 d = sqrtf(
                     ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX + ((TrickyState*)state)->dirZ * ((
                         TrickyState*)state)->dirZ);
