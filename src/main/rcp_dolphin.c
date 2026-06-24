@@ -10,6 +10,10 @@
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
+
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1075,7 +1079,7 @@ void gxFn_80052dc0(void)
     GXSetProjection(omtx, 1);
     GXSetBlendMode(0, 1, 0, 5);
     gxSetZMode_(0, 2, 0);
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXClearVtxDesc();
