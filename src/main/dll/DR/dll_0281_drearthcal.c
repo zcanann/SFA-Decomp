@@ -52,7 +52,7 @@ void drearthcal_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
         for (i = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
         {
@@ -60,17 +60,17 @@ void drearthcal_update(int obj)
                 int elem = ((int*)*(int*)(obj + 0x58))[i + 0x40];
                 if ((u32)elem == player)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 }
             }
         }
         if ((u32)ObjGroup_FindNearestObject(0xa, obj, &searchDist) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0)
         {
