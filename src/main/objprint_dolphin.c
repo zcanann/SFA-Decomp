@@ -54,6 +54,7 @@
 #define GX_VA_NRM 10
 #define GX_VA_CLR0 11
 #define GX_VA_TEX0 13
+#define GX_VA_TEX1 14
 #define GX_TRIANGLES 0x90
 #define GX_VTXFMT7 7
 
@@ -4045,8 +4046,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
     if (gObjCachedModel != (u32)m)
     {
-        GXSetArray(9, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
-        GXSetArray(13, *(int*)&((ModelFileHeader*)m)->unk34, 4);
+        GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+        GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->unk34, 4);
         gObjCachedModel = (u32)m;
     }
     shaderSetGxFlags((u8*)obj, m, ((ModelFileHeader*)m)->renderOps);
@@ -4261,7 +4262,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         gxSetZMode_(0, 3, 0);
         GXSetCullMode(0);
     }
-    GXSetArray(9, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+    GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
     done = 0;
     while (!done)
     {
@@ -4684,18 +4685,18 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             _gxSetFogParams();
         }
     }
-    GXSetArray(9, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+    GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
     if (((ModelFileHeader*)m)->flags24 & 8)
     {
-        GXSetArray(0xa, *(int*)((char*)am + 0x24), 9);
+        GXSetArray(GX_VA_NRM, *(int*)((char*)am + 0x24), 9);
     }
     else
     {
-        GXSetArray(0xa, *(int*)((char*)am + 0x24), 3);
+        GXSetArray(GX_VA_NRM, *(int*)((char*)am + 0x24), 3);
     }
-    GXSetArray(0xb, *(int*)&((ModelFileHeader*)m)->unk30, 2);
-    GXSetArray(0xd, *(int*)&((ModelFileHeader*)m)->unk34, 4);
-    GXSetArray(0xe, *(int*)&((ModelFileHeader*)m)->unk34, 4);
+    GXSetArray(GX_VA_CLR0, *(int*)&((ModelFileHeader*)m)->unk30, 2);
+    GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->unk34, 4);
+    GXSetArray(GX_VA_TEX1, *(int*)&((ModelFileHeader*)m)->unk34, 4);
     done = 0;
     while (!done)
     {
