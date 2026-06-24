@@ -2292,7 +2292,7 @@ void enemy_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+        if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             (**(void (**)(u8*, int, int, int))(*(int*)(*(int*)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
         }
@@ -2368,7 +2368,7 @@ void enemy_init(int obj, u8* setup, int flag)
     ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
     ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
     ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (flag == 0)
     {
         *(int*)&((EnemyState*)state)->flags2E4 = 0;
