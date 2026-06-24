@@ -1796,20 +1796,24 @@ void pauseMenuRunSubmenu(u8 p1)
         {
             u8 a1;
             u8 a2;
+            int v1;
+            int v2;
             padGetAnalogInput(0, &a1, &a2);
-            if ((s8)a2 == 1)
+            v2 = a2;
+            if ((s8)v2 == 1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[0];
             }
-            if ((s8)a2 == -1)
+            if ((s8)v2 == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[1];
             }
-            if ((s8)a1 == -1 && sel == -1)
+            v1 = a1;
+            if ((s8)v1 == -1 && sel == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[2];
             }
-            if ((s8)a1 == 1 && sel == -1)
+            if ((s8)v1 == 1 && sel == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[3];
             }
