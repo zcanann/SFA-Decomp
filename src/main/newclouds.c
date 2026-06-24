@@ -2056,7 +2056,7 @@ extern const f32 lbl_803DF270;
 extern const f32 lbl_803DF274;
 extern const f32 lbl_803DF278;
 
-#define D7_CLOUD ((u8 *)clouds[i + 4])
+#define D7_CLOUD (*(u8 **)((u8 *)(clouds + i) + 16))
 
 void dll_07_func06(void)
 {
@@ -2235,10 +2235,10 @@ void dll_07_func06(void)
             }
             else
             {
-                inpos[0] = ((NewCloud*)p)->worldPosX;
-                inpos[1] = ((NewCloud*)p)->worldPosY;
-                inpos[2] = ((NewCloud*)p)->worldPosZ;
-                snowCloudComputeDrift(wind, inpos, ((NewCloud*)p)->driftScale);
+                inpos[0] = ((NewCloud*)D7_CLOUD)->worldPosX;
+                inpos[1] = ((NewCloud*)D7_CLOUD)->worldPosY;
+                inpos[2] = ((NewCloud*)D7_CLOUD)->worldPosZ;
+                snowCloudComputeDrift(wind, inpos, ((NewCloud*)D7_CLOUD)->driftScale);
                 ((NewCloud*)D7_CLOUD)->windVelX = -wind[0] + ((NewCloud*)D7_CLOUD)->driftOffset;
                 ((NewCloud*)D7_CLOUD)->windVelZ = -wind[2] + ((NewCloud*)D7_CLOUD)->driftOffset;
                 ((NewCloud*)D7_CLOUD)->unk1428 = lbl_803DF1A0;
