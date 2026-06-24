@@ -165,7 +165,7 @@ void doorf4_init(int* obj, int* params)
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
     ((GameObject*)obj)->animEventCallback = doorf4_SeqFn;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     ((GameObject*)obj)->objectFlags |= 0x6000;
     state->gameBitA = *(s16*)((char*)params + 0x1e);
     state->unk18 = *(s16*)((char*)params + 0x20);
@@ -326,13 +326,13 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 2:
         if (gb == 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 8) != 0 && GameBit_Get(0x2c) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0 && GameBit_Get(0x2c) != 0)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 GameBit_Set(sub->gameBitA, 1);
             }
         }
@@ -342,7 +342,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         break;
     case 4:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if (gb != 0)
         {
             for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0;
@@ -404,10 +404,10 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         if (GameBit_Get(sub->gameBitB) != 0 && gb == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 GameBit_Set(sub->gameBitA, 1);
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 gb = 1;
@@ -416,7 +416,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         if (gb != 0)
         {
             active = 1;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         break;
     }
