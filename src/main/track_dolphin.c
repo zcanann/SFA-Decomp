@@ -2553,8 +2553,8 @@ int objShadowFn_80062498(int* obj, int param2)
 }
 
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1,
-                       f64 y1, f32 z1);
+extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1,
+                       f32 y1, f32 z1);
 extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern u32 gTrackTriangleBufferEnd;
 extern s16 gTrackTriangleCount;
@@ -4405,7 +4405,7 @@ extern const f32 lbl_803DECF4;
 extern const f32 lbl_803DECF8;
 
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 scale,
-                f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
+                f32 x0, f32 y0d, f32 z0, f32 x1, f32 y1d, f32 z1)
 {
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
