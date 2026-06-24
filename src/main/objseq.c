@@ -1729,20 +1729,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
     if (((ObjSeqState*)seq)->animEntries != NULL)
     {
-        if (((ObjSeqState*)seq)->animEntries == NULL)
-            {
-                val = lbl_803DEFB0;
-            }
-            else
-            {
-                val = lbl_803DEFB0;
-                if (((ObjSeqState*)seq)->trackRunLength[18] != 0)
-                {
-                    val = objCurveInterpolate(
-                        (ObjCurveKey*)(((ObjSeqState*)seq)->animEntries + ((ObjSeqState*)seq)->trackAnimStart[18] * 8),
-                        ((ObjSeqState*)seq)->trackRunLength[18] & 0xfff, frame);
-                }
-            }
+        val = ObjSeq_SampleTrackCurve(seq, 18, frame);
         vol = val;
 
         for (i = 0; i < 3; i++)
