@@ -45,6 +45,7 @@
 #define GX_BL_SRCALPHA 4
 #define GX_BL_INVSRCALPHA 5
 #define GX_LO_NOOP 5
+#define GX_FOG_NONE 0
 
 typedef struct TrackP6Entry
 {
@@ -3993,7 +3994,7 @@ void renderGlows(void)
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
-    GXSetFog(0, fogCol, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC);
+    GXSetFog(GX_FOG_NONE, fogCol, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC);
     gxBlendFn_800789ac();
     gSunFlareScissorWidth = 0;
     gSunFlareScissorHeight = 0;
