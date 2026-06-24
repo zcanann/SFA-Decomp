@@ -31,6 +31,12 @@
 
 #include "main/dll/ARW/arwing_state.h"
 
+/* ArwingState.flags477 bits */
+#define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
+#define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
+#define ARWING_FLAG_ROLL_RIGHT 0x4   /* barrel-rolling right */
+#define ARWING_FLAG_ROLLING    0x6   /* ROLL_LEFT | ROLL_RIGHT */
+
 typedef struct ArwarwingState
 {
     u8 pad0[0x47C - 0x0];
@@ -462,7 +468,7 @@ void arwarwing_update(int obj)
     f32 t;
     f32 throttle;
 
-    if ((((ArwingState*)state)->flags477 & 1) == 0)
+    if ((((ArwingState*)state)->flags477 & ARWING_FLAG_ACTIVE) == 0)
     {
         arwarwing_initAttachments(obj, state);
         return;
@@ -722,12 +728,12 @@ void arwarwing_updateRollAndEngine(int obj, int state)
 
     if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
     {
-        if ((((ArwingState*)state)->flags477 & 0x2) == 0)
+        if ((((ArwingState*)state)->flags477 & ARWING_FLAG_ROLL_LEFT) == 0)
         {
             if ((((ArwingState*)state)->inputFlags & 0x800) != 0)
             {
-                ((ArwingState*)state)->flags477 &= ~0x4;
-                ((ArwingState*)state)->flags477 |= 0x2;
+                ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_RIGHT;
+                ((ArwingState*)state)->flags477 |= ARWING_FLAG_ROLL_LEFT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F58;
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_eba_smallswipe2, 3);
             }
@@ -738,16 +744,16 @@ void arwarwing_updateRollAndEngine(int obj, int state)
             ((ArwingState*)state)->accelZ = ((ArwingState*)state)->accelZRollL;
             if ((((ArwingState*)state)->inputFlagsPrev & 0x800) != 0)
             {
-                ((ArwingState*)state)->flags477 &= ~0x2;
+                ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_LEFT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F5C;
             }
         }
-        if ((((ArwingState*)state)->flags477 & 0x4) == 0)
+        if ((((ArwingState*)state)->flags477 & ARWING_FLAG_ROLL_RIGHT) == 0)
         {
             if ((((ArwingState*)state)->inputFlags & 0x400) != 0)
             {
-                ((ArwingState*)state)->flags477 &= ~0x2;
-                ((ArwingState*)state)->flags477 |= 0x4;
+                ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_LEFT;
+                ((ArwingState*)state)->flags477 |= ARWING_FLAG_ROLL_RIGHT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F60;
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_kalda_distress, 3);
             }
@@ -758,7 +764,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
             ((ArwingState*)state)->accelZ = ((ArwingState*)state)->accelZRollR;
             if ((((ArwingState*)state)->inputFlagsPrev & 0x400) != 0)
             {
-                ((ArwingState*)state)->flags477 &= ~0x4;
+                ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLL_RIGHT;
                 ((ArwingState*)state)->wingFlexTarget = lbl_803E6F5C;
             }
         }
@@ -776,7 +782,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         }
     }
 
-    if ((((ArwingState*)state)->flags477 & 0x6) == 0)
+    if ((((ArwingState*)state)->flags477 & ARWING_FLAG_ROLLING) == 0)
     {
         ((ArwingState*)state)->speedScaleZ = lbl_803E6ED0;
         ((ArwingState*)state)->accelZ = ((ArwingState*)state)->accelZNeutral;
@@ -805,7 +811,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
         f32 zero;
         if (((ArwingState*)state)->rollEnergy <= (zero = lbl_803E6ECC))
         {
-            ((ArwingState*)state)->flags477 &= ~0x6;
+            ((ArwingState*)state)->flags477 &= ~ARWING_FLAG_ROLLING;
             ((ArwingState*)state)->rollCooldown = ((ArwingState*)state)->rollCooldownInit;
             ((ArwingState*)state)->rollEnergy = ((ArwingState*)state)->rollEnergyMax;
             ((ArwingState*)state)->wingFlexTarget = lbl_803E6F68;
@@ -933,7 +939,7 @@ void arwarwing_initAttachments(int obj, int state)
     if (found != 0)
     {
         (*gCameraInterface)->setFocus((void*)obj, 0);
-        ((ArwingState*)state)->flags477 |= 1;
+        ((ArwingState*)state)->flags477 |= ARWING_FLAG_ACTIVE;
         ((ArwingState*)state)->maxSpeedX = lbl_803E6F70;
         ((ArwingState*)state)->accelX = (c6F74 = lbl_803E6F74);
         ((ArwingState*)state)->maxSpeedY = (c6F78 = lbl_803E6F78);
@@ -1207,7 +1213,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     Camera_GetCurrentViewSlot();
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)arwarwing_clearAimSnapshot;
-    if ((((ArwingState*)state)->flags477 & 1) == 0)
+    if ((((ArwingState*)state)->flags477 & ARWING_FLAG_ACTIVE) == 0)
     {
         arwarwing_initAttachments(obj, state);
         return 0;
