@@ -1811,9 +1811,9 @@ extern int mapTextureOverrideAcquire(int tex, int value, int type);
 
 void MapBlock_initShaders(int obj)
 {
-    int i;
-    int block;
     char* p;
+    int block;
+    int i;
     int j;
     int v;
     int outerOff;
