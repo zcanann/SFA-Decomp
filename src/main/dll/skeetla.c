@@ -836,10 +836,10 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
 {
     s8 status[8];
     s8 i;
+    u32* route;
+    u8* search;
     s8 pass;
     s8 failedCount;
-    u8* search;
-    u32* route;
 
     route = routes;
     search = state;
