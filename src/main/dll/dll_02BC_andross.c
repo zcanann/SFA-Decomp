@@ -295,12 +295,6 @@ void andross_update(int obj)
     f32 fb;
     f32 zero;
     f32 fc;
-    f32 searchDist;
-    f32 searchDist3;
-    f32 searchDist2;
-    f32 searchDist1;
-    f32 searchDist0;
-    f32 camActionParam;
     s16 delayPair[2];
     SunVec3 velCalc0;
     SunVec3 velArg0;
@@ -315,6 +309,12 @@ void andross_update(int obj)
     SunVec3 thrustBArg;
     SunVec3 thrustA;
     SunVec3 thrustB;
+    f32 camActionParam;
+    f32 searchDist0;
+    f32 searchDist1;
+    f32 searchDist2;
+    f32 searchDist3;
+    f32 searchDist;
     u32 randOffsetY;
     state = ((GameObject*)obj)->extra;
     moveChanged = 0;
