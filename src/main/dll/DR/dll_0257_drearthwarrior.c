@@ -180,7 +180,7 @@ typedef struct EarthWarriorState
     u8 pad35C[0x9fd - 0x35c];
     u8 unk9FD;
     u8 pad9FE[0xb54 - 0x9fe];
-    int unkB54;
+    int helperObj;
     EarthWarriorSub sub; /* 0xb58 */
 } EarthWarriorState;
 
@@ -423,10 +423,10 @@ void DR_EarthWarrior_free(int obj)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
     }
-    if (*(void* *)&inner->unkB54 != NULL)
+    if (*(void* *)&inner->helperObj != NULL)
     {
-        ObjLink_DetachChild(obj, inner->unkB54);
-        Obj_FreeObject(inner->unkB54);
+        ObjLink_DetachChild(obj, inner->helperObj);
+        Obj_FreeObject(inner->helperObj);
     }
 }
 
@@ -1231,13 +1231,13 @@ void DR_EarthWarrior_update(int obj)
     Obj_GetPlayerObject();
     hitState->hitVolumePriority = 0;
     hitState->hitVolumeId = 0;
-    if (*(void* *)&inner->unkB54 == NULL && Obj_IsLoadingLocked() != 0)
+    if (*(void* *)&inner->helperObj == NULL && Obj_IsLoadingLocked() != 0)
     {
         int setup = Obj_AllocObjectSetup(0x18, 0x6f5);
         int newObj = Obj_SetupObject(setup, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                      *(int*)&((GameObject*)obj)->anim.parent);
         ObjLink_AttachChild(obj, newObj, 2);
-        inner->unkB54 = newObj;
+        inner->helperObj = newObj;
     }
     inner->sub.unk986 = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
