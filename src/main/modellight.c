@@ -6,6 +6,16 @@
 #include "main/camera.h"
 #include "main/texture.h"
 #include "main/modellight.h"
+#define GX_COLOR0 0
+#define GX_DF_NONE 0
+#define GX_FALSE 0
+#define GX_SRC_REG 0
+#define GX_COLOR1 1
+#define GX_AF_NONE 2
+#define GX_ALPHA0 2
+#define GX_ALPHA1 3
+#define GX_COLOR0A0 4
+#define GX_COLOR1A1 5
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -1040,20 +1050,20 @@ void modelLightChannels_applyGXControls(void)
 
     if ((activeMask & 1) != 0 && (activeMask & 4) == 0)
     {
-        GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     }
     else if ((activeMask & 1) == 0 && (activeMask & 4) != 0)
     {
-        GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     }
 
     if ((activeMask & 2) != 0 && (activeMask & 8) == 0)
     {
-        GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_ALPHA1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     }
     else if ((activeMask & 2) == 0 && (activeMask & 8) != 0)
     {
-        GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     }
 
     if ((activeMask & 0x2a) != 0)
@@ -1062,13 +1072,13 @@ void modelLightChannels_applyGXControls(void)
     }
     else if ((activeMask & 0x15) != 0)
     {
-        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
     }
     else
     {
-        GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(0);
     }
 }
