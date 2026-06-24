@@ -14,6 +14,15 @@
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
+#define GX_BM_NONE 0
+#define GX_BL_ZERO 0
+#define GX_BL_ONE 1
+#define GX_LO_NOOP 5
+#define GX_AOP_AND 0
+#define GX_ALWAYS 7
+#define GX_MT_XF_FLUSH 1
+#define GX_TF_RGBA8 6
+#define GX_FALSE 0
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1077,11 +1086,11 @@ void gxFn_80052dc0(void)
                lbl_803DEB5C, lbl_803DEB7C,
                lbl_803DEB5C, LastReadIssued_803DEB58.lo);
     GXSetProjection(omtx, 1);
-    GXSetBlendMode(0, 1, 0, 5);
+    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     gxSetZMode_(0, 2, 0);
     GXSetCullMode(GX_CULL_NONE);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(10, 1);
@@ -1997,7 +2006,7 @@ void lightFn_80052974(f32 a, f32 b)
 
     if (gRcpWarpDistortListBuilt == 0)
     {
-        GXSetMisc(1, 0);
+        GXSetMisc(GX_MT_XF_FLUSH, 0);
         DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
         w = LastReadIssued_803DEB58.lo;
@@ -2049,7 +2058,7 @@ void lightFn_80052974(f32 a, f32 b)
         }
         gRcpWarpDistortListSize = GXEndDisplayList();
         gRcpWarpDistortListBuilt = 1;
-        GXSetMisc(1, 8);
+        GXSetMisc(GX_MT_XF_FLUSH, 8);
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
@@ -2497,7 +2506,7 @@ void gxTextureFn_80052efc(void)
     GXLoadTexMtxImm(mtx, 0x1e, 1);
     GXSetChanAmbColor(4, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetChanAmbColor(5, *(GXColor8*)&gRcpDistortAmbColor);
-    GXSetTexCopyDst(0x20, 0x20, 6, 0);
+    GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
     base = gRcpDistortSlots;
