@@ -1247,7 +1247,6 @@ void titleScreenDrawFn_80093db4(void)
         {
             if (randomGetRange(0, 9) < 5)
             {
-                f32 z2 = lbl_803DF28C;
                 do
                 {
                     v[0] = (int)
@@ -1257,7 +1256,7 @@ void titleScreenDrawFn_80093db4(void)
                     v[2] = (int)
                     randomGetRange(-5000, 5000);
                 }
-                while (z2 == v[0] && z2 == v[1] && z2 == v[2]);
+                while (zero == v[0] && zero == v[1] && zero == v[2]);
                 PSVECNormalize(v, v);
                 PSVECScale(v, v, gNewCloudStarRadius);
             }
