@@ -156,9 +156,9 @@ extern f32 lbl_803E57B8;
 
 void fn_801DFA28(u8* obj)
 {
-    u8* tricky;
-    u8* state;
     int spawnData;
+    u8* state;
+    u8* tricky;
     int objArray;
     int sfxObj;
     u8* otherObj;
