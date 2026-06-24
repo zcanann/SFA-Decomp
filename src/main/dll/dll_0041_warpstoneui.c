@@ -43,6 +43,10 @@ typedef struct
     u8 b3; /* unused/padding */
 } WarpstoneEntry;
 
+/* gWarpStoneUiEntryTable holds one WarpstoneEntry per warpstone destination
+   (data symbol size 0x18 / sizeof(WarpstoneEntry) == 6). */
+#define WARPSTONE_UI_ENTRY_COUNT 6
+
 extern u8 gWarpStoneUiMenuItemTemplates[];
 extern u8 gWarpStoneUiMenuItems[];
 extern WarpstoneEntry gWarpStoneUiEntryTable[];
@@ -132,7 +136,7 @@ void WarpstoneUI_showUI(int arg)
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
         if (gWarpStoneUiMenuActive == 0)
         {
-            n = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, 6, gWarpStoneUiSelectedIndices);
+            n = fn_801343CC(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
             (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))
                     ((char*)(*gTitleMenuLinkInterface) + 4))
                 (gWarpStoneUiMenuItems, n, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
