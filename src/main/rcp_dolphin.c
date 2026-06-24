@@ -1970,6 +1970,7 @@ extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 extern u8 gRcpWarpDistortDisplayList[];
 extern F32Pair LastReadFinished_803DEB50;
+extern f32 lbl_803DEB54;
 extern f32 lbl_803DEB64;
 
 #pragma opt_loop_invariants off
@@ -1996,8 +1997,8 @@ void lightFn_80052974(f32 a, f32 b)
         DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
         w = LastReadIssued_803DEB58.lo;
-        half = LastReadIssued_803DEB58.hi;
-        scale = LastReadFinished_803DEB50.hi;
+        half = lbl_803DEB5C;
+        scale = lbl_803DEB54;
         for (i = 0; i < 0x10; i++)
         {
             GXBegin(0x98, 4, 0x22);
