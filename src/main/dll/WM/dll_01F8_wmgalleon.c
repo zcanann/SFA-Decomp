@@ -284,7 +284,7 @@ void WM_Galleon_update(int* obj)
     player = Obj_GetPlayerObject();
     state = (WMGalleonState*)OBJ_PTR(obj, 0xb8);
 
-    if (GameBit_Get(0x429) != 0)
+    if (GameBit_Get(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0)
     {
         if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) != 0)
         {
@@ -300,7 +300,7 @@ void WM_Galleon_update(int* obj)
 
     if (GameBit_Get(0xd0) == 0)
     {
-        if ((state->mapEventsLatched == 0) && (GameBit_Get(0x429) == 0))
+        if ((state->mapEventsLatched == 0) && (GameBit_Get(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) == 0))
         {
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
