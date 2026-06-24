@@ -40,6 +40,9 @@ typedef struct SaveSelectPanel
 /* TitleMenuTextEntry.flags (at offset 0x16): row is hidden / non-selectable. */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
+/* count of gSaveSelectTextBuffers scratch allocations (symbol size 0x28 / 4). */
+#define SAVE_SELECT_TEXT_BUFFER_COUNT 10
+
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
 
@@ -73,7 +76,7 @@ extern s16 gSaveSelectTextureIds;
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 
-extern void* gSaveSelectTextBuffers[10];
+extern void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern int gSaveSelectInfoStartSlot;
@@ -178,7 +181,7 @@ void SaveSelectScreen_release(void)
         gSaveSelectTextBuffers[i] = zero;
         i++;
     }
-    while (i < 10);
+    while (i < SAVE_SELECT_TEXT_BUFFER_COUNT);
 }
 
 #pragma dont_inline on
@@ -788,7 +791,7 @@ void SaveSelectScreen_initialise(void)
     gSaveSelectRefreshCounter = 4;
     lbl_803DD6B4 = 0;
 
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < SAVE_SELECT_TEXT_BUFFER_COUNT; i++)
     {
         gSaveSelectTextBuffers[i] = mmAlloc(5, 5, 0);
     }
