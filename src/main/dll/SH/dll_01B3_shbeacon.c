@@ -28,6 +28,13 @@ typedef struct ShBeaconPlacement
     u8 pad22[0x28 - 0x22];
 } ShBeaconPlacement;
 
+typedef enum ShBeaconMode
+{
+    SH_BEACON_MODE_UNLIT = 0,    /* waits for the light event, then ignites */
+    SH_BEACON_MODE_LIT = 1,      /* fully lit: loops fire sfx and emits bursts */
+    SH_BEACON_MODE_IGNITING = 2, /* ignition sequence and flame/fade effects */
+} ShBeaconMode;
+
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
@@ -94,15 +101,15 @@ void sh_beacon_init(int obj, int defData)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 
     ((ShBeaconState*)state)->mode = GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
-    if (((ShBeaconState*)state)->mode == 0)
+    if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT)
     {
         if (GameBit_Get(((ShBeaconPlacement*)defData)->igniteGameBit) != 0)
         {
-            ((ShBeaconState*)state)->mode = 2;
+            ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
         }
     }
 
-    if (((ShBeaconState*)state)->mode != 0 && Obj_IsLoadingLocked() != 0)
+    if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
@@ -130,7 +137,7 @@ void sh_beacon_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     switch (((ShBeaconState*)state)->mode)
     {
-    case 0:
+    case SH_BEACON_MODE_UNLIT:
         if (((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) &&
             ((*gGameUIInterface)->isEventReady(0x194) != 0))
         {
@@ -148,9 +155,9 @@ void sh_beacon_update(int obj)
                 ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
             }
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            ((ShBeaconState*)state)->mode = 2;
+            ((ShBeaconState*)state)->mode = SH_BEACON_MODE_IGNITING;
         }
-    case 2:
+    case SH_BEACON_MODE_IGNITING:
         state2 = *(int*)&((GameObject*)obj)->extra;
         ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer + timeDelta;
         if (((ShBeaconState*)state2)->seqTimer >= lbl_803E5528)
@@ -162,7 +169,7 @@ void sh_beacon_update(int obj)
             }
         }
         break;
-    case 1:
+    case SH_BEACON_MODE_LIT:
         if ((((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping) == 0)
         {
             Sfx_AddLoopedObjectSound(obj, 0x9e);
@@ -189,14 +196,14 @@ void sh_beacon_update(int obj)
         }
         break;
     }
-    if (((ShBeaconState*)state)->mode != 1)
+    if (((ShBeaconState*)state)->mode != SH_BEACON_MODE_LIT)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-        if (((ShBeaconState*)state)->mode == 2)
+        if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING)
         {
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 8);
         }
-        else if ((((ShBeaconState*)state)->mode == 0) && (GameBit_Get(0x194) == 0))
+        else if ((((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT) && (GameBit_Get(0x194) == 0))
         {
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -228,9 +235,9 @@ void sh_beacon_update(int obj)
         {
             fn_80098B18(obj, lbl_803E553C * ((GameObject*)obj)->anim.rootMotionScale, 3, 0, 0, 0);
         }
-        if ((((ShBeaconState*)state)->fadeTimer <= lbl_803E5538) && (((ShBeaconState*)state)->mode == 2))
+        if ((((ShBeaconState*)state)->fadeTimer <= lbl_803E5538) && (((ShBeaconState*)state)->mode == SH_BEACON_MODE_IGNITING))
         {
-            ((ShBeaconState*)state)->mode = 1;
+            ((ShBeaconState*)state)->mode = SH_BEACON_MODE_LIT;
             GameBit_Set(((ShBeaconPlacement*)def)->litGameBit, 1);
             if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0))
             {
