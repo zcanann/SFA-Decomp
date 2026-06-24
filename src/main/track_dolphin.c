@@ -18,6 +18,29 @@
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
+#define GX_COLOR0A0 4
+#define GX_COLOR1A1 5
+#define GX_COLOR_NULL 0xff
+#define GX_DISABLE 0
+#define GX_ENABLE 1
+#define GX_SRC_REG 0
+#define GX_DF_NONE 0
+#define GX_AF_NONE 2
+#define GX_TEVSTAGE0 0
+#define GX_TEXCOORD0 0
+#define GX_TEXMAP0 0
+#define GX_CC_ZERO 0xf
+#define GX_CA_TEXA 4
+#define GX_CA_KONST 6
+#define GX_CA_ZERO 7
+#define GX_TEV_ADD 0
+#define GX_TB_ZERO 0
+#define GX_CS_SCALE_1 0
+#define GX_TEVPREV 0
+#define GX_BM_BLEND 1
+#define GX_BL_SRCALPHA 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP 5
 
 typedef struct TrackP6Entry
 {
@@ -3601,19 +3624,19 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetTevKAlphaSel(0, 0x1c);
             GXSetNumTevStages(1);
             GXSetNumIndStages(0);
-            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(0);
-            GXSetTevOrder(0, 0, 0, 0xff);
-            GXSetTevDirect(0);
-            GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
-            GXSetTevAlphaIn(0, 7, 6, 4, 7);
-            GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-            GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+            GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+            GXSetTevDirect(GX_TEVSTAGE0);
+            GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
+            GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_KONST, GX_CA_TEXA, GX_CA_ZERO);
+            GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
+            GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
             gxSetZMode_(1, 3, 0);
             GXSetCullMode(GX_CULL_NONE);
             GXSetCurrentMtx(0x1b);
-            GXSetBlendMode(1, 4, 5, 5);
+            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
             selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
             GXBegin(0x80, 6, 4);
             GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
