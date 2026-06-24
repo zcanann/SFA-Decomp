@@ -210,12 +210,18 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
     int mixed;
     s16* audioPtr;
     u32 remain;
+    u32 cnt;
+    s16* dst;
+    s16* src;
 
     if (source != NULL)
     {
         if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.internalState == 2) && (lbl_803A5D60.audioExists != 0))
         {
-            do
+            cnt = sampleCount;
+            dst = destination;
+            src = source;
+            for (;;)
             {
                 do
                 {
@@ -224,7 +230,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                         lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
                         if (lbl_803A5D60.curAudioBuffer == NULL)
                         {
-                            memcpy(destination, source, sampleCount << 2);
+                            memcpy(dst, src, cnt << 2);
                             return;
                         }
                         lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
@@ -232,16 +238,16 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     validSamples = lbl_803A5D60.curAudioBuffer->validSample;
                 }
                 while (validSamples == 0);
-                if (validSamples >= sampleCount)
+                if (validSamples >= cnt)
                 {
-                    process = sampleCount;
+                    process = cnt;
                 }
                 else
                 {
                     process = validSamples;
                 }
                 audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
-                for (remain = 0; remain != process; remain = remain + 1)
+                for (remain = 0; remain < process; remain = remain + 1)
                 {
                     if (lbl_803A5D60.rampCount != 0)
                     {
@@ -253,7 +259,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                         lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
                     }
                     volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
-                    mixed = (int)*source + ((int)((u32)volumeScale * (int)*audioPtr) >> 0xf);
+                    mixed = (int)*src + ((int)((u32)volumeScale * (int)*audioPtr) >> 0xf);
                     if (mixed < S16_MIN)
                     {
                         mixed = S16_MIN;
@@ -262,8 +268,8 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     {
                         mixed = S16_MAX;
                     }
-                    *destination = mixed;
-                    mixed = source[1] + ((int)((u32)volumeScale * audioPtr[1]) >> 0xf);
+                    *dst = mixed;
+                    mixed = src[1] + ((int)((u32)volumeScale * audioPtr[1]) >> 0xf);
                     if (mixed < S16_MIN)
                     {
                         mixed = S16_MIN;
@@ -272,12 +278,12 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     {
                         mixed = S16_MAX;
                     }
-                    destination[1] = mixed;
-                    destination = destination + 2;
-                    source = source + 2;
+                    dst[1] = mixed;
+                    dst = dst + 2;
+                    src = src + 2;
                     audioPtr = audioPtr + 2;
                 }
-                sampleCount = sampleCount - process;
+                cnt = cnt - process;
                 lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - process;
                 lbl_803A5D60.curAudioBuffer->curPtr = audioPtr;
                 if (lbl_803A5D60.curAudioBuffer->validSample == 0)
@@ -285,8 +291,11 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
                     lbl_803A5D60.curAudioBuffer = NULL;
                 }
+                if (cnt == 0)
+                {
+                    break;
+                }
             }
-            while (sampleCount != 0);
         }
         else
         {
@@ -295,7 +304,9 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
     }
     else if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.internalState == 2) && (lbl_803A5D60.audioExists != 0))
     {
-        do
+        cnt = sampleCount;
+        dst = destination;
+        for (;;)
         {
             do
             {
@@ -304,7 +315,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                     lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
                     if (lbl_803A5D60.curAudioBuffer == NULL)
                     {
-                        memset(destination, 0, sampleCount << 2);
+                        memset(dst, 0, cnt << 2);
                         return;
                     }
                     lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
@@ -312,12 +323,12 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 validSamples = lbl_803A5D60.curAudioBuffer->validSample;
             }
             while (validSamples == 0);
-            if (validSamples >= sampleCount)
+            if (validSamples >= cnt)
             {
-                validSamples = sampleCount;
+                validSamples = cnt;
             }
             audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
-            for (remain = 0; remain != validSamples; remain = remain + 1)
+            for (remain = 0; remain < validSamples; remain = remain + 1)
             {
                 if (lbl_803A5D60.rampCount != 0)
                 {
@@ -338,7 +349,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 {
                     mixed = S16_MAX;
                 }
-                *destination = mixed;
+                *dst = mixed;
                 mixed = (int)((u32)volumeScale * audioPtr[1]) >> 0xf;
                 if (mixed < S16_MIN)
                 {
@@ -348,11 +359,11 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 {
                     mixed = S16_MAX;
                 }
-                destination[1] = mixed;
-                destination = destination + 2;
+                dst[1] = mixed;
+                dst = dst + 2;
                 audioPtr = audioPtr + 2;
             }
-            sampleCount = sampleCount - validSamples;
+            cnt = cnt - validSamples;
             lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - validSamples;
             lbl_803A5D60.curAudioBuffer->curPtr = audioPtr;
             if (lbl_803A5D60.curAudioBuffer->validSample == 0)
@@ -360,8 +371,11 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
                 PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
                 lbl_803A5D60.curAudioBuffer = NULL;
             }
+            if (cnt == 0)
+            {
+                break;
+            }
         }
-        while (sampleCount != 0);
     }
     else
     {
