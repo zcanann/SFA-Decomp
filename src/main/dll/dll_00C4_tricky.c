@@ -1283,7 +1283,7 @@ void Tricky_update(int obj)
                     if (*(u32*)&((TrickyState*)state)->unk28 != target)
                     {
                         *(u32*)&((TrickyState*)state)->unk28 = target;
-                        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x400;
+                        *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                         ((TrickyState*)state)->unkD2 = 0;
                     }
                     ((TrickyState*)state)->substate = 0;
@@ -1300,7 +1300,7 @@ void Tricky_update(int obj)
                         if (*(u32*)&((TrickyState*)state)->unk28 != (u32)(step + 0x18))
                         {
                             *(u32*)&((TrickyState*)state)->unk28 = step + 0x18;
-                            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x400;
+                            *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                             ((TrickyState*)state)->unkD2 = 0;
                         }
                         ((TrickyState*)state)->unk08 = 0xd;
@@ -1343,7 +1343,7 @@ void Tricky_update(int obj)
             if (*(u32*)&((TrickyState*)state)->unk28 != (u32) & ((TrickyState*)state)->unk72C)
             {
                 *(u32*)&((TrickyState*)state)->unk28 = (u32) & ((TrickyState*)state)->unk72C;
-                ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x400;
+                *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                 ((TrickyState*)state)->unkD2 = 0;
             }
         }
