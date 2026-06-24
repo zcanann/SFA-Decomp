@@ -194,7 +194,7 @@ void enemymushroom_update(int* obj)
     player = Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
     ObjHits_ClearHitVolumes((int)obj);
-    ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
+    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     ((EnemyMushroomState*)state)->stateFlags |= 0x4;
 
     if (objIsFrozen(obj))
@@ -276,7 +276,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 3:
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9c);
         if (((EnemyMushroomState*)state)->stateFlags & 0x2)
         {
@@ -284,7 +284,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 4:
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomChaseRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(((EnemyMushroomState*)state)->stateFlags & 0x1))
@@ -323,7 +323,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 5:
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
         if (((EnemyMushroomState*)state)->timer > (f32)((EnemymushroomPlacement*)src)->regrowDelay)
         {
@@ -386,7 +386,7 @@ void enemymushroom_update(int* obj)
                     ((EnemyMushroomState*)state)->effectTimer = lbl_803E5334;
                 }
                 ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
-                    ((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
+                    ((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
             }
         }
         break;
@@ -401,7 +401,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     default:
-        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         {
             f32 dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
