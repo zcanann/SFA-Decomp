@@ -243,7 +243,7 @@ void dimcannon_update(int* obj)
         return;
     }
 
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) && GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     }
@@ -276,7 +276,7 @@ void dimcannon_update(int* obj)
             {
                 ((DimCannonState*)state)->chargeTimer = (s8)(t - framesThisStep);
             }
-            else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1)
+            else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 int* focusObj;
                 ((DimCannonState*)state)->airMeterCharge = 0;
