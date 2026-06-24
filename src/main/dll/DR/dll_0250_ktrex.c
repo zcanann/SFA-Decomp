@@ -908,14 +908,14 @@ int ktrex_stateHandlerB02(int obj, int runtime)
 
 void ktrex_init(int obj, char* arg, int flag)
 {
-    int i;
-    ObjfsaRomCurveDef* cp;
-    u8 spawnFlags;
-    KTRexRuntime* rt;
-    int* base = (int*)lbl_8032A510;
     int* pA;
     int* pB;
     int* pC;
+    int* base = (int*)lbl_8032A510;
+    KTRexRuntime* rt;
+    int i;
+    ObjfsaRomCurveDef* cp;
+    u8 spawnFlags;
     s16 yaw;
     gKTRexRuntime = ((GameObject*)obj)->extra;
     spawnFlags = 0x10;
