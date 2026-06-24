@@ -1,5 +1,14 @@
 #include "main/engine_shared.h"
 
+#define PAD_MOTOR_STOP 0
+#define PAD_MOTOR_RUMBLE 1
+#define PAD_MOTOR_STOP_HARD 2
+
+#define PAD_ERR_NO_CONTROLLER -1
+#define PAD_ERR_TRANSFER -3
+
+#define PAD_CHAN0_BIT 0x80000000
+
 void doNothing_endOfFrame(void)
 {
 }
@@ -38,7 +47,7 @@ void stopRumble2(void)
 {
     if (rumbleEnabled != 0)
     {
-        PADControlMotor(0, 2);
+        PADControlMotor(0, PAD_MOTOR_STOP_HARD);
         gRumbleTimer = lbl_803DE6E8;
     }
 }
@@ -47,7 +56,7 @@ void stopRumble(void)
 {
     if (rumbleEnabled != 0)
     {
-        PADControlMotor(0, 0);
+        PADControlMotor(0, PAD_MOTOR_STOP);
         gRumbleTimer = lbl_803DE6E8;
     }
 }
@@ -58,7 +67,7 @@ void doRumble(f32 duration)
     {
         f32 rumbleTimer;
 
-        PADControlMotor(0, 1);
+        PADControlMotor(0, PAD_MOTOR_RUMBLE);
         rumbleTimer = gRumbleTimer;
         gRumbleTimer = (rumbleTimer > duration) ? rumbleTimer : duration;
     }
@@ -328,7 +337,7 @@ int initControllers(void)
 
     gPadStatusToggle = 0;
     rumbleEnabled = 1;
-    PADControlMotor(0, 2);
+    PADControlMotor(0, PAD_MOTOR_STOP_HARD);
     gRumbleTimer = lbl_803DE6E8;
     return 0;
 }
@@ -367,7 +376,7 @@ void padUpdate(void)
     other = toggle ^ 1;
     gPadStatusToggle = other;
     readPad = (PadStatusLite*)((u8*)padStateBlock + other * 0x30 + 0x40);
-    if (PADRead(readPad) == -3)
+    if (PADRead(readPad) == PAD_ERR_TRANSFER)
     {
         return;
     }
@@ -381,7 +390,7 @@ void padUpdate(void)
             {
                 if (rumbleEnabled != 0)
                 {
-                    PADControlMotor(0, 0);
+                    PADControlMotor(0, PAD_MOTOR_STOP);
                     gRumbleTimer = lbl_803DE6E8;
                 }
             }
@@ -409,7 +418,7 @@ void padUpdate(void)
 
     for (i = 0; i < 4; i++)
     {
-        if (readPad->error == -1)
+        if (readPad->error == PAD_ERR_NO_CONTROLLER)
         {
             *prevStickY = 0;
             *prevStickX = 0;
@@ -427,8 +436,8 @@ void padUpdate(void)
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PadStatusLite));
             memset((u8*)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
-            gPadResetMask |= 0x80000000U >> i;
-            readPad->error = -1;
+            gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
+            readPad->error = PAD_ERR_NO_CONTROLLER;
         }
         else if ((u8)(readPad->error + 3) <= 1 || lbl_803DCCA5 == 0)
         {
