@@ -300,9 +300,7 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     f32 t1;
     f32 t2;
     f32 negdot;
-    dp = pts;
-    sp = obj;
-    for (i = 0; i < 4; i++)
+    for (i = 0, sp = obj, dp = pts; i < 4; i++)
     {
         *dp = (int*)(*gRomCurveInterface)->getById(*sp);
         sp++;
