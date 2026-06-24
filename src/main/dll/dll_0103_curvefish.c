@@ -85,6 +85,14 @@ typedef struct CurveFishState
     f32 phaseTimer;
 } CurveFishState;
 
+typedef enum CurveFishMode
+{
+    CURVEFISH_MODE_WAIT = 0,    /* wait setup->waitFrames game-frames */
+    CURVEFISH_MODE_SPAWN = 1,   /* teleport to spawn point and bind the curve walker */
+    CURVEFISH_MODE_FADE_IN = 2, /* fade alpha in over one frame-time */
+    CURVEFISH_MODE_CRUISE = 3,  /* cruise along the path; reaching the end resets to wait */
+} CurveFishMode;
+
 void curvefish_update(int obj)
 {
     CurveFishState* state;
@@ -121,7 +129,7 @@ void curvefish_update(int obj)
     {
     default:
         return;
-    case 0:
+    case CURVEFISH_MODE_WAIT:
         {
             f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
             if (!(state->phaseTimer >= waitTime))
@@ -129,9 +137,9 @@ void curvefish_update(int obj)
                 return;
             }
             state->phaseTimer -= waitTime;
-            state->mode = 1;
+            state->mode = CURVEFISH_MODE_SPAWN;
         }
-    case 1:
+    case CURVEFISH_MODE_SPAWN:
         ((GameObject*)obj)->anim.localPosX = setup2->spawnX;
         ((GameObject*)obj)->anim.localPosY = setup2->spawnY;
         ((GameObject*)obj)->anim.localPosZ = setup2->spawnZ;
@@ -149,9 +157,9 @@ void curvefish_update(int obj)
         {
             return;
         }
-        state->mode = 2;
+        state->mode = CURVEFISH_MODE_FADE_IN;
         state->speed = lbl_803E38F0;
-    case 2:
+    case CURVEFISH_MODE_FADE_IN:
         if (state->phaseTimer <= lbl_803E38EC)
         {
             ((GameObject*)obj)->anim.alpha =
@@ -159,8 +167,8 @@ void curvefish_update(int obj)
             return;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
-        state->mode = 3;
-    case 3:
+        state->mode = CURVEFISH_MODE_CRUISE;
+    case CURVEFISH_MODE_CRUISE:
         break;
     }
 
@@ -244,7 +252,7 @@ void curvefish_update(int obj)
             nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
             if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
             {
-                state->mode = 0;
+                state->mode = CURVEFISH_MODE_WAIT;
                 state->phaseTimer = lbl_803E38F0;
                 ((GameObject*)obj)->anim.alpha = 0;
                 return;
@@ -301,7 +309,7 @@ void curvefish_init(int obj, u8* setup)
     ((GameObject*)obj)->objectFlags = flags;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
         ((f32)(u32)((CurveFishSetup*)setup)->rootMotionScaleParam / lbl_803E3928);
-    ((CurveFishState*)state)->mode = 1;
+    ((CurveFishState*)state)->mode = CURVEFISH_MODE_SPAWN;
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)setup[0x19] / lbl_803E3928;
 }
 
