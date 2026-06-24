@@ -15257,17 +15257,17 @@ int fn_802A2918(int obj, int state, f32 fv)
         inner->climbStartY = ((GameObject*)obj)->anim.localPosY;
         {
             int joint = (int)Player_GetActiveModel(obj);
-            f32 a8, ac, jp[3];
+            f32 camBuf[2], scratch, jp[3];
             ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
-                                          jp, &a8);
+                                          jp, &scratch);
             lbl_803DE438 = ((GameObject*)obj)->anim.localPosY + jp[0];
             lbl_803DE43C = inner->climbTargetY + lbl_803DAF88[1];
-            a8 = inner->unk4E8;
-            ac = inner->climbBaseY;
+            camBuf[0] = inner->unk4E8;
+            camBuf[1] = inner->climbBaseY;
             if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
             {
                 (*gCameraInterface)->setMode(
-                    0x4b, 1, 1, 8, &a8, 0, 0);
+                    0x4b, 1, 1, 8, camBuf, 0, 0);
             }
         }
     }
