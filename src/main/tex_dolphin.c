@@ -263,14 +263,14 @@ LAB_8005E630:
     GXSetChanAmbColor(0, *(GXColor*)&gTexLightmapAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
-        GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005E718;
     }
-    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005E718;
 LAB_8005E6D0:
     objGetColor(0, &colB, &colG, &colR);
-    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(0, *(GXColor*)&colB);
 LAB_8005E718:
     return shader;
@@ -333,8 +333,8 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     GXSetCullMode(GX_CULL_BACK);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetBlendMode(1, 4, 5, 5);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     return;
 }
 
@@ -616,10 +616,10 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                         }
                         if ((u8)lo != 0)
                         {
-                            GXSetBlendMode(1, 4, 5, 5);
+                            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
                             gxSetZMode_(1, 3, 0);
                             gxSetPeControl_ZCompLoc_(1);
-                            GXSetAlphaCompare(7, 0, 0, 7, 0);
+                            GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                         }
                     }
                     if ((u8)vis == 0)
@@ -900,27 +900,27 @@ LAB_8005F690:
 LAB_8005F6F4:
     if (((*(u32*)(shader + 0x3c) & 0x40000000) != 0) || ((*(u32*)(shader + 0x3c) & 0x20000000) != 0))
     {
-        GXSetBlendMode(1, 4, 5, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         gxSetZMode_(1, 3, 0);
         gxSetPeControl_ZCompLoc_(1);
-        GXSetAlphaCompare(7, 0, 0, 7, 0);
+        GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         goto LAB_8005F7FC;
     }
     if ((*(u32*)(shader + 0x3c) & 0x400) != 0)
     {
         if ((*(u32*)(shader + 0x3c) & 0x80) == 0)
         {
-            GXSetBlendMode(0, 1, 0, 5);
+            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             gxSetZMode_(1, 3, 1);
             gxSetPeControl_ZCompLoc_(0);
-            GXSetAlphaCompare(4, 0, 0, 4, 0);
+            GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_GREATER, 0);
             goto LAB_8005F7FC;
         }
     }
-    GXSetBlendMode(0, 1, 0, 5);
+    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     gxSetZMode_(1, 3, 1);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 LAB_8005F7FC:
     if ((*(u32*)(shader + 0x3c) & 1) == 0)
     {
@@ -935,14 +935,14 @@ LAB_8005F7FC:
     GXSetChanAmbColor(0, *(GXColor*)&gTexShaderAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
-        GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005F8E4;
     }
-    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005F8E4;
 LAB_8005F89C:
     objGetColor(0, &ambR, &ambG, &ambB);
-    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(0, *(GXColor*)&ambR);
 LAB_8005F8E4:
     if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
