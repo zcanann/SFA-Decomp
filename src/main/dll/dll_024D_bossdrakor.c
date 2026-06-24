@@ -501,9 +501,9 @@ int bossdrakor_chooseNextMove(int obj, f32* speedOut)
 void bossdrakor_spawnAttackObjects(int obj, int state, int action)
 {
     int player;
-    int missile;
-    int lo;
     int hi;
+    int lo;
+    int missile;
     f32 spd;
     f32 prod;
     f32* mstate;
@@ -513,10 +513,8 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
     f32 vecB[3];
     f32 vecC[3];
 
-    if (action < 0)
+    if (action >= 0)
     {
-        return;
-    }
     if (action < 4)
     {
         switch (action)
@@ -595,6 +593,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
             }
             break;
         }
+    }
     }
 }
 
