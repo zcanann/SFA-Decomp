@@ -251,7 +251,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
         }
         break;
     case 1:
-        ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (cMenuGetSelectedItem() == -1)
         {
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
@@ -265,7 +265,7 @@ void queenFeedFn_801d44a4(void* obj, void* state)
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
+                    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 }
                 break;
             }
@@ -324,7 +324,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     void* player;
 
     player = Obj_GetPlayerObject();
-    ((GameObject*)obj)->anim.resetHitboxFlags &= ~0x8;
+    ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if (GameBit_Get(0xc48) != 0)
     {
         ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
@@ -335,7 +335,7 @@ void openPortalFn_801d4364(void* obj, void* state)
     }
     else if (GameBit_Get(0x5bd) != 0)
     {
-        ((GameObject*)obj)->anim.resetHitboxFlags |= 0x8;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell(player, 3) != 0 &&
             getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < gQueenEarthWalkerPortalSpellDistance)
         {
