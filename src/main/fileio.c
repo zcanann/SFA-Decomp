@@ -1,5 +1,12 @@
 #include "main/engine_shared.h"
 
+// DVDGetDriveStatus() drive-status codes
+#define DVD_STATE_FATAL_ERROR -1
+#define DVD_STATE_NO_DISK 4
+#define DVD_STATE_COVER_OPEN 5
+#define DVD_STATE_WRONG_DISK 6
+#define DVD_STATE_RETRY 11
+
 void dvdCheckError(void)
 {
     int msgId = 0xffff;
@@ -16,7 +23,7 @@ void dvdCheckError(void)
     gDvdLastDriveStatus = status;
     switch (status)
     {
-    case -1:
+    case DVD_STATE_FATAL_ERROR:
         msgId = 0x339;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
@@ -27,7 +34,7 @@ void dvdCheckError(void)
             gDvdCoverOpenErrorActive = 1;
         }
         break;
-    case 4:
+    case DVD_STATE_NO_DISK:
         msgId = 0x33d;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
@@ -37,7 +44,7 @@ void dvdCheckError(void)
             cutsceneFadeInOut(1);
         }
         break;
-    case 5:
+    case DVD_STATE_COVER_OPEN:
         msgId = 0x33c;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
@@ -47,7 +54,7 @@ void dvdCheckError(void)
             cutsceneFadeInOut(1);
         }
         break;
-    case 6:
+    case DVD_STATE_WRONG_DISK:
         msgId = 0x33e;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
@@ -57,7 +64,7 @@ void dvdCheckError(void)
             cutsceneFadeInOut(1);
         }
         break;
-    case 11:
+    case DVD_STATE_RETRY:
         msgId = 0x33a;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
