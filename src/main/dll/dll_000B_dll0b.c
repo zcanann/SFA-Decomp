@@ -1808,7 +1808,7 @@ void dll_0B_onMapSetup(void)
     int i;
 
     fn_800A1040(0, 1);
-    for (i = 0; i < 0x32; i++)
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         gPartfxActiveEffects[i] = NULL;
     }
@@ -1822,7 +1822,7 @@ void dll_0B_func08(void* param)
     int** arr = (int**)gPartfxActiveEffects;
     int i;
 
-    for (i = 0; i < 0x32; i++)
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         if (arr[i] != NULL && *(void**)((char*)arr[i] + 0x4) == param)
         {
@@ -2253,7 +2253,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     }
     view = Camera_GetCurrentViewSlot();
     p = (int**)gPartfxActiveEffects;
-    for (slot = 0; slot < 50; slot++)
+    for (slot = 0; slot < PARTFX_ACTIVE_EFFECT_COUNT; slot++)
     {
         if (p[slot] == NULL) continue;
         if (*(s16*)((char*)p[slot] + 0x10c) == -1) continue;
@@ -2805,7 +2805,7 @@ void dll_0B_func05(void)
     }
     gModgfxMotionStep = timeDelta;
     pp = (int**)gPartfxActiveEffects;
-    for (slot = 0; slot < 50; slot++)
+    for (slot = 0; slot < PARTFX_ACTIVE_EFFECT_COUNT; slot++)
     {
         reprocess = 1;
         while (reprocess)
