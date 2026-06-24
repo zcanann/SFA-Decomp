@@ -1047,20 +1047,20 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                        int flags)
 {
     f32 len;
-    int segs;
     f32 total;
+    f32 progress;
     f32 weight;
-    f32 px;
-    f32 py;
-    f32 pz;
     f32 nx;
     f32 ny;
     f32 nz;
-    f32 progress;
+    f32 px;
+    f32 py;
+    f32 pz;
     f32 step;
     int i;
-    int oddFlag;
     int halfWidth;
+    int oddFlag;
+    int segs;
     f32 mtx[12];
     f32 dir[3];
     f32 scaled[3];
