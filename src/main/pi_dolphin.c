@@ -5501,8 +5501,8 @@ void fn_8004DA54(char* p1)
     ((u8*)&lbl_803DB5EC)[2] = 0;
     kc = lbl_803DB5EC;
     GXSetTevKColor(lbl_803DCD74, &kc);
-    GXSetTevKAlphaSel(0, lbl_803DCD6C);
-    GXSetTevKColorSel(1, lbl_803DCD70);
+    GXSetTevKAlphaSel(GX_TEVSTAGE0, lbl_803DCD6C);
+    GXSetTevKColorSel(GX_TEVSTAGE1, lbl_803DCD70);
     GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_RED);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP2, GX_COLOR0A0);
