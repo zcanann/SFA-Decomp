@@ -982,7 +982,7 @@ void Tricky_update(int obj)
                 ((TrickyState*)state)->waterLevel = lbl_803E23DC;
             }
         }
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~(u64)0x4201;
+        *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x4201;
         if (((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 != 0)
         {
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 = 0;
