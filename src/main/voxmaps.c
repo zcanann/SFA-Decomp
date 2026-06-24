@@ -1,6 +1,7 @@
 #include "main/engine_shared.h"
 
 #define VOXMAP_SLOT_COUNT 6
+#define VOXMAPS_ROUTE_NODE_CAPACITY 200
 
 #pragma dont_inline on
 int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, int f)
@@ -659,7 +660,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     if (box[0] == state->tgtX && box[2] == state->tgtY)
     {
         s16 idx = state->nodeCount;
-        if (idx == 200)
+        if (idx == VOXMAPS_ROUTE_NODE_CAPACITY)
         {
             debugPrintf(sVoxmapsRouteNodesListOverflow);
         }
@@ -889,7 +890,7 @@ searched:
         return;
     }
 
-    if (nodeCount == 200)
+    if (nodeCount == VOXMAPS_ROUTE_NODE_CAPACITY)
     {
         debugPrintf(sVoxmapsRouteNodesListOverflow);
         n = NULL;
@@ -1004,7 +1005,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
 
         state->queueCount = 0;
         state->nodeCount = 0;
-        for (i = 0; i < 200; i++)
+        for (i = 0; i < VOXMAPS_ROUTE_NODE_CAPACITY; i++)
         {
             state->queue[i].priority = 0;
             state->nodes[i].flag = 0;
