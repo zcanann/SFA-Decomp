@@ -30,6 +30,8 @@
 #define GX_VA_POS 9
 #define GX_VA_NRM 10
 #define GX_DIRECT 1
+#define GX_TRIANGLESTRIP 0x98
+#define GX_VTXFMT4 4
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -2021,7 +2023,7 @@ void lightFn_80052974(f32 a, f32 b)
         scale = lbl_803DEB54;
         for (i = 0; i < 0x10; i++)
         {
-            GXBegin(0x98, 4, 0x22);
+            GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
             fa = scale * (f32)i;
             z = lbl_803DEB64;
             fb = scale * (f32)(i + 1);
