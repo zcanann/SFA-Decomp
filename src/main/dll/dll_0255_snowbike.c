@@ -67,14 +67,14 @@ typedef struct SnowBikeSetTypeState
     u8 pad422[0x428 - 0x422];
     u8 flags;
     u8 pad429[0x434 - 0x429];
-    u8 unk434;
-    u8 unk435;
+    u8 romListGroupIndex;
+    u8 romListItemIndex;
     u8 pad436[0x448 - 0x436];
     s16 completionGameBit;
     u8 pad44A[0x494 - 0x44A];
-    f32 unk494;
-    f32 unk498;
-    f32 unk49C;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
     u8 pad4A0[0x4B8 - 0x4A0];
     f32 airMeterMax;       /* 0x4B8 */
     f32 airMeterCurrent;   /* 0x4BC */
