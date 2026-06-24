@@ -681,17 +681,17 @@ void fn_802251B4(int obj, WcLevelControlState* state)
 
     if (!(state->completionFlags & 0x10))
     {
-        if ((u8)GameBit_Get(0x810) == 4)
+        if ((u8)GameBit_Get(WCPUSHBLOCK_GAMEBIT_A_COUNT) == 4)
         {
-            GameBit_Set(0x812, 1);
+            GameBit_Set(WCPUSHBLOCK_GAMEBIT_A_SOLVED, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             state->completionFlags |= 0x10;
         }
-        else if ((u32)GameBit_Get(0x808) != 0)
+        else if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0)
         {
             if (state->tileAResetTimer <= lbl_803E6DA8)
             {
-                GameBit_Set(0x810, 0);
+                GameBit_Set(WCPUSHBLOCK_GAMEBIT_A_COUNT, 0);
                 memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
                 state->tileAResetTimer = gWcPushBlockTileResetTime;
             }
@@ -700,23 +700,23 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         {
             state->tileAResetTimer -= timeDelta;
             if (state->tileAResetTimer <= lbl_803E6DA8)
-                GameBit_Set(0x808, 0);
+                GameBit_Set(WCPUSHBLOCK_GAMEBIT_A_FADE, 0);
         }
     }
 
     if (!(state->completionFlags & 0x20))
     {
-        if ((u8)GameBit_Get(0x811) == 4)
+        if ((u8)GameBit_Get(WCPUSHBLOCK_GAMEBIT_B_COUNT) == 4)
         {
-            GameBit_Set(0x813, 1);
+            GameBit_Set(WCPUSHBLOCK_GAMEBIT_B_SOLVED, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             state->completionFlags |= 0x20;
         }
-        else if ((u32)GameBit_Get(0x809) != 0)
+        else if ((u32)GameBit_Get(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0)
         {
             if (state->tileBResetTimer <= lbl_803E6DA8)
             {
-                GameBit_Set(0x811, 0);
+                GameBit_Set(WCPUSHBLOCK_GAMEBIT_B_COUNT, 0);
                 memcpy(lbl_803AD298, lbl_8032B088, 0x40);
                 state->tileBResetTimer = gWcPushBlockTileResetTime;
             }
@@ -725,7 +725,7 @@ void fn_802251B4(int obj, WcLevelControlState* state)
         {
             state->tileBResetTimer -= timeDelta;
             if (state->tileBResetTimer <= lbl_803E6DA8)
-                GameBit_Set(0x809, 0);
+                GameBit_Set(WCPUSHBLOCK_GAMEBIT_B_FADE, 0);
         }
     }
 
