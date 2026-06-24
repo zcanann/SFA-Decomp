@@ -11,6 +11,38 @@
 #include "main/dll/FRONT/n_options.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#define GX_AOP_AND 0
+#define GX_BL_ZERO 0
+#define GX_BM_NONE 0
+#define GX_COLOR0 0
+#define GX_CS_SCALE_1 0
+#define GX_DF_NONE 0
+#define GX_FALSE 0
+#define GX_SRC_REG 0
+#define GX_TB_ZERO 0
+#define GX_TEVPREV 0
+#define GX_TEV_ADD 0
+#define GX_BL_ONE 1
+#define GX_BM_BLEND 1
+#define GX_SRC_VTX 1
+#define GX_TRUE 1
+#define GX_AF_NONE 2
+#define GX_ALPHA0 2
+#define GX_BM_LOGIC 2
+#define GX_CA_A2 3
+#define GX_BL_SRCALPHA 4
+#define GX_COLOR0A0 4
+#define GX_GREATER 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_COLOR1A1 5
+#define GX_LO_NOOP 5
+#define GX_CC_C2 6
+#define GX_ALWAYS 7
+#define GX_CA_ZERO 7
+#define GX_LO_OR 7
+#define GX_CC_ZERO 0xf
+#define GX_TEXCOORD_NULL 0xff
+#define GX_TEXMAP_NULL 0xff
 #define GX_TEVSTAGE0 0
 #define GX_TEV_SWAP0 0
 
@@ -3245,11 +3277,11 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     {
         if (blend != 0)
         {
-            GXSetBlendMode(1, 4, 5, 5);
+            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         }
         else
         {
-            GXSetBlendMode(0, 1, 0, 5);
+            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         }
         gObjGxBlendModeCache = blend;
     }
@@ -3273,7 +3305,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         }
         else
         {
-            GXSetAlphaCompare(7, 0, 0, 7, 0);
+            GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         }
     }
     if (cull != gObjGxCullModeCache)
@@ -3570,14 +3602,14 @@ void objFn_8003dc50(u8* obj, u8* model)
         {
             ((u8*)&gObjCurChanColor)[3] = 0;
             GXSetChanAmbColor(chan, *(ObjGXColor*)&gObjCurChanColor);
-            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(1);
         }
         else
         {
-            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(0);
         }
     }
@@ -3977,8 +4009,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
                 renderHeavyFog(&c);
             }
             textureFn_800528bc();
-            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(0);
             gObjRenderSetupDone = 1;
             *(u32*)gObjGxKColorCache = *(u32*)color;
@@ -4171,7 +4203,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         {
             tev1 = lbl_803DB468;
             GXSetTevColor(3, &tev1);
-            GXSetBlendMode(0, 1, 0, 5);
+            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         }
         else
         {
@@ -4190,23 +4222,23 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             color[3] = 0xff;
             tev2 = *(u32*)color;
             GXSetTevColor(3, &tev2);
-            GXSetBlendMode(2, 1, 0, 7);
+            GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
         }
     }
     GXSetNumTexGens(0);
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);
-    GXSetTevOrder(0, 0xff, 0xff, 4);
-    GXSetTevDirect(0);
-    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 6);
-    GXSetTevAlphaIn(0, 7, 7, 7, 3);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C2);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A2);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor*)&lbl_803DB468);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
     if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
     {
@@ -4565,7 +4597,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetNumTexGens(0);
         GXSetNumTevStages(1);
         GXSetNumIndStages(0);
-        GXSetTevOrder(0, 0xff, 0xff, 4);
+        GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
         {
             u32 sh;
             u8* o;
@@ -4580,7 +4612,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             {
                 tev1 = lbl_803DB468;
                 GXSetTevColor(3, &tev1);
-                GXSetBlendMode(0, 1, 0, 5);
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             }
             else
             {
@@ -4599,19 +4631,19 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 color[3] = 0xff;
                 tev2 = *(u32*)color;
                 GXSetTevColor(3, &tev2);
-                GXSetBlendMode(2, 1, 0, 7);
+                GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
             }
         }
-        GXSetTevDirect(0);
-        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 6);
-        GXSetTevAlphaIn(0, 7, 7, 7, 3);
+        GXSetTevDirect(GX_TEVSTAGE0);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C2);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A2);
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-        GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor*)&lbl_803DB468);
         gxSetPeControl_ZCompLoc_(1);
-        GXSetAlphaCompare(7, 0, 0, 7, 0);
-        GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+        GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+        GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
         if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
         {
@@ -5172,28 +5204,28 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & 0x40000000) || shad)
             {
                 u16 f2;
-                GXSetBlendMode(1, 4, 5, 5);
+                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
                 f2 = *(u16*)(p2 + 2);
                 if (f2 & 0x400)
                 {
                     gxSetZMode_(0, 3, 0);
-                    GXSetAlphaCompare(7, 0, 0, 7, 0);
+                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
                 else if (f2 & 0x2000)
                 {
                     zon = 0;
                     gxSetZMode_(1, 3, 1);
-                    GXSetAlphaCompare(4, lbl_803DCC3C, 0, 4, lbl_803DCC3C);
+                    GXSetAlphaCompare(GX_GREATER, lbl_803DCC3C, GX_AOP_AND, GX_GREATER, lbl_803DCC3C);
                 }
                 else
                 {
                     gxSetZMode_(1, 3, 0);
-                    GXSetAlphaCompare(7, 0, 0, 7, 0);
+                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
             }
             else if (((ObjModelRenderOp*)op)->flags & 0x400)
             {
-                GXSetBlendMode(0, 1, 0, 5);
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (*(u16*)(p2 + 2) & 0x400)
                 {
                     gxSetZMode_(0, 3, 0);
@@ -5202,11 +5234,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
-                GXSetAlphaCompare(4, 0x40, 0, 4, 0x40);
+                GXSetAlphaCompare(GX_GREATER, 0x40, GX_AOP_AND, GX_GREATER, 0x40);
             }
             else
             {
-                GXSetBlendMode(0, 1, 0, 5);
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (*(u16*)(p2 + 2) & 0x400)
                 {
                     gxSetZMode_(0, 3, 0);
@@ -5215,7 +5247,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
             if (((ObjModelRenderOp*)op)->flags & 0x400)
             {
