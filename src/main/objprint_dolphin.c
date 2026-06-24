@@ -5052,9 +5052,9 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         }
         else if (b4 == 0)
         {
-            int i;
             int* lp;
             u8* sp;
+            int i;
             i = 0;
             lp = &lbl_803DCC64;
             sp = &lbl_803DCC60;
