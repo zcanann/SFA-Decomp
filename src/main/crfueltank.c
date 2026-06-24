@@ -3,6 +3,10 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): hides the tank from
+   render/update; toggled with the hit-volume enable/disable. */
+#define CRFUELTANK_OBJFLAG_HIDDEN 0x4000
+
 extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_DisableObject(void* obj);
 extern void ObjHits_EnableObject(void* obj);
@@ -82,7 +86,7 @@ void crfueltank_update(CrFuelTankObject* obj)
         if (timerCountDown(state->timer) != 0)
         {
             ObjHits_EnableObject(obj);
-            obj->flags = (s16)(obj->flags & ~0x4000);
+            obj->flags = (s16)(obj->flags & ~CRFUELTANK_OBJFLAG_HIDDEN);
             obj->fadeTimer = 0xff;
         }
     }
@@ -90,7 +94,7 @@ void crfueltank_update(CrFuelTankObject* obj)
     {
         if (obj->fadeTimer < 0xff)
         {
-            obj->flags = (s16)(obj->flags | 0x4000);
+            obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
             s16toFloat(state->timer, 0x708);
         }
         else
@@ -113,7 +117,7 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
     {
         s16toFloat(state->timer, 0x708);
         ObjHits_DisableObject(obj);
-        obj->flags = (s16)(obj->flags | 0x4000);
+        obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
         obj->fadeTimer = 0;
     }
     return;
