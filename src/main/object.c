@@ -1313,7 +1313,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     memcpy(obj, &tmpl, 0x10c);
     memset((u8*)obj + 0x10c, 0, base + total - 0x10c);
     obj->models = (u8**)(obj + 1);
-    ((ObjModelInstance*)tmpl.def)->flags |= 0x800000LL;
+    ((ObjModelInstance*)obj->def)->flags |= 0x800000LL;
     i = 0;
     obj->f108 = 0;
     if (flags29 & 0x400)
@@ -1325,7 +1325,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             ObjModel_LoadAnimData(models[idx], flags29, (int)obj->models[idx]);
             if (!(*(u16*)(*(u8**)obj->models[idx] + 2) & 0x8000))
             {
-                ((ObjModelInstance*)tmpl.def)->flags &= ~0x800000LL;
+                ((ObjModelInstance*)obj->def)->flags &= ~0x800000LL;
             }
             ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
             modelInitBones(obj->scale, obj->models[idx]);
@@ -1356,7 +1356,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             h = *(u16*)(*(u8**)obj->models[i] + 2);
             if (!(h & 0x8000) && !(h & 0x4000))
             {
-                ((ObjModelInstance*)tmpl.def)->flags &= ~0x800000LL;
+                ((ObjModelInstance*)obj->def)->flags &= ~0x800000LL;
             }
             ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
             modelInitBones(obj->scale, obj->models[i]);
