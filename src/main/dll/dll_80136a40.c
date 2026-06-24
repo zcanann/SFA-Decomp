@@ -1516,6 +1516,7 @@ void debugPrintDraw(int ctx)
     u32 colb;
     u32 sw;
     u32 sh;
+    u16 tx, ty;
 
     res = getScreenResolution();
     gDebugScreenHeight = (u16)(res >> 0x10);
@@ -1545,13 +1546,13 @@ void debugPrintDraw(int ctx)
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;
-    debugPrintYpos = gDebugPrintOriginY;
-    debugPrintXpos = gDebugPrintOriginX;
+    debugPrintYpos = ty = gDebugPrintOriginY;
+    debugPrintXpos = tx = gDebugPrintOriginX;
     gDebugCurrentFontSet = 0xffffffff;
     pass = 0;
     gDebugFixedWidthMode = pass;
-    gDebugRectStartY = debugPrintYpos;
-    gDebugRectStartX = debugPrintXpos;
+    gDebugRectStartY = ty;
+    gDebugRectStartX = tx;
     for (; p != debugLogEnd;)
     {
         gDebugDrawPass = pass;
