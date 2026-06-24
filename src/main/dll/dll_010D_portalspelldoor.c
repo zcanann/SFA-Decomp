@@ -49,11 +49,11 @@ void portalspelldoor_update(int obj)
     p4c = *(int*)&((GameObject*)obj)->anim.placementData;
     if (playerHasSpell(player, 3) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     if (((PortalFlags*)&state->flags0C)->open)
     {
@@ -78,7 +78,7 @@ void portalspelldoor_update(int obj)
         if (t < 0)
         {
             int tricky;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             tricky = getTrickyObject();
             if ((void*)tricky != NULL)
