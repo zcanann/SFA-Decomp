@@ -447,7 +447,7 @@ void largecrate_update(int obj)
     player = Obj_GetPlayerObject();
     if (((GameObject*)obj)->anim.parent != NULL)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
@@ -473,7 +473,7 @@ void largecrate_update(int obj)
                         ((LargeCrateState*)state)->animTimer = lbl_803E39B8;
                         ((LargeCrateState*)state)->breakTimer = 0;
                         ObjHits_EnableObject(obj);
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                     }
                 }
@@ -560,7 +560,7 @@ void largecrate_update(int obj)
                     ((LargeCrateState*)state)->breakTimer = 0x32;
                     ((LargeCrateState*)state)->damageTaken = 0;
                     largecrate_spawnDropContents(obj, player, state);
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
             vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
