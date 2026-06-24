@@ -1370,6 +1370,7 @@ void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ)
     *outZ = s * iz;
 }
 
+#define MAP_BLOCK_LAYER_COUNT 5
 extern void* gMapBlockLayerTables[];
 
 int isInBounds(f32 x, f32 z)
@@ -1384,7 +1385,7 @@ int isInBounds(f32 x, f32 z)
     {
         int i;
         p = gMapBlockLayerTables;
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
         {
             if (((s8*)*p)[linear] > -1) return 1;
             p++;
@@ -1403,7 +1404,7 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
     ix = ix + (iz << 4);
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
     {
         s8* table = gMapBlockLayerTables[i];
         int idx = table[ix];
