@@ -41,7 +41,7 @@ void drearthcal_update(int obj)
     if (fn_802972A8() != NULL)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x18;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x15);
         }
@@ -72,7 +72,7 @@ void drearthcal_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x14);
         }
