@@ -4083,6 +4083,9 @@ extern char sNotOnGroundFailureMessage[];
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
 
+/* Number of directional sweep probes (parallel dirs[13]/dirMasks[13] tables). */
+#define PLAYER_SWEEP_DIR_COUNT 13
+
 s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
 {
     typedef struct
@@ -4154,7 +4157,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
-    for (i = 0; i < 13; i++)
+    for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
         {
