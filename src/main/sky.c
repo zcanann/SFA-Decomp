@@ -19,6 +19,7 @@
 #define GX_CC_TEXC 8
 #define GX_CC_ZERO 0xf
 #define GX_COLOR_NULL 0xff
+#define GX_FOG_NONE 0
 
 int getEnvFxBit2BA(void)
 {
@@ -3066,7 +3067,7 @@ void skyFn_8008aee8(void)
             lbl_803DF0DC * (widthF * cam[0x29]) / lbl_803DF0E4 + sinProd;
         angle *= lbl_803DF0EC;
         (*gSky2Interface)->applyTextColor(0);
-        GXSetFog(0, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
+        GXSetFog(GX_FOG_NONE, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
         selectTexture(texC, 0);
         fn_8007880C();
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
