@@ -412,9 +412,9 @@ void newshadows_captureProjectedShadow(u16* object)
     float maxScale;
     int renderState;
     float* shadowSlot;
-    double dVar4;
+    double tmpY;
     double savedScale;
-    double dVar6;
+    double tmpX;
     double invScale;
     double dirY;
     float projW;
@@ -440,10 +440,10 @@ void newshadows_captureProjectedShadow(u16* object)
         maxScale = scaleX;
     }
     invScale = (double)(lbl_803DF99C / maxScale);
-    dVar6 = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
-    dVar4 = -(double)projX;
+    tmpX = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
+    tmpY = -(double)projX;
     dirY = (double)projY;
-    FUN_8025da64((double)(float)((double)lbl_803DF994 * dVar4),
+    FUN_8025da64((double)(float)((double)lbl_803DF994 * tmpY),
                  (double)(float)((double)lbl_803DF998 * dirY), (double)lbl_803DF9A0,
                  (double)lbl_803DF9A4, (double)lbl_803DF9A8, (double)lbl_803DF9AC);
     if (lbl_803DF9A8 <= projZ)
@@ -453,7 +453,7 @@ void newshadows_captureProjectedShadow(u16* object)
     else
     {
         savedScale = (double)((GameObject*)object)->anim.rootMotionScale;
-        ((GameObject*)object)->anim.rootMotionScale = (float)dVar6;
+        ((GameObject*)object)->anim.rootMotionScale = (float)tmpX;
         FUN_80040cd0(1);
         FUN_8003b878(0, 0, 0, 0, object, 1);
         FUN_80040cd0(0);
@@ -468,14 +468,14 @@ void newshadows_captureProjectedShadow(u16* object)
         **(float**)(object + 0x32) = (float)((double)lbl_803DF9AC / invScale);
     }
     FUN_80006988();
-    dVar6 = (double)lbl_803DF994;
-    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) = (float)(dVar6 * -dVar4);
-    dVar4 = (double)lbl_803DF998;
-    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) = (float)(dVar4 * -dirY);
+    tmpX = (double)lbl_803DF994;
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) = (float)(tmpX * -tmpY);
+    tmpY = (double)lbl_803DF998;
+    *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) = (float)(tmpY * -dirY);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) =
-        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + dVar6);
+        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + tmpX);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) =
-        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + dVar4);
+        (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + tmpY);
     maxScale = lbl_803DF99C;
     shadowSlot = *(float**)(object + 0x32);
     shadowSlot[5] = -(lbl_803DF99C * *shadowSlot - shadowSlot[5]);
