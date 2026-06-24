@@ -469,8 +469,6 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     float z2;
     u8 c[4];
     u8 g[4];
-    u8* base;
-    int ptr;
     int* p;
     int i;
     u32 vis;
@@ -478,6 +476,8 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     u32 word;
     int pos;
     int bptr;
+    u8* base;
+    int ptr;
 
     base = lbl_8037E0C0;
     pos = stream[4];
