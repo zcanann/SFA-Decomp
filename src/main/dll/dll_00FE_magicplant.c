@@ -252,7 +252,7 @@ void MagicPlant_update(int obj)
         return;
     }
 
-    *(u8*)&plant->objAnim.resetHitboxMode |= 8;
+    *(u8*)&plant->objAnim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (objIsFrozen(obj) != 0)
     {
         hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitPos[0], &hitPos[1], &hitPos[2]);
