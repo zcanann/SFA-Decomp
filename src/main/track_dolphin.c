@@ -51,6 +51,7 @@
 #define GX_VA_TEX0 13
 #define GX_VA_TEX1 14
 #define GX_DIRECT 1
+#define GX_KCOLOR0 0
 #define GX_QUADS 0x80
 #define GX_TRIANGLES 0x90
 #define GX_VTXFMT0 0
@@ -3635,7 +3636,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetNumTexGens(1);
             GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
             kColorCopy = kColor;
-            GXSetTevKColor(0, &kColorCopy);
+            GXSetTevKColor(GX_KCOLOR0, &kColorCopy);
             GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
             GXSetNumTevStages(1);
             GXSetNumIndStages(0);
