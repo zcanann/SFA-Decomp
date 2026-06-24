@@ -47,7 +47,7 @@ void gpsh_scene_init(int* obj, int* def)
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
 }
 
 void gpsh_objcreator_init(int* obj, int* def);
