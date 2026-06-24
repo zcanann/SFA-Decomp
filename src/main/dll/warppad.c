@@ -232,7 +232,7 @@ void warpPadPlayerStandingOn(int obj)
         }
     }
 
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & 4) != 0)
+    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         setAButtonIcon(0x1b);
         if (GameBit_Get(0x912) == 0)
@@ -267,7 +267,7 @@ void warpPadPlayerStandingOn(int obj)
         }
         gameBit = placement->enableGameBit;
         if (((gameBit == -1) ||
-                ((GameBit_Get(gameBit) != 0) && ((((GameObject*)obj)->anim.resetHitboxFlags & 4) != 0))) &&
+                ((GameBit_Get(gameBit) != 0) && ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0))
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
