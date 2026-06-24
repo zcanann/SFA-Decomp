@@ -1581,7 +1581,7 @@ void drawReflectionTexture(void)
     drawTexture(texture, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
-    GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, 1);
+    GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, GX_TRUE);
     if (*(u8*)(gNewShadowReflectionSmallTexture + 0x48) != 0)
     {
         GXPreLoadEntireTexture((char*)gNewShadowReflectionSmallTexture + 0x20, *(void**)(gNewShadowReflectionSmallTexture + 0x40));
@@ -1595,10 +1595,10 @@ void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_RGB565, GX_TRUE);
-    GXCopyTex((char*)gNewShadowReflectionTexture + 0x60, 0);
+    GXCopyTex((char*)gNewShadowReflectionTexture + 0x60, GX_FALSE);
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_Z8, GX_TRUE);
-    GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, 0);
+    GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, GX_FALSE);
     if (*(u8*)(gNewShadowReflectionTexture + 0x48) != 0)
     {
         GXPreLoadEntireTexture((char*)gNewShadowReflectionTexture + 0x20, *(void**)(gNewShadowReflectionTexture + 0x40));
@@ -2431,7 +2431,7 @@ void shadowRenderFn_8006b558(int* obj)
         gxSetZMode_(1, 3, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
-        GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), 1);
+        GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), GX_TRUE);
         fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
         *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
     }
@@ -2723,7 +2723,7 @@ void renderShadows(void)
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, GX_TF_Z8, GX_FALSE);
                         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
-                        GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), 1);
+                        GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), GX_TRUE);
                         setDisplayCopyFilter();
                         *(int*)(castSlot + 0x60) = *(int*)((char*)obj[0x64 / 4] + 4);
                     }
@@ -2734,7 +2734,7 @@ void renderShadows(void)
                             gxSetZMode_(1, 3, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
                             GXSetTexCopyDst(w, w, GX_CTF_R4, GX_TRUE);
-                            GXCopyTex((void*)(*(int*)texSlot + 0x60), 1);
+                            GXCopyTex((void*)(*(int*)texSlot + 0x60), GX_TRUE);
                             *(int*)(castSlot + 0x60) = *(int*)texSlot;
                         }
                         r23++;
@@ -2788,7 +2788,7 @@ void renderShadows(void)
         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
         GXSetTexCopyDst(0x100, 0x100, GX_CTF_R8, GX_FALSE);
-        GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), 1);
+        GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), GX_TRUE);
         GXPixModeSync();
         setDisplayCopyFilter();
     }
