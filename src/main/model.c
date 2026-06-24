@@ -1661,10 +1661,10 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
     int i;
     u32 u;
     int v1;
+    int v2;
     int w;
     s16* p;
     u8* b1;
-    int v2;
     u8* b2;
 
     if (((ModelFileHeader*)hdr)->flags & 0x40)
