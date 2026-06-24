@@ -273,7 +273,7 @@ void vfpflamepoint_update(int obj)
     void* tricky;
 
     d = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (!d->done && (d->checkGameBit == -1 || GameBit_Get(d->checkGameBit) != 0))
     {
         if (d->counter <= 0 && !d->done)
@@ -292,12 +292,12 @@ void vfpflamepoint_update(int obj)
                 f32 dist = lbl_803E6158;
                 if (d->noCheck || (void*)ObjGroup_FindNearestObject(5, obj, &dist) == NULL)
                 {
-                    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4)
+                    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
                     {
                         (*(void (*)(void*, int, int, int))*(int*)(*(int*)*(int*)((u8*)tricky + 0x68) + 0x28))(
                             tricky, obj, 1, 4);
                     }
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                     objRenderFn_80041018((void*)obj);
                 }
             }
