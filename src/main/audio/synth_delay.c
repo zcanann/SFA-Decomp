@@ -1,4 +1,9 @@
 #include "src/main/audio/synth_internal.h"
+
+#ifndef SYNTH_VOICE_STRIDE
+#define SYNTH_VOICE_STRIDE 0x404
+#endif
+
 extern int vidGetInternalId(u32 id);
 extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
 extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
@@ -23,9 +28,9 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
     while (handle != 0xFFFFFFFFu)
     {
         idx = handle;
-        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+        if (handle == *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xF4))
         {
-            slot = (McmdVoiceState*)(synthVoice + idx * 0x404);
+            slot = (McmdVoiceState*)(synthVoice + idx * SYNTH_VOICE_STRIDE);
             if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0)
             {
                 inpSetMidiCtrl(controller, idx, slot->startupMidiEvent, value);
@@ -35,7 +40,7 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
                 inpSetMidiCtrl(controller, idx, slot->midiEvent, value);
             }
             found = 1;
-            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xEC);
         }
         else
         {
@@ -61,9 +66,9 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
     while (handle != 0xFFFFFFFFu)
     {
         idx = handle;
-        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+        if (handle == *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xF4))
         {
-            slot = (McmdVoiceState*)(synthVoice + idx * 0x404);
+            slot = (McmdVoiceState*)(synthVoice + idx * SYNTH_VOICE_STRIDE);
             if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0)
             {
                 inpSetMidiCtrl14(controller, idx, slot->startupMidiEvent, value);
@@ -73,7 +78,7 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
                 inpSetMidiCtrl14(controller, idx, slot->midiEvent, value);
             }
             found = 1;
-            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xEC);
         }
         else
         {
@@ -116,12 +121,12 @@ u32 synthSendKeyOff(u32 handle)
         while (handle != 0xFFFFFFFFu)
         {
             idx = (u8)handle;
-            if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+            if (handle == *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xF4))
             {
-                macSetExternalKeyoff((McmdVoiceState*)(synthVoice + idx * 0x404));
+                macSetExternalKeyoff((McmdVoiceState*)(synthVoice + idx * SYNTH_VOICE_STRIDE));
                 found = 1;
             }
-            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * SYNTH_VOICE_STRIDE + 0xEC);
         }
     }
     return found;
