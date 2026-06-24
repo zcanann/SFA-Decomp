@@ -2814,7 +2814,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                      u8 boundsTemplateId)
 {
     ExpgfxSlot* slot;
-    ExpgfxAttachedSourceState* attachedSource;
+    ExpgfxSourceObject* attachedSource;
     ExpgfxResourceHandle* resourceHandle;
     ExpgfxRuntimeDataLayout* runtime;
     GameObject* playerObj;
@@ -2929,7 +2929,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             texT0 = 0;
         }
 
-        attachedSource = (ExpgfxAttachedSourceState*)config->attachedSource;
+        attachedSource = (ExpgfxSourceObject*)config->attachedSource;
         attachedTableKey = 0;
         if (attachedSource == NULL)
         {
@@ -2943,13 +2943,13 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
         else if ((behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0)
         {
-            slot->sourcePosY.value = attachedSource->sourcePosY.value;
-            slot->sourcePosZ.value = attachedSource->sourcePosZ.value;
-            slot->sourcePosW.value = attachedSource->sourcePosW.value;
-            slot->sourcePosX.value = attachedSource->sourcePosX.value;
-            slot->sourceVecZ = attachedSource->sourceVecZ;
-            slot->sourceVecY = attachedSource->sourceVecY;
-            slot->sourceVecX = attachedSource->sourceVecX;
+            slot->sourcePosY.value = attachedSource->worldPosX;
+            slot->sourcePosZ.value = attachedSource->worldPosY;
+            slot->sourcePosW.value = attachedSource->worldPosZ;
+            slot->sourcePosX.value = attachedSource->sourcePosX;
+            slot->sourceVecZ = attachedSource->rotZ;
+            slot->sourceVecY = attachedSource->rotY;
+            slot->sourceVecX = attachedSource->rotX;
             if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
                 (behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)
             {
