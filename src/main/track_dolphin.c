@@ -1476,28 +1476,31 @@ void intersectModLineBuild(int* obj)
         }
         gIntersectLineCount++;
     }
-    for (li = 0; li < gIntersectLineCount; li++)
     {
-        u8* L = (u8*)lbl_803DCF34 + li * 0x10;
-        int t0 = *(s16*)(L + 4) * 2;
-        s16* e0 = &link[t0];
-        s16* e1;
-        if (e0[0] > -1 && e0[0] != li)
-            *(s16*)(L + 8) = e0[0];
-        else if (e0[1] > -1 && e0[1] != li)
-            *(s16*)(L + 8) = e0[1];
-        else
-            *(s16*)(L + 8) = -1;
+        int off;
+        for (li = 0, off = 0; li < gIntersectLineCount; li++, off += 0x10)
         {
-            int t1 = *(s16*)(L + 6) * 2;
-            e1 = &link[t1];
+            u8* L = (u8*)lbl_803DCF34 + off;
+            int t0 = *(s16*)(L + 4) * 2;
+            s16* e0 = &link[t0];
+            s16* e1;
+            if (e0[0] > -1 && e0[0] != li)
+                *(s16*)(L + 8) = e0[0];
+            else if (e0[1] > -1 && e0[1] != li)
+                *(s16*)(L + 8) = e0[1];
+            else
+                *(s16*)(L + 8) = -1;
+            {
+                int t1 = *(s16*)(L + 6) * 2;
+                e1 = &link[t1];
+            }
+            if (e1[0] > -1 && e1[0] != li)
+                *(s16*)(L + 0xa) = e1[0];
+            else if (e1[1] > -1 && e1[1] != li)
+                *(s16*)(L + 0xa) = e1[1];
+            else
+                *(s16*)(L + 0xa) = -1;
         }
-        if (e1[0] > -1 && e1[0] != li)
-            *(s16*)(L + 0xa) = e1[0];
-        else if (e1[1] > -1 && e1[1] != li)
-            *(s16*)(L + 0xa) = e1[1];
-        else
-            *(s16*)(L + 0xa) = -1;
     }
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0)
         return;
@@ -1515,7 +1518,7 @@ void intersectModLineBuild(int* obj)
         u8* base = (u8*)lbl_803DCF34;
         s16 best = 0;
         int j;
-        int grp;
+        s16 grp;
         for (j = 0; j < gIntersectLineCount; j++)
         {
             if (((s8)base[j * 0x10 + 3] & 0x3f) < ((s8)base[best * 0x10 + 3] & 0x3f))
