@@ -475,8 +475,8 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     int i;
     u32 vis;
     u32 flags;
-    int pos;
     u32 word;
+    int pos;
     int bptr;
 
     base = lbl_8037E0C0;
