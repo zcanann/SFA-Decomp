@@ -12,6 +12,11 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
+typedef struct ObjPrintGXColor
+{
+    u8 r, g, b, a;
+} ObjPrintGXColor;
+
 typedef struct ObjModelRenderOp
 {
     u8 pad0[0x18 - 0x0];
@@ -42,7 +47,7 @@ extern int FUN_80017558();
 extern int FUN_80017570();
 extern u32 FUN_8001759c();
 extern u32 FUN_800175b0();
-extern u32 FUN_800175d4();
+extern void FUN_800175d4(int* light, f32 x, f32 y, f32 z);
 extern u32 FUN_800175fc();
 extern u32 FUN_80017600();
 extern u32 FUN_80017604();
@@ -129,7 +134,7 @@ extern u32 FUN_802475b8();
 extern u32 FUN_802475e4();
 extern u32 FUN_80247618();
 extern u32 FUN_80247a48();
-extern u32 FUN_80247a7c();
+extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
 extern u32 FUN_80247bf8();
 extern u32 FUN_802570dc();
 extern u32 FUN_80257b5c();
@@ -239,7 +244,6 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 {
     int obj = (int)objArg;
     int* renderHandle;
-    double fade;
     volatile u32 savedEnvColor;
     int shadowTable;
     int shadowStride;
@@ -247,7 +251,6 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     u32 tevColor;
     u32 ambColor;
     u32 envColor;
-    u32 matColor;
     float mtx[12];
 
     savedEnvColor = DAT_803df670;
@@ -255,7 +258,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     if (renderHandle != 0x0)
     {
         FUN_800175b0((int)renderHandle, 4);
-        FUN_800175d4(renderHandle, (double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684);
+        FUN_800175d4(renderHandle, lbl_803DF684, lbl_803DF6B4, *(f32*)&lbl_803DF684);
         FUN_8001759c((int)renderHandle, 0xff, 0xff, 0xff, 0xff);
         FUN_80017608(0);
         FUN_80017600(2, 0, 0);
@@ -273,7 +276,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     GXSetBlendMode(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
     FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + DAT_803dd8bd * shadowStride) * 4), 0);
-    FUN_80247a7c(mtx, (double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C);
+    FUN_80247a7c(mtx, lbl_803DF6B8, *(f32*)&lbl_803DF6B8, lbl_803DF69C);
     FUN_8025d8c4(mtx, 0x40, 0);
     FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
     FUN_8025be80(0);
@@ -287,9 +290,10 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025be54(0);
     FUN_80258944(2);
     FUN_80259288(2);
-    matColor = DAT_803dc0c8;
-    fade = (double)lbl_803DF684;
-    FUN_8025ca38(fade, fade, fade, fade, 0, (u32*)&matColor);
+    {
+        extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
+        FUN_8025ca38(0, lbl_803DF684, lbl_803DF684, lbl_803DF684, lbl_803DF684, *(ObjPrintGXColor*)&DAT_803dc0c8);
+    }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
     FUN_8025cce8(1, 4, 5, 5);
