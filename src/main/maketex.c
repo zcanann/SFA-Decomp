@@ -896,6 +896,16 @@ extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
 extern u8 lbl_803DD05A;
 
+#define CARD_RESULT_UNLOCKED 1
+#define CARD_RESULT_READY 0
+#define CARD_RESULT_NOCARD -3
+#define CARD_RESULT_NOFILE -4
+#define CARD_RESULT_IOERROR -5
+#define CARD_RESULT_BROKEN -6
+#define CARD_RESULT_NOENT -8
+#define CARD_RESULT_INSSPACE -9
+#define CARD_RESULT_ENCODING -13
+
 /* EN v1.0 0x8007F818  size: 1468b  Mounts the memory card, validates its
  * serial number, opens or creates the save file (writing the card image
  * buffer for a fresh file), and maps any CARD error to a status code. */
@@ -934,16 +944,16 @@ int saveGame(int writeImages)
     }
     lbl_803DB700 = 0;
     result = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
-    if (result == -6)
+    if (result == CARD_RESULT_BROKEN)
     {
         result = CARDCheck(0);
     }
-    if (result == 0 || result == -13)
+    if (result == CARD_RESULT_READY || result == CARD_RESULT_ENCODING)
     {
         int err;
         result = CARDCheck(0);
         err = CARDGetSerialNo(0, &serial);
-        if (err == 0)
+        if (err == CARD_RESULT_READY)
         {
             if (lbl_803DD059 != 0)
             {
@@ -970,29 +980,29 @@ int saveGame(int writeImages)
             result = err;
         }
     }
-    if (result == 0)
+    if (result == CARD_RESULT_READY)
     {
         result = CARDOpen(0, sMemoryCardFileName, lbl_80396900);
-        if (result == -4 && (u8)writeImages == 0)
+        if (result == CARD_RESULT_NOFILE && (u8)writeImages == 0)
         {
             created = 1;
             fresh = 1;
         }
-        if (result == 0)
+        if (result == CARD_RESULT_READY)
         {
             lbl_803DD05A = 1;
         }
     }
-    if (result == 0)
+    if (result == CARD_RESULT_READY)
     {
         result = CARDGetStatus(0, lbl_80396900[1], &stat);
-        if (result == 0)
+        if (result == CARD_RESULT_READY)
         {
             if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff)
             {
                 if ((u8)writeImages != 0)
                 {
-                    result = -4;
+                    result = CARD_RESULT_NOFILE;
                 }
                 else
                 {
@@ -1025,22 +1035,22 @@ int saveGame(int writeImages)
     }
     if (fresh != 0)
     {
-        if (result == 0)
+        if (result == CARD_RESULT_READY)
         {
             result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x4000, 0);
-            if (result == 0)
+            if (result == CARD_RESULT_READY)
             {
                 result = CARDWrite(lbl_80396900, (void*)(gSaveCardImageBuffer + 0x2000), 0x2000, 0x4000);
             }
-            if (result == -5)
+            if (result == CARD_RESULT_IOERROR)
             {
                 CARDDelete(0, sMemoryCardFileName);
             }
-            if (created != 0 && result == 0)
+            if (created != 0 && result == CARD_RESULT_READY)
             {
                 result = CARDGetStatus(0, lbl_80396900[1], &stat);
             }
-            if (result == 0)
+            if (result == CARD_RESULT_READY)
             {
                 stat.commentAddr = 0;
                 stat.bannerFormat = (stat.bannerFormat & ~0x3) | 2;
@@ -1056,7 +1066,7 @@ int saveGame(int writeImages)
                 stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
                 stat.iconSpeed = stat.iconSpeed & ~0x300;
                 result = CARDSetStatus(0, lbl_80396900[1], &stat);
-                if (result == 0)
+                if (result == CARD_RESULT_READY)
                 {
                     lbl_803DD050 = *(u64*)(gSaveCardImageBuffer + 0x3ff8);
                 }
@@ -1066,41 +1076,41 @@ int saveGame(int writeImages)
     }
     switch (result)
     {
-    case 0:
+    case CARD_RESULT_READY:
         if (fresh != 0)
         {
             return 1;
         }
         return 2;
-    case 1:
+    case CARD_RESULT_UNLOCKED:
         lbl_803DB700 = 1;
         ret = 0;
         break;
-    case -3:
+    case CARD_RESULT_NOCARD:
         if ((int)lbl_803DB700 != 3)
         {
             lbl_803DB700 = 2;
         }
         ret = 0;
         break;
-    case -4:
+    case CARD_RESULT_NOFILE:
         lbl_803DB700 = 0xc;
         ret = 0;
         break;
-    case -5:
+    case CARD_RESULT_IOERROR:
         lbl_803DB700 = 4;
         ret = 0;
         break;
-    case -6:
+    case CARD_RESULT_BROKEN:
         lbl_803DB700 = 5;
         ret = 0;
         break;
-    case -13:
+    case CARD_RESULT_ENCODING:
         lbl_803DB700 = 6;
         ret = 0;
         break;
-    case -8:
-    case -9:
+    case CARD_RESULT_NOENT:
+    case CARD_RESULT_INSSPACE:
         lbl_803DB700 = 9;
         ret = 0;
         break;
