@@ -1215,6 +1215,8 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
     PlayerState* inner = ((GameObject*)player)->extra;
     f32 sumC;
     f32 sumS;
+    f32 ratio;
+    f32 angle;
     int* objs;
     int n;
     int i;
@@ -1239,7 +1241,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
                     1.5f * (f32)(u32) * (u8*)((char*)*(int*)((char*)o + 0x4c) + 0x19);
                 if (dist < thresh)
                 {
-                    f32 ratio = lbl_803E7EA4;
+                    ratio = lbl_803E7EA4;
                     if (thresh > lbl_803E7EA4)
                     {
                         ratio = (thresh - dist) / thresh;
@@ -1273,8 +1275,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
             f32 thresh = (f32)(int)(*(u8*)((char*)*(int*)((char*)o + 0x4c) + 0x29) << 3);
             if (dist < thresh)
             {
-                f32 ratio = lbl_803E7EA4;
-                f32 angle;
+                ratio = lbl_803E7EA4;
                 if (thresh > lbl_803E7EA4)
                 {
                     ratio = (thresh - dist) / thresh;
