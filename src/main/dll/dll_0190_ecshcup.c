@@ -321,7 +321,7 @@ void fn_801C8B68(int obj)
     f32 angA, angB;
     int delta;
 
-    if ((((GameObject*)self)->anim.flags & 0x4000) != 0)
+    if ((((GameObject*)self)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
     {
         ((GameObject*)self)->anim.rotX = 0;
         ((GameObject*)self)->anim.localPosY = *(float*)(state2 + 0xc);
