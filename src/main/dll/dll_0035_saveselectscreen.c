@@ -37,6 +37,8 @@ typedef struct SaveSelectPanel
     u8 padA[2];
 } SaveSelectPanel;
 
+/* TitleMenuTextEntry.flags (at offset 0x16): row is hidden / non-selectable. */
+#define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
 extern void gameTextLoadDir(int dirId);
 extern void* gameTextGet(int textId);
@@ -137,7 +139,7 @@ void saveSelectOpenFile(int sel, int slot)
             else
             {
                 (*(TitleMenuTextEntry**)((char*)pp + off))->flags =
-                    (u16)((*(TitleMenuTextEntry**)((char*)pp + off))->flags | 0x4000);
+                    (u16)((*(TitleMenuTextEntry**)((char*)pp + off))->flags | TITLE_MENU_TEXT_ENTRY_HIDDEN);
                 *(s8*)((char*)*(TitleMenuTextEntry**)((char*)pp + off) + 0x56) = -1;
                 *(u16*)((char*)*(TitleMenuTextEntry**)((char*)pp + off) + 0x3c) = 984;
                 gSaveSelectMenuItemActive = 1;
@@ -211,7 +213,7 @@ void saveFileSelect_init(int sel, int slot)
                 }
                 gSaveSelectPanelIndex = 1;
                 *(u16*)((char*)gSaveSelectPanels[1].entries + 0x16) =
-                    (u16)(*(u16*)((char*)gSaveSelectPanels[1].entries + 0x16) & ~0x4000);
+                    (u16)(*(u16*)((char*)gSaveSelectPanels[1].entries + 0x16) & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
                 *(s8*)((char*)gSaveSelectPanels[1].entries + 0x56) = 0;
                 *(u16*)((char*)gSaveSelectPanels[1].entries + 0x3c) = 982;
                 gSaveSelectMenuItemActive = 0;
@@ -282,11 +284,11 @@ void saveSelectGoToChapterSelect(void)
             if (i > *(u8*)((char*)saveFileSelect_saveSlots +
                 saveFileSelect_currentSlotIndex * 36 + 33))
             {
-                *(u16*)((char*)panel->entries + off + 22) |= 0x4000;
+                *(u16*)((char*)panel->entries + off + 22) |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
             else
             {
-                *(u16*)((char*)panel->entries + off + 22) &= ~0x4000;
+                *(u16*)((char*)panel->entries + off + 22) &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
             if (i <= *(u8*)((char*)saveFileSelect_saveSlots +
                 saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5)
@@ -691,7 +693,7 @@ int SaveSelectScreen_run(void)
                     }
                     gSaveSelectPanelIndex = 1;
                     panel = &gSaveSelectPanels[1];
-                    panel->entries[0].flags = (u16)(panel->entries[0].flags & ~0x4000);
+                    panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
                     *(s8*)((char*)panel->entries + 0x56) = 0;
                     *(u16*)((char*)panel->entries + 0x3c) = 0x3d6;
                     gSaveSelectMenuItemActive = 0;
@@ -767,7 +769,7 @@ void SaveSelectScreen_initialise(void)
 
         gSaveSelectPanelIndex = 1;
         panel = &gSaveSelectPanels[1];
-        panel->entries[0].flags = (u16)(panel->entries[0].flags & ~0x4000);
+        panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
         *(s8*)((char*)panel->entries + 0x56) = 0;
         *(u16*)((char*)panel->entries + 0x3c) = 0x3d6;
         gSaveSelectMenuItemActive = 0;
