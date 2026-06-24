@@ -183,7 +183,7 @@ void flammablevine_update(int obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     tricky = getTrickyObject();
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     if (((FlammablevineObjectDef*)def)->gateBit == -1)
     {
         goto can_use_vine;
