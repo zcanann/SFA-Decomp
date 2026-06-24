@@ -1338,7 +1338,7 @@ void Tricky_update(int obj)
             ((TrickyState*)state)->unk08 = 0xf;
             ((TrickyState*)state)->unk740 = (f32)(int)
             randomGetRange(0x1f4, 0x2ee);
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x20000LL;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x40000LL;
             ((TrickyState*)state)->unkD = 3;
             if (*(u32*)&((TrickyState*)state)->unk28 != (u32) & ((TrickyState*)state)->unk72C)
             {
