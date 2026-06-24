@@ -717,9 +717,9 @@ void drawSkyStars(void)
 {
     int timeOk;
     int start;
-    int div;
-    int alpha;
     int i;
+    int alpha;
+    int div;
     int red;
     int green;
     int blue;
