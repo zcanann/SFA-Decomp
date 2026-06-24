@@ -445,7 +445,7 @@ void ObjModel_RelocateModelData(u8* m)
     {
         ((ModelFileHeader*)m)->renderOps = m + *(u32*)&((ModelFileHeader*)m)->renderOps;
     }
-    for (i = 0; i < ((ModelFileHeader*)m)->unkF5 + ((ModelFileHeader*)m)->unkF6; i++)
+    for (i = 0; i < ((ModelFileHeader*)m)->unkF5 + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
     {
         *(u8**)(((ModelFileHeader*)m)->displayLists + i * 0x1c) = m + *(u32*)(((ModelFileHeader*)m)->displayLists + i *
             0x1c);
