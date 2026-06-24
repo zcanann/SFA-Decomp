@@ -54,6 +54,8 @@
 #define GX_VA_NRM 10
 #define GX_VA_CLR0 11
 #define GX_VA_TEX0 13
+#define GX_TRIANGLES 0x90
+#define GX_VTXFMT7 7
 
 typedef struct ObjPrintGXColor
 {
@@ -3495,7 +3497,7 @@ void objRenderFn_8003d980(void* objArg, int* p2)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     verts = *(s16**)(data + 4);
     uvs = *(s16**)(data + 8);
-    GXBegin(0x90, 7, *(u16*)(data + 0xc) * 3);
+    GXBegin(GX_TRIANGLES, GX_VTXFMT7, *(u16*)(data + 0xc) * 3);
     {
         int i = 0;
         int off = 0;
