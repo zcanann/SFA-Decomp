@@ -4966,7 +4966,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     int index;
     int mode;
     int prevIndex;
-    ObjCurveKey* key;
+    int keyIndex;
     ObjCurveKey* prev;
     f32 values[4];
     f32 span;
@@ -4980,10 +4980,8 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     }
 
     index = 0;
-    key = keys;
-    while (index < count && key->frame < frame)
+    while (index < count && keys[index].frame < frame)
     {
-        key++;
         index++;
     }
 
@@ -5035,16 +5033,16 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     }
 
     span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
+    keyIndex = index;
     if (index < count)
     {
-        key = &keys[index];
-        values[1] = key->value;
+        values[1] = keys[keyIndex].value;
         if (mode == 0)
         {
             index++;
             if (index < count)
             {
-                deltaPrev = key[1].value - values[1];
+                deltaPrev = keys[keyIndex + 1].value - values[1];
             }
             else
             {
@@ -5055,13 +5053,13 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
                 deltaPrev = -deltaPrev;
             }
             t = (deltaNext + deltaPrev) * lbl_803DF000;
-            values[3] = t * (f32)(key->tangentAndMode >> 2);
+            values[3] = t * (f32)(keys[keyIndex].tangentAndMode >> 2);
         }
     }
 
     if (span > lbl_803DEFB0)
     {
-        t = (f32)(frame - key[-1].frame) / span;
+        t = (f32)(frame - keys[keyIndex - 1].frame) / span;
         if (mode == 0)
         {
             return Curve_EvalHermite(t, values, NULL);
