@@ -261,9 +261,9 @@ void wmwallcrawler_hitDetect(int obj)
 
 void wmwallcrawler_update(int obj)
 {
+    int bestIdx;
     u32 player;
     u8* st;
-    int bestIdx;
     f32 speed;
     int k;
     int n;
