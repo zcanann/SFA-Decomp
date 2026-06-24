@@ -884,7 +884,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     u8* scan;
     u8* glyph;
     va_list args;
-    char buf[272];
+    char buf[256];
 
     if (enableDebugText != 0)
     {
