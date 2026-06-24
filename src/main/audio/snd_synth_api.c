@@ -35,7 +35,6 @@ extern u32 synthFlags;
 extern u8* synthVoice;
 
 #define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
-#define SYNTH_VOICE_STRIDE 0x404
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET 0x114
 
 /* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
