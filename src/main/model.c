@@ -1459,10 +1459,10 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 bl
     }
     else
     {
-        u8* blendChan;
-        u8* animChan;
-        int i;
         int m;
+        int i;
+        u8* animChan;
+        u8* blendChan;
 
         for (i = 0, blendChan = channel, animChan = channel; i < 2; i++, blendChan += 4, animChan += 2)
         {
