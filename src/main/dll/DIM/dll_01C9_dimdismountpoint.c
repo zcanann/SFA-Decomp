@@ -49,11 +49,11 @@ void dimdismountpoint_update(int* obj)
 
     d = lbl_803E4910;
     nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (u32)obj, &d);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     if (GameBit_Get(DIMDISMOUNT_GAMEBIT_DONE) != 0)
     {
         ((GameObject*)obj)->hitVolumeIndex = 1;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
@@ -63,12 +63,12 @@ void dimdismountpoint_update(int* obj)
             0)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
         else
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
     }
     if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 &&
