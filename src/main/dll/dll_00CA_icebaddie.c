@@ -173,7 +173,7 @@ int iceBaddie_updateOpenState(int obj, int p)
     if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
     {
         GameBit_Set(sub->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&((GroundBaddieState*)p)->baddie.unk34D = 1;
         ((GroundBaddieState*)p)->baddie.moveSpeed = lbl_803E2D70 + (f32)(u32)
@@ -224,7 +224,7 @@ int iceBaddie_updateOpenHitState(int obj, int p)
     if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
     {
         GameBit_Set(sub->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&((GroundBaddieState*)p)->baddie.unk34D = 1;
         ((GroundBaddieState*)p)->baddie.moveSpeed = lbl_803E2D7C + (f32)(u32)
