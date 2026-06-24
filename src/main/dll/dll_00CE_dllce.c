@@ -362,7 +362,7 @@ int fn_8015DF20(int obj, GroundBaddieState* p)
         *(s8*)&p->baddie.physicsActive = 0;
         *(s8*)&p->baddie.hasTarget = 0;
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if (*(char*)&p->baddie.moveDone != '\0')
     {
@@ -459,7 +459,7 @@ int fn_8015E798(int obj, GroundBaddieState* p)
         sub->targetState = 0;
         if ((hit[9] & 2) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
     return 0;
@@ -739,7 +739,7 @@ void dll_CE_init(int obj, u8* p, int flags)
     *v = (f32)(int)
     randomGetRange(10, 300);
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
@@ -781,7 +781,7 @@ void dll_CE_update(int obj, int p2, int p3)
             ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0x10);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
     else if (((GameObject*)obj)->unkF8 == 0)
