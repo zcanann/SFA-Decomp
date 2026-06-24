@@ -2551,19 +2551,13 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             minRot = 0x7fff;
             slot = 0;
-            if (((ObjSeqState*)seq)->sfxTimer[0] < 0x7fff)
+            for (val = 0; val < 3; val++)
             {
-                slot = 0;
-                minRot = ((ObjSeqState*)seq)->sfxTimer[0];
-            }
-            if (((ObjSeqState*)seq)->sfxTimer[1] < (s16)minRot)
-            {
-                slot = 1;
-                minRot = ((ObjSeqState*)seq)->sfxTimer[1];
-            }
-            if (((ObjSeqState*)seq)->sfxTimer[2] < (s16)minRot)
-            {
-                slot = 2;
+                if (((ObjSeqState*)seq)->sfxTimer[val] < (s16)minRot)
+                {
+                    slot = val;
+                    minRot = ((ObjSeqState*)seq)->sfxTimer[val];
+                }
             }
         }
         else
