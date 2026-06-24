@@ -129,8 +129,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
                                   (f32*)((char*)obj + 0x14), 0);
     objRenderFn_8003b8f4((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
 
-    a = (int)p;
-    for (i = 0; i < ((DrshackleState*)p)->slotCount; i++)
+    for (i = 0, a = (int)p; i < ((DrshackleState*)p)->slotCount; i++)
     {
         char* entry = *(char**)a;
         if (entry != NULL)
