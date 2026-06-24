@@ -195,6 +195,10 @@ typedef struct FlamethrowerspeState
     s16 unk116;
 } FlamethrowerspeState;
 
+/* FlamethrowerspeState.phase values */
+#define FLAMETHROWERSPE_PHASE_LAUNCH 1 /* compute launch velocity, then -> ACTIVE */
+#define FLAMETHROWERSPE_PHASE_ACTIVE 2 /* fly + shrink until the lifetime timer expires */
+
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();
@@ -1596,7 +1600,7 @@ void flamethrowerspe_init(int* obj, int* params)
     }
     ((GameObject*)obj)->anim.velocityY = lbl_803E338C;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    ((FlamethrowerspeState*)state)->phase = 1;
+    ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_LAUNCH;
     ObjHits_DisableObject(obj);
 }
 
@@ -1615,7 +1619,7 @@ void flamethrowerspe_update(int* obj)
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     switch (((FlamethrowerspeState*)state)->phase)
     {
-    case 1:
+    case FLAMETHROWERSPE_PHASE_LAUNCH:
         *(f32*)((char*)obj + 0x24) = lbl_803E338C;
         ((GameObject*)obj)->anim.velocityZ =
             lbl_803DBD68 * (lbl_803E3390 * (((FlamethrowerspeState*)state)->sizeScale *
@@ -1628,9 +1632,9 @@ void flamethrowerspe_update(int* obj)
         vecRotateZXY(obj, (f32*)((char*)obj + 0x24));
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
         s16toFloat((f32*)((char*)state + 4), lbl_803DBD64);
-        ((FlamethrowerspeState*)state)->phase = 2;
+        ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_ACTIVE;
         break;
-    case 2:
+    case FLAMETHROWERSPE_PHASE_ACTIVE:
         if (timerCountDown((f32*)((char*)state + 4)) != 0)
         {
             ObjHits_DisableObject(obj);
