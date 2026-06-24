@@ -14132,6 +14132,7 @@ extern int lbl_803E7E6C;
 
 void playerRender(int obj, int a, int b, int c, int d, s8 flag)
 {
+    int in2;
     int inner = *(int*)&((GameObject*)obj)->extra;
     f32 sx;
     f32 sy;
@@ -14229,7 +14230,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             gPlayerHeldObject = 0;
         }
         {
-            int in2 = *(int*)&((GameObject*)obj)->extra;
+            in2 = *(int*)&((GameObject*)obj)->extra;
             if (*(void**)((char*)in2 + 0x7f8) != NULL &&
                 *(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xf8) == 1)
             {
