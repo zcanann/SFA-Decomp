@@ -439,7 +439,7 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | 8);
+    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
 
     if (clearChildren != 0)
     {
