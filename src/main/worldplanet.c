@@ -306,26 +306,26 @@ void worldplanet_update(int obj)
     else
     {
         setFrameCountdown_800202c4(1);
-        if ((state->flags & 4) == 0)
+        if ((state->flags & WORLDPLANET_STATE_FLAG_CAMERA_SET) == 0)
         {
             (*gCameraInterface)->setMode(0x4e, 1, 0, 0, NULL, 0, 0xff);
             (*gCameraInterface)->setFocus((void*)obj, 0);
-            state->flags |= 4;
+            state->flags |= WORLDPLANET_STATE_FLAG_CAMERA_SET;
         }
-        else if ((state->flags & 8) == 0)
+        else if ((state->flags & WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED) == 0)
         {
             objId = tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
             (*gCameraInterface)->releaseAction(&objId, 2);
-            state->flags |= 8;
+            state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
                 int krazoa = ObjList_FindObjectById(0x43077);
                 ((WorldObjState*)((GameObject*)krazoa)->extra)->controlByte = gWorldPlanetKrazoaControlBytes[state->selectedPlanet];
             }
             AudioStream_StopCurrent();
         }
-        if ((state->flags & 1) == 0)
+        if ((state->flags & WORLDPLANET_STATE_FLAG_ENVFX_STARTED) == 0)
         {
-            state->flags |= 1;
+            state->flags |= WORLDPLANET_STATE_FLAG_ENVFX_STARTED;
             getEnvfxAct(0, 0, 0x21f, 0);
             setIsOvercast(0);
             setDrawLights(0);
