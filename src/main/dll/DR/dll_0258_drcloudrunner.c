@@ -363,7 +363,7 @@ int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
     int local = 1;
     int i;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch ((int)animUpdate->eventIds[i])
@@ -1076,10 +1076,10 @@ void DR_CloudRunner_update(int obj)
     inner = ((GameObject*)obj)->extra;
     inner->unkBAE = 5;
     fn_80137948(sOnCloudFormat, GameBit_Get(CLOUDRUNNER_ONCLOUD_GAMEBIT));
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         fn_802C11BC(obj, timeDelta, -1);
         ((ObjAnimComponent*)obj)->modelInstance->flags |= 0x200000LL;
     }
@@ -1111,7 +1111,7 @@ void DR_CloudRunner_update(int obj)
     objAnimFn_80038f38(obj, (int)((char*)inner + 0x494));
     fn_8003B500(obj, (int)((char*)inner + 0x464), lbl_803E83A4);
     characterDoEyeAnims(obj, (int)inner + 0x464);
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flightState == CLOUDRUNNER_FLIGHT_GROUNDED)
         {
