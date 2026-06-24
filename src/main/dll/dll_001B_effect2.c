@@ -1356,6 +1356,9 @@ void Effect2_func05(void)
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
+/* Per-config velocity-range band count (emit[6]/sub[6]/col[6] parallel tables). */
+#define EFFECT2_VELOCITY_RANGE_COUNT 6
+
 typedef struct EmitterCfg
 {
     f32 vel[7][3];
@@ -1559,9 +1562,9 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.overrideColor0 = gEffect2VelocityRangeTable.col[3];
         cfg.overrideColor1 = gEffect2VelocityRangeTable.col[4];
         cfg.overrideColor2 = gEffect2VelocityRangeTable.col[5];
-        for (i = 0; i < 6; i++) if (gEffect2VelocityRangeTable.emit[i] != 0) cfg.behaviorFlags |= 1 << (gEffect2VelocityRangeTable.emit[i] - 1);
+        for (i = 0; i < EFFECT2_VELOCITY_RANGE_COUNT; i++) if (gEffect2VelocityRangeTable.emit[i] != 0) cfg.behaviorFlags |= 1 << (gEffect2VelocityRangeTable.emit[i] - 1);
         cfg.renderFlags = 0x2000000;
-        for (i = 0; i < 6; i++) if (gEffect2VelocityRangeTable.sub[i] != 0) cfg.renderFlags |= 1 << (gEffect2VelocityRangeTable.sub[i] - 1);
+        for (i = 0; i < EFFECT2_VELOCITY_RANGE_COUNT; i++) if (gEffect2VelocityRangeTable.sub[i] != 0) cfg.renderFlags |= 1 << (gEffect2VelocityRangeTable.sub[i] - 1);
         cfg.textureId = (s32)gEffect2VelocityRangeTable.f60;
         cfg.initialAlpha = randomGetRange(gEffect2VelocityRangeTable.b_a0, gEffect2VelocityRangeTable.b_a1);
         break;
