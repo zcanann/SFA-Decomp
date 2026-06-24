@@ -29,6 +29,14 @@ typedef struct WcFloorTileState
     u8 flags; /* 0x7: 1|2 done, 4 armed */
 } WcFloorTileState;
 
+typedef enum WcFloorTilePhase
+{
+    WCFLOORTILE_PHASE_IDLE = 0,    /* armed-watch: waits for a triggering hit entry */
+    WCFLOORTILE_PHASE_FALLING = 1, /* shaking, accelerating down, fading alpha out */
+    WCFLOORTILE_PHASE_FALLEN = 2,  /* alpha 0, collision disabled */
+    WCFLOORTILE_PHASE_RESTORE = 3, /* snapped back to Y, fading alpha in, collision on */
+} WcFloorTilePhase;
+
 typedef struct WcFloorTileSetup
 {
     ObjPlacement base;
@@ -94,11 +102,11 @@ void wcfloortile_update(int obj)
     if ((u32)GameBit_Get(824) != 0)
     {
         ((GameObject*)obj)->anim.localPosY = setup->base.posY;
-        state->phase = 3;
+        state->phase = WCFLOORTILE_PHASE_RESTORE;
     }
     switch (state->phase)
     {
-    case 0:
+    case WCFLOORTILE_PHASE_IDLE:
     default:
         if (state->flags & 4)
         {
@@ -112,7 +120,7 @@ void wcfloortile_update(int obj)
                     if (*(s16*)(e + 0x44) == 1)
                     {
                         Sfx_PlayFromObject(obj, SFXsc_strafe_active);
-                        state->phase = 1;
+                        state->phase = WCFLOORTILE_PHASE_FALLING;
                         state->shakeTime = z;
                         ((GameObject*)obj)->anim.velocityY = z;
                     }
@@ -124,7 +132,7 @@ void wcfloortile_update(int obj)
             state->flags |= 4;
         }
         break;
-    case 1:
+    case WCFLOORTILE_PHASE_FALLING:
         state->shakeTime = state->shakeTime + timeDelta;
         if (state->shakeTime > (shakeMax = lbl_803E6EA0))
         {
@@ -166,15 +174,15 @@ void wcfloortile_update(int obj)
         }
         if (objAnim->alpha == 0)
         {
-            state->phase = 2;
+            state->phase = WCFLOORTILE_PHASE_FALLEN;
         }
         break;
-    case 2:
+    case WCFLOORTILE_PHASE_FALLEN:
         objAnim->alpha = 0;
         ObjHits_DisableObject(obj);
         state->flags |= 3;
         break;
-    case 3:
+    case WCFLOORTILE_PHASE_RESTORE:
         {
             f32 a = (f32)(u32)objAnim->alpha;
             a = lbl_803E6EBC * timeDelta + a;
