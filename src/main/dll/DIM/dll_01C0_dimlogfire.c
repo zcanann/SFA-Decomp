@@ -253,12 +253,12 @@ void dimlogfire_update(int obj)
         tricky = getTrickyObject();
         if ((u32)tricky != 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->unk68 + 0x28))(
                     tricky, obj, 1, 4);
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         }
         ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
         break;
