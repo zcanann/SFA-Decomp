@@ -2651,14 +2651,14 @@ void pauseMenuFn_80129ee0(void)
     u8 isArwing = 0;
     s8 menuMin = 1;
     s8 menuMax = 5;
-    int mapVal;
+    u8* charState;
     u8 hintBuf[13];
     u8 a1;
     u8 a2;
 
     player = Obj_GetPlayerObject();
     objIsCurModelNotZero();
-    mapVal = (int)(*gMapEventInterface)->getCurCharacterState();
+    charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
     if (gameTextFn_80019c00() == 0.0f)
     {
         btn = getButtonsJustPressed(0);
@@ -3314,7 +3314,7 @@ void pauseMenuFn_80129ee0(void)
                     lbl_803DD784 = 0;
                     break;
                 case 8:
-                    *(u8*)(player + 0x9) -= 1;
+                    charState[9] -= 1;
                     fn_80296C84(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
