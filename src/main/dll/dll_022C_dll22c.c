@@ -92,6 +92,13 @@ extern f32 lbl_803E63A0; /* rise ceiling above placement posY */
 extern f32 lbl_803E63A4; /* mode 2 proximity radius */
 extern f32 lbl_803E63A8; /* sink depth at init / descend floor below posY (mode 3) */
 
+/* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
+#define DLL22C_MODE_ARMED   0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
+#define DLL22C_MODE_HOLD_SETUP 1 /* one-frame: arm the 100-frame pauseTimer -> HOLD */
+#define DLL22C_MODE_HOLD    2 /* hold, then pick DESCEND or ASCEND by player Y */
+#define DLL22C_MODE_DESCEND 3 /* fall to posY-lbl_803E63A8, then -> HOLD */
+#define DLL22C_MODE_ASCEND  4 /* rise to posY+lbl_803E63A0, then -> HOLD */
+
 void dll_22C_init(int obj, char* p)
 {
     Dll22CState* state;
@@ -100,7 +107,7 @@ void dll_22C_init(int obj, char* p)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = dll_22C_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(md->rotXByte << 8);
-    state->mode = 0;
+    state->mode = DLL22C_MODE_ARMED;
     state->gameBit = md->gameBit;
     state->gameBit2 = md->gameBit2;
     state->raiseHeight = md->raiseHeight;
@@ -161,7 +168,7 @@ void fn_80204BF8(int obj)
     }
     switch (blob->mode)
     {
-    case 0:
+    case DLL22C_MODE_ARMED:
         if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1)
         {
             if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
@@ -177,7 +184,7 @@ void fn_80204BF8(int obj)
                     if (object->anim.localPosY >= lbl_803E63A0 + placement->posY)
                     {
                         object->anim.localPosY = lbl_803E63A0 + placement->posY;
-                        blob->mode = 1;
+                        blob->mode = DLL22C_MODE_HOLD_SETUP;
                         Sfx_StopObjectChannel(obj, 8);
                     }
                 }
@@ -197,18 +204,18 @@ void fn_80204BF8(int obj)
                         if (object->anim.localPosY >= k + placement->posY)
                         {
                             object->anim.localPosY = k + placement->posY;
-                            blob->mode = 1;
+                            blob->mode = DLL22C_MODE_HOLD_SETUP;
                         }
                     }
                 }
             }
         }
         break;
-    case 1:
-        blob->mode = 2;
+    case DLL22C_MODE_HOLD_SETUP:
+        blob->mode = DLL22C_MODE_HOLD;
         blob->pauseTimer = 0x64;
         break;
-    case 2:
+    case DLL22C_MODE_HOLD:
         h = blob->pauseTimer;
         if (h != 0)
         {
@@ -225,7 +232,7 @@ void fn_80204BF8(int obj)
             {
                 if (object->anim.localPosY == lbl_803E63A0 + placement->posY)
                 {
-                    blob->mode = 3;
+                    blob->mode = DLL22C_MODE_DESCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, 0x1cb);
@@ -234,7 +241,7 @@ void fn_80204BF8(int obj)
                 }
                 else if (object->anim.localPosY == placement->posY - lbl_803E63A8)
                 {
-                    blob->mode = 4;
+                    blob->mode = DLL22C_MODE_ASCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, 0x1cb);
@@ -246,7 +253,7 @@ void fn_80204BF8(int obj)
             {
                 if (player->anim.localPosY < placement->posY)
                 {
-                    blob->mode = 3;
+                    blob->mode = DLL22C_MODE_DESCEND;
                     if (blob->sfxLatch == 1)
                     {
                         blob->sfxLatch = 0;
@@ -254,7 +261,7 @@ void fn_80204BF8(int obj)
                 }
                 else if (player->anim.localPosY > placement->posY)
                 {
-                    blob->mode = 4;
+                    blob->mode = DLL22C_MODE_ASCEND;
                     if (blob->sfxLatch == 1)
                     {
                         blob->sfxLatch = 0;
@@ -263,14 +270,14 @@ void fn_80204BF8(int obj)
             }
         }
         break;
-    case 3:
+    case DLL22C_MODE_DESCEND:
         if (object->anim.localPosY > placement->posY - (k = lbl_803E63A8))
         {
             object->anim.localPosY -= timeDelta;
             if (object->anim.localPosY <= placement->posY - k)
             {
                 object->anim.localPosY = placement->posY - k;
-                blob->mode = 2;
+                blob->mode = DLL22C_MODE_HOLD;
                 Sfx_StopObjectChannel(obj, 8);
                 blob->pauseTimer = 0x64;
             }
@@ -280,11 +287,11 @@ void fn_80204BF8(int obj)
         {
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
-            blob->mode = 2;
+            blob->mode = DLL22C_MODE_HOLD;
             blob->pauseTimer = 0x64;
         }
         break;
-    case 4:
+    case DLL22C_MODE_ASCEND:
         y = object->anim.localPosY;
         k = lbl_803E63A0;
         if (y < k + placement->posY)
@@ -293,7 +300,7 @@ void fn_80204BF8(int obj)
             if (object->anim.localPosY >= k + placement->posY)
             {
                 object->anim.localPosY = k + placement->posY;
-                blob->mode = 2;
+                blob->mode = DLL22C_MODE_HOLD;
                 blob->pauseTimer = 0x64;
                 Sfx_StopObjectChannel(obj, 8);
             }
@@ -301,7 +308,7 @@ void fn_80204BF8(int obj)
         }
         else
         {
-            blob->mode = 2;
+            blob->mode = DLL22C_MODE_HOLD;
             blob->pauseTimer = 0x64;
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
