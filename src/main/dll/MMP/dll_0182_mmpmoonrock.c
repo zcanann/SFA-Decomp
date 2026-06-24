@@ -565,7 +565,7 @@ void mmp_moonrock_update(int obj)
     {
         if (((MmpMoonrockPlacement*)def)->gateBit != -1 && GameBit_Get(((MmpMoonrockPlacement*)def)->gateBit) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         else if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
         {
@@ -574,7 +574,7 @@ void mmp_moonrock_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     state->flags &= ~0x8;
     if (grabbed != 0)
