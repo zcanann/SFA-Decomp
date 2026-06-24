@@ -337,7 +337,7 @@ void gpsh_shrine_update(int obj)
                     ((GpshShrineState*)data)->sfxTimer = (f32)(int)
                     randomGetRange(500, 1000);
                 }
-                if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+                if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
                 {
                     ((GpshShrineState*)data)->puzzleState = 5;
                     GameBit_Set(0x129, 0);
