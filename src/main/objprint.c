@@ -3237,13 +3237,13 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     fz = fz * lbl_803DEA28;
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
     GXSetTexCoordGen2(2, 1, 4, 0x3c, 0, 0x7d);
-    GXSetTevDirect(0);
-    GXSetTevOrder(0, 2, 0, 0xff);
-    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
-    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD2, GX_TEXMAP0, GX_COLOR_NULL);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevSwapMode(0, 0, 0);
-    GXSetTevColorOp(0, 0, 0, 0, 0, 0);
-    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     v = *(u8*)(obj + 0xf1);
     kc.b = v;
     kc.g = v;
@@ -3257,13 +3257,13 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
     selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
-    GXSetTevDirect(1);
-    GXSetTevOrder(1, 0, 1, 4);
+    GXSetTevDirect(GX_TEVSTAGE1);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR0A0);
     GXSetTevSwapMode(1, 0, 0);
-    GXSetTevColorIn(1, 0xf, 8, 0xe, 10);
-    GXSetTevAlphaIn(1, 7, 7, 7, 7);
-    GXSetTevColorOp(1, 0, 0, 0, 1, 2);
-    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_RASC);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     getTextureFn_8006c5e4(&t164);
     selectTexture((void*)t164, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
@@ -3278,12 +3278,12 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     mtxA.m[4] = fz;
     GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
-    GXSetTevOrder(2, 0xff, 0xff, 0xff);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevSwapMode(2, 0, 0);
-    GXSetTevColorIn(2, 0xf, 0, 4, 0xf);
-    GXSetTevAlphaIn(2, 7, 7, 7, 7);
-    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
     GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
     GXSetIndTexOrder(1, 3, 2);
@@ -3297,12 +3297,12 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXLoadTexMtxImm(mtx4, 0x40, 0);
     GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
     GXSetTevKColorSel(3, 4);
-    GXSetTevOrder(3, 4, 3, 8);
-    GXSetTevColorIn(3, 8, 0xe, 0, 0);
-    GXSetTevAlphaIn(3, 7, 4, 5, 7);
+    GXSetTevOrder(GX_TEVSTAGE3, GX_TEXCOORD4, GX_TEXMAP3, GX_ALPHA_BUMPN);
+    GXSetTevColorIn(GX_TEVSTAGE3, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV, GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE3, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
     GXSetTevSwapMode(3, 0, 0);
-    GXSetTevColorOp(3, 1, 1, 0, 1, 0);
-    GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(GX_TEVSTAGE3, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     if (lbl_803DCC44 < 0xc)
     {
         GXSetNumTevStages(4);
@@ -3335,20 +3335,20 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
         PSMTXScale(mtx5, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
         GXSetTexCoordGen2(5, 1, 4, 0x3c, 1, 0x49);
-        GXSetTevDirect(4);
-        GXSetTevOrder(4, 5, 5, 4);
-        GXSetTevColorIn(4, 0xf, 0xf, 0xf, 0);
-        GXSetTevAlphaIn(4, 7, 4, 5, 7);
+        GXSetTevDirect(GX_TEVSTAGE4);
+        GXSetTevOrder(GX_TEVSTAGE4, GX_TEXCOORD5, GX_TEXMAP5, GX_COLOR0A0);
+        GXSetTevColorIn(GX_TEVSTAGE4, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+        GXSetTevAlphaIn(GX_TEVSTAGE4, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
         GXSetTevSwapMode(4, 0, 0);
-        GXSetTevColorOp(4, 0, 0, 0, 1, 0);
-        GXSetTevAlphaOp(4, 0, 0, 0, 1, 2);
-        GXSetTevDirect(5);
-        GXSetTevOrder(5, 0xff, 0xff, 0xff);
-        GXSetTevColorIn(5, 0, 0xe, 5, 0xf);
-        GXSetTevAlphaIn(5, 0, 2, 2, 7);
+        GXSetTevColorOp(GX_TEVSTAGE4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevDirect(GX_TEVSTAGE5);
+        GXSetTevOrder(GX_TEVSTAGE5, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+        GXSetTevColorIn(GX_TEVSTAGE5, GX_CC_CPREV, GX_CC_KONST, GX_CC_A1, GX_CC_ZERO);
+        GXSetTevAlphaIn(GX_TEVSTAGE5, GX_CA_APREV, GX_CA_A1, GX_CA_A1, GX_CA_ZERO);
         GXSetTevSwapMode(5, 0, 0);
-        GXSetTevColorOp(5, 0, 0, 0, 1, 0);
-        GXSetTevAlphaOp(5, 0, 0, 0, 1, 0);
+        GXSetTevColorOp(GX_TEVSTAGE5, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE5, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetNumTevStages(6);
         GXSetNumIndStages(2);
         GXSetNumTexGens(6);
@@ -3359,7 +3359,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
 
@@ -3468,7 +3468,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetTexCoordGen2(2, 1, 4, 0x3c, 0, 0x7d);
     if (lbl_803DCC36 == 0)
     {
-        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     }
     else
     {
@@ -3478,7 +3478,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
             lbl_803DB494.b = v;
             lbl_803DB494.g = v;
             lbl_803DB494.r = v;
-            GXSetTevColorIn(0, 8, 0xc, 0xe, 0xf);
+            GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ONE, GX_CC_KONST, GX_CC_ZERO);
         }
         else
         {
@@ -3492,18 +3492,18 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
             }
             lbl_803DB494.g = lbl_803DB494.b;
             lbl_803DB494.r = lbl_803DB494.b;
-            GXSetTevColorIn(0, 8, 0xf, 0xe, 0xf);
+            GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_KONST, GX_CC_ZERO);
         }
         GXSetTevKColor(1, lbl_803DB494);
         GXSetTevKAlphaSel(0, 0x1d);
         GXSetTevKColorSel(0, 0xd);
     }
-    GXSetTevDirect(0);
-    GXSetTevOrder(0, 2, 0, 0xff);
-    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD2, GX_TEXMAP0, GX_COLOR_NULL);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevSwapMode(0, 0, 0);
-    GXSetTevColorOp(0, 0, 0, 0, 0, 0);
-    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     {
         u8 v = *(u8*)(obj + 0xf1);
         s10.b = v;
@@ -3518,13 +3518,13 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
     selectTexture(*ObjModel_GetRenderOpTextureRefs(model, ropIdx), 1);
-    GXSetTevDirect(1);
-    GXSetTevOrder(1, 0, 1, 4);
+    GXSetTevDirect(GX_TEVSTAGE1);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR0A0);
     GXSetTevSwapMode(1, 0, 0);
-    GXSetTevColorIn(1, 0xf, 8, 6, 10);
-    GXSetTevAlphaIn(1, 7, 7, 7, 3);
-    GXSetTevColorOp(1, 0, 0, 0, 1, 2);
-    GXSetTevAlphaOp(1, 0, 0, 0, 0, 0);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C2, GX_CC_RASC);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A2);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     if (lbl_803DCC5C != 0)
     {
         int stk364;
@@ -3543,50 +3543,50 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     }
     if (fancy)
     {
-        GXSetTevDirect(2);
+        GXSetTevDirect(GX_TEVSTAGE2);
         GXLoadTexMtxImm(modelLightStruct_getProjectionTexMtx(lbl_803DCC64), 0x49, 0);
         GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x49);
         if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2)
         {
-            GXSetTevOrder(2, 1, 5, 4);
+            GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR0A0);
         }
         else
         {
-            GXSetTevOrder(2, 1, 5, 5);
+            GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR1A1);
         }
         selectTexture(modelLightStruct_getProjectionTexture(lbl_803DCC64), 5);
         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &stk348, &t160);
         if (t160 == 2)
         {
-            GXSetTevColorIn(2, 0xf, 4, 8, 0xf);
+            GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
         }
         else if (t160 == 3)
         {
-            GXSetTevColorIn(2, 4, 0xf, 8, 0xf);
+            GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_C1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
         }
         else if (t160 == 1)
         {
-            GXSetTevColorIn(2, 0xf, 0xf, 8, 4);
+            GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1);
         }
         else if (lbl_803DCC60 == 0 || lbl_803DCC60 == 1)
         {
-            GXSetTevColorIn(2, 0xf, 10, 8, 4);
+            GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, GX_CC_C1);
         }
         else
         {
-            GXSetTevColorIn(2, 0xf, 0xb, 8, 4);
+            GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, GX_CC_C1);
         }
         GXSetTevSwapMode(2, 0, 0);
         if (t160 == 1)
         {
-            GXSetTevColorOp(2, 1, 0, 0, 1, 2);
+            GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
         }
         else
         {
-            GXSetTevColorOp(2, 0, 0, 0, 1, 2);
+            GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
         }
-        GXSetTevAlphaIn(2, 7, 7, 7, 0);
-        GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+        GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         stage = 3;
         coord = 5;
     }
@@ -3676,6 +3676,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
