@@ -88,13 +88,13 @@ int bossdrakor_getExtraSize(void)
 void bossdrakor_update(int obj)
 {
     int state;
+    s8* p;
+    int i;
     int state2;
     int moveResult;
     int adv;
     int player;
-    int i;
     int moveId;
-    s8* p;
     s16* uvec;
     int* tbl;
     int shakeX;
