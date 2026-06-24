@@ -117,10 +117,10 @@ void fn_801E7DC8(int p1, int p2, int count)
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
         *(s8*)&((ShopkeeperSpawnSetup*)o)->unk18 = randomGetRange(-128, 127);
         ((ShopkeeperSpawnSetup*)o)->unk1A = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[1] = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[3] = 255;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[0] = 16;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[2] = 6;
+        ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)p2)->vendorObj;
         Obj_SetupObject(o, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&((GameObject*)p1)->anim.parent);
     }
@@ -133,10 +133,10 @@ void fn_801E7DC8(int p1, int p2, int count)
         ((ShopkeeperSpawnSetup*)o)->base.posZ = ((GameObject*)p1)->anim.localPosZ;
         *(s8*)&((ShopkeeperSpawnSetup*)o)->unk18 = randomGetRange(-128, 127);
         ((ShopkeeperSpawnSetup*)o)->unk1A = ((GameObject*)p1)->anim.localPosY - *(f32*)&local;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[1] = 1;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[3] = 255;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[0] = 16;
-        ((ShopkeeperSpawnSetup*)o)->base.unk04[2] = 6;
+        ((ShopkeeperSpawnSetup*)o)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)o)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)o)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)o)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)o)->unk19 = 1;
         ((ShopkeeperSpawnSetup*)o)->base.mapId = ((ShopkeeperState*)p2)->vendorObj;
         Obj_SetupObject(o, 5, ((GameObject*)p1)->anim.mapEventSlot, -1, *(int*)&((GameObject*)p1)->anim.parent);

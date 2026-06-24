@@ -99,9 +99,9 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                ((ObjPlacement*)setup)->unk04[0] = 0x20;
-                ((ObjPlacement*)setup)->unk04[1] = 4;
-                ((ObjPlacement*)setup)->unk04[3] = 0xff;
+                ((ObjPlacement*)setup)->color[0] = 0x20;
+                ((ObjPlacement*)setup)->color[1] = 4;
+                ((ObjPlacement*)setup)->color[3] = 0xff;
                 ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
                 *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= lbl_803E5EA0;
             }

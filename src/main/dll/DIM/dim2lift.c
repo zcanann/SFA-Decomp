@@ -148,10 +148,10 @@ void DIM2icicle_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity)
         setup->base.posX = source->x;
         setup->base.posY = source->y;
         setup->base.posZ = source->z;
-        setup->base.unk04[0] = 1;
-        setup->base.unk04[1] = 1;
-        setup->base.unk04[2] = 255;
-        setup->base.unk04[3] = 255;
+        setup->base.color[0] = 1;
+        setup->base.color[1] = 1;
+        setup->base.color[2] = 255;
+        setup->base.color[3] = 255;
         setup->field1E = -1;
         setup->field20 = -1;
         spawnedObj = (GameObject*)Obj_SetupObject(setup, 5, -1, -1, 0);

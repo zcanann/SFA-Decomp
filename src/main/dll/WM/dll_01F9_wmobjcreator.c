@@ -193,10 +193,10 @@ void WM_ObjCreator_update(int obj)
                     ((ObjPlacement*)setup)->posX = placement->base.posX;
                     ((ObjPlacement*)setup)->posY = placement->base.posY;
                     ((ObjPlacement*)setup)->posZ = placement->base.posZ;
-                    ((ObjPlacement*)setup)->unk04[0] = placement->base.unk04[0];
-                    ((ObjPlacement*)setup)->unk04[1] = placement->base.unk04[1];
-                    ((ObjPlacement*)setup)->unk04[2] = placement->base.unk04[2];
-                    ((ObjPlacement*)setup)->unk04[3] = placement->base.unk04[3];
+                    ((ObjPlacement*)setup)->color[0] = placement->base.color[0];
+                    ((ObjPlacement*)setup)->color[1] = placement->base.color[1];
+                    ((ObjPlacement*)setup)->color[2] = placement->base.color[2];
+                    ((ObjPlacement*)setup)->color[3] = placement->base.color[3];
                     ((WmGalleonSpawnSetup*)setup)->unk1E = 0xffff;
                     ((WmGalleonSpawnSetup*)setup)->unk1A = 2;
                     ((WmGalleonSpawnSetup*)setup)->yawByte = placement->yaw;
@@ -216,9 +216,9 @@ void WM_ObjCreator_update(int obj)
             {
                 int setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
                                                  WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->unk04[0] = 0x20;
-                ((ObjPlacement*)setup)->unk04[1] = 2;
-                ((ObjPlacement*)setup)->unk04[3] = 0xff;
+                ((ObjPlacement*)setup)->color[0] = 0x20;
+                ((ObjPlacement*)setup)->color[1] = 2;
+                ((ObjPlacement*)setup)->color[3] = 0xff;
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -284,8 +284,8 @@ void WM_ObjCreator_update(int obj)
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
                                              WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->unk04[0] = 4;
-                ((ObjPlacement*)setup)->unk04[1] = 2;
+                ((ObjPlacement*)setup)->color[0] = 4;
+                ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX;
                 ((ObjPlacement*)setup)->posY = placement->base.posY + (f32)(int)randomGetRange(-0x28, 0x28);
                 ((ObjPlacement*)setup)->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
@@ -314,9 +314,9 @@ void WM_ObjCreator_update(int obj)
                     n -= 1;
                     setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
                                                  WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                    ((ObjPlacement*)setup)->unk04[0] = 0x20;
-                    ((ObjPlacement*)setup)->unk04[1] = 2;
-                    ((ObjPlacement*)setup)->unk04[3] = 0xff;
+                    ((ObjPlacement*)setup)->color[0] = 0x20;
+                    ((ObjPlacement*)setup)->color[1] = 2;
+                    ((ObjPlacement*)setup)->color[3] = 0xff;
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                     ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -356,8 +356,8 @@ void WM_ObjCreator_update(int obj)
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES,
                                              WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->unk04[0] = 4;
-                ((ObjPlacement*)setup)->unk04[1] = 2;
+                ((ObjPlacement*)setup)->color[0] = 4;
+                ((ObjPlacement*)setup)->color[1] = 2;
                 ((ObjPlacement*)setup)->posX = placement->base.posX + (f32)(int)randomGetRange(-0x28, 0x28);
                 ((ObjPlacement*)setup)->posY = placement->base.posY + (f32)(int)randomGetRange(0, 0x14);
                 ((ObjPlacement*)setup)->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
@@ -379,9 +379,9 @@ void WM_ObjCreator_update(int obj)
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
                 ((ObjPlacement*)setup)->posY = lbl_803E5CDC + ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x50, 0x50);
-                ((ObjPlacement*)setup)->unk04[0] = 0x20;
-                ((ObjPlacement*)setup)->unk04[1] = 2;
-                ((ObjPlacement*)setup)->unk04[3] = 0xff;
+                ((ObjPlacement*)setup)->color[0] = 0x20;
+                ((ObjPlacement*)setup)->color[1] = 2;
+                ((ObjPlacement*)setup)->color[3] = 0xff;
                 ((WmRockSpawnSetup*)setup)->unk1E = 0xffff;
                 ((WmRockSpawnSetup*)setup)->yawByte = ((GameObject*)obj)->anim.rotX >> 8;
                 Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,

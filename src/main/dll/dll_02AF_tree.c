@@ -113,10 +113,10 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
     {
         newObj = Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE, TREE_AMBIENT_EFFECT_OBJECT_ID);
         effectSetup = (TreeAmbientEffectSetup*)newObj;
-        effectSetup->base.unk04[0] = setup->base.unk04[0];
-        effectSetup->base.unk04[2] = setup->base.unk04[2];
-        effectSetup->base.unk04[1] = setup->base.unk04[1];
-        effectSetup->base.unk04[3] = setup->base.unk04[3] - 0xa;
+        effectSetup->base.color[0] = setup->base.color[0];
+        effectSetup->base.color[2] = setup->base.color[2];
+        effectSetup->base.color[1] = setup->base.color[1];
+        effectSetup->base.color[3] = setup->base.color[3] - 0xa;
         idx = index;
         effectSetup->base.posX = state->ambientEffectPos[idx][0];
         effectSetup->base.posY = state->ambientEffectPos[idx][1];

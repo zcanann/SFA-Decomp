@@ -936,10 +936,10 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         }
         Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
         setup = Obj_AllocObjectSetup(0x18, 0x42a);
-        ((ObjPlacement*)setup)->unk04[2] = 0xff;
-        ((ObjPlacement*)setup)->unk04[3] = 0xff;
-        ((ObjPlacement*)setup)->unk04[0] = 2;
-        ((ObjPlacement*)setup)->unk04[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 2;
+        ((ObjPlacement*)setup)->color[1] = 1;
         ((ObjPlacement*)setup)->posX = inner->spawnPosX;
         ((ObjPlacement*)setup)->posY = inner->spawnPosY;
         ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;
@@ -1171,10 +1171,10 @@ void fn_802BF4D8(int obj)
     }
     Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
     setup = Obj_AllocObjectSetup(0x24, 0x42a);
-    ((ObjPlacement*)setup)->unk04[2] = 0xff;
-    ((ObjPlacement*)setup)->unk04[3] = 0xff;
-    ((ObjPlacement*)setup)->unk04[0] = 2;
-    ((ObjPlacement*)setup)->unk04[1] = 1;
+    ((ObjPlacement*)setup)->color[2] = 0xff;
+    ((ObjPlacement*)setup)->color[3] = 0xff;
+    ((ObjPlacement*)setup)->color[0] = 2;
+    ((ObjPlacement*)setup)->color[1] = 1;
     ((ObjPlacement*)setup)->posX = inner->spawnPosX;
     ((ObjPlacement*)setup)->posY = inner->spawnPosY;
     ((ObjPlacement*)setup)->posZ = inner->spawnPosZ;

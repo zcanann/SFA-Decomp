@@ -115,10 +115,10 @@ void dfsh_objcreator_update(int obj)
         ((DfshObjCreatorSetup*)spawnSetup)->base.posY = ((ObjPlacement*)setup)->posY;
         ((DfshObjCreatorSetup*)spawnSetup)->base.posZ = ((ObjPlacement*)setup)->posZ;
         ((DfshObjCreatorSetup*)spawnSetup)->base.mapId = ((ObjPlacement*)setup)->mapId;
-        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[0] = setup[0x04];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[1] = setup[0x05];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[2] = setup[0x06];
-        ((DfshObjCreatorSetup*)spawnSetup)->base.unk04[3] = setup[0x07];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.color[0] = setup[0x04];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.color[1] = setup[0x05];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.color[2] = setup[0x06];
+        ((DfshObjCreatorSetup*)spawnSetup)->base.color[3] = setup[0x07];
         ((DfshObjCreatorSetup*)spawnSetup)->unk27 = 3;
         ((DfshObjCreatorSetup*)spawnSetup)->unk18 = 0x1e7;
         ((DfshObjCreatorSetup*)spawnSetup)->unk30 = -1;

@@ -143,10 +143,10 @@ void imspaceringgen_update(GameObject* obj)
                 {
                     ((ImSpaceRingSetup*)ring)->tiltSpeed = -((ImSpaceRingSetup*)ring)->tiltSpeed;
                 }
-                ((ImSpaceRingSetup*)ring)->base.unk04[0] = setup[4];
-                ((ImSpaceRingSetup*)ring)->base.unk04[2] = setup[6];
-                ((ImSpaceRingSetup*)ring)->base.unk04[1] = 1;
-                ((ImSpaceRingSetup*)ring)->base.unk04[3] = 0xff;
+                ((ImSpaceRingSetup*)ring)->base.color[0] = setup[4];
+                ((ImSpaceRingSetup*)ring)->base.color[2] = setup[6];
+                ((ImSpaceRingSetup*)ring)->base.color[1] = 1;
+                ((ImSpaceRingSetup*)ring)->base.color[3] = 0xff;
                 Obj_SetupObject(ring, 5, obj->anim.mapEventSlot, -1,
                                 *(int*)&obj->anim.parent);
             }

@@ -135,10 +135,10 @@ void drcreator_update(int obj)
                     ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
                     ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
                     ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-                    ((DrcreatorSetup*)setup)->base.unk04[0] = 1;
-                    ((DrcreatorSetup*)setup)->base.unk04[1] = 1;
-                    ((DrcreatorSetup*)setup)->base.unk04[2] = 255;
-                    ((DrcreatorSetup*)setup)->base.unk04[3] = 250;
+                    ((DrcreatorSetup*)setup)->base.color[0] = 1;
+                    ((DrcreatorSetup*)setup)->base.color[1] = 1;
+                    ((DrcreatorSetup*)setup)->base.color[2] = 255;
+                    ((DrcreatorSetup*)setup)->base.color[3] = 250;
                     if (((GameObject*)obj)->anim.mapEventSlot == 2)
                     {
                         ((DrcreatorSetup*)setup)->unk19 = 4;
@@ -202,10 +202,10 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState* a
                 ((DrcreatorSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
                 ((DrcreatorSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
                 ((DrcreatorSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
-                ((DrcreatorSetup*)setup)->base.unk04[0] = 1;
-                ((DrcreatorSetup*)setup)->base.unk04[1] = 1;
-                ((DrcreatorSetup*)setup)->base.unk04[2] = 255;
-                ((DrcreatorSetup*)setup)->base.unk04[3] = 255;
+                ((DrcreatorSetup*)setup)->base.color[0] = 1;
+                ((DrcreatorSetup*)setup)->base.color[1] = 1;
+                ((DrcreatorSetup*)setup)->base.color[2] = 255;
+                ((DrcreatorSetup*)setup)->base.color[3] = 255;
                 ((DrcreatorSetup*)setup)->unk19 = 2;
                 projectile = Obj_SetupObject(setup, 5, -1, -1, 0);
                 if ((void*)projectile != NULL)

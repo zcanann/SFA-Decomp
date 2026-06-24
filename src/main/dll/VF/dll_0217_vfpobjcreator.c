@@ -146,10 +146,10 @@ void vfpobjcreator_update(int* obj)
             char* spawned;
             state->spawnTimer = state->spawnInterval;
             setupBuf = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[2] = 0xff;
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[3] = 0xff;
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[0] = 2;
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[1] = 1;
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[2] = 0xff;
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = 0xff;
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = 2;
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[1] = 1;
             ((VfpObjCreatorSetup*)setupBuf)->base.posX =
                 ((GameObject*)obj)->anim.localPosX +
                 (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
@@ -192,10 +192,10 @@ void vfpobjcreator_update(int* obj)
             ((VfpObjCreatorSetup*)setupBuf)->base.posX = placement->base.posX;
             ((VfpObjCreatorSetup*)setupBuf)->base.posY = placement->base.posY;
             ((VfpObjCreatorSetup*)setupBuf)->base.posZ = placement->base.posZ;
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[0] = placement->base.unk04[0];
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[1] = placement->base.unk04[1];
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[2] = placement->base.unk04[2];
-            ((VfpObjCreatorSetup*)setupBuf)->base.unk04[3] = placement->base.unk04[3];
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = placement->base.color[0];
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[1] = placement->base.color[1];
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[2] = placement->base.color[2];
+            ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = placement->base.color[3];
             ((VfpObjCreatorSetup*)setupBuf)->unk1E = -1;
             ((VfpObjCreatorSetup*)setupBuf)->unk20 = -1;
             spawned = Obj_SetupObject(setupBuf, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,

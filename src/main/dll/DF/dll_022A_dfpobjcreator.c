@@ -25,10 +25,10 @@ typedef struct DfpobjcreatorObjectDef
 typedef struct DfpobjcreatorPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4 -> spawn setup base.unk04[0] */
-    u8 colorG; /* 0x5 -> spawn setup base.unk04[1] */
-    u8 colorB; /* 0x6 -> spawn setup base.unk04[2] */
-    u8 colorA; /* 0x7 -> spawn setup base.unk04[3] */
+    u8 colorR; /* 0x4 -> spawn setup base.color[0] */
+    u8 colorG; /* 0x5 -> spawn setup base.color[1] */
+    u8 colorB; /* 0x6 -> spawn setup base.color[2] */
+    u8 colorA; /* 0x7 -> spawn setup base.color[3] */
     f32 posX;
     f32 posY;
     f32 posZ;
@@ -50,7 +50,7 @@ typedef struct DfpobjcreatorPlacement
 
 /* Obj_AllocObjectSetup(0x24,...) spawn buffer composed in
  * dbstealerworm_stateHandlerA00. Head is the common ObjPlacement (the
- * 0x04..0x07 bytes live in ObjPlacement.unk04); tail (0x18..0x23) is
+ * 0x04..0x07 bytes live in ObjPlacement.color); tail (0x18..0x23) is
  * file-local. */
 typedef struct DfpobjcreatorSetup
 {
@@ -138,10 +138,10 @@ void dfpobjcreator_update(int obj)
                 ((DfpobjcreatorSetup*)setup)->base.posX = ((DfpobjcreatorPlacement*)data)->posX;
                 ((DfpobjcreatorSetup*)setup)->base.posY = ((DfpobjcreatorPlacement*)data)->posY;
                 ((DfpobjcreatorSetup*)setup)->base.posZ = ((DfpobjcreatorPlacement*)data)->posZ;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[0] = ((DfpobjcreatorPlacement*)data)->colorR;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[1] = ((DfpobjcreatorPlacement*)data)->colorG;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[2] = ((DfpobjcreatorPlacement*)data)->colorB;
-                ((DfpobjcreatorSetup*)setup)->base.unk04[3] = ((DfpobjcreatorPlacement*)data)->colorA;
+                ((DfpobjcreatorSetup*)setup)->base.color[0] = ((DfpobjcreatorPlacement*)data)->colorR;
+                ((DfpobjcreatorSetup*)setup)->base.color[1] = ((DfpobjcreatorPlacement*)data)->colorG;
+                ((DfpobjcreatorSetup*)setup)->base.color[2] = ((DfpobjcreatorPlacement*)data)->colorB;
+                ((DfpobjcreatorSetup*)setup)->base.color[3] = ((DfpobjcreatorPlacement*)data)->colorA;
                 ((DfpobjcreatorSetup*)setup)->unk1E = -1;
                 ((DfpobjcreatorSetup*)setup)->unk20 = -1;
                 ((DfpobjcreatorSetup*)setup)->unk1A = 0xdc;

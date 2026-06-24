@@ -63,7 +63,7 @@ extern f32 lbl_803E6478;
 
 /* Obj_AllocObjectSetup(0x2C,...) ring-visual spawn buffer composed in
  * sfxplayer_ensureEffectHandlePair. Head is the common ObjPlacement
- * (the 0x04..0x07 bytes live in ObjPlacement.unk04); tail (0x18..0x2B)
+ * (the 0x04..0x07 bytes live in ObjPlacement.color); tail (0x18..0x2B)
  * is file-local. */
 typedef struct SfxplayerRingVisualSetup
 {
@@ -549,10 +549,10 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
     if (*(void**)((int)handles + handleOffset) == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
-        ((SfxplayerRingVisualSetup*)setup)->base.unk04[2] = 0xff;
-        ((SfxplayerRingVisualSetup*)setup)->base.unk04[3] = 0xff;
-        ((SfxplayerRingVisualSetup*)setup)->base.unk04[0] = 2;
-        ((SfxplayerRingVisualSetup*)setup)->base.unk04[1] = 1;
+        ((SfxplayerRingVisualSetup*)setup)->base.color[2] = 0xff;
+        ((SfxplayerRingVisualSetup*)setup)->base.color[3] = 0xff;
+        ((SfxplayerRingVisualSetup*)setup)->base.color[0] = 2;
+        ((SfxplayerRingVisualSetup*)setup)->base.color[1] = 1;
         ((SfxplayerRingVisualSetup*)setup)->base.posX = ((GameObject*)obj)->anim.localPosX;
         ((SfxplayerRingVisualSetup*)setup)->base.posY = ((GameObject*)obj)->anim.localPosY;
         ((SfxplayerRingVisualSetup*)setup)->base.posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -588,10 +588,10 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
     if (*(void**)pair == NULL)
     {
         setup = Obj_AllocObjectSetup(SFXPLAYER_RING_HIT_SETUP_SIZE, SFXPLAYER_RING_HIT_OBJECT_ID);
-        ((ObjPlacement*)setup)->unk04[2] = 0xff;
-        ((ObjPlacement*)setup)->unk04[3] = 0xff;
-        ((ObjPlacement*)setup)->unk04[0] = 2;
-        ((ObjPlacement*)setup)->unk04[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 2;
+        ((ObjPlacement*)setup)->color[1] = 1;
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;

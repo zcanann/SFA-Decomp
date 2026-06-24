@@ -35,10 +35,10 @@ typedef struct ScMusictreePlacement
 typedef struct ScMusictreeSpawnAmbientEffectPlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4: ambient particle tint red   -> setup head.unk04[0] */
-    u8 colorG; /* 0x5: ambient particle tint green -> setup head.unk04[1] */
-    u8 colorB; /* 0x6: ambient particle tint blue  -> setup head.unk04[2] */
-    u8 colorA; /* 0x7: ambient particle tint alpha -> setup head.unk04[3] */
+    u8 colorR; /* 0x4: ambient particle tint red   -> setup head.color[0] */
+    u8 colorG; /* 0x5: ambient particle tint green -> setup head.color[1] */
+    u8 colorB; /* 0x6: ambient particle tint blue  -> setup head.color[2] */
+    u8 colorA; /* 0x7: ambient particle tint alpha -> setup head.color[3] */
     u8 pad8[0x20 - 0x8];
     u8 unk20;
     u8 unk21;
@@ -169,10 +169,10 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x28, 0x210);
-        ((ScMusictreeSetup*)setup)->head.unk04[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
-        ((ScMusictreeSetup*)setup)->head.unk04[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
-        ((ScMusictreeSetup*)setup)->head.unk04[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
-        ((ScMusictreeSetup*)setup)->head.unk04[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
+        ((ScMusictreeSetup*)setup)->head.color[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
+        ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
+        ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
+        ((ScMusictreeSetup*)setup)->head.color[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
         ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
         ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
         ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
