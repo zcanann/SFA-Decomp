@@ -504,7 +504,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0);
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         hitState->flags &= ~1;
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x80;
         GameBit_Set(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
         if (((GroundBaddieState *)state)->targetState == 1) {
