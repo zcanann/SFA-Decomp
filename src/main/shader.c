@@ -1199,6 +1199,13 @@ extern char lbl_8037E0C0[];
 extern u8 gDvdErrorPauseActive;
 extern int lbl_803DB620;
 
+typedef struct ShaderRomListSlot
+{
+    void* romlist;
+    s16 slot;
+    s16 pad;
+} ShaderRomListSlot;
+
 int mapProcessRomList(int slot)
 {
     char* base;
@@ -1208,8 +1215,9 @@ int mapProcessRomList(int slot)
     char* cur;
     u8 flag;
     int count;
-    char* p;
-    char* entry;
+    ShaderRomListSlot* p;
+    ShaderRomListSlot* slots;
+    ShaderRomListSlot* entry;
     s16* rects;
     int step;
     int rl;
@@ -1235,21 +1243,22 @@ int mapProcessRomList(int slot)
             flag = 1;
     }
     i = 0;
-    p = base + 0x418C;
+    p = (ShaderRomListSlot*)(base + 0x418C);
     count = gShaderRomListSlotCount;
-    while (i < count && *(void**)p != 0)
+    while (i < count && p->romlist != 0)
     {
-        p += 8;
+        p++;
         i++;
     }
     if (i == count)
         gShaderRomListSlotCount++;
     rl = mapGetRomListAndOffsets(slot, 0);
-    entry = base + i * 8 + 0x418C;
-    *(int*)entry = rl;
+    slots = (ShaderRomListSlot*)(base + 0x418C);
+    entry = &slots[i];
+    entry->romlist = (void*)rl;
     ((int*)(base + 0x83A8))[slot] = rl;
-    *(s16*)(base + i * 8 + 0x4190) = slot;
-    lbl_803DCEA0 = *(void**)entry;
+    entry->slot = slot;
+    lbl_803DCEA0 = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
     *(f32*)((char*)lbl_803DCEA0 + 0x24) =
