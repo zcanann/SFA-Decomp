@@ -2305,7 +2305,8 @@ void loadNextMap(void)
 
 extern float fastFloorf(float x);
 extern f32 gMapBlockWorldSize;
-extern u8* gMapBlockLayerTables[5];
+#define MAP_BLOCK_LAYER_COUNT 5
+extern u8* gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 extern f32 lbl_803DEBB8;
 
 typedef struct WarpVec
@@ -2410,7 +2411,7 @@ int objShouldUnload(u8* obj)
         found = 0;
         bx = bx + (bz << 4);
         tp = gMapBlockLayerTables;
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < MAP_BLOCK_LAYER_COUNT; k++)
         {
             if (*(s8*)((u8*)bx + (int)*tp) >= 0)
             {
