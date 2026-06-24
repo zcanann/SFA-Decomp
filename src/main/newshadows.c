@@ -409,7 +409,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
 #pragma peephole on
 void newshadows_captureProjectedShadow(u16* object)
 {
-    float fVar1;
+    float maxScale;
     int renderState;
     float* shadowSlot;
     double dVar4;
@@ -434,12 +434,12 @@ void newshadows_captureProjectedShadow(u16* object)
                  &projX, &projY, &projZ, &scaleX, &scaleY, &projW);
     scaleX = lbl_803DF994 * scaleX + lbl_803DF990;
     scaleY = lbl_803DF998 * scaleY + lbl_803DF990;
-    fVar1 = scaleY;
+    maxScale = scaleY;
     if (scaleY < scaleX)
     {
-        fVar1 = scaleX;
+        maxScale = scaleX;
     }
-    invScale = (double)(lbl_803DF99C / fVar1);
+    invScale = (double)(lbl_803DF99C / maxScale);
     dVar6 = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
     dVar4 = -(double)projX;
     dirY = (double)projY;
@@ -476,11 +476,11 @@ void newshadows_captureProjectedShadow(u16* object)
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + dVar6);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) =
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + dVar4);
-    fVar1 = lbl_803DF99C;
+    maxScale = lbl_803DF99C;
     shadowSlot = *(float**)(object + 0x32);
     shadowSlot[5] = -(lbl_803DF99C * *shadowSlot - shadowSlot[5]);
     shadowSlot = *(float**)(object + 0x32);
-    shadowSlot[6] = -(fVar1 * *shadowSlot - shadowSlot[6]);
+    shadowSlot[6] = -(maxScale * *shadowSlot - shadowSlot[6]);
     return;
 }
 
