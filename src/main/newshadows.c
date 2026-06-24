@@ -1547,11 +1547,12 @@ void findSomething(void* needle)
 }
 
 extern u8 gNewShadowFrameIndex;
-extern u32 gNewShadowFrameTextures[3];
+#define NEW_SHADOW_FRAME_COUNT 3
+extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
 void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
-    int idx = (gNewShadowFrameIndex + 1) % 3;
+    int idx = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     *outTable = gNewShadowFrameTextures[idx];
     *outF = ((GameObject*)obj)->anim.modelState->shadowScale;
     *outX = (int)((GameObject*)obj)->anim.modelState->shadowOffsetX;
@@ -2373,7 +2374,7 @@ void maybeHudFn_8006c91c(void)
     lbl_803DCFA4 = 0.2f *
         (f32)floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
     fn_80060BB0();
-    gNewShadowFrameIndex = (gNewShadowFrameIndex + 1) % 3;
+    gNewShadowFrameIndex = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     if (isHeavyFogEnabled())
     {
         f32 z = Camera_GetInverseViewMatrix()[7];
@@ -2433,7 +2434,7 @@ void shadowRenderFn_8006b558(int* obj)
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), GX_TRUE);
-        fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
+        fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10, 0);
         *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
     }
     else
