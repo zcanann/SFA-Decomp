@@ -59,7 +59,7 @@ void dimicewall_update(int* obj)
 {
     int* extra = ((GameObject*)obj)->extra;
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (((DimicewallState*)extra)->shattered == 0)
     {
         if (*(s8*)extra <= 0)
