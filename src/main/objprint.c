@@ -3272,7 +3272,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x46);
-    GXSetIndTexOrder(0, 1, 4);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
@@ -3286,7 +3286,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
-    GXSetIndTexOrder(1, 3, 2);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
@@ -3355,7 +3355,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     }
     GXSetCullMode(GX_CULL_BACK);
     {
-        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -3603,7 +3603,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
     GXSetTexCoordGen2(coord, 1, 4, 0x3c, 0, 0x46);
-    GXSetIndTexOrder(0, coord, 4);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, coord, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
@@ -3619,7 +3619,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     {
         selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
         GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
-        GXSetIndTexOrder(1, 3, 2);
+        GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
@@ -3628,7 +3628,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     }
     else
     {
-        GXSetIndTexOrder(1, 3, 2);
+        GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = lbl_803DEA04;
         mtxB.m[5] = lbl_803DEA04;
@@ -3668,7 +3668,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetCullMode(GX_CULL_BACK);
     if ((*(u16*)(*model + 2) & 0x100) != 0)
     {
-        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
     }
     else
     {
