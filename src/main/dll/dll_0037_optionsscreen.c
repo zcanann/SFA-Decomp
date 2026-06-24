@@ -24,6 +24,8 @@ extern int* gTitleMenuLinkInterface;
 extern s8 lbl_803DBA28;        /* active panel id (-1 = none) */
 extern u16 lbl_8031ACB8[];     /* per-panel text-box table, 8 u16 per panel */
 extern int lbl_803A87D0[8];    /* the 8 menu-item objects of the active panel */
+/* Menu-item slots per options panel (lbl_803A87D0[8], size 0x20 / 4). */
+#define OPTIONSSCREEN_MENU_ITEM_COUNT 8
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
@@ -95,7 +97,7 @@ void OptionsScreen_render(int arg)
     }
 
     item = lbl_803A87D0;
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
     {
         if (*(void**)&item[i] != NULL)
         {
@@ -172,7 +174,7 @@ int OptionsScreen_run(void)
                 (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x8)))();
                 lbl_803DBA28 = -1;
             }
-            for (i = 0; i < 8; i++)
+            for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
             {
                 if ((u32)lbl_803A87D0[i] != 0)
                 {
@@ -260,7 +262,7 @@ int OptionsScreen_run(void)
 
     if ((s8)lbl_803DBA28 != 0)
     {
-        for (i = 0; i < 8; i++)
+        for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
         {
             if ((u32)lbl_803A87D0[i] != 0)
             {
