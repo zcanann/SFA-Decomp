@@ -4490,8 +4490,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     m2 = mode8 & 2;
     if (m2 || m4 || (mode8 & 8))
     {
-        int j;
         int joff;
+        int j;
         f32 a1c = lbl_803DEA1C;
         j = 0;
         joff = 0;
