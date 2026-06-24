@@ -31,6 +31,13 @@ typedef struct Dll109State
     f32 timer;
 } Dll109State;
 
+typedef enum Dll109Phase
+{
+    DLL109_PHASE_INTACT = 0,  /* carryable/active; waits for a priority hit */
+    DLL109_PHASE_BREAKING = 1, /* just broke: spawn debris, disable, snap to placement */
+    DLL109_PHASE_RESPAWNING = 2, /* respawn timer + off-screen wait, then reset */
+} Dll109Phase;
+
 typedef struct Dll109MapData
 {
     ObjPlacement base;
@@ -77,7 +84,7 @@ void carryable_break_respawn_update(int obj)
     placement = (ObjPlacement*)((GameObject*)obj)->anim.placementData;
     switch (state->phase)
     {
-    case 0:
+    case DLL109_PHASE_INTACT:
         (*gCarryableInterface)->getAnimState(obj, (int)state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
@@ -96,20 +103,20 @@ void carryable_break_respawn_update(int obj)
             }
             (*gPartfxInterface)->spawnObject((void*)obj, 0x355, NULL, 0, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x352, NULL, 0, -1, NULL);
-            state->phase = 1;
+            state->phase = DLL109_PHASE_BREAKING;
         }
         break;
-    case 1:
+    case DLL109_PHASE_BREAKING:
         ObjHits_ClearHitVolumes();
         ObjHits_DisableObject(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        state->phase = 2;
+        state->phase = DLL109_PHASE_RESPAWNING;
         state->timer = lbl_803E3B44;
         ((GameObject*)obj)->anim.localPosX = placement->posX;
         ((GameObject*)obj)->anim.localPosY = placement->posY;
         ((GameObject*)obj)->anim.localPosZ = placement->posZ;
         break;
-    case 2:
+    case DLL109_PHASE_RESPAWNING:
         state->timer += timeDelta;
         if (state->timer > lbl_803E3B48)
         {
@@ -119,7 +126,7 @@ void carryable_break_respawn_update(int obj)
             {
                 ObjHits_EnableObject(obj);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-                state->phase = 0;
+                state->phase = DLL109_PHASE_INTACT;
             }
         }
         break;
@@ -146,7 +153,7 @@ void dll_109_free(int obj)
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll109State* state = ((GameObject*)obj)->extra;
-    if (state->phase == 0)
+    if (state->phase == DLL109_PHASE_INTACT)
     {
         if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
         {
