@@ -1025,20 +1025,20 @@ void modelLightChannels_applyGXControls(void)
             {
                 lightMask = entry->lightMask;
                 attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
+                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
                               attnFn);
             }
             else if (entry->mode == 2)
             {
                 lightMask = entry->lightMask;
                 attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, GX_DF_NONE, attnFn);
             }
             else
             {
                 lightMask = entry->lightMask;
                 attnFn = lightMask != 0 ? 0 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, GX_DF_NONE, attnFn);
             }
             activeMask = (activeMask | (1 << channel)) & 0xff;
         }
