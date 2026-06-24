@@ -1556,7 +1556,7 @@ void gameTextInitFn_8001a234(void)
         *(u16*)(p + 0xa) = *(u16*)(p + 6);
     }
 
-    i = 8;
+    i = GAMETEXT_LOAD_SLOT_COUNT;
     glyphPage = gameTextBase + 0x2c0;
     glyphPagePtr = (u8**)(gameTextBase + 0xc0);
     fontState = gameTextBase + 0xa0;
@@ -1732,7 +1732,7 @@ void gameTextRun(void)
         f32* timer = (f32*)(gameTextBase + 0x40);
         f32* alpha = (f32*)(gameTextBase + 0x20);
         u8* entry = gameTextBase + 0xa0;
-        i = 8;
+        i = GAMETEXT_LOAD_SLOT_COUNT;
         do
         {
             if ((double)*timer > zero)
