@@ -1,5 +1,9 @@
 #include "main/sky_state.h"
 #include "main/sky_80080E58_shared.h"
+#define GX_FALSE 0
+#define GX_TEV_SWAP0 0
+#define GX_TG_MTX2x4 1
+#define GX_TG_TEX0 4
 #define GX_CS_SCALE_1 0
 #define GX_TB_ZERO 0
 #define GX_TEVPREV 0
@@ -3069,10 +3073,10 @@ void skyFn_8008aee8(void)
         GXSetTevDirect(GX_TEVSTAGE0);
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_C1, GX_CC_A1, GX_CC_ZERO);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
-        GXSetTevSwapMode(0, 0, 0);
+        GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+        GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
         GXSetNumIndStages(0);
         GXSetNumChans(0);
         GXSetNumTexGens(1);
