@@ -2002,8 +2002,10 @@ void dbstealerworm_update(u8* objp)
         off = n * 0xc;
         while (n != 0)
         {
+            int stk = ((DbStealerwormControl*)sub)->msgStack;
+            int base = *(int*)entry;
             n--;
-            Stack_Push(((DbStealerwormControl*)sub)->msgStack, (int*)(*(int*)entry + (off -= 12)));
+            Stack_Push(stk, (int*)(base + (off -= 12)));
         }
         ((DbStealerwormControl*)sub)->unk34 = 1;
         ((DbStealerwormFlags44*)&((DbStealerwormControl*)sub)->flags44)->flag10 = 0;
