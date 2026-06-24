@@ -29,7 +29,7 @@ void infotext_update(int obj)
     }
     if (*sub > lbl_803E3C84)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             *sub = lbl_803E3C84;
         }
