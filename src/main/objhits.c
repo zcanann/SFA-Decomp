@@ -1507,10 +1507,12 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     }
     if (checkB != 0)
     {
-        if (gObjHitsScalarZero < bestDepth)
+        if (bestDepth > gObjHitsScalarZero)
         {
             if ((u32)objA == srcObj)
             {
+                extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume,
+                                                   s8 sphereIndex);
                 ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority, stateSrc->objectPairHitVolume,
                                         hit);
                 ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume,
