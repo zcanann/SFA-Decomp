@@ -206,7 +206,7 @@ void fn_80185B74(int obj)
     {
         state->ventState = 1;
         state->launchPhase = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         {
             f32 fz = lbl_803E3A58;
             ((GameObject*)obj)->anim.velocityX = fz;
@@ -235,7 +235,7 @@ void fn_80185B74(int obj)
             state->holdTimer = 0;
             state->ventState = 0;
             ObjHits_EnableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             ((GameObject*)obj)->unkF4 = 0;
         }
         return;
@@ -267,7 +267,7 @@ void fn_80185B74(int obj)
             int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
             if ((void*)cam != (void*)obj &&
-                (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject*)obj)->unkF8 == 0)
+                (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
             {
                 buttonDisable(0, 0x100);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
@@ -284,7 +284,7 @@ void fn_80185B74(int obj)
             if (((GameObject*)obj)->unkF8 == 0)
             {
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
             ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosZ;
@@ -297,7 +297,7 @@ void fn_80185B74(int obj)
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             if ((getButtonsJustPressed(0) & 0x100) != 0)
             {
                 state->riding = 0;
@@ -416,7 +416,7 @@ void fn_80185B74(int obj)
             state->launchPhase = 0;
             ((GameObject*)obj)->unkF8 = 0;
             ObjHits_EnableObject(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             ObjHits_ClearHitVolumes(obj);
         }
     }
