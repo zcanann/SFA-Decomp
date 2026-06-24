@@ -157,7 +157,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     }
 
     ObjHits_DisableObject(obj);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 
     getYButtonItem(&yItem);
     btns = getButtonsJustPressed(0);
