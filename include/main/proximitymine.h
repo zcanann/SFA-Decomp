@@ -4,6 +4,22 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+/* Runtime state of a proximity mine (ProximityMineState.mode). */
+typedef enum ProximityMineMode {
+  PROXIMITYMINE_MODE_LAUNCHING = -1, /* compute launch velocity then fall through to flight */
+  PROXIMITYMINE_MODE_EXPIRED = 0,    /* stopped/destroyed: count render timer then free */
+  PROXIMITYMINE_MODE_FLIGHT = 1,     /* integrate launch velocity, then fall through to armed */
+  PROXIMITYMINE_MODE_ARMED = 2,      /* live: spawn fx, enable hit detection */
+  PROXIMITYMINE_MODE_WAITING = 3     /* idle until player enters trigger range, then arm */
+} ProximityMineMode;
+
+/* Placement-config spawn variant (ProximityMineDef.mode). */
+typedef enum ProximityMineSpawnMode {
+  PROXIMITYMINE_SPAWN_TIMED = 0,     /* stationary mine armed after a parameter delay */
+  PROXIMITYMINE_SPAWN_LAUNCHED = 1,  /* launched/thrown mine */
+  PROXIMITYMINE_SPAWN_PROXIMITY = 2  /* immediately-armed proximity mine */
+} ProximityMineSpawnMode;
+
 typedef struct ProximityMineEffect {
   u8 unk0[0x4c];
   u8 visible;

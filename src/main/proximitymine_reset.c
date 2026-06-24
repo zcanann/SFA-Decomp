@@ -30,7 +30,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     obj->velocityZ = zero;
     storeZeroToFloatParam(&state->renderTimer);
     s16toFloat(&state->renderTimer, 10);
-    state->mode = 0;
+    state->mode = PROXIMITYMINE_MODE_EXPIRED;
     ObjHits_EnableObject((u32)obj);
     ObjHits_MarkObjectPositionDirty((int)obj);
     storeZeroToFloatParam(&state->resetTimer);

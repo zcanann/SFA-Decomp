@@ -114,7 +114,7 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
             obj->velocityY = zeroVelocity;
             obj->velocityX = zeroVelocity;
             obj->velocityZ = zeroVelocity;
-            state->mode = 0;
+            state->mode = PROXIMITYMINE_MODE_EXPIRED;
             storeZeroToFloatParam(&state->resetTimer);
             s16toFloat(&state->resetTimer, 1);
             s16toFloat(&state->renderTimer, 10);
@@ -169,7 +169,7 @@ void proximitymine_update(ProximityMineObject* obj)
         }
         if (timerCountDown(&state->lifespanTimer) != 0)
         {
-            if (state->mode == 2)
+            if (state->mode == PROXIMITYMINE_MODE_ARMED)
             {
                 hitDetectFn_800658a4(obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
                 obj->posY -= groundY;
@@ -234,7 +234,7 @@ void proximitymine_update(ProximityMineObject* obj)
         }
         switch (state->mode)
         {
-        case 3:
+        case PROXIMITYMINE_MODE_WAITING:
             {
                 f32 trigger;
                 ProximityMineObject* player;
@@ -243,12 +243,12 @@ void proximitymine_update(ProximityMineObject* obj)
                 player = Obj_GetPlayerObject();
                 if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
                 {
-                    state->mode = 2;
+                    state->mode = PROXIMITYMINE_MODE_ARMED;
                     s16toFloat(&state->resetTimer, 0x78);
                 }
                 break;
             }
-        case 0:
+        case PROXIMITYMINE_MODE_EXPIRED:
             Sfx_StopObjectChannel((u32)obj, 0x40);
             if (timerCountDown(&state->renderTimer) != 0)
             {
@@ -256,7 +256,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 return;
             }
             break;
-        case -1:
+        case PROXIMITYMINE_MODE_LAUNCHING:
             {
                 f32 dist;
                 f32 zero;
@@ -264,7 +264,7 @@ void proximitymine_update(ProximityMineObject* obj)
 
                 player = Obj_GetPlayerObject();
                 dist = Vec_xzDistance(&obj->prevX, &player->prevX);
-                state->mode = 1;
+                state->mode = PROXIMITYMINE_MODE_FLIGHT;
                 obj->velocityX = lbl_803E6768;
                 obj->velocityY = sqrtf(dist) / lbl_803DC244 + lbl_803E677C * lbl_803DC248;
                 obj->velocityZ = lbl_803E6780 * lbl_803DC248 - sqrtf(dist) / lbl_803DC244;
@@ -279,7 +279,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 vecRotateZXY(&params, &obj->velocityX);
                 Sfx_PlayFromObject((u32)obj, 0xf0);
             }
-        case 1:
+        case PROXIMITYMINE_MODE_FLIGHT:
             if (timerCountDown(&state->launchTimer) != 0)
             {
                 f32 zero;
@@ -289,7 +289,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 obj->velocityY = zero;
                 obj->velocityX = zero;
                 obj->velocityZ = zero;
-                state->mode = 0;
+                state->mode = PROXIMITYMINE_MODE_EXPIRED;
                 storeZeroToFloatParam(&state->resetTimer);
                 s16toFloat(&state->resetTimer, 1);
                 s16toFloat(&state->renderTimer, 10);
@@ -307,7 +307,7 @@ void proximitymine_update(ProximityMineObject* obj)
             obj->prevX = obj->posX;
             obj->prevY = obj->posY;
             obj->prevZ = obj->posZ;
-        case 2:
+        case PROXIMITYMINE_MODE_ARMED:
             (*gPartfxInterface)->spawnObject(obj, 0x51c, NULL, 1, -1, NULL);
             if (timerCountDown(&state->bounceTimer) != 0)
             {
@@ -339,7 +339,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 obj->velocityY = zero;
                 obj->velocityX = zero;
                 obj->velocityZ = zero;
-                state->mode = 0;
+                state->mode = PROXIMITYMINE_MODE_EXPIRED;
                 storeZeroToFloatParam(&state->resetTimer);
                 s16toFloat(&state->resetTimer, 1);
                 s16toFloat(&state->renderTimer, 10);
@@ -356,11 +356,11 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
     state = obj->state;
     if (obj->objId == 0x789)
     {
-        def->mode = 2;
+        def->mode = PROXIMITYMINE_SPAWN_PROXIMITY;
     }
     obj->angle = 0;
     ObjHits_DisableObject((u32)obj);
-    state->mode = 0;
+    state->mode = PROXIMITYMINE_MODE_EXPIRED;
     storeZeroToFloatParam(&state->renderTimer);
     storeZeroToFloatParam(&state->resetTimer);
     storeZeroToFloatParam(&state->bounceTimer);
@@ -377,22 +377,22 @@ void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
     mode = def->mode;
     switch (mode)
     {
-    case 0:
+    case PROXIMITYMINE_SPAWN_TIMED:
         s16toFloat(&state->resetTimer, def->parameter);
-        state->mode = 2;
+        state->mode = PROXIMITYMINE_MODE_ARMED;
         Obj_SetActiveModelIndex(obj, 1);
         obj->height *= gProximityMineHeightScale;
         break;
-    case 1:
+    case PROXIMITYMINE_SPAWN_LAUNCHED:
         s16toFloat(&state->launchTimer, 800);
         s16toFloat(&state->resetTimer, 800);
         obj->angle = def->parameter;
-        state->mode = -1;
+        state->mode = PROXIMITYMINE_MODE_LAUNCHING;
         obj->height *= gProximityMineHeightScale;
         break;
-    case 2:
+    case PROXIMITYMINE_SPAWN_PROXIMITY:
         storeZeroToFloatParam(&state->lifespanTimer);
-        state->mode = 3;
+        state->mode = PROXIMITYMINE_MODE_WAITING;
         ObjHits_EnableObject((u32)obj);
         state->triggerDistance = (f32)(s32)
         def->parameter;
