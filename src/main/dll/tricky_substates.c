@@ -1647,7 +1647,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     }
     if (flag != 0)
     {
-        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
             if ((*gGameUIInterface)->isEventReady(0xc1) != 0)
             {
@@ -1760,7 +1760,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
         g = GameBit_Get(0x4e3);
         if (g != 0xff && cMenuGetSelectedItem() == -1)
         {
-            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 GameBit_Set(0x4e3, 0xff);
                 b = ((GameObject*)obj)->extra;
