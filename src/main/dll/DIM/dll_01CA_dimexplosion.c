@@ -36,8 +36,10 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
+#define GEXPLOSION_TEXTURE_COUNT 4
+
 extern void textureFree(int tex);
-extern int gExplosionTextures[4];
+extern int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern int Obj_GetActiveModel(int obj);
 extern void ModelLightStruct_free(void*);
 extern u8 framesThisStep;
@@ -793,7 +795,7 @@ void explosion_release(u32 obj)
 {
     int i;
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
         if (((int**)gExplosionTextures)[i] != NULL)
         {
@@ -814,7 +816,7 @@ void explosion_initialise(void)
     gExplosionFalloffScaleRed = lbl_803E492C / expf(lbl_803E4950);
     gExplosionFalloffScaleGreen = lbl_803E492C / expf(lbl_803E4954);
     gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
         gExplosionTextures[i] = textureLoadAsset(t.v[i]);
     }
