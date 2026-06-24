@@ -895,9 +895,20 @@ int hightop_stateHandler04(int obj, int p)
     if (player != 0)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC ||
-            (dy >= *(volatile f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
+        if ((dy >= lbl_803E6AA8 ? dy : -dy) < lbl_803E6AEC)
         {
+            goto inRange;
+        }
+        if (dy >= *(volatile f32*)&lbl_803E6AA8)
+        {
+        }
+        else
+        {
+            dy = -dy;
+        }
+        if (dy > lbl_803E6AF0)
+        {
+        inRange:
             state->flags |= 1;
             if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
@@ -908,10 +919,11 @@ int hightop_stateHandler04(int obj, int p)
                     (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
                 }
             }
-            return 0;
+            goto done;
         }
     }
     state->flags &= ~1;
+done:
     return 0;
 }
 
