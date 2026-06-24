@@ -487,7 +487,7 @@ int fn_8015E8BC(int obj, GroundBaddieState* p)
     {
         *(s8*)&p->baddie.physicsActive = 1;
         GameBit_Set(sub->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         *(s8*)&p->baddie.unk34D = 1;
         p->baddie.moveSpeed =
