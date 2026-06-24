@@ -125,6 +125,7 @@ extern f32 lbl_803DEBDC;
 extern f32 changeMode_803DEC00;
 extern f32 gLightmapDegToBamScale;
 extern F32Pair changed_803DEC08;
+extern f32 lbl_803DEC0C;
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern FrustumPlane gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
@@ -2311,7 +2312,7 @@ void getVisibleObjects(s8* opacity)
                                                  ((GameObject*)o)->anim.localPosZ - playerMapOffsetZ, &a, &b,
                                                  &depth, (f32*)(o + 0xa4));
                     }
-                    depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
+                    depthInt = (int)(lbl_803DEC0C * (lbl_803DEBDC + depth));
                 }
                 if ((((GameObject*)o)->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
                     ((GameObject*)o)->anim.modelState != NULL &&
