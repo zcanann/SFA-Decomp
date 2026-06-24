@@ -440,7 +440,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
         else
         {
             ((GameObject*)obj)->anim.alpha = (u8)(int)(lbl_803E257C * ((GameObject*)obj)->anim.currentMoveProgress);
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x4000;
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
         }
     }
     else
