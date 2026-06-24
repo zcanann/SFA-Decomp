@@ -248,6 +248,11 @@ typedef struct FireballState
     s16 unk116;
 } FireballState;
 
+/* FireballState.stateFlags bits (see file header comment) */
+#define FIREBALL_FLAG_POS_LATCHED 0x1 /* launch position has been latched into posX/Y/Z */
+#define FIREBALL_FLAG_GRAVITY 0x4     /* affected by gravity + ground snap */
+#define FIREBALL_FLAG_DISABLED 0x8    /* disabled / no-update */
+
 extern u32 ObjHits_ClearHitVolumes();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
@@ -762,7 +767,7 @@ int Fireball_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     int* state = ((GameObject*)obj)->extra;
-    if (((FireballState*)state)->stateFlags & 8)
+    if (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED)
     {
         return 0;
     }
@@ -797,7 +802,7 @@ void fireball_hitDetect(int* obj)
     int* state = ((GameObject*)obj)->extra;
     int* target;
     if (((GameObject*)obj)->anim.seqId == 0x83e) return;
-    switch (((FireballState*)state)->stateFlags & 8)
+    switch (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED)
     {
     case 0:
         break;
@@ -860,7 +865,7 @@ void fireball_init(int* obj)
 
     if (((FireballPlacement*)params)->unk1C != 0)
     {
-        ((FireballState*)state)->stateFlags |= 8;
+        ((FireballState*)state)->stateFlags |= FIREBALL_FLAG_DISABLED;
     }
     else
     {
@@ -929,7 +934,7 @@ void fireball_update(int* obj)
     int* other = *(int**)&((GameObject*)obj)->unkF8;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if ((((FireballState*)state)->stateFlags & 8) != 0)
+    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED) != 0)
     {
         return;
     }
@@ -956,12 +961,12 @@ void fireball_update(int* obj)
     {
         ObjHits_SetHitVolumeSlot(obj, 14, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
     }
-    if ((((FireballState*)state)->stateFlags & 1) == 0)
+    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
     {
         ((FireballState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
         ((FireballState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
         ((FireballState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        ((FireballState*)state)->stateFlags |= 1;
+        ((FireballState*)state)->stateFlags |= FIREBALL_FLAG_POS_LATCHED;
     }
     {
         if (hitState->contactFlags != 0)
@@ -1040,7 +1045,7 @@ void fireball_update(int* obj)
         ((FireballState*)state)->posY += ((GameObject*)obj)->anim.velocityY * timeDelta;
         ((FireballState*)state)->posZ += ((GameObject*)obj)->anim.velocityZ * timeDelta;
         ((FireballState*)state)->spiralPhase += framesThisStep * 1500;
-        if ((((FireballState*)state)->stateFlags & 4) != 0)
+        if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_GRAVITY) != 0)
         {
             f32 ground;
             ((FireballState*)state)->posY -= lbl_803E3364 * timeDelta;
@@ -1084,7 +1089,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    if ((((FireballState*)state)->stateFlags & 8) != 0)
+    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED) != 0)
     {
         return;
     }
