@@ -2664,14 +2664,14 @@ int RomCurve_func16(double x, double y, double z)
 {
     extern int curves_distFn15(); /* #57 */
     u32 candidateIds[24];
+    u32* top;
     int candidateCount;
+    int category;
     int i;
     int curve;
     int* curveList;
     int out;
-    int category;
     int currentCurve;
-    u32* top;
     int* p;
     u32* end;
 
