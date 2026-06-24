@@ -710,9 +710,9 @@ void ZeroOffsetHandler(int voice)
 
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    f = ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].pauseVol *
-            ((SynthMasterFader*)(base + 0x5D4))[sv->vGroup].volume *
-        ((SynthMasterFader*)(base + 0x5D4))[sv->fxFlag ? 22 : 21].volume;
+    f = ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].pauseVol *
+            ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].volume *
+        ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->fxFlag ? 22 : 21].volume;
 
     if (sv->track != 0xFF)
     {
