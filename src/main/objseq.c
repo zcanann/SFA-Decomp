@@ -3089,7 +3089,8 @@ int ObjSeq_update(u8* obj, f32 t)
             slot = (s8)((ObjSeqState*)seq)->slot;
             if ((s8)base[slot + 0x3cf4] != 0)
             {
-                *(s16*)(base + slot * 2 + 0x3694) = ((ObjSeqState*)seq)->curFrame;
+                p = base + slot * 2;
+                *(s16*)(p + 0x3694) = ((ObjSeqState*)seq)->curFrame;
                 (base + (s8)((ObjSeqState*)seq)->slot)[0x338c] = 2;
                 ((f32*)(base + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
             }
