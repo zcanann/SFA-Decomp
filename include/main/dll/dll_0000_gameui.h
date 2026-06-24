@@ -32,7 +32,7 @@ typedef struct
     u8 trailY; /* 0x09 */
     u8 count; /* 0x0a */
     u8 _b; /* 0x0b */
-    u8 nav[4]; /* 0x0c */
+    s8 nav[4]; /* 0x0c */
     f32 f10; /* 0x10 */
     s32 f14; /* 0x14 */
     s32 f18; /* 0x18 */

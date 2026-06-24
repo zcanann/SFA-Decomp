@@ -1771,7 +1771,7 @@ void pauseMenuRunSubmenu(u8 p1)
             if (lbl_803DD768 > lbl_803E2174)
             {
                 AudioStream_Play(randomGetRange(0, 3) + 0x2716, AudioStream_StartPrepared);
-                lbl_803DD768 = 0.0f;
+                lbl_803DD768 = lbl_803E1E3C;
             }
             break;
         case 5:
@@ -1788,30 +1788,30 @@ void pauseMenuRunSubmenu(u8 p1)
                     id++;
                 }
                 AudioStream_Play(id, AudioStream_StartPrepared);
-                lbl_803DD768 = 0.0f;
+                lbl_803DD768 = lbl_803E1E3C;
             }
             break;
         }
-        if (lbl_803DD764 > 0.0f)
+        if (lbl_803DD764 > lbl_803E1E3C)
         {
             u8 a1;
             u8 a2;
             padGetAnalogInput(0, &a1, &a2);
             if ((s8)a2 == 1)
             {
-                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[0];
+                sel = lbl_803DD824[lbl_803DD7D8].nav[0];
             }
             if ((s8)a2 == -1)
             {
-                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[1];
+                sel = lbl_803DD824[lbl_803DD7D8].nav[1];
             }
             if ((s8)a1 == -1 && sel == -1)
             {
-                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[2];
+                sel = lbl_803DD824[lbl_803DD7D8].nav[2];
             }
             if ((s8)a1 == 1 && sel == -1)
             {
-                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[3];
+                sel = lbl_803DD824[lbl_803DD7D8].nav[3];
             }
         }
         if (sel >= 0)
@@ -1841,7 +1841,7 @@ void pauseMenuRunSubmenu(u8 p1)
                 valid = 1;
             }
         }
-        if (((int)gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0)
+        if (((int)gCMenuButtons & 0x100) && tbl != lbl_8031BD30 && lbl_803E1E3C == lbl_803DD7C0)
         {
             if (valid != 0)
             {
@@ -1850,11 +1850,11 @@ void pauseMenuRunSubmenu(u8 p1)
                 {
                 case 3:
                     AudioStream_Play(randomGetRange(0, 1) + 0x2712, AudioStream_StartPrepared);
-                    lbl_803DD768 = 0.0f;
+                    lbl_803DD768 = lbl_803E1E3C;
                     break;
                 case 5:
                     AudioStream_Play(randomGetRange(0, 1) + 0x2735, AudioStream_StartPrepared);
-                    lbl_803DD768 = 0.0f;
+                    lbl_803DD768 = lbl_803E1E3C;
                     break;
                 }
                 buttonDisable(0, 0x100);
@@ -1866,7 +1866,7 @@ void pauseMenuRunSubmenu(u8 p1)
             {
             case 5:
                 AudioStream_Play(randomGetRange(0, 1) + 0x2737, AudioStream_StartPrepared);
-                lbl_803DD768 = 0.0f;
+                lbl_803DD768 = lbl_803E1E3C;
                 break;
             }
         }
