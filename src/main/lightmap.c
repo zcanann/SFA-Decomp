@@ -1853,9 +1853,9 @@ void sceneDraw(void)
     (*gSky2Interface)->applyFogColor(0);
     gLightmapDeferredObjectCount = 0;
     getAmbientColor(0, (u8*)&c, (u8*)&c + 1, (u8*)&c + 2);
-    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
-    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     ccopy = c;
     GXSetChanAmbColor(0, &ccopy);
     GXSetNumChans(1);
@@ -2009,8 +2009,8 @@ void sceneDrawTransparentPolys(void)
             break;
         case 4:
             block = (int*)e[i][1];
-            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
             c4copy = c4;
             GXSetChanAmbColor(0, &c4copy);
@@ -2021,8 +2021,8 @@ void sceneDrawTransparentPolys(void)
             break;
         case 5:
             block = (int*)e[i][1];
-            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
             c5copy = c5;
             GXSetChanAmbColor(0, &c5copy);
@@ -2033,8 +2033,8 @@ void sceneDrawTransparentPolys(void)
             break;
         case 6:
             block = (int*)e[i][1];
-            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
             c6copy = c6;
             GXSetChanAmbColor(0, &c6copy);
