@@ -645,7 +645,7 @@ void gunpowderbarrel_update(int obj)
      * the frame it expires we un-hide, reset state and pop back onto the pad. --- */
     if (fn_80080150(&state->respawnTimer) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (timerCountDown(&state->respawnTimer) != 0)
         {
             state->fuseFrames = 0;
@@ -665,7 +665,7 @@ void gunpowderbarrel_update(int obj)
      * barrel still (zero throw + object velocity) until the timer drains. --- */
     if (fn_80080150(&state->releaseTimer) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         timerCountDown(&state->releaseTimer);
         memset(&state->throwVelX, 0, 0xc);
         memset((void*)&((GameObject*)obj)->anim.velocityX, 0, 0xc);
@@ -675,11 +675,11 @@ void gunpowderbarrel_update(int obj)
     {
         if (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
     /* --- Cannon/effect-timer link: with no child yet, grab the nearest free
@@ -726,11 +726,11 @@ void gunpowderbarrel_update(int obj)
     }
     if (((GpbHeldFlags*)&state->heldFlags)->held != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
     /* --- Fuse phase: once lit (fuseFrames != 0) grow the blast hitbox each
      * frame; after the fuse window (> 0x14) consume the barrel below. --- */
@@ -895,7 +895,7 @@ void gunpowderbarrel_update(int obj)
     }
     if (((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture != 0 && ((GpbHeldFlags*)&state->heldFlags)->playerHeld != 0)
         {
             state->throwVelX = ((GameObject*)obj)->anim.velocityX;
@@ -928,7 +928,7 @@ void gunpowderbarrel_setHeldState(int* obj)
 {
     GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
     ((GpbHeldFlags*)&sub->heldFlags)->held = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->motionFlags = (u8)(sub->motionFlags & ~2);
 }
 
@@ -943,7 +943,7 @@ void gunpowderbarrel_clearHeldState(int* obj)
     sub->throwVelX = z;
     sub->throwVelZ = z;
     sub->motionFlags = (u8)(sub->motionFlags | 1);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     sub->fallAccum = z;
     ((GpbHeldFlags*)&sub->heldFlags)->held = 0;
 }
@@ -962,7 +962,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
     {
         h[0x6a] = 1;
         h[0x6b] = 1;
-        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 1;
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
         ObjHits_SetFlags(o, 0x480);
@@ -975,7 +975,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         h[0x6a] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x63];
         h[0x6b] = (*(u8**)&((GameObject*)o)->anim.modelInstance)[0x64];
         ((GpbHeldFlags*)&sub->heldFlags)->playerHeld = 0;
-        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~8);
+        *(u8*)&((GameObject*)o)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)o)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         ObjHits_ClearFlags(o, 0x400);
         sub->motionFlags = (u8)(sub->motionFlags | 1);
     }
