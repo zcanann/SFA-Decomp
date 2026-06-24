@@ -213,7 +213,7 @@ void dimcannon_init(int* obj, int* arg)
 
         ((DimCannonState*)state)->refreshTimer = 0x80;
         ((DimCannonState*)state)->unk98 = lbl_803E48B8;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->animEventCallback = fn_801B2550;
         ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
         lbl_803DDB50 = Resource_Acquire(0x79, 1);
@@ -245,7 +245,7 @@ void dimcannon_update(int* obj)
 
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement*)src)->resetGameBit))
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     }
 
     state = ((GameObject*)obj)->extra;
@@ -287,7 +287,7 @@ void dimcannon_update(int* obj)
                 ((DimCannonState*)state)->fireState = 3;
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
             ((DimCannonState*)state)->fireRequested = 0;
             ((DimCannonState*)state)->aimYaw = 0;
@@ -535,7 +535,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
                 animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 if (Sfx_IsPlayingFromObjectChannel((u32)obj, 8) != 0)
                 {
                     Sfx_IsPlayingFromObjectChannel((u32)obj, 0);
