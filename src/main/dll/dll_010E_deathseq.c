@@ -225,10 +225,10 @@ void deathseq_update(int* obj)
 
     if (state->camActive)
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
 }
