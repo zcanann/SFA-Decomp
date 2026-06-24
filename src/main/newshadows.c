@@ -1686,7 +1686,15 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 
 extern u8 gNewShadowCasterCount;
 extern int* gNewShadowCurrentViewSlot;
-extern char gNewShadowCasterTable[];
+
+typedef struct
+{
+    int* obj;
+    f32 scale;
+    u8 flags;
+} NewShadowCaster;
+
+extern NewShadowCaster gNewShadowCasterTable[];
 extern f32 Ydchuff_803DED80;
 extern f32 Ydchuff_803DED90;
 extern const double TokenCB_803DED58;
@@ -2297,27 +2305,26 @@ void shadowCreate(int* obj)
     f32 dx, dy, dz, dist;
     if (gNewShadowCasterCount < 0x12c)
     {
-        *(int**)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc) = obj;
+        gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
         cam = gNewShadowCurrentViewSlot;
         dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)((char*)cam + 0xc);
         dy = ((GameObject*)obj)->anim.worldPosY - *(f32*)((char*)cam + 0x10);
         dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)((char*)cam + 0x14);
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) =
+        gNewShadowCasterTable[gNewShadowCasterCount].scale =
             ((GameObject*)obj)->anim.modelState->shadowScale / dist;
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == 2)
         {
-            u8* slot8;
-            *(slot8 = (u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8)) = 1;
+            gNewShadowCasterTable[gNewShadowCasterCount].flags = 1;
             if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
             {
-                *slot8 = 2;
-                *(f32*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 4) = Ydchuff_803DED90;
+                gNewShadowCasterTable[gNewShadowCasterCount].flags = 2;
+                gNewShadowCasterTable[gNewShadowCasterCount].scale = Ydchuff_803DED90;
             }
         }
         else
         {
-            *(u8*)(gNewShadowCasterTable + gNewShadowCasterCount * 0xc + 8) = 0;
+            gNewShadowCasterTable[gNewShadowCasterCount].flags = 0;
         }
         gNewShadowCasterCount++;
     }
