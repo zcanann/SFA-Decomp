@@ -79,5 +79,5 @@ void mmp_gyservent_init(int obj)
     ((GameObject*)obj)->objectFlags |= 0x6000;
     *(u32*)&((GameObject*)obj)->unkF4 = randomGetRange(0xa, 0xc8);
     ((GameObject*)obj)->anim.alpha = 0;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
 }
