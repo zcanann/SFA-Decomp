@@ -21,6 +21,13 @@ extern f32 gImSpaceThrusterWeightMax;
 extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23, gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
 extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
 
+typedef enum ImSpaceThrusterPhase
+{
+    IMSPACETHRUSTER_PHASE_OFF = 0,
+    IMSPACETHRUSTER_PHASE_ON = 1,
+    IMSPACETHRUSTER_PHASE_FADE_OUT = 2,
+} ImSpaceThrusterPhase;
+
 static inline int* getActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -61,12 +68,12 @@ void imspacethruster_update(GameObject* obj)
             *(int*)&obj->anim.parent, state->kind);
         switch (state->phase)
         {
-        case 0:
+        case IMSPACETHRUSTER_PHASE_OFF:
             if (mode == 1)
             {
                 ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
                 obj->anim.alpha = 0xff;
-                state->phase = 1;
+                state->phase = IMSPACETHRUSTER_PHASE_ON;
             }
             else
             {
@@ -78,25 +85,25 @@ void imspacethruster_update(GameObject* obj)
                 obj->anim.alpha = d;
             }
             break;
-        case 1:
+        case IMSPACETHRUSTER_PHASE_ON:
             if (mode == 0)
             {
                 ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
                 state->blendTimer = 0xb4;
                 obj->anim.alpha = 0xa4;
-                state->phase = 2;
+                state->phase = IMSPACETHRUSTER_PHASE_FADE_OUT;
             }
             break;
-        case 2:
+        case IMSPACETHRUSTER_PHASE_FADE_OUT:
             if (mode == 1)
             {
-                state->phase = 1;
+                state->phase = IMSPACETHRUSTER_PHASE_ON;
             }
             else
             {
                 if ((state->blendTimer -= framesThisStep) < 0)
                 {
-                    state->phase = 0;
+                    state->phase = IMSPACETHRUSTER_PHASE_OFF;
                 }
             }
             break;
