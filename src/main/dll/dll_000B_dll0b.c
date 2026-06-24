@@ -2428,7 +2428,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         if (tex != NULL)
         {
             n131 = *(u8*)((char*)p[slot] + 0x131);
-            n131p1 = (u8)(n131 + 1);
+            n131p1 = (n131 + 1) & 0xff;
             if (n131p1 > texCount - 1)
             {
                 n131p1 = 0;
