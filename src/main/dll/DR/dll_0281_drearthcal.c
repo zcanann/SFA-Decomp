@@ -40,7 +40,7 @@ void drearthcal_update(int obj)
     searchDist = lbl_803E6C08;
     if (fn_802972A8() != NULL)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x18;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~(INTERACT_FLAG_PROMPT_SUPPRESSED | INTERACT_FLAG_DISABLED);
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x15);
