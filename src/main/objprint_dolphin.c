@@ -3301,7 +3301,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         gObjGxAlphaCompareCache = alpha;
         if (alpha != 0)
         {
-            GXSetAlphaCompare(4, (u8)alpha, 0, 4, (u8)alpha);
+            GXSetAlphaCompare(GX_GREATER, (u8)alpha, GX_AOP_AND, GX_GREATER, (u8)alpha);
         }
         else
         {
