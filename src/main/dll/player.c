@@ -5527,8 +5527,8 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     }
     if (changed != 0)
     {
-        *(int*)&((GameObject*)obj)->anim.weaponDaTable = inner->moveSlots +
-            ((u32)inner->moveSlotIndex * 0xb0 + 0x60);
+        *(int*)&((GameObject*)obj)->anim.weaponDaTable =
+            (inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0) + 0x60;
         if (((GameObject*)obj)->anim.currentMove !=
             gPlayerMoveSlotTable[*(s16*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0) + 0x2)])
         {
