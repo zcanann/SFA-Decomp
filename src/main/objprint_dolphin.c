@@ -4300,6 +4300,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
 extern u16 lbl_803DEA4A[3];
+extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
 extern f32 gObjShadowDist;
@@ -4400,7 +4401,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     m4 = mode8 & 4;
     if (m4 || (mode8 & 8))
     {
-        fade = *(f32*)&lbl_803DEA4A[1];
+        fade = lbl_803DEA4C;
     }
     else if (mode8 & 2)
     {
