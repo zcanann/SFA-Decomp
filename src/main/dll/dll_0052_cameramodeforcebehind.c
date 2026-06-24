@@ -131,11 +131,9 @@ void CameraModeForceBehind_update(u8* obj)
     angle = gCamForceBehindPi * (f32)(0x8000 - camera->anim.rotX) / gCamForceBehindBamsToRadDivisor;
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);
-    sx = target->anim.worldPosX;
-    pos[0] = cosv * gCamForceBehindOrbitRadius + sx;
+    pos[0] = cosv * gCamForceBehindOrbitRadius + (sx = target->anim.worldPosX);
     pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
-    sz = target->anim.worldPosZ;
-    pos[2] = sinv * gCamForceBehindOrbitRadius + sz;
+    pos[2] = sinv * gCamForceBehindOrbitRadius + (sz = target->anim.worldPosZ);
     camcontrol_traceFromTarget(pos, target, pos, &extra);
     gCamForceBehindTraceDistance = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
     gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance;
