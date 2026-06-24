@@ -153,7 +153,7 @@ void sc_cloudrunnera_update(int obj)
                 ((ScCloudrunneraSetup*)setup)->unk2A = 0;
                 newObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                          *(int*)&((GameObject*)obj)->anim.parent);
-                ((GameObject*)newObj)->anim.flags = (s16)(((GameObject*)newObj)->anim.flags | 0x4000);
+                ((GameObject*)newObj)->anim.flags = (s16)(((GameObject*)newObj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 ObjLink_AttachChild(obj, newObj, 0);
                 Sfx_PlayFromObject(obj, 0x10f);
                 break;
