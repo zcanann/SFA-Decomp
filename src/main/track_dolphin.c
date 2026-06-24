@@ -3139,9 +3139,9 @@ extern f32 lbl_803DECE0[2];
 void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
 {
     u8* v;
-    f32 oz;
-    f32 planeC;
     f32 ox;
+    f32 planeC;
+    f32 oz;
     f32 arrA[7];
     f32 arrB[7];
     f32 arrC[7];
