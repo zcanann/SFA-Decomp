@@ -16,7 +16,7 @@
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int gWorldPlanetGameBitTable[5];
+extern int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT];
 extern u8 gWorldPlanetHintFlagTable[8];
 extern u8 gWorldPlanetDefaultSelectOrder[8];
 extern int gWorldPlanetSavedSelection;
@@ -414,12 +414,12 @@ void worldplanet_update(int obj)
         {
             gWorldPlanetPathProgress = lbl_803E65F8;
         }
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
         {
             int planet = ObjList_FindObjectById(((struct
             {
                 int ids[10];
-                int objs[5];
+                int objs[WORLDPLANET_PLANET_COUNT];
             }*)tbl)->objs[i]);
             WorldObjState* pstate = ((GameObject*)planet)->extra;
             ((GameObject*)planet)->anim.rotY = ((GameObject*)obj)->anim.rotY;
@@ -574,13 +574,13 @@ void worldplanet_update(int obj)
         {
             u32 ang = -((GameObject*)obj)->anim.rotZ & 0xffff;
             f32 r;
-            for (b = 0; b < 5; b++)
+            for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
             {
                 int p = ObjList_FindObjectById(tbl[b + 10]);
                 ((GameObject*)p)->anim.rotZ = -ang;
             }
             r = gWorldPlanetOrbitRadius;
-            for (b = 0; b < 5; b++)
+            for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
             {
                 s16* p = (s16*)ObjList_FindObjectById(tbl[b]);
                 int* off = &tbl[b + 5];
