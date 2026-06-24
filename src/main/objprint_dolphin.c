@@ -57,6 +57,11 @@
 #define GX_VA_TEX1 14
 #define GX_TRIANGLES 0x90
 #define GX_VTXFMT7 7
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
+#define GX_TEVREG2 3
+#define GX_KCOLOR0 0
 
 typedef struct ObjPrintGXColor
 {
@@ -3325,11 +3330,11 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         gObjGxCullModeCache = cull;
         if (cull != 0)
         {
-            GXSetCullMode(2);
+            GXSetCullMode(GX_CULL_BACK);
         }
         else
         {
-            GXSetCullMode(0);
+            GXSetCullMode(GX_CULL_NONE);
         }
     }
 }
@@ -4040,7 +4045,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             || gObjGxKColorCache[2] != color[2] || gObjGxKColorCache[3] != color[3])
         {
             u32 kcol = *(u32*)color;
-            GXSetTevKColor(0, &kcol);
+            GXSetTevKColor(GX_KCOLOR0, &kcol);
             *(u32*)gObjGxKColorCache = *(u32*)color;
         }
     }
@@ -4214,7 +4219,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         if (sh == 0xff)
         {
             tev1 = lbl_803DB468;
-            GXSetTevColor(3, &tev1);
+            GXSetTevColor(GX_TEVREG2, &tev1);
             GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         }
         else
@@ -4233,7 +4238,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             }
             color[3] = 0xff;
             tev2 = *(u32*)color;
-            GXSetTevColor(3, &tev2);
+            GXSetTevColor(GX_TEVREG2, &tev2);
             GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
         }
     }
@@ -4255,12 +4260,12 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
     {
         gxSetZMode_(1, 3, 1);
-        GXSetCullMode(1);
+        GXSetCullMode(GX_CULL_FRONT);
     }
     else
     {
         gxSetZMode_(0, 3, 0);
-        GXSetCullMode(0);
+        GXSetCullMode(GX_CULL_NONE);
     }
     GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
     done = 0;
@@ -4623,7 +4628,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             if (sh == 0xff)
             {
                 tev1 = lbl_803DB468;
-                GXSetTevColor(3, &tev1);
+                GXSetTevColor(GX_TEVREG2, &tev1);
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             }
             else
@@ -4642,7 +4647,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 }
                 color[3] = 0xff;
                 tev2 = *(u32*)color;
-                GXSetTevColor(3, &tev2);
+                GXSetTevColor(GX_TEVREG2, &tev2);
                 GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
             }
         }
@@ -4660,12 +4665,12 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         if (OBJPRINT_MODEL_DEF(obj)->renderFlags & 4)
         {
             gxSetZMode_(1, 3, 1);
-            GXSetCullMode(1);
+            GXSetCullMode(GX_CULL_FRONT);
         }
         else
         {
             gxSetZMode_(0, 3, 0);
-            GXSetCullMode(0);
+            GXSetCullMode(GX_CULL_NONE);
         }
     }
     else if (m2 != 0)
@@ -5061,7 +5066,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             color[3] = 0;
         }
         tmp1 = *(u32*)color;
-        GXSetTevColor(3, &tmp1);
+        GXSetTevColor(GX_TEVREG2, &tmp1);
         fn_800510F0(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
         if (color[3] != 0)
         {
@@ -5071,7 +5076,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     else
     {
         tmp2 = gObjGxDefaultChanColor;
-        GXSetTevColor(3, &tmp2);
+        GXSetTevColor(GX_TEVREG2, &tmp2);
     }
     nlay = lbl_803DCC5C;
     if (gObjShadowNear != 0)
@@ -5270,11 +5275,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     if (((ObjModelRenderOp*)op)->flags & 8)
     {
-        GXSetCullMode(2);
+        GXSetCullMode(GX_CULL_BACK);
     }
     else
     {
-        GXSetCullMode(0);
+        GXSetCullMode(GX_CULL_NONE);
     }
     return idx;
 }
