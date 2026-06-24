@@ -15,6 +15,10 @@
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSCache.h"
 
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
+
 typedef struct TrackP6Entry
 {
     f32 relX0;
@@ -3607,7 +3611,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetTevColorOp(0, 0, 0, 0, 1, 0);
             GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
             gxSetZMode_(1, 3, 0);
-            GXSetCullMode(0);
+            GXSetCullMode(GX_CULL_NONE);
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(1, 4, 5, 5);
             selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
@@ -3814,7 +3818,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         }
     afterDraw:;
     }
-    GXSetCullMode(1);
+    GXSetCullMode(GX_CULL_FRONT);
     GXSetCurrentMtx(0);
     ((GameObject*)obj)->anim.rootMotionScale = f31;
     ((GameObject*)obj)->anim.rotX = s31;
@@ -3954,7 +3958,7 @@ void renderGlows(void)
     f32 sunDot;
 
     fogCol = *(GlowGXColor*)&sSynthFadeUnit;
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
