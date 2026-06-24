@@ -1,5 +1,20 @@
 #include "main/sky_state.h"
 #include "main/sky_80080E58_shared.h"
+#define GX_CS_SCALE_1 0
+#define GX_TB_ZERO 0
+#define GX_TEVPREV 0
+#define GX_TEVSTAGE0 0
+#define GX_TEV_ADD 0
+#define GX_TEXCOORD0 0
+#define GX_TEXMAP0 0
+#define GX_TRUE 1
+#define GX_CA_TEXA 4
+#define GX_CC_C1 4
+#define GX_CC_A1 5
+#define GX_CA_ZERO 7
+#define GX_CC_TEXC 8
+#define GX_CC_ZERO 0xf
+#define GX_COLOR_NULL 0xff
 
 int getEnvFxBit2BA(void)
 {
@@ -3050,13 +3065,13 @@ void skyFn_8008aee8(void)
         GXSetFog(0, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
         selectTexture(texC, 0);
         fn_8007880C();
-        GXSetTevOrder(0, 0, 0, 0xff);
-        GXSetTevDirect(0);
-        GXSetTevColorIn(0, 8, 4, 5, 0xf);
-        GXSetTevAlphaIn(0, 7, 7, 7, 4);
+        GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+        GXSetTevDirect(GX_TEVSTAGE0);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_C1, GX_CC_A1, GX_CC_ZERO);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
         GXSetTevSwapMode(0, 0, 0);
-        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-        GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
         GXSetNumIndStages(0);
         GXSetNumChans(0);
