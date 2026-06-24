@@ -117,6 +117,7 @@ extern int textureAlloc512(void);
 extern u32 textureFn_8006c5c4(void);
 extern f32 lbl_803DB654;
 extern f32 lbl_803DEC90[2];
+extern f32 lbl_803DEC94;
 extern int lbl_803DCFB8;
 extern u8 lbl_803DCF80;
 extern f32 lbl_803DF930;
@@ -2303,9 +2304,9 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     gShadowOffsetX = a * param;
     gShadowOffsetY = b * param;
     lbl_803DB654 = lbl_803DEC68;
-    if (gShadowOffsetY < lbl_803DEC90[1])
+    if (gShadowOffsetY < lbl_803DEC94)
     {
-        gShadowOffsetY = lbl_803DEC90[1];
+        gShadowOffsetY = lbl_803DEC94;
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
