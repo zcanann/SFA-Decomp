@@ -654,7 +654,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             {
                 ((BackpackState*)aux)->phase = 2;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 ObjHits_EnableObject((u32)obj);
             }
         }
