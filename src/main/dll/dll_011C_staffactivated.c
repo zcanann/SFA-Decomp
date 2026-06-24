@@ -271,7 +271,7 @@ void staffactivated_init(int obj, int setup)
         sizeIndex = 2;
     }
 
-    if (setupData->mode == 2)
+    if (setupData->mode == STAFFACTIVATED_MODE_LIFT)
     {
         switch (sizeIndex)
         {
@@ -310,7 +310,7 @@ void staffactivated_init(int obj, int setup)
 
     switch (setupData->mode)
     {
-    case 2:
+    case STAFFACTIVATED_MODE_LIFT:
         ((GameObject*)obj)->hitVolumeIndex = modelVariant;
         state->targetX = -(lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
@@ -323,7 +323,7 @@ void staffactivated_init(int obj, int setup)
                     mathCosf((gStaffActivatedPi * (f32)((GameObject*)obj)->anim.rotX) / gStaffActivatedBinAngleScale))) -
             ((GameObject*)obj)->anim.localPosZ);
         break;
-    case 3:
+    case STAFFACTIVATED_MODE_HIT_REACTION:
         state->targetX = lbl_803E3C14 *
             (((GameObject*)obj)->anim.rootMotionScale *
                 (lbl_803E3C18 *
@@ -358,15 +358,15 @@ void staffactivated_init(int obj, int setup)
         {
             switch (setupData->mode)
             {
-            case 3:
+            case STAFFACTIVATED_MODE_HIT_REACTION:
                 ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3BBC);
                 break;
-            case 4:
+            case STAFFACTIVATED_MODE_DAMAGE_FIRST:
                 flags->b6 = 0;
                 break;
-            case 2:
+            case STAFFACTIVATED_MODE_LIFT:
                 break;
-            case 5:
+            case STAFFACTIVATED_MODE_DAMAGE_SECOND:
                 break;
             }
         }
