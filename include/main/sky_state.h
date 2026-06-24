@@ -90,7 +90,7 @@ typedef struct Sky2Config {
     u8 unk26[4];
     u16 unk2A;
     u16 unk2C;
-    u16 unk2E;       /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
+    u16 skyTexId0;   /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
     u16 skyTexId1;   /* sky texture id slot 1 (+0xc38) */
     u16 skyTexId2;   /* sky texture id slot 2 (+0xc38) */
     u16 skyTexId3;   /* sky texture id slot 3 (+0xc38) */

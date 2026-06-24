@@ -2061,7 +2061,7 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     {
         *(int*)(base[b1] + 0x3c) = ((Sky2Config*)cfg)->unk2A;
         *(int*)(base[b1] + 0x48) = 1;
-        *(int*)(base[b1] + 8) = ((Sky2Config*)cfg)->unk2E;
+        *(int*)(base[b1] + 8) = ((Sky2Config*)cfg)->skyTexId0;
         *(f32*)(base[b1] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2A;
     }
     else
@@ -3190,7 +3190,7 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->bit20;
         if ((((Sky2Config*)cfg)->flags & 1) == 0)
         {
-            ((SkyState*)gSkyState)->skyTextureIds[0] = ((Sky2Config*)cfg)->unk2E + 0xc38;
+            ((SkyState*)gSkyState)->skyTextureIds[0] = ((Sky2Config*)cfg)->skyTexId0 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[1] = ((Sky2Config*)cfg)->skyTexId1 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[2] = ((Sky2Config*)cfg)->skyTexId2 + 0xc38;
             ((SkyState*)gSkyState)->skyTextureIds[3] = ((Sky2Config*)cfg)->skyTexId3 + 0xc38;
