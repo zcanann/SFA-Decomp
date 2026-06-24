@@ -504,7 +504,7 @@ void worldplanet_update(int obj)
                         (buttons & PAD_BUTTON_A) != 0)
                     {
                         gWorldPlanetSelectConfirmTimer = 10;
-                        mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
+                        mapUnload(gWorldPlanetLoadedMapId, WORLDPLANET_MAP_SELECTED_FLAG);
                     }
                 }
                 if (gWorldPlanetSelectConfirmTimer != 0)
@@ -550,7 +550,7 @@ void worldplanet_update(int obj)
                     gWorldPlanetReselectDelayTimer = 0x1e;
                     (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                     unlockLevel(gWorldPlanetLoadedMapId, 1, 0);
-                    mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
+                    mapUnload(gWorldPlanetLoadedMapId, WORLDPLANET_MAP_SELECTED_FLAG);
                     gWorldPlanetInputLockTimer = 10;
                 }
                 else if ((buttons & PAD_BUTTON_A) != 0)
@@ -562,7 +562,7 @@ void worldplanet_update(int obj)
                     setShowWorldMapHud(0);
                     gWorldPlanetExitWarpTimer = 5;
                     lbl_803DDD10 = 0;
-                    mapUnload(gWorldPlanetLoadedMapId, 0x10000000);
+                    mapUnload(gWorldPlanetLoadedMapId, WORLDPLANET_MAP_PRELOAD_FLAG);
                 }
                 break;
             }
