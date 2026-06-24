@@ -27,6 +27,10 @@
 #define OBJ_COLOR_FADE_FLAG_INFINITE 0x8   /* no frame countdown / never auto-clears */
 #define OBJ_COLOR_FADE_FLAG_OVERRIDE 0x10  /* solid color override (not a fade) */
 
+/* GameObject::objectFlags lifecycle bits */
+#define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
+#define OBJECT_FLAG_FREED 0x40          /* Obj_FreeObject ran (double-free guard) */
+
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
@@ -489,7 +493,7 @@ void* getTablesBinEntry(int i)
 
 void Obj_InsertIntoUpdateList(u8* obj)
 {
-    if (((GameObject*)obj)->objectFlags & 0x10)
+    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
         int* list = &gObjUpdateList;
         int prev = 0;
@@ -506,7 +510,7 @@ void Obj_InsertIntoUpdateList(u8* obj)
 
 void Obj_RemoveFromUpdateList(u8* obj)
 {
-    if (((GameObject*)obj)->objectFlags & 0x10)
+    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
         objList_remove(&gObjUpdateList, obj);
     }
@@ -1710,7 +1714,7 @@ void Obj_UpdateObject(u8* obj)
     void(*cb2)(u8 *);
 
     object = (ObjAnimComponent*)obj;
-    if (((GameObject*)obj)->objectFlags & 0x40)
+    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_FREED)
     {
         return;
     }
@@ -2281,9 +2285,9 @@ void Obj_RegisterObject(u8* obj, int flags)
     }
     if (flags & 1)
     {
-        ((GameObject*)obj)->objectFlags |= 0x10;
+        ((GameObject*)obj)->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
         ((u8**)gObjList)[gObjCount++] = obj;
-        if (((GameObject*)obj)->objectFlags & 0x10)
+        if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             prev = 0;
             cur = *(int*)((u8*)&gObjUpdateList + 4);
@@ -2316,13 +2320,13 @@ void Obj_FreeObject(u8* obj)
     int off;
     u8* q;
 
-    if (((GameObject*)obj)->objectFlags & 0x40)
+    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_FREED)
     {
         return;
     }
     Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
     Sfx_StopObjectChannel((u32)obj, 0x7f);
-    if (((GameObject*)obj)->objectFlags & 0x10)
+    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
         i = 0;
         n = gObjCount;
@@ -2351,7 +2355,7 @@ void Obj_FreeObject(u8* obj)
         {
             OSReport(sObjFreeNonExistentObjectWarning);
         }
-        if (((GameObject*)obj)->objectFlags & 0x10)
+        if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             objList_remove(&gObjUpdateList, obj);
         }
@@ -2360,7 +2364,7 @@ void Obj_FreeObject(u8* obj)
     for (i = 0; i < gObjDeferredFreeCount; i++)
     {
     }
-    ((GameObject*)obj)->objectFlags |= 0x40;
+    ((GameObject*)obj)->objectFlags |= OBJECT_FLAG_FREED;
     if (((GameObject*)obj)->unkEA != 0)
     {
         i = 0;
