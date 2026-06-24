@@ -1660,9 +1660,8 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     stateBytes = (char*)state;
     if (state->reverse != 0)
     {
-        currentCurve = Objfsa_FindRomCurveById(startCurveId);
-        *(s32*)&state->nodeA0 = currentCurve;
-        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
+        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
         if (nextId == -1)
         {
             return 1;
