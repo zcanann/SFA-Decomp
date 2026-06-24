@@ -130,7 +130,7 @@ void spscarab_update(int obj)
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
         itemPickupDoParticleFx(obj, gSpScarabPickupParticleScale, ((SpscarabState*)state)->mode, 0x28);
         ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x8000;
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
 
         {
             int notifyArgB = (((SpscarabPlacement*)placement)->kind == 0) ? 1 : 0;
