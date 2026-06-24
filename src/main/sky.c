@@ -3161,10 +3161,10 @@ void Sky_func03(int a, int b, u8* cfg)
                     p4[0x75] = gSkyState[iofs + 0x79];
                     p4[0x76] = gSkyState[iofs + 0x7a];
                 }
-                if (((Sky2Config*)cfg)->unk5D != 0)
+                if (((Sky2Config*)cfg)->cloudBlendMode != 0)
                 {
                     ((SkyBlendStateFlags*)(gSkyState + iofs + 0xc1))->cloud =
-                        (((Sky2Config*)cfg)->unk5D & 1) + 1;
+                        (((Sky2Config*)cfg)->cloudBlendMode & 1) + 1;
                 }
                 else
                 {
@@ -3174,9 +3174,9 @@ void Sky_func03(int a, int b, u8* cfg)
             envp++;
             iofs += 0xa4;
         }
-        if (((Sky2Config*)cfg)->unk5D != 0)
+        if (((Sky2Config*)cfg)->cloudBlendMode != 0)
         {
-            skyFn_80088c94(mask, (u8)(((Sky2Config*)cfg)->unk5D > 2 ? 1 : 0));
+            skyFn_80088c94(mask, (u8)(((Sky2Config*)cfg)->cloudBlendMode > 2 ? 1 : 0));
         }
         vis = ((Sky2Config*)cfg)->visibility;
         for (i = 0; i < 2; i++)

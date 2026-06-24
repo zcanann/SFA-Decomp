@@ -105,7 +105,7 @@ typedef struct Sky2Config {
     u8 flags;
     u8 flags2;
     u8 unk5A[3];
-    u8 unk5D;
+    u8 cloudBlendMode; /* 0x5D: 0 disables cloud blend; else sets SkyBlendStateFlags.cloud = (v&1)+1; >2 also enables skyFn_80088c94 */
     u8 unk5E[2];
 } Sky2Config;
 
