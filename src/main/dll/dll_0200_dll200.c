@@ -52,9 +52,9 @@ void fn_801F20D4(int obj)
     sub = *(int*)&((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
     stk = *(IntVec3*)gArwingAttachmentItemSetIdle;
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x8) != 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
     }
     if (GameBit_Get(763) == 0)
     {
@@ -74,13 +74,13 @@ void fn_801F20D4(int obj)
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
             (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1) != 0 && GameBit_Get(763) == 0)
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && GameBit_Get(763) == 0)
     {
         GameBit_Set(763, 1);
         *(u8*)(sub + 0x27) = 0;
         buttonDisable(0, 256);
     }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1) != 0)
+    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
         {
@@ -112,7 +112,7 @@ void fn_801F27E4(int obj)
     *(u8*)(sub + 0x24) = 1;
     if (*(u8*)(sub + 0x24) == 0)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(208, 1);
             *(u8*)(sub + 0x24) = 1;
@@ -121,8 +121,8 @@ void fn_801F27E4(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x1) != 0)
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             Obj_GetPlayerObject();
             if (fn_80296A14() > 0)
@@ -226,11 +226,11 @@ int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
     case 2:
         break;
     case 4:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         break;
     case 6:
         state = *(int*)&((GameObject*)obj)->extra;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             switch (animUpdate->eventIds[i])
@@ -260,7 +260,7 @@ int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
 
     player = Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -322,7 +322,7 @@ void dll_200_update(int obj)
             fn_801F2290(obj);
             break;
         case 4:
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             if (((GameObject*)obj)->anim.currentMove != 2)
             {
                 ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
@@ -377,8 +377,8 @@ void fn_801F2290(int obj)
     ((GameObject*)obj)->anim.localPosY = b->homeY;
     if (GameBit_Get(0x1fc) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0 &&
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
         {
             GameBit_Set(0x4d1, 1);
@@ -389,7 +389,7 @@ void fn_801F2290(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         if (b->modeTimer <= 0)
         {
             switch (randomGetRange(1, 4))
