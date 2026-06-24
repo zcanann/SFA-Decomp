@@ -1808,11 +1808,11 @@ extern int mapTextureOverrideAcquire(int tex, int value, int type);
 void MapBlock_initShaders(int obj)
 {
     int i;
-    int j;
-    int outerOff;
     int block;
     char* p;
+    int j;
     int v;
+    int outerOff;
     for (i = 0, outerOff = 0; i < *(u8*)(obj + 0xa2); i++)
     {
         block = *(int*)&((GameObject*)obj)->anim.modelState + outerOff;
