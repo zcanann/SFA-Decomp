@@ -1779,11 +1779,11 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
     if (state->reverse == 0)
     {
-        nextId = RomCurve_pickRandomControlPointId_2A(currentCurve);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
     }
     else
     {
-        nextId = RomCurve_pickRandomControlPointId_2B(currentCurve);
+        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
     }
     if (nextId == -1)
     {
