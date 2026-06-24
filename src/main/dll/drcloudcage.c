@@ -167,10 +167,10 @@ void fn_801E9C00(int obj, int state)
     int copyIndex;
     int copyOffset;
     f32 deltaY;
-    f32 zero;
     f32 maxDelta;
-    f32 minDelta;
+    f32 zero;
     f32 scaleV;
+    f32 minDelta;
 
     localPoints = gDrCloudCagePointTemplate;
 
