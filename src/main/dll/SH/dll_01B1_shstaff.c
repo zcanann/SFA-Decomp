@@ -31,27 +31,27 @@ void sh_staff_free(int* obj, int p2)
         child = *(int**)(p + 56);
         if (child != NULL)
         {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
         child = *(int**)(p + 60);
         if (child != NULL)
         {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
         child = *(int**)(p + 64);
         if (child != NULL)
         {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
         child = *(int**)(p + 68);
         if (child != NULL)
         {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
         child = *(int**)(p + 72);
         if (child != NULL)
         {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }
@@ -201,7 +201,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     if ((u32)state->slots[i] != 0)
                     {
-                        ((GameObject*)state->slots[i])->anim.flags |= 0x4000;
+                        ((GameObject*)state->slots[i])->anim.flags |= OBJANIM_FLAG_HIDDEN;
                         state->slots[i] = 0;
                     }
                 }
@@ -301,7 +301,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     o = state->slots[0];
                     if ((u32)o != 0)
                     {
-                        ((GameObject*)o)->anim.flags |= 0x4000;
+                        ((GameObject*)o)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                         state->slots[0] = 0;
                         state->fadeTimer = bx;
                     }
@@ -453,31 +453,31 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
             child = *(void**)(p + 56);
             if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 *(int*)(p + 56) = zero;
             }
             child = *(void**)(p + 60);
             if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 *(int*)(p + 60) = zero;
             }
             child = *(void**)(p + 64);
             if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 *(int*)(p + 64) = zero;
             }
             child = *(void**)(p + 68);
             if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 *(int*)(p + 68) = zero;
             }
             child = *(void**)(p + 72);
             if (child != NULL)
             {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | 0x4000);
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 *(int*)(p + 72) = zero;
             }
             p += 20;
