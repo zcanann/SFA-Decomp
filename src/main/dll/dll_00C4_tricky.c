@@ -1348,7 +1348,7 @@ void Tricky_update(int obj)
             }
         }
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     ((TrickyState*)state)->unk353 = 1;
     handlerBase = ((TrickyHandlerTable*)base)->handlers;
     handlerBase[((TrickyState*)state)->unk08](obj, state);
@@ -1776,7 +1776,7 @@ void tricky_handleDefeat(int obj, int state)
         }
         ((TrickyState*)state)->actionTargetObj = 0;
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         moveId = ((TrickyState*)state)->moveId1;
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale1);
         ((TrickyState*)state)->flags323 = 1;
