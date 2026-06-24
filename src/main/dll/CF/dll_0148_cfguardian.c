@@ -826,7 +826,7 @@ int cfguardian_updateMain(int obj)
         {
             GameBit_Set(0x4ab, 1);
         }
-        else if (sub->chatterState == 1)
+        else if (sub->chatterState == GUARDIAN_CHATTER_READY)
         {
             int* tbl = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
             int pick;
