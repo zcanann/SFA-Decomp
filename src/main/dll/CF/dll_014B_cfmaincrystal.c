@@ -273,7 +273,7 @@ void fn_8019D9F0(int* obj)
         }
         if (sub->charge >= CFMAINCRYSTAL_CHARGE_FIRE)
         {
-            f32 fr = (f32)(sub->charge - 0x3c);
+            f32 fr = (f32)(sub->charge - CFMAINCRYSTAL_CHARGE_FIRE);
             CrystalBeam* sl;
             fr = fr / lbl_803E41EC;
             sl = &sub->beams[idx];
@@ -304,7 +304,7 @@ void fn_8019D9F0(int* obj)
                 f32 d = vol - sub->humVolume;
                 sub->humVolume = d * gCfMainCrystalHumVolumeApproachRate + sub->humVolume;
             }
-            if (sub->charge >= 0x3c)
+            if (sub->charge >= CFMAINCRYSTAL_CHARGE_FIRE)
             {
                 sub->humVolume = vol;
             }
