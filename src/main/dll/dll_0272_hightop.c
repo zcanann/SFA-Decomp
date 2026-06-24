@@ -666,7 +666,7 @@ void hightop_update(int obj)
 {
     char* p = ((GameObject*)obj)->extra;
     *(s16*)(p + 0xc16) = 5;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     *(s8*)&((BaddieState*)p)->physicsActive = !((BitFlags8*)(p + 0xc49))->b4;
     ((BaddieState*)p)->hitPoints = 0;
     *(int*)p &= ~0x8000;
@@ -1100,7 +1100,7 @@ int hightop_stateHandler09(int obj, int p)
     }
     if (GameBit_Get(((HightopPlacement*)sub)->gameBitId) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (randFn_80080100(0x64) != 0)
         {
             objSoundFn_800392f0(obj, (int)((char*)state + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
