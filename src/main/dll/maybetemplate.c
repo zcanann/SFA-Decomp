@@ -972,7 +972,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             yOff += 0x32;
             i++;
         }
-        while (i < 7);
+        while (i < GCMENU_ITEM_ICON_COUNT);
         drawTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FCC, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
         drawScaledTexture(((PauseMenuHud*)base)->texHandle, lbl_803E1FD4, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100,
                           0x12, 10, 1);
