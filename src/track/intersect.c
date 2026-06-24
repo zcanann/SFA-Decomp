@@ -5507,8 +5507,8 @@ void gxTextureSetupFn_8007cf7c(void)
     f32 indMtx_54[6];
     f32 indMtx_3c[6];
     f32 indMtx_24[6];
-    f32 fA, fB;
     int handle1;
+    f32 fA, fB;
     GXColor temp;
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
@@ -5518,7 +5518,7 @@ void gxTextureSetupFn_8007cf7c(void)
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_cc, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
-    mtx_cc[1][3] = fB;
+    mtx_cc[1][3] = fA;
     GXLoadTexMtxImm(mtx_cc, 0x27, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x27, 0, 0x7d);
 
@@ -5536,8 +5536,8 @@ void gxTextureSetupFn_8007cf7c(void)
     PSMTXScale(mtx_9c, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
     PSMTXRotRad(mtx_6c, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_6c, mtx_9c, mtx_9c);
-    mtx_9c[1][3] = fA;
-    mtx_9c[2][3] = fA;
+    mtx_9c[1][3] = fB;
+    mtx_9c[2][3] = fB;
     GXLoadTexMtxImm(mtx_9c, 0x2a, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x2a, 0, 0x7d);
 
@@ -5569,7 +5569,7 @@ void gxTextureSetupFn_8007cf7c(void)
         ((u8*)&lbl_803DB67C)[2] = (u8)(((u8*)&lbl_803DB67C)[2] >> 3);
         ((u8*)&lbl_803DB67C)[3] = lbl_803DB678;
     }
-    *(u32*)&temp = lbl_803DB67C;
+    temp = *(GXColor*)&lbl_803DB67C;
     GXSetTevKColor(0, temp);
     GXSetTevKAlphaSel(1, 0x1c);
     GXSetTevKColorSel(1, 0xc);
