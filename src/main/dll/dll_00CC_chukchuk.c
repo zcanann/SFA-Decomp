@@ -54,7 +54,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 void chukchuk_init(u8* obj, u8* params)
 {
     ChukChukState* sub = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && GameBit_Get(sub->gameBit) != 0)
     {
