@@ -4,6 +4,10 @@
 #include "track/intersect.h"
 #include "main/model_light.h"
 #include "main/pi_dolphin.h"
+
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -326,7 +330,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     }
     textureFn_800528bc();
     GXSetNumChans(1);
-    GXSetCullMode(2);
+    GXSetCullMode(GX_CULL_BACK);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetBlendMode(1, 4, 5, 5);
@@ -943,10 +947,10 @@ LAB_8005F89C:
 LAB_8005F8E4:
     if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
     {
-        GXSetCullMode(2);
+        GXSetCullMode(GX_CULL_BACK);
         goto LAB_8005F908;
     }
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
 LAB_8005F908:
     return shader;
 }
