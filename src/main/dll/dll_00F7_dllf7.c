@@ -815,11 +815,11 @@ void dll_F7_update(int* obj)
             state->byte8 = 1;
             state->hitsRemaining = 2;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= 1;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         return;
     }
