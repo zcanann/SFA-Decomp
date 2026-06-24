@@ -14,6 +14,10 @@
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSCache.h"
+#define GX_FALSE 0
+#define GX_TG_MTX2x4 1
+#define GX_TG_TEX0 4
+#define GX_TEV_KASEL_K0_A 0x1c
 
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
@@ -3618,10 +3622,10 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetVtxDesc(9, 1);
             GXSetVtxDesc(0xd, 1);
             GXSetNumTexGens(1);
-            GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+            GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
             kColorCopy = kColor;
             GXSetTevKColor(0, &kColorCopy);
-            GXSetTevKAlphaSel(0, 0x1c);
+            GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
             GXSetNumTevStages(1);
             GXSetNumIndStages(0);
             GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
