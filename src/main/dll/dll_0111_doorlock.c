@@ -102,7 +102,7 @@ void doorlock_update(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0) && (GameBit_Get(GAMEBIT_DOORLOCK_UNLOCKED) == 0))
+    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0) && (GameBit_Get(GAMEBIT_DOORLOCK_UNLOCKED) == 0))
     {
         buttonDisable(0, 0x100);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
@@ -132,19 +132,19 @@ void doorlock_update(int obj)
         }
         if (*(u8*)state == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((((DoorlockPlacement*)def)->prereqGameBit1 != -1) && (GameBit_Get(((DoorlockPlacement*)def)->prereqGameBit1) == 0))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                 if ((*(u8*)(def + 0x1b) & 0x10) != 0)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
             if ((((DoorlockPlacement*)def)->prereqGameBit0 != -1) && (GameBit_Get(((DoorlockPlacement*)def)->prereqGameBit0) == 0))
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
             if (((((DoorlockPlacement*)def)->prereqGameBit0 != -1) && (ObjTrigger_IsSetById(
                     obj, ((DoorlockPlacement*)def)->prereqGameBit0) != 0)) ||
@@ -195,7 +195,7 @@ void doorlock_update(int obj)
                 }
                 ((GameObject*)obj)->unkF4 = 1;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
             (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
