@@ -258,7 +258,7 @@ void sidekickball_update(u8* self)
 
     state = (SidekickBallState*)*(int*)&((GameObject*)self)->extra;
     *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
+        (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     state->onPathPoint = 0;
 
     player = Obj_GetPlayerObject();
@@ -296,7 +296,7 @@ void sidekickball_update(u8* self)
         trickyBallMove(self);
     case SIDEKICK_BALL_HELD:
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~0x8);
+            (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         gotHit = 0;
         if ((buttonGetDisabled(0) & 0x100) == 0u
             && ((GameObject*)self)->unkF8 == 0
