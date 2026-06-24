@@ -304,7 +304,7 @@ void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3,
             rotX = 0;
             if (xSide != *(char*)(state + 8))
             {
-                rotX = 0x3fff;
+                rotX = SFXPLAYER_EFFECT_RING_ROT_STEP;
             }
             bitVal = FUN_80017690(0x1d9);
             if (bitVal == 0)
@@ -395,7 +395,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     if ((((*(u8*)(state + 8) >> 4 & 1) != 0) && ((*(u8*)(state + 8) >> 5 & 1) == 0)) &&
         (0x32 < *(short*)(state + 4)))
     {
-        FUN_800068c4((u32)obj, 0x459);
+        FUN_800068c4((u32)obj, SFXPLAYER_RING_START_SFX);
         mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         if (mode == '\x02')
         {
@@ -456,7 +456,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
             *(float*)(handles[1] + 0x14) = *(float*)(handles[1] + 0x14) + *(float*)(obj + 10);
         }
         handles = handles + 2;
-        angleStep = angleStep + 0x3fff;
+        angleStep = angleStep + SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
     return;
 }
