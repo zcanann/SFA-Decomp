@@ -1,5 +1,9 @@
 #include "src/main/audio/synth_internal.h"
 
+#ifndef SYNTH_VOICE_STRIDE
+#define SYNTH_VOICE_STRIDE 0x404
+#endif
+
 /*
  * Scalar fields of the global synth state block (lbl_803BCD90) named for
  * readability. Only the constant-offset scalars are modelled here; the
@@ -98,10 +102,10 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     synthFlags = 0;
     synthMessageCallback = 0;
 
-    synthVoice = salMalloc(voiceCount * 0x404);
-    memset(synthVoice, 0, voiceCount * 0x404);
+    synthVoice = salMalloc(voiceCount * SYNTH_VOICE_STRIDE);
+    memset(synthVoice, 0, voiceCount * SYNTH_VOICE_STRIDE);
 
-    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += 0x404)
+    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += SYNTH_VOICE_STRIDE)
     {
         u8 lowIndex;
 
