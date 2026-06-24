@@ -337,13 +337,13 @@ void lavaball1be_update(s16* obj)
                         spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     }
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
-                    ((GameObject*)obj)->anim.flags |= 0x4000;
+                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
                     spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
-                    ((GameObject*)obj)->anim.flags |= 0x4000;
+                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     return;
                 }
             }
@@ -397,7 +397,7 @@ void lavaball1be_setScale(s16* obj, int vertSpeed, int horizSpeed)
     ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * vertSpeed;
     ((GameObject*)obj)->anim.velocityZ = vxz * -mathCosf(
         gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
-    ((GameObject*)obj)->anim.flags &= ~0x4000;
+    ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ObjHits_EnableObject(obj);
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
