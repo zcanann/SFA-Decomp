@@ -2924,12 +2924,15 @@ void skyFn_8008aee8(void)
     FogColor fogColor;
 
     fogColor = *(FogColor*)&lbl_803E8458;
-    if (gSkyState != NULL &&
-        ((player = Obj_GetPlayerObject()) == NULL ||
-            ((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
-                                     ((GameObject*)player)->anim.localPosZ)) != 0x30 &&
-                cell != 0x2b)))
+    if (gSkyState != NULL)
     {
+        if ((player = Obj_GetPlayerObject()) != NULL &&
+            (((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
+                                      ((GameObject*)player)->anim.localPosZ)) == 0x30) ||
+                cell == 0x2b))
+        {
+            return;
+        }
         sky = *(int**)&gSkyState;
         frac = ((SkyTimeBlend*)sky)->time / gSkySecondsPerDay;
         t = (frac < pEXIInputFlag) ? pEXIInputFlag : ((frac > EXIInputFlag) ? EXIInputFlag : frac);
