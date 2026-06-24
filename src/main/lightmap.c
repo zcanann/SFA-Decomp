@@ -1897,8 +1897,10 @@ void sceneDraw(void)
     }
     {
         u32* b8 = (u32*)(q + 8);
+        u32* b12;
         b8[lbl_803DCE30 * 4] = 0x78000000;
-        ((u32*)(q + 12))[lbl_803DCE30 * 4] = 8;
+        b12 = (u32*)(q + 12);
+        b12[lbl_803DCE30 * 4] = 8;
         lbl_803DCE30++;
         if (lbl_803DCE30 == 1000)
         {
@@ -1906,7 +1908,7 @@ void sceneDraw(void)
             lbl_803DCE30 = 0;
         }
         b8[lbl_803DCE30 * 4] = 0x50000000;
-        ((u32*)(q + 12))[lbl_803DCE30 * 4] = 9;
+        b12[lbl_803DCE30 * 4] = 9;
         lbl_803DCE30++;
     }
     sceneDrawTransparentPolys();
