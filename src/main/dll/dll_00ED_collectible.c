@@ -949,7 +949,7 @@ void collectible_update(int obj)
     f32 timer;
     f32 zero;
 
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     timer = ((CollectibleState*)state)->despawnTimer;
     zero = lbl_803E345C;
     if (timer != zero)
