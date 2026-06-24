@@ -897,7 +897,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         inRange = 0;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     {
         BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
         char* pp = Obj_GetPlayerObject();
@@ -911,11 +911,11 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (found != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
     if (inRange == 0 && sub->runnerState == 2)
@@ -1137,7 +1137,7 @@ void babycloudrunner_update(int* obj)
             }
             else
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 sub2 = ((GameObject*)obj)->extra;
                 {
                     char* pp = Obj_GetPlayerObject();
@@ -1152,11 +1152,11 @@ void babycloudrunner_update(int* obj)
                 }
                 if (found != 0)
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
                 }
                 else
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                 }
             }
             if (sub->runnerState == 3)
