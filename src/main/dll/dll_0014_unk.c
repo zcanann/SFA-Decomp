@@ -3386,19 +3386,23 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
         *previousLinkId = curve->id;
         return candidates[0];
     }
-    for (j = 0; j < candidateCount; j++)
+    if (candidateCount > 1)
     {
-        if (*previousLinkId == candidates[j])
+        for (j = 0; j < candidateCount; j++)
         {
-            for (; j < candidateCount - 1; j++)
+            if (*previousLinkId == candidates[j])
             {
-                candidates[j] = candidates[j + 1];
+                for (; j < candidateCount - 1; j++)
+                {
+                    candidates[j] = candidates[j + 1];
+                }
+                candidateCount--;
             }
-            candidateCount--;
         }
+        *previousLinkId = curve->id;
+        return candidates[randomGetRange(0, candidateCount - 1)];
     }
-    *previousLinkId = curve->id;
-    return candidates[randomGetRange(0, candidateCount - 1)];
+    return -1;
 }
 
 f32 curves_distXZ(f32 x, f32 z, u32 curveId)
