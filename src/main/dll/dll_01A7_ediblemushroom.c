@@ -593,7 +593,7 @@ void ediblemushroom_update(u8* self)
         while (ObjMsg_Pop(self, &msg, 0, 0) != 0)
         {
             if (((u32)msg - 0x70000) != 0xB) continue;
-            ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | 0x4000);
+            ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | OBJANIM_FLAG_HIDDEN);
             ObjHits_DisableObject((u32)(int)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
             GameBit_Set(0x12E, 0);
