@@ -426,6 +426,12 @@ void Obj_ApplyPendingParentLinks(void);
 extern u8* gGameBitTable;
 extern s16 gGameBitCount;
 extern u8* gGameBitSaveData;
+
+/* GameBit descriptor flags byte (gGameBitTable[id*4 + 2]). */
+#define GAMEBIT_FLAG_WIDTH_MASK 0x1f /* bit-run length: (mask)+1 bits stored for this entry */
+#define GAMEBIT_FLAG_SYNC 0x20       /* request a save-sync when this bit is written */
+#define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
+
 #pragma dont_inline off
 #pragma scheduling off
 u32 GameBit_Get(int eventId)
@@ -456,7 +462,7 @@ u32 GameBit_Get(int eventId)
         return 0;
     }
     flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6)
+    switch (flags >> GAMEBIT_FLAG_BANK_SHIFT)
     {
     case 0:
         base = gGameBitSaveData + 0xef0;
@@ -474,7 +480,7 @@ u32 GameBit_Get(int eventId)
     start = *(u16*)(gGameBitTable + id * 4);
     result = 0;
     bit = 1;
-    end = (flags & 0x1f) + start;
+    end = (flags & GAMEBIT_FLAG_WIDTH_MASK) + start;
     for (i = start; i < end + 1; i++)
     {
         if ((1 << (i & 7)) & base[i >> 3])
@@ -536,7 +542,7 @@ void GameBit_Set(int eventId, int value)
         return;
     }
     flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6)
+    switch (flags >> GAMEBIT_FLAG_BANK_SHIFT)
     {
     case 0:
         base = gGameBitSaveData + 0xef0;
@@ -555,13 +561,13 @@ void GameBit_Set(int eventId, int value)
         limit = 0xac;
         break;
     }
-    if (flags & 0x20)
+    if (flags & GAMEBIT_FLAG_SYNC)
     {
         GameBit_RequestSync(gGameBitTable[id * 4 + 3]);
     }
     start = *(u16*)(gGameBitTable + id * 4);
     bit = 1;
-    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start;
+    end = (gGameBitTable[id * 4 + 2] & GAMEBIT_FLAG_WIDTH_MASK) + start;
     for (i = start; i <= end; i++)
     {
         int shift = i & 7;
@@ -588,7 +594,7 @@ void GameBit_Set(int eventId, int value)
 int gameBitIncrement(int bit)
 {
     int val = GameBit_Get(bit) + 1;
-    int max = 1 << ((gGameBitTable[bit * 4 + 2] & 0x1f) + 1);
+    int max = 1 << ((gGameBitTable[bit * 4 + 2] & GAMEBIT_FLAG_WIDTH_MASK) + 1);
     if (val < max)
     {
         GameBit_Set(bit, val);
