@@ -14269,7 +14269,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             tbl[0] = lbl_803E7E68;
             tbl[1] = lbl_803E7E6C;
             objParticleFn_80099d84(obj, lbl_803E7E9C,
-                                   tbl[((PlayerState*)inner)->unk7A8 >> 5] & 0xff,
+                                   tbl[(((PlayerState*)inner)->unk7A8 >> 5) & 7] & 0xff,
                                    lbl_803E7EE0, 0);
         }
         if ((((PlayerState*)inner)->pendingFxFlags & 1) != 0)
@@ -14280,7 +14280,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             if ((((PlayerState*)inner)->pendingFxFlags & 4) != 0)
             {
-                ((PlayerState*)inner)->flags360 |= 0x20000;
+                *(u32*)&((PlayerState*)inner)->flags360 |= 0x20000LL;
                 ((PlayerState*)inner)->pendingFxFlags = ((PlayerState*)inner)->pendingFxFlags & ~0x4;
             }
         }
