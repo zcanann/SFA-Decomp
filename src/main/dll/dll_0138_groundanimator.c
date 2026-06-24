@@ -337,11 +337,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
                                             (double)((GameObject*)obj)->anim.localPosZ));
-    if (block == NULL)
-    {
-        return;
-    }
-    if ((((MapBlockData*)block)->unk4 & 8) == 0)
+    if (block == NULL || (((MapBlockData*)block)->unk4 & 8) == 0)
     {
         return;
     }
