@@ -32,6 +32,11 @@ typedef struct LightSourceState {
     u8 pad1B;
 } LightSourceState;
 
+typedef enum LightSourceMode {
+    LIGHTSOURCE_MODE_STATIC = 0,      /* always lit; no hit interaction */
+    LIGHTSOURCE_MODE_INTERACTIVE = 1, /* toggled lit/unlit by priority hits */
+} LightSourceMode;
+
 #define LIGHTSOURCE_FLAG_FX_ARG_6 0x01
 #define LIGHTSOURCE_FLAG_DISABLE_FX_TYPE 0x02
 #define LIGHTSOURCE_FLAG_FX_TYPE_4 0x04

@@ -123,9 +123,9 @@ void lightsource_update(int obj)
     b = ((GameObject*)obj)->extra;
     switch (b->mode)
     {
-    case 0:
+    case LIGHTSOURCE_MODE_STATIC:
         break;
-    case 1:
+    case LIGHTSOURCE_MODE_INTERACTIVE:
         b->litPrev = b->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
@@ -276,7 +276,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
 
     switch (state->mode)
     {
-    case 0:
+    case LIGHTSOURCE_MODE_STATIC:
         state->lit = 1;
         flags = setup->flags;
         if (flags & LIGHTSOURCE_FLAG_FX_TYPE_4)
