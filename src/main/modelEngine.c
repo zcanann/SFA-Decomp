@@ -1,6 +1,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/engine_shared.h"
 
+#define RESOURCE_DESCRIPTOR_COUNT 0x2c1
+
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
 {
     RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, NULL);
@@ -216,7 +218,7 @@ BOOL Resource_Release(void* handleSlot)
 
     i = 0;
     descriptor = (ResourceDescriptor*)handleSlot;
-    while (i < 0x2c1)
+    while (i < RESOURCE_DESCRIPTOR_COUNT)
     {
         if ((void*)&gResourceLoadedHandles[i] == handleSlot)
         {
@@ -262,7 +264,7 @@ void Resource_ResetRefCounts(void)
 {
     u32 i;
 
-    for (i = 0; i < 0x2c1; i++)
+    for (i = 0; i < RESOURCE_DESCRIPTOR_COUNT; i++)
     {
         gResourceRefCounts[i] = 0;
     }
