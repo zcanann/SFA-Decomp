@@ -26,6 +26,11 @@
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
+
+/* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
+ * this many linked route candidates (status[8] / f32 bestDistances[8]). */
+#define TRICKY_ROUTE_CANDIDATE_COUNT 8
+
 extern const f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
@@ -843,7 +848,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
 
     route = routes;
     search = state;
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
     {
         if (*route != 0)
         {
@@ -858,7 +863,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
         failedCount = 0;
         route = routes;
         search = state;
-        for (i = 0; i < 8; i++)
+        for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
         {
             if (*route != 0)
             {
@@ -889,7 +894,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
             return -1;
         case 7:
             route = routes;
-            for (i = 0; i < 8; i++)
+            for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
             {
                 if (*route != 0)
                 {
@@ -987,7 +992,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
     curves = (void**)(*gRomCurveInterface)->getCurves(&count);
 
     init = lbl_803E2418;
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
     {
         bestDistances[i] = init;
         outRoutes[i] = NULL;
@@ -1049,7 +1054,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
                 continue;
             }
 
-            for (j = 0; j < 8; j++)
+            for (j = 0; j < TRICKY_ROUTE_CANDIDATE_COUNT; j++)
             {
                 if (score < bestDistances[j])
                 {
