@@ -2621,7 +2621,7 @@ void drawFn_8005cf8c(int verts, u8* indices, int count)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXBegin(0x90, 0, count * 3 & 0xffff);
+    GXBegin(GX_TRIANGLES, GX_VTXFMT0, count * 3 & 0xffff);
     for (i = 0; i < count; i++)
     {
         for (j = 0; j < 3; j++)
