@@ -2517,13 +2517,16 @@ void ObjHits_Update(int objectCount)
                         }
                         if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ)
                         {
-                            diff = (((GameObject*)obj)->anim.worldPosY -
-                                        ((GameObject*)candObj)->anim.worldPosY >
-                                    *(const f32*)&gObjHitsScalarZero)
-                                       ? ((GameObject*)obj)->anim.worldPosY -
-                                             ((GameObject*)candObj)->anim.worldPosY
-                                       : -(((GameObject*)obj)->anim.worldPosY -
-                                           ((GameObject*)candObj)->anim.worldPosY);
+                            axisDiff = ((GameObject*)obj)->anim.worldPosY -
+                                ((GameObject*)candObj)->anim.worldPosY;
+                            if (axisDiff > *(const f32*)&gObjHitsScalarZero)
+                            {
+                                diff = axisDiff;
+                            }
+                            else
+                            {
+                                diff = -axisDiff;
+                            }
                             if ((diff < objState->primaryRadiusY + candState->primaryRadiusY) &&
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
