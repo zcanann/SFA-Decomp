@@ -2126,6 +2126,7 @@ int objUpdateOpacity(char* obj)
     f32 sz;
     f32 o5, o6;
     f32 prod;
+    f32 offZ, offX;
 
     op = ((GameObject*)obj)->anim.alpha;
     if (op == 0)
@@ -2195,13 +2196,17 @@ int objUpdateOpacity(char* obj)
     else
     {
         prod = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        offZ = playerMapOffsetZ;
+        offX = playerMapOffsetX;
         for (i = 0; i < 5; i++)
         {
             FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-            if (((GameObject*)obj)->anim.worldPosY * plane->normalY +
-                plane->normalX * (((GameObject*)obj)->anim.worldPosX - playerMapOffsetX) +
-                plane->normalZ * (((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ) + plane->distance + prod <
-                lbl_803DEBCC)
+            if (prod
+                + (plane->distance
+                    + (plane->normalZ * (((GameObject*)obj)->anim.worldPosZ - offZ)
+                        + (((GameObject*)obj)->anim.worldPosY * plane->normalY
+                            + plane->normalX * (((GameObject*)obj)->anim.worldPosX - offX)))) <
+                *(f32*)&lbl_803DEBCC)
                 return 0;
         }
     }
