@@ -7227,7 +7227,7 @@ extern void GXSetTevColor(int id, void* color);
 void fn_8004EF9C(int* param)
 {
     int color = param[0];
-    GXSetTevColor(2, &color);
+    GXSetTevColor(GX_TEVREG1, &color);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
     GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
