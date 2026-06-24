@@ -457,7 +457,7 @@ void windlift_update(int* obj)
             }
             if (found == -1)
             {
-                for (j = 1; j < 0xe; j++)
+                for (j = 1; j < WINDLIFT_SLOTS; j++)
                 {
                     if ((u32)sub->slots[j].i0 == 0)
                     {
