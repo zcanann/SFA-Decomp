@@ -14945,16 +14945,18 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 #pragma peephole off
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
-    EmitPlane planes[2];
-    f32 threshold;
-    f32 bx, ax, bz, az, by, ay;
+    EmitPlane* pl;
+    char* cp;
+    f32* b6b8;
     f32* pbx;
     f32* pby;
     f32* pbz;
-    void* hit;
     int tbl1, tbl2;
-    int idxA, idxB;
+    void* hit;
     int i;
+    f32 bx, ax, bz, az, by, ay;
+    f32 threshold;
+    EmitPlane planes[2];
 
     ((PlayerState*)b)->groundObject = 0;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
@@ -14965,9 +14967,8 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     hit = *(void**)((char*)c + 0x0);
     if (hit != NULL)
     {
-        int m = *(int*)((char*)hit + 0x50);
-        tbl1 = *(int*)((char*)m + 0x34);
-        tbl2 = *(int*)((char*)m + 0x3c);
+        tbl1 = *(int*)((char*)*(int*)((char*)hit + 0x50) + 0x34);
+        tbl2 = *(int*)((char*)*(int*)((char*)hit + 0x50) + 0x3c);
     }
     else
     {
@@ -14984,69 +14985,80 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     planes[1].nz = -planes[0].nz;
     planes[1].d = -(planes[1].nx * *(f32*)((char*)c + 0x8) +
         planes[1].nz * *(f32*)((char*)c + 0x18));
+    i = 0;
+    pl = planes;
+    cp = (char*)c;
+    b6b8 = &lbl_803DC6B8;
     pbx = &bx;
     pby = &by;
     pbz = &bz;
     threshold = lbl_803E7E98;
-    for (i = 0; i < 2; i++)
+    do
     {
-        f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(&planes[i], (void*)e) + planes[i].d;
-        void* face;
-        if (dot < threshold + (&lbl_803DC6B8)[1])
+        f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(pl, (void*)e);
+        if (pl->d + dot < threshold + b6b8[1])
         {
-            s16 fi = *(s16*)((char*)c + i * 2 + 0x4c);
-            if (fi > -1)
+            void* face;
+            if (*(s16*)(cp + 0x4c) > -1)
             {
-                face = (void*)(tbl1 + (fi << 4));
+                face = (void*)(tbl1 + *(s16*)(cp + 0x4c) * 0x10);
             }
             else
             {
                 face = NULL;
             }
-            if (face == NULL ||
-                (((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 6 &&
-                 ((s8) * (s8*)((char*)face + 0x3) & 0x3f) != 0x10))
+            if (face != NULL &&
+                (((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 6 ||
+                 ((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 0x10))
+            {
+                ax = *(f32*)(tbl2 + *(s16*)((char*)face + 0x4) * 12);
+                ay = lbl_803E7EA4;
+                az = *(f32*)(tbl2 + *(s16*)((char*)face + 0x4) * 12 + 8);
+                bx = *(f32*)(tbl2 + *(s16*)((char*)face + 0x6) * 12);
+                by = lbl_803E7EA4;
+                bz = *(f32*)(tbl2 + *(s16*)((char*)face + 0x6) * 12 + 8);
+                if (hit != NULL)
+                {
+                    ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, hit);
+                    ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(pbx, pby, pbz, hit);
+                }
+                {
+                    f32 dz = bz - az;
+                    f32 dx = ax - bx;
+                    f32 scale = lbl_803E7EE0 / sqrtf(dz * dz + dx * dx);
+                    dz = dz * scale;
+                    dx = dx * scale;
+                    if (dz * *(f32*)((char*)d + 0x1c) + dx * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
+                    {
+                        return 0;
+                    }
+                }
+            }
+            else
             {
                 return 0;
             }
-            idxA = *(s16*)((char*)face + 0x4) * 12;
-            ax = *(f32*)((char*)tbl2 + idxA);
-            ay = lbl_803E7EA4;
-            az = *(f32*)((char*)tbl2 + (idxA + 8));
-            idxB = *(s16*)((char*)face + 0x6) * 12;
-            bx = *(f32*)((char*)tbl2 + idxB);
-            by = lbl_803E7EA4;
-            bz = *(f32*)((char*)tbl2 + (idxB + 8));
-            if (hit != NULL)
-            {
-                ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, (int)hit);
-                ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(pbx, pby, pbz, (int)hit);
-            }
-            {
-                f32 dx = ax - bx;
-                f32 dz = bz - az;
-                f32 len = sqrtf(dx * dx + dz * dz);
-                f32 scale = lbl_803E7EE0 / len;
-                dx = dx * scale;
-                dz = dz * scale;
-                if (dx * *(f32*)((char*)d + 0x1c) + dz * *(f32*)((char*)d + 0x24) < lbl_803E7E98)
-                {
-                    return 0;
-                }
-            }
         }
+        pl++;
+        cp += 2;
+        i++;
     }
+    while (i < 2);
     *(f32*)((char*)d + 0x2c) = *(f32*)((char*)e + 0x0);
     *(f32*)((char*)d + 0x30) = *(f32*)((char*)e + 0x4);
     *(f32*)((char*)d + 0x34) = *(f32*)((char*)e + 0x8);
-    *(f32*)((char*)d + 0x44) =
-        -(*(f32*)((char*)d + 0x1c) * (lbl_803E7E98 + lbl_803DC6C0)) + *(f32*)((char*)d + 0x2c);
-    *(f32*)((char*)d + 0x4c) =
-        -(*(f32*)((char*)d + 0x24) * (lbl_803E7E98 + lbl_803DC6C0)) + *(f32*)((char*)d + 0x34);
-    *(f32*)((char*)d + 0x50) =
-        lbl_803E7F10 * *(f32*)((char*)d + 0x1c) + *(f32*)((char*)d + 0x2c);
-    *(f32*)((char*)d + 0x58) =
-        lbl_803E7F10 * *(f32*)((char*)d + 0x24) + *(f32*)((char*)d + 0x34);
+    {
+        f32 e2 = lbl_803E7E98;
+        *(f32*)((char*)d + 0x44) =
+            -(*(f32*)((char*)d + 0x1c) * (e2 + lbl_803DC6C0) - *(f32*)((char*)d + 0x2c));
+        *(f32*)((char*)d + 0x4c) =
+            -(*(f32*)((char*)d + 0x24) * (e2 + lbl_803DC6C0) - *(f32*)((char*)d + 0x34));
+    }
+    {
+        f32 f = lbl_803E7F10;
+        *(f32*)((char*)d + 0x50) = f * *(f32*)((char*)d + 0x1c) + *(f32*)((char*)d + 0x2c);
+        *(f32*)((char*)d + 0x58) = f * *(f32*)((char*)d + 0x24) + *(f32*)((char*)d + 0x34);
+    }
     *(f32*)((char*)d + 0x38) = ((PlayerState*)b)->savedPosX;
     *(f32*)((char*)d + 0x3c) = lbl_803E7EA4;
     *(f32*)((char*)d + 0x40) = ((PlayerState*)b)->savedPosZ;
@@ -15055,8 +15067,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         *(f32*)((char*)c + 0x3c);
     *(u8*)((char*)d + 0x5e) = *(u8*)((char*)c + 0x50);
     *(u8*)((char*)d + 0x61) = 1;
-    if (hitDetectFn_800658a4(a, (char*)d + 0x48, 0x205, *(f32*)((char*)d + 0x44),
-                             *(f32*)((char*)d + 0x4), *(f32*)((char*)d + 0x4c)) != 0)
+    if (((int (*)(int, f32, f32, f32, char*, int))hitDetectFn_800658a4)(
+            a, *(f32*)((char*)d + 0x44), *(f32*)((char*)d + 0x4), *(f32*)((char*)d + 0x4c),
+            (char*)d + 0x48, 0x205) != 0)
     {
         return 0;
     }
@@ -15078,12 +15091,10 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                     return 2;
                 }
             }
-            if (*(f32*)((char*)d + 0x0) <= lbl_803E80C4)
+            if (*(f32*)((char*)d + 0x0) <= lbl_803E80C4 &&
+                *(f32*)((char*)d + 0x0) >= lbl_803E8018)
             {
-                if (*(f32*)((char*)d + 0x0) >= lbl_803E8018)
-                {
-                    return 3;
-                }
+                return 3;
             }
             return 0;
         }
