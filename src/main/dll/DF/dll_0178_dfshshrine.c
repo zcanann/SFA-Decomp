@@ -363,7 +363,7 @@ void dfsh_shrine_update(int obj)
                 randomGetRange(500, 1000);
             }
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(0x589, 0);
             state->mode = 5;
