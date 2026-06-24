@@ -146,9 +146,9 @@ void treasurechest_update(int obj)
     }
     if (flags->open == 0)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             fn_802967E0(Obj_GetPlayerObject(), 1);
             nearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDist);
             if (nearestObject != 0)
