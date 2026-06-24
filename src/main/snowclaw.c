@@ -560,7 +560,7 @@ void snowclaw_update(int obj)
         if (healthState < -10)
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)*(int*)inner)->anim.flags |= 0x4000;
+            ((GameObject*)*(int*)inner)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             ObjHits_DisableObject(*(int*)inner);
         }
@@ -693,15 +693,15 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState* seq)
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
         return 4;
     }
-    ((GameObject*)obj)->anim.flags &= ~0x4000;
+    ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     sub = *(int**)inner;
     ((SnowclawState*)inner)->unkA0 = 0xff;
     if (sub != 0)
     {
         s16 v6 = ((GameObject*)sub)->anim.flags;
-        if (v6 & 0x4000)
+        if (v6 & OBJANIM_FLAG_HIDDEN)
         {
-            ((GameObject*)sub)->anim.flags = v6 & ~0x4000;
+            ((GameObject*)sub)->anim.flags = v6 & ~OBJANIM_FLAG_HIDDEN;
             (*(void (*)(int*, int))(*(int*)(*(int*)(*(int*)&((GameObject*)sub)->anim.dll) + 0x3c)))(sub, 2);
         }
     }
