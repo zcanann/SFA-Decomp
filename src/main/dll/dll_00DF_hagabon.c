@@ -273,7 +273,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         angleDelta += 0xffff;
     }
 
-    *(s16*)obj += (s16)(s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+    *(s16*)obj += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
 void hagabon_hitDetect(int obj)
