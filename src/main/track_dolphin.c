@@ -49,6 +49,11 @@
 #define GX_VA_POS 9
 #define GX_VA_TEX0 13
 #define GX_DIRECT 1
+#define GX_QUADS 0x80
+#define GX_TRIANGLES 0x90
+#define GX_VTXFMT0 0
+#define GX_VTXFMT2 2
+#define GX_VTXFMT6 6
 
 typedef struct TrackP6Entry
 {
@@ -3646,7 +3651,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
             selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
-            GXBegin(0x80, 6, 4);
+            GXBegin(GX_QUADS, GX_VTXFMT6, 4);
             GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
             GXTexCoord2s16(0, 0);
             GXPosition3s16(shadowVerts[3], shadowVerts[4], shadowVerts[5]);
@@ -3884,7 +3889,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     {
         int k;
         int off;
-        GXBegin(0x90, 0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
+        GXBegin(GX_TRIANGLES, GX_VTXFMT0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
         k = 0;
         off = k;
         for (; k < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
@@ -3904,7 +3909,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         int i;
         int vi;
         int off;
-        GXBegin(0x90, 2, (slot * 3) & 0xffff);
+        GXBegin(GX_TRIANGLES, GX_VTXFMT2, (slot * 3) & 0xffff);
         vi = 0;
         off = vi;
         for (i = 0; i < slot; i++)
@@ -4063,7 +4068,7 @@ void renderGlows(void)
                 _gxSetTevColor2(ar, ag, ab, (int)(displayOffsetH_803DEBFC * sunDot));
                 alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
                 sunDot = RecalibrateBits_803DEC3C * sunDot * WaitingBits_803DEC40;
-                GXBegin(0x80, 2, 4);
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 GXWGFifo.f32 = -sunDot;
                 GXWGFifo.f32 = -sunDot;
                 GXWGFifo.f32 = lbl_803DEBCC;
@@ -4130,7 +4135,7 @@ void renderGlows(void)
                 (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff
                 )
                 ;
-                GXBegin(0x80, 2, 4);
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 cx = e->viewX;
                 cy = e->viewY;
                 cz = e->viewZ;
