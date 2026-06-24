@@ -23,6 +23,10 @@
 #define GX_MT_XF_FLUSH 1
 #define GX_TF_RGBA8 6
 #define GX_FALSE 0
+#define GX_TF_I4 0
+#define GX_TEXMAP1 1
+#define GX_TEV_SWAP1 1
+#define GX_CH_ALPHA 3
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1844,8 +1848,8 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
     GXSetTevSwapMode(lbl_803DCD90, 0, 1);
-    GXSetTevSwapModeTable(1, gRcpTevSwapTable[swapsel].r, gRcpTevSwapTable[swapsel].g,
-                          gRcpTevSwapTable[swapsel].b, 3);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, gRcpTevSwapTable[swapsel].r, gRcpTevSwapTable[swapsel].g,
+                          gRcpTevSwapTable[swapsel].b, GX_CH_ALPHA);
     if (mtx != NULL)
     {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
@@ -1924,7 +1928,7 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
         if (*(void**)&((Texture*)tex)->imageOffset != NULL)
         {
             fn_80053C40(tex, lbl_803779A0);
-            GXLoadTexObj(lbl_803779A0, 1);
+            GXLoadTexObj(lbl_803779A0, GX_TEXMAP1);
         }
     }
     if (*(void**)&((Texture*)tex)->imageOffset != NULL)
@@ -1962,7 +1966,7 @@ void fn_80053C40(u8* tex, u8* obj)
     }
     GXInitTexObj(obj, (u8*)(tex + ((Texture*)tex)->imageOffset + 0x60),
                  ((Texture*)tex)->width, ((Texture*)tex)->height,
-                 0, ((Texture*)tex)->wrapS, ((Texture*)tex)->wrapT, mipmap);
+                 GX_TF_I4, ((Texture*)tex)->wrapS, ((Texture*)tex)->wrapT, mipmap);
     if (mipmap != 0)
     {
         GXInitTexObjLOD(obj, ((Texture*)tex)->minFilter, ((Texture*)tex)->magFilter,
