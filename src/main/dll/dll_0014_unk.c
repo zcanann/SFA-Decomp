@@ -2623,7 +2623,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 
     for (i = 0; i < 4; i++)
     {
-        neighborId = *(int*)(curve + 0x1c);
+        neighborId = *(int*)(curve + i * 4 + 0x1c);
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
@@ -2643,11 +2643,10 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
-                    bestNeighborIds[slot] = *(int*)(curve + 0x1c);
+                    bestNeighborIds[slot] = *(int*)(curve + i * 4 + 0x1c);
                 }
             }
         }
-        curve += 4;
     }
 
     if (bestNeighborIds[0] != -1)
