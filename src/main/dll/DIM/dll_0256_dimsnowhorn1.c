@@ -344,7 +344,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
     DIMSnowHorn1State* inner = ((GameObject*)obj)->extra;
 
     *(u32*)((char*)state) |= 0x200000;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 
     switch (((GameObject*)obj)->anim.currentMove)
     {
@@ -407,7 +407,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
 
     near = (void*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &sp);
     inner = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     fz = lbl_803E8234;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = fz;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedB = fz;
