@@ -2191,17 +2191,17 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, void* out)
 {
     u8* base = lbl_80396918;
+    s8 noExec;
+    s8 doUpdate;
+    s8 flag8;
+    u8* seq;
+    u8* activeObj;
     u8* cmd;
     u8* model;
-    u8* activeObj;
-    u8* seq;
     u8* animState;
     u8* act2;
     u8* st2;
     u8* entry;
-    s8 noExec;
-    s8 doUpdate;
-    s8 flag8;
     int opcode;
     int sub;
     int restart;
