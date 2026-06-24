@@ -1,6 +1,17 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
+/* Standard MIDI controller (CC) numbers handled by the RPN setter. */
+#define MIDI_CC_DATA_ENTRY_MSB 6
+#define MIDI_CC_DATA_ENTRY_LSB 38
+#define MIDI_CC_DATA_INCREMENT 96
+#define MIDI_CC_DATA_DECREMENT 97
+#define MIDI_CC_RPN_LSB 100
+#define MIDI_CC_RPN_MSB 101
+
+/* RPN 0 = Pitch Bend Sensitivity (pitch bend range, in semitones). */
+#define MIDI_RPN_PITCH_BEND_SENSITIVITY 0
+
 typedef struct InpMidiState
 {
     u8 pad0[0xC0];
@@ -38,11 +49,11 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
     {
         switch (ctrl)
         {
-        case 6:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_ENTRY_MSB:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = value > 24 ? 24 : value;
                 st->pbRange[set][channel] = range;
                 for (i = 0; i < lbl_803BD150[0x210]; i++)
@@ -56,13 +67,13 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
                 break;
             }
             break;
-        case 38:
+        case MIDI_CC_DATA_ENTRY_LSB:
             break;
-        case 96:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_INCREMENT:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = st->pbRange[set][channel];
                 if (range != 0)
                 {
@@ -80,11 +91,11 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
                 break;
             }
             break;
-        case 97:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_DECREMENT:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = st->pbRange[set][channel];
                 if (range < 24)
                 {
@@ -119,11 +130,11 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
     {
         switch (ctrl)
         {
-        case 6:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_ENTRY_MSB:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = value > 24 ? 24 : value;
                 st->pbRange[set][channel] = range;
                 for (i = 0; i < lbl_803BD150[0x210]; i++)
@@ -137,13 +148,13 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
                 break;
             }
             break;
-        case 38:
+        case MIDI_CC_DATA_ENTRY_LSB:
             break;
-        case 96:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_INCREMENT:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = st->pbRange[set][channel];
                 if (range != 0)
                 {
@@ -161,11 +172,11 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
                 break;
             }
             break;
-        case 97:
-            rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
+        case MIDI_CC_DATA_DECREMENT:
+            rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
             switch (rpn)
             {
-            case 0:
+            case MIDI_RPN_PITCH_BEND_SENSITIVITY:
                 range = st->pbRange[set][channel];
                 if (range < 24)
                 {
