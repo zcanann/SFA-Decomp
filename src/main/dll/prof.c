@@ -113,8 +113,8 @@ void optionsMenu_openGeneralPanel(void)
     OptionsMenuPanels* panels;
     int lastUnlocked;
     int entryOffset;
-    int* slot;
     int cheatId;
+    int* slot;
     int cheatId2;
     int entryOffset2;
     int lastUnlocked2;
