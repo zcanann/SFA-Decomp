@@ -72,7 +72,8 @@ extern int gTexShaderAmbColor;
 extern int gTexLightmapAmbColor;
 extern s8 gTexIndMtxScaleExp;
 extern int lbl_80382008[5];
-extern FrustumPlane gViewFrustumPlanes[5];
+#define FRUSTUM_PLANE_COUNT 5
+extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
 extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
 
@@ -354,7 +355,7 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
     float farZ;
 
     plane = gViewFrustumPlanes;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
         cornerIndex = plane[i].aabbCornerIndex;
         if ((cornerIndex & 1) != 0)
@@ -496,7 +497,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     {
         goto end;
     }
-    if (mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x987c), 5, &x1, &y1, &z1, &x2, &y2, &z2)
+    if (mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x987c), FRUSTUM_PLANE_COUNT, &x1, &y1, &z1, &x2, &y2, &z2)
         == 0)
     {
         goto end;
@@ -605,7 +606,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     }
                     else
                     {
-                        u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x9818), 5,
+                        u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x9818), FRUSTUM_PLANE_COUNT,
                                                                       &x1, &y1, &z1, &x2, &y2, &z2);
                         if (((res2 == 0) || ((u8)lo == 0)) && ((res2 != 0) || ((u8)lo != 0)))
                         {
