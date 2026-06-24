@@ -1857,7 +1857,7 @@ void sceneDraw(void)
     GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     ccopy = c;
-    GXSetChanAmbColor(0, &ccopy);
+    GXSetChanAmbColor(GX_COLOR0, &ccopy);
     GXSetNumChans(1);
     renderSceneGeometry((int*)0, lbl_8030E65C);
     renderResetFn_8003fc60();
@@ -2013,7 +2013,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
             c4copy = c4;
-            GXSetChanAmbColor(0, &c4copy);
+            GXSetChanAmbColor(GX_COLOR0, &c4copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
@@ -2025,7 +2025,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
             c5copy = c5;
-            GXSetChanAmbColor(0, &c5copy);
+            GXSetChanAmbColor(GX_COLOR0, &c5copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
@@ -2037,7 +2037,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
             c6copy = c6;
-            GXSetChanAmbColor(0, &c6copy);
+            GXSetChanAmbColor(GX_COLOR0, &c6copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
