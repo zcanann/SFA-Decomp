@@ -116,7 +116,7 @@ void inpInit(u32 state)
         vs->volumeInput.entries[0].controller = MCMD_CTRL_VOLUME;
         vs->volumeInput.entries[0].combineModeFlags = 0;
         vs->volumeInput.entries[0].scale = 0x10000;
-        vs->volumeInput.entries[1].controller = 0xb;
+        vs->volumeInput.entries[1].controller = MCMD_CTRL_EXPRESSION;
         vs->volumeInput.entries[1].combineModeFlags = 2;
         vs->volumeInput.entries[1].scale = 0x10000;
         vs->volumeInput.entryCount = 2;
