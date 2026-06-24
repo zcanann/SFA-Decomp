@@ -184,8 +184,8 @@ void fn_801101E8(void)
 #pragma opt_propagation off
 void CameraModeArwing_update(u8* obj)
 {
-    u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int yaw0, pitch0;
+    u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int d;
 
     ((GameObject*)obj)->anim.worldPosX = gCamArwingWork[0] * ((CameraArwingWork*)gCamArwingWork)->xScale;
