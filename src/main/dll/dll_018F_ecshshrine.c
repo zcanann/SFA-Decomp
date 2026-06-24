@@ -489,7 +489,7 @@ void ecsh_shrine_update(s16* obj)
                 *(f32*)(sub + 0x10) = (f32)(int)
                 randomGetRange(500, 1000);
             }
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 sub[0x2f] = 1;
                 GameBit_Set(0x129, 0);
