@@ -1,5 +1,7 @@
 #include "main/engine_shared.h"
 
+#define VOXMAP_SLOT_COUNT 6
+
 #pragma dont_inline on
 int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int d, int e, int f)
 {
@@ -146,7 +148,7 @@ void voxmaps_updateTimers(void)
 {
     int* p = gVoxMapsSlotTimers;
     int i;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
         if (*p < 0x3FFFFFFF)
         {
@@ -212,7 +214,7 @@ void voxmaps_resetLoadedMaps(void)
     u8* b = gVoxMapsSlotInUse;
     VoxMapSlotOrigin* slotOrigin = gVoxMaps.slotOrigin;
     int i;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
         if (*mapBuffer != NULL)
         {
@@ -249,7 +251,7 @@ void voxmaps_initialise(void)
     gVoxMapsMaxMapIndex = i - 1;
     gVoxMapsScratchBuffer = mmAlloc(640, 16, NULL);
 
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
         mgr->mapBuffer[i] = NULL;
         mgr->blockId[i] = -2;
@@ -299,13 +301,13 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     if (blockId != -1)
     {
         found = -1;
-        for (i = 0; i < 6; i++)
+        for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
         {
             int* row = (int*)((u8*)vm + (i << 2));
             if (blockId == row[12])
             {
                 found = i;
-                i = 6;
+                i = VOXMAP_SLOT_COUNT;
             }
         }
         if (found != -1)
@@ -319,7 +321,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             int b9;
             bestSlot = -1;
             bestVal = -1;
-            for (i = 0; i < 6; i++)
+            for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
             {
                 if (gVoxMapsSlotInUse[i] == 0 && vm->timer[i] > bestVal)
                 {
