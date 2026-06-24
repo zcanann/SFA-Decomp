@@ -1530,12 +1530,13 @@ typedef struct NewShadowEntry
 
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
-extern NewShadowEntry gNewShadowEntries[0x25];
+#define NEW_SHADOW_ENTRY_CAPACITY 0x25
+extern NewShadowEntry gNewShadowEntries[NEW_SHADOW_ENTRY_CAPACITY];
 
 void findSomething(void* needle)
 {
     int i;
-    for (i = 0; i < 0x25; ++i)
+    for (i = 0; i < NEW_SHADOW_ENTRY_CAPACITY; ++i)
     {
         if (gNewShadowEntries[i].isActive != 0 && &gNewShadowEntries[i] == needle)
         {
