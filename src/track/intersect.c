@@ -1499,8 +1499,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     f32 indMtx[6];
     int handle1;
     int handle2;
-    int handle3;
-    f32 proj0, proj1, proj2, proj3, proj4, proj5;
+    f32 proj5, proj4, proj3, proj2, proj1, proj0;
     GXColor c0;
     GXColor c1;
     GXColor c2;
@@ -1577,8 +1576,11 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevKColor(2, c2);
     GXSetTevColor(1, c3);
 
-    fn_8006C534(&handle3);
-    selectTexture(handle3, 3);
+    {
+        int handle3;
+        fn_8006C534(&handle3);
+        selectTexture(handle3, 3);
+    }
 
     {
         f32 ind_s = lbl_803DB6CC / radius;
