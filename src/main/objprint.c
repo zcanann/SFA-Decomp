@@ -1588,11 +1588,11 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 {
     s16* found;
     int* table;
+    int idx;
     int k;
     int n;
     int i;
     int j;
-    int idx;
     int v;
 
     for (idx = 0; idx < count; idx++)
