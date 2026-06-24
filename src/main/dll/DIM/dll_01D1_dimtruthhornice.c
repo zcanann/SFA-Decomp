@@ -115,7 +115,7 @@ void dimtruthhornice_update(int* obj)
 {
 
     TruthHornIceState* extra = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     switch (extra->phase)
     {
     case TRUTHHORNICE_PHASE_INTACT:
@@ -134,11 +134,11 @@ void dimtruthhornice_update(int* obj)
             int* tricky = getTrickyObject();
             if (tricky != NULL)
             {
-                if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+                if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
                 {
                     (*(void (**)(int*, int*, int, int))(**(int**)((char*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
                 }
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
         }
         break;
