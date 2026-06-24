@@ -4967,6 +4967,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     int mode;
     int prevIndex;
     int keyIndex;
+    ObjCurveKey* key;
     ObjCurveKey* prev;
     f32 values[4];
     f32 span;
@@ -5036,13 +5037,14 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     keyIndex = index;
     if (index < count)
     {
-        values[1] = keys[keyIndex].value;
+        key = &keys[keyIndex];
+        values[1] = key->value;
         if (mode == 0)
         {
             index++;
             if (index < count)
             {
-                deltaPrev = keys[keyIndex + 1].value - values[1];
+                deltaPrev = key[1].value - values[1];
             }
             else
             {
