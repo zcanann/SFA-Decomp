@@ -2436,7 +2436,7 @@ void ObjHits_Update(int objectCount)
                 if (((objState->flags &
                         (OBJHITS_PRIORITY_STATE_ENABLED |
                             OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE)) != 0) &&
-                    (objState->shapeFlags != 8) && (slotCount < 400))
+                    (objState->shapeFlags != 8) && (slotCount < OBJHITS_SWEEP_ENTRY_CAPACITY))
                 {
                     *entrySlot = nextEntry;
                     (*entrySlot)->obj = obj;
