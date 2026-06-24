@@ -2617,10 +2617,10 @@ void drawFn_8005cf8c(int verts, u8* indices, int count)
     int i, j;
 
     GXClearVtxDesc();
-    GXSetVtxDesc(0, 1);
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXBegin(0x90, 0, count * 3 & 0xffff);
     for (i = 0; i < count; i++)
     {
