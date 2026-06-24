@@ -1205,8 +1205,8 @@ int mapProcessRomList(int slot)
     int j;
     char* obj;
     int i;
-    u8 flag;
     char* cur;
+    u8 flag;
     int count;
     char* p;
     char* entry;
