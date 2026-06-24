@@ -990,8 +990,8 @@ typedef struct
 void babycloudrunner_update(int* obj)
 {
     char* player;
-    BabyCloudRunnerState* sub;
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
     int found;
     u8* def2;
     int* near;
@@ -1000,7 +1000,6 @@ void babycloudrunner_update(int* obj)
     RunnerTarget tgt;
     int mode;
     f32 radius;
-    sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     getTrickyObject();
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
