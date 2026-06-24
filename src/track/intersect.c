@@ -48,8 +48,8 @@ extern Mtx lbl_80396850;
 extern f32 lbl_803DFB10;
 extern f32 sqrtf(f32 x);
 
-extern u8 gDepthReadResults[0xF0];
-extern u8 gDepthReadPendingQueue[0xF0];
+extern DepthReadRequest gDepthReadResults[0x14];
+extern DepthReadRequest gDepthReadPendingQueue[0x14];
 extern GXColor lbl_803DB6D0;
 extern GXColor lbl_803DB6D4;
 extern GXColor lbl_803DB6D8;
@@ -588,18 +588,17 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         if (y < 6) y = 6;
         n = gDepthReadPendingCount;
         if (n < 0x14) {
-            ((DepthReadRequest*)(int)&gDepthReadPendingQueue)[n].x = x;
-            p = &((DepthReadRequest*)(int)&gDepthReadPendingQueue)[n];
-            p->y = y;
-            p->key = requestKey;
+            gDepthReadPendingQueue[n].x = x;
+            gDepthReadPendingQueue[n].y = y;
+            gDepthReadPendingQueue[n].key = requestKey;
             gDepthReadPendingCount++;
         }
         i = 0;
-        p = (DepthReadRequest*)&gDepthReadResults;
+        p = gDepthReadResults;
         n = gDepthReadResultCount;
         for (; (u32)i < n; i++) {
             if (requestKey == p->key) {
-                return ((DepthReadRequest*)&gDepthReadResults)[i].value;
+                return gDepthReadResults[i].value;
             }
             p++;
         }
