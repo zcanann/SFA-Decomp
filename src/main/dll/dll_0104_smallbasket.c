@@ -821,7 +821,7 @@ void smallbasket_update(int obj)
         ((CfperchState*)state)->respawnTimer = 800;
         ((CfperchState*)state)->disableTimer = 1;
         ((CfperchState*)state)->throwState = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         fn_801816F8(obj, player, state);
         zf = lbl_803E3938;
         ((GameObject*)obj)->anim.velocityX = zf;
@@ -851,7 +851,7 @@ void smallbasket_update(int obj)
                 ((CfperchState*)state)->disableTimer = 0;
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             }
         }
@@ -921,11 +921,11 @@ void smallbasket_update(int obj)
                     ObjHits_EnableObject(obj);
                     if ((((CfperchState*)state)->disguiseGated != 0) && (playerIsDisguised(player) == 0))
                     {
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                     }
                     else
                     {
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
                     }
                 }
                 ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -935,7 +935,7 @@ void smallbasket_update(int obj)
             else
             {
                 ObjHits_DisableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 if ((playerGetStateFlag310(player) & 0x4000) != 0)
                 {
                     setAButtonIcon(5);
@@ -992,7 +992,7 @@ void smallbasket_update(int obj)
                         ((GameObject*)obj)->anim.velocityY = zf;
                         ((GameObject*)obj)->anim.velocityZ = zf;
                         ObjHits_EnableObject(obj);
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                         ObjHits_ClearHitVolumes(obj);
                     }
                     else
@@ -1011,7 +1011,7 @@ void smallbasket_update(int obj)
                         vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                         ((CfperchState*)state)->carryAttached = 0;
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                     }
                 }
                 if (*(s8*)&((CfperchState*)state)->carryAttached != 0)
@@ -1054,7 +1054,7 @@ void smallbasket_update(int obj)
                 Sfx_PlayFromObject(obj, (u16)((CfperchState*)state)->sfxId);
                 ((CfperchState*)state)->disableTimer = 0x32;
                 ((CfperchState*)state)->throwState = 0;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 fn_801816F8(obj, player, state);
                 zf = lbl_803E3938;
                 ((GameObject*)obj)->anim.velocityX = zf;
@@ -1070,7 +1070,7 @@ void smallbasket_update(int obj)
                 ((CfperchState*)state)->throwState = 0;
                 ((GameObject*)obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_ClearHitVolumes(obj);
             }
         }
@@ -1087,7 +1087,7 @@ void smallbasket_update(int obj)
                 ((CfperchState*)state)->throwState = 0;
                 ((GameObject*)obj)->unkF8 = 0;
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_ClearHitVolumes(obj);
             }
         }
