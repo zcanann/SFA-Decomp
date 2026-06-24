@@ -14206,8 +14206,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             if ((void*)gPlayerHeldObject == NULL)
             {
-                int* mdl = (int*)Obj_GetActiveModel(obj);
-                int m = *mdl;
+                int m = *(int*)Obj_GetActiveModel(obj);
                 int i;
                 for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
                 {
@@ -14247,21 +14246,21 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x10) = py;
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x20) = pz;
                 *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x14) = pz;
-                if (*(s16**)&((GameObject*)obj)->anim.parent == NULL)
-                {
-                    *(s16*)*(int*)((char*)in2 + 0x7f8) = *(s16*)((char*)in2 + 0x478);
-                }
-                else
+                if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
                 {
                     *(s16*)*(int*)((char*)in2 + 0x7f8) =
                         **(s16**)&((GameObject*)obj)->anim.parent + ((GameObject*)obj)->anim.rotX;
+                }
+                else
+                {
+                    *(s16*)*(int*)((char*)in2 + 0x7f8) = *(s16*)((char*)in2 + 0x478);
                 }
                 (*(void (*)(int, int, int, int, int, int))*(int*)(
                     *(int*)(*(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x68)) + 0x10))(
                     *(int*)((char*)in2 + 0x7f8), 0, 0, 0, 0, -1);
             }
         }
-        if (lbl_803E7EA4 < ((PlayerState*)inner)->knockbackTimer ||
+        if (((PlayerState*)inner)->knockbackTimer > lbl_803E7EA4 ||
             (((PlayerState*)inner)->pendingFxFlags & 2) != 0)
         {
             tbl[0] = lbl_803E7E68;
