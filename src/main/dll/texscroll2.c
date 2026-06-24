@@ -177,7 +177,7 @@ int kaldachom_stateHandlerA00(int obj, int statePtr)
         kaldachompme_setLinkedMouthMode((u8*)obj, 1);
         ((GroundBaddieState*)statePtr)->baddie.physicsActive = 1;
         GameBit_Set(state->gameBitB, 1);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((GameObject*)obj)->anim.alpha = 0xff;
         ((GroundBaddieState*)statePtr)->baddie.unk34D = 1;
         ((GroundBaddieState*)statePtr)->baddie.moveSpeed =
