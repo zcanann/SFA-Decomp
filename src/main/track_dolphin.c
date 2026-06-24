@@ -1438,8 +1438,8 @@ extern void memcpy(void* dst, void* src, int n);
 void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
-    int segCount;
     int seg;
+    int segCount;
     u8* sp;
     int li;
     int prev;
@@ -1460,11 +1460,11 @@ void intersectModLineBuild(int* obj)
         line[3] = sp[0xf];
         if ((*(s8*)(line + 3) & 0x3f) == 0x11)
         {
-            *(s8*)(line + 3) = *(s8*)(line + 3) & ~0x3f;
-            *(s8*)(line + 3) = *(s8*)(line + 3) | 2;
+            *(s8*)(line + 3) &= ~0x3f;
+            *(s8*)(line + 3) |= 2;
         }
         line[2] = sp[0xe];
-        *(s8*)(line + 2) = *(s8*)(line + 2) ^ 0x10;
+        *(s8*)(line + 2) ^= 0x10;
         *(s16*)(line + 0xc) = *(s16*)(sp + 0x10);
         for (i = 0; i < 2; i++)
         {
