@@ -2567,7 +2567,7 @@ void gxTextureFn_80052efc(void)
         base += 0x1c;
     }
     GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, gRcpScreenWidth,
-                  gRcpScreenHeight, LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
+                  gRcpScreenHeight, LastCommandWasRead_803DEB60, lbl_803DEB5C);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     GXSetDispCopySrc(0, 0, 0x280, 0x1e0);
     GXSetDispCopyDst(0x280, 0x1e0);
