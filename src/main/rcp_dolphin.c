@@ -32,6 +32,10 @@
 #define GX_DIRECT 1
 #define GX_TRIANGLESTRIP 0x98
 #define GX_VTXFMT4 4
+#define GX_COLOR0 0
+#define GX_COLOR0A0 4
+#define GX_COLOR1A1 5
+#define GX_TEVREG0 1
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1117,7 +1121,7 @@ void gxTextureFn_80052638(int* param)
     int color;
     GXSetTevDirect(lbl_803DCD90);
     color = param[0];
-    GXSetTevColor(1, &color);
+    GXSetTevColor(GX_TEVREG0, &color);
     gxTextureFn_8004bf88(param, 1, 0, &sel, &v1);
     GXSetTevKColorSel(lbl_803DCD90, sel);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
@@ -2513,8 +2517,8 @@ void gxTextureFn_80052efc(void)
     mtx[3] = lbl_803DEB74;
     mtx[7] = lbl_803DEB74;
     GXLoadTexMtxImm(mtx, 0x1e, 1);
-    GXSetChanAmbColor(4, *(GXColor8*)&gRcpDistortAmbColor);
-    GXSetChanAmbColor(5, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
@@ -2578,7 +2582,7 @@ void gxTextureFn_80052efc(void)
             }
             modelLightChannels_applyGXControls();
             lightGetColor(0, &c2.r, &c2.g, &c2.b);
-            GXSetChanAmbColor(0, c2);
+            GXSetChanAmbColor(GX_COLOR0, c2);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
             GXCopyTex(*(u8**)base + 0x60, (i == sel) ? 1 : 0);
             tex = *(u8**)base;
