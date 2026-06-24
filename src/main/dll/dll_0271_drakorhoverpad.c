@@ -97,15 +97,15 @@ typedef struct DrakorHoverpadHandlePathPointEventState
     f32 verticalVel;
     f32 unk114;
     u8 pad118[0x154 - 0x118];
-    f32 unk154;
-    f32 unk158;
-    f32 unk15C;
-    f32 unk160;
-    f32 unk164;
-    f32 unk168;
+    f32 particleEmitAX; /* 0x154 */
+    f32 particleEmitAY; /* 0x158 */
+    f32 particleEmitAZ; /* 0x15c */
+    f32 particleEmitBX; /* 0x160 */
+    f32 particleEmitBY; /* 0x164 */
+    f32 particleEmitBZ; /* 0x168 */
     u8 pad16C[0x174 - 0x16C];
-    s16 unk174;
-    s16 unk176;
+    s16 anglePhase;  /* 0x174 */
+    s16 frameCounter; /* 0x176 */
 } DrakorHoverpadHandlePathPointEventState;
 
 typedef struct DrakorHoverpadState
@@ -119,12 +119,12 @@ typedef struct DrakorHoverpadState
     f32 unk11C;
     f32 unk120;
     u8 pad124[0x30];
-    f32 unk154;
-    f32 unk158;
-    f32 unk15C;
-    f32 unk160;
-    f32 particleEmitY;
-    f32 unk168;
+    f32 particleEmitAX; /* 0x154 */
+    f32 particleEmitAY; /* 0x158 */
+    f32 particleEmitAZ; /* 0x15c */
+    f32 particleEmitBX; /* 0x160 */
+    f32 particleEmitBY; /* 0x164 */
+    f32 particleEmitBZ; /* 0x168 */
     u8 pad16C[4];
     int unk170;
     s16 anglePhase;
