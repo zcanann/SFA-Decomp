@@ -236,7 +236,7 @@ int Carryable_updateHeld(u8* obj)
     else
     {
         ObjHits_MarkObjectPositionDirty(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & 0x100) != 0)
         {
             if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || fn_80295BF0(player) == 0)
