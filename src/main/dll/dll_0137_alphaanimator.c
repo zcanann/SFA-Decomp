@@ -60,6 +60,12 @@ STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
+/* AlphaanimatorPlacement.modeFlags & 3 - alpha-fade mode */
+#define ALPHAANIM_MODE_ONESHOT 0   /* ramp to target once, set completeBit, stop */
+#define ALPHAANIM_MODE_PINGPONG 1  /* bounce between startAlpha and targetAlpha */
+#define ALPHAANIM_MODE_GATED 2     /* direction follows live gate bit; sfx on gate flip */
+#define ALPHAANIM_MODE_TIMED 3     /* timeDelta float fade (fadeA/fadeMax) */
+
 void alphaanimator_free(int* obj)
 {
     AlphaAnimatorState* o = (AlphaAnimatorState*)(int*)((GameObject*)obj)->extra;
@@ -151,7 +157,7 @@ void alphaanimator_update(int* obj)
             s->fadeA = lbl_803E3F78 + s->fadeMax;
             s->gateVal = 1;
         }
-        if (mode == 3)
+        if (mode == ALPHAANIM_MODE_TIMED)
         {
             *(int*)&s->buf = (int)mmAlloc(s->vertCount << 2, 5, 0);
         }
@@ -162,7 +168,7 @@ void alphaanimator_update(int* obj)
     {
         return;
     }
-    if (mode == 2)
+    if (mode == ALPHAANIM_MODE_GATED)
     {
         s->gateVal = GameBit_Get(((AlphaanimatorPlacement*)d)->gateBit);
         if ((s8)s->doneCount > 2 &&
@@ -201,7 +207,7 @@ void alphaanimator_update(int* obj)
     }
     switch (mode)
     {
-    case 0:
+    case ALPHAANIM_MODE_ONESHOT:
         if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
@@ -231,7 +237,7 @@ void alphaanimator_update(int* obj)
             }
         }
         break;
-    case 1:
+    case ALPHAANIM_MODE_PINGPONG:
         if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
@@ -255,7 +261,7 @@ void alphaanimator_update(int* obj)
             }
         }
         break;
-    case 2:
+    case ALPHAANIM_MODE_GATED:
         if ((s8)s->gateVal != 0)
         {
             if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
@@ -323,7 +329,7 @@ void alphaanimator_update(int* obj)
             }
         }
         break;
-    case 3:
+    case ALPHAANIM_MODE_TIMED:
     {
         int rate = (s8)((AlphaanimatorPlacement*)d)->rate;
         if (rate < 0)
