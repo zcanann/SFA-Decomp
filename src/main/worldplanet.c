@@ -10,6 +10,9 @@
 #include "main/worldplanet.h"
 #include "main/pad.h"
 #include "sfa_light_decls.h"
+
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
@@ -498,7 +501,7 @@ void worldplanet_update(int obj)
                 {
                     if (gWorldPlanetSelectConfirmTimer == 0 &&
                         (state->unlockedPlanetMask & (1 << state->selectedPlanet)) != 0 &&
-                        (buttons & 0x100) != 0)
+                        (buttons & PAD_BUTTON_A) != 0)
                     {
                         gWorldPlanetSelectConfirmTimer = 10;
                         mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
@@ -537,7 +540,7 @@ void worldplanet_update(int obj)
                         lbl_803DDD00 = lbl_803E6618;
                     }
                 }
-                if ((buttons & 0x200) != 0)
+                if ((buttons & PAD_BUTTON_B) != 0)
                 {
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, 0x99);
@@ -550,7 +553,7 @@ void worldplanet_update(int obj)
                     mapUnload(gWorldPlanetLoadedMapId, 0x20000000);
                     gWorldPlanetInputLockTimer = 10;
                 }
-                else if ((buttons & 0x100) != 0)
+                else if ((buttons & PAD_BUTTON_A) != 0)
                 {
                     (*gScreenTransitionInterface)->start(4, 1);
                     streamFn_8000a380(3, 1, 0);
