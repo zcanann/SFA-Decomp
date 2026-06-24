@@ -68,7 +68,7 @@ typedef struct HightopPlacement
     u8 padC3C[0xC40 - 0xC3C];
     u16 flagsC40;
     u8 padC42[0xC4B - 0xC42];
-    u8 unkC4B;
+    u8 substate;
     u8 padC4C[0xC50 - 0xC4C];
 } HightopPlacement;
 
@@ -108,13 +108,13 @@ typedef struct HighTopRuntime
     u8 padC46[3];
     BitFlags8 flagsC49;
     BitFlags8 flagsC4A;
-    u8 unkC4B;
+    u8 substate; /* (s8) per-handler behavior substate dispatched via switch */
 } HighTopRuntime;
 
 STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
 STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
 STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
-STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
+STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 
 typedef struct HighTopObject
 {
@@ -281,14 +281,14 @@ int hightop_stateHandler05(int obj, u8* state)
     if ((s8)((BaddieState*)state)->moveJustStartedA != 0)
     {
         p->flagsC49.b1 = 0;
-        p->unkC4B = 0xa;
+        p->substate = 0xa;
     }
-    switch ((s8)p->unkC4B)
+    switch ((s8)p->substate)
     {
     case 1:
         if (GameBit_Get(0x62c) != 0)
         {
-            p->unkC4B = 2;
+            p->substate = 2;
         }
         break;
     case 0xa:
@@ -309,7 +309,7 @@ int hightop_interactionCallback(int obj)
     p->flags &= ~1;
     p->flagsC49.b4 = 0;
     p->flagsC49.b6 = 1;
-    if ((s8)p->unkC4B == 0)
+    if ((s8)p->substate == 0)
     {
         p->flagsC4A.b0 = 1;
     }
@@ -442,7 +442,7 @@ void hightop_init(void* obj, u8* arg)
     ((GameObject*)obj)->animEventCallback = hightop_interactionCallback;
     runtime->unkC45 = arg[0x19];
     runtime->turnRateThreshold = 5;
-    *(s8*)&runtime->unkC4B = -1;
+    *(s8*)&runtime->substate = -1;
     node = *(int**)&((GameObject*)obj)->anim.modelState;
     if (node != 0)
     {
@@ -789,7 +789,7 @@ int hightop_stateHandler07(int obj, int p)
         (*gGameUIInterface)->airMeterSetShutdown();
         rt->flagsC49.b7 = 0;
         rt->flagsC49.b1 = 0;
-        rt->unkC4B = 5;
+        rt->substate = 5;
         ((BaddieState*)p)->moveSpeed = lbl_803E6AAC;
         rt->flags &= ~1;
         ObjGroup_RemoveObject(obj, 10);
@@ -819,7 +819,7 @@ int hightop_stateHandler04(int obj, int p)
     {
         state->flagsC49.b1 = 1;
         state->stateTimer = (f32)(int)randomGetRange(0x1f4, 0x3e8);
-        state->unkC4B = 0;
+        state->substate = 0;
         if (((GameObject*)obj)->anim.currentMove != 2)
         {
             move = 2;
@@ -836,7 +836,7 @@ int hightop_stateHandler04(int obj, int p)
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
-        *(s8*)&state->unkC4B = -1;
+        *(s8*)&state->substate = -1;
         state->flagsC40 |= 0x40;
         state->flagsC40 |= 0x20;
         state->flagsC49.b1 = 0;
@@ -1066,11 +1066,11 @@ int hightop_stateHandler09(int obj, int p)
     {
         if (state->flagsC4A.b0 == 0)
         {
-            state->unkC4B = 0;
+            state->substate = 0;
         }
         else
         {
-            state->unkC4B = 9;
+            state->substate = 9;
         }
         state->flags &= ~1;
         state->flagsC49.b1 = 0;
@@ -1142,11 +1142,11 @@ int hightop_stateHandler09(int obj, int p)
         GameBit_Set(0xaf7, 0);
         if (randFn_80080100(5 - total) != 0)
         {
-            state->unkC4B = 2;
+            state->substate = 2;
         }
         else
         {
-            state->unkC4B = 9;
+            state->substate = 9;
         }
         objModelClearVecFn_8003aa40(obj);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0);
@@ -1169,7 +1169,7 @@ int hightop_stateHandler09(int obj, int p)
     {
         if (timerCountDown((char*)state + 0xc2c) != 0)
         {
-            *(s8*)&state->unkC4B = -1;
+            *(s8*)&state->substate = -1;
             (*gObjectTriggerInterface)->runSequence(gHighTopIdleSequenceIds[state->idleSeqIndex], (void*)obj, -1);
         }
     }
@@ -1207,23 +1207,23 @@ int hightop_stateHandler10(int obj, int p)
     int i;
     if ((s8)((BaddieState*)p)->moveJustStartedA != 0)
     {
-        rt->unkC4B = 3;
+        rt->substate = 3;
         *(int*)((char*)p + 0) |= 0x1000000;
     }
     if (GameBit_Get(0x1c3) != 0)
     {
         if ((int)GameBit_Get(0xee) == 2)
         {
-            rt->unkC4B = 7;
+            rt->substate = 7;
         }
         else
         {
-            rt->unkC4B = 9;
+            rt->substate = 9;
         }
     }
     else
     {
-        rt->unkC4B = 3;
+        rt->substate = 3;
     }
     if (Vec_distance((f32*)((char*)Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX) > lbl_803E6AA4)
     {
