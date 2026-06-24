@@ -58,6 +58,12 @@ typedef struct Dim2lavacontrolState
     f32 unk24;
 } Dim2lavacontrolState;
 
+typedef enum Dim2lavacontrolPhase
+{
+    DIM2LAVACONTROL_PHASE_WAIT = 0,      /* waits for its unlock game bit */
+    DIM2LAVACONTROL_PHASE_TRIGGERED = 1, /* unlock bit set; control latched */
+} Dim2lavacontrolPhase;
+
 #pragma scheduling on
 #pragma peephole on
 extern f32 lbl_803E4B90;
@@ -134,7 +140,7 @@ void dim2lavacontrol_init(int obj, int param2)
     }
     ((Dim2lavacontrolState*)state)->flags = (s8)(*(u8*)&((Dim2lavacontrolState*)state)->flags | g);
     ((Dim2lavacontrolState*)state)->musicTrack = 0xd7;
-    ((Dim2lavacontrolState*)state)->phase = 0;
+    ((Dim2lavacontrolState*)state)->phase = DIM2LAVACONTROL_PHASE_WAIT;
     if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
     {
         *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
@@ -178,14 +184,14 @@ void dim2lavacontrol_update(int obj)
     obj = *(int*)&((GameObject*)obj)->extra;
     switch (((Dim2lavacontrolState*)obj)->phase)
     {
-    case 0:
+    case DIM2LAVACONTROL_PHASE_WAIT:
         if (GameBit_Get(0xacd) != 0)
         {
             GameBit_Set(0xcc3, 1);
-            ((Dim2lavacontrolState*)obj)->phase = 1;
+            ((Dim2lavacontrolState*)obj)->phase = DIM2LAVACONTROL_PHASE_TRIGGERED;
         }
         break;
-    case 1:
+    case DIM2LAVACONTROL_PHASE_TRIGGERED:
         break;
     }
     diff = ((Dim2lavacontrolState*)obj)->sfxLevel - lbl_803DBF28[((Dim2lavacontrolState*)obj)->countdown];
