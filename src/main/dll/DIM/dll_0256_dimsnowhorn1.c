@@ -804,7 +804,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
     if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & 0x100) != 0)
     {
-        if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & 0x4) == 0)
+        if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             return 0xc;
         }
