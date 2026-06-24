@@ -130,7 +130,7 @@ void dll_1FF_update(int obj)
     if (state->grabPhase == 0)
     {
         grab = 0;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject*)obj)->unkF8 == 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
             state->msgLo = grab;
             state->msgHi = 0x28;
@@ -146,7 +146,7 @@ void dll_1FF_update(int obj)
         {
             ObjHits_EnableObject(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~
-                8);
+                INTERACT_FLAG_DISABLED);
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject*)obj)->anim.velocityY);
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
                 anim.localPosY;
@@ -181,7 +181,7 @@ void dll_1FF_update(int obj)
     else
     {
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         if ((getButtonsJustPressed(0) & DLL1FF_BUTTON_ACTION) != 0)
         {
             state->sendFlag = 0;
