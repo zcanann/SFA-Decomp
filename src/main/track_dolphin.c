@@ -46,6 +46,9 @@
 #define GX_BL_INVSRCALPHA 5
 #define GX_LO_NOOP 5
 #define GX_FOG_NONE 0
+#define GX_VA_POS 9
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
 
 typedef struct TrackP6Entry
 {
@@ -3620,8 +3623,8 @@ void objDrawFn_80061654(int obj, int placementObj)
             PSMTXConcat(viewMtx, mtx, outMtx);
             GXLoadPosMtxImm(outMtx, 0x1b);
             GXClearVtxDesc();
-            GXSetVtxDesc(9, 1);
-            GXSetVtxDesc(0xd, 1);
+            GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+            GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
             GXSetNumTexGens(1);
             GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x7d);
             kColorCopy = kColor;
@@ -3780,7 +3783,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     void* viewMtx;
 
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     col[0] = 0;
     col[1] = 0;
     col[2] = 0;
@@ -3989,8 +3992,8 @@ void renderGlows(void)
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
