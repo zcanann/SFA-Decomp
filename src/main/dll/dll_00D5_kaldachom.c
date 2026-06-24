@@ -413,7 +413,7 @@ void kaldachom_update(int obj)
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.
-                resetHitboxMode | 8;
+                resetHitboxMode | INTERACT_FLAG_DISABLED;
         }
     }
     else
@@ -499,7 +499,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
     ((GameObject*)obj)->anim.currentMoveProgress = lbl_803E307C;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     (*(VtableFn*)(*gPlayerInterface + 0x14))(obj, state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
