@@ -3722,8 +3722,8 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
             if (*(u32*)&((ModelFileHeader*)m)->unk34 != 0)
             {
                 GXSetVtxDesc(1, 1);
-                GXSetVtxDesc(2, 1);
                 next = 3;
+                GXSetVtxDesc(2, 1);
             }
             GXSetVtxDesc(next++, 1);
         }
