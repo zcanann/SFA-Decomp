@@ -16790,14 +16790,15 @@ void fn_802ADE80(int obj, int inner, int state)
     }
     ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
     {
+        f32 dt = timeDelta;
         f32 cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 a = -waterZ * sinv - waterX * cosv;
         ((PlayerState*)inner)->waterCurrentVelB =
-            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB)) +
+            dt * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB)) +
             ((PlayerState*)inner)->waterCurrentVelB;
         ((PlayerState*)inner)->waterCurrentVelA =
-            timeDelta * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA)) +
+            dt * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA)) +
             ((PlayerState*)inner)->waterCurrentVelA;
     }
     playEffect = 0;
