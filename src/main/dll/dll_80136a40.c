@@ -1236,6 +1236,7 @@ void fn_80137DF8(void)
     u32 r, rr;
     int rp;
     int rows;
+    u16 fill;
 
     sp = NULL;
     depth = 0;
@@ -1356,12 +1357,13 @@ void fn_80137DF8(void)
                 rows = y + 0x4c;
                 h = rows * 0x280;
                 h2 = (y + 0x4b) * 0x280;
+                fill = 0xc080;
                 if (rows > 0)
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        debugDrawFrameBuffer[h] = 0xc080;
-                        debugDrawFrameBuffer[h2] = 0xc080;
+                        debugDrawFrameBuffer[h] = fill;
+                        debugDrawFrameBuffer[h2] = fill;
                         h++;
                         h2++;
                     }
@@ -1370,7 +1372,7 @@ void fn_80137DF8(void)
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        debugDrawFrameBuffer[h] = 0xc080;
+                        debugDrawFrameBuffer[h] = fill;
                         h++;
                     }
                 }
