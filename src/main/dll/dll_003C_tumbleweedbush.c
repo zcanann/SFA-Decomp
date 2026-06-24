@@ -25,6 +25,9 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
+
+#define LINK_ITEM_SLOTS 25          /* per-item icon-strip slot capacity */
+
 extern u8 linkFlag_803dd8f8;        /* whether navigation input is accepted */
 extern u8 linkIsRotated;            /* swap analog axes (rotated layout) */
 extern s16 linkItemOpacity;
@@ -88,7 +91,7 @@ typedef struct LinkMenuItemDB
     u8 field1A;
     u8 pad1B[3];
     s8 state;
-    s8 slots[25];
+    s8 slots[LINK_ITEM_SLOTS];
     s8 field38;
     u8 pad39[3];
 } LinkMenuItemDB;
@@ -124,7 +127,7 @@ void linkInitTextures(LinkMenuItemDB* item)
     int i;
 
     budget = item->field14;
-    for (i = 0; i < 25; i++)
+    for (i = 0; i < LINK_ITEM_SLOTS; i++)
     {
         item->slots[i] = -1;
     }
@@ -149,7 +152,7 @@ void linkInitTextures(LinkMenuItemDB* item)
         i++;
     }
     item->slots[i++] = 1;
-    if (i >= 25)
+    if (i >= LINK_ITEM_SLOTS)
     {
         OSReport(sTumbleweedBushSlotOverflowErr);
     }
@@ -253,7 +256,7 @@ typedef struct LinkMenuItemDA
     u8 field1A;
     u8 pad1B[3];
     s8 state;
-    s8 slots[25];
+    s8 slots[LINK_ITEM_SLOTS];
     s8 timer;
     u8 pad39[3];
 } LinkMenuItemDA;
@@ -312,7 +315,7 @@ void Link_render(void)
                     slotIndex = 0;
                     x = drawItem->x;
                     y = drawItem->y;
-                    while (drawItem->slots[slotIndex] != -1 && slotIndex < 25)
+                    while (drawItem->slots[slotIndex] != -1 && slotIndex < LINK_ITEM_SLOTS)
                     {
                         textureIndex = drawItem->slots[slotIndex];
                         drawTexture(((LinkTextureSlot*)linkTextures)[textureIndex].texture, x, y, 0xff, 0x100);
@@ -451,7 +454,7 @@ typedef struct LinkMenuItem
     s8 leftLink;
     s8 rightLink;
     s8 state;
-    s8 slots[25];
+    s8 slots[LINK_ITEM_SLOTS];
     s8 timer;
     u8 pad39[3];
 } LinkMenuItem;
