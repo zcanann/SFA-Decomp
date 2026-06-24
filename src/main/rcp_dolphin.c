@@ -1054,6 +1054,7 @@ typedef struct F32Pair
 } F32Pair;
 
 extern F32Pair LastReadIssued_803DEB58;
+extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
 #pragma dont_inline on
 #pragma opt_common_subs off
@@ -1063,14 +1064,14 @@ void gxFn_80052dc0(void)
     f32 pmtx[3][4];
     GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60,
                   sDvdfsCurrentDirEntry, sDvdfsCurrentDirEntry,
-                  LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
+                  LastCommandWasRead_803DEB60, lbl_803DEB5C);
     GXSetScissor(0, 0, 32, 32);
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
     GXSetTexCopySrc(0, 0, 32, 32);
-    C_MTXOrtho(omtx, LastReadIssued_803DEB58.hi, lbl_803DEB7C,
-               LastReadIssued_803DEB58.hi, lbl_803DEB7C,
-               LastReadIssued_803DEB58.hi, LastReadIssued_803DEB58.lo);
+    C_MTXOrtho(omtx, lbl_803DEB5C, lbl_803DEB7C,
+               lbl_803DEB5C, lbl_803DEB7C,
+               lbl_803DEB5C, LastReadIssued_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(0, 1, 0, 5);
     gxSetZMode_(0, 2, 0);
