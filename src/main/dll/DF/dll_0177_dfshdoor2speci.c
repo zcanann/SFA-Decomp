@@ -26,6 +26,13 @@ typedef struct DFDoorSpeciExtra
     u8 pad04[2];
 } DFDoorSpeciExtra;
 
+typedef enum DFSHDoor2SpeciState
+{
+    DFSH_DOOR2SPECI_STATE_WAIT_FOR_GAMEBIT = 0,
+    DFSH_DOOR2SPECI_STATE_FADE_IN = 1,
+    DFSH_DOOR2SPECI_STATE_PULSE = 2,
+} DFSHDoor2SpeciState;
+
 extern float mathCosf(float x);
 extern f32 lbl_803E4E30;
 extern f32 lbl_803E4E34;
@@ -46,13 +53,13 @@ int DFSH_Door2Speci_SeqFn(int obj)
     objDef = *(int*)&((GameObject*)obj)->anim.placementData;
     switch (extra->state)
     {
-    case 0:
+    case DFSH_DOOR2SPECI_STATE_WAIT_FOR_GAMEBIT:
         if (GameBit_Get(((DFSHDoor2SpeciPlacement*)objDef)->gameBit) != 0)
         {
-            extra->state = 1;
+            extra->state = DFSH_DOOR2SPECI_STATE_FADE_IN;
         }
         break;
-    case 1:
+    case DFSH_DOOR2SPECI_STATE_FADE_IN:
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
@@ -60,12 +67,12 @@ int DFSH_Door2Speci_SeqFn(int obj)
             if (alpha > 0x100)
             {
                 alpha = 0x100;
-                extra->state = 2;
+                extra->state = DFSH_DOOR2SPECI_STATE_PULSE;
             }
             texture->textureId = alpha;
         }
         break;
-    case 2:
+    case DFSH_DOOR2SPECI_STATE_PULSE:
     default:
         texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
