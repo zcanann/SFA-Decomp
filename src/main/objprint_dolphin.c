@@ -11,6 +11,8 @@
 #include "main/dll/FRONT/n_options.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#define GX_TEVSTAGE0 0
+#define GX_TEV_SWAP0 0
 
 typedef struct ObjPrintGXColor
 {
@@ -4198,7 +4200,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     GXSetTevDirect(0);
     GXSetTevColorIn(0, 0xf, 0xf, 0xf, 6);
     GXSetTevAlphaIn(0, 7, 7, 7, 3);
-    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor*)&lbl_803DB468);
@@ -4603,7 +4605,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetTevDirect(0);
         GXSetTevColorIn(0, 0xf, 0xf, 0xf, 6);
         GXSetTevAlphaIn(0, 7, 7, 7, 3);
-        GXSetTevSwapMode(0, 0, 0);
+        GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(0, 0, 0, 0, 1, 0);
         GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
         GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor*)&lbl_803DB468);
