@@ -170,8 +170,8 @@ int dim2prisonmammoth_stateHandler02(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     }
     ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         buttonDisable(0, 0x100);
@@ -199,7 +199,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
         }
         ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
     }
-    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         GameBit_Set(0x223, 1);
         buttonDisable(0, 0x100);
@@ -267,7 +267,7 @@ void dim2prisonmammoth_update(int obj)
     } v;
     f32 matrix[16];
     int inner = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
         ((Dim2prisonmammothState*)inner)->hitReactState = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
