@@ -94,7 +94,7 @@ typedef struct DrakorHoverpadHandlePathPointEventState
     f32 unkE0;
     f32 unkE4;
     u8 padE8[0x110 - 0xE8];
-    f32 unk110;
+    f32 verticalVel;
     f32 unk114;
     u8 pad118[0x154 - 0x118];
     f32 unk154;
@@ -664,19 +664,19 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
     {
     case 1:
         player = (int)Obj_GetPlayerObject();
-        ((DrakorHoverpadHandlePathPointEventState*)p)->unk110 = lbl_803E6A78 * -((
-            DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+        ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel = lbl_803E6A78 * -((
+            DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
         *(f32*)p = lbl_803E6A3C;
         if (((GameObject*)player)->anim.parent == (void*)obj)
         {
             Camera_EnableViewYOffset();
-            if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+            if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
             {
-                m = ((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             else
             {
-                m = -((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             CameraShake_SetAllMagnitudes(m);
         }
@@ -686,7 +686,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         {
             break;
         }
-        if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 <= lbl_803E6A3C)
+        if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel <= lbl_803E6A3C)
         {
             break;
         }
@@ -695,25 +695,25 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
             break;
         }
         player = (int)Obj_GetPlayerObject();
-        ((DrakorHoverpadHandlePathPointEventState*)p)->unk110 = lbl_803E6A78 * -((
-            DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+        ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel = lbl_803E6A78 * -((
+            DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
         *(f32*)p = lbl_803E6A3C;
         if (((GameObject*)player)->anim.parent == (void*)obj)
         {
             Camera_EnableViewYOffset();
-            if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+            if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
             {
-                m = ((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             else
             {
-                m = -((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             }
             CameraShake_SetAllMagnitudes(m);
         }
         return 1;
     case 4:
-        if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 <= lbl_803E6A3C)
+        if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel <= lbl_803E6A3C)
         {
             break;
         }
@@ -734,7 +734,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         }
         break;
     case 9:
-        if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+        if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
         {
             break;
         }
@@ -821,19 +821,19 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         if (*(f32*)p >= lbl_803E6A3C)
         {
             player = (int)Obj_GetPlayerObject();
-            ((DrakorHoverpadHandlePathPointEventState*)p)->unk110 = lbl_803E6A78 * -((
-                DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+            ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel = lbl_803E6A78 * -((
+                DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             *(f32*)p = lbl_803E6A3C;
             if (((GameObject*)player)->anim.parent == (void*)obj)
             {
                 Camera_EnableViewYOffset();
-                if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+                if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
                 {
-                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 else
                 {
-                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 CameraShake_SetAllMagnitudes(m);
             }
@@ -847,19 +847,19 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void* out)
         if (*(f32*)p <= lbl_803E6A3C)
         {
             player = (int)Obj_GetPlayerObject();
-            ((DrakorHoverpadHandlePathPointEventState*)p)->unk110 = lbl_803E6A78 * -((
-                DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+            ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel = lbl_803E6A78 * -((
+                DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
             *(f32*)p = lbl_803E6A3C;
             if (((GameObject*)player)->anim.parent == (void*)obj)
             {
                 Camera_EnableViewYOffset();
-                if (((DrakorHoverpadHandlePathPointEventState*)p)->unk110 >= lbl_803E6A3C)
+                if (((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel >= lbl_803E6A3C)
                 {
-                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                    m = ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 else
                 {
-                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->unk110;
+                    m = -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
                 }
                 CameraShake_SetAllMagnitudes(m);
             }
