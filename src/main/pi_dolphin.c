@@ -7853,10 +7853,10 @@ void videoInit(void)
     VIWaitForRetrace();
     VIWaitForRetrace();
     GXClearVtxDesc();
-    GXSetVtxDesc(0, 1);
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxAttrFmt(0, 9, 1, 3, 0);
     GXSetVtxAttrFmt(0, 0xb, 1, 5, 0);
     GXSetVtxAttrFmt(0, 0xd, 1, 3, 7);
