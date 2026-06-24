@@ -1587,6 +1587,9 @@ void drawWorldMapHud(void)
 }
 #pragma dont_inline reset
 
+/* Number of best-time entries in the race-times list (bits[6]). */
+#define GAMEUI_TIME_LIST_COUNT 6
+
 /* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
 void timeListDraw(void)
@@ -1636,7 +1639,7 @@ void timeListDraw(void)
         u16* p;
         int k = 0;
         p = bits;
-        for (; k < 6; k++)
+        for (; k < GAMEUI_TIME_LIST_COUNT; k++)
         {
             int v = GameBit_Get(*p);
             int mins;
