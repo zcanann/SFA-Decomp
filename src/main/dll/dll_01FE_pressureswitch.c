@@ -169,6 +169,7 @@ void pressureswitch_update(int obj)
     extern f32 lbl_803E5D6C;
     extern f32 gPressureSwitchRiseSpeed;
     extern f32 gPressureSwitchPressSpeed;
+    int off;
     PressureswitchPlacement* t;
     GameObject* self;
     PressureSwitchState* sub;
@@ -179,7 +180,6 @@ void pressureswitch_update(int obj)
     GameObject* tricky;
     int ac;
     int v;
-    int off;
     s8 played;
     f32 cur;
     f32 lim;
