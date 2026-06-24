@@ -670,18 +670,18 @@ void smallbasket_render(int obj, int p2, int p3, int p4,
         *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14));
     if (result == 0)
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
     else
     {
         field_a = *(short*)(extra + 0xa);
         if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->hiddenTimer != 0)
         {
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         else if (((GameObject*)obj)->unkF8 != 0 && visible != -1)
         {
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         else
         {
