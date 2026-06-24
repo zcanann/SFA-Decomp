@@ -2,6 +2,11 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "sfa_light_decls.h"
+
+#ifndef SYNTH_VOICE_STRIDE
+#define SYNTH_VOICE_STRIDE 0x404
+#endif
+
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
 extern u8* synthVoice;
@@ -452,12 +457,12 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
                 voice->outputFlags |= 0x20000LL;
-                vidRemoveVoice((McmdVoiceState*)(synthVoice + i * 0x404));
+                vidRemoveVoice((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE));
                 if (result == 0xffffffff)
                 {
                     voice->voiceNextHandle = 0xffffffff;
                     voice->voicePrevHandle = 0xffffffff;
-                    result = vidMakeNew((McmdVoiceState*)(synthVoice + i * 0x404), voiceGroup);
+                    result = vidMakeNew((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE), voiceGroup);
                     previousId = voice->voiceHandle;
                 }
                 else
@@ -465,7 +470,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                     ((McmdVoiceState*)synthVoice)[previousId & 0xff].voiceNextHandle = voice->voiceHandle;
                     voice->voicePrevHandle = previousId;
                     previousId = voice->voiceHandle;
-                    vidMakeNew((McmdVoiceState*)(synthVoice + i * 0x404), 0);
+                    vidMakeNew((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE), 0);
                 }
             }
         }
