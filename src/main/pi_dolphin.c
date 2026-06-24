@@ -4139,7 +4139,7 @@ void gxPerfFn_8004a77c(int enabled)
 {
     if ((u8)enabled != 0)
     {
-        GXSetGPMetric(0x23, 0x16);
+        GXSetGPMetric(GX_PERF0_NONE, GX_PERF1_NONE);
         GXWGFifo.u8 = 0x61;
         GXWGFifo.u32 = 0x2402c004;
         GXWGFifo.u8 = 0x61;
@@ -5189,7 +5189,7 @@ void textureFn_8004c330(void* p1, void* mtx)
     {
         GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
     }
-    GXSetIndTexMtx(1, m.v, (s8)lbl_803DB5F4);
+    GXSetIndTexMtx(GX_ITM_0, m.v, (s8)lbl_803DB5F4);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 7, 1, 0, 0, 0, 0, 3);
     gxTextureFn_8004bf88(&lbl_803DB5F8, 1, 0, &out_c, &out_8);
@@ -5481,9 +5481,9 @@ void fn_8004DA54(char* p1)
     GXLoadTexMtxImm(mtxf4, 0x40, 0);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x40);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
-    GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, m1.v, -2);
-    GXSetIndTexMtx(2, m2.v, -2);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
+    GXSetIndTexMtx(GX_ITM_0, m1.v, -2);
+    GXSetIndTexMtx(GX_ITM_1, m2.v, -2);
     GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     PSMTXScale(mtxc4, lbl_803DEB0C, *(f32*)&lbl_803DEB0C, lbl_803DEAC8);
     PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
@@ -5494,7 +5494,7 @@ void fn_8004DA54(char* p1)
     GXLoadTexMtxImm(mtxc4, 0x43, 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_TEX0, 0x3c, GX_FALSE, 0x43);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
-    GXSetIndTexCoordScale(1, 0, 0);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
     ((u8*)&lbl_803DB5EC)[1] = 0;
@@ -5646,7 +5646,7 @@ void fn_8004E0FC(void)
         }
     }
     newshadows_getReflectionScrollOffsets(&rx, &ry);
-    GXSetIndTexMtx(2, im.v, -1);
+    GXSetIndTexMtx(GX_ITM_1, im.v, -1);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
     m188[0][0] = lbl_803DEB20;
     m188[0][1] = lbl_803DEACC;
@@ -5793,7 +5793,7 @@ void renderHeavyFog(int* fogColorPtr)
         newshadows_getReflectionScrollOffsets(&a, &b);
         b = b * lbl_803DEAE0;
         a = a * lbl_803DEB08;
-        GXSetIndTexMtx(2, im.v, -2);
+        GXSetIndTexMtx(GX_ITM_1, im.v, -2);
         GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 1, lbl_803DCD8C + 1);
         m9c[0][0] = lbl_803DCD34;
         m9c[0][1] = lbl_803DEACC;
@@ -6113,7 +6113,7 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     {
         return 0;
     }
-    GXSetIndTexMtx(1, indmtx.m, 0);
+    GXSetIndTexMtx(GX_ITM_0, indmtx.m, 0);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
     if (p4 != 0)
     {
@@ -6196,7 +6196,7 @@ void fn_8004D6D8(void)
         GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C + 1);
     }
     GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
-    GXSetIndTexMtx(2, indmtx.m, -3);
+    GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
     getTextureFn_8006c5e4(&tex);
     id = lbl_803DCD8C + 1;
@@ -6887,7 +6887,7 @@ void fn_8004CE0C(void* viewMtx)
     GXLoadTexMtxImm(mtx70, 0x21, 1);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, 0x21, GX_FALSE, 0x7d);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
-    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_1_2);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
