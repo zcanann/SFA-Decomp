@@ -578,7 +578,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         }
         cameraMtxVar57->avoidanceYawOffset = cameraMtxVar57->avoidanceYawOffset * lbl_803E16C4;
         if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) &&
-            (lbl_803E16CC < cameraMtxVar57->avoidanceYawOffset))
+            (cameraMtxVar57->avoidanceYawOffset > lbl_803E16CC))
         {
             cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
         }
