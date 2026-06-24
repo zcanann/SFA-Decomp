@@ -317,7 +317,6 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         {
             int b8;
             int b9;
-            void** slot;
             bestSlot = -1;
             bestVal = -1;
             for (i = 0; i < 6; i++)
@@ -330,14 +329,13 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             }
             b8 = block->f8;
             b9 = block->f9;
-            slot = &vm->mapBuffer[bestSlot];
-            if (*slot != NULL)
+            if (vm->mapBuffer[bestSlot] != NULL)
             {
                 int saved = mmSetFreeDelay(0);
-                mm_free(*slot);
+                mm_free(vm->mapBuffer[bestSlot]);
                 mmSetFreeDelay(saved);
             }
-            *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
+            vm->mapBuffer[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
             *(s16*)&vm->slotOrigin[bestSlot].gridX = vm->blockOriginGridX;
