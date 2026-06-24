@@ -8,6 +8,7 @@
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
+#define GX_FOG_NONE 0
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -248,7 +249,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         _gxSetFogParams();
         goto LAB_8005E630;
     }
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
+    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
 LAB_8005E630:
     if ((*(u32*)(shader + 0x3c) & 1) == 0)
     {
@@ -855,7 +856,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         _gxSetFogParams();
         goto LAB_8005F608;
     }
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
+    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
 LAB_8005F608:
     if ((shader != 0) && ((*(u32*)(shader + 0x3c) & 0x80000000) != 0))
     {
