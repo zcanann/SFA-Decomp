@@ -2550,7 +2550,8 @@ void renderShadows(void)
     f32 vA[3], v30[3];
     f32 dot24[3], proj[3];
     int blkArr, blkCount;
-    int r22, r23, r24;
+    s8 r22;
+    int r23, r24;
     char* casterPtr;
     f32 dirX, dirY, dirZ, f22, f21, f23, vAy;
     f32 *vAp1, *vAp2, *mc54p;
