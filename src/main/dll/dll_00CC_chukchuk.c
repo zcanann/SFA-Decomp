@@ -257,7 +257,7 @@ void chukchuk_update(short* obj)
             if (v->hitsLeft < 1)
             {
                 ObjHits_DisableObject(obj);
-                ((GameObject*)obj)->anim.flags |= 0x4000;
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 v->flags |= CHUKCHUK_FLAG_DEAD;
                 Sfx_PlayFromObject(obj, SFXkr_impact3);
                 GameBit_Set(v->gameBit, 1);
