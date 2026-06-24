@@ -157,8 +157,8 @@ void fn_80198DE8(u8* obj, int seqArg)
     f32 localPos[3];
     s8 triggerState;
 
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
+    data = *(u8**)&((GameObject*)obj)->anim.placementData;
 
     planeBase = ((MmpMoonrockState*)state)->homeX;
     normalZ = ((MmpMoonrockState*)state)->respawnTimer;
