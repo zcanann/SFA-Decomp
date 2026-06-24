@@ -502,7 +502,7 @@ void babycloudrunner_init(int* obj, u8* def)
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
     {
         ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 3);
@@ -1004,7 +1004,7 @@ void babycloudrunner_update(int* obj)
     getTrickyObject();
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
     {
-        ((GameObject*)obj)->anim.flags |= 0x4000;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 0x20);
@@ -1026,12 +1026,12 @@ void babycloudrunner_update(int* obj)
                 GameBit_Set(*(s16*)(def + 0x22), 1);
             }
             ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= 0x4000;
+            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList(obj);
             ObjGroup_RemoveObject(obj, 0x20);
             ObjGroup_RemoveObject(obj, 3);
-            ((GameObject*)obj)->anim.flags |= 0x4000;
+            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else
         {
