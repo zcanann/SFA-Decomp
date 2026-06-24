@@ -657,8 +657,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     f32 matrix[16];
 
     pointCount = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
-    radiusOffset = 0;
-    collision->localPointHitMask = radiusOffset;
+    collision->localPointHitMask = radiusOffset = 0;
     pointIndex = 0;
     while (pointIndex < pointCount)
     {
@@ -746,7 +745,7 @@ buildTransform:
         targetRow[71] = targetRow[59];
         localPoint = (f32*)((u8*)collision->localPointPositions + localOffset);
         Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2], &tempX,
-                              &((f32*)collision)[pointIndex + 70], &tempZ);
+                              &collision->localPointTarget[0][pointIndex + 1], &tempZ);
         localOffset += 0xc;
         targetRow += 3;
     }
