@@ -189,11 +189,11 @@ void cclightfoot_update(int obj)
     fallback = 0;
     if (tbl->stateFlags[*((u8*)state + 0x10)] & 1)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
     o1 = state[2];
     if (o1 != 0)
