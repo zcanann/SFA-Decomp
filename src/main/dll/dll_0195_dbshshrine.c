@@ -97,14 +97,14 @@ int fn_801C8EBC(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 lockLevel(mapGetDirIdx(10), 0);
                 break;
             case 0xe:
-                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
                 }
                 break;
             case 0xf:
-                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~0x4000);
+                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
