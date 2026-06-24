@@ -709,6 +709,7 @@ extern f32 lbl_803DEBCC;
 extern f32 retraceCount;
 extern f32 flushFlag;
 extern f32 retraceQueue;
+extern f32 lbl_803DEBEC;
 extern f32 PreCB;
 extern char gViewFrustumPlanes[];
 
@@ -1921,7 +1922,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     else
     {
-        y0 = (&retraceQueue)[1];
+        y0 = lbl_803DEBEC;
         y1 = PreCB;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
