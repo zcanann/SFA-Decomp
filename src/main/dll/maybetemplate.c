@@ -24,6 +24,9 @@
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+
+#define GCMENU_ITEM_ICON_COUNT 7
+
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
 
@@ -97,7 +100,7 @@ extern void fn_8005D118(int a, int b, int c, int d, int e);
 extern int gCMenuItemCount;
 extern s16 gCMenuSelIndex;
 extern s8 gCMenuCurSection;
-extern u8 gCMenuItemIcons[7];
+extern u8 gCMenuItemIcons[GCMENU_ITEM_ICON_COUNT];
 extern u8 lbl_803DD8D4;
 extern int hudYButtonItemIconTexture;
 extern s16 yButtonItemTextureId;
@@ -907,7 +910,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         }
         fade = cMenuFadeCounter;
         iconPtr = gCMenuItemIcons;
-        for (i = 0; i < 7; i++)
+        for (i = 0; i < GCMENU_ITEM_ICON_COUNT; i++)
         {
             ((int*)(base + 0xBD4))[i] = 0;
             iconPtr[i] = 0;
