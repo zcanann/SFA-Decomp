@@ -1211,10 +1211,10 @@ void fn_802AA4B0(int obj, int state, f32 unused)
 
 void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
 {
+    int any = 0;
     PlayerState* inner = ((GameObject*)player)->extra;
     f32 sumC;
     f32 sumS;
-    int any = 0;
     int* objs;
     int n;
     int i;
