@@ -791,9 +791,9 @@ void fn_801DFA28(u8* obj)
                 DBPROT_CLOUD_SET_A(0);
                 DBPROT_CLOUD_SET_B(0);
                 CLOUD_ACTION_SET(lbl_803E56CC, lbl_803E5760);
-                if (((SBGalleonState*)state)->unk80 == 0)
+                if (((SBGalleonState*)state)->musicLatch == 0)
                 {
-                    ((SBGalleonState*)state)->unk80 = 1;
+                    ((SBGalleonState*)state)->musicLatch = 1;
                 }
                 ((SBGalleonState*)state)->cameraState = 1;
                 ((GameObject*)obj)->anim.localPosX = *(f32*)(spawnData + 0x8);

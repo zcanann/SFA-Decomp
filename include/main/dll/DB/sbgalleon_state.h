@@ -59,7 +59,9 @@ typedef struct SBGalleonState {
     u8 unk7B;        /* 0x7b */
     s8 phaseCounter;        /* 0x7c */
     u8 pad7D[3];
-    u8 unk80;        /* 0x80 */
+    u8 musicLatch;   /* 0x80: one-shot latch armed when the boss cutscene/music
+                        is entered (cameraState>0 or the victory fade completes);
+                        cleared on free so the music gate fires once per fight */
     u8 shieldSfxLatch;/* 0x81 */
     s16 headingLatch;/* 0x82 */
     u8 unk84;        /* 0x84 */

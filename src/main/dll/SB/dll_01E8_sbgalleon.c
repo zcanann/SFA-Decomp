@@ -500,9 +500,9 @@ void SB_Galleon_update(GameObject* obj)
     }
     else
     {
-        if ((state->unk80 == 0) && ((s8)state->cameraState > 0))
+        if ((state->musicLatch == 0) && ((s8)state->cameraState > 0))
         {
-            state->unk80 = 1;
+            state->musicLatch = 1;
         }
         switch ((s8)state->cameraState)
         {
@@ -582,9 +582,9 @@ void SB_Galleon_free(GameObject* obj, int p2)
         gSbGalleonSkyTexB = 0;
     }
     ObjGroup_RemoveObject((u32)obj, 3);
-    if (state->unk80 != 0 && p2 == 0)
+    if (state->musicLatch != 0 && p2 == 0)
     {
-        state->unk80 = 0;
+        state->musicLatch = 0;
     }
     gSbGalleon = 0;
     Music_Trigger(state->musicIdB, 0);
