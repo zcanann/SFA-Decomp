@@ -1775,11 +1775,11 @@ extern s32 bEnableColorFilter;
 void sceneDraw(void)
 {
     char* q;
+    int i;
     u8* cursor;
     int* player;
     u8 flag;
     int t;
-    int i;
     GXColor8 c;
     f32 skyA;
     f32 skyB;
