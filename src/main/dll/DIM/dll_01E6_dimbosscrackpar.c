@@ -56,8 +56,8 @@ void dimbosscrackpar_update(int* obj)
     if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->triggerGameBit) != 0u)
     {
         (*gPartfxInterface)->spawnObject(
-            obj, ((DimbosscrackparPlacement*)side)->particleIndex + 1222, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
+            obj, ((DimbosscrackparPlacement*)side)->particleIndex + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
     }
 }
 
