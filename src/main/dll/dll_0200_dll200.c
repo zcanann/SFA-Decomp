@@ -28,6 +28,10 @@ typedef struct IntVec3
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
+/* Dll200State.mode high bit: set while an ObjHitReact reaction is playing,
+ * which suspends the normal map-act scripted update for that tick. */
+#define DLL200_MODE_HITREACTING 0x80
+
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void fn_80296474(int player, int a, int b);
 extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
@@ -299,15 +303,15 @@ void dll_200_update(int obj)
 
     b = ((GameObject*)obj)->extra;
     ret = ObjHitReact_Update(obj, gArwingAttachmentHitReactTable, 11,
-                             (u8)((b->mode & 0x80) ? 1 : 0),
+                             (u8)((b->mode & DLL200_MODE_HITREACTING) ? 1 : 0),
                              &b->hitReactVec);
     if (ret != 0)
     {
-        b->mode = (u8)(b->mode | 0x80);
+        b->mode = (u8)(b->mode | DLL200_MODE_HITREACTING);
     }
     else
     {
-        b->mode = (u8)(b->mode & ~0x80);
+        b->mode = (u8)(b->mode & ~DLL200_MODE_HITREACTING);
         ev = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
         switch (ev)
         {
