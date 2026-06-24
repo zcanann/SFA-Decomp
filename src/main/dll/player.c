@@ -897,9 +897,8 @@ int fn_802A36EC(int obj, int state)
             inner->unk604 = (s16)r;
             ObjAnim_SetCurrentMove(obj, lbl_80332EF0[gPlayerCurrentMoveId], lbl_803E7EA4, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
-            inner->yaw =
+            inner->targetYaw = inner->yaw =
                 (s16)getAngle(inner->unk5C4, inner->unk5CC);
-            inner->targetYaw = inner->yaw;
             Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                            ((GameObject*)obj)->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                            (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
