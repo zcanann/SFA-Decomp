@@ -91,16 +91,16 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 {
     extern u32 mapBlockFn_80060678(int* block); /* #57 */
     extern void* mapBlockFn_800606ec(int* obj, int idx); /* #57 */
+    int edgeOffset;
+    int coordOffset;
+    int triangleOffset;
+    int blockIndex;
+    int triangle;
     int blockEnd;
     u16* mapBlock;
     int blockLayer;
-    int coordOffset;
-    int triangleOffset;
     int edge;
-    int edgeOffset;
     VertexS16* vtx;
-    int triangle;
-    int blockIndex;
 
     triangleOffset = 0;
     coordOffset = 0;
