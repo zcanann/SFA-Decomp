@@ -286,7 +286,7 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #define DFSH_REWARD_BIT(idx) (base[(idx)])
 #define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx) (base[20 + (idx)])
+#define DFSH_REQUIRED_BIT(idx) (((u16 *)((u8 *)base + 40))[(idx)])
 #define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
 
 typedef struct DfshShrineFlagsBits
