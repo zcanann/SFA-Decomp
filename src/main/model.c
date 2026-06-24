@@ -1215,6 +1215,12 @@ void setGQR6_2(int a, int b, int c, int d)
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
+/* Per-bone delta-transform opcode bits: a set bit means the X/Y/Z
+   component is present (as an s16) in the stream, else it is 0. */
+#define MODEL_BONEXFORM_HAS_X 0x2000
+#define MODEL_BONEXFORM_HAS_Y 0x4000
+#define MODEL_BONEXFORM_HAS_Z 0x8000
+
 #pragma peephole on
 #pragma dont_inline on
 static u8* modelBoneTransforms_next(u8* p, int* outX, int* outY, int* outZ)
@@ -1224,19 +1230,19 @@ static u8* modelBoneTransforms_next(u8* p, int* outX, int* outY, int* outZ)
     flags = *(u16*)p;
     p += 2;
     *outX = 0;
-    if (flags & 0x2000)
+    if (flags & MODEL_BONEXFORM_HAS_X)
     {
         *outX = *(s16*)p;
         p += 2;
     }
     *outY = 0;
-    if (flags & 0x4000)
+    if (flags & MODEL_BONEXFORM_HAS_Y)
     {
         *outY = *(s16*)p;
         p += 2;
     }
     *outZ = 0;
-    if (flags & 0x8000)
+    if (flags & MODEL_BONEXFORM_HAS_Z)
     {
         *outZ = *(s16*)p;
         p += 2;
