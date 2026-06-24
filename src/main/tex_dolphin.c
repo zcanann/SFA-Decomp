@@ -261,7 +261,7 @@ LAB_8005E630:
             }
         }
     }
-    GXSetChanAmbColor(0, *(GXColor*)&gTexLightmapAmbColor);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexLightmapAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
@@ -272,7 +272,7 @@ LAB_8005E630:
 LAB_8005E6D0:
     objGetColor(0, &colB, &colG, &colR);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(0, *(GXColor*)&colB);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&colB);
 LAB_8005E718:
     return shader;
 }
@@ -933,7 +933,7 @@ LAB_8005F7FC:
             }
         }
     }
-    GXSetChanAmbColor(0, *(GXColor*)&gTexShaderAmbColor);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
     if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
@@ -944,7 +944,7 @@ LAB_8005F7FC:
 LAB_8005F89C:
     objGetColor(0, &ambR, &ambG, &ambB);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(0, *(GXColor*)&ambR);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambR);
 LAB_8005F8E4:
     if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
     {
