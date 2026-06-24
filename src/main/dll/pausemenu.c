@@ -674,18 +674,19 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
             }
         }
         {
-            for (j = 0; j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
+            u16 jj;
+            for (jj = 0; (s32)(u16)jj < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); jj++)
             {
                 s32 v = *(int*)lbl_803A9364;
                 s32 tex;
                 f32 fyj;
-                if ((s32)(u16)j < (v >> 2)
+                if ((s32)(u16)jj < (v >> 2)
                 )
                 {
                     tex = 0x16;
                 }
                 else
-                if ((s32)(u16)j > (v >> 2)
+                if ((s32)(u16)jj > (v >> 2)
                 )
                 {
                     tex = 0x12;
@@ -695,7 +696,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
                     tex = (v & 3) + 0x12;
                 }
                 fyj = lbl_803E1FAC * (f32)(u32)(u16)
-                j + lbl_803E1F30;
+                jj + lbl_803E1F30;
                 for (i8 = 0x14; i8 >= 0; i8 -= 4)
                 {
                     s16 px = (s16)((0xff - i8) - lbl_803DD75C);
