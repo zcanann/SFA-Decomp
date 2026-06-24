@@ -509,7 +509,7 @@ void fn_80151C68(int obj, u8* state)
             playerAddMoney(player, -25);
             GameBit_Set(*(s16*)(setup + 0x1c), 1);
             *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[2];
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             hudFn_8011f38c(2);
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         }
