@@ -80,10 +80,10 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
     f32 outX[21];
     f32 outY[21];
     f32 outZ[21];
+    int i;
     f32* px = NULL;
     f32* py = NULL;
     f32* pz = NULL;
-    int i;
     f32 dx, dy, dz, sq;
     f32 zero;
 
