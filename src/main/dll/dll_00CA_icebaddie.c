@@ -307,7 +307,7 @@ int iceBaddie_stateHandlerB02(int obj, int state)
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
         ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
@@ -406,7 +406,7 @@ int iceBaddie_stateHandlerA0B(int obj, int state)
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, 2, lbl_803E2D14, 0);
@@ -654,7 +654,7 @@ int iceBaddie_updateSpinState(int obj, int state)
     ((IceBaddieControl*)control)->effectFlags |= 0xc;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         sub->targetState = 4;
     }
     ((GameObject*)obj)->anim.rotX = (s16)(lbl_803E2D5C *
@@ -720,7 +720,7 @@ int iceBaddie_updateHideResetState(int obj, int state)
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
         ((GroundBaddieState*)state)->baddie.hasTarget = 0;
         sub->targetState = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     return 0;
 }
@@ -1458,7 +1458,7 @@ void iceBaddie_update(int obj, int p2, int p3)
             ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
             *(s8*)&sub->baddie.moveDone = 0;
             ((GameObject*)obj)->anim.alpha = 0xff;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
     else if (((GameObject*)obj)->unkF8 == 0)
@@ -1526,7 +1526,7 @@ void iceBaddie_init(int obj, u8* params, int flags)
         *(s16*)&sub->aggroRange = 0x6e;
     }
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
