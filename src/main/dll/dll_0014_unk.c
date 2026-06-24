@@ -1336,48 +1336,64 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 
 static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 {
-    int candidates[4];
     int neighbor;
-    int count = 0;
-    u32 mask = 1;
+    int count;
+    u32 mask;
     int i;
-    for (i = 0; i < 4; i++)
+    int result;
+    int candidates[4];
+
+    count = 0;
+    mask = 1;
+    for (i = 0; i < 4; i = i + 1)
     {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != -1)
+        neighbor = ((RomCurveDef*)curve)->linkIds[i];
+        if ((-1 < neighbor) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) == 0) && (neighbor != -1))
         {
             candidates[count++] = neighbor;
         }
-        mask <<= 1;
+        mask = mask << 1;
     }
     if (count != 0)
     {
-        return candidates[randomGetRange(0, count - 1)];
+        result = candidates[randomGetRange(0, count - 1)];
     }
-    return -1;
+    else
+    {
+        result = -1;
+    }
+    return result;
 }
 
 static inline int RomCurve_pickRandomControlPointId_2B(int curve)
 {
-    int candidates[4];
     int neighbor;
-    int count = 0;
-    u32 mask = 1;
+    int count;
+    u32 mask;
     int i;
-    for (i = 0; i < 4; i++)
+    int result;
+    int candidates[4];
+
+    count = 0;
+    mask = 1;
+    for (i = 0; i < 4; i = i + 1)
     {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != -1)
+        neighbor = ((RomCurveDef*)curve)->linkIds[i];
+        if ((-1 < neighbor) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) != 0) && (neighbor != -1))
         {
             candidates[count++] = neighbor;
         }
-        mask <<= 1;
+        mask = mask << 1;
     }
     if (count != 0)
     {
-        return candidates[randomGetRange(0, count - 1)];
+        result = candidates[randomGetRange(0, count - 1)];
     }
-    return -1;
+    else
+    {
+        result = -1;
+    }
+    return result;
 }
 
 #pragma scheduling off
@@ -1753,9 +1769,9 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
         curveId = nextId;
     }
 
-    *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
-    currentCurve = *(s32*)&state->nodeA0;
-    if (state->nodeA0 == NULL)
+    currentCurve = Objfsa_FindRomCurveById(curveId);
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (currentCurve == 0)
     {
         state->nodeA0 = NULL;
         return 1;
