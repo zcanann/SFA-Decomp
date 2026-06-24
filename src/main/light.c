@@ -364,14 +364,14 @@ void spellStoneUseFn_801fd270(int obj)
     }
     if ((s16)GameBit_Get(state->completeGameBit) != 0 || state->used != 0) return;
     if (cond == 0) return;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
         if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
         {
             GameBit_Set(state->completeGameBit, 1);
             state->used = 1;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
 }
@@ -1091,6 +1091,6 @@ void dll_224_init(void* obj, void* other)
     ((GameObject*)obj)->anim.rotX = v;
     *(extra + 0) = *(s16*)((char*)other + 0x1e);
     *(s16*)((char*)extra + 2) = *(s16*)((char*)other + 0x20);
-    t = (*&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+    t = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
 }
