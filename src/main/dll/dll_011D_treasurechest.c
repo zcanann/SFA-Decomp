@@ -141,7 +141,7 @@ void treasurechest_update(int obj)
     nearestDist = lbl_803E3C28;
     if (flags->trigger != 0 && flags->open != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3C2C, 0);
     }
     if (flags->open == 0)
