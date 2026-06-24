@@ -1997,11 +1997,11 @@ void lightFn_80052974(f32 a, f32 b)
         w = LastReadIssued_803DEB58.lo;
         half = LastReadIssued_803DEB58.hi;
         scale = LastReadFinished_803DEB50.hi;
-        z = lbl_803DEB64;
         for (i = 0; i < 0x10; i++)
         {
             GXBegin(0x98, 4, 0x22);
             fa = scale * (f32)i;
+            z = lbl_803DEB64;
             fb = scale * (f32)(i + 1);
             x0 = fa / w - half;
             x1 = fb / w - half;
