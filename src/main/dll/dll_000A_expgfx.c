@@ -2661,17 +2661,17 @@ void expgfx_free(u32 sourceId)
 void expgfx_resetAllPools(void)
 {
     ExpgfxStaticDataLayout* staticData;
-    ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxSlot* slot;
-    ExpgfxResourceEntry* resourceEntry;
-    ExpgfxTableEntry* tableEntry;
-    u16* refCountPtr;
     u32* slotPoolBases;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
     s16* poolSlotTypeIds;
     u32* poolSourceIds;
     u8* poolFrameFlags;
+    ExpgfxRuntimeDataLayout* runtime;
+    ExpgfxSlot* slot;
+    ExpgfxResourceEntry* resourceEntry;
+    ExpgfxTableEntry* tableEntry;
+    u16* refCountPtr;
     u32 activeBit;
     u32 inactiveBitMask;
     int tableIndex;
