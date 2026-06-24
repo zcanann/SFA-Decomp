@@ -2474,15 +2474,15 @@ void gxTextureFn_80052efc(void)
     GXColor8 c2;
     GXColor8 c;
     int count;
+    u8* e;
     int i;
+    u8* base;
     int sel;
     int k;
     int n;
     int model;
-    u8* e;
     u8* tex;
     int* lp;
-    u8* base;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2494,7 +2494,8 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopyDst(0x20, 0x20, 6, 0);
     modelTextureFn_80089970(2);
     i = 0;
-    e = base = gRcpDistortSlots;
+    base = gRcpDistortSlots;
+    e = base;
     for (; i < 6; i++)
     {
         tex = *(u8**)e;
