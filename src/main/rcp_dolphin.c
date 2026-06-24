@@ -2093,9 +2093,9 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     modelLightStruct_loadChannelLight(3, lb, model);
     modelLightChannels_applyGXControls();
-    modelLightStruct_setAngularAttenuation(la, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60,
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, LastCommandWasRead_803DEB60,
                                            LastCommandWasRead_803DEB60);
-    modelLightStruct_setAngularAttenuation(lb, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60,
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, LastCommandWasRead_803DEB60,
                                            LastCommandWasRead_803DEB60);
     return 0;
 }
