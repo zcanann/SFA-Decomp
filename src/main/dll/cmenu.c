@@ -25,6 +25,11 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 #include "dolphin/gx/GXTransform.h"
+
+/* Number of slots in the parallel cMenu item arrays at lbl_803A87F0
+   (ids/words/state/flags/textures); matches the s16 saved[64] snapshot. */
+#define CMENU_ITEM_SLOT_COUNT 64
+
 extern int FUN_8001792c();
 extern u32 FUN_80051fc4();
 extern u32 FUN_80052778();
@@ -144,7 +149,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     s16* idsW2;
     void** texW;
     void** texP2;
-    s16 saved[64];
+    s16 saved[CMENU_ITEM_SLOT_COUNT];
 
     items = itemsIn;
     base = lbl_803A87F0;
@@ -156,7 +161,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     w3 = stP;
     flP = base + 0x448;
     w4 = flP;
-    for (i = 0; i < 64; i++)
+    for (i = 0; i < CMENU_ITEM_SLOT_COUNT; i++)
     {
         *w2 = *w1;
         *w1 = -1;
@@ -320,7 +325,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
         texW++;
         i++;
     }
-    while (i < 0x40);
+    while (i < CMENU_ITEM_SLOT_COUNT);
     if (getLoadedFileFlags(0) == 0)
     {
         i = 0;
@@ -334,7 +339,7 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
             texP2++;
             i++;
         }
-        while (i < 0x40);
+        while (i < CMENU_ITEM_SLOT_COUNT);
     }
     return count;
 }
