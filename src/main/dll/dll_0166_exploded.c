@@ -16,6 +16,11 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/engine_shared.h"
+
+/* ExplodedObjectState.explodePhase */
+#define EXPLODED_PHASE_IDLE 0   /* settled; no physics */
+#define EXPLODED_PHASE_ACTIVE 1 /* debris physics stepping until settled */
+#define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
 extern u64 FUN_80017698();
 extern u32 FUN_80041ff8();
 extern u32 FUN_80042b9c();
@@ -119,15 +124,15 @@ void exploded_update(int* obj)
     int flag;
     switch (stateVal)
     {
-    case 0:
+    case EXPLODED_PHASE_IDLE:
         break;
-    case 1:
+    case EXPLODED_PHASE_ACTIVE:
         if (exploded_stepDebrisPhysics(o, state) != 0)
         {
-            state->explodePhase = 0;
+            state->explodePhase = EXPLODED_PHASE_IDLE;
         }
         break;
-    case 2:
+    case EXPLODED_PHASE_EXPIRED:
         break;
     }
     if (state->durationFrames != -1)
@@ -157,7 +162,7 @@ void exploded_update(int* obj)
 check:
     if (flag != 0)
     {
-        state->explodePhase = 2;
+        state->explodePhase = EXPLODED_PHASE_EXPIRED;
     }
 }
 
@@ -192,11 +197,11 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
         data->accelerationY != 0 ||
         data->accelerationZ != 0)
     {
-        state->explodePhase = 1;
+        state->explodePhase = EXPLODED_PHASE_ACTIVE;
     }
     else
     {
-        state->explodePhase = 0;
+        state->explodePhase = EXPLODED_PHASE_IDLE;
     }
 }
 
