@@ -234,7 +234,7 @@ void curvefish_update(int obj)
         state->moveStepScale = (lbl_803E3914 * state->speed) / state->maxSpeed;
     }
 
-    if (state->speed != lbl_803E38F0)
+    if (lbl_803E38F0 != state->speed)
     {
         distLimit = state->speed * timeDelta;
         distLimit *= distLimit;
