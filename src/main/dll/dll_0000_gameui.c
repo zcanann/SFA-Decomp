@@ -212,7 +212,7 @@ extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
 extern char* fn_800E888C(u8 track, u8 row);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
-extern u8 gHighScoreTitleIdTable[];
+extern struct { u16 unk0; u16 titleId; } gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;
 extern f32 gHighScorePulseBias;
@@ -1660,14 +1660,13 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
-    s16 h, w, y, x;
     u8* box = gameTextGetBox(0x36);
+    s16 x, y, w, h;
     int pulse;
-    s16 ang = (s16)(gHighScorePulseAngle + gHighScorePulseAngleStep);
     char buf[0x20];
 
-    gHighScorePulseAngle = ang;
-    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)ang) + gHighScorePulseBias);
+    gHighScorePulseAngle = gHighScorePulseAngle + gHighScorePulseAngleStep;
+    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16) * (u16*)(box + 0xa);
     w = (s16) * (u16*)(box + 0x8);
     y = *(s16*)(box + 0x16);
@@ -1685,7 +1684,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
 
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     gameTextFn_80016810(0x345, 0, 0xa);
-    gameTextFn_80016810(*(u16*)(gHighScoreTitleIdTable + gHighScoreActiveTableId * 4 + 2), 0, 0x28);
+    gameTextFn_80016810(gHighScoreTitleIdTable[gHighScoreActiveTableId].titleId, 0, 0x28);
 
     {
         u8 k;
@@ -1694,7 +1693,6 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             char* e = fn_800E888C(gHighScoreActiveTableId, k);
             char* name = e + 4;
             u32 starred = *(u8*)(e + 3) & 1;
-            int rowMul, rowY;
             sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
             {
@@ -1704,17 +1702,15 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             {
                 gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             }
-            rowMul = k * 0x1e;
-            rowY = rowMul + 0x5a;
-            gameTextShowStr(name, 0x86, 0, rowY);
-            gameTextShowStr(buf, 0x87, 0, rowY);
+            gameTextShowStr(name, 0x86, 0, k * 0x1e + 0x5a);
+            gameTextShowStr(buf, 0x87, 0, k * 0x1e + 0x5a);
             if (starred != 0)
             {
                 u8* box2 = gameTextGetBox(0x87);
                 drawTexture(*(void**)(hudTextures + 0xf8),
                             (f32)(*(s16*)(box2 + 0x14) + 0x64),
-                            (f32)(*(s16*)(box2 + 0x16) + rowMul + 0x57), 0xff, 0x100);
-                gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, rowY);
+                            (f32)(*(s16*)(box2 + 0x16) + k * 0x1e + 0x57), 0xff, 0x100);
+                gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
             }
         }
     }
