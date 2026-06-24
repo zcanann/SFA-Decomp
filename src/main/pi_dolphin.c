@@ -7847,7 +7847,7 @@ void videoInit(void)
     displayFrameBuffer = externalFrameBuffer0;
     renderFrameBuffer = externalFrameBuffer1;
     VISetNextFrameBuffer(displayFrameBuffer);
-    GXSetDispCopyGamma(0);
+    GXSetDispCopyGamma(GX_GM_1_0);
     VISetBlack(1);
     VIFlush();
     VIWaitForRetrace();
