@@ -1,6 +1,7 @@
 #include "dolphin/os.h"
 #include "dolphin/pad.h"
 #include "dolphin/vi.h"
+#include "dolphin/dvd.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -1539,19 +1540,19 @@ void checkReset(void)
             gDvdLastDriveStatus = status;
             switch (status)
             {
-            case -1:
+            case DVD_STATE_FATAL_ERROR:
                 gDvdErrorPauseActive = 1;
                 break;
-            case 4:
+            case DVD_STATE_NO_DISK:
                 gDvdErrorPauseActive = 1;
                 break;
-            case 5:
+            case DVD_STATE_COVER_OPEN:
                 gDvdErrorPauseActive = 1;
                 break;
-            case 6:
+            case DVD_STATE_WRONG_DISK:
                 gDvdErrorPauseActive = 1;
                 break;
-            case 11:
+            case DVD_STATE_RETRY:
                 gDvdErrorPauseActive = 1;
                 break;
             }
