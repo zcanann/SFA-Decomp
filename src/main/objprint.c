@@ -1924,9 +1924,9 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     {
         return;
     }
-    if ((((GameObject*)obj)->anim.flags & 0x4000) != 0) return;
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
     sub = *(void**)&((GameObject*)obj)->anim.parent;
-    if (sub != NULL && (((GameObject*)sub)->anim.flags & 0x4000) != 0) return;
+    if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
 
     doNothing_beforeRenderObject(4);
     ((GameObject*)obj)->objectFlags |= 0x800;
