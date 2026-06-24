@@ -129,7 +129,7 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case PAYMENT_KIOSK_SEQEV_PAY:
             GameBit_Set(setup->gameBit, 1);
             playerAddMoney(player, -setup->price);
-            st->payState = 2;
+            st->payState = PAYMENT_KIOSK_STATE_PAID;
             break;
         case PAYMENT_KIOSK_SEQEV_SHOW_PROMPT:
             st->promptState = 1;
@@ -157,24 +157,24 @@ void paymentkiosk_update(int obj)
 
     switch (payState)
     {
-    case 0:
+    case PAYMENT_KIOSK_STATE_RESOLVE:
         if (setup->gameBit != -1 && GameBit_Get(setup->gameBit) != 0)
         {
-            st->payState = 2;
+            st->payState = PAYMENT_KIOSK_STATE_PAID;
         }
         else
         {
-            st->payState = 1;
+            st->payState = PAYMENT_KIOSK_STATE_ACTIVE;
         }
         break;
-    case 1:
+    case PAYMENT_KIOSK_STATE_ACTIVE:
         if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         break;
-    case 2:
+    case PAYMENT_KIOSK_STATE_PAID:
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         break;
     }
@@ -195,7 +195,7 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
 
     ((GameObject*)self)->animEventCallback = PaymentKiosk_SeqFn;
     *(short*)self = (short)((int)setup->facingByte << 8);
-    state->payState = 0;
+    state->payState = PAYMENT_KIOSK_STATE_RESOLVE;
     ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
     ((GameObject*)self)->anim.resetHitboxFlags =
         (u8)(((GameObject*)self)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);

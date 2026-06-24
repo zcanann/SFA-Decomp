@@ -31,4 +31,9 @@ STATIC_ASSERT(offsetof(PaymentKioskMapData, gameBit) == 0x1E);
 
 #define PAYMENT_KIOSK_WELL_TEXT_SEQ_ID 0x0476
 
+/* PaymentKioskState.payState */
+#define PAYMENT_KIOSK_STATE_RESOLVE 0 /* decide from gamebit: already paid -> PAID, else ACTIVE */
+#define PAYMENT_KIOSK_STATE_ACTIVE 1  /* interactable; run pay sequence on activation */
+#define PAYMENT_KIOSK_STATE_PAID 2    /* gamebit set; interaction disabled */
+
 #endif /* MAIN_DLL_PAYMENTKIOSK_H_ */
