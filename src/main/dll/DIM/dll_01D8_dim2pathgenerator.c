@@ -63,7 +63,7 @@ typedef struct Dim2pathgeneratorPlacement
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] (forced 0xff) */
     u8 pad8[0x14 - 0x8];
     s32 unk14;
-    s16 unk18;
+    s16 spawnPeriod; /* 0x18 */
     s16 unk1A;
     s16 unk1C;
     u16 spawnType0; /* 0x1E */

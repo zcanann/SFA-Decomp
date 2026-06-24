@@ -36,7 +36,7 @@ typedef struct DfpobjcreatorPlacement
     u8 pad18[0x19 - 0x18];
     u8 unk19;
     s16 behaviorMode; /* 0x1A switch selector (case 7 spawns the periodic object) */
-    s16 unk1C;
+    s16 spawnPeriod; /* 0x1C */
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
