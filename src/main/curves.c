@@ -404,8 +404,9 @@ f32 Curve_EvalLinear(f32 t, f32* values)
 
 f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
-    f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - values[3];
+    f32 p3 = values[3];
+    f32 a = p3 + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] + -values[0]));
+    f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - p3;
     f32 c = -values[0] + values[2];
     f32 d = lbl_803DE660 * values[1];
 
