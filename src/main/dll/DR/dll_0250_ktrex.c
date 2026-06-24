@@ -1468,7 +1468,7 @@ int ktrex_stateHandlerA07(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
         (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 6);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         ((KTRexArenaState*)gKTRexState)->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
         GameBit_Set(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
@@ -1579,7 +1579,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
             ((KTRexArenaState*)gKTRexState)->stateTimer =
                 (f32)(u32) * (u16*)(row + (((KTRexArenaState*)gKTRexState)->phaseCounter & ~1));
         }
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         goto ret0;
     }
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 8) == 0)
@@ -1601,7 +1601,7 @@ int ktrex_stateHandlerA08(int obj, int runtime)
     {
         return 2;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     return 10;
 ret0:
     return 0;
@@ -1806,7 +1806,7 @@ int ktrex_stateHandlerA01(int obj, int runtime)
 {
     if ((s8)((KTRexRuntime*)runtime)->unk27B != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         ((KTRexRuntime*)runtime)->unk349 = 0;
         ((KTRexRuntime*)runtime)->unk25F = 0;
         *(f32*)((char*)gKTRexState + 4) = lbl_803E67EC;
