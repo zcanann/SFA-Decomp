@@ -30,7 +30,7 @@ typedef struct HightopPlacement
     u8 pad20[0x25F - 0x20];
     s8 unk25F;
     u8 pad260[0x27A - 0x260];
-    u8 unk27A;
+    u8 moveJustStartedA; /* 0x27A: BaddieState one-shot */
     u8 pad27B[0x280 - 0x27B];
     f32 unk280;
     f32 unk284;
@@ -53,7 +53,7 @@ typedef struct HightopPlacement
     s16 unk336;
     s16 unk338;
     u8 pad33A[0x346 - 0x33A];
-    u8 unk346;
+    u8 moveDone;         /* 0x346: BaddieState move-complete flag */
     u8 pad347[0x354 - 0x347];
     u8 unk354;
     u8 pad355[0x9FD - 0x355];
@@ -1062,7 +1062,7 @@ int hightop_stateHandler09(int obj, int p)
     int* weight;
     int roll;
     int idx;
-    if ((s8)((HightopPlacement*)p)->unk27A != 0 || state->flagsC49.b6 != 0)
+    if ((s8)((HightopPlacement*)p)->moveJustStartedA != 0 || state->flagsC49.b6 != 0)
     {
         if (state->flagsC4A.b0 == 0)
         {
@@ -1105,7 +1105,7 @@ int hightop_stateHandler09(int obj, int p)
         {
             objSoundFn_800392f0(obj, (int)((char*)state + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
         }
-        if ((s8)((HightopPlacement*)p)->unk346 != 0)
+        if ((s8)((HightopPlacement*)p)->moveDone != 0)
         {
             if (randFn_80080100(2) != 0)
             {
@@ -1156,7 +1156,7 @@ int hightop_stateHandler09(int obj, int p)
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         return 0;
     }
-    if ((s8)((HightopPlacement*)p)->unk346 != 0)
+    if ((s8)((HightopPlacement*)p)->moveDone != 0)
     {
         if (((GameObject*)obj)->anim.currentMove != 2)
         {
