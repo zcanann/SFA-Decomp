@@ -3060,7 +3060,7 @@ void objRenderChild(int* child, int* parent, u8 p3)
     }
     *(u8*)((char*)child + 0x37) = ((((GameObject*)child)->anim.alpha + 1) * *(u8*)((char*)parent + 0x37)) >> 8;
     *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
-    if (!(((GameObject*)child)->anim.flags & 0x4000))
+    if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
     {
         curObjMtx = (u32)m2;
         if (p3 == 0)
