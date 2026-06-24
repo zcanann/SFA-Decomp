@@ -334,7 +334,7 @@ void s3dAllocateRoomStudios(void)
                         if (voice->entry == evictedEntry)
                         {
                             synthSendKeyOff(voice->handle);
-                            voice->flags |= 0x80000;
+                            voice->flags |= S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                             voice->handle = 0xffffffff;
                         }
                     }
