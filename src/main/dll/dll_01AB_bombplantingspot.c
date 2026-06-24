@@ -42,7 +42,7 @@ void bombplantingspot_update(void* obj)
         GameBit_Set(mapData->plantedGameBit, 1);
         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
     }
-    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0 &&
+    else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 &&
         GameBit_Get(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
