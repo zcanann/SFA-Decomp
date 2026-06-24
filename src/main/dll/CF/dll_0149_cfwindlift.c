@@ -14,6 +14,8 @@
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
 
+#define WINDLIFT_SLOTS 14   /* max tracked lift slots */
+
 typedef struct WindliftPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -65,7 +67,7 @@ typedef struct
     int gamebit;
     int pad10;
     int timer;
-    WindLiftSlot slots[14];
+    WindLiftSlot slots[WINDLIFT_SLOTS];
     int pad168;
     int pad16c;
     f32 liftHeight;
@@ -439,14 +441,14 @@ void windlift_update(int* obj)
         {
             count = 0xe;
         }
-        for (j = 1; j < 14; j++)
+        for (j = 1; j < WINDLIFT_SLOTS; j++)
         {
             sub->slots[j].link14 = -1;
         }
         for (idx = 1; idx < count; idx++)
         {
             found = -1;
-            for (j = 1; j < 14; j++)
+            for (j = 1; j < WINDLIFT_SLOTS; j++)
             {
                 if ((u32)sub->slots[j].i0 == (u32) * objs)
                 {
@@ -489,7 +491,7 @@ void windlift_update(int* obj)
                 }
             }
         }
-        for (j = 1; j < 14; j++)
+        for (j = 1; j < WINDLIFT_SLOTS; j++)
         {
             if (sub->slots[j].link14 == -1)
             {
@@ -550,7 +552,7 @@ void windlift_init(int* obj, u8* def)
     }
     {
         WindLiftSub* p = sub;
-        for (i = 0; i < 14; i++)
+        for (i = 0; i < WINDLIFT_SLOTS; i++)
         {
             p->slots[i].b10 = 0;
             p->slots[i].b10 &= ~0xf1;
