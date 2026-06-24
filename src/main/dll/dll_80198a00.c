@@ -138,8 +138,8 @@ void fn_80198DE8(u8* obj, int seqArg)
     s8 triggerState;
     u8* data;
     f32 planeBase;
-    f32 normalX;
     f32 normalY;
+    f32 normalX;
     f32 normalZ;
     f32 nearX;
     f32 nearY;
