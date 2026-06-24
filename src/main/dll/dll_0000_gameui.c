@@ -3081,19 +3081,19 @@ void pauseMenuFn_80129ee0(void)
                         lbl_803DD7D8 = lbl_803DD8E0;
                     }
                     {
-                        int k;
+                        u8 k;
                         for (k = 0; k < 0xd; k++)
                         {
                             if (hintBuf[k] != 0)
                             {
-                                lbl_803DD824[(u8)k].id = 0x48;
+                                lbl_803DD824[k].id = 0x48;
                             }
                             else
                             {
-                                lbl_803DD824[(u8)k].id = 0x49;
+                                lbl_803DD824[k].id = 0x49;
                             }
-                            *(u8*)((char*)&lbl_803DD824[(u8)k] + 0x8) = 0x10;
-                            *(u8*)((char*)&lbl_803DD824[(u8)k] + 0x9) = 0xc;
+                            *(u8*)((char*)&lbl_803DD824[k] + 0x8) = 0x10;
+                            *(u8*)((char*)&lbl_803DD824[k] + 0x9) = 0xc;
                         }
                     }
                     if (lbl_803DD7D6 == lbl_803DD8E0)
