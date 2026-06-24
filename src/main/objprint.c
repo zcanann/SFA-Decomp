@@ -8,6 +8,10 @@
 #include "dolphin/gx/GXCull.h"
 #include "sfa_light_decls.h"
 
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
+
 #define OBJPRINT_OBJECT(obj) ((ObjAnimComponent *)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj) (OBJPRINT_OBJECT(obj)->modelInstance)
 #define OBJPRINT_BANK_TABLE(obj) ((int **)OBJPRINT_OBJECT(obj)->banks)
@@ -3349,7 +3353,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
         GXSetNumIndStages(2);
         GXSetNumTexGens(6);
     }
-    GXSetCullMode(2);
+    GXSetCullMode(GX_CULL_BACK);
     {
         GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
     }
@@ -3661,7 +3665,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         GXSetNumTexGens(5);
     }
     GXSetNumIndStages(2);
-    GXSetCullMode(2);
+    GXSetCullMode(GX_CULL_BACK);
     if ((*(u16*)(*model + 2) & 0x100) != 0)
     {
         GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
