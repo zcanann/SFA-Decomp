@@ -454,10 +454,10 @@ void drlasercannon_hitDetect(int obj)
 
 void drlasercannon_update(int obj)
 {
+    int target;
     DrLaserCannonState* state = ((GameObject*)obj)->extra;
     DrLaserCannonSetup* setup = (DrLaserCannonSetup*)((GameObject*)obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
-    int target;
     int hit;
     int spawned;
     f32 dist;
@@ -574,9 +574,9 @@ void drlasercannon_update(int obj)
                             ((DrLaserCannonBeamSetup*)o)->field06 = 0xff;
                             ((DrLaserCannonBeamSetup*)o)->field05 = 1;
                             ((DrLaserCannonBeamSetup*)o)->field07 = 0xff;
-                            ((DrLaserCannonBeamSetup*)o)->spawnX = state->muzzleX;
-                            ((DrLaserCannonBeamSetup*)o)->spawnY = state->muzzleY;
-                            ((DrLaserCannonBeamSetup*)o)->spawnZ = state->muzzleZ;
+                            ((DrLaserCannonBeamSetup*)o)->spawnX = ((DrLaserCannonState*)spawned)->muzzleX;
+                            ((DrLaserCannonBeamSetup*)o)->spawnY = ((DrLaserCannonState*)spawned)->muzzleY;
+                            ((DrLaserCannonBeamSetup*)o)->spawnZ = ((DrLaserCannonState*)spawned)->muzzleZ;
                             spawned = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                         }
                         if ((void*)spawned != NULL)
