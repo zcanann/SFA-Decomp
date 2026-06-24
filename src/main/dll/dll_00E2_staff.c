@@ -991,9 +991,12 @@ void staff_initialise(void)
 {
     s16* p;
     int n;
-    int i;
     int j;
-    for (n = 0, p = (s16*)lbl_803208A0; n < 30; n += 6)
+    int off;
+    void** tex;
+    int i;
+    p = (s16*)lbl_803208A0;
+    for (n = 0; n < 30; n += 6)
     {
         for (j = 0; j < 7; j++)
         {
@@ -1007,9 +1010,11 @@ void staff_initialise(void)
     gStaffSwipeTextureIds = sStaffSwipeTextureIdTable;
     if (gStaffSwipeTextures[0] == NULL)
     {
-        for (i = 0; i < 2; i++)
+        for (i = 0, off = i, tex = gStaffSwipeTextures; i < 2; i++)
         {
-            gStaffSwipeTextures[i] = textureLoad(gStaffSwipeTextureIds[i], 0);
+            *tex = textureLoad(*(s16*)((u8*)gStaffSwipeTextureIds + off), 0);
+            off += 2;
+            tex++;
         }
     }
     if (gStaffSwipeResource == NULL)
