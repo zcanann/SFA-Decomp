@@ -27,6 +27,9 @@
 #define GX_TEXMAP1 1
 #define GX_TEV_SWAP1 1
 #define GX_CH_ALPHA 3
+#define GX_VA_POS 9
+#define GX_VA_NRM 10
+#define GX_DIRECT 1
 extern u32 FUN_800033a8();
 extern u32 FUN_8001763c();
 extern int randomGetRange(int lo, int hi);
@@ -1096,8 +1099,8 @@ void gxFn_80052dc0(void)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(10, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     PSMTXIdentity(pmtx);
     GXLoadPosMtxImm(pmtx, 0);
     GXLoadNrmMtxImm(pmtx, 0);
