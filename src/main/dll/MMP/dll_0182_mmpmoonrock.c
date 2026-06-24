@@ -276,12 +276,12 @@ void fn_801A80F0(int obj, u8 flag)
     if (flag != 0)
     {
         state->flags |= 0x4;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else
     {
         state->flags &= ~0x4;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
 }
 
