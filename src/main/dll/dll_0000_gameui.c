@@ -710,6 +710,12 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
     }
 }
 
+/* pauseMenuSetupTitle `flags` dispatch bits (see comment below). */
+#define PAUSEMENU_TITLE_FLAG_SET_HINT   0x08 /* commit idx to hint index, consult GameBit table */
+#define PAUSEMENU_TITLE_FLAG_RESET      0x04 /* full reset: clear counter and return */
+#define PAUSEMENU_TITLE_FLAG_MIRROR     0x02 /* mirror active counter past peak, clear dir */
+#define PAUSEMENU_TITLE_FLAG_SET_DIR    0x01 /* set direction byte to 1 */
+
 /* EN v1.0 0x8012DDD8  size: 316b  State setter with bit-flag dispatch.
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
  *   flags & 0x08 : commit `idx` to gPauseMenuHintIndex and consult the bit
@@ -727,7 +733,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
 #pragma dont_inline on
 void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 {
-    if (flags & 0x08)
+    if (flags & PAUSEMENU_TITLE_FLAG_SET_HINT)
     {
         gPauseMenuHintIndex = idx;
         if (GameBit_Get(gTaskHintTable[idx].bit_id) == 0)
@@ -736,12 +742,12 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
         }
     }
     gPauseMenuTextCharset = q;
-    if (flags & 0x04)
+    if (flags & PAUSEMENU_TITLE_FLAG_RESET)
     {
         lbl_803DD774 = 0;
         return;
     }
-    if (flags & 0x02)
+    if (flags & PAUSEMENU_TITLE_FLAG_MIRROR)
     {
         u16 cur = lbl_803DD774;
         if (cur == 0) return;
@@ -757,7 +763,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
         lbl_803DD77F = 0;
         return;
     }
-    if (flags & 0x01)
+    if (flags & PAUSEMENU_TITLE_FLAG_SET_DIR)
     {
         lbl_803DD77F = 1;
     }
