@@ -297,9 +297,9 @@ void wcpushblock_update(int obj)
     case WCPUSHBLOCK_PHASE_IDLE:
         {
             int a = objAnim->alpha + framesThisStep * 8;
-            if (a > 255)
+            if (a > WCPUSHBLOCK_ALPHA_OPAQUE)
             {
-                a = 255;
+                a = WCPUSHBLOCK_ALPHA_OPAQUE;
             }
             objAnim->alpha = a;
         }
