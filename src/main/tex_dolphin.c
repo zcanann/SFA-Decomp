@@ -241,7 +241,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         shaderIdx = (_bits >> (bitPos & 7)) & 0x3f;
         shader = *(int*)(blockData + 0x64) + shaderIdx * 0x44;
     }
-    GXSetTevAlphaIn(0, 7, 4, 5, 7);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
     selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
     if ((*(u32*)(shader + 0x3c) & 4) != 0)
     {
