@@ -1544,7 +1544,7 @@ void Tricky_update(int obj)
         ((TrickyState*)state)->unk808 -= timeDelta;
         if (((TrickyState*)state)->unk808 <= lbl_803E23DC)
         {
-            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x80000000LL;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & 0x7FFFFFFF;
             sfxId = ((u16*)&pair)[randomGetRange(0, 1)];
             TRICKY_VOICE(obj, st, sfxId, 0x500);
         }
