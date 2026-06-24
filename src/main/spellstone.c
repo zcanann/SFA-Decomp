@@ -5,6 +5,10 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+/* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): stops the object being
+   rendered/updated; set when the stone's map event completes. */
+#define SPELLSTONE_OBJFLAG_HIDDEN 0x4000
+
 extern f32 Vec_distance(void* posA, void* posB);
 
 extern void Obj_RemoveFromUpdateList(void* obj);
@@ -91,7 +95,7 @@ void spellstone_update(SpellStoneObject* obj)
     if (eventActive != 0)
     {
         GameBit_Set(*(&lbl_803DC228 + def->eventIndex), 1);
-        obj->flags = (s16)(obj->flags | 0x4000);
+        obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
         Obj_RemoveFromUpdateList(obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
@@ -100,7 +104,7 @@ void spellstone_update(SpellStoneObject* obj)
         eventActive = GameBit_Get(def->activeEvent);
         if (eventActive != 0)
         {
-            obj->flags = (s16)(obj->flags | 0x4000);
+            obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
             Obj_RemoveFromUpdateList(obj);
         }
         if (state->state == SPELLSTONE_STATE_ACTIVE)
