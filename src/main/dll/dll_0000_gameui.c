@@ -144,6 +144,8 @@ extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 extern TaskHintEntry gTaskHintTable[5];
+/* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
+#define GAMEUI_TASK_HINT_COUNT 5
 extern u8 pauseMenuState;
 extern s8 pauseMenuFrameCounter;
 extern void padGetAnalogInput(int port, u8* x, u8* y);
@@ -1481,7 +1483,7 @@ void drawWorldMapHud(void)
             base = (u8*)(int)gGameUiTaskHintCandidates;
             i = 0;
             p = base;
-            for (; i < 5; i++)
+            for (; i < GAMEUI_TASK_HINT_COUNT; i++)
             {
                 if (GameBit_Get(gTaskHintTable[*p].bit_id))
                 {
@@ -2460,7 +2462,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 i = 0;
                 base = (u8*)(int)gGameUiTaskHintCandidates;
                 p = base;
-                for (; i < 5; i++)
+                for (; i < GAMEUI_TASK_HINT_COUNT; i++)
                 {
                     if (GameBit_Get(gTaskHintTable[*p].bit_id))
                     {
