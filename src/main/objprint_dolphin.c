@@ -3207,8 +3207,8 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
         {
             GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
         }
-        GXSetVtxDesc(9, (flags & 2) ? 3 : 2);
-        GXSetVtxDesc(13, (flags & 4) ? 3 : 2);
+        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? 3 : 2);
+        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? 3 : 2);
         gObjGxVtxDescCache = flags;
     }
 }
@@ -3848,7 +3848,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         w |= p[1] << 8;
         w |= p[2] << 16;
         bs->pos = pos + 1;
-        GXSetVtxDesc(9, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+        GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
     }
     if (m[0x40] & 1)
     {
@@ -3871,7 +3871,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
         else
         {
-            GXSetVtxDesc(0xa, b ? 3 : 2);
+            GXSetVtxDesc(GX_VA_NRM, b ? 3 : 2);
         }
         *out1 = 1;
     }
@@ -3890,7 +3890,7 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         w |= p[1] << 8;
         w |= p[2] << 16;
         bs->pos = pos + 1;
-        GXSetVtxDesc(0xb, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+        GXSetVtxDesc(GX_VA_CLR0, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
     }
     {
         int b;
@@ -4298,7 +4298,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 1;
-                GXSetVtxDesc(9, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+                GXSetVtxDesc(GX_VA_POS, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
             }
             if (((u8*)op)[0x40] & 1)
             {

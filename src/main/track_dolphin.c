@@ -212,7 +212,7 @@ int* bs;
     bit = (val >> (pos & 7)) & 1;
     if (flag != 0)
     {
-        GXSetVtxDesc(9, bit ? 3 : 2);
+        GXSetVtxDesc(GX_VA_POS, bit ? 3 : 2);
     }
     pos2 = bs[4];
     off2 = pos2 >> 3;
@@ -224,7 +224,7 @@ int* bs;
     bit2 = (val2 >> (pos2 & 7)) & 1;
     if (flag != 0)
     {
-        GXSetVtxDesc(11, bit2 ? 3 : 2);
+        GXSetVtxDesc(GX_VA_CLR0, bit2 ? 3 : 2);
     }
     pos3 = bs[4];
     off3 = pos3 >> 3;
@@ -245,7 +245,7 @@ int* bs;
         }
         else
         {
-            GXSetVtxDesc(13, bit3 ? 3 : 2);
+            GXSetVtxDesc(GX_VA_TEX0, bit3 ? 3 : 2);
         }
     }
 }
