@@ -3248,7 +3248,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     kc.b = v;
     kc.g = v;
     kc.r = v;
-    GXSetTevKColor(0, kc);
+    GXSetTevKColor(GX_KCOLOR0, kc);
     GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K0);
     PSMTXScale(mtx3, lbl_803DEA2C, *(f32*)&lbl_803DEA2C, lbl_803DEA04);
@@ -3321,13 +3321,13 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
-            GXSetChanAmbColor(2, *(ObjPrintGXColor*)&lbl_803DB470);
+            GXSetChanAmbColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB470);
             GXSetChanMatColor(2, *(ObjPrintGXColor*)&lbl_803DB468);
             modelLightStruct_loadChannelLight(2, lt, obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
         }
-        GXSetTevKColor(0, kc2);
+        GXSetTevKColor(GX_KCOLOR0, kc2);
         GXSetTevKAlphaSel(GX_TEVSTAGE5, GX_TEV_KASEL_K0_A);
         GXSetTevKColorSel(GX_TEVSTAGE5, GX_TEV_KCSEL_K0);
         fn_8006C4C0(&a174, &b178, &stk380);
@@ -3494,7 +3494,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
             lbl_803DB494.r = lbl_803DB494.b;
             GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_KONST, GX_CC_ZERO);
         }
-        GXSetTevKColor(1, lbl_803DB494);
+        GXSetTevKColor(GX_KCOLOR1, lbl_803DB494);
         GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K1_A);
         GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K1);
     }
