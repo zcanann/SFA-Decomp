@@ -71,6 +71,10 @@ typedef struct ShopItemRow
     u8 pad0[0xa];
     s16 textId;
 } ShopItemRow;
+
+/* number of ShopItemRow entries in lbl_80327FD0
+   (data symbol size 0x2D0 / sizeof(ShopItemRow)(0xc) == 0x3c). */
+#define SHOP_ITEM_ROW_COUNT 0x3c
 extern void fn_80295CF4(int obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void envFxActFn_800887f8(u8 value);
@@ -231,7 +235,7 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 
 int shop_getItemPrice(int p, int idx)
 {
-    if (idx >= 0 && idx < 0x3c)
+    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
         return lbl_80327FD0[idx * 0xc];
     }
@@ -240,7 +244,7 @@ int shop_getItemPrice(int p, int idx)
 
 s16 shop_getItemTextId(int p, int idx)
 {
-    if (idx >= 0 && idx < 0x3c)
+    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
         ShopItemRow* rows = (ShopItemRow*)lbl_80327FD0;
         return rows[idx].textId;
@@ -250,7 +254,7 @@ s16 shop_getItemTextId(int p, int idx)
 
 u8 shop_getItemField4(int p, int idx)
 {
-    if (idx >= 0 && idx < 0x3c)
+    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
         return lbl_80327FD0[idx * 0xc + 0x4];
     }
@@ -259,7 +263,7 @@ u8 shop_getItemField4(int p, int idx)
 
 u8 shop_getItemMinPrice(int p, int idx)
 {
-    if (idx >= 0 && idx < 0x3c)
+    if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
         return lbl_80327FD0[idx * 0xc + 0x5];
     }
@@ -273,7 +277,7 @@ void shop_init(int obj, int objDef)
 
     *(s8*)(*(int*)&((GameObject*)obj)->extra + 1) = -1;
     ObjGroup_AddObject(obj, 9);
-    for (i = 0; i < 0x3c; i++)
+    for (i = 0; i < SHOP_ITEM_ROW_COUNT; i++)
     {
         item = &lbl_80327FD0[i * 0xc];
         item[5] = item[randomGetRange(0, 2) + 1];
