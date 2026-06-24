@@ -26,6 +26,7 @@
 #include "sfa_light_decls.h"
 
 #define GCMENU_ITEM_ICON_COUNT 7
+#define PAUSE_MENU_HUD_ITEM_COUNT 13
 
 extern int objIsCurModelNotZero(void* obj);
 extern int playerGetMoney(void* player);
@@ -516,7 +517,7 @@ void pauseMenuDrawStatus(void)
     f32 thresh;
     f32 prev;
     f32 newOp;
-    int statuses[13];
+    int statuses[PAUSE_MENU_HUD_ITEM_COUNT];
 
     base = (u8*)lbl_803A87F0;
     player = Obj_GetPlayerObject();
@@ -598,7 +599,7 @@ void pauseMenuDrawStatus(void)
     {
         cMenuEnabled = 1;
     }
-    for (i = 0; i < 13; i++)
+    for (i = 0; i < PAUSE_MENU_HUD_ITEM_COUNT; i++)
     {
         switch (i)
         {
@@ -641,7 +642,7 @@ void pauseMenuDrawStatus(void)
     if ((lbl_803DD840 & 1) != 0)
     {
         lbl_803DD840 = lbl_803DD840 & ~1;
-        for (j = 0; j < 13; j++)
+        for (j = 0; j < PAUSE_MENU_HUD_ITEM_COUNT; j++)
         {
             ((int*)(base + 0xB74))[j] = statuses[j];
             ((int*)(base + 0xB30))[j] = statuses[j];
@@ -676,7 +677,7 @@ void pauseMenuDrawStatus(void)
     else
     {
         thresh = lbl_803E1FA8;
-        for (; i < 13; i++)
+        for (; i < PAUSE_MENU_HUD_ITEM_COUNT; i++)
         {
             ji = i;
             op = ((f32*)(base + 0xAFC)) + ji;
