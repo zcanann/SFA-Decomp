@@ -152,6 +152,7 @@ void fn_80204BF8(int obj)
     int h;
     f32 d;
     f32 k;
+    f32 y;
 
     player = Obj_GetPlayerObject();
     if (player == NULL)
@@ -188,10 +189,11 @@ void fn_80204BF8(int obj)
             {
                 if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
                 {
+                    y = object->anim.localPosY;
                     k = lbl_803E63A0;
-                    if (object->anim.localPosY < k + placement->posY)
+                    if (y < k + placement->posY)
                     {
-                        object->anim.localPosY += timeDelta;
+                        object->anim.localPosY = y + timeDelta;
                         if (object->anim.localPosY >= k + placement->posY)
                         {
                             object->anim.localPosY = k + placement->posY;
@@ -283,10 +285,11 @@ void fn_80204BF8(int obj)
         }
         break;
     case 4:
+        y = object->anim.localPosY;
         k = lbl_803E63A0;
-        if (object->anim.localPosY < k + placement->posY)
+        if (y < k + placement->posY)
         {
-            object->anim.localPosY += timeDelta;
+            object->anim.localPosY = y + timeDelta;
             if (object->anim.localPosY >= k + placement->posY)
             {
                 object->anim.localPosY = k + placement->posY;
