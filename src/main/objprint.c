@@ -3058,24 +3058,22 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 {
                     lim = (s32)(gObjPrintDegToAngle * (f32) * sp1);
                 }
-                v = *src;
-                *dst = v;
+                v = src[n2];
+                dst[n2] = v;
                 if (v > lim)
                 {
-                    *dst = lim;
-                    *src = v - lim;
+                    dst[n2] = lim;
+                    src[n2] = v - lim;
                 }
                 else if (v < -lim)
                 {
-                    *dst = (s16) - lim;
-                    *src = v + lim;
+                    dst[n2] = (s16) - lim;
+                    src[n2] = v + lim;
                 }
                 else
                 {
-                    *src = 0;
+                    src[n2] = 0;
                 }
-                src++;
-                dst++;
             }
         }
 
