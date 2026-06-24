@@ -247,7 +247,7 @@ void fn_80174BFC(int obj, int ext)
                                         tex->textureId = 0x100;
                                     }
                                     GameBit_Set(*(s16*)(def + 0x18), 1);
-                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     ((PushableState*)ext)->flags |= 0x80;
                                 }
                                 break;
@@ -257,7 +257,7 @@ void fn_80174BFC(int obj, int ext)
                                     GameBit_Set(gamebit, 1);
                                     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                                     ((PushableState*)ext)->flags |= 0x80;
-                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     saveGame_saveObjectPos(obj);
                                 }
                                 break;
@@ -918,7 +918,7 @@ void pushable_init(s16* obj, char* def)
         if (((PushableObjectDef*)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef*)def)->gameBit) != 0)
         {
             state->flags = state->flags | 0x81;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             pushable_savePos((int*)obj);
         }
         state->savePosEnabled = 0;
