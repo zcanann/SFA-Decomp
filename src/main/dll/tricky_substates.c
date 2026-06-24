@@ -847,7 +847,7 @@ int trickyFn_80142eb0(int obj, int state)
     {
         return 1;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     move = ((GameObject*)obj)->anim.currentMove;
     switch (move)
     {
@@ -1065,7 +1065,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
     {
         return 1;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     move = ((GameObject*)obj)->anim.currentMove;
     switch (move)
     {
@@ -1631,7 +1631,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     s16 item[4];
 
     flag = 0;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     n = GameBit_Get(0xc1);
     if (n != 0)
     {
@@ -1751,7 +1751,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 4);
         }
     }
@@ -1802,7 +1802,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                 buttonDisable(0, 0x100);
                 return 1;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 2);
         }
     }
