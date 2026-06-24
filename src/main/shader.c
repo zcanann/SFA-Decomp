@@ -1199,12 +1199,13 @@ extern int lbl_803DB620;
 int mapProcessRomList(int slot)
 {
     u8 flag;
+    char* cur;
+    char* obj;
     int i;
     int count;
     char* p;
     char* entry;
     s16* rects;
-    char* cur;
     int j;
     int step;
     int rl;
@@ -1257,7 +1258,7 @@ int mapProcessRomList(int slot)
     dx = *(f32*)(cur + 0x24);
     if (cur != 0)
     {
-        char* obj = *(char**)(cur + 0x20);
+        obj = *(char**)(cur + 0x20);
         for (j = 0; j < *(u16*)(cur + 8);)
         {
             if (saveGame_restoreObjectPosToRomList(obj) == 0)
