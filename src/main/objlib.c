@@ -2183,6 +2183,17 @@ u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z)
     return hitId & 0xffff;
 }
 
+/* Eye-blink state machine (PlayerBlinkState.mode). amount = eyelid closure 0..255. */
+typedef enum ObjLibBlinkMode
+{
+    OBJLIB_BLINK_MODE_OPEN = 0,       /* eyes open; randomly start a blink or a wink */
+    OBJLIB_BLINK_MODE_CLOSING = 1,    /* eyelids ramping shut (amount -> 255) */
+    OBJLIB_BLINK_MODE_CLOSED = 2,     /* fully shut; randomly start opening */
+    OBJLIB_BLINK_MODE_OPENING = 3,    /* eyelids ramping open (amount -> 0) */
+    OBJLIB_BLINK_MODE_WINK_RIGHT = 4, /* hold shut, right eye scaled apart */
+    OBJLIB_BLINK_MODE_WINK_LEFT = 5,  /* hold shut, left eye scaled apart */
+} ObjLibBlinkMode;
+
 typedef struct PlayerBlinkState
 {
     u8 pad[0x2b];
@@ -2214,7 +2225,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     rightScale = (leftScale = lbl_803DE99C);
     switch (bs->mode)
     {
-    case 0:
+    case OBJLIB_BLINK_MODE_OPEN:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
         bs->amount = 0;
         if (((u16)flags & 1) != 0)
@@ -2223,13 +2234,13 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
             {
                 switch (bs->mode)
                 {
-                case 0:
-                    bs->mode = 1;
+                case OBJLIB_BLINK_MODE_OPEN:
+                    bs->mode = OBJLIB_BLINK_MODE_CLOSING;
                     bs->timer = 0;
                     bs->amount = 0;
                     break;
-                case 3:
-                    bs->mode = 1;
+                case OBJLIB_BLINK_MODE_OPENING:
+                    bs->mode = OBJLIB_BLINK_MODE_CLOSING;
                     break;
                 }
             }
@@ -2237,51 +2248,51 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
             {
                 if (randomGetRange(0, 1) == 0)
                 {
-                    bs->mode = 4;
+                    bs->mode = OBJLIB_BLINK_MODE_WINK_RIGHT;
                 }
                 else
                 {
-                    bs->mode = 5;
+                    bs->mode = OBJLIB_BLINK_MODE_WINK_LEFT;
                 }
             }
         }
         break;
-    case 1:
+    case OBJLIB_BLINK_MODE_CLOSING:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
         if ((s16)bs->amount + (s16)step > 255)
         {
             step = (u8)(255 - bs->amount);
-            bs->mode = 2;
+            bs->mode = OBJLIB_BLINK_MODE_CLOSED;
         }
         bs->amount += step;
         break;
-    case 2:
+    case OBJLIB_BLINK_MODE_CLOSED:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
         if (randomGetRange(0, 100) == 1)
         {
             switch (bs->mode)
             {
-            case 1:
-            case 2:
-                bs->mode = 3;
+            case OBJLIB_BLINK_MODE_CLOSING:
+            case OBJLIB_BLINK_MODE_CLOSED:
+                bs->mode = OBJLIB_BLINK_MODE_OPENING;
                 break;
-            case 4:
-            case 5:
-                bs->mode = 0;
+            case OBJLIB_BLINK_MODE_WINK_RIGHT:
+            case OBJLIB_BLINK_MODE_WINK_LEFT:
+                bs->mode = OBJLIB_BLINK_MODE_OPEN;
                 break;
             }
         }
         break;
-    case 3:
+    case OBJLIB_BLINK_MODE_OPENING:
         bs->timer = (u8)((f32)bs->timer + timeDelta);
         if ((s16)bs->amount - (s16)step < 0)
         {
             step = bs->amount;
-            bs->mode = 0;
+            bs->mode = OBJLIB_BLINK_MODE_OPEN;
         }
         bs->amount -= step;
         break;
-    case 4:
+    case OBJLIB_BLINK_MODE_WINK_RIGHT:
         bs->timer = (u8)(lbl_803DE9A0 * timeDelta + bs->timer);
         bs->amount = 0xff;
         rightScale = lbl_803DE9A4;
@@ -2289,18 +2300,18 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         {
             switch (bs->mode)
             {
-            case 1:
-            case 2:
-                bs->mode = 3;
+            case OBJLIB_BLINK_MODE_CLOSING:
+            case OBJLIB_BLINK_MODE_CLOSED:
+                bs->mode = OBJLIB_BLINK_MODE_OPENING;
                 break;
-            case 4:
-            case 5:
-                bs->mode = 0;
+            case OBJLIB_BLINK_MODE_WINK_RIGHT:
+            case OBJLIB_BLINK_MODE_WINK_LEFT:
+                bs->mode = OBJLIB_BLINK_MODE_OPEN;
                 break;
             }
         }
         break;
-    case 5:
+    case OBJLIB_BLINK_MODE_WINK_LEFT:
         bs->timer = (u8)(lbl_803DE9A0 * timeDelta + bs->timer);
         bs->amount = 0xff;
         leftScale = lbl_803DE9A4;
@@ -2308,13 +2319,13 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
         {
             switch (bs->mode)
             {
-            case 1:
-            case 2:
-                bs->mode = 3;
+            case OBJLIB_BLINK_MODE_CLOSING:
+            case OBJLIB_BLINK_MODE_CLOSED:
+                bs->mode = OBJLIB_BLINK_MODE_OPENING;
                 break;
-            case 4:
-            case 5:
-                bs->mode = 0;
+            case OBJLIB_BLINK_MODE_WINK_RIGHT:
+            case OBJLIB_BLINK_MODE_WINK_LEFT:
+                bs->mode = OBJLIB_BLINK_MODE_OPEN;
                 break;
             }
         }
