@@ -42,4 +42,14 @@ typedef struct SynthJob {
     u8 unk5E[6];
 } SynthJob;
 
+/* SynthJob.state - stream playback job lifecycle */
+#define SYNTH_JOB_STATE_FREE 0    /* unused slot */
+#define SYNTH_JOB_STATE_PENDING 1 /* queued; start playback next service */
+#define SYNTH_JOB_STATE_PLAYING 2 /* voice started; streaming */
+#define SYNTH_JOB_STATE_DONE 3    /* cancelled/finished; awaiting recycle */
+
+/* SynthJob.format - sample codec */
+#define SYNTH_JOB_FORMAT_PCM 0   /* uncompressed (hw compType 2) */
+#define SYNTH_JOB_FORMAT_ADPCM 1 /* ADPCM (hw compType 4) */
+
 #endif /* MAIN_AUDIO_SYNTH_JOB_H_ */

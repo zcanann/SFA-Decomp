@@ -14,7 +14,7 @@ void synthInitJobTable(void)
     synthJobTablePeriod = 3;
     for (i = 0; i < lbl_803BD150[0x210]; ++i)
     {
-        synthJobTable[i].state = 0;
+        synthJobTable[i].state = SYNTH_JOB_STATE_FREE;
     }
     lbl_803DE284 = 0;
 }

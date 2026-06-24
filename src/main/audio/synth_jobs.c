@@ -61,7 +61,7 @@ void synthUpdateJobTable(void)
     {
         switch (si->state)
         {
-        case 1:
+        case SYNTH_JOB_STATE_PENDING:
             newsmp.info = si->frq | 0x40000000;
             newsmp.addr = hwFlushStream(si->streamHandle);
             newsmp.offset = 0;
@@ -72,10 +72,10 @@ void synthUpdateJobTable(void)
             DCInvalidateRange(si->buffer, 1);
             switch (si->format)
             {
-            case 0:
+            case SYNTH_JOB_FORMAT_PCM:
                 newsmp.compType = 2;
                 break;
-            case 1:
+            case SYNTH_JOB_FORMAT_ADPCM:
                 newsmp.extraData = &si->adpcm;
                 newsmp.compType = 4;
                 break;
@@ -86,13 +86,13 @@ void synthUpdateJobTable(void)
             hwSetVolume(si->voice, 0, volScale * si->volume, volScale * si->leftVolume,
                         volScale * si->rightVolume, si->pan << 16, si->surroundPan << 16);
             hwStart(si->voice, si->studio);
-            si->state = 2;
+            si->state = SYNTH_JOB_STATE_PLAYING;
             if (!(si->flags & 0x20000))
             {
                 hwGetPos(si->buffer, 0, si->bytes, si->streamHandle, 0, 0);
             }
             break;
-        case 2:
+        case SYNTH_JOB_STATE_PLAYING:
             cpos = hwChangeStudio(si->voice);
 
             if (si->format == 1)
@@ -110,7 +110,7 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        cpos - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -133,7 +133,7 @@ void synthUpdateJobTable(void)
                         off = (si->last / 14) * 8;
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, cpos - si->last,
                                                                        0, 0, si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -161,7 +161,7 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -185,7 +185,7 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
                                                                        si->size - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -213,7 +213,7 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, si->buffer,
                                                                        cpos, si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -243,7 +243,7 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
                                                                        si->size - si->last, si->buffer,
                                                                        cpos, si->callbackUser)) != 0 &&
-                            si->state == 2)
+                            si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000))
@@ -269,7 +269,7 @@ void synthUpdateJobTable(void)
                     }
                 }
 
-                if (si->state == 2 && !(si->flags & 0x20000) && si->format == 1)
+                if (si->state == SYNTH_JOB_STATE_PLAYING && !(si->flags & 0x20000) && si->format == SYNTH_JOB_FORMAT_ADPCM)
                 {
                     hwSetStreamLoopPS(si->voice, *(u32*)((u32)si->buffer + 0x40000000) >> 24);
                 }
@@ -290,20 +290,20 @@ void synthCancelJob(int voice)
 
     job = synthJobTable + voice;
     state = job->state;
-    if (state < 3)
+    if (state < SYNTH_JOB_STATE_DONE)
     {
-        if (state >= 1)
+        if (state >= SYNTH_JOB_STATE_PENDING)
         {
             goto cancel;
         }
     }
     return;
 cancel:
-    if ((u32)state == 2)
+    if ((u32)state == SYNTH_JOB_STATE_PLAYING)
     {
         voiceBreakAndFree(job->voice);
     }
-    job->state = 3;
+    job->state = SYNTH_JOB_STATE_DONE;
     job->callback(0, 0, 0, 0, job->callbackUser);
 }
 
@@ -316,7 +316,7 @@ void synthRefreshJobVolumes(void)
     volumeScale = lbl_803E77D8;
     for (i = 0; i < lbl_803BD150[0x210]; i++)
     {
-        if (synthJobTable[i].state != 0)
+        if (synthJobTable[i].state != SYNTH_JOB_STATE_FREE)
         {
             synthJobTable[i].pan = synthJobTable[i].savedPan;
             synthJobTable[i].surroundPan = synthJobTable[i].savedSurroundPan;
@@ -329,7 +329,7 @@ void synthRefreshJobVolumes(void)
             {
                 synthJobTable[i].surroundPan = 0;
             }
-            if (synthJobTable[i].state != 3)
+            if (synthJobTable[i].state != SYNTH_JOB_STATE_DONE)
             {
                 hwSetVolume(synthJobTable[i].voice, 0, volumeScale * synthJobTable[i].volume,
                             volumeScale * synthJobTable[i].leftVolume,
