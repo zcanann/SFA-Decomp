@@ -107,6 +107,14 @@ typedef struct
 
 extern int Camera_GetCurrentViewSlot(void);
 extern u32 renderFlags;
+/* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
+ * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad). */
+#define RENDERFLAG_DRAW_CLOUDS     0x10
+#define RENDERFLAG_DRAW_SHADOWS    0x80
+#define RENDERFLAG_PENDING_MAP_LOAD 0x1000
+#define RENDERFLAG_DRAW_DISTANCE   0x10000
+#define RENDERFLAG_OVERCAST        0x40000
+
 extern f32 Camera_GetFovY(void);
 extern f32 encoderType_803DEBF8;
 extern f32 displayOffsetH_803DEBFC;
@@ -144,7 +152,7 @@ void updateVisibleGeometry(void)
 
     cam = (u8*)Camera_GetCurrentViewSlot();
     n = 0;
-    if ((renderFlags & 8) != 0 || (renderFlags & 0x10000) != 0)
+    if ((renderFlags & 8) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
     {
         scale = Camera_GetFovY() / encoderType_803DEBF8;
     }
@@ -1293,14 +1301,14 @@ void doNothing_8005D14C(void)
 {
 }
 
-u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
+u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & RENDERFLAG_DRAW_DISTANCE; }
 int isWidescreen(void) { return renderFlags & 0x8; }
-u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
-u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
+u32 shouldDrawShadows(void) { return renderFlags & RENDERFLAG_DRAW_SHADOWS; }
+u32 shouldDrawClouds(void) { return renderFlags & RENDERFLAG_DRAW_CLOUDS; }
 
 u32 isOvercast(void)
 {
-    u32 v = renderFlags & 0x40000;
+    u32 v = renderFlags & RENDERFLAG_OVERCAST;
     u32 t = ((u32) - (s32)v | v) >> 31;
     return t;
 }
@@ -1325,8 +1333,8 @@ void gameFlagFn_8005ce6c(int v)
 
 void setIsOvercast(int v)
 {
-    if (v != 0) renderFlags |= 0x40000;
-    else renderFlags &= ~0x40000;
+    if (v != 0) renderFlags |= RENDERFLAG_OVERCAST;
+    else renderFlags &= ~RENDERFLAG_OVERCAST;
 }
 
 void fn_8005CECC(int v)
@@ -1337,8 +1345,8 @@ void fn_8005CECC(int v)
 
 void setPendingMapLoad(int v)
 {
-    if (v != 0) renderFlags |= 0x1000;
-    else renderFlags &= ~0x1000;
+    if (v != 0) renderFlags |= RENDERFLAG_PENDING_MAP_LOAD;
+    else renderFlags &= ~RENDERFLAG_PENDING_MAP_LOAD;
 }
 
 extern u8 gLoadedRomListPages[0x1e0];
@@ -1815,7 +1823,7 @@ void sceneDraw(void)
         t = 1;
     }
     flag = t;
-    if ((renderFlags & 0x40000) != 0)
+    if ((renderFlags & RENDERFLAG_OVERCAST) != 0)
     {
         (*gSkyInterface)->renderTimeOfDayBackdrop(0, 0);
         if (flag != 0)
@@ -1823,7 +1831,7 @@ void sceneDraw(void)
             drawSkyStars();
         }
         (*gSkyInterface)->render(0, 0, 0, 0, flag);
-        if ((renderFlags & 0x10) != 0)
+        if ((renderFlags & RENDERFLAG_DRAW_CLOUDS) != 0)
         {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         }
