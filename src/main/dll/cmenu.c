@@ -573,13 +573,13 @@ int cMenuRingIconRenderFn(int obj, int param2, int param3)
 void hudDrawCMenu(int p1, int p2, int p3)
 {
     u8 slot;
+    int j;
     int sel;
     int model;
     int* objs;
     u8* u;
     f32* v;
     int i;
-    int j;
     f32 thresh;
     f32 div;
     f32 sy;
