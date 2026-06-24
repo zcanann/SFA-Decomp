@@ -734,6 +734,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
 }
 
 extern char lbl_803822C8[];
+#define ROM_LIST_PAGE_COUNT 120
 extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 
@@ -1523,7 +1524,7 @@ void unloadMap(void)
     }
     lbl_803DCE98 = 0;
     Obj_ResetObjectSystem();
-    for (n = 0; n < 120; n++)
+    for (n = 0; n < ROM_LIST_PAGE_COUNT; n++)
     {
         if (gLoadedRomListPages[n] != 0)
         {
