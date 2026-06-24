@@ -1,5 +1,6 @@
 #include "main/sky_state.h"
 #include "main/sky_80080E58_shared.h"
+#define SKY_CONFIG_FIELD_COUNT 0xb
 #define GX_FALSE 0
 #define GX_TEV_SWAP0 0
 #define GX_TG_MTX2x4 1
@@ -1950,7 +1951,7 @@ void sky2_update(int a, int b, u8* cfg)
             *(u16*)((&gSky2State)[b1] + 4) = ((Sky2Config*)cfg)->flags | 0x100;
             (&gSky2State)[b1][0x315] = 1;
             *(f32*)((&gSky2State)[b1] + 0x304) = lbl_803DF108;
-            for (i = 0; i < 0xb; i++)
+            for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
             {
                 *(f32*)((&gSky2State)[b1] + i * 4 + 0xf4) =
                     (f32)(u32)
@@ -2051,12 +2052,12 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     {
         *(f32*)(base[b1] + i * 4 + 0x2ac) = lbl_803DF108;
     }
-    for (i = 0; i < 0xb; i++)
+    for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
     {
         *(f32*)(base[b1] + i * 4 + 0x1fc) = lbl_803DF10C;
         *(f32*)(base[b1] + i * 4 + 0x228) = lbl_803DF110;
     }
-    for (i = 0; i < 0xb; i++)
+    for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
     {
         *(f32*)(base[b1] + i * 4 + 0xf4) = (f32)(u32)
         cfg[gSkyConfigFieldIndices[i] + 0xc];
