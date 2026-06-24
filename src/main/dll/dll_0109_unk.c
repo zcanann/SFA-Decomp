@@ -109,7 +109,7 @@ void carryable_break_respawn_update(int obj)
     case DLL109_PHASE_BREAKING:
         ObjHits_ClearHitVolumes();
         ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         state->phase = DLL109_PHASE_RESPAWNING;
         state->timer = lbl_803E3B44;
         ((GameObject*)obj)->anim.localPosX = placement->posX;
@@ -125,7 +125,7 @@ void carryable_break_respawn_update(int obj)
                                             rootMotionScale) == 0)
             {
                 ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 state->phase = DLL109_PHASE_INTACT;
             }
         }
