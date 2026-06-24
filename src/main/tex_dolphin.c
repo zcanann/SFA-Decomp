@@ -459,8 +459,7 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
 void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, float* mtx)
 {
     u8 dBig[16];
-    int dOut1;
-    int dOut0;
+    int dOut[3];
     int count;
     float x1;
     float y1;
@@ -559,16 +558,16 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     else
                     {
                         modelLightStruct_getDiffuseColor((void*)gTexBlockLightList, &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)gTexBlockLightList, &dOut0, &dOut1, dBig);
+                        modelLightStruct_getPosition((void*)gTexBlockLightList, &dOut[0], &dOut[1], &dOut[2]);
                         modelLightStruct_getRadius((void*)gTexBlockLightList);
-                        fn_8004F6D8(c, &dOut0, g);
+                        fn_8004F6D8(c, &dOut[0], g);
                         p = &gTexBlockLightList + 1;
                         for (i = 1; i < count; i = i + 1)
                         {
                             modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
-                            modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
+                            modelLightStruct_getPosition((void*)*p, &dOut[0], &dOut[1], &dOut[2]);
                             modelLightStruct_getRadius((void*)*p);
-                            fn_8004F380(c, &dOut0);
+                            fn_8004F380(c, &dOut[0]);
                             p = p + 1;
                         }
                         if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x800) != 0))
@@ -587,9 +586,9 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     for (i = 0; i < count; i = i + 1)
                     {
                         modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)*p, &dOut0, &dOut1, dBig);
+                        modelLightStruct_getPosition((void*)*p, &dOut[0], &dOut[1], &dOut[2]);
                         modelLightStruct_getRadius((void*)*p);
-                        fn_8004FA30(c, &dOut0);
+                        fn_8004FA30(c, &dOut[0]);
                         p = p + 1;
                     }
                 }
