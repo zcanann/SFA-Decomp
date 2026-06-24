@@ -151,7 +151,7 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                         (one - (one - ratio) * (one - ratio)))));
             }
 
-            if ((emitter->flags & 0x00080000) == 0)
+            if ((emitter->flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM) == 0)
             {
                 if (((emitter->flags & 0x00000008) != 0) || ((listener->flags & 1) != 0))
                 {
