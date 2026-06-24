@@ -38,6 +38,11 @@ extern u8* synthVoice;
 #define SYNTH_VOICE_STRIDE 0x404
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET 0x114
 
+/* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
+#define SND_OUTPUTMODE_MONO 0     /* mono downmix */
+#define SND_OUTPUTMODE_STEREO 1   /* plain stereo */
+#define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
+
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
  *
@@ -179,17 +184,17 @@ void sndOutputMode(int mode)
     u32 oldFlags = synthFlags;
     switch (mode)
     {
-    case 0:
+    case SND_OUTPUTMODE_MONO:
         synthFlags = synthFlags | 0x1;
         synthFlags = synthFlags & ~0x2;
         hwDisableHRTF();
         break;
-    case 1:
+    case SND_OUTPUTMODE_STEREO:
         synthFlags = synthFlags & ~0x1;
         synthFlags = synthFlags & ~0x2;
         hwDisableHRTF();
         break;
-    case 2:
+    case SND_OUTPUTMODE_SURROUND:
         synthFlags = synthFlags & ~0x1;
         synthFlags = synthFlags | 0x2;
         hwDisableHRTF();
