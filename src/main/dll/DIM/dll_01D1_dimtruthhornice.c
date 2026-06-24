@@ -49,6 +49,13 @@ typedef struct DimtruthhorniceObjectDef
     s16 gameBit;
 } DimtruthhorniceObjectDef;
 
+typedef enum TruthHornIcePhase
+{
+    TRUTHHORNICE_PHASE_INTACT = 0,     /* takes hits; on break sets game bit, disables hits */
+    TRUTHHORNICE_PHASE_SHATTERING = 1, /* delay timer, then spawns the ice-shard burst */
+    TRUTHHORNICE_PHASE_SHATTERED = 2,  /* hidden */
+} TruthHornIcePhase;
+
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
@@ -96,7 +103,7 @@ void dimtruthhornice_init(int* obj, int* def)
         if (slot != -1 && GameBit_Get(slot) != 0u)
         {
             ObjHits_DisableObject(obj);
-            state->phase = 2;
+            state->phase = TRUTHHORNICE_PHASE_SHATTERED;
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
@@ -111,14 +118,14 @@ void dimtruthhornice_update(int* obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
     switch (extra->phase)
     {
-    case 0:
+    case TRUTHHORNICE_PHASE_INTACT:
         if (extra->hitsLeft <= 0)
         {
             if (extra->gameBit != -1)
             {
                 GameBit_Set(extra->gameBit, 1);
                 ObjHits_DisableObject(obj);
-                extra->phase = 1;
+                extra->phase = TRUTHHORNICE_PHASE_SHATTERING;
                 extra->timer = lbl_803E4A40;
             }
         }
@@ -135,14 +142,14 @@ void dimtruthhornice_update(int* obj)
             }
         }
         break;
-    case 1:
+    case TRUTHHORNICE_PHASE_SHATTERING:
         {
             f32 desc[6];
             extra->timer = extra->timer + timeDelta;
             if (extra->timer > lbl_803E4A44)
             {
                 int i;
-                extra->phase = 2;
+                extra->phase = TRUTHHORNICE_PHASE_SHATTERED;
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                 Sfx_PlayFromObject((int)obj, 1147);
                 for (i = 30; i != 0; i--)
@@ -168,7 +175,7 @@ void dimtruthhornice_update(int* obj)
             (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
             break;
         }
-    case 2:
+    case TRUTHHORNICE_PHASE_SHATTERED:
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     }
