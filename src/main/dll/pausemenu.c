@@ -289,8 +289,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 if (lbl_803DD7A4 != 0 && *(u16*)((u8*)lbl_803DD7A4 + 2) >= 2)
                 {
                     acc = 0x96;
-                    idx = 4;
                     i = 1;
+                    idx = 4;
                     while (i < *(u16*)((u8*)lbl_803DD7A4 + 2))
                     {
                         s32 sp28, sp24, sp20, sp1c;
