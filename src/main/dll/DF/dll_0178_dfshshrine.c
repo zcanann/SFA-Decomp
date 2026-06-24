@@ -63,8 +63,8 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern int ObjList_FindObjectById(int objId);
-extern void fn_8014C5C0(int obj);
+extern void* ObjList_FindObjectById(int objId);
+extern void fn_8014C5C0(void* obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern const f32 lbl_803E4E8C;
@@ -421,7 +421,7 @@ void dfsh_shrine_update(int obj)
             for (i = 0; i < 10; i++)
             {
                 int targetId;
-                int targetObj;
+                void* targetObj;
 
                 targetId = DFSH_TARGET_OBJECT(i);
                 if (targetId != -1)
