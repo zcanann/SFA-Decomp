@@ -1542,8 +1542,8 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
     extern int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB,
                                        u32 mask, int skelMask);
 
-    stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
+    stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     if ((u32)attA != 0)
     {
         attStateA = ObjAnim_GetPriorityHitState((ObjAnimComponent*)attA);
