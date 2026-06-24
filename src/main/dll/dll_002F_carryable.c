@@ -160,7 +160,7 @@ int Carryable_updateHeld(u8* obj)
         t = (void*)*(u8**)(obj + 0x78);
         if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6
             && (buttonGetDisabled(0) & 0x100) == 0
-            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0
+            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0
             && ((GameObject*)obj)->unkF8 == 0)
         {
             *(s16*)held = 0;
@@ -179,7 +179,7 @@ int Carryable_updateHeld(u8* obj)
             u8* hit;
             f32** p;
             ObjHits_SyncObjectPositionIfDirty(obj);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject*)obj)->anim.velocityY);
