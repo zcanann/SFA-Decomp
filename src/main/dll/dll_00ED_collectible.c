@@ -1041,7 +1041,7 @@ void collectible_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         collectible_updateIdleMotion(obj);
         if (((CollectibleState*)state)->bounceTimer != 0)
         {
