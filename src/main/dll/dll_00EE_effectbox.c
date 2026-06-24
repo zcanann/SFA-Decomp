@@ -4,10 +4,10 @@
  * position into the box's local space (yaw/pitch from the placement) and,
  * if it lies inside the box extents, fires an action on that object.
  *
- * The placement's targetMode selects the candidate set: 0 = Tricky, 1 =
- * the player, 2 = every object in object group 5. The action depends on
- * the same mode (Tricky gets fn_80295918 with actionArg; group members get a
- * vtable call at slot 0x28). A non-negative placement game bit gates the
+ * The placement's targetMode selects the candidate set: 0 = the player,
+ * 1 = Tricky, 2 = every object in object group 5. The action depends on
+ * the same mode (the player gets fn_80295918 with actionArg; group members get
+ * a vtable call at slot 0x28). A non-negative placement game bit gates the
  * box: it only runs while the bit's value differs from gameBitValue.
  */
 #include "main/game_object.h"
@@ -38,9 +38,14 @@ typedef struct EffectboxPlacement
     u8 pad1E;
     u8 gameBitValue;    /* 0x1F: gate value compared against the game bit */
     s16 gameBitIndex;          /* 0x20: game bit index */
-    u8 targetMode;      /* 0x22: 0 Tricky, 1 player, 2 object group */
+    u8 targetMode;      /* 0x22: EFFECTBOX_TARGET_* candidate set */
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
+
+/* EffectboxPlacement.targetMode values */
+#define EFFECTBOX_TARGET_PLAYER 0 /* Obj_GetPlayerObject */
+#define EFFECTBOX_TARGET_TRICKY 1 /* getTrickyObject */
+#define EFFECTBOX_TARGET_GROUP 2  /* every object in object group 5 */
 
 int effectbox_getExtraSize(void) { return 0x0; }
 int effectbox_getObjectTypeId(void) { return 0x0; }
@@ -95,7 +100,7 @@ void effectbox_update(int obj)
         extZ = (f32)((EffectboxPlacement*)def)->extentZ;
         switch (((EffectboxPlacement*)def)->targetMode)
         {
-        case 0:
+        case EFFECTBOX_TARGET_PLAYER:
             single = (int)Obj_GetPlayerObject();
             if (single == 0u)
             {
@@ -104,7 +109,7 @@ void effectbox_update(int obj)
             list = &single;
             count = 1;
             break;
-        case 1:
+        case EFFECTBOX_TARGET_TRICKY:
             single = (int)getTrickyObject();
             if (single == 0u)
             {
@@ -113,7 +118,7 @@ void effectbox_update(int obj)
             list = &single;
             count = 1;
             break;
-        case 2:
+        case EFFECTBOX_TARGET_GROUP:
             list = (int*)ObjGroup_GetObjects(5, &count);
             if (list == NULL)
             {
@@ -145,12 +150,12 @@ void effectbox_update(int obj)
                     {
                         switch (((EffectboxPlacement*)def)->targetMode)
                         {
-                        case 1:
+                        case EFFECTBOX_TARGET_TRICKY:
                             break;
-                        case 0:
+                        case EFFECTBOX_TARGET_PLAYER:
                             fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
                             break;
-                        case 2:
+                        case EFFECTBOX_TARGET_GROUP:
                             (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(other, ((EffectboxPlacement*)def)->actionArg);
                             break;
                         }
