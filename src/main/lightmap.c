@@ -137,6 +137,7 @@ extern float fn_802943F4(float x);
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_propagation off
 void updateVisibleGeometry(void)
 {
     u8* cam;
@@ -213,6 +214,7 @@ void updateVisibleGeometry(void)
     n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
+#pragma opt_propagation reset
 
 u32 FUN_8005af70(int idx)
 {
