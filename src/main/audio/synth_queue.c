@@ -1,5 +1,10 @@
 #include "src/main/audio/synth_internal.h"
 
+/* SynthVoice.state - which intrusive list the voice sits on */
+#define SYNTH_VOICE_STATE_FREE 0      /* unallocated */
+#define SYNTH_VOICE_STATE_QUEUED 1    /* on gSynthQueuedVoices; awaiting start */
+#define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
+
 /* MusyX sequencer arrangement data (ARR). */
 typedef struct SynthArrangement
 {
@@ -84,7 +89,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     }
     nseq->prev = 0;
     gSynthQueuedVoices = nseq;
-    nseq->state = 1;
+    nseq->state = SYNTH_VOICE_STATE_QUEUED;
     for (i = 0; i < 16; i++)
     {
         nseq->section[i].eventList = 0;
@@ -372,7 +377,7 @@ void synthQueueVoice(SynthVoice* voice)
     }
     voice->prev = 0;
     gSynthAllocatedVoices = voice;
-    voice->state = 2;
+    voice->state = SYNTH_VOICE_STATE_ALLOCATED;
 }
 
 /*
@@ -419,7 +424,7 @@ done:
     if ((found & 0x80000000) == 0)
     {
         voice = &gSynthVoices[found];
-        if (voice->state != 1) return;
+        if (voice->state != SYNTH_VOICE_STATE_QUEUED) return;
 
         if (voice->prev != 0)
         {
@@ -440,7 +445,7 @@ done:
         }
         voice->prev = 0;
         gSynthAllocatedVoices = voice;
-        voice->state = 2;
+        voice->state = SYNTH_VOICE_STATE_ALLOCATED;
 
         {
             SynthVoice* base = voice;
@@ -469,7 +474,7 @@ done:
     {
         u32 idx = found & 0x7fffffffu;
         voice = &gSynthVoices[idx];
-        if (voice->state == 0) return;
+        if (voice->state == SYNTH_VOICE_STATE_FREE) return;
         voice->pendingUpdate.flags |= 8;
     }
 }
@@ -526,7 +531,7 @@ done:
         voice = &runtime->voices[found];
         switch (runtime->voices[found].state)
         {
-        case 1:
+        case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
             {
                 voice->prev->next = voice->next;
@@ -575,7 +580,7 @@ done:
         {
             voice->next->prev = voice->prev;
         }
-        voice->state = 0;
+        voice->state = SYNTH_VOICE_STATE_FREE;
         if (gSynthFreeVoices != 0)
         {
             gSynthFreeVoices->prev = voice;
@@ -587,7 +592,7 @@ done:
     else
     {
         voice = &runtime->voices[found & 0x7fffffffu];
-        if (voice->state != 0)
+        if (voice->state != SYNTH_VOICE_STATE_FREE)
         {
             voice->pendingUpdate.output = 0;
         }
@@ -704,7 +709,7 @@ done:
     if ((found & 0x80000000) == 0)
     {
         voice = &gSynthVoices[found];
-        if (voice->state != 2)
+        if (voice->state != SYNTH_VOICE_STATE_ALLOCATED)
         {
             return;
         }
@@ -728,7 +733,7 @@ done:
         }
         voice->prev = 0;
         gSynthQueuedVoices = voice;
-        voice->state = 1;
+        voice->state = SYNTH_VOICE_STATE_QUEUED;
     }
     else
     {
