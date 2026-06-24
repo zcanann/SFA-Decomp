@@ -466,11 +466,11 @@ void landed_arwing_update(int obj)
 
     if ((u32)player != 0 && (u32)fn_802972A8(player) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 
     switch (state->sequenceState)
