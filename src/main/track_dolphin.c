@@ -3142,10 +3142,10 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
     f32 oz;
     f32 planeC;
     f32 ox;
+    f32 arrA[7];
+    f32 arrB[7];
+    f32 arrC[7];
     f32 vec[3];
-    f32 arrC[4];
-    f32 arrB[4];
-    f32 arrA[4];
 
     if (*(void**)desc == NULL)
     {
