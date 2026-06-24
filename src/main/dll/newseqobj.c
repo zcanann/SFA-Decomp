@@ -25,7 +25,19 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/fx_800944A0_shared.h"
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
-extern u8 lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
+
+/* per-family table-of-tables row (0x28 bytes); holds pointers to the
+ * sub-tables that drive a family's anim sequencing. */
+typedef struct
+{
+    u8* tbl0;     /* 0x00 */
+    u8* tbl4;     /* 0x04 */
+    u8  pad08[0x14]; /* 0x08 */
+    u8* tbl1c;    /* 0x1c */
+    u8  pad20[0x08]; /* 0x20 */
+} FamilyTable;
+
+extern FamilyTable lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8015039C(void* p1, void* p2);
 extern u32 fn_8014FFB4(void* p1, void* p2, int p3);
@@ -76,7 +88,7 @@ typedef struct
 
 int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
 {
-    u8* slot = lbl_8031F16C;
+    u8* slot = (u8*)lbl_8031F16C;
     u8* animRows;
     u8* rowsC;
     u8* rowsB;
@@ -370,18 +382,17 @@ void fn_80150EDC(void* obj, void* state)
 void fn_80150910(int* obj, u8* state)
 {
     RomCurveWalker* path = *(RomCurveWalker**)state;
-    u8* slot = lbl_8031F16C;
+    u8 idx = state[0x33b];
     u8* tbl4;
     u8* tbl0;
     u8* tbl1c;
     u32 flags;
 
-    slot += state[0x33b] * 0x28;
-    tbl4 = *(u8**)(slot + 4);
-    tbl0 = *(u8**)slot;
-    tbl1c = *(u8**)(slot + 0x1c);
+    tbl4 = lbl_8031F16C[idx].tbl4;
+    tbl0 = lbl_8031F16C[idx].tbl0;
+    tbl1c = lbl_8031F16C[idx].tbl1c;
 
-    if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
+    if (idx == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
         GameBit_Set(0x1c8, 1);
     }
