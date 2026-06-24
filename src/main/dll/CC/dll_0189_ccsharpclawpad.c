@@ -56,7 +56,7 @@ void ccsharpclawpad_update(int obj)
 
     if (GameBit_Get(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         particleArgs.offset[0] = lbl_803E46A8;
         particleArgs.offset[1] = lbl_803E46AC;
         particleArgs.offset[2] = lbl_803E46B0;
@@ -68,14 +68,14 @@ void ccsharpclawpad_update(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if (GameBit_Get(0x40) == 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         state = ((GameObject*)obj)->extra;
         if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
@@ -101,7 +101,7 @@ void ccsharpclawpad_update(int obj)
         {
             Sfx_PlayFromObject(obj, 0x109);
             GameBit_Set(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         particleArgs.offset[0] = lbl_803E46A8;
         particleArgs.offset[1] = lbl_803E46AC;
