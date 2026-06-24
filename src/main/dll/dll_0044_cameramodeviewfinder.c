@@ -30,6 +30,15 @@
 #include "main/dll/player_objects.h"
 #include "main/rcp_dolphin.h"
 #include "sfa_light_decls.h"
+
+/* ViewfinderState.mode state machine (see file header) */
+#define VIEWFINDER_MODE_ENTER_BLEND 0
+#define VIEWFINDER_MODE_YAW_SETTLE 1
+#define VIEWFINDER_MODE_ACTIVE 2
+#define VIEWFINDER_MODE_EXIT_BLEND 3
+#define VIEWFINDER_MODE_FADE_BACK 4
+#define VIEWFINDER_MODE_IDLE 5
+
 extern u8 padGetCY(int port);
 extern s8 padGetStickX(int port);
 extern s8 padGetStickY(int port);
@@ -317,22 +326,22 @@ void CameraModeViewfinder_update(s16* obj)
     firstPersonPlaceCamera((GameObject*)camObj, 0);
     switch (lbl_803DD548->mode)
     {
-    case 0:
+    case VIEWFINDER_MODE_ENTER_BLEND:
         lbl_803DD548->mode = firstPersonEnter((u8*)obj, (s16*)*(int*)&((GameObject*)obj)->anim.targetObj);
         break;
-    case 1:
+    case VIEWFINDER_MODE_YAW_SETTLE:
         if (Curve_AdvanceAlongPath(&lbl_803DD548->viewCurve, lbl_803E1820) != 0)
         {
             if (lbl_803DD548->flags.zoomHudEnabled)
             {
                 Rcp_SetViewFinderHudEnabled(1);
             }
-            lbl_803DD548->mode = 2;
+            lbl_803DD548->mode = VIEWFINDER_MODE_ACTIVE;
         }
         *obj = lbl_803DD548->viewCurve.sample[0];
         *(u8*)(obj + 0x9f) = 1;
         break;
-    case 2:
+    case VIEWFINDER_MODE_ACTIVE:
         if (lbl_803DD548->flags.zoomHudEnabled)
         {
             Rcp_SetViewFinderHudEnabled(1);
@@ -343,11 +352,11 @@ void CameraModeViewfinder_update(s16* obj)
             buttonDisable(0, 0x200);
             firstPersonExit((CameraObject*)obj);
             Rcp_SetViewFinderHudEnabled(0);
-            lbl_803DD548->mode = 3;
+            lbl_803DD548->mode = VIEWFINDER_MODE_EXIT_BLEND;
         }
         *(u8*)(obj + 0x9f) = 0;
         break;
-    case 3:
+    case VIEWFINDER_MODE_EXIT_BLEND:
         angleDiff = Curve_AdvanceAlongPath(&lbl_803DD548->viewCurve, lbl_803E1820);
         *obj = lbl_803DD548->viewCurve.sample[0];
         obj[1] = lbl_803DD548->viewCurve.sample[1];
@@ -363,7 +372,7 @@ void CameraModeViewfinder_update(s16* obj)
             curvesMove(&lbl_803DD548->viewCurve);
             *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) = *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) & ~0x4000;
             firstPersonZoomOutOnExit(0xf, 0xfe);
-            lbl_803DD548->mode = 4;
+            lbl_803DD548->mode = VIEWFINDER_MODE_FADE_BACK;
             if (lbl_803DD548->flags.sfxEnabled)
             {
                 Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? 0x3f5 : 0x3f3);
@@ -371,7 +380,7 @@ void CameraModeViewfinder_update(s16* obj)
         }
         *(u8*)(obj + 0x9f) = 1;
         break;
-    case 4:
+    case VIEWFINDER_MODE_FADE_BACK:
         ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
         ((GameObject*)obj)->anim.worldPosY = lbl_803DD548->posYCurve.end;
         ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
@@ -457,7 +466,7 @@ void CameraModeViewfinder_update(s16* obj)
         }
         *(u8*)(obj + 0x9f) = 1;
         break;
-    case 5:
+    case VIEWFINDER_MODE_IDLE:
         break;
     }
     if (ObjHits_GetPriorityHit(*(int*)&((GameObject*)obj)->anim.targetObj, 0, 0, 0) != 0)
@@ -587,11 +596,11 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     }
     if (mode == 1)
     {
-        lbl_803DD548->mode = 5;
+        lbl_803DD548->mode = VIEWFINDER_MODE_IDLE;
     }
     else
     {
-        lbl_803DD548->mode = 0;
+        lbl_803DD548->mode = VIEWFINDER_MODE_ENTER_BLEND;
         lbl_803DD548->flags.sfxEnabled = 1;
         Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? 0x3f4 : 0x28b);
     }
