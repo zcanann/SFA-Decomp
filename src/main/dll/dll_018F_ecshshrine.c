@@ -373,6 +373,9 @@ void ecsh_shrine_free(int* obj)
     GameBit_Set(0xa7f, 1);
 }
 
+/* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
+#define ECSHSHRINE_CUP_COUNT 6
+
 typedef struct EcshPuzzleState
 {
     f32 cupPos[12]; /* 0x00: the 6 cups' (x,z) positions */
@@ -619,7 +622,7 @@ void ecsh_shrine_update(s16* obj)
                         }
                         if (pick == 0)
                         {
-                            for (n = 0; n < 6; n++)
+                            for (n = 0; n < ECSHSHRINE_CUP_COUNT; n++)
                             {
                                 ps->cupSlotMap[n] += 1;
                                 if (ps->cupSlotMap[n] > 5)
@@ -630,7 +633,7 @@ void ecsh_shrine_update(s16* obj)
                         }
                         else if (pick == 1)
                         {
-                            for (n = 0; n < 6; n++)
+                            for (n = 0; n < ECSHSHRINE_CUP_COUNT; n++)
                             {
                                 ps->cupSlotMap[n] -= 1;
                                 if (ps->cupSlotMap[n] < 0)
