@@ -18238,29 +18238,29 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
         if ((u16)v < 0x1770)
         {
             r4c = *(int*)&((GameObject*)obj)->anim.placementData;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             switch (*(int*)((char*)r4c + 0x14))
             {
             case 0x46a51:
                 if (GameBit_Get(0xc52))
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 break;
             case 0x46a55:
                 if (GameBit_Get(0xc53))
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 break;
             case 0x49928:
                 if (GameBit_Get(0xc54))
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
                 break;
             }
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
                 buttonDisable(0, 0x100);
                 switch (*(int*)((char*)r4c + 0x14))
@@ -18275,7 +18275,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                             (*gObjectTriggerInterface)
                                 ->runSequence(3, (void*)obj, -1);
                             *(u8*)((char*)sub + 0x2e) = 1;
-                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                         }
                     }
                     else
@@ -18294,7 +18294,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                             (*gObjectTriggerInterface)
                                 ->runSequence(5, (void*)obj, -1);
                             *(u8*)((char*)sub + 0x2e) = 1;
-                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                         }
                     }
                     else
@@ -18313,7 +18313,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                             (*gObjectTriggerInterface)
                                 ->runSequence(7, (void*)obj, -1);
                             *(u8*)((char*)sub + 0x2e) = 1;
-                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                         }
                     }
                     else
@@ -18327,7 +18327,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedB != 0 || *(s8*)&((PlayerState*)state)->baddie.moveDone
             != 0)
