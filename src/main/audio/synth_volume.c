@@ -251,12 +251,12 @@ int synthHWMessageHandler(int mode, u32 arg)
     {
     case 0:
         {
-            if (*((synthVoice + 0x11c) + (arg & 0xff) * 0x404) != 0)
+            if (*((synthVoice + 0x11c) + (arg & 0xff) * SYNTH_VOICE_STRIDE) != 0)
             {
                 break;
             }
             synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
-            if (arg != *(u32*)((u8*)(synthVoice + 0xf4) + (arg & 0xff) * 0x404))
+            if (arg != *(u32*)((u8*)(synthVoice + 0xf4) + (arg & 0xff) * SYNTH_VOICE_STRIDE))
             {
                 break;
             }
