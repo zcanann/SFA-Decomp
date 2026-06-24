@@ -163,7 +163,7 @@ void dbegg_processMessages(int obj)
                 ObjHits_DisableObject(obj);
                 *(u8*)(sub + 0x118) = 11;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
                 break;
             case 17:
                 {
@@ -187,7 +187,7 @@ void dbegg_processMessages(int obj)
             case 20:
                 *(u8*)(sub + 0x118) = 5;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 ObjHits_EnableObject(obj);
                 break;
             case 19:
@@ -708,7 +708,7 @@ void dbegg_update(int obj)
                 }
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                         ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
             break;
         case DBEGG_MODE_SETTLED:
@@ -716,12 +716,12 @@ void dbegg_update(int obj)
             {
                 hitState->flags |= 1;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_DRIFTING:
             if (((DbEggState*)blob)->flags119 & 4)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + (((DbeggPlacement*)data)->
                     targetPosX - ((GameObject*)obj)->anim.localPosX) / (fz = lbl_803E61E4);
                 ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + (((DbeggPlacement*)data)->
@@ -777,7 +777,7 @@ void dbegg_update(int obj)
             }
             if (GameBit_Get(0x426) != 0)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ((DbEggState*)blob)->waterOffset = ((DbEggState*)blob)->waterOffset - lbl_803E623C * timeDelta;
                 if (((DbEggState*)blob)->waterOffset < lbl_803E61EC)
                 {
@@ -787,16 +787,16 @@ void dbegg_update(int obj)
                     ((GameObject*)obj)->anim.velocityY = lbl_803E61C8;
                     ((GameObject*)obj)->anim.velocityX = fz;
                     ((GameObject*)obj)->anim.velocityZ = fz;
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
             else if (((DbEggState*)blob)->flags119 & 2)
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
             break;
         case DBEGG_MODE_INERT:
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
             if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (((DbEggState*)blob)->flags119 & 2) == 0)
@@ -808,7 +808,7 @@ void dbegg_update(int obj)
                 ((DbEggState*)b2)->mode = DBEGG_MODE_RELEASED;
                 GameBit_Set(0x3c4, 1);
                 GameBit_Set(0x86d, 1);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 GameBit_Set(((DbeggPlacement*)d2)->triggerGameBit, 1);
                 ((DbEggState*)b2)->msg11C = -1;
                 ((DbEggState*)b2)->msg11E = 0;
@@ -819,17 +819,17 @@ void dbegg_update(int obj)
             else if (getButtonsJustPressed(0) & 0x100)
             {
                 ((DbEggState*)blob)->mode = DBEGG_MODE_FALLING;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
             else
             {
                 hitState->flags &= ~1;
                 ObjMsg_SendToObject(player, 0x100008, obj, 0x38000);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
             break;
         case DBEGG_MODE_HELD:
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             return;
         case DBEGG_MODE_SINKING:
             fn_801FE560(obj, &h, lbl_803E61C8, *(f32*)&lbl_803E61C8, 0);
@@ -871,7 +871,7 @@ void dbegg_update(int obj)
             }
             else
             {
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ((DbEggState*)blob)->mode = DBEGG_MODE_CURVE_FOLLOW;
                 n = ((DbEggState*)blob)->flags119;
                 if (n & 4)
@@ -965,16 +965,16 @@ void dbegg_update(int obj)
         }
         if (((DbEggState*)blob)->flags119 & 8)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             ObjHits_DisableObject(obj);
             if (GameBit_Get(((DbeggPlacement*)data)->triggerGameBit) != 0)
             {
                 ((DbEggState*)blob)->flags119 &= ~9;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_EnableObject(obj);
             }
         }
-        else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+        else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
             if (GameBit_Get(0x3c4) == 0)
             {
@@ -989,7 +989,7 @@ void dbegg_update(int obj)
                         ((DbEggState*)b2)->mode = DBEGG_MODE_RELEASED;
                         GameBit_Set(0x3c4, 1);
                         GameBit_Set(0x86d, 1);
-                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                         GameBit_Set(((DbeggPlacement*)d2)->triggerGameBit, 1);
                         ((DbEggState*)b2)->msg11C = -1;
                         ((DbEggState*)b2)->msg11E = 0;
@@ -1002,7 +1002,7 @@ void dbegg_update(int obj)
                         v = v >= lbl_803E61C8 ? v : -v;
                         if (v < lbl_803E6268)
                         {
-                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                             ((DbEggState*)blob)->mode = DBEGG_MODE_PICKUP_PROMPT;
                             hitState->flags &= ~1;
                         }
