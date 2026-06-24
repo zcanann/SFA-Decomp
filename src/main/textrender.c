@@ -1579,7 +1579,7 @@ void gameTextInitFn_8001a234(void)
     }
 
     i = 4;
-    request = gameTextBase + 0x1660;
+    request = gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET;
     zero = lbl_803DE704;
     while (request -= 0x28, i-- != 0)
     {
