@@ -4049,7 +4049,7 @@ extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, i
 extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
 extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
 typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
-extern int* ObjModel_GetRenderOp(int am0, int idx);
+extern int* ObjModel_GetRenderOp(u8* am0, int idx);
 extern void GXSetTevColor(int id, u32* color);
 
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
@@ -4269,7 +4269,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 6;
-                op = ObjModel_GetRenderOp((int)m, (w >> (pos & 7)) & 0x3f);
+                op = ObjModel_GetRenderOp(m, (w >> (pos & 7)) & 0x3f);
             }
             break;
         case 2:
@@ -4658,7 +4658,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         {
             u32 w;
             int pos = bs.pos;
-            u8* p = (u8*)((pos >> 3) + bs.data);
+            int off = pos >> 3;
+            u8* p = (u8*)(off + bs.data);
             w = p[0];
             w |= p[1] << 8;
             w |= p[2] << 16;
@@ -4673,23 +4674,24 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         case 1:
             if (mode == 0 || mode == 4 || mode == 8)
             {
+                u32 idx;
                 if (lbl_803DCC20 == 0)
                 {
-                    u32 idx = objRenderFn_8003edf4((u8*)obj, m, am, &bs);
-                    op = ObjModel_GetRenderOp((int)m, idx);
+                    idx = objRenderFn_8003edf4((u8*)obj, m, am, &bs);
+                    op = ObjModel_GetRenderOp(m, idx);
                 }
                 else
                 {
-                    u32 idx;
                     u32 w;
                     int pos = bs.pos;
-                    u8* p = (u8*)((pos >> 3) + bs.data);
+                    int off = pos >> 3;
+                    u8* p = (u8*)(off + bs.data);
                     w = p[0];
                     w |= p[1] << 8;
                     w |= p[2] << 16;
                     bs.pos = pos + 6;
                     idx = (w >> (pos & 7)) & 0x3f;
-                    op = ObjModel_GetRenderOp((int)m, idx);
+                    op = ObjModel_GetRenderOp(m, idx);
                     refs = ObjModel_GetRenderOpTextureRefs(am, idx);
                 }
             }
@@ -4700,7 +4702,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 u8* dl;
                 u32 w;
                 int pos = bs.pos;
-                u8* p = (u8*)((pos >> 3) + bs.data);
+                int off = pos >> 3;
+                u8* p = (u8*)(off + bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -4976,7 +4979,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     {
         return idx;
     }
-    op = ObjModel_GetRenderOp(*am, idx);
+    op = ObjModel_GetRenderOp((u8*)*am, idx);
     refs = ObjModel_GetRenderOpTextureRefs(am, idx);
     resetLotsOfRenderVars();
     envtex = 0;
