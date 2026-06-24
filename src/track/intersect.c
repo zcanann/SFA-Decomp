@@ -324,7 +324,7 @@ void drawFn_8006f500(void)
     GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
     GXSetNumChans(0);
     GXSetTevOrder(0, 0, 0, 0xff);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
     GXSetTevKAlphaSel(0, 0x1c);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
@@ -842,7 +842,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     wrapBit = (((Texture *)tex2)->maxLod - ((Texture *)tex2)->minLod > 0) ? 1 : 0;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60,
                  ((Texture *)tex2)->width, ((Texture *)tex2)->height,
-                 ((Texture *)tex2)->format, 1, 1, wrapBit);
+                 ((Texture *)tex2)->format, GX_REPEAT, GX_REPEAT, wrapBit);
     selectTexture(tex2, 2);
     GXLoadTexMtxImm(lbl_80396850, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
@@ -874,7 +874,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetTevColor(3, *(GXColor*)&lbl_803DB6F4);
     GXSetTevKColor(0, *(GXColor*)&lbl_803DB6F8);
     GXSetTevKColorSel(1, 0xC);
-    GXSetIndTexOrder(0, 2, 2);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EAA0, -1);
     GXSetIndTexMtx(2, lbl_8030EAA0, -2);
@@ -896,7 +896,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetTevSwapMode(1, 0, 0);
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 3, 0, 4);
     GXSetTevColorIn(2, 0, 8, 9, 0xf);
     GXSetTevAlphaIn(2, 7, 7, 7, 5);
@@ -922,7 +922,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(0, 3, 0);
+                    GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -933,7 +933,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 1);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 1;
@@ -947,7 +947,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
             } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 0);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -961,7 +961,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -970,7 +970,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -983,7 +983,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -992,7 +992,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -1070,19 +1070,19 @@ void screenImageDraw(u8 alpha)
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
 
     GXSetTevOrder(0, 0xFF, 0xFF, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(0, 7, 7, 7, 7);
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
 
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA70, -3);
     GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 1);
 
-    GXSetIndTexOrder(1, 2, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, lbl_8030EA88, -3);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 1);
@@ -1103,7 +1103,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTevKColorSel(3, 0xC);
     GXSetTevKAlphaSel(3, 0x4);
-    GXSetTevDirect(3);
+    GXSetTevDirect(GX_TEVSTAGE3);
     GXSetTevOrder(3, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(3, 0xF, 0xE, 0, 0xF);
     GXSetTevAlphaIn(3, 6, 7, 7, 0);
@@ -1113,7 +1113,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTevKColorSel(4, 0xD);
     GXSetTevKAlphaSel(4, 0x4);
-    GXSetTevDirect(4);
+    GXSetTevDirect(GX_TEVSTAGE4);
     GXSetTevOrder(4, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(4, 0xE, 0xF, 0, 2);
     GXSetTevAlphaIn(4, 0, 7, 7, 6);
@@ -1123,7 +1123,7 @@ void screenImageDraw(u8 alpha)
 
     GXSetTevKColorSel(5, 0xE);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
-    GXSetTevDirect(5);
+    GXSetTevDirect(GX_TEVSTAGE5);
     GXSetTevColorIn(5, 0xF, 0xE, 0, 0xF);
     GXSetTevAlphaIn(5, 1, 7, 7, 2);
     GXSetTevSwapMode(5, 0, 0);
@@ -1134,7 +1134,7 @@ void screenImageDraw(u8 alpha)
     GXSetTevKAlphaSel(6, 0x4);
     GXSetTevColor(3, lbl_803DB6E0);
     GXSetTevOrder(6, 0xFF, 0xFF, 0xFF);
-    GXSetTevDirect(6);
+    GXSetTevDirect(GX_TEVSTAGE6);
     GXSetTevColorIn(6, 0xE, 0xF, 0, 4);
     GXSetTevAlphaIn(6, 7, 7, 7, 0);
     GXSetTevSwapMode(6, 0, 0);
@@ -1142,7 +1142,7 @@ void screenImageDraw(u8 alpha)
     GXSetTevAlphaOp(6, 0, 0, 0, 1, 0);
 
     GXSetTevKAlphaSel(7, 0x1C);
-    GXSetTevDirect(7);
+    GXSetTevDirect(GX_TEVSTAGE7);
     GXSetTevOrder(7, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(7, 4, 2, 1, 0xF);
     GXSetTevAlphaIn(7, 7, 7, 7, 6);
@@ -1164,14 +1164,14 @@ void screenImageDraw(u8 alpha)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -1222,10 +1222,10 @@ void doSpiritVisionFilter(void)
 
     updateReflectionTextures();
     selectReflectionTexture(0);
-    GXSetTevSwapModeTable(0, 1, 2, 0, 3);
-    GXSetTevSwapModeTable(1, 0, 0, 0, 3);
-    GXSetTevSwapModeTable(2, 1, 1, 1, 3);
-    GXSetTevSwapModeTable(3, 2, 2, 2, 3);
+    GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_GREEN, GX_CH_BLUE, GX_CH_RED, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_ALPHA);
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
@@ -1242,7 +1242,7 @@ void doSpiritVisionFilter(void)
     GXSetNumTevStages(4);
 
     GXSetTevKColorSel(0, 0xC);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xff);
     GXSetTevColorIn(0, 0xf, 8, 0xe, 2);
     GXSetTevAlphaIn(0, 7, 7, 7, 1);
@@ -1252,7 +1252,7 @@ void doSpiritVisionFilter(void)
 
     GXSetTevKColorSel(1, 0xD);
     GXSetTevKAlphaSel(1, 0x1D);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 0, 0, 0xff);
     GXSetTevColorIn(1, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(1, 7, 7, 7, 0);
@@ -1261,7 +1261,7 @@ void doSpiritVisionFilter(void)
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 3);
 
     GXSetTevKColorSel(2, 0xE);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 0, 0, 0xff);
     GXSetTevColorIn(2, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(2, 7, 7, 7, 0);
@@ -1269,7 +1269,7 @@ void doSpiritVisionFilter(void)
     GXSetTevColorOp(2, 0, 0, 3, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
 
-    GXSetTevDirect(3);
+    GXSetTevDirect(GX_TEVSTAGE3);
     GXSetTevOrder(3, 0, 0, 0xff);
     GXSetTevColorIn(3, 0, 0xf, 0xf, 8);
     GXSetTevAlphaIn(3, 7, 7, 7, 0);
@@ -1284,14 +1284,14 @@ void doSpiritVisionFilter(void)
     GXSetBlendMode(0, 1, 0, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -1325,7 +1325,7 @@ void doSpiritVisionFilter(void)
     GXWGFifo.s16 = 0x80;
 
     Camera_RebuildProjectionMatrix();
-    GXSetTevSwapModeTable(0, 0, 1, 2, 3);
+    GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_ALPHA);
 }
 
 void doColorFilter(u8* mod)
@@ -1361,9 +1361,9 @@ void doColorFilter(u8* mod)
 
     updateReflectionTextures();
     selectReflectionTexture(0);
-    GXSetTevSwapModeTable(1, 0, 0, 0, 3);
-    GXSetTevSwapModeTable(2, 1, 1, 1, 3);
-    GXSetTevSwapModeTable(3, 2, 2, 2, 3);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_ALPHA);
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
@@ -1380,7 +1380,7 @@ void doColorFilter(u8* mod)
     GXSetNumTevStages(3);
 
     GXSetTevKColorSel(0, 0xC);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xff);
     GXSetTevColorIn(0, 0xf, 8, 0xe, 2);
     GXSetTevAlphaIn(0, 7, 7, 7, 1);
@@ -1390,7 +1390,7 @@ void doColorFilter(u8* mod)
 
     GXSetTevKColorSel(1, 0xD);
     GXSetTevKAlphaSel(1, 0x1D);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 0, 0, 0xff);
     GXSetTevColorIn(1, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(1, 7, 7, 7, 0);
@@ -1399,7 +1399,7 @@ void doColorFilter(u8* mod)
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 3);
 
     GXSetTevKColorSel(2, 0xE);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 0, 0, 0xff);
     GXSetTevColorIn(2, 0xf, 8, 0xe, 0);
     GXSetTevAlphaIn(2, 7, 7, 7, 0);
@@ -1414,14 +1414,14 @@ void doColorFilter(u8* mod)
     GXSetBlendMode(0, 1, 0, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -1536,9 +1536,9 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     fn_8006C540(&handle2);
     selectTexture(handle2, 2);
 
-    GXSetTevSwapModeTable(1, 0, 0, 0, 3);
-    GXSetTevSwapModeTable(2, 1, 1, 1, 3);
-    GXSetTevSwapModeTable(3, 2, 2, 2, 3);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_ALPHA);
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     GXSetTexCoordGen2(1, 1, 4, 0x3C, 0, 0x7D);
@@ -1605,7 +1605,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXLoadTexMtxImm(mtx_d0, 0x21, 1);
     GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
 
-    GXSetIndTexOrder(0, 3, 3);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD3, GX_TEXMAP3);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, 1);
 
@@ -1621,7 +1621,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetNumTevStages(6);
 
     GXSetTevKAlphaSel(0, 0x1C);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 1, 1, 0xFF);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(0, 4, 7, 7, 6);
@@ -1630,7 +1630,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevAlphaOp(0, 1, 0, 2, 1, 3);
 
     GXSetTevKAlphaSel(1, 0x1C);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 1, 1, 0xFF);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(1, 6, 7, 7, 4);
@@ -1663,7 +1663,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(4, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(4, 0, 0, 2, 1, 0);
 
-    GXSetTevDirect(5);
+    GXSetTevDirect(GX_TEVSTAGE5);
     GXSetTevOrder(5, 2, 2, 0xFF);
     GXSetTevColorIn(5, 0xF, 0xF, 0xF, 0);
     GXSetTevAlphaIn(5, 4, 7, 0, 7);
@@ -1678,14 +1678,14 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetBlendMode(1, 5, 4, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -1778,7 +1778,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(mtx_54, 0x4f, 0);
     GXSetTexCoordGen2(2, 0, 4, 0x3c, 0, 0x4f);
 
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA58, -1);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
@@ -1789,7 +1789,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
 
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 2, 2, 0xff);
     GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
     GXSetTevAlphaIn(1, 7, 7, 7, 0);
@@ -1829,7 +1829,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(0, 3, 0);
+                    GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -1840,7 +1840,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 1);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 1;
@@ -1852,7 +1852,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
             } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 0);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -1866,7 +1866,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -1875,7 +1875,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -1888,7 +1888,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -1897,7 +1897,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -1918,10 +1918,10 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
         GXSetCullMode(0);
         if ((((ModelFileHeader *)model)->flags & 0x100) != 0) {
             fogColor = temp;
-            GXSetFog(0, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, fogColor);
+            GXSetFog(GX_FOG_NONE, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, fogColor);
         } else {
             fogColor = gFogColor;
-            GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
+            GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
         }
     }
 }
@@ -1982,7 +1982,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     ind_mtx[1][0] = lbl_803DEEDC;
     ind_mtx[1][1] = lbl_803DEEEC;
     ind_mtx[1][2] = lbl_803DEEDC;
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, ind_mtx, -3);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
@@ -2017,7 +2017,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 2, 2, 0xFF);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
     GXSetTevAlphaIn(1, 7, 4, 6, 7);
@@ -2026,7 +2026,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -2034,7 +2034,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     }
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -2062,7 +2062,7 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xFF);
     GXSetTevColorIn(0, 0xF, 8, 0xE, 2);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
@@ -2072,14 +2072,14 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     GXSetBlendMode(1, 4, 1, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -2133,7 +2133,7 @@ int modelCb_80073d04(u8 *obj, int *objB)
     GXSetNumIndStages(0);
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     if (((ModelFileHeader *)model)->flags24 & 2) {
         GXSetNumChans(1);
         GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
@@ -2154,7 +2154,7 @@ int modelCb_80073d04(u8 *obj, int *objB)
     GXSetTevAlphaOp(0, 1, 0, 0, 1, 0);
     GXSetTexCoordGen2(1, 1, 4, 0x3c, 0, 0x7d);
     selectTexture(tex, 1);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 1, 1, 0xff);
     GXSetTevColorIn(1, 2, 0xf, 0xf, 8);
     GXSetTevAlphaIn(1, 7, 0, 6, 7);
@@ -2163,14 +2163,14 @@ int modelCb_80073d04(u8 *obj, int *objB)
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -2212,7 +2212,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     colorK.a = (((ModelRenderOp *)op)->alpha * obj[0x37]) >> 8;
     GXSetTevKColor(0, colorK);
     GXSetTevKAlphaSel(0, 0x1c);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xff);
     GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
@@ -2222,14 +2222,14 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     colorFog.a = 0x3e;
     GXSetTevKColor(1, colorFog);
     GXSetTevKAlphaSel(1, 0x1d);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 1, 0, 0xff);
     GXSetTevColorIn(1, 0xf, 0xf, 0xf, 0);
     GXSetTevAlphaIn(1, 7, 6, 4, 7);
     GXSetTevSwapMode(1, 0, 0);
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 2, 1, 1);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 0xff, 0xff, 0xff);
     GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
     GXSetTevAlphaIn(2, 0, 7, 1, 7);
@@ -2239,7 +2239,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -2247,12 +2247,12 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
     GXSetCullMode(0);
-    GXSetFog(0, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, colorFog);
+    GXSetFog(GX_FOG_NONE, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, colorFog);
     return 1;
 }
 
@@ -2299,7 +2299,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
     GXSetNumIndStages(2);
-    GXSetIndTexOrder(0, 0, 2);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD0, GX_TEXMAP2);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, 0);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
@@ -2311,7 +2311,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
 
-    GXSetIndTexOrder(1, 0, 2);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD0, GX_TEXMAP2);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
     PSMTXScale(mtx_30, lbl_803DB6B0, lbl_803DB6B0, lbl_803DEEE4);
@@ -2347,7 +2347,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(0, 3, 0);
+                    GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -2358,7 +2358,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 1);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 1;
@@ -2373,7 +2373,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
             } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                    GXSetZMode(1, 3, 0);
+                    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
@@ -2387,7 +2387,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -2396,7 +2396,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -2409,7 +2409,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-                        GXSetZMode(0, 3, 0);
+                        GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
@@ -2418,7 +2418,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-                        GXSetZMode(1, 3, 1);
+                        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 1;
@@ -2525,7 +2525,7 @@ u32 objCallback_80074d04(int handle, void* model)
         indMtx_44[4] = v;
         indMtx_44[5] = lbl_803DEEDC;
     }
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_44, -4);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
@@ -2548,7 +2548,7 @@ u32 objCallback_80074d04(int handle, void* model)
         indMtx_2c[4] = v44;
         indMtx_2c[5] = lbl_803DEEDC;
     }
-    GXSetIndTexOrder(1, 2, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_2c, -4);
     GXSetTevIndirect(1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
@@ -2595,7 +2595,7 @@ u32 objCallback_80074d04(int handle, void* model)
     ((u8*)&temp)[3] = ((u8*)(int)handle)[0x37];
     GXSetTevKColor(0, temp);
     GXSetTevKAlphaSel(2, 0x1c);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 3, 2, 0xff);
     GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
     GXSetTevAlphaIn(2, 7, 4, 6, 7);
@@ -2605,7 +2605,7 @@ u32 objCallback_80074d04(int handle, void* model)
 
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -2613,7 +2613,7 @@ u32 objCallback_80074d04(int handle, void* model)
     }
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -2641,7 +2641,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -2653,7 +2653,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
     GXSetTevOrder(0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevAlphaIn(0, 7, 7, 7, 6);
     GXSetTevSwapMode(0, 0, 0);
@@ -2728,7 +2728,7 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -2740,7 +2740,7 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
     GXSetTevOrder(0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevAlphaIn(0, 7, 7, 7, 6);
     GXSetTevSwapMode(0, 0, 0);
@@ -2813,7 +2813,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -2825,7 +2825,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
     GXSetTevOrder(0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevAlphaIn(0, 7, 7, 7, 6);
     GXSetTevSwapMode(0, 0, 0);
@@ -2977,7 +2977,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     GXSetTevKColor(0, c);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -2986,7 +2986,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     if (((u32*)obj)[0x14] != 0) {
         GXSetTevKAlphaSel(1, 0x1C);
         GXSetTevOrder(1, 0, 1, 0xFF);
-        GXSetTevDirect(1);
+        GXSetTevDirect(GX_TEVSTAGE1);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
         GXSetTevAlphaIn(1, 7, 4, 6, 7);
         GXSetTevSwapMode(1, 0, 0);
@@ -3007,7 +3007,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3075,9 +3075,9 @@ void drawRect(f32 sx, f32 sy, int x, int y)
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    GXSetColorUpdate(0);
+    GXSetColorUpdate(GX_FALSE);
     GXSetTevOrder(0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xC);
     GXSetTevAlphaIn(0, 7, 7, 7, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -3093,14 +3093,14 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-        GXSetZMode(1, 7, 1);
+        GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 1;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 0 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(0);
+        GXSetZCompLoc(GX_FALSE);
         gGxZCompLocCached = 0;
         gGxZCompLocValid = 1;
     }
@@ -3127,7 +3127,7 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXWGFifo.s16 = -0x18C;
 
     Camera_RebuildProjectionMatrix();
-    GXSetColorUpdate(1);
+    GXSetColorUpdate(GX_TRUE);
 }
 
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags)
@@ -3158,7 +3158,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     GXSetTevKColor(0, c);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -3167,7 +3167,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     if (((u32*)obj)[0x14] != 0) {
         GXSetTevKAlphaSel(1, 0x1C);
         GXSetTevOrder(1, 0, 1, 0xFF);
-        GXSetTevDirect(1);
+        GXSetTevDirect(GX_TEVSTAGE1);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
         GXSetTevAlphaIn(1, 7, 4, 6, 7);
         GXSetTevSwapMode(1, 0, 0);
@@ -3188,7 +3188,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3284,7 +3284,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetTevKColorSel(0, 0xC);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     if (flag != 0) {
         GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     } else {
@@ -3317,7 +3317,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3401,7 +3401,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetTevKColor(0, c);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -3410,7 +3410,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     if (((u32*)obj)[0x14] != 0) {
         GXSetTevKAlphaSel(1, 0x1C);
         GXSetTevOrder(1, 0, 1, 0xFF);
-        GXSetTevDirect(1);
+        GXSetTevDirect(GX_TEVSTAGE1);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
         GXSetTevAlphaIn(1, 7, 4, 6, 7);
         GXSetTevSwapMode(1, 0, 0);
@@ -3431,7 +3431,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3486,7 +3486,7 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     extern u8 gGxZModeCompareEnable;
     Mtx tmp;
 
-    GXSetTevSwapModeTable(1, 3, 0, 3, 0);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_RED, GX_CH_ALPHA, GX_CH_RED);
     PSMTXConcat((float(*)[4])obj, mtx, tmp);
     GXLoadTexMtxImm(tmp, 0x1E, 1);
     GXSetTexCoordGen2(0, 1, 0, 0x1E, 0, 0x7D);
@@ -3496,7 +3496,7 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetTevKColorSel(0, 0xC);
     GXSetTevColor(2, lbl_803DC308);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevAlphaIn(0, 2, 4, 6, 7);
     GXSetTevSwapMode(0, 0, 1);
@@ -3511,14 +3511,14 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetNumTevStages(1);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3543,7 +3543,7 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevAlphaIn(0, 7, 4, 6, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -3558,14 +3558,14 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetNumTevStages(1);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3606,7 +3606,7 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     GXSetTevKColor(0, c);
     GXSetTevKColorSel(0, 0xc);
     GXSetTevOrder(0, 0, 0, 0xff);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xf, 8, 0xe, 0xf);
     GXSetTevAlphaIn(0, 7, 7, 7, 7);
     GXSetTevSwapMode(0, 0, 0);
@@ -3632,7 +3632,7 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     PSMTXConcat(m58, m28, m28);
     GXLoadTexMtxImm(m28, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7d);
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevSwapMode(1, 0, 0);
     GXSetTevOrder(1, 1, 1, 0xff);
     GXSetTevColorIn(1, 0, 0xf, 8, 0xf);
@@ -3645,18 +3645,18 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     GXSetNumChans(0);
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
-    GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, kc);
+    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, kc);
     GXSetBlendMode(1, 0, 3, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3718,10 +3718,10 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     selectTexture(*(int *)&((GameObject *)obj)->anim.eventTable, 0);
 
     if (((u8*)obj)[0x65] < 8) {
-        GXSetTevSwapModeTable(1, 0, 0, 0, 0);
+        GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_RED);
         stage_idx = ((u8*)obj)[0x65] - 1;
     } else if (((u8*)obj)[0x65] < 0x10) {
-        GXSetTevSwapModeTable(1, 3, 3, 3, 3);
+        GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA);
         stage_idx = ((u8*)obj)[0x65] - 9;
     }
     if (stage_idx < 0) stage_idx = 0;
@@ -3740,7 +3740,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     stage_base = 0;
     stage_count = ((u8*)&stab0)[stage_idx];
     if (stage_count != 0) {
-        GXSetTevDirect(0);
+        GXSetTevDirect(GX_TEVSTAGE0);
         GXSetTevSwapMode(0, 0, 1);
         GXSetTevOrder(0, 0, 0, 0xFF);
         GXSetTevColorIn(0, 0xF, 0x8, 0xC, buf_c4.w[stage_idx]);
@@ -3825,19 +3825,19 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     GXSetNumTexGens(2);
     GXSetNumTevStages((u8)(stage_count + 2));
 
-    GXSetFog(4, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
+    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
     GXSetBlendMode(1, 0, 3, 5);
 
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3853,7 +3853,7 @@ void fn_80078740(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 1 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 1);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 1;
@@ -3861,7 +3861,7 @@ void fn_80078740(void)
     }
     GXSetBlendMode(0, 1, 0, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3877,7 +3877,7 @@ void fn_8007880C(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -3885,7 +3885,7 @@ void fn_8007880C(void)
     }
     GXSetBlendMode(0, 1, 0, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3901,7 +3901,7 @@ void fn_800788DC(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -3909,7 +3909,7 @@ void fn_800788DC(void)
     }
     GXSetBlendMode(1, 4, 1, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3925,7 +3925,7 @@ void gxBlendFn_800789ac(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3933,7 +3933,7 @@ void gxBlendFn_800789ac(void)
     }
     GXSetBlendMode(1, 4, 1, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3949,7 +3949,7 @@ void textBlendSetupFn_80078a7c(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -3957,7 +3957,7 @@ void textBlendSetupFn_80078a7c(void)
     }
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3973,7 +3973,7 @@ void gxBlendFn_80078b4c(void)
     extern u8 gGxZModeCompareEnable;
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
@@ -3981,7 +3981,7 @@ void gxBlendFn_80078b4c(void)
     }
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -3997,7 +3997,7 @@ void gxDebugTextureFn_80078c1c(void)
     extern u8 gGxZModeCompareEnable;
     GXSetCullMode(0);
     GXSetTevOrder(0, 0, 0, 0xFF);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevColorIn(0, 0xF, 8, 2, 0xF);
     GXSetTevAlphaIn(0, 7, 7, 7, 4);
     GXSetTevSwapMode(0, 0, 0);
@@ -4011,7 +4011,7 @@ void gxDebugTextureFn_80078c1c(void)
     GXSetNumTevStages(1);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
@@ -4019,7 +4019,7 @@ void gxDebugTextureFn_80078c1c(void)
     }
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -4326,7 +4326,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXLoadTexMtxImm(mtx, 0x1E, 1);
     GXSetTevKColorSel(0, 0xC);
     GXSetTevKAlphaSel(0, 0x1C);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xFF);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
     GXSetTevSwapMode(0, 0, 0);
@@ -4357,14 +4357,14 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetBlendMode(1, 5, 4, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -4468,7 +4468,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
 
     GXSetTevKColor(0, c_K0);
     GXSetTevKAlphaSel(0, 0x1C);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 0xFF);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(0, 6, 7, 7, 4);
@@ -4476,7 +4476,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 1, 0, 2, 1, 0);
 
-    GXSetTevDirect(1);
+    GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(1, 1, 1, 0xFF);
     GXSetTevColorIn(1, 8, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(1, 7, 0, 4, 7);
@@ -4486,7 +4486,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
 
     GXSetTevKColor(1, c_K1);
     GXSetTevKAlphaSel(2, 0x1D);
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 0, 0, 0xFF);
     GXSetTevColorIn(2, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(2, 6, 7, 7, 4);
@@ -4494,7 +4494,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevColorOp(2, 0, 0, 0, 1, 1);
     GXSetTevAlphaOp(2, 1, 0, 2, 1, 1);
 
-    GXSetTevDirect(3);
+    GXSetTevDirect(GX_TEVSTAGE3);
     GXSetTevOrder(3, 2, 1, 0xFF);
     GXSetTevColorIn(3, 8, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(3, 7, 1, 4, 7);
@@ -4503,7 +4503,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTevAlphaOp(3, 0, 0, 2, 1, 1);
 
     GXSetTevKAlphaSel(4, 0);
-    GXSetTevDirect(4);
+    GXSetTevDirect(GX_TEVSTAGE4);
     GXSetTevOrder(4, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(4, 0, 2, 3, 0xF);
     GXSetTevAlphaIn(4, 0, 6, 1, 7);
@@ -4513,7 +4513,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
 
     GXSetTevKColor(2, c_K2);
     GXSetTevKAlphaSel(5, 0x1E);
-    GXSetTevDirect(5);
+    GXSetTevDirect(GX_TEVSTAGE5);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
     GXSetTevColorIn(5, 0xF, 0xF, 0xF, 0);
     GXSetTevAlphaIn(5, 7, 0, 6, 7);
@@ -4536,14 +4536,14 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 1, 0);
+        GXSetZMode(GX_TRUE, GX_LESS, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 1;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -4649,14 +4649,14 @@ void doHeatEffect(u8 alpha)
     GXLoadTexMtxImm(mtx_44, 0x40, 0);
     GXSetTexCoordGen2(1, 0, 4, 0x3C, 0, 0x40);
 
-    GXSetIndTexOrder(0, 1, 2);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP2);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, -6);
     GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
 
     GXSetTevKColor(0, lbl_803DB6A4);
     GXSetTevKAlphaSel(0, 0x1c);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 1, 0xff);
     GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
     GXSetTevAlphaIn(0, 6, 7, 7, 4);
@@ -4671,7 +4671,7 @@ void doHeatEffect(u8 alpha)
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 2, 1, 0);
 
-    GXSetTevDirect(2);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(2, 0xff, 0xff, 4);
     GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
     GXSetTevAlphaIn(2, 7, 0, 5, 7);
@@ -4692,14 +4692,14 @@ void doHeatEffect(u8 alpha)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 1, 0);
+        GXSetZMode(GX_TRUE, GX_LESS, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 1;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -4784,14 +4784,14 @@ void renderMotionBlur(f32 alpha)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -4803,7 +4803,7 @@ void renderMotionBlur(f32 alpha)
     GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
     GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
     GXSetNumChans(0);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0, 0, 6);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
     GXSetTevAlphaIn(0, 7, 7, 7, 6);
@@ -4880,7 +4880,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     selectReflectionTexture(0);
     getReflectionTexture2(&handle);
     selectTexture(handle, 1);
-    GXSetTevSwapModeTable(1, 0, 0, 0, 1);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
 
     PSMTXIdentity(mtx_24);
     mtx_24[1][3] = lbl_803DEF78;
@@ -4925,7 +4925,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
             GXSetTevKAlphaSel(1, 0x1C);
             GXSetNumTevStages(7);
 
-            GXSetTevDirect(0);
+            GXSetTevDirect(GX_TEVSTAGE0);
             GXSetTevOrder(0, 1, 1, 0xFF);
             GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
             GXSetTevAlphaIn(0, 4, 7, 7, 6);
@@ -4997,7 +4997,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevKAlphaSel(1, 0x1C);
         GXSetNumTevStages(7);
 
-        GXSetTevDirect(0);
+        GXSetTevDirect(GX_TEVSTAGE0);
         GXSetTevOrder(0, 1, 1, 0xFF);
         GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
         GXSetTevAlphaIn(0, 4, 7, 7, 6);
@@ -5005,7 +5005,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevColorOp(0, 0, 0, 0, 1, 3);
         GXSetTevAlphaOp(0, 1, 0, 0, 1, 3);
 
-        GXSetTevDirect(1);
+        GXSetTevDirect(GX_TEVSTAGE1);
         GXSetTevOrder(1, 1, 1, 0xFF);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
         GXSetTevAlphaIn(1, 6, 7, 7, 4);
@@ -5014,7 +5014,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevAlphaOp(1, 1, 0, 0, 1, 0);
 
         GXSetTevKColorSel(2, 0xD);
-        GXSetTevDirect(2);
+        GXSetTevDirect(GX_TEVSTAGE2);
         GXSetTevOrder(2, 0, 0, 0xFF);
         GXSetTevColorIn(2, 0xF, 0x8, 0xE, 0xF);
         GXSetTevAlphaIn(2, 0, 7, 7, 3);
@@ -5023,7 +5023,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevAlphaOp(2, 0, 0, 2, 1, 0);
 
         GXSetTevKColorSel(3, 0xD);
-        GXSetTevDirect(3);
+        GXSetTevDirect(GX_TEVSTAGE3);
         GXSetTevOrder(3, 2, 0, 0xFF);
         GXSetTevColorIn(3, 0xF, 0x8, 0xE, 0);
         GXSetTevAlphaIn(3, 7, 7, 7, 0);
@@ -5032,7 +5032,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevAlphaOp(3, 0, 0, 2, 1, 0);
 
         GXSetTevKColorSel(4, 0xD);
-        GXSetTevDirect(4);
+        GXSetTevDirect(GX_TEVSTAGE4);
         GXSetTevOrder(4, 3, 0, 0xFF);
         GXSetTevColorIn(4, 0xF, 0x8, 0xE, 0);
         GXSetTevAlphaIn(4, 7, 7, 7, 0);
@@ -5041,7 +5041,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevAlphaOp(4, 0, 0, 2, 1, 0);
 
         GXSetTevKColorSel(5, 0xD);
-        GXSetTevDirect(5);
+        GXSetTevDirect(GX_TEVSTAGE5);
         GXSetTevOrder(5, 4, 0, 0xFF);
         GXSetTevColorIn(5, 0xF, 0x8, 0xE, 0);
         GXSetTevAlphaIn(5, 7, 7, 7, 0);
@@ -5050,7 +5050,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevAlphaOp(5, 0, 0, 2, 1, 0);
 
         GXSetTevKColorSel(6, 0xD);
-        GXSetTevDirect(6);
+        GXSetTevDirect(GX_TEVSTAGE6);
         GXSetTevOrder(6, 5, 0, 0xFF);
         GXSetTevColorIn(6, 0xF, 0x8, 0xE, 0);
         GXSetTevAlphaIn(6, 7, 7, 7, 0);
@@ -5068,14 +5068,14 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(0, 7, 0);
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -5193,7 +5193,7 @@ void fn_8007BD8C(int handle1, int handle2)
     ((u8*)&temp2)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
     GXSetTevColor(2, temp2);
 
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indBase, -1);
     GXSetIndTexMtx(2, (f32(*)[3])(indBase + 0x18), -1);
@@ -5227,7 +5227,7 @@ void fn_8007BD8C(int handle1, int handle2)
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
 
-    GXSetTevDirect(3);
+    GXSetTevDirect(GX_TEVSTAGE3);
     GXSetTevOrder(3, 2, 2, 0xff);
     GXSetTevColorIn(3, 0, 4, 9, 0xF);
     GXSetTevAlphaIn(3, 7, 7, 7, 0);
@@ -5238,14 +5238,14 @@ void fn_8007BD8C(int handle1, int handle2)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -5268,7 +5268,7 @@ void setupReflectionIndirectTev(u8 flag)
     mtx[3] = lbl_803DEEDC;
     mtx[4] = lbl_803DEEDC;
     mtx[5] = *(f32*)&gSynthDelayedActionWord0;
-    GXSetIndTexOrder(0, 0, 0);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD0, GX_TEXMAP0);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (void*)mtx, -2);
     GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 1);
@@ -5278,7 +5278,7 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
     GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
     GXSetNumChans(1);
-    GXSetTevDirect(0);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(0, 0xFF, 0xFF, 4);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xA);
     GXSetTevAlphaIn(0, 7, 7, 7, 5);
@@ -5348,7 +5348,7 @@ void fn_8007C664(int texHandle)
     GXSetTevColor(3, lbl_803DB688);
     GXSetTevKColor(0, lbl_803DB68C);
     GXSetTevKColorSel(1, 0xc);
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
@@ -5377,14 +5377,14 @@ void fn_8007C664(int texHandle)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -5441,7 +5441,7 @@ void fn_8007CAF4(void)
     GXSetTevColor(3, lbl_803DB680);
     GXSetTevKColor(0, lbl_803DB684);
     GXSetTevKColorSel(1, 0xc);
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
@@ -5470,14 +5470,14 @@ void fn_8007CAF4(void)
     GXSetBlendMode(1, 4, 5, 5);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
@@ -5528,7 +5528,7 @@ void gxTextureSetupFn_8007cf7c(void)
     indMtx_54[3] = lbl_803DEEDC;
     indMtx_54[4] = gSynthDelayedActionWord0;
     indMtx_54[5] = lbl_803DEEDC;
-    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_54, -2);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
@@ -5547,7 +5547,7 @@ void gxTextureSetupFn_8007cf7c(void)
     indMtx_3c[3] = lbl_803DEF88;
     indMtx_3c[4] = lbl_803DEF84;
     indMtx_3c[5] = lbl_803DEEDC;
-    GXSetIndTexOrder(1, 2, 1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_3c, -4);
     GXSetTevIndirect(1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
@@ -5626,14 +5626,14 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetCullMode(0);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
         gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
     if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
-        GXSetZCompLoc(1);
+        GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
     }
