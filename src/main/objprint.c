@@ -3276,7 +3276,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB498);
+    GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -3290,7 +3290,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetIndTexCoordScale(1, 0, 0);
     mtxB.m[1] = fz;
     mtxB.m[5] = fz;
-    GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
+    GXSetIndTexMtx(GX_ITM_1, &mtxB, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
@@ -3607,7 +3607,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetIndTexCoordScale(0, 0, 0);
     mtxA.m[0] = fz;
     mtxA.m[4] = fz;
-    GXSetIndTexMtx(1, &mtxA, (s8)lbl_803DB48C);
+    GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, 0xff, 0xff, 0xff);
     GXSetTevSwapMode(stage, 0, 0);
@@ -3623,7 +3623,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = fz;
         mtxB.m[5] = fz;
-        GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
+        GXSetIndTexMtx(GX_ITM_1, &mtxB, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     }
     else
@@ -3632,7 +3632,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = lbl_803DEA04;
         mtxB.m[5] = lbl_803DEA04;
-        GXSetIndTexMtx(2, &mtxB, -0xf);
+        GXSetIndTexMtx(GX_ITM_1, &mtxB, -0xf);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     }
     selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
