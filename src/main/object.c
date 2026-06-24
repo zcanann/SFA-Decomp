@@ -1614,13 +1614,13 @@ void objFreeObjDef(u8* obj, int flag)
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {
-                if ((((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4) == 0)
+                if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 4)
                 {
-                    textureFree(tex);
+                    mm_free(tex);
                 }
                 else
                 {
-                    mm_free(tex);
+                    textureFree(tex);
                 }
             }
         }
