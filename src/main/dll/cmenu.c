@@ -580,11 +580,11 @@ void hudDrawCMenu(int p1, int p2, int p3)
     f32* v;
     int i;
     int j;
+    f32 thresh;
     f32 div;
     f32 sy;
     f32 sx;
     f32 mul;
-    f32 thresh;
     u8 used[4];
     f32 vals[3];
 
