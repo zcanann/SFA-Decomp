@@ -262,7 +262,7 @@ void cfprisonguard_update(int* obj)
     if (GameBit_Get(((CfPrisonGuardMapData*)def)->disableEvent) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
+        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ObjHits_DisableObject(obj);
         Obj_RemoveFromUpdateList(obj);
         return;
