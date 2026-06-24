@@ -98,7 +98,7 @@ void drcagewith_hitDetect(int obj)
             ((GameObject*)spawned)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
             spawned = Obj_SetupObject(spawned, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                       *(int*)&((GameObject*)obj)->anim.parent);
-            ((GameObject*)spawned)->anim.flags |= 0x4000;
+            ((GameObject*)spawned)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ((GameObject*)spawned)->unkF4 = 1;
             *(int*)state = spawned;
             return;
