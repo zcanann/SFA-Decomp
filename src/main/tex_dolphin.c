@@ -212,7 +212,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
         selectTexture(*(int*)(la + (u8)i * 4), 1);
         m[0][0] = (f32)((i & 0xff) + 1) * k24 * kH;
         m[1][1] = m[0][0];
-        GXSetIndTexMtx(1, (const float (*)[3])m, gTexIndMtxScaleExp);
+        GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])m, gTexIndMtxScaleExp);
         GXCallDisplayList(*(void**)ptr, (u32) * (u16*)(ptr + 4));
     }
 }
