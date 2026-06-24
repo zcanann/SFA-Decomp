@@ -52,6 +52,10 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
+/* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
+   highlighted entry, set on the rest). */
+#define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
+
 #pragma dont_inline on
 
 extern void buttonDisable(int port, u32 mask);
@@ -331,9 +335,9 @@ void TitleMenu_frameEnd(void)
     int i; \
     for (i = 0; i < 4; i++) { \
       if (i == (entry)) { \
-        lbl_8031A214[i].flags &= ~0x4000; \
+        lbl_8031A214[i].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN; \
       } else { \
-        lbl_8031A214[i].flags |= 0x4000; \
+        lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN; \
       } \
     } \
     TitleMenu_BindEntries(); \
@@ -667,11 +671,11 @@ void TitleMenu_initialise(void)
     {
         if (i == gTitleMenuSelection)
         {
-            lbl_8031A214[i].flags &= ~0x4000;
+            lbl_8031A214[i].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
         }
         else
         {
-            lbl_8031A214[i].flags |= 0x4000;
+            lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
         }
     }
     ((void (**)(TitleMenuTextEntry*))gTitleMenuLinkInterface->vtable)[11](lbl_8031A214);
