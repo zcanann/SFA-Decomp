@@ -58,6 +58,16 @@ void vfpblock1_free(int obj)
 }
 
 /* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
+/* SeqPointState.mode: which predicate must hold for the seq point to fire. */
+typedef enum SeqPointMode {
+  SEQPOINT_MODE_RADIUS = 0,          /* fire when player is within triggerRadius */
+  SEQPOINT_MODE_BIT = 1,             /* fire when conditionBit is set */
+  SEQPOINT_MODE_RADIUS_AND_BIT = 2,  /* fire when in radius AND conditionBit set */
+  SEQPOINT_MODE_RADIUS_BIT_ONCE = 3, /* fire in radius with conditionBit clear, then set it */
+  SEQPOINT_MODE_BIT_ONCE = 4,        /* fire with conditionBit clear, then set it */
+  SEQPOINT_MODE_BIT_REPEAT = 5       /* fire whenever conditionBit is set (no done latch) */
+} SeqPointMode;
+
 typedef struct SeqPointState
 {
     f32 triggerRadius;
@@ -563,25 +573,25 @@ void seqpoint_update(int* obj)
     if (self->done != 0) return;
     switch (self->mode)
     {
-    case 0:
+    case SEQPOINT_MODE_RADIUS:
         if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
-    case 1:
+    case SEQPOINT_MODE_BIT:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
-    case 2:
+    case SEQPOINT_MODE_RADIUS_AND_BIT:
         if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
-    case 3:
+    case SEQPOINT_MODE_RADIUS_BIT_ONCE:
         if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius)) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
@@ -589,14 +599,14 @@ void seqpoint_update(int* obj)
         GameBit_Set(self->conditionBit, 1);
         self->done = 1;
         break;
-    case 4:
+    case SEQPOINT_MODE_BIT_ONCE:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         GameBit_Set(self->conditionBit, 1);
         self->done = 1;
         break;
-    case 5:
+    case SEQPOINT_MODE_BIT_REPEAT:
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
