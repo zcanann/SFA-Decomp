@@ -16,6 +16,7 @@
 #define GX_ALPHA1 3
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
+#define GX_DA_MEDIUM 2
 
 u16*
 FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
@@ -288,7 +289,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
         light[0xbc] = 1;
         ((ModelLightStruct*)light)->attenuationNear = lbl_803DE750;
         ((ModelLightStruct*)light)->attenuationFar = lbl_803DE754;
-        GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, 2);
+        GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
         GXGetLightAttnK(light + 0x68, (f32*)(light + 0x124), (f32*)(light + 0x128),
                         (f32*)(light + 0x12c));
         if (setFlag != 0)
@@ -379,7 +380,7 @@ void* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->projectedLightChannelPreference = 1;
     ((ModelLightStruct*)light)->attenuationNear = lbl_803DE750;
     ((ModelLightStruct*)light)->attenuationFar = lbl_803DE754;
-    GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, 2);
+    GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
     GXGetLightAttnK(light + 0x68, (f32*)(light + 0x124), (f32*)(light + 0x128), (f32*)(light + 0x12c));
     zero = lbl_803DE75C;
     ((ModelLightStruct*)light)->attenuationFar = zero;
@@ -1204,7 +1205,7 @@ void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b)
 {
     *(f32*)(obj + 0x140) = a;
     *(f32*)(obj + 0x144) = b;
-    GXInitLightDistAttn(obj + 0x68, *(f32*)(obj + 0x140), lbl_803DE758, 2);
+    GXInitLightDistAttn(obj + 0x68, *(f32*)(obj + 0x140), lbl_803DE758, GX_DA_MEDIUM);
     GXGetLightAttnK(obj + 0x68, (f32*)(obj + 0x124), (f32*)(obj + 0x128), (f32*)(obj + 0x12c));
 }
 
