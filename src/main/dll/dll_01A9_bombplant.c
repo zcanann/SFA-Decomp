@@ -436,8 +436,8 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x2) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x4) != 0 && GameBit_Get(0x189) == 0)
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && GameBit_Get(0x189) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             GameBit_Set(0x189, 1);
@@ -445,7 +445,7 @@ void bombplant_update(void* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
 
     if ((entry[8] & 0x4) != 0)
