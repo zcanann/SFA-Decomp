@@ -2,12 +2,12 @@
 
 Masks branch-target addresses and groups divergences into regions, so output
 shows only real codegen differences (not address/label noise). The classifier
-pattern-matches each region against the CLAUDE.md recipe taxonomy and prints
-the recipe numbers to try first.
+tags each region with a structural label and the compiler pass that owns it,
+to triage with docs/mwcc_re/LEVERS.md -- it does NOT prescribe a fix.
 
 Usage:
   python3 tools/ndiff.py <unit> <symbol>                normalized region diff
-  python3 tools/ndiff.py <unit> <symbol> --classify     + recipe suggestions
+  python3 tools/ndiff.py <unit> <symbol> --classify     + structural region tags
   python3 tools/ndiff.py <unit> <symbol> --fingerprint 'fmuls|fadds'
         register-column fingerprint of matching instructions (probe batteries)
   python3 tools/ndiff.py <unit> <symbol> --context N    N matched instrs around
@@ -59,41 +59,24 @@ def regs_only_diff(tt: list[str], cc: list[str]) -> bool:
     return all(strip(a) == strip(b) for a, b in zip(tt, cc))
 
 
-CLASSIFY_NOTE = {
-    "ext-insert": "extra extsh/extsb/clrlwi in CURRENT -> narrow-extension class: "
-    "#20 compound +=, #53 subtrahend cast, #83(c) drop cast on float store, "
-    "#58 width launder, int-local keeper (dimmagicbridge) for the inverse",
-    "ext-delete": "target HAS an extension we fold -> #83(c) INVERSE: route the copy "
-    "through an int local to keep the conversion pair live",
-    "reg-perm": "pure register permutation -> #16/#61b decl order, #61b fn-scope "
-    "decl position, #107 un-naming, #82 launder, #88 web split; if a 'simplified' "
-    "final iteration of uniform code, restore uniformity (mtx44_mult recipe)",
-    "via-r0": "addi rX,rH,lo via r0+mr vs direct -> #80 init launder + arg respell, "
-    "#160 index form for walked pointers",
-    "branch-over-branch": "beq+b vs folded bne -> #109(d) single-case switch "
-    "(SIGNED operands only; pointer/u8 operands are the documented wall), "
-    "#13-addendum dead empty case, #63 keep-or-negate ternary",
-    "cmp-width": "cmpwi vs cmplwi -> #3 (void*)/NULL, #14 int param, #58 width "
-    "local, #64 (u32) cast in test, #11 vtable return width",
-    "fcmpo-swap": "lfs pair + fcmpo operand swap -> #81 launder (*(f32 *)&lbl on "
-    "ONE ref), double-embed clamp if (a = FIELD) op (lim = lbl), #82 taxonomy",
-    "frame": "stwu/frame delta -> #67 (probe array sizes, struct-typed locals, "
-    "conversion slots), #75 union align, #109(e) struct slot",
-    "pool-reloc": "@N vs named lbl reloc -> score-neutral per #70 UNLESS the "
-    "score is <100: then check #71 literal-vs-extern reload shape",
-    "mr-copy": "mr/fmr copy inserted or deleted -> #68 peephole copy-prop "
-    "(A/B peephole pragma), #86 emission order, #119 variable recycling",
-    "lha-lhz": "lha vs lhz -> s16/u16 signedness of field or deref (#46/#58)",
-    "li-const": "li constant materialization differs -> #74 LL-suffix masks, "
-    "#110 per-fn O1 for li;mr chains, #51 chained assignment, GVN small-const "
-    "open class (bank if spellings exhausted)",
-    "sched-order": "same instructions transposed -> scheduling/emission order: "
-    "#5 decl/init split, #43 comma-init, #116 embedded store address, #29/#84 "
-    "arg eval order, #90 doubled-arg launder",
-    "deref-via-copy": "param deref via saved-reg copy in TARGET, via param reg in "
-    "CURRENT -> #68 peephole copy-prop: wrap fn in #pragma peephole off (or check "
-    "the unit's effective pragma state first; ON-target units are NOT this class). "
-    "Non-r3-param variant is documented open",
+# Structural tag -> the pass that owns this class of divergence. Triage with
+# docs/mwcc_re/LEVERS.md (the code-path-backed levers), then read the target asm.
+# Deliberately NOT a recipe catalogue: derive the fix fresh, per CLAUDE.md.
+CLASSIFY_OWNER = {
+    "ext-insert": "narrowing/extension (operand width & signedness)",
+    "ext-delete": "narrowing/extension (operand width & signedness)",
+    "reg-perm": "register allocation (Coloring.c: interference + web/creation order)",
+    "via-r0": "instruction selection / address materialization",
+    "branch-over-branch": "branch folding (compare operand type & form)",
+    "cmp-width": "compare width (cmpwi vs cmplwi -> operand width/sign)",
+    "fcmpo-swap": "FP compare operand order / coloring",
+    "frame": "stack frame size (locals, struct/array slots, alignment)",
+    "pool-reloc": "literal-pool reloc (usually score-neutral)",
+    "mr-copy": "copy survival (propagation / value-numbering / coalescer)",
+    "lha-lhz": "load signedness (s16 vs u16 field/deref)",
+    "li-const": "constant materialization",
+    "sched-order": "scheduling / emission order (Scheduler.c)",
+    "deref-via-copy": "copy survival via saved-reg (coalescer / peephole)",
 }
 
 
@@ -152,7 +135,7 @@ def main() -> None:
     parser.add_argument("unit")
     parser.add_argument("symbol")
     parser.add_argument("-v", "--version", default="GSAE01")
-    parser.add_argument("--classify", action="store_true", help="suggest recipes per region")
+    parser.add_argument("--classify", action="store_true", help="tag each region (structural class + owning pass)")
     parser.add_argument("--fingerprint", metavar="REGEX",
                         help="print operand columns of CURRENT instrs matching REGEX (and target's)")
     parser.add_argument("--context", type=int, default=0, metavar="N",
@@ -198,7 +181,8 @@ def main() -> None:
         if args.classify:
             kind = classify(tt, cc)
             if kind:
-                print(f"  >> [{kind}] {CLASSIFY_NOTE[kind]}")
+                owner = CLASSIFY_OWNER.get(kind, "")
+                print(f"  >> [{kind}] {owner} -- triage via docs/mwcc_re/LEVERS.md")
         if args.classify or args.context:
             print()
     print(f"-- {len(regs)} region(s), T={len(t)} C={len(c)} instrs")
