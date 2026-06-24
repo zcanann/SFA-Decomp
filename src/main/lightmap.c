@@ -2085,20 +2085,19 @@ void renderSceneGeometry(int* p1, s8* order)
     int box3[4];
     void** lt;
     int* lt2;
-    int layer;
-    s8* table;
     u8* p;
-    u32 n;
-    int y, x0, x1, y1;
+    int y, x0;
     int k;
-    int oi, ii;
-    s8 *op, *ip;
     int row, col;
+    int oi, ii;
+    int layer;
+    u8* blk;
+    s8* table;
     f32 ws;
     f32 rowF, colF;
     int cell;
     int idx;
-    u8* blk;
+    s8 *op, *ip;
 
     layer = 4;
     lt = &gMapBlockLayerTables[4];
