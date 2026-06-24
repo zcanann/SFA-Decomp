@@ -109,7 +109,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
 
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
 
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitPos[0], &hitPos[1], &hitPos[2]);
     if ((hitKind != 0) && (hitObj != 0))
