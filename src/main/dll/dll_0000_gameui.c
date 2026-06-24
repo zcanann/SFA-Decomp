@@ -1159,12 +1159,12 @@ void perspectiveFn_80129db4(void)
  */
 void pauseMenuDrawText(void)
 {
-    s16 target;
-    int saved;
-    void* handle;
-    s16 alpha;
     void* sprite;
+    s16 alpha;
+    void* handle;
+    int saved;
     s16 cur;
+    s16 target;
     s16 mirrored;
     s32 v[4];
 
