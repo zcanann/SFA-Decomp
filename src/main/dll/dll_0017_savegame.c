@@ -801,10 +801,10 @@ void SaveGame_initialise(void)
 {
     s8* base = (s8*)gTransientMapBits;
     int i;
-    memset(base + 0x328, 0, 0xf70);
+    memset(base + 0x328, 0, SAVEGAME_LIVE_BUFFER_SIZE);
     if (!(lbl_803DD498[0x21] & 0x80))
     {
-        memset(lbl_803DD498, 0, 0x6ec);
+        memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
     }
     pRestartPoint = 0;
     gSaveGameMapActCacheIdx = -1;
@@ -854,11 +854,11 @@ void SaveGame_gplayGotoRestartPoint(void)
 {
     if (pRestartPoint != 0)
     {
-        memcpy(gSaveGameData, (void*)pRestartPoint, 0x6ec);
+        memcpy(gSaveGameData, (void*)pRestartPoint, SAVEGAME_ACTIVE_SIZE);
     }
     else
     {
-        memcpy(gSaveGameData, lbl_803DD498, 0x6ec);
+        memcpy(gSaveGameData, lbl_803DD498, SAVEGAME_ACTIVE_SIZE);
     }
     loadMapForCurrentSaveGame();
 }
@@ -867,7 +867,7 @@ void SaveGame_gplayGotoSavegame(void)
 {
     if ((s8)lbl_803DD498[0] < 1) lbl_803DD498[0] = 1;
     if ((s8)lbl_803DD498[0xc] < 1) lbl_803DD498[0xc] = 1;
-    memcpy(gSaveGameData, lbl_803DD498, 0x6ec);
+    memcpy(gSaveGameData, lbl_803DD498, SAVEGAME_ACTIVE_SIZE);
     loadMapForCurrentSaveGame();
 }
 
@@ -1178,7 +1178,7 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
             SAVEGAME_CHARACTER_POSITION(base)->z = pos[2];
             SAVEGAME_CHARACTER_POSITION(base)->angle = (s8)(angle >> 8);
             SAVEGAME_CHARACTER_POSITION(base)->map = mapByte;
-            memcpy(lbl_803DD498, base, 0x6ec);
+            memcpy(lbl_803DD498, base, SAVEGAME_ACTIVE_SIZE);
             if (pRestartPoint != 0)
             {
                 mm_free(pRestartPoint);
@@ -1197,7 +1197,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     int healed = 0;
     if (pRestartPoint == 0)
     {
-        pRestartPoint = (u32)mmAlloc(0x6ec, 0xffff00ff, 0);
+        pRestartPoint = (u32)mmAlloc(SAVEGAME_ACTIVE_SIZE, 0xffff00ff, 0);
         if (pRestartPoint == 0) return;
     }
     if (flag != 0)
@@ -1209,7 +1209,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
             healed = 1;
         }
     }
-    memcpy((void*)pRestartPoint, gSaveGameData, 0x6ec);
+    memcpy((void*)pRestartPoint, gSaveGameData, SAVEGAME_ACTIVE_SIZE);
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->x = pos[0];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->y = pos[1];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->z = pos[2];
