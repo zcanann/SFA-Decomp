@@ -2286,11 +2286,11 @@ void enemy_update(int obj)
     {
         if (tricky != NULL && GameBit_Get(0x9e) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         if (tricky != NULL && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
         {
