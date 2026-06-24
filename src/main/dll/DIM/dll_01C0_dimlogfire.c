@@ -203,7 +203,7 @@ void dimlogfire_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     tricky = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     switch (state->mode)
     {
     case 1:
