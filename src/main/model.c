@@ -611,11 +611,11 @@ void ObjModel_LoadRenderOpTextures(u8* model, int arg)
 {
     int i;
     u8* hdr = *(u8**)model;
-    if (((ObjModel*)model)->bufferFlags & 0x40)
+    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
     {
         return;
     }
-    ((ObjModel*)model)->bufferFlags |= 0x40;
+    ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
     for (i = 0; i < (*(u8**)model)[0xf8]; i++)
     {
         shaderInit(((ModelFileHeader*)hdr)->renderOps + i * 0x44, ((ObjModel*)model)->textureRefs + i * 0xc, arg,
@@ -1178,9 +1178,9 @@ void ObjModel_Release(u8* model)
 {
     u8* header;
     int i;
-    if (((ObjModel*)model)->bufferFlags & 0x40)
+    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
     {
-        ((ObjModel*)model)->bufferFlags &= ~0x40;
+        ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
         for (i = 0; i < (*(u8**)model)[0xf8]; i++)
         {
             ShaderDef_free((int*)(((ObjModel*)model)->textureRefs + i * 0xc));
@@ -1765,7 +1765,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
-        if (((ModelFileHeader*)p)->flags24 & 8)
+        if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
         {
             n = 9;
         }
@@ -2098,7 +2098,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
     {
         int cur = sizes[0];
         int k;
-        if (((ModelFileHeader*)hdr)->flags24 & 8)
+        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
         {
             k = 9;
         }

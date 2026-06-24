@@ -79,6 +79,12 @@ typedef struct ModelFileHeader {
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
 #define MODEL_FLAG_VERTEX_ANIM_AREA 0x40
 
+/* ModelFileHeader.flags24 bit: set = 9-byte (else 3-byte) entries at normals */
+#define MODEL_FLAGS24_NORMALS_9BYTE 0x8
+
+/* ObjModel.bufferFlags bit */
+#define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
+
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
