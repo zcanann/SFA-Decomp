@@ -56,7 +56,7 @@ void magiccavebottom_update(int* obj)
         *sub = 2;
         break;
     case 2:
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x19);
         }
