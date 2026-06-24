@@ -51,7 +51,8 @@ extern f32 lbl_803DF860;
 extern f32 lbl_803DF864;
 extern f32 lbl_803DF868;
 extern char sShaderDebugStrings[];
-extern int gMapBlockLayerTables[5];
+#define MAP_BLOCK_LAYER_COUNT 5
+extern int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 typedef struct WarpVec
 {
     f32 x;
@@ -159,7 +160,7 @@ test:
         }
         found = 0;
         bx += bz << 4;
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
         {
             if (*(s8*)(bx + gMapBlockLayerTables[i]) >= 0)
             {
@@ -1476,7 +1477,7 @@ void unloadMap(void)
     audioStopByMask(4);
     Sfx_ClearLoopedObjectSounds();
     doNothing_8001F678(1, 0);
-    for (layer = 0; layer < 5; layer++)
+    for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++)
     {
         cur = (s8*)gMapBlockLayerTables[layer];
         for (i = 0; i < 256; i++)
