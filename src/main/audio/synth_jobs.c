@@ -81,7 +81,7 @@ void synthUpdateJobTable(void)
                 break;
             }
             hwInitSamplePlayback(si->voice, 0xFFFF, &newsmp, 1, -1,
-                                 *(u32*)(synthVoice + si->voice * 0x404 + 0xF4), 1, 1);
+                                 *(u32*)(synthVoice + si->voice * SYNTH_VOICE_STRIDE + 0xF4), 1, 1);
             hwSetPitch(si->voice, freqScale * ((f32)si->frq / (f32) * (u32*)lbl_803BD150));
             hwSetVolume(si->voice, 0, volScale * si->volume, volScale * si->leftVolume,
                         volScale * si->rightVolume, si->pan << 16, si->surroundPan << 16);
