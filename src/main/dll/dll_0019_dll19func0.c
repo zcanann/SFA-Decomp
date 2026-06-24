@@ -1029,7 +1029,7 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     *(f32*)(state + 996) = fparam;
     ((GameObject*)obj)->anim.rotX = (s16)((s8)config[42] << 8);
     ((GameObject*)obj)->anim.alpha = 255;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
     *(s16*)(state + 1010) = *(s16*)(config + 24);
     if (*(s16*)(state + 1010) != -1)
     {
