@@ -967,8 +967,10 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
 {
     f32 bestDistances[8];
+    int i;
     void** curves;
     void* curve;
+    u8 j;
     void* linkedCurve;
     u8 routeFlags;
     f32 cx;
@@ -977,8 +979,6 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
     f32 score;
     f32 init;
     int count;
-    int i;
-    u8 j;
     u8 k;
     int linkCurveId;
     u8* state;
