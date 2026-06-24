@@ -52,6 +52,7 @@ extern f32 lbl_803DF864;
 extern f32 lbl_803DF868;
 extern char sShaderDebugStrings[];
 #define MAP_BLOCK_LAYER_COUNT 5
+#define FRUSTUM_PLANE_COUNT 5
 extern int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 typedef struct WarpVec
 {
@@ -720,7 +721,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     u8 i = 0;
     f32 offZ = playerMapOffsetZ;
     f32 offX = playerMapOffsetX;
-    for (; i < 5; i++)
+    for (; i < FRUSTUM_PLANE_COUNT; i++)
     {
         float dot;
         plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
@@ -1025,14 +1026,14 @@ void playerVecFn_8005a9b0(void)
     scales.v[0] = clipDist;
 
     outPtr = (f32*)gPlayerRelativeFrustumPlanes;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
         PSMTXMultVec(invRotMtx, (_Vec3*)&planes.v[i * 3], &outPtr[i * 5]);
         PSVECScale(&outPtr[i * 5], &tmp, scales.v[i]);
         PSVECAdd(&camPos, &tmp, &tmp);
         outPtr[i * 5 + 3] = -PSVECDotProduct(&tmp, &outPtr[i * 5]);
     }
-    frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, 5);
+    frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, FRUSTUM_PLANE_COUNT);
 }
 
 extern int* lbl_803DCE9C;
@@ -1928,7 +1929,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
         y1 = PreCB;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
         f32 p0 = plane[i].normalX;
         f32 p1 = plane[i].normalY;
@@ -2200,7 +2201,7 @@ int objUpdateOpacity(char* obj)
         prod = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
         offZ = playerMapOffsetZ;
         offX = playerMapOffsetX;
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
         {
             FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
             if (prod
