@@ -108,6 +108,8 @@ extern void* mmAlloc(int size, int type, int flag);
 #define SAVE_SCORE_FILE_STRIDE 0x28
 #define SAVE_SCORE_TABLE_OFFSET 0x1c
 #define SAVE_SCORE_ENTRY_COUNT 5
+/* number of on-disk save-game slots */
+#define SAVEGAME_SLOT_COUNT 3
 #define SAVEGAME_MAP_COUNT 0x78
 #define SAVEGAME_EXTENDED_MAP_THRESHOLD 0x50
 #define SAVEGAME_TRANSIENT_MAP_BIT_COUNT 20
@@ -660,7 +662,7 @@ int saveSelect_getInfo(void* outPtr)
 
         slot++;
     }
-    while (slot < 3);
+    while (slot < SAVEGAME_SLOT_COUNT);
 
     return 1;
 }
