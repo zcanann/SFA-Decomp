@@ -2483,7 +2483,6 @@ void ObjHits_Update(int objectCount)
         if ((objState->flags & 4) != 0)
         {
             ObjHitsSweepEntry** skipSlot;
-            ObjHitsSweepEntry** ptrSlot;
             candidateIndex = currentIndex;
             skipSlot = &gObjHitsSweepEntryPtrs[currentIndex];
             for (; (entry->minX > (*skipSlot)->maxX) && (candidateIndex < slotCount); candidateIndex++)
@@ -2491,12 +2490,11 @@ void ObjHits_Update(int objectCount)
                 skipSlot++;
             }
             currentIndex = candidateIndex;
-            ptrSlot = gObjHitsSweepEntryPtrs;
             for (; (candidateIndex < slotCount) &&
-                   ((*entrySlot)->maxX > ptrSlot[candidateIndex]->minX);
+                   ((*entrySlot)->maxX > gObjHitsSweepEntryPtrs[candidateIndex]->minX);
                    candidateIndex++)
             {
-                candidateEntry = ptrSlot[candidateIndex];
+                candidateEntry = gObjHitsSweepEntryPtrs[candidateIndex];
                 if ((*entrySlot)->minX > candidateEntry->maxX)
                 {
                     continue;
@@ -2644,8 +2642,9 @@ void ObjHits_Update(int objectCount)
                 obj)->anim.previousLocalPosZ);
         }
     }
-    for (slotIndex = 0; slotIndex < 5; slotIndex++)
-    {
-        gObjHitsActiveHitVolumeObjects[slotIndex] = 0;
-    }
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[slotIndex = 0] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
+    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
 }
