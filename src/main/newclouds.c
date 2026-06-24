@@ -251,6 +251,13 @@ extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u
 extern f32 lbl_8039A8F0[];
 extern int gNewCloudSnowFogColor;
 
+typedef struct
+{
+    s16 uv[6];
+} SnowFlakeUVs;
+
+extern const SnowFlakeUVs lbl_802C1FCC;
+
 #pragma dont_inline off
 void dll_07_func07(int arg)
 {
@@ -2394,9 +2401,9 @@ int snowPrintSnowCloud(int arg, int cloudId)
     u8* part;
     int i;
     int j;
+    u8 hudHidden;
     int texIdx;
     int ct;
-    u8 hudHidden;
     u8 cr;
     u8 cg;
     u8 cb;
@@ -2415,8 +2422,9 @@ int snowPrintSnowCloud(int arg, int cloudId)
     volatile f32 vx[3];
     volatile f32 vy[3];
     volatile f32 vz[3];
-    volatile s16 uvs[6] = {-0x30, 0, 0xb0, 0, 0x40, 0x100};
+    volatile SnowFlakeUVs uvs;
 
+    uvs = lbl_802C1FCC;
     scale = lbl_803DF1A4;
     if (renderModeSetOrGet(-1) == 1)
     {
@@ -2584,18 +2592,18 @@ int snowPrintSnowCloud(int arg, int cloudId)
         GXWGFifo.f32 = vx[0];
         GXWGFifo.f32 = vy[0];
         GXWGFifo.f32 = vz[0];
-        GXWGFifo.s16 = uvs[0];
-        GXWGFifo.s16 = uvs[1];
+        GXWGFifo.s16 = uvs.uv[0];
+        GXWGFifo.s16 = uvs.uv[1];
         GXWGFifo.f32 = vx[1];
         GXWGFifo.f32 = vy[1];
         GXWGFifo.f32 = vz[1];
-        GXWGFifo.s16 = uvs[2];
-        GXWGFifo.s16 = uvs[3];
+        GXWGFifo.s16 = uvs.uv[2];
+        GXWGFifo.s16 = uvs.uv[3];
         GXWGFifo.f32 = vx[2];
         GXWGFifo.f32 = vy[2];
         GXWGFifo.f32 = vz[2];
-        GXWGFifo.s16 = uvs[4];
-        GXWGFifo.s16 = uvs[5];
+        GXWGFifo.s16 = uvs.uv[4];
+        GXWGFifo.s16 = uvs.uv[5];
         part += 0x18;
     }
     return 0;
