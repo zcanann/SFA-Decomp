@@ -407,8 +407,7 @@ void wcpushblock_update(int obj)
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moved = 0;
         {
-            u32 dir = WCPUSHBLOCK_PUSH_DIR(state);
-            if (dir == WCPUSHBLOCK_DIR_POS_X)
+            if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
             {
                 if (((GameObject*)obj)->anim.velocityX < gWcPushBlockMaxSlideSpeed)
                 {
@@ -420,7 +419,7 @@ void wcpushblock_update(int obj)
                     moved = 1;
                 }
             }
-            else if (dir == WCPUSHBLOCK_DIR_NEG_X)
+            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
             {
                 if (((GameObject*)obj)->anim.velocityX > gWcPushBlockMinSlideSpeed)
                 {
@@ -432,7 +431,7 @@ void wcpushblock_update(int obj)
                     moved = 1;
                 }
             }
-            else if (dir == WCPUSHBLOCK_DIR_POS_Z)
+            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
             {
                 if (((GameObject*)obj)->anim.velocityZ < gWcPushBlockMaxSlideSpeed)
                 {
@@ -444,7 +443,7 @@ void wcpushblock_update(int obj)
                     moved = 1;
                 }
             }
-            else if (dir == WCPUSHBLOCK_DIR_NEG_Z)
+            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
             {
                 if (((GameObject*)obj)->anim.velocityZ > gWcPushBlockMinSlideSpeed)
                 {
