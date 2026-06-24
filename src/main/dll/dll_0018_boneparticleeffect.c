@@ -1474,7 +1474,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 s.unk02 = 0;
                 s.unk00 = 0;
                 jb = (u8*)((int*)m)[(*(u16*)((u8*)m + 0x18) & 1) + 3];
-                id = idp[gBoneParticleStageIndex * 5];
+                id = (base + gBoneParticleStageIndex * 5 + j)[0x5b4];
                 mtx = (u8*)((BoneFxJRow*)jb + (id << 4));
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32*)(mtx + 0x34);
