@@ -180,6 +180,8 @@ extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, 
 extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
 extern int getNextTaskHintText(void);
 extern u8 lbl_803DBA9C[6];
+/* Segments in the task-hint progress bar (lbl_803DBA9C[6], size 0x6). */
+#define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
 extern f32 lbl_803E1FA8;
 extern f32 lbl_803E1FD0;
 extern f32 lbl_803E20D4;
@@ -1425,7 +1427,7 @@ void fn_80128120(int unused, int p2)
     else if (v > 0x8) level = 1;
     else level = 0;
 
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < GAMEUI_HINT_BAR_SEGMENT_COUNT; i++)
     {
         int t = 0x11;
         if (i >= level) t = -1;
