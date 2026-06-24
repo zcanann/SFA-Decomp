@@ -2137,14 +2137,14 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int cx;
     int hh;
     int hw;
-    u16 h7;
-    u16 w7;
-    s16 y7;
     s16 x7;
-    s16 x2;
+    s16 y7;
+    u16 w7;
+    u16 h7;
+    s16 y2;
     int w2;
     int xw;
-    s16 y2;
+    s16 x2;
     int half;
     int rem;
 
