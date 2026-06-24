@@ -501,7 +501,7 @@ void fn_801522E0(int* obj, u8* state)
     {
         *(int*)&((BaddieState*)state)->controlFlags |= 1;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
 
 /* EN v1.0 0x80152040  size: 672b  state-table driver: walks the 12-byte
@@ -529,15 +529,15 @@ void fn_80152040(int* obj, u8* state)
 
     if (((BaddieState*)state)->seqEntryIndex == 2 && GameBit_Get(*(s16*)((char*)def + 0x1c)) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
         {
             fn_80151C68(obj, state);
         }
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     }
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & 0x80000000)
