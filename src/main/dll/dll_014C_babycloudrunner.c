@@ -945,7 +945,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         sub->behaviourState = 0xb;
         if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32) * (s16*)(def + 0x1a)
-            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+            && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             sub->behaviourState = 7;
             return 4;
@@ -1040,7 +1040,7 @@ void babycloudrunner_update(int* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (sub->runnerState == 0)
         {
             mode = 0x19;
