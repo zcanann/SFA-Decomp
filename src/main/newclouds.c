@@ -1816,6 +1816,7 @@ extern const f32 lbl_803DF27C;
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
+    u8* cloud;
     u8 fl;
     struct
     {
@@ -1853,7 +1854,8 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    if (NC_CLOUD == NULL)
+    cloud = NC_CLOUD;
+    if (cloud == NULL)
     {
         fl = params[0x58];
         if (!(fl & 4) && !(fl & 8) && !(fl & 0x20))
@@ -1958,8 +1960,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
                 }
             }
         }
+        return;
     }
-    if (NC_CLOUD == NULL)
+    if (cloud == NULL)
     {
         return;
     }
@@ -1968,9 +1971,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     {
         return;
     }
-    if ((fl & 8) && NC_CLOUD[0x144e] != 0)
+    if ((fl & 8) && cloud[0x144e] != 0)
     {
-        env[*(u16*)(params + 0x26) + 0x41] = NC_CLOUD[0x144d];
+        env[*(u16*)(params + 0x26) + 0x41] = (s8)cloud[0x144d];
         NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
         if (NC_CLOUD[0x144d] == 1)
         {
@@ -2016,9 +2019,9 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     else if (fl & 4)
     {
-        if (NC_CLOUD[0x144f] != 0)
+        if (cloud[0x144f] != 0)
         {
-            NC_CLOUD[0x144f] = 0;
+            cloud[0x144f] = 0;
         }
         ((NewCloud*)NC_CLOUD)->despawning = 1 - ((NewCloud*)NC_CLOUD)->despawning;
         if (*(u16*)(params + 0x2a) != 0)
