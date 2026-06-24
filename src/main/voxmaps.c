@@ -1025,7 +1025,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             int count;
             state->minHCost = 0x2710;
             count = state->nodeCount;
-            if (count == 0xc8)
+            if (count == VOXMAPS_ROUTE_NODE_CAPACITY)
             {
                 debugPrintf(sVoxmapsRouteNodesListOverflow);
                 node = NULL;
