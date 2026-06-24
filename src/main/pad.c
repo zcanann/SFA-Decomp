@@ -249,14 +249,12 @@ u32 getButtonsHeld(int port)
 
 int initControllers(void)
 {
-    s32 i;
     u8* prevStickY;
     u8* prevStickX;
     u8* repeatY;
     u8* repeatX;
     u8* analogY;
     u8* analogX;
-    u32* padStateBlock;
     u32* heldButtons;
     u32* buttonsPressed;
     u32* buttonsReleased;
@@ -266,8 +264,8 @@ int initControllers(void)
     u16* triggersReleased;
     u16* triggersPressed;
     PadStatusLite* statuses;
+    s32 i;
 
-    padStateBlock = gPadStateBlock;
     gPadResetMask = 0xF0000000;
     PADInit();
     PADRecalibrate(gPadResetMask);
@@ -282,15 +280,15 @@ int initControllers(void)
     repeatX = &gPadRepeatX;
     analogY = &gPadAnalogY;
     analogX = &gPadAnalogX;
-    heldButtons = padStateBlock;
-    buttonsPressed = padStateBlock + 4;
-    buttonsReleased = padStateBlock + 8;
-    controlStick = padStateBlock + 12;
+    heldButtons = gPadStateBlock;
+    buttonsPressed = gPadStateBlock + 4;
+    buttonsReleased = gPadStateBlock + 8;
+    controlStick = gPadStateBlock + 12;
     prevTriggers = &gPadPrevTriggers;
     triggers = &gPadTriggers;
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
-    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
+    statuses = (PadStatusLite*)((u8*)gPadStateBlock + 0x40);
 
     for (i = 0; i < 4; i++)
     {
