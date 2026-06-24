@@ -46,6 +46,14 @@
 #define GX_TEVSTAGE0 0
 #define GX_TEV_SWAP0 0
 #define GX_FOG_NONE 0
+#define GX_VA_PNMTXIDX 0
+#define GX_VA_TEX0MTXIDX 1
+#define GX_VA_TEX1MTXIDX 2
+#define GX_DIRECT 1
+#define GX_VA_POS 9
+#define GX_VA_NRM 10
+#define GX_VA_CLR0 11
+#define GX_VA_TEX0 13
 
 typedef struct ObjPrintGXColor
 {
@@ -3185,7 +3193,7 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
         GXClearVtxDesc();
         if (flags & 1)
         {
-            GXSetVtxDesc(0, 1);
+            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
         }
         else
         {
@@ -3482,9 +3490,9 @@ void objRenderFn_8003d980(void* objArg, int* p2)
     GXLoadTexMtxImm(cm, 0x1e, 0);
     gxTextureFn_80072dfc(obj, p2, 0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(10, 1);
-    GXSetVtxDesc(13, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     verts = *(s16**)(data + 4);
     uvs = *(s16**)(data + 8);
     GXBegin(0x90, 7, *(u16*)(data + 0xc) * 3);
@@ -3749,16 +3757,16 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
     {
         int next;
         int back;
-        GXSetVtxDesc(0, 1);
+        GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
         next = 1;
         back = 8;
         if (p3[0] != 0 || p3[1] != 0)
         {
             if (*(u32*)&((ModelFileHeader*)m)->unk34 != 0)
             {
-                GXSetVtxDesc(1, 1);
+                GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
                 next = 3;
-                GXSetVtxDesc(2, 1);
+                GXSetVtxDesc(GX_VA_TEX1MTXIDX, GX_DIRECT);
             }
             GXSetVtxDesc(next++, 1);
         }
@@ -4272,7 +4280,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             GXClearVtxDesc();
             if (((ModelFileHeader*)m)->jointCount > 1)
             {
-                GXSetVtxDesc(0, 1);
+                GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
             }
             {
                 u32 w;
@@ -4292,7 +4300,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             {
                 bs.pos += 1;
             }
-            GXSetVtxDesc(0xb, 1);
+            GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
             bs.pos += 1;
             break;
         case 1:
