@@ -1406,11 +1406,11 @@ void Tricky_update(int obj)
             diff += 0xffff;
         }
         step = (int)((f32)((TrickyState*)state)->rotRate * ((TrickyState*)state)->rotStepScale);
-        if ((diff < 0 ? -diff : diff) >= 4)
+        if ((diff >= 0 ? diff : -diff) >= 4)
         {
             if ((step > 0 && diff > 0) || (step < 0 && diff < 0))
             {
-                if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff))
+                if ((step >= 0 ? step : -step) > (diff >= 0 ? diff : -diff))
                 {
                     *(s16*)obj = *(volatile s16*)obj + diff;
                 }
