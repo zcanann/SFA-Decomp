@@ -56,6 +56,12 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
 STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 
+/* BabyCloudRunnerState.mode */
+#define BABYCLOUDRUNNER_MODE_UNINIT 0
+#define BABYCLOUDRUNNER_MODE_LATCHED 1
+#define BABYCLOUDRUNNER_MODE_WAIT_GATE 2
+#define BABYCLOUDRUNNER_MODE_FINISHED 3
+
 /* BabyCloudRunnerPlacement.flags bits */
 #define BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE 0x1
 #define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT 0x2
@@ -136,7 +142,7 @@ void dll_FC_update(int obj)
             gameBitValue = GameBit_Get((int)placement->rememberedGameBit);
             state->rememberedGameBitValue = gameBitValue;
         }
-        state->mode = 1;
+        state->mode = BABYCLOUDRUNNER_MODE_LATCHED;
     }
 
     ((GameObject*)obj)->anim.localPosX = state->target->anim.localPosX;
@@ -148,21 +154,21 @@ void dll_FC_update(int obj)
 
     switch (state->mode)
     {
-    case 3:
+    case BABYCLOUDRUNNER_MODE_FINISHED:
         break;
-    case 1:
+    case BABYCLOUDRUNNER_MODE_LATCHED:
         if ((state->rememberedGameBitValue != 0) && ((placement->flags & BABYCLOUDRUNNER_FLAG_REMEMBERED_DONE) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-            state->mode = 3;
+            state->mode = BABYCLOUDRUNNER_MODE_FINISHED;
         }
         else if (((int)placement->gateGameBit != -1) &&
             (GameBit_Get((int)placement->gateGameBit) == 0))
         {
             state->target->anim.resetHitboxFlags &= ~0x20;
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-            state->mode = 2;
+            state->mode = BABYCLOUDRUNNER_MODE_WAIT_GATE;
         }
         else if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
@@ -197,10 +203,10 @@ void dll_FC_update(int obj)
             ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
         break;
-    case 2:
+    case BABYCLOUDRUNNER_MODE_WAIT_GATE:
         if (GameBit_Get((int)placement->gateGameBit) != 0)
         {
-            state->mode = 1;
+            state->mode = BABYCLOUDRUNNER_MODE_LATCHED;
         }
         break;
     }
@@ -215,7 +221,7 @@ void dll_FC_init(int obj, int objDef)
 
     state = ((GameObject*)obj)->extra;
     placement = (BabyCloudRunnerPlacement*)objDef;
-    state->mode = 0;
+    state->mode = BABYCLOUDRUNNER_MODE_UNINIT;
     state->triggerId = placement->triggerIdMax;
     ((GameObject*)obj)->objectFlags |= 0x4000;
 }
