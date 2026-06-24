@@ -127,7 +127,7 @@ void screenTransition_do2(int p1, int p2, int p3)
     {
         screenTransitionAlpha = lbl_803E0560;
         gScreenTransitionDone = 1;
-        if (gScreenTransitionType == 5)
+        if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
         {
             setHudOpacity(0xff);
         }
@@ -141,7 +141,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         {
             gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
         }
-        if (gScreenTransitionType != 5)
+        if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
         {
             setHudOpacity(0xff);
         }
@@ -156,7 +156,7 @@ void screenTransition_do2(int p1, int p2, int p3)
     }
     switch (gScreenTransitionType)
     {
-    case 1:
+    case SCREEN_TRANSITION_BLACK:
     {
         HudColor col;
         int sh;
@@ -173,7 +173,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         GXSetScissor(sx, sy, sw, sh);
         break;
     }
-    case 2:
+    case SCREEN_TRANSITION_WHITE:
     {
         HudColor col;
         int sh;
@@ -190,10 +190,10 @@ void screenTransition_do2(int p1, int p2, int p3)
         GXSetScissor(sx, sy, sw, sh);
         break;
     }
-    case 3:
+    case SCREEN_TRANSITION_WHITE_WIPE:
         screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
         break;
-    case 4:
+    case SCREEN_TRANSITION_RED:
     {
         HudColor col;
         int sh;
@@ -210,7 +210,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         GXSetScissor(sx, sy, sw, sh);
         break;
     }
-    case 5:
+    case SCREEN_TRANSITION_HUD:
         break;
     }
 }
