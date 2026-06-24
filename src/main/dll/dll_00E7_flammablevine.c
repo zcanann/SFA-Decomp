@@ -229,8 +229,8 @@ checked_vine_use:
 
         if (tricky != NULL && canUse != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
+            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 TrickyIface* iface = *(TrickyIface**)((u8*)tricky + 0x68);
                 iface->vtbl->slot28(tricky, obj, 1, 4);
