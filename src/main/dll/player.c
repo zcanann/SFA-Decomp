@@ -4890,10 +4890,10 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     *(f32*)((char*)out + 0x2c) = *(f32*)((char*)src + 0x24);
     *(f32*)((char*)out + 0x30) = *(f32*)((char*)src + 0x28);
     *(f32*)((char*)out + 0x34) = -*(f32*)((char*)src + 0x24);
-    *(f32*)((char*)out + 0x38) = lbl_803E7EA4;
+    c38 = lbl_803E7EA4;
+    *(f32*)((char*)out + 0x38) = c38;
     *(f32*)((char*)out + 0x3c) = *(f32*)((char*)src + 0x1c);
-    c38 = *(f32*)((char*)out + 0x38);
-    *(f32*)((char*)out + 0x40) = -(*(f32*)((char*)out + 0x48) * c38 +
+    *(f32*)((char*)out + 0x40) = -(*(f32*)((char*)out + 0x48) * *(f32*)((char*)out + 0x38) +
         *(f32*)((char*)out + 0x44) * *(f32*)((char*)out + 0x34) +
         *(f32*)((char*)out + 0x4c) * *(f32*)((char*)out + 0x3c));
     nx = -*(f32*)((char*)out + 0x2c);
