@@ -5847,7 +5847,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
                     if (!(dE <= (*(f32*)&__AR_Callback))) continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= (*(f32*)&__AR_Callback) && (*(f32*)&__AR_Callback) <= dE) || ((*(f32*)&__AR_Callback) <= dS && dE <= (*(f32*)&__AR_Callback)))
+                    if ((dS <= (*(f32*)&__AR_Callback) && dE >= (*(f32*)&__AR_Callback)) || (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
                     {
                         f32 lo, hi;
                         if (dS != dE)
