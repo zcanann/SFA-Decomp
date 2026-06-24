@@ -4,6 +4,7 @@
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#define NEW_SHADOW_MAX_CASTERS 100
 extern u32 FUN_800033a8();
 extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
@@ -703,7 +704,7 @@ void newshadows_renderQueuedShadowCasters(void)
         dirShadowCount = 0;
         shadowSlot = 0;
         queueEntry = &DAT_8038ef08;
-        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)DAT_803ddbf8 && (casterIdx < 100));
+        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)DAT_803ddbf8 && (casterIdx < NEW_SHADOW_MAX_CASTERS));
              casterIdx = casterIdx + '\x01')
         {
             obj = *queueEntry;
@@ -2584,7 +2585,7 @@ void renderShadows(void)
     vAp1 = &vA[1];
     vAp2 = &vA[2];
     mc54p = &mc54[0];
-    for (r22 = 0; r22 < gNewShadowCasterCount && r22 < 0x64; r22++, casterPtr += 0xc)
+    for (r22 = 0; r22 < gNewShadowCasterCount && r22 < NEW_SHADOW_MAX_CASTERS; r22++, casterPtr += 0xc)
     {
         int* obj = *(int**)casterPtr;
         int* of64 = (int*)obj[0x64 / 4];
