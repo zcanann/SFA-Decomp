@@ -90,6 +90,17 @@ int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
 extern u8 framesThisStep;
+/* Top-level boot / soft-reset state machine (the global gameState). */
+typedef enum GameLoopState {
+  GAMELOOP_STATE_BOOTING = 0,            /* loading; the gameUpdate frame is skipped */
+  GAMELOOP_STATE_RUNNING = 1,            /* normal per-frame game update */
+  GAMELOOP_STATE_RESET_REQUESTED = 2,    /* soft reset: stop audio/rumble, begin transition */
+  GAMELOOP_STATE_RESET_FADE_OUT = 3,     /* fade-out timer countdown */
+  GAMELOOP_STATE_RESET_TEARDOWN = 4,     /* DVD/audio/VI teardown then OSResetSystem */
+  GAMELOOP_STATE_RESET_DONE = 5,         /* terminal, after OSResetSystem */
+  GAMELOOP_STATE_HARD_RESET_REQUESTED = 6 /* like RESET_REQUESTED but flags a hard reset */
+} GameLoopState;
+
 extern u8 gameState;
 extern u8 timeStop;
 extern u8 shouldResetNextFrame;
@@ -109,11 +120,11 @@ extern void checkReset(void);
 
 void main(void)
 {
-    gameState = 0;
+    gameState = GAMELOOP_STATE_BOOTING;
     gGameLoopInitComplete = 0;
     init();
     gGameLoopInitComplete = 1;
-    gameState = 1;
+    gameState = GAMELOOP_STATE_RUNNING;
     do
     {
         checkReset();
@@ -795,8 +806,8 @@ void init(void)
         }
         GXFlush_(1, 0);
     }
-    while ((filesDone == 0 || audioDone == 0) && gameState == 0);
-    while (gameState != 0)
+    while ((filesDone == 0 || audioDone == 0) && gameState == GAMELOOP_STATE_BOOTING);
+    while (gameState != GAMELOOP_STATE_BOOTING)
     {
         mmFreeTick(0);
         padUpdate();
@@ -1026,7 +1037,7 @@ extern f32 lbl_803DE7A8;
 void gameLoop(void)
 {
     waitNextFrame();
-    if (gameState == 1)
+    if (gameState == GAMELOOP_STATE_RUNNING)
     {
         padUpdate();
         voxmaps_updateTimers();
@@ -1039,7 +1050,7 @@ void gameLoop(void)
     }
     debugPrintDraw(0);
     (*gScreenTransitionInterface)->init(0, 0, 0);
-    if (gameState == 1)
+    if (gameState == GAMELOOP_STATE_RUNNING)
     {
         if (gGameLoopButtonObjectCount != 0)
         {
@@ -1457,11 +1468,11 @@ void checkReset(void)
     lbl_803DCCA6 = 0;
     switch (gameState)
     {
-    case 0:
-    case 1:
+    case GAMELOOP_STATE_BOOTING:
+    case GAMELOOP_STATE_RUNNING:
         if (shouldResetNextFrame != 0)
         {
-            gameState = 2;
+            gameState = GAMELOOP_STATE_RESET_REQUESTED;
         }
         if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
             (getNewInputs(0) & 0x1000) != 0)
@@ -1482,7 +1493,7 @@ void checkReset(void)
             gGameLoopResetHoldTimer = t;
             if (t >= lbl_803DE7AC)
             {
-                gameState = 2;
+                gameState = GAMELOOP_STATE_RESET_REQUESTED;
             }
         }
         else
@@ -1490,14 +1501,14 @@ void checkReset(void)
             gGameLoopResetHoldTimer = lbl_803DE7B0;
         }
         break;
-    case 2:
-    case 6:
+    case GAMELOOP_STATE_RESET_REQUESTED:
+    case GAMELOOP_STATE_HARD_RESET_REQUESTED:
         OSReport(msg + 0xd0);
         if (gGameLoopInitComplete != 0)
         {
             (*gScreenTransitionInterface)->start(0x1e, 1);
         }
-        if (gameState == 6)
+        if (gameState == GAMELOOP_STATE_HARD_RESET_REQUESTED)
         {
             gGameLoopHardReset = 1;
         }
@@ -1509,18 +1520,18 @@ void checkReset(void)
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
         audioStopAll();
-        gameState = 3;
+        gameState = GAMELOOP_STATE_RESET_FADE_OUT;
         gGameLoopResetFadeOutTimer = lbl_803DE7AC;
         break;
-    case 3:
+    case GAMELOOP_STATE_RESET_FADE_OUT:
         t = gGameLoopResetFadeOutTimer - lbl_803DE7A8;
         gGameLoopResetFadeOutTimer = t;
         if (t <= lbl_803DE7B0)
         {
-            gameState = 4;
+            gameState = GAMELOOP_STATE_RESET_TEARDOWN;
         }
         break;
-    case 4:
+    case GAMELOOP_STATE_RESET_TEARDOWN:
         OSReport(msg + 0xec);
         while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0))
         {
@@ -1560,7 +1571,7 @@ void checkReset(void)
         VIFlush();
         VIWaitForRetrace();
         OSReport(msg + 0x12c);
-        gameState = 5;
+        gameState = GAMELOOP_STATE_RESET_DONE;
         if (gGameLoopHardReset != 0)
         {
             OSResetSystem(1, 0x80000000, 1);
