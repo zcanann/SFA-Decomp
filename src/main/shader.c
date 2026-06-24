@@ -1201,19 +1201,19 @@ extern int lbl_803DB620;
 
 int mapProcessRomList(int slot)
 {
-    u8 flag;
-    char* cur;
+    char* base;
+    int j;
     char* obj;
     int i;
+    u8 flag;
+    char* cur;
     int count;
     char* p;
     char* entry;
     s16* rects;
-    int j;
     int step;
     int rl;
     f32 dx, dz;
-    char* base;
 
     base = lbl_8037E0C0;
     flag = 0;
@@ -1270,8 +1270,8 @@ int mapProcessRomList(int slot)
                 ((GameObject*)obj)->anim.localPosY += dz;
             }
             step = *(u8*)(obj + 2) * 4;
-            obj += step;
             j += step;
+            obj += step;
         }
     }
     lbl_803DB620 = slot;
