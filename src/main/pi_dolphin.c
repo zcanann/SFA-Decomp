@@ -17,6 +17,10 @@
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"
 #include "sfa_light_decls.h"
+
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -7897,7 +7901,7 @@ void videoInit(void)
     GXSetVtxAttrFmt(7, 0xf, 1, 3, 10);
     GXSetVtxAttrFmt(7, 0x10, 1, 3, 10);
     lbl_803DCCF4 = 0;
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     cc = *(int*)&lbl_803DB5D0;
     GXSetCopyClear(&cc, 0xffffff);
     GXSetBlendMode(0, 1, 0, 5);
