@@ -75,6 +75,10 @@ typedef struct ModelFileHeader {
     u8 morphTargetCount;
 } ModelFileHeader;
 
+/* ModelFileHeader.flags bits */
+#define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
+#define MODEL_FLAG_VERTEX_ANIM_AREA 0x40
+
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);

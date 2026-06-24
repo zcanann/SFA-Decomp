@@ -1367,7 +1367,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
     blendChan = stk;
     for (; i < n; i++)
     {
-        if (((ModelFileHeader*)hdr)->flags & 0x40)
+        if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
         {
             blendDst = *(u8**)(stk + *(u16*)(animChan + 0x44) * 4 + 0x1c);
             blendSrc = blendDst;
@@ -1507,7 +1507,7 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 bl
                 *(f32*)(stk + 0x18) = fa;
                 *(f32*)(stk + 8) = fb;
                 *(u32*)(stk + 0x38) = *(u32*)(blendChan + 0x3c);
-                if (((ModelFileHeader*)hdr)->flags & 0x40)
+                if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
                 {
                     *(u16*)(stk + 0x44) = 0;
                     *(u16*)(stk + 0x46) = 1;
@@ -1620,7 +1620,7 @@ void modelAnimResetState(void* m, void* data)
     hdr = *(u8**)m;
     if (((ModelFileHeader*)hdr)->animationCount != 0)
     {
-        if (((ModelFileHeader*)hdr)->flags & 0x40)
+        if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
         {
             LOADCOLOR_BLOCK(0x1c)
             LOADCOLOR_BLOCK(0x20)
@@ -1676,7 +1676,7 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
     u8* b1;
     u8* b2;
 
-    if (((ModelFileHeader*)hdr)->flags & 0x40)
+    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
         b1 = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x44) * 4);
         b2 = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x46) * 4);
@@ -1744,7 +1744,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     pos += szs[6] >> 1;
     *(int*)&((ObjModel*)out)->curMtxBuf = *(int*)&((ObjModel*)out)->jointMatrices[0];
     if (((ModelFileHeader*)p)->morphTargetCount != 0 || ((ModelFileHeader*)p)->vertexAnimEntries != NULL || (((
-        ModelFileHeader*)p)->flags & 0x10))
+        ModelFileHeader*)p)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS))
     {
         pos = roundUpTo32(pos);
         *(int*)&((ObjModel*)out2)->vtxBuf0 = pos;
@@ -1792,7 +1792,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         *(int*)&((ObjModel*)out2)->animStateB = pos;
         pos += 0x68;
     }
-    if (((ModelFileHeader*)p)->flags & 0x40)
+    if (((ModelFileHeader*)p)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
         pos = roundUpTo8(pos);
         q = ((ObjModel*)out2)->animStateA;
@@ -1952,7 +1952,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     ((ModelFileHeader*)hdr)->animationDataFileOffset = gModelAnimOffsetTable[id & 3];
     sz4 = gModelAnimOffsetTable[id & 3];
     id = gModelAnimOffsetTable[(id & 3) + 1] - sz4;
-    if (((ModelFileHeader*)hdr)->flags & 0x40)
+    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = buf;
         while (sz & 7)
@@ -1980,7 +1980,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
         }
         o += 2;
     }
-    if ((((ModelFileHeader*)hdr)->flags & 0x40) == 0)
+    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0)
     {
         *(int*)&((ModelFileHeader*)hdr)->animationHeaderBuffer = 0;
         ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
@@ -2086,7 +2086,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
         sizes[6] = 0x80;
     }
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || ((ModelFileHeader*)hdr)->vertexAnimEntries != 0 || (((
-        ModelFileHeader*)hdr)->flags & 0x10) != 0)
+        ModelFileHeader*)hdr)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS) != 0)
     {
         sizes[0] = (u32)((ModelFileHeader*)hdr)->vertexCount * 0xc + 0x60;
     }
@@ -2117,7 +2117,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
         sizes[1] = half << 1;
     }
     sizes[3] = 0;
-    if ((((ModelFileHeader*)hdr)->flags & 0x40) != 0)
+    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) != 0)
     {
         sizes[5] = ((ModelFileHeader*)hdr)->unk84;
         while ((sizes[5] & 7) != 0)
@@ -2906,7 +2906,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     i2 = (u8)g;
     p = c + 0x34;
     *(int*)(stk + 0x38) = *(int*)(p + i2 * 4);
-    if (((ModelFileHeader*)hdr)->flags & 0x40)
+    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
         *(u16*)(stk + 0x44) = 0;
         *(u16*)(stk + 0x46) = 1;
