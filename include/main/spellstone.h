@@ -4,6 +4,13 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+/* SpellStoneState.state */
+typedef enum SpellStoneStateId {
+  SPELLSTONE_STATE_HIDDEN = 0, /* not rendered, hits off, snaps to follow target */
+  SPELLSTONE_STATE_IDLE = 1,   /* placed and visible, hits enabled, awaiting activation */
+  SPELLSTONE_STATE_ACTIVE = 2  /* raised and spinning, proximity-completes the map event */
+} SpellStoneStateId;
+
 typedef struct SpellStoneState {
   u8 state;
 } SpellStoneState;

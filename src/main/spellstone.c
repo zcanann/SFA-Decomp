@@ -20,7 +20,7 @@ extern f32 lbl_803E6758;
 
 int spellstone_getState(SpellStoneObject* obj)
 {
-    return obj->state->state != 2;
+    return obj->state->state != SPELLSTONE_STATE_ACTIVE;
 }
 
 int spellstone_setState(SpellStoneObject* obj, int state)
@@ -31,11 +31,11 @@ int spellstone_setState(SpellStoneObject* obj, int state)
     extra = obj->state;
     oldState = extra->state;
     extra->state = state;
-    if (state == 2)
+    if (state == SPELLSTONE_STATE_ACTIVE)
     {
         obj->posY += lbl_803E6750;
     }
-    return oldState != 1;
+    return oldState != SPELLSTONE_STATE_IDLE;
 }
 
 int spellstone_getExtraSize(void)
@@ -60,7 +60,7 @@ void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3,
     SpellStoneState* state;
 
     state = obj->state;
-    if ((visible != 0) && (state->state != 0))
+    if ((visible != 0) && (state->state != SPELLSTONE_STATE_HIDDEN))
     {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6754);
     }
@@ -81,7 +81,7 @@ void spellstone_update(SpellStoneObject* obj)
 
     state = obj->state;
     def = obj->def;
-    if (state->state == 2)
+    if (state->state == SPELLSTONE_STATE_ACTIVE)
     {
         obj->rotY = 0;
         obj->rotX += 0x100;
@@ -103,7 +103,7 @@ void spellstone_update(SpellStoneObject* obj)
             obj->flags = (s16)(obj->flags | 0x4000);
             Obj_RemoveFromUpdateList(obj);
         }
-        if (state->state == 2)
+        if (state->state == SPELLSTONE_STATE_ACTIVE)
         {
             playerObj = Obj_GetPlayerObject();
             if (Vec_distance(&obj->worldPosX, (u8*)playerObj + 0x18) < lbl_803E6758)
@@ -111,7 +111,7 @@ void spellstone_update(SpellStoneObject* obj)
                 GameBit_Set(def->completeEvent, 1);
             }
         }
-        if (state->state == 0)
+        if (state->state == SPELLSTONE_STATE_HIDDEN)
         {
             ObjHits_DisableObject((u32)obj);
             if (obj->followTarget != NULL)
@@ -135,7 +135,7 @@ void spellstone_init(SpellStoneObject* obj)
 
     state = obj->state;
     ObjGroup_AddObject((u32)obj, 0x1e);
-    state->state = 1;
+    state->state = SPELLSTONE_STATE_IDLE;
     obj->callback = spellstone_idleCallback;
     return;
 }
