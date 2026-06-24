@@ -1550,11 +1550,13 @@ extern const f32 lbl_803DF244;
 void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 {
     char* strs;
-    int ok;
     int id;
+    int ok;
     int i;
     u8 fl;
     WindSource* w;
+    int (*sizeRange)[2];
+    int (*spinRange)[2];
 
     strs = lbl_8030F500;
     ok = 1;
@@ -1682,9 +1684,9 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         *(u16*)(NC_PARTS + i * 0x18 + 0x12) = randomGetRange(0, 0x13);
         if (((NewCloud*)NC_CLOUD)->cloudType == 0)
         {
+            sizeRange = (int(*)[2])(strs + 0x58);
             *(s8*)(NC_PARTS + i * 0x18 + 0x14) =
-                (randomGetRange(*(int*)(strs + params[0x5a] * 8 + 0x58),
-                                    *(int*)(strs + params[0x5a] * 8 + 0x5c)) /
+                (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) /
                     4);
             *(f32*)(NC_PARTS + i * 0x18 + 0xc) =
                 (int)
@@ -1694,9 +1696,9 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         }
         else
         {
+            sizeRange = (int(*)[2])(strs + 0x58);
             *(s8*)(NC_PARTS + i * 0x18 + 0x14) =
-                (randomGetRange(*(int*)(strs + params[0x5a] * 8 + 0x58),
-                                    *(int*)(strs + params[0x5a] * 8 + 0x5c)) *
+                (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) *
                     2);
             *(f32*)(NC_PARTS + i * 0x18 + 0xc) = lbl_803DF1A4;
             *(NC_PARTS + i * 0x18 + 0x16) = 0;
@@ -1705,10 +1707,10 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
         {
             *(NC_PARTS + i * 0x18 + 0x14) = 1;
         }
+        spinRange = (int(*)[2])(strs + 0x30);
         *(s8*)(NC_PARTS + i * 0x18 + 0x15) =
-            (*(int*)(strs + params[0x5b] * 8 + 0x34) / 2 -
-                randomGetRange(*(int*)(strs + params[0x5b] * 8 + 0x30),
-                               *(int*)(strs + params[0x5b] * 8 + 0x34)));
+            (((int(*)[2])(strs + 0x30))[params[0x5b]][1] / 2 -
+                randomGetRange(spinRange[params[0x5b]][0], spinRange[params[0x5b]][1]));
     }
     if (gNewCloudWindSourcesInit != 0)
     {
