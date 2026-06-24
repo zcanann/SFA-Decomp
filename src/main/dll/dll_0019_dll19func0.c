@@ -735,7 +735,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 ((BaddieState*)baddieState)->hitPoints = 0;
                 obj[54] = 0;
                 ((GameObject*)obj)->unkF4 = 1;
-                ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+                ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 (*gMapEventInterface)->addTime(
                     *(int*)(other + 20),
                     (f32)(s32)(*(s16*)(other + 44) * 60));
@@ -1053,10 +1053,10 @@ void dll_19_func18(int obj, u8* config, u8* state, int moveArg0, int moveArg1, i
     if (((GameObject*)obj)->unkF4 != 0)
     {
         ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         return;
     }
-    ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x4000;
+    ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
     ObjHits_EnableObject(obj);
     if ((s8)config[46] == -1)
     {
