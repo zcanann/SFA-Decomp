@@ -1335,7 +1335,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             else
             {
-                cb = modelDef->renderFlags;
+                cb = ((ObjModelInstance*)obj->def)->renderFlags;
                 if (cb & 1)
                 {
                     ObjModel_SetRenderCallback(obj->models[idx], modelCb_80073d04);
@@ -1366,7 +1366,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
             else
             {
-                cb = modelDef->renderFlags;
+                cb = ((ObjModelInstance*)obj->def)->renderFlags;
                 if (cb & 1)
                 {
                     ObjModel_SetRenderCallback(obj->models[i], modelCb_80073d04);
@@ -1378,7 +1378,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             }
         }
     }
-    cursor = roundUpTo4((int)obj->models + count * 4);
+    cursor = roundUpTo4((int)obj->models + modelDef->modelCount * 4);
     switch (obj->seqId)
     {
     case 0:
