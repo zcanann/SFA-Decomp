@@ -2856,11 +2856,11 @@ void doPendingMapLoads(void)
                         lbl_803DCE88 = *cp2;
                         cell = 0;
                         row = 0;
-                        p5 = p13;
+                        p7 = p13;
                         for (row = 0; row < 16; row++)
                         {
                             col = 0;
-                            p7 = p5;
+                            p5 = p7;
                             for (k8 = 0; k8 < 8; k8++)
                             {
                                 c = g[0];
@@ -2906,7 +2906,6 @@ void doPendingMapLoads(void)
                                 g += 2;
                                 col = col + 1;
                             }
-                            p5 = p7;
                         }
                         bp2++;
                         ap2++;
