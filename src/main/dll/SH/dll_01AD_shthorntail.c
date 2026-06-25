@@ -370,7 +370,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
     SHthorntailRuntime* runtime;
-    int byteVal;
     int i;
     u8 hitResult;
     u8 mode;
@@ -449,9 +448,8 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
-            byteVal = runtime->freezeFrameCounter + 1;
-            runtime->freezeFrameCounter = byteVal;
-            if ((u8)byteVal > 0xa)
+            runtime->freezeFrameCounter = runtime->freezeFrameCounter + 1;
+            if (runtime->freezeFrameCounter > 0xa)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
@@ -507,6 +505,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
             obj->facingAngle += animEvents.rootPitch;
         }
+        uval = (u32)obj;
         for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1)
         {
             if (eventId[0x13] == '\0')
@@ -514,14 +513,14 @@ void SHthorntail_update(SHthorntailObject* obj)
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0)
                 {
                     Sfx_PlayFromObject(
-                        (u32)obj,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
+                        uval,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
             }
             else if ((eventId[0x13] == '\a') &&
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
-                    (u32)obj, SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
+                    uval, SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
