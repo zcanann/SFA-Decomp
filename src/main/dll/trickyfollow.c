@@ -141,7 +141,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     if ((wg != 0) && (((TrickyState*)state)->unkD0 != wg))
     {
         ((TrickyState*)state)->unkD0 = wg;
-        *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+        *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
         ((TrickyState*)state)->patch[0] = 0;
         ((TrickyState*)state)->patch[1] = 0;
         ((TrickyState*)state)->patch[2] = 0;
@@ -241,7 +241,11 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     }
     tp = getPatchGroup((f32*)target, ((TrickyState*)state)->unkD0) & 0xffff;
     trickyPatch = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->unkD0) & 0xffff;
-    if ((targetWg == 0) || (wg != targetWg))
+    if ((targetWg != 0) && (wg == targetWg))
+    {
+        ((TrickyState*)state)->unk09 = 1;
+    }
+    else
     {
         ulink = walkGroupFn_800db3e4((f32*)(obj + 0x18), (f32*)target, ((TrickyState*)state)->unkD0);
         if (ulink != 0)
@@ -250,7 +254,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             if (ulink != ((TrickyState*)state)->unkD0)
             {
                 *(s16*)&((TrickyState*)state)->unkD0 = ulink;
-                *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+                *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                 ((TrickyState*)state)->patch[0] = 0;
                 ((TrickyState*)state)->patch[1] = 0;
                 ((TrickyState*)state)->patch[2] = 0;
@@ -456,10 +460,6 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                 }
             }
         }
-    }
-    else
-    {
-        ((TrickyState*)state)->unk09 = 1;
     }
 state_selected:
     if (((TrickyState*)state)->unk09 < 5)
