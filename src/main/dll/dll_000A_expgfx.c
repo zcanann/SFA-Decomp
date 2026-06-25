@@ -1433,9 +1433,9 @@ foundFirst:
                         rot.x = lbl_803DF35C;
                         rot.y = lbl_803DF35C;
                         rot.z = lbl_803DF35C;
-                        slot->sourceVecX = slot->sourceVecX + framesThisStep * (int)slot->sourcePosY.value;
-                        slot->sourceVecY = slot->sourceVecY + framesThisStep * (int)slot->sourcePosZ.value;
-                        slot->sourceVecZ = slot->sourceVecZ + framesThisStep * (int)slot->sourcePosW.value;
+                        slot->sourceVecX = slot->sourceVecX + (int)slot->sourcePosY.value * framesThisStep;
+                        slot->sourceVecY = slot->sourceVecY + (int)slot->sourcePosZ.value * framesThisStep;
+                        slot->sourceVecZ = slot->sourceVecZ + (int)slot->sourcePosW.value * framesThisStep;
                         rot.scale = lbl_803DF354;
                         vecBuf[0] = (f32)
                         template
