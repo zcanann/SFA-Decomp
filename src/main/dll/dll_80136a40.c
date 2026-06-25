@@ -824,16 +824,16 @@ void objAnimFreeChildren(int a, int b, void** c)
 #pragma opt_strength_reduction off
 void fn_80137A00(int x, int y, u8* grid, int unused)
 {
+    int c1;
+    int i;
     int a0;
     int a1;
     int a2;
     int a3;
     int c0;
-    int c1;
     int bit;
-    int row0;
     int row1;
-    int i;
+    int row0;
 
     if (enableDebugText != 0)
     {
@@ -1503,13 +1503,14 @@ void fn_80137DF8(void)
 #pragma optimization_level 2
 void debugPrintDraw(int ctx)
 {
+    u32 ys;
+    u32 y2;
     u8* p;
     int pass;
     u32 res;
     u32 x1;
-    u32 xs, ys;
+    u32 xs;
     u32 yv;
-    u32 y2;
     u32 xa, xb, ya, yb;
     f32 scale;
     u32 colw;
