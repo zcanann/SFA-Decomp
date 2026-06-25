@@ -89,6 +89,7 @@ void fn_801923F8(int* cfgArg)
     int y;
     int stepY;
     int heightIdx;
+    int row;
     int phaseIdx;
     f32 a;
     f32 waveDivisor;
@@ -114,23 +115,27 @@ void fn_801923F8(int* cfgArg)
     waveDivisor = lbl_803E3F4C;
     for (; i < cfg->period; i++)
     {
-        f32 xv = waveScale * x;
-        for (j = 0; j < cfg->period; j++)
+        f32 xv;
+        j = 0;
+        row = heightIdx;
+        xv = waveScale * x;
+        for (; j < cfg->period; j++)
         {
             f32 s1 = mathSinf((waveScale * y) / waveDivisor);
             f32 s2;
             a = cfg->ampY * s1;
             s2 = mathSinf(xv / waveDivisor);
-            ((f32*)lbl_803DDAF4)[heightIdx] = cfg->ampX * s2 + a;
-            if (((f32*)lbl_803DDAF4)[heightIdx] < cfg->minHeight)
+            ((f32*)lbl_803DDAF4)[row] = cfg->ampX * s2 + a;
+            if (((f32*)lbl_803DDAF4)[row] < cfg->minHeight)
             {
-                cfg->minHeight = ((f32*)lbl_803DDAF4)[heightIdx];
+                cfg->minHeight = ((f32*)lbl_803DDAF4)[row];
             }
-            if (((f32*)lbl_803DDAF4)[heightIdx] > cfg->maxHeight)
+            if (((f32*)lbl_803DDAF4)[row] > cfg->maxHeight)
             {
-                cfg->maxHeight = ((f32*)lbl_803DDAF4)[heightIdx];
+                cfg->maxHeight = ((f32*)lbl_803DDAF4)[row];
             }
             y += stepY;
+            row++;
             heightIdx++;
         }
         x += stepX;
