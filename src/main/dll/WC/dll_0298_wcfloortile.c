@@ -196,7 +196,7 @@ void wcfloortile_update(int obj)
         break;
     }
     {
-        WcFloorTileSetup* setup2 = (WcFloorTileSetup*)((GameObject*)obj)->anim.placementData;
+        setup = (WcFloorTileSetup*)((GameObject*)obj)->anim.placementData;
         if (fn_80065640() != 0)
         {
             state->flags |= 2;
@@ -205,7 +205,7 @@ void wcfloortile_update(int obj)
         {
             if (fn_80065640() == 0)
             {
-                fn_80065574(setup2->eventId, *(int*)&((GameObject*)obj)->anim.parent, state->flags & 1);
+                fn_80065574(setup->eventId, *(int*)&((GameObject*)obj)->anim.parent, state->flags & 1);
                 state->flags &= ~2;
             }
         }
