@@ -504,7 +504,7 @@ void pauseMenuDrawStatus(void)
     u8* base;
     int delta;
     s8 negDelta;
-    f32* op;
+    int cur;
     u8* bp;
     int* dp;
     int bit;
@@ -512,7 +512,7 @@ void pauseMenuDrawStatus(void)
     u8 j;
     u32 ji;
     int off;
-    int cur;
+    f32* op;
     int sv;
     f32 thresh;
     f32 prev;
