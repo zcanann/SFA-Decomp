@@ -1270,13 +1270,14 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
             {
                 return 0;
             }
-            k = lbl_803E62C8 - stk.range / lbl_803E635C;
+            scale = lbl_803E62C8;
+            k = scale - stk.range / lbl_803E635C;
             k = k * k;
             k = k * k;
             stk.d[0] = ((GameObject*)o)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             stk.d[1] = ((GameObject*)o)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
             stk.d[2] = ((GameObject*)o)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-            scale = lbl_803E62C8 / stk.range;
+            scale = scale / stk.range;
             stk.d[0] *= scale;
             stk.d[1] *= scale;
             stk.d[2] *= scale;
