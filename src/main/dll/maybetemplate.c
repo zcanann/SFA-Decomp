@@ -193,9 +193,9 @@ STATIC_ASSERT(offsetof(PauseMenuHud, maxMagicLatch) == 0xB94);
 
 void hudDrawMagicBar(int alpha, int unk2, u32 flags)
 {
+    int t13;
     int total;
     int current;
-    int t13;
     int seg1;
     int rem1;
     int seg2;
