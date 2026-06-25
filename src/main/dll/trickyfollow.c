@@ -203,7 +203,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         {
             for (i = 0; i < 4; i++)
             {
-                if ((prod == wgi.patch[i]) && ((wgi.mask & (1 << i)) != 0))
+                if ((prod == wgi.patch[i]) && (((1 << i) & wgi.mask) != 0))
                 {
                     *(s16*)&((TrickyState*)state)->unkD2 = prod;
                     *(f32*)(state + 0xd4) = *(f32*)target;
