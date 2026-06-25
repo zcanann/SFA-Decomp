@@ -90,7 +90,7 @@ void gameUiLoadResources(void)
         char* p;
         u32* cnt;
         f32 fb, fc, fa;
-        f32 ga, gb;
+        f32 gb, ga;
 
         val = 0;
         i = 0;
