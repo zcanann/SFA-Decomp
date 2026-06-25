@@ -975,10 +975,10 @@ state_selected:
                 (int)obj, ((TrickyState*)state)->speed * lbl_803E24AC, (float*)(state + 0x34));
             k = lbl_803E24AC;
             ((GameObject*)obj)->anim.localPosX =
-                timeDelta * ((TrickyState*)state)->dirX * ((TrickyState*)state)->speed * k +
+                timeDelta * (((TrickyState*)state)->dirX * (((TrickyState*)state)->speed * lbl_803E24AC)) +
                 ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.localPosZ =
-                timeDelta * ((TrickyState*)state)->dirZ * ((TrickyState*)state)->speed * k +
+                timeDelta * (((TrickyState*)state)->dirZ * (((TrickyState*)state)->speed * lbl_803E24AC)) +
                 ((GameObject*)obj)->anim.localPosZ;
         }
         if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
