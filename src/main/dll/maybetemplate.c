@@ -503,7 +503,7 @@ void pauseMenuDrawStatus(void)
     u8* trickyStatus;
     u8* base;
     int delta;
-    s8 negDelta;
+    f32 newOp;
     int cur;
     u8* bp;
     int* dp;
@@ -516,7 +516,7 @@ void pauseMenuDrawStatus(void)
     int sv;
     f32 thresh;
     f32 prev;
-    f32 newOp;
+    s8 negDelta;
     int statuses[PAUSE_MENU_HUD_ITEM_COUNT];
 
     base = (u8*)lbl_803A87F0;
@@ -843,13 +843,13 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int bm2;
     int bm1;
     int bm0;
+    int k;
     u8* base;
     void* player;
     u8* gp;
     s16 fade;
     int slotCount;
     int sel;
-    int k;
     int i;
     int yOff;
     u8* iconPtr;
