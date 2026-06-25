@@ -1398,10 +1398,8 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
 {
     BoneFxVtx s;
-    u8* base;
     int* m;
-    void** grp;
-    void** grp2;
+    u8* base;
     int slot;
     int row;
     s16 j;
@@ -1413,6 +1411,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     f32* pa;
     f32* pb;
     f32* pc;
+    void** grp;
+    void** grp2;
     u8* jb;
     s32 idx;
     f32 dx;
@@ -1453,10 +1453,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
         gBoneParticleDrift = gBoneParticleDriftMin;
         Sfx_PlayFromObject(o, 0x282);
     }
-    slot = 0;
     grp2 = gBoneParticleEffectBuffers;
     grp = gBoneParticleEffectBuffers;
-    do
+    for (slot = 0; slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT; slot++)
     {
         if (slot != 5)
         {
@@ -1495,25 +1494,25 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                 k = 0;
                 pa = (f32*)(base + 0x90);
-                pb = (f32*)(int)gBoneParticleConfigTable;
+                pb = (f32*)base;
                 pc = (f32*)(base + 0x120);
                 while (k < 4)
                 {
-                    u8* t;
                     u8* t4;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
-                    t = base + id;
-                    cls = *(u8*)(t + 0x590);
+                    cls = *(u8*)((base + id) + 0x590);
                     if (cls == 0)
                     {
-                        s.vx = pa[0] * *(f32*)((base + 0x5d8) + id * 4);
-                        s.vy = pa[1] * *(f32*)((base + 0x5d8) + id * 4);
+                        t4 = base + id * 4;
+                        s.vx = pa[0] * *(f32*)(t4 + 0x5d8);
+                        s.vy = pa[1] * *(f32*)(t4 + 0x5d8);
                         s.vz = pa[2] * *(f32*)(t4 + 0x664);
                     }
                     else if (cls == 1)
                     {
-                        s.vx = pb[0] * *(f32*)((base + 0x5d8) + id * 4);
-                        s.vy = pb[1] * *(f32*)((base + 0x5d8) + id * 4);
+                        t4 = base + id * 4;
+                        s.vx = pb[0] * *(f32*)(t4 + 0x5d8);
+                        s.vy = pb[1] * *(f32*)(t4 + 0x5d8);
                         s.vz = pb[2] * *(f32*)(t4 + 0x664);
                     }
                     else if (cls == 2)
@@ -1530,8 +1529,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     *(s16*)((u8*)*grp + (k + row) * 0x10 + 2) = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
                     *(s16*)((u8*)*grp + (k + row) * 0x10 + 4) = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
                     *(u8*)((u8*)*grp + (k + row) * 0x10 + 0xf) = 0x9b;
-                    t = base + 0x1ba;
-                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 0xa) = (s16)(*(s16*)(t + (k + row) * 0x10) - (gBoneParticleScrollOffset << 2));
+                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 0xa) = (s16)(*(s16*)(base + (k + row) * 0x10 + 0x1ba) - (gBoneParticleScrollOffset << 2));
                     pa += 3;
                     pb += 3;
                     pc += 3;
@@ -1543,9 +1541,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
             }
         }
         grp += 1;
-        slot += 1;
     }
-    while (slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     s.vx = ((GameObject*)o)->anim.localPosX;
     s.vy = ((GameObject*)o)->anim.localPosY;
     s.vz = ((GameObject*)o)->anim.localPosZ;
