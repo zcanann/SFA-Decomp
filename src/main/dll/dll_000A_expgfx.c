@@ -2882,7 +2882,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
-        if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < gExpgfxSequenceCounter)
+        if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX)
         {
             gExpgfxSequenceCounter = 0;
         }
@@ -2903,7 +2903,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        if (resourceHandle->refCount == EXPGFX_REFCOUNT_OVERFLOW)
+        if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW)
         {
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
@@ -2951,9 +2951,13 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                 config->velocityY = config->velocityY + attachedSource->velocityY;
                 config->velocityZ = config->velocityZ + attachedSource->velocityZ;
             }
-            attachedTableKey = attachedSource->attachedTableKey;
-            attachedSource = NULL;
         }
+
+        if (attachedSource != NULL)
+        {
+            attachedTableKey = attachedSource->attachedTableKey;
+        }
+        attachedSource = NULL;
 
         expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey,
                                         config->texture.parts.textureId);
