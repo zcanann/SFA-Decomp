@@ -1298,7 +1298,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
-#pragma optimization_level 1
+#pragma optimization_level 2
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
