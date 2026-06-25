@@ -1227,33 +1227,43 @@ void setGQR6_2(int a, int b, int c, int d)
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
 
+typedef struct ModelBoneDelta
+{
+    int x;
+    int y;
+    int z;
+    u8* p;
+} ModelBoneDelta;
+
 #pragma peephole on
 #pragma dont_inline on
-static u8* modelBoneTransforms_next(u8* p, int* outX, int* outY, int* outZ)
+ModelBoneDelta modelBoneTransforms_next(u8* p)
 {
+    ModelBoneDelta r;
     u16 flags;
 
     flags = *(u16*)p;
     p += 2;
-    *outX = 0;
+    r.x = 0;
     if (flags & MODEL_BONEXFORM_HAS_X)
     {
-        *outX = *(s16*)p;
+        r.x = *(s16*)p;
         p += 2;
     }
-    *outY = 0;
+    r.y = 0;
     if (flags & MODEL_BONEXFORM_HAS_Y)
     {
-        *outY = *(s16*)p;
+        r.y = *(s16*)p;
         p += 2;
     }
-    *outZ = 0;
+    r.z = 0;
     if (flags & MODEL_BONEXFORM_HAS_Z)
     {
-        *outZ = *(s16*)p;
+        r.z = *(s16*)p;
         p += 2;
     }
-    return p;
+    r.p = p;
+    return r;
 }
 
 void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
@@ -1266,6 +1276,8 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
     int bIdx;
     int ax, ay, az;
     int bx, by, bz;
+    ModelBoneDelta da;
+    ModelBoneDelta db;
 
     a = *pd;
     b = *pe;
@@ -1299,15 +1311,27 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         }
         if (i == bIdx)
         {
-            b = modelBoneTransforms_next(b, &bx, &by, &bz);
-            a = modelBoneTransforms_next(a, &ax, &ay, &az);
+            db = modelBoneTransforms_next(b);
+            b = db.p;
+            bx = db.x;
+            by = db.y;
+            bz = db.z;
+            da = modelBoneTransforms_next(a);
+            a = da.p;
+            ax = da.x;
+            ay = da.y;
+            az = da.z;
             ax = (u32)(ax * wHi + bx * f) >> 16;
             ay = (u32)(ay * wHi + by * f) >> 16;
             az = (u32)(az * wHi + bz * f) >> 16;
         }
         else
         {
-            a = modelBoneTransforms_next(a, &ax, &ay, &az);
+            da = modelBoneTransforms_next(a);
+            a = da.p;
+            ax = da.x;
+            ay = da.y;
+            az = da.z;
             ax = (u32)(ax * wHi) >> 16;
             ay = (u32)(ay * wHi) >> 16;
             az = (u32)(az * wHi) >> 16;
@@ -1325,7 +1349,11 @@ void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16
         i++;
         continue;
     onlyB:
-        b = modelBoneTransforms_next(b, &bx, &by, &bz);
+        db = modelBoneTransforms_next(b);
+        b = db.p;
+        bx = db.x;
+        by = db.y;
+        bz = db.z;
         bx = (u32)(bx * f) >> 16;
         by = (u32)(by * f) >> 16;
         bz = (u32)(bz * f) >> 16;
