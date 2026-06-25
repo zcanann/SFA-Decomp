@@ -694,9 +694,9 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
+    GfxCmd* e;
     u8* base = (u8*)(int)lbl_803146D8;
     GfxCmd* entries = buf.entries;
-    GfxCmd* e;
     entries[0].layer = 0;
     entries[0].flags = 0x15;
     entries[0].tex = &base[0x1b0];
@@ -713,7 +713,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].x = lbl_803E0BBC;
         entries[1].y = lbl_803E0BC0;
         entries[1].z = lbl_803E0BBC;
-        e = &buf.entries[2];
+        e = &entries[2];
     }
     else
     {
@@ -724,7 +724,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].x = lbl_803E0BBC;
         entries[1].y = lbl_803E0BC4;
         entries[1].z = lbl_803E0BBC;
-        e = &buf.entries[2];
+        e = &entries[2];
     }
     if (variant == 0)
     {
@@ -842,7 +842,7 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v59 = 0xe;
     buf.v5a = 0;
     buf.v5b = 0x1e;
-    buf.count = (e + 1) - buf.entries;
+    buf.count = (e + 1) - entries;
     buf.hw[0] = *(s16*)&base[0x214];
     buf.hw[1] = *(s16*)&base[0x216];
     buf.hw[2] = *(s16*)&base[0x218];
