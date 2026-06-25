@@ -3100,7 +3100,7 @@ void dll_0B_func05(void)
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
-                                                                 *(s16*)(E9 + emOff + 0x14), eff + 0xc, 0x10002,
+                                                                 *(s16*)(E9 + emOff + 0x14), eff + 3, 0x10002,
                                                                  -1, NULL);
                             }
                             else
@@ -3150,7 +3150,7 @@ void dll_0B_func05(void)
                             {
                                 if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                                 {
-                                    (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 0xc, 1, -1, NULL);
+                                    (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 3, 1, -1, NULL);
                                 }
                                 else
                                 {
@@ -3166,7 +3166,7 @@ void dll_0B_func05(void)
                         {
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
-                                (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 0xc, 1, -1, NULL);
+                                (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 3, 1, -1, NULL);
                             }
                             else
                             {
