@@ -1119,10 +1119,11 @@ void andross_update(int obj)
         {
             fc = gAndrossSwayAmplitudeX;
         }
-        gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+        gAndrossDistortPhase = fval;
+        if (fval > gAndrossDistortPhaseWrap)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
         turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         break;
@@ -1140,10 +1141,11 @@ void andross_update(int obj)
         {
             fc = gAndrossSwayAmplitudeX;
         }
-        gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+        gAndrossDistortPhase = fval;
+        if (fval > gAndrossDistortPhaseWrap)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
         turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (moveChanged)
@@ -1192,10 +1194,11 @@ void andross_update(int obj)
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionState = 0x1a;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+            gAndrossDistortPhase = fval;
+            if (fval > gAndrossDistortPhaseWrap)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
             turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam, gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
@@ -1215,10 +1218,11 @@ void andross_update(int obj)
         {
             fc = gAndrossSwayAmplitudeX;
         }
-        gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+        gAndrossDistortPhase = fval;
+        if (fval > gAndrossDistortPhaseWrap)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
         }
         turnOnDistortionFilter((f32*)(state + 0x30), fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (moveChanged)
@@ -1273,10 +1277,11 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+            gAndrossDistortPhase = fval;
+            if (fval > gAndrossDistortPhaseWrap)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
             turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam, gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
@@ -1299,10 +1304,11 @@ void andross_update(int obj)
                 ((AndrossState*)state)->actionState = 0xf;
             }
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+            gAndrossDistortPhase = fval;
+            if (fval > gAndrossDistortPhaseWrap)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
             turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam, gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
@@ -1316,10 +1322,11 @@ void andross_update(int obj)
                 ((GameObject*)*state)->anim.localPosZ = ((AndrossState*)state)->cachedPosZ;
                 ((AndrossState*)state)->velZ = lbl_803E74D4;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
-                gAndrossDistortPhase += gAndrossDistortPhaseStep;
-                if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+                fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+                gAndrossDistortPhase = fval;
+                if (fval > gAndrossDistortPhaseWrap)
                 {
-                    gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                    gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
                 }
                 turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam, gAndrossDistortPhase);
                 Rcp_DisableDistortionFilter();
@@ -1331,10 +1338,11 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
-            gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            fval = gAndrossDistortPhase + gAndrossDistortPhaseStep;
+            gAndrossDistortPhase = fval;
+            if (fval > gAndrossDistortPhaseWrap)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase = fval - gAndrossDistortPhaseWrap;
             }
             turnOnDistortionFilter((f32*)(state + 0x30), lbl_803E74BC, &gAndrossDistortFilterParam, gAndrossDistortPhase);
             Rcp_DisableDistortionFilter();
