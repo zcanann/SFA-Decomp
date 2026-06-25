@@ -1472,6 +1472,7 @@ void drawWorldMapHud(void)
     lbl_803DD776 = 0x78;
     if (sv < 0x1e)
     {
+        u8* base;
         s8 fi;
         s8 li_;
         u8 lv;
@@ -1480,7 +1481,6 @@ void drawWorldMapHud(void)
 
         {
             int i;
-            u8* base;
             u8* p;
             base = (u8*)(int)gGameUiTaskHintCandidates;
             i = 0;
