@@ -427,7 +427,8 @@ extern f32 lbl_803E550C;
 extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
-#pragma optimization_level 1
+#pragma opt_dead_assignments off
+#pragma opt_propagation off
 #pragma opt_strength_reduction on
 void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 {
@@ -488,7 +489,8 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     state->phase = 6;
 }
 #pragma opt_strength_reduction reset
-#pragma optimization_level reset
+#pragma opt_propagation reset
+#pragma opt_dead_assignments reset
 
 void sh_staff_update(int obj)
 {
