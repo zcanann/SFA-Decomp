@@ -813,17 +813,13 @@ int iceBaddie_stateHandlerB07(int obj, int state)
                 IceBaddieControl* control = (IceBaddieControl*)*(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = control->attackPatternIndex;
-                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMovesAlt[attackIndex]);
+                        obj, state, gIceBaddieAttackMovesAlt[control->attackPatternIndex++]);
                 }
                 else
                 {
-                    int attackIndex = control->attackPatternIndex;
-                    control->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMoves[attackIndex]);
+                        obj, state, gIceBaddieAttackMoves[control->attackPatternIndex++]);
                 }
                 if (control->attackPatternIndex >= 7)
                 {
@@ -866,17 +862,13 @@ int iceBaddie_stateHandlerB07(int obj, int state)
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMovesAlt[attackIndex]);
+                        obj, state, gIceBaddieAttackMovesAlt[((IceBaddieControl*)control)->attackPatternIndex++]);
                 }
                 else
                 {
-                    int attackIndex = ((IceBaddieControl*)control)->attackPatternIndex;
-                    ((IceBaddieControl*)control)->attackPatternIndex += 1;
                     ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMoves[attackIndex]);
+                        obj, state, gIceBaddieAttackMoves[((IceBaddieControl*)control)->attackPatternIndex++]);
                 }
                 if (((IceBaddieControl*)control)->attackPatternIndex >= 7)
                 {
