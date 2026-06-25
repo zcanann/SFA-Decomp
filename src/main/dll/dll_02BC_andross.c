@@ -1840,10 +1840,7 @@ void andross_update(int obj)
             velArg2 = velCalc2;
             arwarwing_setVelocity(ref, (int)&velArg2);
             fval = -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8);
-            if (fval < lbl_803E7538)
-            {
-                fval = lbl_803E7538;
-            }
+            fval = (lbl_803E7538 < fval) ? fval : lbl_803E7538;
             ((AndrossState*)state)->unkA8 = fval;
         }
         sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
