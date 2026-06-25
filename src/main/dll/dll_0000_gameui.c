@@ -1482,8 +1482,8 @@ void drawWorldMapHud(void)
         {
             int i;
             u8* p;
-            base = (u8*)(int)gGameUiTaskHintCandidates;
             i = 0;
+            base = (u8*)(int)gGameUiTaskHintCandidates;
             p = base;
             for (; i < GAMEUI_TASK_HINT_COUNT; i++)
             {
