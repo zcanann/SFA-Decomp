@@ -375,17 +375,20 @@ void drakormissile_free(int obj)
 void drakormissile_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
 {
     u8* trail;
+    s16 savedRotZ;
+    s16 savedRotY;
+    int i;
     u8* p = ((GameObject*)obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     extern int modelLightStruct_getActiveState(void *light);
     if (visible != 0 && *(u8*)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT)
     {
-        s16 savedRotZ = ((GameObject*)obj)->anim.rotZ;
-        s16 savedRotY = ((GameObject*)obj)->anim.rotY;
-        f32 savedScale = ((GameObject*)obj)->anim.rootMotionScale;
-        int i;
+        f32 savedScale;
         int* model;
         char* m;
+        savedRotZ = ((GameObject*)obj)->anim.rotZ;
+        savedRotY = ((GameObject*)obj)->anim.rotY;
+        savedScale = ((GameObject*)obj)->anim.rootMotionScale;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
         i = 0;
