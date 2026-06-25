@@ -814,12 +814,12 @@ void linkDrawFn_801302c0(void)
     LinkMenuItemDB* p;
     int four = 4;
     void* tex;
+    int i;
     int selLeft;
     int selRight;
     int itemLeft;
     int itemRight;
     int w;
-    int i;
 
     base = gTumbleweedBushItems;
     sel = &base[linkSelected];
