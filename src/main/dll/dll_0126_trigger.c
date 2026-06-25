@@ -569,9 +569,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    t = (int)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if ((void*)t != NULL)
                     {
-                        for (; *tbl != -1; tbl++)
+                        for (tbl = (int*)t; *tbl != -1; tbl++)
                         {
                             if ((void*)getLoadedTexture(*tbl) == NULL)
                             {
@@ -581,9 +582,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x16:
-                    if ((tbl = (int*)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2)) != NULL)
+                    t = (int)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
+                    if ((void*)t != NULL)
                     {
-                        for (; *tbl != -1; tbl++)
+                        for (tbl = (int*)t; *tbl != -1; tbl++)
                         {
                             if ((void*)getLoadedTexture(*tbl) != NULL)
                             {
