@@ -2908,7 +2908,7 @@ void dll_0B_func05(void)
                         if (Obj_IsLoadingLocked())
                         {
                             int* o;
-                            if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
+                            if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                             {
                                 tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
                                 tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
@@ -2930,7 +2930,7 @@ void dll_0B_func05(void)
                     }
                     if (*(void**)eff != NULL)
                     {
-                        if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
+                        if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                         {
                             tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
                             tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
