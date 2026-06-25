@@ -244,7 +244,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     f32 low;
     f32 range;
     f32 slide;
-    f64 approach;
+    f32 approach;
     f32 mtx[16];
     CamSlideRot rot;
     f32 velX;
