@@ -1642,7 +1642,7 @@ void animatedobj_init(int* obj, int* params)
 
 void mikabomb_init(int* obj);
 
-#pragma opt_loop_invariants off
+#pragma opt_loop_invariants on
 void animatedobj_update(int* obj)
 {
     extern void Obj_FreeObject(u8* obj); /* #57 */
@@ -1659,13 +1659,14 @@ void animatedobj_update(int* obj)
             int slot8 = *(s8*)((char*)seq + 0x57);
             int* match = NULL;
             int* list;
-            int cnt;
             int slot;
+            int cnt;
             list = ObjList_GetObjects(&res, &count);
             cnt = 0;
+            res = 0;
             slot = slot8;
             slot |= slot8;
-            for (res = 0; res < count; res++)
+            for (; res < count; res++)
             {
                 int* other = (int*)*list;
                 if (((GameObject*)other)->seqIndex == slot8)
