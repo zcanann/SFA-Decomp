@@ -728,9 +728,12 @@ state_selected:
             if ((delta[2] > lbl_803E23DC) && (lbl_803E23DC != ((TrickyState*)state)->speed))
             {
                 step = 0;
-                while ((step < 4) &&
-                    ((u16) * (u8*)(node + step + 4) != ((TrickyState*)state)->unk532))
+                while (step < 4)
                 {
+                    if ((u16) * (u8*)(node + step + 4) == ((TrickyState*)state)->unk532)
+                    {
+                        break;
+                    }
                     step = step + 1;
                 }
                 if (step == 4)
