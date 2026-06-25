@@ -168,8 +168,8 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxSlot* slot;
     u32 activeBit;
+    ExpgfxSlot* slot;
     u32 inactiveBitMask;
 
     runtime = EXPGFX_RUNTIME_DATA;
