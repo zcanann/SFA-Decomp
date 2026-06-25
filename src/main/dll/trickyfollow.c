@@ -1039,17 +1039,18 @@ state_selected:
         }
         else
         {
+            f32 baseX = *(f32*)(state + 0x74);
+            f32 baseZ;
             ((GameObject*)obj)->anim.localPosX =
-                (*(f32*)(state + 0x7c) - *(f32*)(state + 0x74)) *
-                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) +
-                *(f32*)(state + 0x74);
+                (*(f32*)(state + 0x7c) - baseX) *
+                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) + baseX;
             k = *(f32*)(state + 0x68);
             ((GameObject*)obj)->anim.localPosY =
                 gTrickyFollowArcCoefficient * k * k + (*(f32*)(state + 0x6c) * k + *(f32*)(state + 0x70));
+            baseZ = *(f32*)(state + 0x78);
             ((GameObject*)obj)->anim.localPosZ =
-                (*(f32*)(state + 0x80) - *(f32*)(state + 0x78)) *
-                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) +
-                *(f32*)(state + 0x78);
+                (*(f32*)(state + 0x80) - baseZ) *
+                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) + baseZ;
             v = *(f32*)(state + 0x64);
             if (v <= lbl_803E24B4)
             {
