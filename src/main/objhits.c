@@ -889,11 +889,11 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
 #pragma dont_inline on
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
 {
-    int gap;
     int maxGap;
+    ObjHitsSweepEntry* prevEntry;
     int index;
     int insertIndex;
-    ObjHitsSweepEntry* prevEntry;
+    int gap;
     ObjHitsSweepEntry* entry;
 
     gap = 1;
