@@ -105,9 +105,9 @@ void drakormissile_startActiveLaunch(int obj)
 }
 
 #pragma fp_contract off
+#pragma opt_common_subs off
 void drakormissile_func0B(int obj, int from, int target, f32 speed)
 {
-    u8* p = ((GameObject*)obj)->extra;
     void* light;
     f32 dir[3];
     f32 hitDir[3];
@@ -117,6 +117,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     s16 hitGrid[3];
     f32 mag;
     f32 horizDist;
+    u8* p = ((GameObject*)obj)->extra;
 
     dir[0] = *(f32*)((char*)target + 0xc) - *(f32*)((char*)from + 0xc);
     dir[1] = *(f32*)((char*)target + 0x10) - *(f32*)((char*)from + 0x10);
@@ -184,6 +185,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
 #pragma fp_contract reset
+#pragma opt_common_subs reset
 
 void drakormissile_update(int obj)
 {
