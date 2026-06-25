@@ -982,7 +982,7 @@ void Tricky_update(int obj)
                 ((TrickyState*)state)->waterLevel = lbl_803E23DC;
             }
         }
-        *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x4201;
+        *(s32*)&((TrickyState*)state)->stateFlags &= ~0x4201;
         if (((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 != 0)
         {
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 = 0;
@@ -2959,11 +2959,8 @@ int trickyFn_801451d8(int obj, int state)
         int setup = Obj_AllocObjectSetup(0x18, 0x25);
         gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
-    {
-        int ret = 1;
-        ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = ret;
-        return ret;
-    }
+    ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
+    return 1;
 }
 
 void Tricky_func11(int* obj)
