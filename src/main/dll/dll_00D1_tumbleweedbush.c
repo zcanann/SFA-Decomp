@@ -365,8 +365,12 @@ s8 fn_801631C8(int* obj)
                                      ((GameObject*)obj)->anim.parent);
         u8* slotBase = state + 0xc;
         *(int**)(slotBase + freeSlot * 4) = setup;
-        ((void(*)(f64, f64))*(int*)(*(int*)(*(int*)((char*)setup + 0x68)) + 0x24))(
-            (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
+        {
+            int* spawned = *(int**)(slotBase + freeSlot * 4);
+            ((void(*)(int*, f64, f64))*(int*)(*(int*)(*(int*)((char*)spawned + 0x68)) + 0x24))(
+                spawned,
+                (f64)((GameObject*)obj)->anim.localPosX, (f64)((GameObject*)obj)->anim.localPosZ);
+        }
     }
     *(u16*)(state + 0x4e) += 1;
     return freeSlot;
