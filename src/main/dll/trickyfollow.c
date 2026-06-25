@@ -62,7 +62,7 @@ extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 
 extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
 extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
 extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
-extern s16 getAngle(f32 x, f32 z);
+extern int getAngle(f32 x, f32 z);
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
 extern void objAnimFn_8013a3f0(u8* obj, int animId, f32 speed, int flags);
 extern void curveFn_800da23c(RomCurveWalker* route);
@@ -95,7 +95,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     s16 link;
     u16 ulink;
     s16 yawA;
-    u16 yawB;
+    s16 yawB;
     s16 diff;
     char type;
     u8 step;
@@ -533,7 +533,7 @@ state_selected:
                                     ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
                     yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
                                     ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-                    diff = yawA - yawB;
+                    diff = yawA - (u16)yawB;
                     if (0x8000 < diff)
                     {
                         diff = diff - 0xffff;
@@ -823,7 +823,7 @@ state_selected:
                                     ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
                     yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
                                     ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-                    diff = yawA - yawB;
+                    diff = yawA - (u16)yawB;
                     if (0x8000 < diff)
                     {
                         diff = diff - 0xffff;
@@ -878,7 +878,7 @@ state_selected:
                         ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
         yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
                         ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-        diff = yawA - yawB;
+        diff = yawA - (u16)yawB;
         if (0x8000 < diff)
         {
             diff = diff - 0xffff;
@@ -1091,7 +1091,7 @@ state_selected:
                         ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
         yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
                         ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-        diff = yawA - yawB;
+        diff = yawA - (u16)yawB;
         if (0x8000 < diff)
         {
             diff = diff - 0xffff;
@@ -1205,7 +1205,7 @@ state_selected:
                         ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
         yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
                         ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-        diff = yawA - yawB;
+        diff = yawA - (u16)yawB;
         if (0x8000 < diff)
         {
             diff = diff - 0xffff;
