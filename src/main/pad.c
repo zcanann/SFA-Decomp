@@ -283,6 +283,7 @@ int initControllers(void)
         gPadResetMask = 0;
     }
 
+    i = 0;
     prevStickY = &gPadPrevStickY;
     prevStickX = &gPadPrevStickX;
     repeatY = &gPadRepeatY;
@@ -299,7 +300,7 @@ int initControllers(void)
     triggersPressed = &gPadTriggersPressed;
     statuses = (PadStatusLite*)((u8*)gPadStateBlock + 0x40);
 
-    for (i = 0; i < 4; i++)
+    for (; i < 4; i++)
     {
         *prevStickY = 0;
         *prevStickX = 0;
