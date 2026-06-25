@@ -1449,7 +1449,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
     f32 arrH[4];
     f32 arrI[4];
     f32 arrJ[4];
-    f32 sinv, cosv, vidx, flb, fla, frac, tmax, prog, angle, acc, step;
+    f32 sinv, cosv, vidx, flb, fla, frac, tmax, angle, acc, step, prog;
     int ang;
 
     swipe = (u8*)swipeArg;
