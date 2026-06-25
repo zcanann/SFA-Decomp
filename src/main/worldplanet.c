@@ -249,7 +249,6 @@ void worldplanet_update(int obj)
     u8 done;
     u8 prevPlanet;
     int buttons;
-    u32 mask;
     u8 i;
     u8 b;
     int objId;
@@ -532,9 +531,9 @@ void worldplanet_update(int obj)
                 }
                 break;
             case 1:
-                Pause_ResetMenuFrameCounter();
                 {
                     int neq = lbl_803DDD00 != lbl_803E65F8;
+                    Pause_ResetMenuFrameCounter();
                     if (!neq)
                     {
                         lbl_803DDD00 = lbl_803E6618;
