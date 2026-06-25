@@ -1077,7 +1077,7 @@ void fireball_update(int* obj)
 #undef hitState
 }
 
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* model;
     u8* state = ((GameObject*)obj)->extra;
@@ -1096,7 +1096,7 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (((FireballState*)state)->startupDelay == lbl_803E3330)
     {
         ((ObjAnimComponent*)obj)->bankIndex = 1;
-        model = Obj_GetActiveModel((int)obj);
+        model = Obj_GetActiveModel(obj);
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
         savedRot4 = ((GameObject*)obj)->anim.rotZ;
         savedRot2 = ((GameObject*)obj)->anim.rotY;
@@ -1110,16 +1110,16 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject*)obj)->anim.rotZ = (s16) * (u16*)(p + 0x48);
             ((GameObject*)obj)->anim.rotY = (s16) * (u16*)(p + 0x5c);
             *(u16*)((char*)model + 0x18) &= ~0x8;
-            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         }
         ((GameObject*)obj)->anim.rotZ = savedRot4;
         ((GameObject*)obj)->anim.rotY = savedRot2;
         ((GameObject*)obj)->anim.rootMotionScale = savedF8;
         ((ObjAnimComponent*)obj)->bankIndex = 0;
-        model = Obj_GetActiveModel((int)obj);
+        model = Obj_GetActiveModel(obj);
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) =
             gFireballColorIndexTable[((FireballState*)state)->colorIndex];
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         if (*(int**)state != NULL)
         {
             if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)

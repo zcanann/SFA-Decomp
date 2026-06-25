@@ -185,7 +185,7 @@ void staff_free(int* obj);
 void staff_modelMtxFn(int* obj, int p4, int p5);
 s16 staff_getHitReactValue(int* obj);
 s32 staff_func16(int* obj);
-void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void flamethrowerspe_func0B(int* obj);
 void flamethrowerspe_render(void);
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
