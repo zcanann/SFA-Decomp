@@ -817,7 +817,7 @@ void appleontree_update(int objArg)
             }
             break;
         case 5:
-            if (lbl_803E3810 < fb)
+            if (fb > lbl_803E3810)
             {
                 placement = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & 0x2000)
