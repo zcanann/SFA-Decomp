@@ -3070,7 +3070,6 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
         u32 i;
         u32 nb;
         u8* dst;
-        u8** cp;
 
         q = *(u8**)(hdr + 0xc);
         words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
@@ -3078,27 +3077,26 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
         sizes[0] = words;
         w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
         copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(q + 0x64), w2);
-        cp = gModelCacheBuffersA;
         for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
         {
             q = *(u8**)(hdr + 0xc) + i * 0x74;
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
-            copyToCache(cp[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
+            copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
             sizes[nb] = words;
             {
                 u8* q2;
                 int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
-                copyToCache(cp[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
+                copyToCache(gModelCacheBuffersA[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
             }
             cacheQueueWait(2);
             dst = out + offs[i];
             ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                      cp[(u8)((i & 1) * 2) + 1],
-                                                      q[0x72] + (int)cp[(u8)((i & 1) * 2)],
-                                                      q[0x72] + (int)cp[(u8)((i & 1) * 2)],
+                                                      gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
                                                       *(u16*)(q + 0x70));
-            memcpyToCache(dst, cp[(u8)((i & 1) * 2)], sizes[i & 1]);
+            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
         }
         q = *(u8**)(hdr + 0xc) + i * 0x74;
         cacheQueueWait(0);
