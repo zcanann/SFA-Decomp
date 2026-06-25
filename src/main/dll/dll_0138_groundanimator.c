@@ -504,11 +504,7 @@ void groundanimator_update(int* obj)
         }
     }
     block = mapGetBlock(bi);
-    if (block == NULL)
-    {
-        return;
-    }
-    if ((((MapBlockData*)block)->unk4 & 8) == 0)
+    if (block == NULL || (((MapBlockData*)block)->unk4 & 8) == 0)
     {
         return;
     }
