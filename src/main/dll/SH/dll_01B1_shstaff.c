@@ -446,9 +446,9 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     {
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
-        zero = 0;
         {
             char* p = (char*)state;
+            zero = 0;
             for (i = 0; i < 8; i += 4)
             {
             child = *(void**)(p + 56);
