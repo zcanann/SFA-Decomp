@@ -253,7 +253,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             ((TrickyState*)state)->unk09 = 1;
             if (ulink != ((TrickyState*)state)->unkD0)
             {
-                *(s16*)&((TrickyState*)state)->unkD0 = ulink;
+                *(u16*)&((TrickyState*)state)->unkD0 = ulink;
                 *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                 ((TrickyState*)state)->patch[0] = 0;
                 ((TrickyState*)state)->patch[1] = 0;
