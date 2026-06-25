@@ -995,7 +995,9 @@ state_selected:
             node = route->nodeA0;
             dx = ((GameObject*)node)->anim.rootMotionScale - ((GameObject*)obj)->anim.worldPosX;
             dz = ((GameObject*)node)->anim.localPosY - ((GameObject*)obj)->anim.worldPosZ;
-            len = sqrtf(dx * dx + dz * dz);
+            sqx = dx * dx;
+            sqz = dz * dz;
+            len = sqrtf(sqx + sqz);
             *(f32*)(state + 0x64) = len / lbl_803E24A4;
             *(f32*)(state + 0x68) = lbl_803E23DC;
             *(f32*)(state + 0x74) = ((GameObject*)obj)->anim.worldPosX;
