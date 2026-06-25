@@ -45,7 +45,7 @@ typedef struct BaddieInstantiateWeaponPlacement
 typedef struct TrickyDestroyState
 {
     u8 pad0[0x700 - 0x0];
-    s32 unk700;
+    s32 childObj; /* 0x700: child flame object handle (per-slot, walked by Tricky_destroy) */
     u8 pad704[0x708 - 0x704];
 } TrickyDestroyState;
 
@@ -754,7 +754,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         childSlot = state;
         do
         {
-            objSetAnimSpeedTo1(((TrickyDestroyState*)childSlot)->unk700);
+            objSetAnimSpeedTo1(((TrickyDestroyState*)childSlot)->childObj);
             childSlot = childSlot + 4;
             i = i + 1;
         }
