@@ -1150,10 +1150,10 @@ void staffFn_80170380(int* obj, int cmd)
             ((ShieldState*)state)->unk8 = lbl_803E33B0;
             {
                 f32 amp = lbl_803E33C4;
-                int i;
                 u8* hw;
                 u8* w;
                 f32* t1;
+                int i;
                 f32 k;
                 /* kc inlined as lbl_803E33C8 (created after bias) */
                 ((ShieldState*)state)->unkC = amp;
