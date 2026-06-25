@@ -988,16 +988,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->fightPhase++;
             if (((AndrossState*)state)->fightPhase < 5)
             {
-                ref = randomGetRange(0, 1);
-                if (ref != 0)
-                {
-                    objId = 0x471;
-                }
-                else
-                {
-                    objId = 0x472;
-                }
-                Sfx_PlayFromObject(obj, objId);
+                Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
                 ((AndrossState*)state)->actionState = 0x16;
                 ((AndrossState*)state)->targetRotX = 0x8000;
             }
@@ -1803,16 +1794,7 @@ void andross_update(int obj)
     case 0x16:
         if (moveChanged)
         {
-            ref = randomGetRange(0, 1);
-            if (ref != 0)
-            {
-                objId = 0x471;
-            }
-            else
-            {
-                objId = 0x472;
-            }
-            Sfx_PlayFromObject(obj, objId);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
