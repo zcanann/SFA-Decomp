@@ -1255,10 +1255,9 @@ void* objModelGetVecFn_800395d8(void* obj, int target)
         int entryIdx = 0, vecOffset = 0;
         int count = OBJPRINT_JOINT_COUNT(m);
         int i;
-        int entries;
         for (i = 0; i < count; i++)
         {
-            entries = *(int*)&((ObjDef*)m)->jointData;
+            int entries = *(int*)&((ObjDef*)m)->jointData;
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32)*(u8*)(entries + entryIdx) == target)
             {
@@ -1555,7 +1554,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     int j;
     int idx;
 
-    for (idx = 0; idx < count; idx++)
+    for (idx = 0; idx < count;)
     {
         int key = *keys;
         found = NULL;
@@ -1584,6 +1583,7 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
             *(s16*)(out + 0x46) = found[0];
         }
         keys++;
+        idx++;
         out += 0x60;
     }
 }
@@ -2153,12 +2153,12 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
+    int* keys;
     int obj;
     int count;
     char* p4;
     int total;
     int i;
-    int* keys;
 
     obj = objArg;
     count = countArg;
