@@ -211,6 +211,7 @@ int cmbsrc_cycleColor(int obj, int state)
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
+    int base;
     int idx;
 
     sourceState->colorCycleTimer -= timeDelta;
@@ -225,7 +226,7 @@ int cmbsrc_cycleColor(int obj, int state)
         idx = gCmbsrcColorCycleIndexTable[sourceState->colorCycleIndex];
         if (sourceState->light != NULL)
         {
-            int base = idx * 3;
+            base = idx * 3;
             modelLightStruct_setDiffuseColor(sourceState->light, gCmbsrcColorRgbTable[base],
                                              gCmbsrcColorRgbTable[base + 1], gCmbsrcColorRgbTable[base + 2], 0xff);
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[base],
