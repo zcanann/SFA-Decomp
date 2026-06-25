@@ -1871,16 +1871,7 @@ void andross_update(int obj)
         if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568) &&
             ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0u))
         {
-            work = randomGetRange(0, 1);
-            if (work != 0)
-            {
-                objId = 0x471;
-            }
-            else
-            {
-                objId = 0x472;
-            }
-            Sfx_PlayFromObject(obj, objId);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 1;
         }
         if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte*)&((AndrossState*)state)
