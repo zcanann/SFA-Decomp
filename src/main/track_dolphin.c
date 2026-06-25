@@ -2978,11 +2978,13 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                 for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
                     int i9 = (j & 3) * 2;
-                    int i12 = (j >> 2) * 0x40;
+                    int i12;
                     int i6;
                     u8 *ad, *bd, *cd;
                     u8 aLo, bLo, aHi, bHi;
-                    ad = src1 + i9; ad += i12; ad += i4;
+                    ad = src1 + i9;
+                    i12 = (j >> 2) * 0x40;
+                    ad += i12; ad += i4;
                     i6 = (int)*(u16*)(src1 + 0xa) * i5 * 2;
                     ad += i6;
                     bd = src2 + i9; bd += i12; bd += i4; bd += i6;
