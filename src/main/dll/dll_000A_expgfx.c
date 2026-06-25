@@ -3200,8 +3200,8 @@ void expgfx_onMapSetup(void)
 
     gExpgfxTextureFreeInProgress = 1;
     resourceEntry = runtime->resourceTable;
-    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceIndex++,
-         resourceEntry++)
+    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++,
+         resourceIndex++)
     {
         if (resourceEntry->resource != NULL)
         {
