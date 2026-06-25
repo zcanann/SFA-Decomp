@@ -1118,8 +1118,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             s1a.y = ((GameObject*)curveObj)->anim.localPosY;
             s1a.z = ((GameObject*)curveObj)->anim.localPosZ;
             setMatrixFromObjectPos(m1a, &s1a);
-            byteOff = i = worldIdx = 0;
+            worldIdx = i = 0;
             worldBase = (u8*)collision;
+            byteOff = 0;
             while (i < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
             {
                 pf = (f32*)((u8*)collision->localPointPositions + byteOff);
@@ -1268,12 +1269,7 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
         if ((s32)(state->flags & 0x40000) == 0)
         {
             linked = *(int*)(curveObj + 0x2a);
-            if (((void*)linked == NULL) || ((*(s16*)&((GameObject*)linked)->anim.eventTable & 1) == 0))
-            {
-                ((GameObject*)curveObj)->anim.velocityY =
-                    invStep * (((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48));
-            }
-            else
+            if (((void*)linked != NULL) && ((*(s16*)&((GameObject*)linked)->anim.eventTable & 1) != 0))
             {
                 ((GameObject*)curveObj)->anim.velocityY =
                     invStep * (((GameObject*)curveObj)->anim.worldPosY - ((GameObject*)linked)->anim.worldPosZ);
@@ -1281,6 +1277,11 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
                 {
                     ((GameObject*)curveObj)->anim.velocityY = lbl_803E0668;
                 }
+            }
+            else
+            {
+                ((GameObject*)curveObj)->anim.velocityY =
+                    invStep * (((GameObject*)curveObj)->anim.worldPosY - *(f32*)(curveObj + 0x48));
             }
         }
     }
