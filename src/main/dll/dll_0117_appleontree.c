@@ -739,10 +739,10 @@ void appleontree_update(int objArg)
             else
             {
                 val = *(int*)&((GameObject*)obj)->extra;
-                fa = *(float*)(val + 8);
-                fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - fa) /
+                fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - *(float*)(val + 8)) /
                 (*(float*)(val + 4) *
                     (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
+                fa = *(float*)(val + 8);
                 fc = fa * fa;
                 fc = fc * fc;
                 state = 0x100 - (int)((fc * fc) / *(float*)(val + 0x54));
@@ -786,9 +786,9 @@ void appleontree_update(int objArg)
             else
             {
                 placement = 0;
-                val = 0;
                 fd = lbl_803E37D4;
-                do
+                val = 0;
+                while (placement == 0)
                 {
                     f32 t = ((AppleOnTreeState*)state)->unk0C;
                     fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
@@ -802,8 +802,8 @@ void appleontree_update(int objArg)
                         placement = FUN_8017e15c(fc, obj, state);
                     }
                     val = val + 1;
+                    if (!((val == 100) || (val != 0x66))) break;
                 }
-                while (((val == 100) || (val != 0x66)) && placement == 0);
                 if (lbl_803E37D4 != ((AppleOnTreeState*)state)->unk30)
                 {
                     fb = ((AppleOnTreeState*)state)->unk0C / ((AppleOnTreeState*)state)->unk50;
