@@ -246,13 +246,12 @@ void magicdust_update(int obj)
                 {
                     ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
-                    fval = lbl_803E34D8;
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34D8;
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34D8;
                 }
-                flagsByte = *(char*)&((MagicDustState*)state)->bounceCount + 1;
-                ((MagicDustState*)state)->bounceCount = flagsByte;
-                if (5 < flagsByte)
+                ref = ((MagicDustState*)state)->bounceCount + 1;
+                ((MagicDustState*)state)->bounceCount = ref;
+                if (5 < (u8)ref)
                 {
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 2;
                     fval = lbl_803E34C4;
