@@ -31,7 +31,7 @@ extern f32 lbl_803E43F4;
 extern f32 lbl_803E4428;
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
-extern f32 lbl_803E43F0;
+extern const f32 lbl_803E43F0;
 extern f32 lbl_803E4400;
 extern f32 lbl_803E4404;
 extern f32 lbl_803E4408;
@@ -219,7 +219,7 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
 {
     extern void Model_GetVertexPosition(int, int, f32*);
     extern void vecRotateYXZ(int, int);
-    extern f32 lbl_803E43F0;
+    extern const f32 lbl_803E43F0;
     extern f32 lbl_803E43F4;
 
     obj->x = data->positionX;
@@ -373,8 +373,7 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
             state->spinVelocityX = t;
             state->spinX = t;
             obj->velocityY = t;
-            k = gExplodedGroundFriction;
-            state->accelerationX = state->accelerationX * k;
+            state->accelerationX = state->accelerationX * (k = gExplodedGroundFriction);
             obj->velocityX = obj->velocityX * k;
             state->accelerationZ = state->accelerationZ * k;
             obj->velocityZ = obj->velocityZ * k;
@@ -392,8 +391,7 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
         {
             f32 k2;
             obj->velocityY = gExplodedBounceRestitution * -obj->velocityY;
-            k2 = gExplodedGroundFriction;
-            obj->velocityX = obj->velocityX * k2;
+            obj->velocityX = obj->velocityX * (k2 = gExplodedGroundFriction);
             obj->velocityZ = obj->velocityZ * k2;
             state->accelerationY = gExplodedGravity;
             state->spinVelocityZ = -state->spinVelocityZ;
