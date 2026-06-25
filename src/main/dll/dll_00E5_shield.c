@@ -875,12 +875,18 @@ void shield_update(int* obj)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     {
-        s16* ps = (s16*)state;
-        f32* t8 = tbl + 8;
-        f32* pf = state;
-        f32* t12 = tbl + 12;
-        f32* t4 = tbl + 4;
-        for (i = 0; i < 4; i++)
+        s16* ps;
+        f32* t8;
+        f32* pf;
+        f32* t12;
+        f32* t4;
+        i = 0;
+        ps = (s16*)state;
+        t8 = tbl + 8;
+        pf = state;
+        t12 = tbl + 12;
+        t4 = tbl + 4;
+        for (; i < 4; i++)
         {
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == 2102)
@@ -968,8 +974,10 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            f32* pv = s.pos;
-            for (i = 0; i < 4; i++)
+            f32* pv;
+            i = 0;
+            pv = s.pos;
+            for (; i < 4; i++)
             {
                 if ((*(u8*)(state + i + 0x5c) & 1) == 0)
                 {
@@ -990,11 +998,12 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         f32 cC;
                         f32 cB;
                         f32 cA;
+                        j = 0;
                         cA = lbl_803E33D8;
                         cB = lbl_803E33DC;
                         cC = lbl_803E33AC;
                         cD = lbl_803E33C4;
-                        for (j = 0; j < 2; j++)
+                        for (; j < 2; j++)
                         {
                             f32 f8v = ((GameObject*)obj)->anim.rootMotionScale;
                             pv[0] = cA * f8v;
