@@ -765,15 +765,15 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             if (*(void**)layer != NULL)
             {
                 int texVal = *layer;
-                layerByte = *(u8*)((int)layer + 5);
-                if (layerByte != '\0')
+                u8 ovrLayerByte = *(u8*)((int)layer + 5);
+                if (ovrLayerByte != '\0')
                 {
                     overrideIdx = 0;
                     ovr = (int*)lbl_803DCE6C;
                     for (remain = 0x50; remain != 0; remain--)
                     {
                         if (((0 < *(short*)(ovr + 3)) && ((u32)*ovr == texVal)) &&
-                            ((int)layerByte == (int)*(u8*)((int)ovr + 0xe)))
+                            ((int)ovrLayerByte == (int)*(u8*)((int)ovr + 0xe)))
                         {
                             texId = textureCrazyPointerFollowFn_80054c30(texVal, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
                             goto layerN_done;
