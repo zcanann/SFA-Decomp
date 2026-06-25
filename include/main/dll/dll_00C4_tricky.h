@@ -21,7 +21,7 @@ void FUN_801457a4(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,u32 param_10,int param_11,u32 param_12,
                  u32 param_13,u32 param_14,u32 param_15,u32 param_16);
-int trickyFn_801451d8(int obj,int state);
+void trickyFn_801451d8(int obj,int state);
 void trickyFn_80144f50(int obj,int state);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);

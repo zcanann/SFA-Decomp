@@ -2923,7 +2923,7 @@ extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 
-int trickyFn_801451d8(int obj, int state)
+void trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
     u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)(obj + 0x18), 0);
@@ -2960,7 +2960,6 @@ int trickyFn_801451d8(int obj, int state)
         gTrickyHelperObject = Obj_SetupObject(setup, 4, -1, -1, *(int*)&((GameObject*)obj)->anim.parent);
     }
     ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
-    return 1;
 }
 
 void Tricky_func11(int* obj)
