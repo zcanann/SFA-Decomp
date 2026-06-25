@@ -1812,7 +1812,7 @@ void andross_update(int obj)
             fval = (lbl_803E7538 < -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E7538;
             ((AndrossState*)state)->unkA8 = fval;
         }
-        sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
+        sval = ((AndrossState*)state)->targetRotX - (u16)((GameObject*)obj)->anim.rotX;
         if (0x8000 < sval)
         {
             sval = sval - 0xffff;
@@ -2053,7 +2053,7 @@ void andross_update(int obj)
         velAdd = *(SunVec3*)(state + 0x36);
         arwarwing_addVelocity(*state, (int)&velAdd);
     }
-    sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
+    sval = ((AndrossState*)state)->targetRotX - (u16)((GameObject*)obj)->anim.rotX;
     if (0x8000 < sval)
     {
         sval = sval - 0xffff;
