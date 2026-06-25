@@ -342,7 +342,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                     {
                         if (wg == 0)
                         {
-                            tp = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->unkD0);
+                            tp = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->unkD0) & 0xffff;
                             if (tp != 0)
                             {
                                 if (*(s16*)&((TrickyState*)state)->unkD2 == tp)
