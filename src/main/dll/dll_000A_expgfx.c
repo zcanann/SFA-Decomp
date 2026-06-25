@@ -1316,15 +1316,15 @@ foundFirst:
                             slot->colorByte2);
                         if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0)
                         {
-                            quad[0].colorR = colR * (ambR8 + 1) >> 8;
-                            quad[0].colorG = colG * (ambG8 + 1) >> 8;
-                            quad[0].colorB = colB * (ambB8 + 1) >> 8;
+                            quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
+                            quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
+                            quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
                         }
                         else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0)
                         {
-                            quad[0].colorR = colR * ambRPlus1 >> 8;
-                            quad[0].colorG = colG * ambGPlus1 >> 8;
-                            quad[0].colorB = colB * ambBPlus1 >> 8;
+                            quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
+                            quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
+                            quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
                         }
                         else
                         {
