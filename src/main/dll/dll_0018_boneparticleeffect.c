@@ -1354,12 +1354,12 @@ extern s32 gBoneParticleScrollOffset;
 extern f32 gBoneParticleDrift;
 extern f32 gBoneParticleDriftVelocity;
 extern s32 gBoneParticleBufferFlip;
-extern f32 lbl_803DF4A8;
+extern const f32 lbl_803DF4A8;
 extern f32 gBoneParticleDriftMax;
 extern f32 lbl_803DF4B0;
 extern f32 gBoneParticleDriftMin;
-extern f32 lbl_803DF4B8;
-extern f32 lbl_803DF4BC;
+extern const f32 lbl_803DF4B8;
+extern const f32 lbl_803DF4BC;
 extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
 extern f32 playerMapOffsetX;
@@ -1419,7 +1419,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     f32 dy;
     f32 dz;
 
-    base = (u8*)(int)gBoneParticleConfigTable;
+    base = (u8*)gBoneParticleConfigTable;
     if (GameBit_Get(0x468) != 0)
     {
         GameBit_Set(0x468, 0);
@@ -1453,9 +1453,10 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
         gBoneParticleDrift = gBoneParticleDriftMin;
         Sfx_PlayFromObject(o, 0x282);
     }
+    slot = 0;
     grp2 = gBoneParticleEffectBuffers;
     grp = gBoneParticleEffectBuffers;
-    for (slot = 0; slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT; slot++)
+    for (; slot < BONE_PARTICLE_EFFECT_BUFFER_COUNT; slot++)
     {
         if (slot != 5)
         {
@@ -1465,10 +1466,10 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
             idp = base + 0x5b4;
             while (j < 5)
             {
-                s.vx = 0.0f;
-                s.vy = 0.0f;
-                s.vz = 0.0f;
-                s.w = 1.0f;
+                s.vx = lbl_803DF4A8;
+                s.vy = lbl_803DF4A8;
+                s.vz = lbl_803DF4A8;
+                s.w = lbl_803DF4B8;
                 s.unk04 = 0;
                 s.unk02 = 0;
                 s.unk00 = 0;
