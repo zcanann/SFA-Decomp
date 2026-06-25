@@ -86,7 +86,7 @@ void dll_1DA_update(int obj)
 {
     extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
     extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-    extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* out, int a, int b);
+    extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
     int sub;
     f32 vx;
     f32 vy;
@@ -146,8 +146,8 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * e;
     }
     ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject*)obj)->anim.localPosY);
-    n = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ, obj,
+    n = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                             ((GameObject*)obj)->anim.localPosZ,
                              &list, 0, 0x11);
     ((Dll1DAState*)sub)->grounded = 0;
     i = 0;
