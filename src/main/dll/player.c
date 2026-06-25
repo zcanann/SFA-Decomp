@@ -14209,8 +14209,8 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             if ((void*)gPlayerHeldObject == NULL)
             {
-                int m = *(int*)Obj_GetActiveModel(obj);
                 int i;
+                int m = *(int*)Obj_GetActiveModel(obj);
                 for (i = 0; i < (int)(u32) * (u8*)((char*)m + 0xf8); i++)
                 {
                     int op = ObjModel_GetRenderOp(m, i);
@@ -15015,12 +15015,12 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 (((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 6 ||
                  ((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 0x10))
             {
-                ax = *(f32*)(tbl2 + *(s16*)((char*)face + 0x4) * 12);
+                ax = ((f32*)tbl2)[*(s16*)((char*)face + 0x4) * 3];
                 ay = lbl_803E7EA4;
-                az = *(f32*)(tbl2 + *(s16*)((char*)face + 0x4) * 12 + 8);
-                bx = *(f32*)(tbl2 + *(s16*)((char*)face + 0x6) * 12);
+                az = ((f32*)tbl2)[*(s16*)((char*)face + 0x4) * 3 + 2];
+                bx = ((f32*)tbl2)[*(s16*)((char*)face + 0x6) * 3];
                 by = lbl_803E7EA4;
-                bz = *(f32*)(tbl2 + *(s16*)((char*)face + 0x6) * 12 + 8);
+                bz = ((f32*)tbl2)[*(s16*)((char*)face + 0x6) * 3 + 2];
                 if (hit != NULL)
                 {
                     ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, hit);
