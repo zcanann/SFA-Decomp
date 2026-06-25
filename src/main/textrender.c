@@ -990,8 +990,8 @@ void gameTextInit(void)
 
 extern void subtitleFn_8001b700(void);
 extern int gSubtitlesEnabled;
-extern s16 lbl_803DC9AA;
-extern s16 lbl_803DC9A8;
+extern u16 lbl_803DC9AA;
+extern u16 lbl_803DC9A8;
 extern int lbl_803DC9C8;
 
 typedef struct
@@ -1839,7 +1839,7 @@ void gameTextRun(void)
             ((void (*)(void))cmd->f4)();
             break;
         case 10:
-            lbl_803DC9AA = cmd->f4;
+            lbl_803DC9AA = (u16)cmd->f4;
             lbl_803DC9A8 = (u16)cmd->f8;
             break;
         case 11:
