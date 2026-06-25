@@ -15,13 +15,14 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    GameObject* o = (GameObject*)obj;
+    int i;
     TreasureChestSetup * setup;
     u8* state;
     u8 eventId;
-    int i;
 
-    setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    setup = (TreasureChestSetup*)o->anim.placementData;
+    state = o->extra;
     i = 0;
     while (i < animUpdate->eventCount)
     {
@@ -41,8 +42,8 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ((StaffFlags*)state)->b5 = 0;
             break;
         case 4:
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((u32)obj);
+            o->anim.flags = o->anim.flags | OBJANIM_FLAG_HIDDEN;
+            ObjHits_DisableObject((u32)o);
             break;
         }
         i++;
