@@ -572,7 +572,6 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     zero = lbl_803E0668;
     one = lbl_803E068C;
     points = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], (u32*)&hitCount, 0);
-    foundBelow = 0;
     collision->waterY[0] = topSentinel;
     collision->floorY[0] = topSentinel;
     collision->ceilingY[0] = floorSentinel;
@@ -581,6 +580,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     collision->waterNormalX[0] = zero;
     collision->waterNormalY[0] = one;
     collision->waterNormalZ[0] = zero;
+    foundBelow = 0;
     point = points;
     for (i = 0; i < hitCount; i++)
     {
