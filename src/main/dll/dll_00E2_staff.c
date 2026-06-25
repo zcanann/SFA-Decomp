@@ -1431,9 +1431,9 @@ extern f32 lbl_803E32AC;
 
 void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
 {
-    u8* model2;
     u8* slot;
     u8* obj;
+    u8* model2;
     u8* swipe;
     ObjWeaponDaTable* weaponDaTable;
     s16* tbl;
@@ -1449,7 +1449,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
     f32 arrH[4];
     f32 arrI[4];
     f32 arrJ[4];
-    f32 sinv, cosv, vidx, flb, fla, frac, tmax, angle, acc, step, prog;
+    f32 sinv, cosv, vidx, flb, tmax, step, fla, angle, frac, acc, prog;
     int ang;
 
     swipe = (u8*)swipeArg;
