@@ -1461,8 +1461,7 @@ void andross_update(int obj)
             }
         }
         ((AndrossState*)state)->fadeAlpha = ((AndrossState*)state)->fadeAlpha - gAndrossFadeAlphaStep;
-        fval = ((AndrossState*)state)->fadeAlpha;
-        fval = (lbl_803E74D4 < fval) ? fval : lbl_803E74D4;
+        fval = (lbl_803E74D4 < ((AndrossState*)state)->fadeAlpha) ? ((AndrossState*)state)->fadeAlpha : lbl_803E74D4;
         ((AndrossState*)state)->fadeAlpha = fval;
         fc = ((AndrossState*)state)->fadeAlpha;
         work = *(int*)Obj_GetActiveModel(obj);
