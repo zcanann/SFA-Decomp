@@ -1588,9 +1588,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
     }
     q = *(int*)&((BaddieState*)baddie)->targetObj;
     found = 0;
-    i = 0;
     objs = ObjGroup_GetObjects(3, &cnt2);
-    for (; i < cnt2; i++)
+    for (i = 0; i < cnt2; i++)
     {
         if (*(s16*)(*objs + 0x46) == 0x539)
         {
@@ -1606,8 +1605,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
         if ((u32)obj == ObjGroup_FindNearestObject(3, *(int*)&((BaddieState*)baddie)->targetObj, 0))
         {
             sub->unk3C = *(int*)&((BaddieState*)baddie)->targetObj;
-            tmpA = sub->unk30;
             tmpB = sub->unk2C;
+            tmpA = sub->unk30;
             q = sub->msgStack;
             msgA[0] = sub->unk28;
             msgA[1] = tmpB;
@@ -1658,8 +1657,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
     {
         if (ObjGroup_ContainsObject(*(int*)&((BaddieState*)baddie)->targetObj, c30) != 0)
         {
-            tmpA = sub->unk30;
             tmpB = sub->unk2C;
+            tmpA = sub->unk30;
             q = sub->msgStack;
             msgE[0] = sub->unk28;
             msgE[1] = tmpB;
@@ -1718,8 +1717,8 @@ int dbstealerworm_stateHandlerA0B(int obj, int baddie, f32 t)
         }
         player = Obj_GetPlayerObject();
         *(int*)&((BaddieState*)baddie)->targetObj = player;
-        tmpA = sub->unk30;
         tmpB = sub->unk2C;
+        tmpA = sub->unk30;
         q = sub->msgStack;
         msgH[0] = sub->unk28;
         msgH[1] = tmpB;
