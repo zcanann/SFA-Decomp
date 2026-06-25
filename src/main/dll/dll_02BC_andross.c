@@ -1909,7 +1909,7 @@ void andross_update(int obj)
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 0;
         }
         ((AndrossState*)state)->soundTimer = ((AndrossState*)state)->soundTimer + timeDelta;
-        if ((lbl_803E7578 < ((AndrossState*)state)->soundTimer) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
+        if ((((AndrossState*)state)->soundTimer > lbl_803E7578) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
             Sfx_PlayFromObject(obj, 0x46f);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
