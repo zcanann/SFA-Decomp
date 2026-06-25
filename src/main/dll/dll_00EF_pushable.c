@@ -963,15 +963,15 @@ typedef struct
 void pushable_hitDetect(int* obj)
 {
     extern u32 fn_80174BFC(); /* #57 */
+    f32* wp;
+    f32* hp;
+    int i;
+    int cntE;
+    int cnt2;
+    s8 cnt;
     PushableState* state;
     f32* w;
-    f32* wp;
     u8* e;
-    int i;
-    int cnt2;
-    int cntE;
-    s8 cnt;
-    f32* hp;
     f32 acc;
     f32 wpos[12];
     f32 mtx[16];
