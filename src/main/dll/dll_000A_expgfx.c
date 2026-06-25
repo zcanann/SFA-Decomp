@@ -2881,7 +2881,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
-        gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
+        gExpgfxSequenceCounter++;
         if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX)
         {
             gExpgfxSequenceCounter = 0;
