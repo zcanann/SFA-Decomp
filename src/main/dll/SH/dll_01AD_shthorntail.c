@@ -448,8 +448,9 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
-            runtime->freezeFrameCounter = runtime->freezeFrameCounter + 1;
-            if (runtime->freezeFrameCounter > 0xa)
+            u8 newCounter = runtime->freezeFrameCounter + 1;
+            runtime->freezeFrameCounter = newCounter;
+            if (newCounter > 0xa)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
