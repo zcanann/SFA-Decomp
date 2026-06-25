@@ -876,17 +876,26 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
         if (visited[cur] == 0)
         {
-            for (k = 1; k >= 0; k--)
             {
-                n = Checkpoint_find(cp->backLinkIds[k], &slot);
-                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                /* lp walks cp + k words; backLinkIds at word 6 (0x18),
+                 * forwardLinkIds at word 8 (0x20). Single induction pointer
+                 * matches the retail strength-reduced addressing. */
+                s32* lp;
+                k = 1;
+                lp = (s32*)cp + 1;
+                for (; k >= 0; k--)
                 {
-                    stack[count++] = slot;
-                }
-                n = Checkpoint_find(cp->forwardLinkIds[k], &slot);
-                if (n != NULL && visited[slot] == 0 && count < 0x3c)
-                {
-                    stack[count++] = slot;
+                    n = Checkpoint_find(lp[6], &slot);
+                    if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                    {
+                        stack[count++] = slot;
+                    }
+                    n = Checkpoint_find(lp[8], &slot);
+                    if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                    {
+                        stack[count++] = slot;
+                    }
+                    lp--;
                 }
             }
             visited[cur] = 1;
