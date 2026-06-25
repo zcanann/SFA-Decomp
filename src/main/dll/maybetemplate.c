@@ -197,9 +197,9 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
     int total;
     int current;
     int seg1;
-    int rem1;
-    int seg2;
     int seg3;
+    int seg2;
+    int rem1;
     int seg4;
     int rem4;
     int w8;
