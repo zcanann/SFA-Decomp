@@ -774,9 +774,9 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     {
         if (moveId == -1)
         {
-            int masked;
+            int masked = idx & 0xfe;
             ObjAnim_SetCurrentMove(
-                obj, *(s16*)((u8*)&base[0x60] + ((masked = idx & 0xfe) + ((ByteFlags*)&inner->flagsBC0)->b80) * 2), speed,
+                obj, *(s16*)((u8*)&base[0x60] + (masked + ((ByteFlags*)&inner->flagsBC0)->b80) * 2), speed,
                 0);
             ((CloudRunnerState*)baddie)->baddie.moveSpeed = ((f32*)(base + 0xc0))[masked >> 1];
         }
