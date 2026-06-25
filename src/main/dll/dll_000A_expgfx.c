@@ -806,18 +806,14 @@ foundFirst:
             curPool = pool;
             next = pool + 1;
             scan = &runtime->poolActiveCounts[next];
-            if (next < EXPGFX_POOL_COUNT)
+            for (; next < EXPGFX_POOL_COUNT; next++)
             {
-                for (batch = EXPGFX_POOL_COUNT - next; batch != 0; batch--)
+                switch (*scan)
                 {
-                    switch (*scan)
-                    {
-                    case 0: break;
-                    default: goto foundNext;
-                    }
-                    scan++;
-                    next++;
+                case 0: break;
+                default: goto foundNext;
                 }
+                scan++;
             }
             next = -1;
         foundNext:
