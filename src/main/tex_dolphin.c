@@ -698,10 +698,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     layer0_done:
         if (*(u8*)((int)layer + 6) != 0xff)
         {
-            layerIdx = (u32) * (u8*)((int)layer + 6) * 0x10;
+            layerIdx = (u32) * (u8*)((int)layer + 6) << 4;
             PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
-                       *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
+                       *(float*)((lbl_803DCE68 + 4) + layerIdx) / lbl_803DEBC8,
                        lbl_803DEBCC);
             texMtx = (float*)texMatrix;
         }
@@ -743,10 +743,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     layer1_done:
         if (*(u8*)((int)layer + 6) != 0xff)
         {
-            layerIdx = (u32) * (u8*)((int)layer + 6) * 0x10;
+            layerIdx = (u32) * (u8*)((int)layer + 6) << 4;
             PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
-                       *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
+                       *(float*)((lbl_803DCE68 + 4) + layerIdx) / lbl_803DEBC8,
                        lbl_803DEBCC);
             texMtx = (float*)texMatrix;
         }
