@@ -158,9 +158,8 @@ void bombplantspore_updateDrift(void* obj, void* state)
         {
             ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
         }
-        ((BombPlantSporeState*)state)->spinAngle =
-            ((BombPlantSporeState*)state)->spinAngle + ((BombPlantSporeState*)state)->currentSpinAngle;
-        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - baseAngle;
+        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->currentSpinAngle;
+        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
         if (angleDelta > 0x8000)
         {
             angleDelta -= 0xffff;
