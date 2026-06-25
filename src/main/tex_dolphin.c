@@ -660,8 +660,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     int* ovr;
     int overrideIdx;
     int remain;
-    u8 layerByte;
     TexOverride* pE;
+    u8 layerByte;
     u32 colorWord;
     Mtx texMatrix;
 
