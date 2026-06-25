@@ -471,7 +471,10 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     {
         idx = s->extendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
     }
-    if (idx < SAVEGAME_MAP_COUNT && gSaveGameMapObjGroupBits[idx] != 0)
+    if (!(idx < SAVEGAME_MAP_COUNT && gSaveGameMapObjGroupBits[idx] != 0))
+    {
+        return;
+    }
     {
         if (value == -1)
         {
