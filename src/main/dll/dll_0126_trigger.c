@@ -524,7 +524,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 0x21:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x1fff;
-                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13 & 7)));
+                    GameBit_Set(bit, (1 << (op >> 13 & 7)) ^ GameBit_Get(bit));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
@@ -587,9 +587,10 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     {
                         for (tbl = (int*)t; *tbl != -1; tbl++)
                         {
-                            if ((void*)getLoadedTexture(*tbl) != NULL)
+                            t2 = (int)getLoadedTexture(*tbl);
+                            if ((void*)t2 != NULL)
                             {
-                                textureFree(*tbl);
+                                textureFree(t2);
                             }
                         }
                     }
