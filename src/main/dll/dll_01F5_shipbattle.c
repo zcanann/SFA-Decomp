@@ -152,14 +152,14 @@ void ShipBattle_render(int* obj)
 
 void ShipBattle_update(int obj)
 {
+    int groupId;
     int* objects;
     int i;
     int objectCount;
     int current;
     int linkedObject;
-    int sameGroupCount;
-    int groupId;
     int groupId2;
+    int sameGroupCount;
 
     if (((GameObject*)obj)->anim.placementData == NULL)
     {
