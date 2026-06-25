@@ -132,6 +132,7 @@ typedef struct DbeggPlacement
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
 
+#pragma optimization_level 2
 void dbegg_processMessages(int obj)
 {
     extern int gameBitIncrement(int bit);
@@ -140,8 +141,8 @@ void dbegg_processMessages(int obj)
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
-    AnimBehaviorConfig* config;
     int sub;
+    AnimBehaviorConfig* config;
     u32 msgType = 0;
     int msgFlag = 0;
     int msgArg;
@@ -192,9 +193,9 @@ void dbegg_processMessages(int obj)
                 break;
             case 19:
                 GameBit_Set(config->secondaryConditionId, 1);
-                if (config->activationEventId > 0)
+                if ((int)config->activationEventId > 0)
                 {
-                    gameBitIncrement(config->activationEventId);
+                    gameBitIncrement((int)config->activationEventId);
                 }
                 Obj_RemoveFromUpdateList(obj);
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -204,6 +205,7 @@ void dbegg_processMessages(int obj)
         }
     }
 }
+#pragma optimization_level reset
 
 int dbegg_getExtraSize(void) { return 0x124; }
 int dbegg_getObjectTypeId(void) { return 0x8; }
