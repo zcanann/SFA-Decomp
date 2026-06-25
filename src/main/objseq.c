@@ -4475,26 +4475,20 @@ void objSeq_onMapSetup(void)
     }
 
     {
-        u8* marks2 = base + 0x338c + i;
-        int* handles2 = (int*)(base + 0x33e4) + i;
-        s16* modes2 = (s16*)(base + 0x3a98) + i;
         for (; i < 0x55; i++)
         {
-            *(marks2 + (0x3b9c - 0x338c)) = 0;
-            *(marks2 + (0x3b44 - 0x338c)) = 0;
-            modes2[0] = 0;
-            *(marks2 + (0x3c4c - 0x338c)) = 0;
-            *(marks2 + (0x3bf4 - 0x338c)) = 0;
-            *(marks2 + (0x3a40 - 0x338c)) = 0;
-            *(marks2 + (0x39e8 - 0x338c)) = 0;
-            *(f32*)(handles2 + (0x3894 - 0x33e4)/4) = lbl_803DEFB0;
-            *(f32*)(handles2 + (0x3740 - 0x33e4)/4) = lbl_803DEFF0;
-            *(marks2 + (0x3590 - 0x338c)) = 0;
-            handles2[0] = 0;
-            marks2[0] = 0;
-            modes2++;
-            handles2++;
-            marks2++;
+            *(base + 0x3b9c + i) = 0;
+            *(base + 0x3b44 + i) = 0;
+            ((s16*)(base + 0x3a98))[i] = 0;
+            *(base + 0x3c4c + i) = 0;
+            *(base + 0x3bf4 + i) = 0;
+            *(base + 0x3a40 + i) = 0;
+            *(base + 0x39e8 + i) = 0;
+            ((f32*)(base + 0x3894))[i] = lbl_803DEFB0;
+            ((f32*)(base + 0x3740))[i] = lbl_803DEFF0;
+            *(base + 0x3590 + i) = 0;
+            ((int*)(base + 0x33e4))[i] = 0;
+            *(base + 0x338c + i) = 0;
         }
     }
 
