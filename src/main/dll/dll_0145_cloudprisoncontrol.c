@@ -128,8 +128,11 @@ void cloudprisoncontrol_update(int obj)
             break;
         case CPMSG_UNREGISTER:
             i = 0;
-            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *(u32*)p != target; p += 2)
+            p = lbl_803AC7D8;
+            n = lbl_803DDB09;
+            while (i < n && *(u32*)p != target)
             {
+                p += 2;
                 i++;
             }
             lbl_803DDB09--;
