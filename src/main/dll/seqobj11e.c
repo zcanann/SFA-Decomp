@@ -591,8 +591,7 @@ void fn_80152040(int* obj, u8* state)
             ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
         }
         anim = ((GameObject*)obj)->anim.currentMove;
-        animTbl = (u8*)gSeq11EStateTable + 8;
-        if (anim != animTbl[((BaddieState*)state)->seqEntryIndex * 12])
+        if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->seqEntryIndex * 12])
         {
             if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 && animTbl[((BaddieState*)state)->seqEntryIndex
                 * 12] != 4)
