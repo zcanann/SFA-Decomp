@@ -1792,16 +1792,7 @@ void andross_update(int obj)
             ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
-            ref = randomGetRange(0, 1);
-            if (ref != 0)
-            {
-                objId = 0x471;
-            }
-            else
-            {
-                objId = 0x472;
-            }
-            Sfx_PlayFromObject(obj, objId);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
         }
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
