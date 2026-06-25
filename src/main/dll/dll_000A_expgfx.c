@@ -1773,7 +1773,8 @@ foundFirst:
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
-                    attached = (u8*)runtime->expTab[Expgfx_GetSlotTableIndex(slot)].attachedTableKey;
+                    attached = (u8*)((ExpgfxTableEntry*)((u8*)runtime->expTab +
+                        (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16))->attachedTableKey;
                     rot.x = lbl_803DF35C;
                     rot.y = lbl_803DF35C;
                     rot.z = lbl_803DF35C;
