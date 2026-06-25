@@ -103,7 +103,7 @@ extern f32 gMinimapArrowScale1;
 extern f32 gMinimapArrowScale0;
 extern u8 framesThisStep;
 extern u32 gMinimapBaseColor;
-extern f32 gMinimapZero;
+extern const f32 gMinimapZero;
 extern f32 gMinimapF50;
 extern f32 gMinimapF256;
 extern f32 gMinimapFNeg10;
@@ -170,7 +170,7 @@ int Minimap_update(void)
 {
     u8* player;
     int marker;
-    u8 i, k, j, found, cell;
+    u8 found, i, k, j, cell;
     MinimapRow* rows;
     MinimapRow* row;
     MinimapRow* r2;
@@ -210,8 +210,7 @@ int Minimap_update(void)
     i = 0;
     k = 0;
     found = 0;
-    ox = 0.0f;
-    oy = 0.0f;
+    ox = oy = gMinimapZero;
     col = gMinimapBaseColor;
     player = Obj_GetPlayerObject();
     if (player != NULL)
