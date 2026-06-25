@@ -363,20 +363,14 @@ void hudDrawMagicBar(int alpha, int unk2, u32 flags)
     {
         rem1 = t13;
     }
-    if (rem1 < 1)
-    {
-        rem1 = 0;
-    }
+    rem1 = (rem1 > 0) ? rem1 : 0;
     seg2 = seg2 - rem1;
     current = (current - 8) - t13;
     if (current > 8)
     {
         current = 8;
     }
-    if (current < 1)
-    {
-        current = 0;
-    }
+    current = (current > 0) ? current : 0;
     seg4 = seg4 - current;
     if (seg1 != 0)
     {
