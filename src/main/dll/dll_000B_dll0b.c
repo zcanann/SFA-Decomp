@@ -2965,7 +2965,7 @@ void dll_0B_func05(void)
                                         (int)*(f32*)(E9 + emIdx * 0x18 + 0xc),
                                         &tmpl, 0x200001, -1, q);
                                 }
-                                ((ModgfxEffectSlot*)eff)->pendingFrameIdx = (int)*(f32*)(E9 + emIdx * 0x18 + 0x8);
+                                ((ModgfxEffectSlot*)eff)->pendingFrameIdx = *(f32*)(E9 + emIdx * 0x18 + 0x8);
                                 break;
                             }
                         }
@@ -3054,7 +3054,7 @@ void dll_0B_func05(void)
                     {
                         ((ModgfxEffectSlot*)eff)->alphaCurrent = lbl_803DF430;
                     }
-                    (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha = (int)((ModgfxEffectSlot*)eff)->alphaCurrent;
+                    (*(GameObject**)&((ModgfxEffectSlot*)eff)->sourceObj)->anim.alpha = ((ModgfxEffectSlot*)eff)->alphaCurrent;
                 }
                 if (*(int*)(E9 + emOff) & 0x400000)
                 {
