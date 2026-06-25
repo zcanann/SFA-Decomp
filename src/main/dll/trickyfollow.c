@@ -719,7 +719,7 @@ state_selected:
             rot._pad0 = 0;
             rot._pad1 = 0;
             vecRotateZXY(&rot, delta);
-            if ((lbl_803E23DC < delta[2]) && (lbl_803E23DC != ((TrickyState*)state)->speed))
+            if ((delta[2] > lbl_803E23DC) && (lbl_803E23DC != ((TrickyState*)state)->speed))
             {
                 step = 0;
                 while ((step < 4) &&
@@ -745,7 +745,7 @@ state_selected:
                             {
                                 if (found < 0)
                                 {
-                                    if (-2 < found)
+                                    if (found >= -1)
                                     {
                                         found = 1;
                                     }
@@ -1042,10 +1042,10 @@ state_selected:
                 (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) +
                 *(f32*)(state + 0x78);
             v = *(f32*)(state + 0x64);
-            if (lbl_803E24B4 < v)
+            if (v > lbl_803E24B4)
             {
                 k = *(f32*)(state + 0x68);
-                if (lbl_803E24B8 < k)
+                if (k > lbl_803E24B8)
                 {
                     if (k < v - lbl_803E24B8)
                     {
