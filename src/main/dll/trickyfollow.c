@@ -958,7 +958,9 @@ state_selected:
         {
             f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
-            if (lbl_803E23EC < dx * dx + dz * dz)
+            sqx = dx * dx;
+            sqz = dz * dz;
+            if (sqx + sqz > lbl_803E23EC)
             {
                 yawA = getAngle(-dx, -dz);
                 trickyTurnTowardYaw(obj, yawA);
@@ -1177,7 +1179,9 @@ state_selected:
         {
             f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
-            if (lbl_803E23EC < dx * dx + dz * dz)
+            sqx = dx * dx;
+            sqz = dz * dz;
+            if (sqx + sqz > lbl_803E23EC)
             {
                 yawA = getAngle(-dx, -dz);
                 trickyTurnTowardYaw(obj, yawA);
