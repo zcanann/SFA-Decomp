@@ -564,11 +564,11 @@ void ktrex_update(int obj)
     u32 tmp;
     s16* bitA;
     s16* bitB;
+    int i;
     u8 maskA;
     u8 maskB;
     u8 flags;
     int phase;
-    int i;
     f32 dx, dz, frac;
 
     if (((GameObject*)obj)->unkF4 != 0)
