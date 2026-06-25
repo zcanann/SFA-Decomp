@@ -962,8 +962,7 @@ state_selected:
             sqz = dz * dz;
             if (sqx + sqz > lbl_803E23EC)
             {
-                yawA = getAngle(-dx, -dz);
-                trickyTurnTowardYaw(obj, yawA);
+                trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
             }
         }
         if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E24A8)
@@ -1183,8 +1182,7 @@ state_selected:
             sqz = dz * dz;
             if (sqx + sqz > lbl_803E23EC)
             {
-                yawA = getAngle(-dx, -dz);
-                trickyTurnTowardYaw(obj, yawA);
+                trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
             }
         }
         if ((((TrickyState*)state)->stateFlags & 0x8000000) != 0)
