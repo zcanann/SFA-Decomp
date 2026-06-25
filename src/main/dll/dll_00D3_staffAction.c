@@ -591,7 +591,7 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
     planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
     planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
     planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
-    len = sqrtf(planeX * planeX + (planeY * planeY + planeZ * planeZ));
+    len = sqrtf(planeZ * planeZ + (planeX * planeX + planeY * planeY));
     if (len > lbl_803E2FDC)
     {
         len = lbl_803E2FF4 / len;
