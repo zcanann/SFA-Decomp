@@ -963,10 +963,10 @@ state_selected:
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
                 (int)obj, ((TrickyState*)state)->speed, (float*)(state + 0x34));
             ((GameObject*)obj)->anim.localPosX =
-                timeDelta * ((TrickyState*)state)->dirX * ((TrickyState*)state)->speed + ((GameObject*)obj)->anim.
+                timeDelta * (((TrickyState*)state)->dirX * ((TrickyState*)state)->speed) + ((GameObject*)obj)->anim.
                 localPosX;
             ((GameObject*)obj)->anim.localPosZ =
-                timeDelta * ((TrickyState*)state)->dirZ * ((TrickyState*)state)->speed + ((GameObject*)obj)->anim.
+                timeDelta * (((TrickyState*)state)->dirZ * ((TrickyState*)state)->speed) + ((GameObject*)obj)->anim.
                 localPosZ;
         }
         else
