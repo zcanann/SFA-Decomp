@@ -2466,7 +2466,7 @@ void fn_8006CB50(void)
         f32 fy = y - Udchuff_803DEDAC;
         for (x = 0; x < 0x100; x++)
         {
-            char* addr = (char*)lbl_803DCFBC + ylo + yhi + (x & 3) * 8 + (x >> 2) * 0x800;
+            char* addr = (char*)lbl_803DCFBC + (ylo + yhi) + (x & 3) * 8 + (x >> 2) * 0x800;
             f32 fx = x - Udchuff_803DEDAC;
             f32 dist = sqrtf(fy * fy + fx * fx);
             f32 ny = fy / dist;
@@ -2532,6 +2532,8 @@ extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNar
 extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
 extern f32 FinishQueue_803DED64;
+extern f32 FinishQueue_803DED68;
+extern f32 FinishQueue_803DED6C;
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int gRenderModeObj;
@@ -2669,7 +2671,7 @@ void renderShadows(void)
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
                 if (mag > lbl_803DED28)
                 {
-                    f32 inv = (&FinishQueue_803DED64)[1] / mag;
+                    f32 inv = FinishQueue_803DED68 / mag;
                     dirX *= inv;
                     dirY *= inv;
                     dirZ *= inv;
@@ -2700,7 +2702,7 @@ void renderShadows(void)
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
-            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, (&FinishQueue_803DED64)[2]);
+            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, FinishQueue_803DED6C);
             GXSetProjection(mOrtho, 1);
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho((f32*)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
