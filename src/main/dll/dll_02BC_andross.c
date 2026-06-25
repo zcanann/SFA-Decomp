@@ -1407,10 +1407,7 @@ void andross_update(int obj)
         velArg3 = velCalc3;
         arwarwing_setVelocity(ref, (int)&velArg3);
         fval = -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
-        if (fval < lbl_803E74EC)
-        {
-            fval = lbl_803E74EC;
-        }
+        fval = (lbl_803E74EC < fval) ? fval : lbl_803E74EC;
         ((AndrossState*)state)->unkA8 = fval;
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
@@ -1428,10 +1425,7 @@ void andross_update(int obj)
             arwarwing_addShield(*state, 0xfffffffc);
         }
         fval = -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
-        if (fval < lbl_803E74EC)
-        {
-            fval = lbl_803E74EC;
-        }
+        fval = (lbl_803E74EC < fval) ? fval : lbl_803E74EC;
         ((AndrossState*)state)->unkA8 = fval;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
