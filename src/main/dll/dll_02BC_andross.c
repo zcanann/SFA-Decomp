@@ -1967,11 +1967,7 @@ void andross_update(int obj)
         else
         {
             fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
-            fval = lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8;
-            if (lbl_803E74D4 < fval)
-            {
-                fval = lbl_803E74D4;
-            }
+            fval = (lbl_803E74D4 < lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8) ? lbl_803E74D4 : lbl_803E753C * timeDelta + ((AndrossState*)state)->unkA8;
             ((AndrossState*)state)->unkA8 = fval;
             *(u8*)(state + 0x2e) = 0;
             *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
