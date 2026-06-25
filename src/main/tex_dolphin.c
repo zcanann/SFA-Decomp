@@ -167,18 +167,22 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     int pos;
     u32 word;
     u32 flags;
-    u8 count;
     u8* tbl;
+    u8 count;
     int i;
-    f32 k24;
     f32 kH;
+    f32 k24;
     f32 k;
 
     pos = bitReader[4];
-    word = ((u8*)*bitReader)[pos >> 3];
-    bptr = *bitReader + (pos >> 3);
-    word = word | (u32)(*(u8*)(bptr + 1) << 8);
-    word = word | (u32)(*(u8*)(bptr + 2) << 16);
+    {
+        int off = pos >> 3;
+        bptr = *bitReader;
+        word = *(u8*)(bptr + off);
+        bptr += off;
+        word = word | (u32)(*(u8*)(bptr + 1) << 8);
+        word = word | (u32)(*(u8*)(bptr + 2) << 16);
+    }
     bitReader[4] = pos + 8;
     ptr = *(int*)(blockData + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
     flags = *(u32*)(arg2 + 0x3c);
@@ -660,7 +664,6 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     int* layer;
     int texId;
     float* texMtx;
-    int* ovr;
     int overrideIdx;
     int remain;
     TexOverride* pE;
@@ -771,17 +774,19 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 u8 ovrLayerByte = *(u8*)((int)layer + 5);
                 if (ovrLayerByte != '\0')
                 {
+                    TexOverride* base;
                     overrideIdx = 0;
-                    ovr = (int*)lbl_803DCE6C;
+                    base = (TexOverride*)lbl_803DCE6C;
+                    pE = base;
                     for (remain = 0x50; remain != 0; remain--)
                     {
-                        if (((0 < *(short*)(ovr + 3)) && ((u32)*ovr == texVal)) &&
-                            ((int)ovrLayerByte == (int)*(u8*)((int)ovr + 0xe)))
+                        if (((0 < pE->count) && ((u32)pE->id == texVal)) &&
+                            ((int)ovrLayerByte == pE->layerByte))
                         {
-                            texId = textureCrazyPointerFollowFn_80054c30(texVal, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
+                            texId = textureCrazyPointerFollowFn_80054c30(texVal, base[overrideIdx].ptr);
                             goto layerN_done;
                         }
-                        ovr = ovr + 4;
+                        pE = pE + 1;
                         overrideIdx = overrideIdx + 1;
                     }
                 }
