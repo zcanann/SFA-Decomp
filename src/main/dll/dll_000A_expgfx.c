@@ -445,10 +445,10 @@ void expgfx_initSlotQuad(void* slotPtr)
     ;
     u32 resource;
     u32 behaviorFlags;
-    s16 texS0;
+    s16 texT1;
     s16 texT0;
     s16 texS1;
-    s16 texT1;
+    s16 texS0;
     f32 step;
 
     slot = (ExpgfxSlot*)slotPtr;
@@ -529,8 +529,8 @@ void expgfx_initSlotQuad(void* slotPtr)
     }
 
     texT0 = 0;
-    texS0 = 0;
     texT1 = 0;
+    texS0 = 0;
     texS1 = 0;
     if (resource != 0)
     {
