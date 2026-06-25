@@ -62,9 +62,9 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     int i;
     DFropenodeExtra* extra;
     f32 phase;
-    f32 best;
-    f32 localX;
     f32 localY;
+    f32 localX;
+    f32 best;
     f32 localZ;
     f32 x;
     f32 y;
