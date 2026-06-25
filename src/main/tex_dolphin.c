@@ -509,8 +509,9 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         {
             fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
             {
+                int shadowType = 5;
                 int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = 5;
+                *(int*)((char*)row + 0xc) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
@@ -518,8 +519,9 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         {
             fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
             {
+                int shadowType = 4;
                 int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = 4;
+                *(int*)((char*)row + 0xc) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
@@ -640,8 +642,9 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         {
             fn_8005D3B4(ptr, block, 0x17);
             {
+                int shadowType = 6;
                 int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = 6;
+                *(int*)((char*)row + 0xc) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
