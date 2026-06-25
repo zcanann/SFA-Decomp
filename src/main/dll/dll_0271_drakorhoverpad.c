@@ -445,10 +445,10 @@ ret1:
 void drakorhoverpad_updateMain(int obj)
 {
     u8* p = ((GameObject*)obj)->extra;
+    RomCurveWalker* curve;
     int q = *(int*)&((GameObject*)obj)->anim.placementData;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
-    RomCurveWalker* curve;
     int evOut;
     f32 diff[3];
     f32 curvePos[3];
@@ -611,14 +611,8 @@ void drakorhoverpad_updateMain(int obj)
             yawDelta = 0x800;
         }
         c = (s16)yawDelta;
-        if (((DrakorHoverpadUpdateMainState*)p)->verticalVel < lbl_803E6A3C)
-        {
-            ((GameObject*)obj)->anim.rotZ = c;
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.rotZ = -c;
-        }
+        ((GameObject*)obj)->anim.rotZ = (s16)((((DrakorHoverpadUpdateMainState*)p)->verticalVel <
+            lbl_803E6A3C) ? c : -c);
         if (c < -0x100)
         {
             c = -0x100;
