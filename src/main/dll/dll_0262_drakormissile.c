@@ -70,10 +70,11 @@ void drakormissile_release(void)
 {
 }
 
+#pragma opt_common_subs off
 void drakormissile_startActiveLaunch(int obj)
 {
-    u8* p = ((GameObject*)obj)->extra;
     void* light;
+    u8* p = ((GameObject*)obj)->extra;
 
     ObjHits_EnableObject(obj);
     *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_HOMING;
@@ -103,6 +104,7 @@ void drakormissile_startActiveLaunch(int obj)
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
+#pragma opt_common_subs reset
 
 #pragma fp_contract off
 #pragma opt_common_subs off
