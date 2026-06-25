@@ -233,8 +233,8 @@ void invhit_update(int* obj)
     case 7:
         {
             char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-            char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
             char* ownerHitSlot;
+            char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
             int j;
 
             j = 0;
