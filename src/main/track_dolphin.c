@@ -2882,11 +2882,9 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
                     nx = (hitX - cx) / r;
                     ny = (hitY - cy) / r;
                     dot = -(hitX * nx + hitY * ny);
-                    vy4 = p4[1];
-                    vy5 = p5[1];
-                    proj = dot + (nx * vy4 + ny * vy5);
-                    p4[1] = vy4 - proj * nx;
-                    p5[1] = vy5 - proj * ny;
+                    proj = dot + (nx * p4[1] + ny * p5[1]);
+                    p4[1] = p4[1] - proj * nx;
+                    p5[1] = p5[1] - proj * ny;
                     step8 = lbl_803DECC8;
                     step_x = step8 * nx;
                     step_y = step8 * ny;
