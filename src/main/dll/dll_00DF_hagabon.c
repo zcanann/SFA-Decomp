@@ -222,8 +222,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         ((GameObject*)obj)->anim.velocityZ += lbl_803E2624 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ);
     }
 
-    damp = lbl_803E2630;
-    ((GameObject*)obj)->anim.velocityX *= damp;
+    ((GameObject*)obj)->anim.velocityX *= (damp = lbl_803E2630);
     ((GameObject*)obj)->anim.velocityY *= damp;
     ((GameObject*)obj)->anim.velocityZ *= damp;
 
