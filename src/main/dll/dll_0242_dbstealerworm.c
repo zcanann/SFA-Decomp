@@ -2322,16 +2322,16 @@ int dbstealerworm_stateHandlerA0C(int obj, int baddie, f32 t)
     int n;
     int q;
     int* objs;
+    int best;
     int player;
     int o;
-    int best;
     int i;
     int tmpB;
     int tmpA;
+    f32 bestD;
     f32 frac;
     f32 ratio;
     f32 ds;
-    f32 bestD;
     int msg0[3];
     int msgA[3];
     int msgB[3];
