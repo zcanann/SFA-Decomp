@@ -883,10 +883,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04)
     {
+        f32 r;
         f32 v = interpolate(((EarthWarriorSub*)q)->unk408 - ((EarthWarriorState*)state)->baddie.animSpeedC,
                             ((EarthWarriorSub*)q)->unk438, timeDelta);
-        f32 r = lbl_803E834C * timeDelta;
-        r = (v < r) ? r : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
+        r = (v < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
         if (((EarthWarriorSub*)q)->frameCounter >= 0x96 && r > lbl_803E8304)
         {
             r = lbl_803E8314 * -r;
@@ -894,19 +894,17 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         ((EarthWarriorState*)state)->baddie.animSpeedC += r;
         {
             f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
-            f32 t = **(f32**)&((EarthWarriorSub*)q)->configRow;
-            t = (vv < t) ? t : ((vv > ((EarthWarriorSub*)q)->unk404) ? ((EarthWarriorSub*)q)->unk404 : vv);
-            ((EarthWarriorState*)state)->baddie.animSpeedC = t;
+            f32 lo = **(f32**)&((EarthWarriorSub*)q)->configRow;
+            ((EarthWarriorState*)state)->baddie.animSpeedC =
+                (vv < lo) ? lo : ((vv > ((EarthWarriorSub*)q)->unk404) ? ((EarthWarriorSub*)q)->unk404 : vv);
         }
         ((EarthWarriorState*)state)->baddie.animSpeedB = lbl_803E8304;
     }
     else
     {
-        f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
         f32 h = ((EarthWarriorSub*)q)->unk404;
-        f32 t = -h;
-        t = (vv < t) ? t : ((vv > h) ? h : vv);
-        ((EarthWarriorState*)state)->baddie.animSpeedC = t;
+        f32 vv = ((EarthWarriorState*)state)->baddie.animSpeedC;
+        ((EarthWarriorState*)state)->baddie.animSpeedC = (vv < -h) ? -h : ((vv > h) ? h : vv);
     }
     ((EarthWarriorState*)state)->baddie.animSpeedA += interpolate(
         ((EarthWarriorState*)state)->baddie.animSpeedC - ((EarthWarriorState*)state)->baddie.animSpeedA,
