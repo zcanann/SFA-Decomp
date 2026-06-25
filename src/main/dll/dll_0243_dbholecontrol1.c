@@ -592,13 +592,15 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     extern int*ObjGroup_GetObjects(int, int*);
     extern void ObjMsg_SendToObjects(int, int, int, int, int);
     extern int lbl_803DDCE0;
+    int newObj;
+    void* res;
+    int* objs;
+    int count;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        void* res;
-        int newObj;
         switch (animUpdate->eventIds[i])
         {
         case 1:
@@ -620,8 +622,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (GameBit_Get(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
-        int count;
-        int* objs = ObjGroup_GetObjects(36, &count);
+        objs = ObjGroup_GetObjects(36, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
         while (count-- != 0)
         {
