@@ -213,23 +213,8 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     }
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
-    {
-        f32 a = *(f32*)((char*)obj + 36);
-        f32 b = ((GameObject*)obj)->anim.velocityY;
-        f32 c = ((GameObject*)obj)->anim.velocityZ;
-        SidekickBallState* st = ((GameObject*)obj)->extra;
-        st->ballMode = SIDEKICK_BALL_THROWN;
-        st->fadeTimer = lbl_803E369C;
-        *(f32*)((char*)obj + 36) = a;
-        ((GameObject*)obj)->anim.velocityY = b;
-        ((GameObject*)obj)->anim.velocityZ = c;
-        ObjHits_EnableObject(obj);
-        ObjHits_SyncObjectPositionIfDirty(obj);
-        st->hittableLatch = 1;
-        st->launchX = ((GameObject*)obj)->anim.localPosX;
-        st->launchY = ((GameObject*)obj)->anim.localPosY;
-        st->launchZ = ((GameObject*)obj)->anim.localPosZ;
-    }
+    fn_801796BC(obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
+                ((GameObject*)obj)->anim.velocityZ);
     goto end;
 
 fading:
