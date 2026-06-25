@@ -1817,8 +1817,8 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
 int mapCoordsToId(int x, int z, int layerIdx)
 {
     int x0, z0;
-    int x1;
     s8* layers;
+    int x1;
     s16* rects;
     u8* bits;
     int id;
@@ -1828,8 +1828,9 @@ int mapCoordsToId(int x, int z, int layerIdx)
     layer = curMapLayer + (&lbl_803DB624)[layerIdx];
     rects = (s16*)gShaderMapRomBuffers[1];
     bits = (u8*)gShaderMapRomBuffers[4];
+    id = 0;
     layers = (s8*)gShaderMapRomBuffers[3];
-    for (id = 0; id < 128; id++)
+    for (; id < 128; id++)
     {
         if (layer == layers[0])
         {
