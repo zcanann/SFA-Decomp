@@ -561,8 +561,8 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
 {
     f32 speed;
     f32 planeX;
-    f32 planeY;
     f32 planeZ;
+    f32 planeY;
     f32 planeW;
     f32 response[3];
     f32 plane[4];
