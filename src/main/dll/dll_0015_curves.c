@@ -427,8 +427,8 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             }
             if ((s32)(collision->flags & 0x8000) != 0)
             {
-                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
-                                 (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
+                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]),
+                                 (localZ[0] + localZ[idx1]) - (localZ[idx3] + localZ[idx2]));
                 ((GameObject*)obj)->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
@@ -1452,13 +1452,13 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
     extern int ObjHits_IsObjectEnabled(int obj);
     f32 r;
-    f32 v;
     f32 maxX;
     f32 minX;
     f32 maxY;
     f32 minY;
     f32 maxZ;
     f32 minZ;
+    f32 v;
     f32* pin;
     int idx3;
     int byteOff;
@@ -1529,11 +1529,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         byteOff = 0;
         ptsRead = pts;
         ptsWalk = ptsRead;
+        i = 0;
         radWrite = radii;
         radSrc = state;
         radDst = radii;
         c = lbl_803E06C0;
-        for (i = 0; i < (int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
+        for (; i < (int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             pin = (f32*)((u8*)state->segmentLocalPoints + byteOff);
             Matrix_TransformPoint(m, pin[0], pin[1], pin[2], ptsWalk,
