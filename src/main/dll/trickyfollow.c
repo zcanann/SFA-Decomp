@@ -847,11 +847,11 @@ state_selected:
                 type = *(s8*)((u8*)route->nodeA0 + 0x1a);
                 switch (type)
                 {
-                case 5:
-                    ((TrickyState*)state)->unk09 = 0xb;
-                    break;
                 case 1:
                     ((TrickyState*)state)->unk09 = 8;
+                    break;
+                case 5:
+                    ((TrickyState*)state)->unk09 = 0xb;
                     break;
                 case 6:
                     ((TrickyState*)state)->unk09 = 0xd;
