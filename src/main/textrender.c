@@ -1298,7 +1298,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 }
 
 #pragma dont_inline off
-#pragma optimization_level 2
+#pragma optimization_level 1
 void gameTextSetWindowStrPos(int idx, int x, int y)
 {
     if (gameTextDrawFunc != NULL)
@@ -2832,10 +2832,9 @@ void gameTextInitFn_8001c794(void)
     src = gGameTextBoxCornerTexSrc;
     for (i = 0; i < 4; i++)
     {
-        x = 0;
-        for (j = 0; j < 2; j++)
+        x0 = 0;
+        for (x = 0; x < 16; x += 8)
         {
-            x0 = (x + 0) * 2;
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
@@ -2863,7 +2862,7 @@ void gameTextInitFn_8001c794(void)
             dst[13] = *(u16*)(rowBase + x1);
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
-            x0 = (x + 4) * 2;
+            x0 += 8;
             x1 = (x + 5) * 2;
             x2 = (x + 6) * 2;
             x3 = (x + 7) * 2;
@@ -2892,7 +2891,7 @@ void gameTextInitFn_8001c794(void)
             dst[30] = *(u16*)(rowBase + x2);
             dst[31] = *(u16*)(rowBase + x3);
             dst += 32;
-            x += 8;
+            x0 += 8;
         }
         y += 4;
     }
@@ -2905,10 +2904,9 @@ void gameTextInitFn_8001c794(void)
     src = lbl_802CA100;
     for (i = 0; i < 5; i++)
     {
-        x = 0;
-        for (j = 0; j < 5; j++)
+        x0 = 0;
+        for (x = 0; x < 20; x += 4)
         {
-            x0 = (x + 0) * 2;
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
             x3 = (x + 3) * 2;
@@ -2937,7 +2935,7 @@ void gameTextInitFn_8001c794(void)
             dst[14] = *(u16*)(rowBase + x2);
             dst[15] = *(u16*)(rowBase + x3);
             dst += 16;
-            x += 4;
+            x0 += 8;
         }
         y += 4;
     }
