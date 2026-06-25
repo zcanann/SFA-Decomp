@@ -2255,8 +2255,9 @@ int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t)
     }
     else if (*(void**)&sub->linkedObj == NULL)
     {
-        d = (s16)-(lbl_803E6328 * ((BaddieState*)baddie)->animSpeedA);
-        flag = (s16)-(lbl_803E6328 * ((BaddieState*)baddie)->animSpeedB);
+        d = -(lbl_803E6328 * ((BaddieState*)baddie)->animSpeedA);
+        flag = -(lbl_803E6328 * ((BaddieState*)baddie)->animSpeedB);
+        d = (s16)d;
         if (d < -0x500)
         {
             d = -0x500;
@@ -2266,6 +2267,7 @@ int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t)
             d = 0x500;
         }
         sa = d;
+        flag = (s16)flag;
         if (flag < -0x500)
         {
             flag = -0x500;
