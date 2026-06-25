@@ -20,7 +20,7 @@
 #include "dolphin/os/OSCache.h"
 extern int mmAlloc(int size, int pool, int tag);
 
-extern int return0_80060B90(void);
+extern int return0_80060B90(void* blk);
 extern void* fn_800606DC(int* obj, int idx);
 extern void* fn_800606FC(int* obj, int idx);
 extern void* fn_8006070C(int* obj, int idx);
@@ -240,7 +240,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
         }
         edgeData += 2;
     }
-    *(int*)block = return0_80060B90();
+    *(int*)block = return0_80060B90((void*)block);
 }
 #pragma opt_dead_assignments reset
 
