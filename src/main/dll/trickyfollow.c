@@ -991,11 +991,11 @@ state_selected:
             len = sqrtf(dx * dx + dz * dz);
             *(f32*)(state + 0x64) = len / lbl_803E24A4;
             *(f32*)(state + 0x68) = lbl_803E23DC;
-            *(u32*)(state + 0x74) = *(u32*)&((GameObject*)obj)->anim.worldPosX;
-            *(u32*)(state + 0x70) = *(u32*)&((GameObject*)obj)->anim.worldPosY;
-            *(u32*)(state + 0x78) = *(u32*)&((GameObject*)obj)->anim.worldPosZ;
-            *(u32*)(state + 0x7c) = *(u32*)&((GameObject*)node)->anim.rootMotionScale;
-            *(u32*)(state + 0x80) = *(u32*)&((GameObject*)node)->anim.localPosY;
+            *(f32*)(state + 0x74) = ((GameObject*)obj)->anim.worldPosX;
+            *(f32*)(state + 0x70) = ((GameObject*)obj)->anim.worldPosY;
+            *(f32*)(state + 0x78) = ((GameObject*)obj)->anim.worldPosZ;
+            *(f32*)(state + 0x7c) = ((GameObject*)node)->anim.rootMotionScale;
+            *(f32*)(state + 0x80) = ((GameObject*)node)->anim.localPosY;
             k = *(f32*)(state + 0x64);
             *(f32*)(state + 0x6c) =
                 -(gTrickyFollowArcCoefficient * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
@@ -1024,7 +1024,7 @@ state_selected:
         *(f32*)(state + 0x68) = *(f32*)(state + 0x68) + timeDelta;
         if (*(f32*)(state + 0x68) >= *(f32*)(state + 0x64))
         {
-            *(u32*)&((GameObject*)obj)->anim.localPosY = *(u32*)((u8*)route->nodeA0 + 0xc);
+            ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)route->nodeA0 + 0xc);
             ((TrickyState*)state)->unk3C = lbl_803E23E8;
             ((TrickyState*)state)->unk09 = 7;
         }
