@@ -1855,11 +1855,11 @@ void andross_update(int obj)
         sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
         if (0x8000 < sval)
         {
-            sval = sval + 1;
+            sval = sval - 0xffff;
         }
         if (sval < -0x8000)
         {
-            sval = sval + -1;
+            sval = sval + 0xffff;
         }
         ref = sval;
         if (ref < 0)
@@ -2109,11 +2109,11 @@ void andross_update(int obj)
     sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
     if (0x8000 < sval)
     {
-        sval = sval + 1;
+        sval = sval - 0xffff;
     }
     if (sval < -0x8000)
     {
-        sval = sval + -1;
+        sval = sval + 0xffff;
     }
     ((AndrossState*)state)->rotXSpeed =
         ((AndrossState*)state)->rotXSpeed +
