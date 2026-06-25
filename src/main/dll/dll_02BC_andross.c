@@ -818,7 +818,7 @@ void andross_update(int obj)
             }
         }
         ((AndrossState*)state)->timer -= framesThisStep;
-        if (((AndrossState*)state)->timer < 1)
+        if (((AndrossState*)state)->timer <= 0)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1068,7 +1068,7 @@ void andross_update(int obj)
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
-            if (((AndrossState*)state)->timer < 1)
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1177,7 +1177,7 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x466);
         if ((((AndrossState*)state)->actionTimer != 0) &&
             (((AndrossState*)state)->actionTimer -= framesThisStep,
-                ((AndrossState*)state)->actionTimer < 1))
+                ((AndrossState*)state)->actionTimer <= 0))
         {
             ((AndrossState*)state)->actionTimer = 0;
             GameBit_Set(0xf, 1);
@@ -1249,7 +1249,7 @@ void andross_update(int obj)
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
-            if (((AndrossState*)state)->timer < 1)
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1491,7 +1491,7 @@ void andross_update(int obj)
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
-            if (((AndrossState*)state)->timer < 1)
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1547,7 +1547,7 @@ void andross_update(int obj)
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
-            if (((AndrossState*)state)->timer < 1)
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1634,7 +1634,7 @@ void andross_update(int obj)
                 }
             }
             ((AndrossState*)state)->timer -= framesThisStep;
-            if (((AndrossState*)state)->timer < 1)
+            if (((AndrossState*)state)->timer <= 0)
             {
                 ref = randomGetRange(0, 5);
                 GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
@@ -1725,7 +1725,7 @@ void andross_update(int obj)
             }
         }
         ((AndrossState*)state)->timer -= framesThisStep;
-        if (((AndrossState*)state)->timer < 1)
+        if (((AndrossState*)state)->timer <= 0)
         {
             ref = randomGetRange(0, 5);
             GameBit_Set(ref + GAMEBIT_ANDROSS_HIT_CUE_BASE, 1);
