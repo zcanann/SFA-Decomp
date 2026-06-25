@@ -3007,7 +3007,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->lifetimeFrameLimit
             )
             ;
-            slot->scaleTarget = slot->scaleCurrent;
+            *(u16*)&slot->scaleTarget = scaleVal;
         }
         else
         {
