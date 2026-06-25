@@ -1132,13 +1132,13 @@ state_selected:
                     ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / len;
                     ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / len;
                 }
-                if (randomGetRange(0, 1) == 0)
+                if (randomGetRange(0, 1) != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
+                    objAnimFn_8013a3f0(obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
+                    objAnimFn_8013a3f0(obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
                 }
                 ((TrickyState*)state)->verticalDelta =
                     (*(f32*)((u8*)route->nodeA0 + 0xc) - ((GameObject*)obj)->anim.worldPosY) /
