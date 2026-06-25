@@ -320,7 +320,6 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
 {
     ExpgfxRuntimeDataLayout* runtime;
     s8* poolActiveCounts;
-    u32* poolSourceIds;
     u32* poolActiveMasks;
     s16* poolSlotTypeIds;
     u32* sourceIdWalk;
@@ -340,12 +339,11 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     runtime = EXPGFX_RUNTIME_DATA;
     foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
     foundPool = 0;
-    poolActiveCounts = runtime->poolActiveCounts;
-    poolSourceIds = runtime->poolSourceIds;
-    sourceIdWalk = poolSourceIds;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
     searchIndex = 0;
-    activeCountWalk = poolActiveCounts;
+    sourceIdWalk = runtime->poolSourceIds;
+    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+    activeCountWalk = runtime->poolActiveCounts;
+    poolActiveCounts = runtime->poolActiveCounts;
     for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT; batchGroup++)
     {
         for (batchSlot = 0; batchSlot < EXPGFX_POOL_SEARCH_BATCH_SIZE; batchSlot++)

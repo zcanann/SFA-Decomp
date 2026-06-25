@@ -2786,7 +2786,7 @@ void pauseMenuFn_80129ee0(void)
         pauseMenuFrameCounter = c;
     }
     {
-        s8 state = pauseMenuState;
+        int state = pauseMenuState;
         if (state == 1 || state < 0 || state >= 3)
         {
             int t = lbl_803DD78C + framesThisStep * 0x32;
@@ -2837,13 +2837,13 @@ void pauseMenuFn_80129ee0(void)
                         pauseMenuState = 4;
                         if (lbl_803DD8E0 == lbl_803DD7D6)
                         {
-                            gGameUiCurHintTextMap = hintTextMapFn_800ea264();
+                            hintTextMapFn_800ea264();
                         }
                         else
                         {
                             gameTextLoadDir(0xb);
-                            gGameUiCurHintTextMap = 0xb;
                         }
+                        gGameUiCurHintTextMap = 0xb;
                         lbl_803DD764 = lbl_803E1E60;
                     }
                     else
