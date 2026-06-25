@@ -248,9 +248,9 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8* arg)
 
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
     KytesMumSetup* setup;
     int i;
+    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
     Obj_GetPlayerObject();
     setup = ((KytesMumObject*)obj)->setup;
     ObjHits_EnableObject(obj);
