@@ -899,8 +899,8 @@ extern int return0_80060B90(void* blk);
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
     int blockId;
-    char* entry;
     s8* statusArr;
+    char* entry;
     int slotIdx;
     s16* arr;
     int i;
@@ -1480,9 +1480,9 @@ void unloadMap(void)
     s8* cur;
     int mapType;
     int j;
-    int k;
     int rb;
     char* p;
+    int k;
     int n;
 
     audioStopByMask(4);

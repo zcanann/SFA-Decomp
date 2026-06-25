@@ -183,7 +183,8 @@ void updateVisibleGeometry(void)
     tt = fn_80293AC4(fov);
     ratio = fn_80293D0C(fov) / tt;
     ratio2 = ratio * ratio;
-    tt = fn_80292248(sqrtf(changed_803DEC08.lo * (changed_803DEC08.lo * ratio2) + ratio2));
+    tt = changed_803DEC08.lo * ratio2;
+    tt = fn_80292248(sqrtf(changed_803DEC08.lo * tt + ratio2));
     ff = floor(tt);
     ss = fn_802943F4(tt);
     negff = -ff;
