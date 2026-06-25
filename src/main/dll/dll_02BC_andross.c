@@ -1587,7 +1587,7 @@ void andross_update(int obj)
         {
             if (((((void*)((AndrossState*)state)->unk14 == NULL) && (((AndrossState*)state)->actionTimer <= delayPair[(u8)work]))
                 &&
-                (delayPair[(u8)work] < (short)ref)) && (Obj_IsLoadingLocked() != 0))
+                ((short)ref > delayPair[(u8)work])) && (Obj_IsLoadingLocked() != 0))
             {
                 found = Obj_AllocObjectSetup(0x24, 0x819);
                 *(f32*)&((AndrossState*)found)->handObjB = ((AndrossState*)state)->cachedPosX;
