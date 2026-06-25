@@ -624,23 +624,21 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ExpgfxStaticDataLayout* staticData;
     ExpgfxRuntimeDataLayout* runtime;
     int next;
+    GameObject* player;
+    GameObject* tricky;
+    int pool;
+    int sky;
     ExpgfxBounds* bounds;
     f32* maxYPtr;
     f32* minZPtr;
     f32* maxZPtr;
     s16 slotIdx;
     ExpgfxSlot* slot;
-    ExpgfxQuadTemplateVertex *
-    template
-    ;
+    ExpgfxQuadTemplateVertex* template;
     s16 texT1;
     s16 texT0;
     s16 texS1;
     u8* nextBuf;
-    GameObject* player;
-    GameObject* tricky;
-    int pool;
-    int sky;
     f32* minYPtr;
     ExpgfxSourceObject* srcObj;
     u32 resource;
