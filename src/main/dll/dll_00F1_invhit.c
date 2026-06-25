@@ -173,7 +173,6 @@ void invhit_init(int* obj, u8* def)
 void invhit_update(int* obj)
 {
     InvHitState* state;
-    int i;
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -236,10 +235,11 @@ void invhit_update(int* obj)
             char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
             char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
             char* ownerHitSlot;
+            int j;
 
-            i = 0;
+            j = 0;
             ownerHitSlot = ownerHitState;
-            for (; i < *(s8*)(ownerHitState + 0x71); i++)
+            for (; j < *(s8*)(ownerHitState + 0x71); j++)
             {
                 if (*(int**)(ownerHitSlot + 0x7c) == obj)
                 {
@@ -260,6 +260,7 @@ void invhit_update(int* obj)
             f32 reach;
             int cnt;
             f32 thr;
+            int i;
 
             ((GameObject*)obj)->unkF8 -= framesThisStep;
             if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
