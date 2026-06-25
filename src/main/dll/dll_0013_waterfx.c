@@ -322,10 +322,10 @@ void waterfx_func05(int obj, int renderParam)
             fn_8007CAF4((int)gWaterfxRippleTexture);
         }
         {
-        int o32, o64;
-        for (i = 0, o32 = 0, o64 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
+        int oPool, o32, o64;
+        for (i = 0, oPool = 0, o32 = 0, o64 = oPool; i < WATERFX_POOL_SIZE; oPool += 0x1c, o32 += 0x20, o64 += 0x40, i++)
         {
-            WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
+            WaterEntry7* e = (WaterEntry7*)((char*)gWaterfxRipplePool + oPool);
             if (e->active != 0)
             {
                 setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
