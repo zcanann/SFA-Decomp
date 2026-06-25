@@ -1406,8 +1406,7 @@ void andross_update(int obj)
         velCalc3.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC468;
         velArg3 = velCalc3;
         arwarwing_setVelocity(ref, (int)&velArg3);
-        fval = -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
-        fval = (lbl_803E74EC < fval) ? fval : lbl_803E74EC;
+        fval = (lbl_803E74EC < -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E74EC;
         ((AndrossState*)state)->unkA8 = fval;
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
@@ -1424,8 +1423,7 @@ void andross_update(int obj)
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[21];
             arwarwing_addShield(*state, 0xfffffffc);
         }
-        fval = -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
-        fval = (lbl_803E74EC < fval) ? fval : lbl_803E74EC;
+        fval = (lbl_803E74EC < -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E74EC;
         ((AndrossState*)state)->unkA8 = fval;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1839,8 +1837,7 @@ void andross_update(int obj)
             velCalc2.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC488;
             velArg2 = velCalc2;
             arwarwing_setVelocity(ref, (int)&velArg2);
-            fval = -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8);
-            fval = (lbl_803E7538 < fval) ? fval : lbl_803E7538;
+            fval = (lbl_803E7538 < -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E7538;
             ((AndrossState*)state)->unkA8 = fval;
         }
         sval = ((AndrossState*)state)->targetRotX - ((GameObject*)obj)->anim.rotX;
