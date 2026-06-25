@@ -1051,30 +1051,27 @@ state_selected:
                 (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) +
                 *(f32*)(state + 0x78);
             v = *(f32*)(state + 0x64);
-            if (v > lbl_803E24B4)
+            if (v <= lbl_803E24B4)
             {
-                k = *(f32*)(state + 0x68);
-                if (k > lbl_803E24B8)
-                {
-                    if (k < v - lbl_803E24B8)
-                    {
-                        ((TrickyState*)state)->unk3C =
-                            ((k - lbl_803E24B8) / (v - lbl_803E24BC)) * lbl_803E24A8 +
-                            lbl_803E24AC;
-                    }
-                    else
-                    {
-                        ((TrickyState*)state)->unk3C = ((lbl_803E24B4 - v) + k) / lbl_803E24B4;
-                    }
-                }
-                else
-                {
-                    ((TrickyState*)state)->unk3C = k / lbl_803E24B4;
-                }
+                ((TrickyState*)state)->unk3C = *(f32*)(state + 0x68) / v;
             }
             else
             {
-                ((TrickyState*)state)->unk3C = *(f32*)(state + 0x68) / v;
+                k = *(f32*)(state + 0x68);
+                if (k <= lbl_803E24B8)
+                {
+                    ((TrickyState*)state)->unk3C = k / lbl_803E24B4;
+                }
+                else if (k >= v - lbl_803E24B8)
+                {
+                    ((TrickyState*)state)->unk3C = ((lbl_803E24B4 - v) + k) / lbl_803E24B4;
+                }
+                else
+                {
+                    ((TrickyState*)state)->unk3C =
+                        ((k - lbl_803E24B8) / (v - lbl_803E24BC)) * lbl_803E24A8 +
+                        lbl_803E24AC;
+                }
             }
             objHitDetectFn_80062e84(obj, 0, 0);
             ((TrickyState*)state)->unk353 = 0;
