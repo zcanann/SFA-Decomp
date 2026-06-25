@@ -419,13 +419,15 @@ void fn_8023A3E4(int objArg, int hitState)
     int hitType;
     int hitObj;
     int got;
-    GfHitState* s = (GfHitState*)hitState;
-    int obj = objArg;
+    GfHitState* s;
+    int obj;
     u8 adjusted;
     int texIdx;
     u8 state;
     ObjTextureRuntimeSlot* tex;
 
+    obj = objArg;
+    s = (GfHitState*)hitState;
     got = ObjHits_GetPriorityHit(objArg, &hitObj, &hitType, &hitVol);
     {
         u8 j;
@@ -474,15 +476,15 @@ void fn_8023A3E4(int objArg, int hitState)
         }
         case 3:
         {
-            u8* hp = (u8*)s + ht;
-            if (((GameObject*)hitObj)->anim.seqId == 0x605 &&
-                hp[0xB2] == 0 &&
-                hp[0xAE] != 0 &&
-                s->mode == 0xc)
+            if (((GameObject*)hitObj)->anim.seqId == 0x605)
             {
-                Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
-                s->hits[hitType] -= 1;
-                s->timer[hitType] = 0xc8;
+                u8* hp = (u8*)s + ht;
+                if (hp[0xB2] == 0 && hp[0xAE] != 0 && s->mode == 0xc)
+                {
+                    Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
+                    s->hits[hitType] -= 1;
+                    s->timer[hitType] = 0xc8;
+                }
             }
             break;
         }
