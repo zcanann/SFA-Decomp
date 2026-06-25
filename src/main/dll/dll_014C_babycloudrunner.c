@@ -987,11 +987,12 @@ typedef struct
  * despawn on its gamebit, run the captured/timer flow, follow its rom curve
  * while fleeing, hand off to the nearest sandworm, and once freed steer home
  * to the roost point. */
+#pragma opt_common_subs off
 void babycloudrunner_update(int* obj)
 {
     char* player;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
+    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     int found;
     u8* def2;
     int* near;
@@ -1203,3 +1204,4 @@ void babycloudrunner_update(int* obj)
         }
     }
 }
+#pragma opt_common_subs reset
