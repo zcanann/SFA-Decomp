@@ -2944,10 +2944,12 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                 for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
                     int i6 = (j & 3) * 2;
-                    int i4 = (j >> 2) * 0x20;
+                    int i4;
                     int i12;
                     u8 *p;
-                    p = src1 + i6; p += i4; p += i5;
+                    p = src1 + i6;
+                    i4 = (j >> 2) * 0x20;
+                    p += i4; p += i5;
                     i12 = (int)*(u16*)(src1 + 0xa) * im * 2;
                     p += i12;
                     texA = *(u16*)(p + 0x60);
