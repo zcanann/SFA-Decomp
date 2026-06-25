@@ -384,9 +384,11 @@ void wcpushblock_update(int obj)
         }
         break;
     case WCPUSHBLOCK_PHASE_SLIDING:
-        if (lbl_803E6D64 != ((GameObject*)obj)->anim.velocityX || lbl_803E6D64 != ((GameObject*)obj)->anim.velocityZ)
         {
-            f32 vx = ((GameObject*)obj)->anim.velocityX;
+        f32 zero = lbl_803E6D64;
+        f32 vx = ((GameObject*)obj)->anim.velocityX;
+        if (zero != vx || zero != ((GameObject*)obj)->anim.velocityZ)
+        {
             f32 speed = sqrtf(vx * vx +
                     ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) -
                 lbl_803E6D68;
@@ -403,6 +405,7 @@ void wcpushblock_update(int obj)
             Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, dist, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
+        }
         objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E6D64,
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moved = 0;
@@ -414,8 +417,8 @@ void wcpushblock_update(int obj)
                     ((GameObject*)obj)->anim.velocityX = gWcPushBlockSlideAccel * timeDelta + ((GameObject*)obj)->anim.velocityX;
                 }
                 {
-                    f32 tx = WCPUSHBLOCK_TARGET_X(state);
-                    if (((GameObject*)obj)->anim.localPosX >= tx)
+                    f32 tx;
+                    if (((GameObject*)obj)->anim.localPosX >= (tx = WCPUSHBLOCK_TARGET_X(state)))
                     {
                         ((GameObject*)obj)->anim.localPosX = tx;
                         moved = 1;
@@ -429,8 +432,8 @@ void wcpushblock_update(int obj)
                     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - gWcPushBlockSlideAccel * timeDelta;
                 }
                 {
-                    f32 tx = WCPUSHBLOCK_TARGET_X(state);
-                    if (((GameObject*)obj)->anim.localPosX <= tx)
+                    f32 tx;
+                    if (((GameObject*)obj)->anim.localPosX <= (tx = WCPUSHBLOCK_TARGET_X(state)))
                     {
                         ((GameObject*)obj)->anim.localPosX = tx;
                         moved = 1;
@@ -444,8 +447,8 @@ void wcpushblock_update(int obj)
                     ((GameObject*)obj)->anim.velocityZ = gWcPushBlockSlideAccel * timeDelta + ((GameObject*)obj)->anim.velocityZ;
                 }
                 {
-                    f32 tz = WCPUSHBLOCK_TARGET_Z(state);
-                    if (((GameObject*)obj)->anim.localPosZ >= tz)
+                    f32 tz;
+                    if (((GameObject*)obj)->anim.localPosZ >= (tz = WCPUSHBLOCK_TARGET_Z(state)))
                     {
                         ((GameObject*)obj)->anim.localPosZ = tz;
                         moved = 1;
@@ -459,8 +462,8 @@ void wcpushblock_update(int obj)
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - gWcPushBlockSlideAccel * timeDelta;
                 }
                 {
-                    f32 tz = WCPUSHBLOCK_TARGET_Z(state);
-                    if (((GameObject*)obj)->anim.localPosZ <= tz)
+                    f32 tz;
+                    if (((GameObject*)obj)->anim.localPosZ <= (tz = WCPUSHBLOCK_TARGET_Z(state)))
                     {
                         ((GameObject*)obj)->anim.localPosZ = tz;
                         moved = 1;
