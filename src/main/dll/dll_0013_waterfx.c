@@ -389,8 +389,8 @@ void waterfx_func05(int obj, int renderParam)
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
-            int o64 = i * 0x40;
             int o32 = i * 0x20;
+            int o64 = i * 0x40;
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor(obj, 0xff, 0xff, 0xff, (u8)g->active);
