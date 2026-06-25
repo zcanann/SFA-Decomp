@@ -1317,10 +1317,10 @@ void hudDrawFn_80121440(void)
     TrickyHud* base = (TrickyHud*)lbl_803A87F0;
     int *player;
     void *tricky;
+    int alpha;
     int itemTex = 0;
     int hcArg = 0;
     int krazoa = 0;
-    int alpha;
     int magicId;
     int i;
     f32 op;
