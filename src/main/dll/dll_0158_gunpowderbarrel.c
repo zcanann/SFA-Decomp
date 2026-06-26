@@ -632,10 +632,12 @@ void gunpowderbarrel_init(int obj, u8* def)
  * transitions against the player's carry state. */
 void gunpowderbarrel_update(int obj)
 {
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
     extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-    u8* player = Obj_GetPlayerObject();
-    int def = *(int*)&((GameObject*)obj)->anim.placementData;
+    u8* player;
+    int def;
+    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
 
     if (state->impactSoundCooldown <= lbl_803E4334)
     {
