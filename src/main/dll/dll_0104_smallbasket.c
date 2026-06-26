@@ -510,8 +510,8 @@ int smallbasket_resolveCollision(u8* obj)
     } HitDetectResults;
 
     u8* st;
-    f32* endY;
     f32* endZ;
+    f32* endY;
     s8* axes;
     int idx;
     u8 hit;
