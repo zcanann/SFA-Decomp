@@ -829,7 +829,6 @@ void shield_update(int* obj)
 {
     f32* tbl = lbl_80320A28;
     f32* state = ((GameObject*)obj)->extra;
-    int i;
 
     if (state[1] != state[2])
     {
@@ -880,6 +879,7 @@ void shield_update(int* obj)
         f32* pf;
         f32* t12;
         f32* t4;
+        int i;
         i = 0;
         ps = (s16*)state;
         t8 = tbl + 8;
