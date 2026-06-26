@@ -2414,8 +2414,6 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
         break;
     case 2:
         break;
-    case 3:
-        break;
     case 5:
         if (curve[14] > 0)
         {
