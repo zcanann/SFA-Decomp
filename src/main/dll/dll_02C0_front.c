@@ -1080,8 +1080,9 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
         box = (int)gameTextGetBox(v);
+        yb = *(s16*)(box + 0x16);
         xb = (int)mtx[3];
-        yb = *(s16*)(box + 0x16) + (int)mtx[7];
+        yb += (int)mtx[7];
         if ((hideHighlight & 0xff) == 0u)
         {
             drawTexture(gTitleScreenTextures[5], (f32)(int)(xb + 0x2f),
