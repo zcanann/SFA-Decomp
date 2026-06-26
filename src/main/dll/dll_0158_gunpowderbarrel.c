@@ -739,9 +739,10 @@ void gunpowderbarrel_update(int obj)
         state->fuseFrames += framesThisStep;
         state->hitRadius = state->radiusGrowthPerFrame * (f32)(u32)
         state->fuseFrames + lbl_803E42DC;
-        ObjHitbox_SetCapsuleBounds(obj, state->hitRadius,
-                                   (s32)(-state->hitRadius * lbl_803E4328),
-                                   (s32)(state->hitRadius * lbl_803E4328));
+        {
+            f32 r = state->hitRadius;
+            ObjHitbox_SetCapsuleBounds(obj, r, (s32)(-r * lbl_803E4328), (s32)(r * lbl_803E4328));
+        }
         if (*(void* *)&state->linkedTimerObject != NULL)
         {
             timer_clearManualFlags(state->linkedTimerObject);
