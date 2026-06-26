@@ -495,8 +495,7 @@ void expgfx_initSlotQuad(void* slotPtr)
         slot->velocityY += gExpgfxYVelocitySlowStep * timeDelta;
     }
 
-    step = gExpgfxSlotMotionStep;
-    slot->posX.value += slot->velocityX * step;
+    slot->posX.value += slot->velocityX * (step = gExpgfxSlotMotionStep);
     slot->posY.value += slot->velocityY * step;
     slot->posZ.value += slot->velocityZ * step;
 
