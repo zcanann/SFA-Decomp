@@ -31,8 +31,8 @@ void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
 void nw_ice_update(int* obj)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
+    NwIcePlacement* setup;
     NwIceState* state;
-    int* setup;
     int i;
     int** scan;
     int** objects;
@@ -72,12 +72,12 @@ void nw_ice_update(int* obj)
     else
     {
         objects = (int**)ObjGroup_GetObjects(0x3d, &count);
-        setup = *(int**)&((GameObject*)obj)->anim.placementData;
+        setup = *(NwIcePlacement**)&((GameObject*)obj)->anim.placementData;
         for (i = 0, scan = objects; i < count; scan++, i++)
         {
             candidate = *scan;
             if ((obj != candidate) &&
-                (((NwIcePlacement*)setup)->linkId ==
+                (setup->linkId ==
                     *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
             {
                 state->linkedObj = objects[i];
