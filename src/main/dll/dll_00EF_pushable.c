@@ -1096,12 +1096,11 @@ void pushable_hitDetect(int* obj)
         for (; i < state->pointCount; i++)
         {
             f32 y = wp[1];
-            s8 found;
+            s8 found = 0;
 
             *hp = y;
             acc = lbl_803E3528;
             cnt = hitDetectFn_80065e50(obj, wp[0], y, wp[2], (f32***)&list, -1, 0);
-            found = 0;
             if (cnt != 0)
             {
                 int j = 0;
