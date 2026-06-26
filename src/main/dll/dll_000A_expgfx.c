@@ -1955,7 +1955,7 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
             bit = 1 << (signedPoolIndex >> 1);
             highBits = (u32)((s32)bit >> 31);
             mask = &gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1];
-            if ((((u64)(((u64)(u32)(mask->highWord) << 32) | (u32)(mask->lowWord))) & ((u64)(((u64)(u32)(highBits) << 32) | (u32)(bit)))) != 0)
+            if ((((u64)(((u64)(u32)(highBits) << 32) | (u32)(bit))) & ((u64)(((u64)(u32)(mask->highWord) << 32) | (u32)(mask->lowWord)))) != 0)
             {
                 *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
                 if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A)
