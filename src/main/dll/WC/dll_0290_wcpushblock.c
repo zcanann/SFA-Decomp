@@ -543,9 +543,9 @@ void wcpushblock_update(int obj)
             {
                 WCPUSHBLOCK_IFACE->setTileA(0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                                             WCPUSHBLOCK_IFACE);
-                WCPUSHBLOCK_IFACE->worldPosToTileA(obj, &state->tileX, &state->tileY,
-                                                   ((GameObject*)obj)->anim.localPosX,
-                                                   ((GameObject*)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->worldPosToTileA(obj, ((GameObject*)obj)->anim.localPosX,
+                                                   ((GameObject*)obj)->anim.localPosZ,
+                                                   &state->tileX, &state->tileY, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->setTileA(WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state),
                                             WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
             }
@@ -553,9 +553,9 @@ void wcpushblock_update(int obj)
             {
                 WCPUSHBLOCK_IFACE->setTileB(0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
                                             WCPUSHBLOCK_IFACE);
-                WCPUSHBLOCK_IFACE->worldPosToTileB(obj, &state->tileX, &state->tileY,
-                                                   ((GameObject*)obj)->anim.localPosX,
-                                                   ((GameObject*)obj)->anim.localPosZ, WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->worldPosToTileB(obj, ((GameObject*)obj)->anim.localPosX,
+                                                   ((GameObject*)obj)->anim.localPosZ,
+                                                   &state->tileX, &state->tileY, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->setTileB(WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state),
                                             WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
             }

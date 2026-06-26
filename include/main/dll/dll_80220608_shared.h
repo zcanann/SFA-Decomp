@@ -180,7 +180,7 @@ typedef struct WCLevelContInterface {
     u8 pad00[0x20];
     void (*tileAToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
                             WCLevelContInterface *iface);
-    void (*worldPosToTileA)(int obj, s16 *outTileX, s16 *outTileY, f32 x, f32 z,
+    void (*worldPosToTileA)(int obj, f32 x, f32 z, s16 *outTileX, s16 *outTileY,
                             WCLevelContInterface *iface);
     void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface *iface);
     int (*getTileA)(int tileX, int tileY, WCLevelContInterface *iface);
@@ -192,7 +192,7 @@ typedef struct WCLevelContInterface {
                       int dy, WCLevelContInterface *iface);
     void (*tileBToWorldPos)(int obj, int tileX, int tileY, f32 *outX, f32 *outZ,
                             WCLevelContInterface *iface);
-    void (*worldPosToTileB)(int obj, s16 *outTileX, s16 *outTileY, f32 x, f32 z,
+    void (*worldPosToTileB)(int obj, f32 x, f32 z, s16 *outTileX, s16 *outTileY,
                             WCLevelContInterface *iface);
     void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface *iface);
     int (*getTileB)(int tileX, int tileY, WCLevelContInterface *iface);
