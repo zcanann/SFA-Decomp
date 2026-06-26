@@ -164,9 +164,10 @@ void fn_8014F620(int obj, WispBaddieState* state)
             ((GameObject*)obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
+        wave = (lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) -
+                ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) -
-                ((GameObject*)obj)->anim.localPosY) * lbl_803E26E8 +
+            lbl_803E26E8 * wave +
             ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityZ =
             lbl_803E26E8 * (state->playerObj->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) +
@@ -179,9 +180,9 @@ void fn_8014F620(int obj, WispBaddieState* state)
             ((GameObject*)obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
+        wave = (lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - ((GameObject*)obj)->anim.localPosY) *
-            lbl_803E26E8 +
+            lbl_803E26E8 * wave +
             ((GameObject*)obj)->anim.velocityY;
         ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (((RomCurveWalker*)curve)->posZ - ((GameObject*)obj)->anim.localPosZ)
             +
