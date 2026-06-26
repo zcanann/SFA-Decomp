@@ -72,13 +72,13 @@ void cloudprisoncontrol_update(int obj)
     int target;
     int data;
     int msg[2];
-    int found;
     int i;
     int n;
     int idx;
     int dval;
     int m;
     int* p;
+    int found;
 
     data = 0;
     if (lbl_803DBE08 != 0)
