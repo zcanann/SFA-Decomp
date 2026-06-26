@@ -1718,7 +1718,8 @@ extern inline float sqrtf(float x)
 }
 
 extern const f32 CPUFifo_803DED38;
-extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
+extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern const f32 lbl_803DED2C;
 extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
 extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
@@ -1790,6 +1791,7 @@ extern int testAndSet_onlyUseHeap3(int v);
 extern float fn_802943F4(float x);
 extern double floor(double);
 extern f32 __PADFixBits;
+extern const f32 Yachuff_803DEDE0;
 extern f32 gNewShadowPlacements[];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
@@ -1835,14 +1837,14 @@ void initFn_8006d020(void)
             {
                 f32 mx, mz, tmp, d;
                 mx = __fabsf(*p1 - o[1]);
-                tmp = __fabsf((1.0f + *p1) - o[1]);
+                tmp = __fabsf((lbl_803DED2C + *p1) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = __fabsf((*p1 - 1.0f) - o[1]);
+                tmp = __fabsf((*p1 - lbl_803DED2C) - o[1]);
                 if (tmp < mx) mx = tmp;
                 mz = __fabsf(*p2 - o[2]);
-                tmp = __fabsf((1.0f + *p2) - o[2]);
+                tmp = __fabsf((lbl_803DED2C + *p2) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = __fabsf((*p2 - 1.0f) - o[2]);
+                tmp = __fabsf((*p2 - lbl_803DED2C) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = sqrtf(mx * mx + mz * mz);
                 if (d < *p4 + o[3]) collide = 1;
@@ -1870,8 +1872,8 @@ void initFn_8006d020(void)
                 char* dst = (char*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
                     + (col & 3) * 8 + (col >> 2) * 0x200);
                 fn_8006CD20(gNewShadowPlacements, placed, &o1, &o2,
-                            row * 0.015625f,
-                            col * 0.015625f,
+                            row * Yachuff_803DEDE0,
+                            col * Yachuff_803DEDE0,
                             tex);
                 hi = (int)(padFix * o2);
                 lo = (int)(padFix * o1);
@@ -2392,7 +2394,7 @@ extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
 extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern f32 lbl_803DED0C, lbl_803DED10;
 extern const f32 lbl_803DED14, Chan_803DED18;
-extern f32 Enabled_803DED20, BarnacleEnabled_803DED24, lbl_803DED2C;
+extern f32 Enabled_803DED20, BarnacleEnabled_803DED24;
 extern void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
@@ -2527,7 +2529,7 @@ extern void GXSetScissor(int a, int b, int c, int d);
 extern void setDisplayCopyFilter(void);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
-extern f32 lbl_803DED2C, gNewShadowFovY, lbl_803DED34;
+extern f32 gNewShadowFovY, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
 extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
