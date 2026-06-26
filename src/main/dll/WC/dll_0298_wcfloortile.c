@@ -535,10 +535,13 @@ void arwarwing_readControls(int obj, int state)
             ((ArwingState*)state)->hitShake = 0;
             (*gPathControlInterface)->attachObject((void*)obj, ((ArwingState*)state)->pathBlock);
         }
-        ((ArwingState*)state)->stickX =
-            ((ArwingState*)state)->stickX * (lbl_803E6ED0 - tv) + nx * tv;
-        ((ArwingState*)state)->stickY =
-            ((ArwingState*)state)->stickY * (lbl_803E6ED0 - tv) + ny * tv;
+        {
+            f32 inv;
+            ((ArwingState*)state)->stickX =
+                ((ArwingState*)state)->stickX * (inv = lbl_803E6ED0 - tv) + nx * tv;
+            ((ArwingState*)state)->stickY =
+                ((ArwingState*)state)->stickY * inv + ny * tv;
+        }
     }
     ((ArwingState*)state)->rTriggerTrim = (f32)(u32)(u8)
     padGetRTrigger(0) / lbl_803E6ED4;
