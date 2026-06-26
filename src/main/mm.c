@@ -1049,7 +1049,7 @@ void* stackCreate(int count, int size)
     *(s16*)(s + 0xc) = size;
     *(s16*)(s + 0xe) = count;
     *(u16*)(s + 0x10) = 0;
-    *(int*)(s + 4) = *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20 + (int)s;
+    *(int*)(s + 4) = (int)s + *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20;
     first = (void**)(s + 0x20);
     cur = first;
     next = (u8*)first + size;
