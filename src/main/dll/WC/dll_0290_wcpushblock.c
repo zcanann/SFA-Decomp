@@ -406,8 +406,8 @@ void wcpushblock_update(int obj)
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
         }
-        objMove(obj, timeDelta * ((GameObject*)obj)->anim.velocityX, lbl_803E6D64,
-                timeDelta * ((GameObject*)obj)->anim.velocityZ);
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E6D64,
+                ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moved = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
