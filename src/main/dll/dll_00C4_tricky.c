@@ -1576,8 +1576,7 @@ void Tricky_update(int obj)
     {
         p = state + 0x80c;
         sfx2 = 0;
-        count = *(s8*)(p + 0x1b);
-        for (i = 0; i < count; i++)
+        for (i = 0, count = *(s8*)(p + 0x1b); i < count; i++)
         {
             if (*(s8*)(p + i + 0x13) < 3 && *(s8*)(p + i + 0x13) >= 0)
             {
