@@ -82,15 +82,15 @@ void waveanimator_setScale(int* obj, f32 fval)
 
 void fn_801923F8(int* cfgArg)
 {
+    int row;
+    int heightIdx;
     int i;
     int j;
     int x;
     int stepX;
     int y;
-    int stepY;
-    int heightIdx;
-    int row;
     int phaseIdx;
+    int stepY;
     f32 a;
     f32 waveDivisor;
     f32 waveScale;
@@ -125,18 +125,18 @@ void fn_801923F8(int* cfgArg)
             f32 s2;
             a = cfg->ampY * s1;
             s2 = mathSinf(xv / waveDivisor);
-            ((f32*)lbl_803DDAF4)[row] = cfg->ampX * s2 + a;
-            if (((f32*)lbl_803DDAF4)[row] < cfg->minHeight)
+            *(f32*)((u8*)lbl_803DDAF4 + row) = cfg->ampX * s2 + a;
+            if (*(f32*)((u8*)lbl_803DDAF4 + row) < cfg->minHeight)
             {
-                cfg->minHeight = ((f32*)lbl_803DDAF4)[row];
+                cfg->minHeight = *(f32*)((u8*)lbl_803DDAF4 + row);
             }
-            if (((f32*)lbl_803DDAF4)[row] > cfg->maxHeight)
+            if (*(f32*)((u8*)lbl_803DDAF4 + row) > cfg->maxHeight)
             {
-                cfg->maxHeight = ((f32*)lbl_803DDAF4)[row];
+                cfg->maxHeight = *(f32*)((u8*)lbl_803DDAF4 + row);
             }
             y += stepY;
-            row++;
-            heightIdx++;
+            row += 4;
+            heightIdx += 4;
         }
         x += stepX;
     }
