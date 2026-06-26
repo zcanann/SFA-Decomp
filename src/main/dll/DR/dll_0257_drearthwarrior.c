@@ -815,11 +815,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
             hitState->suppressOutgoingHits = 0;
         }
         {
-            f32 m1 = lbl_803E8314;
             f32 m2;
-            ((EarthWarriorSub*)q)->unk428 *= m1;
-            m2 = lbl_803E8318;
-            ((EarthWarriorSub*)q)->unk42C *= m2;
+            f32 m1;
+            ((EarthWarriorSub*)q)->unk428 *= (m1 = lbl_803E8314);
+            ((EarthWarriorSub*)q)->unk42C *= (m2 = lbl_803E8318);
             ((EarthWarriorSub*)q)->unk430 *= m1;
             ((EarthWarriorSub*)q)->unk434 *= m2;
         }
@@ -883,10 +882,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
     }
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F1)->b04)
     {
-        f32 r;
-        f32 v = interpolate(((EarthWarriorSub*)q)->unk408 - ((EarthWarriorState*)state)->baddie.animSpeedC,
+        f32 r = interpolate(((EarthWarriorSub*)q)->unk408 - ((EarthWarriorState*)state)->baddie.animSpeedC,
                             ((EarthWarriorSub*)q)->unk438, timeDelta);
-        r = (v < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
+        r = (r < lbl_803E834C * timeDelta) ? lbl_803E834C * timeDelta : ((r > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : r);
         if (((EarthWarriorSub*)q)->frameCounter >= 0x96 && r > lbl_803E8304)
         {
             r = lbl_803E8314 * -r;

@@ -363,23 +363,23 @@ int ktrex_shouldAdvanceArenaPhase(void)
 {
     u8 a;
     u8 b;
-    int* s = gKTRexState;
+    KTRexArenaState* s = (KTRexArenaState*)gKTRexState;
     int r6;
-    r6 = *(u16*)((char*)s + 0xfa) & 1;
-    a = *(u8*)((char*)s + 0xfe);
-    b = *(u8*)((char*)s + 0xff);
+    r6 = s->timerFA & 1;
+    a = s->unkFE;
+    b = s->unkFF;
     if ((a & b) != 0)
     {
         if (r6 != 0)
         {
-            if (*(f32*)((char*)s + 0x8) < *(f32*)((char*)s + 0xf4))
+            if (s->laneLerpT < s->unkF4)
             {
                 return 1;
             }
         }
         else
         {
-            if (*(f32*)((char*)s + 0x8) > *(f32*)((char*)s + 0xf4))
+            if (s->laneLerpT > s->unkF4)
             {
                 return 1;
             }
