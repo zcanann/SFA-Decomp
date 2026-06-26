@@ -1516,10 +1516,10 @@ void sky2_onMapSetup(void)
     (&lbl_803DB610)[1] = -1;
     i = 0;
     slot = (void**)&gSky2State;
-    a = lbl_803DF190;
-    b = lbl_803DF194;
     for (; i < 2; i++)
     {
+        a = lbl_803DF190;
+        b = lbl_803DF194;
         if (slot[i] == NULL)
         {
             slot[i] = mmAlloc(792, 23, 0);
