@@ -75,9 +75,8 @@ extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
 void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u32 height)
 {
-    u32 halfWidth;
-    u32 halfHeight;
-    double lod;
+    int halfHeight;
+    int halfWidth;
     u32 kColor0;
     u32 kColor1;
     u32 kColor2;
@@ -141,19 +140,14 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     kColor2 = lbl_803E1D40;
     GXSetTevKColor(2, &kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
-    GXInitTexObj(&yTexObj, yBuf, width & 0xffff, height & 0xffff, 1, 0, 0, 0);
-    lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(&yTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXInitTexObj(&yTexObj, yBuf, width, height, 1, 0, 0, 0);
+    GXInitTexObjLOD(&yTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
     GXLoadTexObj(&yTexObj, 0);
-    halfWidth = (int)(short)width >> 1;
-    halfHeight = (int)(short)height >> 1;
-    GXInitTexObj(&uTexObj, uBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, 0);
-    lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(&uTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXInitTexObj(&uTexObj, uBuf, halfWidth = (short)width >> 1, halfHeight = (short)height >> 1, 1, 0, 0, 0);
+    GXInitTexObjLOD(&uTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
     GXLoadTexObj(&uTexObj, 1);
-    GXInitTexObj(&vTexObj, vBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, 0);
-    lod = (double)lbl_803E1D44;
-    GXInitTexObjLOD(&vTexObj, 0, 0, lod, lod, lod, 0, 0, 0);
+    GXInitTexObj(&vTexObj, vBuf, halfWidth, halfHeight, 1, 0, 0, 0);
+    GXInitTexObjLOD(&vTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
     GXLoadTexObj(&vTexObj, 2);
 }
 
