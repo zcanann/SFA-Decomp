@@ -111,10 +111,10 @@ void scarab_update(int obj)
     u32 money1;
     u32 money2;
     u32 money3;
-    int best;
-    int flag;
     int player;
     int state;
+    int best;
+    int flag;
     int ph;
     s16 mode;
     f32 bestDist;
