@@ -1049,25 +1049,10 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             {
                 u16 cost = node->hCost + node->gCost;
                 CurveHeapNode* queue = state->queue;
-                int pos;
-                u16 key;
-                u16 val;
-                int parent;
 
                 queue[++state->queueCount].value = (u16)(state->nodeCount - 1);
                 queue[state->queueCount].priority = (u16)(0xffff - cost);
-                pos = state->queueCount;
-                key = queue[pos].priority;
-                val = queue[pos].value;
-                queue[0].priority = 0xffff;
-                while (parent = pos >> 1, queue[parent].priority <= key)
-                {
-                    queue[pos].value = queue[parent].value;
-                    queue[pos].priority = queue[parent].priority;
-                    pos = parent;
-                }
-                queue[pos].priority = key;
-                queue[pos].value = val;
+                heapSiftUp(queue, state->queueCount);
                 state->pathCount = 0;
             }
             pathDirect = 0;
