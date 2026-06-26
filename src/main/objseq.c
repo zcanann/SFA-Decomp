@@ -2814,8 +2814,8 @@ int ObjSeq_update(u8* obj, f32 t)
                 if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
                 {
                     if (ObjAnim_SampleRootCurvePhase(
-                        sqrtf((px - prevX) * (px - prevX) +
-                            (pz - prevZ) * (pz - prevZ)),
+                        sqrtf((pz - prevZ) * (pz - prevZ) +
+                            (px - prevX) * (px - prevX)),
                         (ObjAnimComponent*)activeObj, &scratch[1]) == 0)
                     {
                         i = ((ObjSeqState*)seq)->curFrame - 1;
