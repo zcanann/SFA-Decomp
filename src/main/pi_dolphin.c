@@ -7313,8 +7313,9 @@ int initLoadFiles(void)
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
+        i = 0;
         rom = t->romList;
-        for (i = 0; i < 0x75; i++)
+        for (; i < 0x75; i++)
         {
             *rom = 0;
             if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
