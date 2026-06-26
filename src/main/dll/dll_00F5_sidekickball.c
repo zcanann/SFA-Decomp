@@ -117,20 +117,20 @@ void fn_80179678(int obj)
     state->hittableLatch = 0;
 }
 
-void fn_801796BC(int obj, f32 a, f32 b, f32 c)
+void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
 {
-    SidekickBallState* state = ((GameObject*)obj)->extra;
+    SidekickBallState* state = obj->extra;
     state->ballMode = SIDEKICK_BALL_THROWN;
     state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
-    ((GameObject*)obj)->anim.velocityY = b;
-    ((GameObject*)obj)->anim.velocityZ = c;
-    ObjHits_EnableObject(obj);
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    obj->anim.velocityY = b;
+    obj->anim.velocityZ = c;
+    ObjHits_EnableObject((int)obj);
+    ObjHits_SyncObjectPositionIfDirty((int)obj);
     state->hittableLatch = 1;
-    state->launchX = ((GameObject*)obj)->anim.localPosX;
-    state->launchY = ((GameObject*)obj)->anim.localPosY;
-    state->launchZ = ((GameObject*)obj)->anim.localPosZ;
+    state->launchX = obj->anim.localPosX;
+    state->launchY = obj->anim.localPosY;
+    state->launchZ = obj->anim.localPosZ;
 }
 
 void trickyBallFn_801793b8(int obj, u8* paramsRaw)
@@ -213,7 +213,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     }
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
-    fn_801796BC(obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
+    fn_801796BC((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
     goto end;
 
