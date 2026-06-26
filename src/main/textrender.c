@@ -1162,7 +1162,7 @@ void gameTextSetWindow(u8* textBox)
     }
 }
 
-void gameTextSetCursor(s16 x, s16 y, int flags)
+void gameTextSetCursor(u16 x, u16 y, int flags)
 {
     if (flags & 1)
     {
