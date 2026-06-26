@@ -22,7 +22,7 @@ size_t wcstombs(char* s, const wchar_t* pwcs, size_t n) {
         } else {
             result = unicode_to_UTF8(temp, *source++);
             if ((chars_written + result) <= n) {
-                strncpy(s + chars_written, temp, result);
+                memcpy(s + chars_written, temp, result);
                 chars_written += result;
             } else
                 break;
