@@ -63,9 +63,9 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
         GfxCmd entries[32];
     } buf;
     u8* tab = (u8*)(int)lbl_80318E40;
-    GfxCmd* e;
     GfxCmd* p;
-    u32 argY, argX, argZ;
+    GfxCmd* e;
+    u32 argY, argZ, argX;
     int argFlags;
     u32 fl;
 
