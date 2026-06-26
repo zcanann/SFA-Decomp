@@ -2771,6 +2771,7 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     int midY;
 
     alpha = *(u8*)(p + 0x1e);
+    alpha |= *(u8*)(p + 0x1e);
     x = *(s16*)(p + 0x14);
     y = *(s16*)(p + 0x16);
     halfW = ((x + *(u16*)(p + 0x8)) - *(s16*)(p + 0x14)) >> 1;
