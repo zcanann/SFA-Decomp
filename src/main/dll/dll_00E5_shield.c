@@ -891,12 +891,17 @@ void shield_update(int* obj)
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == 2102)
             {
-                pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
+                f32 c = fcos16(ps[26]);
+                c = c * lbl_803E33EC + lbl_803E33C4;
+                pf[9] = *t8 * c;
                 pf[5] = *t12;
             }
             else
             {
-                pf[9] = *tbl * ((lbl_803E33C4 + fcos16(ps[26])) * lbl_803E33A8);
+                f32 c = fcos16(ps[26]);
+                f32 sum = lbl_803E33C4 + c;
+                c = sum * lbl_803E33A8;
+                pf[9] = *tbl * c;
                 pf[5] = *t4;
             }
             ps++;
