@@ -115,11 +115,11 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     WCTempleBriSetup* setup = (WCTempleBriSetup*)((GameObject*)obj)->anim.placementData;
-    WCTempleBriState* state = ((GameObject*)obj)->extra;
     int model;
     int modelBase;
     int i;
     f32 waveScale;
+    WCTempleBriState* state = ((GameObject*)obj)->extra;
 
     animUpdate->sequenceEventActive = 0;
     animUpdate->activeHitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
