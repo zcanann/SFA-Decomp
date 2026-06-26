@@ -137,8 +137,8 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 {
 
     SidekickBallState* params = (SidekickBallState*)paramsRaw;
-    int* playerState;
     int* player;
+    int* playerState;
     s16 yItem;
     u32 btns;
     f32 lcl[6];
