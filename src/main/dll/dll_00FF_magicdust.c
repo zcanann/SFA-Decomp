@@ -139,8 +139,7 @@ void magicdust_update(int obj)
         if ((((MagicDustState*)state)->flags27A & 2) != 0)
         {
             *(short*)obj = *(short*)obj + framesThisStep * 0x100;
-            ((MagicDustState*)state)->ambientTimer -= framesThisStep;
-            if (((MagicDustState*)state)->ambientTimer < 0)
+            if ((((MagicDustState*)state)->ambientTimer -= framesThisStep) < 0)
             {
                 Sfx_PlayFromObject(obj, SFXen_statue_wave);
                 val = randomGetRange(0xf0, 300);
