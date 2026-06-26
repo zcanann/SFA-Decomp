@@ -1336,10 +1336,10 @@ int fn_80011EB0(RouteState* state, int count)
     f32 local[3];
     RouteNode startNode;
     RouteNode* cur;
+    int idx;
     RouteNode* cand;
     RouteNode* lastClear;
     RouteNode* node;
-    int idx;
     int i;
     int j;
 
