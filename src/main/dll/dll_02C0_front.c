@@ -1072,7 +1072,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                               (f32)(int)(yb - (i + 1) * 3),
                               (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
                               tex->width + (i + 1) * 8,
-                              (u32)(sc3 * gTitleScreenCursorY) + (i + 1) * 6 + 0x10, 4);
+                              (u32)(sc3 * gTitleScreenCursorY) + ((i + 1) * 6 + 0x10), 4);
             i++;
         }
         while (i < 4);
