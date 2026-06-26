@@ -209,6 +209,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     int objIdx;
     int* other;
     int gb;
+    u8 gbToggle;
     int active;
     int* list;
     int* player;
@@ -453,14 +454,16 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     if (*(s16*)(def + 0x20) != -1)
                     {
-                        GameBit_Set(*(s16*)(def + 0x20),
-                                    (u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c));
+                        gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x20));
+                        gbToggle ^= (u8) * (s16*)(def + 0x1c);
+                        GameBit_Set(*(s16*)(def + 0x20), gbToggle);
                     }
                 }
                 else if (*(s16*)(def + 0x1a) != -1)
                 {
-                    GameBit_Set(*(s16*)(def + 0x1a),
-                                (u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8));
+                    gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x1a));
+                    gbToggle ^= (u8)(*(s16*)(def + 0x1c) >> 8);
+                    GameBit_Set(*(s16*)(def + 0x1a), gbToggle);
                 }
                 if (sd <= lbl_803E3648)
                 {
@@ -517,14 +520,16 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     if (*(s16*)(def + 0x20) != -1)
                     {
-                        GameBit_Set(*(s16*)(def + 0x20),
-                                    (u8)GameBit_Get(*(s16*)(def + 0x20)) ^ (u8) * (s16*)(def + 0x1c));
+                        gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x20));
+                        gbToggle ^= (u8) * (s16*)(def + 0x1c);
+                        GameBit_Set(*(s16*)(def + 0x20), gbToggle);
                     }
                 }
                 else if (*(s16*)(def + 0x1a) != -1)
                 {
-                    GameBit_Set(*(s16*)(def + 0x1a),
-                                (u8)GameBit_Get(*(s16*)(def + 0x1a)) ^ (u8)(*(s16*)(def + 0x1c) >> 8));
+                    gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x1a));
+                    gbToggle ^= (u8)(*(s16*)(def + 0x1c) >> 8);
+                    GameBit_Set(*(s16*)(def + 0x1a), gbToggle);
                 }
                 switch (((GameObject*)obj)->anim.seqId)
                 {
