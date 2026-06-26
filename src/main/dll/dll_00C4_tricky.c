@@ -1856,6 +1856,12 @@ void tricky_handleDefeat(int obj, int state)
     }
 }
 
+struct TrickyCommandSpawnPair
+{
+    u32 a;
+    u32 b;
+};
+
 int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u32 mode)
 {
     u32 commandSpawnIds[2];
@@ -1877,8 +1883,7 @@ int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u3
 
     (void)state;
     parentSetup = *(int*)&((GameObject*)obj)->anim.placementData;
-    commandSpawnIds[0] = lbl_803E2558;
-    commandSpawnIds[1] = lbl_803E255C;
+    *(struct TrickyCommandSpawnPair*)commandSpawnIds = *(struct TrickyCommandSpawnPair*)&lbl_803E2558;
     rewardSpawnIds0 = lbl_803E2560;
     rewardTail.pair = lbl_803E2564;
     rewardTail.single = lbl_803E2568;
