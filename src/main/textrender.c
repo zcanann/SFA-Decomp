@@ -1780,10 +1780,10 @@ void gameTextRun(void)
         {
         case 3:
             {
-                u8 c0 = cmd->f4;
-                u8 c1 = cmd->f8;
-                u8 c2 = cmd->fc;
                 u8 c3 = cmd->f10;
+                u8 c2 = cmd->fc;
+                u8 c1 = cmd->f8;
+                u8 c0 = cmd->f4;
                 lbl_803DC9A7 = c0;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
@@ -1793,7 +1793,7 @@ void gameTextRun(void)
         case 4:
             {
                 int t1 = cmd->fc;
-                int t2 = cmd->f8;
+                s16 t2 = cmd->f8;
                 textWindow = gTextBoxes + cmd->f4 * 0x20;
                 *(s16*)(textWindow + 0x18) = t2;
                 *(s16*)(textWindow + 0x1a) = t1;
@@ -1839,9 +1839,12 @@ void gameTextRun(void)
             ((void (*)(void))cmd->f4)();
             break;
         case 10:
-            lbl_803DC9AA = (u16)cmd->f4;
-            lbl_803DC9A8 = (u16)cmd->f8;
-            break;
+            {
+                u16 b1 = cmd->f8;
+                lbl_803DC9AA = (u16)cmd->f4;
+                lbl_803DC9A8 = b1;
+                break;
+            }
         case 11:
             lbl_803DC9AA = 0;
             lbl_803DC9A8 = 0;
@@ -1850,14 +1853,22 @@ void gameTextRun(void)
             lbl_803DC984 = cmd->f4;
             break;
         case 14:
-            lbl_803DC992 = cmd->f4;
-            lbl_803DC991 = cmd->f8;
-            lbl_803DC990 = cmd->fc;
-            break;
+            {
+                u8 e2 = cmd->fc;
+                u8 e1 = cmd->f8;
+                u8 e0 = cmd->f4;
+                lbl_803DC992 = e0;
+                lbl_803DC991 = e1;
+                lbl_803DC990 = e2;
+                break;
+            }
         case 13:
-            gGameTextShadowOffsetX = cmd->f4;
-            gGameTextShadowOffsetY = cmd->f8;
-            break;
+            {
+                int sy = cmd->f8;
+                gGameTextShadowOffsetX = cmd->f4;
+                gGameTextShadowOffsetY = sy;
+                break;
+            }
         case 15:
             gameTextFonts = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->f4 * 0x28;
             gameTextCharset = cmd->f4;
@@ -1880,12 +1891,14 @@ void gameTextRun(void)
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
     textWindow = gTextBoxes + 0x1280;
-    for (i = 0x94; i > 0; i--)
+    i = 0x94;
+    do
     {
         textWindow -= 0x20;
         *(s16*)(textWindow + 0x18) = 0;
         *(s16*)(textWindow + 0x1a) = 0;
     }
+    while (i-- != 0);
     gCurTextBox = NULL;
 }
 
