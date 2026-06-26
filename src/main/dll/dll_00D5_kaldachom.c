@@ -110,9 +110,9 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     KaldaChomControl* control;
     int ref;
     u8* setup;
-    f32 h;
-    f32 spd;
     f32 r;
+    f32 spd;
+    f32 h;
 
     control = ((CampfireState*)state)->control;
     ref = *(int*)&((GameObject*)obj)->anim.placementData;
