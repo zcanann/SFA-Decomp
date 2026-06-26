@@ -578,7 +578,7 @@ void drakorhoverpad_updateMain(int obj)
                 yawDelta = 0x200;
             }
             c = (s16)yawDelta;
-            ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + c);
+            ((GameObject*)obj)->anim.rotX += (s16)c;
             if (((GameObject*)obj)->anim.rotY != 0)
             {
                 yawDelta = ((GameObject*)obj)->anim.rotY;
@@ -590,7 +590,7 @@ void drakorhoverpad_updateMain(int obj)
                 {
                     yawDelta = 0x100;
                 }
-                ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY - yawDelta);
+                ((GameObject*)obj)->anim.rotY -= (s16)yawDelta;
             }
             ((GameObject*)obj)->anim.rotZ = (s16)(c * lbl_803DC2FC);
         }
@@ -601,7 +601,7 @@ void drakorhoverpad_updateMain(int obj)
             curve->tangentZ * curve->tangentZ);
         yawDelta = (s16)((s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) -
             ((GameObject*)obj)->anim.rotX);
-        ((GameObject*)obj)->anim.rotY = getAngle(curve->tangentY, phase);
+        ((GameObject*)obj)->anim.rotY = (s16)getAngle(curve->tangentY, phase);
         if (yawDelta < -0x800)
         {
             yawDelta = -0x800;
@@ -621,7 +621,7 @@ void drakorhoverpad_updateMain(int obj)
         {
             c = 0x100;
         }
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + c);
+        ((GameObject*)obj)->anim.rotX += (s16)c;
         c = ((GameObject*)obj)->anim.rotY;
         if (c < -0x64)
         {
