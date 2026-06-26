@@ -2849,7 +2849,7 @@ void dll_0B_func05(void)
             feFlag = 0;
             emIdx = 0;
             emOff = 0;
-            for (; emIdx < ((ModgfxEffectSlot*)eff)->emitterCount; emIdx++, emOff += 0x18)
+            for (; emIdx < ((ModgfxEffectSlot*)eff)->emitterCount; emOff += 0x18, emIdx++)
             {
                 int flags;
                 if (*(s16*)((char*)eff + 0xfc) != *(u8*)(E9 + emOff + 0x16)) continue;
@@ -3112,11 +3112,14 @@ void dll_0B_func05(void)
                     }
                     else if (lbl_803DF434 == *(f32*)(E9 + emOff + 0x8))
                     {
-                        if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
+                        if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                         {
-                            tmpl.x = ((ModgfxEffectSlot*)eff)->posCurX;
-                            tmpl.y = ((ModgfxEffectSlot*)eff)->posCurY;
-                            tmpl.z = ((ModgfxEffectSlot*)eff)->posCurZ;
+                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + ((
+                                ModgfxEffectSlot*)eff)->posCurX;
+                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + ((
+                                ModgfxEffectSlot*)eff)->posCurY;
+                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + ((
+                                ModgfxEffectSlot*)eff)->posCurZ;
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
@@ -3125,12 +3128,9 @@ void dll_0B_func05(void)
                         }
                         else
                         {
-                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + ((
-                                ModgfxEffectSlot*)eff)->posCurX;
-                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + ((
-                                ModgfxEffectSlot*)eff)->posCurY;
-                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + ((
-                                ModgfxEffectSlot*)eff)->posCurZ;
+                            tmpl.x = ((ModgfxEffectSlot*)eff)->posCurX;
+                            tmpl.y = ((ModgfxEffectSlot*)eff)->posCurY;
+                            tmpl.z = ((ModgfxEffectSlot*)eff)->posCurZ;
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
                                 (*gPartfxInterface)->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
