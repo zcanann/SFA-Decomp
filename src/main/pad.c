@@ -275,6 +275,7 @@ int initControllers(void)
     PadStatusLite* statuses;
     s32 i;
 
+    heldButtons = gPadStateBlock;
     gPadResetMask = 0xF0000000;
     PADInit();
     PADRecalibrate(gPadResetMask);
@@ -290,7 +291,6 @@ int initControllers(void)
     repeatX = &gPadRepeatX;
     analogY = &gPadAnalogY;
     analogX = &gPadAnalogX;
-    heldButtons = gPadStateBlock;
     buttonsPressed = gPadStateBlock + 4;
     buttonsReleased = gPadStateBlock + 8;
     controlStick = gPadStateBlock + 12;
