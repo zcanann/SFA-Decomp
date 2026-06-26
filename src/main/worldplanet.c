@@ -581,11 +581,12 @@ void worldplanet_update(int obj)
             r = gWorldPlanetOrbitRadius;
             for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                s16* p = (s16*)ObjList_FindObjectById(tbl[b]);
-                int* off = &tbl[b + 5];
-                if (tbl[b] == 0x4300d)
+                int* row = &tbl[b];
+                s16* p = (s16*)ObjList_FindObjectById(row[0]);
+                int* off = &row[5];
+                if (row[0] == 0x4300d)
                 {
-                    *p = ang + tbl[b + 5] + 0x4000;
+                    *p = ang + row[5] + 0x4000;
                 }
                 else
                 {
