@@ -431,7 +431,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 5:
-                    if (((TriggerState*)state)->rangeSq != lbl_803E40D8)
+                    if (((TriggerState*)state)->rangeSq == lbl_803E40D8)
                     {
                         break;
                     }
