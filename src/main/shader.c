@@ -2266,8 +2266,9 @@ void mapLoadUnloadObjects(int flag)
     tp = (int*)(base + 0x41E0);
     for (i = 0; i < 5; i++)
     {
+        k = 0;
         q = (s16*)(*tp + 0x594);
-        for (k = 0; k < 3; k++)
+        for (; k < 3; k++)
         {
             s16 id = *q;
             if (id >= 0 && id < 80 && *(void**)(base + (0x83A8 + id * 4)) != 0)
