@@ -1916,14 +1916,8 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     int i;
     void (*vfn)(int, int, int, int, int, int);
 
-    if ((((GameObject*)obj)->objectFlags & 0x40) != 0) return;
-    if (((GameObject*)obj)->ownerObj == NULL)
-    {
-    }
-    else
-    {
-        return;
-    }
+    if ((((GameObject*)obj)->objectFlags & 0x40) != 0 ||
+        ((GameObject*)obj)->ownerObj != NULL) return;
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
     sub = *(void**)&((GameObject*)obj)->anim.parent;
     if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) return;
