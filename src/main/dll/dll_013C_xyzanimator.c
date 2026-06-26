@@ -102,10 +102,10 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     int edge;
     VertexS16* vtx;
 
-    triangleOffset = 0;
-    coordOffset = 0;
     edgeOffset = 0;
-    for (blockIndex = 0; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
+    blockIndex = 0;
+    triangleOffset = coordOffset = 0;
+    for (; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
