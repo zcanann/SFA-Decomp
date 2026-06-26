@@ -221,9 +221,7 @@ void pressureswitchfb_update(int obj)
     if ((((PressureswitchfbPlacement*)def)->enableGameBit == -1) || (GameBit_Get(((PressureswitchfbPlacement*)def)->enableGameBit) !=
         0))
     {
-        s8 c = *state - 1;
-        *state = c;
-        if (c < 0)
+        if (--*state < 0)
         {
             *state = 0;
         }
