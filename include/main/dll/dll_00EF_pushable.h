@@ -17,7 +17,7 @@ void FUN_801757ac(u64 param_1,double param_2,u32 param_3,u32 param_4,
                  int param_5);
 void FUN_80175ed4(int param_1);
 void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible);
-void pushable_hitDetect(int *obj);
+void pushable_hitDetect(int obj);
 void FUN_801765c8(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9);

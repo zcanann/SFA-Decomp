@@ -960,7 +960,7 @@ typedef struct
     f32 vz;
 } PushableObjPos;
 
-void pushable_hitDetect(int* obj)
+void pushable_hitDetect(int obj)
 {
     extern u32 fn_80174BFC(); /* #57 */
     f32* wp;
@@ -1028,7 +1028,7 @@ void pushable_hitDetect(int* obj)
             setMatrixFromObjectPos(mtx, &vec);
             Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
                                   (f32*)((char*)obj + 0x24), &tmpY, (f32*)((char*)obj + 0x2c));
-            objMove(obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
+            objMove((int*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, state);
@@ -1071,7 +1071,7 @@ void pushable_hitDetect(int* obj)
     }
     if ((state->flags & 2) != 0 || (state->flags & 4) != 0)
     {
-        Obj_BuildTransformMatrices(obj);
+        Obj_BuildTransformMatrices((int*)obj);
         i = 0;
         wp = wpos;
         w = wp;
@@ -1080,14 +1080,14 @@ void pushable_hitDetect(int* obj)
         {
             Obj_TransformLocalPointToWorld(((PushableState*)e)->cornerLocal[0].x, ((PushableState*)e)->cornerLocal[0].y,
                                            ((PushableState*)e)->cornerLocal[0].z,
-                                           w, w + 1, w + 2, obj);
+                                           w, w + 1, w + 2, (int*)obj);
             w += 3;
             e += 0xc;
         }
         hitDetect_calcSweptSphereBounds(sweep, (f32*)state->cornerWorld, wpos, (int*)&box, 4);
         sweep[1] = (int)((f32)sweep[1] - lbl_803E35BC);
         sweep[4] = (int)((f32)sweep[4] + lbl_803E35BC);
-        hitDetectFn_800691c0(obj, sweep, 1, 1);
+        hitDetectFn_800691c0((int*)obj, sweep, 1, 1);
         tmpY = lbl_803E3528;
         cnt2 = 0;
         cntE = 0;
@@ -1100,7 +1100,7 @@ void pushable_hitDetect(int* obj)
 
             *hp = y;
             acc = lbl_803E3528;
-            cnt = hitDetectFn_80065e50(obj, wp[0], y, wp[2], (f32***)&list, -1, 0);
+            cnt = hitDetectFn_80065e50((int*)obj, wp[0], y, wp[2], (f32***)&list, -1, 0);
             if (cnt != 0)
             {
                 int j = 0;
@@ -1129,7 +1129,7 @@ void pushable_hitDetect(int* obj)
                             o = *(u32*)(*(int*)(list + off) + 0x10);
                             if (o != 0)
                             {
-                                ObjHits_AddContactObject(o, (int)obj);
+                                ObjHits_AddContactObject(o, obj);
                             }
                             cnt2++;
                             found = 1;
@@ -1165,14 +1165,14 @@ void pushable_hitDetect(int* obj)
             state->flags = state->flags | 0xc;
         }
     }
-    Obj_BuildTransformMatrices(obj);
+    Obj_BuildTransformMatrices((int*)obj);
     i = 0;
     e = (u8*)state;
     for (; i < state->pointCount; i++)
     {
         Obj_TransformLocalPointToWorld(((PushableState*)e)->probeLocal[0].x, ((PushableState*)e)->probeLocal[0].y,
                                        ((PushableState*)e)->probeLocal[0].z,
-                                       (f32*)(e + 0x78), (f32*)(e + 0x7c), (f32*)(e + 0x80), obj);
+                                       (f32*)(e + 0x78), (f32*)(e + 0x7c), (f32*)(e + 0x80), (int*)obj);
         e += 0xc;
     }
 }
