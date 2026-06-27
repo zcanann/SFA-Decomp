@@ -599,7 +599,7 @@ void appleontree_update(int objArg)
     state = *(int*)&((GameObject*)obj)->extra;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     msg = 0;
-    if ((*(u8*)(state + 0x5a) & 4) != 0)
+    if ((((AppleOnTreeState*)state)->flags & 4) != 0)
     {
         while (val = ObjMsg_Pop((int)obj, &msg, 0x0, 0x0), val != 0)
         {
@@ -621,15 +621,15 @@ void appleontree_update(int objArg)
                         {
                             ObjHits_DisableObject((int)obj);
                         }
-                        *(u8*)(val + 0x5a) = *(u8*)(val + 0x5a) | 2;
+                        ((AppleOnTreeState*)val)->flags = ((AppleOnTreeState*)val)->flags | 2;
                     }
-                    *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) & ~4;
+                    ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags & ~4;
                 }
             }
         }
-        if ((*(u8*)(state + 0x5a) & 4) != 0) goto switchD_8017e864_caseD_7;
+        if ((((AppleOnTreeState*)state)->flags & 4) != 0) goto switchD_8017e864_caseD_7;
     }
-    if ((*(u8*)(state + 0x5a) & 2) == 0)
+    if ((((AppleOnTreeState*)state)->flags & 2) == 0)
     {
         ((AppleOnTreeState*)state)->elapsedTime = ((AppleOnTreeState*)state)->elapsedTime + timeDelta;
         fa = ((AppleOnTreeState*)state)->unk0C;
@@ -656,7 +656,7 @@ void appleontree_update(int objArg)
                 {
                     ObjHits_DisableObject((int)obj);
                 }
-                *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
+                ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
                 ((AppleOnTreeState*)state)->animState = 5;
             }
@@ -695,7 +695,7 @@ void appleontree_update(int objArg)
                 {
                     ObjHits_DisableObject((int)obj);
                 }
-                *(u8*)(state + 0x5a) = *(u8*)(state + 0x5a) | 2;
+                ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
                 ((AppleOnTreeState*)state)->animState = 5;
             }
@@ -830,7 +830,7 @@ void appleontree_update(int objArg)
                     {
                         ObjHits_DisableObject((int)obj);
                     }
-                    *(u8*)(placement + 0x5a) = *(u8*)(placement + 0x5a) | 2;
+                    ((AppleOnTreeState*)placement)->flags = ((AppleOnTreeState*)placement)->flags | 2;
                 }
             }
             break;
@@ -849,7 +849,7 @@ void appleontree_update(int objArg)
                     {
                         ObjHits_DisableObject((int)obj);
                     }
-                    *(u8*)(placement + 0x5a) = *(u8*)(placement + 0x5a) | 2;
+                    ((AppleOnTreeState*)placement)->flags = ((AppleOnTreeState*)placement)->flags | 2;
                 }
             }
             else
