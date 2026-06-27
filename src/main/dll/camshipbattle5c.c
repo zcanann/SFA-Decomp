@@ -50,19 +50,19 @@ extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                                 f32* o5, f32* o6, f32* o7)
 {
-    int i;
-    u8** pwNode;
+    f32* wp;
     int* np;
+    f32 *w1, *w2, *w3, *w4, *w5, *w6, *w7;
     u8** ppNode;
     f32 *q1, *q2, *q3, *q4, *q5, *q6, *q7;
     u8* node;
     int j;
-    f32 *w1, *w2, *w3, *w4, *w5, *w6, *w7;
-    int axis;
+    u8** pwNode;
+    int i;
     int step;
     f32* axisOut;
-    f32* wp;
-    f32 near, lower, upper, wrap, v1, v0, d;
+    int axis;
+    f32 wrap, d, near, lower, upper, v0, v1;
     u8* pts[4];
 
     i = 0;
