@@ -224,11 +224,11 @@ void vfplavastar_release(void)
 
 int fn_801FD4A8(void* obj, int x)
 {
-    s8* extra = (s8*)((GameObject*)obj)->extra;
+    VfpFlamePointData* extra = ((GameObject*)obj)->extra;
     if (extra != NULL)
     {
-        extra[4] -= x;
-        return extra[4] <= 0 ? 1 : 0;
+        extra->counter -= x;
+        return extra->counter <= 0 ? 1 : 0;
     }
     return 0;
 }
