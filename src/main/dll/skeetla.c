@@ -846,9 +846,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     s8 pass;
     s8 failedCount;
 
-    route = routes;
-    search = state;
-    for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
+    for (i = 0, route = routes, search = state; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
     {
         if (*route != 0)
         {
@@ -861,9 +859,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     for (pass = 0; pass < 100; pass++)
     {
         failedCount = 0;
-        route = routes;
-        search = state;
-        for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
+        for (i = 0, route = routes, search = state; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
         {
             if (*route != 0)
             {
@@ -893,8 +889,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
         case 8:
             return -1;
         case 7:
-            route = routes;
-            for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
+            for (i = 0, route = routes; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
             {
                 if (*route != 0)
                 {
