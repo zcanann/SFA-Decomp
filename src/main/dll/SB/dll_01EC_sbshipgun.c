@@ -31,24 +31,29 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-/* SBShipGunState. Most of update() reaches the timing/aim fields through
-   raw int* offsets (state is int*); the layout is:
-     +0x03 s8  livesRemaining  +0x04 s16 yawAngle    +0x06 s16 pitchAngle
-     +0x08 s16 fireTimer       +0x0A u8  phase        +0x0B s8  hitCount
-     +0x0C u8  health          +0x0D u8  active       +0x0E u8  volleyCount
-   state[0] (+0x00) caches the CloudRunner object pointer. */
+/* SBShipGunState: the gun's 0x10-byte extra block. cloudRunner (+0x00)
+   caches the ridden CloudRunner object pointer; the rest is the aim/timing
+   and damage state the update() machine drives. */
 typedef struct SBShipGunState
 {
-    u8 pad0[0x3 - 0x0];
-    s8 livesRemaining; /* 0x03: damage stages left before death */
-    u8 pad4[0xC - 0x4];
+    u32 cloudRunner;   /* 0x00: cached CloudRunner object (target) */
+    s16 yawAngle;      /* 0x04: aim yaw (binary angle) */
+    s16 pitchAngle;    /* 0x06: aim pitch/elevation (binary angle) */
+    s16 fireTimer;     /* 0x08: frames until the next cannonball */
+    u8 phase;          /* 0x0A: state-machine phase (see enum) */
+    s8 hitCount;       /* 0x0B: damaging hits taken in current stage */
     u8 health;         /* 0x0C: hit-points within the current stage */
     u8 active;         /* 0x0D: cleared while the WM-galleon alias is parent */
     u8 volleyCount;    /* 0x0E: shots fired in the current volley */
     u8 padF[0x10 - 0xF];
 } SBShipGunState;
 
-STATIC_ASSERT(offsetof(SBShipGunState, livesRemaining) == 0x3);
+STATIC_ASSERT(offsetof(SBShipGunState, cloudRunner) == 0x0);
+STATIC_ASSERT(offsetof(SBShipGunState, yawAngle) == 0x4);
+STATIC_ASSERT(offsetof(SBShipGunState, pitchAngle) == 0x6);
+STATIC_ASSERT(offsetof(SBShipGunState, fireTimer) == 0x8);
+STATIC_ASSERT(offsetof(SBShipGunState, phase) == 0xA);
+STATIC_ASSERT(offsetof(SBShipGunState, hitCount) == 0xB);
 STATIC_ASSERT(offsetof(SBShipGunState, health) == 0xC);
 STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
@@ -201,7 +206,7 @@ void SB_ShipGun_update(int obj)
     }
     else
     {
-        if (*(u32*)state == 0)
+        if (((SBShipGunState*)state)->cloudRunner == 0)
         {
             /* find and cache the CloudRunner object (galleon reused as the
                object-list base here, before it holds the parent Galleon). */
@@ -211,7 +216,7 @@ void SB_ShipGun_update(int obj)
                 hit = *(int*)(galleon + i * 4);
                 if (((GameObject*)hit)->anim.seqId == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
                 {
-                    *state = hit;
+                    ((SBShipGunState*)state)->cloudRunner = hit;
                     i = listCount;
                 }
             }
@@ -225,10 +230,10 @@ void SB_ShipGun_update(int obj)
         else
         {
             galleonStage = 0;
-            *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
+            ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_EXPLODED;
         }
         ((SBShipGunState*)state)->active = 1;
-        phase = *(char*)((int)state + 10);
+        phase = ((SBShipGunState*)state)->phase;
         switch (phase)
         {
         case SB_SHIPGUN_PHASE_IDLE:
@@ -237,13 +242,13 @@ void SB_ShipGun_update(int obj)
             {
                 if (*(char*)(placement + SB_SHIPGUN_PLACEMENT_NO_WAKE_DELAY) == '\0')
                 {
-                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
-                    *(u16*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
+                    ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_ACTIVE;
+                    ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_WAKE_DELAY;
                 }
                 else
                 {
-                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
-                    *(u16*)(state + 2) = 0;
+                    ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_ACTIVE;
+                    ((SBShipGunState*)state)->fireTimer = 0;
                 }
             }
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
@@ -257,21 +262,21 @@ void SB_ShipGun_update(int obj)
                 {
                     Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
                     Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_A);
-                    *(s8*)((int)state + 0xb) += 1;
-                    if (*(char*)((int)state + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
+                    ((SBShipGunState*)state)->hitCount += 1;
+                    if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
                     {
                         *(s8*)&((SBShipGunState*)state)->health -= 1;
-                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                        ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
                             SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
                         }
                     }
-                    else if (*(char*)((int)state + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
+                    else if (((SBShipGunState*)state)->hitCount == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
                     {
                         Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
                         *(s8*)&((SBShipGunState*)state)->health -= 1;
-                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                        ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                         if ((void*)galleon != NULL)
                         {
                             SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
@@ -280,11 +285,11 @@ void SB_ShipGun_update(int obj)
                 }
                 if (((void*)galleon != NULL) && (placement != 0))
                 {
-                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
+                    ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_DEATH_TRIGGER;
                 }
                 fdx = player->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
                 fdz = player->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-                *(short*)(state + 1) = (short)
+                ((SBShipGunState*)state)->yawAngle = (short)
                 (((u32)(u16)
                 getAngle(-fdz, fdx) & 0xffff
                 )
@@ -296,25 +301,25 @@ void SB_ShipGun_update(int obj)
                 dist = sqrtf(fdx * fdx + fdz * fdz);
                 {
                     extern int getAngle(float y, float x);
-                    *(short*)((int)state + 6) = getAngle(-fdy, dist);
+                    ((SBShipGunState*)state)->pitchAngle = getAngle(-fdy, dist);
                 }
-                if (*(short*)((int)state + 6) > SB_SHIPGUN_MAX_PITCH)
+                if (((SBShipGunState*)state)->pitchAngle > SB_SHIPGUN_MAX_PITCH)
                 {
-                    *(short*)((int)state + 6) = SB_SHIPGUN_MAX_PITCH;
+                    ((SBShipGunState*)state)->pitchAngle = SB_SHIPGUN_MAX_PITCH;
                 }
-                else if (*(short*)((int)state + 6) < -SB_SHIPGUN_MAX_PITCH)
+                else if (((SBShipGunState*)state)->pitchAngle < -SB_SHIPGUN_MAX_PITCH)
                 {
-                    *(short*)((int)state + 6) = -SB_SHIPGUN_MAX_PITCH;
+                    ((SBShipGunState*)state)->pitchAngle = -SB_SHIPGUN_MAX_PITCH;
                 }
-                *(s16*)(state + 2) -= framesThisStep;
-                if ((*(short*)(state + 2) < 0) && (Obj_IsLoadingLocked() != 0))
+                ((SBShipGunState*)state)->fireTimer -= framesThisStep;
+                if ((((SBShipGunState*)state)->fireTimer < 0) && (Obj_IsLoadingLocked() != 0))
                 {
                     Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
                     stk.b = lbl_803E588C;
                     stk.c = lbl_803E588C;
                     stk.d = lbl_803E588C;
                     stk.a = lbl_803E5888;
-                    stk.rot[0] = *(s16*)(state + 1);
+                    stk.rot[0] = ((SBShipGunState*)state)->yawAngle;
                     stk.rot[1] = 0;
                     stk.rot[2] = 0;
                     offset.x = lbl_803E5890;
@@ -356,22 +361,22 @@ void SB_ShipGun_update(int obj)
                         if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            *(short*)(state + 2) = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
+                            ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_FAST_FIRE_DELAY;
                         }
                         else
                         {
                             randDelay = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                            *(short*)(state + 2) = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
+                            ((SBShipGunState*)state)->fireTimer = randDelay + SB_SHIPGUN_SLOW_FIRE_DELAY;
                         }
                         ((SBShipGunState*)state)->volleyCount = 0;
                     }
                     else if (galleonStage >= SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE)
                     {
-                        *(u16*)(state + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
+                        ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_FAST_FIRE_DELAY;
                     }
                     else
                     {
-                        *(u16*)(state + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
+                        ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_SLOW_FIRE_DELAY;
                     }
                 }
             }
@@ -381,11 +386,11 @@ void SB_ShipGun_update(int obj)
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
                 spawnExplosion(obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
-                *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_EXPLODED;
+                ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_EXPLODED;
             }
             else
             {
-                *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_SMOLDERING;
+                ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_SMOLDERING;
             }
             break;
         case SB_SHIPGUN_PHASE_EXPLODED:
@@ -413,14 +418,14 @@ void SB_ShipGun_update(int obj)
                 {
                     if (SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE <= galleonStage)
                     {
-                        *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
-                        *(u16*)(state + 2) = SB_SHIPGUN_WAKE_DELAY;
+                        ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_ACTIVE;
+                        ((SBShipGunState*)state)->fireTimer = SB_SHIPGUN_WAKE_DELAY;
                     }
                 }
                 else if (SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE <= galleonStage)
                 {
-                    *(u8*)((int)state + 10) = SB_SHIPGUN_PHASE_ACTIVE;
-                    *(u16*)(state + 2) = 0;
+                    ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_ACTIVE;
+                    ((SBShipGunState*)state)->fireTimer = 0;
                 }
             }
             stk.a = lbl_803E58A8;
