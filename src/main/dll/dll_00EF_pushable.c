@@ -963,13 +963,13 @@ typedef struct
 void pushable_hitDetect(int obj)
 {
     extern u32 fn_80174BFC(); /* #57 */
+    int i;
+    PushableState* state;
     f32* wp;
     f32* hp;
-    int i;
-    int cntE;
     int cnt2;
     s8 cnt;
-    PushableState* state;
+    int cntE;
     f32* w;
     u8* e;
     f32 acc;
@@ -1096,11 +1096,12 @@ void pushable_hitDetect(int obj)
         for (; i < state->pointCount; i++)
         {
             f32 y = wp[1];
-            s8 found = 0;
+            s8 found;
 
             *hp = y;
             acc = lbl_803E3528;
             cnt = hitDetectFn_80065e50((int*)obj, wp[0], y, wp[2], (f32***)&list, -1, 0);
+            found = 0;
             if (cnt != 0)
             {
                 int j = 0;
@@ -1150,7 +1151,7 @@ void pushable_hitDetect(int obj)
         {
             state->waterDepth = lbl_803E3528;
         }
-        if (cnt2 != 0 && state->timer_0x110 <= lbl_803E3528)
+        if (cnt2 != 0 && state->timer_0x110 <= *(f32*)&lbl_803E3528)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E3528;
             ((GameObject*)obj)->anim.localPosY = lbl_803E358C + tmpY / cnt2;
