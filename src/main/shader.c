@@ -2770,7 +2770,7 @@ void doPendingMapLoads(void)
     int doLoad;
     int layer;
     int row;
-    s16 col;
+    int col;
     int cell;
     int i;
     int slot;
