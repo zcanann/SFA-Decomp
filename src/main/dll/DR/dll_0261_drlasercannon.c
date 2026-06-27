@@ -169,7 +169,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
                               f32* eyePos)
 {
     extern int getAngle(float y, float x);
-    int clamp;
+    s16 negClampS;
     s16* vec;
     f32 d[3];
     f32* dp;
@@ -177,7 +177,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     int yaw;
     int pitch;
     int negClamp;
-    s16 negClampS;
+    int clamp;
     int delta;
     s16 wrapDelta;
 
