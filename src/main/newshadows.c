@@ -1109,13 +1109,13 @@ double newshadows_getShadowNoiseScale(void)
 #pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
-    if (*(char*)(DAT_803ddbfc + 0x48) == '\0')
+    if (((Texture*)DAT_803ddbfc)->preloaded == '\0')
     {
         FUN_8025b054((u32*)(DAT_803ddbfc + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((u32*)(DAT_803ddbfc + 0x20), *(u32**)(DAT_803ddbfc + 0x40), textureSlot);
+        FUN_8025aeac((u32*)(DAT_803ddbfc + 0x20), ((Texture*)DAT_803ddbfc)->tmemAddr, textureSlot);
     }
     return;
 }
@@ -1141,13 +1141,13 @@ int newshadows_getRadialFalloffTexture(void)
 #pragma peephole on
 void newshadows_bindShadowCaptureTexture(int textureSlot)
 {
-    if (*(char*)(DAT_803ddc64 + 0x48) == '\0')
+    if (((Texture*)DAT_803ddc64)->preloaded == '\0')
     {
         FUN_8025b054((u32*)(DAT_803ddc64 + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((u32*)(DAT_803ddc64 + 0x20), *(u32**)(DAT_803ddc64 + 0x40), textureSlot);
+        FUN_8025aeac((u32*)(DAT_803ddc64 + 0x20), ((Texture*)DAT_803ddc64)->tmemAddr, textureSlot);
     }
     return;
 }
@@ -1158,9 +1158,9 @@ void newshadows_refreshShadowCaptureTexture(void)
     FUN_80259400(0, 0, 0x50, 0x3c);
     FUN_80259504(0x50, 0x3c, 4, 0);
     FUN_80259c0c(DAT_803ddc64 + 0x60, 1);
-    if (*(char*)(DAT_803ddc64 + 0x48) != '\0')
+    if (((Texture*)DAT_803ddc64)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddc64 + 0x20, *(u32**)(DAT_803ddc64 + 0x40));
+        FUN_8025b280(DAT_803ddc64 + 0x20, ((Texture*)DAT_803ddc64)->tmemAddr);
     }
     return;
 }
@@ -1173,15 +1173,15 @@ void newshadows_flushShadowRenderTargets(void)
     FUN_80259400(0, 0, 0x280, 0x1e0);
     FUN_80259504(0x140, 0xf0, 0x11, 1);
     FUN_80259c0c(DAT_803ddc5c + 0x60, 0);
-    if (*(char*)(DAT_803ddbfc + 0x48) != '\0')
+    if (((Texture*)DAT_803ddbfc)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddbfc + 0x20, *(u32**)(DAT_803ddbfc + 0x40));
+        FUN_8025b280(DAT_803ddbfc + 0x20, ((Texture*)DAT_803ddbfc)->tmemAddr);
     }
-    if (*(char*)(DAT_803ddc5c + 0x48) != '\0')
+    if (((Texture*)DAT_803ddc5c)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddc5c + 0x20, *(u32**)(DAT_803ddc5c + 0x40));
+        FUN_8025b280(DAT_803ddc5c + 0x20, ((Texture*)DAT_803ddc5c)->tmemAddr);
     }
-    if ((*(char*)(DAT_803ddbfc + 0x48) == '\0') || (*(char*)(DAT_803ddc5c + 0x48) == '\0'))
+    if ((((Texture*)DAT_803ddbfc)->preloaded == '\0') || (((Texture*)DAT_803ddc5c)->preloaded == '\0'))
     {
         FUN_8025b210();
     }
