@@ -51,8 +51,8 @@ extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int widt
 extern u8* ObjModel_GetRenderOp(int model, int idx);
 extern void PushFreeTextureSet(OSMessage msg);
 extern u16 gAttractMovieVolumeScale[];
-extern u32 lbl_803E1D30; /* TEV color-S10 / k-color constants */
-extern u32 lbl_803E1D34;
+typedef struct { u32 a; u32 b; } TevColorS10Pair;
+extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
 extern u32 lbl_803E1D38;
 extern u32 lbl_803E1D3C;
 extern u32 lbl_803E1D40;
@@ -80,7 +80,7 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     u32 kColor0;
     u32 kColor1;
     u32 kColor2;
-    u32 tevColorS10[2];
+    TevColorS10Pair tevColorS10;
     GXTexObj yTexObj;
     GXTexObj uTexObj;
     GXTexObj vTexObj;
@@ -130,9 +130,8 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
     GXSetTevSwapMode(3, 0, 0);
     GXSetTevKColorSel(3, 0xe);
-    tevColorS10[0] = lbl_803E1D30;
-    tevColorS10[1] = lbl_803E1D34;
-    GXSetTevColorS10(1, tevColorS10);
+    tevColorS10 = lbl_803E1D30;
+    GXSetTevColorS10(1, &tevColorS10);
     kColor0 = lbl_803E1D38;
     GXSetTevKColor(0, &kColor0);
     kColor1 = lbl_803E1D3C;
