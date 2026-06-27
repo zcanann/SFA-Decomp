@@ -1301,13 +1301,13 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     {
         curvesSetupMoveNetworkCurve((float*)state);
     }
-    if (state->reverse == 0)
+    if (state->reverse != 0)
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
     }
     else
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
     }
     return 0;
 clearAndReturn:
