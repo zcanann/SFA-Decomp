@@ -797,9 +797,9 @@ void cMenuRotateFn_80124d80(void)
         {
             d3 = (s16)(d3 + 0xFFFF);
         }
-        best = ((d2 < 0 ? -d2 : d2) < (d1 < 0 ? -d1 : d1))
-                   ? (d2 < 0 ? -d2 : d2)
-                   : (d1 < 0 ? -d1 : d1);
+        best = ((d1 < 0 ? -d1 : d1) < (d2 < 0 ? -d2 : d2))
+                   ? (d1 < 0 ? -d1 : d1)
+                   : (d2 < 0 ? -d2 : d2);
         best = (best < (d3 < 0 ? -d3 : d3)) ? best : (d3 < 0 ? -d3 : d3);
         r = (s16)(int) - (lbl_803E2030 * best - lbl_803E2028);
         lbl_803DD8D4 = (r > 0) ? r : 0;
