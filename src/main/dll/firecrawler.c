@@ -1816,12 +1816,12 @@ void crawler_updateC(s16* obj, u8* state)
 void crawler_updateB(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
-    u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
     u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
     CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
     u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
     u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
+    u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
     f32 cap;
     int count;
     int i;
