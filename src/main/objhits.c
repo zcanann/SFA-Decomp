@@ -2261,10 +2261,8 @@ void ObjHits_CheckTrackContact(int objA, int objB)
             pointCount = 0;
             rOff = 0;
             ptOff = 0;
-            volOff = 0;
-            curWalk = curSpheres;
-            prevWalk = prevSpheres;
-            for (i = 0; i < (int)(u32)modelFile->hitVolumeCount; i = i + 1)
+            for (i = 0, volOff = 0, curWalk = curSpheres, prevWalk = prevSpheres;
+                 i < (int)(u32)modelFile->hitVolumeCount; i = i + 1)
             {
                 hitVolume = (ObjHitsModelHitVolume*)((u8*)modelFile->hitVolumes + volOff);
                 if ((i == hitVolume->sphereIndex) &&
