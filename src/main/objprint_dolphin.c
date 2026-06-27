@@ -1427,25 +1427,25 @@ void FUN_800401a0(float* mtx, float* out, short* in, int flag, u16* obj,
     u32 posY;
     u32 posZ;
     float worldMtx[16];
-    u32 local_28;
-    u32 uStack_24;
-    u32 local_20;
-    u32 uStack_1c;
-    u32 local_18;
-    u32 uStack_14;
+    u32 cvtHiX;
+    u32 cvtLoX;
+    u32 cvtHiY;
+    u32 cvtLoY;
+    u32 cvtHiZ;
+    u32 cvtLoZ;
 
-    uStack_24 = (int)*in ^ 0x80000000;
-    local_28 = 0x43300000;
+    cvtLoX = (int)*in ^ 0x80000000;
+    cvtHiX = 0x43300000;
     inX = (f32)(s32)
-    uStack_24;
-    uStack_1c = in[1] ^ 0x80000000;
-    local_20 = 0x43300000;
+    cvtLoX;
+    cvtLoY = in[1] ^ 0x80000000;
+    cvtHiY = 0x43300000;
     inY = (f32)(s32)
-    uStack_1c;
-    uStack_14 = in[2] ^ 0x80000000;
-    local_18 = 0x43300000;
+    cvtLoY;
+    cvtLoZ = in[2] ^ 0x80000000;
+    cvtHiZ = 0x43300000;
     inZ = (f32)(s32)
-    uStack_14;
+    cvtLoZ;
     if (e != 0)
     {
         inX = inX * lbl_803DF6D8;
@@ -1566,20 +1566,20 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     u32 boneWord0;
     u32 boneWord1;
     u32 boneWord2;
-    float afStack_c4[3];
+    float rot[3];
     float posX;
     u32 posY;
     float posZ;
-    float afStack_84[27];
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    float jointMtxBuf[27];
+    float spill18;
+    float spill14;
+    float spill8;
+    float spill4;
 
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    local_18 = (float)in_f30;
-    fStack_14 = (float)in_ps30_1;
+    spill8 = (float)in_f31;
+    spill4 = (float)in_ps31_1;
+    spill18 = (float)in_f30;
+    spill14 = (float)in_ps30_1;
     pairWord = FUN_80286840();
     child = (u16*)(u64)(pairWord >> 0x20);
     parent = (u16*)(u32)pairWord;
@@ -1599,8 +1599,8 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         boneWord2 = *(u32*)(bonePtr + 8);
         if (jointIdx == -1)
         {
-            FUN_80017a50(parent, afStack_84, '\0');
-            jointMtx = afStack_84;
+            FUN_80017a50(parent, jointMtxBuf, '\0');
+            jointMtx = jointMtxBuf;
         }
         else
         {
@@ -1613,8 +1613,8 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
             rotX = *(u16*)(boneOff + 0xc);
             rotY = *(u16*)(boneOff + 0xe);
             rotZ = *(u16*)(boneOff + 0x10);
-            FUN_80017700(&rotX, afStack_c4);
-            FUN_80247618(jointMtx, afStack_c4, afStack_c4);
+            FUN_80017700(&rotX, rot);
+            FUN_80247618(jointMtx, rot, rot);
         }
         else
         {
@@ -1628,7 +1628,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
             boneOff = FUN_80017730();
             rotY = (u16)boneOff;
             rotZ = cam[2];
-            FUN_80017700(&rotX, afStack_c4);
+            FUN_80017700(&rotX, rot);
             posTmpX = posX;
             posTmpY = posY;
             posTmpZ = posZ;
@@ -1654,14 +1654,14 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
                              (double)*(float*)(child + 0x10), (float*)(child + 6),
                              (float*)(child + 8), (float*)(child + 10), *(int*)(child + 0x18));
             }
-            FUN_8003bbfc(afStack_c4, child, child + 1, child + 2);
+            FUN_8003bbfc(rot, child, child + 1, child + 2);
         }
         *(char*)((int)child + 0x37) =
             (char)((*(u8*)(child + 0x1b) + 1) * (u32) * (u8*)((int)parent + 0x37) >> 8);
         *(u8*)((int)child + 0xf1) = *(u8*)((int)parent + 0xf1);
         if ((child[3] & 0x4000) == 0)
         {
-            DAT_803dd8a4 = (u32)afStack_c4;
+            DAT_803dd8a4 = (u32)rot;
             if ((shadowFlag & 0xff) == 0)
             {
                 child[0x58] = child[0x58] | 0x800;
@@ -1964,8 +1964,8 @@ void FUN_80040da0(void)
     return;
 }
 
-void FUN_80041c10(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_80041c10(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   int charId)
 {
     int charPos;
@@ -1976,27 +1976,27 @@ void FUN_80041c10(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     {
         charPos = (int)(*gMapEventInterface)->getCurCharPos();
         *(char*)(charPos + 0xe) = charId;
-        param_1 = extraout_f1;
+        arg1 = extraout_f1;
     }
-    acc = FUN_800443fc(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    acc = FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    FUN_800443fc(acc, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+    acc = FUN_800443fc(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    acc = FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    FUN_800443fc(acc, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
     return;
 }
 
-int FUN_80041ff8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                 u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+int FUN_80041ff8(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                 u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                  int mapId)
 {
     int slot;
@@ -2028,11 +2028,11 @@ int FUN_80041ff8(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         }
         if (slot == -1)
         {
-            FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, mapped);
+            FUN_80041c10(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, mapped);
             return mapped;
         }
     }
-    FUN_80041c10(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, charId);
+    FUN_80041c10(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, charId);
     return charId;
 }
 
@@ -2094,8 +2094,8 @@ int FUN_80042bec(u32 val, int idx)
     return (&DAT_803dc210)[idx];
 }
 
-void FUN_80043030(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void FUN_80043030(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
 }
 
