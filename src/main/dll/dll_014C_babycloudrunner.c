@@ -14,6 +14,7 @@
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/rom_curve_interface.h"
@@ -474,16 +475,37 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
+/* Placement record for the baby cloud runner (ObjPlacement head + tuning). */
+typedef struct BabyCloudRunnerPlacement
+{
+    ObjPlacement base; /* 0x00: posX/posY/posZ at 0x08/0x0c/0x10 = roost point */
+    s16 outerRadius; /* 0x18: outer trigger radius */
+    s16 innerRadius; /* 0x1a: inner trigger radius (halved for proximity tests) */
+    u8 behaviourState; /* 0x1c: initial BabyCloudRunnerState.behaviourState */
+    u8 initialYaw; /* 0x1d: << 8 -> rotX */
+    s16 enableBit; /* 0x1e: gamebit set on capture */
+    u8 pad20[2];
+    s16 runnerGameBit; /* 0x22: despawn gamebit; -0x2fc -> runnerIndex */
+} BabyCloudRunnerPlacement;
+
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, outerRadius) == 0x18);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, innerRadius) == 0x1a);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, behaviourState) == 0x1c);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, initialYaw) == 0x1d);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, enableBit) == 0x1e);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, runnerGameBit) == 0x22);
+
 #pragma scheduling off
 #pragma peephole off
-void babycloudrunner_init(int* obj, u8* def)
+void babycloudrunner_init(int* obj, u8* defBytes)
 {
     BabyCloudRunnerState* sub;
+    BabyCloudRunnerPlacement* def = (BabyCloudRunnerPlacement*)defBytes;
 
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(def[0x1d] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
     ObjGroup_AddObject(obj, 3);
     sub = ((GameObject*)obj)->extra;
     sub->unkB0 = 0;
@@ -491,7 +513,7 @@ void babycloudrunner_init(int* obj, u8* def)
     sub->unkB8 = 0;
     sub->unkBC = 0;
     sub->turnLatch = 0;
-    sub->behaviourState = def[0x1c];
+    sub->behaviourState = def->behaviourState;
     sub->unkCC = 0;
     storeZeroToFloatParam(sub);
     sub->linkedObj = 0;
@@ -499,7 +521,7 @@ void babycloudrunner_init(int* obj, u8* def)
     sub->flags22C = 0;
     sub->animSpeed = lbl_803E422C;
     sub->runnerState = 0;
-    if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
+    if (GameBit_Get(def->runnerGameBit) != 0)
     {
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -509,7 +531,7 @@ void babycloudrunner_init(int* obj, u8* def)
     }
     else
     {
-        sub->runnerIndex = *(s16*)(def + 0x22) - 0x2fc;
+        sub->runnerIndex = def->runnerGameBit - 0x2fc;
         if (((GameObject*)obj)->anim.seqId == 0x788)
         {
             sub->runnerIndex = -1;
@@ -707,17 +729,17 @@ int babycloudrunner_func0B(void* p)
 {
     int* obj;
     int flag;
-    u8* r;
+    BabyCloudRunnerPlacement* r;
     BabyCloudRunnerState* sub;
-    u8* q;
+    BabyCloudRunnerPlacement* q;
     void* player;
     obj = p;
     sub = ((GameObject*)obj)->extra;
-    q = *(u8**)&((GameObject*)obj)->anim.placementData;
+    q = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    r = *(u8**)&((GameObject*)obj)->anim.placementData;
+    r = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     flag = 0;
-    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16) * (s16*)(r + 0x1a))
+    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)r->innerRadius)
     {
         if (sub->runnerState == 3)
         {
@@ -736,7 +758,7 @@ int babycloudrunner_func0B(void* p)
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
-        GameBit_Set(*(s16*)(q + 0x1e), 1);
+        GameBit_Set(q->enableBit, 1);
         ((GameObject*)obj)->unkF4 = 0;
         return 1;
     }
@@ -879,17 +901,17 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     f32 dz;
     f32 distSq;
     BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->seqIndex == 4)
     {
         return 0;
     }
     animUpdate->sequenceEventActive = 0;
     player = Obj_GetPlayerObject();
-    dx = ((GameObject*)player)->anim.localPosX - *(f32*)(def + 8);
-    dz = ((GameObject*)player)->anim.localPosZ - *(f32*)(def + 0x10);
+    dx = ((GameObject*)player)->anim.localPosX - def->base.posX;
+    dz = ((GameObject*)player)->anim.localPosZ - def->base.posZ;
     distSq = dx * dx + dz * dz;
-    if (distSq < (f32)((*(s16*)(def + 0x1a) / 2) * (*(s16*)(def + 0x1a) / 2)))
+    if (distSq < (f32)((def->innerRadius / 2) * (def->innerRadius / 2)))
     {
         inRange = 1;
     }
@@ -901,9 +923,9 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
         char* pp = Obj_GetPlayerObject();
-        u8* def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
+        BabyCloudRunnerPlacement* def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
-        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32) * (s16*)(def2 + 0x1a)
+        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32)def2->innerRadius
             && sub2->runnerState == 3
             && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
         {
@@ -920,7 +942,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (inRange == 0 && sub->runnerState == 2)
     {
-        f32 radius = (f32) * (s16*)(def + 0x18);
+        f32 radius = (f32)def->outerRadius;
         if ((void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL)
         {
             inRange = 1;
@@ -944,7 +966,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             *(f32*)((char*)sub->linkedObj + 8) = sub->scale;
         }
         sub->behaviourState = 0xb;
-        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32) * (s16*)(def + 0x1a)
+        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)def->innerRadius
             && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             sub->behaviourState = 7;
@@ -992,9 +1014,9 @@ void babycloudrunner_update(int* obj)
 {
     char* player;
     BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     int found;
-    u8* def2;
+    BabyCloudRunnerPlacement* def2;
     int* near;
     BabyCloudRunnerState* sub2;
     int inRange;
@@ -1003,7 +1025,7 @@ void babycloudrunner_update(int* obj)
     f32 radius;
     player = Obj_GetPlayerObject();
     getTrickyObject();
-    if (GameBit_Get(*(s16*)(def + 0x22)) != 0)
+    if (GameBit_Get(def->runnerGameBit) != 0)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
@@ -1022,9 +1044,9 @@ void babycloudrunner_update(int* obj)
         sub->behaviourState = 0;
         if (((GameObject*)obj)->unkF4 < 0)
         {
-            if (*(s16*)(def + 0x22) != -1)
+            if (def->runnerGameBit != -1)
             {
-                GameBit_Set(*(s16*)(def + 0x22), 1);
+                GameBit_Set(def->runnerGameBit, 1);
             }
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -1109,10 +1131,10 @@ void babycloudrunner_update(int* obj)
                     fn_8019E3F4(obj);
                 }
             }
-            inRange = Vec_distance((char*)((int)obj + 0x18), player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
+            inRange = Vec_distance((char*)((int)obj + 0x18), player + 0x18) < (f32)(def->innerRadius / 2);
             if (sub->runnerState == 2)
             {
-                radius = (f32) * (s16*)(def + 0x18);
+                radius = (f32)def->outerRadius;
                 if (fn_80080150((char*)sub + 0x238) != 0)
                 {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown(
@@ -1142,9 +1164,9 @@ void babycloudrunner_update(int* obj)
                 sub2 = ((GameObject*)obj)->extra;
                 {
                     char* pp = Obj_GetPlayerObject();
-                    def2 = *(u8**)&((GameObject*)obj)->anim.placementData;
+                    def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
-                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32) * (s16*)(def2 + 0x1a)
+                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)def2->innerRadius
                         && sub2->runnerState == 3
                         && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
                     {
@@ -1164,9 +1186,9 @@ void babycloudrunner_update(int* obj)
             {
                 if (!((WormSpitByte*)&sub->spitFlags)->_p0)
                 {
-                    tgt.x = *(f32*)(def + 8);
-                    tgt.y = *(f32*)(def + 0xc);
-                    tgt.z = *(f32*)(def + 0x10);
+                    tgt.x = def->base.posX;
+                    tgt.y = def->base.posY;
+                    tgt.z = def->base.posZ;
                     tgt.a = sub->roostYaw;
                     tgt.b = 0;
                     tgt.c = 0;
