@@ -341,7 +341,6 @@ extern int lbl_803DD8DC;
 extern f32 lbl_803DD820;
 extern u8 lbl_803DBAA2;
 extern f32 lbl_803E1E60;
-extern f32 lbl_803E1F9C_;
 extern PauseTbl lbl_8031AE20;
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void* Obj_GetActiveModel(u8* obj);
@@ -2876,7 +2875,7 @@ void pauseMenuFn_80129ee0(void)
                     f32 dt = lbl_803DD7DC;
                     f32 nt = dt + timeDelta;
                     lbl_803DD7DC = nt;
-                    if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C_)
+                    if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
                     {
                         lbl_803DD7DC = 0.0f;
                         Sfx_PlayFromObject(0, 0x38d);
