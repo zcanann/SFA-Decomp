@@ -4640,12 +4640,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 s
                         ey *= inv2;
                         ez *= inv2;
                     }
-                    *(f32*)(cur + k22 * 4 + 0x24) = ex;
-                    k22++;
-                    *(f32*)(cur + k22 * 4 + 0x24) = ey;
-                    k22++;
-                    *(f32*)(cur + k22 * 4 + 0x24) = ez;
-                    k22++;
+                    *(f32*)(cur + k22++ * 4 + 0x24) = ex;
+                    *(f32*)(cur + k22++ * 4 + 0x24) = ey;
+                    *(f32*)(cur + k22++ * 4 + 0x24) = ez;
                     xw++;
                     yw++;
                     zw++;
