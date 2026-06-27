@@ -789,7 +789,7 @@ u32 isInWalkGroupOrPatch(float* point)
             nz = (s16*)patch;
             nx = (s16*)patch;
             offs = (char*)patch;
-            for (; i < 4; i++, offs += 4, nz += 2, nx += 2)
+            for (; i < 4; offs += 4, i++, nz += 2, nx += 2)
             {
                 if (*(f32*)(offs + 0x10) +
                     (point[0] * nx[0] + point[2] * nz[1]) >
