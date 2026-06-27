@@ -2717,17 +2717,17 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     else
     {
         DVDOpen(sResourceFileNameTable[fileId], buf);
-        if (((u32)destBuf & 0x1f) == 0 && ((int)length & 0x1f) == 0)
-        {
-            DVDRead(buf, (void*)destBuf, length, offsetFlags);
-        }
-        else
+        if (((u32)destBuf & 0x1f) != 0 || ((int)length & 0x1f) != 0)
         {
             alignedSize = (length + 0x1f) & 0xffffffe0;
             tmp = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
             DVDRead(buf, (void*)tmp, alignedSize, offsetFlags);
             memcpy((void*)destBuf, (void*)tmp, length);
             mm_free((void*)tmp);
+        }
+        else
+        {
+            DVDRead(buf, (void*)destBuf, length, offsetFlags);
         }
         DCStoreRange((void*)destBuf, length);
         DVDClose(buf);
