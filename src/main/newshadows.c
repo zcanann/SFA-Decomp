@@ -1819,10 +1819,10 @@ void initFn_8006d020(void)
         randomGetRange(0x14, 0x32)
         )
         ;
+        attempts = 0;
         p1 = &e[1];
         p2 = &e[2];
         p4 = &e[4];
-        attempts = 0;
         do
         {
             f32* o;
