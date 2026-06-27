@@ -2583,7 +2583,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     {
         return;
     }
-    fileBuf = MLDF_PTR(fileId);
+    fileBuf = t->ptrs[fileId];
     if (fileBuf != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
@@ -2606,7 +2606,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             return;
         }
         decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x25 || fileId == 0x47)
@@ -2621,7 +2621,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             return;
         }
         decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x2b || fileId == 0x46)
@@ -2655,7 +2655,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
     }
@@ -2670,7 +2670,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
     }
@@ -2680,7 +2680,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         tmp = return0_8002A5B8(fileBuf);
         if (tmp == 0)
         {
-            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
+            memcpy((void*)destBuf, (void*)(t->ptrs[fileId] + offsetFlags), length);
         }
         else
         {
