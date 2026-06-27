@@ -81,8 +81,8 @@ void magicdust_update(int obj)
     int ref;
     u32 val;
     int state;
+    u8 burstArg;
     char fxArg;
-    u8 burstArg[1];
     int msg[1];
     f32 dist;
 
@@ -199,11 +199,11 @@ void magicdust_update(int obj)
                     (*gExpgfxInterface)->freeSource2((u32)obj);
                     if (*(void**)&((GameObject*)obj)->anim.parent == NULL)
                     {
-                        for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0]--)
+                        for (burstArg = '\x1e'; burstArg != '\0'; burstArg--)
                         {
                             (*gPartfxInterface)->spawnObject((void*)obj,
                                                              ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
-                                                             burstArg);
+                                                             &burstArg);
                         }
                     }
                     ((GameObject*)obj)->anim.alpha = 1;
