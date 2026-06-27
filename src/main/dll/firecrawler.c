@@ -397,8 +397,8 @@ void crawler_initTailModel(int* obj, int* st)
     }
     *(f32*)((char*)st + 0x328) = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
-    *(int**)((char*)st + 0x36c) = (int*)ObjModelChain_Alloc(gCrawlerModelChainIds, 5);
-    ObjModelChain_SetOrigin((ObjModelChain*)*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
+    ((FireCrawlerState*)st)->tailModelChain = ObjModelChain_Alloc(gCrawlerModelChainIds, 5);
+    ObjModelChain_SetOrigin(((FireCrawlerState*)st)->tailModelChain, lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
@@ -1098,24 +1098,24 @@ void hagabonMK2_update(s16* obj, u8* state)
     if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
-        if (*(void**)(state + 0x368) == NULL)
+        if (((FireCrawlerState*)state)->engineLight == NULL)
         {
-            if (*(void**)(state + 0x368) == NULL)
+            if (((FireCrawlerState*)state)->engineLight == NULL)
             {
-                *(int*)(state + 0x368) = objCreateLight(0, 1);
+                ((FireCrawlerState*)state)->engineLight = (void*)objCreateLight(0, 1);
             }
-            if (*(void**)(state + 0x368) != NULL)
+            if (((FireCrawlerState*)state)->engineLight != NULL)
             {
-                modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
-                modelLightStruct_setPosition(*(int*)(state + 0x368), ((GameObject*)obj)->anim.localPosX,
+                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, 2);
+                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                modelLightStruct_setDiffuseColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setSpecularColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setDistanceAttenuation(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
-                lightSetField4D(*(int*)(state + 0x368), 1);
-                modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
-                modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
-                modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
+                modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setSpecularColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10, lbl_803E2C14);
+                lightSetField4D(((FireCrawlerState*)state)->engineLight, 1);
+                modelLightStruct_setEnabled(((FireCrawlerState*)state)->engineLight, 1, lbl_803E2C18);
+                modelLightStruct_startColorFade(((FireCrawlerState*)state)->engineLight, 0, 0);
+                modelLightStruct_setAffectsAabbLightSelection(((FireCrawlerState*)state)->engineLight, 0);
             }
         }
         else
@@ -2055,24 +2055,24 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
-        if (*(void**)(state + 0x368) == NULL)
+        if (((FireCrawlerState*)state)->engineLight == NULL)
         {
-            if (*(void**)(state + 0x368) == NULL)
+            if (((FireCrawlerState*)state)->engineLight == NULL)
             {
-                *(int*)(state + 0x368) = objCreateLight(0, 1);
+                ((FireCrawlerState*)state)->engineLight = (void*)objCreateLight(0, 1);
             }
-            if (*(void**)(state + 0x368) != NULL)
+            if (((FireCrawlerState*)state)->engineLight != NULL)
             {
-                modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
-                modelLightStruct_setPosition(*(int*)(state + 0x368), ((GameObject*)obj)->anim.localPosX,
+                modelLightStruct_setLightKind(((FireCrawlerState*)state)->engineLight, 2);
+                modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-                modelLightStruct_setDiffuseColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setSpecularColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setDistanceAttenuation(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
-                lightSetField4D(*(int*)(state + 0x368), 1);
-                modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
-                modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
-                modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
+                modelLightStruct_setDiffuseColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setSpecularColor(((FireCrawlerState*)state)->engineLight, 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setDistanceAttenuation(((FireCrawlerState*)state)->engineLight, lbl_803E2C10, lbl_803E2C14);
+                lightSetField4D(((FireCrawlerState*)state)->engineLight, 1);
+                modelLightStruct_setEnabled(((FireCrawlerState*)state)->engineLight, 1, lbl_803E2C18);
+                modelLightStruct_startColorFade(((FireCrawlerState*)state)->engineLight, 0, 0);
+                modelLightStruct_setAffectsAabbLightSelection(((FireCrawlerState*)state)->engineLight, 0);
             }
         }
         else

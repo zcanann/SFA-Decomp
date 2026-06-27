@@ -16,6 +16,23 @@
 #include "main/dll/modgfx.h"
 #include "main/sfa_extern_decls.h"
 
+/*
+ * FireCrawlerState - BaddieState plus the crawler/HagabonMK2-family tail that
+ * lives past the shared 0x35C record. The 0x35C-region is per-family (see
+ * baddie_state.h); this TU owns the two tail pointers:
+ *   0x368: dynamic engine light (objCreateLight) for the HagabonMK2 flier
+ *   0x36c: ObjModelChain for the segmented tail model
+ */
+typedef struct FireCrawlerState {
+    BaddieState baddie;
+    u8 unk35C[0x368 - 0x35C];
+    void *engineLight; /* 0x368: objCreateLight() handle, HagabonMK2 flier glow */
+    ObjModelChain *tailModelChain; /* 0x36c: segmented tail model chain */
+} FireCrawlerState;
+
+STATIC_ASSERT(offsetof(FireCrawlerState, engineLight) == 0x368);
+STATIC_ASSERT(offsetof(FireCrawlerState, tailModelChain) == 0x36c);
+
 void crawler_playReactionEffects(int* obj, int* st);
 
 #endif
