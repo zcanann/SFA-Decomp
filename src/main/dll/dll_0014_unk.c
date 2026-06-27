@@ -2832,10 +2832,10 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                                       float* outPhase)
 {
     RomCurveDef* curves[4];
+    f32 nextSegmentDx;
     f32 segmentDx;
     f32 segmentDy;
     f32 segmentDz;
-    f32 nextSegmentDx;
     f32 nextSegmentDz;
     f32 tangentDx;
     f32 tangentDz;
