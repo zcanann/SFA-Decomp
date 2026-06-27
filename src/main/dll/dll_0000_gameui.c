@@ -2661,8 +2661,8 @@ void pauseMenuFn_80129ee0(void)
     u8* player;
     u16 btn = 0;
     u8 isArwing = 0;
-    s8 menuMin = 1;
-    s8 menuMax = 5;
+    u8 menuMin = 1;
+    u8 menuMax = 5;
     u8* charState;
     u8 hintBuf[13];
     u8 a1;
