@@ -342,6 +342,21 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 
 #pragma scheduling off
 #pragma peephole off
+static inline int Objfsa_RomCurveIsBlocked(int curve)
+{
+    int slot;
+
+    for (slot = 0; slot < 4; slot++)
+    {
+        if (*(int*)(curve + 0x1C + slot * 4) != -1 &&
+            (*(s8*)(curve + 0x1B) & (1 << slot)) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
 {
     int cand1[4];
@@ -383,16 +398,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     found = a;
     while (done == 0)
     {
-        for (slot = 0; slot < 4; slot++)
-        {
-            if (*(int*)(found + 0x1C + slot * 4) != -1 && (*(s8*)(found + 0x1B) & (1 << slot)) == 0)
-            {
-                blocked = 0;
-                goto blocked_checked;
-            }
-        }
-        blocked = 1;
-    blocked_checked:
+        blocked = Objfsa_RomCurveIsBlocked(found);
         if (blocked != 0)
         {
             done = 1;
