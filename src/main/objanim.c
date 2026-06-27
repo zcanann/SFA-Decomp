@@ -900,7 +900,15 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         }
     }
 
-    moveData = ObjAnim_GetCurrentMoveData(bank->animDef, state);
+    if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
+    {
+        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] +
+            OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    }
+    else
+    {
+        moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->moveCacheSlot];
+    }
     if (moveData->rootCurveOffset != 0)
     {
     events->rootCurveValid = 1;
@@ -920,8 +928,17 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     {
         blendWeight = state->eventState / gObjAnimEventStepScale;
         moveWeight = gObjAnimProgressOne - blendWeight;
-        blendCurve = ObjAnim_GetMoveDataRootCurve(
-            ObjAnim_GetCurrentBlendMoveData(bank->animDef, state));
+        if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
+        {
+            blendCurve = ObjAnim_GetMoveDataRootCurve(
+                (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] +
+                    OBJANIM_CACHED_MOVE_DATA_OFFSET));
+        }
+        else
+        {
+            blendCurve = ObjAnim_GetMoveDataRootCurve(
+                (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot]);
+        }
         blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
     }
     else
