@@ -2286,6 +2286,8 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                             sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
                             if (pointCount < 4)
                             {
+                                float* curEntry;
+                                int prevEntry;
                                 curEntry = curSpheres + sphereIdx * 4;
                                 *endPtr = offX + curEntry[1];
                                 endPtr[1] = curEntry[2];
