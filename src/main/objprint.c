@@ -2147,12 +2147,12 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
-    int* keys;
-    int obj;
     int count;
-    char* p4;
     int total;
+    char* p4;
+    int* keys;
     int i;
+    int obj;
 
     obj = objArg;
     count = countArg;
