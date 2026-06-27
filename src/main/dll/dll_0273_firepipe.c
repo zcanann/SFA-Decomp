@@ -123,8 +123,8 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
         if ((((GameObject*)effectObj)->objectFlags & 0x200) == 0)
         {
             ((GameObject*)effectObj)->objectFlags |= 0x200;
-            memcpy(*(void**)(effectObj + 0x4c), spawnDef, *(u8*)((int)spawnDef + 2));
-            *(s16*)(effectObj + 6) &= ~0x4000;
+            memcpy(((GameObject*)effectObj)->anim.placement, spawnDef, *(u8*)((int)spawnDef + 2));
+            ((GameObject*)effectObj)->anim.flags &= ~0x4000;
             ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
             ((GameObject*)effectObj)->anim.localPosY = *(float*)((int)spawnDef + 0xc);
             ((GameObject*)effectObj)->anim.localPosZ = *(float*)((int)spawnDef + 0x10);
@@ -133,7 +133,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
             Obj_InsertIntoUpdateList(effectObj);
-            *(u16*)(effectObj + 0xb0) &= ~0x8000;
+            ((GameObject*)effectObj)->objectFlags &= ~0x8000;
             return effectObj;
         }
     }
@@ -150,13 +150,13 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
 
 void firepipe_releaseEffectObject(FirePipeObject* obj)
 {
-    if ((*(u16*)((int)obj + 0xb0) & 0x200) != 0)
+    if ((((GameObject*)obj)->objectFlags & 0x200) != 0)
     {
         ObjHits_DisableObject(obj);
-        *(u16*)((int)obj + 0xb0) &= ~0x200;
+        ((GameObject*)obj)->objectFlags &= ~0x200;
         Obj_RemoveFromUpdateList(obj);
-        *(u16*)((int)obj + 0xb0) |= 0x8000;
-        *(s16*)((int)obj + 6) |= 0x4000;
+        ((GameObject*)obj)->objectFlags |= 0x8000;
+        ((GameObject*)obj)->anim.flags |= 0x4000;
     }
     else
     {
@@ -385,8 +385,8 @@ sound_update:
             ((GameObject*)effectObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)effectObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY;
             ((GameObject*)effectObj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
-            *(s16*)(effectObj + 0) = ((GameObject*)obj)->anim.rotX;
-            *(s16*)(effectObj + 2) = ((GameObject*)obj)->anim.rotY;
+            ((GameObject*)effectObj)->anim.rotX = ((GameObject*)obj)->anim.rotX;
+            ((GameObject*)effectObj)->anim.rotY = ((GameObject*)obj)->anim.rotY;
             ((GameObject*)effectObj)->anim.velocityY = lbl_803DC344;
         }
         storeZeroToFloatParam(&extra->emitTimer);
@@ -474,7 +474,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
 {
     FirePipeExtra* extra;
     FirePipeExtra* extra2;
-    int def;
+    FirePipeMapData* def;
     short startTime;
     short cycleTime;
     u32 bitVal;
@@ -485,7 +485,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     {
         f32 scale = lbl_803E6BA8 * (f32)(s32)
         mapData->scale;
-        obj->scale = scale * *(float*)(*(int*)((int)obj + 0x50) + 4);
+        obj->scale = scale * obj->anim.modelInstance->rootMotionScaleBase;
     }
     if (mapData->gameBit != -1)
     {
@@ -498,13 +498,13 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     }
     obj->sequenceCallback = firepipe_stateCallback;
     {
-        def = (int)obj->objectDef;
+        def = (FirePipeMapData*)obj->objectDef;
         extra2 = obj->extra;
         storeZeroToFloatParam(&extra2->cycleTimer);
-        cycleTime = *(short*)(def + 0x1a);
+        cycleTime = def->cycleTime;
         if (cycleTime != 0)
         {
-            startTime = *(short*)(def + 0x20);
+            startTime = def->startOffset;
             if (startTime != 0)
             {
                 if (startTime < 0)
@@ -515,7 +515,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
                 else
                 {
                     s16toFloat(&extra2->cycleTimer, (int)(short)(startTime * 0x3c));
-                    if (*(short*)(def + 0x20) >= *(short*)(def + 0x1a))
+                    if (def->startOffset >= def->cycleTime)
                     {
                         ((FirePipeBitFlags*)&extra2->flags)->emitting = 0;
                     }
