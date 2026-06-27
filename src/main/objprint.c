@@ -728,20 +728,20 @@ void FUN_8003ad08(int obj, u32* keys, int count, int out)
     return;
 }
 
-void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
-                  u32 param_6)
+void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 maxAngle, u32 flag,
+                  u32 minRange)
 {
-    int iVar1;
-    float fVar2;
+    int scratch4;
+    float dx;
     float deltaZ;
     u32 count;
     short clampHi;
     short stepVal;
-    int iVar7;
-    int iVar8;
-    short* psVar9;
-    int iVar10;
-    int iVar11;
+    int scratch0;
+    int scratch1;
+    short* srcPtr;
+    int scratch2;
+    int scratch3;
     short* foundEntry;
     double in_f28;
     double in_f29;
@@ -751,7 +751,7 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    u64 uVar13;
+    u64 packed;
     short local_88[4];
     u32 local_80;
     u32 uStack_7c;
@@ -775,40 +775,40 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
     fStack_24 = (float)in_ps29_1;
     local_38 = (float)in_f28;
     fStack_34 = (float)in_ps28_1;
-    uVar13 = FUN_8028683c();
-    psVar9 = (short*)((u64)uVar13 >> 0x20);
-    iVar7 = uVar13;
+    packed = FUN_8028683c();
+    srcPtr = (short*)((u64)packed >> 0x20);
+    scratch0 = packed;
     foundEntry = 0x0;
-    iVar8 = *(int*)(psVar9 + 0x28);
-    if (iVar8 != 0)
+    scratch1 = *(int*)(srcPtr + 0x28);
+    if (scratch1 != 0)
     {
-        iVar10 = 0;
-        iVar11 = 0;
-        for (count = (u32) * (u8*)(iVar8 + 0x5a); count != 0; count = count - 1)
+        scratch2 = 0;
+        scratch3 = 0;
+        for (count = (u32) * (u8*)(scratch1 + 0x5a); count != 0; count = count - 1)
         {
-            if ((*(char*)(*(int*)(iVar8 + 0x10) + *(char*)((int)psVar9 + 0xad) + iVar10 + 1) != -1) &&
-                (*(char*)(*(int*)(iVar8 + 0x10) + iVar10) == '\0'))
+            if ((*(char*)(*(int*)(scratch1 + 0x10) + *(char*)((int)srcPtr + 0xad) + scratch2 + 1) != -1) &&
+                (*(char*)(*(int*)(scratch1 + 0x10) + scratch2) == '\0'))
             {
-                foundEntry = (short*)(*(int*)(psVar9 + 0x36) + iVar11);
+                foundEntry = (short*)(*(int*)(srcPtr + 0x36) + scratch3);
             }
-            iVar10 = *(char*)(iVar8 + 0x55) + iVar10 + 1;
-            iVar11 = iVar11 + 0x12;
+            scratch2 = *(char*)(scratch1 + 0x55) + scratch2 + 1;
+            scratch3 = scratch3 + 0x12;
         }
     }
     if (foundEntry != 0x0)
     {
-        if (iVar7 == 0)
+        if (scratch0 == 0)
         {
             foundEntry[1] = foundEntry[1] >> 1;
             *foundEntry = *foundEntry >> 1;
         }
         else
         {
-            fVar2 = *(float*)(psVar9 + 6) - *(float*)(iVar7 + 0xc);
-            deltaZ = *(float*)(psVar9 + 10) - *(float*)(iVar7 + 0x14);
-            FUN_80293900((double)(fVar2 * fVar2 + deltaZ * deltaZ));
-            iVar7 = FUN_80017730();
-            local_88[0] = iVar7 - *psVar9;
+            dx = *(float*)(srcPtr + 6) - *(float*)(scratch0 + 0xc);
+            deltaZ = *(float*)(srcPtr + 10) - *(float*)(scratch0 + 0x14);
+            FUN_80293900((double)(dx * dx + deltaZ * deltaZ));
+            scratch0 = FUN_80017730();
+            local_88[0] = scratch0 - *srcPtr;
             if (0x8000 < local_88[0])
             {
                 local_88[0] = local_88[0] + 1;
@@ -821,55 +821,55 @@ void FUN_8003add8(u32 param_1, u32 param_2, int state, u32 param_4, u32 flag,
             {
                 local_88[0] = local_88[0] + -0x8000;
             }
-            iVar7 = FUN_80017730();
-            local_88[1] = iVar7 + -0x3fff;
-            uStack_7c = param_4 ^ 0x80000000;
+            scratch0 = FUN_80017730();
+            local_88[1] = scratch0 + -0x3fff;
+            uStack_7c = maxAngle ^ 0x80000000;
             local_80 = 0x43300000;
-            iVar7 = (int)(lbl_803DF66C *
-                (f32)(s32)(param_4));
-            local_78 = (s64)iVar7;
-            clampHi = iVar7;
-            psVar9 = local_88;
-            fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
-            iVar7 = fVar2;
-            local_68 = (double)(s64)iVar7;
-            iVar8 = -(int)(short)iVar7;
-            iVar10 = -clampHi;
-            iVar11 = 2;
-            iVar7 = state;
+            scratch0 = (int)(lbl_803DF66C *
+                (f32)(s32)(maxAngle));
+            local_78 = (s64)scratch0;
+            clampHi = scratch0;
+            srcPtr = local_88;
+            dx = lbl_803DF66C * (f32)(s32)(minRange);
+            scratch0 = dx;
+            local_68 = (double)(s64)scratch0;
+            scratch1 = -(int)(short)scratch0;
+            scratch2 = -clampHi;
+            scratch3 = 2;
+            scratch0 = state;
             do
             {
-                *psVar9 = *psVar9 - *(short*)(iVar7 + 0x14);
-                stepVal = *psVar9;
-                if (stepVal < iVar8)
+                *srcPtr = *srcPtr - *(short*)(scratch0 + 0x14);
+                stepVal = *srcPtr;
+                if (stepVal < scratch1)
                 {
-                    stepVal = iVar8;
+                    stepVal = scratch1;
                 }
                 else
                 {
-                    iVar1 = fVar2;
-                    local_68 = (double)(s64)iVar1;
-                    if ((int)(short)iVar1 < stepVal)
+                    scratch4 = dx;
+                    local_68 = (double)(s64)scratch4;
+                    if ((int)(short)scratch4 < stepVal)
                     {
-                        local_70 = (double)(s64)iVar1;
-                        stepVal = iVar1;
+                        local_70 = (double)(s64)scratch4;
+                        stepVal = scratch4;
                     }
                 }
-                *psVar9 = stepVal;
-                *(short*)(iVar7 + 0x14) = *(short*)(iVar7 + 0x14) + *psVar9;
-                if ((int)clampHi < (int)*(short*)(iVar7 + 0x14))
+                *srcPtr = stepVal;
+                *(short*)(scratch0 + 0x14) = *(short*)(scratch0 + 0x14) + *srcPtr;
+                if ((int)clampHi < (int)*(short*)(scratch0 + 0x14))
                 {
-                    *(short*)(iVar7 + 0x14) = clampHi;
+                    *(short*)(scratch0 + 0x14) = clampHi;
                 }
-                if (*(short*)(iVar7 + 0x14) < iVar10)
+                if (*(short*)(scratch0 + 0x14) < scratch2)
                 {
-                    *(short*)(iVar7 + 0x14) = iVar10;
+                    *(short*)(scratch0 + 0x14) = scratch2;
                 }
-                iVar7 = iVar7 + 0x30;
-                psVar9 = psVar9 + 1;
-                iVar11 = iVar11 + -1;
+                scratch0 = scratch0 + 0x30;
+                srcPtr = srcPtr + 1;
+                scratch3 = scratch3 + -1;
             }
-            while (iVar11 != 0);
+            while (scratch3 != 0);
             foundEntry[1] = *(short*)(state + 0x14);
             *foundEntry = *(short*)(state + 0x44);
         }
