@@ -2324,10 +2324,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaPatch* sp;
     u8* pp;
     char* lp;
+    f32 div;
     f32 scale;
     f32 fdx;
     f32 fdz;
-    f32 div;
     f32 dxn;
     f32 dzn;
     f32 len;
