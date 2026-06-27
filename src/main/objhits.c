@@ -2216,7 +2216,6 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     int mask2;
     u8 contact;
     ObjHitsPriorityState* stateA;
-    ObjHitsPriorityState* stateB;
     u32 bits;
     int volOff;
     float* curWalk;
@@ -2229,6 +2228,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     int rOff;
     int ptOff;
     int pointCount;
+    ObjHitsPriorityState* stateB;
     ObjHitsModelHitVolume* hitVolume;
     u32 bounds[6];
     struct
