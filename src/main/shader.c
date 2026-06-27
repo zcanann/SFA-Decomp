@@ -3055,7 +3055,7 @@ void doPendingMapLoads(void)
                                 lbl_803DCE88 = *cp3;
                                 for (zz = oa[2]; zz <= oa[3]; zz++)
                                 {
-                                    char* gp = g3 + (zz + 7) * 16 + oa[0];
+                                    char* gp = g3 + oa[0] + (zz + 7) * 16;
                                     for (xx = oa[0]; xx <= oa[1]; xx++)
                                     {
                                         gp[7] = -3;
@@ -3064,7 +3064,7 @@ void doPendingMapLoads(void)
                                 }
                                 for (zz = ob[2]; zz <= ob[3]; zz++)
                                 {
-                                    char* gp = g3 + (zz + 7) * 16 + ob[0];
+                                    char* gp = g3 + ob[0] + (zz + 7) * 16;
                                     for (xx = ob[0]; xx <= ob[1]; xx++)
                                     {
                                         gp[7] = -3;
@@ -3073,7 +3073,7 @@ void doPendingMapLoads(void)
                                 }
                                 for (zz = oc[2]; zz <= oc[3]; zz++)
                                 {
-                                    char* gp = g3 + (zz + 7) * 16 + oc[0];
+                                    char* gp = g3 + oc[0] + (zz + 7) * 16;
                                     for (xx = oc[0]; xx <= oc[1]; xx++)
                                     {
                                         gp[7] = -3;
@@ -3082,7 +3082,7 @@ void doPendingMapLoads(void)
                                 }
                                 for (zz = od[2]; zz <= od[3]; zz++)
                                 {
-                                    char* gp = g3 + (zz + 7) * 16 + od[0];
+                                    char* gp = g3 + od[0] + (zz + 7) * 16;
                                     for (xx = od[0]; xx <= od[1]; xx++)
                                     {
                                         gp[7] = -3;
