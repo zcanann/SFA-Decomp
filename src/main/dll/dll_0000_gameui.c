@@ -2896,7 +2896,7 @@ void pauseMenuFn_80129ee0(void)
                 if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 &&
                     AudioStream_IsPreparing() == 0)
                 {
-                    ObjAnim_SetCurrentMove((int)hud->anims[lbl_803DD781], 0, 0.0f, 0);
+                    ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
                     lbl_803DD781 = 0;
                 }
                 if ((s8)a1 == 0 || lbl_803DD78C == 0 ||
