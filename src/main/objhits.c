@@ -2228,8 +2228,6 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     int prevSpheres;
     int rOff;
     int ptOff;
-    float* curEntry;
-    int prevEntry;
     int pointCount;
     ObjHitsModelHitVolume* hitVolume;
     u32 bounds[6];
