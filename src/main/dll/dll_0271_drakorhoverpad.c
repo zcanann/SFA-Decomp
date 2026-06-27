@@ -25,6 +25,26 @@
 #define DRAKORHOVERPAD_SUBTYPE_TRACKING 1812 /* tracks/yaws toward a nearby object */
 #define DRAKORHOVERPAD_SUBTYPE_FREE 1048     /* free curve-follow, no tracking */
 
+/*
+ * A ROM curve network node (the record returned by gRomCurveInterface->getById
+ * and walked through anim.currentMove / anim.activeMoveProgress / anim.targetObj
+ * in drakorhoverpad_update). The leading layout matches ObjfsaRomCurveDef
+ * (pos at 0x8/0xc/0x10, blockedLinkMask at 0x1b, linkIds[4] at 0x1c); this view
+ * extends it with the per-node tangent record at 0x2c-0x2e that the hover-pad
+ * uses to derive its bob / banking velocity.
+ */
+typedef struct DrakorCurveNode
+{
+    u8 pad0[0x8 - 0x0];
+    f32 x;           /* 0x08 */
+    f32 y;           /* 0x0c */
+    f32 z;           /* 0x10 */
+    u8 pad14[0x2C - 0x14];
+    s8 tangentYaw;   /* 0x2c << 8 -> yaw angle */
+    s8 tangentPitch; /* 0x2d << 8 -> pitch angle */
+    u8 tangentMag;   /* 0x2e magnitude scalar */
+} DrakorCurveNode;
+
 int drakorhoverpad_func0B(void) { return 0x1; }
 
 int drakorhoverpad_func0E(void) { return 0x1; }
@@ -361,66 +381,56 @@ int drakorhoverpad_update(RomCurveWalker* curve, int arg)
     {
         goto ret1;
     }
+/* Each field access re-reads the node pointer out of the anim slot (the
+ * original never cached it in a local); these macros keep that reload. */
+#define CM_NODE  (*(DrakorCurveNode**)&((GameObject*)p)->anim.currentMove)
+#define AMP_NODE (*(DrakorCurveNode**)&((GameObject*)p)->anim.activeMoveProgress)
+#define TGT_NODE (*(DrakorCurveNode**)&((GameObject*)p)->anim.targetObj)
     if (*(int*)&((GameObject*)p)->anim.previousLocalPosX != 0)
     {
-        *(f32*)&((GameObject*)p)->extra = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
-        *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 8);
-        *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            currentMove + 0x2e) * mathSinf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            activeMoveProgress + 0x2e) * mathSinf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
-            gDrakorHoverpadAngleScale));
-        *(f32*)(p + 0xd8) = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
-        *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0xc);
-        *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
-            mathSinf(
-                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
-                gDrakorHoverpadAngleScale));
-        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2e)
-            * mathSinf(
-                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2d) << 8) /
-                gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->unkF8 = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
-        ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x10);
-        ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
-            0x2e) * mathCosf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            activeMoveProgress + 0x2e) * mathCosf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.activeMoveProgress + 0x2c) << 8) /
-            gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->extra = CM_NODE->x;
+        *(f32*)&((GameObject*)p)->animEventCallback = AMP_NODE->x;
+        *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32)AMP_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(AMP_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)(p + 0xd8) = CM_NODE->y;
+        *(f32*)&((GameObject*)p)->unkDC = AMP_NODE->y;
+        *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)AMP_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(AMP_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->unkF8 = CM_NODE->z;
+        ((GameObject*)p)->externalVelX = AMP_NODE->z;
+        ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathCosf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32)AMP_NODE->tangentMag * mathCosf(
+            gDrakorHoverpadPi * (f32)(int)(AMP_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
     }
     else
     {
-        *(f32*)&((GameObject*)p)->extra = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 8);
-        *(f32*)&((GameObject*)p)->animEventCallback = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 8);
-        *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            currentMove + 0x2e) * mathSinf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.
-            targetObj + 0x2e) * mathSinf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        *(f32*)(p + 0xd8) = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0xc);
-        *(f32*)&((GameObject*)p)->unkDC = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0xc);
-        *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2e) *
-            mathSinf(
-                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2d) << 8) /
-                gDrakorHoverpadAngleScale));
-        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2e) *
-            mathSinf(
-                gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2d) << 8) /
-                gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->unkF8 = *(f32*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x10);
-        ((GameObject*)p)->externalVelX = *(f32*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x10);
-        ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.currentMove +
-            0x2e) * mathCosf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.currentMove + 0x2c) << 8) / gDrakorHoverpadAngleScale));
-        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32) * (u8*)(*(u8**)&((GameObject*)p)->anim.targetObj +
-            0x2e) * mathCosf(
-            gDrakorHoverpadPi * (f32)(int)(*(s8*)(*(u8**)&((GameObject*)p)->anim.targetObj + 0x2c) << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->extra = CM_NODE->x;
+        *(f32*)&((GameObject*)p)->animEventCallback = TGT_NODE->x;
+        *(f32*)&((GameObject*)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->ownerObj = lbl_803E6A38 * ((f32)(u32)TGT_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(TGT_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)(p + 0xd8) = CM_NODE->y;
+        *(f32*)&((GameObject*)p)->unkDC = TGT_NODE->y;
+        *(f32*)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)TGT_NODE->tangentMag * mathSinf(
+            gDrakorHoverpadPi * (f32)(int)(TGT_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
+        *(f32*)&((GameObject*)p)->unkF8 = CM_NODE->z;
+        ((GameObject*)p)->externalVelX = TGT_NODE->z;
+        ((GameObject*)p)->externalVelY = lbl_803E6A38 * ((f32)(u32)CM_NODE->tangentMag * mathCosf(
+            gDrakorHoverpadPi * (f32)(int)(CM_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
+        ((GameObject*)p)->externalVelZ = lbl_803E6A38 * ((f32)(u32)TGT_NODE->tangentMag * mathCosf(
+            gDrakorHoverpadPi * (f32)(int)(TGT_NODE->tangentYaw << 8) / gDrakorHoverpadAngleScale));
     }
+#undef CM_NODE
+#undef AMP_NODE
+#undef TGT_NODE
     if (*(int*)&((GameObject*)p)->anim.previousWorldPosY != 0)
     {
         curvesSetupMoveNetworkCurve(curve);
