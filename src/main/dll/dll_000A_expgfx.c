@@ -937,7 +937,7 @@ foundFirst:
                         slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
                         slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
-                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
+                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
                         slot->velocityX = -(vecBuf[0] * attractRatio);
                         slot->velocityZ = -(vecBuf[2] * attractRatio);
                     }
@@ -1010,7 +1010,7 @@ foundFirst:
                             {
                                 slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A | 0LL;
                             }
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED | 0LL;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0)
                             {
                                 slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE | 0LL;
@@ -1021,7 +1021,7 @@ foundFirst:
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0)
                             {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | 0LL;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
                             }
                             slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
                         }
@@ -1169,7 +1169,7 @@ foundFirst:
                                 Sfx_PlayFromObject((u32)srcObj, 0x285);
                             }
                             slot->soundHandle = -1;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT | 0LL;
                             slot->lifetimeFrame = 0;
                             gExpgfxFrameParityBit = 0;
                         }
