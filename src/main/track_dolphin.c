@@ -605,70 +605,70 @@ FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
 )
 {
     float dot;
-    double dVar2;
-    double dVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
+    double scratch1;
+    double scratch2;
+    double scratch3;
+    double scratch4;
+    double scratch5;
     double segDy;
     double segDx;
 
-    dVar2 = (double)lbl_803DF934;
-    if (dVar2 != r)
+    scratch1 = (double)lbl_803DF934;
+    if (scratch1 != r)
     {
-        dVar5 = (double)*px;
-        dVar4 = (double)(float)(dVar5 - cx);
-        dVar3 = (double)(float)((double)*py - cy);
-        dVar6 = -(double)(float)(r * r -
-            (double)((float)(dVar4 * dVar4) + (float)(dVar3 * dVar3)));
-        if (dVar2 <= dVar6)
+        scratch4 = (double)*px;
+        scratch3 = (double)(float)(scratch4 - cx);
+        scratch2 = (double)(float)((double)*py - cy);
+        scratch5 = -(double)(float)(r * r -
+            (double)((float)(scratch3 * scratch3) + (float)(scratch2 * scratch2)));
+        if (scratch1 <= scratch5)
         {
-            segDx = (double)(float)((double)px[1] - dVar5);
+            segDx = (double)(float)((double)px[1] - scratch4);
             segDy = (double)(float)((double)py[1] - (double)*py);
-            dVar5 = (double)(float)(segDx * segDx + (double)(float)(segDy * segDy));
-            if (dVar2 < dVar5)
+            scratch4 = (double)(float)(segDx * segDx + (double)(float)(segDy * segDy));
+            if (scratch1 < scratch4)
             {
-                dVar4 = (double)(lbl_803DF938 * (float)(segDx * dVar4 + (double)(float)(segDy * dVar3)));
-                dVar3 = (double)(float)(dVar4 * dVar4 -
-                    (double)(float)((double)(float)((double)lbl_803DF93C * dVar5) *
-                        dVar6));
-                if (dVar2 <= dVar3)
+                scratch3 = (double)(lbl_803DF938 * (float)(segDx * scratch3 + (double)(float)(segDy * scratch2)));
+                scratch2 = (double)(float)(scratch3 * scratch3 -
+                    (double)(float)((double)(float)((double)lbl_803DF93C * scratch4) *
+                        scratch5));
+                if (scratch1 <= scratch2)
                 {
-                    dVar3 = FUN_80293900(dVar3);
-                    dVar2 = (double)((float)(-dVar4 + dVar3) / (float)((double)lbl_803DF938 * dVar5));
-                    dVar3 = (double)((float)(-dVar4 - dVar3) / (float)((double)lbl_803DF938 * dVar5));
-                    if (dVar2 < (double)lbl_803DF934)
+                    scratch2 = FUN_80293900(scratch2);
+                    scratch1 = (double)((float)(-scratch3 + scratch2) / (float)((double)lbl_803DF938 * scratch4));
+                    scratch2 = (double)((float)(-scratch3 - scratch2) / (float)((double)lbl_803DF938 * scratch4));
+                    if (scratch1 < (double)lbl_803DF934)
                     {
-                        dVar2 = (double)lbl_803DF940;
+                        scratch1 = (double)lbl_803DF940;
                     }
-                    if (dVar3 < (double)lbl_803DF934)
+                    if (scratch2 < (double)lbl_803DF934)
                     {
-                        dVar3 = (double)lbl_803DF940;
+                        scratch2 = (double)lbl_803DF940;
                     }
-                    if (dVar3 < dVar2)
+                    if (scratch2 < scratch1)
                     {
-                        dVar2 = dVar3;
+                        scratch1 = scratch2;
                     }
-                    if (((double)lbl_803DF934 <= dVar2) && (dVar2 <= (double)lbl_803DF944))
+                    if (((double)lbl_803DF934 <= scratch1) && (scratch1 <= (double)lbl_803DF944))
                     {
-                        lbl_803DDBD8 = (float)dVar2;
+                        lbl_803DDBD8 = (float)scratch1;
                         if (resolve != '\0')
                         {
-                            dVar3 = (double)(float)(dVar2 * segDx + (double)*px);
-                            dVar2 = (double)(float)(dVar2 * segDy + (double)*py);
-                            dVar4 = (double)(float)((double)(float)(dVar3 - cx) / r);
-                            dVar5 = (double)(float)((double)(float)(dVar2 - cy) / r);
-                            dot = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
-                            dVar2 = (double)(dot + (float)(dVar4 * (double)px[1] +
-                                (double)(float)(dVar5 * (double)py[1])));
-                            px[1] = -(float)(dVar2 * dVar4 - (double)px[1]);
-                            py[1] = -(float)(dVar2 * dVar5 - (double)py[1]);
-                            dVar2 = (double)lbl_803DF948;
-                            while ((double)(dot + (float)((double)px[1] * dVar4 +
-                                (double)(float)((double)py[1] * dVar5))) < dVar2)
+                            scratch2 = (double)(float)(scratch1 * segDx + (double)*px);
+                            scratch1 = (double)(float)(scratch1 * segDy + (double)*py);
+                            scratch3 = (double)(float)((double)(float)(scratch2 - cx) / r);
+                            scratch4 = (double)(float)((double)(float)(scratch1 - cy) / r);
+                            dot = -(float)(scratch2 * scratch3 + (double)(float)(scratch1 * scratch4));
+                            scratch1 = (double)(dot + (float)(scratch3 * (double)px[1] +
+                                (double)(float)(scratch4 * (double)py[1])));
+                            px[1] = -(float)(scratch1 * scratch3 - (double)px[1]);
+                            py[1] = -(float)(scratch1 * scratch4 - (double)py[1]);
+                            scratch1 = (double)lbl_803DF948;
+                            while ((double)(dot + (float)((double)px[1] * scratch3 +
+                                (double)(float)((double)py[1] * scratch4))) < scratch1)
                             {
-                                px[1] = px[1] + (float)(dVar2 * dVar4);
-                                py[1] = py[1] + (float)(dVar2 * dVar5);
+                                px[1] = px[1] + (float)(scratch1 * scratch3);
+                                py[1] = py[1] + (float)(scratch1 * scratch4);
                             }
                         }
                         return 1;
@@ -678,7 +678,7 @@ FUN_80061cbc(double cx, double cy, double r, float* px, float* py, char resolve
         }
         else if (resolve != '\0')
         {
-            px[1] = (float)(dVar5 + (double)lbl_803DDBD4);
+            px[1] = (float)(scratch4 + (double)lbl_803DDBD4);
             py[1] = *py + lbl_803DDBD0;
         }
     }
