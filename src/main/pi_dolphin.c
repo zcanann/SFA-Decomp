@@ -2261,7 +2261,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
             }
         }
-        else if (b != 0 && (((u32*)t->mergeTex0)[entryIndex] & 0x40000000) != 0)
+        else if (b != 0 && (((int*)t->mergeTex0)[entryIndex] & 0x40000000) != 0)
         {
             fileId = 0x23;
             if (sizeOut != NULL)
@@ -2453,7 +2453,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
             }
         }
-        else if (b != 0 && (((u32*)t->mergeTex1)[entryIndex] & 0x40000000) != 0)
+        else if (b != 0 && (((int*)t->mergeTex1)[entryIndex] & 0x40000000) != 0)
         {
             fileId = 0x20;
             if (sizeOut != NULL)
@@ -2717,7 +2717,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     else
     {
         DVDOpen(sResourceFileNameTable[fileId], buf);
-        if (((u32)destBuf & 0x1f) == 0 && (length & 0x1f) == 0)
+        if (((u32)destBuf & 0x1f) == 0 && ((int)length & 0x1f) == 0)
         {
             DVDRead(buf, (void*)destBuf, length, offsetFlags);
         }
