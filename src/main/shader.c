@@ -827,10 +827,10 @@ extern u32 getDataFileSize(int idx);
 
 void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
 {
-    int layer;
     u8* tabEntry;
-    int mapId;
     int mapY;
+    int mapId;
+    int layer;
     int mapCount;
     s8* arr;
 
