@@ -2218,9 +2218,9 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
     u32 bits;
+    int volOff;
     float* curWalk;
     ObjHitsModelBank* modelBank;
-    int volOff;
     int prevWalk;
     int i;
     ObjHitsModelFileHeader* modelFile;
