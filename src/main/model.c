@@ -2162,20 +2162,18 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int a4)
     }
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || a4 != 0)
     {
-        int s61;
         sizes[4] = sizes[4] + 0x30;
         total = sizes[4] + 100;
-        s61 = sizes[6] + sizes[1];
-        total = (s61 + 8) + total;
         total = sizes[3] + total;
+        total = (sizes[1] + 8) + total;
+        total = sizes[6] + total;
     }
     else
     {
-        int s61;
         total = sizes[4] + 100;
-        s61 = sizes[6] + sizes[1];
-        total = (s61 + 8) + total;
         total = sizes[3] + total;
+        total = (sizes[1] + 8) + total;
+        total = sizes[6] + total;
     }
     total = total + sizes[0];
     if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
