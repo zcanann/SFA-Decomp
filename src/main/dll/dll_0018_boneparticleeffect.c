@@ -1346,7 +1346,7 @@ void boneParticleEffect_release(void)
 }
 
 extern void Sfx_PlayFromObject(void* obj, int id);
-extern f32 gBoneParticleConfigTable[];
+extern u8 gBoneParticleConfigTable[];
 extern s16 gBoneParticleEffectTimer;
 extern s16 gBoneParticleStageIndex;
 extern s32 lbl_803DD2B0;
@@ -1398,19 +1398,19 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
 {
     BoneFxVtx s;
-    int* m;
-    int row;
-    s16 j;
+    void** grp;
     s16 k;
+    s16 j;
+    int row;
     u32 id;
     u32 cls;
     u8* mtx;
-    u8* base;
     u8* idp;
+    u8* base;
     f32* pa;
     f32* pb;
     f32* pc;
-    void** grp;
+    int* m;
     void** grp2;
     int slot;
     u8* jb;
@@ -1419,7 +1419,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     f32 dy;
     f32 dz;
 
-    base = (u8*)gBoneParticleConfigTable;
+    base = gBoneParticleConfigTable;
     if (GameBit_Get(0x468) != 0)
     {
         GameBit_Set(0x468, 0);
