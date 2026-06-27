@@ -14682,13 +14682,13 @@ extern f32 lbl_803E80C0;
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
-    s8 mode;
-    int inner;
-    void* parent;
-    int wallHit;
+    void** list;
     int tris;
     int verts;
-    void** list;
+    int inner;
+    void* parent;
+    s8 mode;
+    int wallHit;
     f32 y1;
     f32 y2;
     f32 z1;
