@@ -42,17 +42,6 @@ typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
 /* mirrors CfperchState for the fields used here, but unk6/unk9 are s8 (not u8)
    - the sign-checked reads in smallbasket_update treat them as signed. */
-typedef struct SmallbasketState
-{
-    u8 pad0[0x5 - 0x0];
-    s8 carryState;
-    s8 carryAttached;
-    u8 pad7[0x9 - 0x7];
-    s8 throwState;
-    u8 padA[0x14 - 0xA];
-    s32 hiddenTimer;
-} SmallbasketState;
-
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
@@ -644,9 +633,9 @@ void objThrowFn_80182504(int obj)
     short* player;
     extra = *(int*)&((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    ((SmallbasketState*)extra)->carryAttached = 0;
-    ((SmallbasketState*)extra)->carryState = 0;
-    ((SmallbasketState*)extra)->throwState = 1;
+    ((CfperchState*)extra)->carryAttached = 0;
+    ((CfperchState*)extra)->carryState = 0;
+    ((CfperchState*)extra)->throwState = 1;
     ((GameObject*)obj)->anim.velocityY = lbl_803E3958;
     ((GameObject*)obj)->anim.velocityZ = lbl_803E3974;
     local.f14 = lbl_803E3938;
@@ -674,8 +663,8 @@ void smallbasket_render(int obj, int p2, int p3, int p4,
     }
     else
     {
-        field_a = *(short*)(extra + 0xa);
-        if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->hiddenTimer != 0)
+        field_a = ((CfperchState*)extra)->disableTimer;
+        if ((field_a != 0 && field_a <= 0x32) || ((CfperchState*)extra)->hiddenTimer != 0)
         {
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
