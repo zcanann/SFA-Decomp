@@ -3830,8 +3830,8 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
             *outZCursor = reloaded->z;
             foundCount = foundCount + 1;
         }
-        windowCursor = windowCursor + 1;
         idCursor++;
+        windowCursor = windowCursor + 1;
         outXCursor++;
         outYCursor = outYCursor + 1;
         outZCursor = outZCursor + 1;
