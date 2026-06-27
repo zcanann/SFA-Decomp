@@ -31,21 +31,23 @@ extern f32 lbl_803E5B70; /* -1.0f */
 extern f32 lbl_803E5B74; /* -0.05f */
 extern f32 lbl_803E5B78; /* 2.0f */
 
-#define DRSHACKLE_COLLIDER_OFFSET 0x28
-#define DRSHACKLE_COLLIDER_MODE_OFFSET 0x5d
 #define DRSHACKLE_MODEL_OFFSET 0x54
 
-#define DRSHACKLE_FLAGS_OFFSET 0x428
-#define DRSHACKLE_SWING_ACCEL_OFFSET 0x430
-#define DRSHACKLE_FLOOR_ADJUST_FLAG_OFFSET 0x434
-#define DRSHACKLE_YAW_OFFSET 0x40c
-#define DRSHACKLE_TARGET_YAW_OFFSET 0x40e
-#define DRSHACKLE_SWING_COMMAND_OFFSET 0x44c
-#define DRSHACKLE_SWING_RETURN_OFFSET 0x458
-#define DRSHACKLE_SWING_BLEND_OFFSET 0x45c
-#define DRSHACKLE_DISTANCE_FADE_OFFSET 0x3e4
-#define DRSHACKLE_LAST_PITCH_OFFSET 0x49c
-#define DRSHACKLE_ATTACHMENT_OFFSET 0x178
+STATIC_ASSERT(offsetof(ShackleSwingState, anchorX) == 0x0C);
+STATIC_ASSERT(offsetof(ShackleSwingState, collider) == 0x28);
+STATIC_ASSERT(offsetof(ShackleSwingState, colliderMode) == 0x5D);
+STATIC_ASSERT(offsetof(ShackleSwingState, attachment) == 0x178);
+STATIC_ASSERT(offsetof(ShackleSwingState, distanceFade) == 0x3E4);
+STATIC_ASSERT(offsetof(ShackleSwingState, yaw) == 0x40C);
+STATIC_ASSERT(offsetof(ShackleSwingState, targetYaw) == 0x40E);
+STATIC_ASSERT(offsetof(ShackleSwingState, flags) == 0x428);
+STATIC_ASSERT(offsetof(ShackleSwingState, swingAccel) == 0x430);
+STATIC_ASSERT(offsetof(ShackleSwingState, floorAdjustFlag) == 0x434);
+STATIC_ASSERT(offsetof(ShackleSwingState, swingCommand) == 0x44C);
+STATIC_ASSERT(offsetof(ShackleSwingState, swingReturn) == 0x458);
+STATIC_ASSERT(offsetof(ShackleSwingState, swingBlend) == 0x45C);
+STATIC_ASSERT(offsetof(ShackleSwingState, unk494) == 0x494);
+STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
 
 /* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
  * interface header; cast the slot locally to emit the extra r7=0. */
@@ -60,6 +62,7 @@ extern f32 lbl_803E5B78; /* 2.0f */
 
 int drshackle_updateSwingBlend(int obj, int state)
 {
+    ShackleSwingState* s = (ShackleSwingState*)state;
     int hitResult;
     int yawDelta;
     f32 fade;
@@ -67,12 +70,12 @@ int drshackle_updateSwingBlend(int obj, int state)
     {
         f32 dx = ((GameObject*)obj)->anim.localPosX;
         f32 dz = ((GameObject*)obj)->anim.localPosZ;
-        dx = dx - *(f32*)(state + 0xc);
-        dz = dz - *(f32*)(state + 0x14);
+        dx = dx - s->anchorX;
+        dz = dz - s->anchorZ;
         fade = lbl_803E5B68 - sqrtf(dx * dx + dz * dz);
     }
 
-    if (*(f32*)(state + DRSHACKLE_DISTANCE_FADE_OFFSET) != lbl_803E5AE8)
+    if (s->distanceFade != lbl_803E5AE8)
     {
         fade = fade + (((fade - lbl_803E5B10) < lbl_803E5AE8)
                            ? lbl_803E5AE8
@@ -87,25 +90,25 @@ int drshackle_updateSwingBlend(int obj, int state)
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE(
         (*gCheckpointInterface),
-        (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET), fade,
-        *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
+        (u8*)state, &s->collider, fade,
+        s->colliderMode, 1);
 
     (*gCheckpointInterface)
-        ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
+        ->getRouteHeading((GameObject*)obj, &s->collider);
 
     (*gCheckpointInterface)->queueRouteRankItem(
-        (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
+        (CheckpointRankItem*)&s->collider);
 
     if (hitResult != 0)
     {
-        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) = lbl_803E5AE8;
+        s->swingBlend = lbl_803E5AE8;
         return 0;
     }
 
     yawDelta = (s32)(u16)
-    getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0xc),
-             ((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x14)) -
-        (s32)(u16) * (s16*)(state + DRSHACKLE_YAW_OFFSET);
+    getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
+             ((GameObject*)obj)->anim.localPosZ - s->anchorZ) -
+        (s32)(u16)s->yaw;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta + -0xffff;
@@ -124,15 +127,14 @@ int drshackle_updateSwingBlend(int obj, int state)
         {
             blendStep = DRSHACKLE_SWING_BLEND_LIMIT;
         }
-        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) = (f32)(-blendStep);
+        s->swingBlend = (f32)(-blendStep);
     }
-    *(s16*)(state + DRSHACKLE_SWING_COMMAND_OFFSET) = 0;
-    *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) =
-        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) / lbl_803E5B6C;
+    s->swingCommand = 0;
+    s->swingBlend = s->swingBlend / lbl_803E5B6C;
 
     {
-        f32 blend = *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET);
-        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) =
+        f32 blend = s->swingBlend;
+        s->swingBlend =
             (blend < lbl_803E5B70)
                 ? lbl_803E5B70
                 : ((blend > lbl_803E5AEC) ? lbl_803E5AEC : blend);
@@ -141,14 +143,14 @@ int drshackle_updateSwingBlend(int obj, int state)
     {
         f32 ang = fn_801EA678(obj, state);
         ang = -ang;
-        if (*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) < ang ||
+        if (s->lastPitch < ang ||
             yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
-            *(int*)(state + DRSHACKLE_SWING_RETURN_OFFSET) = 0;
+            s->swingReturn = 0;
         }
-        else if (*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) > ang)
+        else if (s->lastPitch > ang)
         {
-            *(int*)(state + DRSHACKLE_SWING_RETURN_OFFSET) = DRSHACKLE_SWING_RETURN_LEFT;
+            s->swingReturn = DRSHACKLE_SWING_RETURN_LEFT;
         }
     }
     return 1;
@@ -156,13 +158,14 @@ int drshackle_updateSwingBlend(int obj, int state)
 
 int drshackle_updateAttachedPosition(int obj, int state)
 {
+    ShackleSwingState* s = (ShackleSwingState*)state;
     ShackleFlags* flags;
     int mapBlockIdx;
     int hitResult;
     s16 angle;
     f32 floorOffset;
 
-    flags = (ShackleFlags*)(state + DRSHACKLE_FLAGS_OFFSET);
+    flags = &s->flags;
     if (flags->active == 0)
     {
         return 0;
@@ -175,35 +178,35 @@ int drshackle_updateAttachedPosition(int obj, int state)
         {
             {
                 f32 zero = lbl_803E5AE8;
-                *(f32*)(state + 0x494) = zero;
-                *(f32*)(state + 0x498) = zero;
+                s->unk494 = zero;
+                s->unk498 = zero;
             }
-            *(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) = -fn_801EA678(obj, state);
+            s->lastPitch = -fn_801EA678(obj, state);
             hitResult = DRSHACKLE_ADVANCE_ROUTE(
                 (*gCheckpointInterface),
-                (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
-                -*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) * timeDelta,
-                *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
+                (u8*)state, &s->collider,
+                -s->lastPitch * timeDelta,
+                s->colliderMode, 1);
             (*gCheckpointInterface)
-                ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
+                ->getRouteHeading((GameObject*)obj, &s->collider);
             (*gCheckpointInterface)->queueRouteRankItem(
-                (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
+                (CheckpointRankItem*)&s->collider);
             if (hitResult != 0)
             {
                 return 0;
             }
 
             fn_801EC870(obj, state);
-            angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0xc),
-                                  ((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x14));
+            angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
+                                  ((GameObject*)obj)->anim.localPosZ - s->anchorZ);
             ((GameObject*)obj)->anim.rotX = angle;
-            *(s16*)(state + DRSHACKLE_TARGET_YAW_OFFSET) = angle;
-            *(s16*)(state + DRSHACKLE_YAW_OFFSET) = angle;
-            *(f32*)(state + DRSHACKLE_SWING_ACCEL_OFFSET) = lbl_803E5B74;
-            ((GameObject*)obj)->anim.localPosX = *(f32*)(state + 0xc);
-            ((GameObject*)obj)->anim.localPosY = *(f32*)(state + 0x10);
-            ((GameObject*)obj)->anim.localPosZ = *(f32*)(state + 0x14);
-            (*gPathControlInterface)->attachObject((void*)obj, (void*)(state + DRSHACKLE_ATTACHMENT_OFFSET));
+            s->targetYaw = angle;
+            s->yaw = angle;
+            s->swingAccel = lbl_803E5B74;
+            ((GameObject*)obj)->anim.localPosX = s->anchorX;
+            ((GameObject*)obj)->anim.localPosY = s->anchorY;
+            ((GameObject*)obj)->anim.localPosZ = s->anchorZ;
+            (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
             *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = ((GameObject*)obj)->anim.localPosZ;
@@ -211,7 +214,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
             *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = ((GameObject*)obj)->anim.worldPosY;
             *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = ((GameObject*)obj)->anim.worldPosZ;
 
-            if (*(u8*)(state + DRSHACKLE_FLOOR_ADJUST_FLAG_OFFSET) == 0)
+            if (s->floorAdjustFlag == 0)
             {
                 hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX,
                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
@@ -227,24 +230,24 @@ int drshackle_updateAttachedPosition(int obj, int state)
 
     hitResult = DRSHACKLE_ADVANCE_ROUTE(
         (*gCheckpointInterface),
-        (u8*)state, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET),
-        timeDelta * fn_801EA678(obj, state), *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1);
+        (u8*)state, &s->collider,
+        timeDelta * fn_801EA678(obj, state), s->colliderMode, 1);
     (*gCheckpointInterface)
-        ->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(state + DRSHACKLE_COLLIDER_OFFSET));
+        ->getRouteHeading((GameObject*)obj, &s->collider);
     (*gCheckpointInterface)->queueRouteRankItem(
-        (CheckpointRankItem*)(state + DRSHACKLE_COLLIDER_OFFSET));
+        (CheckpointRankItem*)&s->collider);
     if (hitResult != 0)
     {
         return 0;
     }
 
-    angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(state + 0xc),
-                          ((GameObject*)obj)->anim.localPosZ - *(f32*)(state + 0x14));
+    angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - s->anchorX,
+                          ((GameObject*)obj)->anim.localPosZ - s->anchorZ);
     ((GameObject*)obj)->anim.rotX = angle;
-    ((GameObject*)obj)->anim.localPosX = *(f32*)(state + 0xc);
-    ((GameObject*)obj)->anim.localPosY = *(f32*)(state + 0x10);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)(state + 0x14);
-    (*gPathControlInterface)->attachObject((void*)obj, (void*)(state + DRSHACKLE_ATTACHMENT_OFFSET));
+    ((GameObject*)obj)->anim.localPosX = s->anchorX;
+    ((GameObject*)obj)->anim.localPosY = s->anchorY;
+    ((GameObject*)obj)->anim.localPosZ = s->anchorZ;
+    (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
     *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = ((GameObject*)obj)->anim.localPosX;
     *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = ((GameObject*)obj)->anim.localPosY;
     *(f32*)(*(int*)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = ((GameObject*)obj)->anim.localPosZ;
