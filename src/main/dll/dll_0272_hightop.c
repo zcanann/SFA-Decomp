@@ -19,6 +19,23 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/obj_placement.h"
+
+/* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
+ * hightop_takeHit when the air meter empties (death follow-up spawn). */
+typedef struct HighTopDeathSpawn
+{
+    ObjPlacement base; /* 0x00..0x17 */
+    u8 pad18[0x1A - 0x18];
+    s16 unk1A; /* 0x1A: 0x675 */
+    s16 unk1C; /* 0x1C */
+    s16 unk1E; /* 0x1E: -1 */
+    u8 pad20[0x2C - 0x20];
+} HighTopDeathSpawn;
+
+STATIC_ASSERT(offsetof(HighTopDeathSpawn, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(HighTopDeathSpawn, unk1E) == 0x1E);
+STATIC_ASSERT(sizeof(HighTopDeathSpawn) == 0x2C);
 
 typedef struct HightopPlacement
 {
@@ -502,7 +519,7 @@ int hightop_stateHandler08(int obj, u8* stateArg)
         switch (cur)
         {
         case 10:
-            if (*(f32*)(stateArg + 0x2a0) > lbl_803E6AA8)
+            if (((HighTopRuntime*)stateArg)->baddie.moveSpeed > lbl_803E6AA8)
             {
                 ObjAnim_SetCurrentMove(obj, 5, lbl_803E6AA8, 0);
             }
@@ -526,7 +543,7 @@ int hightop_stateHandler08(int obj, u8* stateArg)
     }
     if (((GameObject*)obj)->anim.currentMove == 10)
     {
-        if (*(f32*)(stateArg + 0x2a0) < lbl_803E6AA8)
+        if (((HighTopRuntime*)stateArg)->baddie.moveSpeed < lbl_803E6AA8)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E6AC4)
             {
@@ -637,15 +654,15 @@ void hightop_hitDetect(int obj)
             GameBit_Set(0x634, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
-                int spawn = Obj_AllocObjectSetup(0x2c, 0xd4);
-                *(u8*)(spawn + 0x4) = 2;
-                *(f32*)(spawn + 0x8) = ((GameObject*)obj)->anim.localPosX;
-                *(f32*)(spawn + 0xc) = ((GameObject*)obj)->anim.localPosY;
-                *(f32*)(spawn + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-                *(s16*)(spawn + 0x1a) = 0x675;
-                *(s16*)(spawn + 0x1c) = 0;
-                *(s16*)(spawn + 0x1e) = -1;
-                Obj_SetupObject(spawn, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                HighTopDeathSpawn* spawn = (HighTopDeathSpawn*)Obj_AllocObjectSetup(0x2c, 0xd4);
+                spawn->base.color[0] = 2;
+                spawn->base.posX = ((GameObject*)obj)->anim.localPosX;
+                spawn->base.posY = ((GameObject*)obj)->anim.localPosY;
+                spawn->base.posZ = ((GameObject*)obj)->anim.localPosZ;
+                spawn->unk1A = 0x675;
+                spawn->unk1C = 0;
+                spawn->unk1E = -1;
+                Obj_SetupObject((int)spawn, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                 *(int*)&((GameObject*)obj)->anim.parent);
             }
             ((GameObject*)obj)->anim.rotY = 0;
@@ -665,22 +682,22 @@ void hightop_hitDetect(int obj)
 void hightop_update(int obj)
 {
     char* p = ((GameObject*)obj)->extra;
-    *(s16*)(p + 0xc16) = 5;
+    ((HighTopRuntime*)p)->turnRateThreshold = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     *(s8*)&((BaddieState*)p)->physicsActive = !((BitFlags8*)(p + 0xc49))->b4;
     ((BaddieState*)p)->hitPoints = 0;
     *(int*)p &= ~0x8000;
-    if ((*(u16*)(p + 0xc40) & 0x40) != 0)
+    if ((((HighTopRuntime*)p)->flagsC40 & 0x40) != 0)
     {
         int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32*)(p + 0xa10),
-                                                  lbl_803DC324 * (*(f32*)(p + 0xc28) * timeDelta),
+                                                  lbl_803DC324 * (((HighTopRuntime*)p)->unkC28 * timeDelta),
                                                   lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
         if (ev != 0)
         {
             if (ev == -1)
             {
-                *(u16*)(p + 0xc40) &= ~0x140;
-                *(u8*)(p + 0x9fd) &= ~2;
+                ((HighTopRuntime*)p)->flagsC40 &= ~0x140;
+                ((HighTopRuntime*)p)->flags &= ~2;
             }
             else
             {
@@ -708,7 +725,7 @@ void hightop_update(int obj)
     {
         s8 v;
         buttonDisable(0, 0x100);
-        v = (s8) * (u8*)(p + 0xc4b);
+        v = (s8)((HighTopRuntime*)p)->substate;
         if (v != -1)
         {
             if (v < 0xa)
@@ -728,11 +745,11 @@ void hightop_update(int obj)
     }
     if (((BitFlags8*)(p + 0xc49))->b7 != 0)
     {
-        (*gGameUIInterface)->runAirMeter(*(s16*)(p + 0xc18));
-        *(f32*)(p + 0xc38) += timeDelta;
-        if (*(f32*)(p + 0xc38) > *(f32*)&gHighTopAirMeterSfxInterval)
+        (*gGameUIInterface)->runAirMeter(((HighTopRuntime*)p)->airMeterRemaining);
+        ((HighTopRuntime*)p)->unkC38 += timeDelta;
+        if (((HighTopRuntime*)p)->unkC38 > *(f32*)&gHighTopAirMeterSfxInterval)
         {
-            *(f32*)(p + 0xc38) -= gHighTopAirMeterSfxInterval;
+            ((HighTopRuntime*)p)->unkC38 -= gHighTopAirMeterSfxInterval;
             Sfx_PlayFromObject((u32)obj, 0x47f);
         }
     }
