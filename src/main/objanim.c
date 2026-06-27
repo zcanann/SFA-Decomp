@@ -949,23 +949,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     axisIndex = 0;
     do
     {
-        if (*axis == 0)
-        {
-            axis++;
-            if (blendAxis != NULL)
-            {
-                blendAxis++;
-            }
-            if (axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT)
-            {
-                (&events->rootDeltaX)[axisIndex] = gObjAnimProgressZero;
-            }
-            else
-            {
-                (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = 0;
-            }
-        }
-        else
+        if (*axis != 0)
         {
             axis++;
             if (blendAxis != NULL)
@@ -1037,6 +1021,22 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
             if (blendAxis != NULL)
             {
                 blendAxis += segmentCount + 1;
+            }
+        }
+        else
+        {
+            axis++;
+            if (blendAxis != NULL)
+            {
+                blendAxis++;
+            }
+            if (axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT)
+            {
+                (&events->rootDeltaX)[axisIndex] = gObjAnimProgressZero;
+            }
+            else
+            {
+                (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = 0;
             }
         }
         axisIndex++;
