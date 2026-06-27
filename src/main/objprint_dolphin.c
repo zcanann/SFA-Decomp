@@ -3415,7 +3415,8 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
             }
             if (lbl_803DCC48 == 2)
             {
-                hdr = (u8*)(cache + idx * 0x30 + 0x12c0);
+                hdr = (u8*)(cache + idx * 0x30);
+                hdr = hdr + 0x12c0;
                 GXLoadPosMtxImm((f32*)hdr, *tbl);
                 if (skip == 0 && tex != 0)
                 {
