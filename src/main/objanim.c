@@ -930,15 +930,14 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
         moveWeight = gObjAnimProgressOne - blendWeight;
         if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
         {
-            blendCurve = ObjAnim_GetMoveDataRootCurve(
-                (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] +
-                    OBJANIM_CACHED_MOVE_DATA_OFFSET));
+            moveData = (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] +
+                OBJANIM_CACHED_MOVE_DATA_OFFSET);
         }
         else
         {
-            blendCurve = ObjAnim_GetMoveDataRootCurve(
-                (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot]);
+            moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot];
         }
+        blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
         blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
     }
     else
