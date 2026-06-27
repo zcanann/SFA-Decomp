@@ -1526,12 +1526,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         s.z = obj->anim.worldPosZ;
         setMatrixFromObjectPos(m, &s);
         idx3 = 0;
-        byteOff = 0;
+        i = 0;
         ptsRead = pts;
         ptsWalk = ptsRead;
-        i = 0;
-        radWrite = radii;
+        byteOff = 0;
         radSrc = state;
+        radWrite = radii;
         radDst = radii;
         c = lbl_803E06C0;
         for (; i < (int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
