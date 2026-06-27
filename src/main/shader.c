@@ -1299,7 +1299,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     int i;
 
     mapsBinGetRomlistSize(offset0, &v0, &v1, &v2);
-    lbl_803DCEA0 = mmAlloc(tailLen + ((v0 + 7 >> 3) + 0x401) + v2, 5, 0);
+    lbl_803DCEA0 = mmAlloc(tailLen + (v0 + 7 >> 3) + 0x401 + v2, 5, 0);
     fileLoadToBufferOffset(0x1d, lbl_803DCEA0, offset0, tailLen);
 
     *(int*)((char*)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 4) + tabOff) - offset0;
