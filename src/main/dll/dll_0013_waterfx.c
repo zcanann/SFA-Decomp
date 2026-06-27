@@ -468,7 +468,7 @@ void waterfx_run(void)
             d->x += d->f0c;
             d->y += d->f10;
             d->z += d->f14;
-            if (d->y < wp->y)
+            if (wp->y > d->y)
             {
                 wp->active--;
                 d->idx = -1;
