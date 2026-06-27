@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/camera.h"
@@ -1481,28 +1482,28 @@ extern u32 lbl_803DCFCC;
 void fn_8006C6A4(int id)
 {
     register int idCopy = id;
-    char* p = (char*)lbl_803DCFCC;
-    if (*(u8*)(p + 0x48) != 0)
+    Texture* p = (Texture*)lbl_803DCFCC;
+    if (p->preloaded != 0)
     {
-        GXLoadTexObjPreLoaded(p + 0x20, *(void**)(p + 0x40), idCopy);
+        GXLoadTexObjPreLoaded((char*)p + 0x20, p->tmemAddr, idCopy);
     }
     else
     {
-        GXLoadTexObj(p + 0x20, idCopy);
+        GXLoadTexObj((char*)p + 0x20, idCopy);
     }
 }
 
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
-    char* p = gNewShadowReflectionTexture;
-    if (*(u8*)(p + 0x48) != 0)
+    Texture* p = (Texture*)gNewShadowReflectionTexture;
+    if (p->preloaded != 0)
     {
-        GXLoadTexObjPreLoaded(p + 0x20, *(void**)(p + 0x40), idCopy);
+        GXLoadTexObjPreLoaded((char*)p + 0x20, p->tmemAddr, idCopy);
     }
     else
     {
-        GXLoadTexObj(p + 0x20, idCopy);
+        GXLoadTexObj((char*)p + 0x20, idCopy);
     }
 }
 
@@ -1511,14 +1512,14 @@ extern u32 gNewShadowReflectionSmallTexture;
 void textureFn_8006c75c(int id)
 {
     register int idCopy = id;
-    char* p = (char*)gNewShadowReflectionSmallTexture;
-    if (*(u8*)(p + 0x48) != 0)
+    Texture* p = (Texture*)gNewShadowReflectionSmallTexture;
+    if (p->preloaded != 0)
     {
-        GXLoadTexObjPreLoaded(p + 0x20, *(void**)(p + 0x40), idCopy);
+        GXLoadTexObjPreLoaded((char*)p + 0x20, p->tmemAddr, idCopy);
     }
     else
     {
-        GXLoadTexObj(p + 0x20, idCopy);
+        GXLoadTexObj((char*)p + 0x20, idCopy);
     }
 }
 
@@ -1564,8 +1565,8 @@ extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9
 
 void* textureAlloc512(void)
 {
-    void* tex = textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
-    *(s16*)((char*)tex + 0xe) = 1;
+    Texture* tex = (Texture*)textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
+    tex->refCount = 1;
     DCFlushRange((char*)tex + 0x60, *(u32*)((char*)tex + 0x44));
     return tex;
 }
@@ -1585,9 +1586,10 @@ void drawReflectionTexture(void)
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
     GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, GX_TRUE);
-    if (*(u8*)(gNewShadowReflectionSmallTexture + 0x48) != 0)
+    if (((Texture*)gNewShadowReflectionSmallTexture)->preloaded != 0)
     {
-        GXPreLoadEntireTexture((char*)gNewShadowReflectionSmallTexture + 0x20, *(void**)(gNewShadowReflectionSmallTexture + 0x40));
+        GXPreLoadEntireTexture((char*)gNewShadowReflectionSmallTexture + 0x20,
+                               ((Texture*)gNewShadowReflectionSmallTexture)->tmemAddr);
     }
 }
 #pragma optimization_level reset
@@ -1602,15 +1604,18 @@ void updateReflectionTextures(void)
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_Z8, GX_TRUE);
     GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, GX_FALSE);
-    if (*(u8*)(gNewShadowReflectionTexture + 0x48) != 0)
+    if (((Texture*)gNewShadowReflectionTexture)->preloaded != 0)
     {
-        GXPreLoadEntireTexture((char*)gNewShadowReflectionTexture + 0x20, *(void**)(gNewShadowReflectionTexture + 0x40));
+        GXPreLoadEntireTexture((char*)gNewShadowReflectionTexture + 0x20,
+                               ((Texture*)gNewShadowReflectionTexture)->tmemAddr);
     }
-    if (*(u8*)(gNewShadowReflectionTexture2 + 0x48) != 0)
+    if (((Texture*)gNewShadowReflectionTexture2)->preloaded != 0)
     {
-        GXPreLoadEntireTexture((char*)gNewShadowReflectionTexture2 + 0x20, *(void**)(gNewShadowReflectionTexture2 + 0x40));
+        GXPreLoadEntireTexture((char*)gNewShadowReflectionTexture2 + 0x20,
+                               ((Texture*)gNewShadowReflectionTexture2)->tmemAddr);
     }
-    if (*(u8*)(gNewShadowReflectionTexture + 0x48) == 0 || *(u8*)(gNewShadowReflectionTexture2 + 0x48) == 0)
+    if (((Texture*)gNewShadowReflectionTexture)->preloaded == 0 ||
+        ((Texture*)gNewShadowReflectionTexture2)->preloaded == 0)
     {
         GXInvalidateTexAll();
     }
@@ -1911,7 +1916,6 @@ void initFn_8006d020(void)
     testAndSet_onlyUseHeap3(saved);
 }
 
-extern int textureLoadAsset(int);
 extern void fn_80069EB8();
 extern f32 lbl_803DED10, lbl_803DED34;
 extern const f32 Dev_803DED1C;
@@ -2095,9 +2099,9 @@ void allocLotsOfTextures(void)
     }
     DCFlushRange((void*)(gNewShadowBumpTexture + 0x60), *(int*)(gNewShadowBumpTexture + 0x44));
 
-    lbl_803DCFCC = textureLoadAsset(0x5b0);
-    lbl_803DCFC8 = textureLoadAsset(0x600);
-    lbl_803DCFC4 = textureLoadAsset(0xc18);
+    lbl_803DCFCC = (u32)textureLoadAsset(0x5b0);
+    lbl_803DCFC8 = (u32)textureLoadAsset(0x600);
+    lbl_803DCFC4 = (u32)textureLoadAsset(0xc18);
 
     gNewShadowRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     for (i = 0; i < 0x100; i++)
