@@ -223,6 +223,7 @@ extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 
 void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
+    u32 H;
     int vx;
     int vy;
     int vr;
@@ -241,7 +242,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 loEdge;
     u32 inset;
     u8 maxAlpha;
-    u32 H;
     u8 step;
     u8 fadeAlpha;
     f32 conv;
