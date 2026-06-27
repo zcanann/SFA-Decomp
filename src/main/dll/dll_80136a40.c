@@ -843,15 +843,15 @@ void fn_80137A00(int x, int y, u8* grid, int unused)
         for (; i < 5; i++)
         {
             bit = 0;
-            c0 = x + row0;
+            c0 = row0 + x;
             a0 = c0;
             a1 = c0 + 1;
-            c1 = x + row1;
+            c1 = row1 + x;
             a2 = c1;
             a3 = c1 + 1;
             for (; bit < 8; bit++)
             {
-                if (((1 << bit) & *grid) != 0)
+                if (((1 << bit) & grid[i]) != 0)
                 {
                     debugDrawFrameBuffer[a0] = 0xC080;
                     debugDrawFrameBuffer[a1] = 0xC080;
@@ -867,7 +867,6 @@ void fn_80137A00(int x, int y, u8* grid, int unused)
             DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
             row0 += 0x500;
             row1 += 0x500;
-            grid++;
         }
     }
 }
