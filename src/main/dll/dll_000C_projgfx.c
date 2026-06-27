@@ -425,7 +425,7 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     u64 convFrames2;
 
     biasU = DOUBLE_803e00c0;
-    vtxData = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
+    vtxData = (int)modgfx_getActiveVertexBuffer((ModgfxState*)state);
     if (mode == 1)
     {
         targetR = ((ModgfxVertexGroupCmd*)command)->valueX;
@@ -509,11 +509,11 @@ void modgfx_updateVertexRgb(int state, int command, int mode)
     idxOff = 0;
     for (i = 0; i < ((ModgfxVertexGroupCmd*)command)->indexCount; i = i + 1)
     {
-        *(char*)(vtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff) * 0x10 + 0xc) =
+        ((ModgfxVertexData*)vtxData)[*(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff)].colorR =
             (char)(int)((ModgfxState*)state)->blendColorR;
-        *(char*)(vtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff) * 0x10 + 0xd) =
+        ((ModgfxVertexData*)vtxData)[*(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff)].colorG =
             (char)(int)((ModgfxState*)state)->blendColorG;
-        *(char*)(vtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff) * 0x10 + 0xe) =
+        ((ModgfxVertexData*)vtxData)[*(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + idxOff)].colorB =
             (char)(int)((ModgfxState*)state)->blendColorB;
         idxOff = idxOff + 2;
     }
@@ -535,7 +535,7 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
     biasS = DOUBLE_803e00c8;
     if (mode == 1)
     {
-        if (*(s16*)((u8*)state + state->activeChannel * 2 + 0xee) == 0)
+        if (state->channelFrames[state->activeChannel] == 0)
         {
             if (((state->flags & 4) != 0) || ((state->flags & 0x80000) != 0))
             {
@@ -546,16 +546,16 @@ void modgfx_updateEffectPosition(int stateArg, int command, int mode)
                 rotAngle0 = *(u16*)state->unk04;
                 rotAngle1 = rotAngle0;
                 rotAngle2 = rotAngle0;
-                FUN_80017748(&rotAngle0, (float*)(command + 4));
+                FUN_80017748(&rotAngle0, &((ModgfxVertexGroupCmd*)command)->valueX);
             }
-            *(u32*)&state->posStepX = *(u32*)(command + 4);
-            *(u32*)&state->posStepY = *(u32*)(command + 8);
-            *(u32*)&state->posStepZ = *(u32*)(command + 0xc);
+            *(u32*)&state->posStepX = *(u32*)&((ModgfxVertexGroupCmd*)command)->valueX;
+            *(u32*)&state->posStepY = *(u32*)&((ModgfxVertexGroupCmd*)command)->valueY;
+            *(u32*)&state->posStepZ = *(u32*)&((ModgfxVertexGroupCmd*)command)->valueZ;
         }
         else
         {
             state->posStepX =
-                *(float*)(command + 4) /
+                ((ModgfxVertexGroupCmd*)command)->valueX /
                 (float)((double)(int)state->blendFrameCount);
             state->posStepY =
                 ((ModgfxVertexGroupCmd*)command)->valueY /
@@ -634,7 +634,7 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
     u64 convAlphaBase;
 
     biasU = DOUBLE_803e00c0;
-    curVtxData = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
+    curVtxData = (int)modgfx_getActiveVertexBuffer((ModgfxState*)state);
     baseVtxData = (int)((ModgfxState*)state)->baseVertexData;
     if (mode == 1)
     {
@@ -644,7 +644,7 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
             work1 = 0;
             for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
             {
-                *(char*)(baseVtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 0xf) =
+                ((ModgfxVertexData*)baseVtxData)[*(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1)].alpha =
                     (char)(int)targetAlpha;
                 work2 = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work1) * 0x10 + 0xf;
                 *(u8*)(curVtxData + work2) = *(u8*)(baseVtxData + work2);
@@ -653,14 +653,14 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
             return;
         }
         work1 = state + (channel & 0xff) * 8;
-        *(float*)(work1 + 0xac) =
+        ((ModgfxState*)state)->alphaChannels[channel & 0xff].step =
             (targetAlpha - (float)((double)(u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->
                                                         indices *
                                                         0x10 + 0xf)))
             / (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
         convAlphaBase = (double)(u32) * (u8*)(baseVtxData + *((ModgfxVertexGroupCmd*)command)->indices *
                                              0x10 + 0xf);
-        *(float*)(work1 + 0xb0) = (float)(convAlphaBase);
+        ((ModgfxState*)state)->alphaChannels[channel & 0xff].cur = (float)(convAlphaBase);
     }
     work1 = (channel & 0xff) * 8;
     work0 = state + work1;
@@ -679,7 +679,7 @@ void modgfx_updateVertexAlpha(int state, int command, int mode, u32 channel)
     work0 = 0;
     for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2 = work2 + 1)
     {
-        *(char*)(curVtxData + *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work0) * 0x10 + 0xf) =
+        ((ModgfxVertexData*)curVtxData)[*(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work0)].alpha =
             (char)(int)*(float*)(state + work1 + 0xb0);
         vtxOff = *(short*)((int)((ModgfxVertexGroupCmd*)command)->indices + work0) * 0x10 + 0xf;
         *(u8*)(baseVtxData + vtxOff) = *(u8*)(curVtxData + vtxOff);
@@ -712,7 +712,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
         if ((int)((ModgfxState*)state)->blendFrameCount == 0)
         {
             work2 = (int)((ModgfxState*)state)->baseVertexData;
-            vtxBufA = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
+            vtxBufA = (int)modgfx_getActiveVertexBuffer((ModgfxState*)state);
             work1 = 0;
             for (work0 = 0; work0 < ((ModgfxVertexGroupCmd*)command)->indexCount; work0 = work0 + 1)
             {
@@ -736,13 +736,14 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
             return;
         }
         work1 = state + (channel & 0xff) * 0x18;
-        *(float*)(work1 + 0x3c) =
-            (targetX - *(float*)(work1 + 0x30)) /
+        ((ModgfxState*)state)->scaleChannels[channel & 0xff].step[0] =
+            (targetX - ((ModgfxState*)state)->scaleChannels[channel & 0xff].cur[0]) /
             (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
         convFrames = (double)(int)((ModgfxState*)state)->blendFrameCount;
-        *(float*)(work1 + 0x40) = (targetY - *(float*)(work1 + 0x34)) / (float)(convFrames);
-        *(float*)(work1 + 0x44) =
-            (targetZ - *(float*)(work1 + 0x38)) /
+        ((ModgfxState*)state)->scaleChannels[channel & 0xff].step[1] =
+            (targetY - ((ModgfxState*)state)->scaleChannels[channel & 0xff].cur[1]) / (float)(convFrames);
+        ((ModgfxState*)state)->scaleChannels[channel & 0xff].step[2] =
+            (targetZ - ((ModgfxState*)state)->scaleChannels[channel & 0xff].cur[2]) /
             (float)((double)(int)((ModgfxState*)state)->blendFrameCount);
     }
     work0 = state + (channel & 0xff) * 0x18;
@@ -751,7 +752,7 @@ void modgfx_updateVertexScale(int state, int command, int mode, u32 channel)
     *(float*)(work0 + 0x38) = *(float*)(work0 + 0x44) * lbl_803DDF04 + *(float*)(work0 + 0x38);
     targetX = lbl_803E00B4;
     vtxBufA = (int)((ModgfxState*)state)->baseVertexData;
-    work1 = *(int*)(state + (u32) * (u8*)(state + 0x130) * 4 + 0x78);
+    work1 = (int)modgfx_getActiveVertexBuffer((ModgfxState*)state);
     off = 0;
     for (work2 = 0; work2 < ((ModgfxVertexGroupCmd*)command)->indexCount; work2 = work2 + 1)
     {
