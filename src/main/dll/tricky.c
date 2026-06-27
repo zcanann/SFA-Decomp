@@ -1723,7 +1723,7 @@ void drawViewFinderHud(void)
             if (r28v < 0) r28v += 0x168;
             for (; f18 < lbl_803E1F4C; f18 += f19)
             {
-                int r27v = 0xff;
+                u8 r27v = 0xff;
                 int r26v = 0xff;
                 int r25v = 0xf;
                 f64 q;
