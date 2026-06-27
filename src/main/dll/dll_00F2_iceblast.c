@@ -65,7 +65,7 @@ void iceblast_update(int* obj)
     int* path;
     f32* state;
     int* player;
-    int* def;
+    IceblastPlacement* def;
     struct
     {
         s16 dir[3];
@@ -74,7 +74,7 @@ void iceblast_update(int* obj)
     } vec;
     player = Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    def = *(IceblastPlacement**)&((GameObject*)obj)->anim.placementData;
     if (player != NULL && (path = ((GameObject*)player)->childObjs[0]) != NULL)
     {
         ((GameObject*)obj)->anim.rotZ = *(s16*)((char*)path + 4);
@@ -86,7 +86,7 @@ void iceblast_update(int* obj)
         return;
     }
     {
-        int slot = ((IceblastPlacement*)def)->useAltHitVolume != 0 ? 3 : 1;
+        int slot = def->useAltHitVolume != 0 ? 3 : 1;
         ObjHits_SetHitVolumeSlot((u32)obj, 0x10, slot, 0);
     }
     state[0] = state[0] - timeDelta;
