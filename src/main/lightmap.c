@@ -361,283 +361,283 @@ void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
 void FUN_8005bdbc(void)
 {
     char* extraout_r4;
-    char* pcVar1;
-    int iVar2;
-    int iVar3;
-    char* pcVar4;
+    char* gridPtr;
+    int cellState;
+    int cellIdx;
+    char* colPtr;
     int cellTable;
-    int iVar6;
+    int blockPtr;
     int layer;
-    int iVar8;
-    u32 uVar9;
-    u32 uVar10;
+    int scratchA;
+    u32 runBlocks;
+    u32 scratchC;
     u32* layerDat;
     int* layerTbl;
-    int iVar13;
+    int scratchB;
     double in_f29;
-    double dVar14;
+    double worldX;
     double in_f30;
-    double dVar15;
+    double scaleA;
     double in_f31;
-    double dVar16;
+    double scaleB;
     double in_ps29_1;
     double in_ps30_1;
     double in_ps31_1;
-    int local_1c0;
-    int local_1bc;
-    int local_1b8;
-    int local_1b4;
-    int local_1b0;
-    int local_1ac;
-    int local_1a8;
-    int local_1a4;
-    int local_1a0;
-    int local_19c;
-    int local_198;
-    int local_194;
-    int local_190;
-    int local_18c;
-    int local_188;
-    int local_184;
+    int ring3_x0;
+    int ring3_x1;
+    int ring3_y0;
+    int ring3_y1;
+    int ring2_x0;
+    int ring2_x1;
+    int ring2_y0;
+    int ring2_y1;
+    int ring1_x0;
+    int ring1_x1;
+    int ring1_y0;
+    int ring1_y1;
+    int ring0_x0;
+    int ring0_x1;
+    int ring0_y0;
+    int ring0_y1;
     char visGrid[256];
-    u32 local_80;
-    u32 uStack_7c;
-    u32 local_78;
-    u32 uStack_74;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    u32 cvtLoHiA;
+    u32 cvtLoLoA;
+    u32 cvtHiHi;
+    u32 cvtHiLo;
+    float spillF29;
+    float spillF29_1;
+    float spillF30;
+    float spillF30_1;
+    float spillF31;
+    float spillF31_1;
 
-    local_8 = (float)in_f31;
-    fStack_4 = (float)in_ps31_1;
-    local_18 = (float)in_f30;
-    fStack_14 = (float)in_ps30_1;
-    local_28 = (float)in_f29;
-    fStack_24 = (float)in_ps29_1;
+    spillF31 = (float)in_f31;
+    spillF31_1 = (float)in_ps31_1;
+    spillF30 = (float)in_f30;
+    spillF30_1 = (float)in_ps30_1;
+    spillF29 = (float)in_f29;
+    spillF29_1 = (float)in_ps29_1;
     FUN_80286818();
     layer = 4;
     layerTbl = &DAT_80382f24;
     layerDat = &DAT_80382efc;
-    dVar15 = (double)lbl_803DF834;
-    dVar16 = DOUBLE_803df840;
+    scaleA = (double)lbl_803DF834;
+    scaleB = DOUBLE_803df840;
     do
     {
         cellTable = *layerTbl;
         DAT_803ddb08 = *layerDat;
-        FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &local_190, &local_1a0, &local_1b0, &local_1c0, layer
+        FUN_800566ec(DAT_803dda50 + 7, DAT_803dda54 + 7, &ring0_x0, &ring1_x0, &ring2_x0, &ring3_x0, layer
                      , 1, DAT_803ddb40);
-        pcVar1 = visGrid;
-        iVar13 = 8;
+        gridPtr = visGrid;
+        scratchB = 8;
         do
         {
-            *pcVar1 = '\0';
-            pcVar1[1] = '\0';
-            pcVar1[2] = '\0';
-            pcVar1[3] = '\0';
-            pcVar1[4] = '\0';
-            pcVar1[5] = '\0';
-            pcVar1[6] = '\0';
-            pcVar1[7] = '\0';
-            pcVar1[8] = '\0';
-            pcVar1[9] = '\0';
-            pcVar1[10] = '\0';
-            pcVar1[0xb] = '\0';
-            pcVar1[0xc] = '\0';
-            pcVar1[0xd] = '\0';
-            pcVar1[0xe] = '\0';
-            pcVar1[0xf] = '\0';
-            pcVar1[0x10] = '\0';
-            pcVar1[0x11] = '\0';
-            pcVar1[0x12] = '\0';
-            pcVar1[0x13] = '\0';
-            pcVar1[0x14] = '\0';
-            pcVar1[0x15] = '\0';
-            pcVar1[0x16] = '\0';
-            pcVar1[0x17] = '\0';
-            pcVar1[0x18] = '\0';
-            pcVar1[0x19] = '\0';
-            pcVar1[0x1a] = '\0';
-            pcVar1[0x1b] = '\0';
-            pcVar1[0x1c] = '\0';
-            pcVar1[0x1d] = '\0';
-            pcVar1[0x1e] = '\0';
-            pcVar1[0x1f] = '\0';
-            pcVar1 = pcVar1 + 0x20;
-            iVar13 = iVar13 + -1;
-            iVar8 = local_188;
+            *gridPtr = '\0';
+            gridPtr[1] = '\0';
+            gridPtr[2] = '\0';
+            gridPtr[3] = '\0';
+            gridPtr[4] = '\0';
+            gridPtr[5] = '\0';
+            gridPtr[6] = '\0';
+            gridPtr[7] = '\0';
+            gridPtr[8] = '\0';
+            gridPtr[9] = '\0';
+            gridPtr[10] = '\0';
+            gridPtr[0xb] = '\0';
+            gridPtr[0xc] = '\0';
+            gridPtr[0xd] = '\0';
+            gridPtr[0xe] = '\0';
+            gridPtr[0xf] = '\0';
+            gridPtr[0x10] = '\0';
+            gridPtr[0x11] = '\0';
+            gridPtr[0x12] = '\0';
+            gridPtr[0x13] = '\0';
+            gridPtr[0x14] = '\0';
+            gridPtr[0x15] = '\0';
+            gridPtr[0x16] = '\0';
+            gridPtr[0x17] = '\0';
+            gridPtr[0x18] = '\0';
+            gridPtr[0x19] = '\0';
+            gridPtr[0x1a] = '\0';
+            gridPtr[0x1b] = '\0';
+            gridPtr[0x1c] = '\0';
+            gridPtr[0x1d] = '\0';
+            gridPtr[0x1e] = '\0';
+            gridPtr[0x1f] = '\0';
+            gridPtr = gridPtr + 0x20;
+            scratchB = scratchB + -1;
+            scratchA = ring0_y0;
         }
-        while (iVar13 != 0);
-        for (; iVar13 = local_198, iVar8 <= local_184; iVar8 = iVar8 + 1)
+        while (scratchB != 0);
+        for (; scratchB = ring1_y0, scratchA <= ring0_y1; scratchA = scratchA + 1)
         {
-            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_190;
-            uVar10 = (local_18c + 1) - local_190;
-            if (local_190 <= local_18c)
+            gridPtr = visGrid + (scratchA + 7) * 0x10 + ring0_x0;
+            scratchC = (ring0_x1 + 1) - ring0_x0;
+            if (ring0_x0 <= ring0_x1)
             {
-                uVar9 = uVar10 >> 3;
-                if (uVar9 != 0)
+                runBlocks = scratchC >> 3;
+                if (runBlocks != 0)
                 {
                     do
                     {
-                        builtin_strncpy(pcVar1 + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
-                        pcVar1 = pcVar1 + 8;
-                        uVar9 = uVar9 - 1;
+                        builtin_strncpy(gridPtr + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
+                        gridPtr = gridPtr + 8;
+                        runBlocks = runBlocks - 1;
                     }
-                    while (uVar9 != 0);
-                    uVar10 = uVar10 & 7;
-                    if (uVar10 == 0) goto LAB_8005bfc4;
+                    while (runBlocks != 0);
+                    scratchC = scratchC & 7;
+                    if (scratchC == 0) goto LAB_8005bfc4;
                 }
                 do
                 {
-                    pcVar1[7] = '\x01';
-                    pcVar1 = pcVar1 + 1;
-                    uVar10 = uVar10 - 1;
+                    gridPtr[7] = '\x01';
+                    gridPtr = gridPtr + 1;
+                    scratchC = scratchC - 1;
                 }
-                while (uVar10 != 0);
+                while (scratchC != 0);
             }
         LAB_8005bfc4:
             ;
         }
-        for (; iVar8 = local_1a8, iVar13 <= local_194; iVar13 = iVar13 + 1)
+        for (; scratchA = ring2_y0, scratchB <= ring1_y1; scratchB = scratchB + 1)
         {
-            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1a0;
-            uVar10 = (local_19c + 1) - local_1a0;
-            if (local_1a0 <= local_19c)
+            gridPtr = visGrid + (scratchB + 7) * 0x10 + ring1_x0;
+            scratchC = (ring1_x1 + 1) - ring1_x0;
+            if (ring1_x0 <= ring1_x1)
             {
-                uVar9 = uVar10 >> 3;
-                if (uVar9 != 0)
+                runBlocks = scratchC >> 3;
+                if (runBlocks != 0)
                 {
                     do
                     {
-                        builtin_strncpy(pcVar1 + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
-                        pcVar1 = pcVar1 + 8;
-                        uVar9 = uVar9 - 1;
+                        builtin_strncpy(gridPtr + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
+                        gridPtr = gridPtr + 8;
+                        runBlocks = runBlocks - 1;
                     }
-                    while (uVar9 != 0);
-                    uVar10 = uVar10 & 7;
-                    if (uVar10 == 0) goto LAB_8005c058;
+                    while (runBlocks != 0);
+                    scratchC = scratchC & 7;
+                    if (scratchC == 0) goto LAB_8005c058;
                 }
                 do
                 {
-                    pcVar1[7] = '\x01';
-                    pcVar1 = pcVar1 + 1;
-                    uVar10 = uVar10 - 1;
+                    gridPtr[7] = '\x01';
+                    gridPtr = gridPtr + 1;
+                    scratchC = scratchC - 1;
                 }
-                while (uVar10 != 0);
+                while (scratchC != 0);
             }
         LAB_8005c058:
             ;
         }
-        for (; iVar13 = local_1b8, iVar8 <= local_1a4; iVar8 = iVar8 + 1)
+        for (; scratchB = ring3_y0, scratchA <= ring2_y1; scratchA = scratchA + 1)
         {
-            pcVar1 = visGrid + (iVar8 + 7) * 0x10 + local_1b0;
-            uVar10 = (local_1ac + 1) - local_1b0;
-            if (local_1b0 <= local_1ac)
+            gridPtr = visGrid + (scratchA + 7) * 0x10 + ring2_x0;
+            scratchC = (ring2_x1 + 1) - ring2_x0;
+            if (ring2_x0 <= ring2_x1)
             {
-                uVar9 = uVar10 >> 3;
-                if (uVar9 != 0)
+                runBlocks = scratchC >> 3;
+                if (runBlocks != 0)
                 {
                     do
                     {
-                        builtin_strncpy(pcVar1 + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
-                        pcVar1 = pcVar1 + 8;
-                        uVar9 = uVar9 - 1;
+                        builtin_strncpy(gridPtr + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
+                        gridPtr = gridPtr + 8;
+                        runBlocks = runBlocks - 1;
                     }
-                    while (uVar9 != 0);
-                    uVar10 = uVar10 & 7;
-                    if (uVar10 == 0) goto LAB_8005c0ec;
+                    while (runBlocks != 0);
+                    scratchC = scratchC & 7;
+                    if (scratchC == 0) goto LAB_8005c0ec;
                 }
                 do
                 {
-                    pcVar1[7] = '\x01';
-                    pcVar1 = pcVar1 + 1;
-                    uVar10 = uVar10 - 1;
+                    gridPtr[7] = '\x01';
+                    gridPtr = gridPtr + 1;
+                    scratchC = scratchC - 1;
                 }
-                while (uVar10 != 0);
+                while (scratchC != 0);
             }
         LAB_8005c0ec:
             ;
         }
-        for (; iVar13 <= local_1b4; iVar13 = iVar13 + 1)
+        for (; scratchB <= ring3_y1; scratchB = scratchB + 1)
         {
-            pcVar1 = visGrid + (iVar13 + 7) * 0x10 + local_1c0;
-            uVar10 = (local_1bc + 1) - local_1c0;
-            if (local_1c0 <= local_1bc)
+            gridPtr = visGrid + (scratchB + 7) * 0x10 + ring3_x0;
+            scratchC = (ring3_x1 + 1) - ring3_x0;
+            if (ring3_x0 <= ring3_x1)
             {
-                uVar9 = uVar10 >> 3;
-                if (uVar9 != 0)
+                runBlocks = scratchC >> 3;
+                if (runBlocks != 0)
                 {
                     do
                     {
-                        builtin_strncpy(pcVar1 + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
-                        pcVar1 = pcVar1 + 8;
-                        uVar9 = uVar9 - 1;
+                        builtin_strncpy(gridPtr + 7, "\x01\x01\x01\x01\x01\x01\x01\x01", 8);
+                        gridPtr = gridPtr + 8;
+                        runBlocks = runBlocks - 1;
                     }
-                    while (uVar9 != 0);
-                    uVar10 = uVar10 & 7;
-                    if (uVar10 == 0) goto LAB_8005c180;
+                    while (runBlocks != 0);
+                    scratchC = scratchC & 7;
+                    if (scratchC == 0) goto LAB_8005c180;
                 }
                 do
                 {
-                    pcVar1[7] = '\x01';
-                    pcVar1 = pcVar1 + 1;
-                    uVar10 = uVar10 - 1;
+                    gridPtr[7] = '\x01';
+                    gridPtr = gridPtr + 1;
+                    scratchC = scratchC - 1;
                 }
-                while (uVar10 != 0);
+                while (scratchC != 0);
             }
         LAB_8005c180:
             ;
         }
-        iVar13 = 0;
-        pcVar1 = extraout_r4;
+        scratchB = 0;
+        gridPtr = extraout_r4;
         do
         {
-            uVar10 = (u32) * pcVar1;
-            iVar8 = 0;
-            uStack_7c = uVar10 ^ 0x80000000;
-            local_80 = 0x43300000;
-            dVar14 = (double)(float)(dVar15 * (double)(float)((double)(int)uVar10));
-            pcVar4 = extraout_r4;
+            scratchC = (u32) * gridPtr;
+            scratchA = 0;
+            cvtLoLoA = scratchC ^ 0x80000000;
+            cvtLoHiA = 0x43300000;
+            worldX = (double)(float)(scaleA * (double)(float)((double)(int)scratchC));
+            colPtr = extraout_r4;
             do
             {
-                uVar9 = (u32) * pcVar4;
-                iVar3 = uVar10 + uVar9 * 0x10;
-                iVar2 = (int)*(char*)(cellTable + iVar3);
-                if (iVar2 < 0)
+                runBlocks = (u32) * colPtr;
+                cellIdx = scratchC + runBlocks * 0x10;
+                cellState = (int)*(char*)(cellTable + cellIdx);
+                if (cellState < 0)
                 {
-                    iVar6 = 0;
+                    blockPtr = 0;
                 LAB_8005c210:
-                    if ((-1 < iVar2) && (iVar2 = FUN_80057ce8(uVar10, uVar9, iVar6), iVar2 != 0))
+                    if ((-1 < cellState) && (cellState = FUN_80057ce8(scratchC, runBlocks, blockPtr), cellState != 0))
                     {
-                        lbl_803DDAD8 = (float)dVar14;
-                        uStack_7c = uVar9 ^ 0x80000000;
-                        local_80 = 0x43300000;
+                        lbl_803DDAD8 = (float)worldX;
+                        cvtLoLoA = runBlocks ^ 0x80000000;
+                        cvtLoHiA = 0x43300000;
                         lbl_803DDAD4 =
                             lbl_803DF834 * (f32)(s32)
-                        uStack_7c;
-                        uStack_74 = (int)*(short*)(iVar6 + 0x8e) ^ 0x80000000;
-                        local_78 = 0x43300000;
-                        FUN_80247a48(dVar14, (f64)(f32)(s32)uStack_74, (double)lbl_803DDAD4,
-                                     (u32*)(iVar6 + 0xc));
+                        cvtLoLoA;
+                        cvtHiLo = (int)*(short*)(blockPtr + 0x8e) ^ 0x80000000;
+                        cvtHiHi = 0x43300000;
+                        FUN_80247a48(worldX, (f64)(f32)(s32)cvtHiLo, (double)lbl_803DDAD4,
+                                     (u32*)(blockPtr + 0xc));
                         FUN_8005fb68();
                     }
                 }
                 else
                 {
-                    iVar6 = *(int*)(DAT_803ddb1c + iVar2 * 4);
-                    *(u16*)(iVar6 + 4) = *(u16*)(iVar6 + 4) ^ 1;
-                    if (visGrid[iVar3] != '\0') goto LAB_8005c210;
+                    blockPtr = *(int*)(DAT_803ddb1c + cellState * 4);
+                    *(u16*)(blockPtr + 4) = *(u16*)(blockPtr + 4) ^ 1;
+                    if (visGrid[cellIdx] != '\0') goto LAB_8005c210;
                 }
-                iVar8 = iVar8 + 1;
-                pcVar4 = pcVar4 + 1;
+                scratchA = scratchA + 1;
+                colPtr = colPtr + 1;
             }
-            while (iVar8 < 0x10);
-            iVar13 = iVar13 + 1;
-            pcVar1 = pcVar1 + 1;
+            while (scratchA < 0x10);
+            scratchB = scratchB + 1;
+            gridPtr = gridPtr + 1;
         }
-        while (iVar13 < 0x10);
+        while (scratchB < 0x10);
         layerTbl = layerTbl + -1;
         layerDat = layerDat + -1;
         layer = layer + -1;
