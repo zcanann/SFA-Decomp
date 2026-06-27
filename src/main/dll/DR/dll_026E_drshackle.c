@@ -75,11 +75,11 @@ void drshackle_initialise(void)
 
 int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
 {
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
-    u8* p = ((GameObject*)obj)->extra;
     int* model;
     int* modelData;
     int joint1;
+    u8* p = ((GameObject*)obj)->extra;
+    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     f32 jointPos[3];
     f32 parentPos[3];
     int i;
