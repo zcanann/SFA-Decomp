@@ -708,9 +708,9 @@ void mapBlockFn_80059c2c(u8* outFlags)
 }
 
 extern f32 lbl_803DEBCC;
-extern f32 retraceCount;
-extern f32 flushFlag;
-extern f32 retraceQueue;
+extern f32 retraceCount_803DEBE0;
+extern f32 flushFlag_803DEBE4;
+extern f32 retraceQueue_803DEBE8;
 extern f32 lbl_803DEBEC;
 extern f32 PreCB;
 extern char gViewFrustumPlanes[];
@@ -2192,14 +2192,14 @@ int objUpdateOpacity(char* obj)
                                   &o1, &o2, &o3, &sz, &o5, &o6);
         sz = __fabs(sz);
         sz = sz * gMapBlockWorldSize;
-        if (sz < retraceCount)
+        if (sz < retraceCount_803DEBE0)
         {
             *(u8*)(obj + 0x37) = 0;
             return 0;
         }
-        if (sz < retraceQueue)
+        if (sz < retraceQueue_803DEBE8)
         {
-            alpha = (int)(((f32)alpha * (sz - retraceCount)) / flushFlag);
+            alpha = (int)(((f32)alpha * (sz - retraceCount_803DEBE0)) / flushFlag_803DEBE4);
         }
         *(u8*)(obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
     }
