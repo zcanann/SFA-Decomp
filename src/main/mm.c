@@ -427,8 +427,9 @@ void mmFreeTick(int arg)
     gMmTickCount++;
     gMmOpCount++;
 
+    i = 0;
     d = g->deferred;
-    for (i = 0; i < gMmDeferredFreeCount;)
+    for (; i < gMmDeferredFreeCount;)
     {
         d->delay--;
         if (d->delay == 0)
