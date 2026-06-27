@@ -681,14 +681,14 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 {
     char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
     int bestIdx;
-    HeapItem* base;
     HeapItem* it;
-    HeapItem* res;
-    int bestSize;
-    int largest;
-    int t28;
-    int t27;
     int idx;
+    HeapItem* base;
+    int bestSize;
+    int t28;
+    HeapItem* res;
+    int t27;
+    int largest;
 
     largest = 0;
     t28 = 0;
