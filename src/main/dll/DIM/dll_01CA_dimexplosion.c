@@ -35,6 +35,9 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
+STATIC_ASSERT(sizeof(GravityDebris) == 0x24);
+STATIC_ASSERT(offsetof(ExplosionState, debris) == 0x964);
+STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 
 #define GEXPLOSION_TEXTURE_COUNT 4
 
@@ -486,37 +489,38 @@ void explosion_update(int obj)
     fake.velocityZ = lbl_803E4960;
     for (i = 0, p = state; i < ((ExplosionState*)state)->debrisCount; i++)
     {
-        if (*(u8*)((char*)p + 0x984) != 0)
+        GravityDebris* d = (GravityDebris*)((char*)p + 0x964);
+        if (d->active != 0)
         {
-            *(int*)((char*)p + 0x97c) += framesThisStep;
-            if (*(int*)((char*)p + 0x97c) >= *(int*)((char*)p + 0x980))
+            d->age += framesThisStep;
+            if (d->age >= d->lifetime)
             {
-                *(u8*)((char*)p + 0x984) = 0;
+                d->active = 0;
             }
             else
             {
                 f32 grav = ((ExplosionState*)state)->driftYSpeed;
                 u32 ft = framesThisStep;
-                f32 n974 = -(grav * (f32)(u32)ft - *(f32*)((char*)p + 0x974));
-                *(f32*)((char*)p + 0x968) = -(lbl_803E499C * (grav * (f32)(int)(ft * ft))
-                                       - (*(f32*)((char*)p + 0x974) * (f32)(u32)ft + *(f32*)((char*)p + 0x968)));
-                *(f32*)((char*)p + 0x974) = n974;
-                *(f32*)((char*)p + 0x964) += *(f32*)((char*)p + 0x970) * (f32)(u32)framesThisStep;
-                *(f32*)((char*)p + 0x96c) += *(f32*)((char*)p + 0x978) * (f32)(u32)framesThisStep;
-                if (((ExplosionState*)state)->nearGround != 0 && *(f32*)((char*)p + 0x968) < ((ExplosionState*)state)->groundY &&
-                    *(f32*)((char*)p + 0x974) < lbl_803E4960)
+                f32 n974 = -(grav * (f32)(u32)ft - d->velY);
+                d->posY = -(lbl_803E499C * (grav * (f32)(int)(ft * ft))
+                                       - (d->velY * (f32)(u32)ft + d->posY));
+                d->velY = n974;
+                d->posX += d->velX * (f32)(u32)framesThisStep;
+                d->posZ += d->velZ * (f32)(u32)framesThisStep;
+                if (((ExplosionState*)state)->nearGround != 0 && d->posY < ((ExplosionState*)state)->groundY &&
+                    d->velY < lbl_803E4960)
                 {
-                    *(f32*)((char*)p + 0x974) = lbl_803E49A0 * -*(f32*)((char*)p + 0x974);
+                    d->velY = lbl_803E49A0 * -d->velY;
                 }
-                fake.localPosX = *(f32*)((char*)p + 0x964);
-                fake.localPosY = *(f32*)((char*)p + 0x968);
-                fake.localPosZ = *(f32*)((char*)p + 0x96c);
+                fake.localPosX = d->posX;
+                fake.localPosY = d->posY;
+                fake.localPosZ = d->posZ;
                 fake.worldPosX = fake.localPosX;
                 fake.worldPosY = fake.localPosY;
                 fake.worldPosZ = fake.localPosZ;
                 if (gExplosionUpdateTick & 1)
                 {
-                    int t = *(int*)((char*)p + 0x97c);
+                    int t = d->age;
                     if (t < 0x40)
                     {
                         int v = t << 6;
@@ -717,15 +721,18 @@ void explosion_init(int obj, int p2)
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, vsp, vsp);
             }
-            *(f32*)((char*)p + 0x964) = ((GameObject*)obj)->anim.localPosX;
-            *(f32*)((char*)p + 0x968) = ((GameObject*)obj)->anim.localPosY;
-            *(f32*)((char*)p + 0x96c) = ((GameObject*)obj)->anim.localPosZ;
-            *(f32*)((char*)p + 0x970) = vsp[0];
-            *(f32*)((char*)p + 0x974) = vsp[1];
-            *(f32*)((char*)p + 0x978) = vsp[2];
-            *(int*)((char*)p + 0x97c) = 0;
-            *(int*)((char*)p + 0x980) = randomGetRange(0x28, 0x32);
-            *(u8*)((char*)p + 0x984) = 1;
+            {
+                GravityDebris* d = (GravityDebris*)((char*)p + 0x964);
+                d->posX = ((GameObject*)obj)->anim.localPosX;
+                d->posY = ((GameObject*)obj)->anim.localPosY;
+                d->posZ = ((GameObject*)obj)->anim.localPosZ;
+                d->velX = vsp[0];
+                d->velY = vsp[1];
+                d->velZ = vsp[2];
+                d->age = 0;
+                d->lifetime = randomGetRange(0x28, 0x32);
+                d->active = 1;
+            }
             p += 0x24;
         }
         ((ExplosionState*)state)->debrisCount = i;
