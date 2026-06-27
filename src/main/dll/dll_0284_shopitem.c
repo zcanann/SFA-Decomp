@@ -377,12 +377,11 @@ void shopitem_update(int obj)
 
 void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 {
-    int slot;
-    int state = *(int*)&((GameObject*)obj)->extra;
+    ShopItemState* state = *(ShopItemState**)&((GameObject*)obj)->extra;
     u8 i;
     u8 spawned = 0;
     ShopSparkleSpawn v;
-    PushcartState97* b = (PushcartState97*)(state + 0xE8);
+    PushcartState97* b = (PushcartState97*)&state->flagsE8;
     f32 scale;
 
     if (b->flag_40)
@@ -400,18 +399,17 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)
     {
-        slot = state + i * 4;
-        if (*(void**)(slot + 0x98) != NULL)
+        if (*(void**)&state->lightningHandles[i] != NULL)
         {
-            lightningRender(*(void**)(slot + 0x98));
+            lightningRender(*(void**)&state->lightningHandles[i]);
             if (getHudHiddenFrameCount() == 0)
             {
-                *(f32*)(slot + 0xC0) += timeDelta;
-                *(u16*)(*(int*)(slot + 0x98) + 0x20) = (u16)(int)(lbl_803E5A3C + *(f32*)(slot + 0xC0));
-                if (*(u16*)(*(int*)(slot + 0x98) + 0x20) > 0x14)
+                state->lightningTimers[i] += timeDelta;
+                *(u16*)(state->lightningHandles[i] + 0x20) = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
+                if (*(u16*)(state->lightningHandles[i] + 0x20) > 0x14)
                 {
-                    mm_free_(*(int*)(slot + 0x98));
-                    *(int*)(slot + 0x98) = 0;
+                    mm_free_(state->lightningHandles[i]);
+                    state->lightningHandles[i] = 0;
                 }
             }
         }
@@ -437,9 +435,9 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                     v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
                     v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
                 }
-                *(int*)(slot + 0x98) =
+                state->lightningHandles[i] =
                     lightningCreate((f32*)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
-                *(f32*)(slot + 0xC0) = lbl_803E5A50;
+                state->lightningTimers[i] = lbl_803E5A50;
                 spawned = 1;
             }
         }

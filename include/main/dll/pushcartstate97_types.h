@@ -28,7 +28,10 @@ typedef struct ShopItemState
     s16 helpTextId; /* 0x94 */
     u8 pad96;
     u8 flags97; /* 0x97: PushcartState97 overlay */
-    u8 pad98[0xEC - 0x98];
+    int lightningHandles[10]; /* 0x98: per-spark lightning effect handles */
+    f32 lightningTimers[10];  /* 0xC0: per-spark age timers */
+    u8 flagsE8; /* 0xE8: PushcartState97 overlay (sparkle render path) */
+    u8 padE9[0xEC - 0xE9];
 } ShopItemState;
 
 #endif
