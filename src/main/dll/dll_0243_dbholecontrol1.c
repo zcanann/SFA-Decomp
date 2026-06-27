@@ -419,7 +419,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 }
 
 u32
-FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* obj,
+FUN_80202004(double rangeThreshold, double turnGain, u64 param_3, double rangeScale, u16* obj,
              int target)
 {
     int yawDelta;
@@ -431,13 +431,13 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
 
     control = *(int*)&((GameObject*)obj)->extra;
     yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
-    if ((double)lbl_803E6F40 == param_4)
+    if ((double)lbl_803E6F40 == rangeScale)
     {
         result = 0;
     }
     else
     {
-        signedDist = (double)(float)((double)(float)((double)info[0] - param_1) / param_4);
+        signedDist = (double)(float)((double)(float)((double)info[0] - rangeThreshold) / rangeScale);
         absDist = signedDist;
         if (signedDist < (double)lbl_803E6F40)
         {
@@ -447,11 +447,11 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
         {
             if (signedDist < (double)lbl_803E6F40)
             {
-                param_2 = -param_2;
+                turnGain = -turnGain;
             }
             *(float*)(control + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
+                ((float)(turnGain *
                     (double)(lbl_803E6F60 -
                         (float)((double)(int)(short)yawDelta) / lbl_803E700C)) - *(float*)(control + 0x280)) +
                 *(float*)(control + 0x280);
@@ -469,7 +469,7 @@ FUN_80202004(double param_1, double param_2, u64 param_3, double param_4, u16* o
 int dbstealerworm_stateHandlerA06(int obj, int p2);
 
 u32
-FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* obj,
+FUN_80202130(double rangeThreshold, double turnGain, u64 param_3, double rangeScale, u16* obj,
              int target)
 {
     int yawDelta;
@@ -481,9 +481,9 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
     if ((obj != 0x0) && (target != 0))
     {
         yawDelta = Obj_GetYawDeltaToObject(obj, target, info);
-        if ((double)lbl_803E6F40 != param_4)
+        if ((double)lbl_803E6F40 != rangeScale)
         {
-            if ((double)info[0] < param_1)
+            if ((double)info[0] < rangeThreshold)
             {
                 absDy = (double)(*(float*)(obj + 8) - *(float*)(target + 0x10));
                 if (absDy < (double)lbl_803E6F40)
@@ -497,7 +497,7 @@ FUN_80202130(double param_1, double param_2, u64 param_3, double param_4, u16* o
             }
             *(float*)(control + 0x280) =
                 lbl_803DC074 * lbl_803E6FE4 *
-                ((float)(param_2 *
+                ((float)(turnGain *
                     (double)(lbl_803E6F60 -
                         (float)((double)(int)(short)yawDelta) / lbl_803E700C)) - *(float*)(control + 0x280)) +
                 *(float*)(control + 0x280);
