@@ -780,7 +780,7 @@ u32 isInWalkGroupOrPatch(float* point)
     idx = 1;
     patch = &gObjfsaPatches[1];
     count = gObjfsaPatchCount;
-    for (; idx < count; idx++, patch++)
+    for (; idx < count; patch++, idx++)
     {
         y = point[1];
         if (y < patch->maxY && y > patch->minY)
