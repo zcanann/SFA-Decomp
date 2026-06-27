@@ -711,7 +711,8 @@ typedef struct SmallbasketObjectDef
     s8 rotX;
     u8 subtype;
     s16 unk1A;
-    f32 unk1C;
+    s16 respawnMinutes;
+    s16 enableGameBit;
     s16 leashRange;
     u8 pad22[0x24 - 0x22];
     f32 unk24;
@@ -727,7 +728,7 @@ void smallbasket_init(int obj, int def)
     ObjHits_DisableObject(obj);
     ObjGroup_AddObject(obj, 0x10);
 
-    v1c = *(s16*)(def + 0x1c);
+    v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
     if (v1c == 0)
     {
         ((CfperchState*)state)->respawnDelay = 0;
@@ -741,7 +742,7 @@ void smallbasket_init(int obj, int def)
     ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
     ((CfperchState*)state)->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
     ((GameObject*)obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
-    ((CfperchState*)state)->enableGameBit = *(s16*)(def + 0x1e);
+    ((CfperchState*)state)->enableGameBit = ((SmallbasketObjectDef*)def)->enableGameBit;
     ((CfperchState*)state)->leashRange = ((SmallbasketObjectDef*)def)->leashRange;
     if (((CfperchState*)state)->leashRange == 0)
     {
