@@ -43,7 +43,7 @@ extern const f32 lbl_803DF354;
 extern const f32 lbl_803DF35C;
 extern volatile f32 lbl_803DF384;
 extern volatile f32 lbl_803DF418;
-extern f32 lbl_803DF358;
+extern const f32 lbl_803DF358;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f64 gExpgfxU16ToDoubleBias;
@@ -51,7 +51,7 @@ extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;
 extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
-extern f32 gExpgfxSlotMotionStep;
+extern const f32 gExpgfxSlotMotionStep;
 
 ObjectDescriptor14 expgfx_funcs = {
     0,
