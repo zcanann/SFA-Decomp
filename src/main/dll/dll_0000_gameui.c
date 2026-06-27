@@ -2913,7 +2913,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                     {
                         u8 prev = lbl_803DBA64;
-                        lbl_803DBA64 = (u8)(prev + a1);
+                        lbl_803DBA64 = prev + a1;
                         if ((s8)lbl_803DBA64 < menuMin)
                         {
                             lbl_803DBA64 = menuMax;
