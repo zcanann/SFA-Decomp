@@ -1551,7 +1551,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     int s;
     int i;
     int k;
-    int fileBuf;
+    u32 fileBuf;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
@@ -2584,49 +2584,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         return;
     }
     fileBuf = MLDF_PTR(fileId);
-    if (fileBuf == 0)
+    if (fileBuf != 0)
     {
-        if (fileId == 0x20 || fileId == 0x4b)
-        {
-            DVDOpen(sResourceFileNameTable[fileId], buf);
-            alignedSize = (length + 0x1f) & 0xffffffe0;
-            fileBuf = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
-            DVDRead(buf, (void*)fileBuf, alignedSize, offsetFlags & 0xffffff);
-            DVDClose(buf);
-            DCStoreRange((void*)fileBuf, length);
-            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
-            {
-                for (;;)
-                {
-                }
-            }
-            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
-            {
-                decompSize = *(u32*)(fileBuf + 8);
-                zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
-            }
-            mm_free((void*)fileBuf);
-        }
-        else
-        {
-            DVDOpen(sResourceFileNameTable[fileId], buf);
-            if (((u32)destBuf & 0x1f) == 0 && (length & 0x1f) == 0)
-            {
-                DVDRead(buf, (void*)destBuf, length, offsetFlags);
-            }
-            else
-            {
-                alignedSize = (length + 0x1f) & 0xffffffe0;
-                tmp = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
-                DVDRead(buf, (void*)tmp, alignedSize, offsetFlags);
-                memcpy((void*)destBuf, (void*)tmp, length);
-                mm_free((void*)tmp);
-            }
-            DCStoreRange((void*)destBuf, length);
-            DVDClose(buf);
-        }
-    }
-    else if (fileId == 0xd || fileId == 0x55)
+    if (fileId == 0xd || fileId == 0x55)
     {
         if (fileBuf == 0)
         {
@@ -2731,6 +2691,46 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     else
     {
         memcpy((void*)destBuf, (void*)(fileBuf + offsetFlags), length);
+    }
+    }
+    else if (fileId == 0x20 || fileId == 0x4b)
+    {
+        DVDOpen(sResourceFileNameTable[fileId], buf);
+        alignedSize = (length + 0x1f) & 0xffffffe0;
+        fileBuf = (u32)mmAlloc(alignedSize, 0x7f7f7fff, 0);
+        DVDRead(buf, (void*)fileBuf, alignedSize, offsetFlags & 0xffffff);
+        DVDClose(buf);
+        DCStoreRange((void*)fileBuf, length);
+        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+        {
+            for (;;)
+            {
+            }
+        }
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+        {
+            decompSize = *(u32*)(fileBuf + 8);
+            zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        }
+        mm_free((void*)fileBuf);
+    }
+    else
+    {
+        DVDOpen(sResourceFileNameTable[fileId], buf);
+        if (((u32)destBuf & 0x1f) == 0 && (length & 0x1f) == 0)
+        {
+            DVDRead(buf, (void*)destBuf, length, offsetFlags);
+        }
+        else
+        {
+            alignedSize = (length + 0x1f) & 0xffffffe0;
+            tmp = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
+            DVDRead(buf, (void*)tmp, alignedSize, offsetFlags);
+            memcpy((void*)destBuf, (void*)tmp, length);
+            mm_free((void*)tmp);
+        }
+        DCStoreRange((void*)destBuf, length);
+        DVDClose(buf);
     }
 }
 #pragma dont_inline reset
