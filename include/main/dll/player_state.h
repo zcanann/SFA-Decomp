@@ -340,7 +340,7 @@ typedef struct PlayerState {
     u8 altAnimSoundId; /* anim-sound-set id copied into animSoundId for specific moves (e.g. turn/launch); init 6 */
     u8 moveSlotCount;
     u8 moveSlotIndex;
-    u8 altMoveToggle; /* 0x8aa: alternating selector XOR-toggled each invocation; when nonzero picks the alternate approach move (0x1a) — sibling of moveAltToggle */
+    u8 altMoveToggle; /* 0x8aa: alternating selector XOR-toggled each invocation; when nonzero picks the alternate approach move (0x1a) -- sibling of moveAltToggle */
     u8 hitCount; /* hits dealt so far in the current multi-hit move; ++ per hit, stops when >= hitCountMax */
     u8 hitCountMax; /* max hits for the move (HitDesc.valsB[0]) */
     u8 hitInterval; /* frames between hits (HitDesc.valsA[0]); reloads hitTimer */
