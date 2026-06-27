@@ -244,15 +244,15 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
 
 void worldplanet_update(int obj)
 {
-    WorldPlanetState* state;
-    int* tbl;
-    u8 done;
     u8 prevPlanet;
+    int galleon;
     int buttons;
+    int* tbl;
+    WorldPlanetState* state;
+    u8 done;
     u8 i;
     u8 b;
     int objId;
-    int galleon;
     WorldObjEffectParams pfx;
     struct
     {
