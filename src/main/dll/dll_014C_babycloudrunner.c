@@ -119,7 +119,7 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
+void FUN_8019b1d8(u32 arg0, u32 arg1, u16* sfxTable)
 {
     u32 obj;
     int tailSfxSlot;
@@ -170,8 +170,8 @@ void FUN_8019b1d8(u32 param_1, u32 param_2, u16* sfxTable)
 }
 
 u32
-FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
-             u32 param_6, u32 param_7, u32 param_8, u32 param_9)
+FUN_8019b2e0(double dt, short* self, short* target, float* arg3, u32 arg4,
+             u32 arg5, u32 arg6, u32 arg7, u32 arg8)
 {
     int newAng;
     short angDelta;
@@ -186,10 +186,10 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
     float deltaZ;
     float deltaY;
     float deltaX[2];
-    u32 local_48;
-    u32 uStack_44;
-    u32 local_40;
-    u32 uStack_3c;
+    u32 selfYawCvtHi;
+    u32 selfYawCvtLo;
+    u32 angDeltaCvtHi;
+    u32 angDeltaCvtLo;
 
     if (target == 0x0)
     {
@@ -218,15 +218,15 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
             {
                 angDelta = angDelta + -1;
             }
-            uStack_44 = (int)*self ^ 0x80000000;
-            local_48 = 0x43300000;
-            uStack_3c = angDelta ^ 0x80000000;
-            local_40 = 0x43300000;
+            selfYawCvtLo = (int)*self ^ 0x80000000;
+            selfYawCvtHi = 0x43300000;
+            angDeltaCvtLo = angDelta ^ 0x80000000;
+            angDeltaCvtHi = 0x43300000;
             newAng = (int)
             ((f32)(s32)
-            uStack_44 +
+            selfYawCvtLo +
                 (float)((double)((lbl_803E4DC0 +
-                    (float)((double)(u32)uStack_3c
+                    (float)((double)(u32)angDeltaCvtLo
                     )) * (float)(dt * (double)lbl_803DC074)) / dist)
             )
             ;
@@ -237,9 +237,9 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
             if (self[0x50] != 0x1a)
             {
                 FUN_800305f8((double)lbl_803E4DA8, dist, velZ, dx, in_f5, in_f6, in_f7, in_f8, self, 0x1a, 0
-                             , param_5, param_6, param_7, param_8, param_9);
+                             , arg4, arg5, arg6, arg7, arg8);
             }
-            FUN_8002f6ac(dt, self, param_4);
+            FUN_8002f6ac(dt, self, arg3);
             result = 0;
         }
         else
@@ -251,19 +251,19 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
 }
 
 u32
-FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, short* param_9,
-             u32 param_10, u32 param_11, float* param_12, int param_13, u32 param_14
-             , u32 param_15, u32 param_16)
+FUN_8019b650(u64 arg0, double arg1, double arg2, double arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, short* arg8,
+             u32 arg9, u32 arg10, float* arg11, int arg12, u32 arg13
+             , u32 arg14, u32 arg15)
 {
     return 0;
 }
 
 u32
-FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_8019b658(u64 arg0, double arg1, double arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, int obj, u32 arg9
+             , ObjAnimUpdateState* animUpdate, u32 arg11, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15)
 {
     u32 result;
     int hitResult;
@@ -296,9 +296,9 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         }
         hitResult = FUN_8007f924((int)animUpdate);
         if ((hitResult == 0x283) ||
-            (hitResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj
-                                  , animUpdate, state, (short)*coordPair, coordPair[1], param_14, param_15,
-                                  param_16), hitResult == 0))
+            (hitResult = FUN_801149b8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, obj
+                                  , animUpdate, state, (short)*coordPair, coordPair[1], arg13, arg14,
+                                  arg15), hitResult == 0))
         {
             if (animUpdate->triggerCommand == 2)
             {
@@ -316,10 +316,10 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
 }
 
 u32
-FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 obj
-             , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8019c318(u64 arg0, u64 arg1, u64 arg2, u64 arg3,
+             u64 arg4, u64 arg5, u64 arg6, u64 arg7, u32 obj
+             , u32 arg9, ObjAnimUpdateState* animUpdate, u32 arg11, u32 arg12,
+             u32 arg13, u32 arg14, u32 arg15)
 {
     int eventIdx;
     u32 bitSet;
@@ -336,30 +336,30 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             if ((*objType == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
-                                    0x110001, obj, 0, param_13, param_14, param_15, param_16);
+                ObjMsg_SendToObject(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, msgArgs[0],
+                                    0x110001, obj, 0, arg12, arg13, arg14, arg15);
             }
         }
         else if ((int)msgId < 0x110001)
         {
             if (msgId == 0xa0005)
             {
-                param_1 = FUN_80017698((int)*objType, 1);
+                arg0 = FUN_80017698((int)*objType, 1);
             }
         }
         else if (msgId == 0x110003)
         {
             if ((*objType == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
-                                    0x110003, obj, 0, param_13, param_14, param_15, param_16);
+                ObjMsg_SendToObject(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, msgArgs[0],
+                                    0x110003, obj, 0, arg12, arg13, arg14, arg15);
             }
         }
         else if ((((int)msgId < 0x110003) && (*objType == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgArgs[0],
-                                0x110002, obj, 0, param_13, param_14, param_15, param_16);
+            ObjMsg_SendToObject(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, msgArgs[0],
+                                0x110002, obj, 0, arg12, arg13, arg14, arg15);
         }
     }
     for (eventIdx = 0; eventIdx < (int)(u32)animUpdate->eventCount; eventIdx = eventIdx + 1)
@@ -374,10 +374,10 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
 }
 
 u32
-FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 obj,
-             u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8019d238(u64 arg0, double arg1, double arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u32 obj,
+             u32 arg9, u32 arg10, u32 arg11, u32 arg12,
+             u32 arg13, u32 arg14, u32 arg15)
 {
     int state;
     double pitch;
@@ -385,21 +385,21 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((GameObject*)obj)->anim.currentMove != 5) && (((GameObject*)obj)->anim.currentMove != 0xd))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg1, arg2, arg3, arg4,
+                     arg5, arg6,
+                     arg7, obj, 0xd, 0, arg11, arg12, arg13, arg14, arg15);
     }
     if ((((GameObject*)obj)->anim.currentMove == 5) && (lbl_803E4EC4 < ((GameObject*)obj)->anim.velocityY))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg1, arg2, arg3, arg4,
+                     arg5, arg6,
+                     arg7, obj, 0xd, 0, arg11, arg12, arg13, arg14, arg15);
     }
     if ((((GameObject*)obj)->anim.currentMove == 0xd) && (((GameObject*)obj)->anim.velocityY < lbl_803E4EB0))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 5, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg1, arg2, arg3, arg4,
+                     arg5, arg6,
+                     arg7, obj, 5, 0, arg11, arg12, arg13, arg14, arg15);
     }
     pitch = (double)((((GameObject*)obj)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
     if (pitch < (double)lbl_803E4EB0)
