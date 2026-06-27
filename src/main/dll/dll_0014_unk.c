@@ -413,8 +413,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 n = *(int*)(found + 0x1C + k * 4);
                 if (n > -1 && (*(s8*)(found + 0x1B) & mask) == 0 && n != 0)
                 {
-                    cand1[count] = n;
-                    count++;
+                    cand1[count++] = n;
                 }
                 mask <<= 1;
             }
