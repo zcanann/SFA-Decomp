@@ -2530,25 +2530,25 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 *(f32*)(curve + 0xc);
                             fy1 = lbl_803E05D0 * (f32) * (s8*)(linked + 0x18) +
                                 *(f32*)(linked + 0xc);
-                            if (fy0 <= fy1)
+                            if (fy0 > fy1)
                             {
-                                OBJFSA_NEWPATCH.maxY = fy1;
+                                OBJFSA_NEWPATCH.maxY = fy0;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.maxY = fy0;
+                                OBJFSA_NEWPATCH.maxY = fy1;
                             }
                             fy0 = -(lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) -
                                 *(f32*)(curve + 0xc));
                             fy1 = -(lbl_803E05D0 * (f32) * (s8*)(linked + 0x1a) -
                                 *(f32*)(linked + 0xc));
-                            if (fy1 <= fy0)
+                            if (fy0 < fy1)
                             {
-                                OBJFSA_NEWPATCH.minY = fy1;
+                                OBJFSA_NEWPATCH.minY = fy0;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.minY = fy0;
+                                OBJFSA_NEWPATCH.minY = fy1;
                             }
                             gObjfsaPatchCount++;
                         }
