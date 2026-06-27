@@ -1065,9 +1065,9 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
     f32* pf;
     int byteOff;
     int outOff;
-    int worldIdx;
     u8* worldBase;
     int i;
+    int worldIdx;
     int linked;
     f32 invStep;
     f32 one;
