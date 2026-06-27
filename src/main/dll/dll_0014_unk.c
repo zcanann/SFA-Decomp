@@ -3625,6 +3625,7 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
 {
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
+    u32 mask;
     RomCurvePlacementDef* next;
     int done;
     int n;
@@ -3633,7 +3634,6 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
     int count;
     int link;
     int id;
-    u32 mask;
     int i;
     int idsB[ROMCURVE_LINK_COUNT];
     int idsA[ROMCURVE_LINK_COUNT];
