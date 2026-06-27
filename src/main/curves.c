@@ -471,8 +471,8 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
 {
     f32 v3 = values[3];
-    f32 k668 = lbl_803DE668;
     f32 k664 = lbl_803DE664;
+    f32 k668 = lbl_803DE668;
     f32 scale;
 
     coefficients[0] = v3 + (k668 * values[2] + (-values[0] + k664 * values[1]));
