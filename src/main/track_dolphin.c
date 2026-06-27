@@ -3183,7 +3183,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 }
 
 extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
-extern f32 lbl_803DECE0[2];
+extern const f32 lbl_803DECE0[2];
 
 void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
 {
