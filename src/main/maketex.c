@@ -34,154 +34,154 @@ int FUN_8007eb04(u32 slot)
 {
     u32 xorEven;
     u32 xorOdd;
-    u32 uVar3;
+    u32 scratch3;
     u16 i;
-    u32 uVar5;
-    u32 uVar6;
-    u32 uVar7;
-    u32 uVar8;
-    u32 uVar9;
-    u32 uVar10;
-    u32 uVar11;
-    u32 uVar12;
-    int iVar13;
+    u32 scratch5;
+    u32 scratch6;
+    u32 scratch7;
+    u32 scratch8;
+    u32 scratch9;
+    u32 scratch10;
+    u32 scratch11;
+    u32 scratch12;
+    int scratch13;
     int sum2;
-    u32 uVar15;
-    u32 uVar16;
-    u32 uVar17;
-    u32 uVar18;
-    u32 uVar19;
-    u32 uVar20;
-    u32 uVar21;
-    u32 uVar22;
+    u32 scratch15;
+    u32 scratch16;
+    u32 scratch17;
+    u32 scratch18;
+    u32 scratch19;
+    u32 scratch20;
+    u32 scratch21;
+    u32 scratch22;
     u32* wp;
-    u32 uVar24;
+    u32 scratch24;
     bool carry;
 
-    uVar7 = DAT_803ddcc4;
+    scratch7 = DAT_803ddcc4;
     xorOdd = 0;
     xorEven = 0;
-    uVar6 = 1;
-    iVar13 = 0;
+    scratch6 = 1;
+    scratch13 = 0;
     for (i = 0; i < 0x3f7; i = i + 8)
     {
         wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
-        uVar12 = wp[1];
-        carry = addCarryOut32(uVar6, uVar12);
-        uVar3 = uVar6 + uVar12;
-        uVar15 = wp[3];
-        uVar5 = uVar3 + uVar15;
-        uVar16 = wp[5];
-        uVar24 = uVar5 + uVar16;
-        uVar17 = wp[7];
-        uVar8 = uVar24 + uVar17;
-        uVar18 = wp[9];
-        uVar9 = uVar8 + uVar18;
-        uVar19 = wp[0xb];
-        uVar10 = uVar9 + uVar19;
-        uVar20 = wp[0xd];
-        uVar11 = uVar10 + uVar20;
-        uVar21 = wp[0xf];
-        xorOdd = xorOdd ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
+        scratch12 = wp[1];
+        carry = addCarryOut32(scratch6, scratch12);
+        scratch3 = scratch6 + scratch12;
+        scratch15 = wp[3];
+        scratch5 = scratch3 + scratch15;
+        scratch16 = wp[5];
+        scratch24 = scratch5 + scratch16;
+        scratch17 = wp[7];
+        scratch8 = scratch24 + scratch17;
+        scratch18 = wp[9];
+        scratch9 = scratch8 + scratch18;
+        scratch19 = wp[0xb];
+        scratch10 = scratch9 + scratch19;
+        scratch20 = wp[0xd];
+        scratch11 = scratch10 + scratch20;
+        scratch21 = wp[0xf];
+        xorOdd = xorOdd ^ scratch12 ^ scratch15 ^ scratch16 ^ scratch17 ^ scratch18 ^ scratch19 ^ scratch20 ^ scratch21;
         xorEven = xorEven ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
             wp[0xc] ^ wp[0xe];
-        uVar6 = uVar11 + uVar21;
-        iVar13 = iVar13 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(uVar3, uVar15) +
-            wp[4] + (u32)addCarryOut32(uVar5, uVar16) + wp[6] + (u32)addCarryOut32(uVar24, uVar17) +
-            wp[8] + (u32)addCarryOut32(uVar8, uVar18) + wp[10] + (u32)addCarryOut32(uVar9, uVar19) +
-            wp[0xc] + (u32)addCarryOut32(uVar10, uVar20) + wp[0xe] + (u32)addCarryOut32(uVar11, uVar21);
+        scratch6 = scratch11 + scratch21;
+        scratch13 = scratch13 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(scratch3, scratch15) +
+            wp[4] + (u32)addCarryOut32(scratch5, scratch16) + wp[6] + (u32)addCarryOut32(scratch24, scratch17) +
+            wp[8] + (u32)addCarryOut32(scratch8, scratch18) + wp[10] + (u32)addCarryOut32(scratch9, scratch19) +
+            wp[0xc] + (u32)addCarryOut32(scratch10, scratch20) + wp[0xe] + (u32)addCarryOut32(scratch11, scratch21);
     }
     for (; i < 0x3ff; i = i + 1)
     {
         wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
-        uVar3 = *wp;
-        uVar5 = wp[1];
-        xorOdd = xorOdd ^ uVar5;
-        xorEven = xorEven ^ uVar3;
-        carry = addCarryOut32(uVar6, uVar5);
-        uVar6 = uVar6 + uVar5;
-        iVar13 = iVar13 + uVar3 + carry;
+        scratch3 = *wp;
+        scratch5 = wp[1];
+        xorOdd = xorOdd ^ scratch5;
+        xorEven = xorEven ^ scratch3;
+        carry = addCarryOut32(scratch6, scratch5);
+        scratch6 = scratch6 + scratch5;
+        scratch13 = scratch13 + scratch3 + carry;
     }
-    xorOdd = xorOdd ^ uVar6 + 0xd;
-    xorEven = xorEven ^ iVar13 + (u32)(0xfffffff2 < uVar6);
+    xorOdd = xorOdd ^ scratch6 + 0xd;
+    xorEven = xorEven ^ scratch13 + (u32)(0xfffffff2 < scratch6);
     *(u32*)(DAT_803ddcc4 + 0x1ffc) = xorOdd;
-    *(u32*)(uVar7 + 0x1ff8) = xorEven;
+    *(u32*)(scratch7 + 0x1ff8) = xorEven;
     FUN_802420e0(DAT_803ddcc4, 0x2000);
-    uVar7 = (slot & 0xff) << 0xd;
-    iVar13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
-    if (iVar13 == -5)
+    scratch7 = (slot & 0xff) << 0xd;
+    scratch13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, scratch7);
+    if (scratch13 == -5)
     {
         FUN_80264624(0, DAT_803dc364);
     }
-    uVar6 = DAT_803ddcd0;
-    uVar3 = DAT_803ddcd4;
-    if (iVar13 == 0)
+    scratch6 = DAT_803ddcd0;
+    scratch3 = DAT_803ddcd4;
+    if (scratch13 == 0)
     {
         FUN_802420b0(DAT_803ddcc4, 0x2000);
-        iVar13 = FUN_802640ac((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
-        uVar6 = DAT_803ddcd0;
-        uVar3 = DAT_803ddcd4;
-        if (iVar13 == 0)
+        scratch13 = FUN_802640ac((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, scratch7);
+        scratch6 = DAT_803ddcd0;
+        scratch3 = DAT_803ddcd4;
+        if (scratch13 == 0)
         {
-            uVar3 = 0;
-            uVar6 = 0;
-            uVar7 = 1;
+            scratch3 = 0;
+            scratch6 = 0;
+            scratch7 = 1;
             sum2 = 0;
             for (i = 0; i < 0x3f7; i = i + 8)
             {
                 wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
-                uVar15 = wp[1];
-                carry = addCarryOut32(uVar7, uVar15);
-                uVar5 = uVar7 + uVar15;
-                uVar16 = wp[3];
-                uVar24 = uVar5 + uVar16;
-                uVar17 = wp[5];
-                uVar8 = uVar24 + uVar17;
-                uVar18 = wp[7];
-                uVar9 = uVar8 + uVar18;
-                uVar19 = wp[9];
-                uVar10 = uVar9 + uVar19;
-                uVar20 = wp[0xb];
-                uVar11 = uVar10 + uVar20;
-                uVar21 = wp[0xd];
-                uVar12 = uVar11 + uVar21;
-                uVar22 = wp[0xf];
-                uVar3 = uVar3 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21 ^ uVar22;
-                uVar6 = uVar6 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
+                scratch15 = wp[1];
+                carry = addCarryOut32(scratch7, scratch15);
+                scratch5 = scratch7 + scratch15;
+                scratch16 = wp[3];
+                scratch24 = scratch5 + scratch16;
+                scratch17 = wp[5];
+                scratch8 = scratch24 + scratch17;
+                scratch18 = wp[7];
+                scratch9 = scratch8 + scratch18;
+                scratch19 = wp[9];
+                scratch10 = scratch9 + scratch19;
+                scratch20 = wp[0xb];
+                scratch11 = scratch10 + scratch20;
+                scratch21 = wp[0xd];
+                scratch12 = scratch11 + scratch21;
+                scratch22 = wp[0xf];
+                scratch3 = scratch3 ^ scratch15 ^ scratch16 ^ scratch17 ^ scratch18 ^ scratch19 ^ scratch20 ^ scratch21 ^ scratch22;
+                scratch6 = scratch6 ^ *wp ^ wp[2] ^ wp[4] ^ wp[6] ^ wp[8] ^ wp[10] ^
                     wp[0xc] ^ wp[0xe];
-                uVar7 = uVar12 + uVar22;
-                sum2 = sum2 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(uVar5, uVar16) +
-                    wp[4] + (u32)addCarryOut32(uVar24, uVar17) + wp[6] + (u32)addCarryOut32(uVar8, uVar18)
-                    + wp[8] + (u32)addCarryOut32(uVar9, uVar19) +
-                    wp[10] + (u32)addCarryOut32(uVar10, uVar20) +
-                    wp[0xc] + (u32)addCarryOut32(uVar11, uVar21) +
-                    wp[0xe] + (u32)addCarryOut32(uVar12, uVar22);
+                scratch7 = scratch12 + scratch22;
+                sum2 = sum2 + *wp + (u32)carry + wp[2] + (u32)addCarryOut32(scratch5, scratch16) +
+                    wp[4] + (u32)addCarryOut32(scratch24, scratch17) + wp[6] + (u32)addCarryOut32(scratch8, scratch18)
+                    + wp[8] + (u32)addCarryOut32(scratch9, scratch19) +
+                    wp[10] + (u32)addCarryOut32(scratch10, scratch20) +
+                    wp[0xc] + (u32)addCarryOut32(scratch11, scratch21) +
+                    wp[0xe] + (u32)addCarryOut32(scratch12, scratch22);
             }
             for (; i < 0x3ff; i = i + 1)
             {
                 wp = (u32*)(DAT_803ddcc4 + (u32)i * 8);
-                uVar5 = *wp;
-                uVar24 = wp[1];
-                uVar3 = uVar3 ^ uVar24;
-                uVar6 = uVar6 ^ uVar5;
-                carry = addCarryOut32(uVar7, uVar24);
-                uVar7 = uVar7 + uVar24;
-                sum2 = sum2 + uVar5 + carry;
+                scratch5 = *wp;
+                scratch24 = wp[1];
+                scratch3 = scratch3 ^ scratch24;
+                scratch6 = scratch6 ^ scratch5;
+                carry = addCarryOut32(scratch7, scratch24);
+                scratch7 = scratch7 + scratch24;
+                sum2 = sum2 + scratch5 + carry;
             }
-            uVar3 = uVar3 ^ uVar7 + 0xd;
-            uVar6 = uVar6 ^ sum2 + (u32)(0xfffffff2 < uVar7);
-            if (xorOdd != uVar3 || xorEven != uVar6)
+            scratch3 = scratch3 ^ scratch7 + 0xd;
+            scratch6 = scratch6 ^ sum2 + (u32)(0xfffffff2 < scratch7);
+            if (xorOdd != scratch3 || xorEven != scratch6)
             {
-                iVar13 = -0x55;
+                scratch13 = -0x55;
                 DAT_803dc360 = 10;
-                uVar6 = DAT_803ddcd0;
-                uVar3 = DAT_803ddcd4;
+                scratch6 = DAT_803ddcd0;
+                scratch3 = DAT_803ddcd4;
             }
         }
     }
-    DAT_803ddcd4 = uVar3;
-    DAT_803ddcd0 = uVar6;
-    return iVar13;
+    DAT_803ddcd4 = scratch3;
+    DAT_803ddcd0 = scratch6;
+    return scratch13;
 }
 
 u32
