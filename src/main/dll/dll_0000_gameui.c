@@ -3738,17 +3738,16 @@ void fn_8012C000(void)
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
                                                                      &animEvents);
-        kk *= step;
-        a = c1E64 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + kk) / c1E94);
+        a = c1E64 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0xc) =
             a * c2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
-        base = c2050 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + kk) / c1E94) +
+        base = c2050 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94) +
             (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + c2010);
-        a = c1E64 - mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + kk) / c1E94);
+        a = c1E64 - mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0x10) = a * c2190 + base;
-        a = c1E64 * mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + kk) / c1E94);
+        a = c1E64 * mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0x14) =
             a * c2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
