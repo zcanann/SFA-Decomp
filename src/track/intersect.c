@@ -254,19 +254,20 @@ void timeFn_8006f400(f32 step)
     u8* b;
     extern u8 gWaterSplashQuads[];
     extern u8 gWaterRipples[];
+    extern f32 Vachuff_803DEE20;
 
     a = gWaterSplashQuads;
     b = gWaterRipples;
     for (i = 0; i < 256; i++) {
         if (a[0x33] != 0) {
-            if ((f32)(u32)a[0x33] - step <= 0.0f) {
+            if ((f32)(u32)a[0x33] - step <= Vachuff_803DEE20) {
                 a[0x33] = 0;
             } else {
                 a[0x33] = (f32)(u32)a[0x33] - step;
             }
         }
         if (b[0x0E] != 0) {
-            if ((f32)(u32)b[0x0E] - step <= 0.0f) {
+            if ((f32)(u32)b[0x0E] - step <= Vachuff_803DEE20) {
                 b[0x0E] = 0;
             } else {
                 b[0x0E] = (f32)(u32)b[0x0E] - step;
@@ -1457,13 +1458,12 @@ void doColorFilter(u8* mod)
 }
 
 static inline float distortSqrtf(float x) {
-    static const double half = 0.5;
-    static const double three = 3.0;
+    extern double lbl_803DEF10, lbl_803DEF18;
     volatile float y;
     double guess = __frsqrte((double)x);
-    guess = half * guess * (three - guess * guess * x);
-    guess = half * guess * (three - guess * guess * x);
-    guess = half * guess * (three - guess * guess * x);
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
+    guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
     y = (float)(x * guess);
     return y;
 }
@@ -1561,13 +1561,13 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
             sr = r2;
         }
         if (sr > lbl_803DEEE4) {
-            c2.a = 0xFF;
+            c1.a = 0xFF;
         } else {
-            c2.a = (s32)(lbl_803DEF20 * sr);
+            c1.a = lbl_803DEF20 * sr;
         }
         sr = sr * gSynthFadeMask;
         if (sr > lbl_803DEEE4) sr = lbl_803DEEE4;
-        c1.a = (s32)(lbl_803DEF20 * sr);
+        c3.a = lbl_803DEF20 * sr;
     }
 
     GXSetTevKColor(0, c0);
