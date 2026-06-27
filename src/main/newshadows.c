@@ -2484,8 +2484,12 @@ void fn_8006CB50(void)
                 s = lbl_803DED28;
             }
             {
-                f32 py = Vdchuff_803DEDC0 * (ny * s) + Udchuff_803DEDBC;
-                f32 px = Vdchuff_803DEDC0 * (nx * s) + Udchuff_803DEDBC;
+                f32 py;
+                f32 px;
+                ny = ny * s;
+                nx = nx * s;
+                py = Vdchuff_803DEDC0 * ny + Udchuff_803DEDBC;
+                px = Vdchuff_803DEDC0 * nx + Udchuff_803DEDBC;
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
         }
