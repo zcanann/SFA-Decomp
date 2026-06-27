@@ -186,9 +186,9 @@ int Minimap_update(void)
     u32 texW, texH;
     int boxW, boxH;
     f32 fx, fz;
-    f32 ox, oy;
     f32 xrel, yrel;
     f32 panx, pany;
+    f32 ox, oy;
     f32 t, e, a, b;
     f32 uq, vq, frac;
     u32 u, vv;
