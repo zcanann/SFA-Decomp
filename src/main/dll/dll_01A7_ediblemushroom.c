@@ -68,6 +68,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
     u8* player;
     int sval;
+    u32 k;
     int curMove;
     int moveId;
     int bit;
@@ -420,11 +421,12 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         ((EdibleMushroomState*)state)->flags &= ~1;
     }
 
-    if (((EdibleMushroomState*)state)->animState == 1)
+    k = ((EdibleMushroomState*)state)->animState;
+    if (k == 1)
     {
         speed = ((EdibleMushroomState*)state)->lungeRootSpeedScale * (animOut[0] * oneOverTimeDelta);
     }
-    else if (((EdibleMushroomState*)state)->animState == 5)
+    else if (k == 5)
     {
         speed = animOut[2] * oneOverTimeDelta;
     }
