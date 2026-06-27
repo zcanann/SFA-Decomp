@@ -2670,8 +2670,8 @@ void expgfx_resetAllPools(void)
     int slotIndex;
     int resourceIndex;
 
-    staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
+    staticData = EXPGFX_STATIC_DATA;
     poolIndex = 0;
     slotPoolBases = runtime->slotPoolBases;
     poolActiveMasks = runtime->poolActiveMasks;
