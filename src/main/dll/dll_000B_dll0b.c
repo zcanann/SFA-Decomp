@@ -1900,8 +1900,8 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     int divThresh;
     int total;
     int base0;
-    f32 fz430;
     f32 fz434;
+    f32 fz430;
 
     total = 0;
     for (i = 0, found = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
@@ -2109,8 +2109,8 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosY = *(f32*)(st + 0x30);
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosZ = *(f32*)(st + 0x34);
     }
-    fz430 = lbl_803DF430;
     fz434 = lbl_803DF434;
+    fz430 = lbl_803DF430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepX = fz430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepY = fz430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepZ = fz430;
