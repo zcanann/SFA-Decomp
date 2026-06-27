@@ -2309,7 +2309,6 @@ typedef struct GameTextCharset
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
-    GameTextCharset* cs;
     int* data;
     u8* hdr;
     u8* entries;
@@ -2333,6 +2332,7 @@ void setLanguageFn_8001ad64(void* reqp)
     u16* old;
     int delta;
     int* strs2;
+    GameTextCharset* cs;
 
     DCStoreRange(*(void**)(req + 0x3c), *(u32*)(req + 0x40));
     if (req[0x4b] == 1)
