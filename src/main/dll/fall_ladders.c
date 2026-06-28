@@ -266,19 +266,19 @@ void fn_801542AC(int unused, u8* state)
     ((BaddieState*)state)->unk308 = lbl_803E297C;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2954;
     ((BaddieState*)state)->unk304 = lbl_803E2980;
-    state[800] = 0;
+    ((BaddieState*)state)->unk320 = 0;
     fz = lbl_803E2984;
     *(f32*)&((BaddieState*)state)->eventFlags = fz;
-    state[801] = 7;
+    ((BaddieState*)state)->unk321 = 7;
     ((BaddieState*)state)->unk318 = lbl_803E2988;
-    state[802] = 0;
+    ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
     fc = lbl_803E294C;
     *(f32*)((char*)state + 804) = fc;
     *(f32*)((char*)state + 808) = fc;
     *(f32*)((char*)state + 812) = fc;
-    state[826] = 0;
-    state[827] = 0;
+    ((BaddieState*)state)->seqEntryIndex = 0;
+    ((BaddieState*)state)->inWhirlpoolGroup = 0;
     *(f32*)((char*)state + 816) = lbl_803E298C;
     ((BaddieState*)state)->pathStep = lbl_803E2958;
 }
