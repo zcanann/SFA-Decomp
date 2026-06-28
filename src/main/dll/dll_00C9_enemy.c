@@ -815,14 +815,15 @@ double FUN_8014cbcc(int obj)
     {
         ratio = (double)lbl_803E31FC;
     }
-    else if ((*(u16*)(state + 0x2b2) == 0) || (*(u16*)(state + 0x2b0) == 0))
+    else if ((*(u16*)&((EnemyState*)state)->unk2B2 == 0) ||
+             (*(u16*)&((EnemyState*)state)->unk2B0 == 0))
     {
         ratio = (double)lbl_803E31FC;
     }
     else
     {
-        ratio = (double)((float)((double)(u32) * (u16*)(state + 0x2b0)) /
-            (float)((double)(u32) * (u16*)(state + 0x2b2)));
+        ratio = (double)((float)((double)(u32)*(u16*)&((EnemyState*)state)->unk2B0) /
+            (float)((double)(u32)*(u16*)&((EnemyState*)state)->unk2B2));
     }
     return ratio;
 }
