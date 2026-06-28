@@ -926,12 +926,12 @@ int mathFn_800dbff0(float* point)
 {
     s16 up;
     s16 down;
+    u8 i;
+    u8 j;
     ObjfsaWalkGroup* g;
     f32 y;
     f32 x;
     f32 z;
-    u8 i;
-    u8 j;
 
     down = gObjfsaLastWalkGroupIndex;
     if (gObjfsaLastWalkGroupIndex == OBJFSA_WALKGROUP_COUNT - 1)
