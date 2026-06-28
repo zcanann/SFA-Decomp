@@ -17,8 +17,14 @@ typedef struct PollenFragmentConfig {
 } PollenFragmentConfig;
 
 typedef struct PollenExtra {
-  u8 pad00[0x12];
-  s16 fragmentSpawnTimer;
+  s16 phaseX;            /* 0x00: random drift phase seed */
+  s16 unk02;             /* 0x02 */
+  s16 phaseY;            /* 0x04: random drift phase seed */
+  s16 phaseSpeed;        /* 0x06: random drift rate */
+  f32 settleVelocity;    /* 0x08: settle/freeze velocity baseline */
+  f32 driftVelocity;     /* 0x0C: initial drift velocity */
+  s16 unk10;             /* 0x10 */
+  s16 fragmentSpawnTimer;/* 0x12 */
 } PollenExtra;
 
 #define POLLEN_FRAGMENT_OBJECT_ID 0x482

@@ -266,15 +266,15 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 void pollen_init(int obj)
 {
-    s16* state = ((GameObject*)obj)->extra;
-    state[0] = randomGetRange(-0x8000, 0x7fff);
-    *(f32*)&((XyzAnimatorState*)state)->dataBuffer = lbl_803E3148 * (f32)(s32)
+    PollenExtra* extra = *(PollenExtra**)&((GameObject*)obj)->extra;
+    extra->phaseX = randomGetRange(-0x8000, 0x7fff);
+    extra->driftVelocity = lbl_803E3148 * (f32)(s32)
     randomGetRange(0xfa0, 0x1388);
-    *(s16*)((char*)state + 4) = randomGetRange(-0x8000, 0x7fff);
-    *(f32*)&((XyzAnimatorState*)state)->unk8 = lbl_803E313C;
-    *(s16*)((char*)state + 6) = randomGetRange(0xe6, 0x1f4);
-    *(s16*)((char*)state + 0x10) = 0;
-    *(s16*)((char*)state + 0x12) = 0;
+    extra->phaseY = randomGetRange(-0x8000, 0x7fff);
+    extra->settleVelocity = lbl_803E313C;
+    extra->phaseSpeed = randomGetRange(0xe6, 0x1f4);
+    extra->unk10 = 0;
+    extra->fragmentSpawnTimer = 0;
     ((GameObject*)obj)->anim.alpha = 0xff;
     ObjHits_DisableObject((u32)obj);
     {
