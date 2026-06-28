@@ -4,12 +4,28 @@
 #include "ghidra_import.h"
 #include "main/dll/door.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 typedef struct DfpTargetBlockPoint {
   f32 x;
   f32 y;
   f32 z;
 } DfpTargetBlockPoint;
+
+/*
+ * Placement/def record the map loader hands to dfptargetblock_init. Embeds the
+ * common ObjPlacement head, then the block's class-specific SFX gamebit ids
+ * (def+0x1E / def+0x20) read in dfptargetblock_init.
+ */
+typedef struct DfpTargetBlockPlacement {
+  ObjPlacement base;       /* 0x00: common placement head */
+  u8 pad18[0x1E - 0x18];   /* 0x18 */
+  s16 completionSfxId;     /* 0x1E */
+  s16 stateSfxId;          /* 0x20 */
+} DfpTargetBlockPlacement;
+
+STATIC_ASSERT(offsetof(DfpTargetBlockPlacement, completionSfxId) == 0x1E);
+STATIC_ASSERT(offsetof(DfpTargetBlockPlacement, stateSfxId) == 0x20);
 
 typedef struct DfpTargetBlockState {
   void *pathState;
