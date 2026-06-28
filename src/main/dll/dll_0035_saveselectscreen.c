@@ -143,8 +143,8 @@ void saveSelectOpenFile(int sel, int slot)
             {
                 (*(TitleMenuTextEntry**)((char*)pp + off))->flags =
                     (u16)((*(TitleMenuTextEntry**)((char*)pp + off))->flags | TITLE_MENU_TEXT_ENTRY_HIDDEN);
-                *(s8*)((char*)*(TitleMenuTextEntry**)((char*)pp + off) + 0x56) = -1;
-                *(u16*)((char*)*(TitleMenuTextEntry**)((char*)pp + off) + 0x3c) = 984;
+                (*(TitleMenuTextEntry**)((char*)pp + off))[1].pad18[2] = -1;
+                (*(TitleMenuTextEntry**)((char*)pp + off))[1].textId = 984;
                 gSaveSelectMenuItemActive = 1;
                 gSaveSelectMenuItem =
                     ((void *(**)(int, int, int, int, int))gTitleMenuItemInterface->vtable)[3]
@@ -215,10 +215,10 @@ void saveFileSelect_init(int sel, int slot)
                     ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
                 }
                 gSaveSelectPanelIndex = 1;
-                *(u16*)((char*)gSaveSelectPanels[1].entries + 0x16) =
-                    (u16)(*(u16*)((char*)gSaveSelectPanels[1].entries + 0x16) & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
-                *(s8*)((char*)gSaveSelectPanels[1].entries + 0x56) = 0;
-                *(u16*)((char*)gSaveSelectPanels[1].entries + 0x3c) = 982;
+                gSaveSelectPanels[1].entries[0].flags =
+                    (u16)(gSaveSelectPanels[1].entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
+                gSaveSelectPanels[1].entries[1].pad18[2] = 0;
+                gSaveSelectPanels[1].entries[1].textId = 982;
                 gSaveSelectMenuItemActive = 0;
                 ((void (**)(void*, u8, int, int, int, int, int, int, int, int, int, int))
                     gTitleMenuLinkInterface->vtable)[1]
@@ -284,8 +284,7 @@ void saveSelectGoToChapterSelect(void)
         panel = &gSaveSelectPanels[4];
         for (i = 0, off = 0; i < 6; i++)
         {
-            if (i > *(u8*)((char*)saveFileSelect_saveSlots +
-                saveFileSelect_currentSlotIndex * 36 + 33))
+            if (i > saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag)
             {
                 *(u16*)((char*)panel->entries + off + 22) |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
@@ -293,8 +292,7 @@ void saveSelectGoToChapterSelect(void)
             {
                 *(u16*)((char*)panel->entries + off + 22) &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
-            if (i <= *(u8*)((char*)saveFileSelect_saveSlots +
-                saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5)
+            if (i <= saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag + -1 && i < 5)
             {
                 *(s8*)((char*)panel->entries + off + 27) = (s8)(i + 1);
             }
@@ -697,8 +695,8 @@ int SaveSelectScreen_run(void)
                     gSaveSelectPanelIndex = 1;
                     panel = &gSaveSelectPanels[1];
                     panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
-                    *(s8*)((char*)panel->entries + 0x56) = 0;
-                    *(u16*)((char*)panel->entries + 0x3c) = 0x3d6;
+                    panel->entries[1].pad18[2] = 0;
+                    panel->entries[1].textId = 0x3d6;
                     gSaveSelectMenuItemActive = 0;
                     ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int, int))
                             gTitleMenuLinkInterface->vtable)[1]
@@ -773,8 +771,8 @@ void SaveSelectScreen_initialise(void)
         gSaveSelectPanelIndex = 1;
         panel = &gSaveSelectPanels[1];
         panel->entries[0].flags = (u16)(panel->entries[0].flags & ~TITLE_MENU_TEXT_ENTRY_HIDDEN);
-        *(s8*)((char*)panel->entries + 0x56) = 0;
-        *(u16*)((char*)panel->entries + 0x3c) = 0x3d6;
+        panel->entries[1].pad18[2] = 0;
+        panel->entries[1].textId = 0x3d6;
         gSaveSelectMenuItemActive = 0;
         ((void (**)(TitleMenuTextEntry*, u8, int, int, int, int, int, int, int, int, int, int))
                 gTitleMenuLinkInterface->vtable)[1]
