@@ -362,10 +362,10 @@ void fn_80152B90(int* obj, u8* state)
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                     ((ObjPlacement*)setup)->posY = lbl_803E2878 + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                    *(u8*)(setup + 4) = 1;
-                    *(u8*)(setup + 5) = 1;
-                    *(u8*)(setup + 6) = 0xff;
-                    *(u8*)(setup + 7) = 0xff;
+                    ((ObjPlacement*)setup)->color[0] = 1;
+                    ((ObjPlacement*)setup)->color[1] = 1;
+                    ((ObjPlacement*)setup)->color[2] = 0xff;
+                    ((ObjPlacement*)setup)->color[3] = 0xff;
                     spawned = loadObjectAtObject(obj, setup);
                     if (spawned != 0)
                     {
@@ -414,10 +414,10 @@ int fn_80152370(int obj, int p2)
     if (Obj_IsLoadingLocked() == 0) return 0;
     setup = Obj_AllocObjectSetup(36, p2);
     *(s16*)(setup + 0) = p2;
-    *(u8*)(setup + 4) = *(u8*)(sub + 4);
-    *(u8*)(setup + 6) = *(u8*)(sub + 6);
-    *(u8*)(setup + 5) = 1;
-    *(u8*)(setup + 7) = *(u8*)(sub + 7);
+    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
+    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
+    ((ObjPlacement*)setup)->color[1] = 1;
+    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
     ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
