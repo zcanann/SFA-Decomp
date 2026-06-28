@@ -16,7 +16,8 @@ typedef struct QueenEarthWalkerState {
     /* 0x01 */ u8 pad01;
     /* 0x02 */ u8 flags;
     /* 0x03 */ u8 pad03[0x08 - 0x03];
-    /* 0x08 */ u8 pad08[0x0c - 0x08]; /* eye-anim sub-struct base */
+    /* 0x08 */ u8 eyeAnimEnabled;     /* eye-anim sub-struct base; set to 1 to enable eye tracking */
+    /* 0x09 */ u8 pad09[0x0c - 0x09];
     /* 0x0C */ f32 targetX;
     /* 0x10 */ f32 targetY;
     /* 0x14 */ f32 targetZ;

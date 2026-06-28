@@ -88,7 +88,7 @@ void sh_queenearthwalker_update(void* obj)
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableFeed;
             }
             player = Obj_GetPlayerObject();
-            *(u8*)((int)state + 0x8) = 1;
+            ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
             ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
@@ -107,7 +107,7 @@ void sh_queenearthwalker_update(void* obj)
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableSpell;
             }
             player = Obj_GetPlayerObject();
-            *(u8*)((int)state + 0x8) = 1;
+            ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
             ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
@@ -123,7 +123,7 @@ void sh_queenearthwalker_update(void* obj)
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableBerry;
             }
             player = Obj_GetPlayerObject();
-            *(u8*)((int)state + 0x8) = 1;
+            ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
             ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
@@ -131,7 +131,7 @@ void sh_queenearthwalker_update(void* obj)
             break;
         case 5:
             player = Obj_GetPlayerObject();
-            *(u8*)((int)state + 0x8) = 1;
+            ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
             ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;

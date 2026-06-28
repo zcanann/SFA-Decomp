@@ -72,7 +72,7 @@ int sh_queenearthwalker_processAnimEvents(void* obj, void* unused, ObjAnimUpdate
             GameObject* player;
             animUpdate->hitVolumePair &= ~0x8;
             player = Obj_GetPlayerObject();
-            *(u8*)((int)state + 0x8) = 1;
+            ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             state->targetX = player->anim.localPosX;
             state->targetY = player->anim.localPosY;
             state->targetZ = player->anim.localPosZ;
