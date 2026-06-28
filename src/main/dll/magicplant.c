@@ -17,6 +17,7 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
@@ -350,10 +351,10 @@ void fn_80153640(int obj, int state)
         ((GameObject*)fx)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)fx)->anim.localPosX = lbl_803E28F0 + ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)fx)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)(fx + 0x4) = 1;
-        *(u8*)(fx + 0x5) = 1;
-        *(u8*)(fx + 0x6) = 0xff;
-        *(u8*)(fx + 0x7) = 0xff;
+        ((ObjPlacement*)fx)->color[0] = 1;
+        ((ObjPlacement*)fx)->color[1] = 1;
+        ((ObjPlacement*)fx)->color[2] = 0xff;
+        ((ObjPlacement*)fx)->color[3] = 0xff;
         newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
