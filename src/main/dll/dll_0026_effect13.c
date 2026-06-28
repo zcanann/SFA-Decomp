@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -603,9 +604,9 @@ int Effect13_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         {
             if (cfg.attachedSource != 0)
             {
-                cfg.startPosX = cfg.startPosX + *(f32*)((char*)cfg.attachedSource + 0x18);
-                cfg.startPosY = cfg.startPosY + *(f32*)((char*)cfg.attachedSource + 0x1c);
-                cfg.startPosZ = cfg.startPosZ + *(f32*)((char*)cfg.attachedSource + 0x20);
+                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             }
         }
     }
