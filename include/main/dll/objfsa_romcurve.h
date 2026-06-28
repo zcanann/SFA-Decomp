@@ -14,6 +14,10 @@ typedef struct ObjfsaRomCurveDef {
   u8 pad1A;
   s8 blockedLinkMask;
   s32 linkIds[4];
+  s8 angle;
+  u8 pad2D[3];
+  s16 requiredBit;
+  s16 forbiddenBit;
 } ObjfsaRomCurveDef;
 
 #endif

@@ -709,8 +709,8 @@ static void* skeetla_validateRouteEntry(void* entry)
     {
         entry = NULL;
     }
-    else if (((*(s16*)((u8*)entry + 0x30) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x30)) == 0)) ||
-        ((*(s16*)((u8*)entry + 0x32) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x32)) != 0)))
+    else if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
+        ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
     {
         entry = NULL;
     }
@@ -739,8 +739,8 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
     mask = 1;
     while (i < 4)
     {
-        curveId = *(int*)(routeDef + 0x1c + i * 4);
-        if ((curveId > -1) && ((((s8)routeDef[0x1b] & mask) ^ routeFlagValue) == 0))
+        curveId = ((ObjfsaRomCurveDef*)routeDef)->linkIds[i];
+        if ((curveId > -1) && (((((ObjfsaRomCurveDef*)routeDef)->blockedLinkMask & mask) ^ routeFlagValue) == 0))
         {
             candidates[count] = (*gRomCurveInterface)->getById(curveId);
             entry = candidates[count];
@@ -748,10 +748,10 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
             {
                 if ((linkSelector == 0) || (routeDef[count + 4] == linkSelector))
                 {
-                    requiredBit = *(s16*)((u8*)entry + 0x30);
+                    requiredBit = ((ObjfsaRomCurveDef*)entry)->requiredBit;
                     if ((requiredBit == -1) || (GameBit_Get(requiredBit) != 0))
                     {
-                        forbiddenBit = *(s16*)((u8*)entry + 0x32);
+                        forbiddenBit = ((ObjfsaRomCurveDef*)entry)->forbiddenBit;
                         if ((forbiddenBit == -1) || (GameBit_Get(forbiddenBit) == 0))
                         {
                             if (((s8)routeDef[0x1a] != 9) || (*(s8*)((u8*)entry + 0x1a) != 8))
@@ -810,8 +810,8 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
         {
             entry = NULL;
         }
-        else if (((*(s16*)((u8*)entry + 0x30) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x30)) == 0)) ||
-            ((*(s16*)((u8*)entry + 0x32) != -1) && (GameBit_Get(*(s16*)((u8*)entry + 0x32)) != 0)))
+        else if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
+            ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
         {
             entry = NULL;
         }
@@ -1004,10 +1004,10 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         {
             continue;
         }
-        if (((*(s16*)((u8*)curve + 0x30) != -1) &&
-                (GameBit_Get(*(s16*)((u8*)curve + 0x30)) == 0)) ||
-            ((*(s16*)((u8*)curve + 0x32) != -1) &&
-                (GameBit_Get(*(s16*)((u8*)curve + 0x32)) != 0)))
+        if (((((ObjfsaRomCurveDef*)curve)->requiredBit != -1) &&
+                (GameBit_Get(((ObjfsaRomCurveDef*)curve)->requiredBit) == 0)) ||
+            ((((ObjfsaRomCurveDef*)curve)->forbiddenBit != -1) &&
+                (GameBit_Get(((ObjfsaRomCurveDef*)curve)->forbiddenBit) != 0)))
         {
             continue;
         }
@@ -1025,7 +1025,7 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         {
             for (j = 0; j < 4; j++)
             {
-                linkCurveId = *(int*)((u8*)curve + 0x1c + j * 4);
+                linkCurveId = ((ObjfsaRomCurveDef*)curve)->linkIds[j];
                 if ((linkCurveId > -1) && (*(u8*)((u8*)curve + 4 + j) == linkSelector))
                 {
                     if (*(s8*)((u8*)curve + 0x1a) == 8)
