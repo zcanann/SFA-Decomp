@@ -16,6 +16,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 /* sequence event opcodes consumed by gf_levelcon_handleScriptEvents */
 #define GFLEVELCON_SEQEV_NONE 0
@@ -270,11 +271,11 @@ void fn_80239DD8(int p1, int p2)
         if (nearObj != NULL)
         {
             newObj = Obj_AllocObjectSetup(0x24, 0x608);
-            *(f32*)(newObj + 8) = *(f32*)(nearObj + 0xc);
-            ((GameObject*)newObj)->anim.localPosX = *(f32*)(nearObj + 0x10);
-            ((GameObject*)newObj)->anim.localPosY = *(f32*)(nearObj + 0x14);
-            *(u8*)(newObj + 4) = 1;
-            *(u8*)(newObj + 5) = 1;
+            ((ObjPlacement*)newObj)->posX = ((GameObject*)nearObj)->anim.localPosX;
+            ((ObjPlacement*)newObj)->posY = ((GameObject*)nearObj)->anim.localPosY;
+            ((ObjPlacement*)newObj)->posZ = ((GameObject*)nearObj)->anim.localPosZ;
+            ((ObjPlacement*)newObj)->color[0] = 1;
+            ((ObjPlacement*)newObj)->color[1] = 1;
             *(int*)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
             if (*(void**)(p2 + 0x10) != NULL)
             {
@@ -327,18 +328,18 @@ void fn_8023A168(int p1, int p2)
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x80d);
-        *(f32*)(newObj + 8) = *(f32*)(p2 + 0xc0);
-        ((GameObject*)newObj)->anim.localPosX = *(f32*)(p2 + 0xc4);
-        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8);
+        ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
+        ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
+        ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yawRnd) >> 8;
         *(u8*)(newObj + 0x19) = pitchRnd;
         *(u8*)(newObj + 0x18) = 0;
-        *(u8*)(newObj + 4) = 1;
-        *(u8*)(newObj + 5) = 1;
+        ((ObjPlacement*)newObj)->color[0] = 1;
+        ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
         if ((void*)proj != NULL)
         {
-            *(f32*)(proj + 8) = lbl_803E74B0;
+            ((GameObject*)proj)->anim.rootMotionScale = lbl_803E74B0;
             arwprojectile_setLifetime(proj, 0x6e);
             arwprojectile_placeForward(proj, lbl_803E74AC);
         }
@@ -359,14 +360,14 @@ void fn_8023A268(int p1, int p2, int p3)
         yaw = (u16)getAngle(dx, dz);
         gGfLevelConProjectilePitch = (u16)getAngle(*(f32*)(p2 + 0xc4) - *(f32*)(*(int*)p2 + 0x10), dist) >> 8;
         newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
-        *(f32*)(newObj + 8) = *(f32*)(p2 + 0xc0);
-        ((GameObject*)newObj)->anim.localPosX = *(f32*)(p2 + 0xc4);
-        ((GameObject*)newObj)->anim.localPosY = *(f32*)(p2 + 0xc8);
+        ((ObjPlacement*)newObj)->posX = *(f32*)(p2 + 0xc0);
+        ((ObjPlacement*)newObj)->posY = *(f32*)(p2 + 0xc4);
+        ((ObjPlacement*)newObj)->posZ = *(f32*)(p2 + 0xc8);
         *(u8*)(newObj + 0x1a) = (*(s16*)p1 + yaw) >> 8;
         *(u8*)(newObj + 0x19) = gGfLevelConProjectilePitch;
         *(u8*)(newObj + 0x18) = 0;
-        *(u8*)(newObj + 4) = 1;
-        *(u8*)(newObj + 5) = 1;
+        ((ObjPlacement*)newObj)->color[0] = 1;
+        ((ObjPlacement*)newObj)->color[1] = 1;
         p1 = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
         if ((void*)p1 != NULL)
         {
@@ -393,18 +394,18 @@ void fn_80239FCC(int obj, int state)
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
         ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
-        *(f32*)(newObj + 8) = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
-        ((GameObject*)newObj)->anim.localPosX = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
-        ((GameObject*)newObj)->anim.localPosY = *(f32*)(state + 0xc8) - lbl_803E74A8;
+        ((ObjPlacement*)newObj)->posX = (f32)(int)rndDur * mathSinf(ang) + *(f32*)(*(int*)state + 0xc);
+        ((ObjPlacement*)newObj)->posY = (f32)(int)rndDur * mathCosf(ang) + *(f32*)(*(int*)state + 0x10);
+        ((ObjPlacement*)newObj)->posZ = *(f32*)(state + 0xc8) - lbl_803E74A8;
         *(u8*)(newObj + 0x1a) = (*(s16*)obj + yaw) >> 8;
         *(u8*)(newObj + 0x19) = lbl_803DDDC0;
         *(u8*)(newObj + 0x18) = 0;
-        *(u8*)(newObj + 4) = 1;
-        *(u8*)(newObj + 5) = 1;
+        ((ObjPlacement*)newObj)->color[0] = 1;
+        ((ObjPlacement*)newObj)->color[1] = 1;
         proj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
         if ((u32)proj != 0)
         {
-            *(f32*)(proj + 8) = lbl_803DC4E4;
+            ((GameObject*)proj)->anim.rootMotionScale = lbl_803DC4E4;
             arwprojectile_setLifetime(proj, lbl_803DC4E0);
             arwprojectile_placeForward(proj, lbl_803E74AC);
         }
