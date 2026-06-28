@@ -321,8 +321,8 @@ void s3dAllocateRoomStudios(void)
                         if (scanEntry->assignedVoice != 0xff &&
                             worstDistance < scanEntry->averageDistanceSq)
                         {
-                            evictedEntry = scanEntry;
                             worstDistance = scanEntry->averageDistanceSq;
+                            evictedEntry = scanEntry;
                         }
                     }
                     if (!listenerOwned && worstDistance <= distanceSq)
