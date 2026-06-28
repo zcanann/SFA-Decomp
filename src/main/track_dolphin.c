@@ -4025,8 +4025,8 @@ void renderGlows(void)
         sunDot = PSVECDotProduct(dir, cam);
         if (sunDot > lbl_803DEBCC)
         {
-            int occ;
             int i;
+            int occ;
             f32 fade;
             skyBuildSunModelMatrix(sunMtx);
             Camera_ProjectWorldPointWithOffset(sunMtx[3], sunMtx[7], sunMtx[11], lbl_803DEBD4, &px, &py, &pz);
