@@ -4,7 +4,9 @@
 
 typedef struct DREarthWarriorPlacement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x18 - 0x0];
+    s8 spawnYaw; /* (s8)<<8 -> anim.rotX */
+    u8 unk19; /* -> DREarthWarriorState.unk14E8 */
     s16 airMeterMax;
     u8 pad1C[0xB18 - 0x1C];
     f32 unkB18;
@@ -542,7 +544,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     slot = (int)Camera_GetCurrentViewSlot();
     ((EarthWarriorState*)inner)->baddie.hitPoints = 0;
     *(int*)((char*)inner + 0) &= ~0x8000;
-    if (*(u8*)((char*)inner + 0x14e6) == 2)
+    if (((DREarthWarriorState*)inner)->unk14E6 == 2)
     {
         ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)
         padGetStickX(0);
@@ -571,7 +573,7 @@ void fn_802BE6E8(int obj, int t, int p3)
         ((GameObject*)obj)->anim.rotZ + (((EarthWarriorState*)inner)->baddie.spawnRotZ >> 2));
     if (((ByteFlags*)((char*)inner + 0x14ec))->b02)
     {
-        (*gGameUIInterface)->runAirMeter(*(s16*)((char*)inner + 0x14e2));
+        (*gGameUIInterface)->runAirMeter(((DREarthWarriorState*)inner)->airMeterCapacity);
     }
     fn_802B1BF8(obj, q, inner, timeDelta);
     fn_802B1B28(obj, timeDelta);
@@ -1347,10 +1349,10 @@ void DR_EarthWarrior_init(int obj, int p2)
     stk = lbl_803E82D8;
     r2 = lbl_802C2CA8;
     r1 = lbl_802C2CB4;
-    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)p2 + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((DREarthWarriorPlacement*)p2)->spawnYaw << 8);
     ((GameObject*)obj)->animEventCallback = fn_802BDBE8;
     ObjGroup_AddObject(obj, 0xa);
-    ((DREarthWarriorState*)inner)->unk14E8 = *(u8*)((char*)p2 + 0x19);
+    ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)p2)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
     ((DREarthWarriorState*)inner)->unk14F4 = -1;
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
@@ -1369,7 +1371,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     dll_2E_setLookAtMaxDistance(inner + 0x3ec, lbl_803E8388);
     ((DREarthWarriorState*)inner)->unk9FD |= 2;
     ((DREarthWarriorState*)inner)->unk1444 = lbl_803E82E8;
-    ((DREarthWarriorState*)inner)->airMeterCapacity = *(s16*)((char*)p2 + 0x1a);
+    ((DREarthWarriorState*)inner)->airMeterCapacity = ((DREarthWarriorPlacement*)p2)->airMeterMax;
     ((DREarthWarriorState*)inner)->unkF50 = (int)(base + 0xd8);
     ((DREarthWarriorState*)inner)->unkF58 = (int)(base + 0x84);
     {
