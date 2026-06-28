@@ -173,7 +173,7 @@ void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x188 && *(s32*)(*(u8**)&((GameObject*)obj)->anim.parent + 0xf4) >= 7)
+    if (((GameObject*)obj)->anim.seqId == 0x188 && ((GameObject*)((GameObject*)obj)->anim.parent)->unkF4 >= 7)
     {
         return;
     }
