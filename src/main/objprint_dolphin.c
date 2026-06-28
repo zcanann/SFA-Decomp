@@ -4790,13 +4790,13 @@ extern f32 lbl_803DEA48;
 
 u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
 {
-    void* tex;
-    u8* colp;
     u16 alpha;
+    u8* colp;
+    void* tex;
     u8* prev;
     u8* layer;
-    int layerIdx;
     u8 ok;
+    int layerIdx;
     u8 color[4];
     f32 m[12];
 
