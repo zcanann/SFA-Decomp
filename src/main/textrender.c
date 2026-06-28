@@ -1661,13 +1661,13 @@ void gameTextRun(void)
 {
     GameTextSlot* cmd;
     u8* gameTextBase;
-    GameTextLoadSlot* slot;
+    int sourceId;
     GameTextLoadSlot* freeSlot;
     u8* pending;
-    int sourceId;
+    int i;
     int dirId;
     int languageId;
-    int i;
+    GameTextLoadSlot* slot;
     u8* textWindow;
     int color;
     double fadeLimit;
