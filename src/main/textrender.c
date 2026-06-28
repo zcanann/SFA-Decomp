@@ -2333,23 +2333,23 @@ typedef struct GameTextCharset
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
-    int* data;
-    u8* hdr;
-    u8* entries;
+    int** slot;
+    u16* p;
+    u32 bpp;
     int ofs;
     int* table;
-    int numStrings;
-    int* strs;
+    u32 w;
+    u32 h;
     int i;
     u8* txt;
     int* texHdr;
-    u16* p;
+    u8* hdr;
     u16* texStart;
-    int** slot;
+    int* data;
     u16 kind;
-    u32 bpp;
-    u32 w;
-    u32 h;
+    u8* entries;
+    int numStrings;
+    int* strs;
     int n;
     u32 size;
     u16* newBuf;
