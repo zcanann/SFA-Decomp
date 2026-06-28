@@ -52,6 +52,7 @@ void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8 effectArgs[0x18];
+    PartFxSpawnParams* fx = (PartFxSpawnParams*)effectArgs;
     int i;
 
     if ((s32)randomGetRange(0, 1) != 0)
@@ -72,11 +73,11 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
     {
-        *(f32*)(effectArgs + 8) = lbl_803E597C;
-        *(s16*)(effectArgs + 6) = 0xc0d;
-        *(f32*)(effectArgs + 0xc) = *(f32*)(effectArgs + 0xc) - ((GameObject*)obj)->anim.worldPosX;
-        *(f32*)(effectArgs + 0x10) = *(f32*)(effectArgs + 0x10) - ((GameObject*)obj)->anim.worldPosY;
-        *(f32*)(effectArgs + 0x14) = *(f32*)(effectArgs + 0x14) - ((GameObject*)obj)->anim.worldPosZ;
+        fx->scale = lbl_803E597C;
+        fx->arg3 = 0xc0d;
+        fx->posX = fx->posX - ((GameObject*)obj)->anim.worldPosX;
+        fx->posY = fx->posY - ((GameObject*)obj)->anim.worldPosY;
+        fx->posZ = fx->posZ - ((GameObject*)obj)->anim.worldPosZ;
         for (i = 0; i < framesThisStep; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x7a8, effectArgs, 6, -1, NULL);
