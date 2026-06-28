@@ -118,20 +118,22 @@ typedef struct SnowBikeState {
     f32 homePosX;             /* 0x51c: home X */
     f32 homePosY;             /* 0x520: home Y */
     f32 homePosZ;             /* 0x524: home Z */
-    u8 pad528[0x8];
+    u8 pad528[0x4];
+    f32 unk52C;             /* 0x52c */
     f32 unk530;             /* 0x530 */
     f32 unk534;             /* 0x534 */
     f32 unk538;             /* 0x538 */
-    u8 pad53C[0x4];
+    f32 unk53C;             /* 0x53c */
     f32 turnVelScale;       /* 0x540: smoothed scale on the strafe/turn velocity delta */
     f32 turnForceGain;      /* 0x544: smoothed gain (* unk4B0) on the strafe/turn force input */
     f32 localVelXDamp;      /* 0x548: smoothed base of powfBitEstimate(.,dt) damping localVelX */
     f32 distanceScaleDamp;  /* 0x54c: smoothed base of powfBitEstimate(.,dt) damping distanceScale */
-    u8 pad550[0x8];
+    f32 unk550;             /* 0x550 */
+    f32 unk554;             /* 0x554 */
     f32 unk558;             /* 0x558 */
     u8 pad55C[0x10];
     f32 unk56C;             /* 0x56c */
-    u8 pad570[0x4];
+    f32 unk570;             /* 0x570 */
     f32 unk574;             /* 0x574 */
     f32 unk578;             /* 0x578 */
     f32 localVelXDampTarget;     /* 0x57c: held target for localVelXDamp (riding-paused state) */

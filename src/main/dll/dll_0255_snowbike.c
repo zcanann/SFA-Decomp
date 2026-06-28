@@ -196,7 +196,7 @@ int SnowBike_render2(void) { return 0x0; }
 int SnowBike_getExtraSize(void) { return 0x59c; }
 int SnowBike_getObjectTypeId(void) { return 0x3; }
 
-u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x420); }
+u8 SnowBike_func0B(int* obj) { return ((SnowBikeState*)((GameObject*)obj)->extra)->unk420; }
 
 void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
 {
@@ -304,7 +304,7 @@ void fn_801EC870(int p1, register int p2_int)
 {
     f32 fz, fa, fb, fc;
     DRcradleSnowBikeFlags* flags;
-    *(f32*)(p2_int + 0x52c) = lbl_803E5C34;
+    ((SnowBikeState*)p2_int)->unk52C = lbl_803E5C34;
     ((SnowBikeState*)p2_int)->unk530 = lbl_803E5C38;
     ((SnowBikeState*)p2_int)->unk534 = lbl_803E5BF4;
     fz = lbl_803E5AE8;
@@ -343,7 +343,7 @@ void fn_801EC928(int p1, int p2)
     ((SnowBikeState*)p2)->unk530 = lbl_803E5C38;
     ((SnowBikeState*)p2)->unk534 = lbl_803E5BF4;
     ((SnowBikeState*)p2)->unk538 = lbl_803E5B74;
-    *(f32*)(p2 + 0x53c) = lbl_803E5C14;
+    ((SnowBikeState*)p2)->unk53C = lbl_803E5C14;
     ((SnowBikeState*)p2)->localVelXDamp = lbl_803E5BFC;
     ((SnowBikeState*)p2)->distanceScaleDamp = lbl_803E5BE4;
     ((SnowBikeState*)p2)->turnVelScale = lbl_803E5B20;
@@ -351,9 +351,9 @@ void fn_801EC928(int p1, int p2)
     fa = lbl_803E5C40;
     ((SnowBikeState*)p2)->localVelXDampTarget = fa;
     ((SnowBikeState*)p2)->distanceScaleDampTarget = fa;
-    *(f32*)(p2 + 0x554) = lbl_803E5C44;
-    *(f32*)(p2 + 0x550) = lbl_803E5C10;
-    *(f32*)(p2 + 0x570) = lbl_803E5BB8;
+    ((SnowBikeState*)p2)->unk554 = lbl_803E5C44;
+    ((SnowBikeState*)p2)->unk550 = lbl_803E5C10;
+    ((SnowBikeState*)p2)->unk570 = lbl_803E5BB8;
     fz = lbl_803E5BA8;
     ((SnowBikeState*)p2)->unk558 = fz;
     ((SnowBikeState*)p2)->unk578 = lbl_803E5B8C;
@@ -472,8 +472,8 @@ void SnowBike_free(int obj)
     }
 }
 
-s32 SnowBike_func14(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x422); }
-s32 SnowBike_getType(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x421); }
+s32 SnowBike_func14(int* obj) { return ((SnowBikeState*)((GameObject*)obj)->extra)->unk422; }
+s32 SnowBike_getType(int* obj) { return ((SnowBikeState*)((GameObject*)obj)->extra)->riderMode; }
 
 void SnowBike_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
