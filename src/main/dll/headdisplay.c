@@ -59,9 +59,9 @@ extern void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int Obj_GetActiveModel(int obj);
 extern float fsin16Approx(int angle);
-extern void drawPartialTexture(int tex, f32 a, f32 b, int alpha, int scale, int c, int d, int e, int f);
-extern void drawScaledTexture(int tex, f32 a, f32 b, int alpha, int scale, int c, int d, int e);
-extern void drawTexture(int tex, f32 x, f32 y, int alpha, int scale);
+extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
+extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
+extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
 extern u8 lbl_803DD7A8;
@@ -267,16 +267,16 @@ void drawFn_80125424(void)
         }
         panelW = width;
         xLeft = panelW - 5;
-        drawTexture(hudTextures[10], lbl_803E2054, xLeft, alpha & 0xff, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, xLeft, alpha & 0xff, 0x100, 0x78, 5, 0);
+        drawTexture(hudTextures[10], lbl_803E2054, xLeft, alpha, 0x100);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, xLeft, alpha, 0x100, 0x78, 5, 0);
         panelH = height;
-        drawScaledTexture(hudTextures[11], lbl_803E2054, panelW, alpha & 0xff, 0x100, 5, panelH, 0);
+        drawScaledTexture(hudTextures[11], lbl_803E2054, panelW, alpha, 0x100, 5, panelH, 0);
         xRight = panelW + panelH;
-        drawScaledTexture(hudTextures[13], lbl_803E2040, xRight, alpha & 0xff, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, panelW, alpha & 0xff, 0x100, 5, panelH, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, xRight, alpha & 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, xLeft, alpha & 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, xRight, alpha & 0xff, 0x100, 5, 5, 2);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, xRight, alpha, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, panelW, alpha, 0x100, 5, panelH, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, xRight, alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, xLeft, alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, xRight, alpha, 0x100, 5, 5, 2);
     }
 }
 
@@ -450,35 +450,35 @@ void drawArwingHud(void)
                 texIdx = partialFrame;
             }
             drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), lbl_803E1FAC,
-                        arwingHudAlpha & 0xff, 0x100);
+                        arwingHudAlpha, 0x100);
         }
         for (bombSlot = 0; bombSlot < 3; bombSlot++)
         {
             bombX = bombSlot * 0x1c;
-            drawTexture(hudTextures[56], (f32)(bombX + 0x1e), lbl_803E2060, arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[56], (f32)(bombX + 0x1e), lbl_803E2060, arwingHudAlpha, 0x100);
             if ((int)bombSlot < bombs)
             {
-                drawTexture(hudTextures[57], (f32)(bombX + 0x23), lbl_803E2064, arwingHudAlpha & 0xff, 0x100);
+                drawTexture(hudTextures[57], (f32)(bombX + 0x23), lbl_803E2064, arwingHudAlpha, 0x100);
             }
         }
         if (((GameObject*)arwing)->anim.mapEventSlot != 0x26)
         {
-            drawTexture(hudTextures[61], lbl_803E2068, lbl_803E1FAC, arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[61], lbl_803E2068, lbl_803E1FAC, arwingHudAlpha, 0x100);
             for (i = 0; (int)(i & 0xff) < rings; i++)
             {
                 drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), lbl_803E1F9C,
-                            arwingHudAlpha & 0xff, 0x100);
+                            arwingHudAlpha, 0x100);
             }
             for (; (int)(pip = i & 0xff) < req; i++)
             {
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), lbl_803E1F9C,
-                            arwingHudAlpha & 0xff, 0x100);
+                            arwingHudAlpha, 0x100);
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC,
-                        arwingHudAlpha & 0xff, 0x100);
+                        arwingHudAlpha, 0x100);
             sprintf((char*)buf, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
-        gameTextSetColor(0xff, 0xff, 0xff, arwingHudAlpha & 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, arwingHudAlpha);
         gameTextShowStr((char*)buf, 0x93, 0x23a, 0x41);
         drawFn_80125424();
     }
