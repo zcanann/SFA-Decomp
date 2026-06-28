@@ -330,7 +330,7 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
     f32 dx;
     f32 dz;
     int diff;
-    enemy = (int*)ctx[0x2d0 / 4];
+    enemy = (int*)((BaddieState*)ctx)->targetObj;
     if (enemy != 0)
     {
         if ((u32)enemy[0x30 / 4] == obj[0x30 / 4])
@@ -984,16 +984,16 @@ void player_updateVel(char* p, char* obj, int unused)
         fsin = mathCosf(gPlayerMovePi * (float)(s32) * (s16*)p / gPlayerMoveHalfCircleAngle);
         if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
         {
-            *(f32*)(obj + 0x280) = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
-            *(f32*)(obj + 0x294) = *(f32*)(obj + 0x280);
+            ((BaddieState*)obj)->animSpeedA = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
+            ((BaddieState*)obj)->animSpeedC = ((BaddieState*)obj)->animSpeedA;
         }
         else
         {
-            *(f32*)(obj + 0x284) = ((GameObject*)p)->anim.velocityX * fsin - ((GameObject*)p)->anim.velocityZ * fcos;
-            *(f32*)(obj + 0x280) = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
+            ((BaddieState*)obj)->animSpeedB = ((GameObject*)p)->anim.velocityX * fsin - ((GameObject*)p)->anim.velocityZ * fcos;
+            ((BaddieState*)obj)->animSpeedA = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             if (((s32)(s8) * (obj + 0x34c) & 4) != 0)
             {
-                *(f32*)(obj + 0x294) = sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
+                ((BaddieState*)obj)->animSpeedC = sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
                     ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ);
             }
         }
