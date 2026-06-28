@@ -2804,13 +2804,13 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType,
                      u8 boundsTemplateId)
 {
-    ExpgfxSlot* slot;
+    u32 behaviorFlags;
     ExpgfxSourceObject* attachedSource;
     ExpgfxResourceHandle* resourceHandle;
     ExpgfxRuntimeDataLayout* runtime;
     GameObject* playerObj;
-    u32 behaviorFlags;
-    int resourceTableIndex;
+    ExpgfxSlot* slot;
+    s16 texS0 = 0;
     int expTabIndex;
     int attachedTableKey;
     u32 bit;
@@ -2819,10 +2819,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     u32 inverseBit;
     short poolIndex;
     short slotIndex;
-    s16 texS1 = 0;
-    s16 texS0 = 0;
-    s16 texT0 = 0;
     s16 texT1 = 0;
+    int resourceTableIndex;
+    s16 texT0 = 0;
+    s16 texS1 = 0;
     f32 scaleVal;
     u8* poolSourceModesByte;
     u8 modeFlag;
