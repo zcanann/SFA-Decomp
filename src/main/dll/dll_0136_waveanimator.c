@@ -253,8 +253,8 @@ void waveanimator_init(int* obj, int* desc)
     state->originY = ((WaveanimatorObjectDef*)desc)->originY;
     state->spanX = ((WaveanimatorObjectDef*)desc)->spanX;
     state->spanY = ((WaveanimatorObjectDef*)desc)->spanY;
-    state->ampX = (f32) * (s8*)((char*)desc + 0x1E);
-    state->ampY = (f32) * (s8*)((char*)desc + 0x1F);
+    state->ampX = (f32)((WaveanimatorObjectDef*)desc)->ampX;
+    state->ampY = (f32)((WaveanimatorObjectDef*)desc)->ampY;
     state->period = ((WaveanimatorObjectDef*)desc)->period;
     state->gridN = ((WaveanimatorObjectDef*)desc)->gridN;
     scale = lbl_803E3F70;
