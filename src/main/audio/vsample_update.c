@@ -95,22 +95,23 @@ void synthUpdateVirtualSamples(void)
                         u32 prev;
 
                         synthAdvanceVirtualSampleEntry(entry, elapsed);
-                        prev = *(u32*)(entry + 0xc);
+                        prev = *(u32*)(entry + VIRTUAL_SAMPLE_LAST_TICK_OFFSET);
                         if (currentTick >= prev)
                         {
-                            *(u32*)(entry + 8) -= (currentTick - prev);
+                            *(u32*)(entry + VIRTUAL_SAMPLE_REMAINING_OFFSET) -= (currentTick - prev);
                         }
                         else
                         {
-                            *(u32*)(entry + 8) -= *(u32*)(state + 4) - (prev - currentTick);
+                            *(u32*)(entry + VIRTUAL_SAMPLE_REMAINING_OFFSET) -=
+                                *(u32*)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET) - (prev - currentTick);
                         }
-                        *(u32*)(entry + 0xc) = currentTick;
+                        *(u32*)(entry + VIRTUAL_SAMPLE_LAST_TICK_OFFSET) = currentTick;
 
                         if ((s32)(u32)((s32)(*(u16*)(synthVoice +
                                     entry[VIRTUAL_SAMPLE_VOICE_OFFSET] * SYNTH_VIRTUAL_SAMPLE_VOICE_STRIDE +
                                     SYNTH_VIRTUAL_SAMPLE_VOICE_RELEASE_OFFSET) * SYNTH_VIRTUAL_SAMPLE_RELEASE_SCALE +
                                 SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND) /
-                            SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT) > (s32) * (u32*)(entry + 8))
+                            SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT) > (s32) * (u32*)(entry + VIRTUAL_SAMPLE_REMAINING_OFFSET))
                         {
                             if (hwVoiceInStartup(entry[VIRTUAL_SAMPLE_VOICE_OFFSET]) == 0)
                             {
