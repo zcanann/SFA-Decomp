@@ -178,7 +178,7 @@ void pressureswitch_update(int obj)
     int i;
     GameObject* player;
     GameObject* tricky;
-    int ac;
+    s8 ac;
     int v;
     s8 played;
     f32 cur;
