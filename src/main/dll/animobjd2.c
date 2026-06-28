@@ -17,7 +17,7 @@
  *                                   x/y/z onto the state; trickyFn_8013b368
  *                                   then steers toward it.
  * fn_8013E0D0                    - the circling state machine, dispatched on
- *                                   substate st[0xa] (0 acquire, 1 approach,
+ *                                   substate ((TrickyState*)st)->substate (0 acquire, 1 approach,
  *                                   2/3/4 the special charge/spawn/finish
  *                                   path, 5 orbit-and-pick-best). It spawns
  *                                   helper objects (ids 0x17b, 0x4f0),
@@ -237,7 +237,7 @@ void fn_8013E0D0(int* obj, register u8* st)
     int* best = NULL;
     f32 bestd = lbl_803E23DC;
 
-    switch (st[0xa])
+    switch (((TrickyState*)st)->substate)
     {
     case 0:
         {
@@ -245,30 +245,30 @@ void fn_8013E0D0(int* obj, register u8* st)
             int go;
             trickyDebugPrint(str + 0x5a0);
             ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
+            if ((((TrickyState*)st)->followObj = trickyFindNearestUsableBaddie(*(void**)&((TrickyState*)st)->playerObj, lbl_803E24D8, 0)) != NULL)
             {
-                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                TRICKY_RETARGET(st, *(int*)&((TrickyState*)st)->followObj);
                 go = 1;
             }
             else
             {
-                *(u8*)(st + 8) = 1;
+                ((TrickyState*)st)->unk08 = 1;
                 go = 0;
-                st[0xa] = go;
+                ((TrickyState*)st)->substate = go;
                 TRICKY_RESET_TAIL(st)
             }
             if (go != 0)
             {
-                if (*(int*)(st + 0x728) == 0)
+                if (*(int*)&((TrickyState*)st)->unk728 == 0)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(obj, st);
-                        *(void**)(st + 0x720) = ct;
+                        *(void**)&((TrickyState*)st)->unk720 = ct;
                         if (ct != NULL)
                         {
-                            *(int*)(st + 0x24) = *(int*)(st + 0x720);
-                            *(int*)(st + 0x724) = 0;
-                            st[0xa] = 5;
+                            *(int*)&((TrickyState*)st)->followObj = *(int*)&((TrickyState*)st)->unk720;
+                            *(int*)&((TrickyState*)st)->unk724 = 0;
+                            ((TrickyState*)st)->substate = 5;
                             break;
                         }
                     }
@@ -279,19 +279,19 @@ void fn_8013E0D0(int* obj, register u8* st)
                     break;
                 }
                 if (getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                  &((GameObject*)*(int*)(st + 0x24))->anim.worldPosX) < lbl_803E24DC)
+                                  &((GameObject*)*(int*)&((TrickyState*)st)->followObj)->anim.worldPosX) < lbl_803E24DC)
                 {
                     int b;
-                    st[0xa] = 1;
-                    *(f32*)(st + 0x71c) = lbl_803E23DC;
-                    b = lbl_803E23DC != *(f32*)(st + 0x2ac)
-                        && (lbl_803E2410 == *(f32*)(st + 0x2b0)
-                            || *(f32*)(st + 0x2b4) - *(f32*)(st + 0x2b0) > lbl_803E2414);
+                    ((TrickyState*)st)->substate = 1;
+                    ((TrickyState*)st)->unk71C = lbl_803E23DC;
+                    b = lbl_803E23DC != ((TrickyState*)st)->waterLevel
+                        && (lbl_803E2410 == ((TrickyState*)st)->unk2B0
+                            || ((TrickyState*)st)->unk2B4 - ((TrickyState*)st)->unk2B0 > lbl_803E2414);
                     if (b != 0)
                     {
                         objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                        *(f32*)(st + 0x79c) = lbl_803E2440;
-                        *(f32*)(st + 0x838) = lbl_803E23DC;
+                        ((TrickyState*)st)->unk79C = lbl_803E2440;
+                        ((TrickyState*)st)->unk838 = lbl_803E23DC;
                         trickyDebugPrint(str + 0x184);
                     }
                     else
@@ -307,32 +307,32 @@ void fn_8013E0D0(int* obj, register u8* st)
         {
             u8 ok;
             int go;
-            trickyDebugPrint(str + 0x5b4, **(u8**)(st + 0), *(int*)(st + 0x728));
+            trickyDebugPrint(str + 0x5b4, **(u8**)&((TrickyState*)st)->progressPtr, *(int*)&((TrickyState*)st)->unk728);
             ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
+            if ((((TrickyState*)st)->followObj = trickyFindNearestUsableBaddie(*(void**)&((TrickyState*)st)->playerObj, lbl_803E24D8, 0)) != NULL)
             {
-                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                TRICKY_RETARGET(st, *(int*)&((TrickyState*)st)->followObj);
                 go = 1;
             }
             else
             {
-                *(u8*)(st + 8) = 1;
+                ((TrickyState*)st)->unk08 = 1;
                 go = 0;
-                st[0xa] = go;
+                ((TrickyState*)st)->substate = go;
                 TRICKY_RESET_TAIL(st)
             }
             if (go != 0)
             {
-                if (*(int*)(st + 0x728) == 0)
+                if (*(int*)&((TrickyState*)st)->unk728 == 0)
                 {
                     {
                         void* ct = trickyFindCirclingTarget(obj, st);
-                        *(void**)(st + 0x720) = ct;
+                        *(void**)&((TrickyState*)st)->unk720 = ct;
                         if (ct != NULL)
                         {
-                            *(int*)(st + 0x24) = *(int*)(st + 0x720);
-                            *(int*)(st + 0x724) = 0;
-                            st[0xa] = 5;
+                            *(int*)&((TrickyState*)st)->followObj = *(int*)&((TrickyState*)st)->unk720;
+                            *(int*)&((TrickyState*)st)->unk724 = 0;
+                            ((TrickyState*)st)->substate = 5;
                             break;
                         }
                     }
@@ -346,16 +346,16 @@ void fn_8013E0D0(int* obj, register u8* st)
                 {
                     objAnimFn_8013a3f0(obj, 0x33, lbl_803E243C, 0);
                 }
-                if (*(int*)(st + 0x728) != 0)
+                if (*(int*)&((TrickyState*)st)->unk728 != 0)
                 {
-                    if (**(u8**)(st + 0) < 2)
+                    if (**(u8**)&((TrickyState*)st)->progressPtr < 2)
                     {
-                        *(int*)(st + 0x728) = 0;
+                        *(int*)&((TrickyState*)st)->unk728 = 0;
                         if (Obj_IsLoadingLocked() != 0)
                         {
                             *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_4;
                             TRICKY_RESET(st);
-                            if (*(void**)(st + 0x7b8) == NULL)
+                            if (((TrickyState*)st)->child == NULL)
                             {
                                 int o = Obj_AllocObjectSetup(0x20, 0x17b);
                                 s8 slots[4];
@@ -363,17 +363,17 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 slots[0] = -1;
                                 slots[1] = -1;
                                 slots[2] = -1;
-                                if (*(void**)(st + 0x7a8) != NULL)
+                                if (((TrickyState*)st)->unk7A8 != NULL)
                                 {
-                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->a] = 1;
+                                    slots[((TrickyPackedSlots*)((char*)st + 0x7bc))->a] = 1;
                                 }
-                                if (*(void**)(st + 0x7b0) != NULL)
+                                if (((TrickyState*)st)->unk7B0 != NULL)
                                 {
-                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->b] = 1;
+                                    slots[((TrickyPackedSlots*)((char*)st + 0x7bc))->b] = 1;
                                 }
-                                if (*(void**)(st + 0x7b8) != NULL)
+                                if (((TrickyState*)st)->child != NULL)
                                 {
-                                    slots[((TrickyPackedSlots*)(st + 0x7bc))->c] = 1;
+                                    slots[((TrickyPackedSlots*)((char*)st + 0x7bc))->c] = 1;
                                 }
                                 if (slots[0] == -1)
                                 {
@@ -395,35 +395,35 @@ void fn_8013E0D0(int* obj, register u8* st)
                                 {
                                     free_ = -1;
                                 }
-                                ((TrickyPackedSlots*)(st + 0x7bc))->c = free_;
-                                *(int*)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1,
+                                ((TrickyPackedSlots*)((char*)st + 0x7bc))->c = free_;
+                                *(int*)&((TrickyState*)st)->child = Obj_SetupObject(o, 4, -1, -1,
                                                                       *(int*)&((GameObject*)obj)->anim.parent);
-                                ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPackedSlots*)(st + 0x7bc))->c);
+                                ObjLink_AttachChild((int)obj, *(int*)&((TrickyState*)st)->child, ((TrickyPackedSlots*)((char*)st + 0x7bc))->c);
                                 {
                                     f32 z3 = lbl_803E23DC;
-                                    *(f32*)(st + 0x7c0) = z3;
-                                    *(f32*)(st + 0x7c4) = z3;
-                                    *(f32*)(st + 0x7c8) = z3;
+                                    ((TrickyState*)st)->unk7C0 = z3;
+                                    ((TrickyState*)st)->unk7C4 = z3;
+                                    ((TrickyState*)st)->unk7C8 = z3;
                                 }
                             }
                         }
                     }
                     else
                     {
-                        st[0xa] = 2;
+                        ((TrickyState*)st)->substate = 2;
                         break;
                     }
                 }
                 if (getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                  &((GameObject*)*(int*)(st + 0x24))->anim.worldPosX) > lbl_803E24E0)
+                                  &((GameObject*)*(int*)&((TrickyState*)st)->followObj)->anim.worldPosX) > lbl_803E24E0)
                 {
-                    st[0xa] = 0;
+                    ((TrickyState*)st)->substate = 0;
                     break;
                 }
-                *(f32*)(st + 0x71c) -= timeDelta;
-                if (*(f32*)(st + 0x71c) < lbl_803E23DC)
+                ((TrickyState*)st)->unk71C -= timeDelta;
+                if (((TrickyState*)st)->unk71C < lbl_803E23DC)
                 {
-                    *(f32*)(st + 0x71c) = (f32)(s32)
+                    ((TrickyState*)st)->unk71C = (f32)(s32)
                     randomGetRange(0xc8, 0x258) * lbl_803E24A8;
                     TRICKY_BARK(obj, 0x29b, 0x1000);
                 }
@@ -436,24 +436,24 @@ void fn_8013E0D0(int* obj, register u8* st)
             int go;
             trickyDebugPrint(str + 0x5cc);
             ok = trickyFn_8013b368(obj, lbl_803E24E4, st);
-            if ((*(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0)) != NULL)
+            if ((((TrickyState*)st)->followObj = trickyFindNearestUsableBaddie(*(void**)&((TrickyState*)st)->playerObj, lbl_803E24D8, 0)) != NULL)
             {
-                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                TRICKY_RETARGET(st, *(int*)&((TrickyState*)st)->followObj);
                 go = 1;
             }
             else
             {
-                *(u8*)(st + 8) = 1;
+                ((TrickyState*)st)->unk08 = 1;
                 go = 0;
-                st[0xa] = go;
+                ((TrickyState*)st)->substate = go;
                 TRICKY_RESET_TAIL(st)
             }
             if (go != 0 && ok != 1)
             {
                 objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
                 *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) |= 0x10;
-                st[0xa] = 3;
-                *(int*)(st + 0x728) = 0;
+                ((TrickyState*)st)->substate = 3;
+                *(int*)&((TrickyState*)st)->unk728 = 0;
             }
             break;
         }
@@ -484,8 +484,8 @@ void fn_8013E0D0(int* obj, register u8* st)
                 Sfx_PlayFromObject(obj, 0x3db);
                 Sfx_AddLoopedObjectSound(obj, 0x3dc);
             }
-            **(u8**)(st + 0) -= 2;
-            st[0xa] = 4;
+            **(u8**)&((TrickyState*)st)->progressPtr -= 2;
+            ((TrickyState*)st)->substate = 4;
         }
         break;
     case 4:
@@ -509,26 +509,26 @@ void fn_8013E0D0(int* obj, register u8* st)
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
                 TRICKY_BARK(obj, 0x29d, 0);
                 *(u32*)(st + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10LL;
-                st[0xa] = 0;
+                ((TrickyState*)st)->substate = 0;
             }
             break;
         }
     case 5:
         {
             int* t;
-            void* found = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
+            void* found = trickyFindNearestUsableBaddie(*(void**)&((TrickyState*)st)->playerObj, lbl_803E24D8, 0);
             if (found != NULL && ((GameObject*)found)->anim.seqId == 0x6a3)
             {
                 t = found;
             }
             else
             {
-                t = (int*)Player_GetTargetObject(*(int*)(st + 4));
+                t = (int*)Player_GetTargetObject(((TrickyState*)st)->playerObj);
             }
-            if ((u32)t != *(u32*)(st + 0x720) || *(int*)(st + 0x728) != 0)
+            if ((u32)t != *(u32*)&((TrickyState*)st)->unk720 || *(int*)&((TrickyState*)st)->unk728 != 0)
             {
-                TRICKY_RETARGET(st, *(int *)(st + 0x24));
-                st[0xa] = 0;
+                TRICKY_RETARGET(st, *(int*)&((TrickyState*)st)->followObj);
+                ((TrickyState*)st)->substate = 0;
             }
             else
             {
@@ -541,9 +541,9 @@ void fn_8013E0D0(int* obj, register u8* st)
                     f32 d1 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
                                             &((GameObject*)t)->anim.worldPosX);
                     f32 d2 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
-                                            &((GameObject*)*(void**)(st + 4))->anim.worldPosX);
+                                            &((GameObject*)*(void**)&((TrickyState*)st)->playerObj)->anim.worldPosX);
                     f32 d3 = Vec_xzDistance(&((GameObject*)t)->anim.worldPosX,
-                                            &((GameObject*)*(void**)(st + 4))->anim.worldPosX);
+                                            &((GameObject*)*(void**)&((TrickyState*)st)->playerObj)->anim.worldPosX);
                     if (d1 + d2 > ratio * d3)
                     {
                         f32 d4 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
@@ -557,23 +557,26 @@ void fn_8013E0D0(int* obj, register u8* st)
                     list++;
                 }
                 {
-                    int* c = *(int**)(st + 0x724);
+                    int* c = *(int**)&((TrickyState*)st)->unk724;
                     if (c != NULL && (((GameObject*)c)->objectFlags & 0x40))
                     {
-                        *(int*)(st + 0x724) = 0;
-                        TRICKY_RETARGET(st, *(int *)(st + 4));
+                        *(int*)&((TrickyState*)st)->unk724 = 0;
+                        TRICKY_RETARGET(st, ((TrickyState*)st)->playerObj);
                     }
                 }
                 if (best != NULL)
                 {
+                    /* unk724 NULL-checks kept raw: typing as ->unk724 shifts
+                       saved-register coloring and regresses (the int reads/
+                       stores below are byte-neutral as fields). */
                     if (*(void**)(st + 0x724) == NULL)
                     {
                         TRICKY_BARK(obj, 0x35b, 0x500);
                     }
-                    if (*(void**)(st + 0x724) == NULL || *(int**)(st + 0x724) != best)
+                    if (*(void**)(st + 0x724) == NULL || *(int**)&((TrickyState*)st)->unk724 != best)
                     {
-                        *(int**)(st + 0x724) = best;
-                        TRICKY_RETARGET(st, *(int *)(st + 0x724));
+                        *(int**)&((TrickyState*)st)->unk724 = best;
+                        TRICKY_RETARGET(st, *(int*)&((TrickyState*)st)->unk724);
                     }
                 }
             }
@@ -589,14 +592,14 @@ void fn_8013E0D0(int* obj, register u8* st)
                 }
                 if (r != 1)
                 {
-                    int b = lbl_803E23DC != *(f32*)(st + 0x2ac)
-                        && (lbl_803E2410 == *(f32*)(st + 0x2b0)
-                            || *(f32*)(st + 0x2b4) - *(f32*)(st + 0x2b0) > lbl_803E2414);
+                    int b = lbl_803E23DC != ((TrickyState*)st)->waterLevel
+                        && (lbl_803E2410 == ((TrickyState*)st)->unk2B0
+                            || ((TrickyState*)st)->unk2B4 - ((TrickyState*)st)->unk2B0 > lbl_803E2414);
                     if (b != 0)
                     {
                         objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                        *(f32*)(st + 0x79c) = lbl_803E2440;
-                        *(f32*)(st + 0x838) = lbl_803E23DC;
+                        ((TrickyState*)st)->unk79C = lbl_803E2440;
+                        ((TrickyState*)st)->unk838 = lbl_803E23DC;
                         trickyDebugPrint(str + 0x184);
                     }
                     else
