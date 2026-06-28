@@ -4126,15 +4126,15 @@ void renderGlows(void)
                 f32 f = e->activeIntensity;
                 f32 cx, cy, cz, hs;
                 selectTexture((int)e->glowTexture, 0);
-                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * f),
+                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
                     (int)
                 ((f32)(u32)
-                e->glowColor[1] * f
+                e->glowColor[1] * e->activeIntensity
                 )
                 ,
                 (int)
                 ((f32)(u32)
-                e->glowColor[2] * f
+                e->glowColor[2] * e->activeIntensity
                 )
                 ,
                 (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff
