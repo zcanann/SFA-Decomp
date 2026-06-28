@@ -1,5 +1,6 @@
 /* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017EFF0) */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/dll/dll_00FD.h"
 #include "main/game_ui_interface.h"
@@ -52,9 +53,33 @@ void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 typedef struct Dll14DState
 {
-    u8 pad0[0x4 - 0x0];
+    u8 mode;       /* 0x00: state-machine mode (0/1/2/3/4) */
+    u8 gateOpen;   /* 0x01: GameBit-gated flag (0/1) */
+    u8 pad02[2];
     u32 anchorObj; /* 0x04: nearest object (ObjGroup_FindNearestObject); this object snaps to its pos/rot */
 } Dll14DState;
+
+STATIC_ASSERT(offsetof(Dll14DState, anchorObj) == 0x4);
+STATIC_ASSERT(sizeof(Dll14DState) == 0x8);
+
+/* Class-specific placement record for the dll_14D (baby-CloudRunner trigger)
+ * family: ObjPlacement common head (0x00..0x17) + trigger/sequence fields. */
+typedef struct Dll14DPlacement
+{
+    ObjPlacement head;     /* 0x00..0x17 */
+    s16 enableBit;         /* 0x18: GameBit gating activation */
+    s16 stateBit;          /* 0x1a: GameBit persisting open/closed state */
+    s16 eventId;           /* 0x1c: UI event id to wait on */
+    s16 preemptSeq;        /* 0x1e: sequence id passed to preempt() */
+    u8 runSeqArg;          /* 0x20: runSequence 3rd arg */
+    u8 groupId;            /* 0x21: ObjGroup_FindNearestObject group id */
+    u8 runSeqId;           /* 0x22: runSequence sequence id */
+    u8 flags;              /* 0x23: bit0 = no auto-open, bit1 = clear enableBit */
+} Dll14DPlacement;
+
+STATIC_ASSERT(offsetof(Dll14DPlacement, enableBit) == 0x18);
+STATIC_ASSERT(offsetof(Dll14DPlacement, flags) == 0x23);
+STATIC_ASSERT(sizeof(Dll14DPlacement) == 0x24);
 
 typedef struct MagicPlantBridgeState
 {
@@ -73,99 +98,99 @@ void dll_14D_update(u16* obj)
     u32 found;
     u32 bitVal;
     int eventReady;
-    int placement;
-    u8* state;
+    Dll14DPlacement* placement;
+    Dll14DState* state;
     float dist;
 
     dist = lbl_803E3854;
-    placement = *(int*)(obj + 0x26);
-    state = *(u8**)(obj + 0x5c);
-    if (*(void**)(state + 4) == NULL)
+    placement = (Dll14DPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (Dll14DState*)((GameObject*)obj)->extra;
+    if (*(void**)&state->anchorObj == NULL)
     {
-        found = ObjGroup_FindNearestObject((u32) * (u8*)(placement + 0x21), obj, &dist);
-        *(u32*)(state + 4) = found;
-        if (*(void**)(state + 4) == NULL)
+        found = ObjGroup_FindNearestObject((u32)placement->groupId, obj, &dist);
+        state->anchorObj = found;
+        if (*(void**)&state->anchorObj == NULL)
         {
             return;
         }
-        if (*(s16*)(placement + 0x1a) == -1)
+        if (placement->stateBit == -1)
         {
-            state[1] = 0;
+            state->gateOpen = 0;
         }
         else
         {
-            bitVal = GameBit_Get(*(s16*)(placement + 0x1a));
-            state[1] = bitVal;
+            bitVal = GameBit_Get(placement->stateBit);
+            state->gateOpen = bitVal;
         }
-        if ((state[1] != 0) && (*(s16*)(placement + 0x1e) != -1))
+        if ((state->gateOpen != 0) && (placement->preemptSeq != -1))
         {
-            *state = 1;
+            state->mode = 1;
         }
         else
         {
-            *state = 2;
+            state->mode = 2;
         }
     }
-    ((GameObject*)obj)->anim.localPosX = *(f32*)(*(int*)(state + 4) + 0xc);
-    ((GameObject*)obj)->anim.localPosY = *(f32*)(*(int*)(state + 4) + 0x10);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)(*(int*)(state + 4) + 0x14);
-    ((GameObject*)obj)->anim.rotX = **(s16**)(state + 4);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(*(int*)(state + 4) + 4);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(*(int*)(state + 4) + 2);
-    mode = *state;
+    ((GameObject*)obj)->anim.localPosX = *(f32*)(state->anchorObj + 0xc);
+    ((GameObject*)obj)->anim.localPosY = *(f32*)(state->anchorObj + 0x10);
+    ((GameObject*)obj)->anim.localPosZ = *(f32*)(state->anchorObj + 0x14);
+    ((GameObject*)obj)->anim.rotX = *(s16*)state->anchorObj;
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(state->anchorObj + 4);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(state->anchorObj + 2);
+    mode = state->mode;
     switch (mode)
     {
     case 1:
-        *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+        *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
         *(u8*)((int)obj + 0xaf) |= 8;
-        (*gObjectTriggerInterface)->preempt((int)obj, *(s16*)(placement + 0x1e));
-        (*gObjectTriggerInterface)->runSequence(*(u8*)(placement + 0x22), obj,
-                                                *(u8*)(placement + 0x20));
-        *state = 4;
+        (*gObjectTriggerInterface)->preempt((int)obj, placement->preemptSeq);
+        (*gObjectTriggerInterface)->runSequence(placement->runSeqId, obj,
+                                                placement->runSeqArg);
+        state->mode = 4;
         break;
     case 2:
-        if ((state[1] != 0) && ((*(u8*)(placement + 0x23) & 1) == 0))
+        if ((state->gateOpen != 0) && ((placement->flags & 1) == 0))
         {
-            *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+            *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
             *(u8*)((int)obj + 0xaf) |= 8;
-            *state = 4;
+            state->mode = 4;
         }
-        else if ((*(s16*)(placement + 0x18) != -1) &&
-            (bitVal = GameBit_Get(*(s16*)(placement + 0x18)), bitVal == 0))
+        else if ((placement->enableBit != -1) &&
+            (bitVal = GameBit_Get(placement->enableBit), bitVal == 0))
         {
-            *(u8*)(*(int*)(state + 4) + 0xaf) &= ~0x20;
+            *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
             *(u8*)((int)obj + 0xaf) |= 8;
-            *state = 3;
+            state->mode = 3;
         }
         else if (((*(u8*)((int)obj + 0xaf) & 1) != 0) &&
-            ((*(s16*)(placement + 0x1c) == -1) ||
-                (eventReady = (*gGameUIInterface)->isEventReady(*(s16*)(placement + 0x1c)),
+            ((placement->eventId == -1) ||
+                (eventReady = (*gGameUIInterface)->isEventReady(placement->eventId),
                     eventReady != 0)))
         {
-            if ((*(u8*)(placement + 0x23) & 2) != 0)
+            if ((placement->flags & 2) != 0)
             {
-                GameBit_Set(*(s16*)(placement + 0x18), 0);
+                GameBit_Set(placement->enableBit, 0);
             }
-            if (*(s16*)(placement + 0x1a) != -1)
+            if (placement->stateBit != -1)
             {
-                GameBit_Set(*(s16*)(placement + 0x1a), 1);
+                GameBit_Set(placement->stateBit, 1);
             }
             *(u8*)((int)obj + 0xaf) |= 8;
-            state[1] = 1;
-            (*gObjectTriggerInterface)->runSequence(*(u8*)(placement + 0x22), obj,
+            state->gateOpen = 1;
+            (*gObjectTriggerInterface)->runSequence(placement->runSeqId, obj,
                                                     0xffffffff);
         }
         else
         {
-            *(u8*)(*(int*)(state + 4) + 0xaf) |= 0x20;
+            *(u8*)(state->anchorObj + 0xaf) |= 0x20;
             *(u8*)((int)obj + 0xaf) &= ~8;
         }
         break;
     case 3:
-        bitVal = GameBit_Get(*(s16*)(placement + 0x18));
+        bitVal = GameBit_Get(placement->enableBit);
         if (bitVal != 0)
         {
-            *state = 2;
+            state->mode = 2;
         }
         break;
     case 4:
@@ -175,9 +200,9 @@ void dll_14D_update(u16* obj)
 
 void dll_14D_init(int* obj)
 {
-    char* p = ((GameObject*)obj)->extra;
-    *p = 0;
-    ((Dll14DState*)p)->anchorObj = 0;
+    Dll14DState* p = ((GameObject*)obj)->extra;
+    p->mode = 0;
+    p->anchorObj = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 
