@@ -4419,6 +4419,8 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     f32 ratio1;
     f32 angle;
     f32 ratio2;
+    f32 fade1;
+    f32 fade2;
     GXColor c_K2;
     GXColor c_K0;
     GXColor c_K1;
@@ -4454,8 +4456,10 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
     GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
 
     PSMTXScale(mtx_58, lbl_803DEF64 * (f32)s2, lbl_803DEF64 * (f32)s2, lbl_803DEEDC);
-    PSMTXTrans(mtx_28, gSynthFadeMask * ratio1 * (f32)s3,
-                       lbl_803DEF68 * (f32)s1 + gSynthFadeMask * ratio2 * (f32)s3,
+    fade1 = gSynthFadeMask * ratio1;
+    fade2 = gSynthFadeMask * ratio2;
+    PSMTXTrans(mtx_28, fade1 * (f32)s3,
+                       lbl_803DEF68 * (f32)s1 + fade2 * (f32)s3,
                        lbl_803DEEDC);
     PSMTXConcat(mtx_28, mtx_58, mtx_58);
     PSMTXRotRad(mtx_28, 'z', gSynthDelayedActionWord0 * angle);
