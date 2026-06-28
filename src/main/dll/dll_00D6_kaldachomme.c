@@ -31,6 +31,18 @@ typedef struct KaldaChompMeState
     u8 pad0D[3];
 } KaldaChompMeState;
 
+typedef struct KaldaChompMePlacement
+{
+    ObjPlacement head;
+    u8 yawBits;   /* 0x18 */
+    u8 pitchBits; /* 0x19 */
+    u8 rollBits;  /* 0x1a */
+} KaldaChompMePlacement;
+
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, yawBits) == 0x18);
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, pitchBits) == 0x19);
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, rollBits) == 0x1a);
+
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
     KaldaChompMeState* state;
@@ -172,9 +184,11 @@ void kaldachompme_update(int obj)
 
 void kaldachompme_init(int obj, int params)
 {
-    ((GameObject*)obj)->anim.rotZ = (s16)(*(u8*)(params + 0x18) << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)(*(u8*)(params + 0x19) << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)(*(u8*)(params + 0x1a) << 8);
+    KaldaChompMePlacement* placement = (KaldaChompMePlacement*)params;
+
+    ((GameObject*)obj)->anim.rotZ = (s16)(placement->yawBits << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(placement->pitchBits << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rollBits << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E30D4, 0);
 }
