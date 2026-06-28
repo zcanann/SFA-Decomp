@@ -131,12 +131,12 @@ extern f32 lbl_803E2068;
 
 void drawFn_80125424(void)
 {
+    int i;
     s16 alpha;
     u32 height;
     u32 width;
     int type;
     int ypos;
-    int i;
     int alphaI;
     int alphaTmp;
     int randX;
