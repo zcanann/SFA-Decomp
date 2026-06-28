@@ -36,6 +36,48 @@ typedef struct EcshCreatorState {
     s16 groupSlot;
 } EcshCreatorState;
 
+/* 0x38-byte spawn descriptor handed to Obj_SetupObject for the shrine
+ * child (object type 0x11). Head is the common ObjPlacement layout
+ * (type id at 0, color block, position, mapId); the tail is the
+ * EarthWalker-shrine class fields. */
+typedef struct EcshShrineSpawnSetup {
+    s16 objType;       /* 0x00 */
+    s16 pad02;         /* 0x02 */
+    u8 color[4];       /* 0x04 */
+    f32 posX;          /* 0x08 */
+    f32 posY;          /* 0x0c */
+    f32 posZ;          /* 0x10 */
+    s32 mapId;         /* 0x14 */
+    s16 gameBit;       /* 0x18 */
+    s16 unk1A;         /* 0x1a */
+    u8 pad1C[2];       /* 0x1c */
+    s16 unk1E;         /* 0x1e */
+    s16 unk20;         /* 0x20 */
+    s16 unk22;         /* 0x22 */
+    s16 unk24;         /* 0x24 */
+    u8 pad26;          /* 0x26 */
+    u8 unk27;          /* 0x27 */
+    u8 unk28;          /* 0x28 */
+    u8 unk29;          /* 0x29 */
+    s8 unk2A;          /* 0x2a */
+    u8 unk2B;          /* 0x2b */
+    s16 unk2C;         /* 0x2c */
+    s8 unk2E;          /* 0x2e */
+    u8 pad2F;          /* 0x2f */
+    s16 unk30;         /* 0x30 */
+    u8 unk32;          /* 0x32 */
+    u8 pad33;          /* 0x33 */
+    u16 unk34;         /* 0x34 */
+    u8 pad36[2];       /* 0x36 */
+} EcshShrineSpawnSetup;
+
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, posX) == 0x8);
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, mapId) == 0x14);
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, unk2A) == 0x2a);
+STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, unk34) == 0x34);
+STATIC_ASSERT(sizeof(EcshShrineSpawnSetup) == 0x38);
+
 STATIC_ASSERT(offsetof(EcshCreatorState, countdown) == 0);
 STATIC_ASSERT(offsetof(EcshCreatorState, active) == 2);
 STATIC_ASSERT(offsetof(EcshCreatorState, gameBit) == 4);
@@ -89,7 +131,7 @@ void ecsh_creator_update(GameObject* obj)
     u8* def;
     EcshCreatorState* state;
     void* res;
-    u8* p;
+    EcshShrineSpawnSetup* p;
     int ret;
 
     def = (u8*)obj->anim.placementData;
@@ -111,32 +153,32 @@ void ecsh_creator_update(GameObject* obj)
     if (Obj_IsLoadingLocked() != 0 && state->countdown <= 0)
     {
         p = mmAlloc(0x38, 0xe, 0);
-        *(f32*)(p + 8) = ((ObjPlacement*)def)->posX;
-        *(f32*)(p + 0xc) = ((ObjPlacement*)def)->posY;
-        *(f32*)(p + 0x10) = ((ObjPlacement*)def)->posZ;
-        *(s16*)p = ECSH_SHRINE_OBJ_TYPE;
-        *(int*)(p + 0x14) = -1;
-        p[4] = def[4];
-        p[5] = def[5];
-        p[6] = def[6];
-        p[7] = def[7];
-        p[0x27] = 3;
-        p[0x28] = 0;
-        *(s16*)(p + 0x18) = state->gameBit + *(s8*)(def + 0x1f);
-        *(s16*)(p + 0x30) = -1;
-        *(s8*)(p + 0x2a) = (s8)(obj->anim.rotX >> 8);
-        p[0x2b] = 2;
-        *(s16*)(p + 0x20) = 0;
-        *(s16*)(p + 0x1e) = 0;
-        *(s16*)(p + 0x22) = -1;
-        p[0x29] = 0xff;
-        *(s8*)(p + 0x2e) = -1;
-        *(s16*)(p + 0x24) = 0;
-        *(s16*)(p + 0x2c) = 0;
-        *(u16*)(p + 0x34) = 0xFFFF;
-        *(s16*)(p + 0x1a) = 0;
-        *(u8*)(p + 0x32) = state->groupSlot;
-        ret = Obj_SetupObject(p, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        p->posX = ((ObjPlacement*)def)->posX;
+        p->posY = ((ObjPlacement*)def)->posY;
+        p->posZ = ((ObjPlacement*)def)->posZ;
+        p->objType = ECSH_SHRINE_OBJ_TYPE;
+        p->mapId = -1;
+        p->color[0] = def[4];
+        p->color[1] = def[5];
+        p->color[2] = def[6];
+        p->color[3] = def[7];
+        p->unk27 = 3;
+        p->unk28 = 0;
+        p->gameBit = state->gameBit + *(s8*)(def + 0x1f);
+        p->unk30 = -1;
+        p->unk2A = (s8)(obj->anim.rotX >> 8);
+        p->unk2B = 2;
+        p->unk20 = 0;
+        p->unk1E = 0;
+        p->unk22 = -1;
+        p->unk29 = 0xff;
+        p->unk2E = -1;
+        p->unk24 = 0;
+        p->unk2C = 0;
+        p->unk34 = 0xFFFF;
+        p->unk1A = 0;
+        p->unk32 = state->groupSlot;
+        ret = Obj_SetupObject((u8*)p, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
         if ((u32)ret != 0)
         {
             *(u8*)(*(int*)&((GameObject*)ret)->extra + 0x404) = 0x20;
