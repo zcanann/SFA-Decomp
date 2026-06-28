@@ -246,9 +246,9 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
     u8* bank;
 
     ctrl = controller & 0xff;
+    stateBase = (u8*)lbl_803CD760;
     dstVoice = ((McmdVoiceState*)dstState)->voiceHandle & 0xff;
     srcVoice = ((McmdVoiceState*)srcState)->voiceHandle & 0xff;
-    stateBase = (u8*)lbl_803CD760;
 
     if (ctrl < 0x40)
     {
