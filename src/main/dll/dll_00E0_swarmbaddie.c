@@ -19,6 +19,7 @@
 #include "main/dll/swarmbaddiestate_struct.h"
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -155,19 +156,21 @@ void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {
     int curve;
+    RomCurveWalker* walker;
     int done;
     f32 step;
 
     curve = state->curve;
+    walker = (RomCurveWalker*)curve;
     done = Curve_AdvanceAlongPath(curve, state->curveStep);
-    if (((done != 0) || (*(int*)(curve + 0x10) != gSwarmBaddieLastCurvePoint)) &&
+    if (((done != 0) || (walker->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678,
                                           &lbl_803DBC78, -1) != 0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
-    gSwarmBaddieLastCurvePoint = *(int*)(curve + 0x10);
+    gSwarmBaddieLastCurvePoint = walker->atSegmentEnd;
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         step = lbl_803E267C;
@@ -184,11 +187,11 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
     else
     {
         step = lbl_803E267C;
-        ((GameObject*)obj)->anim.velocityX = step * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX) +
+        ((GameObject*)obj)->anim.velocityX = step * (walker->posX - ((GameObject*)obj)->anim.localPosX) +
             ((GameObject*)obj)->anim.velocityX;
-        ((GameObject*)obj)->anim.velocityY = step * (*(f32*)(curve + 0x6c) - ((GameObject*)obj)->anim.localPosY) +
+        ((GameObject*)obj)->anim.velocityY = step * (walker->posY - ((GameObject*)obj)->anim.localPosY) +
             ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ = step * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ) +
+        ((GameObject*)obj)->anim.velocityZ = step * (walker->posZ - ((GameObject*)obj)->anim.localPosZ) +
             ((GameObject*)obj)->anim.velocityZ;
     }
 
@@ -284,9 +287,10 @@ void swarmbaddie_update(int obj)
     }
     if ((void*)oldTarget != NULL)
     {
-        d.x = *(f32*)&((GameObject*)oldTarget)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
-        d.y = *(f32*)&((GameObject*)oldTarget)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
-        d.z = *(f32*)(oldTarget + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        RomCurveWalker* walker = (RomCurveWalker*)oldTarget;
+        d.x = walker->posX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = walker->posY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = walker->posZ - ((GameObject*)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
     if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > lbl_803E26C4))
