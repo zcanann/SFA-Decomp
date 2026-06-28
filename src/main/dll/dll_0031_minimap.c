@@ -664,14 +664,14 @@ void fn_80133818(void)
     for (; i < 2; i++)
     {
         lbl_803DBBC8[i] = (void*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
-        *(f32*)((char*)lbl_803DBBC8[i] + 0xc) = a;
-        *(f32*)((char*)lbl_803DBBC8[i] + 0x10) = b;
-        *(f32*)((char*)lbl_803DBBC8[i] + 0xc) = c;
-        *(f32*)((char*)lbl_803DBBC8[i] + 0x10) = c;
-        *(f32*)((char*)lbl_803DBBC8[i] + 0x14) = d;
-        *(u16*)lbl_803DBBC8[i] = 2000;
-        *(u16*)((char*)lbl_803DBBC8[i] + 2) = 0;
-        *(f32*)((char*)lbl_803DBBC8[i] + 8) = e;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = a;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = b;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = c;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = c;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = d;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = e;
     }
 }
 #pragma dont_inline reset
@@ -972,10 +972,10 @@ void fn_8013396C(void)
                         gMinimapBlipPulse = 0;
                     }
                     slot = Camera_GetCurrentViewSlot();
-                    a = getAngle(*(f32*)(lbl_803DD934 + 0xc) - ((GameObject*)player)->anim.localPosX,
-                                 *(f32*)(lbl_803DD934 + 0x14) - ((GameObject*)player)->anim.localPosZ);
+                    a = getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                                 ((GameObject*)lbl_803DD934)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
                     a = *slot + a;
-                    d = a - (u16) * (s16*)((char*)lbl_803DBBC8[1] + 4);
+                    d = a - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
                     if (d > 0x8000)
                     {
                         d = (d - 0x10000) + 1;
