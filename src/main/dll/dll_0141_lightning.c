@@ -81,9 +81,41 @@ typedef struct LightningMode
     u8 mode : 4; /* 0x0f */
 } LightningMode;
 
+/* Per-object extra state for the MMP lightning object
+ * (lightning_getExtraSize == 0x28). Shares the carryable header region with
+ * MmpMoonrockState but is its own record. */
+typedef struct LightningState
+{
+    u32 handle;        /* 0x00: active lightning effect handle (object ptr) */
+    f32 ageTimer;      /* 0x04 */
+    f32 radiusX;       /* 0x08 */
+    f32 radiusY;       /* 0x0c */
+    f32 hitRadius;     /* 0x10 */
+    f32 burstRadius;   /* 0x14 */
+    f32 countdown;     /* 0x18 */
+    u8 delayBase;      /* 0x1c */
+    u8 param1D;        /* 0x1d */
+    u8 pad1E[2];
+    u32 linkedHandle;  /* 0x20 */
+    LightningMode modeBits; /* 0x24 */
+    LightningFlags flags;   /* 0x25 */
+    u8 pad26[2];
+} LightningState;
+
+STATIC_ASSERT(sizeof(LightningState) == 0x28);
+STATIC_ASSERT(offsetof(LightningState, ageTimer) == 0x04);
+STATIC_ASSERT(offsetof(LightningState, radiusX) == 0x08);
+STATIC_ASSERT(offsetof(LightningState, radiusY) == 0x0c);
+STATIC_ASSERT(offsetof(LightningState, hitRadius) == 0x10);
+STATIC_ASSERT(offsetof(LightningState, burstRadius) == 0x14);
+STATIC_ASSERT(offsetof(LightningState, countdown) == 0x18);
+STATIC_ASSERT(offsetof(LightningState, linkedHandle) == 0x20);
+STATIC_ASSERT(offsetof(LightningState, modeBits) == 0x24);
+STATIC_ASSERT(offsetof(LightningState, flags) == 0x25);
+
 void lightning_update(u8* obj)
 {
-    u8* state;
+    LightningState* state;
     u8* data;
     u32* objects;
     int objectCount;
@@ -96,31 +128,31 @@ void lightning_update(u8* obj)
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (((LightningPlacement*)data)->enableGameBit != -1)
     {
-        if (((LightningFlags*)(state + 0x25))->enabled)
+        if (state->flags.enabled)
         {
             if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) == 0)
             {
-                ((LightningFlags*)(state + 0x25))->enabled = 0;
-                if (*(u32*)state != 0)
+                state->flags.enabled = 0;
+                if (state->handle != 0)
                 {
-                    mm_free(*(void**)state);
-                    *(u32*)state = 0;
+                    mm_free((void*)state->handle);
+                    state->handle = 0;
                 }
             }
         }
         else if (GameBit_Get(((LightningPlacement*)data)->enableGameBit) != 0)
         {
-            ((LightningFlags*)(state + 0x25))->enabled = 1;
+            state->flags.enabled = 1;
         }
     }
 
-    if (*(u32*)state == 0 && ((LightningFlags*)(state + 0x25))->enabled)
+    if (state->handle == 0 && state->flags.enabled)
     {
         spawnLightning = 0;
-        ((MmpMoonrockState*)state)->homeX -= timeDelta;
-        if (((MmpMoonrockState*)state)->homeX <= lbl_803E4088)
+        state->countdown -= timeDelta;
+        if (state->countdown <= lbl_803E4088)
         {
-            ((MmpMoonrockState*)state)->homeX += (f32)(s32)((u32)data[0x23] * 0x3c);
+            state->countdown += (f32)(s32)((u32)data[0x23] * 0x3c);
             spawnLightning = 1;
         }
         if (spawnLightning != 0)
@@ -130,7 +162,7 @@ void lightning_update(u8* obj)
             while (objectIndex < objectCount)
             {
                 u32 linkedHandle = *(u32*)(*(u32*)(objects[objectIndex] + 0x4c) + 0x14);
-                if (linkedHandle == *(u32*)&((MmpMoonrockState*)state)->homeZ)
+                if (linkedHandle == state->linkedHandle)
                 {
                     break;
                 }
@@ -138,20 +170,20 @@ void lightning_update(u8* obj)
             }
             if (objectIndex == objectCount)
             {
-                ((LightningFlags*)(state + 0x25))->enabled = 0;
+                state->flags.enabled = 0;
                 return;
             }
 
-            delay = (u16)(state[0x1c] + randomGetRange(-5, 5));
+            delay = (u16)(state->delayBase + randomGetRange(-5, 5));
             handle = lightningCreate((float*)(obj + 0x0c), (float*)(objects[objectIndex] + 0x0c),
-                                     *(f32*)(state + 0x08), ((MmpMoonrockState*)state)->baseY,
-                                     delay, state[0x1d],
-                                     (u8)(((LightningFlags*)(state + 0x25))->style == 1));
-            *(int*)state = handle;
-            *(f32*)(state + 0x04) = lbl_803E4088;
-            if ((((LightningMode*)(state + 0x24))->mode & 1) != 0)
+                                     state->radiusX, state->radiusY,
+                                     delay, state->param1D,
+                                     (u8)(state->flags.style == 1));
+            state->handle = handle;
+            state->ageTimer = lbl_803E4088;
+            if ((state->modeBits.mode & 1) != 0)
             {
-                hitDetectFn_80097070(obj, ((MmpMoonrockState*)state)->baseY2, 1, 7, 0x1e, 0);
+                hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, 0);
             }
             data = *(u8**)(objects[objectIndex] + 0xb8);
             if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
@@ -159,9 +191,9 @@ void lightning_update(u8* obj)
                 hitDetectFn_80097070((u8*)objects[objectIndex], *(f32*)(data + 0x10), 1, 7,
                                      0x1e, 0);
             }
-            if ((((LightningMode*)(state + 0x24))->mode & 2) != 0)
+            if ((state->modeBits.mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst(obj, 5, ((MmpMoonrockState*)state)->respawnTimer, 1, 1, 100, lbl_803E408C,
+                objfx_spawnDirectionalBurst(obj, 5, state->burstRadius, 1, 1, 100, lbl_803E408C,
                                             0, 0);
             }
             if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
@@ -172,45 +204,45 @@ void lightning_update(u8* obj)
         }
     }
 
-    if (*(u32*)state != 0)
+    if (state->handle != 0)
     {
-        if (((LightningFlags*)(state + 0x25))->noAge == 0)
+        if (state->flags.noAge == 0)
         {
-            *(f32*)(state + 0x04) += timeDelta;
-            *(u16*)(*(u32*)state + 0x20) = (u16)(int)(lbl_803E4090 + *(f32*)(state + 0x04));
+            state->ageTimer += timeDelta;
+            *(u16*)(state->handle + 0x20) = (u16)(int)(lbl_803E4090 + state->ageTimer);
         }
-        if (*(u16*)(*(u32*)state + 0x20) >= *(u16*)(*(u32*)state + 0x22))
+        if (*(u16*)(state->handle + 0x20) >= *(u16*)(state->handle + 0x22))
         {
-            mm_free(*(void**)state);
-            *(u32*)state = 0;
+            mm_free((void*)state->handle);
+            state->handle = 0;
         }
     }
 }
 
 void lightning_init(u8* obj, u8* data)
 {
-    u8* state;
+    LightningState* state;
     f32 defaultScale;
 
     state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
-    ((LightningMode*)(state + 0x24))->mode = data[0x21];
+    state->modeBits.mode = data[0x21];
     defaultScale = lbl_803E40A0;
-    ((MmpMoonrockState*)state)->baseY2 = defaultScale;
-    ((MmpMoonrockState*)state)->respawnTimer = defaultScale;
-    *(f32*)(state + 0x08) = (f32)(u32)
+    state->hitRadius = defaultScale;
+    state->burstRadius = defaultScale;
+    state->radiusX = (f32)(u32)
     data[0x1c];
-    ((MmpMoonrockState*)state)->baseY = (f32)(u32)
+    state->radiusY = (f32)(u32)
     data[0x1d];
-    state[0x1c] = data[0x1e];
-    state[0x1d] = data[0x1f];
-    *(u32*)&((MmpMoonrockState*)state)->homeZ = *(u32*)(data + 0x18);
+    state->delayBase = data[0x1e];
+    state->param1D = data[0x1f];
+    state->linkedHandle = *(u32*)(data + 0x18);
 
-    ((LightningFlags*)(state + 0x25))->enabled = (data[0x20] & 1) ? 1 : 0;
-    ((LightningFlags*)(state + 0x25))->style = (data[0x20] & 2) ? 1 : 0;
-    ((LightningFlags*)(state + 0x25))->noAge = (data[0x20] & 4) ? 1 : 0;
+    state->flags.enabled = (data[0x20] & 1) ? 1 : 0;
+    state->flags.style = (data[0x20] & 2) ? 1 : 0;
+    state->flags.noAge = (data[0x20] & 4) ? 1 : 0;
 
-    ((MmpMoonrockState*)state)->homeX = (f32)(s32)((u32)data[0x22] * 0x3c);
+    state->countdown = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
