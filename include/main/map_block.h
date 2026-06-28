@@ -24,7 +24,8 @@ typedef struct MapBlockData {
     u16 unk90;
     u8 pad92[0x9A - 0x92];
     u16 unk9A;
-    u8 pad9C[0xA2 - 0x9C];
+    u8 pad9C[0xA1 - 0x9C];
+    u8 unkA1;
     u8 unkA2;
     u8 padA3;
 } MapBlockData;

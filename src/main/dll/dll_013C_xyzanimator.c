@@ -17,6 +17,7 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/map_block.h"
 #include "dolphin/os/OSCache.h"
 extern int mmAlloc(int size, int pool, int tag);
 
@@ -105,7 +106,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     edgeOffset = 0;
     blockIndex = 0;
     triangleOffset = coordOffset = 0;
-    for (; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
+    for (; blockIndex < (int)(u32)((MapBlockData*)block)->unk9A; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
@@ -122,17 +123,17 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
                 int o6;
                 int o12;
                 mapBlock = fn_800606DC((int*)block, triangle);
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32) * mapBlock * 6);
+                vtx = (VertexS16*)(((MapBlockData*)block)->unk58 + (u32) * mapBlock * 6);
                 *(s16*)(state->dataBuffer + edgeOffset) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset + 4) = vtx->z;
                 o6 = edgeOffset + 6;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[1] * 6);
+                vtx = (VertexS16*)(((MapBlockData*)block)->unk58 + mapBlock[1] * 6);
                 *(s16*)(state->dataBuffer + o6) = vtx->x;
                 *(s16*)(state->dataBuffer + o6 + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + o6 + 4) = vtx->z;
                 o12 = o6 + 6;
-                vtx = (VertexS16*)(*(int*)(block + 0x58) + mapBlock[2] * 6);
+                vtx = (VertexS16*)(((MapBlockData*)block)->unk58 + mapBlock[2] * 6);
                 *(s16*)(state->dataBuffer + o12) = vtx->x;
                 *(s16*)(state->dataBuffer + o12 + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + o12 + 4) = vtx->z;
@@ -142,7 +143,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
         }
     }
     edge = 0;
-    for (edgeOffset = 0; edgeOffset < (int)(u32) * (u8*)(block + 0xa1); edgeOffset++)
+    for (edgeOffset = 0; edgeOffset < (int)(u32)((MapBlockData*)block)->unkA1; edgeOffset++)
     {
         blockIndex = (int)fn_800606FC((int*)block, edgeOffset);
         *(s16*)(state->unk28 + edge) = ((EdgeVerts*)blockIndex)->a;
@@ -178,7 +179,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 
     coordOffset = 0;
     vertexOffset = coordOffset;
-    for (blockIndex = 0; blockIndex < (int)(u32) * (u16*)(block + 0x9a); blockIndex++)
+    for (blockIndex = 0; blockIndex < (int)(u32)((MapBlockData*)block)->unk9A; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
@@ -199,7 +200,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
                 edgeOffset = vertexIndex;
                 for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
                 {
-                    vtx = (VertexS16*)(*(int*)(block + 0x58) + (u32) * mapBlock * 6);
+                    vtx = (VertexS16*)(((MapBlockData*)block)->unk58 + (u32) * mapBlock * 6);
                     vtx->x = (s16)(scale * state->offsetX +
                         (f32) * (s16*)(state->dataBuffer + edgeOffset));
                     vtx->y = (s16)(scale * state->offsetY +
@@ -214,10 +215,10 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
             }
         }
     }
-    DCStoreRange(*(void**)(block + 0x58), (u32) * (u16*)(block + 0x90) * 6);
+    DCStoreRange((void*)((MapBlockData*)block)->unk58, (u32)((MapBlockData*)block)->unk90 * 6);
     edgeOffset = 0;
     edgeData = edgeOffset;
-    for (; edgeOffset < (int)(u32) * (u8*)(block + 0xa1); edgeOffset++)
+    for (; edgeOffset < (int)(u32)((MapBlockData*)block)->unkA1; edgeOffset++)
     {
         vertexOffset = (int)fn_800606FC((int*)block, edgeOffset);
         shader = fn_8006070C((int*)block, *(u8*)(vertexOffset + 0x13));
@@ -312,13 +313,13 @@ void xyzanimator_update(int obj)
         ((XyzAnimatorState*)state)->loopCount = 0;
         goto no_update;
     }
-    if ((*(u16*)(block + 4) & 8) == 0)
+    if ((((MapBlockData*)block)->unk4 & 8) == 0)
     {
         goto no_update;
     }
     if (((XyzAnimatorState*)state)->unk4 == 0)
     {
-        for (i = 0; i < *(u16*)(block + 0x9a); i++)
+        for (i = 0; i < ((MapBlockData*)block)->unk9A; i++)
         {
             row = mapBlockFn_800606ec(block, i);
             t = mapBlockFn_80060678();
@@ -341,7 +342,7 @@ void xyzanimator_update(int obj)
         {
             ((XyzAnimatorState*)state)->gameBitValue = GameBit_Get(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         }
-        ((XyzAnimatorState*)state)->unk8 = *(u8*)(block + 0xa1);
+        ((XyzAnimatorState*)state)->unk8 = ((MapBlockData*)block)->unkA1;
         ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
         ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
         ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
@@ -386,9 +387,9 @@ void xyzanimator_update(int obj)
         if (((XyzAnimatorPlacement*)setup)->mode != 4)
         {
             fn_80194C40(setup, state, block);
-            *(u16*)(block + 4) = *(u16*)(block + 4) ^ 1;
+            ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
             fn_80194C40(setup, state, block);
-            *(u16*)(block + 4) = *(u16*)(block + 4) ^ 1;
+            ((MapBlockData*)block)->unk4 = ((MapBlockData*)block)->unk4 ^ 1;
         }
     }
     if (((XyzAnimatorPlacement*)setup)->mode == 2)
