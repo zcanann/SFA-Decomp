@@ -142,9 +142,9 @@ void updateVisibleGeometry(void)
 {
     u8* cam;
     int n;
+    f32 tt, ff, ss;
     f32 scale;
     f32 xx, yy, zz;
-    f32 tt, ff, ss;
     f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
