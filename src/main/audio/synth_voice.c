@@ -245,7 +245,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
         idx = (key & 0x7F) * 8;
-        if (*(u16*)(keymap + idx) != 0xFFFF)
+        if (((KeymapEntry*)(keymap + idx))->id != 0xFFFF)
         {
             if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) != 0x4000)
             {
@@ -271,7 +271,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     pan = 0x80;
                 }
 
-                k = (key & 0x7F) + *(s8*)(keymap + idx + 2);
+                k = (key & 0x7F) + ((KeymapEntry*)(keymap + idx))->transpose;
                 if (k > 0x7F)
                 {
                     k = 0x7F;
@@ -281,7 +281,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     k = 0;
                 }
 
-                prio += *(s16*)(keymap + idx + 4);
+                prio += ((KeymapEntry*)(keymap + idx))->prioOffset;
                 if (prio > 0xFF)
                 {
                     prio = 0xFF;
