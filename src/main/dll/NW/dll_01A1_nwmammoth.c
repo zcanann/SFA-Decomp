@@ -424,6 +424,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int* tw2;
+    int* tw;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (state->stateIndex)
     {
@@ -493,7 +494,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                         }
                         else
                         {
-                            int* tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
+                            tw = tumbleweedbush_findNearestActive((char*)o2 + 0x18);
                             if (tw == NULL || vec3f_distanceSquared((char*)tw + 0x18, &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
                                 if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX, &o2[6]) >=
