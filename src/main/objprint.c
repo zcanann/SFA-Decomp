@@ -3424,17 +3424,17 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
     ObjPrintS10Color s10;
+    int coord;
     int texTbl;
     int texCnt;
     int t150;
     f32 sx;
     f32 sy;
     int stk348;
-    int t160;
     u8* rop;
     f32 fz;
     int stage;
-    int coord;
+    int t160;
     u8 fancy;
 
     s10 = lbl_803DE9F4;
