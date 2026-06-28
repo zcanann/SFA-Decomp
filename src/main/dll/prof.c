@@ -14,6 +14,7 @@
  * its exact role is unconfirmed.
  */
 #include "main/dll/debug/prof.h"
+#include "main/dll/titlemenuitem_struct.h"
 #include "main/engine_shared.h"
 extern int saveFileStruct_isCheatActive();
 extern int isCheatUnlocked(u8);
@@ -92,7 +93,8 @@ void optionsMenu_openAudioPanel(void)
     lbl_803A87D0[3] =
         (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(
             0x124, 0xe6, 0, 0x7f, lbl_803DD708[12], 0x3e);
-    *(u8*)(lbl_803A87D0[3] + 4) = (u8)(*(u8*)(lbl_803A87D0[3] + 4) | 0x40);
+    ((TitleMenuItem*)lbl_803A87D0[3])->flags =
+        (u8)(((TitleMenuItem*)lbl_803A87D0[3])->flags | 0x40);
     lbl_803A87D0[4] = 0;
     lbl_803A87D0[5] = 0;
 
@@ -101,7 +103,8 @@ void optionsMenu_openAudioPanel(void)
         lbl_803A87D0[5] =
             (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
                 0x3cb, 0x27, 0, (s16)(return0x64_8000A378() - 1), 0);
-        *(u8*)(lbl_803A87D0[5] + 4) = (u8)(*(u8*)(lbl_803A87D0[5] + 4) | 0x80);
+        ((TitleMenuItem*)lbl_803A87D0[5])->flags =
+            (u8)(((TitleMenuItem*)lbl_803A87D0[5])->flags | 0x80);
     }
 
     (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
