@@ -1166,9 +1166,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
         defs[1] = stateA->worldPosX - playerMapOffsetX;
         defs[2] = stateA->worldPosY;
         defs[3] = stateA->worldPosZ - playerMapOffsetZ;
-        volA0[22] = 0;
-        volA0[23] = 0;
-        *(u16*)(volA0 + 20) = 0;
+        volA->sphereIndex = 0;
+        volA->maskBit = 0;
+        volA->linkedSpheres = 0;
     }
     if ((checkA != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
         (checkB != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES))
@@ -1202,9 +1202,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
         defs[5] = stateA->worldPosX - playerMapOffsetX;
         defs[6] = stateA->worldPosY;
         defs[7] = stateA->worldPosZ - playerMapOffsetZ;
-        volB0[22] = 0;
-        volB0[23] = 0;
-        *(u16*)(volB0 + 20) = 0;
+        volB->sphereIndex = 0;
+        volB->maskBit = 0;
+        volB->linkedSpheres = 0;
     }
     if (countA > 64 || countB > 64)
     {
