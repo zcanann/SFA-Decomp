@@ -674,7 +674,8 @@ void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void gcbaddieshield_init(int* obj, void* initData)
 {
     int lifetime = *(s16*)((char*)initData + 0x1a);
-    *(f32*)((GameObject*)obj)->extra = lifetime;
+    f32* state = ((GameObject*)obj)->extra;
+    state[0] = lifetime;
 }
 
 void gcbaddieshield_update(int* obj)
