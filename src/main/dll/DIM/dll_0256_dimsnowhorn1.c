@@ -41,7 +41,8 @@ typedef struct DIMSnowHorn1State
     u8 mode;
     u8 triggerMode;
     u8 flags; /* 0xA8E: bit0x2 riding (GAMEBIT_SNOWHORN_RIDING), bit0x8 hitvol-priority, bit0x20 sequence-triggered */
-    u8 padA8F[2];
+    u8 queryFlagA8F; /* 0xA8F: nonzero queried by DIMSnowHorn1_func14 (set cross-DLL) */
+    u8 queryFlagA90; /* 0xA90: nonzero queried by DIMSnowHorn1_func11 (set cross-DLL) */
     u8 proximityPhase; /* 0xA91: 0/1/2 phase toggling linked objects by player distance (stateHandler05) */
     u8 padA92[0xD00 - 0xA92];
     u8 hitReactState; /* 0xD00: ObjHitReact_Update persistent state (in/out), gates fn_8003A168 */
@@ -842,7 +843,7 @@ void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
 void DIMSnowHorn1_func17(int obj, int value)
 {
     u8 mode = (u8)value;
-    *(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa8a) = mode;
+    ((DIMSnowHorn1State*)((GameObject*)obj)->extra)->mountMode = mode;
 }
 
 int DIMSnowHorn1_func16(void) { return 0; }
@@ -878,7 +879,7 @@ void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
 
 int DIMSnowHorn1_func14(int obj)
 {
-    if (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa8f) != 0)
+    if (((DIMSnowHorn1State*)((GameObject*)obj)->extra)->queryFlagA8F != 0)
     {
         return 2;
     }
@@ -907,7 +908,7 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32* out_x, f32* out_y, f32* out_z)
 
 int DIMSnowHorn1_func11(int obj)
 {
-    if (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa90) != 0)
+    if (((DIMSnowHorn1State*)((GameObject*)obj)->extra)->queryFlagA90 != 0)
     {
         return 1;
     }
