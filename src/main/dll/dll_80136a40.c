@@ -1521,7 +1521,7 @@ void debugPrintDraw(int ctx)
     res = getScreenResolution();
     gDebugScreenHeight = res >> 0x10;
     gDebugScreenWidth = res;
-    GXSetScissor(0, 0, (u16)res, (u16)(res >> 0x10));
+    GXSetScissor(0, 0, (u16)res, gDebugScreenHeight);
     sw = gDebugScreenWidth;
     if (sw <= 0x140)
     {
