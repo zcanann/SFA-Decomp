@@ -20,13 +20,20 @@ extern f32 lbl_803E3DC8;
 
 typedef struct KtTorchPlacement
 {
-    u8 pad0[0x1B - 0x0];
+    u8 pad0[0x18 - 0x0];
+    u8 modelBankIndex;     /* 0x18: model bank, clamped to modelCount */
+    u8 startMove;          /* 0x19: initial anim move index */
+    u8 moveStartSpeed;     /* 0x1A: initial move speed factor */
     u8 animSpeed;          /* 0x1B */
-    u8 pad1C[0x20 - 0x1C];
+    u8 flameScale;         /* 0x1C: flame scale byte, clamped to a floor */
+    u8 swayRotPacked;      /* 0x1D: low 6 bits seed the swaying rotation */
+    u8 pad1E[0x20 - 0x1E];
+    s16 visGameBit;        /* 0x20: -1 disables, else gates visibility */
 } KtTorchPlacement;
 
 STATIC_ASSERT(offsetof(KtTorchPlacement, animSpeed) == 0x1B);
-STATIC_ASSERT(sizeof(KtTorchPlacement) == 0x20);
+STATIC_ASSERT(offsetof(KtTorchPlacement, visGameBit) == 0x20);
+STATIC_ASSERT(sizeof(KtTorchPlacement) == 0x22);
 
 void kt_torch_init(int obj, int placement)
 {
@@ -35,7 +42,7 @@ void kt_torch_init(int obj, int placement)
     u8 scaleByte;
 
     ((GameObject*)obj)->anim.flags |= 2;
-    scaleByte = *(u8*)(placement + 0x1c);
+    scaleByte = ((KtTorchPlacement*)placement)->flameScale;
     scale = (f32)(int)scaleByte;
     if ((f32)(int)scaleByte < lbl_803E3DC0)
     {
@@ -43,19 +50,20 @@ void kt_torch_init(int obj, int placement)
     }
     scale *= lbl_803E3DC4;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * scale;
-    ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)(placement + 0x1d) & 0x3f) << 10);
+    ((GameObject*)obj)->anim.rotX = (s16)((((KtTorchPlacement*)placement)->swayRotPacked & 0x3f) << 10);
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         **(f32**)&((GameObject*)obj)->anim.modelState = **(f32**)&((GameObject*)obj)->anim.modelInstance * scale;
     }
-    objAnim->bankIndex = (s8) * (u8*)(placement + 0x18);
+    objAnim->bankIndex = (s8)((KtTorchPlacement*)placement)->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    ObjAnim_SetCurrentMove(obj, *(u8*)(placement + 0x19), (f32) * (u8*)(placement + 0x1a) * lbl_803E3DC8, 0);
+    ObjAnim_SetCurrentMove(obj, ((KtTorchPlacement*)placement)->startMove,
+                           (f32)((KtTorchPlacement*)placement)->moveStartSpeed * lbl_803E3DC8, 0);
     {
-        s16 visBit = *(s16*)(placement + 0x20);
+        s16 visBit = ((KtTorchPlacement*)placement)->visGameBit;
         if (visBit != -1)
         {
             if (GameBit_Get(visBit) != 0)
@@ -94,7 +102,7 @@ void kt_torch_update(int obj)
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     ObjAnim_AdvanceCurrentMove((f32)((KtTorchPlacement*)placement)->animSpeed / lbl_803E3DB4,
                                timeDelta, obj, (ObjAnimEventList*)0);
-    visBit = *(short*)(placement + 0x20);
+    visBit = ((KtTorchPlacement*)placement)->visGameBit;
     if (visBit != -1)
     {
         if (GameBit_Get(visBit) != 0)
