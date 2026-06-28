@@ -16,6 +16,7 @@
  * lbl_803E24C4 squared units of Tricky.
  */
 #include "main/dll/baddie/MMP_critterspit.h"
+#include "main/game_object.h"
 #include "main/gamebits.h"
 extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
@@ -52,10 +53,10 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
     {
         u8* levelObj = (u8*)*(u32*)(critter + 4);
 
-        if ((*(u16*)(levelObj + 0xB0) & 0x1000) != 0)
+        if ((((GameObject*)levelObj)->objectFlags & 0x1000) != 0)
         {
-            if (coordsToMapCell(levelObj, *(f32*)(tricky + 0xC),
-                                *(f32*)(tricky + 0x14)) == 0x38)
+            if (coordsToMapCell(levelObj, ((GameObject*)tricky)->anim.localPosX,
+                                ((GameObject*)tricky)->anim.localPosZ) == 0x38)
             {
                 if ((GameBit_Get(0x385) == 0) && (GameBit_Get(0x384) != 0))
                 {
@@ -77,8 +78,8 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
     {
         u8* levelObj = (u8*)*(u32*)(critter + 4);
 
-        if (vec3f_distanceSquared((f32*)(levelObj + 0x18),
-                                  (f32*)(tricky + 0x18)) < lbl_803E24C4)
+        if (vec3f_distanceSquared(&((GameObject*)levelObj)->anim.worldPosX,
+                                  &((GameObject*)tricky)->anim.worldPosX) < lbl_803E24C4)
         {
             return 2;
         }
