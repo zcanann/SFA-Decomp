@@ -59,6 +59,28 @@ extern void fn_8011F6D4(u32 x);
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
+/*
+ * Placement record written for each spawned villager/"orb" object
+ * (Obj_AllocObjectSetup size 0x38). The ObjPlacement head carries the
+ * orbit position and the RGBA color block copied from the totem's own
+ * definition; the class-specific tail holds the trigger event id and the
+ * per-orb game-bit ids.
+ */
+typedef struct TotemBondOrbPlacement
+{
+    ObjPlacement base;
+    s16 unk18;
+    s16 triggerEvent;
+    s16 orbGameBit;
+    u8 pad1E[0x2A - 0x1E];
+    s8 yawByte;
+    u8 pad2B[0x30 - 0x2B];
+    s16 ringGameBit;
+    u8 unk32;
+    u8 pad33[0x38 - 0x33];
+} TotemBondOrbPlacement;
+STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
+
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
     s32 angleOffset;
@@ -85,12 +107,12 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
             setup[0x05] = (definition[0x05] & ~1) | 4;
             setup[0x06] = definition[0x06];
             setup[0x07] = 0x1e;
-            *(s16*)(setup + 0x18) = -1;
-            *(s16*)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-            *(s16*)(setup + 0x1c) = gTotemBondOrbGameBits[orbIndex];
-            *(s16*)(setup + 0x30) = gTotemBondRingGameBits[orbIndex];
-            *(s8*)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
-            setup[0x32] = 1;
+            ((TotemBondOrbPlacement*)setup)->unk18 = -1;
+            ((TotemBondOrbPlacement*)setup)->triggerEvent = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
+            ((TotemBondOrbPlacement*)setup)->orbGameBit = gTotemBondOrbGameBits[orbIndex];
+            ((TotemBondOrbPlacement*)setup)->ringGameBit = gTotemBondRingGameBits[orbIndex];
+            ((TotemBondOrbPlacement*)setup)->yawByte = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
+            ((TotemBondOrbPlacement*)setup)->unk32 = 1;
             Obj_SetupObject(setup, 5, -1, -1, 0);
             orbIndex++;
             if (orbIndex > 7)
