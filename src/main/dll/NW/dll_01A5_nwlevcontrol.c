@@ -39,6 +39,23 @@ extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 extern void gameTimerStop(void);
 
+/* obj+0xB8 per-class state block (getExtraSize == 0x14). */
+typedef struct NwLevControlState
+{
+    f32 countdown;       /* 0x00 hint-message countdown */
+    u8 mode;             /* 0x04 state-machine mode */
+    u8 timerMinutes;     /* 0x05 challenge timer minutes */
+    u8 pad06[0x08 - 0x06];
+    u32 flags;           /* 0x08 progression flag bits */
+    u8 seqId;            /* 0x0C trigger sequence id */
+    u8 nextMode;         /* 0x0D mode to enter after the timer step */
+    u8 tableIndex;       /* 0x0E walk index into the target-object table */
+    u8 pad0F[0x10 - 0x0F];
+    s16 dayNightMusic;   /* 0x10 day/night music marker */
+    u8 pad12[0x14 - 0x12];
+} NwLevControlState;
+STATIC_ASSERT(sizeof(NwLevControlState) == 0x14);
+
 void nw_levcontrol_update(int objArg)
 {
     int obj;
@@ -50,18 +67,18 @@ void nw_levcontrol_update(int objArg)
     u8 flag;
     int bitVal2;
     u32 bitVal4;
-    float* state;
+    NwLevControlState* state;
 
     obj = objArg;
-    state = (float*)((GameObject*)obj)->extra;
+    state = (NwLevControlState*)((GameObject*)obj)->extra;
     player = (short*)Obj_GetPlayerObject();
-    if (*state > lbl_803E5278)
+    if (state->countdown > lbl_803E5278)
     {
         gameTextShow(0x435);
-        *state = *state - timeDelta;
-        if (*state < lbl_803E5278)
+        state->countdown = state->countdown - timeDelta;
+        if (state->countdown < lbl_803E5278)
         {
-            *state = *(f32 *)&lbl_803E5278;
+            state->countdown = *(f32 *)&lbl_803E5278;
         }
     }
     mode = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
@@ -81,10 +98,10 @@ void nw_levcontrol_update(int objArg)
     val = (*gSkyInterface)->getSunPosition(0);
     if (val != 0)
     {
-        if (*(short*)(state + 4) != -1)
+        if (state->dayNightMusic != -1)
         {
-            *(short*)(state + 4) = -1;
-            if ((*((int*)state + 2) & 0x10) != 0)
+            state->dayNightMusic = -1;
+            if (((int)state->flags & 0x10) != 0)
             {
                 Music_Trigger((int*)0x1a, 0);
             }
@@ -92,19 +109,19 @@ void nw_levcontrol_update(int objArg)
     }
     else
     {
-        if (*(short*)(state + 4) != 0x1a)
+        if (state->dayNightMusic != 0x1a)
         {
-            *(short*)(state + 4) = 0x1a;
-            if ((*((int*)state + 2) & 0x10) != 0)
+            state->dayNightMusic = 0x1a;
+            if (((int)state->flags & 0x10) != 0)
             {
                 Music_Trigger((int*)0x1a, 1);
             }
         }
     }
-    SCGameBitLatch_Update(state + 2, 8, -1, -1, 0x3a0, 0x35);
-    SCGameBitLatch_Update(state + 2, 0x10, -1, -1, 0x3a1, (int*)(int)*(short*)(state + 4));
-    SCGameBitLatch_Update(state + 2, 0x20, -1, -1, 0x393, 0x36);
-    SCGameBitLatch_Update(state + 2, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update(&state->flags, 8, -1, -1, 0x3a0, 0x35);
+    SCGameBitLatch_Update(&state->flags, 0x10, -1, -1, 0x3a1, (int*)(int)state->dayNightMusic);
+    SCGameBitLatch_Update(&state->flags, 0x20, -1, -1, 0x393, 0x36);
+    SCGameBitLatch_Update(&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
     bitVal4 = 0;
     bitVal = GameBit_Get(0x19f);
     bitVal3 = GameBit_Get(0x19d);
@@ -113,7 +130,7 @@ void nw_levcontrol_update(int objArg)
         bitVal4 = 1;
     }
     GameBit_Set(0xf31, bitVal4);
-    SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, 0xaf);
     bitVal = GameBit_Get(0x398);
     if ((bitVal != 0) &&
         (mode = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == 0)
@@ -121,36 +138,36 @@ void nw_levcontrol_update(int objArg)
     {
         (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
-    if (((*((int*)state + 2) & 2) != 0) && isGameTimerDisabled() != 0)
+    if ((((int)state->flags & 2) != 0) && isGameTimerDisabled() != 0)
     {
         Sfx_PlayFromObject(0, SFXsc_clubhit02);
         (*gMapEventInterface)->gotoRestartPoint();
     }
     else
     {
-        switch (*(u8*)(state + 1))
+        switch (state->mode)
         {
         case 0:
             bitVal = GameBit_Get(0x19d);
             if (bitVal != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                *(u8*)(state + 1) = 2;
+                state->mode = 2;
                 GameBit_Set(0xecd, 1);
             }
             break;
         case 1:
             (*gObjectTriggerInterface)->preempt(obj, 0x64a);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0x20);
-            *(u8*)(state + 1) = 2;
+            state->mode = 2;
             GameBit_Set(0xecd, 1);
             break;
         case 2:
             obj = fn_801CFD68((u8*)state);
             if (obj != 0)
             {
-                *(u8*)((int)state + 5) = 0x32;
-                *((u32*)state + 2) = *((u32*)state + 2) | 1;
+                state->timerMinutes = 0x32;
+                state->flags = state->flags | 1;
             }
             break;
         case 3:
@@ -164,31 +181,31 @@ void nw_levcontrol_update(int objArg)
             obj = fn_801CFD68((u8*)state);
             if (obj == 1)
             {
-                *((u32*)state + 2) = *((u32*)state + 2) | 4;
+                state->flags = state->flags | 4;
             }
             break;
         case 9:
             if ((*(u16*)(player + 0x58) & 0x1000) != 0)
             {
-                *(u8*)(state + 1) = 10;
+                state->mode = 10;
             }
             break;
         case 10:
             if ((*(u16*)(player + 0x58) & 0x1000) == 0)
             {
-                bitVal2 = *((int*)state + 2);
+                bitVal2 = state->flags;
                 if ((bitVal2 & 1) != 0)
                 {
-                    *((u32*)state + 2) = bitVal2 & ~1;
-                    *((u32*)state + 2) = *((u32*)state + 2) | 2;
-                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5));
+                    state->flags = bitVal2 & ~1;
+                    state->flags = state->flags | 2;
+                    gameTimerInit(0x15, (u32)state->timerMinutes);
                     timerSetToCountUp();
                     (*gMapEventInterface)->savePoint((int)(player + 6), (int)*player, 0, 0);
                 }
                 else if ((bitVal2 & 4) != 0)
                 {
-                    *((u32*)state + 2) = bitVal2 & ~2;
-                    *((u32*)state + 2) = *((u32*)state + 2) & ~4;
+                    state->flags = bitVal2 & ~2;
+                    state->flags = state->flags & ~4;
                     gameTimerStop();
                     Music_Trigger((int*)0xaf, 0);
                     GameBit_Set(0x19f, 1);
@@ -197,12 +214,12 @@ void nw_levcontrol_update(int objArg)
                 {
                     int extra = (int)(fn_80014668() / lbl_803E527C);
                     gameTimerStop();
-                    gameTimerInit(0x15, (u32) * (u8*)((int)state + 5) + extra);
+                    gameTimerInit(0x15, (u32)state->timerMinutes + extra);
                     timerSetToCountUp();
                 }
-                (*gObjectTriggerInterface)->runSequence(*(u8*)(state + 3), (void*)obj,
+                (*gObjectTriggerInterface)->runSequence(state->seqId, (void*)obj,
                                                         -1);
-                *(u8*)(state + 1) = *(u8*)((int)state + 0xd);
+                state->mode = state->nextMode;
             }
             break;
         case 0xb:
@@ -215,7 +232,7 @@ void nw_levcontrol_update(int objArg)
         case 0xc:
             (*gObjectTriggerInterface)->preempt(obj, 0x5a);
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 8);
-            *(u8*)(state + 1) = 0xb;
+            state->mode = 0xb;
         }
     }
     return;
@@ -226,25 +243,25 @@ void nw_levcontrol_init(int* obj)
     extern void envFxActFn_800887f8(u8 value);
     extern char lbl_803269F8[];
     char* base = lbl_803269F8;
-    u8* state = ((GameObject*)obj)->extra;
+    NwLevControlState* state = ((GameObject*)obj)->extra;
 
     Obj_GetPlayerObject();
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 
     if (GameBit_Get(0x19f) != 0)
     {
-        state[4] = 0xc;
+        state->mode = 0xc;
     }
     else if (GameBit_Get(0x19d) != 0)
     {
-        state[4] = 1;
+        state->mode = 1;
     }
     else
     {
-        state[4] = 0;
+        state->mode = 0;
     }
 
-    *(f32*)state = lbl_803E5280;
+    state->countdown = lbl_803E5280;
 
     fn_80088870(base + 0x8c, base + 0x54, base + 0xc4, base + 0xfc);
 
@@ -267,34 +284,35 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setObjGroupStatus(7, 9, 1);
 }
 
-int fn_801CFD68(u8* state)
+int fn_801CFD68(u8* stateBytes)
 {
     extern s32 lbl_803269F8[];
+    NwLevControlState* state = (NwLevControlState*)stateBytes;
     s32* table;
     int obj;
 
     table = lbl_803269F8;
-    obj = ObjList_FindObjectById(table[state[0xe]]);
+    obj = ObjList_FindObjectById(table[state->tableIndex]);
     if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        state[4] = 9;
-        state[0xc] = table[state[0xe] + 7];
-        state[0xd] = table[state[0xe] + 0xe];
-        state[0xe]++;
-        state[5] = 0x1e;
+        state->mode = 9;
+        state->seqId = table[state->tableIndex + 7];
+        state->nextMode = table[state->tableIndex + 0xe];
+        state->tableIndex++;
+        state->timerMinutes = 0x1e;
         return 1;
     }
 
-    if (state[0xe] != 0)
+    if (state->tableIndex != 0)
     {
-        obj = ObjList_FindObjectById(table[state[0xe] - 1]);
+        obj = ObjList_FindObjectById(table[state->tableIndex - 1]);
         if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            state[4] = 9;
-            state[0xc] = table[state[0xe] + 6];
-            state[5] = 0;
+            state->mode = 9;
+            state->seqId = table[state->tableIndex + 6];
+            state->timerMinutes = 0;
             return 2;
         }
     }
