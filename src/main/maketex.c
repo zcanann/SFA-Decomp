@@ -759,9 +759,9 @@ void loadMemCardImages(void)
 {
     char* names = sMemoryCardFileNameString;
     DVDFileInfoStub fi;
-    u64 x;
-    u16 i;
     u64* p;
+    u16 i;
+    u64 x;
     u64* q;
     u64 a;
     u64 chk;
