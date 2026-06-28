@@ -2509,20 +2509,20 @@ extern int lbl_803DB3C4;
 #pragma ppc_unroll_speculative off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
-    u8* fontData;
+    int wbytes;
     u8* base30;
     u8* base31;
     u8* buf;
     int sizeA;
-    int sizeB;
+    int y;
+    int x;
     u8* bufA;
     u8* bufB;
     int savedHeap;
     int count;
     u8* glyph;
-    int x;
-    int y;
-    int wbytes;
+    int sizeB;
+    u8* fontData;
     u8 s[3];
     int width;
 
