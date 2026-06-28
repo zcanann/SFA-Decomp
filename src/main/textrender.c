@@ -2035,10 +2035,8 @@ void gameTextLoadForCurMap(int sourceId)
         return;
     }
 
-    dirId = (int)curGameTextDir;
-    gGameTextLastDir = dirId;
-    languageId = curLanguage;
-    gGameTextLastLanguage = languageId;
+    gGameTextLastDir = dirId = (int)curGameTextDir;
+    gGameTextLastLanguage = languageId = curLanguage;
     if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT ||
         languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT)
     {
