@@ -3349,9 +3349,9 @@ extern void OSReport(const char* msg, ...);
 #pragma optimization_level 2
 void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
+    u8* hdr = hdrArg;
     u8* tbl = gObjGxPosMtxIdTable;
     char* cache = getCache();
-    u8* hdr = hdrArg;
     if (lbl_803DCC48 == 1)
     {
         if (skip == 0)
