@@ -424,7 +424,7 @@ void dll_1CE_init(u8* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
     sub = ((GameObject*)obj)->extra;
     sub->igniteCountdown = 1;
-    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
+    if (GameBit_Get(((Dll1CEPlacement*)params)->gameBitId) != 0)
     {
         sub->igniteCountdown = 0;
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
