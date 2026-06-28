@@ -26,24 +26,34 @@ extern f32 lbl_803E4D10;
 
 extern int cos16(s16 angle);
 
+typedef struct WaterSpikeMotion
+{
+    /* 0x00 */ f32 ySpeed;  /* current vertical velocity, low-pass smoothed */
+    /* 0x04 */ f32 zSpin;   /* accumulated rotZ sway velocity */
+    /* 0x08 */ f32 targetY; /* desired height offset */
+    /* 0x0C */ f32 baseY;   /* rest height the spike bobs around */
+    /* 0x10 */ u8 pad10[4];
+    /* 0x14 */ s16 phase;   /* bob phase angle, advanced +0x400/frame */
+} WaterSpikeMotion;
+
 void fn_801BEEA0(s16* obj, u8* state)
 {
-    u8* motion;
+    WaterSpikeMotion* motion;
     f32 heightDelta;
     s16 turnDelta;
 
-    motion = (u8*)*(int*)(state + 0x40C);
-    heightDelta = *(f32*)(motion + 0xC) - ((GameObject*)obj)->anim.localPosY;
+    motion = (WaterSpikeMotion*)*(int*)(state + 0x40C);
+    heightDelta = motion->baseY - ((GameObject*)obj)->anim.localPosY;
 
-    *(s16*)(motion + 0x14) += 0x400;
-    heightDelta = heightDelta + (f32)(int)cos16(*(s16*)(motion + 0x14)) / lbl_803E4D00;
+    motion->phase += 0x400;
+    heightDelta = heightDelta + (f32)(int)cos16(motion->phase) / lbl_803E4D00;
 
-    *(f32*)(motion + 0x0) = timeDelta * (heightDelta / lbl_803E4D04 - *(f32*)(motion + 0x8))
-        + *(f32*)(motion + 0x0);
+    motion->ySpeed = timeDelta * (heightDelta / lbl_803E4D04 - motion->targetY)
+        + motion->ySpeed;
 
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + *(f32*)(motion + 0x0);
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + motion->ySpeed;
 
-    ((GameObject*)obj)->anim.rotY = (s16)(lbl_803E4D08 * *(f32*)(motion + 0x0));
+    ((GameObject*)obj)->anim.rotY = (s16)(lbl_803E4D08 * motion->ySpeed);
 
     turnDelta = (s16) - (u16)((GameObject*)obj)->anim.rotZ;
     if (turnDelta > 0x8000)
@@ -55,9 +65,9 @@ void fn_801BEEA0(s16* obj, u8* state)
         turnDelta = (s16)((turnDelta + 0x10000) - 1);
     }
 
-    *(f32*)(motion + 0x4) = *(f32*)(motion + 0x4) + (f32)((int)(turnDelta / 16) * framesThisStep);
-    ((GameObject*)obj)->anim.rotZ = (s16)((f32)(int)((GameObject*)obj)->anim.rotZ + *(f32*)(motion + 0x4));
+    motion->zSpin = motion->zSpin + (f32)((int)(turnDelta / 16) * framesThisStep);
+    ((GameObject*)obj)->anim.rotZ = (s16)((f32)(int)((GameObject*)obj)->anim.rotZ + motion->zSpin);
 
-    *(f32*)(motion + 0x0) = *(f32*)(motion + 0x0) / lbl_803E4D0C;
-    *(f32*)(motion + 0x4) = *(f32*)(motion + 0x4) / lbl_803E4D10;
+    motion->ySpeed = motion->ySpeed / lbl_803E4D0C;
+    motion->zSpin = motion->zSpin / lbl_803E4D10;
 }
