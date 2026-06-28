@@ -888,15 +888,15 @@ void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
             {
                 *(IVec3*)viewPos = *(IVec3*)(obj + 0xc);
             }
-            PSVECSubtract((f32*)(light + 0x1c), viewPos, viewPos);
+            PSVECSubtract(&((ModelLightStruct*)light)->viewX, viewPos, viewPos);
             GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
         }
         else
         {
-            GXInitLightPos(light + 0x68, *(f32*)(light + 0x1c), ((ModelLightStruct*)light)->viewY,
+            GXInitLightPos(light + 0x68, ((ModelLightStruct*)light)->viewX, ((ModelLightStruct*)light)->viewY,
                            ((ModelLightStruct*)light)->viewZ);
         }
-        GXInitLightDir(light + 0x68, *(f32*)(light + 0x40), ((ModelLightStruct*)light)->viewDirY,
+        GXInitLightDir(light + 0x68, ((ModelLightStruct*)light)->viewDirX, ((ModelLightStruct*)light)->viewDirY,
                        ((ModelLightStruct*)light)->viewDirZ);
         if (obj != NULL && (((ObjAnimComponent*)obj)->modelInstance->flags & 0x10) == 0)
         {
@@ -1203,10 +1203,11 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
 
 void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b)
 {
-    *(f32*)(obj + 0x140) = a;
-    *(f32*)(obj + 0x144) = b;
-    GXInitLightDistAttn(obj + 0x68, *(f32*)(obj + 0x140), lbl_803DE758, GX_DA_MEDIUM);
-    GXGetLightAttnK(obj + 0x68, (f32*)(obj + 0x124), (f32*)(obj + 0x128), (f32*)(obj + 0x12c));
+    ((ModelLightStruct*)obj)->attenuationNear = a;
+    ((ModelLightStruct*)obj)->attenuationFar = b;
+    GXInitLightDistAttn(obj + 0x68, ((ModelLightStruct*)obj)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
+    GXGetLightAttnK(obj + 0x68, &((ModelLightStruct*)obj)->attenuationK0, &((ModelLightStruct*)obj)->attenuationK1,
+                    &((ModelLightStruct*)obj)->attenuationK2);
 }
 
 typedef struct ModelLightCornerBlock
@@ -1481,7 +1482,7 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
                 if (*(void**)(light + 0x16c) != NULL && modelLightStruct_projectedLightIntersectsObject(light, obj) !=
                     0)
                 {
-                    PSVECSubtract((f32*)(obj + 0x18), (f32*)(light + 0x10), delta);
+                    PSVECSubtract((f32*)(obj + 0x18), &((ModelLightStruct*)light)->worldX, delta);
                     dist = PSVECMag(delta);
                     intensity = lbl_803DE764;
                     ((ModelLightStruct*)light)->selectionScore = intensity + intensity / dist;
@@ -1539,7 +1540,7 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
         intensity = lbl_803DE75C;
         for (i = 0; i < candidateCount; i++)
         {
-            if (*(f32*)(candidates[i] + 0x130) > intensity)
+            if (((ModelLightStruct*)candidates[i])->selectionScore > intensity)
             {
                 light = candidates[i];
                 intensity = ((ModelLightStruct*)light)->selectionScore;
