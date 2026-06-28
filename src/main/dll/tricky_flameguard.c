@@ -223,7 +223,6 @@ void trickyFlame(int p1, int p2)
             }
             trickyTurnTowardYaw(p1, srcAng);
         }
-        dieFlag = 1;
         if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
             if ((((TrickyRuntime*)p2)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
@@ -273,9 +272,12 @@ void trickyFlame(int p1, int p2)
                         }
                     }
                     dieFlag = 0;
+                    goto flame_diecheck;
                 }
             }
         }
+        dieFlag = 1;
+    flame_diecheck:
         if (dieFlag == 0)
         {
             *(u8*)(p2 + 0xa) = 8;
