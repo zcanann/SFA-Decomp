@@ -263,16 +263,16 @@ void dll_07_func07(int arg)
 {
     int i;
     int total;
-    u8* snow;
+    NewCloud* snow;
 
     GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
              *(FogColor*)&gNewCloudSnowFogColor);
     for (i = 0, total = 0; i < 8; i++)
     {
         snow = gNewClouds[i];
-        if (snow != NULL && snow[0x144F] == 0)
+        if (snow != NULL && snow->unk144F == 0)
         {
-            total += snowPrintSnowCloud(arg, *(int*)(snow + 0x13F0));
+            total += snowPrintSnowCloud(arg, snow->cloudId);
         }
     }
     if (gNewCloudSnowFlashAlpha != 0)
@@ -325,7 +325,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
     }
     ((NewCloud*)gNewClouds[i])->despawning = 1;
     ((NewCloud*)gNewClouds[i])->flakeDrainRate =
-        -((f32)flag / (f32) * (int*)((char*)gNewClouds[i] + 0x13fc));
+        -((f32)flag / (f32)((NewCloud*)gNewClouds[i])->flakeCount);
 }
 
 extern int ObjModel_GetRenderOp(int model, int x);
@@ -600,7 +600,7 @@ extern const f32 lbl_803DF1F8;
 void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
 {
     u8* p;
-    u8* e;
+    SnowQuad* e;
     f32* dst;
     int i;
     int j;
@@ -640,34 +640,34 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
         size = gSnowFlakeSizeLarge;
     }
     j = 0;
-    e = p + 0x1008;
+    e = (SnowQuad*)(p + 0x1008);
     negSize = -size;
     halfNeg = lbl_803DF1EC * negSize;
     for (; j < 20; j++)
     {
-        *(f32*)(e + 0x0) = negSize;
-        *(f32*)(e + 0x18) = 0.0f;
-        *(f32*)(e + 0x4) = size;
-        *(f32*)(e + 0x1c) = 0.0f;
-        *(f32*)(e + 0x8) = 0.0f;
-        *(f32*)(e + 0x20) = 0.0f;
-        if (*(int*)((u8*)gNewClouds[i] + 0x13f4) == 0)
+        e->verts[0] = negSize;
+        e->verts[6] = 0.0f;
+        e->verts[1] = size;
+        e->verts[7] = 0.0f;
+        e->verts[2] = 0.0f;
+        e->verts[8] = 0.0f;
+        if (((NewCloud*)gNewClouds[i])->cloudType == 0)
         {
-            *(f32*)(e + 0xc) = negSize;
-            *(f32*)(e + 0x10) = negSize;
-            *(f32*)(e + 0x14) = size;
+            e->verts[3] = negSize;
+            e->verts[4] = negSize;
+            e->verts[5] = size;
         }
         else
         {
-            *(f32*)(e + 0xc) = negSize;
-            *(f32*)(e + 0x10) = negSize;
-            *(f32*)(e + 0x14) = halfNeg;
+            e->verts[3] = negSize;
+            e->verts[4] = negSize;
+            e->verts[5] = halfNeg;
         }
-        *(u16*)(e + 0x28) = randomGetRange(0, 0xffff);
-        *(u16*)(e + 0x2a) = randomGetRange(0, 0xffff);
-        *(u16*)(e + 0x24) = randomGetRange(0x96, 0x1f4);
-        *(u16*)(e + 0x26) = randomGetRange(0x96, 0x1f4);
-        e += 0x2c;
+        e->angA = randomGetRange(0, 0xffff);
+        e->angB = randomGetRange(0, 0xffff);
+        e->angVelA = randomGetRange(0x96, 0x1f4);
+        e->angVelB = randomGetRange(0x96, 0x1f4);
+        e += 1;
     }
     widx = *(int*)((u8*)gNewClouds[i] + 0x1408);
     dst = buf + widx;
@@ -675,7 +675,7 @@ void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
     {
         if (widx == 0x400)
         {
-            *(int*)((u8*)gNewClouds[i] + 0x1400) = 0;
+            ((NewCloud*)gNewClouds[i])->active = 0;
             *(int*)((u8*)gNewClouds[i] + 0x1408) = 0;
             return;
         }
@@ -970,7 +970,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 void snowCloudUpdateFlakes(u8* snow)
 {
     s16* cam;
-    u8* e;
+    SnowQuad* e;
     f32* m;
     int i;
     int c;
@@ -982,14 +982,14 @@ void snowCloudUpdateFlakes(u8* snow)
     f32 s3;
 
     cam = Camera_GetCurrentViewSlot();
-    e = snow + 0x1008;
-    if (*(int*)(snow + 0x13f4) == 0)
+    e = (SnowQuad*)(snow + 0x1008);
+    if (((NewCloud*)snow)->cloudType == 0)
     {
         f32 size = gSnowFlakeSizeLarge;
         f32 negSize = -size;
         for (i = 0; i < 20; i++)
         {
-            m = (f32*)e;
+            m = e->verts;
             m[0] = negSize;
             m[3] = negSize;
             m[6] = 0.0f;
@@ -999,13 +999,13 @@ void snowCloudUpdateFlakes(u8* snow)
             m[2] = 0.0f;
             m[5] = size;
             m[8] = 0.0f;
-            *(u16*)(e + 0x28) =
-                timeDelta * (f32) * (u16*)(e + 0x24) + (f32) * (u16*)(e + 0x28);
-            *(u16*)(e + 0x2a) =
-                timeDelta * (f32) * (u16*)(e + 0x26) + (f32) * (u16*)(e + 0x2a);
+            e->angA =
+                timeDelta * (f32)e->angVelA + (f32)e->angA;
+            e->angB =
+                timeDelta * (f32)e->angVelB + (f32)e->angB;
             angleToVec2((u16)(0xffff - *cam), &c1, &s1);
-            angleToVec2(*(u16*)(e + 0x28), &c2, &s2);
-            angleToVec2(*(u16*)(e + 0x2a), &c3, &s3);
+            angleToVec2(e->angA, &c2, &s2);
+            angleToVec2(e->angB, &c3, &s3);
             for (c = 0; c < 3; c++)
             {
                 f32 t2;
@@ -1018,7 +1018,7 @@ void snowCloudUpdateFlakes(u8* snow)
                 m[c + 3] = t2 * s2 + -m2 * c2;
                 m[c + 6] = -t1 * c1 + s1 * (t2 * c2) + s1 * (m2 * s2);
             }
-            e += 0x2c;
+            e += 1;
         }
     }
     else
@@ -1028,7 +1028,7 @@ void snowCloudUpdateFlakes(u8* snow)
         angleToVec2((u16)(0xffff - *cam), &c1, &s1);
         size2 = gSnowFlakeSize;
         negSize2 = -size2;
-        m = (f32*)e;
+        m = e->verts;
         for (i = 0; i < 20; i++)
         {
             m[0] = negSize2 * s1;
@@ -1371,7 +1371,7 @@ extern f32 gNewCloudLightningRadius;
 void snowReposSnowCloud(int cloudId)
 {
     u8* p;
-    u8* part;
+    SnowFlake* part;
     f32* cam;
     f32* m;
     u8* q;
@@ -1421,20 +1421,20 @@ void snowReposSnowCloud(int cloudId)
         debugPrintf(lbl_8030F670, cloudId);
         return;
     }
-    part = *(u8**)(p + 4);
+    part = *(SnowFlake**)(p + 4);
     cam = (f32*)Camera_GetCurrentViewSlot();
-    dx = cam[0x44 / 4] - *(f32*)((u8*)gNewClouds[i] + 0x140c);
-    dy = cam[0x48 / 4] - *(f32*)((u8*)gNewClouds[i] + 0x1410);
-    dz = cam[0x4c / 4] - *(f32*)((u8*)gNewClouds[i] + 0x1414);
+    dx = cam[0x44 / 4] - ((NewCloud*)gNewClouds[i])->worldPosX;
+    dy = cam[0x48 / 4] - ((NewCloud*)gNewClouds[i])->worldPosY;
+    dz = cam[0x4c / 4] - ((NewCloud*)gNewClouds[i])->worldPosZ;
     distSq = dx * dx + dy * dy + dz * dz;
     sqrtf__inline((f32)distSq);
-    *(s16*)((u8*)gNewClouds[i] + 0x1448) =
-        (f32) * (s16*)((u8*)gNewClouds[i] + 0x1448) - timeDelta;
+    ((NewCloud*)gNewClouds[i])->lightningTimer =
+        (f32)((NewCloud*)gNewClouds[i])->lightningTimer - timeDelta;
     q = gNewClouds[cloudId];
-    if (*(int*)(q + 0x13f4) == 4 && (q[0x144b] & 0x38) != 0 &&
-        *(s16*)(q + 0x1448) <= 0 && q[0x144d] == 0 && lbl_803DD19C == 0)
+    if (((NewCloud*)q)->cloudType == 4 && (((NewCloud*)q)->unk144B & 0x38) != 0 &&
+        ((NewCloud*)q)->lightningTimer <= 0 && ((NewCloud*)q)->unk144D == 0 && lbl_803DD19C == 0)
     {
-        if (q[0x1452] != 0 && cam != NULL)
+        if (((NewCloud*)q)->unk1452 != 0 && cam != NULL)
         {
             dir[0] = lbl_803DF1A0;
             dir[1] = lbl_803DF1A0;
@@ -1495,42 +1495,42 @@ void snowReposSnowCloud(int cloudId)
             extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
             Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], 0x2c9);
         }
-        fl = ((u8*)gNewClouds[cloudId])[0x144b];
+        fl = ((NewCloud*)gNewClouds[cloudId])->unk144B;
         if (fl & 8)
         {
-            *(s16*)((u8*)gNewClouds[cloudId] + 0x1448) = randomGetRange(0x78, 0xf0);
+            ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x78, 0xf0);
         }
         else if (fl & 0x10)
         {
-            *(s16*)((u8*)gNewClouds[cloudId] + 0x1448) = randomGetRange(0x78, 0xf0);
+            ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x78, 0xf0);
         }
         else if (fl & 0x20)
         {
-            *(s16*)((u8*)gNewClouds[cloudId] + 0x1448) = randomGetRange(0x5a, 0xb4);
+            ((NewCloud*)gNewClouds[cloudId])->lightningTimer = randomGetRange(0x5a, 0xb4);
         }
     }
     snowCloudUpdateFlakes(gNewClouds[i]);
-    for (j = 0; j < *(int*)((u8*)gNewClouds[i] + 0x13fc); j++)
+    for (j = 0; j < ((NewCloud*)gNewClouds[i])->flakeCount; j++)
     {
-        if (*(int*)((u8*)gNewClouds[i] + 0x13f4) == 0)
+        if (((NewCloud*)gNewClouds[i])->cloudType == 0)
         {
-            *(u16*)(part + 0x10) =
-                *(u16*)(part + 0x10) + (s8)part[0x14] * framesThisStep;
-            if ((int)*(u16*)(part + 0x10) > 0x3ff)
+            part->angle =
+                part->angle + part->size * framesThisStep;
+            if ((int)part->angle > 0x3ff)
             {
-                *(u16*)(part + 0x10) -= 0x3ff;
+                part->angle -= 0x3ff;
             }
         }
-        else if (*(int*)((u8*)gNewClouds[i] + 0x13f4) == 4)
+        else if (((NewCloud*)gNewClouds[i])->cloudType == 4)
         {
-            *(u16*)(part + 0x10) = *(u16*)(part + 0x10) +
-                framesThisStep * ((s8)part[0x14] + (s8)part[0x14]);
-            if ((int)*(u16*)(part + 0x10) > 0x3ff)
+            part->angle = part->angle +
+                framesThisStep * (part->size + part->size);
+            if ((int)part->angle > 0x3ff)
             {
-                *(u16*)(part + 0x10) -= 0x3ff;
+                part->angle -= 0x3ff;
             }
         }
-        part += 0x18;
+        part += 1;
     }
 }
 
@@ -1545,7 +1545,7 @@ extern const f32 lbl_803DF240;
 extern const f32 lbl_803DF244;
 
 #define NC_CLOUD ((u8 *)gNewClouds[id])
-#define NC_PARTS ((u8 *)*(void **)(NC_CLOUD + 4))
+#define NC_PARTS ((SnowFlake *)*(void **)(NC_CLOUD + 4))
 
 void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
 {
@@ -1643,15 +1643,15 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     fl = NC_CLOUD[0x144b];
     if (fl & 8)
     {
-        ((NewCloud*)NC_CLOUD)->unk1448 = 0x320;
+        ((NewCloud*)NC_CLOUD)->lightningTimer = 0x320;
     }
     else if (fl & 0x10)
     {
-        ((NewCloud*)NC_CLOUD)->unk1448 = 0xc8;
+        ((NewCloud*)NC_CLOUD)->lightningTimer = 0xc8;
     }
     else if (fl & 0x20)
     {
-        ((NewCloud*)NC_CLOUD)->unk1448 = 0x64;
+        ((NewCloud*)NC_CLOUD)->lightningTimer = 0x64;
     }
     snowCloudInitFlakes((f32*)(NC_CLOUD + 8), id, ((NewCloud*)NC_CLOUD)->cloudHeight,
                         ((NewCloud*)NC_CLOUD)->scale);
@@ -1671,44 +1671,44 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     }
     for (i = 0; i < ((NewCloud*)NC_CLOUD)->flakeCount; i++)
     {
-        *(f32*)(NC_PARTS + i * 0x18) =
+        NC_PARTS[i].x =
             (int)
         randomGetRange((int)((NewCloud*)NC_CLOUD)->flakeMinX,
                        ((NewCloud*)NC_CLOUD)->flakeMaxX);
-        *(f32*)(NC_PARTS + i * 0x18 + 4) = ((NewCloud*)NC_CLOUD)->unk1388;
-        *(f32*)(NC_PARTS + i * 0x18 + 8) =
+        NC_PARTS[i].y = ((NewCloud*)NC_CLOUD)->unk1388;
+        NC_PARTS[i].z =
             (int)
         randomGetRange((int)((NewCloud*)NC_CLOUD)->flakeMinZ,
                        ((NewCloud*)NC_CLOUD)->flakeMaxZ);
-        *(u16*)(NC_PARTS + i * 0x18 + 0x10) = randomGetRange(0, 0x3d0);
-        *(u16*)(NC_PARTS + i * 0x18 + 0x12) = randomGetRange(0, 0x13);
+        NC_PARTS[i].angle = randomGetRange(0, 0x3d0);
+        NC_PARTS[i].unk12 = randomGetRange(0, 0x13);
         if (((NewCloud*)NC_CLOUD)->cloudType == 0)
         {
             sizeRange = (int(*)[2])(strs + 0x58);
-            *(s8*)(NC_PARTS + i * 0x18 + 0x14) =
+            NC_PARTS[i].size =
                 (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) /
                     4);
-            *(f32*)(NC_PARTS + i * 0x18 + 0xc) =
+            NC_PARTS[i].fallSpeed =
                 (int)
             randomGetRange(0x4b, 0x64) / lbl_803DF1FC;
-            *(NC_PARTS + i * 0x18 + 0x16) =
+            NC_PARTS[i].unk16 =
                 (i / (((NewCloud*)NC_CLOUD)->flakeCount / 4));
         }
         else
         {
             sizeRange = (int(*)[2])(strs + 0x58);
-            *(s8*)(NC_PARTS + i * 0x18 + 0x14) =
+            NC_PARTS[i].size =
                 (randomGetRange(sizeRange[params[0x5a]][0], sizeRange[params[0x5a]][1]) *
                     2);
-            *(f32*)(NC_PARTS + i * 0x18 + 0xc) = lbl_803DF1A4;
-            *(NC_PARTS + i * 0x18 + 0x16) = 0;
+            NC_PARTS[i].fallSpeed = lbl_803DF1A4;
+            NC_PARTS[i].unk16 = 0;
         }
-        if (*(s8*)(NC_PARTS + i * 0x18 + 0x14) < 1)
+        if (NC_PARTS[i].size < 1)
         {
-            *(NC_PARTS + i * 0x18 + 0x14) = 1;
+            NC_PARTS[i].size = 1;
         }
         spinRange = (int(*)[2])(strs + 0x30);
-        *(s8*)(NC_PARTS + i * 0x18 + 0x15) =
+        NC_PARTS[i].spin =
             (((int(*)[2])(strs + 0x30))[params[0x5b]][1] / 2 -
                 randomGetRange(spinRange[params[0x5b]][0], spinRange[params[0x5b]][1]));
     }
