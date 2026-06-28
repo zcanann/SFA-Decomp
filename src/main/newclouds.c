@@ -2072,12 +2072,12 @@ void dll_07_func06(void)
 {
     s16* cam;
     u8* p;
-    u8* nearestCloud;
-    u8 activeCount;
-    int i;
-    f32* m;
     f32* py;
     f32* pz;
+    int i;
+    f32* m;
+    u8* nearestCloud;
+    u8 activeCount;
     f32 nearest;
     f32 mag;
     f32 t;
