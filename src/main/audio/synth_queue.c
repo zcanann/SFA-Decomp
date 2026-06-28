@@ -542,8 +542,10 @@ done:
             }
 
             {
-                SynthVoice* base = voice;
-                for (i = 0; i < 2; i++)
+                SynthVoice* base;
+                i = 0;
+                base = voice;
+                for (; i < 2; i++)
                 {
                     SynthCallbackLink* cb = base->callbackLists[0];
                     while (cb != 0)
