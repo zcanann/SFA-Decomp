@@ -404,9 +404,9 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             mtxRotateByVec3s(matrix, transform.angles);
 
             i = 0;
-            outX = localX;
-            outY = localY;
             outZ = localZ;
+            outY = localY;
+            outX = localX;
             point = (f32*)collision;
             for (; i < pointCount; i++)
             {
