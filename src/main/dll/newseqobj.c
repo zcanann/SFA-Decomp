@@ -424,10 +424,10 @@ void fn_80150910(int* obj, u8* state)
             ((GameObject*)obj)->anim.velocityY = z;
             ((GameObject*)obj)->anim.velocityX = z;
             {
-                IdleRow* row = &((IdleRow*)tbl4)[state[0x33d]];
-                Baddie_SetMove(obj, state, row->anim,
+                IdleRow* idleRows = (IdleRow*)tbl4;
+                Baddie_SetMove(obj, state, idleRows[state[0x33d]].anim,
                             *(f32*)(tbl4 + state[0x33d] * 12), 0,
-                            (u8)row->flags);
+                            (u8)idleRows[state[0x33d]].flags);
             }
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
                                     *(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4));
@@ -495,10 +495,10 @@ void fn_80150910(int* obj, u8* state)
         {
             if (*(u16*)(state + 0x338) != 0)
             {
-                SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
-                Baddie_SetMove(obj, state, row->anim,
+                SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
+                Baddie_SetMove(obj, state, seqRow16[*(u16*)(state + 0x338)].anim,
                             *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                            (u8)row->flags);
+                            (u8)seqRow16[*(u16*)(state + 0x338)].flags);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                     (ObjAnimComponent*)obj,
                     *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
@@ -541,12 +541,12 @@ void fn_80150910(int* obj, u8* state)
             if (*(u16*)(state + 0x338) != 0)
             {
                 {
-                    SeqRow16* row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
-                    state[0x2f2] = (u8)row->extra;
-                    row = &((SeqRow16*)tbl1c)[*(u16*)(state + 0x338)];
-                    Baddie_SetMove(obj, state, row->anim,
+                    SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
+                    state[0x2f2] = (u8)seqRow16[*(u16*)(state + 0x338)].extra;
+                    Baddie_SetMove(obj, state,
+                                seqRow16[*(u16*)(state + 0x338)].anim,
                                 *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                                (u8)row->flags);
+                                (u8)seqRow16[*(u16*)(state + 0x338)].flags);
                 }
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                     (ObjAnimComponent*)obj,
