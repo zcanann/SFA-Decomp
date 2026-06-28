@@ -2613,12 +2613,12 @@ extern char sRcpTexRestructStrings[];
 
 void texRestructRefs(int mode)
 {
-    char* strs;
-    u8* tex;
     u8* na;
+    int i;
+    char* strs;
     int done;
     int pass;
-    int i;
+    u8* tex;
     int off;
     u32 size;
     int d;
