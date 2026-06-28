@@ -68,6 +68,13 @@ typedef struct DfpfloorbarPlacement
 {
     u8 pad0[0xC - 0x0];
     f32 posY;
+    u8 pad10[0x18 - 0x10];
+    u8 rotXByte;          /* 0x18: <<8 seeds anim.rotX */
+    u8 modeIndex;         /* 0x19: selects the mode-table row */
+    u8 pad1A[0x1C - 0x1A];
+    s16 travelRange;      /* 0x1C: nonzero scales rootMotionScale */
+    s16 triggerGameBit;   /* 0x1E */
+    s16 completionGameBit; /* 0x20 */
 } DfpfloorbarPlacement;
 
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
@@ -212,22 +219,23 @@ void dfpfloorbar_init(int obj, int params)
 {
     DfpFloorbarState* state = ((GameObject*)obj)->extra;
 
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)((DfpfloorbarPlacement*)params)->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = dfpfloorbar_SeqFn;
-    state->modeIndex = *(u8*)(params + 0x19);
-    state->triggerGameBit = *(s16*)(params + 0x1e);
-    state->completionGameBit = *(s16*)(params + 0x20);
+    state->modeIndex = ((DfpfloorbarPlacement*)params)->modeIndex;
+    state->triggerGameBit = ((DfpfloorbarPlacement*)params)->triggerGameBit;
+    state->completionGameBit = ((DfpfloorbarPlacement*)params)->completionGameBit;
     state->linkedObject = NULL;
 
-    if (*(s16*)(params + 0x1c) != 0)
+    if (((DfpfloorbarPlacement*)params)->travelRange != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6408 / ((f32)(s32) * (s16*)(params + 0x1c) / lbl_803E642C);
+        ((GameObject*)obj)->anim.rootMotionScale =
+            lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / lbl_803E642C);
     }
 
     if (GameBit_Get((int)state->completionGameBit) != 0)
     {
         state->active = 1;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)params)->posY - lbl_803E640C;
+        ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - lbl_803E640C;
     }
 }
 
