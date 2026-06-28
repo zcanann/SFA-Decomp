@@ -77,7 +77,7 @@ void fn_801F20D4(int obj)
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && GameBit_Get(763) == 0)
     {
         GameBit_Set(763, 1);
-        *(u8*)(sub + 0x27) = 0;
+        *(u8*)&((Dll200State*)sub)->counter27 = 0;
         buttonDisable(0, 256);
     }
     else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
@@ -85,7 +85,7 @@ void fn_801F20D4(int obj)
         if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&stk, 3) > -1)
         {
             GameBit_Set(784, 1);
-            *(u8*)(sub + 0x27) += 1;
+            *(u8*)&((Dll200State*)sub)->counter27 += 1;
             buttonDisable(0, 256);
         }
     }
@@ -109,13 +109,13 @@ void fn_801F27E4(int obj)
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
         (obj, lbl_803E5D9C, (f32)(u32)framesThisStep, NULL);
-    *(u8*)(sub + 0x24) = 1;
-    if (*(u8*)(sub + 0x24) == 0)
+    ((Dll200State*)sub)->latch24 = 1;
+    if (((Dll200State*)sub)->latch24 == 0)
     {
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(208, 1);
-            *(u8*)(sub + 0x24) = 1;
+            ((Dll200State*)sub)->latch24 = 1;
             buttonDisable(0, 256);
         }
     }
@@ -127,7 +127,7 @@ void fn_801F27E4(int obj)
             Obj_GetPlayerObject();
             if (fn_80296A14() > 0)
             {
-                *(u8*)(sub + 0x25) = 2;
+                ((Dll200State*)sub)->mode25 = 2;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 buttonDisable(0, 256);
             }
@@ -135,7 +135,7 @@ void fn_801F27E4(int obj)
             {
                 if (GameBit_Get(177) == 0 || GameBit_Get(178) == 0 || GameBit_Get(179) == 0)
                 {
-                    *(u8*)(sub + 0x25) = 1;
+                    ((Dll200State*)sub)->mode25 = 1;
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                     buttonDisable(0, 256);
                 }
