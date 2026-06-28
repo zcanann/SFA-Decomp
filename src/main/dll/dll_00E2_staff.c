@@ -187,6 +187,19 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
 
+typedef struct StaffSwipeSlot
+{
+    void* buffer;
+    f32 unk4;
+    f32 unk8;
+    s16 unkC;
+    s16 unkE;
+    s16 idx;
+    s16 unk12;
+    u8 flags;
+    u8 pad15[0x18 - 0x15];
+} StaffSwipeSlot;
+
 typedef struct StaffDoGrowShrinkAnimState
 {
     u8 pad0[0x4 - 0x0];
@@ -817,25 +830,25 @@ void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB)
 
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2)
 {
-    u8* slot;
+    StaffSwipeSlot* slot;
     int n;
-    u8* state = (u8*)(int*)((GameObject*)obj)->extra;
+    StaffSwipeSlot* slots = (StaffSwipeSlot*)(int*)((GameObject*)obj)->extra;
     for (n = 0; n < 3; n++)
     {
-        slot = state + n * 0x18;
-        if ((slot[0x14] & 0x2) == 0)
+        slot = &slots[n];
+        if ((slot->flags & 0x2) == 0)
         {
             break;
         }
     }
-    slot[0x14] = (u8)(slot[0x14] | 0x3);
-    *(f32*)(slot + 0x4) = f1;
-    *(f32*)(slot + 0x8) = f2;
-    *(s16*)(slot + 0xc) = 0;
-    *(s16*)(slot + 0xe) = 0;
-    *(s16*)(slot + 0x12) = 0;
-    *(s16*)(slot + 0x10) = idx;
-    *(void**)(state + 0x48) = slot;
+    slot->flags = (u8)(slot->flags | 0x3);
+    slot->unk4 = f1;
+    slot->unk8 = f2;
+    slot->unkC = 0;
+    slot->unkE = 0;
+    slot->unk12 = 0;
+    slot->idx = idx;
+    *(void**)((char*)slots + 0x48) = slot;
 }
 
 extern void mm_free(void* p);
@@ -844,14 +857,14 @@ void gcbaddieshield_update(int* obj);
 
 void staff_free(int* obj)
 {
-    u8* p;
+    StaffSwipeSlot* p;
     int i;
     i = 0;
-    p = ((GameObject*)obj)->extra;
+    p = (StaffSwipeSlot*)((GameObject*)obj)->extra;
     for (; i < 3; i++)
     {
-        mm_free(*(int**)p);
-        p += 0x18;
+        mm_free(p->buffer);
+        p++;
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -896,7 +909,7 @@ void staff_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
-    int* p;
+    StaffSwipeSlot* p;
     int i;
     ((StaffDoGrowShrinkAnimState*)state)->unkAA = 1;
     ((StaffDoGrowShrinkAnimState*)state)->unkB0 = 2;
@@ -907,12 +920,12 @@ void staff_init(int* obj)
         hitState->trackContactMask = 0x109;
     }
     i = 0;
-    p = state;
+    p = (StaffSwipeSlot*)state;
     for (; i < 3; i++)
     {
-        *p = mmAlloc(0xEA60, 0x1a, 0);
-        *(s16*)((char*)p + 0x10) = -1;
-        p = (int*)((char*)p + 0x18);
+        p->buffer = (void*)mmAlloc(0xEA60, 0x1a, 0);
+        p->idx = -1;
+        p++;
     }
     gStaffQuakeSpellState[0x20] = 0;
     *(int*)(gStaffQuakeSpellState + 0x1c) = 0;
