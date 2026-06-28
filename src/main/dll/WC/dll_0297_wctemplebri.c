@@ -155,17 +155,17 @@ int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate
     waveScale = *(f32*)&lbl_803E6E70;
     for (; i < *(u16*)(modelBase + 0xe4); i++)
     {
-        int curr = ObjModel_GetCurrentVertexCoords(model, i);
-        int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int wave = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY));
+        s16* curr = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
+        s16* base = (s16*)ObjModel_GetBaseVertexCoords(modelBase, i);
+        int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
-        if (*(s16*)(base + 0) > 0)
-            *(s16*)(curr + 0) =
+        if (base[0] > 0)
+            curr[0] =
                 (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
-                    (f32) * (s16*)(base + 0));
+                    (f32)base[0]);
         else
-            *(s16*)(curr + 0) =
-                (s16)((f32) * (s16*)(base + 0) -
+            curr[0] =
+                (s16)((f32)base[0] -
                     lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     return 0;
@@ -233,17 +233,17 @@ void wctemplebri_update(int obj)
     waveScale = *(f32*)&lbl_803E6E70;
     for (; i < *(u16*)(modelBase + 0xe4); i++)
     {
-        int curr = ObjModel_GetCurrentVertexCoords(model, i);
-        int base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int wave = (u16)(int)(waveScale * ((f32) * (s16*)(curr + 4) / state->maxY));
+        s16* curr = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
+        s16* base = (s16*)ObjModel_GetBaseVertexCoords(modelBase, i);
+        int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
         int idx = wave + state->wavePhaseA;
-        if (*(s16*)(base + 0) > 0)
-            *(s16*)(curr + 0) =
+        if (base[0] > 0)
+            curr[0] =
                 (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) +
-                    (f32) * (s16*)(base + 0));
+                    (f32)base[0]);
         else
-            *(s16*)(curr + 0) =
-                (s16)((f32) * (s16*)(base + 0) -
+            curr[0] =
+                (s16)((f32)base[0] -
                     lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
     }
     if (state->active != 0)
@@ -307,7 +307,7 @@ void wctemplebri_init(int obj, int initData)
     modelData = *(int*)(model + 0);
     for (i = 0; i < *(u16*)(modelData + 0xe4); i++)
     {
-        int y = *(s16*)(ObjModel_GetCurrentVertexCoords(model, i) + 4);
+        int y = ((s16*)ObjModel_GetCurrentVertexCoords(model, i))[2];
         if (y < maxY)
             maxY = y;
     }
