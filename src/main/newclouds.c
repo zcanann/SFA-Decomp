@@ -2078,11 +2078,11 @@ void dll_07_func06(void)
     f32* m;
     u8* nearestCloud;
     u8 activeCount;
-    f32 nearest;
+    f32 wrap;
     f32 mag;
     f32 t;
     f32 rot;
-    f32 wrap;
+    f32 nearest;
     void** clouds;
     f32 inpos[3];
     f32 wind[3];
