@@ -232,7 +232,7 @@ void invhit_update(int* obj)
         break;
     case 7:
         {
-            char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
+            ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
             char* ownerHitSlot;
             char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
             int j;
@@ -243,7 +243,7 @@ void invhit_update(int* obj)
             {
                 if (*(int**)(ownerHitSlot + 0x7c) == obj)
                 {
-                    *(s16*)(hitState + 0x60) = *(s16*)(hitState + 0x60) & ~1;
+                    hitState->flags = hitState->flags & ~1;
                     Obj_FreeObject(obj);
                 }
                 ownerHitSlot += 4;
