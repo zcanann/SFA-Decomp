@@ -228,9 +228,9 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
         {
             d |= 0x10;
         }
-        ((u8*)obj)[counter * 8] = b;
-        *(u8*)(obj + counter * 8 + 1) = d;
-        *(int*)(obj + counter * 8 + 4) = c;
+        ring->slots[counter].ctrl = b;
+        ring->slots[counter].flags = d;
+        ring->slots[counter].value = c;
     }
 }
 
