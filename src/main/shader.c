@@ -1482,8 +1482,8 @@ void unloadMap(void)
     int j;
     int rb;
     char* p;
-    int k;
     int n;
+    int k;
 
     audioStopByMask(4);
     Sfx_ClearLoopedObjectSounds();
