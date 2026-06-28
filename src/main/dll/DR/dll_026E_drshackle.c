@@ -30,7 +30,7 @@ typedef struct DrshacklePlacement
 
 typedef struct DrshackleState
 {
-    u8 pad0[0x8 - 0x0]; /* 0x00: path-object pointer slots (one per slot) */
+    s32 pathSlots[2];   /* 0x00: path-object pointer slots (one per slot) */
     f32 savedPosX;      /* 0x08 */
     f32 savedPosY;      /* 0x0C */
     f32 savedPosZ;      /* 0x10 */
@@ -160,7 +160,7 @@ void drshackle_init(int obj, char* arg)
     ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
     ((DrshackleState*)p)->pathPointA = arg[0x18] % 2;
     ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
-    if (*(s16*)(arg + 0x1c) == 1)
+    if (((DrshacklePlacement*)arg)->quarterTurns == 1)
     {
         ((DrshackleState*)p)->slotCount = 2;
         ((DrshackleState*)p)->pathPointB = 1 - ((DrshackleState*)p)->pathPointA;
@@ -235,9 +235,9 @@ void drshackle_update(int obj)
             {
                 if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)q)->pathObjGroupBase + j * 4)
                 {
-                    *(int*)(p + j * 4) = *list;
+                    ((DrshackleState*)p)->pathSlots[j] = *list;
                     (*gObjectTriggerInterface)
-                        ->runSequence(0, (void*)*(int*)(p + j * 4), -1);
+                        ->runSequence(0, (void*)((DrshackleState*)p)->pathSlots[j], -1);
                 }
             }
             list++;
