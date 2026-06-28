@@ -14,7 +14,7 @@ extern void objRenderFn_8003b8f4(f32);
 
 typedef struct ShopBuyItemState
 {
-    u8 pad0[0x1 - 0x0];
+    s8 unk0; /* 0x0 */
     s8 itemIndex; /* 0x1 shop item type: purchase-effect switch + items-table index */
     u8 pad2[0x4 - 0x2];
     u8 unk4;
@@ -68,8 +68,13 @@ extern u8 lbl_80327FD0[];
 
 typedef struct ShopItemRow
 {
-    u8 pad0[0xa];
-    s16 textId;
+    u8 price; /* 0x0 */
+    u8 pad1[0x4 - 0x1];
+    u8 field4; /* 0x4 */
+    u8 minPrice; /* 0x5 */
+    s16 availBit; /* 0x6 "available" GameBit slot (-1 = always available) */
+    s16 boughtBit; /* 0x8 "bought" GameBit slot (-1 = none) */
+    s16 textId; /* 0xa */
 } ShopItemRow;
 
 /* number of ShopItemRow entries in lbl_80327FD0
@@ -109,8 +114,8 @@ int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
 int fn_801E66DC(void);
 
-s32 shop_getStateField1(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x1); }
-s32 shop_setScale(int* obj) { return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x0); }
+s32 shop_getStateField1(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
+s32 shop_setScale(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -237,7 +242,7 @@ int shop_getItemPrice(int p, int idx)
 {
     if (idx >= 0 && idx < SHOP_ITEM_ROW_COUNT)
     {
-        return lbl_80327FD0[idx * 0xc];
+        return ((ShopItemRow*)lbl_80327FD0)[idx].price;
     }
     return 0;
 }
@@ -275,7 +280,7 @@ void shop_init(int obj, int objDef)
     int i;
     u8* item;
 
-    *(s8*)(*(int*)&((GameObject*)obj)->extra + 1) = -1;
+    ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
     ObjGroup_AddObject(obj, 9);
     for (i = 0; i < SHOP_ITEM_ROW_COUNT; i++)
     {
@@ -297,7 +302,7 @@ int shop_isItemAvailable(int p, int idx)
     int result;
     Obj_GetPlayerObject();
     result = 0;
-    slot = *(s16*)(lbl_80327FD0 + idx * 0xc + 0x6);
+    slot = ((ShopItemRow*)lbl_80327FD0)[idx].availBit;
     if (slot == -1 || GameBit_Get(slot) != 0u)
     {
         result = 1;
@@ -314,7 +319,7 @@ int shop_isItemBought(int p, int idx)
     int result;
     Obj_GetPlayerObject();
     result = 0;
-    slot = *(s16*)(lbl_80327FD0 + idx * 0xc + 0x8);
+    slot = ((ShopItemRow*)lbl_80327FD0)[idx].boughtBit;
     if (slot != -1 && GameBit_Get(slot) != 0u)
     {
         result = 1;
