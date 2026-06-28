@@ -2573,9 +2573,9 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
-    u8* activeObj;
-    u8* action;
     u8* cmd;
+    u8* action;
+    u8* activeObj;
     f32 scratch[2];
     u8* model;
     u8* seq;
@@ -2595,11 +2595,11 @@ int ObjSeq_update(u8* obj, f32 t)
     int aInt;
     f32 val;
     f32 rate;
+    f32 px;
+    f32 pz;
     f32 fval;
     f32 prevX;
     f32 prevZ;
-    f32 px;
-    f32 pz;
     ObjAnimSequenceConditionCallback cb;
 
     (void)t;
