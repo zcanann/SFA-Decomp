@@ -501,6 +501,9 @@ void cmbsrc_init(int obj, u8* setup)
 {
     extern void modelLightStruct_setDiffuseTargetColor(ModelLight* light, int r, int g, int b, int a); /* #57 */
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
+    u8* c2;
+    u8* c1;
+    u8* c0;
     CmbSrcMapData* mapData = (CmbSrcMapData*)setup;
     CmbSrcState* state = cmbsrc->state;
     int lightVariant;
@@ -542,9 +545,6 @@ void cmbsrc_init(int obj, u8* setup)
     }
     if (mapData->flags & CMBSRC_MAP_CREATE_LIGHT)
     {
-        u8* c0;
-        u8* c1;
-        u8* c2;
         f32 sunTime;
 
         if (state->light == NULL)
