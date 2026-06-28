@@ -549,15 +549,13 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
 
 s32 dataRemoveMacro(u16 mid)
 {
-    s32 main;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     s32 base;
     s32 i;
     MAC_MAINTAB* m;
 
     sndBegin();
-    main = (mid >> 6) & 0x3ff;
-    m = &t->macMain[main];
+    m = &t->macMain[(mid >> 6) & 0x3ff];
 
     if (m->num != 0)
     {
@@ -570,21 +568,28 @@ s32 dataRemoveMacro(u16 mid)
         {
             if (--t->macSub[base + i].refCount == 0)
             {
-                for (i = base + i + 1; i < dataMacTotal; ++i)
                 {
-                    t->macSub[i - 1] = t->macSub[i];
-                }
-
-                m = t->macMain;
-                for (i = 0; i < 512; ++i)
-                {
-                    if (m[i].subTabIndex > base)
+                    MAC_SUBTAB* macSub = t->macSub;
+                    MAC_SUBTAB* p = &macSub[base + i + 1];
+                    for (i = base + i + 1; i < dataMacTotal; ++i)
                     {
-                        --m[i].subTabIndex;
+                        p[-1] = p[0];
+                        ++p;
                     }
                 }
 
-                --t->macMain[main].num;
+                {
+                    MAC_MAINTAB* mm = t->macMain;
+                    for (i = 0; i < 512; ++i)
+                    {
+                        if (mm[i].subTabIndex > base)
+                        {
+                            --mm[i].subTabIndex;
+                        }
+                    }
+                }
+
+                --m->num;
                 --dataMacTotal;
             }
         }
