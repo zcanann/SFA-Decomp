@@ -1,7 +1,7 @@
 #include "main/audio/dsp_voice.h"
 #include "main/audio/voice_conv.h"
 extern u8 voiceAdsrDecayTable[];
-extern u8* dspVoice;
+extern u8* volatile dspVoice;
 
 typedef struct HwAdsrEnvelope
 {
@@ -25,15 +25,14 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
     {
     case 0:
         offset = slot * 0xf4;
-        entry = dspVoice;
-        entry += offset;
+        entry = dspVoice + offset;
         ((DSPvoice*)entry)->adsr.mode = 0;
-        entry = dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.aTime = envelope->attack;
-        entry = dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.dTime = envelope->decay;
+        value = envelope->attack;
+        entry = dspVoice + offset;
+        ((DSPvoice*)entry)->adsr.aTime = value;
+        value = envelope->decay;
+        entry = dspVoice + offset;
+        ((DSPvoice*)entry)->adsr.dTime = value;
 
         value = envelope->sustain << 3;
         if (value > 0x7fff)
@@ -41,34 +40,29 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
             value = 0x7fff;
         }
 
-        entry = dspVoice;
-        entry += offset;
+        entry = dspVoice + offset;
         ((DSPvoice*)entry)->adsr.sLevel = value;
-        entry = dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.rTime = envelope->release;
+        value = envelope->release;
+        entry = dspVoice + offset;
+        ((DSPvoice*)entry)->adsr.rTime = value;
         break;
     case 1:
     case 2:
         offset = slot * 0xf4;
-        entry = dspVoice;
-        entry += offset;
+        entry = dspVoice + offset;
         ((DSPvoice*)entry)->adsr.mode = 1;
-        entry = dspVoice;
-        entry += offset;
+        entry = dspVoice + offset;
         ((DSPvoice*)entry)->adsr.aMode = 0;
 
         if (mode == 1)
         {
-            value = voiceConvertDbToLinear(adsr[0]);
-            entry = dspVoice;
-            entry += offset;
-            ((DSPvoice*)entry)->adsr.aTime = value & 0xffff;
+            value = voiceConvertDbToLinear(adsr[0]) & 0xffff;
+            entry = dspVoice + offset;
+            ((DSPvoice*)entry)->adsr.aTime = value;
 
-            value = voiceConvertDbToLinear(adsr[1]);
-            entry = dspVoice;
-            entry += offset;
-            ((DSPvoice*)entry)->adsr.dTime = value & 0xffff;
+            value = voiceConvertDbToLinear(adsr[1]) & 0xffff;
+            entry = dspVoice + offset;
+            ((DSPvoice*)entry)->adsr.dTime = value;
 
             value = envelope->decayTime >> 2;
             if (value > 0x3ff)
@@ -76,31 +70,29 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
                 value = 0x3ff;
             }
 
-            entry = dspVoice;
-            entry += offset;
+            entry = dspVoice + offset;
             ((DSPvoice*)entry)->adsr.sLevel = 0xc1 - voiceAdsrDecayTable[value];
         }
         else
         {
-            entry = dspVoice;
-            entry += offset;
-            ((DSPvoice*)entry)->adsr.aTime = adsr[0] & 0xffff;
-            entry = dspVoice;
-            entry += offset;
-            ((DSPvoice*)entry)->adsr.dTime = adsr[1] & 0xffff;
-            entry = dspVoice;
-            entry += offset;
-            ((DSPvoice*)entry)->adsr.sLevel = envelope->decayTime;
+            value = adsr[0] & 0xffff;
+            entry = dspVoice + offset;
+            ((DSPvoice*)entry)->adsr.aTime = value;
+            value = adsr[1] & 0xffff;
+            entry = dspVoice + offset;
+            ((DSPvoice*)entry)->adsr.dTime = value;
+            value = envelope->decayTime;
+            entry = dspVoice + offset;
+            ((DSPvoice*)entry)->adsr.sLevel = value;
         }
 
-        entry = dspVoice;
-        entry += offset;
-        ((DSPvoice*)entry)->adsr.rTime = envelope->releaseTime;
+        value = envelope->releaseTime;
+        entry = dspVoice + offset;
+        ((DSPvoice*)entry)->adsr.rTime = value;
         break;
     }
 
     offset = slot * 0xf4;
-    entry = dspVoice;
-    entry += offset;
+    entry = dspVoice + offset;
     ((DSPvoice*)entry)->changed[0] |= 0x10;
 }
