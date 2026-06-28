@@ -55,8 +55,8 @@ typedef struct Dbholecontrol1Placement
     f32 unk10;
     s32 unk14;
     s16 unk18;
-    u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
+    s16 gameBitA; /* copied into DbHoleControl1State.gameBitA */
+    s16 gameBitB; /* copied into DbHoleControl1State.gameBitB */
     s16 hideGameBit;
     s16 triggerGameBit;
     u8 pad22[0x24 - 0x22];
@@ -559,8 +559,8 @@ void dbholecontrol1_init(int* obj, u8* params)
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject*)obj)->animEventCallback = dbholecontrol1_SeqFn;
-    sub->gameBitA = *(s16*)(params + 0x1a);
-    sub->gameBitB = *(s16*)(params + 0x1c);
+    sub->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
+    sub->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
 }
 
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
