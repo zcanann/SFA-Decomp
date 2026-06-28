@@ -2672,7 +2672,7 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
 void renderSunAndMoon(int a, int b, int c, int d, int visible)
 {
     SkyRotQ q1;
-    SkyRotQ q2;
+    f32 moonTC;
     f32 vec[3];
     SkyVec3 sunDir;
     SkyVec3 moonDir;
@@ -2683,7 +2683,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     f32 scale;
     f32 sunT;
     f32 moonT;
-    f32 moonTC;
+    SkyRotQ q2;
     f32 riseT;
     f32 time2;
     u8 vis;
