@@ -141,7 +141,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
             {
                 Sfx_PlayFromObject(obj, SFXsc_gethit02);
                 uval = randomGetRange(0, 5);
-                if (((int)uval == 0) && ((*(u8*)(state + 0x27a) & 8) != 0))
+                if (((int)uval == 0) && ((((BackpackState*)state)->flags & 8) != 0))
                 {
                     Sfx_PlayFromObject(obj, SFXsc_gethit03);
                 }
@@ -154,20 +154,20 @@ void tumbleweed_updateRollingMotion(int obj, int state)
 #pragma peephole off
 void tumbleweed_func0F(int obj, int value)
 {
-    *(int*)(*(int*)&((GameObject*)obj)->extra + 0x284) = value;
+    *(int*)&((BackpackState*)((GameObject*)obj)->extra)->targetObj = value;
 }
 
 int tumbleweed_func0E(int obj)
 {
-    return *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x278) == 6;
+    return ((BackpackState*)((GameObject*)obj)->extra)->phase == 6;
 }
 
 void tumbleweed_render2(int* obj, int p2)
 {
     int* state = ((GameObject*)obj)->extra;
     ((TumbleweedState*)state)->mode = 6;
-    *(int*)((char*)state + 0x290) = p2;
-    *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
+    *(int*)&((BackpackState*)state)->targetPos = p2;
+    ((BackpackState*)state)->speed = timeDelta * lbl_803E2F98;
     ObjHits_DisableObject((u32)obj);
 }
 
@@ -181,7 +181,7 @@ void tumbleweed_modelMtxFn(int obj)
         ((TumbleweedState*)state)->effectFlags |= 3;
         if (((GameObject*)obj)->anim.seqId == 0x4c1)
         {
-            *(f32*)(state + 0x2a0) = lbl_803E2F9C;
+            ((BackpackState*)state)->phaseTimer = lbl_803E2F9C;
         }
     }
 }
@@ -190,13 +190,13 @@ void tumbleweed_func0B(int obj, float x, float y)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
 
-    *(float*)(extra + 0x288) = x;
-    *(float*)(extra + 0x28c) = y;
+    ((BackpackState*)extra)->anchorPosX = x;
+    ((BackpackState*)extra)->anchorPosZ = y;
 }
 
 int tumbleweed_setScale(int obj)
 {
-    return *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x278);
+    return ((BackpackState*)((GameObject*)obj)->extra)->phase;
 }
 
 int tumbleweed_getExtraSize(void)
@@ -231,8 +231,8 @@ void tumbleweed_free(int* obj)
     items = ObjList_GetObjects(&counter, &limit);
     while (counter < limit)
     {
-        int* o = (int*)items[counter];
-        if (target_id == *(s16*)((int)o + 0x46))
+        GameObject* o = (GameObject*)items[counter];
+        if (target_id == o->anim.seqId)
         {
             (*(VtableFn*)(**(int**)((int)o + 0x68) + 0x20))(o, obj);
         }
