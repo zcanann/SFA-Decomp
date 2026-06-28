@@ -177,7 +177,7 @@ u8 groundanimator_func0B(int* obj)
     GroundAnimatorState * state = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
     f32 depth = state->sinkDepth;
     int* placement = ((int**)obj)[0x4C / 4];
-    u8 maxDepth = *(u8*)((char*)placement + 0x20);
+    u8 maxDepth = ((GroundanimatorPlacement*)placement)->maxSinkDepth;
     return depth > lbl_803E3F98 * maxDepth;
 }
 
@@ -352,7 +352,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     for (blkIdx = 0; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
     {
         entry = mapBlockFn_800606ec(block, blkIdx);
-        if (*(u8*)((char*)placement + 0x25) == mapBlockFn_80060678(entry))
+        if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
             fallMid = fallOff;
