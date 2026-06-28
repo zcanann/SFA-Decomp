@@ -17,6 +17,40 @@ typedef struct Dll19APlacement
     s8 gateBitIndex; /* added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child as link index */
 } Dll19APlacement;
 
+/* 0x38-byte spawn descriptor handed to Obj_SetupObject for the child
+ * object (type 0x2d0). ObjPlacement-style head (color/position) plus
+ * class-specific tail. */
+typedef struct Dll19ASpawnSetup
+{
+    u8 pad00[4];   /* 0x00 */
+    u8 color[4];   /* 0x04 */
+    f32 posX;      /* 0x08 */
+    f32 posY;      /* 0x0c */
+    f32 posZ;      /* 0x10 */
+    u8 pad14[4];   /* 0x14 */
+    s16 unk18;     /* 0x18 */
+    u8 pad1A[8];   /* 0x1a */
+    s16 unk22;     /* 0x22 */
+    u8 pad24[3];   /* 0x24 */
+    u8 unk27;      /* 0x27 */
+    u8 pad28;      /* 0x28 */
+    u8 unk29;      /* 0x29 */
+    s8 unk2A;      /* 0x2a */
+    u8 unk2B;      /* 0x2b */
+    u8 pad2C[2];   /* 0x2c */
+    s8 unk2E;      /* 0x2e */
+    u8 pad2F;      /* 0x2f */
+    s16 unk30;     /* 0x30 */
+    u8 unk32;      /* 0x32 */
+    u8 pad33[5];   /* 0x33 */
+} Dll19ASpawnSetup;
+
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, posX) == 0x8);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk2A) == 0x2a);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk32) == 0x32);
+STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
+
 #define GAMEBIT_DLL19A_RESET 0x5b9
 #define GAMEBIT_DLL19A_GATE_BASE 0x1cd
 
@@ -31,7 +65,7 @@ void dll_19A_update(int obj)
     int setup;
     short* state;
     int* res;
-    int newObj;
+    Dll19ASpawnSetup* newObj;
     char* r;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -62,34 +96,34 @@ void dll_19A_update(int obj)
         }
         if ((*state <= 0) && (Obj_IsLoadingLocked() != 0))
         {
-            newObj = Obj_AllocObjectSetup(0x38, 0x2d0);
-            *(f32*)(newObj + 8) = ((ObjPlacement*)setup)->posX;
-            ((GameObject*)newObj)->anim.localPosX = ((ObjPlacement*)setup)->posY;
-            ((GameObject*)newObj)->anim.localPosY = ((ObjPlacement*)setup)->posZ;
-            *(u8*)(newObj + 4) = ((Dll19APlacement*)setup)->unk4;
-            *(u8*)(newObj + 5) = ((Dll19APlacement*)setup)->unk5;
-            *(u8*)(newObj + 6) = ((Dll19APlacement*)setup)->unk6;
-            *(u8*)(newObj + 7) = ((Dll19APlacement*)setup)->unk7;
-            *(u8*)(newObj + 0x27) = 1;
-            *(s16*)(newObj + 0x18) = 0x1e7;
-            *(s16*)(newObj + 0x30) = 0xffff;
-            *(s8*)(newObj + 0x2a) = ((GameObject*)obj)->anim.rotX >> 8;
-            *(u8*)(newObj + 0x2b) = 2;
+            newObj = (Dll19ASpawnSetup*)Obj_AllocObjectSetup(0x38, 0x2d0);
+            newObj->posX = ((ObjPlacement*)setup)->posX;
+            newObj->posY = ((ObjPlacement*)setup)->posY;
+            newObj->posZ = ((ObjPlacement*)setup)->posZ;
+            newObj->color[0] = ((Dll19APlacement*)setup)->unk4;
+            newObj->color[1] = ((Dll19APlacement*)setup)->unk5;
+            newObj->color[2] = ((Dll19APlacement*)setup)->unk6;
+            newObj->color[3] = ((Dll19APlacement*)setup)->unk7;
+            newObj->unk27 = 1;
+            newObj->unk18 = 0x1e7;
+            newObj->unk30 = 0xffff;
+            newObj->unk2A = ((GameObject*)obj)->anim.rotX >> 8;
+            newObj->unk2B = 2;
             if (GameBit_Get(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
             {
-                *(s16*)(newObj + 0x22) = 0x49;
+                newObj->unk22 = 0x49;
             }
             else
             {
-                *(s16*)(newObj + 0x22) = 0xffff;
+                newObj->unk22 = 0xffff;
             }
-            *(u8*)(newObj + 0x29) = 0xff;
-            *(s8*)(newObj + 0x2e) = -1;
+            newObj->unk29 = 0xff;
+            newObj->unk2E = -1;
             {
                 int linkIdx = ((Dll19APlacement*)setup)->gateBitIndex;
-                *(u8*)(newObj + 0x32) = linkIdx;
+                newObj->unk32 = linkIdx;
             }
-            r = Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
+            r = Obj_SetupObject((int)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
                                 *(int*)&((GameObject*)obj)->anim.parent);
             if ((r != 0) && (((GameObject*)r)->extra != 0))
             {
