@@ -381,7 +381,7 @@ void CameraModeCombat_update(short* cam)
                             dy = dy + gCamCombatState->heightOffset;
                             step = interpolate(((CameraObject*)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
                             n[1] = ((CameraObject*)cam)->anim.worldPosY - step;
-                            PSVECSubtract(n, (f32*)((char*)cam + 0x18), vec);
+                            PSVECSubtract(n, &((CameraObject*)cam)->anim.worldPosX, vec);
                             mag = PSVECMag(vec);
                             if (mag > lbl_803E18C4)
                             {
@@ -410,9 +410,9 @@ void CameraModeCombat_update(short* cam)
                                        (mag < lbl_803E18C4)
                                            ? lbl_803E18C4
                                            : ((mag > lbl_803E18D0) ? lbl_803E18D0 : mag));
-                            PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
-                            camcontrol_traceMove(&prevX, (f32*)((char*)cam + 0x18),
-                                                 (f32*)((char*)cam + 0x18), trace, 3, 1, 1, lbl_803E18CC);
+                            PSVECAdd(&((CameraObject*)cam)->anim.worldPosX, vec, &((CameraObject*)cam)->anim.worldPosX);
+                            camcontrol_traceMove(&prevX, &((CameraObject*)cam)->anim.worldPosX,
+                                                 &((CameraObject*)cam)->anim.worldPosX, trace, 3, 1, 1, lbl_803E18CC);
                             t = lbl_803E18F8 * dz + focus->anim.worldPosZ;
                             fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
                             dy = *(f32*)(view + 0x10) - py;
@@ -460,7 +460,7 @@ void CameraModeCombat_update(short* cam)
                             {
                                 ((struct { u8 b7 : 1; } *)&((CameraObject*)cam)->smoothingFlags)->b7 = 1;
                             }
-                            Obj_TransformWorldPointToLocal(*(f32*)((char*)cam + 0x18),
+                            Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX,
                                                            ((CameraObject*)cam)->anim.worldPosY,
                                                            ((CameraObject*)cam)->anim.worldPosZ,
                                                            &((CameraObject*)cam)->anim.localPosX,
