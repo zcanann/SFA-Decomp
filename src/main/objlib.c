@@ -1560,7 +1560,7 @@ u32 Obj_IsObjectAlive(u32 obj)
     u32 alive;
 
     alive = 0;
-    if ((obj != 0) && ((*(u16*)(obj + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_DEAD) == 0))
+    if ((obj != 0) && ((((GameObject*)obj)->objectFlags & OBJLINK_FLAGS_DEAD) == 0))
     {
         alive = 1;
     }
@@ -1665,7 +1665,7 @@ void ObjLink_DetachChild(int obj, int child)
     int i;
 
     i = 0;
-    for (p = obj; i < (int)*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET); i++)
+    for (p = obj; i < (int)((GameObject*)obj)->childCount; i++)
     {
         if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == child)
         {
@@ -1674,34 +1674,33 @@ void ObjLink_DetachChild(int obj, int child)
         p += 4;
     }
     q = obj + i * 4;
-    while (i < (int)*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET) - 1)
+    while (i < (int)((GameObject*)obj)->childCount - 1)
     {
         *(int*)(q + OBJLINK_CHILD_LIST_OFFSET) = *(int*)(q + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
         q += 4;
         i++;
     }
-    (*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET))--;
+    ((GameObject*)obj)->childCount--;
     *(int*)(obj + OBJLINK_CHILD_LIST_OFFSET +
-        (u32) * (u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET) * 4) = 0;
-    *(int*)(child + OBJLINK_PARENT_OFFSET) = 0;
+        (u32)((GameObject*)obj)->childCount * 4) = 0;
+    ((GameObject*)child)->ownerObj = (void*)0;
     return;
 }
 
 void ObjLink_AttachChild(int parent, int child, u16 linkMode)
 {
     int childIndex;
-    u8* parentBytes;
+    GameObject* parentObj;
+    GameObject* childObj;
 
-    childIndex = (int)*(u8*)(parent + OBJLINK_CHILD_COUNT_OFFSET);
-    *(u8*)(parent + OBJLINK_CHILD_COUNT_OFFSET) += 1;
-    parentBytes = (u8*)parent;
-    parentBytes = parentBytes + childIndex * sizeof(int);
-    *(int*)(parentBytes + OBJLINK_CHILD_LIST_OFFSET) = child;
-    *(int*)(child + OBJLINK_PARENT_OFFSET) = parent;
-    *(u16*)(child + OBJLINK_FLAGS_OFFSET) =
-        (u16)(*(u16*)(child + OBJLINK_FLAGS_OFFSET) & ~OBJLINK_FLAGS_MODE_MASK);
-    *(u16*)(child + OBJLINK_FLAGS_OFFSET) =
-        (u16)(*(u16*)(child + OBJLINK_FLAGS_OFFSET) | linkMode);
+    parentObj = (GameObject*)parent;
+    childObj = (GameObject*)child;
+    childIndex = (int)parentObj->childCount;
+    parentObj->childCount += 1;
+    parentObj->childObjs[childIndex] = (void*)child;
+    childObj->ownerObj = (void*)parent;
+    childObj->objectFlags = (u16)(childObj->objectFlags & ~OBJLINK_FLAGS_MODE_MASK);
+    childObj->objectFlags = (u16)(childObj->objectFlags | linkMode);
     *(u8*)(child + OBJLINK_CHILD_STATE_OFFSET) = 0;
     return;
 }
