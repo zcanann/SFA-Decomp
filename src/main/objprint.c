@@ -2958,7 +2958,6 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     extern int lbl_803DB460;
     extern ObjPrintFlipFlag lbl_803DCC00;
     s16 ang[4];
-    s16* sp1;
     s16* sp2;
     char* p;
     int* keys;
@@ -3002,7 +3001,6 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
 
     i = 0;
     keys = lbl_802CAE88;
-    sp1 = spd;
     while (i < 10)
     {
         int key;
@@ -3053,7 +3051,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 }
                 else
                 {
-                    lim = (s32)(gObjPrintDegToAngle * (f32) * sp1);
+                    lim = (s32)(gObjPrintDegToAngle * (f32) * spd);
                 }
                 v = src[n2];
                 dst[n2] = v;
@@ -3091,10 +3089,10 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
             int div2;
             int lim3;
 
-            lim = (d1 < framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *sp1) / lbl_803DB460))
-                      ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *sp1) / lbl_803DB460)
-                      : ((d1 > framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * sp1) / lbl_803DB460))
-                             ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * sp1) / lbl_803DB460)
+            lim = (d1 < framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *spd) / lbl_803DB460))
+                      ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *spd) / lbl_803DB460)
+                      : ((d1 > framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * spd) / lbl_803DB460))
+                             ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * spd) / lbl_803DB460)
                              : d1);
             d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
             t2 = (s16)(s32)(*(volatile f32*)&gObjPrintDegToAngle * (f32) * sp2);
@@ -3112,7 +3110,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
         }
         keys++;
         sp2++;
-        sp1++;
+        spd++;
         i++;
     }
     return ang[2];
