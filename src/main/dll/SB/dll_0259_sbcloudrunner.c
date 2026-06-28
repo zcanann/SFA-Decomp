@@ -369,9 +369,9 @@ void SB_CloudRunner_UpdateSteer(s16 *obj, u8 *state)
     }
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, spd, timeDelta, (ObjAnimEventList *)&events);
 
-    *(f32 *)(obj + 6) = ((SBCloudRunnerState *)state)->spawnPosX;
-    *(f32 *)(obj + 8) = ((SBCloudRunnerState *)state)->spawnPosY;
-    *(f32 *)(obj + 10) = ((SBCloudRunnerState *)state)->spawnPosZ;
+    ((GameObject *)obj)->anim.localPosX = ((SBCloudRunnerState *)state)->spawnPosX;
+    ((GameObject *)obj)->anim.localPosY = ((SBCloudRunnerState *)state)->spawnPosY;
+    ((GameObject *)obj)->anim.localPosZ = ((SBCloudRunnerState *)state)->spawnPosZ;
 
     if (events.sfxFlag)
     {
