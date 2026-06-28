@@ -15186,7 +15186,6 @@ int fn_802A2918(int obj, int state, f32 fv)
     {
         extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
         s16* tbl;
-        s16* t;
         int sel;
         struct
         {
@@ -15237,9 +15236,8 @@ int fn_802A2918(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.localPosZ = inner->unk534;
         sel = inner->unk4FC >= *(f32*)&lbl_803E7EA4 ? 0 : 4;
         tbl = flag ? lbl_80332F88 : lbl_80332F78;
-        t = tbl + sel;
         inner->unk544 =
-            fn_802A71E0(obj, t[0], t[2], (int*)((char*)inner + 0x538), (int*)&vb.vx,
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)((char*)inner + 0x538), (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
             int f9 = 0x34;
@@ -15247,11 +15245,11 @@ int fn_802A2918(int obj, int state, f32 fv)
             {
                 f9 |= 0x40;
             }
-            fn_802A71E0(obj, t[0], tbl[sel + 1], (int*)((char*)inner + 0x538),
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)((char*)inner + 0x538),
                         (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                         ((PlayerState*)state)->baddie.moveSpeed, 0, f9);
         }
-        fn_802A71E0(obj, t[2], tbl[sel + 3], (int*)((char*)inner + 0x538),
+        fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)((char*)inner + 0x538),
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY =
