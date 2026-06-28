@@ -29,6 +29,20 @@ extern int ObjList_FindObjectById(int id);
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objhits.h"
 #include "main/engine_shared.h"
+#include "main/obj_placement.h"
+
+/* dim2icefloe romlist placement: ObjPlacement head (mapId@0x14 repurposed as
+   the target-object id consumed at init), then class-specific bytes. */
+typedef struct Dim2IceFloePlacement
+{
+    ObjPlacement base;
+    s8 yawByte;     /* 0x18 */
+    u8 pad19[3];
+    s16 curveStep;  /* 0x1c */
+} Dim2IceFloePlacement;
+
+STATIC_ASSERT(offsetof(Dim2IceFloePlacement, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(Dim2IceFloePlacement, curveStep) == 0x1c);
 
 #pragma scheduling on
 #pragma peephole on
@@ -139,14 +153,15 @@ void dim2icefloe_update(int obj)
 void dim2icefloe_init(int obj, int p)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    Dim2IceFloePlacement* placement = (Dim2IceFloePlacement*)p;
     int sub = *(int*)&((GameObject*)obj)->extra;
-    ((Dim2IceFloeState*)sub)->targetId = *(int*)(p + 0x14);
-    ((Dim2IceFloeState*)sub)->curveStep = (f32) * (s16*)(p + 0x1c) / lbl_803E4B48;
+    ((Dim2IceFloeState*)sub)->targetId = placement->base.mapId;
+    ((Dim2IceFloeState*)sub)->curveStep = (f32)placement->curveStep / lbl_803E4B48;
     ((Dim2IceFloeState*)sub)->yawJitter = (f32)(s32)
     randomGetRange(-0x1e, 0x1e);
-    *(int*)(p + 0x14) = -1;
+    placement->base.mapId = -1;
     objAnim->bankIndex = randomGetRange(0, objAnim->modelInstance->modelCount - 1);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(p + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->yawByte << 8);
     ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
     ((GameObject*)obj)->anim.alpha = 0;
     switch (((GameObject*)obj)->anim.seqId)
