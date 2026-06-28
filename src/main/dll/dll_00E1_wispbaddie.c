@@ -616,7 +616,7 @@ void fn_8014FF58(int unused, char* p)
     ((BaddieState*)p)->unk304 = lbl_803E2734;
     ((BaddieState*)p)->unk320 = 0;
     v1c = lbl_803E2738;
-    *(f32*)(p + 0x314) = v1c;
+    *(f32*)&((BaddieState*)p)->eventFlags = v1c;
     ((BaddieState*)p)->unk321 = 0;
     ((BaddieState*)p)->unk318 = lbl_803E273C;
     ((BaddieState*)p)->unk322 = 0;
