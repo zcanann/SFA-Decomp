@@ -1825,14 +1825,9 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
             else
             {
                 slot *= 0xa4;
-                sk = gSkyState + slot;
-                *x = *(f32*)(sk + 0x90);
-                sk = gSkyState;
-                sk += slot;
-                *y = *(f32*)(sk + 0x94);
-                sk = gSkyState;
-                sk += slot;
-                *z = *(f32*)(sk + 0x98);
+                *x = *(f32*)&gSkyState[slot + 0x90];
+                *y = *(f32*)&gSkyState[slot + 0x94];
+                *z = *(f32*)&gSkyState[slot + 0x98];
             }
         }
     }
