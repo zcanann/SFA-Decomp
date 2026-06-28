@@ -74,14 +74,14 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                     f32* pitchOut, f32* frontBackOut)
 {
     SndSpatialListener* listener;
-    f32 azimuthSum;
-    f32 pitchSum;
-    f32 frontBackSum;
-    f32 zero;
-    f32 one;
-    f32 half;
-    f64 k3;
     f64 k1;
+    f64 k3;
+    f32 half;
+    f32 one;
+    f32 zero;
+    f32 frontBackSum;
+    f32 pitchSum;
+    f32 azimuthSum;
     f32 dx;
     f32 dy;
     f32 dz;
