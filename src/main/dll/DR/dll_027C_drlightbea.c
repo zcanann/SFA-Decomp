@@ -24,19 +24,27 @@ typedef struct DrlightbeaPlacement
     u8 pad22[0x28 - 0x22];
 } DrlightbeaPlacement;
 
+/* Per-object extra state block (drlightbea_getExtraSize == 0xc): holds the
+ * lightningCreate buffer handle at 0 and the active/free bit flags at 4. */
+typedef struct DrLightBeaState
+{
+    void* handle;          /* 0x00: lightningCreate buffer, or NULL */
+    DrLightBeaFlags flags; /* 0x04 */
+} DrLightBeaState;
+
 int drlightbea_getExtraSize(void) { return 0xc; }
 
 int drlightbea_getObjectTypeId(void) { return 0; }
 
 void drlightbea_free(int obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    void* buffer = *(void**)state;
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    void* buffer = state->handle;
 
     if (buffer != NULL)
     {
         mm_free(buffer);
-        *(void**)state = NULL;
+        state->handle = NULL;
     }
 }
 
@@ -46,8 +54,8 @@ void drlightbea_hitDetect(void)
 
 void drlightbea_update(int obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    if (((DrLightBeaFlags*)(state + 4))->bit40)
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    if (state->flags.bit40)
     {
         Obj_FreeObject(obj);
     }
@@ -55,10 +63,10 @@ void drlightbea_update(int obj)
 
 void drlightbea_init(int obj)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    ((DrLightBeaFlags*)(state + 4))->bit80 = 0;
-    *(void**)state = NULL;
-    ((DrLightBeaFlags*)(state + 4))->bit40 = 0;
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
+    state->flags.bit80 = 0;
+    state->handle = NULL;
+    state->flags.bit40 = 0;
 }
 
 void drlightbea_release(void)
@@ -71,47 +79,47 @@ void drlightbea_initialise(void)
 
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    DrLightBeaState* state = *(DrLightBeaState**)&((GameObject*)obj)->extra;
     int setup = *(int*)&((GameObject*)obj)->anim.placementData;
     int player;
     f32 targetXform[6];
     f32 sourcePos[3];
     f32 targetPos[3];
 
-    if (((DrLightBeaFlags*)(state + 4))->bit80)
+    if (state->flags.bit80)
     {
-        *(f32*)(*(int*)state + 0) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(*(int*)state + 4) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(*(int*)state + 8) = ((GameObject*)obj)->anim.localPosZ;
+        *(f32*)((int)state->handle + 0) = ((GameObject*)obj)->anim.localPosX;
+        *(f32*)((int)state->handle + 4) = ((GameObject*)obj)->anim.localPosY;
+        *(f32*)((int)state->handle + 8) = ((GameObject*)obj)->anim.localPosZ;
         if (((DrlightbeaPlacement*)setup)->targetId == 0)
         {
             player = Obj_GetPlayerObject();
-            *(f32*)(*(int*)state + 0xc) = ((GameObject*)player)->anim.localPosX;
-            *(f32*)(*(int*)state + 0x10) = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
-            *(f32*)(*(int*)state + 0x14) = ((GameObject*)player)->anim.localPosZ;
+            *(f32*)((int)state->handle + 0xc) = ((GameObject*)player)->anim.localPosX;
+            *(f32*)((int)state->handle + 0x10) = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
+            *(f32*)((int)state->handle + 0x14) = ((GameObject*)player)->anim.localPosZ;
         }
-        lightningRender(*(void**)state);
-        *(u16*)(*(int*)state + 0x20) += 1;
-        if (*(u16*)(*(int*)state + 0x20) >= *(u16*)(*(int*)state + 0x22))
+        lightningRender(state->handle);
+        *(u16*)((int)state->handle + 0x20) += 1;
+        if (*(u16*)((int)state->handle + 0x20) >= *(u16*)((int)state->handle + 0x22))
         {
-            mm_free(*(void**)state);
-            *(int*)state = 0;
-            ((DrLightBeaFlags*)(state + 4))->bit80 = 0;
+            mm_free(state->handle);
+            state->handle = NULL;
+            state->flags.bit80 = 0;
             if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
             {
-                ((DrLightBeaFlags*)(state + 4))->bit40 = 1;
+                state->flags.bit40 = 1;
             }
         }
     }
     else
     {
-        if (*(void**)state != NULL)
+        if (state->handle != NULL)
         {
-            mm_free(*(void**)state);
-            *(int*)state = 0;
+            mm_free(state->handle);
+            state->handle = NULL;
         }
-        ((DrLightBeaFlags*)(state + 4))->bit80 = GameBit_Get(((DrlightbeaPlacement*)setup)->gameBit);
-        if (((DrLightBeaFlags*)(state + 4))->bit80)
+        state->flags.bit80 = GameBit_Get(((DrlightbeaPlacement*)setup)->gameBit);
+        if (state->flags.bit80)
         {
             Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
             sourcePos[0] = ((GameObject*)obj)->anim.localPosX;
@@ -131,8 +139,8 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
                 targetPos[1] = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
                 targetPos[2] = ((GameObject*)player)->anim.localPosZ;
             }
-            *(void**)state = lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
-                                             randomGetRange(5, 0xf), 0x60, 0);
+            state->handle = lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
+                                            randomGetRange(5, 0xf), 0x60, 0);
         }
     }
 }
