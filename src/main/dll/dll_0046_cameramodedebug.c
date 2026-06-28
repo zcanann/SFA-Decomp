@@ -6,6 +6,8 @@
  * CameraModeStatic symbols at the end are co-linked with this DLL.
  */
 #include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/game_object.h"
 #include "main/dll/CAM/camdebug_state.h"
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
@@ -37,11 +39,10 @@ extern f32 gCamDebugOrbitRadiusInit;
 
 #pragma opt_common_subs off
 #pragma opt_propagation off
-void CameraModeDebug_update(short* camObj)
+void CameraModeDebug_update(CameraObject* cam)
 {
     extern u16 getButtonsJustPressed(int port);
-    u8* cam = (u8*)camObj;
-    u8* state;
+    GameObject* state;
     u16 held;
     f32 move;
     f32 absMove;
@@ -50,7 +51,7 @@ void CameraModeDebug_update(short* camObj)
     f32 radius;
 
     move = lbl_803E1840;
-    state = *(u8**)(cam + 164);
+    state = (GameObject*)cam->anim.targetObj;
     held = getButtonsHeld(0);
     if ((getButtonsJustPressed(0) & 2) != 0)
     {
@@ -85,30 +86,30 @@ void CameraModeDebug_update(short* camObj)
     {
         u16 dx = (u16)((s8)padGetCX(0) * 3);
         u16 dy = (u16)((s8)padGetCY(0) * 3);
-        *(s16*)cam = (s16)(*(s16*)cam - dx);
-        *(s16*)(cam + 2) = (s16)(*(s16*)(cam + 2) + dy);
+        cam->anim.rotX = (s16)(cam->anim.rotX - dx);
+        cam->anim.rotY = (s16)(cam->anim.rotY + dy);
     }
     {
-        f32 cosYaw = mathSinf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
-        f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(*(s16*)cam - 0x4000) / gCamDebugAngleUnitScale);
-        f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
-        f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)*(s16*)(cam + 2) / gCamDebugAngleUnitScale);
+        f32 cosYaw = mathSinf(gCamDebugPi * (f32)(s32)(cam->anim.rotX - 0x4000) / gCamDebugAngleUnitScale);
+        f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(cam->anim.rotX - 0x4000) / gCamDebugAngleUnitScale);
+        f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)cam->anim.rotY / gCamDebugAngleUnitScale);
+        f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)cam->anim.rotY / gCamDebugAngleUnitScale);
         f32 vy, h, px, pz;
         radius = gCamDebugState->orbitRadius;
         vy = radius * cosPitch;
         h = radius * sinPitch;
         px = h * sinYaw;
         pz = h * cosYaw;
-        *(f32*)(cam + 24) = *(f32*)(state + 24) + px;
+        cam->anim.worldPosX = state->anim.worldPosX + px;
         {
-            f32 base28 = gCamDebugOrbitRadiusMin + *(f32*)(state + 28);
-            *(f32*)(cam + 28) = base28 + vy;
+            f32 base28 = gCamDebugOrbitRadiusMin + state->anim.worldPosY;
+            cam->anim.worldPosY = base28 + vy;
         }
-        *(f32*)(cam + 32) = *(f32*)(state + 32) + pz;
+        cam->anim.worldPosZ = state->anim.worldPosZ + pz;
     }
-    Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
-                                   (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
-                                   *(int*)(cam + 48));
+    Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
+                                   &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
+                                   *(int*)&cam->anim.parent);
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
