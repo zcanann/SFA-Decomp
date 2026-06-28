@@ -220,16 +220,16 @@ void SpiritDoorLock_update(int obj)
         orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;
         for (i = 0; i < orbitCount; i++)
         {
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)orbitObjs[i] + 0x18)) > gSpiritDoorLockOrbitMaxDist)
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)orbitObjs[i])->anim.worldPosX) > gSpiritDoorLockOrbitMaxDist)
             {
                 continue;
             }
             ((GameObject*)obj)->anim.rotZ = angle;
             Obj_TransformLocalVectorByWorldMatrix(obj, orbitOffset, worldOffset);
-            PSVECAdd(&((GameObject*)obj)->anim.localPosX, worldOffset, (f32*)((char*)orbitObjs[i] + 0xc));
-            *(s16*)orbitObjs[i] = *(s16*)obj;
-            *(s16*)((char*)orbitObjs[i] + 4) = (s16)(angle + 0x8000);
-            *(f32*)((char*)orbitObjs[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
+            PSVECAdd(&((GameObject*)obj)->anim.localPosX, worldOffset, &((GameObject*)orbitObjs[i])->anim.localPosX);
+            ((GameObject*)orbitObjs[i])->anim.rotX = ((GameObject*)obj)->anim.rotX;
+            ((GameObject*)orbitObjs[i])->anim.rotZ = (s16)(angle + 0x8000);
+            ((GameObject*)orbitObjs[i])->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale;
             angle += angleStep;
         }
         state->spinAngle += gSpiritDoorLockSpinSpeed;
