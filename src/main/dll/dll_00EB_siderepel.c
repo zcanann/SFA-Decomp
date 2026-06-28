@@ -30,6 +30,19 @@
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00F7_dllf7.h"
+#include "main/obj_placement.h"
+
+/*
+ * SideRepel placement record: the common ObjPlacement head followed by
+ * the repel-volume radius at +0x18 (sphere radius >> 3 feeds the hit
+ * sphere). Single-owner to siderepel_init.
+ */
+typedef struct SideRepelPlacement {
+    ObjPlacement head; /* 0x00: common placement head */
+    u16 radius;        /* 0x18: hit-sphere radius source */
+} SideRepelPlacement;
+
+STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
 
 void mikabomb_free(int obj, int mode);
 
@@ -221,7 +234,7 @@ void siderepel_init(int obj, int placement)
     ObjGroup_AddObject(obj, 0x40);
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(obj, (s16)(*(u16*)(placement + 0x18) >> 3));
+        ObjHitbox_SetSphereRadius(obj, (s16)(((SideRepelPlacement*)placement)->radius >> 3));
     }
 }
 
