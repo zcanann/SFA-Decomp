@@ -1683,9 +1683,9 @@ void animatedobj_update(int* obj)
                 }
                 list++;
             }
-            if (cnt <= 1 && match != NULL && *(s16*)((char*)match + 0xb4) != -1)
+            if (cnt <= 1 && match != NULL && ((GameObject*)match)->seqIndex != -1)
             {
-                *(s16*)((char*)match + 0xb4) = -1;
+                ((GameObject*)match)->seqIndex = -1;
                 (*gObjectTriggerInterface)->endSequence(slot);
             }
             ((GameObject*)obj)->seqIndex = -1;
