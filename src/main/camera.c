@@ -184,10 +184,10 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     {
         ancestors[ancestorCount] = current;
         ancestorCount++;
-        savedScale = *(f32*)(current + 0x08);
-        if ((*(u16*)(current + 0xB0) & 8) == 0)
+        savedScale = ((GameObject*)current)->anim.rootMotionScale;
+        if ((((GameObject*)current)->objectFlags & 8) == 0)
         {
-            *(f32*)(current + 0x08) = lbl_803DE5F0;
+            ((GameObject*)current)->anim.rootMotionScale = lbl_803DE5F0;
         }
 
         if (hasParent == 0)
@@ -200,8 +200,8 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
             mtx44_multSafe(yawMatrix, (f32*)(base + 3904), yawMatrix);
         }
 
-        *(f32*)(current + 0x08) = savedScale;
-        current = *(u32*)(current + 0x30);
+        ((GameObject*)current)->anim.rootMotionScale = savedScale;
+        current = (u32)((GameObject*)current)->anim.parent;
         hasParent = 1;
     }
 
@@ -209,20 +209,20 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     {
         ancestorCount--;
         current = ancestors[ancestorCount];
-        inverseTransform.x = -*(f32*)(current + 0x0C);
-        inverseTransform.y = -*(f32*)(current + 0x10);
-        inverseTransform.z = -*(f32*)(current + 0x14);
-        if ((*(u16*)(current + 0xB0) & 8) == 0)
+        inverseTransform.x = -((GameObject*)current)->anim.localPosX;
+        inverseTransform.y = -((GameObject*)current)->anim.localPosY;
+        inverseTransform.z = -((GameObject*)current)->anim.localPosZ;
+        if ((((GameObject*)current)->objectFlags & 8) == 0)
         {
             inverseTransform.scale = lbl_803DE5F0;
         }
         else
         {
-            inverseTransform.scale = lbl_803DE5F0 / *(f32*)(current + 0x08);
+            inverseTransform.scale = lbl_803DE5F0 / ((GameObject*)current)->anim.rootMotionScale;
         }
-        inverseTransform.rotX = -*(s16*)(current + 0x00);
-        inverseTransform.rotY = -*(s16*)(current + 0x02);
-        inverseTransform.rotZ = -*(s16*)(current + 0x04);
+        inverseTransform.rotX = -((GameObject*)current)->anim.rotX;
+        inverseTransform.rotY = -((GameObject*)current)->anim.rotY;
+        inverseTransform.rotZ = -((GameObject*)current)->anim.rotZ;
         mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
     }
 }
