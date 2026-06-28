@@ -2278,7 +2278,7 @@ void mapLoadUnloadObjects(int flag)
                 int j2;
                 for (j2 = 0; j2 < count; j2++)
                 {
-                    if (*w == *q)
+                    if (*w == id)
                     {
                         dup = 1;
                         break;
