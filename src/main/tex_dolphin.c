@@ -546,10 +546,14 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
 
     base = lbl_8037E0C0;
     pos = stream[4];
-    word = ((u8*)*stream)[pos >> 3];
-    bptr = *stream + (pos >> 3);
-    word = word | (u32)(*(u8*)(bptr + 1) << 8);
-    word = word | (u32)(*(u8*)(bptr + 2) << 16);
+    {
+        int off = pos >> 3;
+        bptr = *stream;
+        word = *(u8*)(bptr + off);
+        bptr += off;
+        word = word | (u32)(*(u8*)(bptr + 1) << 8);
+        word = word | (u32)(*(u8*)(bptr + 2) << 16);
+    }
     stream[4] = pos + 8;
     ptr = *(int*)(block + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
     if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 2) != 0))
