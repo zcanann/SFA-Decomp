@@ -66,4 +66,42 @@ STATIC_ASSERT(offsetof(CollectibleState, spinSpeed) == 0x30);
 STATIC_ASSERT(offsetof(CollectibleState, pathState) == 0x50);
 STATIC_ASSERT(sizeof(CollectibleState) == 0x2B8);
 
+/*
+ * CollectibleSetup - the per-instance placement/setup record at obj+0x4C
+ * (ObjAnimComponent.placementData) for the collectible family. The first
+ * 0x18 bytes are the common ObjPlacement head (position/color/mapId); the
+ * class-specific tail from 0x18 on configures the pickup: per-axis initial
+ * rotation bytes, the hide / visibility / collect / counter game bits, the
+ * model bank index, and an optional RGB tint. Read field-by-field in
+ * collectible_init / collectible_applyPickup.
+ */
+typedef struct CollectibleSetup {
+    u8 pad0[0x19 - 0x0];
+    u8 unkC;            /* 0x19 -> CollectibleState.unkC */
+    u8 unkD;            /* 0x1A -> CollectibleState.unkD */
+    u8 rotXByte;        /* 0x1B initial anim.rotX (<<8) */
+    s16 hideGameBit;    /* 0x1C bit set on collect so the item stays gone */
+    s16 collectGameBit; /* 0x1E bit set when the item is picked up (-1 = none) */
+    u8 pad20[0x22 - 0x20];
+    u8 rotYByte;        /* 0x22 initial anim.rotY (<<8) */
+    u8 rotZByte;        /* 0x23 initial anim.rotZ (<<8) */
+    s16 visibilityGameBit; /* 0x24 item is active only while this bit is set */
+    s8 modelIndex;      /* 0x26 model bank index */
+    u8 useColor;        /* 0x27 nonzero applies the RGB tint below */
+    u8 colorR;          /* 0x28 */
+    u8 colorG;          /* 0x29 */
+    u8 colorB;          /* 0x2A */
+    u8 pad2B[0x2C - 0x2B];
+    s16 counterGameBit; /* 0x2C bit incremented on collect (>0 = active) */
+} CollectibleSetup;
+
+STATIC_ASSERT(offsetof(CollectibleSetup, unkC) == 0x19);
+STATIC_ASSERT(offsetof(CollectibleSetup, hideGameBit) == 0x1C);
+STATIC_ASSERT(offsetof(CollectibleSetup, collectGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(CollectibleSetup, rotYByte) == 0x22);
+STATIC_ASSERT(offsetof(CollectibleSetup, visibilityGameBit) == 0x24);
+STATIC_ASSERT(offsetof(CollectibleSetup, modelIndex) == 0x26);
+STATIC_ASSERT(offsetof(CollectibleSetup, colorR) == 0x28);
+STATIC_ASSERT(offsetof(CollectibleSetup, counterGameBit) == 0x2C);
+
 #endif /* MAIN_DLL_COLLECTIBLE_STATE_H_ */

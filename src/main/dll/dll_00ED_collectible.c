@@ -611,13 +611,13 @@ void collectible_applyPickup(int* obj)
         GameBit_Set(((CollectibleState*)state)->hideGameBit, 1);
         saveGame_unsaveObjectPos(obj);
     }
-    if (*(s16*)(params + 0x1e) != -1)
+    if (((CollectibleSetup*)params)->collectGameBit != -1)
     {
-        GameBit_Set(*(s16*)(params + 0x1e), 1);
+        GameBit_Set(((CollectibleSetup*)params)->collectGameBit, 1);
     }
-    if (*(s16*)(params + 0x2c) > 0)
+    if (((CollectibleSetup*)params)->counterGameBit > 0)
     {
-        gameBitIncrement(*(s16*)(params + 0x2c));
+        gameBitIncrement(((CollectibleSetup*)params)->counterGameBit);
     }
     switch (*(s16*)(setup2 + 2))
     {
@@ -1149,37 +1149,37 @@ void collectible_init(int obj, int setup)
     pathByte = lbl_803E3444;
     ObjGroup_AddObject(obj, 4);
     ObjMsg_AllocQueue(obj, 2);
-    ((GameObject*)obj)->anim.rotX = (s16)((u8) * (u8*)(setup + 0x1b) << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((u8) * (u8*)(setup + 0x22) << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)((u8) * (u8*)(setup + 0x23) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((u8)((CollectibleSetup*)setup)->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)((u8)((CollectibleSetup*)setup)->rotYByte << 8);
+    ((GameObject*)obj)->anim.rotZ = (s16)((u8)((CollectibleSetup*)setup)->rotZByte << 8);
     setupObj = (int)objAnim->modelInstance;
     ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(setupObj + 4);
     ((GameObject*)obj)->animEventCallback = collectible_SeqFn;
-    setupModelIndex = *(s8*)(setup + 0x26);
+    setupModelIndex = ((CollectibleSetup*)setup)->modelIndex;
     objAnim->bankIndex = setupModelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
-    ((CollectibleState*)state)->unkC = *(u8*)(setup + 0x19);
-    ((CollectibleState*)state)->unkD = *(u8*)(setup + 0x1a);
+    ((CollectibleState*)state)->unkC = ((CollectibleSetup*)setup)->unkC;
+    ((CollectibleState*)state)->unkD = ((CollectibleSetup*)setup)->unkD;
     ((CollectibleState*)state)->unkF = 0;
     ((CollectibleState*)state)->hitRegionId = -2;
     ((CollectibleState*)state)->bounceTimer = 0;
-    ((CollectibleState*)state)->visibilityGameBit = *(s16*)(setup + 0x24);
+    ((CollectibleState*)state)->visibilityGameBit = ((CollectibleSetup*)setup)->visibilityGameBit;
     ((CollectibleState*)state)->mapId = ((ObjPlacement*)setup)->mapId;
     ((CollectibleState*)state)->basePosX = ((GameObject*)obj)->anim.localPosX;
     ((CollectibleState*)state)->basePosY = ((GameObject*)obj)->anim.localPosY;
     ((CollectibleState*)state)->basePosZ = ((GameObject*)obj)->anim.localPosZ;
-    ((CollectibleState*)state)->useColor = *(u8*)(setup + 0x27);
+    ((CollectibleState*)state)->useColor = ((CollectibleSetup*)setup)->useColor;
     ((CollectibleState*)state)->delayedMsgTimer = 0;
     if (((CollectibleState*)state)->visibilityGameBit != -1)
     {
         ((CollectibleState*)state)->visibilityBitClear = (u8)(
             (u32)__cntlzw(GameBit_Get(((CollectibleState*)state)->visibilityGameBit)) >> 5);
     }
-    ((CollectibleState*)state)->hideGameBit = *(s16*)(setup + 0x1c);
+    ((CollectibleState*)state)->hideGameBit = ((CollectibleSetup*)setup)->hideGameBit;
     if (((CollectibleState*)state)->hideGameBit != -1)
     {
         *(u32*)&((GameObject*)obj)->unkF4 = GameBit_Get(((CollectibleState*)state)->hideGameBit);
@@ -1207,9 +1207,9 @@ void collectible_init(int obj, int setup)
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0) &&
             (((CollectibleState*)state)->useColor != 0))
         {
-            ((CollectibleState*)state)->colorR = *(u8*)(setup + 0x28);
-            ((CollectibleState*)state)->colorG = *(u8*)(setup + 0x29);
-            ((CollectibleState*)state)->colorB = *(u8*)(setup + 0x2a);
+            ((CollectibleState*)state)->colorR = ((CollectibleSetup*)setup)->colorR;
+            ((CollectibleState*)state)->colorG = ((CollectibleSetup*)setup)->colorG;
+            ((CollectibleState*)state)->colorB = ((CollectibleSetup*)setup)->colorB;
         }
         switch (((GameObject*)obj)->anim.seqId)
         {
