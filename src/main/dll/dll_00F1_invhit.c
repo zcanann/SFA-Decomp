@@ -161,7 +161,7 @@ void invhit_init(int* obj, u8* def)
             if (anchorObj != NULL)
             {
                 state->anchorX = ((GameObject*)anchorObj)->anim.localPosX;
-                state->anchorZ = *(f32*)(*(char**)&((InvhitObjectDef*)def)->anchorObj + 0x14);
+                state->anchorZ = ((GameObject*)(*(char**)&((InvhitObjectDef*)def)->anchorObj))->anim.localPosZ;
             }
         }
         break;
