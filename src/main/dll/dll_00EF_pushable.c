@@ -86,6 +86,32 @@ extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
+typedef struct PushablePlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 gameBit;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    u8 unk1F;
+    u8 pad20[0x23 - 0x20];
+    s8 unk23;
+    u8 pad24[0x28 - 0x24];
+} PushablePlacement;
+
+typedef struct PushableObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 gameBit;
+    s16 unk1A;
+    void* unk1C;
+    u16 scaleRaw;
+    u8 rotXByte;
+    u8 unk23;
+    u8 pad24[0x28 - 0x24];
+} PushableObjectDef;
+
 void fn_80174A80(int obj, PushableState* ext)
 {
     int def;
@@ -105,8 +131,8 @@ void fn_80174A80(int obj, PushableState* ext)
     randomGetRange(0x28, 0x46);
     f = lbl_803E3528;
     ext->blinkPhase = f;
-    ext->gameBit = *(short*)(def + 0x18);
-    ext->gameBit2 = *(short*)(def + 0x1a);
+    ext->gameBit = ((PushablePlacement*)def)->gameBit;
+    ext->gameBit2 = ((PushablePlacement*)def)->unk1A;
     ext->unk_F0 = f;
     ext->nearestObj = NULL;
     GameBit_Set(ext->gameBit, 0);
@@ -229,7 +255,7 @@ void fn_80174BFC(int obj, int ext)
                     {
                         int gamebit;
                         ((PushableState*)ext)->flags |= 1;
-                        gamebit = *(s16*)(def + 0x18);
+                        gamebit = ((PushablePlacement*)def)->gameBit;
                         if (gamebit > -1)
                         {
                             switch (((GameObject*)obj)->anim.seqId)
@@ -246,7 +272,7 @@ void fn_80174BFC(int obj, int ext)
                                     {
                                         tex->textureId = 0x100;
                                     }
-                                    GameBit_Set(*(s16*)(def + 0x18), 1);
+                                    GameBit_Set(((PushablePlacement*)def)->gameBit, 1);
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     ((PushableState*)ext)->flags |= 0x80;
                                 }
@@ -263,7 +289,7 @@ void fn_80174BFC(int obj, int ext)
                                 break;
                             default:
                                 {
-                                    s8 t = *(s8*)(def + 0x23);
+                                    s8 t = ((PushablePlacement*)def)->unk23;
                                     if (t > -1 && t == hit.id)
                                     {
                                         GameBit_Set(gamebit, 1);
@@ -478,32 +504,6 @@ int pushable_func0B(int obj, int other)
     return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
         *(f32*)(state + 0xc);
 }
-
-typedef struct PushablePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    u8 unk1F;
-    u8 pad20[0x23 - 0x20];
-    s8 unk23;
-    u8 pad24[0x28 - 0x24];
-} PushablePlacement;
-
-typedef struct PushableObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    s16 unk1A;
-    void* unk1C;
-    u16 scaleRaw;
-    u8 rotXByte;
-    u8 unk23;
-    u8 pad24[0x28 - 0x24];
-} PushableObjectDef;
 
 #pragma scheduling on
 #pragma peephole on
