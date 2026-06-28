@@ -3615,10 +3615,10 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     f32 dir2[3];
     f32 dir1[3];
     f32 axis[3];
-    f32* m;
+    int nextIdx;
     int i;
     int idx;
-    int nextIdx;
+    f32* m;
     int prevOff;
     f32 dot;
     f32 cap;
