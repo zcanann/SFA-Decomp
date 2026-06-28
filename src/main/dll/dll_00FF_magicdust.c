@@ -306,6 +306,14 @@ LAB_80173f80:
     return;
 }
 
+typedef struct MagicdustObjectDef
+{
+    u8 pad0[0x26 - 0x0];
+    u8 bankIndex;
+    u8 pad27[0x2e - 0x27];
+    s16 spawnMode;
+} MagicdustObjectDef;
+
 void magicdust_init(int obj, int placement)
 {
     extern u32 ObjHits_DisableObject(); /* #57 */
@@ -342,7 +350,7 @@ void magicdust_init(int obj, int placement)
     ((GameObject*)obj)->anim.velocityZ = spd * mathCosf(ang);
     ((GameObject*)obj)->anim.velocityY = (f32)(int)
     randomGetRange(0x28, 0x32) / lbl_803E34F0;
-    mode = *(short*)(placement + 0x2e);
+    mode = ((MagicdustObjectDef*)placement)->spawnMode;
     if (mode == 1)
     {
         ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 1;
@@ -372,7 +380,7 @@ void magicdust_init(int obj, int placement)
         )
         ;
     }
-    ((ObjAnimComponent*)obj)->bankIndex = *(u8*)(placement + 0x26);
+    ((ObjAnimComponent*)obj)->bankIndex = ((MagicdustObjectDef*)placement)->bankIndex;
     if (((ObjAnimComponent*)obj)->bankIndex >=
         ((ObjAnimComponent*)obj)->modelInstance->modelCount)
     {
