@@ -262,7 +262,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
     player = state->player;
     angle = (u16)getAngle(((GameObject*)obj)->anim.worldPosX - player->anim.worldPosX,
                           ((GameObject*)obj)->anim.worldPosZ - player->anim.worldPosZ);
-    angleDelta = angle - ((int)*(s16*)obj & 0xffff);
+    angleDelta = angle - ((int)((GameObject*)obj)->anim.rotX & 0xffff);
     if (angleDelta > 0x8000)
     {
         angleDelta -= 0xffff;
@@ -272,7 +272,7 @@ void fn_8014E1DC(int obj, HagabonState* state)
         angleDelta += 0xffff;
     }
 
-    *(s16*)obj += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+    ((GameObject*)obj)->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
 void hagabon_hitDetect(int obj)
@@ -301,9 +301,10 @@ void hagabon_free(int obj)
 void hagabon_init(int obj, int data, int skip_alloc)
 {
     HagabonState* state = ((GameObject*)obj)->extra;
-    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E266C;
+    HagabonPlacement* placement = (HagabonPlacement*)data;
+    state->curveStep = (f32)(s32)placement->curveStepRaw / lbl_803E266C;
     state->animSpeed = lbl_803E2670;
-    state->chaseRadius = lbl_803E2674 * (f32)(s32) * (s8*)(data + 0x19);
+    state->chaseRadius = lbl_803E2674 * (f32)(s32)placement->chaseRadiusScale;
     if (skip_alloc == 0)
     {
         *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
@@ -317,9 +318,9 @@ void hagabon_init(int obj, int data, int skip_alloc)
             state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;
         }
     }
-    if (*(s16*)(data + 0x20) != -1)
+    if (placement->armGameBit != -1)
     {
-        if (GameBit_Get(*(s16*)(data + 0x20)) != 0)
+        if (GameBit_Get(placement->armGameBit) != 0)
         {
             ((GameObject*)obj)->unkF4 = 1;
         }
