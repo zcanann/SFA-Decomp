@@ -834,7 +834,7 @@ void linkDrawFn_801302c0(void)
     }
     if (tex != NULL)
     {
-        w = *(u16*)((char*)tex + 12);
+        w = ((Texture*)tex)->height;
         selLeft = sel->field0C;
     }
     else
@@ -865,7 +865,7 @@ void linkDrawFn_801302c0(void)
             }
             if (tex != NULL)
             {
-                w = *(u16*)((char*)tex + 12);
+                w = ((Texture*)tex)->height;
                 itemLeft = p->field0C;
             }
             else
@@ -919,7 +919,7 @@ void linkDrawFn_80130484(void)
         }
         if (tex != NULL)
         {
-            w = *(u16*)((char*)tex + 12);
+            w = ((Texture*)tex)->height;
             x = p->field0C;
         }
         else
