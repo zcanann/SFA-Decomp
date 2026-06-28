@@ -2769,13 +2769,13 @@ extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int m
 
 void* textureLoad(int texId, u8 flag)
 {
-    int orig;
-    int* p;
+    u8* prev;
+    int slot;
     LoadedTextureEntry* entry;
     u8* walk;
     u8* tex;
     u8* first;
-    u8* prev;
+    int orig;
     u8* buf;
     int restore;
     int disabled;
@@ -2791,7 +2791,7 @@ void* textureLoad(int texId, u8 flag)
     u32 size;
     int packed;
     int base19;
-    int slot;
+    int* p;
     int sizeOut;
     int frameOut;
 
