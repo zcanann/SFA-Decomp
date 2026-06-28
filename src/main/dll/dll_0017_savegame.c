@@ -31,6 +31,12 @@
 #include "main/dll/dll_0016_screentransition.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
+typedef struct SaveGameTimeEntry
+{
+    int objId;
+    f32 time;
+} SaveGameTimeEntry;
+
 typedef struct SaveGameData
 {
     u8 pad0[0x20 - 0x0];
@@ -41,8 +47,15 @@ typedef struct SaveGameData
     f32 playTime;
     u8 pad564[0x6A4 - 0x564];
     s16 camActionNo;
-    u8 pad6A6[0xF70 - 0x6A6];
+    u8 pad6A6[0x6EC - 0x6A6];
+    s16 timeEntryCount; /* 0x6ec: number of valid entries in timeEntries */
+    u8 pad6EE[0x6F0 - 0x6EE];
+    SaveGameTimeEntry timeEntries[(0xF70 - 0x6F0) / 8]; /* 0x6f0: time-attack record table */
 } SaveGameData;
+
+STATIC_ASSERT(offsetof(SaveGameData, timeEntryCount) == 0x6EC);
+STATIC_ASSERT(offsetof(SaveGameData, timeEntries) == 0x6F0);
+STATIC_ASSERT(sizeof(SaveGameData) == 0xF70);
 
 extern u32 FUN_80006768();
 extern u32 FUN_8000676c();
@@ -134,12 +147,6 @@ typedef struct SaveGameImage
     u8 header[SAVEGAME_OBJECT_POSITION_OFFSET];
     SaveGameObjectPosition positions[SAVEGAME_OBJECT_POSITION_COUNT];
 } SaveGameImage;
-
-typedef struct SaveGameTimeEntry
-{
-    int objId;
-    f32 time;
-} SaveGameTimeEntry;
 
 typedef struct SaveGameRomListPosition
 {
@@ -943,13 +950,13 @@ void SaveGame_updateTimes(void)
     base = gSaveGameData;
     ((SaveGameData*)base)->playTime = ((SaveGameData*)base)->playTime + timeDelta;
     p = base;
-    while (i < *(s16*)(base + 0x6ec))
+    while (i < ((SaveGameData*)base)->timeEntryCount)
     {
         if (((SaveGameData*)base)->playTime > *(f32*)(p + 0x6f4))
         {
-            cnt = (*(s16*)(base + 0x6ec) -= 1);
+            cnt = (((SaveGameData*)base)->timeEntryCount -= 1);
             *(int*)(p + 0x6f0) = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
-            *(f32*)(p + 0x6f4) = ((SaveGameTimeEntry*)(base + 0x6f0))[*(s16*)(base + 0x6ec)].time;
+            *(f32*)(p + 0x6f4) = ((SaveGameTimeEntry*)(base + 0x6f0))[((SaveGameData*)base)->timeEntryCount].time;
         }
         else
         {
@@ -969,7 +976,7 @@ f32 SaveGame_gplayGetTime(int id)
     if (id == -1) return lbl_803E06D0;
     i = 0;
     p = gSaveGameData;
-    count = *(s16*)(p + 0x6ec);
+    count = ((SaveGameData*)p)->timeEntryCount;
     for (; i < count; i++)
     {
         if (*(int*)(p + 0x6f0) == id)
@@ -989,7 +996,7 @@ int SaveGame_gplayShouldNotSaveTime(int id)
     int i;
     if (id == -1) return 1;
     p = gSaveGameData;
-    count = *(s16*)(p + 0x6ec);
+    count = ((SaveGameData*)p)->timeEntryCount;
     for (i = 0; i < count; i++)
     {
         if (*(int*)(p + 0x6f0) == id) return 0;
@@ -1007,7 +1014,7 @@ void SaveGame_gplayAddTime(int id, f32 time)
     f32 total;
     if (id == -1) return;
     base = gSaveGameData;
-    count = *(s16*)(base + 0x6ec);
+    count = ((SaveGameData*)base)->timeEntryCount;
     if (count == 0x100) return;
     total = lbl_803E06D4 * time;
     total += ((SaveGameData*)base)->playTime;
@@ -1020,7 +1027,7 @@ void SaveGame_gplayAddTime(int id, f32 time)
     }
     if (i == count)
     {
-        (*(s16*)(base + 0x6ec))++;
+        ((SaveGameData*)base)->timeEntryCount++;
     }
     base = gSaveGameData;
     p = base;
