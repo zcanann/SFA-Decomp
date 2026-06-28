@@ -2159,6 +2159,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 {
     u32 colorB;
     u32 colorA;
+    u16 h7;
     int c6y1;
     int c6y0;
     int c6x1;
@@ -2166,7 +2167,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     int c3y1;
     int c3y0;
     int c3x1;
-    int c3x0;
     s16 savedY;
     s16 savedX;
     u16 f;
@@ -2178,7 +2178,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     s16 x7;
     s16 y7;
     u16 w7;
-    u16 h7;
+    int c3x0;
     s16 y2;
     int w2;
     int xw;
