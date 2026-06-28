@@ -426,9 +426,9 @@ void dll_199_init(int obj, int def)
         *state = ((Dll199ObjectDef*)def)->initStateOverride >> 8;
     }
     ((Dll199State*)state)->phase = 0;
-    *(u8*)(state + 8) = 0;
+    ((Dll199State*)state)->unk10 = 0;
     state[1] = 0;
-    *(u8*)(state + 7) = 0;
+    ((Dll199State*)state)->unlockCount = 0;
     ((GameObject*)obj)->animEventCallback = dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
@@ -443,7 +443,7 @@ void dll_199_init(int obj, int def)
     (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(2, 0x2b, 0x50, 1, 0);
     state[3] = 0;
     state[5] = 0;
-    *(u8*)(state + 9) = 0;
+    ((Dll199State*)state)->triggered = 0;
     res = Resource_Acquire(0x6a, 1);
     id = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
     state[6] = id;
