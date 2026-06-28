@@ -346,7 +346,8 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
                                      u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                      u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
-    p = prioOffset + prio;
+    p = prio;
+    p += prioOffset;
     if ((u8)p > 0xFF)
     {
         p = 0xFF;
