@@ -7301,13 +7301,13 @@ int initLoadFiles(void)
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
     int i;
     int* rom;
-    u32* ptrs;
     s16* owners;
+    u8* himem;
     int* ids;
     char** names;
     int* sizes;
     u8* flags;
-    u8* himem;
+    u32* ptrs;
     if (lbl_803DCC90 == 0)
     {
         lbl_803DCC90 = 1;
