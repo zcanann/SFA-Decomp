@@ -427,8 +427,9 @@ void fn_800D8414(int* obj, int* ctx)
     }
     ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
     gPlayerMoveTargetYaw = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
-    gPlayerMoveTargetYaw = (s16)(gPlayerMoveTargetYaw - ((BaddieState*)ctx)->cameraYaw);
-    diff = gPlayerMoveTargetYaw - (u16)((GameObject*)obj)->anim.rotX;
+    gPlayerMoveTargetYaw -= ((BaddieState*)ctx)->cameraYaw;
+    diff = (s16)gPlayerMoveTargetYaw;
+    diff -= (u16)((GameObject*)obj)->anim.rotX;
     if (diff > 0x8000)
     {
         diff -= 0xffff;
