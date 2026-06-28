@@ -2760,8 +2760,8 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
         else
         {
             f32* m = *(f32**)((char*)d + 0xc);
-            f32* p6start = (f32*)p6;
-            int totalStart = total;
+            f32* p6start;
+            int totalStart;
             f32* outA;
 
             lm[0] = m[0];
@@ -2776,6 +2776,8 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
             lm[9] = m[6];
             lm[10] = m[10];
             lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
+            p6start = (f32*)p6;
+            totalStart = total;
             j = (s16) * (s16*)((char*)d + 4);
             outA = (f32*)((char*)p5 + outOff);
             while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
