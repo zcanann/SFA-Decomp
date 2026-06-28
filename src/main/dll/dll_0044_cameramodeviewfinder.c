@@ -101,7 +101,7 @@ void firstPersonDoControls(s16* obj)
     camObj = *(short**)(obj + 0x52);
     stickX = padGetStickX(0);
     stickY = padGetStickY(0);
-    t = (lbl_803E17E0 - *(f32*)(obj + 0x5a)) / lbl_803E17E4;
+    t = (lbl_803E17E0 - ((CameraObject*)obj)->fov) / lbl_803E17E4;
     zoom = (t < lbl_803E17C4) ? lbl_803E17C4 : ((t > lbl_803E17E8) ? lbl_803E17E8 : t);
     spin = stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);
     spin = interpolate(spin - lbl_803DD548->yawSpeed, lbl_803E17F4, timeDelta);
@@ -146,7 +146,7 @@ void firstPersonDoControls(s16* obj)
     ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->camPosZ;
     if (lbl_803DD548->flags.zoomHudEnabled)
     {
-        zoom2 = *(f32*)(obj + 0x5a);
+        zoom2 = ((CameraObject*)obj)->fov;
         stickX = padGetCY(0);
         t = (f32) - stickX;
         t = lbl_803E1810 * t;
@@ -157,20 +157,20 @@ void firstPersonDoControls(s16* obj)
                         : ((zoom2 > lbl_803E17E0) ? lbl_803E17E0 : zoom2);
         if (lbl_803DD548->flags.sfxEnabled)
         {
-            if ((fovTarget == *(f32*)(obj + 0x5a)) &&
+            if ((fovTarget == ((CameraObject*)obj)->fov) &&
                 (lbl_803DD548->flags.zoomSfxPlaying))
             {
                 Sfx_StopFromObject(0, 0x3d8);
                 lbl_803DD548->flags.zoomSfxPlaying = 0;
             }
-            if ((fovTarget != *(f32*)(obj + 0x5a)) &&
+            if ((fovTarget != ((CameraObject*)obj)->fov) &&
                 (!lbl_803DD548->flags.zoomSfxPlaying))
             {
                 Sfx_PlayFromObject(0, 0x3d8);
                 lbl_803DD548->flags.zoomSfxPlaying = 1;
             }
         }
-        *(f32*)(obj + 0x5a) = fovTarget;
+        ((CameraObject*)obj)->fov = fovTarget;
     }
 }
 
@@ -339,7 +339,7 @@ void CameraModeViewfinder_update(s16* obj)
             lbl_803DD548->mode = VIEWFINDER_MODE_ACTIVE;
         }
         *obj = lbl_803DD548->viewCurve.sample[0];
-        *(u8*)(obj + 0x9f) = 1;
+        ((CameraObject*)obj)->unk13E = 1;
         break;
     case VIEWFINDER_MODE_ACTIVE:
         if (lbl_803DD548->flags.zoomHudEnabled)
@@ -354,7 +354,7 @@ void CameraModeViewfinder_update(s16* obj)
             Rcp_SetViewFinderHudEnabled(0);
             lbl_803DD548->mode = VIEWFINDER_MODE_EXIT_BLEND;
         }
-        *(u8*)(obj + 0x9f) = 0;
+        ((CameraObject*)obj)->unk13E = 0;
         break;
     case VIEWFINDER_MODE_EXIT_BLEND:
         angleDiff = Curve_AdvanceAlongPath(&lbl_803DD548->viewCurve, lbl_803E1820);
@@ -378,7 +378,7 @@ void CameraModeViewfinder_update(s16* obj)
                 Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? 0x3f5 : 0x3f3);
             }
         }
-        *(u8*)(obj + 0x9f) = 1;
+        ((CameraObject*)obj)->unk13E = 1;
         break;
     case VIEWFINDER_MODE_FADE_BACK:
         ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
@@ -431,7 +431,7 @@ void CameraModeViewfinder_update(s16* obj)
         }
         else
         {
-            hitY = ((GameObject*)obj)->anim.worldPosY - (*(f32*)(camObj + 0x1c) + lbl_803E17C0);
+            hitY = ((GameObject*)obj)->anim.worldPosY - (((GameObject*)camObj)->anim.worldPosY + lbl_803E17C0);
             angleDiff = (getAngle() & 0xffff) - (obj[1] & 0xffffU);
             if (angleDiff > 0x8000)
             {
@@ -464,7 +464,7 @@ void CameraModeViewfinder_update(s16* obj)
                 }
             }
         }
-        *(u8*)(obj + 0x9f) = 1;
+        ((CameraObject*)obj)->unk13E = 1;
         break;
     case VIEWFINDER_MODE_IDLE:
         break;
@@ -589,7 +589,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     lbl_803DD548->pitchCurve.end = zero;
     lbl_803DD548->pitchCurve.startTangent = zero;
     lbl_803DD548->pitchCurve.endTangent = zero;
-    *(u8*)(obj + 0x9f) = 1;
+    ((CameraObject*)obj)->unk13E = 1;
     if (GameBit_Get(0xc64) != 0)
     {
         lbl_803DD548->flags.zoomHudEnabled = 1;
