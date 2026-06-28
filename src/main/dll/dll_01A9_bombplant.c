@@ -66,7 +66,7 @@ void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
 
 void fn_801D2B70(int* obj, int unused, int* p3)
 {
-    int* p4 = *(int**)&((GameObject*)obj)->anim.placementData;
+    BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
     void* trickyObj = getTrickyObject();
     s16 gbId;
     int i;
@@ -80,9 +80,9 @@ void fn_801D2B70(int* obj, int unused, int* p3)
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | 0x40);
     }
     spawnExplosion((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
-    *(u8*)((char*)p3 + 0x14) = 1;
-    *(u8*)((char*)p3 + 0x15) = (u8)(*(u8*)((char*)p3 + 0x15) | 2);
-    gbId = *(s16*)((char*)p4 + 0x1c);
+    ((BombPlantState*)p3)->stateIndex = 1;
+    ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | 2);
+    gbId = p4->gameBit;
     if (gbId != -1)
     {
         GameBit_Set(gbId, 0);
@@ -107,13 +107,30 @@ typedef struct
     f32 v[3];
 } MushSpawnBuild;
 
+/* Spore spawn descriptor (Obj_AllocObjectSetup 0x24): ObjPlacement head
+ * extended with the spore's seeded yaw / parent-rotX slots. */
+typedef struct
+{
+    u8 unk00[2];
+    s16 unk02;
+    u8 color[4];   /* 0x04 */
+    f32 posX;      /* 0x08 */
+    f32 posY;      /* 0x0c */
+    f32 posZ;      /* 0x10 */
+    s32 mapId;     /* 0x14 */
+    u8 pad18[0x1a - 0x18];
+    s16 spawnYaw;  /* 0x1a */
+    s16 rotXSeed;  /* 0x1c */
+    u8 pad1e[0x24 - 0x1e];
+} BombplantSporeSpawn;
+
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
 #pragma opt_common_subs off
 void fn_801D29E4(int* obj, int* p2)
 {
-    int* spore;
-    int* base = *(int**)&((GameObject*)obj)->anim.placementData;
+    BombplantSporeSpawn* spore;
+    BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
 
     if (Obj_IsLoadingLocked())
     {
@@ -134,14 +151,14 @@ void fn_801D29E4(int* obj, int* p2)
         bd.v[0] = gBombPlantSporeOffsetScale * tx;
         bd.v[1] = gBombPlantSporeOffsetScale * ty;
         bd.v[2] = gBombPlantSporeOffsetScale * tz;
-        *(f32*)((char*)spore + 0x8) = ((GameObject*)obj)->anim.localPosX + bd.v[0];
-        *(f32*)((char*)spore + 0xc) = ((GameObject*)obj)->anim.localPosY + bd.v[1];
-        *(f32*)&((ObjDef*)spore)->jointData = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
-        *(u8*)((char*)spore + 0x5) = 1;
-        *(u8*)((char*)spore + 0x4) = 2;
-        *(s16*)((char*)spore + 0x1a) = (s16)((s8) * (s8*)((char*)base + 0x1e) << 8);
-        *(s16*)((char*)spore + 0x1c) = ((GameObject*)obj)->anim.rotX;
-        Obj_SetupObject(spore, 5, -1, -1, 0);
+        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.v[0];
+        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.v[1];
+        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
+        spore->color[1] = 1;
+        spore->color[0] = 2;
+        spore->spawnYaw = (s16)((s32)base->unk1E << 8);
+        spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
+        Obj_SetupObject((int*)spore, 5, -1, -1, 0);
     }
 }
 #pragma opt_common_subs reset
@@ -209,7 +226,7 @@ void bombplant_init(void* obj, void* param, int flag)
     s16 bitId;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8) * ((u8*)param + 0x1f) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->animEventCallback = bombplant_SeqFn;
     ((BombPlantState*)state)->growTargetScale = ((GameObject*)obj)->anim.rootMotionScale;
