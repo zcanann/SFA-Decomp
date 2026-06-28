@@ -140,7 +140,7 @@ typedef struct PlayerState {
     f32 unk52C;
     u8 pad530[0x534 - 0x530];
     f32 unk534;
-    u8 pad538[0x544 - 0x538];
+    f32 unk538[3];
     s16 unk544;
     s8 unk546;
     u8 unk547;

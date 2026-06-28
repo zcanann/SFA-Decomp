@@ -15200,11 +15200,14 @@ int fn_802A2918(int obj, int state, f32 fv)
             inner->staffActionRequest = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
-        ((PlayerState*)state)->baddie.animSpeedA = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedB = lbl_803E7EA4;
-        *(s16*)((char*)state + 0x278) = 0xe;
-        inner->stateHandler = (int)fn_8029FFD0;
-        vb.sp1c = lbl_803E7EA4;
+        {
+            f32 z = lbl_803E7EA4;
+            ((PlayerState*)state)->baddie.animSpeedA = z;
+            ((PlayerState*)state)->baddie.animSpeedB = z;
+            *(s16*)((char*)state + 0x278) = 0xe;
+            inner->stateHandler = (int)fn_8029FFD0;
+            vb.sp1c = z;
+        }
         if (flag)
         {
             vb.vx = -inner->unk50C;
@@ -15237,7 +15240,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         sel = inner->unk4FC >= *(f32*)&lbl_803E7EA4 ? 0 : 4;
         tbl = flag ? lbl_80332F88 : lbl_80332F78;
         inner->unk544 =
-            fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)((char*)inner + 0x538), (int*)&vb.vx,
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)inner->unk538, (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
             int f9 = 0x34;
@@ -15245,11 +15248,11 @@ int fn_802A2918(int obj, int state, f32 fv)
             {
                 f9 |= 0x40;
             }
-            fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)((char*)inner + 0x538),
+            fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)inner->unk538,
                         (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                         ((PlayerState*)state)->baddie.moveSpeed, 0, f9);
         }
-        fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)((char*)inner + 0x538),
+        fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->unk538,
                     (int*)((char*)inner + 0x51c), lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY =
