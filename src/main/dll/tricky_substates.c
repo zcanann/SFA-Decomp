@@ -965,15 +965,15 @@ u32 trickyFn_80143210(int obj, int* trickyState)
     switch (move)
     {
     case 0x23:
-        if ((trickyState[0x15] & 0x8000000U) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x24, lbl_803E2478, 0);
         }
         break;
     case 0x24:
-        if (((trickyState[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        if (((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
         break;
     }
@@ -994,15 +994,15 @@ u32 trickyFn_801432cc(int obj, int* trickyState)
     switch (move)
     {
     case 0x21:
-        if ((trickyState[0x15] & 0x8000000U) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x22, lbl_803E2478, 0);
         }
         break;
     case 0x22:
-        if (((trickyState[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        if (((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
         {
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
         break;
     }
@@ -1038,11 +1038,11 @@ u32 trickyFn_80143388(int obj, int* trickyState)
     {
         return 1;
     }
-    if ((trickyState[0x15] & 0x8000000U) != 0)
+    if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
     {
-        if (trickyState[8] == (int)((GameObject*)obj)->anim.currentMove)
+        if (((TrickyState*)trickyState)->moveId == (int)((GameObject*)obj)->anim.currentMove)
         {
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
     }
     return 1;
@@ -1070,7 +1070,7 @@ int trickyFn_801434b0(int obj, int* trickyState)
     switch (move)
     {
     case 0x29:
-        if ((*(u32*)&trickyState[0x15] & 0x8000000) != 0)
+        if ((((TrickyState*)trickyState)->stateFlags & 0x8000000) != 0)
         {
             objAnimFn_8013a3f0(obj, 0x2a, lbl_803E2520, 0);
         }
@@ -1272,11 +1272,11 @@ u32 trickyFn_80143b04(int obj, int* trickyState)
     {
         return 1;
     }
-    if ((trickyState[0x15] & 0x8000000U) != 0)
+    if ((((TrickyState*)trickyState)->stateFlags & 0x8000000U) != 0)
     {
-        if (trickyState[8] == (int)((GameObject*)obj)->anim.currentMove)
+        if (((TrickyState*)trickyState)->moveId == (int)((GameObject*)obj)->anim.currentMove)
         {
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
     }
     return 1;
@@ -1294,13 +1294,13 @@ u32 trickyFn_80143b78(int obj, int* trickyState)
     val = trickyFn_8013b368(obj, lbl_803E2408, trickyState);
     if (val == 1)
     {
-        if (lbl_803E23DC == *(f32*)((int)trickyState + 0x71c))
+        if (lbl_803E23DC == ((TrickyState*)trickyState)->unk71C)
         {
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
         return 1;
     }
-    *(u8*)((int)trickyState + 10) = 0;
+    ((TrickyState*)trickyState)->substate = 0;
     return 0;
 }
 
@@ -1396,7 +1396,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
     if (*(f32*)((int)trickyState + 0x79c) > lbl_803E23DC)
     {
         objAnimFn_8013a3f0(obj, 0x1b, lbl_803E23EC, 0);
-        *(u8*)((int)trickyState + 10) = 2;
+        ((TrickyState*)trickyState)->substate = 2;
         *(f32*)((int)trickyState + 0x79c) = lbl_803E23DC;
         return 1;
     }
@@ -1416,7 +1416,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
             *(f32*)((int)trickyState + 0x724) =
                 (f32)(s32)(bitVal);
             ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 0;
-            *(u8*)((int)trickyState + 10) = 1;
+            ((TrickyState*)trickyState)->substate = 1;
         }
         return 0;
     }
@@ -1427,12 +1427,12 @@ u32 fn_80143DD4(int obj, int* trickyState)
     done = (*gSkyInterface)->getSunPosition(0);
     if (done == 0)
     {
-        *(u32*)&trickyState[0x15] = *(u32*)&trickyState[0x15] & ~0x20000000LL;
+        ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags & ~0x20000000LL;
     }
     done = (*gSkyInterface)->getSunPosition(0);
-    if ((done != 0) && ((trickyState[0x15] & 0x20000000U) == 0))
+    if ((done != 0) && ((((TrickyState*)trickyState)->stateFlags & 0x20000000U) == 0))
     {
-        *(u32*)&trickyState[0x15] = *(u32*)&trickyState[0x15] | 0x20000000LL;
+        ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x20000000LL;
         done = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(done + 0x58) >> 6 & 1) == 0U) &&
             ((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -1445,8 +1445,8 @@ u32 fn_80143DD4(int obj, int* trickyState)
     if (*(u8*)*trickyState <= 3)
     {
         objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
-        *(u8*)((int)trickyState + 10) = 3;
-        *(f32*)((int)trickyState + 0x738) = lbl_803E2440;
+        ((TrickyState*)trickyState)->substate = 3;
+        ((TrickyState*)trickyState)->unk738 = lbl_803E2440;
         return 1;
     }
     *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
@@ -1458,8 +1458,8 @@ u32 fn_80143DD4(int obj, int* trickyState)
         if (*(u8*)*trickyState <= 7)
         {
             objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
-            *(u8*)((int)trickyState + 10) = 3;
-            *(f32*)((int)trickyState + 0x738) = lbl_803E2440;
+            ((TrickyState*)trickyState)->substate = 3;
+            ((TrickyState*)trickyState)->unk738 = lbl_803E2440;
             return 1;
         }
         if (*(f32*)((int)trickyState + 0x71c) > lbl_803E23DC)
@@ -1468,7 +1468,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
         }
         else
         {
-            if ((u32)trickyState[0x1ec] != 0)
+            if ((u32)((TrickyState*)trickyState)->unk7B0 != 0)
             {
                 extra = *(int*)&((GameObject*)obj)->extra;
                 if ((((*(u8*)(extra + 0x58) >> 6 & 1) == 0U) &&
@@ -1478,7 +1478,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
                     objAudioFn_800393f8(obj, (void*)(extra + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
                 objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
-                *(u8*)((int)trickyState + 10) = 5;
+                ((TrickyState*)trickyState)->substate = 5;
             }
             else
             {
