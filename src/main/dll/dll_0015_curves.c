@@ -1464,14 +1464,14 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
     f32* pin;
     int idx3;
     int byteOff;
-    int i;
     int n;
+    CurvesCollisionState* radSrc;
     f32 c;
-    f32* ptsWalk;
+    f32* radDst;
     f32* radWrite;
     f32* ptsRead;
-    CurvesCollisionState* radSrc;
-    f32* radDst;
+    int i;
+    f32* ptsWalk;
     f32 m[16];
     f32 pts[12];
     CurvesTransformScratch s;
