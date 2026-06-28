@@ -60,12 +60,12 @@ extern void fn_802712C8(McmdVoiceState * state); /* synthStartSynthJobHandling *
  */
 void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u8 k1;
-    u8 k2;
     u8 t;
     s32 i1;
     s32 i2;
     u8 detune;
+    u8 k1;
+    u8 k2;
 
     if (((args->value >> 8) & 0xff) == 0)
     {
