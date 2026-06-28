@@ -177,19 +177,20 @@ void vfpstatueball_free(int obj)
 
 void vfpstatueball_init(int* obj, u8* init)
 {
+    VfpStatueBallPlacement* setup = (VfpStatueBallPlacement*)init;
     VfpStatueBallState* state = ((GameObject*)obj)->extra;
-    state->gameBit = *(s16*)((char*)init + 0x1e);
+    state->gameBit = setup->gameBit;
     state->timer = 0x19;
     ((GameObject*)obj)->objectFlags |= 0x4000;
-    if (*(s16*)((char*)init + 0x1a) > 2)
+    if (setup->variant > 2)
     {
-        *(s16*)((char*)init + 0x1a) = 2;
+        setup->variant = 2;
     }
-    if (*(s16*)((char*)init + 0x1c) > 1)
+    if (setup->modelScale > 1)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)*(s16*)((char*)init + 0x1c);
+            ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)setup->modelScale;
     }
-    Obj_SetActiveModelIndex((int)obj, *(s16*)((char*)init + 0x1a));
+    Obj_SetActiveModelIndex((int)obj, setup->variant);
     state->active = GameBit_Get(state->gameBit);
 }
