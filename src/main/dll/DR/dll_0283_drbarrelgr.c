@@ -161,11 +161,11 @@ void drbarrelgr_update(int obj)
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
             if ((u32)nearest != 0 &&
                 Vec_xzDistance(obj + 24, nearest + 24) < gDrBarrelGenGrabRange &&
-                *(f32*)(nearest + 16) < ((GameObject*)obj)->anim.localPosY)
+                ((GameObject*)nearest)->anim.localPosY < ((GameObject*)obj)->anim.localPosY)
             {
-                vec[0] = *(f32*)(nearest + 12);
-                vec[1] = lbl_803E6CB4 + *(f32*)(nearest + 16);
-                vec[2] = *(f32*)(nearest + 20);
+                vec[0] = ((GameObject*)nearest)->anim.localPosX;
+                vec[1] = lbl_803E6CB4 + ((GameObject*)nearest)->anim.localPosY;
+                vec[2] = ((GameObject*)nearest)->anim.localPosZ;
                 if (voxmaps_traceWorldLine((void*)&((GameObject*)obj)->anim.localPosX, vec) != 0 &&
                     gunpowderbarrel_canBeGrabbed(nearest) != 0)
                 {
@@ -197,15 +197,17 @@ void drbarrelgr_update(int obj)
             ((DrbarrelgrState*)state)->heldBarrel = 0;
             break;
         }
-        PSVECSubtract((void*)(state + 0x14), (void*)(((DrbarrelgrState*)state)->heldBarrel + 12), tmp);
+        PSVECSubtract((void*)(state + 0x14),
+                      (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX, tmp);
         if (tmp[0] != lbl_803E6CA4 || tmp[1] != lbl_803E6CA4 || tmp[2] != lbl_803E6CA4)
         {
             PSVECNormalize(tmp, tmp);
         }
         PSVECScale(tmp, tmp, lbl_803DC3B0);
         gunpowderbarrel_addThrowVelocity(((DrbarrelgrState*)state)->heldBarrel, tmp);
-        if (PSVECDistance((void*)(state + 0x14), (void*)(((DrbarrelgrState*)state)->heldBarrel + 12)) < lbl_803E6CA0 ||
-            *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 16) > ((DrbarrelgrState*)state)->grabY)
+        if (PSVECDistance((void*)(state + 0x14),
+                          (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX) < lbl_803E6CA0 ||
+            ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosY > ((DrbarrelgrState*)state)->grabY)
         {
             Sfx_PlayFromObject((int)(GameObject*)obj, 960);
             gunpowderbarrel_setHeldState(((DrbarrelgrState*)state)->heldBarrel);
@@ -282,9 +284,9 @@ void drbarrelgr_update(int obj)
         ((DrbarrelgrState*)state)->grabX = ((GameObject*)obj)->anim.localPosX;
         ((DrbarrelgrState*)state)->grabY = ((GameObject*)obj)->anim.localPosY + gDrBarrelGenGrabYOffset;
         ((DrbarrelgrState*)state)->grabZ = ((GameObject*)obj)->anim.localPosZ;
-        *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 12) = ((DrbarrelgrState*)state)->grabX;
-        *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 16) = ((DrbarrelgrState*)state)->grabY;
-        *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 20) = ((DrbarrelgrState*)state)->grabZ;
+        ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX = ((DrbarrelgrState*)state)->grabX;
+        ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosY = ((DrbarrelgrState*)state)->grabY;
+        ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosZ = ((DrbarrelgrState*)state)->grabZ;
     }
 }
 #pragma scheduling reset
@@ -333,9 +335,9 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         }
         if (match && *(int*)state != 4)
         {
-            *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 0xc) = ((DrbarrelgrState*)state)->grabX;
-            *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 0x10) = ((DrbarrelgrState*)state)->grabY;
-            *(f32*)(((DrbarrelgrState*)state)->heldBarrel + 0x14) = ((DrbarrelgrState*)state)->grabZ;
+            ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX = ((DrbarrelgrState*)state)->grabX;
+            ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosY = ((DrbarrelgrState*)state)->grabY;
+            ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosZ = ((DrbarrelgrState*)state)->grabZ;
             objRenderFn_8003b8f4(((DrbarrelgrState*)state)->heldBarrel, p2, p3, p4, p5, lbl_803E6CA0);
         }
     }
