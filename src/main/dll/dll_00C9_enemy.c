@@ -2069,7 +2069,7 @@ void enemy_free(int obj, int flag)
         if (child != NULL)
         {
             ObjLink_DetachChild(obj, child);
-            if (flag == 0 || (*(u16*)(child + 0xb0) & 0x10) == 0)
+            if (flag == 0 || (((GameObject*)child)->objectFlags & 0x10) == 0)
             {
                 Obj_FreeObject((int)child);
             }
