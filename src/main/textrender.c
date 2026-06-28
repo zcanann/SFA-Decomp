@@ -1561,14 +1561,14 @@ extern int lbl_803DB378;
 
 void gameTextInitFn_8001a234(void)
 {
-    u8* gameTextBase;
-    u8* p;
-    u8* textWindow;
-    u8* glyphPage;
+    u8* clearPtr;
     u8** glyphPagePtr;
     u8* fontState;
+    u8* textWindow;
+    u8* gameTextBase;
+    u8* glyphPage;
     u8* request;
-    u8* clearPtr;
+    u8* p;
     f32 zero;
     int i;
     int j;
