@@ -214,9 +214,9 @@ void dll_83_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            buf.pos[0] = lbl_803E0EE4 + *(f32*)(posSource + 0xc);
-            buf.pos[1] = lbl_803E0EE4 + *(f32*)(posSource + 0x10);
-            buf.pos[2] = lbl_803E0EE4 + *(f32*)(posSource + 0x14);
+            buf.pos[0] = lbl_803E0EE4 + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = lbl_803E0EE4 + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E0EE4 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x24, (u8*)(int)gFoodbagEffectTexData, 0x10, base + 0x168, base32[variant + 0xb7],
