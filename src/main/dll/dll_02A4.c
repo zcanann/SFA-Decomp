@@ -125,7 +125,7 @@ void fn_802315EC(int obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
         dir[0] = setup->velocityX / *(f32*)&lbl_803E7140;
         dir[1] = setup->velocityY / *(f32*)&lbl_803E7140;
         dir[2] = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_8023137C(newObj, (int)dir);
+        fn_8023137C(newObj, dir);
         fn_8023134C(newObj, setup->projectileSpeed);
     }
 }

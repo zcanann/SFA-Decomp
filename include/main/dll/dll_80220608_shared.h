@@ -2479,7 +2479,7 @@ void arwarwing_initAttachments(int obj, int state);
 void arwbombcoll_update(int obj);
 void arwsquadron_init(int obj, int setup);
 void fn_80231058(int obj, int src);
-void fn_8023137C(int obj, int src);
+void fn_8023137C(int obj, f32* src);
 void fn_8022ED74(int obj, int v);
 void fn_8022F558(int obj, int v);
 void fn_80231028(int obj, int v);

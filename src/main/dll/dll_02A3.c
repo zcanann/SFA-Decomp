@@ -102,11 +102,11 @@ void dll_2A3_init(int obj)
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
 
-void fn_8023137C(int obj, int velocity)
+void fn_8023137C(int obj, f32* velocity)
 {
-    ((GameObject*)obj)->anim.velocityX = *(f32*)(velocity + 0x0);
-    ((GameObject*)obj)->anim.velocityY = *(f32*)(velocity + 0x4);
-    ((GameObject*)obj)->anim.velocityZ = *(f32*)(velocity + 0x8);
+    ((GameObject*)obj)->anim.velocityX = velocity[0];
+    ((GameObject*)obj)->anim.velocityY = velocity[1];
+    ((GameObject*)obj)->anim.velocityZ = velocity[2];
 }
 
 void fn_8023134C(int obj, int lifetime)
