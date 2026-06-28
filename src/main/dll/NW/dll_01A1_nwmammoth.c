@@ -237,7 +237,7 @@ int fn_801CE078(int* obj, u8* st)
     {
         snd = 0;
     }
-    if (st[0x408] < 0x14)
+    if (state->stateIndex < 0x14)
     {
         if (cv != 0)
         {
@@ -245,24 +245,24 @@ int fn_801CE078(int* obj, u8* st)
             {
                 return -1;
             }
-            st[0x409] = st[0x408];
-            st[0x408] = 0x14;
+            st[0x409] = state->stateIndex;
+            state->stateIndex = 0x14;
         }
         else
         {
             return 0;
         }
     }
-    switch (st[0x408])
+    switch (state->stateIndex)
     {
     case 0x14:
         if (snd != 0)
         {
             Sfx_PlayFromObject((u32)obj, 0x14b);
         }
-        if (st[0x43c] & 2)
+        if (state->runtimeFlags & 2)
         {
-            st[0x408] = 0x15;
+            state->stateIndex = 0x15;
             state->stateTimer = (f32)(s32)
             randomGetRange(0, 300);
         }
@@ -275,7 +275,7 @@ int fn_801CE078(int* obj, u8* st)
         state->stateTimer -= timeDelta;
         if (cv == 0 && state->stateTimer <= lbl_803E520C)
         {
-            st[0x408] = 0x16;
+            state->stateIndex = 0x16;
         }
         {
             f32 t = state->partfxTimer - timeDelta;
@@ -298,9 +298,9 @@ int fn_801CE078(int* obj, u8* st)
         {
             Sfx_PlayFromObject((u32)obj, 0x14d);
         }
-        if (st[0x43c] & 2)
+        if (state->runtimeFlags & 2)
         {
-            st[0x408] = st[0x409];
+            state->stateIndex = st[0x409];
         }
         break;
     }
@@ -340,7 +340,7 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
     case 1:
         return;
     }
-    switch (st[0x408])
+    switch (state->stateIndex)
     {
     case 8:
         {
@@ -360,14 +360,14 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
             ((GameObject*)obj)->anim.localPosZ = ((Curve*)cv)->sample[2];
             if (state->pathSpeed <= lbl_803E520C)
             {
-                st[0x408] = 7;
+                state->stateIndex = 7;
             }
             break;
         }
     case 7:
         if (state->pathSpeed > lbl_803E5250)
         {
-            st[0x408] = 8;
+            state->stateIndex = 8;
         }
         break;
     }
@@ -424,7 +424,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
-    switch (st[0x408])
+    switch (state->stateIndex)
     {
     case 9:
         state->sfxTimer += timeDelta;
@@ -435,13 +435,13 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
         if (state->playerDistanceSq < (f32)(s32)(objDef[0xc] * objDef[0xc]))
         {
-            st[0x408] = 0xa;
+            state->stateIndex = 0xa;
         }
         break;
     case 0xa:
-        if (st[0x43c] & 2)
+        if (state->runtimeFlags & 2)
         {
-            st[0x408] = 0xb;
+            state->stateIndex = 0xb;
         }
         break;
     case 0xb:
@@ -454,8 +454,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         if (ObjTrigger_IsSet(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)near_, -1);
-            st[0x43c] = (u8)(st[0x43c] | 0x10);
-            st[0x408] = 0xd;
+            state->runtimeFlags = (u8)(state->runtimeFlags | 0x10);
+            state->stateIndex = 0xd;
             GameBit_Set(0xce1, 1);
             GameBit_Set(0xd32, 1);
         }
@@ -463,7 +463,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     case 0xc:
         (*gObjectTriggerInterface)->preempt(near_, 0x5aa);
         (*gObjectTriggerInterface)->runSequence(3, (void*)near_, 0x30);
-        st[0x408] = 0xd;
+        state->stateIndex = 0xd;
         break;
     case 0xd:
         {
@@ -538,16 +538,16 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                                 (**(void (**)(int*, u8*))((char*)(*(int**)*(int*)((char*)tw2 + 0x68)) + 0x2c))(
                                     tw2, st + 0xc);
                                 *(int**)&state->trackedObject = tw2;
-                                st[0x408] = 0xe;
+                                state->stateIndex = 0xe;
                             }
                         }
                     }
                 }
             }
-            if (!(st[0x43c] & 0x40))
+            if (!(state->runtimeFlags & 0x40))
             {
                 (*gGameUIInterface)->initAirMeter(0xc8, 0x5d0);
-                st[0x43c] = (u8)(st[0x43c] | 0x40);
+                state->runtimeFlags = (u8)(state->runtimeFlags | 0x40);
             }
             break;
         }
@@ -556,11 +556,11 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         {
             Sfx_PlayFromObject((u32)obj, 0x38b);
             fn_80163980(*(int*)&state->trackedObject);
-            st[0x408] = 0xf;
+            state->stateIndex = 0xf;
         }
         break;
     case 0xf:
-        if (st[0x43c] & 2)
+        if (state->runtimeFlags & 2)
         {
             Obj_FreeObject(*(int*)&state->trackedObject);
             *(int*)&state->trackedObject = 0;
@@ -571,7 +571,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             GameBit_Set(0x48b, state->uiMessageCount);
             if (state->uiMessageCount >= 3)
             {
-                st[0x408] = 0x11;
+                state->stateIndex = 0x11;
             }
             else
             {
@@ -579,23 +579,23 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                 {
                     Sfx_PlayFromObject((u32)obj, 0x14f);
                 }
-                st[0x408] = 0xd;
+                state->stateIndex = 0xd;
             }
         }
         break;
     case 0x10:
         (*gObjectTriggerInterface)->preempt(near_, 0x157c);
         (*gObjectTriggerInterface)->runSequence(1, (void*)near_, 2);
-        st[0x408] = 0x13;
+        state->stateIndex = 0x13;
         break;
     case 0x11:
         if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
         {
             Sfx_PlayFromObject((u32)obj, 0x109);
             (*gScreenTransitionInterface)->start(0x14, 1);
-            st[0x408] = 0x12;
+            state->stateIndex = 0x12;
             GameBit_Set(0xd32, 0);
-            st[0x43c] = (u8)(st[0x43c] & ~0x40);
+            state->runtimeFlags = (u8)(state->runtimeFlags & ~0x40);
             (*gGameUIInterface)->airMeterShutdown();
         }
         break;
@@ -606,7 +606,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             {
                 GameBit_Set(0x102, 1);
                 (*gObjectTriggerInterface)->runSequence(1, (void*)near_, -1);
-                st[0x408] = 0x13;
+                state->stateIndex = 0x13;
             }
         }
         break;
@@ -628,7 +628,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         fn_801CE078(obj, st);
         break;
     }
-    if (st[0x43c] & 0x40)
+    if (state->runtimeFlags & 0x40)
     {
         if (state->airMeterValue < gNwMammothAirMeterPerSegment * state->uiMessageCount)
         {
