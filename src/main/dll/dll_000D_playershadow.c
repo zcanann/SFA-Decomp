@@ -1334,6 +1334,27 @@ extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
 
+/* One terrain-triangle hit record produced by the hit-detect pipeline
+ * (hitDetectFn_800691c0 / fn_80069968). Stride 0x4c; the three struck-triangle
+ * corners are stored as separate s16 component arrays, and the GameObject
+ * surface type lives at 0x48. */
+typedef struct PlayerShadowTriHit
+{
+    u8 pad00[0x10];
+    s16 vertX[3]; /* 0x10 */
+    s16 vertY[3]; /* 0x16 */
+    s16 vertZ[3]; /* 0x1c */
+    u8 pad22[0x48 - 0x22];
+    u8 surfaceType; /* 0x48 */
+    u8 pad49[0x4c - 0x49];
+} PlayerShadowTriHit;
+
+STATIC_ASSERT(sizeof(PlayerShadowTriHit) == 0x4c);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertX) == 0x10);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
+STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
+
 void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
 {
     extern int randomGetRange(int min, int max);
@@ -1374,7 +1395,7 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     dz = ((GameObject*)cam)->anim.localPosZ - ((GameObject*)ctx)->anim.localPosZ;
     for (i = 0; i < count; i++)
     {
-        u8 t = *(u8*)((char*)table + i * 0x4c + 0x48);
+        u8 t = ((PlayerShadowTriHit*)table)[i].surfaceType;
         if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
         {
             gPlayerShadowCamDelta[0] = dx;
@@ -1408,22 +1429,22 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     if (found)
     {
         int j;
-        char* e = table;
+        PlayerShadowTriHit* e = table;
         for (j = 0; j < count; j++)
         {
-            u8 t = *(u8*)(e + 0x48);
+            u8 t = e->surfaceType;
             if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
             {
                 int rt;
-                p0x = ((GameObject*)ctx)->anim.localPosX + ((f32) * (s16*)(e + 0x10) - a);
-                p0y = (f32) * (s16*)(e + 0x16);
-                p0z = ((GameObject*)ctx)->anim.localPosZ + ((f32) * (s16*)(e + 0x1c) - b);
-                p1x = ((GameObject*)ctx)->anim.localPosX + ((f32) * (s16*)(e + 0x12) - a);
-                p1y = (f32) * (s16*)(e + 0x18);
-                p1z = ((GameObject*)ctx)->anim.localPosZ + ((f32) * (s16*)(e + 0x1e) - b);
-                p2x = ((GameObject*)ctx)->anim.localPosX + ((f32) * (s16*)(e + 0x14) - a);
-                p2y = (f32) * (s16*)(e + 0x1a);
-                p2z = ((GameObject*)ctx)->anim.localPosZ + ((f32) * (s16*)(e + 0x20) - b);
+                p0x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[0] - a);
+                p0y = (f32)e->vertY[0];
+                p0z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[0] - b);
+                p1x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[1] - a);
+                p1y = (f32)e->vertY[1];
+                p1z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[1] - b);
+                p2x = ((GameObject*)ctx)->anim.localPosX + ((f32)e->vertX[2] - a);
+                p2y = (f32)e->vertY[2];
+                p2z = ((GameObject*)ctx)->anim.localPosZ + ((f32)e->vertZ[2] - b);
                 r1 = randomGetRange(1, 1000) / lbl_803DF474;
                 r2 = randomGetRange(1, 1000) / lbl_803DF474;
                 s = sqrtf(r2);
@@ -1434,7 +1455,7 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
                 data.y = w0 * p0y + w1 * p1y + w2 * p2y;
                 data.z = w0 * p0z + w1 * p1z + w2 * p2z;
                 data.y = data.y + lbl_803DF478;
-                rt = *(s8*)(e + 0x48);
+                rt = (s8)e->surfaceType;
                 if (rt == 0x12 || rt == 0x10)
                 {
                     if (randomGetRange(0, 0x1e) == 1)
@@ -1470,7 +1491,7 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
                     (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
                 }
             }
-            e += 0x4c;
+            e++;
         }
     }
 }
