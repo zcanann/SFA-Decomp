@@ -172,7 +172,8 @@ void fuelcell_update(int* obj)
                 dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
                 if (dy > lbl_803E3D08 && dy < lbl_803E3D0C
                     && GameBit_Get(0xe97) == 0
-                    && getXZDistance((char*)obj + 0x18, (char*)player + 0x18) < lbl_803E3D10)
+                    && getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                                     &((GameObject*)player)->anim.worldPosX) < lbl_803E3D10)
                 {
                     state->msg = 0xcbe;
                     ObjMsg_SendToObject(player, 0x7000a, obj, state);
@@ -269,8 +270,8 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                         u8 ok;
                         if (other != obj)
                         {
-                            if (*(FuelcellState**)((char*)other + 0xb8) != NULL &&
-                                (*(FuelcellState**)((char*)other + 0xb8))->unkBit5)
+                            if (((GameObject*)other)->extra != NULL &&
+                                ((FuelcellState*)((GameObject*)other)->extra)->unkBit5)
                             {
                                 ok = 0;
                             }
@@ -299,9 +300,9 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                     candidates[0] = obj;
                 }
                 target = candidates[pickCount];
-                pos[0] = *(f32*)((char*)target + 0xc);
-                pos[1] = *(f32*)((char*)target + 0x10);
-                pos[2] = *(f32*)((char*)target + 0x14);
+                pos[0] = ((GameObjPos*)target)->pos[0];
+                pos[1] = ((GameObjPos*)target)->pos[1];
+                pos[2] = ((GameObjPos*)target)->pos[2];
                 if (target == obj)
                 {
                     if (state->unkBit5)
