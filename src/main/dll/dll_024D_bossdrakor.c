@@ -153,7 +153,7 @@ void bossdrakor_update(int obj)
             modelLightStruct_setGlowProjectionRadius(((BossDrakorState*)state)->lightObj, lbl_803E6550);
         }
     }
-    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(*(f32*)state, lbl_803E6568, lbl_803E6520, obj,
+    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(((BossDrakorState*)state)->unk00, lbl_803E6568, lbl_803E6520, obj,
                                                          (void*)((char*)state + 0x28), 1,
                                                          &((BossDrakorState*)state)->curveFollowState);
     if (((DrakorFlags*)((char*)state + 0x198))->b40)
