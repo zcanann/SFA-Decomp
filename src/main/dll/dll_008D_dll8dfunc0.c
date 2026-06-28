@@ -68,9 +68,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = *(f32*)(posSource + 0xc);
-            p->y = *(f32*)(posSource + 0x10);
-            p->z = *(f32*)(posSource + 0x14);
+            p->x = ((PartFxSpawnParams*)posSource)->posX;
+            p->y = ((PartFxSpawnParams*)posSource)->posY;
+            p->z = ((PartFxSpawnParams*)posSource)->posZ;
             p++;
         }
         else
@@ -131,9 +131,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = *(f32*)(posSource + 0xc);
-            p->y = *(f32*)(posSource + 0x10);
-            p->z = *(f32*)(posSource + 0x14);
+            p->x = ((PartFxSpawnParams*)posSource)->posX;
+            p->y = ((PartFxSpawnParams*)posSource)->posY;
+            p->z = ((PartFxSpawnParams*)posSource)->posZ;
             p++;
         }
         else
@@ -178,9 +178,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = *(f32*)(posSource + 0xc);
-            p->y = *(f32*)(posSource + 0x10);
-            p->z = *(f32*)(posSource + 0x14);
+            p->x = ((PartFxSpawnParams*)posSource)->posX;
+            p->y = ((PartFxSpawnParams*)posSource)->posY;
+            p->z = ((PartFxSpawnParams*)posSource)->posZ;
             p++;
         }
         else
@@ -403,9 +403,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            buf.pos[0] += *(f32*)(posSource + 0xc);
-            buf.pos[1] += *(f32*)(posSource + 0x10);
-            buf.pos[2] += *(f32*)(posSource + 0x14);
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)
