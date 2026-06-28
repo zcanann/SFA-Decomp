@@ -5635,14 +5635,17 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                                 int j;
                                 if (flag1 != 0)
                                 {
+                                    f32 stepLb, stepLa;
                                     f32 t3 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
                                     pos[3] = -(t3 * lb[3] - pos[3]);
                                     pos[1] = -(t3 * la[3] - pos[1]);
+                                    stepLb = lbl_803DB660 * lb[3];
+                                    stepLa = lbl_803DB660 * la[3];
                                     j = 0;
                                     while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
                                     {
-                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
-                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        pos[3] = pos[3] + stepLb;
+                                        pos[1] = pos[1] + stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -5654,13 +5657,16 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                                 }
                                 else
                                 {
+                                    f32 stepLb, stepLa;
                                     pos[3] = cx;
                                     pos[1] = cz;
+                                    stepLb = lbl_803DB660 * lb[3];
+                                    stepLa = lbl_803DB660 * la[3];
                                     j = 0;
                                     while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
                                     {
-                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
-                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        pos[3] = pos[3] + stepLb;
+                                        pos[1] = pos[1] + stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
