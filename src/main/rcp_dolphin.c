@@ -2166,10 +2166,10 @@ void initFn_800534f8(void)
     j = 0;
     gRcpDistortSlotIndex = j;
     q = lbl_8030D028;
-    scaleA = gRcpDistortScaleA;
-    scaleB = LastReadFinished_803DEB50.lo;
     for (; j < 6; j++)
     {
+        scaleA = gRcpDistortScaleA;
+        scaleB = LastReadFinished_803DEB50.lo;
         v = *(f32*)(q + j * 8 + 4);
         slot = gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c;
         slot[0xc] = 0xff;
