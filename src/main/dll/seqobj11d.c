@@ -252,7 +252,8 @@ void fn_801513AC(int obj, u8* state)
             {
                 d = (d + 0x10000) - 1;
             }
-            state[0x33a] = (u8)(gGroundBaddieAngleSectorOffsets[(s16)((u32)(u16)d >> 13)] + entry[8]);
+            d = (s16)((u32)(u16)d >> 13);
+            state[0x33a] = (u8)(entry[8] + gGroundBaddieAngleSectorOffsets[d]);
         }
         else if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 70)
         {
