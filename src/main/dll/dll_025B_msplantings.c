@@ -46,6 +46,10 @@ typedef struct MoonSeedPlantingSpotPlacement
 {
     u8 pad0[0xC - 0x0];
     f32 posY; /* 0x0c: planted-spot Y position */
+    u8 pad10[0x14 - 0x10];
+    s32 mapId; /* 0x14: ObjPlacement head mapId */
+    u8 pad18[0x1F - 0x18];
+    u8 rotByte; /* 0x1f: rotX in 1/256 turns */
 } MoonSeedPlantingSpotPlacement;
 
 typedef struct MoonSeedPlantingSpotState
@@ -99,17 +103,17 @@ void MoonSeedPlantingSpot_initialise(void)
 
 #pragma scheduling off
 #pragma peephole off
-void MoonSeedPlantingSpot_init(int* obj, u8* init)
+void MoonSeedPlantingSpot_init(int* obj, MoonSeedPlantingSpotPlacement* init)
 {
     u8* sub;
     int mapId;
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = MoonSeedPlantingSpot_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(init[0x1f] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(init->rotByte << 8);
     sub[0] = MSPLANTING_PHASE_INIT;
     ObjGroup_AddObject((int)obj, MSPLANTING_OBJ_GROUP);
-    mapId = *(int*)(init + 0x14);
+    mapId = init->mapId;
     switch (mapId)
     {
     case 0x41a5b:
