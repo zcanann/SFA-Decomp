@@ -31,6 +31,26 @@ typedef struct ShopSparkleSpawn
     u8 pad[0x28]; /* opaque scratch passed by address to lightningCreate */
 } ShopSparkleSpawn;
 
+/* Per-instance placement descriptor (anim.placementData / shopitem_init's
+ * data arg): item slot index queried against the vendor vtable, model bank
+ * index, packed rotation bytes, and the spline Y offset for the 0x467 path. */
+typedef struct ShopItemDef
+{
+    u8 pad0[0xC];
+    f32 splineYOffset;
+    u8 padC[0x18 - 0x10];
+    s8 bankIndex;
+    u8 itemSlot;
+    u8 rotXByte;
+    u8 rotYByte;
+} ShopItemDef;
+
+STATIC_ASSERT(offsetof(ShopItemDef, splineYOffset) == 0xC);
+STATIC_ASSERT(offsetof(ShopItemDef, bankIndex) == 0x18);
+STATIC_ASSERT(offsetof(ShopItemDef, itemSlot) == 0x19);
+STATIC_ASSERT(offsetof(ShopItemDef, rotXByte) == 0x1A);
+STATIC_ASSERT(offsetof(ShopItemDef, rotYByte) == 0x1B);
+
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -201,9 +221,9 @@ void shopitem_init(int obj, int data)
     objAnim = (ObjAnimComponent*)obj;
     ((GameObject*)obj)->objectFlags |= 0x2000;
     ((GameObject*)obj)->animEventCallback = fn_801E86F4;
-    objAnim->bankIndex = (s8) * (s8*)(data + 0x18);
-    ((GameObject*)obj)->anim.rotX = (s16)((*(u8*)(data + 0x1A)) << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((*(u8*)(data + 0x1B)) << 8);
+    objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
+    ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(((ShopItemDef*)data)->rotYByte << 8);
     if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
@@ -233,7 +253,7 @@ void fn_801E8660(int obj)
     {
         int* vptr = (int*)((ShopItemState*)state)->vendorObj;
         int* cls = **(int***)((char*)vptr + 0x68);
-        if ((*(int (*)(int*, int))cls[0x2C / 4])(vptr, *(u8*)(def + 0x19)) != 0)
+        if ((*(int (*)(int*, int))cls[0x2C / 4])(vptr, ((ShopItemDef*)def)->itemSlot) != 0)
         {
             b->flag_80 = 1;
         }
@@ -279,9 +299,9 @@ void shopitem_update(int obj)
             if ((u32)item != 0)
             {
                 if ((*(int (**)(int, int))((char*)**(int***)(item + 0x68) + 0x28))(
-                        item, *(u8*)(def + 0x19)) == 0
+                        item, ((ShopItemDef*)def)->itemSlot) == 0
                     || (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x2C))(
-                        ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19)) != 0)
+                        ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot) != 0)
                 {
                     b->flag_40 = 1;
                     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
@@ -290,7 +310,7 @@ void shopitem_update(int obj)
                 }
                 ((ShopItemState*)state)->helpTextId = (s16)(
                     *(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
-                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
+                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
             }
         }
         else
@@ -304,14 +324,14 @@ void shopitem_update(int obj)
             {
                 money = playerGetMoney(player);
                 price = (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x38))(
-                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
+                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
                 (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x40))(
-                    ((ShopItemState*)state)->vendorObj, *(u8*)(def + 0x19));
+                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
                 switch (((GameObject*)obj)->anim.seqId)
                 {
                 case 0x467:
-                    ((GameObject*)obj)->anim.localPosY = lbl_803E5A68 + *(f32*)(*(int*)&((GameObject*)obj)->anim.
-                        placementData + 0xC);
+                    ((GameObject*)obj)->anim.localPosY = lbl_803E5A68 +
+                        ((ShopItemDef*)*(int*)&((GameObject*)obj)->anim.placementData)->splineYOffset;
                     break;
                 }
                 if (money >= price)
