@@ -518,29 +518,29 @@ int Tricky_updateSideCommandPrompts(int obj)
     bitVal = GameBit_Get(0x4e4);
     if (bitVal != 0)
     {
-        if ((*(u32*)(state + 0x54) & 0x10) != 0)
+        if ((((TrickyState*)state)->stateFlags & 0x10) != 0)
         {
-            *(u8*)(state + 0xb) = 0;
+            ((TrickyState*)state)->unk0B = 0;
         }
-        commandMask = *(u8*)(state + 0xb) | 9;
-        if (((*(u8*)(state + 8) == 8) || (*(u8*)(state + 8) == 0xd)) ||
-            ((*(u8*)(state + 8) == 0xe && (*(u8*)(state + 10) == 1))))
+        commandMask = ((TrickyState*)state)->unk0B | 9;
+        if (((((TrickyState*)state)->unk08 == 8) || (((TrickyState*)state)->unk08 == 0xd)) ||
+            ((((TrickyState*)state)->unk08 == 0xe && (((TrickyState*)state)->substate == 1))))
         {
             commandMask |= 0x10;
             promptA = true;
         }
         else
         {
-            ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), lbl_803E2524, 1);
+            ref = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E2524, 1);
             if ((void*)ref != NULL)
             {
                 promptA = true;
                 promptC = true;
             }
         }
-        if (*(u8*)(state + 0xb) != 0)
+        if (((TrickyState*)state)->unk0B != 0)
         {
-            for (i = 0; i < *(u8*)(state + 0x798); i++)
+            for (i = 0; i < ((TrickyState*)state)->unk798; i++)
             {
                 ref = state + i * 8;
                 cmdByte = *(char*)(ref + 0x74c);
@@ -558,13 +558,13 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
             }
         }
-        if (((*(u32*)(state + 0x54) & 0x10) == 0) && (bitVal = GameBit_Get(0x3f8), bitVal != 0))
+        if (((((TrickyState*)state)->stateFlags & 0x10) == 0) && (bitVal = GameBit_Get(0x3f8), bitVal != 0))
         {
             ref = Obj_GetPlayerObject();
             ref = fn_80296240(ref);
             if ((ref != 0) && (bitVal = GameBit_Get(0xd00), bitVal == 0))
             {
-                if (fn_80296448(*(int*)(state + 4)) == 0)
+                if (fn_80296448(((TrickyState*)state)->playerObj) == 0)
                 {
                     commandMask |= 0x20;
                 }
@@ -582,11 +582,11 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             commandMask &= ~0x10;
         }
-        *(u8*)(state + 0xb) = 0;
-        if ((cond) && ((*(u32*)(state + 0x54) & 0x200) == 0))
+        ((TrickyState*)state)->unk0B = 0;
+        if ((cond) && ((((TrickyState*)state)->stateFlags & 0x200) == 0))
         {
             *(float*)(state + 0x7b4) = lbl_803E24F8;
-            if ((*(void**)(state + 0x7b0) == NULL) && (Obj_IsLoadingLocked() != 0))
+            if ((((TrickyState*)state)->unk7B0 == NULL) && (Obj_IsLoadingLocked() != 0))
             {
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
@@ -601,15 +601,15 @@ int Tricky_updateSideCommandPrompts(int obj)
                 flagsB[0] = -1;
                 flagsB[1] = -1;
                 flagsB[2] = -1;
-                if (*(void**)(state + 0x7a8) != NULL)
+                if (((TrickyState*)state)->unk7A8 != NULL)
                 {
                     flagsB[*(u8*)(state + 0x7bc) >> 6 & 3] = '\x01';
                 }
-                if (*(void**)(state + 0x7b0) != NULL)
+                if (((TrickyState*)state)->unk7B0 != NULL)
                 {
                     flagsB[*(u8*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(void**)(state + 0x7b8) != NULL)
+                if (((TrickyState*)state)->child != NULL)
                 {
                     flagsB[*(u8*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
@@ -636,10 +636,10 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
                 spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
                 *(u32*)(state + 0x7b0) = spawnedObj;
-                ObjLink_AttachChild(objVal, *(int*)(state + 0x7b0), *(u8*)(state + 0x7bc) >> 4 & 3);
+                ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7B0, *(u8*)(state + 0x7bc) >> 4 & 3);
             }
         }
-        else if (*(void**)(state + 0x7b0) != NULL)
+        else if (((TrickyState*)state)->unk7B0 != NULL)
         {
             *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
             if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
@@ -647,10 +647,10 @@ int Tricky_updateSideCommandPrompts(int obj)
                 objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
             }
         }
-        if ((promptA) && ((*(u32*)(state + 0x54) & 0x200) == 0))
+        if ((promptA) && ((((TrickyState*)state)->stateFlags & 0x200) == 0))
         {
             *(float*)(state + 0x7ac) = lbl_803E24F8;
-            if ((*(void**)(state + 0x7a8) == NULL) && (Obj_IsLoadingLocked() != 0))
+            if ((((TrickyState*)state)->unk7A8 == NULL) && (Obj_IsLoadingLocked() != 0))
             {
                 if (randomGetRange(0, 3) == 0)
                 {
@@ -676,15 +676,15 @@ int Tricky_updateSideCommandPrompts(int obj)
                 flagsA[0] = -1;
                 flagsA[1] = -1;
                 flagsA[2] = -1;
-                if (*(void**)(state + 0x7a8) != NULL)
+                if (((TrickyState*)state)->unk7A8 != NULL)
                 {
                     flagsA[*(u8*)(state + 0x7bc) >> 6 & 3] = '\x01';
                 }
-                if (*(void**)(state + 0x7b0) != NULL)
+                if (((TrickyState*)state)->unk7B0 != NULL)
                 {
                     flagsA[*(u8*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(void**)(state + 0x7b8) != NULL)
+                if (((TrickyState*)state)->child != NULL)
                 {
                     flagsA[*(u8*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
@@ -711,10 +711,10 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
                 spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
                 *(u32*)(state + 0x7a8) = spawnedObj;
-                ObjLink_AttachChild(objVal, *(int*)(state + 0x7a8), *(u8*)(state + 0x7bc) >> 6 & 3);
+                ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7A8, *(u8*)(state + 0x7bc) >> 6 & 3);
             }
         }
-        else if (*(void**)(state + 0x7a8) != NULL)
+        else if (((TrickyState*)state)->unk7A8 != NULL)
         {
             *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
             if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
