@@ -169,6 +169,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 {
     ExpgfxRuntimeDataLayout* runtime;
     u32 activeBit;
+    u8* resBase;
     ExpgfxSlot* slot;
     u32 inactiveBitMask;
 
@@ -184,7 +185,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 
     if (skipTextureFree == 0)
     {
-        u8* resBase = (u8*)&runtime->expTab[0].resource;
+        resBase = (u8*)&runtime->expTab[0].resource;
 
         if (*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) != 0)
         {
