@@ -1,5 +1,5 @@
 /*
- * DLL 0xDE — baddieinterestp: object-descriptor table for a family of
+ * DLL 0xDE - baddieinterestp: object-descriptor table for a family of
  * baddie-related objects (kaldachompspit, pinponspike, pollen[fragment],
  * mikabomb[shadow], staticcamera, gcbaddieshield, animatedobj, dim2roofrub,
  * depthoffieldpoint, staff, fireball, flamethrowerspe, shield, curve,
@@ -179,7 +179,8 @@ typedef struct BaddieinterestpPlacement
 {
     u8 pad0[0x14 - 0x0]; /* 0x00 */
     s32 linkId;          /* 0x14 id (matched against other placements' linkId) */
-    s16 unk18;           /* 0x18 sun-mode/kind byte; body reads it via raw casts (params+0x18, +0x19) */
+    s8 modeKind;         /* 0x18 high nibble = sun mode (bits 4-5), low nibble = reaction kind */
+    s8 prob;             /* 0x19 trigger probability (1..100) */
     s16 targetIdLo;      /* 0x1A id low half */
     s16 targetIdHi;      /* 0x1C id high half */
     s16 doneGameBit;     /* 0x1E done-gate gamebit */
@@ -776,10 +777,10 @@ void baddieinterestp_update(int* obj)
                     {
                         if (((GameObject*)obj)->unkF4 == 0)
                         {
-                            if ((int)randomGetRange(1, 100) <= *(s8*)((char*)params + 0x19))
+                            if ((int)randomGetRange(1, 100) <= ((BaddieinterestpPlacement*)params)->prob)
                             {
                                 f32 sunTime;
-                                s8 b = *(s8*)((char*)params + 0x18);
+                                s8 b = ((BaddieinterestpPlacement*)params)->modeKind;
                                 switch ((b & 0x30) >> 4)
                                 {
                                 case 0:
@@ -806,7 +807,7 @@ void baddieinterestp_update(int* obj)
                                 case 1:
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
                                     {
-                                        u8 b2 = *(u8*)((char*)params + 0x18);
+                                        u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
                                         int kind = b2 & 0xf;
                                         int* target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
@@ -829,7 +830,7 @@ void baddieinterestp_update(int* obj)
                                 case 2:
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                                     {
-                                        u8 b2 = *(u8*)((char*)params + 0x18);
+                                        u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
                                         int kind = b2 & 0xf;
                                         int* target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
