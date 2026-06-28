@@ -78,8 +78,8 @@ int fn_801B17F4(int obj, int delta);
 void dimbarrier_update(int obj)
 {
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    int* extra = ((GameObject*)obj)->extra;
-    switch (*(u8*)((char*)extra + 2))
+    DimbarrierState* extra = (DimbarrierState*)((GameObject*)obj)->extra;
+    switch (extra->state)
     {
     case 0:
         {
@@ -100,11 +100,10 @@ void dimbarrier_update(int obj)
             }
             if (found)
             {
-                DimbarrierState* st = (DimbarrierState*)extra;
-                if (--st->countdown <= 0)
+                if (--extra->countdown <= 0)
                 {
-                    *(s8*)((char*)extra + 2) = 1;
-                    *(s16*)extra = 30;
+                    extra->state = 1;
+                    extra->timer = 30;
                     Sfx_PlayFromObject(obj, SFXthorntail_chew1);
                 }
                 else
@@ -125,11 +124,11 @@ void dimbarrier_update(int obj)
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags &= ~1;
             ((GameObject*)obj)->anim.alpha = v;
-            *(s16*)extra -= framesThisStep;
-            if (*(s16*)extra <= 0)
+            extra->timer -= framesThisStep;
+            if (extra->timer <= 0)
             {
                 GameBit_Set(((DimbarrierPlacement*)def)->barrierGameBit, 1);
-                *(s8*)((char*)extra + 2) = 2;
+                extra->state = 2;
             }
             break;
         }
