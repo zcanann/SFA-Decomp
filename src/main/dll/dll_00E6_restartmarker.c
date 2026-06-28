@@ -1,6 +1,39 @@
 /* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
 
+/* Particle/emitter system embedded in the restart-marker object's extra block
+ * (single owner: FUN_8016e8cc's fade tick). The system holds 3 fading emitters
+ * followed by a dedicated "special" emitter pointer; each emitter owns a packed
+ * particle ring walked in steps of 2 half-slots (particle stride 0x28). */
+typedef struct RMParticle {
+    u8 pad00[0xc];
+    f32 unkC;   /* +0x0c: per-particle scalar fed into the fade ramp */
+    s16 levelA; /* +0x10: primary fade level, clamped 0..0xff */
+    u8 pad12[0x24 - 0x12];
+    s16 levelB; /* +0x24: mirror of levelA */
+    u8 pad26[0x28 - 0x26];
+} RMParticle;
+
+typedef struct RMEmitter {
+    RMParticle* particles; /* +0x00: base of this emitter's particle buffer */
+    u8 pad04[0xc - 0x4];
+    u16 startIdx; /* +0x0c: live-range start (half-slot units) */
+    u16 count;    /* +0x0e: live-range end (half-slot units) */
+    u8 pad10[0x12 - 0x10];
+    s16 liveCount; /* +0x12: remaining live half-slots */
+    u8 flags;      /* +0x14: bit 0x2 = active */
+    u8 pad15[0x18 - 0x15];
+} RMEmitter;
+
+typedef struct RMParticleSystem {
+    RMEmitter emitters[3]; /* +0x00: the three fading emitters */
+    RMEmitter* specialEmitter; /* +0x48: dedicated emitter (not fade-cleared) */
+    u8 pad4C[0x50 - 0x4C];
+    int unk50; /* +0x50: count, converted to float for FUN_8002fc3c */
+    u8 pad54[0x98 - 0x54];
+    int unk98; /* +0x98: count, converted to float in the fade ramp */
+} RMParticleSystem;
+
 extern u32 ObjHitbox_SetSphereRadius();
 
 void mikabomb_hitDetect(void);
@@ -559,50 +592,50 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
 {
     short level;
     int scratch;
-    int* emitter;
+    RMEmitter* emitter;
     u32 partIdx;
-    int partPtr;
-    int* extra;
+    RMParticle* part;
+    RMParticleSystem* extra;
     double computed;
     double clamped;
 
-    extra = ((GameObject*)obj)->extra;
+    extra = (RMParticleSystem*)((GameObject*)obj)->extra;
     scratch = FUN_80017a54(obj);
     *(u16*)(scratch + 0x18) = *(u16*)(scratch + 0x18) & ~0x8;
-    FUN_8002fc3c((double)(float)extra[0x14], (double)lbl_803DC074);
+    FUN_8002fc3c((double)(float)extra->unk50, (double)lbl_803DC074);
     scratch = 3;
-    emitter = extra;
+    emitter = extra->emitters;
     do
     {
-        if ((*(u8*)(emitter + 5) & 2) != 0)
+        if ((emitter->flags & 2) != 0)
         {
-            partIdx = (u32) * (u16*)(emitter + 3);
-            partPtr = *emitter + partIdx * 0x14;
-            for (; partIdx < (int)(u32) * (u16*)((int)emitter + 0xe); partIdx = partIdx + 2)
+            partIdx = (u32)emitter->startIdx;
+            part = (RMParticle*)((char*)emitter->particles + partIdx * 0x14);
+            for (; partIdx < (int)(u32)emitter->count; partIdx = partIdx + 2)
             {
-                if (emitter == (int*)extra[0x12])
+                if (emitter == extra->specialEmitter)
                 {
                     param_3 = (double)lbl_803E3F8C;
                     computed = (double)(float)(param_3 *
-                        (double)((lbl_803E3FA4 * (float)extra[0x26] -
-                            *(float*)(partPtr + 0xc)) * lbl_803E3FA8));
+                        (double)((lbl_803E3FA4 * (float)extra->unk98 -
+                            part->unkC) * lbl_803E3FA8));
                     clamped = (double)lbl_803E3F4C;
                     if ((clamped <= computed) && (clamped = computed, param_3 < computed))
                     {
                         clamped = param_3;
                     }
-                    *(short*)(partPtr + 0x10) = (short)(int)(param_3 - clamped);
-                    *(u16*)(partPtr + 0x24) = *(u16*)(partPtr + 0x10);
+                    part->levelA = (short)(int)(param_3 - clamped);
+                    *(u16*)&part->levelB = *(u16*)&part->levelA;
                 }
                 else
                 {
                     param_3 = (double)lbl_803E3FC4;
-                    *(short*)(partPtr + 0x10) =
+                    part->levelA =
                         (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                            (double)(f32)(s32)((int)*(short*)(partPtr + 0x10)));
-                    *(u16*)(partPtr + 0x24) = *(u16*)(partPtr + 0x10);
+                            (double)(f32)(s32)((int)part->levelA));
+                    *(u16*)&part->levelB = *(u16*)&part->levelA;
                 }
-                level = *(short*)(partPtr + 0x10);
+                level = part->levelA;
                 if (level < 0)
                 {
                     level = 0;
@@ -611,8 +644,8 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
                 {
                     level = 0xff;
                 }
-                *(short*)(partPtr + 0x10) = level;
-                level = *(short*)(partPtr + 0x24);
+                part->levelA = level;
+                level = part->levelB;
                 if (level < 0)
                 {
                     level = 0;
@@ -621,20 +654,20 @@ void FUN_8016e8cc(u64 param_1, u64 param_2, double param_3, u64 param_4,
                 {
                     level = 0xff;
                 }
-                *(short*)(partPtr + 0x24) = level;
-                if ((*(short*)(partPtr + 0x10) < 1) && (*(short*)(partPtr + 0x24) < 1))
+                part->levelB = level;
+                if ((part->levelA < 1) && (part->levelB < 1))
                 {
-                    *(short*)((int)emitter + 0x12) = *(short*)((int)emitter + 0x12) + -2;
-                    *(short*)(emitter + 3) = *(short*)(emitter + 3) + 2;
+                    emitter->liveCount = emitter->liveCount + -2;
+                    *(s16*)&emitter->startIdx = *(s16*)&emitter->startIdx + 2;
                 }
-                partPtr = partPtr + 0x28;
+                part = (RMParticle*)((char*)part + 0x28);
             }
-            if ((emitter != (int*)extra[0x12]) && (*(short*)((int)emitter + 0x12) == 0))
+            if ((emitter != extra->specialEmitter) && (emitter->liveCount == 0))
             {
-                *(u8*)(emitter + 5) = *(u8*)(emitter + 5) & 0xfd;
+                emitter->flags = emitter->flags & 0xfd;
             }
         }
-        emitter = emitter + 6;
+        emitter = emitter + 1;
         scratch = scratch + -1;
     }
     while (scratch != 0);
