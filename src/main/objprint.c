@@ -2777,14 +2777,10 @@ void characterDoEyeAnims(int obj, int state)
     a = characterFindEyeJoint(obj, 5);
     b = characterFindEyeJoint(obj, 4);
 
-    if (a == NULL)
+    if (a == NULL || b == NULL)
     {
         return;
     }
-    if (b == NULL)
-    {
-    }
-    else
     {
         int v = b->textureId;
         int st = (s8) * (s8*)(state + 0x1e);
