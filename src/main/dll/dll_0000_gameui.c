@@ -2367,7 +2367,7 @@ void fn_80128470(int p1)
     }
     if (lbl_803DD75C == 0)
     {
-        HudTextures* tex = (HudTextures*)hudTextures;
+        HudTextures* tex;
         GridEntry* e = &lbl_803DD824[lbl_803DD7D8];
         f32 scale = (f32)(lbl_803E2108 * e->f10);
         int w = lbl_803E1F34;
@@ -2397,6 +2397,7 @@ void fn_80128470(int p1)
         }
         alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
         w16 = w;
+        tex = (HudTextures*)hudTextures;
         pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1,
                              0x100, (u8)alpha, w16, 0);
         drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1,
