@@ -1315,14 +1315,14 @@ STATIC_ASSERT(offsetof(TrickyHud, trickyValue) == 0xBA4);
 void hudDrawFn_80121440(void)
 {
     TrickyHud* base = (TrickyHud*)lbl_803A87F0;
-    int *player;
+    int i;
     void *tricky;
     int alpha;
     int itemTex = 0;
     int hcArg = 0;
     int krazoa = 0;
     int magicId;
-    int i;
+    int *player;
     f32 op;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
