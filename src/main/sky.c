@@ -2327,11 +2327,11 @@ void fn_8008BDA8(void)
 
 void skyFn_8008a04c(void)
 {
-    int cC;
-    int cB;
-    int cA;
-    f32* vec;
+    int part;
+    int red;
     int iofs;
+    f32* vec;
+    int green;
     f32* pA;
     f32* pB;
     f32* pC;
@@ -2340,12 +2340,12 @@ void skyFn_8008a04c(void)
     u8* color;
     int part4;
     int i;
-    int t2;
-    int blue;
     int c1;
-    int part;
-    int red;
-    int green;
+    int blue;
+    int t2;
+    int cC;
+    int cB;
+    int cA;
     f32 tc;
     f32 blend;
     f32 time2;
