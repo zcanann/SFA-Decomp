@@ -639,7 +639,7 @@ void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
 void fn_8015625C(u32 obj, int state)
 {
     u32 randVal;
-    int tracked;
+    GameObject* tracked;
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
@@ -692,10 +692,10 @@ void fn_8015625C(u32 obj, int state)
     }
     else
     {
-        tracked = *(int*)&((BaddieState*)state)->trackedObj;
-        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(tracked + 0x18),
-                                                         lbl_803E2AB8 + *(float*)(tracked + 0x1c),
-                                                         *(float*)(tracked + 0x20),
+        tracked = (GameObject*)((BaddieState*)state)->trackedObj;
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, tracked->anim.worldPosX,
+                                                         lbl_803E2AB8 + tracked->anim.worldPosY,
+                                                         tracked->anim.worldPosZ,
                                                          lbl_803E2ABC, lbl_803E2AC0, lbl_803E2AC4,
                                                          ((BaddieState*)state)->unk304);
     }
@@ -868,7 +868,7 @@ void wbInit(u32 unused, int state)
 
 void fn_80156950(u32 obj, int state)
 {
-    switch (*(short*)(obj + 0xa0))
+    switch (((GameObject*)obj)->anim.currentMove)
     {
     case 5:
         if (*(u16*)(state + 0x2f8) != 0)
