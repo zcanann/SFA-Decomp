@@ -157,12 +157,12 @@ void dbegg_processMessages(int obj)
             switch (msgFlag)
             {
             case 18:
-                if ((*(u8*)(sub + 0x119) & 0x20) == 0)
+                if ((((DbEggState*)sub)->flags119 & 0x20) == 0)
                 {
                     ObjGroup_RemoveObject(obj, 36);
                 }
                 ObjHits_DisableObject(obj);
-                *(u8*)(sub + 0x118) = 11;
+                ((DbEggState*)sub)->mode = 11;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
                 break;
@@ -170,9 +170,9 @@ void dbegg_processMessages(int obj)
                 {
                     f32 buf[6];
                     f32 v;
-                    ((GameObject*)obj)->anim.velocityX = *(f32*)(sub + 0x10c);
-                    ((GameObject*)obj)->anim.velocityY = *(f32*)(sub + 0x110);
-                    ((GameObject*)obj)->anim.velocityZ = -*(f32*)(sub + 0x114);
+                    ((GameObject*)obj)->anim.velocityX = ((DbEggState*)sub)->launchVelX;
+                    ((GameObject*)obj)->anim.velocityY = ((DbEggState*)sub)->launchVelY;
+                    ((GameObject*)obj)->anim.velocityZ = -((DbEggState*)sub)->launchVelZ;
                     v = lbl_803E61C8;
                     buf[3] = v;
                     buf[4] = v;
@@ -186,7 +186,7 @@ void dbegg_processMessages(int obj)
             case 16:
                 ObjGroup_AddObject(obj, 36);
             case 20:
-                *(u8*)(sub + 0x118) = 5;
+                ((DbEggState*)sub)->mode = 5;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
                 ObjHits_EnableObject(obj);
@@ -288,9 +288,9 @@ int dbegg_func0B(int obj, f32* v)
     u8* inner = ((GameObject*)obj)->extra;
     if (((DbEggState*)inner)->mode == 0xb)
     {
-        *(f32*)(inner + 0x10c) = v[0];
-        *(f32*)(inner + 0x110) = v[1];
-        *(f32*)(inner + 0x114) = v[2];
+        ((DbEggState*)inner)->launchVelX = v[0];
+        ((DbEggState*)inner)->launchVelY = v[1];
+        ((DbEggState*)inner)->launchVelZ = v[2];
         return 1;
     }
     return 0;
@@ -543,8 +543,8 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     int control;
 
     control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    *(u8*)(control + 0x14) = *(u8*)(control + 0x14) | 2;
-    *(u8*)(control + 0x15) = *(u8*)(control + 0x15) | 4;
+    ((DbStealerwormControl*)control)->flags14 |= 2;
+    ((DbStealerwormControl*)control)->flags15 |= 4;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
     {
@@ -555,16 +555,16 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        *(int*)(control + 0x18) = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
+        ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         ((DbStealerwormControl*)control)->unk1C = 0x24;
         ((DbStealerwormControl*)control)->unk2C = 0;
         ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            *(int*)(control + 0x18), 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+                            ((DbStealerwormControl*)control)->linkedObj, 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
     {
-        *(u8*)(control + 0x34) = 1;
+        ((DbStealerwormControl*)control)->unk34 = 1;
     }
     return 0;
 }
