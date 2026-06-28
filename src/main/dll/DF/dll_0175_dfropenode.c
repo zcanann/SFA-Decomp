@@ -641,7 +641,7 @@ void dfropenode_update(DFropenodeObject* obj)
         extra->planeDistance = -(baseZ * normalZ + (baseX * normalX + baseY * normalY));
     }
 
-    DFRope_UpdateSimulation((u8*)extra->rope);
+    DFRope_UpdateSimulation(extra->rope);
 }
 
 void dfropenode_init(DFropenodeObject* obj, u8* objDef)

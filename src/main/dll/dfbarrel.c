@@ -24,87 +24,86 @@ extern void DFPulley_integrateLinks(u8 * self);
 
 #define DFBARREL_NODE_LINKS_OFFSET 0x28
 
-void DFRope_UpdateSimulation(u8* self)
+void DFRope_UpdateSimulation(DFRope* self)
 {
     int j;
-    u8* link;
+    DFRopeLink* link;
     int k;
-    u8* parts;
+    DFRopeNode* parts;
     int i;
-    u8* partIter;
+    DFRopeNode* partIter;
     Vec tmp;
     f32 zero;
-    u8* partsInit;
+    DFRopeNode* partsInit;
 
-    partsInit = (u8*)*(int*)(self + 0x0);
+    partsInit = self->nodes;
     parts = partsInit;
 
-    if ((s8)self[0x34] < -DFBARREL_SWAY_LIMIT)
+    if ((s8)self->sway < -DFBARREL_SWAY_LIMIT)
     {
-        self[0x35] = DFBARREL_SWAY_DIR_INCREASING;
+        self->direction = DFBARREL_SWAY_DIR_INCREASING;
     }
-    if ((s8)self[0x34] > DFBARREL_SWAY_LIMIT)
+    if ((s8)self->sway > DFBARREL_SWAY_LIMIT)
     {
-        self[0x35] = DFBARREL_SWAY_DIR_DECREASING;
+        self->direction = DFBARREL_SWAY_DIR_DECREASING;
     }
-    if ((s8)self[0x35] == DFBARREL_SWAY_DIR_DECREASING)
+    if ((s8)self->direction == DFBARREL_SWAY_DIR_DECREASING)
     {
-        self[0x34]--;
+        self->sway--;
     }
     else
     {
-        self[0x34]++;
+        self->sway++;
     }
 
     i = 1;
-    partIter = partsInit + DFBARREL_ROPE_PART_SIZE;
+    partIter = partsInit + 1;
     {
         f32 rate = lbl_803E4DF8;
-        for (; i < self[0x8] - 1; i++)
+        for (; i < self->count - 1; i++)
         {
-            *(f32*)(partIter + 0x18) =
-                *(f32*)(partIter + 0x18) + rate * (f32)(int)(s8)
-            self[0x34];
-            partIter += DFBARREL_ROPE_PART_SIZE;
+            partIter->force[0] =
+                partIter->force[0] + rate * (f32)(int)(s8)self->sway;
+            partIter++;
         }
     }
 
     k = 0;
     zero = lbl_803E4DFC;
-    for (; k < *(int *)&((GameObject *)self)->anim.velocityY; k++)
+    for (; k < self->enabled; k++)
     {
-        link = (u8*)*(int*)(self + 0x4);
-        for (j = 0; j < self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE)
+        link = self->links;
+        for (j = 0; j < self->count - 1; j++, link++)
         {
-            PSVECSubtract((Vec*)*(int*)(link + 0x4), (Vec*)*(int*)(link + 0x8), &tmp);
-            *(f32*)(link + 0x0) = PSVECMag(&tmp);
-            if (*(f32*)(link + 0x0) > *(f32*)(link + 0x14))
+            PSVECSubtract((Vec*)link->a, (Vec*)link->b, &tmp);
+            link->length = PSVECMag(&tmp);
+            if (link->length > link->maxLength)
             {
-                *(f32*)(link + 0xC) = lbl_803E4DFC;
+                link->restLength = lbl_803E4DFC;
             }
-            if (zero == *(f32*)(link + 0xC))
+            if (zero == link->restLength)
             {
-                *(f32*)(link + 0x20) = zero;
-                *(f32*)(link + 0x1C) = zero;
-                *(f32*)(link + 0x18) = zero;
+                link->force[2] = zero;
+                link->force[1] = zero;
+                link->force[0] = zero;
             }
             else
             {
-                PSVECScale(&tmp, (Vec*)(link + 0x18),
-                           -*(f32*)(link + 0x10) * (*(f32*)(link + 0x0) - *(f32*)(link + 0xC)));
+                PSVECScale(&tmp, (Vec*)link->force,
+                           -link->stiffness * (link->length - link->restLength));
             }
         }
-        DFPulley_integrateLinks(self);
+        DFPulley_integrateLinks((u8*)self);
     }
 
     i = 0;
     {
         f32 cleanZero = lbl_803E4DFC;
-        for (; i < self[0x8]; i++, parts += DFBARREL_ROPE_PART_SIZE)
+        for (; i < self->count; i++, parts++)
         {
-            *(f32*)(parts + 0x18) = cleanZero;
-            *(f32*)(parts + 0x1C) = cleanZero;
-            *(f32*)(parts + 0x20) = cleanZero;
+            parts->force[0] = cleanZero;
+            parts->force[1] = cleanZero;
+            parts->force[2] = cleanZero;
         }
     }
 }
