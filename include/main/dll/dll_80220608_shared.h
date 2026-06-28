@@ -702,6 +702,27 @@ STATIC_ASSERT(offsetof(RingState, phase) == 0x15);
 STATIC_ASSERT(offsetof(RingState, pullTimer) == 0x18);
 STATIC_ASSERT(offsetof(RingState, light) == 0x20);
 
+/*
+ * Placement/setup record the map loader hands to ring_init/ring_update.
+ * Embeds the common ObjPlacement head, then the ring's class-specific
+ * fields (setup+0x18..+0x20) read in ring_init and ring_update.
+ */
+typedef struct RingPlacement {
+    ObjPlacement base;     /* 0x00: common placement head */
+    s8 modeFlag;           /* 0x18 */
+    u8 route;              /* 0x19 */
+    s16 linkId;            /* 0x1A */
+    s16 pullHeight;        /* 0x1C */
+    u8 pad1E[2];           /* 0x1E */
+    s16 activateBit;       /* 0x20 */
+} RingPlacement;
+
+STATIC_ASSERT(offsetof(RingPlacement, modeFlag) == 0x18);
+STATIC_ASSERT(offsetof(RingPlacement, route) == 0x19);
+STATIC_ASSERT(offsetof(RingPlacement, linkId) == 0x1A);
+STATIC_ASSERT(offsetof(RingPlacement, pullHeight) == 0x1C);
+STATIC_ASSERT(offsetof(RingPlacement, activateBit) == 0x20);
+
 extern f32 lbl_803E70C4;
 extern f32 lbl_803E70D8;
 

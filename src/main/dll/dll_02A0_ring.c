@@ -42,12 +42,6 @@
 #define RING_PHASE_PULL_TO_ARWING 2
 #define RING_PHASE_COLLECTED 3
 
-#define RING_SETUP_MODE_FLAG_OFFSET 0x18
-#define RING_SETUP_ROUTE_OFFSET 0x19
-#define RING_SETUP_LINK_ID_OFFSET 0x1a
-#define RING_SETUP_PULL_HEIGHT_OFFSET 0x1c
-#define RING_SETUP_ACTIVATE_BIT_OFFSET 0x20
-
 #define RING_ALPHA_OPAQUE 0xff
 #define RING_SCORE_VALUE 0xf
 #define RING_SHOT_TYPE_A 0x604
@@ -96,6 +90,7 @@ void ring_initialise(void)
 void ring_init(int obj, int setup)
 {
     RingState* state = ((GameObject*)obj)->extra;
+    RingPlacement* p = (RingPlacement*)setup;
     RingFlags* f = &state->flags;
     s16 type = ((GameObject*)obj)->anim.seqId;
     if (type == RING_OBJ_ARW_SILVER)
@@ -123,7 +118,7 @@ void ring_init(int obj, int setup)
     {
         state->mode = RING_MODE_GOLD;
     }
-    state->route = *(u8*)(setup + RING_SETUP_ROUTE_OFFSET);
+    state->route = p->route;
     if (state->route == RING_ROUTE_STATIONARY_SHOT || state->route == RING_ROUTE_MOVING_SHOT_A ||
         state->route == RING_ROUTE_MOVING_SHOT_B)
     {
@@ -135,11 +130,11 @@ void ring_init(int obj, int setup)
         f->bit80 = 1;
         ObjHits_DisableObject(obj);
     }
-    state->linkId = *(s16*)(setup + RING_SETUP_LINK_ID_OFFSET);
-    state->pullHeight = (f32) * (s16*)(setup + RING_SETUP_PULL_HEIGHT_OFFSET) / lbl_803E70C4;
+    state->linkId = p->linkId;
+    state->pullHeight = (f32)p->pullHeight / lbl_803E70C4;
     state->origX = ((GameObject*)obj)->anim.localPosX;
     state->origY = ((GameObject*)obj)->anim.localPosY;
-    if (*(s8*)(setup + RING_SETUP_MODE_FLAG_OFFSET) != 0)
+    if (p->modeFlag != 0)
         f->bit20 = 1;
     else
         f->bit20 = 0;
@@ -160,7 +155,7 @@ void ring_update(int obj)
 {
     RingState* state = ((GameObject*)obj)->extra;
     int arwing;
-    int setup;
+    RingPlacement* setup;
     int bit;
     int r;
     int hitA;
@@ -172,7 +167,7 @@ void ring_update(int obj)
     f32 mtx[12];
 
     arwing = getArwing();
-    setup = *(int*)&((GameObject*)obj)->anim.placementData;
+    setup = (RingPlacement*)((GameObject*)obj)->anim.placementData;
     if (arwing == 0u)
         arwing = Obj_GetPlayerObject();
 
@@ -186,7 +181,7 @@ void ring_update(int obj)
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
         }
         ((GameObject*)obj)->anim.alpha = r;
-        bit = *(s16*)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
+        bit = setup->activateBit;
         if (bit > -1)
         {
             if (GameBit_Get(bit) != 0u)
@@ -208,7 +203,7 @@ void ring_update(int obj)
         r = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + lbl_803E70B4 * timeDelta);
         if (r > RING_ALPHA_OPAQUE) r = RING_ALPHA_OPAQUE;
         ((GameObject*)obj)->anim.alpha = r;
-        bit = *(s16*)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
+        bit = setup->activateBit;
         if (bit > -1)
         {
             if (GameBit_Get(bit) == 0u)
@@ -348,9 +343,9 @@ void ring_update(int obj)
             {
                 f32 fz = lbl_803E70A0;
                 state->pullTimer = fz;
-                ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+                ((GameObject*)obj)->anim.localPosX = setup->base.posX;
+                ((GameObject*)obj)->anim.localPosY = setup->base.posY;
+                ((GameObject*)obj)->anim.localPosZ = setup->base.posZ;
                 ((GameObject*)obj)->anim.rotX = 0;
                 ((GameObject*)obj)->anim.alpha = RING_ALPHA_OPAQUE;
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
