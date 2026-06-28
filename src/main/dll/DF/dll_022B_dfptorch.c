@@ -101,17 +101,17 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 scale;
     struct
     {
-        u8 pad[12];
-        f32 col[3];
-    } fx;
-    struct
-    {
         s32 out[2];
         s16 g2[4];
         s16 g1[4];
-        f32 d[3];
-        f32 a[3];
         f32 b[3];
+        f32 a[3];
+        f32 d[3];
+        struct
+        {
+            u8 pad[12];
+            f32 col[3];
+        } fx;
     } stk2;
 
     if (visible == 0)
@@ -164,10 +164,10 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if (state->visibleLatch != 0)
                 {
-                    fx.col[0] = lbl_803E63D8;
-                    fx.col[1] = lbl_803E63DC;
-                    fx.col[2] = lbl_803E63D8;
-                    (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &fx, 0x12, -1,
+                    stk2.fx.col[0] = lbl_803E63D8;
+                    stk2.fx.col[1] = lbl_803E63DC;
+                    stk2.fx.col[2] = lbl_803E63D8;
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &stk2.fx, 0x12, -1,
                                                      NULL);
                 }
                 state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
