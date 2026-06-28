@@ -822,7 +822,8 @@ void linkDrawFn_801302c0(void)
     int w;
 
     base = gTumbleweedBushItems;
-    sel = &base[linkSelected];
+    sel = base;
+    sel += linkSelected;
     sel->field38 = four;
     if (((sel->flags & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
@@ -850,8 +851,7 @@ void linkDrawFn_801302c0(void)
         selLeft = sel->field06 - 2;
     }
     selRight = selLeft + w;
-    p = base;
-    for (i = 0; i < gTumbleweedBushItemCount; i++)
+    for (i = 0, p = gTumbleweedBushItems; i < gTumbleweedBushItemCount; i++)
     {
         if (i != linkSelected)
         {
