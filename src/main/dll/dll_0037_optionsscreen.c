@@ -39,7 +39,7 @@ extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextLoadDir(int dirId);
 extern s8 lbl_803DD706;        /* render-stale countdown */
 extern s8 lbl_803DD70C;        /* last top-level item index (read by other DLL) */
-extern u32 lbl_803DD708;       /* save-file struct base */
+extern u8* lbl_803DD708;       /* save-file struct base */
 extern s8 lbl_803DD705;        /* exit-in-progress flag */
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;        /* initial panel selector */
@@ -120,7 +120,7 @@ void OptionsScreen_initialise(void)
     (*gScreenTransitionInterface)->step(20, 5);
     gameTextLoadDir(21);
     lbl_803DD70C = 0;
-    lbl_803DD708 = (u32)getSaveFileStruct();
+    lbl_803DD708 = getSaveFileStruct();
     if (lbl_803DD6F8 == 0)
     {
         fn_8011CA74();
@@ -210,25 +210,25 @@ int OptionsScreen_run(void)
         optionsMenu_applyGameplaySetting(selection, item);
         if (selection == 0)
         {
-            ((u8*)lbl_803DD708)[6] =
+            lbl_803DD708[6] =
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
-            ((u8*)lbl_803DD708)[8] =
+            lbl_803DD708[8] =
                 !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
-            setWidescreen(((u8*)lbl_803DD708)[6]);
-            setRumbleEnabled(((u8*)lbl_803DD708)[8]);
+            setWidescreen(lbl_803DD708[6]);
+            setRumbleEnabled(lbl_803DD708[8]);
         }
         break;
     case 1:
         optionsMenu_applyAudioSetting(selection, item);
         if (selection == 0)
         {
-            ((u8*)lbl_803DD708)[9] =
+            lbl_803DD708[9] =
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
-            ((u8*)lbl_803DD708)[10] =
+            lbl_803DD708[10] =
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
-            ((u8*)lbl_803DD708)[11] =
+            lbl_803DD708[11] =
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[2]);
-            ((u8*)lbl_803DD708)[12] =
+            lbl_803DD708[12] =
                 (*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[3]);
         }
         break;
@@ -246,9 +246,9 @@ int OptionsScreen_run(void)
             switch (item)
             {
             case 0:
-                ((u8*)lbl_803DD708)[2] =
+                lbl_803DD708[2] =
                     !(*(int (*)(int))(*(int*)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
-                setSubtitlesEnabled(((u8*)lbl_803DD708)[2]);
+                setSubtitlesEnabled(lbl_803DD708[2]);
                 break;
             default:
                 saveFileStruct_setCheatActive(3,
