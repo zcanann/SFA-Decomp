@@ -151,9 +151,9 @@ void hitDetectFn_80097070(void* obj, u8 a, u8 b, u8 count, void* p7, f32 fval)
     params.f6 = table.v[b];
     if (p7 != NULL)
     {
-        params.vec[0] = *(f32*)((char*)p7 + 0xc);
-        params.vec[1] = *(f32*)((char*)p7 + 0x10);
-        params.vec[2] = *(f32*)((char*)p7 + 0x14);
+        params.vec[0] = ((GameObject*)p7)->anim.localPosX;
+        params.vec[1] = ((GameObject*)p7)->anim.localPosY;
+        params.vec[2] = ((GameObject*)p7)->anim.localPosZ;
     }
     else
     {
@@ -184,9 +184,9 @@ void objfx_spawnMaskedHitEffect(void* obj, u8 a, u8 b, u8 mask, void* p7, f32 fv
     params.f6 = table1.v[b];
     if (p7 != NULL)
     {
-        params.vec[0] = *(f32*)((char*)p7 + 0xc);
-        params.vec[1] = *(f32*)((char*)p7 + 0x10);
-        params.vec[2] = *(f32*)((char*)p7 + 0x14);
+        params.vec[0] = ((GameObject*)p7)->anim.localPosX;
+        params.vec[1] = ((GameObject*)p7)->anim.localPosY;
+        params.vec[2] = ((GameObject*)p7)->anim.localPosZ;
     }
     else
     {
@@ -611,9 +611,9 @@ void objfx_spawnLightPulse(void* obj, u8 type, int a3, u8 mode, void* light, f32
     {
         if (light != NULL)
         {
-            lvec[3] = *(f32*)((char*)light + 0xc);
-            lvec[4] = *(f32*)((char*)light + 0x10);
-            lvec[5] = *(f32*)((char*)light + 0x14);
+            lvec[3] = ((GameObject*)light)->anim.localPosX;
+            lvec[4] = ((GameObject*)light)->anim.localPosY;
+            lvec[5] = ((GameObject*)light)->anim.localPosZ;
             vecRotateZXY(obj, &lvec[3]);
             Camera_ProjectWorldPointWithOffset(
                 ((GameObject*)obj)->anim.worldPosX + lvec[3] - playerMapOffsetX,
