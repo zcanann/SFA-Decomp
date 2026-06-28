@@ -13,6 +13,7 @@
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/infopointstate_struct.h"
 
 typedef struct InfopointObjectDef
 {
@@ -72,15 +73,15 @@ void infopoint_update(GameObject* obj)
 
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    s16* inner = ((GameObject*)obj)->extra;
+    InfopointState* state = ((GameObject*)obj)->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
-        case 1: inner[0xb] = 0xff;
+        case 1: state->flag = 0xff;
             break;
-        case 2: inner[0xb] = 0;
+        case 2: state->flag = 0;
             break;
         case 3: break;
         case 4: break;
@@ -91,21 +92,21 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void infopoint_init(int* obj, u8* def)
 {
-    u8* state = ((GameObject*)obj)->extra;
+    InfopointState* state = ((GameObject*)obj)->extra;
     int* txt;
     ((GameObject*)obj)->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
         *(int*)lbl_803219A0 = textureLoadAsset(616);
     }
-    *(int*)(state + 8) = (int)lbl_80321990;
+    state->unk08 = (int)lbl_80321990;
     txt = gameTextGet(((InfopointObjectDef*)def)->textId);
-    *(int*)(state + 4) = **(int**)((char*)txt + 8);
-    *(int*)(state + 0xc) = 100;
-    *(int*)state = (int)txt;
+    state->textValue = **(int**)((char*)txt + 8);
+    state->timer = 100;
+    state->text = (int)txt;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->rotXByte << 8);
-    *(int*)(state + 0x18) = 2;
-    *(u8*)(state + 0x10) = ((InfopointObjectDef*)def)->unk1B;
-    *(s16*)(state + 0x16) = 0;
+    state->unk18 = 2;
+    state->unk10 = ((InfopointObjectDef*)def)->unk1B;
+    state->flag = 0;
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
