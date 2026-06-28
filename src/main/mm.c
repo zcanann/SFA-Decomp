@@ -200,6 +200,19 @@ typedef struct
 
 extern MmRegion gMmRegionTable[];
 
+typedef struct
+{
+    void* key;
+    int size;
+    s16 type;
+    s16 prev;
+    s16 next;
+    s16 stack;
+    int f10;
+    int f14;
+    int f18;
+} HeapItem;
+
 int mmGetRegionForPtr(u8* ptr)
 {
     int i;
@@ -221,33 +234,33 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     int slotsBytes = numSlots * 0x1c;
     int after = size - slotsBytes;
     int i;
-    u8* slot;
+    HeapItem* slot;
     int freePtr;
     gMmRegionTable[regIdx].numSlots = numSlots;
     gMmRegionTable[regIdx].f4 = 0;
     gMmRegionTable[regIdx].start = buf;
     gMmRegionTable[regIdx].size = size;
     gMmRegionTable[regIdx].f10 = 0;
-    slot = gMmRegionTable[regIdx].start;
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
     for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
     {
-        *(s16*)(slot + 0xe) = i;
-        slot += 0x1c;
+        slot->stack = i;
+        slot++;
     }
-    slot = gMmRegionTable[regIdx].start;
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
     freePtr = (int)buf + slotsBytes;
     if (freePtr & 0x1f)
     {
-        *(int*)(slot + 0) = (freePtr & ~0x1f) + 0x20;
+        *(int*)&slot->key = (freePtr & ~0x1f) + 0x20;
     }
     else
     {
-        *(int*)(slot + 0) = freePtr;
+        *(int*)&slot->key = freePtr;
     }
-    *(int*)(slot + 4) = after;
-    *(s16*)(slot + 8) = 0;
-    *(s16*)(slot + 0xa) = -1;
-    *(s16*)(slot + 0xc) = -1;
+    slot->size = after;
+    slot->type = 0;
+    slot->prev = -1;
+    slot->next = -1;
     gMmRegionTable[regIdx].f4++;
     return gMmRegionTable[regIdx].start;
 }
@@ -384,19 +397,6 @@ void mmFreeDeferred(void* p)
     gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
     gMmDeferredFreeCount++;
 }
-
-typedef struct
-{
-    void* key;
-    int size;
-    s16 type;
-    s16 prev;
-    s16 next;
-    s16 stack;
-    int f10;
-    int f14;
-    int f18;
-} HeapItem;
 
 typedef struct
 {
@@ -543,20 +543,18 @@ void mmFree(void* p)
 {
     int region;
     int i;
-    u8* slot;
-    u8* base;
+    HeapItem* base;
     gMmLastFreeTick = OSGetTick();
     region = mmGetRegionForPtr(p);
     if (region != -1)
     {
-        base = gMmRegionTable[region].start;
+        base = (HeapItem*)gMmRegionTable[region].start;
         i = 0;
         do
         {
-            slot = base + i * 0x1c;
-            if (*(void**)slot == p)
+            if (base[i].key == p)
             {
-                s16 t = *(s16*)(slot + 8);
+                s16 t = base[i].type;
                 if (t == 1 || t == 4)
                 {
                     heapFree(region, i);
@@ -567,7 +565,7 @@ void mmFree(void* p)
                 }
                 return;
             }
-            i = *(s16*)(slot + 0xc);
+            i = base[i].next;
         }
         while (i != -1);
     }
@@ -579,14 +577,14 @@ extern char sMmMemoryStoreMessageBlock[];
 
 int mmAllocateFromFBMemoryStore(int handle, int size)
 {
-    int* found;
+    MmStore* found;
     int i;
     int avail;
     found = NULL;
     i = 0;
     while (i < 0x20)
     {
-        if (gMmStoreArray[i] != NULL && handle == ((int*)gMmStoreArray[i])[3])
+        if (gMmStoreArray[i] != NULL && handle == ((MmStore*)gMmStoreArray[i])->handle)
         {
             found = gMmStoreArray[i];
             break;
@@ -599,14 +597,14 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     }
     if (found != NULL)
     {
-        avail = found[2] - (found[1] - found[0]);
+        avail = found->size - ((int)found->bufCur - (int)found->buf);
         if (avail < size)
         {
             OSReport(sMmMemoryStoreMessageBlock);
             return 0;
         }
-        found[1] += size;
-        return found[1] - size;
+        found->bufCur = (char*)found->bufCur + size;
+        return (int)found->bufCur - size;
     }
     return 0;
 }
