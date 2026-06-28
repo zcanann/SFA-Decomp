@@ -1364,16 +1364,16 @@ void boxDrawFn_8012975c(void)
         return;
     }
     idx = lbl_803DD770 & 0x1f;
-    drawTexture(*(void**)(hudTextures + 0x110), lbl_803E213C, lbl_803E2140, 0xff, 0x100);
+    drawTexture(((HudTextures*)hudTextures)->tex110, lbl_803E213C, lbl_803E2140, 0xff, 0x100);
     j = 2;
     alpha = 0xaa;
     for (; j >= 0; j--)
     {
         i = idx;
-        drawTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
+        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
                     (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
                     (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2158 - scaled), t, (u8)a,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), t, (u8)a,
                           (u16)u, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
@@ -1384,10 +1384,10 @@ void boxDrawFn_8012975c(void)
     for (; j >= 0; j--)
     {
         i = idx;
-        drawTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
+        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
                     (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
                     (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(*(void**)(hudTextures + 0x114), (f32)(lbl_803E2158 - scaled), t, (u8)a,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), t, (u8)a,
                           (u16)u, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
@@ -1403,18 +1403,18 @@ void fn_80128120(int unused, int p2)
     u8 level;
     s8 i;
 
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20D8, n, p2, lbl_803E1F34, 0);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20D8, n, p2, lbl_803E1F34, 0x1c, 0x1e, 1);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 2);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 3);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E4, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    drawFn_8011eb3c(*(int*)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E8, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20EC, lbl_803E1FD0, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement(*(int*)(hudTextures + 0x40), lbl_803E20EC, lbl_803E2100, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, n, p2, lbl_803E1F34, 0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, n, p2, lbl_803E1F34, 0x1c, 0x1e, 1);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 2);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 3);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, n, p2, lbl_803E1F34, 0);
 
     v = (u16)getNextTaskHintText();
     if (v > 0xb3) level = 6;
@@ -1437,18 +1437,18 @@ void fn_80128120(int unused, int p2)
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
 void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 {
-    drawTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
+    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
     if (flag != 0)
     {
-        drawScaledTexture(*(void**)(hudTextures + 0x30), x, y, alpha, 0x100, w, h, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
     }
-    drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x + w), y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
 }
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
@@ -1599,15 +1599,15 @@ void timeListDraw(void)
     {
         return;
     }
-    drawTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
+    drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
 
     {
         s16 ang;
@@ -1677,15 +1677,15 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     y = *(s16*)(box + 0x16);
     x = *(s16*)(box + 0x14);
 
-    drawTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), 0xff, 0x100);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y - 5), 0xff, 0x100, w, 5, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x - 5), y, 0xff, 0x100, 5, h, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x30), x, y, 0xff, 0x100, w, h, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
-    drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), 0xff, 0x100, 5, 5, 2);
+    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), 0xff, 0x100);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), 0xff, 0x100, w, 5, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, 0xff, 0x100, 5, h, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, 0xff, 0x100, w, h, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     gameTextFn_80016810(0x345, 0, 0xa);
@@ -1712,7 +1712,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             if (starred != 0)
             {
                 u8* box2 = gameTextGetBox(0x87);
-                drawTexture(*(void**)(hudTextures + 0xf8),
+                drawTexture(((HudTextures*)hudTextures)->texF8,
                             (f32)(*(s16*)(box2 + 0x14) + 0x64),
                             (f32)(*(s16*)(box2 + 0x16) + k * 0x1e + 0x57), 0xff, 0x100);
                 gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
@@ -2367,7 +2367,7 @@ void fn_80128470(int p1)
     }
     if (lbl_803DD75C == 0)
     {
-        u8* tex = hudTextures;
+        HudTextures* tex = (HudTextures*)hudTextures;
         GridEntry* e = &lbl_803DD824[lbl_803DD7D8];
         f32 scale = (f32)(lbl_803E2108 * e->f10);
         int w = lbl_803E1F34;
@@ -2397,13 +2397,13 @@ void fn_80128470(int p1)
         }
         alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
         w16 = w;
-        pauseMenuDrawElement(*(int*)(tex + 0x80), (f32)(s16)x1, (f32)(s16)y1,
+        pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1,
                              0x100, (u8)alpha, w16, 0);
-        drawFn_8011eb3c(*(int*)(tex + 0x80), x2, (f32)(s16)y1,
+        drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 1);
-        drawFn_8011eb3c(*(int*)(tex + 0x80), (f32)(s16)x1, y2,
+        drawFn_8011eb3c((int)tex->tex80, (f32)(s16)x1, y2,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 2);
-        drawFn_8011eb3c(*(int*)(tex + 0x80), x2, y2,
+        drawFn_8011eb3c((int)tex->tex80, x2, y2,
                         0x100, (u8)alpha, w16, 0x12, 0xa, 3);
     }
     gameTextSetDrawFunc(0);
@@ -2442,15 +2442,15 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         y = *(s16*)(gTextBoxes + 0x196);
         h = h0;
         w = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x30), x, y, alpha, 0x100, w, h, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x + w), y, alpha, 0x100, 5, h, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = h0;
         {
             s8 fi;
@@ -2553,14 +2553,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             }
         }
         lbl_803DD77C++;
-        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E2198, lbl_803E219C, alpha, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
+        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, alpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
         {
             int row;
             int ph1 = 0;
@@ -2584,7 +2584,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     a2 = 0xff;
                 }
-                drawPartialTexture(*(void**)(hudTextures + 0x150), lbl_803E1F48, (f32)(row + 0x32),
+                drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x32),
                                    (u8)a2, 0x100, 0x82, 2, r2, r1);
                 b2 = (int)((f32)alpha * (c1 + s));
                 if (b2 < 0)
@@ -2597,7 +2597,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     b2 = 0xff;
                 }
-                drawPartialTexture(*(void**)(hudTextures + 0x150), lbl_803E1F48, (f32)(row + 0x34),
+                drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x34),
                                    (u8)b2, 0x100, 0x82, 2, r2, r1);
                 ph1 += 0x3520;
                 ph2 += 0x1f40;
@@ -2609,41 +2609,41 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     {
         char* gt;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E1F9C, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21AC, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
-        drawTexture(*(void**)(hudTextures + 0xfc), lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
+        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E1F9C, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21AC, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(((HudTextures*)hudTextures)->texFC, lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
         gt = gameTextGet(0x2ac);
         if (*(u16*)(gt + 2) > 1)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 4), 0x93, 0x69, 0x17f);
         }
-        drawTexture(*(void**)(hudTextures + 0x10c), lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
+        drawTexture(((HudTextures*)hudTextures)->tex10C, lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 2)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 8), 0x93, 0x51, 0x194);
         }
-        drawTexture(*(void**)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21B8, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x30), lbl_803E21BC, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(*(void**)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(*(void**)(hudTextures + 0x2c), lbl_803E21C0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(*(void**)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
-        drawTexture(*(void**)(hudTextures + 0x100), lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
+        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21B8, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E21BC, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E21BC, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21C0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21C0, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(((HudTextures*)hudTextures)->tex100, lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 4)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x10), 0x93, 0x20c, 0x17f);
         }
-        drawTexture(*(void**)(hudTextures + 0x104), lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
+        drawTexture(((HudTextures*)hudTextures)->tex104, lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
         if (*(u16*)(gt + 2) > 5)
         {
             gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x14), 0x93, 0x1f6, 0x195);
