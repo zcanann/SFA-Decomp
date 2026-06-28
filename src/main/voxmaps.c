@@ -1193,8 +1193,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
         {
             z6lo = voxZ6 & 3;
             z6hi = z6lo + 1;
-            bitmapCol = (voxZ << 1) + (voxX >> 3);
-            for (row = 0; row < 3; row++)
+            for (row = 0, bitmapCol = (voxZ << 1) + (voxX >> 3); row < 3; row++)
             {
                 int y = row + cur.y;
                 y -= 1;
