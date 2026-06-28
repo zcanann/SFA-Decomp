@@ -423,6 +423,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b); /* #57 */
     NwMammothState* state = (NwMammothState*)st;
+    int* tw2;
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (state->stateIndex)
     {
@@ -514,7 +515,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                 }
             }
             {
-                int* tw2 = tumbleweedbush_findNearestActive(st + 0xc);
+                tw2 = tumbleweedbush_findNearestActive(st + 0xc);
                 if (tw2 != NULL)
                 {
                     int* tk = getTrickyObject();
