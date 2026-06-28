@@ -320,13 +320,12 @@ void fn_80150EDC(void* obj, void* state)
         SeqRow16* seqRow16 = (SeqRow16*)seqRows;
         if (*(u16*)((u8*)state + 0x338) != 0)
         {
-            SeqRow16* row;
-            row = &seqRow16[*(u16*)((u8*)state + 0x338)];
-            *(u8*)((u8*)state + 0x2f2) = row->extra;
-            row = &seqRow16[*(u16*)((u8*)state + 0x338)];
-            Baddie_SetMove(obj, state, row->anim,
+            *(u8*)((u8*)state + 0x2f2) =
+                seqRow16[*(u16*)((u8*)state + 0x338)].extra;
+            Baddie_SetMove(obj, state,
+                        seqRow16[*(u16*)((u8*)state + 0x338)].anim,
                         *(f32*)(seqRows + (*(u16*)((u8*)state + 0x338) << 4)), 0,
-                        (u8)row->flags);
+                        (u8)seqRow16[*(u16*)((u8*)state + 0x338)].flags);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj,
                 *(f32*)(table + (seqRow16[*(u16*)((u8*)state + 0x338)].anim << 2)));
