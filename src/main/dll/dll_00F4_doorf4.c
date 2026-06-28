@@ -178,13 +178,15 @@ void doorf4_init(int* obj, int* params)
     DoorF4State* state = ((GameObject*)obj)->extra;
     s16 type;
 
+    DoorF4Placement* def = (DoorF4Placement*)params;
+
     ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)def->yawByte << 8);
     ((GameObject*)obj)->animEventCallback = doorf4_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     ((GameObject*)obj)->objectFlags |= 0x6000;
-    state->gameBitA = *(s16*)((char*)params + 0x1e);
-    state->unk18 = *(s16*)((char*)params + 0x20);
+    state->gameBitA = def->gameBitA;
+    state->unk18 = def->gameBitC;
     state->openRange = lbl_803E3654;
 
     type = ((GameObject*)obj)->anim.seqId;
