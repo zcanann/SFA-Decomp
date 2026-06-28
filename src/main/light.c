@@ -302,31 +302,43 @@ void vfpcoreplat_free(int obj)
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
+/* Per-object extra state for the VFP platform family (vfpplatform/vfpblock1/
+ * vfpcoreplat). vfpplatform_getExtraSize == 0x6. */
+typedef struct VfpPlatformState
+{
+    s16 gameBitId;  /* drives the open/close state machine */
+    u8 state;       /* state-machine mode (cases 0-6) */
+    u8 axisMode;    /* 0/3 = move axis, 10 = trigger-on-bit, 99/0x63 = inert */
+    s16 timer;      /* dwell countdown */
+} VfpPlatformState;
+
+STATIC_ASSERT(sizeof(VfpPlatformState) == 0x6);
+
 #pragma scheduling off
 #pragma peephole off
 void vfpblock1_init(int obj, int data)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    *(s16*)state = *(s16*)(data + 0x1e);
+    state->gameBitId = *(s16*)(data + 0x1e);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
 void vfpplatform_init(int obj, int data)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    *(s16*)state = *(s16*)(data + 0x20);
-    *(u8*)(state + 2) = 0;
-    *(u8*)(state + 3) = *(u8*)(data + 0x19);
+    state->gameBitId = *(s16*)(data + 0x20);
+    state->state = 0;
+    state->axisMode = *(u8*)(data + 0x19);
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 void vfpcoreplat_init(int obj, int data)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    *(s16*)state = *(s16*)(data + 0x20);
+    state->gameBitId = *(s16*)(data + 0x20);
     *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
     if (((GameObject*)obj)->anim.seqId == 0x3cb)
     {
@@ -450,9 +462,9 @@ void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
     s32 v = visible;
-    if (v != 0 && *(u8*)(state + 3) != 0x63)
+    if (v != 0 && state->axisMode != 0x63)
     {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
@@ -728,12 +740,12 @@ int fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 void fn_801FBAC8(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
-    int state = *(int*)&((GameObject*)obj)->extra;
-    if (GameBit_Get(*(s16*)state) != 0)
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
+    if (GameBit_Get(state->gameBitId) != 0)
     {
-        *(u8*)(state + 2) = 6;
+        state->state = 6;
     }
-    switch (*(u8*)(state + 2))
+    switch (state->state)
     {
     case 6:
         if (((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)params)->posZ)
@@ -754,49 +766,49 @@ void fn_801FBAC8(int obj)
         }
         else
         {
-            if (GameBit_Get(*(s16*)state) == 0)
+            if (GameBit_Get(state->gameBitId) == 0)
             {
-                *(u8*)(state + 2) = 3;
+                state->state = 3;
             }
         }
         break;
     case 0:
-        if (GameBit_Get(*(s16*)state) == 0)
+        if (GameBit_Get(state->gameBitId) == 0)
         {
-            *(u8*)(state + 2) = 3;
+            state->state = 3;
         }
         break;
     case 1:
         {
-            s16 timer = *(s16*)(state + 4);
+            s16 timer = state->timer;
             if (timer != 0)
             {
-                *(s16*)(state + 4) -= (s16)timeDelta;
-                if (*(s16*)(state + 4) <= 0)
+                state->timer -= (s16)timeDelta;
+                if (state->timer <= 0)
                 {
-                    *(s16*)(state + 4) = 0;
+                    state->timer = 0;
                 }
             }
-            else if (*(u8*)(state + 3) == 0)
+            else if (state->axisMode == 0)
             {
                 if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
                 {
-                    *(u8*)(state + 2) = 2;
+                    state->state = 2;
                 }
                 if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
                 {
-                    *(u8*)(state + 2) = 3;
+                    state->state = 3;
                 }
             }
             else
             {
                 if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
                 {
-                    *(u8*)(state + 2) = 4;
+                    state->state = 4;
                 }
                 if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
                 {
-                    *(u8*)(state + 2) = 5;
+                    state->state = 5;
                 }
             }
             break;
@@ -810,8 +822,8 @@ void fn_801FBAC8(int obj)
                 if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
                 {
                     ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
-                    *(u8*)(state + 2) = 1;
-                    *(s16*)(state + 4) = 20;
+                    state->state = 1;
+                    state->timer = 20;
                 }
             }
             break;
@@ -825,8 +837,8 @@ void fn_801FBAC8(int obj)
                 if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
                 {
                     ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ - thr;
-                    *(u8*)(state + 2) = 1;
-                    *(s16*)(state + 4) = 20;
+                    state->state = 1;
+                    state->timer = 20;
                 }
             }
             break;
@@ -837,11 +849,11 @@ void fn_801FBAC8(int obj)
 void vfpplatform_update(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
-    int state = *(int*)&((GameObject*)obj)->extra;
-    u8 s3 = *(u8*)(state + 3);
+    VfpPlatformState* state = ((GameObject*)obj)->extra;
+    u8 s3 = state->axisMode;
     if (s3 == 10)
     {
-        if (GameBit_Get(*(s16*)state) != 0)
+        if (GameBit_Get(state->gameBitId) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
@@ -860,35 +872,35 @@ void vfpplatform_update(int obj)
             }
             else
             {
-                switch (*(u8*)(state + 2))
+                switch (state->state)
                 {
                 case 0:
-                    if (GameBit_Get(*(s16*)state) != 0)
+                    if (GameBit_Get(state->gameBitId) != 0)
                     {
-                        *(u8*)(state + 2) = 1;
+                        state->state = 1;
                     }
                     break;
                 case 1:
                     {
-                        s16 timer = *(s16*)(state + 4);
+                        s16 timer = state->timer;
                         if (timer != 0)
                         {
-                            *(s16*)(state + 4) -= (s16)timeDelta;
-                            if (*(s16*)(state + 4) <= 0)
+                            state->timer -= (s16)timeDelta;
+                            if (state->timer <= 0)
                             {
-                                *(s16*)(state + 4) = 0;
+                                state->timer = 0;
                             }
                         }
                         else if (s3 == 0)
                         {
                             if (yi == tyi - 60)
                             {
-                                *(u8*)(state + 2) = 2;
+                                state->state = 2;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                             if (yi == tyi)
                             {
-                                *(u8*)(state + 2) = 3;
+                                state->state = 3;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                         }
@@ -896,12 +908,12 @@ void vfpplatform_update(int obj)
                         {
                             if (xi == txi - 60)
                             {
-                                *(u8*)(state + 2) = 2;
+                                state->state = 2;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                             if (xi == txi)
                             {
-                                *(u8*)(state + 2) = 3;
+                                state->state = 3;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                         }
@@ -909,12 +921,12 @@ void vfpplatform_update(int obj)
                         {
                             if (yi == tyi + 60)
                             {
-                                *(u8*)(state + 2) = 4;
+                                state->state = 4;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                             if (yi == tyi)
                             {
-                                *(u8*)(state + 2) = 5;
+                                state->state = 5;
                                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                             }
                         }
@@ -929,7 +941,7 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosX >= txi)
                             {
                                 ((GameObject*)obj)->anim.localPosX = txi;
-                                *(u8*)(state + 2) = 1;
+                                state->state = 1;
                             }
                         }
                     }
@@ -941,7 +953,7 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosZ >= tyi)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = tyi;
-                                *(u8*)(state + 2) = 1;
+                                state->state = 1;
                             }
                         }
                     }
@@ -955,8 +967,8 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosX <= txi - 60)
                             {
                                 ((GameObject*)obj)->anim.localPosX = (txi - 60);
-                                *(u8*)(state + 2) = 1;
-                                *(s16*)(state + 4) = 200;
+                                state->state = 1;
+                                state->timer = 200;
                             }
                         }
                     }
@@ -968,8 +980,8 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosZ <= tyi - 60)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = (tyi - 60);
-                                *(u8*)(state + 2) = 1;
-                                *(s16*)(state + 4) = 200;
+                                state->state = 1;
+                                state->timer = 200;
                             }
                         }
                     }
@@ -983,7 +995,7 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosX <= txi)
                             {
                                 ((GameObject*)obj)->anim.localPosX = txi;
-                                *(u8*)(state + 2) = 1;
+                                state->state = 1;
                             }
                         }
                     }
@@ -995,7 +1007,7 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosZ <= tyi)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = tyi;
-                                *(u8*)(state + 2) = 1;
+                                state->state = 1;
                             }
                         }
                     }
@@ -1009,8 +1021,8 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosX >= txi + 60)
                             {
                                 ((GameObject*)obj)->anim.localPosX = (txi + 60);
-                                *(u8*)(state + 2) = 1;
-                                *(s16*)(state + 4) = 200;
+                                state->state = 1;
+                                state->timer = 200;
                             }
                         }
                     }
@@ -1022,8 +1034,8 @@ void vfpplatform_update(int obj)
                             if ((int)((GameObject*)obj)->anim.localPosZ >= tyi + 60)
                             {
                                 ((GameObject*)obj)->anim.localPosZ = (tyi + 60);
-                                *(u8*)(state + 2) = 1;
-                                *(s16*)(state + 4) = 200;
+                                state->state = 1;
+                                state->timer = 200;
                             }
                         }
                     }
@@ -1085,12 +1097,12 @@ void dll_224_update(void* objArg)
 
 void dll_224_init(void* obj, void* other)
 {
-    s16* extra = ((GameObject*)obj)->extra;
+    SpellStoneUseState* extra = ((GameObject*)obj)->extra;
     s16 v = ((s8) * ((s8*)other + 0x18) << 8);
     u8 t;
     ((GameObject*)obj)->anim.rotX = v;
-    *(extra + 0) = *(s16*)((char*)other + 0x1e);
-    *(s16*)((char*)extra + 2) = *(s16*)((char*)other + 0x20);
+    extra->completeGameBit = *(s16*)((char*)other + 0x1e);
+    extra->requiredGameBit = *(s16*)((char*)other + 0x20);
     t = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
 }
