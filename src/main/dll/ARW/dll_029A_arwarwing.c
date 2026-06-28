@@ -1112,7 +1112,7 @@ void arwarwing_handlePathDamage(int obj, int state)
             Sfx_PlayFromObject(obj, 0x380);
             Music_Trigger(0xd6, 1);
         }
-        else if ((s8) * (u8*)(*(int*)&((GameObject*)obj)->extra + 0x468) <= 3)
+        else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
@@ -1196,7 +1196,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
         loadMapAndParent(0x29);
         lockLevel(mapGetDirIdx(0x29), 0);
     }
-    else if ((s8) * (u8*)(*(int*)&((GameObject*)obj)->extra + 0x468) <= 3)
+    else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
     }
