@@ -628,7 +628,15 @@ extern int gGameLoopPendingMapId;
 extern int gGameLoopPendingMapDataFileId;
 extern u8 lbl_803DCA40;
 extern u8 gGameLoopMapLoadPending;
-extern u8 gGameLoopPlayerTrailBuffer[];
+typedef struct PlayerTrailRecord
+{
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    int time;
+} PlayerTrailRecord;
+
+extern PlayerTrailRecord gGameLoopPlayerTrailBuffer[];
 extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
 extern f32 lbl_803DE7B4;
@@ -927,22 +935,22 @@ void gameUpdate(void)
     {
         void* player;
         int idx;
-        u8* rec;
+        PlayerTrailRecord* rec;
         int t;
 
         updateEnvironment(0);
         (*gMapEventInterface)->updateTimes();
         player = Obj_GetPlayerObject();
         idx = gGameLoopPlayerTrailIndex;
-        rec = gGameLoopPlayerTrailBuffer + idx * 16;
+        rec = &gGameLoopPlayerTrailBuffer[idx];
         t = gGameLoopPlayerTrailTime + framesThisStep;
         gGameLoopPlayerTrailTime = t;
         if (player != 0)
         {
-            *(f32*)(rec + 0) = ((GameObject*)player)->anim.localPosX;
-            *(f32*)(rec + 4) = ((GameObject*)player)->anim.localPosY;
-            *(f32*)(rec + 8) = ((GameObject*)player)->anim.localPosZ;
-            *(int*)(rec + 0xc) = t;
+            rec->posX = ((GameObject*)player)->anim.localPosX;
+            rec->posY = ((GameObject*)player)->anim.localPosY;
+            rec->posZ = ((GameObject*)player)->anim.localPosZ;
+            rec->time = t;
             gGameLoopPlayerTrailIndex = idx + 1;
             if (gGameLoopPlayerTrailIndex >= 0x3c)
             {
