@@ -29,8 +29,8 @@ extern int objMove(u8* obj, f32 dx, f32 dy, f32 dz);
 extern void objRenderFn_8003b8f4(f32 v);
 
 
-extern char gMmpAsteroidIntensityHeightTable[];
-extern char gMmpAsteroidDustSpawnParams[];
+extern f32 gMmpAsteroidIntensityHeightTable[];
+extern PartFxSpawnParams gMmpAsteroidDustSpawnParams;
 extern int gMmpAsteroidDustHeightParam;
 extern f32 lbl_803E44E8;
 extern f32 lbl_803E44F8;
@@ -195,7 +195,7 @@ void mmp_asteroid_re_update(int obj)
         if (state->intensity != 0)
         {
             f32 speed = ((GameObject*)obj)->anim.velocityY;
-            if (speed < lbl_803E4500 * ((state->baseY + *(f32*)(gMmpAsteroidIntensityHeightTable + state->intensity * 4)) - ((GameObject*)
+            if (speed < lbl_803E4500 * ((state->baseY + gMmpAsteroidIntensityHeightTable[state->intensity]) - ((GameObject*)
                 obj)->anim.localPosY))
             {
                 ((GameObject*)obj)->anim.velocityY = lbl_803E4504 * timeDelta + speed;
@@ -221,15 +221,15 @@ void mmp_asteroid_re_update(int obj)
             ((GameObject*)obj)->anim.rotY = (s16)(
                 ((GameObject*)obj)->anim.rotY + (int)(lbl_803E4524 * mathSinf(
                     (gMmpAsteroidPi * state->pitchPhase) / lbl_803E4520)));
-            *(f32*)(gMmpAsteroidDustSpawnParams + 8) = lbl_803E44F8;
-            *(f32*)(gMmpAsteroidDustSpawnParams + 0xC) = ((GameObject*)obj)->anim.localPosX;
-            *(f32*)(gMmpAsteroidDustSpawnParams + 0x10) = state->baseY - lbl_803E4528;
-            *(f32*)(gMmpAsteroidDustSpawnParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+            gMmpAsteroidDustSpawnParams.scale = lbl_803E44F8;
+            gMmpAsteroidDustSpawnParams.posX = ((GameObject*)obj)->anim.localPosX;
+            gMmpAsteroidDustSpawnParams.posY = state->baseY - lbl_803E4528;
+            gMmpAsteroidDustSpawnParams.posZ = ((GameObject*)obj)->anim.localPosZ;
             gMmpAsteroidDustHeightParam = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x722, NULL, 2, -1, &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, gMmpAsteroidDustSpawnParams, 0x200001, -1,
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
                                              &gMmpAsteroidDustHeightParam);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, gMmpAsteroidDustSpawnParams, 0x200001, -1,
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x723, &gMmpAsteroidDustSpawnParams, 0x200001, -1,
                                              &gMmpAsteroidDustHeightParam);
         }
     }
