@@ -208,9 +208,9 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         }
         else
         {
-            buf.pos[0] += *(f32*)(posSource + 0xc);
-            buf.pos[1] += *(f32*)(posSource + 0x10);
-            buf.pos[2] = lbl_803E1318 + *(f32*)(posSource + 0x14);
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E1318 + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)
