@@ -164,7 +164,7 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
         else
         {
             amount = state[0x2f1] & 0x1f;
-            if (amount > 0x18)
+            if ((u32)(state[0x2f1] & 0x1f) > 0x18)
             {
                 amount = 0;
             }
