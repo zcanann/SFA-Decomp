@@ -1,5 +1,5 @@
 /*
- * DLL 0x00F5 (sidekickball) — the Tricky "fetch" ball.
+ * DLL 0x00F5 (sidekickball) - the Tricky "fetch" ball.
  *
  * sidekickball_init spawns one ball object (extra size 0x2CC), wires it
  * onto the path-control interface and clears game bit 0x3F8; the free
