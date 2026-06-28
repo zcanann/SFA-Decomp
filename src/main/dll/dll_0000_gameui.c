@@ -1474,7 +1474,8 @@ void drawWorldMapHud(void)
         s8 fi;
         s8 li_;
         u8 lv;
-        int n, t;
+        int n;
+        int t;
         int hint;
 
         {
@@ -1498,7 +1499,7 @@ void drawWorldMapHud(void)
             t = GameBit_Get(0x4e9);
             n += GameBit_Get(0x5f3);
             n += GameBit_Get(0x5f4);
-            n = t + n;
+            n += t;
             if (GameBit_Get(0x123))
             {
                 n++;
