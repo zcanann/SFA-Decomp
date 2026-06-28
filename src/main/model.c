@@ -2630,9 +2630,9 @@ void modelInitBoneMtxs(u8* m, u8* out)
 
 void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
 {
-    u8* hdr;
-    int boneOff;
     u8* dst;
+    int boneOff;
+    u8* hdr;
     u32 i;
     u8* mtx;
     u8* bone;
