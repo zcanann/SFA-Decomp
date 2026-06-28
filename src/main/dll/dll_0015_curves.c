@@ -582,8 +582,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     collision->waterNormalY[0] = one;
     collision->waterNormalZ[0] = zero;
     foundBelow = 0;
-    point = points;
-    for (i = 0; i < hitCount; i++)
+    for (i = 0, point = points; i < hitCount; i++)
     {
         if ((s8)point->type != ROMCURVE_POINT_TYPE_WATER)
         {
