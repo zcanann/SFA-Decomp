@@ -985,10 +985,10 @@ void snowCloudUpdateFlakes(u8* snow)
     e = (SnowQuad*)(snow + 0x1008);
     if (((NewCloud*)snow)->cloudType == 0)
     {
-        f32 size = gSnowFlakeSizeLarge;
-        f32 negSize = -size;
         for (i = 0; i < 20; i++)
         {
+            f32 size = gSnowFlakeSizeLarge;
+            f32 negSize = -size;
             m = e->verts;
             m[0] = negSize;
             m[3] = negSize;
