@@ -1203,11 +1203,11 @@ extern const f32 lbl_803DF2A4;
 
 void titleScreenDrawFn_80093db4(void)
 {
-    f32* constellation;
+    int k;
     f32* cp;
     int i;
     int j;
-    int k;
+    f32* constellation;
     int idx;
     f32 zero;
     f32 v[3];
