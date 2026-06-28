@@ -1793,12 +1793,15 @@ typedef struct EnemyPlacement
     s16 gameBit2;
     u8 pad1C[0x28 - 0x1C];
     s8 unk28;
-    u8 pad29[0x2A - 0x29];
+    u8 aggroRangeByte; /* 0x29 */
     s8 rotXByte;
-    u8 pad2B[0x2C - 0x2B];
+    u8 flags2B; /* 0x2B: bit 3 (0x8) reloads spawn position before the trigger sequence */
     s16 respawnEnabled; /* 0x2C: when 0, the off-screen respawn path is skipped */
     s8 triggerSeqId;
-    u8 pad2F[0x34 - 0x2F];
+    u8 healthByte; /* 0x2F */
+    u8 pad30[0x32 - 0x30];
+    u8 unk32; /* 0x32 */
+    u8 pad33[0x34 - 0x33];
     u16 unk34;
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
@@ -2136,7 +2139,7 @@ void enemy_update(int obj)
         {
             return;
         }
-        if (setup != NULL && (setup[0x2b] & 8) != 0)
+        if (setup != NULL && (((EnemyPlacement*)setup)->flags2B & 8) != 0)
         {
             ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
@@ -2173,7 +2176,7 @@ void enemy_update(int obj)
             }
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2202,7 +2205,7 @@ void enemy_update(int obj)
             player = Obj_GetPlayerObject();
             if (player != NULL)
             {
-                if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
+                if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) > enemyRespawnDistanceSq)
                 {
                     enemy_init(obj, setup, 0);
                     ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2235,7 +2238,7 @@ void enemy_update(int obj)
                     player = Obj_GetPlayerObject();
                     if (player != NULL)
                     {
-                        if (vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(setup + 8)) > enemyRespawnDistanceSq)
+                        if (vec3f_distanceSquared((f32*)(player + 0x18), &((EnemyPlacement*)setup)->posX) > enemyRespawnDistanceSq)
                         {
                             enemy_init(obj, setup, 0);
                             ((EnemyState*)state)->controlFlags |= 0x1000;
@@ -2315,31 +2318,31 @@ void enemy_init(int obj, u8* setup, int flag)
     ((GameObject*)obj)->unkF4 = 0;
     if (flag == 0)
     {
-        if (*(s16*)(setup + 0x1a) != -1)
+        if (((EnemyPlacement*)setup)->gameBit2 != -1)
         {
-            if (*(s16*)(setup + 0x18) != -1)
+            if (((EnemyPlacement*)setup)->gameBit != -1)
             {
-                if (GameBit_Get(*(s16*)(setup + 0x18)) == 0)
+                if (GameBit_Get(((EnemyPlacement*)setup)->gameBit) == 0)
                 {
-                    ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x1a)) == 0;
+                    ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0;
                 }
             }
             else
             {
-                ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x1a)) == 0;
+                ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit2) == 0;
             }
         }
         if (*(u32*)&((ObjPlacement*)setup)->mapId != 0xFFFFFFFF)
         {
             if (((GameObject*)obj)->unkF4 == 0)
             {
-                if (*(s16*)(setup + 0x18) != -1)
+                if (((EnemyPlacement*)setup)->gameBit != -1)
                 {
-                    ((GameObject*)obj)->unkF4 = GameBit_Get(*(s16*)(setup + 0x18));
+                    ((GameObject*)obj)->unkF4 = GameBit_Get(((EnemyPlacement*)setup)->gameBit);
                 }
                 if (((GameObject*)obj)->unkF4 == 0)
                 {
-                    if (*(s16*)(setup + 0x2c) != 0)
+                    if (((EnemyPlacement*)setup)->respawnEnabled != 0)
                     {
                         if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) == 0)
                         {
@@ -2360,11 +2363,11 @@ void enemy_init(int obj, u8* setup, int flag)
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ((GameObject*)obj)->anim.alpha = 255;
     }
-    ((EnemyState*)state)->unk2FC = setup[0x2f] / lbl_803E257C;
-    ((EnemyState*)state)->aggroRange = (f32)(u32)(setup[0x29] << 3);
+    ((EnemyState*)state)->unk2FC = ((EnemyPlacement*)setup)->healthByte / lbl_803E257C;
+    ((EnemyState*)state)->aggroRange = (f32)(u32)(((EnemyPlacement*)setup)->aggroRangeByte << 3);
     *(int*)&((EnemyState*)state)->controlFlags = 0;
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
-    ((GameObject*)obj)->anim.rotX = *(s8*)(setup + 0x2a) << 8;
+    ((GameObject*)obj)->anim.rotX = ((EnemyPlacement*)setup)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
     ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
     ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
@@ -2397,8 +2400,8 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->intervalTimer = fz;
         ((EnemyState*)state)->unk2B4 = -1;
         ((EnemyState*)state)->unk2B6 = ((EnemyState*)state)->unk2B4;
-        ((GameObject*)obj)->objectFlags |= *(s8*)(setup + 0x28) & 7;
-        ((EnemyState*)state)->unk2B0 = setup[0x32];
+        ((GameObject*)obj)->objectFlags |= ((EnemyPlacement*)setup)->unk28 & 7;
+        ((EnemyState*)state)->unk2B0 = ((EnemyPlacement*)setup)->unk32;
         ((GameObject*)obj)->animEventCallback = enemy_animEventCallback;
         switch (((GameObject*)obj)->anim.seqId)
         {
@@ -2473,7 +2476,7 @@ void enemy_init(int obj, u8* setup, int flag)
             break;
         }
         ((EnemyState*)state)->unk2B2 = *(u16*)&((EnemyState*)state)->unk2B0;
-        if (*(u16*)(setup + 0x34) != 0)
+        if (((EnemyPlacement*)setup)->unk34 != 0)
         {
             *(int*)&((EnemyState*)state)->flags2E4 = *(int*)&((EnemyState*)state)->flags2E4 & -39;
         }
@@ -2508,7 +2511,7 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             state[0x25f] = 1;
         }
-        if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || *(u16*)(setup + 0x34) != 0
+        if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || ((EnemyPlacement*)setup)->unk34 != 0
             || ((GameObject*)obj)->anim.seqId == 1022 || ((GameObject*)obj)->anim.seqId == 1990)
         {
             ((EnemyState*)state)->flags |= 0x40000;
