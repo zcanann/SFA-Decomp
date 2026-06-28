@@ -23,6 +23,27 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 
+/*
+ * Per-instance runtime state stored in GameObject::extra
+ * (sfxplayerObj_getExtraSize returns sizeof == 0x8).
+ *
+ * Offset 0 overlays the GAMEBIT-mode latched bit value and the
+ * RANDOM_DELAY-mode countdown timer; offset 4 holds the runtime flags
+ * (SFXPLAYER_RUNTIME_ACTIVE_FLAG marks the sfx pair as currently playing).
+ */
+typedef struct SfxplayerObjState
+{
+    union {
+        int gameBitState;
+        f32 delayTimer;
+    };
+    u8 flags;
+    u8 pad5[3];
+} SfxplayerObjState;
+
+STATIC_ASSERT(sizeof(SfxplayerObjState) == 0x8);
+STATIC_ASSERT(offsetof(SfxplayerObjState, flags) == 0x4);
+
 extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
@@ -34,7 +55,7 @@ extern f32 lbl_803E40BC;
 
 void sfxplayerObj_init(u8* obj, u8* data)
 {
-    u8* sub = ((GameObject*)obj)->extra;
+    SfxplayerObjState* sub = ((GameObject*)obj)->extra;
     int type;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS);
     type = data[0x1d];
@@ -45,7 +66,7 @@ void sfxplayerObj_init(u8* obj, u8* data)
             s16 bit = *(s16*)(data + 0x18);
             if (bit > 0)
             {
-                *(int*)sub = GameBit_Get(bit);
+                sub->gameBitState = GameBit_Get(bit);
             }
             break;
         }
@@ -56,7 +77,7 @@ void sfxplayerObj_init(u8* obj, u8* data)
             int v = randomGetRange(data[0x1e], data[0x1f]);
             f32 fv = v;
             fv = lbl_803E40BC * fv;
-            *(f32*)sub = fv;
+            sub->delayTimer = fv;
             break;
         }
     }
@@ -65,10 +86,10 @@ void sfxplayerObj_init(u8* obj, u8* data)
 void sfxplayerObj_free(u8* obj)
 {
     u8* data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    u8* sub = ((GameObject*)obj)->extra;
-    u8 flag = sub[4];
+    SfxplayerObjState* sub = ((GameObject*)obj)->extra;
+    u8 flag = sub->flags;
     if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) return;
-    sub[4] = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
+    sub->flags = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
     if (data[0x1d] == SFXPLAYER_MODE_LOOPED)
     {
         u16 sfx1 = *(u16*)(data + 0x1a);
@@ -94,7 +115,7 @@ void sfxplayerObj_free(u8* obj)
         soundId = (sfxExpr); \
         if (soundId != 0) { \
             soundObj = obj; \
-            state[4] = state[4] | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
+            state->flags = state->flags | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
             if ((data[0x1c] & 0x10) == 0) { \
                 soundObj = NULL; \
             } \
@@ -140,7 +161,7 @@ void sfxplayerObj_free(u8* obj)
 
 void sfxplayerObj_update(u8* obj)
 {
-    u8* state;
+    SfxplayerObjState* state;
     u8* data;
     u8* focusObj;
     u8* soundObj;
@@ -179,11 +200,11 @@ void sfxplayerObj_update(u8* obj)
     case SFXPLAYER_MODE_GAMEBIT:
         if (*(s16*)(data + 0x18) > 0)
         {
-            if (*(int*)state != 0)
+            if (state->gameBitState != 0)
             {
                 if (bitState == 0)
                 {
-                    *(u32*)state = 0;
+                    state->gameBitState = 0;
                     if ((data[0x1c] & 4) != 0)
                     {
                         SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
@@ -193,7 +214,7 @@ void sfxplayerObj_update(u8* obj)
             }
             else if (bitState != 0)
             {
-                *(u32*)state = 1;
+                state->gameBitState = 1;
                 if ((data[0x1c] & 2) != 0)
                 {
                     SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
@@ -207,15 +228,15 @@ void sfxplayerObj_update(u8* obj)
             (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
             (((data[0x1c] & 4) != 0) && (bitState == 0)))
         {
-            if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
+            if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
             {
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
             }
         }
-        else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
+        else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
         {
-            state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
+            state->flags = state->flags & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
             SFXPLAYER_STOP_PAIR();
         }
         break;
@@ -224,18 +245,18 @@ void sfxplayerObj_update(u8* obj)
             (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
             (((data[0x1c] & 4) != 0) && (bitState == 0)))
         {
-            *(f32*)state -= timeDelta;
-            if (*(f32*)state <= lbl_803E40B8)
+            state->delayTimer -= timeDelta;
+            if (state->delayTimer <= lbl_803E40B8)
             {
-                *(f32*)state = (f32)(s32)
+                state->delayTimer = (f32)(s32)
                 randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
             }
         }
-        else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
+        else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
         {
-            state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
+            state->flags = state->flags & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
             SFXPLAYER_STOP_PAIR();
         }
         break;
