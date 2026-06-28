@@ -15,7 +15,8 @@
 typedef struct ExplodablePlacement
 {
     ObjPlacement base;   /* 0x00: common placement head (position / mapId) */
-    u8 pad18[0x1A - 0x18];
+    u8 fragmentCount;    /* 0x18: number of fragments to spawn (0 -> 1) */
+    u8 pad19[0x1A - 0x19];
     s16 rotX;            /* 0x1A: prop orientation */
     s16 rotY;            /* 0x1C */
     s16 rotZ;            /* 0x1E */

@@ -141,7 +141,7 @@ void explodable_init(int obj, int setup)
 
     ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
     state = *(int*)&((GameObject*)obj)->extra;
-    count = *(u8*)(setup + 0x18);
+    count = ((ExplodablePlacement*)setup)->fragmentCount;
     if (count == 0)
     {
         count = 1;
@@ -163,9 +163,9 @@ void explodable_init(int obj, int setup)
     ((DrExplodableState*)state)->children[12] = 0;
     ((DrExplodableState*)state)->children[13] = 0;
     ((DrExplodableState*)state)->children[14] = 0;
-    ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
+    ((GameObject*)obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
+    ((GameObject*)obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
+    ((GameObject*)obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
     if ((u32)GameBit_Get(((ExplodablePlacement*)setup)->doneGameBit) != 0)
     {
         ((DrExplodableState*)state)->phase6E4 = 2;
