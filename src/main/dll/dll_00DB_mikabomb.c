@@ -27,6 +27,7 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/obj_placement.h"
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHitbox_SetSphereRadius();
 extern u32 ObjHits_SetHitVolumeSlot();
@@ -231,10 +232,7 @@ typedef struct MikabombState
 {
     int* shadowObj; /* 0x00: spawned shadow-bomb object */
     f32 groundY;    /* 0x04: ground-plane Y sampled at init */
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
+    void* resource; /* 0x08: Resource_Acquire(0x5b) handle (effect vtable) */
     u8 exploded;    /* 0x0C: set once the bomb has detonated */
     u8 padD[0x18 - 0xD];
     u8 unk18;
@@ -799,7 +797,7 @@ void mikabomb_update(int* obj)
                 localB = lbl_803E31A0;
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)st[2])[1])(obj, rnd, 0, 2, -1, &localB);
+                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(obj, rnd, 0, 2, -1, &localB);
                 ObjHitbox_SetSphereRadius(
                     obj, (s32)(gMikaBombHitSphereRadiusScale * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration, gMikaBombCameraShakeFalloff);
@@ -819,7 +817,7 @@ void mikabomb_update(int* obj)
                 localA = lbl_803E31A0;
                 Sfx_PlayFromObject(obj, SFXen_weetinklp22);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)st[2])[1])(obj, rnd, 0, 2, -1, &localA);
+                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(obj, rnd, 0, 2, -1, &localA);
                 ObjHitbox_SetSphereRadius(
                     obj, (s32)(gMikaBombHitSphereRadiusScale * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration, gMikaBombCameraShakeFalloff);
@@ -837,7 +835,7 @@ void mikabomb_init(int* obj)
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     f32 out;
-    void* alloc;
+    ObjPlacement* alloc;
     f32 fz;
 
     ObjHits_DisableObject(obj);
@@ -847,7 +845,7 @@ void mikabomb_init(int* obj)
     ((GameObject*)obj)->anim.velocityY = lbl_803E31D4;
     ((GameObject*)obj)->anim.velocityZ = fz;
     ((GameObject*)obj)->anim.rotY = -0x4000;
-    *(s16*)obj = 0;
+    ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
     fn_80065684((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &out, 0);
@@ -855,21 +853,21 @@ void mikabomb_init(int* obj)
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
         alloc = Obj_AllocObjectSetup(0x20, 0xc);
-        *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)((char*)alloc + 0xc) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)&((ObjDef*)alloc)->jointData = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)((char*)alloc + 4) = 1;
-        *(u8*)((char*)alloc + 5) = 1;
-        *(u8*)((char*)alloc + 6) = 0xff;
-        *(u8*)((char*)alloc + 7) = 0xff;
+        alloc->posX = ((GameObject*)obj)->anim.localPosX;
+        alloc->posY = ((GameObject*)obj)->anim.localPosY;
+        alloc->posZ = ((GameObject*)obj)->anim.localPosZ;
+        alloc->color[0] = 1;
+        alloc->color[1] = 1;
+        alloc->color[2] = 0xff;
+        alloc->color[3] = 0xff;
         *state = loadObjectAtObject(obj, alloc);
-        *(int**)((char*)*(int**)state + 0xc4) = obj;
+        ((GameObject*)*state)->ownerObj = obj;
     }
     else
     {
         *state = 0;
     }
-    *(void**)((char*)state + 8) = Resource_Acquire(0x5b, 1);
+    ((MikabombState*)state)->resource = Resource_Acquire(0x5b, 1);
     ((MikabombState*)state)->exploded = 0;
 }
 
