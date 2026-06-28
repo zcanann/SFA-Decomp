@@ -18,6 +18,21 @@ extern f32 timeDelta;
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
+
+/* Per-object Lightfoot state block (obj->extra, cclightfoot_getExtraSize = 0x18). */
+typedef struct CcLightfootState
+{
+    int childObj;   /* 0x00: spawned child marker object handle */
+    int playerObj;  /* 0x04: cached player object */
+    int targetA;    /* 0x08: target actor A object */
+    int targetB;    /* 0x0C: target actor B object */
+    u8 state;       /* 0x10: state-machine state */
+    u8 flags;       /* 0x11: bit0 = hit/advance landed, bit1 = facing target off-axis */
+    u8 pad[2];      /* 0x12 */
+    f32 sfxTimer;   /* 0x14: countdown to next idle sfx */
+} CcLightfootState;
+
+STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
@@ -46,17 +61,17 @@ void cclightfoot_init(int* obj, int* def)
 void cclightfoot_free(int* obj, int p2)
 {
     extern u32 ObjLink_DetachChild();
-    int* state = ((GameObject*)obj)->extra;
-    int* sub = (int*)state[0];
+    CcLightfootState* state = ((GameObject*)obj)->extra;
+    void* sub = (void*)state->childObj;
     if (sub != NULL)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
-            ObjLink_DetachChild(obj, sub);
+            ObjLink_DetachChild(obj, (int)sub);
         }
         if (p2 == 0)
         {
-            Obj_FreeObject((int*)state[0]);
+            Obj_FreeObject(state->childObj);
         }
     }
 }
@@ -67,17 +82,17 @@ extern f32 lbl_803E467C;
 
 #pragma dont_inline on
 #pragma scheduling on
-void fn_801AA878(u8* state, int* targetObj, f32 dist)
+void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 {
     s16 move;
     if (gCcLightfootDistSentinel == dist)
     {
-        state[16] = 12;
+        state->state = 12;
         return;
     }
-    if ((state[17] & 2) != 0)
+    if ((state->flags & 2) != 0)
     {
-        state[16] = 1;
+        state->state = 1;
         return;
     }
     if (dist < lbl_803E4678)
@@ -85,18 +100,18 @@ void fn_801AA878(u8* state, int* targetObj, f32 dist)
         move = ((GameObject*)targetObj)->anim.currentMove;
         if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
-            state[16] = 8;
+            state->state = 8;
             return;
         }
         if (move == 25)
         {
-            state[16] = 5;
+            state->state = 5;
             return;
         }
-        state[16] = 11;
+        state->state = 11;
         return;
     }
-    state[16] = 2;
+    state->state = 2;
 }
 #pragma dont_inline reset
 
@@ -106,7 +121,7 @@ extern f32 lbl_803E4670;
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern u32 ObjLink_DetachChild();
-    int* state = ((GameObject*)obj)->extra;
+    CcLightfootState* state = ((GameObject*)obj)->extra;
     if (animUpdate->eventCount != 0)
     {
         int i;
@@ -118,7 +133,7 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             case 1:
                 if (((GameObject*)obj)->childObjs[0] != NULL)
                 {
-                    ObjLink_DetachChild(obj, *(int*)state);
+                    ObjLink_DetachChild(obj, state->childObj);
                 }
                 break;
             case 2:
@@ -167,7 +182,7 @@ void cclightfoot_update(int obj)
     extern u32 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
     u32 fallback;
-    int* state = ((GameObject*)obj)->extra;
+    CcLightfootState* state = ((GameObject*)obj)->extra;
     u32 targetObj;
     s16 angle;
     u32 o2;
@@ -187,7 +202,7 @@ void cclightfoot_update(int obj)
     u8 m;
 
     fallback = 0;
-    if (tbl->stateFlags[*((u8*)state + 0x10)] & 1)
+    if (tbl->stateFlags[state->state] & 1)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
@@ -195,7 +210,7 @@ void cclightfoot_update(int obj)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     }
-    o1 = state[2];
+    o1 = state->targetA;
     if (o1 != 0)
     {
         if (!(fn_8014C5D0(o1) > lbl_803E4680))
@@ -210,7 +225,7 @@ void cclightfoot_update(int obj)
         {
             goto cc_else;
         }
-        o2 = state[3];
+        o2 = state->targetB;
         if (!(fn_8014C5D0(o2) > lbl_803E4680))
         {
             valid = 0;
@@ -224,29 +239,29 @@ void cclightfoot_update(int obj)
             goto cc_else;
         }
         {
-            dist = getXZDistance((f32*)(state[1] + 0x18), (f32*)(state[3] + 0x18));
-            if (getXZDistance((f32*)(state[1] + 0x18), (f32*)(state[2] + 0x18)) < dist)
+            dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetB + 0x18));
+            if (getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetA + 0x18)) < dist)
             {
-                oNear = state[2];
-                oFar = state[3];
+                oNear = state->targetA;
+                oFar = state->targetB;
             }
             else
             {
-                oNear = state[3];
-                oFar = state[2];
+                oNear = state->targetB;
+                oFar = state->targetA;
             }
-            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state[1] + 0x18)) < lbl_803E4684
-                    || (void*)Player_GetTargetObject(state[1]) == *(void**)(state + 2)
-                    || (void*)Player_GetTargetObject(state[1]) == *(void**)(state + 3))
-                && playerIsDisguised(state[1]) == 0)
+            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4684
+                    || (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetA
+                    || (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetB)
+                && playerIsDisguised(state->playerObj) == 0)
             {
-                if ((void*)Player_GetTargetObject(state[1]) == (void*)oFar)
+                if ((void*)Player_GetTargetObject(state->playerObj) == (void*)oFar)
                 {
                     u32 tmp = oFar ^ oNear;
                     oNear = oNear ^ tmp;
                     oFar = tmp ^ oNear;
                 }
-                fn_8014C66C(oNear, state[1]);
+                fn_8014C66C(oNear, state->playerObj);
                 fn_8014C66C(oFar, obj);
                 targetObj = oFar;
                 dist = getXZDistance((f32*)(obj + 0x18), (f32*)(oFar + 0x18));
@@ -262,12 +277,12 @@ void cclightfoot_update(int obj)
                 }
                 if (dists[0] < dists[1])
                 {
-                    targetObj = state[2];
+                    targetObj = state->targetA;
                     dist = dists[0];
                 }
                 else
                 {
-                    targetObj = state[3];
+                    targetObj = state->targetB;
                     dist = dists[1];
                 }
             }
@@ -275,7 +290,7 @@ void cclightfoot_update(int obj)
         goto cc_endif;
     cc_else:
         {
-            o2 = state[2];
+            o2 = state->targetA;
             if (!(fn_8014C5D0(o2) > lbl_803E4680))
             {
                 valid = 0;
@@ -286,9 +301,9 @@ void cclightfoot_update(int obj)
             }
             if (valid != 0)
             {
-                fallback = state[2];
+                fallback = state->targetA;
             }
-            o2 = state[3];
+            o2 = state->targetB;
             if (!(fn_8014C5D0(o2) > lbl_803E4680))
             {
                 valid = 0;
@@ -299,27 +314,27 @@ void cclightfoot_update(int obj)
             }
             if (valid != 0)
             {
-                fallback = state[3];
+                fallback = state->targetB;
             }
             if (fallback != 0)
             {
-                dist = getXZDistance((f32*)(state[1] + 0x18), (f32*)(fallback + 0x18));
+                dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
                 if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist
-                        && (void*)Player_GetTargetObject(state[1]) != (void*)fallback)
-                    || playerIsDisguised(state[1]) != 0)
+                        && (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback)
+                    || playerIsDisguised(state->playerObj) != 0)
                 {
                     fn_8014C66C(fallback, obj);
                 }
                 else
                 {
-                    fn_8014C66C(fallback, state[1]);
+                    fn_8014C66C(fallback, state->playerObj);
                 }
                 targetObj = fallback;
                 dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));
             }
             else
             {
-                targetObj = state[1];
+                targetObj = state->playerObj;
                 dist = gCcLightfootDistSentinel;
             }
         }
@@ -337,47 +352,47 @@ void cclightfoot_update(int obj)
         }
         if (diff > 0x1000)
         {
-            *((u8*)state + 0x11) |= 2;
+            state->flags |= 2;
         }
         else if (diff < -0x1000)
         {
-            *((u8*)state + 0x11) |= 2;
+            state->flags |= 2;
         }
         else
         {
-            *((u8*)state + 0x11) &= ~2;
+            state->flags &= ~2;
         }
     }
-    if (*((u8*)state + 0x10) <= 0xb)
+    if (state->state <= 0xb)
     {
-        *(f32*)(state + 5) -= timeDelta;
-        if (*(f32*)(state + 5) < lbl_803E4680)
+        state->sfxTimer -= timeDelta;
+        if (state->sfxTimer < lbl_803E4680)
         {
-            *(f32*)(state + 5) = (f32)(int)
+            state->sfxTimer = (f32)(int)
             randomGetRange(0xb4, 0x12c);
             Sfx_PlayFromObject(obj, 0x134);
         }
     }
-    switch (*((u8*)state + 0x10))
+    switch (state->state)
     {
     case 0:
         if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
-            *((u8*)state + 0x10) = 0xe;
+            state->state = 0xe;
         }
         else
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                state[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6f1), 5, -1, -1,
+                state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6f1), 5, -1, -1,
                                            *(int*)&((GameObject*)obj)->anim.parent);
-                ObjLink_AttachChild(obj, state[0], 0);
+                ObjLink_AttachChild(obj, state->childObj, 0);
             }
-            state[1] = (int)Obj_GetPlayerObject();
-            state[2] = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
-            state[3] = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
-            *((u8*)state + 0x10) = 1;
-            *(f32*)(state + 5) = (f32)(int)
+            state->playerObj = (int)Obj_GetPlayerObject();
+            state->targetA = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
+            state->targetB = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_B);
+            state->state = 1;
+            state->sfxTimer = (f32)(int)
             randomGetRange(0xb4, 0x12c);
         }
         break;
@@ -398,65 +413,65 @@ void cclightfoot_update(int obj)
                 ((GameObject*)obj)->anim.rotX = angle;
             }
         }
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            fn_801AA878((u8*)state, (int*)targetObj, dist);
+            fn_801AA878(state, (int*)targetObj, dist);
         }
         break;
     case 2:
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
             if (dist < lbl_803E4678)
             {
-                *((u8*)state + 0x10) = 4;
+                state->state = 4;
             }
             else
             {
-                *((u8*)state + 0x10) = 3;
+                state->state = 3;
             }
         }
         break;
     case 3:
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            *((u8*)state + 0x10) = 4;
+            state->state = 4;
         }
         break;
     case 4:
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            fn_801AA878((u8*)state, (int*)targetObj, dist);
+            fn_801AA878(state, (int*)targetObj, dist);
         }
         break;
     case 5:
         if (((GameObject*)targetObj)->anim.currentMove != 0x19)
         {
-            *((u8*)state + 0x10) = 7;
+            state->state = 7;
         }
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            *((u8*)state + 0x10) = 6;
+            state->state = 6;
         }
         break;
     case 6:
         if (((GameObject*)targetObj)->anim.currentMove != 0x19)
         {
-            *((u8*)state + 0x10) = 7;
+            state->state = 7;
         }
         break;
     case 7:
         t = ((GameObject*)targetObj)->anim.currentMove;
         if (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
-            *((u8*)state + 0x10) = 8;
+            state->state = 8;
         }
         else if (t == 0x19)
         {
-            *((u8*)state + 0x10) = 5;
+            state->state = 5;
         }
-        else if (*((u8*)state + 0x11) & 1)
+        else if (state->flags & 1)
         {
-            fn_801AA878((u8*)state, (int*)targetObj, dist);
+            fn_801AA878(state, (int*)targetObj, dist);
         }
         break;
     case 8:
@@ -464,11 +479,11 @@ void cclightfoot_update(int obj)
         if (t != 0x18 ||
             (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
-            *((u8*)state + 0x10) = 0xa;
+            state->state = 0xa;
         }
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            *((u8*)state + 0x10) = 9;
+            state->state = 9;
         }
         break;
     case 9:
@@ -476,33 +491,33 @@ void cclightfoot_update(int obj)
         if (t != 0x18 ||
             (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress < lbl_803E467C))
         {
-            *((u8*)state + 0x10) = 0xa;
+            state->state = 0xa;
         }
         break;
     case 10:
         t = ((GameObject*)targetObj)->anim.currentMove;
         if (t == 0x18 && ((GameObject*)targetObj)->anim.currentMoveProgress > lbl_803E467C)
         {
-            *((u8*)state + 0x10) = 8;
+            state->state = 8;
         }
         else if (t == 0x19)
         {
-            *((u8*)state + 0x10) = 5;
+            state->state = 5;
         }
-        else if (*((u8*)state + 0x11) & 1)
+        else if (state->flags & 1)
         {
-            fn_801AA878((u8*)state, (int*)targetObj, dist);
+            fn_801AA878(state, (int*)targetObj, dist);
         }
         break;
     case 0xb:
-        fn_801AA878((u8*)state, (int*)targetObj, dist);
+        fn_801AA878(state, (int*)targetObj, dist);
         break;
     case 0xc:
         if (GameBit_Get(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
         {
             if (GameBit_Get(GAMEBIT_CC_COMPLETE) != 0)
             {
-                *((u8*)state + 0x10) = 0xe;
+                state->state = 0xe;
             }
         }
         else
@@ -511,9 +526,9 @@ void cclightfoot_update(int obj)
             {
                 GameBit_Set(GAMEBIT_LIGHTFOOT_TRIGGERED, 1);
             }
-            else if (*((u8*)state + 0x11) & 2)
+            else if (state->flags & 2)
             {
-                *((u8*)state + 0x10) = 0xd;
+                state->state = 0xd;
             }
         }
         break;
@@ -534,32 +549,32 @@ void cclightfoot_update(int obj)
                 ((GameObject*)obj)->anim.rotX = angle;
             }
         }
-        if (*((u8*)state + 0x11) & 1)
+        if (state->flags & 1)
         {
-            *((u8*)state + 0x10) = 0xc;
+            state->state = 0xc;
         }
         break;
     case 0xe:
-        if ((u32)state[0] != 0)
+        if ((u32)state->childObj != 0)
         {
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
-                ObjLink_DetachChild(obj, state[0]);
+                ObjLink_DetachChild(obj, state->childObj);
             }
-            Obj_FreeObject(state[0]);
-            state[0] = 0;
+            Obj_FreeObject(state->childObj);
+            state->childObj = 0;
         }
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
         return;
     }
-    m = *((u8*)state + 0x10);
+    m = state->state;
     if (m >= 5 && m <= 0xa)
     {
         if (ObjHits_PollPriorityHitWithCooldown(obj, gCcLightfootHitCooldown, 0, hitPos) != 0)
         {
-            if (getXZDistance((f32*)(obj + 0x18), (f32*)(state[1] + 0x18)) < lbl_803E4690)
+            if (getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4690)
             {
                 objfx_spawnHitEmitterAtPos(hitPos, 8, 0xff, 0xff, 0x78);
                 objLightFn_8009a1dc((void*)obj, lbl_803E4694, hitPos, 4, 0);
@@ -578,7 +593,7 @@ void cclightfoot_update(int obj)
             }
         }
     }
-    m = *((u8*)state + 0x10);
+    m = state->state;
     {
         u8* pa = &tbl->stateFlags[m];
         animId = pa[0x10];
@@ -594,14 +609,14 @@ void cclightfoot_update(int obj)
             }
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[*((u8*)state + 0x10)],
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, tbl->animSpeeds[state->state],
                                                                     timeDelta,
                                                                     NULL) != 0)
     {
-        *((u8*)state + 0x11) |= 1;
+        state->flags |= 1;
     }
     else
     {
-        *((u8*)state + 0x11) &= ~1;
+        state->flags &= ~1;
     }
 }
