@@ -2190,7 +2190,7 @@ int objUpdateOpacity(char* obj)
                                   ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ,
                                   ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale,
                                   &o1, &o2, &o3, &sz, &o5, &o6);
-        sz = __fabs(sz);
+        sz = __fabsf(sz);
         sz = sz * gMapBlockWorldSize;
         if (sz < retraceCount_803DEBE0)
         {
