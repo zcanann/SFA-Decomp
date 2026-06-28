@@ -185,6 +185,7 @@ void dimmagicbridge_update(int obj)
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
+    DimMagicBridgeState* sub = (DimMagicBridgeState*)obj;
     ObjTextureRuntimeSlot* tex;
     s32 v;
 
@@ -205,12 +206,12 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     {
         tex->offsetT -= 10000;
     }
-    v = (s32) * (u16*)(obj + 0x60) + framesThisStep * 0x100;
+    v = (s32)sub->wavePhase + framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x60) = v;
-    v = (s32) * (u16*)(obj + 0x62) + framesThisStep * 0x80;
+    sub->wavePhase = v;
+    v = (s32)sub->wavePhaseB + framesThisStep * 0x80;
     if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x62) = v;
+    sub->wavePhaseB = v;
 }
 #pragma dont_inline reset
 
@@ -220,26 +221,27 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
     int j;
     int i;
     u8* sub = ((GameObject*)obj)->extra;
+    DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
     dimmagicbridge_scrollTextureChannels(obj, sub);
     if (animUpdate->triggerCommand == 1)
     {
         animUpdate->triggerCommand = 0;
-        sub[0x5f] = 1;
+        state->ignited = 1;
     }
-    if (sub[0x5f] != 0)
+    if (state->ignited != 0)
     {
         ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer -= framesThisStep;
         if (((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer <= 0)
         {
             ((DimmagicbridgeFlameSeqFnState*)sub)->seqTimer = 0x10;
-            for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++)
+            for (j = 1; sub[0x40 + j] != 0 && j < state->segmentCount; j++)
             {
             }
             sub[0x40 + j] = 1;
         }
-        for (i = 1; i < sub[0x4f]; i++)
+        for (i = 1; i < state->segmentCount; i++)
         {
             if (sub[0x40 + i] != 0)
             {
@@ -263,6 +265,7 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     int mdl;
     int model;
     f32 amp;
+    DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
     model = Obj_GetActiveModel(obj);
     mdl = *(int*)model;
     i = 0;
@@ -271,8 +274,8 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
     {
         s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
         s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(amp * ((f32)(int)vc[2] / *(f32*)sub));
-        u = u + *(u16*)(sub + 0x60);
+        int u = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
+        u = u + state->wavePhase;
         if (*vb > 0)
         {
             *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C
@@ -287,5 +290,5 @@ void dimmagicbridge_updateVertexWave(int obj, u8* sub)
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
-    ((GameObject*)obj)->anim.alpha = *(u8*)(sub + 0x51);
+    ((GameObject*)obj)->anim.alpha = state->segmentGlow[1];
 }
