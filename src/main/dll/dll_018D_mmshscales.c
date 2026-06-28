@@ -35,6 +35,21 @@ typedef struct MmshScalesState
     u8 pad70[0x140 - 0x70];
 } MmshScalesState;
 
+/* 0x24-byte spawn descriptor handed to Obj_SetupObject for the child
+ * object. ObjPlacement-style head (color block + position). */
+typedef struct MmshScalesSpawnSetup
+{
+    u8 pad0[4];   /* 0x00 */
+    u8 color[4];  /* 0x04 */
+    f32 posX;     /* 0x08 */
+    f32 posY;     /* 0x0c */
+    f32 posZ;     /* 0x10 */
+    u8 pad14[0x24 - 0x14];
+} MmshScalesSpawnSetup;
+
+STATIC_ASSERT(offsetof(MmshScalesSpawnSetup, posX) == 0x8);
+STATIC_ASSERT(sizeof(MmshScalesSpawnSetup) == 0x24);
+
 extern void Obj_FreeObject(u8* obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -129,7 +144,7 @@ void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void mmsh_scales_init(int* obj, s16* def)
 {
     u8* state = ((GameObject*)obj)->extra;
-    u8* setup;
+    MmshScalesSpawnSetup* setup;
     int loadedBank;
     ((MmshScalesState*)state)->unk6A = def[13];
     ((MmshScalesState*)state)->unk6E = -1;
@@ -152,14 +167,13 @@ void mmsh_scales_init(int* obj, s16* def)
     }
     if (Obj_IsLoadingLocked() == 0) return;
     setup = Obj_AllocObjectSetup(0x24, 0x1b8);
-    *(f32*)(setup + 8) = ((GameObject*)obj)->anim.localPosX;
-    *(f32*)(setup + 12) = ((GameObject*)obj)->anim.localPosY;
-    *(f32*)(setup + 16) = ((GameObject*)obj)->anim.localPosZ;
-    setup[4] = 32;
-    setup[5] = 4;
-    setup[7] = 0xff;
-    setup = Obj_SetupObject(setup, 5, -1, -1, 0);
-    ((GameObject*)obj)->childObjs[0] = setup;
+    setup->posX = ((GameObject*)obj)->anim.localPosX;
+    setup->posY = ((GameObject*)obj)->anim.localPosY;
+    setup->posZ = ((GameObject*)obj)->anim.localPosZ;
+    setup->color[0] = 32;
+    setup->color[1] = 4;
+    setup->color[3] = 0xff;
+    ((GameObject*)obj)->childObjs[0] = Obj_SetupObject((u8*)setup, 5, -1, -1, 0);
     *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) = *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *
         lbl_803E4F78;
 }
