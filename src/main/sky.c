@@ -2486,12 +2486,12 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     int c12;
     int c13;
     int pb;
-    int cb;
+    int scale2;
     int ofs;
     u8* p3;
     f32 bl;
     int scale1;
-    int scale2;
+    int cb;
     u8* prev;
     u8* cur2;
 
