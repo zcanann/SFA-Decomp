@@ -103,9 +103,9 @@ check_decor_objects:
     {
         if (Vec_distance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < state[6])
         {
-            if (*(void**)(*objects + 0x54) != NULL)
+            if (((GameObject*)*objects)->anim.hitReactState != NULL)
             {
-                radius = (f32)*(s16*)(*(int*)(*objects + 0x54) + 0x5a);
+                radius = (f32)((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->primaryRadius;
                 objWorldToLocalPos(localPos, obj, (f32*)(*objects + 0xc));
 
                 sum = lbl_803E3B7C;
@@ -167,8 +167,8 @@ check_decor_objects:
 
                 if (sum < radius * radius)
                 {
-                    ((ObjHitsPriorityState*)*(int*)(*objects + 0x54))->lastHitObject = obj;
-                    ((ObjHitsPriorityState*)*(int*)(*objects + 0x54))->contactFlags = 1;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = obj;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags = 1;
                 }
             }
         }
