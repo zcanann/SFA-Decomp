@@ -7,9 +7,10 @@
 typedef struct TexframeanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
+    s8 wrapFrame;    /* 0x18 */
+    s8 textureSlot;  /* 0x19 */
+    s16 endFrame;    /* 0x1A */
+    s16 speed;       /* 0x1C */
     s16 completedGameBit;
     s16 triggerGameBit;
     s16 unk22;
@@ -123,11 +124,11 @@ void texframeanimator_init(int* obj, u8* params)
     u8 done;
 
     state = ((GameObject*)obj)->extra;
-    state->textureSlot = (s8)params[0x19];
-    state->endFrame = *(s16*)(params + 0x1a) << 8;
-    state->speed = (u8) * (s16*)(params + 0x1c);
-    state->wrapFrame = (s8)params[0x18] << 8;
-    done = GameBit_Get(*(s16*)(params + 0x1e));
+    state->textureSlot = ((TexframeanimatorPlacement*)params)->textureSlot;
+    state->endFrame = ((TexframeanimatorPlacement*)params)->endFrame << 8;
+    state->speed = (u8)((TexframeanimatorPlacement*)params)->speed;
+    state->wrapFrame = ((TexframeanimatorPlacement*)params)->wrapFrame << 8;
+    done = GameBit_Get(((TexframeanimatorPlacement*)params)->completedGameBit);
     if ((state->done = done) != 0)
     {
         state->frame = state->endFrame;
