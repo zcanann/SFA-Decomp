@@ -16,6 +16,30 @@ extern const char sMoonrockTriggerIdentFormat[];
 
 #define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
+/* Per-object trigger-plane state stashed at obj->extra. Distinct from
+ * MmpMoonrockState (which overlays the same slot for the carried-rock class):
+ * here the block holds a clip plane (normal + D), the two segment endpoints the
+ * RomCurve query was run against, a clip half-extent, and the 3x4 transform that
+ * maps a hit point into trigger-local space. */
+typedef struct MmpTriggerPlaneState {
+    u8 header[0xC];      /* 0x00 */
+    f32 normalX;         /* 0x0C plane normal */
+    f32 normalY;         /* 0x10 */
+    f32 normalZ;         /* 0x14 */
+    f32 planeD;          /* 0x18 plane constant */
+    f32 ptA[3];          /* 0x1C near segment endpoint */
+    f32 ptB[3];          /* 0x28 far segment endpoint */
+    f32 clipHalfExtent;  /* 0x34 trigger-local half size */
+    f32 mtx[3][4];       /* 0x38 world->trigger-local transform */
+} MmpTriggerPlaneState;
+
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, normalX) == 0x0C);
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, planeD) == 0x18);
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptA) == 0x1C);
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptB) == 0x28);
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, clipHalfExtent) == 0x34);
+STATIC_ASSERT(offsetof(MmpTriggerPlaneState, mtx) == 0x38);
+
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
@@ -34,7 +58,7 @@ extern const char sMoonrockTriggerIdentFormat[];
 
 void fn_80198A00(u8* obj, int seqArg)
 {
-    u8* state;
+    MmpTriggerPlaneState* state;
     f32 hitDistance;
     int queryType;
     int curveHit;
@@ -42,15 +66,15 @@ void fn_80198A00(u8* obj, int seqArg)
     int rearBlocked;
 
     queryType = 0x17;
-    state = ((GameObject*)obj)->extra;
+    state = (MmpTriggerPlaneState*)((GameObject*)obj)->extra;
     curveHit = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-        *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30), &queryType, 1,
+        state->ptB[0], state->ptB[1], state->ptB[2], &queryType, 1,
         *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38));
     frontBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30),
+        curveHit, state->ptB[0], state->ptB[1], state->ptB[2],
         &hitDistance);
     rearBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, ((MmpMoonrockState*)state)->homeY, ((MmpMoonrockState*)state)->homeZ, *(f32*)(state + 0x24),
+        curveHit, state->ptA[0], state->ptA[1], state->ptA[2],
         &hitDistance);
 
     if (frontBlocked != 0)
@@ -134,7 +158,7 @@ int fn_80198B68(u8* obj, f32* point)
 
 void fn_80198DE8(u8* obj, int seqArg)
 {
-    u8* state;
+    MmpTriggerPlaneState* state;
     s8 triggerState;
     u8* data;
     f32 planeBase;
@@ -158,21 +182,21 @@ void fn_80198DE8(u8* obj, int seqArg)
     f32 localPos[3];
 
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    state = (MmpTriggerPlaneState*)((GameObject*)obj)->extra;
 
-    planeBase = ((MmpMoonrockState*)state)->homeX;
-    normalZ = ((MmpMoonrockState*)state)->respawnTimer;
-    nearZ = *(f32*)(state + 0x24);
+    planeBase = state->planeD;
+    normalZ = state->normalZ;
+    nearZ = state->ptA[2];
     prodZ = normalZ * nearZ;
-    normalX = ((MmpMoonrockState*)state)->baseY;
-    nearX = ((MmpMoonrockState*)state)->homeY;
-    normalY = ((MmpMoonrockState*)state)->baseY2;
-    nearY = ((MmpMoonrockState*)state)->homeZ;
+    normalX = state->normalX;
+    nearX = state->ptA[0];
+    normalY = state->normalY;
+    nearY = state->ptA[1];
     prodY = normalY * nearY;
     nearDist = planeBase + (prodZ + (normalX * nearX + prodY));
-    farZ = *(f32*)(state + 0x30);
-    farX = *(f32*)(state + 0x28);
-    farY = *(f32*)(state + 0x2c);
+    farZ = state->ptB[2];
+    farX = state->ptB[0];
+    farY = state->ptB[1];
     farDist = planeBase + (normalZ * farZ + (normalX * farX + normalY * farY));
 
     if (farDist < lbl_803E40D8)
@@ -193,12 +217,12 @@ void fn_80198DE8(u8* obj, int seqArg)
             ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
-        localPos[1] = t * deltaY + ((MmpMoonrockState*)state)->homeZ;
-        localPos[2] = t * deltaZ + *(f32*)(state + 0x24);
-        PSMTXMultVec((f32*)(state + 0x38), localPos, localPos);
+        localPos[1] = t * deltaY + state->ptA[1];
+        localPos[2] = t * deltaZ + state->ptA[2];
+        PSMTXMultVec(&state->mtx[0][0], localPos, localPos);
 
-        if ((localPos[0] >= -*(f32*)(state + 0x34)) && (localPos[0] <= *(f32*)(state + 0x34)) &&
-            (localPos[1] >= -*(f32*)(state + 0x34)) && (localPos[1] <= *(f32*)(state + 0x34)))
+        if ((localPos[0] >= -state->clipHalfExtent) && (localPos[0] <= state->clipHalfExtent) &&
+            (localPos[1] >= -state->clipHalfExtent) && (localPos[1] <= state->clipHalfExtent))
         {
             OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32*)(data + 0x14));
             objInterpretSeq(obj, seqArg, triggerState, (int)farDist);
