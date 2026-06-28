@@ -4748,8 +4748,14 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
 
 void fn_80296EB4(int obj, int newParent)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
     int oldParent = *(int*)&((GameObject*)obj)->anim.parent;
+    int a0;
+    int a1;
+    int a2;
+    int a3;
+    int a4;
+    int a5;
+    PlayerState* inner = ((GameObject*)obj)->extra;
     struct
     {
         f32 wp0[3];
@@ -4757,12 +4763,6 @@ void fn_80296EB4(int obj, int newParent)
         f32 wp2[3];
         f32 wp[3];
     } s;
-    int a0;
-    int a1;
-    int a2;
-    int a3;
-    int a4;
-    int a5;
 
     if ((void*)oldParent == (void*)newParent)
     {
