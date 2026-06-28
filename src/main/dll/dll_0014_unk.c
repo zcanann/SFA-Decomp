@@ -452,8 +452,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
         if (n > -1 && (((ObjfsaRomCurveDef*)a)->blockedLinkMask & mask) == 0 && n != 0)
         {
-            cand2[count] = n;
-            count++;
+            cand2[count++] = n;
         }
         mask <<= 1;
     }
@@ -492,8 +491,7 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
                 if (n > -1 && (((ObjfsaRomCurveDef*)a)->blockedLinkMask & mask) == 0 && n != 0)
                 {
-                    cand3[count] = n;
-                    count++;
+                    cand3[count++] = n;
                 }
                 mask <<= 1;
             }
