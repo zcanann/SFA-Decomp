@@ -16,9 +16,9 @@ typedef struct ChukaPlacement
     f32 unkC;
     f32 unk10;
     s32 unk14;
-    u8 pad18[0x19 - 0x18];
+    s8 rotXByte; /* 0x18 high byte of initial rotX (<<8) */
     u8 unk19;
-    u8 pad1A[0x1C - 0x1A];
+    s16 rotZInit; /* 0x1A initial rotZ */
     s16 barHeight; /* 0x1C model-scale height divisor (rootMotionScale) */
     s16 unk1E;
     s16 unk20;
@@ -205,22 +205,23 @@ extern f32 lbl_803E63FC;
 void chuka_init(int obj, int params)
 {
     ChukaState* state = ((GameObject*)obj)->extra;
+    ChukaPlacement* placement = (ChukaPlacement*)params;
     u8* modeTable;
 
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = chuka_SeqFn;
     state->startY = ((GameObject*)obj)->anim.localPosY;
-    state->modeIndex = *(u8*)(params + 0x19);
+    state->modeIndex = placement->unk19;
 
-    if (*(s16*)(params + 0x1c) != 0)
+    if (placement->barHeight != 0)
     {
         ((GameObject*)obj)->anim.rootMotionScale =
-            lbl_803E63F8 / ((f32)(s32) * (s16*)(params + 0x1c) / lbl_803E63FC);
+            lbl_803E63F8 / ((f32)placement->barHeight / lbl_803E63FC);
     }
 
-    if (*(s16*)(params + 0x1a) != 0)
+    if (placement->rotZInit != 0)
     {
-        ((GameObject*)obj)->anim.rotZ = *(s16*)(params + 0x1a);
+        ((GameObject*)obj)->anim.rotZ = placement->rotZInit;
     }
 
     ((GameObject*)obj)->objectFlags |= 0x4000;
