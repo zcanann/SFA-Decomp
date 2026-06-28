@@ -29,7 +29,7 @@ typedef struct LightfootSub
     s32 unk4;
     u8 pad8[0xC - 0x8];
     f32 animTimer;
-    u8 pad10[0x14 - 0x10];
+    f32 unk10;
     f32 unk14;
     u8 pad18[0x24 - 0x18];
     u16 unk24;
@@ -64,7 +64,7 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        switch (*(int*)(p1 + 0xf4))
+        switch (((GameObject*)p1)->unkF4)
         {
         case 0:
             objRenderFn_8003b8f4(lbl_803E8188);
@@ -121,10 +121,10 @@ void lightfoot_update(int obj)
     f32 limit;
     f32 fv;
 
-    fv = *(f32*)((char*)anim + 0x10);
+    fv = ((LightfootSub*)anim)->unk10;
     if (fv != (limit = lbl_803E8180)) {
-        *(f32*)((char*)anim + 0x10) = fv - timeDelta;
-        if (*(f32*)((char*)anim + 0x10) <= limit) {
+        ((LightfootSub*)anim)->unk10 = fv - timeDelta;
+        if (((LightfootSub*)anim)->unk10 <= limit) {
             Obj_FreeObject(obj);
         }
     }
@@ -256,11 +256,11 @@ void lightfoot_update(int obj)
         if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & 0x800))
         {
             int a40c = ((LightfootState*)inner)->unk40C;
-            *(f32*)((char*)a40c + 0xc) -= timeDelta;
-            if (*(f32*)((char*)a40c + 0xc) <= lbl_803E8180)
+            ((LightfootSub*)a40c)->animTimer -= timeDelta;
+            if (((LightfootSub*)a40c)->animTimer <= lbl_803E8180)
             {
                 p30 = 3;
-                *(f32*)((char*)a40c + 0xc) += lbl_803E81C0;
+                ((LightfootSub*)a40c)->animTimer += lbl_803E81C0;
             }
             else
             {
@@ -272,7 +272,7 @@ void lightfoot_update(int obj)
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
             fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, p30, 0, snd);
         }
-        *(f32*)((char*)anim + 0x14) -= timeDelta;
+        ((LightfootSub*)anim)->unk14 -= timeDelta;
     }
 }
 
@@ -280,6 +280,7 @@ void lightfoot_init(int obj, int p2, int p3)
 {
     u8* base = (u8*)lbl_80334EE8;
     int inner = *(int*)&((GameObject*)obj)->extra;
+    ObjPlacement* plc = (ObjPlacement*)p2;
     int sub;
     u8 flags = 0x16;
 
@@ -312,7 +313,7 @@ void lightfoot_init(int obj, int p2, int p3)
     }
     else
     {
-        switch (*(int*)((char*)p2 + 0x14))
+        switch (plc->mapId)
         {
         case 0x34316:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC714;
