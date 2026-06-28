@@ -199,7 +199,7 @@ void dimbossgut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
                                                                       lbl_803E4CF0);
-        light = *(u8**)(((Dimbossgut2State*)light)->curveData + 0x18);
+        light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {
             queueGlowRender(light);
@@ -214,8 +214,8 @@ void dimbossgut2_update(int obj)
     int tmpVar;
     u32 randomThreshold;
     u32 n;
-    float* posData;
-    int val;
+    Dimbossgut2Curve* posData;
+    Dimbossgut2Curve* val;
     f32 heightDiff;
     f32 xyScale;
     u8* curveLight;
@@ -244,38 +244,38 @@ void dimbossgut2_update(int obj)
             tmpVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
         }
         while (tmpVar != 0);
-        posData = *(float**)&((Dimbossgut2State*)state)->curveData;
-        if ((*posData < lbl_803E4CD0) && (posData[4] < lbl_803E4CD4))
+        posData = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
+        if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))
         {
-            heightDiff = posData[3] - ((GameObject*)obj)->anim.localPosY;
+            heightDiff = posData->fC - ((GameObject*)obj)->anim.localPosY;
             if (heightDiff < lbl_803E4CD8)
             {
                 heightDiff = -heightDiff;
             }
             if ((heightDiff < lbl_803E4CDC) &&
-                (stk.f4c = posData[3], randomThreshold = randomGetRange(0x1e, 0x3c),
-                    (int)(u32) * (u16*)((int)posData + 0x16) > (int)randomThreshold))
+                (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
+                    (int)(u32)posData->timer16 > (int)randomThreshold))
             {
-                xyScale = lbl_803E4CE0 * posData[4];
+                xyScale = lbl_803E4CE0 * posData->f10;
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                    xyScale * mathSinf(gDimBossGut2Pi * (f32) * (s16*)obj / gDimBossGut2AngleUnitToRadians);
+                    xyScale * mathSinf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                    xyScale * mathCosf(gDimBossGut2Pi * (f32) * (s16*)obj / gDimBossGut2AngleUnitToRadians);
+                    xyScale * mathCosf(gDimBossGut2Pi * (f32)((GameObject*)obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
                                                  NULL);
-                *(u16*)((int)posData + 0x16) = 0;
+                posData->timer16 = 0;
             }
         }
-        *(u16*)((int)posData + 0x16) += framesThisStep;
+        posData->timer16 += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
-        val = ((Dimbossgut2State*)state)->curveData;
-        curveLight = *(u8**)(val + 0x18);
+        val = (Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData;
+        curveLight = (u8*)val->light;
         if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))
         {
             n = (curveLight[0x2f9] + *(s8*)(curveLight + 0x2fa)) & 0xffff;
@@ -285,10 +285,10 @@ void dimbossgut2_update(int obj)
                 if (0xff < n)
                 {
                     n = 0xff;
-                    *(u8*)(((Dimbossgut2Curve*)val)->light + 0x2fa) = 0;
+                    *(u8*)(val->light + 0x2fa) = 0;
                 }
             }
-            *(u8*)(((Dimbossgut2Curve*)val)->light + 0x2f9) = n;
+            *(u8*)(val->light + 0x2f9) = n;
         }
     }
     return;
