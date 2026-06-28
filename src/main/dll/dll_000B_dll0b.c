@@ -1674,19 +1674,19 @@ void fn_800A0478(ModgfxState* state)
         src++;
     }
     f1 = *(f32*)&lbl_803DF434;
-    *(f32*)((char*)state + 0x30) = f1;
-    *(f32*)((char*)state + 0x34) = f1;
-    *(f32*)((char*)state + 0x38) = f1;
+    state->scaleChannels[0].cur[0] = f1;
+    state->scaleChannels[0].cur[1] = f1;
+    state->scaleChannels[0].cur[2] = f1;
     f0 = lbl_803DF430;
-    *(f32*)((char*)state + 0x3C) = f0;
-    *(f32*)((char*)state + 0x40) = f0;
-    *(f32*)((char*)state + 0x44) = f0;
-    *(f32*)((char*)state + 0x48) = f1;
-    *(f32*)((char*)state + 0x4C) = f1;
-    *(f32*)((char*)state + 0x50) = f1;
-    *(f32*)((char*)state + 0x54) = f0;
-    *(f32*)((char*)state + 0x58) = f0;
-    *(f32*)((char*)state + 0x5C) = f0;
+    state->scaleChannels[0].step[0] = f0;
+    state->scaleChannels[0].step[1] = f0;
+    state->scaleChannels[0].step[2] = f0;
+    state->scaleChannels[1].cur[0] = f1;
+    state->scaleChannels[1].cur[1] = f1;
+    state->scaleChannels[1].cur[2] = f1;
+    state->scaleChannels[1].step[0] = f0;
+    state->scaleChannels[1].step[1] = f0;
+    state->scaleChannels[1].step[2] = f0;
 }
 
 #pragma peephole off
@@ -1819,37 +1819,37 @@ extern f32 sqrtf(f32 x);
 
 void dll_0B_func08(void* param)
 {
-    int** arr = (int**)gPartfxActiveEffects;
+    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
 
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
-        if (arr[i] != NULL && *(void**)((char*)arr[i] + 0x4) == param)
+        if (arr[i] != NULL && arr[i]->sourceObject == param)
         {
-            if (*(int*)((char*)arr[i] + 0xa4) & 0x10000)
+            if ((int)arr[i]->flags & 0x10000)
             {
-                fn_800A1040(*(s16*)((char*)arr[i] + 0x10c), 0);
+                fn_800A1040(arr[i]->sequenceId, 0);
             }
             else
             {
-                *(f32*)((char*)arr[i] + 0x18) = *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x18);
-                *(f32*)((char*)arr[i] + 0x1c) = *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x1c);
-                *(f32*)((char*)arr[i] + 0x20) = *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x20);
-                *(f32*)((char*)arr[i] + 0x14) = *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x8);
-                *(s16*)((char*)arr[i] + 0x10) = *(s16*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x4);
-                *(s16*)((char*)arr[i] + 0xe) = *(s16*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x2);
-                *(s16*)((char*)arr[i] + 0xc) = *(s16*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x0);
-                if (*(int*)((char*)arr[i] + 0xa4) & 0x2)
+                arr[i]->sourcePosX = *(f32*)((char*)arr[i]->sourceObject + 0x18);
+                arr[i]->sourcePosY = *(f32*)((char*)arr[i]->sourceObject + 0x1c);
+                arr[i]->sourcePosZ = *(f32*)((char*)arr[i]->sourceObject + 0x20);
+                arr[i]->sourceScale = *(f32*)((char*)arr[i]->sourceObject + 0x8);
+                arr[i]->sourceRotZ = *(s16*)((char*)arr[i]->sourceObject + 0x4);
+                arr[i]->sourceRotY = *(s16*)((char*)arr[i]->sourceObject + 0x2);
+                arr[i]->sourceRotX = *(s16*)((char*)arr[i]->sourceObject + 0x0);
+                if ((int)arr[i]->flags & 0x2)
                 {
-                    *(f32*)((char*)arr[i] + 0x6c) += *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x24);
-                    *(f32*)((char*)arr[i] + 0x70) += *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x28);
-                    *(f32*)((char*)arr[i] + 0x74) += *(f32*)((char*)*(void**)((char*)arr[i] + 0x4) + 0x2c);
+                    arr[i]->velocityX += *(f32*)((char*)arr[i]->sourceObject + 0x24);
+                    arr[i]->velocityY += *(f32*)((char*)arr[i]->sourceObject + 0x28);
+                    arr[i]->velocityZ += *(f32*)((char*)arr[i]->sourceObject + 0x2c);
                 }
-                if (!(*(int*)((char*)arr[i] + 0xa4) & 0x200000))
+                if (!((int)arr[i]->flags & 0x200000))
                 {
-                    *(u32*)((char*)arr[i] + 0xa4) |= 0x200000;
+                    arr[i]->flags |= 0x200000;
                 }
-                *(int*)((char*)arr[i] + 0x4) = 0;
+                *(int*)&arr[i]->sourceObject = 0;
             }
         }
     }
