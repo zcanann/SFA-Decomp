@@ -1899,7 +1899,7 @@ void initFn_8006d020(void)
             char* dst = (char*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
                 + (col & 3) * 8 + (col >> 2) * 0x200);
             cv = 0.39275f * col;
-            n1 = fn_802943F4(CPUFifo_803DED38 * (f32)floor(cv) + rv);
+            n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
             fb = 127.0f * prod + 127.0f;
