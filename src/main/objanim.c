@@ -704,6 +704,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     f32 rootScale;
     f32 blendWeight;
     f32 moveWeight;
+    f32 sampleSpan;
     int wrapped;
     int countdown;
     int previousFrame;
@@ -916,10 +917,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimHand
     rootScale = curve->scale * objAnim->rootMotionScale;
     segmentCount = curve->sampleCount - 1;
     axis = ObjAnim_GetRootCurveAxisData(curve);
-    previousScaledSample = segmentCount * previousProgress;
+    sampleSpan = segmentCount;
+    previousScaledSample = sampleSpan * previousProgress;
     previousSampleIndex = previousScaledSample;
     previousFraction = previousScaledSample - previousSampleIndex;
-    currentScaledSample = segmentCount * objAnim->currentMoveProgress;
+    currentScaledSample = sampleSpan * objAnim->currentMoveProgress;
     currentSampleIndex = currentScaledSample;
     currentFraction = currentScaledSample - currentSampleIndex;
 
