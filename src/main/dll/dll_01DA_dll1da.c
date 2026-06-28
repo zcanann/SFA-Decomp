@@ -61,8 +61,8 @@ void dll_1DA_hitDetect(int obj)
     {
         player = Obj_GetPlayerObject();
         (void)Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)((int)player + 0x18));
-        ((GameObject*)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * (k = lbl_803E4ADC);
-        ((GameObject*)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * k;
+        ((GameObject*)obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = lbl_803E4ADC);
+        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)hi)->anim.velocityZ * k;
         Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
