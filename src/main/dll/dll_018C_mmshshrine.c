@@ -87,7 +87,8 @@ typedef struct MMSHShrineRuntime
     f32 swayTarget;
     f32 idleSfxTimer;
     SCGameBitLatchState latch;
-    u8 pad1C[0x24 - 0x1C];
+    s16 initCount;
+    u8 pad1E[0x24 - 0x1E];
     u8 phase;
     u8 pad25[3];
 } MMSHShrineRuntime;
@@ -367,24 +368,24 @@ void mmsh_shrine_update(int objArg)
 void mmsh_shrine_init(int obj, int def)
 {
     int light;
-    int* state;
+    MMSHShrineRuntime* state;
 
     state = ((GameObject*)obj)->extra;
     ((MMSHShrineObject*)obj)->yaw = 0;
     ((GameObject*)obj)->animEventCallback = MMSH_Shrine_SeqFn;
-    *(u16*)(state + 7) = 10;
-    *(u8*)(state + 9) = 0;
+    state->initCount = 10;
+    state->phase = 0;
     if (0 < *(short*)(def + 0x1a))
     {
-        *(short*)(state + 7) = *(short*)(def + 0x1a) >> 8;
+        state->initCount = *(short*)(def + 0x1a) >> 8;
     }
     GameBit_Set(MMSH_SHRINE_GB_RESET_A, 0);
     GameBit_Set(MMSH_SHRINE_GB_12D, 0);
     ((MMSHShrineObject*)obj)->loadTriggerTimer = 1;
-    if (*(void**)state == NULL)
+    if (state->light == NULL)
     {
         light = objCreateLight(0, 1);
-        *state = light;
+        state->light = (void*)light;
     }
     GameBit_Set(MMSH_SHRINE_GB_F07, 1);
     GameBit_Set(MMSH_SHRINE_GB_EFA, 1);
