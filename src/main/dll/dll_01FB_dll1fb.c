@@ -41,9 +41,6 @@ typedef struct WmGalleonState
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
@@ -59,10 +56,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D04;
 extern f32 lbl_803E5D08;
-
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
@@ -129,14 +122,14 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
 int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+    Dll1FBState* state = (Dll1FBState*)((GameObject*)obj)->extra;
     s16 mode = state->triggerMode;
     u8 flags;
 
     if ((mode == 1) || (mode == 2))
     {
-        flags = (u8)(OBJ_U8(obj, 0xaf) | 8);
-        OBJ_U8(obj, 0xaf) = flags;
+        flags = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = flags;
     }
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
@@ -152,7 +145,7 @@ void dll_1FB_free_nop(void)
 
 void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+    Dll1FBState* state = (Dll1FBState*)((GameObject*)obj)->extra;
 
     if (visible == 0 || state->hideModel != 0u)
     {
@@ -167,9 +160,9 @@ void dll_1FB_hitDetect_nop(void)
 
 void dll_1FB_update(int* obj)
 {
-    Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+    Dll1FBState* state = (Dll1FBState*)((GameObject*)obj)->extra;
 
-    if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&
+    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0) && (state->triggerMode == 2) &&
         (GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
@@ -185,12 +178,12 @@ void dll_1FB_init(int* obj, u8* def)
     Dll1FBState* state;
     Dll1FBSetup* setup;
 
-    state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
+    state = (Dll1FBState*)((GameObject*)obj)->extra;
     setup = (Dll1FBSetup*)def;
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = dll_1FB_SeqFn;
-    OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
-    OBJ_S16(obj, 2) = setup->objectParam;
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->yawByte << 8);
+    ((GameObject*)obj)->anim.rotY = setup->objectParam;
     state->baseMove = setup->baseMove;
     state->triggerMode = setup->triggerMode;
     ObjAnim_SetCurrentMove((int)obj, state->baseMove + 0x100, lbl_803E5D08, 0);
