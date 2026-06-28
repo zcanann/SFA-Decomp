@@ -60,10 +60,20 @@ extern void warpToMap(int idx, s8 transType);
 
 typedef struct Lavaball1bePlacement
 {
-    u8 pad0[0x18 - 0x0];
-    s8 spawnRotX; /* spawn yaw byte, placed in anim.rotX high byte */
-    u8 pad19[0x20 - 0x19];
+    u8 pad0[0x14 - 0x0];
+    s32 linkedId; /* 0x14: linked-object id, consumed and cleared (-1) at init */
+    s8 spawnRotX; /* 0x18: spawn yaw byte, placed in anim.rotX high byte */
+    u8 pad19;     /* 0x19 */
+    s16 velScaleY;  /* 0x1A: vertical launch-velocity scale */
+    s16 velScaleXZ; /* 0x1C: horizontal launch-velocity scale */
+    u8 pad1E[0x20 - 0x1E];
 } Lavaball1bePlacement;
+
+STATIC_ASSERT(offsetof(Lavaball1bePlacement, linkedId) == 0x14);
+STATIC_ASSERT(offsetof(Lavaball1bePlacement, spawnRotX) == 0x18);
+STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleY) == 0x1a);
+STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleXZ) == 0x1c);
+STATIC_ASSERT(sizeof(Lavaball1bePlacement) == 0x20);
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -218,14 +228,15 @@ void lavaball1be_init(s16* obj, u8* p)
         f32 vxz;
         int* sub;
         u8* light;
+        Lavaball1bePlacement* placement = (Lavaball1bePlacement*)p;
 
-        ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(p + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->spawnRotX << 8);
         state = ((GameObject*)obj)->extra;
-        vy = gDimLavaVelocityScale * (f32) * (s16*)(p + 0x1a);
-        vxz = gDimLavaVelocityScale * (f32) * (s16*)(p + 0x1c);
+        vy = gDimLavaVelocityScale * (f32)placement->velScaleY;
+        vxz = gDimLavaVelocityScale * (f32)placement->velScaleXZ;
         state->floorY = ((GameObject*)obj)->anim.localPosY;
-        state->linkedId = *(int*)(p + 0x14);
-        *(int*)(p + 0x14) = -1;
+        state->linkedId = placement->linkedId;
+        placement->linkedId = -1;
         ((GameObject*)obj)->anim.velocityX = vxz * -mathSinf(
             gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
         ((GameObject*)obj)->anim.velocityY = vy;
