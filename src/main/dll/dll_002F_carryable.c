@@ -62,7 +62,7 @@ void Carryable_stopCarrying(int* obj, u8* param2)
 {
     void* player = Obj_GetPlayerObject();
     int held;
-    param2[5] = 0;
+    ((CarryableUpdateHeldState*)param2)->carryState = 0;
     Player_GetHeldObject((int)player, &held);
     if ((int*)held == obj)
     {
@@ -74,25 +74,25 @@ void Carryable_setFlag08(u8* state, u8 enable)
 {
     if (enable != 0)
     {
-        state[7] |= 8;
+        ((CarryableUpdateHeldState*)state)->flags |= 8;
     }
     else
     {
-        state[7] &= ~8;
+        ((CarryableUpdateHeldState*)state)->flags &= ~8;
     }
 }
 
-s32 Carryable_getFlag04(u8* state) { return (state[7] & 4) != 0; }
+s32 Carryable_getFlag04(u8* state) { return (((CarryableUpdateHeldState*)state)->flags & 4) != 0; }
 
 void Carryable_setFlag04(u8* state, u8 enable)
 {
     if (enable != 0)
     {
-        state[7] |= 4;
+        ((CarryableUpdateHeldState*)state)->flags |= 4;
     }
     else
     {
-        state[7] &= ~4;
+        ((CarryableUpdateHeldState*)state)->flags &= ~4;
     }
 }
 
@@ -100,19 +100,19 @@ void Carryable_setFlag02Inverted(u8* state, u8 clear)
 {
     if (clear != 0)
     {
-        state[7] &= ~2;
+        ((CarryableUpdateHeldState*)state)->flags &= ~2;
     }
     else
     {
-        state[7] |= 2;
+        ((CarryableUpdateHeldState*)state)->flags |= 2;
     }
 }
 
-u8 Carryable_getSurfaceType(u8* state) { return state[8]; }
+u8 Carryable_getSurfaceType(u8* state) { return ((CarryableUpdateHeldState*)state)->surfaceType; }
 
-s32 Carryable_getFlag01(u8* state) { return state[7] & 1; }
+s32 Carryable_getFlag01(u8* state) { return ((CarryableUpdateHeldState*)state)->flags & 1; }
 
-s32 Carryable_isHeld(u8* state) { return *(s8*)(state + 0x5); }
+s32 Carryable_isHeld(u8* state) { return ((CarryableUpdateHeldState*)state)->carryState; }
 
 void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
 
