@@ -942,9 +942,9 @@ void Trigger_hitDetect(int obj)
                 case 0x4d:
                     if (ok)
                     {
-                        u8* st = ((GameObject*)obj)->extra;
-                        inside = fn_80198B68(obj, (int)(st + 0x28));
-                        wasInside = fn_80198B68(obj, (int)(st + 0x1c));
+                        TriggerState* st = (TriggerState*)((GameObject*)obj)->extra;
+                        inside = fn_80198B68(obj, (int)&st->prevTargetPosX);
+                        wasInside = fn_80198B68(obj, (int)&st->targetPosX);
                         if (inside != 0)
                         {
                             if (wasInside == 0)
@@ -976,14 +976,13 @@ void Trigger_hitDetect(int obj)
                 case 0x54:
                     ok = 1;
                     i = 0;
-                    def = state;
                     while (i < 4 && ok)
                     {
-                        if (*(s16*)(def + 0x82) != -1 && GameBit_Get(*(s16*)(def + 0x82)) == 0u)
+                        s16 gate = ((TriggerState*)state)->gateBits[i];
+                        if (gate != -1 && GameBit_Get(gate) == 0u)
                         {
                             ok = 0;
                         }
-                        def += 2;
                         i++;
                     }
                     if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
