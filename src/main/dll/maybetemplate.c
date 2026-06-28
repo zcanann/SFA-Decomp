@@ -499,14 +499,14 @@ void pauseMenuDrawStatus(void)
     int delta;
     f32 newOp;
     int cur;
-    u8* bp;
+    f32* op;
     int* dp;
     int bit;
     u8 i;
     u8 j;
     u32 ji;
     int off;
-    f32* op;
+    u8* bp;
     int sv;
     f32 thresh;
     f32 prev;
