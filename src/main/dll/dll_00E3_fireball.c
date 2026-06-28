@@ -221,17 +221,10 @@ typedef struct FireballState
     s16 unk42;
     u8 pad44[0x46 - 0x44];
     u16 spiralPhase;
-    u8 pad48[0x50 - 0x48];
-    f32 unk50;
-    u8 pad54[0x5C - 0x54];
-    u8 unk5C;
-    u8 unk5D;
-    u8 unk5E;
-    u8 unk5F;
-    u8 pad60[0x6A - 0x60];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
+    u16 rotZBase[5];  /* 0x48 */
+    u16 rotZDelta[5]; /* 0x52 */
+    u16 rotYBase[5];  /* 0x5C */
+    u16 rotYDelta[5]; /* 0x66 */
     u8 stateFlags;
     u8 colorIndex;
     u8 pad72[0x94 - 0x72];
@@ -745,7 +738,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-u8 fn_8016F16C(int* obj) { return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x71); }
+u8 fn_8016F16C(int* obj) { return ((FireballState*)((GameObject*)obj)->extra)->colorIndex; }
 
 void fireball_free(int* obj)
 {
@@ -869,7 +862,7 @@ void fireball_init(int* obj)
     }
     else
     {
-        u8* p;
+        FireballState* fs;
         int i;
         ((FireballState*)state)->unk40 = randomGetRange(600, 900);
         ((FireballState*)state)->unk42 = randomGetRange(-600, 600);
@@ -905,13 +898,13 @@ void fireball_init(int* obj)
             }
         }
         ((GameObject*)obj)->anim.alpha = 200;
-        for (i = 0, p = (u8*)state; i < 5; i++)
+        for (i = 0, fs = (FireballState*)state; i < 5; i++)
         {
-            *(u16*)(p + 0x48) = randomGetRange(-32767, 32767);
-            *(u16*)(p + 0x52) = randomGetRange(-1024, 1024);
-            *(u16*)(p + 0x5c) = randomGetRange(-32767, 32767);
-            *(u16*)(p + 0x66) = randomGetRange(-1024, 1024);
-            p += 2;
+            fs->rotZBase[0] = randomGetRange(-32767, 32767);
+            fs->rotZDelta[0] = randomGetRange(-1024, 1024);
+            fs->rotYBase[0] = randomGetRange(-32767, 32767);
+            fs->rotYDelta[0] = randomGetRange(-1024, 1024);
+            fs = (FireballState*)((char*)fs + 2);
         }
         ((GameObject*)obj)->animEventCallback = Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, 2);
@@ -1104,11 +1097,11 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3350;
         for (i = 0; i < 5; i++)
         {
-            u8* p = state + i * 2;
-            *(u16*)(p + 0x48) += *(u16*)(p + 0x52);
-            *(u16*)(p + 0x5c) += *(u16*)(p + 0x66);
-            ((GameObject*)obj)->anim.rotZ = (s16) * (u16*)(p + 0x48);
-            ((GameObject*)obj)->anim.rotY = (s16) * (u16*)(p + 0x5c);
+            FireballState* fs = (FireballState*)(state + i * 2);
+            fs->rotZBase[0] += fs->rotZDelta[0];
+            fs->rotYBase[0] += fs->rotYDelta[0];
+            ((GameObject*)obj)->anim.rotZ = (s16)fs->rotZBase[0];
+            ((GameObject*)obj)->anim.rotY = (s16)fs->rotYBase[0];
             *(u16*)((char*)model + 0x18) &= ~0x8;
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
         }
