@@ -399,7 +399,6 @@ void drawArwingHud(void)
     u32 pip;
     u8 texIdx;
     u8 bombSlot;
-    int bombX;
 
     arwing = getArwing();
     *(int*)buf = lbl_803E1E08;
@@ -454,11 +453,10 @@ void drawArwingHud(void)
         }
         for (bombSlot = 0; bombSlot < 3; bombSlot++)
         {
-            bombX = bombSlot * 0x1c;
-            drawTexture(hudTextures[56], (f32)(bombX + 0x1e), lbl_803E2060, arwingHudAlpha, 0x100);
+            drawTexture(hudTextures[56], (f32)(bombSlot * 0x1c + 0x1e), lbl_803E2060, arwingHudAlpha, 0x100);
             if ((int)bombSlot < bombs)
             {
-                drawTexture(hudTextures[57], (f32)(bombX + 0x23), lbl_803E2064, arwingHudAlpha, 0x100);
+                drawTexture(hudTextures[57], (f32)(bombSlot * 0x1c + 0x23), lbl_803E2064, arwingHudAlpha, 0x100);
             }
         }
         if (((GameObject*)arwing)->anim.mapEventSlot != 0x26)
