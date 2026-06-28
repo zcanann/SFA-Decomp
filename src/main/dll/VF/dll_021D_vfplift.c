@@ -190,16 +190,16 @@ void vfplift23_updateState(int obj)
 
 void vfplift1_updateState(int obj)
 {
-    VfpLiftState* state;
     VfpLiftPlacement* setup;
+    VfpLiftState* state;
     void* player;
     s16 gate0;
     s16 gate1;
     s16 gate2;
     s16 gate3;
 
-    state = vfplift_getState(obj);
-    setup = *(VfpLiftPlacement**)&((GameObject*)obj)->anim.placementData;
+    setup = (VfpLiftPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (VfpLiftState*)((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (player == NULL)
@@ -214,7 +214,9 @@ void vfplift1_updateState(int obj)
     if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 2)
     {
         gate0 = 1;
-        gate3 = gate2 = gate1 = gate0;
+        gate1 = gate0;
+        gate2 = gate0;
+        gate3 = gate0;
     }
     if (gate0 != 0 && gate1 != 0 && gate2 != 0 && gate3 != 0 &&
         state->mode == VFPLIFT_STATE_IDLE && GameBit_Get(VFPLIFT1_READY_GAMEBIT) == 0)
