@@ -86,7 +86,9 @@ typedef struct ProjectileSwitchPlacement
 
 typedef struct ProjectileSwitchState
 {
-    u8 pad0[0x4 - 0x0];
+    u8 isOn;
+    u8 pad1[0x2 - 0x1];
+    s16 gameBitId;
     f32 cooldownTimer;
     u8 pad8[0x20 - 0x8];
     u8 unk20;
@@ -137,7 +139,7 @@ void ProjectileSwitch_hitDetect(int obj)
     }
     if (isSpecial != 0) return;
 
-    if (*(u8*)state != 0)
+    if (((ProjectileSwitchState*)state)->isOn != 0)
     {
         if (((((ProjectileSwitchPlacement*)state2)->triggerMode & 3)) != 1) return;
         stateB = *(int*)&((GameObject*)obj)->extra;
@@ -154,8 +156,8 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             tex->textureId = 0;
         }
-        *(u8*)stateB = 0;
-        GameBit_Set((int)*(short*)(state + 2), 0);
+        ((ProjectileSwitchState*)stateB)->isOn = 0;
+        GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 0);
     }
     else
     {
@@ -173,8 +175,8 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             tex->textureId = 0x100;
         }
-        *(u8*)stateB = 1;
-        GameBit_Set((int)*(short*)(state + 2), 1);
+        ((ProjectileSwitchState*)stateB)->isOn = 1;
+        GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 1);
         if ((((ProjectileSwitchPlacement*)state2)->triggerMode & 3) == 2)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer =
@@ -192,24 +194,24 @@ void ProjectileSwitch_update(int obj)
     ObjTextureRuntimeSlot* tex;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    if (*(u8*)state != 0)
+    if (((ProjectileSwitchState*)state)->isOn != 0)
     {
-        if (GameBit_Get((int)*(short*)(state + 2)) == 0)
+        if (GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId) == 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
             tex = objFindTexture((void*)obj, 0, 0);
             if (tex != 0) tex->textureId = 0;
-            *(u8*)state2 = 0;
+            ((ProjectileSwitchState*)state2)->isOn = 0;
         }
     }
     else
     {
-        if (GameBit_Get((int)*(short*)(state + 2)) != 0)
+        if (GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId) != 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
             tex = objFindTexture((void*)obj, 0, 0);
             if (tex != 0) tex->textureId = 0x100;
-            *(u8*)state2 = 1;
+            ((ProjectileSwitchState*)state2)->isOn = 1;
         }
     }
     if (((ProjectileSwitchState*)state)->cooldownTimer > lbl_803E3718)
@@ -220,7 +222,7 @@ void ProjectileSwitch_update(int obj)
         if (((ProjectileSwitchState*)state)->cooldownTimer <= lbl_803E3718)
         {
             ((ProjectileSwitchState*)state)->cooldownTimer = lbl_803E3718;
-            GameBit_Set((int)*(short*)(state + 2), 0);
+            GameBit_Set((int)((ProjectileSwitchState*)state)->gameBitId, 0);
         }
     }
 }
@@ -262,32 +264,32 @@ void ProjectileSwitch_init(int obj, u8* initData)
         linkSub = *(u8**)&((GameObject*)linkObj)->anim.placementData;
         if (linkSub != 0)
         {
-            *(short*)(state + 2) =
+            ((ProjectileSwitchState*)state)->gameBitId =
                 seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int*)(linkSub + 0x14));
         }
         else
         {
-            *(short*)(state + 2) = -1;
+            ((ProjectileSwitchState*)state)->gameBitId = -1;
         }
     }
     else
     {
-        *(short*)(state + 2) = *(short*)(initData + 0x18);
+        ((ProjectileSwitchState*)state)->gameBitId = *(short*)(initData + 0x18);
     }
-    *(u8*)state = GameBit_Get((int)*(short*)(state + 2));
-    if (*(u8*)state != 0)
+    ((ProjectileSwitchState*)state)->isOn = GameBit_Get((int)((ProjectileSwitchState*)state)->gameBitId);
+    if (((ProjectileSwitchState*)state)->isOn != 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0) tex->textureId = 0x100;
-        *(u8*)state = 1;
+        ((ProjectileSwitchState*)state)->isOn = 1;
     }
     else
     {
         state = *(int*)&((GameObject*)obj)->extra;
         tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0) tex->textureId = 0;
-        *(u8*)state = 0;
+        ((ProjectileSwitchState*)state)->isOn = 0;
     }
     if ((initData[0x23] & 1) == 0)
     {
