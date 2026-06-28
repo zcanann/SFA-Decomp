@@ -14,6 +14,28 @@ typedef struct WaterFallSprayState
     u32 sfxIdB;
 } WaterFallSprayState;
 
+/* Placement/def record the map loader hands to the waterfall-spray init/update.
+ * Shares the ObjPlacement head (pos at 0x8/0xc/0x10, mapId at 0x14). */
+typedef struct WaterFallSprayPlacement
+{
+    u8 pad0[0x14 - 0x0];
+    s32 mapId;       /* 0x14: selects the alternate SFX-id pair */
+    s16 gameBit;     /* 0x18: gating GameBit_Get (-1 = always on) */
+    s8 rotZSeed;     /* 0x1a: <<8 -> anim.rotZ */
+    s8 rotYSeed;     /* 0x1b: <<8 -> anim.rotY */
+    s8 rotXSeed;     /* 0x1c: <<8 -> anim.rotX */
+    u8 randX;        /* 0x1d: +/- spawn offset range, X */
+    u8 randZ;        /* 0x1e: +/- spawn offset range, Z */
+    u8 randY;        /* 0x1f: +/- spawn offset range, Y */
+    u8 distance;     /* 0x20: trigger radius (<<4) */
+    u8 pad21[0x23 - 0x21];
+    u8 flags;        /* 0x23: spawn/keepalive flags */
+    u8 count;        /* 0x24: particles spawned per trigger */
+} WaterFallSprayPlacement;
+
+STATIC_ASSERT(offsetof(WaterFallSprayPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(WaterFallSprayPlacement, count) == 0x24);
+
 
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
@@ -44,7 +66,7 @@ void WaterFallSpray_update(int* objParam)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId); /* #57 */
     u32* state;
-    u8* data;
+    WaterFallSprayPlacement* data;
     u8* player;
     u8* obj;
     GameObject* playerObj;
@@ -58,14 +80,14 @@ void WaterFallSpray_update(int* objParam)
 
     obj = (u8*)objParam;
     state = ((GameObject*)obj)->extra;
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
+    data = *(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
     if (player != NULL)
     {
-        if (*(s16*)(data + 0x18) != -1)
+        if (data->gameBit != -1)
         {
-            i = GameBit_Get(*(s16*)(data + 0x18));
+            i = GameBit_Get(data->gameBit);
         }
         else
         {
@@ -73,7 +95,7 @@ void WaterFallSpray_update(int* objParam)
         }
         if (i != 0)
         {
-            if ((data[0x23] & 0x10) == 0)
+            if ((data->flags & 0x10) == 0)
             {
                 Sfx_KeepAliveLoopedObjectSound(obj, state[0] & 0xffff);
                 Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
@@ -86,36 +108,36 @@ void WaterFallSpray_update(int* objParam)
                 dy = ((GameObject*)obj)->anim.worldPosY - playerObj->anim.worldPosY;
                 dz = ((GameObject*)obj)->anim.worldPosZ - playerObj->anim.worldPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
-                if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
+                if (((distance <= (f32)(s32)((u32)data->distance << 4)) || (data->distance == 0)) &&
                     ((((GameObject*)obj)->objectFlags & 0x800) != 0))
                 {
-                    for (i = 0; i < data[0x24]; i++)
+                    for (i = 0; i < data->count; i++)
                     {
                         partfxArgs.xOffset = (f32)(s32)
-                        randomGetRange(-data[0x1d], data[0x1d]);
+                        randomGetRange(-data->randX, data->randX);
                         partfxArgs.yOffset = (f32)(s32)
-                        randomGetRange(-data[0x1f], data[0x1f]);
+                        randomGetRange(-data->randY, data->randY);
                         partfxArgs.zOffset = (f32)(s32)
-                        randomGetRange(-data[0x1e], data[0x1e]);
-                        if ((data[0x23] & 1) != 0)
+                        randomGetRange(-data->randZ, data->randZ);
+                        if ((data->flags & 1) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
                         }
-                        if ((data[0x23] & 2) != 0)
+                        if ((data->flags & 2) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x321, &partfxArgs);
                         }
-                        if ((data[0x23] & 4) != 0)
+                        if ((data->flags & 4) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x322, &partfxArgs);
                         }
-                        if ((data[0x23] & 8) != 0)
+                        if ((data->flags & 8) != 0)
                         {
                             WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x351, &partfxArgs);
                         }
                     }
                 }
-                *(u32*)&((GameObject*)obj)->unkF4 = -data[0x24];
+                *(u32*)&((GameObject*)obj)->unkF4 = -data->count;
             }
             else if (cooldown > 0)
             {
@@ -128,20 +150,21 @@ void WaterFallSpray_update(int* objParam)
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-void WaterFallSpray_init(u8* obj, u8* data)
+void WaterFallSpray_init(u8* obj, u8* dataRaw)
 {
+    WaterFallSprayPlacement* data = (WaterFallSprayPlacement*)dataRaw;
     u8* sub = ((GameObject*)obj)->extra;
     s16 a, b, c;
     int v;
-    a = (s16)((s32)(s8)data[0x1a] << 8);
+    a = (s16)((s32)data->rotZSeed << 8);
     ((GameObject*)obj)->anim.rotZ = a;
-    b = (s16)((s32)(s8)data[0x1b] << 8);
+    b = (s16)((s32)data->rotYSeed << 8);
     ((GameObject*)obj)->anim.rotY = b;
-    c = (s16)((s32)(s8)data[0x1c] << 8);
+    c = (s16)((s32)data->rotXSeed << 8);
     ((GameObject*)obj)->anim.rotX = c;
     *(u32*)&((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
-    v = *(int*)((char*)(*(u8**)&((GameObject*)obj)->anim.placementData) + 0x14);
+    v = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END && v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
     {
         ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_ALT_SFX_A;
