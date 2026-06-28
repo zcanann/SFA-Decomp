@@ -154,13 +154,13 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int state = *(int*)&((GameObject*)obj)->extra;
     f32 fxParams[4];
     fxParams[0] = lbl_803E59D8;
-    if (*(s16*)(state + 0x274) != 7 && visible != 0)
+    if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
             (obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, state + 0x35c, 0);
     }
-    if ((*(u8*)(state + 0x9d4) & SHOPKEEPER_FLAG_TICK) != 0)
+    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
     {
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, fxParams, 0x50, NULL);
     }
