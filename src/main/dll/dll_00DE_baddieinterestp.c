@@ -750,13 +750,15 @@ void baddieinterestp_update(int* obj)
         if (count > 0)
         {
             u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->targetIdHi << 16;
+            int* other;
             u16 i;
             u8 found;
             id |= (u16)((BaddieinterestpPlacement*)params)->targetIdLo;
             for (i = 0; i < count; i++)
             {
-                int* other = (int*)objs[i];
-                int* otherParams = *(int**)&((GameObject*)other)->anim.placementData;
+                int* otherParams;
+                other = (int*)objs[i];
+                otherParams = *(int**)&((GameObject*)other)->anim.placementData;
                 if (otherParams != NULL)
                 {
                     found = 0;
@@ -780,7 +782,7 @@ void baddieinterestp_update(int* obj)
                             if ((int)randomGetRange(1, 100) <= ((BaddieinterestpPlacement*)params)->prob)
                             {
                                 f32 sunTime;
-                                s8 b = ((BaddieinterestpPlacement*)params)->modeKind;
+                                int b = ((BaddieinterestpPlacement*)params)->modeKind;
                                 switch ((b & 0x30) >> 4)
                                 {
                                 case 0:
