@@ -1256,8 +1256,8 @@ int mapProcessRomList(int slot)
     slots = (ShaderRomListSlot*)(base + 0x418C);
     entry = &slots[i];
     entry->romlist = (void*)rl;
-    ((int*)(base + 0x83A8))[slot] = rl;
-    entry->slot = slot;
+    *(int*)(slot * 4 + 0x83A8 + (char*)base) = rl;
+    *(s16*)(base + i * 8 + 0x4190) = slot;
     lbl_803DCEA0 = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
