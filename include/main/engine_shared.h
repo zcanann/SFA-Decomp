@@ -99,14 +99,16 @@ typedef struct SfxObjectChannel {
     u8 tracksObjectPosition;
     u8 paused;
     u8 volume;
-    u8 pad08[0x04];
+    s16 field08;
+    u8 pad0a[0x02];
     f32 x;
     f32 y;
     f32 z;
     u32 object;
     u16 channelMask;
     u16 sfxId;
-    u8 pad20[0x08];
+    f32 field20;
+    f32 field24;
     u8 globalCtrlDisabled;
     u8 pad29[0x07];
     u64 age;
