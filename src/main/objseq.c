@@ -1451,11 +1451,11 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     u8* cmd;
     f32 speed;
     u8* model;
-    u8* activeObj;
     u8* action;
     int found;
-    int targetFrame;
     int i;
+    int targetFrame;
+    u8* activeObj;
     int stop;
     int frame;
     f32 val;
