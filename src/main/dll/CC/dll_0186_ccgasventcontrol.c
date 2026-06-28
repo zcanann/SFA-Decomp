@@ -83,7 +83,7 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void ccgasventcontrol_free(int obj)
 {
     char* inner = ((GameObject*)obj)->extra;
-    u8 t = *(u8*)inner;
+    u8 t = ((CcgasventcontrolState*)inner)->state;
     if (t == 3 || t == 4)
     {
         disableHeavyFog();
@@ -98,7 +98,7 @@ void ccgasventcontrol_init(int obj, u8* p)
     ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1a] << 8);
     if (GameBit_Get(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
-        *(u8*)inner = 7;
+        ((CcgasventcontrolState*)inner)->state = 7;
     }
 }
 
@@ -114,7 +114,7 @@ void ccgasventcontrol_update(int obj)
 {
     int ex = *(int*)&((GameObject*)obj)->extra;
     u8 b = CCGasVentControlFn_801a9fd0(obj, ex);
-    switch (*(u8*)ex)
+    switch (((CcgasventcontrolState*)ex)->state)
     {
     case 0:
         {
@@ -122,7 +122,7 @@ void ccgasventcontrol_update(int obj)
             ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
             if (cnt == 4)
             {
-                *(u8*)ex = 1;
+                ((CcgasventcontrolState*)ex)->state = 1;
             }
             break;
         }
@@ -130,13 +130,13 @@ void ccgasventcontrol_update(int obj)
         if (GameBit_Get(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            *(u8*)ex = 2;
+            ((CcgasventcontrolState*)ex)->state = 2;
         }
         break;
     case 2:
         (*gGameUIInterface)->initAirMeter(6000, 0x603);
         ((CcgasventcontrolState*)ex)->airMeter = gCcGasVentAirMeterMax;
-        *(u8*)ex = 3;
+        ((CcgasventcontrolState*)ex)->state = 3;
         ((CcgasventcontrolState*)ex)->ventCount = b;
         break;
     case 3:
@@ -176,7 +176,7 @@ void ccgasventcontrol_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-                *(u8*)ex = 4;
+                ((CcgasventcontrolState*)ex)->state = 4;
             }
             if (b != ((CcgasventcontrolState*)ex)->ventCount)
             {
@@ -190,7 +190,7 @@ void ccgasventcontrol_update(int obj)
             (*gGameUIInterface)->airMeterSetShutdown();
             GameBit_Set(GAMEBIT_GAS_PUZZLE_DONE, 1);
             GameBit_Set(0x620, 0);
-            *(u8*)ex = 5;
+            ((CcgasventcontrolState*)ex)->state = 5;
         }
         break;
     case 4:
@@ -200,14 +200,14 @@ void ccgasventcontrol_update(int obj)
         {
             int player = Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-            *(u8*)ex = 6;
+            ((CcgasventcontrolState*)ex)->state = 6;
             break;
         }
     case 6:
         if (GameBit_Get(GAMEBIT_GAS_ACTIVE) == 0)
         {
             disableHeavyFog();
-            *(u8*)ex = 7;
+            ((CcgasventcontrolState*)ex)->state = 7;
         }
         break;
     }
@@ -235,19 +235,19 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     }
     if (count != 0)
     {
-        if (*(u8*)((char*)extra + 1) == 0)
+        if (((CcgasventcontrolState*)extra)->soundActive == 0)
         {
             Sfx_AddLoopedObjectSound(obj, 0x223);
-            *(u8*)((char*)extra + 1) = 1;
+            ((CcgasventcontrolState*)extra)->soundActive = 1;
         }
         Sfx_SetObjectSfxVolume(obj, 0x223, (u8)(count * 0xf + 0x28), lbl_803E461C);
     }
     else
     {
-        if (*(u8*)((char*)extra + 1) != 0)
+        if (((CcgasventcontrolState*)extra)->soundActive != 0)
         {
             Sfx_RemoveLoopedObjectSound(obj, 0x223);
-            *(u8*)((char*)extra + 1) = 0;
+            ((CcgasventcontrolState*)extra)->soundActive = 0;
         }
     }
     return count;
