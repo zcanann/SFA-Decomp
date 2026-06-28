@@ -428,16 +428,16 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
 
 void ObjSeq_run(void)
 {
-    int count;
-    int matchCount;
     int ok;
     int keepCount;
     void** objects;
-    u8* base;
+    int matchCount;
     void** objPtr;
+    u8* base;
     u8* cmd;
     s16* keepWalk;
     s16* keepBase;
+    int count;
     int i;
     int index;
     int xrot;
