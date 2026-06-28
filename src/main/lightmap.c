@@ -173,11 +173,11 @@ void updateVisibleGeometry(void)
     st.rz = *(s16*)(cam + 0x54);
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
+    n = 0;
     gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
-    n++;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
     ratio = fn_80293D0C(fov) / tt;
@@ -187,29 +187,29 @@ void updateVisibleGeometry(void)
     ff = floor(tt);
     ss = fn_802943F4(tt);
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
+    n = 1;
     gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
-    n++;
     Matrix_TransformPoint(m, -ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
+    n = 2;
     gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
-    n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, -ss, -ff, &ox, &oy, &oz);
+    n = 3;
     gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
-    n++;
     Matrix_TransformPoint(m, lbl_803DEBCC, ss, -ff, &ox, &oy, &oz);
+    n = 4;
     gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
-    n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 #pragma opt_propagation reset
