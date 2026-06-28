@@ -13,6 +13,7 @@
  *     returns it (1-based); otherwise returns 0.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/game_object.h"
 
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
@@ -24,19 +25,20 @@ int fn_801E66E4(void) { return 0; }
 
 int fn_801E66EC(int arg1, int arg2)
 {
+    GameObject* obj = (GameObject*)arg1;
     int state;
     f32 spawnParam;
     int stk;
     int nextState;
 
-    state = *(int*)(arg1 + 0xb8);
+    state = (int)obj->extra;
     spawnParam = lbl_803E59D8;
 
     if (*(s8*)(arg2 + 0x27a) != 0)
     {
-        if ((*(u16*)(arg1 + 0xb0) & 0x800) != 0)
+        if ((obj->objectFlags & 0x800) != 0)
         {
-            (*gBoneParticleEffectInterface)->spawnEffect((void*)arg1, 2031, &spawnParam, 80, NULL);
+            (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 2031, &spawnParam, 80, NULL);
         }
     }
 
