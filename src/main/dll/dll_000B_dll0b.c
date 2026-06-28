@@ -3144,7 +3144,7 @@ void dll_0B_func05(void)
                     res = Resource_Acquire((u16)(*(s16*)(E9 + emOff + 0x14) + 0x58), 1);
                     if (*(int*)(E9 + emOff) & 0x1000000)
                     {
-                        for (k = 0; k < (int)*(f32*)(E9 + emOff + 0x4); k++)
+                        for (k = 0; k < (int)*(f32*)(E9 + (emOff + 0x4)); k++)
                         {
                             if (randomGetRange(0, 5) == 0)
                             {
@@ -3162,7 +3162,7 @@ void dll_0B_func05(void)
                     }
                     else
                     {
-                        for (k = 0; k < (int)*(f32*)(E9 + emOff + 0x4); k++)
+                        for (k = 0; k < (int)*(f32*)(E9 + (emOff + 0x4)); k++)
                         {
                             if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                             {
