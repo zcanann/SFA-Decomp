@@ -99,16 +99,31 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-typedef struct EcshShrineByte15
+typedef struct GpshShrineState
 {
-    u8 flag : 1;
-    u8 rest : 7;
-} EcshShrineByte15;
+    void* light;
+    f32 timer;
+    f32 sfxTimer;
+    s16 anglePhase[3];
+    u8 solvedCount;
+    u8 pad13[0x14 - 0x13];
+    u8 puzzleState;
+    u8 activatedFlag : 1;
+    u8 flagRest : 7;
+    u8 pad16[0x18 - 0x16];
+} GpshShrineState;
+
+STATIC_ASSERT(sizeof(GpshShrineState) == 0x18);
+STATIC_ASSERT(offsetof(GpshShrineState, timer) == 0x04);
+STATIC_ASSERT(offsetof(GpshShrineState, sfxTimer) == 0x08);
+STATIC_ASSERT(offsetof(GpshShrineState, anglePhase) == 0x0C);
+STATIC_ASSERT(offsetof(GpshShrineState, solvedCount) == 0x12);
+STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
 
 int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void); /* #57 */
-    u8* sub;
+    GpshShrineState* sub;
     int* player;
     int i;
     u8 ev;
@@ -126,7 +141,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (ev)
             {
             case 3:
-                ((EcshShrineByte15*)(sub + 0x15))->flag = 1;
+                sub->activatedFlag = 1;
                 break;
             case 7:
                 fn_80296518(player, 0x80, 1);
@@ -136,7 +151,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 14:
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                light = *(void**)sub;
+                light = sub->light;
                 if (light != NULL)
                 {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
@@ -144,7 +159,7 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 15:
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                light = *(void**)sub;
+                light = sub->light;
                 if (light != NULL)
                 {
                     modelLightStruct_setEnabled(light, 0, lbl_803E5038);
@@ -162,7 +177,7 @@ void fn_801C70F0(s16* obj)
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8 buf[32];
     u8* def;
-    u8* sub;
+    GpshShrineState* sub;
     int* player;
     int diff;
     f32 c1;
@@ -179,18 +194,18 @@ void fn_801C70F0(s16* obj)
     }
     else
     {
-        *(s16*)(sub + 0xc) = (s16)(*(s16*)(sub + 0xc) + (int)(lbl_803E5000 * timeDelta));
-        *(s16*)(sub + 0xe) = (s16)(*(s16*)(sub + 0xe) + (int)(lbl_803E5004 * timeDelta));
-        *(s16*)(sub + 0x10) = (s16)(*(s16*)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
+        sub->anglePhase[0] = (s16)(sub->anglePhase[0] + (int)(lbl_803E5000 * timeDelta));
+        sub->anglePhase[1] = (s16)(sub->anglePhase[1] + (int)(lbl_803E5004 * timeDelta));
+        sub->anglePhase[2] = (s16)(sub->anglePhase[2] + (int)(lbl_803E5008 * timeDelta));
         ((GameObject*)obj)->anim.localPosY =
             lbl_803E500C + (((ObjPlacement*)def)->posY
-                + mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange));
-        c1 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xe)) / gGpShShrineAngleHalfRange);
-        c2 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange);
+                + mathSinf((gGpShShrinePi * (f32)sub->anglePhase[0]) / gGpShShrineAngleHalfRange));
+        c1 = mathSinf((gGpShShrinePi * (f32)sub->anglePhase[1]) / gGpShShrineAngleHalfRange);
+        c2 = mathSinf((gGpShShrinePi * (f32)sub->anglePhase[0]) / gGpShShrineAngleHalfRange);
         c2 = c2 + c1;
         ((GameObject*)obj)->anim.rotZ = lbl_803E5018 * c2;
-        c1 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0x10)) / gGpShShrineAngleHalfRange);
-        c2 = mathSinf((gGpShShrinePi * (f32) * (s16*)(sub + 0xc)) / gGpShShrineAngleHalfRange);
+        c1 = mathSinf((gGpShShrinePi * (f32)sub->anglePhase[2]) / gGpShShrineAngleHalfRange);
+        c2 = mathSinf((gGpShShrinePi * (f32)sub->anglePhase[0]) / gGpShShrineAngleHalfRange);
         c2 = c2 + c1;
         ((GameObject*)obj)->anim.rotY = lbl_803E5018 * c2;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta,
@@ -221,18 +236,6 @@ void fn_801C70F0(s16* obj)
         }
     }
 }
-
-typedef struct GpshShrineState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 timer;
-    f32 sfxTimer;
-    u8 padC[0x12 - 0xC];
-    u8 solvedCount;
-    u8 pad13[0x14 - 0x13];
-    u8 puzzleState;
-    u8 pad15[0x18 - 0x15];
-} GpshShrineState;
 
 void gpsh_shrine_update(int obj)
 {
