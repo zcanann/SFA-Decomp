@@ -1,4 +1,4 @@
-/* DLL 0x019B — torch / fire-effect objects [801CBA98-801CBD88) */
+/* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
 #include "main/dll/torch1CD.h"
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
@@ -30,6 +30,17 @@ extern f32 lbl_803E519C;
 extern f32 lbl_803E51A0;
 extern f32 timeDelta;
 extern u8 framesThisStep;
+
+/* Romlist placement for the 0x19B torch object. The standard ObjPlacement
+ * header occupies 0x00..0x18; this class stores a packed activation-distance
+ * value at 0x1A (the high byte >> 8 seeds Dll19BState.activationDist). */
+typedef struct Dll19BPlacement
+{
+    u8 pad0[0x1A - 0x00];
+    s16 activationDistPacked; /* 0x1A */
+} Dll19BPlacement;
+
+STATIC_ASSERT(offsetof(Dll19BPlacement, activationDistPacked) == 0x1A);
 
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -400,9 +411,9 @@ void dll_19B_init(u8* obj, u8* params)
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
     sub->activationDist = 0xa;
-    if (*(s16*)(params + 0x1a) > 0)
+    if (((Dll19BPlacement*)params)->activationDistPacked > 0)
     {
-        sub->activationDist = (s16)(*(s16*)(params + 0x1a) >> 8);
+        sub->activationDist = (s16)(((Dll19BPlacement*)params)->activationDistPacked >> 8);
     }
     sub->phase = 0;
     sub->pendingEvent = 0;
