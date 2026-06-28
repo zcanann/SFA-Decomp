@@ -16,16 +16,33 @@ typedef struct AndrossState {
     int lightAnchorObj;
     int effectHandle;
     int unk14;
-    u8 unk18[0x20 - 0x18];
-    s16 unk20;
-    u8 unk22[0x23 - 0x22];
-    u8 unk23;
-    u8 unk24[0x43 - 0x24];
-    s8 unk43;
-    s16 unk44;
-    u8 unk46[0x4C - 0x46];
-    int targetPosPtr;
-    u8 unk50[0x58 - 0x50];
+    /*
+     * 0x18..0x58 is genuinely a pair of per-spawn arrays on the Andross state
+     * itself: four spawned-object handles followed by four position-delta
+     * vectors (object world pos - Andross local pos, restored each tick).
+     * The scalar overlay names below alias the same bytes only because the
+     * code casts foreign objects (render ops, helper objects, freshly
+     * allocated setups) through AndrossState* to reach those objects' own
+     * fields - none of those scalar accesses are made on the Andross state.
+     */
+    union {
+        struct {
+            int spawnObj[4];      /* 0x18: ObjList_FindObjectById(gAndrossSpawnObjectIds[i]) */
+            SunVec3 spawnDelta[4]; /* 0x28: spawnObj[i] world pos - Andross local pos */
+        };
+        struct {
+            u8 unk18[0x20 - 0x18];
+            s16 unk20;
+            u8 unk22[0x23 - 0x22];
+            u8 unk23;
+            u8 unk24[0x43 - 0x24];
+            s8 unk43;
+            s16 unk44;
+            u8 unk46[0x4C - 0x46];
+            int targetPosPtr;
+            u8 unk50[0x58 - 0x50];
+        };
+    };
     f32 homePosX; /* anchor position from the placement (setup->posX/Y/Z) */
     f32 homePosY;
     f32 homePosZ;
@@ -77,6 +94,9 @@ typedef struct AndrossState {
 } AndrossState;
 
 STATIC_ASSERT(sizeof(AndrossState) == 0xEC);
+STATIC_ASSERT(offsetof(AndrossState, spawnObj) == 0x18);
+STATIC_ASSERT(offsetof(AndrossState, spawnDelta) == 0x28);
+STATIC_ASSERT(offsetof(AndrossState, targetPosPtr) == 0x4C);
 STATIC_ASSERT(offsetof(AndrossState, homePosX) == 0x58);
 STATIC_ASSERT(offsetof(AndrossState, actionTimer) == 0x98);
 

@@ -216,7 +216,7 @@ void fn_8023A87C(int obj, int state)
 {
     void* spawned;
 
-    spawned = *(void**)(state + 0x10);
+    spawned = *(void**)&((AndrossState*)state)->effectHandle;
     if (spawned != NULL)
     {
         *(f32*)((char*)spawned + 0x14) -= lbl_803E74D8;
@@ -348,6 +348,12 @@ void andross_update(int obj)
         ((AndrossState*)state)->savedPosZ = ((GameObject*)*state)->anim.localPosZ;
         arwarwing_setFlightHalfWidth(*state, gAndrossFlightHalfWidth);
     }
+    /*
+     * spawnObj[val] (state+0x18+val*4) intentionally kept as the indexed raw
+     * deref: the original sources the handle this way and the lwzx index reg
+     * coloring only matches in this form. spawnDelta[val] (state+0x28+val*12)
+     * is the typed SunVec3 array.
+     */
     for (work = 0; (u8)work < 4; work = work + 1)
     {
         val = (u8)work;
@@ -356,22 +362,22 @@ void andross_update(int obj)
             *(int*)((int)state + val * 4 + 0x18) = ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
             if (*(void**)((int)state + val * 4 + 0x18) != NULL)
             {
-                *(f32*)(state + val * 3 + 10) = *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) - ((GameObject*)
-                    obj)->anim.localPosX;
-                *(f32*)(state + val * 3 + 0xb) = *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x10) - ((GameObject*)
-                    obj)->anim.localPosY;
-                *(f32*)(state + val * 3 + 0xc) = *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x14) - ((GameObject*)
-                    obj)->anim.localPosZ;
+                ((AndrossState*)state)->spawnDelta[val].x =
+                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) - ((GameObject*)obj)->anim.localPosX;
+                ((AndrossState*)state)->spawnDelta[val].y =
+                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x10) - ((GameObject*)obj)->anim.localPosY;
+                ((AndrossState*)state)->spawnDelta[val].z =
+                    *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             }
         }
         else
         {
-            *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) = ((GameObject*)obj)->anim.localPosX + *(f32*)(state +
-                val * 3 + 10);
+            *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0xc) =
+                ((GameObject*)obj)->anim.localPosX + ((AndrossState*)state)->spawnDelta[val].x;
             *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x10) =
-                ((GameObject*)obj)->anim.localPosY + *(f32*)(state + val * 3 + 0xb);
+                ((GameObject*)obj)->anim.localPosY + ((AndrossState*)state)->spawnDelta[val].y;
             *(float*)(*(int*)((int)state + val * 4 + 0x18) + 0x14) =
-                ((GameObject*)obj)->anim.localPosZ + *(f32*)(state + val * 3 + 0xc);
+                ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
     found = ((AndrossState*)state)->fightPhase;
