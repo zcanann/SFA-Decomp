@@ -6,6 +6,7 @@
  */
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct Dimsnowball1c2State
 {
@@ -24,8 +25,7 @@ typedef struct Dimsnowball1c2Placement
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
     u8 pad8[0x14 - 0x8];
     s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    s8 unk19;
+    s16 unk18; /* init: copied to extra (DimicewallState.unk2 + word 0) */
     u8 unk1A;
     u8 unk1B;
     s8 unk1C;
@@ -79,11 +79,12 @@ void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimsnowball1c2_init(int obj, u8* p)
 {
+    Dimsnowball1c2Placement* def = (Dimsnowball1c2Placement*)p;
     char* inner;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
     inner = ((GameObject*)obj)->extra;
-    ((DimicewallState*)inner)->unk2 = *(s16*)(p + 0x18);
-    *(s16*)inner = *(s16*)(p + 0x18);
+    ((DimicewallState*)inner)->unk2 = def->unk18;
+    *(s16*)inner = def->unk18;
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
 
@@ -98,25 +99,25 @@ void dimsnowball1c2_update(int* obj)
         {
             if (fn_802972A8(Obj_GetPlayerObject()) == 0)
             {
-                int* np;
-                int* def;
-                def = *(int**)&((GameObject*)obj)->anim.placementData;
-                np = (int*)Obj_AllocObjectSetup(36, 406);
-                *(u8*)((char*)np + 4) = ((Dimsnowball1c2Placement*)def)->colorR;
-                *(u8*)((char*)np + 6) = ((Dimsnowball1c2Placement*)def)->colorB;
-                *(u8*)((char*)np + 5) = ((Dimsnowball1c2Placement*)def)->colorG;
-                *(u8*)((char*)np + 7) = ((Dimsnowball1c2Placement*)def)->colorA;
-                *(f32*)((char*)np + 8) = ((GameObject*)obj)->anim.localPosX;
-                *(f32*)((char*)np + 0xc) = ((GameObject*)obj)->anim.localPosY;
-                *(f32*)&((ObjDef*)np)->jointData = ((GameObject*)obj)->anim.localPosZ;
-                *(int*)((char*)np + 0x14) = ((Dimsnowball1c2Placement*)def)->unk14;
+                ObjPlacement* np;
+                Dimsnowball1c2Placement* def;
+                def = *(Dimsnowball1c2Placement**)&((GameObject*)obj)->anim.placementData;
+                np = (ObjPlacement*)Obj_AllocObjectSetup(36, 406);
+                np->color[0] = def->colorR;
+                np->color[2] = def->colorB;
+                np->color[1] = def->colorG;
+                np->color[3] = def->colorA;
+                np->posX = ((GameObject*)obj)->anim.localPosX;
+                np->posY = ((GameObject*)obj)->anim.localPosY;
+                np->posZ = ((GameObject*)obj)->anim.localPosZ;
+                np->mapId = def->unk14;
                 {
-                    int t1c = ((Dimsnowball1c2Placement*)def)->unk1C;
+                    int t1c = def->unk1C;
                     *(s8*)((char*)np + 0x18) = t1c;
                 }
-                *(s16*)((char*)np + 0x1a) = ((Dimsnowball1c2Placement*)def)->unk1A;
+                *(s16*)((char*)np + 0x1a) = def->unk1A;
                 *(s16*)((char*)np + 0x1c) =
-                    (f32)(u32)((Dimsnowball1c2Placement*)def)->unk1B +
+                    (f32)(u32)def->unk1B +
                     (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
                 Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                 *(s16*)extra = ((Dimsnowball1c2State*)extra)->spawnPeriod;
