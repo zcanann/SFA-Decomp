@@ -745,7 +745,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     f32 dist1, dist2, nx, nz, offs1, dz;
     f32 offs2, distA, distB, dx, dy, len, q, t0, sum, frac, b1, width;
     f32 px, py, pz, outX, outY;
-    f32 ddx, ddy, ddz;
+    f32 ddy, ddx, ddz;
 
     count = 0;
     for (i = 0; i < (int)gCheckpointRouteCount; i++)
