@@ -43,6 +43,22 @@ typedef struct DoorF4State
 
 STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
 
+/* Class-specific placement record for the doorf4 (DLL 0xF4) door family:
+ * ObjPlacement common head (0x00..0x17) followed by the door gate fields. */
+typedef struct DoorF4Placement
+{
+    ObjPlacement head; /* 0x00..0x17 */
+    s8 yawByte;        /* 0x18: spawn yaw, scaled by <<8 to a binary angle */
+    s8 gateMode;       /* 0x19: gate-mode selector (switch in SeqFn) */
+    s16 gameBitB;      /* 0x1a: secondary GameBit toggled on far-side open */
+    s16 toggleMask;    /* 0x1c: xor masks (low byte near-side, high byte far) */
+    s16 gameBitA;      /* 0x1e: open-latch GameBit id */
+    s16 gameBitC;      /* 0x20: near-side GameBit toggled on open */
+} DoorF4Placement;
+
+STATIC_ASSERT(offsetof(DoorF4Placement, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
+
 #define DOORF4_OBJ_GROUP 14
 
 /* messages received by a door's inbox */
@@ -214,7 +230,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     int* list;
     int* player;
     int i;
-    u8* def;
+    DoorF4Placement* def;
     DoorF4State* sub;
     int** walk;
     f32* vs;
@@ -227,14 +243,14 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     f32 dy;
     f32 thr;
 
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    def = *(DoorF4Placement**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
     sd = lbl_803E3648;
     list = ObjList_GetObjects(&objIdx, &objCount);
     animUpdate->sequenceEventActive = 0;
     player = Obj_GetPlayerObject();
-    dx = ((GameObject*)player)->anim.localPosX - ((ObjPlacement*)def)->posX;
-    dy = ((GameObject*)player)->anim.localPosZ - ((ObjPlacement*)def)->posZ;
+    dx = ((GameObject*)player)->anim.localPosX - def->head.posX;
+    dy = ((GameObject*)player)->anim.localPosZ - def->head.posZ;
     dist = sqrtf(dx * dx + dy * dy);
     if (sub->gameBitA == -1)
     {
@@ -257,7 +273,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     active = *(s8*)&sub->active;
-    switch (*(s8*)(def + 0x19))
+    switch (def->gateMode)
     {
     case 6:
         if (gb != 0)
@@ -266,10 +282,10 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         break;
     case 0:
-        ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
+        ang = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
         sd = mathSinf(ang);
         s = mathCosf(ang);
-        sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
+        sd = -(def->head.posX * sd + def->head.posZ * s)
             + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
         thr = sub->openRange;
         if (dist < thr && gb != 0 && sd < thr && sd > -thr)
@@ -303,10 +319,10 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 1:
         if (dist < lbl_803E3654 && gb != 0)
         {
-            ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
+            ang = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang);
             s = mathCosf(ang);
-            sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
+            sd = -(def->head.posX * sd + def->head.posZ * s)
                 + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
             if (((GameObject*)obj)->unkF8 == 0)
             {
@@ -352,14 +368,14 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 other = *walk;
                 if (((GameObject*)other)->anim.seqId == 0x7c)
                 {
-                    dx = ((GameObject*)other)->anim.localPosX - ((ObjPlacement*)def)->posX;
-                    dy = ((GameObject*)other)->anim.localPosZ - ((ObjPlacement*)def)->posZ;
+                    dx = ((GameObject*)other)->anim.localPosX - def->head.posX;
+                    dy = ((GameObject*)other)->anim.localPosZ - def->head.posZ;
                     if (sqrtf(dx * dx + dy * dy) < lbl_803E3660)
                     {
-                        ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
+                        ang = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
                         sd = mathSinf(ang);
                         s = mathCosf(ang);
-                        sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
+                        sd = -(def->head.posX * sd + def->head.posZ * s)
                             + (sd * ((GameObject*)other)->anim.localPosX + s * ((GameObject*)other)->anim.localPosZ);
                         if (sd < lbl_803E3664 && sd > lbl_803E3668)
                         {
@@ -391,10 +407,10 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 3:
         if (dist < lbl_803E3654 && gb != 0)
         {
-            ang = (gDoorF4Pi * (f32)(*(s8*)(def + 0x18) << 8)) / gDoorF4BinaryAngleScale;
+            ang = (gDoorF4Pi * (f32)(def->yawByte << 8)) / gDoorF4BinaryAngleScale;
             sd = mathSinf(ang);
             s = mathCosf(ang);
-            sd = -(((ObjPlacement*)def)->posX * sd + ((ObjPlacement*)def)->posZ * s)
+            sd = -(def->head.posX * sd + def->head.posZ * s)
                 + (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
             if (sd < lbl_803E366C && sd > lbl_803E3670)
             {
@@ -452,18 +468,18 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 vs = Camera_GetCurrentViewSlot();
                 if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648)
                 {
-                    if (*(s16*)(def + 0x20) != -1)
+                    if (def->gameBitC != -1)
                     {
-                        gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x20));
-                        gbToggle ^= (u8) * (s16*)(def + 0x1c);
-                        GameBit_Set(*(s16*)(def + 0x20), gbToggle);
+                        gbToggle = (u8)GameBit_Get(def->gameBitC);
+                        gbToggle ^= (u8)def->toggleMask;
+                        GameBit_Set(def->gameBitC, gbToggle);
                     }
                 }
-                else if (*(s16*)(def + 0x1a) != -1)
+                else if (def->gameBitB != -1)
                 {
-                    gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x1a));
-                    gbToggle ^= (u8)(*(s16*)(def + 0x1c) >> 8);
-                    GameBit_Set(*(s16*)(def + 0x1a), gbToggle);
+                    gbToggle = (u8)GameBit_Get(def->gameBitB);
+                    gbToggle ^= (u8)(def->toggleMask >> 8);
+                    GameBit_Set(def->gameBitB, gbToggle);
                 }
                 if (sd <= lbl_803E3648)
                 {
@@ -518,18 +534,18 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 vs = Camera_GetCurrentViewSlot();
                 if (sub->planeD + (sub->cosYaw * vs[3] + sub->sinYaw * vs[5]) < lbl_803E3648)
                 {
-                    if (*(s16*)(def + 0x20) != -1)
+                    if (def->gameBitC != -1)
                     {
-                        gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x20));
-                        gbToggle ^= (u8) * (s16*)(def + 0x1c);
-                        GameBit_Set(*(s16*)(def + 0x20), gbToggle);
+                        gbToggle = (u8)GameBit_Get(def->gameBitC);
+                        gbToggle ^= (u8)def->toggleMask;
+                        GameBit_Set(def->gameBitC, gbToggle);
                     }
                 }
-                else if (*(s16*)(def + 0x1a) != -1)
+                else if (def->gameBitB != -1)
                 {
-                    gbToggle = (u8)GameBit_Get(*(s16*)(def + 0x1a));
-                    gbToggle ^= (u8)(*(s16*)(def + 0x1c) >> 8);
-                    GameBit_Set(*(s16*)(def + 0x1a), gbToggle);
+                    gbToggle = (u8)GameBit_Get(def->gameBitB);
+                    gbToggle ^= (u8)(def->toggleMask >> 8);
+                    GameBit_Set(def->gameBitB, gbToggle);
                 }
                 switch (((GameObject*)obj)->anim.seqId)
                 {
