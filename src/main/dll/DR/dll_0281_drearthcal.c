@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 
 #define DREARTHCAL_SETUP_YAW 0x18
-#define DREARTHCAL_OBJECT_FLAGS_B0 0xb0
 #define DREARTHCAL_INIT_FLAGS 0x6000
 
 int drearthcal_setScale(void) { return 1; }
@@ -94,7 +93,7 @@ void drearthcal_update(int obj)
 void drearthcal_init(int obj, int setup)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(setup + DREARTHCAL_SETUP_YAW) << 8);
-    *(u16*)(obj + DREARTHCAL_OBJECT_FLAGS_B0) |= DREARTHCAL_INIT_FLAGS;
+    ((GameObject*)obj)->objectFlags |= DREARTHCAL_INIT_FLAGS;
 }
 #pragma scheduling on
 #pragma peephole on
