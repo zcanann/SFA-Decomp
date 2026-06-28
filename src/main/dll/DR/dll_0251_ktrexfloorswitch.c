@@ -32,7 +32,8 @@ typedef struct KtrexfloorswitchPlacement
     f32 curveX;          /* 0x08: rom-curve lookup coordinates */
     f32 baseHeight;      /* 0x0C: top/raised Y of the plate */
     f32 curveZ;          /* 0x10 */
-    u8 pad14[0x19 - 0x14];
+    u8 pad14[0x18 - 0x14];
+    u8 rotByte;          /* 0x18: byte yaw, shifted into anim.rotX at init */
     u8 chargeReload;     /* 0x19: charge timer reload value */
     s16 levelBit;        /* 0x1A: game bit holding the 0..15 charge level */
     s16 activeBit;       /* 0x1C: game bit; nonzero/2 makes the plate active */
@@ -43,6 +44,7 @@ typedef struct KtrexfloorswitchPlacement
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, curveX) == 0x08);
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, baseHeight) == 0x0C);
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, curveZ) == 0x10);
+STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, rotByte) == 0x18);
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, chargeReload) == 0x19);
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, levelBit) == 0x1A);
 STATIC_ASSERT(offsetof(KtrexfloorswitchPlacement, activeBit) == 0x1C);
@@ -56,10 +58,12 @@ typedef struct KtrexfloorswitchSpawnEnergyArcState
     u8 pad0[0x8 - 0x0];
     f32 unk8;
     f32 unkC;
+    void* boltObj;       /* 0x10: lightning bolt object (ktlazerwall overlay) */
 } KtrexfloorswitchSpawnEnergyArcState;
 
 STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unk8) == 0x8);
 STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, unkC) == 0xC);
+STATIC_ASSERT(offsetof(KtrexfloorswitchSpawnEnergyArcState, boltObj) == 0x10);
 
 
 typedef struct KtrexfloorswitchState
@@ -113,8 +117,8 @@ void ktrexfloorswitch_init(int obj, char* placement)
 {
     char* extra = ((GameObject*)obj)->extra;
     int curve;
-    ((GameObject*)obj)->anim.rotX = (s16)(((u8*)placement)[0x18] << 8);
-    ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((u8*)placement)[0x19];
+    ((GameObject*)obj)->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
+    ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->unkF8 = 1;
     {
@@ -136,13 +140,13 @@ void ktrexfloorswitch_init(int obj, char* placement)
 
 void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
 {
-    char* runtime = ((GameObject*)obj)->extra;
+    KtrexfloorswitchSpawnEnergyArcState* runtime = ((GameObject*)obj)->extra;
     f32 pos[3];
     f32 dir[3];
-    if (*(void**)(runtime + 0x10) != 0)
+    if (runtime->boltObj != 0)
     {
-        mm_free(*(void**)(runtime + 0x10));
-        *(void**)(runtime + 0x10) = 0;
+        mm_free(runtime->boltObj);
+        runtime->boltObj = 0;
     }
     pos[0] = ((GameObject*)obj)->anim.localPosX;
     pos[1] = ((GameObject*)obj)->anim.localPosY;
@@ -150,7 +154,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     dir[0] = lbl_803E6898;
     {
         f32 fr = angle;
-        fr = fr * ((KtrexfloorswitchSpawnEnergyArcState*)runtime)->unkC;
+        fr = fr * runtime->unkC;
         dir[1] = -(fr * lbl_803E689C);
     }
     dir[2] = scale;
@@ -158,8 +162,8 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle)
     dir[0] += ((GameObject*)obj)->anim.localPosX;
     dir[1] += ((GameObject*)obj)->anim.localPosY;
     dir[2] += ((GameObject*)obj)->anim.localPosZ;
-    ((KtrexfloorswitchSpawnEnergyArcState*)runtime)->unk8 = (f32)(int)randomGetRange(10, angle);
-    *(void**)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, angle, 96, 0);
+    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
+    runtime->boltObj = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, angle, 96, 0);
 }
 
 void ktrexfloorswitch_update(int obj)
@@ -196,9 +200,9 @@ void ktrexfloorswitch_update(int obj)
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveZ,
                 &gKTrexFloorSwitchCurveFindResult, 1, curveBits);
             if (curveId != -1)
             {
@@ -230,9 +234,9 @@ void ktrexfloorswitch_update(int obj)
             ((GameObject*)obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight - (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = GameBit_Get(0x572) >> 1;
             curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0xc),
-                *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x10),
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveX,
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->baseHeight,
+                ((KtrexfloorswitchPlacement*)*(int*)&((GameObject*)obj)->anim.placementData)->curveZ,
                 &gKTrexFloorSwitchCurveFindResult, 1, curveBits);
             if (curveId != -1)
             {
@@ -254,7 +258,7 @@ void ktrexfloorswitch_update(int obj)
         player = Obj_GetPlayerObject();
         if (player != 0)
         {
-            PSMTXRotRad(mtx, 0x79, (f32)(gKTrexFloorSwitchPi * (f64) * (s16*)obj / gKTrexFloorSwitchBamHalfCircle));
+            PSMTXRotRad(mtx, 0x79, (f32)(gKTrexFloorSwitchPi * (f64)((GameObject*)obj)->anim.rotX / gKTrexFloorSwitchBamHalfCircle));
             PSMTXMultVecSR(mtx, vecA, vecA);
             PSMTXMultVecSR(mtx, vecB, vecB);
             cx = ((GameObject*)obj)->anim.localPosX;
