@@ -30,20 +30,51 @@ extern char sPathCamNeedTwoControlPointsError[];
 
 extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 
-/* curve-node field offsets used below */
-#define NODE_POS_X 0x08
-#define NODE_POS_Y 0x0C
-#define NODE_POS_Z 0x10
+/* curve-node field offsets (raw walking-pointer accesses below) */
 #define NODE_SELF_ID 0x14
 #define NODE_DIR_MASK 0x1B
 #define NODE_NEIGHBOURS 0x1C
-#define NODE_SAMPLE_A 0x34
-#define NODE_SAMPLE_B 0x36
-#define NODE_SAMPLE_C 0x38
-#define NODE_SAMPLE_D 0x3A
 #define NODE_TAG0 0x31
 #define NODE_TAG1 0x32
 #define NODE_TAG2 0x33
+
+/*
+ * A single ROM curve-node as returned by gRomCurveInterface->getById.
+ * Single-owner layout for this unit (and its sibling dll_8010a104.c,
+ * which still uses raw offsets). Only the fields touched here are named.
+ */
+typedef struct RomCurveNode {
+    /* 0x00 */ u8 pad00[0x08];
+    /* 0x08 */ f32 x;
+    /* 0x0C */ f32 y;
+    /* 0x10 */ f32 z;
+    /* 0x14 */ int selfId;
+    /* 0x18 */ u8 pad18[0x03];
+    /* 0x1B */ u8 dirMask;
+    /* 0x1C */ int neighbours[5];
+    /* 0x30 */ u8 pad30;
+    /* 0x31 */ u8 tag0;
+    /* 0x32 */ u8 tag1;
+    /* 0x33 */ u8 tag2;
+    /* 0x34 */ s16 sampleA;
+    /* 0x36 */ s16 sampleB;
+    /* 0x38 */ s16 sampleC;
+    /* 0x3A */ s8 sampleD;
+} RomCurveNode;
+
+STATIC_ASSERT(offsetof(RomCurveNode, x) == 0x08);
+STATIC_ASSERT(offsetof(RomCurveNode, y) == 0x0C);
+STATIC_ASSERT(offsetof(RomCurveNode, z) == 0x10);
+STATIC_ASSERT(offsetof(RomCurveNode, selfId) == 0x14);
+STATIC_ASSERT(offsetof(RomCurveNode, dirMask) == 0x1B);
+STATIC_ASSERT(offsetof(RomCurveNode, neighbours) == 0x1C);
+STATIC_ASSERT(offsetof(RomCurveNode, tag0) == 0x31);
+STATIC_ASSERT(offsetof(RomCurveNode, tag1) == 0x32);
+STATIC_ASSERT(offsetof(RomCurveNode, tag2) == 0x33);
+STATIC_ASSERT(offsetof(RomCurveNode, sampleA) == 0x34);
+STATIC_ASSERT(offsetof(RomCurveNode, sampleB) == 0x36);
+STATIC_ASSERT(offsetof(RomCurveNode, sampleC) == 0x38);
+STATIC_ASSERT(offsetof(RomCurveNode, sampleD) == 0x3A);
 
 #pragma opt_common_subs off
 #pragma ppc_unroll_factor_limit 1
@@ -53,17 +84,17 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     f32* wp;
     int* np;
     f32 *w1, *w2, *w3, *w4, *w5, *w6, *w7;
-    u8** ppNode;
+    RomCurveNode** ppNode;
     f32 *q1, *q2, *q3, *q4, *q5, *q6, *q7;
-    u8* node;
+    RomCurveNode* node;
     int j;
-    u8** pwNode;
+    RomCurveNode** pwNode;
     int i;
     int step;
     f32* axisOut;
     int axis;
     f32 wrap, d, near, lower, upper, v0, v1;
-    u8* pts[4];
+    RomCurveNode* pts[4];
 
     i = 0;
     np = nodes;
@@ -78,17 +109,17 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     q7 = o7;
     for (; i < 4; i++)
     {
-        *ppNode = (u8*)(*gRomCurveInterface)->getById(*np);
+        *ppNode = (RomCurveNode*)(*gRomCurveInterface)->getById(*np);
         node = *ppNode;
         if (node != NULL)
         {
-            *q1 = *(f32*)(node + NODE_POS_X);
-            *q2 = *(f32*)(node + NODE_POS_Y);
-            *q3 = *(f32*)(node + NODE_POS_Z);
-            *q4 = (f32) * (s16*)(node + NODE_SAMPLE_A);
-            *q5 = (f32) * (s16*)(node + NODE_SAMPLE_B);
-            *q6 = (f32) * (s16*)(node + NODE_SAMPLE_C);
-            *q7 = (f32) * (s8*)(node + NODE_SAMPLE_D);
+            *q1 = node->x;
+            *q2 = node->y;
+            *q3 = node->z;
+            *q4 = (f32)node->sampleA;
+            *q5 = (f32)node->sampleB;
+            *q6 = (f32)node->sampleC;
+            *q7 = (f32)node->sampleD;
         }
         np++;
         ppNode++;
@@ -120,25 +151,25 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
             {
                 if (j == 0)
                 {
-                    *w1 = *(f32*)(pts[1] + NODE_POS_X) + (*(f32*)(pts[1] + NODE_POS_X) - *(f32*)(pts[2] + NODE_POS_X));
-                    *w2 = *(f32*)(pts[1] + NODE_POS_Y) + (*(f32*)(pts[1] + NODE_POS_Y) - *(f32*)(pts[2] + NODE_POS_Y));
-                    *w3 = *(f32*)(pts[1] + NODE_POS_Z) + (*(f32*)(pts[1] + NODE_POS_Z) - *(f32*)(pts[2] + NODE_POS_Z));
-                    *w4 = (f32)(*(s16*)(pts[1] + NODE_SAMPLE_A) + (*(s16*)(pts[1] + NODE_SAMPLE_A) - *(s16*)(pts[2] + NODE_SAMPLE_A)));
-                    *w5 = (f32)(*(s16*)(pts[1] + NODE_SAMPLE_B) + (*(s16*)(pts[1] + NODE_SAMPLE_B) - *(s16*)(pts[2] + NODE_SAMPLE_B)));
-                    *w6 = (f32)(*(s16*)(pts[1] + NODE_SAMPLE_C) + (*(s16*)(pts[1] + NODE_SAMPLE_C) - *(s16*)(pts[2] + NODE_SAMPLE_C)));
-                    *w7 = (f32) * (s8*)(pts[1] + NODE_SAMPLE_D) +
-                        ((f32) * (s8*)(pts[1] + NODE_SAMPLE_D) - (f32) * (s8*)(pts[2] + NODE_SAMPLE_D));
+                    *w1 = pts[1]->x + (pts[1]->x - pts[2]->x);
+                    *w2 = pts[1]->y + (pts[1]->y - pts[2]->y);
+                    *w3 = pts[1]->z + (pts[1]->z - pts[2]->z);
+                    *w4 = (f32)(pts[1]->sampleA + (pts[1]->sampleA - pts[2]->sampleA));
+                    *w5 = (f32)(pts[1]->sampleB + (pts[1]->sampleB - pts[2]->sampleB));
+                    *w6 = (f32)(pts[1]->sampleC + (pts[1]->sampleC - pts[2]->sampleC));
+                    *w7 = (f32)pts[1]->sampleD +
+                        ((f32)pts[1]->sampleD - (f32)pts[2]->sampleD);
                 }
                 else if (j == 3)
                 {
-                    *w1 = *(f32*)(pts[2] + NODE_POS_X) + (*(f32*)(pts[2] + NODE_POS_X) - *(f32*)(pts[1] + NODE_POS_X));
-                    *w2 = *(f32*)(pts[2] + NODE_POS_Y) + (*(f32*)(pts[2] + NODE_POS_Y) - *(f32*)(pts[1] + NODE_POS_Y));
-                    *w3 = *(f32*)(pts[2] + NODE_POS_Z) + (*(f32*)(pts[2] + NODE_POS_Z) - *(f32*)(pts[1] + NODE_POS_Z));
-                    *w4 = (f32)(*(s16*)(pts[2] + NODE_SAMPLE_A) + (*(s16*)(pts[2] + NODE_SAMPLE_A) - *(s16*)(pts[1] + NODE_SAMPLE_A)));
-                    *w5 = (f32)(*(s16*)(pts[2] + NODE_SAMPLE_B) + (*(s16*)(pts[2] + NODE_SAMPLE_B) - *(s16*)(pts[1] + NODE_SAMPLE_B)));
-                    *w6 = (f32)(*(s16*)(pts[2] + NODE_SAMPLE_C) + (*(s16*)(pts[2] + NODE_SAMPLE_C) - *(s16*)(pts[1] + NODE_SAMPLE_C)));
-                    *w7 = (f32) * (s8*)(pts[2] + NODE_SAMPLE_D) +
-                        ((f32) * (s8*)(pts[2] + NODE_SAMPLE_D) - (f32) * (s8*)(pts[1] + NODE_SAMPLE_D));
+                    *w1 = pts[2]->x + (pts[2]->x - pts[1]->x);
+                    *w2 = pts[2]->y + (pts[2]->y - pts[1]->y);
+                    *w3 = pts[2]->z + (pts[2]->z - pts[1]->z);
+                    *w4 = (f32)(pts[2]->sampleA + (pts[2]->sampleA - pts[1]->sampleA));
+                    *w5 = (f32)(pts[2]->sampleB + (pts[2]->sampleB - pts[1]->sampleB));
+                    *w6 = (f32)(pts[2]->sampleC + (pts[2]->sampleC - pts[1]->sampleC));
+                    *w7 = (f32)pts[2]->sampleD +
+                        ((f32)pts[2]->sampleD - (f32)pts[1]->sampleD);
                 }
             }
             pwNode++;
@@ -284,9 +315,9 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 
 f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
 {
-    int* pts[4];
+    RomCurveNode* pts[4];
     int* sp;
-    int** dp;
+    RomCurveNode** dp;
     int i;
     f32 dx1;
     f32 dz1;
@@ -302,16 +333,16 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
     f32 negdot;
     for (i = 0, sp = obj, dp = pts; i < 4; i++)
     {
-        *dp = (int*)(*gRomCurveInterface)->getById(*sp);
+        *dp = (RomCurveNode*)(*gRomCurveInterface)->getById(*sp);
         sp++;
         dp++;
     }
-    dx1 = *(f32*)((char*)pts[2] + NODE_POS_X) - *(f32*)((char*)pts[1] + NODE_POS_X);
-    dz1 = *(f32*)((char*)pts[2] + NODE_POS_Z) - *(f32*)((char*)pts[1] + NODE_POS_Z);
+    dx1 = pts[2]->x - pts[1]->x;
+    dz1 = pts[2]->z - pts[1]->z;
     if (pts[0] != NULL)
     {
-        sx = *(f32*)((char*)pts[1] + NODE_POS_X) - *(f32*)((char*)pts[0] + NODE_POS_X);
-        sz = *(f32*)((char*)pts[1] + NODE_POS_Z) - *(f32*)((char*)pts[0] + NODE_POS_Z);
+        sx = pts[1]->x - pts[0]->x;
+        sz = pts[1]->z - pts[0]->z;
     }
     else
     {
@@ -326,18 +357,18 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nz * *(f32*)((char*)pts[1] + NODE_POS_Z) + nx * *(f32*)((char*)pts[1] + NODE_POS_X));
+    negdot = -(nz * pts[1]->z + nx * pts[1]->x);
     t1 = nx * dx1 + nz * dz1;
     if (0.0f != t1)
     {
         t1 = -(negdot + (nx * px + nz * pz)) / t1;
     }
-    sx = *(f32*)((char*)pts[2] + NODE_POS_X) - *(f32*)((char*)pts[1] + NODE_POS_X);
-    sz = *(f32*)((char*)pts[2] + NODE_POS_Z) - *(f32*)((char*)pts[1] + NODE_POS_Z);
+    sx = pts[2]->x - pts[1]->x;
+    sz = pts[2]->z - pts[1]->z;
     if (pts[3] != NULL)
     {
-        nsx = *(f32*)((char*)pts[3] + NODE_POS_X) - *(f32*)((char*)pts[2] + NODE_POS_X);
-        nsz = *(f32*)((char*)pts[3] + NODE_POS_Z) - *(f32*)((char*)pts[2] + NODE_POS_Z);
+        nsx = pts[3]->x - pts[2]->x;
+        nsz = pts[3]->z - pts[2]->z;
     }
     else
     {
@@ -352,7 +383,7 @@ f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nx * *(f32*)((char*)pts[2] + NODE_POS_X) + nz * *(f32*)((char*)pts[2] + NODE_POS_Z));
+    negdot = -(nx * pts[2]->x + nz * pts[2]->z);
     t2 = nx * dx1 + nz * dz1;
     if (0.0f != t2)
     {
