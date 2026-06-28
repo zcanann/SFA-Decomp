@@ -540,10 +540,10 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
     CheckpointRouteEntry* cp;
     CheckpointRouteEntry* cp2;
     short ang;
-    f32 cosv, sinv, cos2, sin2;
+    f32 zero, cpX, cos2, sin2;
     f32 dist, dist2, nx, nz, offs, dx;
-    f32 offs2, distA, distB, dz, dy, len, q, proj, proj2, t0, sum, frac, zero;
-    f32 cpX, cpZ, cp2X, cp2Z;
+    f32 cpZ, distA, distB, dz, dy, len, q, proj, offs2, t0, sum, frac;
+    f32 cosv, sinv, proj2, cp2X, cp2Z;
 
     if (state->currentCheckpointId < 0)
     {
