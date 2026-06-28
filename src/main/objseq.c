@@ -2849,6 +2849,10 @@ int ObjSeq_update(u8* obj, f32 t)
                                         ((ObjSeqState*)seq)->trackAnimStart[10] * 8),
                                     ((ObjSeqState*)seq)->trackRunLength[10] & 0xfff, i);
                             }
+                            else
+                            {
+                                rate = gObjSeqDefaultFadeRate;
+                            }
                         }
                         else
                         {
