@@ -1,5 +1,5 @@
 /*
- * DLL 0x0206 (lightsource) — a placeable point-light / flame object.
+ * DLL 0x0206 (lightsource) - a placeable point-light / flame object.
  *
  * init builds a ModelLightStruct (objCreateLight), sets its kind/colour
  * (from the gLightSourceColorTable colour table indexed by fxType), distance
@@ -20,16 +20,20 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
-/* Light-glow object: the bytes named here (0x4C, 0x2F8) live in the
-   shared ModelLightStruct. */
-typedef struct LightsourceState
+/* The glow-light object referenced by LightSourceState.light is a shared
+   ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
+   in render/update are declared here, to keep the rest of this DLL's call
+   externs (void*-typed) intact for byte-matching. */
+typedef struct LightGlow
 {
     u8 pad0[0x4C - 0x0];
-    u8 unk4C;
+    u8 enabled;
     u8 pad4D[0x2F8 - 0x4D];
-    u8 unk2F8;
-    u8 pad2F9[0x300 - 0x2F9];
-} LightsourceState;
+    u8 glowType;
+    u8 glowAlpha;
+    s8 glowAlphaStep;
+    u8 pad2FB[0x300 - 0x2FB];
+} LightGlow;
 
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
@@ -70,7 +74,7 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 alpha);
     void* light = (*(LightSourceState**)&((GameObject*)obj)->extra)->light;
-    if (light != NULL && ((LightsourceState*)light)->unk2F8 != 0 && ((LightsourceState*)light)->unk4C != 0)
+    if (light != NULL && ((LightGlow*)light)->glowType != 0 && ((LightGlow*)light)->enabled != 0)
     {
         queueGlowRender(light);
     }
@@ -109,7 +113,7 @@ void lightsource_update(int obj)
     extern f32 lbl_803E5E18;
     extern f32 gLightSourceSparkTimerPeriod;
     LightSourceState* b;
-    char* t;
+    LightGlow* t;
     s16 sum;
     u8 sfxFlag;
     f32 vec[3];
@@ -190,20 +194,20 @@ void lightsource_update(int obj)
         }
     }
     t = b->light;
-    if (t != NULL && *(u8*)(t + 0x2f8) != 0 && *(u8*)(t + 0x4c) != 0)
+    if (t != NULL && t->glowType != 0 && t->enabled != 0)
     {
-        sum = (s16)(*(u8*)(t + 0x2f9) + *(s8*)(t + 0x2fa));
+        sum = (s16)(t->glowAlpha + t->glowAlphaStep);
         if (sum < 0)
         {
             sum = 0;
-            *(u8*)(t + 0x2fa) = 0;
+            t->glowAlphaStep = 0;
         }
         else if (sum > 255)
         {
             sum = 255;
-            *(u8*)(t + 0x2fa) = 0;
+            t->glowAlphaStep = 0;
         }
-        *(u8*)((char*)b->light + 0x2f9) = sum;
+        ((LightGlow*)b->light)->glowAlpha = sum;
     }
     if (((GameObject*)obj)->anim.seqId != 0x705 && ((GameObject*)obj)->anim.seqId != 0x712)
     {
