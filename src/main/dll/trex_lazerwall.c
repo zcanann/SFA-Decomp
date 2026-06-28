@@ -81,6 +81,26 @@ typedef struct RomCurveSearchPair
     u32 b;
 } RomCurveSearchPair;
 
+/* rom-curve node record returned by gRomCurveInterface->getById; only the
+ * fields touched here are named (full layout in dll_0015_curves.h, which this
+ * TU can't include without an extern conflict). */
+typedef struct LazerwallCurveNode
+{
+    u8 pad00[0x8];
+    f32 x;     /* 0x08 */
+    f32 y;     /* 0x0C */
+    f32 z;     /* 0x10 */
+    u8 pad14[0x19 - 0x14];
+    u8 type;   /* 0x19 */
+    u8 pad1A[0x2C - 0x1A];
+    s8 rotZ;   /* 0x2C (placement extension) */
+} LazerwallCurveNode;
+STATIC_ASSERT(offsetof(LazerwallCurveNode, x) == 0x8);
+STATIC_ASSERT(offsetof(LazerwallCurveNode, y) == 0xc);
+STATIC_ASSERT(offsetof(LazerwallCurveNode, z) == 0x10);
+STATIC_ASSERT(offsetof(LazerwallCurveNode, type) == 0x19);
+STATIC_ASSERT(offsetof(LazerwallCurveNode, rotZ) == 0x2c);
+
 /* timer object's query slot (vtable+0x54): fills elapsed/now/limit outparams */
 typedef void (*TimerQueryFn)(int timer, int* elapsed, int* now, int* limit);
 
@@ -113,11 +133,11 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
             if (found != -1)
             {
                 node = (int)(*gRomCurveInterface)->getById(found);
-                ((GameObject*)arg1)->anim.localPosX = *(f32*)(node + 0x8);
-                ((GameObject*)arg1)->anim.localPosY = lbl_803E59E0 + ((GameObject*)node)->anim.localPosX;
-                ((GameObject*)arg1)->anim.localPosZ = ((GameObject*)node)->anim.localPosY;
-                *(s16*)arg1 = (s16)((s32) * (s8*)(node + 0x2c) << 8);
-                ((TREXLazerwallUpdateTimedChallengeState*)state)->nodeTargetY = lbl_803E59E0 + ((GameObject*)node)->anim.localPosX;
+                ((GameObject*)arg1)->anim.localPosX = ((LazerwallCurveNode*)node)->x;
+                ((GameObject*)arg1)->anim.localPosY = lbl_803E59E0 + ((LazerwallCurveNode*)node)->y;
+                ((GameObject*)arg1)->anim.localPosZ = ((LazerwallCurveNode*)node)->z;
+                *(s16*)arg1 = (s16)((s32)((LazerwallCurveNode*)node)->rotZ << 8);
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->nodeTargetY = lbl_803E59E0 + ((LazerwallCurveNode*)node)->y;
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9CA = 0;
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->curveNodeTag = *(u8*)(node + 0x19);
             }
