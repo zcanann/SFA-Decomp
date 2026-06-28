@@ -2593,11 +2593,12 @@ void renderShadows(void)
     mapGetBlocks(&blkArr, &blkCount);
     r23 = 0;
     r24 = 0;
+    r22 = 0;
     casterPtr = B + 0x360;
-    vAp1 = &vA[1];
-    vAp2 = &vA[2];
     mc54p = &mc54[0];
-    for (r22 = 0; r22 < gNewShadowCasterCount && r22 < NEW_SHADOW_MAX_CASTERS; r22++, casterPtr += 0xc)
+    vAp2 = &vA[2];
+    vAp1 = &vA[1];
+    for (; r22 < gNewShadowCasterCount && r22 < NEW_SHADOW_MAX_CASTERS; r22++, casterPtr += 0xc)
     {
         int* obj = *(int**)casterPtr;
         int* of64 = (int*)obj[0x64 / 4];
