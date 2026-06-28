@@ -2384,7 +2384,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                     dirX = dirX / dscale;
                     dirZ = dirZ / dscale;
                 }
-                xf.ang[0] += (s16)(int)(f32)(u16)
+                xf.ang[0] += (s16)(f32)(u16)
                 getAngle(dirX, dirZ);
             }
         }
