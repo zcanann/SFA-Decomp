@@ -1666,8 +1666,11 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
+    s16 w;
+    s16 h;
+    s16 y;
     u8* box = gameTextGetBox(0x36);
-    s16 x, y, w, h;
+    s16 x;
     int pulse;
     char buf[0x20];
 
