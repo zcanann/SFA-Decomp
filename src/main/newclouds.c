@@ -937,8 +937,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
             )
             ;
             PSMTXMultVecSR(mtx, offset, offset);
-            step = weight * (len * (segs - i));
-            px += scaled[0] * step;
+            px += scaled[0] * (step = weight * (len * (segs - i)));
             py += scaled[1] * step;
             pz += scaled[2] * step;
             GXWGFifo.f32 = px + offset[0];
