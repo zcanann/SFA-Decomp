@@ -204,9 +204,9 @@ void Obj_SteerVelocityTowardVector(int out, f32* v1, f32* v2, f32 a, f32 b, f32 
         t = mag1 - b;
     if (t > a)
         t = a;
-    *(f32*)(out + 0x24) = n2[0] * t;
-    *(f32*)(out + 0x28) = n2[1] * t;
-    *(f32*)(out + 0x2c) = n2[2] * t;
+    ((GameObject*)out)->anim.velocityX = n2[0] * t;
+    ((GameObject*)out)->anim.velocityY = n2[1] * t;
+    ((GameObject*)out)->anim.velocityZ = n2[2] * t;
 }
 #pragma optimization_level reset
 
@@ -377,6 +377,8 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
 
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
+    ObjAnimComponent* anim = &((GameObject*)a)->anim;
+    f32* vel = (f32*)b;
     f32 rate;
     f32 delta;
     f32 clamped;
@@ -389,7 +391,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         rate = lbl_803E6C6C;
     }
 
-    delta = (f32)(int)((u16)getAngle(-*(f32*)(b + 0), -*(f32*)(b + 8)) - (u16) * (s16*)(a + 0));
+    delta = (f32)(int)((u16)getAngle(-vel[0], -vel[2]) - (u16)anim->rotX);
     if (delta > gBarrelGenAngleHalfRange)
     {
         delta = gBarrelGenAngleWrapNeg + delta;
@@ -402,13 +404,13 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     clamped = (delta < gBarrelGenTurnRateClampMin)
                   ? gBarrelGenTurnRateClampMin
                   : ((delta > gBarrelGenTurnRateClampMax) ? gBarrelGenTurnRateClampMax : delta);
-    *(s16*)(a + 0) += (int)clamped;
+    anim->rotX += (int)clamped;
 
     if (d != lbl_803E6C38)
     {
-        *(s16*)(a + 4) = (s16)(lbl_803E6C98 * (f32) * (s16*)(a + 4));
-        *(s16*)(a + 4) = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32) * (s16*)(a + 4));
-        tmp = *(s16*)(a + 4);
+        anim->rotZ = (s16)(lbl_803E6C98 * (f32)anim->rotZ);
+        anim->rotZ = (s16)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32)anim->rotZ);
+        tmp = anim->rotZ;
         if (tmp < -0x2000)
         {
             tmp = -0x2000;
@@ -417,13 +419,13 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             tmp = 0x2000;
         }
-        *(s16*)(a + 4) = tmp;
+        anim->rotZ = tmp;
     }
 
     if (lbl_803E6C38 != e)
     {
-        dist = sqrtf(*(f32*)(b + 0) * *(f32*)(b + 0) + *(f32*)(b + 8) * *(f32*)(b + 8));
-        delta = (f32)(int)((u16)getAngle(*(f32*)(b + 4) * e, dist) - (u16) * (s16*)(a + 2));
+        dist = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]);
+        delta = (f32)(int)((u16)getAngle(vel[1] * e, dist) - (u16)anim->rotY);
         if (delta > gBarrelGenAngleHalfRange)
         {
             delta = gBarrelGenAngleWrapNeg + delta;
@@ -432,7 +434,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         {
             delta = gBarrelGenAngleWrapPos + delta;
         }
-        *(s16*)(a + 2) += (int)(delta * rate);
+        anim->rotY += (int)(delta * rate);
     }
 }
 
