@@ -34,7 +34,7 @@ void dll_AA_func03(int sourceObj, int variant, u8* posSource, u32 seqFlags)
     scale = lbl_803E1600;
     if (posSource != 0)
     {
-        scale = *(f32*)(posSource + 8) / lbl_803E1604;
+        scale = ((PartFxSpawnParams*)posSource)->scale / lbl_803E1604;
     }
     (*gModgfxInterface)->beginSequence((void*)sourceObj, (u8)variant, 0x15, 1, 0);
     (*gModgfxInterface)->setSequenceParams(&tab[0x1dc]);
