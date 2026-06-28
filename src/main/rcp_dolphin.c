@@ -1526,11 +1526,18 @@ extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
+    int i;
+    char* p;
+    char* end;
     char* romBase;
-    char *p, *obj, *end, *objStart;
-    int objIndex, i;
-    int visible, v, flag;
-    int byteIdx, bit;
+    char* objStart;
+    int objIndex;
+    char* obj;
+    int visible;
+    int v;
+    int flag;
+    int byteIdx;
+    int bit;
     s8* vis;
 
     if (seg[index] == -1)
