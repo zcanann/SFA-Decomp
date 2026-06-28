@@ -1380,6 +1380,15 @@ typedef struct BoneFxVtx
     f32 vz;
 } BoneFxVtx;
 
+/* One 0x10-byte rendered particle slot in a gBoneParticleEffectBuffers buffer. */
+typedef struct ParticleSlot
+{
+    s16 unk00, unk02, unk04;
+    u16 pad;
+    s16 unk08, unk0A;
+    u8 unk0C, unk0D, unk0E, alpha;
+} ParticleSlot;
+
 extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
 extern void GXSetCullMode(int mode);
@@ -1526,11 +1535,11 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                     s.vx = s.vx + playerMapOffsetX;
                     s.vz = s.vz + playerMapOffsetZ;
-                    *(s16*)((u8*)*grp + (k + row) * 0x10) = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
-                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 2) = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
-                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 4) = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
-                    *(u8*)((u8*)*grp + (k + row) * 0x10 + 0xf) = 0x9b;
-                    *(s16*)((u8*)*grp + (k + row) * 0x10 + 0xa) = (s16)(*(s16*)(base + (k + row) * 0x10 + 0x1ba) - (gBoneParticleScrollOffset << 2));
+                    ((ParticleSlot*)*grp)[k + row].unk00 = dx + (s.vx - ((GameObject*)o)->anim.localPosX);
+                    ((ParticleSlot*)*grp)[k + row].unk02 = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
+                    ((ParticleSlot*)*grp)[k + row].unk04 = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
+                    ((ParticleSlot*)*grp)[k + row].alpha = 0x9b;
+                    ((ParticleSlot*)*grp)[k + row].unk0A = (s16)(*(s16*)(base + (k + row) * 0x10 + 0x1ba) - (gBoneParticleScrollOffset << 2));
                     pa += 3;
                     pb += 3;
                     pc += 3;
@@ -1593,14 +1602,6 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     gBoneParticleBufferFlip = 1 - gBoneParticleBufferFlip;
 }
 #pragma opt_propagation reset
-
-typedef struct
-{
-    s16 unk00, unk02, unk04;
-    u16 pad;
-    s16 unk08, unk0A;
-    u8 unk0C, unk0D, unk0E, alpha;
-} ParticleSlot;
 
 extern ParticleSlot gBoneParticleInitData[];
 
