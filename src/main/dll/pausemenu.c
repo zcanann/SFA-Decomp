@@ -203,7 +203,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)y / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
@@ -264,7 +264,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
@@ -348,7 +348,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
@@ -388,7 +388,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     lbl_803DBA8C = lbl_803E1E64;
                     gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
                     lbl_803DBA8C = lbl_803E20A0;
-                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, 0x100,
+                    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex134, lbl_803E1ECC, lbl_803E2018, 0x100,
                                          alpha,
                                          0x258, 0);
                     break;
@@ -549,7 +549,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     {
         s32 rnd1 = randomGetRange(0, 0x1e) * 2;
         s32 rnd2 = randomGetRange(0, 0x1e) * 2;
-        drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+        drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094,
                         0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
         model = Obj_GetActiveModel(lbl_803DD860[1]);
         objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
@@ -573,11 +573,11 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         for (i8 = 0x14; i8 >= 0; i8 -= 4)
         {
             s16 px = (s16)((0xf0 - i8) - lbl_803DD75C);
-            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
+            drawFn_8011eb3c(((HudTextures*)hudTextures)->tex170, lbl_803E2094, lbl_803E20A4,
                             px, ty, 0x100, 0x190, 4, 0);
-            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
+            drawFn_8011eb3c(((HudTextures*)hudTextures)->tex170, lbl_803E1ECC, lbl_803E20A8,
                             px, ty, 0x100, 0xf0, 4, 0);
-            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20AC,
+            drawFn_8011eb3c(((HudTextures*)hudTextures)->tex170, lbl_803E1ECC, lbl_803E20AC,
                             px, ty, 0x100, 0xf0, 4, 0);
         }
         lbl_803DD824 = lbl_8031BD90;
@@ -708,7 +708,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, lbl_803DBAD0, lbl_803DBAD4,
                              0x100 - lbl_803DD75C, ty,
                              0x100, 0);
-        drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
+        drawFn_8011eb3c(((HudTextures*)hudTextures)->texB8, (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
                         0x100 - lbl_803DD75C, ty, 0x100, 0x66, 0x12, 0);
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
                              0x100 - lbl_803DD75C, ty,
@@ -743,11 +743,11 @@ void fn_80127F24(s32 alpha)
 
     for (i = 10; i >= 0; i -= 2)
     {
-        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
+        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex11C,
                              lbl_803E20BC, lbl_803E1EE4,
                              x = (s16)((0xf5 - i) - lbl_803DD75C),
                              alpha, 0x200, 0);
-        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
+        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex11C,
                              lbl_803E20C0, lbl_803E1EE4,
                              x,
                              alpha, 0x200, 0);
@@ -758,11 +758,11 @@ void fn_80127F24(s32 alpha)
     for (; j >= 0; j -= 10)
     {
         f32 off = phase * (40.0f - (f32)(s32)(s8)j) / 40.0f;
-        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
+        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex118,
                              595.0f + off, lbl_803E20CC,
                              x2 = (s16)((0xff - j) - lbl_803DD75C),
                              alpha, (s32)(f64)brightness, 0);
-        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
+        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex118,
                              27.0f - off, lbl_803E20CC,
                              x2,
                              alpha, (s32)(f64)brightness, 0);
