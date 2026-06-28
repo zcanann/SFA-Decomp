@@ -46,6 +46,16 @@ typedef struct NwMammothPathPoint {
   f32 z;
 } NwMammothPathPoint;
 
+/* Look-at target fed to the character eye-animation update; lives in the
+ * eyeAnimState block at 0x40C. */
+typedef struct NwMammothEyeTarget {
+  u8 enabled;
+  u8 pad01[0x04 - 0x01];
+  f32 targetX;
+  f32 targetY;
+  f32 targetZ;
+} NwMammothEyeTarget;
+
 typedef struct NwMammothCurveState {
   u8 pad00[0x68];
   f32 pointX;
@@ -78,7 +88,10 @@ typedef struct NwMammothState {
   u8 pad3D5[0x408 - 0x3D5];
   u8 stateIndex;
   u8 pad409[0x40C - 0x409];
-  u8 eyeAnimState[0x43C - 0x40C];
+  union {
+    u8 eyeAnimState[0x43C - 0x40C];
+    NwMammothEyeTarget eyeTarget;
+  };
   u8 runtimeFlags;
   u8 pad43D[0x43F - 0x43D];
   s8 uiMessageCount;
@@ -173,6 +186,10 @@ STATIC_ASSERT(offsetof(NwMammothState, pathState) == 0x16C);
 STATIC_ASSERT(offsetof(NwMammothState, hitReactState) == 0x3D4);
 STATIC_ASSERT(offsetof(NwMammothState, stateIndex) == 0x408);
 STATIC_ASSERT(offsetof(NwMammothState, eyeAnimState) == 0x40C);
+STATIC_ASSERT(offsetof(NwMammothState, eyeTarget) == 0x40C);
+STATIC_ASSERT(offsetof(NwMammothEyeTarget, targetX) == 0x04);
+STATIC_ASSERT(offsetof(NwMammothEyeTarget, targetY) == 0x08);
+STATIC_ASSERT(offsetof(NwMammothEyeTarget, targetZ) == 0x0C);
 STATIC_ASSERT(offsetof(NwMammothState, runtimeFlags) == 0x43C);
 STATIC_ASSERT(offsetof(NwMammothState, uiMessageCount) == 0x43F);
 STATIC_ASSERT(offsetof(NwMammothState, animEvents) == 0x440);

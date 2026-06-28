@@ -137,14 +137,14 @@ void fn_801CDF94(int obj, int state, int flag)
 {
     if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL && ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)
     {
-        *(u8*)(state + 0x40c) = 1;
-        *(f32*)(state + 0x410) = *(f32*)(*(int*)(state + 0x28) + 0xc);
-        *(f32*)(state + 0x414) = *(f32*)(*(int*)(state + 0x28) + 0x10);
-        *(f32*)(state + 0x418) = *(f32*)(*(int*)(state + 0x28) + 0x14);
+        ((NwMammothState*)state)->eyeTarget.enabled = 1;
+        ((NwMammothState*)state)->eyeTarget.targetX = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
+        ((NwMammothState*)state)->eyeTarget.targetY = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
+        ((NwMammothState*)state)->eyeTarget.targetZ = ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
     }
     else
     {
-        *(u8*)(state + 0x40c) = 0;
+        ((NwMammothState*)state)->eyeTarget.enabled = 0;
     }
     if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
     {
