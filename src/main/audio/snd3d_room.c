@@ -250,8 +250,6 @@ void s3dAllocateRoomStudios(void)
     f32 fadeScale;
     f64 fadeThreshold;
 
-    fadeScale = gSnd3dRoomFadeFixedToFloat;
-    fadeThreshold = lbl_803E7898;
     s3dUpdateRoomDistances();
 
     listenerCount = 0;
@@ -262,6 +260,8 @@ void s3dAllocateRoomStudios(void)
 
     if (listenerCount != 0)
     {
+        fadeScale = gSnd3dRoomFadeFixedToFloat;
+        fadeThreshold = lbl_803E7898;
         for (entry = s3dRoomRoot; entry != NULL; entry = entry->next)
         {
             if (entry->assignedVoice == 0xff)
