@@ -50,18 +50,19 @@ void mmp_trenchfx_free(int obj)
 void mmp_trenchfx_init(int obj, int data)
 {
     MmpTrenchfxState* state = ((GameObject*)obj)->extra;
+    MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;
     s16 v;
-    state->enableBit = *(s16*)(data + 0x24);
-    state->extentX = (u16)((*(u8*)(data + 0x1C)) << 2);
-    state->extentZ = (u16)((*(u8*)(data + 0x1D)) << 2);
-    state->extentY = (u16)((*(u8*)(data + 0x1E)) << 2);
-    v = (s16)(((s32) * (s8*)(data + 0x19)) << 8);
+    state->enableBit = place->enableBit;
+    state->extentX = (u16)(place->extentX << 2);
+    state->extentZ = (u16)(place->extentZ << 2);
+    state->extentY = (u16)(place->extentY << 2);
+    v = (s16)(((s32)place->emitAngleZ) << 8);
     state->emitAngles[2] = v;
     ((GameObject*)obj)->anim.rotZ = v;
-    v = (s16)(((s32) * (s8*)(data + 0x1A)) << 8);
+    v = (s16)(((s32)place->emitAngleY) << 8);
     state->emitAngles[1] = v;
     ((GameObject*)obj)->anim.rotY = v;
-    v = (s16)(((s32) * (s8*)(data + 0x1B)) << 8);
+    v = (s16)(((s32)place->emitAngleX) << 8);
     state->emitAngles[0] = v;
     ((GameObject*)obj)->anim.rotX = v;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
