@@ -301,9 +301,9 @@ extern SynthPool lbl_803AF550;
  */
 int fn_8026F30C(void)
 {
-    SynthSong* sp;
-    u16* np;
     SynthPool* pool;
+    u16* np;
+    SynthSong* sp;
     u32 i;
     int j;
     int n;
