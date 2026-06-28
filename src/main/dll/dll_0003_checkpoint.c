@@ -72,17 +72,17 @@ CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 #pragma dont_inline off
 s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
 {
-    s32 ret;
+    f32 cosB;
     s32 local_idx;
-    CheckpointRouteEntry* q;
+    s32 j;
     f32 cosA;
     f32 sinA;
-    f32 cosB;
+    CheckpointRouteEntry* q;
     f32 sinB;
     f32 sclA;
     f32 sclB;
     s32 i;
-    s32 j;
+    s32 ret;
     f32* v3;
 
     ret = 1;
