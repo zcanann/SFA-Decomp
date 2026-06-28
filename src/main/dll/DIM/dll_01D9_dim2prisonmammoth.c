@@ -1,4 +1,4 @@
-/* DLL 0x1D9 — DIM2 Prison Mammoth: mammoth baddie state machine for the
+/* DLL 0x1D9 - DIM2 Prison Mammoth: mammoth baddie state machine for the
  * DIM2 prison area.  Handles idle/stomp/charge state transitions, eye
  * animations, hit-react, and the tail-whip player interaction. */
 #include "main/dll/baddie_state.h"
@@ -12,8 +12,9 @@
 
 typedef struct Dim2prisonmammothPlacement
 {
-    u8 pad0[0x19 - 0x0];
-    s8 unk19;
+    u8 pad0[0x18 - 0x0];
+    s8 unk18; /* 0x18 packed into rotX as (s16)(unk18 << 8) at init */
+    s8 unk19; /* 0x19 spawn variant selector (stateHandler00) */
     u8 pad1A[0x20 - 0x1A];
 } Dim2prisonmammothPlacement;
 
@@ -214,7 +215,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
 void dim2prisonmammoth_init(int obj, int params)
 {
     int inner;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->unk18 << 8);
     ((GameObject*)obj)->animEventCallback = fn_802BC3F0;
     inner = *(int*)&((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.modelState != NULL)
