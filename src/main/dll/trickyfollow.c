@@ -738,18 +738,18 @@ state_selected:
                 }
                 if (step == 4)
                 {
-                    fn_8004B31C(state + 0x538, (u32)route->nodeA4, ((TrickyState*)state)->unk28,
+                    fn_8004B31C(((TrickyState*)state)->voxBlocks[0], (u32)route->nodeA4, ((TrickyState*)state)->unk28,
                                 ((TrickyState*)state)->unk532, route->reverse);
-                    fn_8004B31C(state + 0x568, (u32)route->node9C, ((TrickyState*)state)->unk28,
+                    fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->unk28,
                                 ((TrickyState*)state)->unk532, route->reverse ^ 1);
                     found = 0;
                     step = 0;
                     while ((step = step + 1, step < 100 && (found != 1)))
                     {
-                        found = fn_8004B218(state + 0x538, 1);
+                        found = fn_8004B218(((TrickyState*)state)->voxBlocks[0], 1);
                         if (found != 1)
                         {
-                            found = fn_8004B218(state + 0x568, 1);
+                            found = fn_8004B218(((TrickyState*)state)->voxBlocks[1], 1);
                             if (found != 0)
                             {
                                 if (found < 0)
@@ -961,7 +961,7 @@ state_selected:
         ((TrickyState*)state)->speed = v;
         {
             f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
-            f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
+            f32 dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
             sqx = dx * dx;
             sqz = dz * dz;
             if (sqx + sqz > lbl_803E23EC)
@@ -972,7 +972,7 @@ state_selected:
         if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E24A8)
         {
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, ((TrickyState*)state)->speed, (float*)(state + 0x34));
+                (int)obj, ((TrickyState*)state)->speed, &((TrickyState*)state)->moveProgress);
             ((GameObject*)obj)->anim.localPosX =
                 timeDelta * (((TrickyState*)state)->dirX * ((TrickyState*)state)->speed) + ((GameObject*)obj)->anim.
                 localPosX;
@@ -983,7 +983,7 @@ state_selected:
         else
         {
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, ((TrickyState*)state)->speed * lbl_803E24AC, (float*)(state + 0x34));
+                (int)obj, ((TrickyState*)state)->speed * lbl_803E24AC, &((TrickyState*)state)->moveProgress);
             k = lbl_803E24AC;
             ((GameObject*)obj)->anim.localPosX =
                 timeDelta * (((TrickyState*)state)->dirX * (((TrickyState*)state)->speed * lbl_803E24AC)) +
@@ -1181,7 +1181,7 @@ state_selected:
         trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
             f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
-            f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
+            f32 dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
             sqx = dx * dx;
             sqz = dz * dz;
             if (sqx + sqz > lbl_803E23EC)
