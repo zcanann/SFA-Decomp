@@ -2958,11 +2958,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     extern int lbl_803DB460;
     extern ObjPrintFlipFlag lbl_803DCC00;
     s16 ang[4];
-    s16* sp2;
-    char* p;
-    int* keys;
     int i;
     s16 ret;
+    char* p;
+    int* keys;
+    s16* sp2;
     f32 dx, dy, dz, dist;
 
     p = (char*)p4;
