@@ -7,7 +7,9 @@
 
 typedef struct CameraModeStaticPlacement
 {
-    u8 pad0[0x1C - 0x0];
+    u8 pad0[0x1A - 0x0];
+    u8 fovByte;
+    u8 flags;
     s16 yaw;
     s16 pitch;
     s16 roll;
@@ -78,31 +80,31 @@ void CameraModeStatic_update(short* camObj)
     {
         viewObj = *(int*)(camObj + 0x52);
         placement = (int)lbl_803DD558->staticObject->anim.placementData;
-        if ((*(u8*)(placement + 0x1b) & 1) == 0)
+        if ((((CameraModeStaticPlacement*)placement)->flags & 1) == 0)
         {
             *camObj = ((CameraModeStaticPlacement*)placement)->yaw + 0x8000;
         }
-        if ((*(u8*)(placement + 0x1b) & 2) == 0)
+        if ((((CameraModeStaticPlacement*)placement)->flags & 2) == 0)
         {
             camObj[1] = ((CameraModeStaticPlacement*)placement)->pitch;
         }
-        if ((*(u8*)(placement + 0x1b) & 4) == 0)
+        if ((((CameraModeStaticPlacement*)placement)->flags & 4) == 0)
         {
             camObj[2] = ((CameraModeStaticPlacement*)placement)->roll;
         }
         ((CameraObject*)camObj)->anim.worldPosX = lbl_803DD558->staticObject->anim.worldPosX;
         ((CameraObject*)camObj)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
         ((CameraObject*)camObj)->anim.worldPosZ = lbl_803DD558->staticObject->anim.worldPosZ;
-        *(float*)(camObj + 0x5a) = (float)(u32) * (u8*)(placement + 0x1a);
-        dx = *(float*)(camObj + 0xc) - *(float*)(viewObj + 0x18);
-        dy = *(float*)(camObj + 0xe) - *(float*)(viewObj + 0x1c);
-        dz = *(float*)(camObj + 0x10) - *(float*)(viewObj + 0x20);
-        if ((*(u8*)(placement + 0x1b) & 1) != 0)
+        ((CameraObject*)camObj)->fov = (float)(u32)((CameraModeStaticPlacement*)placement)->fovByte;
+        dx = ((CameraObject*)camObj)->anim.worldPosX - *(float*)(viewObj + 0x18);
+        dy = ((CameraObject*)camObj)->anim.worldPosY - *(float*)(viewObj + 0x1c);
+        dz = ((CameraObject*)camObj)->anim.worldPosZ - *(float*)(viewObj + 0x20);
+        if ((((CameraModeStaticPlacement*)placement)->flags & 1) != 0)
         {
             angle = getAngle(dx, dz);
             *camObj = 0x8000 - angle;
         }
-        if ((*(u8*)(placement + 0x1b) & 2) != 0)
+        if ((((CameraModeStaticPlacement*)placement)->flags & 2) != 0)
         {
             pitch = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
             angle = (pitch - (int)((CameraModeStaticPlacement*)placement)->pitch) - (u32)(u16)camObj[1];
@@ -116,7 +118,7 @@ void CameraModeStatic_update(short* camObj)
             }
             camObj[1] += (int)(angle * framesThisStep) >> 3;
         }
-        if ((*(u8*)(placement + 0x1b) & 4) != 0)
+        if ((((CameraModeStaticPlacement*)placement)->flags & 4) != 0)
         {
             viewObj = camObj[2] - (u32)(u16) * (short*)(viewObj + 4);
             if (0x8000 < viewObj)
@@ -129,9 +131,13 @@ void CameraModeStatic_update(short* camObj)
             }
             camObj[2] += (int)(viewObj * framesThisStep) >> 3;
         }
-        Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
-                                       *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),
-                                       (float*)(camObj + 10), *(int*)(camObj + 0x18));
+        Obj_TransformWorldPointToLocal(((CameraObject*)camObj)->anim.worldPosX,
+                                       ((CameraObject*)camObj)->anim.worldPosY,
+                                       ((CameraObject*)camObj)->anim.worldPosZ,
+                                       &((CameraObject*)camObj)->anim.localPosX,
+                                       &((CameraObject*)camObj)->anim.localPosY,
+                                       &((CameraObject*)camObj)->anim.localPosZ,
+                                       *(int*)&((CameraObject*)camObj)->anim.parent);
     }
     return;
 }
@@ -166,7 +172,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
     dx = best->anim.worldPosX - state->anim.worldPosX;
     dy = best->anim.worldPosY - state->anim.worldPosY;
     dz = best->anim.worldPosZ - state->anim.worldPosZ;
-    if ((setup[27] & 1) != 0)
+    if ((((CameraModeStaticPlacement*)setup)->flags & 1) != 0)
     {
         yaw = 0x8000 - getAngle(dx, dz);
     }
@@ -174,7 +180,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
     {
         yaw = ((CameraModeStaticPlacement*)setup)->yaw + 0x8000;
     }
-    if ((setup[27] & 2) != 0)
+    if ((((CameraModeStaticPlacement*)setup)->flags & 2) != 0)
     {
         pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
         pitch -= ((CameraModeStaticPlacement*)setup)->pitch;
@@ -183,7 +189,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
     {
         pitch = ((CameraModeStaticPlacement*)setup)->pitch;
     }
-    if ((setup[27] & 4) != 0)
+    if ((((CameraModeStaticPlacement*)setup)->flags & 4) != 0)
     {
         roll = state->anim.rotZ;
     }
@@ -192,7 +198,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
         roll = ((CameraModeStaticPlacement*)setup)->roll;
     }
     {
-        f32 fov = (f32)(u32)setup[26];
+        f32 fov = (f32)(u32)((CameraModeStaticPlacement*)setup)->fovByte;
         ((CameraObject*)cam)->anim.worldPosX = best->anim.worldPosX;
         ((CameraObject*)cam)->anim.worldPosY = best->anim.worldPosY;
         ((CameraObject*)cam)->anim.worldPosZ = best->anim.worldPosZ;
@@ -203,7 +209,9 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
     }
     Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
                                    ((CameraObject*)cam)->anim.worldPosZ,
-                                   (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
+                                   &((CameraObject*)cam)->anim.localPosX,
+                                   &((CameraObject*)cam)->anim.localPosY,
+                                   &((CameraObject*)cam)->anim.localPosZ,
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
 
