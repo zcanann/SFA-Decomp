@@ -463,8 +463,8 @@ void arwarwing_spawnBomb(int obj, int state, int side)
     *(u8*)(setup + 0x1a) = ((GameObject*)obj)->anim.rotX >> 8;
     *(u8*)(setup + 0x19) = ((GameObject*)obj)->anim.rotY >> 8;
     *(u8*)(setup + 0x18) = ((GameObject*)obj)->anim.rotZ >> 8;
-    *(u8*)(setup + 4) = 1;
-    *(u8*)(setup + 5) = 1;
+    ((ObjPlacement*)setup)->color[0] = 1;
+    ((ObjPlacement*)setup)->color[1] = 1;
     arwing->activeBombObj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
     fn_8022ED74(arwing->activeBombObj, *(u16*)&arwing->bombProjectileParam);
     fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
