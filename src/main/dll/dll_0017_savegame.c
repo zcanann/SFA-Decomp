@@ -388,7 +388,7 @@ int gplayNewGame(char* name, int slot)
     save[0x16] = 1;
     *(s8*)(save + 0x6a2) = -1;
     save[0x19] = 0x14;
-    *(s16*)(save + 0x6a4) = -1;
+    ((SaveGameData*)save)->camActionNo = -1;
     *(f32*)(save + 0x6a8) = lbl_803E06C8;
     *(s16*)(save + 0x6ac) = -1;
     *(s16*)(save + 0x6ae) = -1;
