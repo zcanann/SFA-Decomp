@@ -1903,7 +1903,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     f32 fz434;
     f32 fz430;
 
-    total = 0;
     for (i = 0, found = 0; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; i++)
     {
         if (((void**)gPartfxActiveEffects)[i] == NULL) found = 1;
@@ -1921,6 +1920,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         return 0;
     }
 
+    total = 0;
     n = *(s8*)(st + 0x5d);
     for (i = 0; i < n; i++)
     {
