@@ -159,7 +159,7 @@ void dll_115_init(s16* obj, int mapData)
     int step;
 
     state = ((GameObject*)obj)->extra;
-    *obj = (s16)(*(u8*)(mapData + 0x38) << 8);
+    *obj = (s16)(((Dll115Placement*)mapData)->rotByte << 8);
     ((GameObject*)obj)->animEventCallback = dll_115_seqFn;
     ((GameObject*)obj)->objectFlags |= 0x6000;
     ObjGroup_AddObject((int)obj, 0xf);
@@ -181,7 +181,8 @@ void dll_115_init(s16* obj, int mapData)
     {
         state[0] = step;
     }
-    if ((state[0] == DLL115_STEP_IDLE) && ((*(u8*)(mapData + 0x39) & DLL115_PLACEMENT_FINISH_FLAG) != 0))
+    if ((state[0] == DLL115_STEP_IDLE) &&
+        ((((Dll115Placement*)mapData)->flags & DLL115_PLACEMENT_FINISH_FLAG) != 0))
     {
         state[0] = DLL115_STEP_FINISH;
     }
