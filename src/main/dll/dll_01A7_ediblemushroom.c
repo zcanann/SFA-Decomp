@@ -688,7 +688,7 @@ void ediblemushroom_init(int obj, int aux)
     ((GameObject*)obj)->animEventCallback = EdibleMushroom_SeqFn;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 
-    if (GameBit_Get(*(short*)(aux + 0x1a)) != 0)
+    if (GameBit_Get(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
     {
         ((EdibleMushroomState*)state)->animState = 8;
         ObjHits_DisableObject((u32)obj);
@@ -699,7 +699,7 @@ void ediblemushroom_init(int obj, int aux)
 
     ((EdibleMushroomState*)state)->lungeRootSpeedScale = lbl_803E52E0;
     ((EdibleMushroomState*)state)->mapParamScale = lbl_803E52E4 *
-        ((f32) * (u8*)(aux + 0x1c) / gEdibleMushroomByteNormScale);
+        ((f32)((EdibleMushroomPlacement*)aux)->paramByte / gEdibleMushroomByteNormScale);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32*)&lbl_803E52A8, &animEvents);
@@ -724,7 +724,7 @@ void ediblemushroom_init(int obj, int aux)
     ObjMsg_AllocQueue(obj, 1);
 
     {
-        int v = *(u8*)(aux + 0x18);
+        int v = ((EdibleMushroomPlacement*)aux)->objectTypeParam;
         switch (v)
         {
         case 4:

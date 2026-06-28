@@ -6,6 +6,14 @@
 #include "main/dll/curve_walker.h"
 #include "main/objanim_internal.h"
 
+typedef struct EdibleMushroomPlacement {
+  u8 pad00[0x18];
+  u8 objectTypeParam; /* 0x18: variant selector (switch 4/5) */
+  u8 pad19[0x1A - 0x19];
+  s16 gameBitId;      /* 0x1a: pickup/spawn GameBit id */
+  u8 paramByte;       /* 0x1c: normalized into mapParamScale */
+} EdibleMushroomPlacement;
+
 typedef struct EnemyMushroomMapData {
   u8 pad00[0x08];
   f32 posX;
