@@ -1,4 +1,4 @@
-/* DLL 0x0129 — campfire area objects [8018CD64-8018CDAC) */
+/* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 extern int randomGetRange(int lo, int hi);
 extern void objRenderFn_8003b8f4(f32);
@@ -35,12 +35,30 @@ extern f32 lbl_803E3D90;
 extern f32 lbl_803E3D94;
 extern f32 lbl_803E3D98;
 
+/* CampfireExtra - the per-class extra state block (GameObject.extra) for the
+ * campfire object class; campfire_getExtraSize() returns 0x14. Single-owner;
+ * offsets mirror the observed deref widths in this unit. */
+typedef struct CampfireExtra {
+    void *light;     /* 0x00 ModelLightStruct handle (objCreateLight result) */
+    f32 dayTimer;    /* 0x04 flicker/sound timer used in the daytime branch */
+    f32 nightTimer;  /* 0x08 timer used in the night branch */
+    s16 gameBit;     /* 0x0C gamebit index (from spawn descriptor +0x18) */
+    u8 unk0E[2];
+    u8 unk10;        /* 0x10 (from spawn descriptor +0x1b) */
+    u8 flags;        /* 0x11 bit0 = gamebit 0x8c set, bit2 = gameBit set */
+    u8 sfxPlaying;   /* 0x12 looped-sound active flag */
+    u8 unk13;
+} CampfireExtra;
+
+STATIC_ASSERT(offsetof(CampfireExtra, gameBit) == 0xC);
+STATIC_ASSERT(sizeof(CampfireExtra) == 0x14);
+
 void campfire_update(int obj)
 {
 
     extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
     extern void* Obj_GetPlayerObject(void);
-    int* state;
+    CampfireExtra* state;
     int type;
     int mode;
     int flag;
@@ -51,16 +69,16 @@ void campfire_update(int obj)
     Obj_GetPlayerObject();
     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
     {
-        if (*(void**)state != NULL)
+        if (state->light != NULL)
         {
-            modelLightStruct_setEnabled(*state, 1, lbl_803E3D78);
+            modelLightStruct_setEnabled((int)state->light, 1, lbl_803E3D78);
         }
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-        *(f32*)((char*)state + 8) -= timeDelta;
-        if (*(f32*)((char*)state + 8) <= lbl_803E3D7C)
+        state->nightTimer -= timeDelta;
+        if (state->nightTimer <= lbl_803E3D7C)
         {
             flag = 1;
-            *(f32*)((char*)state + 8) += lbl_803E3D78;
+            state->nightTimer += lbl_803E3D78;
         }
         else
         {
@@ -68,24 +86,24 @@ void campfire_update(int obj)
         }
         type = 2;
         mode = 0;
-        if (*((u8*)state + 0x12) == 0)
+        if (state->sfxPlaying == 0)
         {
             Sfx_AddLoopedObjectSound(obj, 0x9e);
-            *((u8*)state + 0x12) = 1;
+            state->sfxPlaying = 1;
         }
     }
     else
     {
-        if (*(void**)state != NULL)
+        if (state->light != NULL)
         {
-            modelLightStruct_setEnabled(*state, 0, lbl_803E3D78);
+            modelLightStruct_setEnabled((int)state->light, 0, lbl_803E3D78);
         }
         ObjHits_ClearHitVolumes(obj);
-        *(f32*)((char*)state + 4) -= timeDelta;
-        if (*(f32*)((char*)state + 4) <= lbl_803E3D7C)
+        state->dayTimer -= timeDelta;
+        if (state->dayTimer <= lbl_803E3D7C)
         {
             mode = 3;
-            *(f32*)((char*)state + 4) += lbl_803E3D80;
+            state->dayTimer += lbl_803E3D80;
         }
         else
         {
@@ -93,10 +111,10 @@ void campfire_update(int obj)
         }
         type = 0;
         flag = 0;
-        if (*((u8*)state + 0x12) != 0)
+        if (state->sfxPlaying != 0)
         {
             Sfx_RemoveLoopedObjectSound(obj, 0x9e);
-            *((u8*)state + 0x12) = 0;
+            state->sfxPlaying = 0;
         }
     }
     params[0] = lbl_803E3D7C;
@@ -104,14 +122,14 @@ void campfire_update(int obj)
     params[2] = lbl_803E3D7C;
     fn_80098B18(obj, lbl_803E3D84 * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
     {
-        u8* light = *(u8**)state;
+        u8* light = state->light;
         if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
         {
             int rnd;
             u8* l2;
             s16 v;
             rnd = randomGetRange(-0x19, 0x19);
-            l2 = *(u8**)state;
+            l2 = state->light;
             v = l2[0x2f9] + *(s8*)(l2 + 0x2fa) + rnd;
             if (v < 0)
             {
@@ -123,14 +141,14 @@ void campfire_update(int obj)
                 v = 0xff;
                 l2[0x2fa] = 0;
             }
-            *(u8*)(*state + 0x2f9) = v;
+            *(u8*)((int)state->light + 0x2f9) = v;
         }
     }
 }
 
 void campfire_init(int obj, int p2)
 {
-    int* state;
+    CampfireExtra* state;
     f32 sunTime;
     u32 size;
     s16 bit;
@@ -143,15 +161,15 @@ void campfire_init(int obj, int p2)
     }
     if (GameBit_Get(0x8c) != 0)
     {
-        *((u8*)state + 0x11) |= 1;
+        state->flags |= 1;
     }
-    *(s16*)((char*)state + 0xc) = *(s16*)(p2 + 0x18);
-    bit = *(s16*)((char*)state + 0xc);
+    state->gameBit = *(s16*)(p2 + 0x18);
+    bit = state->gameBit;
     if (bit != -1 && GameBit_Get(bit) != 0)
     {
-        *((u8*)state + 0x11) |= 4;
+        state->flags |= 4;
     }
-    *((u8*)state + 0x10) = *(u8*)(p2 + 0x1b);
+    state->unk10 = *(u8*)(p2 + 0x1b);
     {
         f32 scale = ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         int m = *(int*)&((GameObject*)obj)->anim.hitReactState;
@@ -160,45 +178,45 @@ void campfire_init(int obj, int p2)
                                    (int)((f32)((ObjHitsPriorityState*)m)->primaryCapsuleOffsetA * scale),
                                    (int)((f32)((ObjHitsPriorityState*)m)->primaryCapsuleOffsetB * scale));
     }
-    *(f32*)(state + 1) = lbl_803E3D80;
-    *(f32*)(state + 2) = lbl_803E3D78;
-    if (*(void**)state == NULL)
+    state->dayTimer = lbl_803E3D80;
+    state->nightTimer = lbl_803E3D78;
+    if (state->light == NULL)
     {
-        *state = objCreateLight(obj, 1);
+        state->light = (void*)objCreateLight(obj, 1);
     }
-    if (*(void**)state != NULL)
+    if (state->light != NULL)
     {
         int atten;
-        modelLightStruct_setLightKind(*state, 2);
-        modelLightStruct_setDiffuseColor(*state, 0xff, 0x7f, 0, 0xff);
-        modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setLightKind((int)state->light, 2);
+        modelLightStruct_setDiffuseColor((int)state->light, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setSpecularColor((int)state->light, 0xff, 0x7f, 0, 0xff);
         atten = (int)(lbl_803E3D8C * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setDistanceAttenuation(*state, atten, lbl_803E3D90 + atten);
+        modelLightStruct_setDistanceAttenuation((int)state->light, atten, lbl_803E3D90 + atten);
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
-            modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);
+            modelLightStruct_setEnabled((int)state->light, 1, lbl_803E3D7C);
         }
         else
         {
-            modelLightStruct_setEnabled(*state, 0, lbl_803E3D7C);
+            modelLightStruct_setEnabled((int)state->light, 0, lbl_803E3D7C);
         }
-        modelLightStruct_setPosition(*state, lbl_803E3D7C, lbl_803E3D94, *(f32*)&lbl_803E3D7C);
-        modelLightStruct_startColorFade(*state, 1, 3);
-        modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
-        modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87,
+        modelLightStruct_setPosition((int)state->light, lbl_803E3D7C, lbl_803E3D94, *(f32*)&lbl_803E3D7C);
+        modelLightStruct_startColorFade((int)state->light, 1, 3);
+        modelLightStruct_setDiffuseTargetColor((int)state->light, 0xff, 0x5c, 0, 0xff);
+        modelLightStruct_setupGlow((int)state->light, 0, 0xff, 0x7f, 0, 0x87,
                                    lbl_803E3D98 * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius(*state, lbl_803E3D90);
+        modelLightStruct_setGlowProjectionRadius((int)state->light, lbl_803E3D90);
     }
 }
 
 void campfire_free(int obj)
 {
-    void** state;
+    CampfireExtra* state;
     void* effect;
 
     state = ((GameObject*)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    effect = *state;
+    effect = state->light;
     if (effect != 0)
     {
         ModelLightStruct_free(effect);
@@ -207,7 +225,7 @@ void campfire_free(int obj)
 
 void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void** state;
+    CampfireExtra* state;
     void* effect;
     s32 isVisible;
 
@@ -216,7 +234,7 @@ void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (isVisible != 0)
     {
         objRenderFn_8003b8f4(lbl_803E3D78);
-        effect = *state;
+        effect = state->light;
         if (((effect != 0) && (*(u8*)((int)effect + 0x2f8) != 0)) &&
             (*(u8*)((int)effect + 0x4c) != 0))
         {
