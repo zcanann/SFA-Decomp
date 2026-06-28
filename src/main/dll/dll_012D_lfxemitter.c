@@ -32,7 +32,7 @@ void FUN_8018f650(void)
 {
     u8 spawnType;
     int emitter;
-    int config;
+    LfxEmitterConfig* config;
     int* effectVtbl;
     short i;
     double in_f31;
@@ -58,25 +58,25 @@ void FUN_8018f650(void)
     saveHi = (float)in_f31;
     saveLo = (float)in_ps31_1;
     emitter = FUN_8028683c();
-    config = *(int*)(emitter + 0xb8);
+    config = *(LfxEmitterConfig**)(emitter + 0xb8);
     velScale = FLOAT_803e4b00;
-    spawnType = *(u8*)(config + 8);
+    spawnType = config->spawnType;
     if (spawnType == 0)
     {
-        if (*(short*)(config + 0xc) < 1)
+        if (config->spawnCount < 1)
         {
-            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+            randZ = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+            randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+            randX = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
             offZ = (f32)(s32)
             randX;
-            posBlock = *(u16*)(config + 0x1a);
-            posBlock1 = *(u16*)(config + 0x1c);
-            posBlock2 = *(short*)(config + 0x1e);
+            posBlock = config->posBlock0;
+            posBlock1 = config->posBlock1;
+            posBlock2 = config->posBlock2;
             if (*(int*)(emitter + 0x30) != 0)
             {
                 posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
@@ -85,23 +85,23 @@ void FUN_8018f650(void)
             offX = offX + *(float*)(emitter + 0xc);
             offY = offY + *(float*)(emitter + 0x10);
             offZ = offZ + *(float*)(emitter + 0x14);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+            (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                              spawnParams, 0x200001, -1, NULL);
         }
         else
         {
             roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
+            for (i = 0; i < config->spawnCount; i = i + 1)
             {
-                randX = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+                randX = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
                 offX = (float)((double)(u32)randX);
-                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+                randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
                 offY = (float)((double)(u32)randY);
-                randZ = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+                randZ = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
                 offZ = (float)((double)(u32)randZ);
-                posBlock = *(u16*)(config + 0x1a);
-                posBlock1 = *(u16*)(config + 0x1c);
-                posBlock2 = *(short*)(config + 0x1e);
+                posBlock = config->posBlock0;
+                posBlock1 = config->posBlock1;
+                posBlock2 = config->posBlock2;
                 if (*(int*)(emitter + 0x30) != 0)
                 {
                     posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
@@ -110,21 +110,21 @@ void FUN_8018f650(void)
                 offX = offX + *(float*)(emitter + 0xc);
                 offY = offY + *(float*)(emitter + 0x10);
                 offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                  spawnParams, 0x200001, -1, NULL);
             }
         }
     }
     else if (spawnType == 1)
     {
-        effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0x58 & 0xffff);
-        if (*(short*)(config + 0xc) < 1)
+        effectVtbl = (int*)FUN_80006b14(config->effectId + 0x58 & 0xffff);
+        if (config->spawnCount < 1)
         {
             (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
         }
         else
         {
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
+            for (i = 0; i < config->spawnCount; i = i + 1)
             {
                 (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, 0);
             }
@@ -133,119 +133,119 @@ void FUN_8018f650(void)
     }
     else if (spawnType == 2)
     {
-        effectVtbl = (int*)FUN_80006b14(*(u16*)(config + 10) + 0xab & 0xffff);
-        if (*(short*)(config + 0xc) < 1)
+        effectVtbl = (int*)FUN_80006b14(config->effectId + 0xab & 0xffff);
+        if (config->spawnCount < 1)
         {
-            (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
+            (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, config->effectId & 0xff, 0);
         }
         else
         {
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
+            for (i = 0; i < config->spawnCount; i = i + 1)
             {
-                (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, *(u16*)(config + 10) & 0xff, 0);
+                (**(VtableFn**)(*effectVtbl + 4))(emitter, 0, 0, 1, 0xffffffff, config->effectId & 0xff, 0);
             }
         }
         FUN_80006b0c((u8*)effectVtbl);
     }
     else if (spawnType == 3)
     {
-        if (*(short*)(config + 0xc) < 1)
+        if (config->spawnCount < 1)
         {
-            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+            randZ = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+            randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+            randX = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
             offZ = (f32)(s32)
             randX;
-            posBlock = *(u16*)(config + 0x1a);
-            posBlock1 = *(u16*)(config + 0x1c);
-            posBlock2 = *(short*)(config + 0x1e);
+            posBlock = config->posBlock0;
+            posBlock1 = config->posBlock1;
+            posBlock2 = config->posBlock2;
             if (*(int*)(emitter + 0x30) != 0)
             {
                 posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
             }
             FUN_80017748(&posBlock, &offX);
-            (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+            (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                              spawnParams, 2, -1, NULL);
         }
         else
         {
             roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
+            for (i = 0; i < config->spawnCount; i = i + 1)
             {
-                randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+                randZ = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
                 offX = (float)((double)(u32)randZ);
-                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+                randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
                 offY = (float)((double)(u32)randY);
-                randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+                randX = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
                 offZ = (float)((double)(u32)randX);
-                posBlock = *(u16*)(config + 0x1a);
-                posBlock1 = *(u16*)(config + 0x1c);
-                posBlock2 = *(short*)(config + 0x1e);
+                posBlock = config->posBlock0;
+                posBlock1 = config->posBlock1;
+                posBlock2 = config->posBlock2;
                 if (*(int*)(emitter + 0x30) != 0)
                 {
                     posBlock2 = posBlock2 + *(short*)(*(int*)(emitter + 0x30) + 4);
                 }
                 FUN_80017748(&posBlock, &offX);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                  spawnParams, 2, -1, NULL);
             }
         }
     }
     else if (5 < spawnType)
     {
-        if (*(short*)(config + 0xc) < 1)
+        if (config->spawnCount < 1)
         {
-            randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+            randZ = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
             offX = (f32)(s32)
             randZ;
-            randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+            randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
             offY = (f32)(s32)
             randY;
-            randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+            randX = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
             offZ = (f32)(s32)
             randX;
-            FUN_80017748((u16*)(config + 0x1a), &offX);
-            if (*(char*)(config + 8) == '\x06')
+            FUN_80017748(&config->posBlock0, &offX);
+            if (config->spawnType == 6)
             {
                 offX = offX + *(float*)(emitter + 0xc);
                 offY = offY + *(float*)(emitter + 0x10);
                 offZ = offZ + *(float*)(emitter + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                  spawnParams, 0x200001, -1, NULL);
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                  spawnParams, 2, -1, NULL);
             }
         }
         else
         {
             roundBias = DOUBLE_803e4af8;
-            for (i = 0; i < *(short*)(config + 0xc); i = i + 1)
+            for (i = 0; i < config->spawnCount; i = i + 1)
             {
-                randZ = randomGetRange(-(u32) * (u16*)(config + 0x14), (u32) * (u16*)(config + 0x14));
+                randZ = randomGetRange(-(u32)config->rangeX, (u32)config->rangeX);
                 offX = (float)((double)(u32)randZ);
-                randY = randomGetRange(-(u32) * (u16*)(config + 0x18), (u32) * (u16*)(config + 0x18));
+                randY = randomGetRange(-(u32)config->rangeY, (u32)config->rangeY);
                 offY = (float)((double)(u32)randY);
-                randX = randomGetRange(-(u32) * (u16*)(config + 0x16), (u32) * (u16*)(config + 0x16));
+                randX = randomGetRange(-(u32)config->rangeZ, (u32)config->rangeZ);
                 offZ = (float)((double)(u32)randX);
-                FUN_80017748((u16*)(config + 0x1a), &offX);
-                if (*(char*)(config + 8) == '\x06')
+                FUN_80017748(&config->posBlock0, &offX);
+                if (config->spawnType == 6)
                 {
                     offX = offX + *(float*)(emitter + 0xc);
                     offY = offY + *(float*)(emitter + 0x10);
                     offZ = offZ + *(float*)(emitter + 0x14);
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                    (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                      spawnParams, 0x200001, -1, NULL);
                 }
                 else
                 {
-                    (*gPartfxInterface)->spawnObject((void*)emitter, *(u16*)(config + 10),
+                    (*gPartfxInterface)->spawnObject((void*)emitter, config->effectId,
                                                      spawnParams, 2, -1, NULL);
                 }
             }

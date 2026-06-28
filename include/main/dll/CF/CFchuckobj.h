@@ -114,6 +114,40 @@ STATIC_ASSERT(offsetof(AreaFxEmitObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(AreaFxEmitObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(AreaFxEmitObject, emitCooldown) == 0xF4);
 
+/*
+ * 0x28-byte lfxemitter spawn config record (the lbl_803AC7B0 / mmAlloc copy
+ * format produced by fn_8018FF48 and consumed by FUN_8018f650). spawnType
+ * selects between the gPartfxInterface spawn paths and the FUN_80006b14
+ * effect-bank paths; the rangeX/Y/Z fields seed randomGetRange jitter and
+ * posBlock* feed FUN_80017748.
+ */
+typedef struct LfxEmitterConfig {
+    u8 pad00[0x08];
+    u8 spawnType;
+    u8 pad09;
+    u16 effectId;
+    s16 spawnCount;
+    u8 pad0E[0x14 - 0x0E];
+    u16 rangeX;
+    u16 rangeZ;
+    u16 rangeY;
+    u16 posBlock0;
+    u16 posBlock1;
+    s16 posBlock2;
+    u8 pad20[0x28 - 0x20];
+} LfxEmitterConfig;
+
+STATIC_ASSERT(sizeof(LfxEmitterConfig) == LFXEMITTER_CONFIG_BYTES);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, spawnType) == 0x08);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, effectId) == 0x0A);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, spawnCount) == 0x0C);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeX) == 0x14);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeZ) == 0x16);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, rangeY) == 0x18);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock0) == 0x1A);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock1) == 0x1C);
+STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock2) == 0x1E);
+
 typedef struct LfxEmitterPlacement {
     u8 pad00[0x08];
     f32 initialX;
