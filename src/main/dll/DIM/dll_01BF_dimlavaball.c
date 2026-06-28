@@ -214,18 +214,19 @@ void lavaball1bf_update(int* obj)
     if (*(void**)&state->spawnedObj == NULL && Obj_IsLoadingLocked() != 0)
     {
         int s = Obj_AllocObjectSetup(0x24, 0x18d);
+        ObjPlacement* sp = (ObjPlacement*)s;
         *(u8*)(s + 2) = 9;
-        *(u8*)(s + 4) = 2;
-        *(u8*)(s + 6) = 0xff;
-        *(u8*)(s + 5) = 4;
-        *(u8*)(s + 7) = 0x50;
-        *(f32*)(s + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(s + 0xc) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(s + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        sp->color[0] = 2;
+        sp->color[2] = 0xff;
+        sp->color[1] = 4;
+        sp->color[3] = 0x50;
+        sp->posX = ((GameObject*)obj)->anim.localPosX;
+        sp->posY = ((GameObject*)obj)->anim.localPosY;
+        sp->posZ = ((GameObject*)obj)->anim.localPosZ;
         *(s8*)(s + 0x18) = setup[0x1c];
         *(s16*)(s + 0x1a) = setup[0x1a];
         *(s16*)(s + 0x1c) = setup[0x1b];
-        *(int*)(s + 0x14) = ((ObjPlacement*)setup)->mapId;
+        sp->mapId = ((ObjPlacement*)setup)->mapId;
         *(int*)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(
             s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
