@@ -22,6 +22,12 @@ typedef struct SynthGlobalState
     f32 auxMixB;
     u8 pad9f8[0x1d9];
     u8 initialized;
+    u8 padbd2[0xc34 - 0xbd2];
+    u32 auxASend[8];
+    u8 padc54[0xc74 - 0xc54];
+    u32 auxBSend[8];
+    u8 auxPairState[8][2];
+    u32 auxMixSlot[16];
 } SynthGlobalState;
 
 /* global.h is incompatible here (u32 = unsigned long vs unsigned int), so
@@ -32,6 +38,10 @@ typedef char synth_ctrl_assert_sampleRate[SYNTH_CTRL_OFFSETOF(SynthGlobalState, 
 typedef char synth_ctrl_assert_auxMixA[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixA) == 0x9c4 ? 1 : -1];
 typedef char synth_ctrl_assert_auxMixB[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixB) == 0x9f4 ? 1 : -1];
 typedef char synth_ctrl_assert_initialized[SYNTH_CTRL_OFFSETOF(SynthGlobalState, initialized) == 0xbd1 ? 1 : -1];
+typedef char synth_ctrl_assert_auxASend[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxASend) == 0xc34 ? 1 : -1];
+typedef char synth_ctrl_assert_auxBSend[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxBSend) == 0xc74 ? 1 : -1];
+typedef char synth_ctrl_assert_auxPairState[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxPairState) == 0xc94 ? 1 : -1];
+typedef char synth_ctrl_assert_auxMixSlot[SYNTH_CTRL_OFFSETOF(SynthGlobalState, auxMixSlot) == 0xca4 ? 1 : -1];
 
 #define SYNTH_FADE_SCALE sSynthFadeScale
 #define SYNTH_FADE_ONE sSynthFadeUnit
@@ -227,12 +237,12 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     for (auxIndex = 0; auxIndex < 8; auxIndex++)
     {
-        *(u32*)(state + 0xC34 + auxIndex * 4) = 0;
+        ((SynthGlobalState*)state)->auxASend[auxIndex] = 0;
         synthAuxAIndex[auxIndex] = 0xFF;
-        *(u32*)(state + 0xC74 + auxIndex * 4) = 0;
+        ((SynthGlobalState*)state)->auxBSend[auxIndex] = 0;
         synthAuxBIndex[auxIndex] = 0xFF;
-        *(u8*)(state + 0xC95 + auxIndex * 2) = 0;
-        *(u8*)(state + 0xC94 + auxIndex * 2) = 0;
+        ((SynthGlobalState*)state)->auxPairState[auxIndex][1] = 0;
+        ((SynthGlobalState*)state)->auxPairState[auxIndex][0] = 0;
     }
 
     macInit();
@@ -241,7 +251,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     for (auxIndex = 0; auxIndex < 16; auxIndex++)
     {
-        *(u32*)(state + 0xCA4 + auxIndex * 4) = 0;
+        ((SynthGlobalState*)state)->auxMixSlot[auxIndex] = 0;
     }
 
     voiceInitRegistrationTables();
