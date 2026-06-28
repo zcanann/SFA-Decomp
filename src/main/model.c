@@ -2472,7 +2472,6 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     int dstOff;
     u8* prev;
     int i;
-    void* result;
     u8* state;
     u8* arr;
     u8* src;
@@ -2481,6 +2480,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     u32 sel;
     int idx;
     int count;
+    void* result;
     u32 cnt;
     int lim;
     ObjHitBufs* st;
