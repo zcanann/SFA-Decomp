@@ -3029,7 +3029,7 @@ void subtitleBuildLineTable(void)
         if (n != 0)
         {
             q = args[2] / 60;
-            s->times[gSubtitleLineCount] = (f32)(args[1] + (args[0] * 60 + q));
+            s->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
         }
         strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
         if (strLines != NULL)
