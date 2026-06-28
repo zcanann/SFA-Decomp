@@ -5120,7 +5120,10 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                     {
                         shad = 1;
                     }
-                    fn_80050558(t, modelLightStruct_getProjectionTexMtx(*lp), a, b, *sp);
+                    {
+                        int mtx = modelLightStruct_getProjectionTexMtx(*lp);
+                        fn_80050558(t, mtx, a, b, *sp);
+                    }
                 }
                 lp++;
                 sp++;
