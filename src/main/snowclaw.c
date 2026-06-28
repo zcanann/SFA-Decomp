@@ -4,6 +4,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 #include "main/sfa_shared_decls.h"
 
 typedef struct SnowclawState
@@ -207,14 +208,14 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
     {
         obj2 = Obj_AllocObjectSetup(0x24, 0x5ff);
         *(s16*)(obj2 + 0x0) = 0x5ff;
-        *(u8*)(obj2 + 0x4) = 2;
-        *(u8*)(obj2 + 0x6) = 0xff;
-        *(u8*)(obj2 + 0x5) = 1;
-        *(u8*)(obj2 + 0x7) = 0xff;
+        ((ObjPlacement*)obj2)->color[0] = 2;
+        ((ObjPlacement*)obj2)->color[2] = 0xff;
+        ((ObjPlacement*)obj2)->color[1] = 1;
+        ((ObjPlacement*)obj2)->color[3] = 0xff;
         *(s8*)(obj2 + 0x19) = b;
-        *(f32*)(obj2 + 0x8) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(obj2 + 0xc) = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(obj2 + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)obj2)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjPlacement*)obj2)->posY = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
+        ((ObjPlacement*)obj2)->posZ = ((GameObject*)obj)->anim.localPosZ;
         *(s8*)(obj2 + 0x18) = (s8)(u8)((((getAngle(
             ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX,
             ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) & 0xffff) >> 8) + 0x8000) >> 8);
