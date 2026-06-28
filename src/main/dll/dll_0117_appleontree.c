@@ -641,8 +641,8 @@ void appleontree_update(int objArg)
         case 0:
             val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
-                ((*(short*)(placement + 0x26) != -1 &&
-                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
+                ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
+                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
                 i = 0;
@@ -680,8 +680,8 @@ void appleontree_update(int objArg)
         case 1:
             val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
-                ((*(short*)(placement + 0x26) != -1 &&
-                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
+                ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
+                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 state = *(int*)&((GameObject*)obj)->extra;
                 i = 0;
@@ -754,8 +754,8 @@ void appleontree_update(int objArg)
             }
             state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
             if ((state != 0) ||
-                ((*(short*)(placement + 0x26) != -1 &&
-                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
+                ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
+                    (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
                 FUN_8017db40((u32)obj, 1);
             }
@@ -770,8 +770,8 @@ void appleontree_update(int objArg)
             {
                 state = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
                 if ((state != 0) ||
-                    ((*(short*)(placement + 0x26) != -1 &&
-                        (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
+                    ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
+                        (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
                     FUN_8017db40((u32)obj, 2);
                 }
