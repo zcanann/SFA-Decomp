@@ -126,6 +126,7 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
     {
         if (msgId != 0x11)
         {
+            f32 z;
             if (msgId != 0x1a && ((GameObject*)attacker)->anim.seqId != 0x6d &&
                 ((GameObject*)attacker)->anim.seqId != 0x754)
             {
@@ -148,8 +149,9 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
             }
             ret = rowsC[state[0x33c] * 12 + 9];
             *(f32*)(state + 0x32c) = *(f32*)(state + 0x330);
-            *(f32*)(state + 0x324) = lbl_803E2740;
-            *(f32*)(state + 0x334) = lbl_803E2740;
+            z = lbl_803E2740;
+            *(f32*)(state + 0x324) = z;
+            *(f32*)(state + 0x334) = z;
         }
     }
     else
