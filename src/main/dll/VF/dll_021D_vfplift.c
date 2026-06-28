@@ -43,7 +43,8 @@ typedef struct VfpLiftState
     s16 mode;
     s16 hitDisableGameBit;
     s16 toggleGameBit;
-    u8 pad10[0x1a - 0x10];
+    u8 pad10[0x12 - 0x10];
+    s16 anim[4];
     u8 mapEventNo;
     u8 pad1b;
     u8 applyHeight : 1;
@@ -67,6 +68,7 @@ STATIC_ASSERT(offsetof(VfpLiftState, travelDistance) == 0x00);
 STATIC_ASSERT(offsetof(VfpLiftState, mode) == 0x0A);
 STATIC_ASSERT(offsetof(VfpLiftState, hitDisableGameBit) == 0x0C);
 STATIC_ASSERT(offsetof(VfpLiftState, toggleGameBit) == 0x0E);
+STATIC_ASSERT(offsetof(VfpLiftState, anim) == 0x12);
 STATIC_ASSERT(offsetof(VfpLiftState, mapEventNo) == 0x1A);
 STATIC_ASSERT(sizeof(VfpLiftPlacement) == 0x24);
 STATIC_ASSERT(offsetof(VfpLiftPlacement, rotXByte) == 0x18);
@@ -342,10 +344,10 @@ void vfplift_init(int* obj, VfpLiftPlacement* init)
     state->toggleGameBit = init->toggleGameBit;
     state->travelDistance = (f32)(s32)init->travelDistance;
     state->mapEventNo = init->mapEventNo;
-    *(s16*)((char*)state + 0x12) = 0;
-    *(s16*)((char*)state + 0x14) = 0;
-    *(s16*)((char*)state + 0x16) = 0;
-    *(s16*)((char*)state + 0x18) = 0;
+    state->anim[0] = 0;
+    state->anim[1] = 0;
+    state->anim[2] = 0;
+    state->anim[3] = 0;
     if (((GameObject*)obj)->anim.seqId == VFPLIFT2_OBJTYPE)
     {
         if ((u32)GameBit_Get(state->toggleGameBit) != 0)
