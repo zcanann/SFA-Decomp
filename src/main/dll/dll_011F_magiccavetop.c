@@ -10,35 +10,39 @@ extern void* Obj_GetPlayerObject(void);
 
 typedef struct MagiccavetopPlacement
 {
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    u8 pad0[0x18 - 0x0];
+    u8 rangeOuter;
+    u8 rangeInner;
+    u8 objGroup;
+    u8 mapAct;
     s16 visibleGameBit;
-    s16 unk1E;
+    u8 lockDirId;
+    u8 mapId;
     s8 warpMapId;
     s8 gameBitValue; /* value written to game bit 0x1B8 on warp transition */
-    u8 pad22[0x28 - 0x22];
+    u8 noLoad;
+    u8 rotByte;
+    u8 pad24[0x28 - 0x24];
 } MagiccavetopPlacement;
 
 typedef struct MagiccavetopObjectDef
 {
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    u8 pad0[0x1C - 0x0];
     s16 visibleGameBit;
-    s16 unk1E;
-    s8 warpMapId;
-    s8 gameBitValue; /* value written to game bit 0x1B8 on warp transition */
-    u8 pad22[0x24 - 0x22];
+    u8 pad1E[0x23 - 0x1E];
+    u8 rotByte;
     s16 swapGameBit;
     u8 pad26[0x28 - 0x26];
 } MagiccavetopObjectDef;
 
 typedef struct MagiccavetopState
 {
-    u8 pad0[0x1 - 0x0];
+    u8 subState;
     u8 flags;
-    u8 pad2[0x4 - 0x2];
+    u8 rumbleState;
+    u8 pad3[0x4 - 0x3];
     f32 fadeTimer;
-    u8 pad8[0xC - 0x8];
+    f32 timer;
 } MagiccavetopState;
 
 extern f32 timeDelta;
@@ -80,20 +84,20 @@ int trickyguardspot_getExtraSize(void);
 
 void magiccavetop_init(int* obj, s8* def)
 {
-    int* state = ((GameObject*)obj)->extra;
+    MagiccavetopState* state = ((GameObject*)obj)->extra;
     int* refs;
     ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | 0x6000);
     if (GameBit_Get(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
-        ((MagiccavetopState*)state)->fadeTimer = gMagicCaveTopFadeMax;
+        state->fadeTimer = gMagicCaveTopFadeMax;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x23] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)((MagiccavetopObjectDef*)def)->rotByte << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
     if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
     {
         if (GameBit_Get(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
         {
-            ((MagiccavetopState*)state)->flags = (u8)(((MagiccavetopState*)state)->flags | 0x0c);
+            state->flags = (u8)(state->flags | 0x0c);
             *(u8*)((char*)refs + 8) = 23;
         }
         else
@@ -105,8 +109,8 @@ void magiccavetop_init(int* obj, s8* def)
 
 void magiccavetop_free(int* obj)
 {
-    u8* state = ((GameObject*)obj)->extra;
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    MagiccavetopState* state = ((GameObject*)obj)->extra;
+    MagiccavetopPlacement* def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
     void* p;
     void* r;
     stopRumble2();
@@ -119,11 +123,11 @@ void magiccavetop_free(int* obj)
             staffSetGlow(r, 5, 0);
         }
     }
-    if (state[0] == 1)
+    if (state->subState == 1)
     {
-        if (def[0x22] == 0)
+        if (def->noLoad == 0)
         {
-            mapUnload(mapGetDirIdx(def[0x1f]), 0x20000000);
+            mapUnload(mapGetDirIdx(def->mapId), 0x20000000);
         }
     }
 }
@@ -141,8 +145,8 @@ void magiccavetop_update(int* obj)
 
     MagicCaveTopFxArgs fx;
     int* player;
-    u8* sub;
-    u8* def;
+    MagiccavetopState* sub;
+    MagiccavetopPlacement* def;
     int gb;
     u8 dirIdx;
     int range;
@@ -152,61 +156,61 @@ void magiccavetop_update(int* obj)
 
     player = Obj_GetPlayerObject();
     sub = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
     gb = 0;
     if (player != NULL)
     {
         if (GameBit_Get(0x91e) != 0)
         {
             GameBit_Set(0x91e, 0);
-            (*gMapEventInterface)->setObjGroupStatus(def[0x1f], def[0x1a], 0);
+            (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
-            *sub = 3;
+            sub->subState = 3;
             return;
         }
-        dirIdx = mapGetDirIdx(def[0x1f]);
+        dirIdx = mapGetDirIdx(def->mapId);
         dist = vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-        gb = GameBit_Get(((MagiccavetopPlacement*)def)->visibleGameBit);
-        switch (*sub)
+        gb = GameBit_Get(def->visibleGameBit);
+        switch (sub->subState)
         {
         case 0:
-            range = def[0x19] * 2;
+            range = def->rangeInner * 2;
             if (dist < (f32)(range * range))
             {
-                if (def[0x22] == 0)
+                if (def->noLoad == 0)
                 {
-                    loadMapAndParent(def[0x1f]);
+                    loadMapAndParent(def->mapId);
                 }
-                *sub = 1;
+                sub->subState = 1;
             }
             break;
         case 1:
-            range = def[0x18] * 2;
+            range = def->rangeOuter * 2;
             if (dist > (f32)(range * range))
             {
-                if (def[0x22] == 0)
+                if (def->noLoad == 0)
                 {
                     mapUnload(dirIdx, 0x20000000);
                 }
-                *sub = 0;
+                sub->subState = 0;
             }
             else if (dist < lbl_803E3C30 && gb != 0)
             {
-                *sub = 2;
-                (*gMapEventInterface)->setObjGroupStatus(def[0x1f], def[0x1a], 1);
-                (*gMapEventInterface)->setMapAct(def[0x1f], def[0x1b]);
+                sub->subState = 2;
+                (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 1);
+                (*gMapEventInterface)->setMapAct(def->mapId, def->mapAct);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             break;
         case 2:
-            GameBit_Set(0x1b8, ((MagiccavetopPlacement*)def)->gameBitValue);
-            if (def[0x22] != 0)
+            GameBit_Set(0x1b8, def->gameBitValue);
+            if (def->noLoad != 0)
             {
                 unlockLevel(0, 0, 1);
-                lockLevel(def[0x1e], 0);
-                lockLevel(def[0x1e], 1);
+                lockLevel(def->lockDirId, 0);
+                lockLevel(def->lockDirId, 1);
             }
             else
             {
@@ -218,25 +222,25 @@ void magiccavetop_update(int* obj)
             {
                 GameBit_Set(0xe05, 0);
             }
-            warpToMap(((MagiccavetopPlacement*)def)->warpMapId, 0);
+            warpToMap(def->warpMapId, 0);
             break;
         case 3:
             if (dist > lbl_803E3C30)
             {
-                *sub = 1;
+                sub->subState = 1;
             }
             break;
         }
-        if ((sub[1] & 4) == 0)
+        if ((sub->flags & 4) == 0)
         {
             if (dist >= lbl_803E3C34)
             {
-                *(f32*)(sub + 8) = lbl_803E3C38;
-                sub[1] &= ~2;
+                sub->timer = lbl_803E3C38;
+                sub->flags &= ~2;
             }
-            else if ((sub[1] & 2) == 0)
+            else if ((sub->flags & 2) == 0)
             {
-                if ((sub[1] & 1) != 0)
+                if ((sub->flags & 1) != 0)
                 {
                     if (dist < lbl_803E3C3C)
                     {
@@ -249,11 +253,11 @@ void magiccavetop_update(int* obj)
                                 staffSetGlow(staff, 5, 0);
                             }
                         }
-                        sub[2] = 0;
+                        sub->rumbleState = 0;
                     }
                     else if (dist < lbl_803E3C40)
                     {
-                        if (sub[2] == 1)
+                        if (sub->rumbleState == 1)
                         {
                             stopRumble();
                             if (player != NULL)
@@ -264,7 +268,7 @@ void magiccavetop_update(int* obj)
                                     staffSetGlow(staff, 5, 0);
                                 }
                             }
-                            sub[2] = 0;
+                            sub->rumbleState = 0;
                         }
                         else
                         {
@@ -277,7 +281,7 @@ void magiccavetop_update(int* obj)
                                     staffSetGlow(staff, 5, 0);
                                 }
                             }
-                            sub[2] = 1;
+                            sub->rumbleState = 1;
                         }
                     }
                     else
@@ -291,10 +295,10 @@ void magiccavetop_update(int* obj)
                                 staffSetGlow(staff, 5, 0);
                             }
                         }
-                        sub[2] = 1;
+                        sub->rumbleState = 1;
                     }
-                    sub[1] &= ~1;
-                    *(f32*)(sub + 8) += timeDelta;
+                    sub->flags &= ~1;
+                    sub->timer += timeDelta;
                 }
                 else if (dist < lbl_803E3C34)
                 {
@@ -307,32 +311,32 @@ void magiccavetop_update(int* obj)
                             staffSetGlow(staff, 5, 2);
                         }
                     }
-                    sub[1] |= 1;
-                    *(f32*)(sub + 8) += timeDelta;
+                    sub->flags |= 1;
+                    sub->timer += timeDelta;
                 }
-                if (*(f32*)(sub + 8) > lbl_803E3C48)
+                if (sub->timer > lbl_803E3C48)
                 {
-                    sub[1] |= 2;
+                    sub->flags |= 2;
                 }
             }
         }
     }
     if (gb != 0)
     {
-        if (lbl_803E3C38 == ((MagiccavetopState*)sub)->fadeTimer)
+        if (lbl_803E3C38 == sub->fadeTimer)
         {
             Sfx_PlayFromObject(obj, 0x4a2);
         }
-        ((MagiccavetopState*)sub)->fadeTimer += timeDelta;
-        if (((MagiccavetopState*)sub)->fadeTimer > gMagicCaveTopFadeMax)
+        sub->fadeTimer += timeDelta;
+        if (sub->fadeTimer > gMagicCaveTopFadeMax)
         {
-            ((MagiccavetopState*)sub)->fadeTimer = gMagicCaveTopFadeMax;
+            sub->fadeTimer = gMagicCaveTopFadeMax;
             ((GameObject*)obj)->anim.alpha = 0xff;
         }
         else
         {
             ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(gMagicCaveTopAlphaMax * (((MagiccavetopState*)sub)->fadeTimer / gMagicCaveTopFadeMax));
+                (u8)(int)(gMagicCaveTopAlphaMax * (sub->fadeTimer / gMagicCaveTopFadeMax));
         }
     }
     else
@@ -345,7 +349,7 @@ void magiccavetop_update(int* obj)
         fx.x = t;
         fx.y = lbl_803E3C54;
         fx.z = t;
-        if ((sub[1] & 8) != 0)
+        if ((sub->flags & 8) != 0)
         {
             objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 5, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad,
                                   0);
