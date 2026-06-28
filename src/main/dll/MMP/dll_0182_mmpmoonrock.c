@@ -360,8 +360,8 @@ void fn_801A7D74(int obj, u8 a, u8 b)
     int count;
     int* list;
     MmpMoonrockState * state;
-    int odef;
-    int mydef;
+    MmpMoonrockPlacement* odef;
+    MmpMoonrockPlacement* mydef;
     s8 g1;
     s8 g2;
 
@@ -374,16 +374,16 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             Vec_distance((void*)(obj + 0x18), (void*)(o + 0x18)) < gMoonRockPickupRange)
         {
             u32 c;
-            odef = *(int*)(list[i] + 0x4C);
-            mydef = *(int*)&((GameObject*)obj)->anim.placementData;
+            odef = (MmpMoonrockPlacement*)((GameObject*)list[i])->anim.placementData;
+            mydef = (MmpMoonrockPlacement*)((GameObject*)obj)->anim.placementData;
             g1 = GameBit_Get(0x88C);
             g2 = GameBit_Get(0x894);
             if (a == 0)
             {
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
-                if (*(s16*)(odef + 0x1E) != -1)
+                if (odef->unk1E != -1)
                 {
-                    GameBit_Set(*(s16*)(odef + 0x1E), 0);
+                    GameBit_Set(odef->unk1E, 0);
                 }
                 c = state->kind;
                 if (c == 3) goto dec;
@@ -397,9 +397,9 @@ void fn_801A7D74(int obj, u8 a, u8 b)
                 {
                     g2 -= 1;
                 }
-                if (*(s16*)(mydef + 0x1A) != -1)
+                if (mydef->kindGameBit != -1)
                 {
-                    GameBit_Set(*(s16*)(mydef + 0x1A), 0);
+                    GameBit_Set(mydef->kindGameBit, 0);
                     state->kind = 0;
                 }
                 {
@@ -416,15 +416,15 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             else
             {
                 (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
-                if (*(s16*)(odef + 0x1E) != -1)
+                if (odef->unk1E != -1)
                 {
-                    GameBit_Set(*(s16*)(odef + 0x1E), 1);
+                    GameBit_Set(odef->unk1E, 1);
                 }
                 if (b == 0)
                 {
-                    ((GameObject*)obj)->anim.localPosX = *(f32*)(list[i] + 0xC);
-                    ((GameObject*)obj)->anim.localPosY = *(f32*)(list[i] + 0x10);
-                    ((GameObject*)obj)->anim.localPosZ = *(f32*)(list[i] + 0x14);
+                    ((GameObject*)obj)->anim.localPosX = ((GameObject*)list[i])->anim.localPosX;
+                    ((GameObject*)obj)->anim.localPosY = ((GameObject*)list[i])->anim.localPosY;
+                    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)list[i])->anim.localPosZ;
                     saveGame_saveObjectPos(obj);
                 }
                 {
@@ -432,10 +432,10 @@ void fn_801A7D74(int obj, u8 a, u8 b)
                     state->baseY = y;
                     state->baseY2 = y;
                 }
-                if (*(s16*)(mydef + 0x1A) != -1)
+                if (mydef->kindGameBit != -1)
                 {
-                    GameBit_Set(*(s16*)(mydef + 0x1A), *(s16*)(odef + 0x1A));
-                    state->kind = *(s16*)(odef + 0x1A);
+                    GameBit_Set(mydef->kindGameBit, odef->kindGameBit);
+                    state->kind = odef->kindGameBit;
                 }
                 c = state->kind;
                 if (c == 3) goto held;
