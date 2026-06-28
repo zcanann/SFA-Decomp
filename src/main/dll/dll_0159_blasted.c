@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/map_block.h"
 extern f32 lbl_803E4348;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int i);
@@ -49,18 +50,18 @@ void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma dont_inline on
 int fn_801A27B8(int obj, int id)
 {
-    u8* block;
+    MapBlockData* block;
 
     block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                             ((GameObject*)obj)->anim.localPosZ));
-    if (block == NULL || (*(u16*)(block + 4) & 0x8) == 0)
+    if (block == NULL || (block->unk4 & 0x8) == 0)
     {
         return 0;
     }
     {
         int j;
         int i;
-        for (i = 0; i < *(u16*)(block + 0x9a); i++)
+        for (i = 0; i < block->unk9A; i++)
         {
             u8* e = mapBlockFn_800606ec(block, i);
             if (id == mapBlockFn_80060678(e))
@@ -68,7 +69,7 @@ int fn_801A27B8(int obj, int id)
                 *(int*)(e + 0x10) |= 3;
             }
         }
-        for (j = 0; j < *(u8*)(block + 0xa2); j++)
+        for (j = 0; j < block->unkA2; j++)
         {
             u8* g = fn_8006070C(block, j);
             u8* p;
@@ -216,6 +217,7 @@ typedef struct BlastedState
 
 void blasted_init(int obj, int placement)
 {
+    BlastedTargetSetup* setup = (BlastedTargetSetup*)placement;
     int* state = ((GameObject*)obj)->extra;
     int* targ;
     s16 gbid;
@@ -225,8 +227,8 @@ void blasted_init(int obj, int placement)
     objSetSlot((int*)obj, 0x51);
     targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
-    ((BlastedState*)state)->unk10 = (u8) * (s16*)(placement + 0x1a);
-    gbid = *(s16*)(placement + 0x20);
+    ((BlastedState*)state)->unk10 = (u8)setup->pieceCount;
+    gbid = setup->progressGameBit;
     if (gbid != -1)
     {
         v = GameBit_Get(gbid);
@@ -238,9 +240,9 @@ void blasted_init(int obj, int placement)
     }
     GameBit_Set(0x2de, 1);
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
-    if ((u32)GameBit_Get(*(s16*)(placement + 0x1e)) != 0)
+    if ((u32)GameBit_Get(setup->completedGameBit) != 0)
     {
-        state[0xc / 4] = fn_801A27B8(obj, (int)*(s16*)(placement + 0x1c));
+        state[0xc / 4] = fn_801A27B8(obj, (int)setup->triggerId);
     }
 }
 
