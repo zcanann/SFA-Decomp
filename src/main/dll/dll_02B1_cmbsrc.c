@@ -87,8 +87,8 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0)
     {
         state->flags |= CMBSRC_STATE_RENDERED;
-        if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
-            *(u8*)((int)state->light + 0x4c) != 0)
+        if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
+            ((CmbSrcLight*)state->light)->enabled != 0)
         {
             queueGlowRender(state->light);
         }
@@ -450,14 +450,15 @@ int cmbsrc_update(int obj)
                 Sfx_KeepAliveLoopedObjectSound(obj,
                                                gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->objAnim.placementData)->colorIndex]);
             }
-            if (state->light != NULL && *(u8*)((int)state->light + 0x2f8) != 0 &&
-                *(u8*)((int)state->light + 0x4c) != 0)
+            if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
+                ((CmbSrcLight*)state->light)->enabled != 0)
             {
-                s16 v = (s16)(*(u8*)((int)state->light + 0x2f9) + *(s8*)((int)state->light + 0x2fa));
+                s16 v = (s16)(((CmbSrcLight*)state->light)->glowAlpha +
+                              ((CmbSrcLight*)state->light)->glowAlphaStep);
                 if (v < 0)
                 {
                     v = 0;
-                    *(u8*)((int)state->light + 0x2fa) = v;
+                    ((CmbSrcLight*)state->light)->glowAlphaStep = v;
                 }
                 else if (v > 0xc)
                 {
@@ -465,10 +466,10 @@ int cmbsrc_update(int obj)
                     if (v > 0xff)
                     {
                         v = 0xff;
-                        *(u8*)((int)state->light + 0x2fa) = 0;
+                        ((CmbSrcLight*)state->light)->glowAlphaStep = 0;
                     }
                 }
-                *(u8*)((int)state->light + 0x2f9) = v;
+                ((CmbSrcLight*)state->light)->glowAlpha = v;
             }
         }
         break;

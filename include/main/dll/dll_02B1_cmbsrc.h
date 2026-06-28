@@ -80,6 +80,24 @@ typedef struct CmbSrcHitFlags {
   u8 disabled : 1;
 } CmbSrcHitFlags;
 
+/* Partial overlay onto the shared ModelLightStruct (defined in
+ * main/model_light.h, which conflicts with the dll_80220608_shared.h
+ * ModelLight = void typedef / signatures used by this DLL). Only the
+ * enable flag and glow-pulse fields touched by cmbsrc are named here. */
+typedef struct CmbSrcLight {
+  u8 pad00[0x4C - 0x00];
+  u8 enabled;
+  u8 pad4D[0x2F8 - 0x4D];
+  u8 glowType;
+  u8 glowAlpha;
+  s8 glowAlphaStep;
+} CmbSrcLight;
+
+STATIC_ASSERT(offsetof(CmbSrcLight, enabled) == 0x4C);
+STATIC_ASSERT(offsetof(CmbSrcLight, glowType) == 0x2F8);
+STATIC_ASSERT(offsetof(CmbSrcLight, glowAlpha) == 0x2F9);
+STATIC_ASSERT(offsetof(CmbSrcLight, glowAlphaStep) == 0x2FA);
+
 typedef struct CmbSrcState {
   void *light;
   f32 effectTimer;
