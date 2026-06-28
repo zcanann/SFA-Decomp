@@ -43,6 +43,16 @@ extern f32 lbl_803DBF50;
 extern u8 gRopeNodeVariantVisibleFlags;
 extern f32 gRopeNodeLiftHeight;
 
+typedef struct DfropenodePlacement
+{
+    u8 pad0[0x18 - 0x0];
+    u8 flags18; /* bit0 enables rope-render pass */
+    u8 pad19[0x1B - 0x19];
+    u8 textureIndex; /* gRopeNodeTextures index; 1 = white/active style */
+    s16 fadeGameBit; /* game bit gating the node fade-out */
+    u8 pad1E[0x20 - 0x1E];
+} DfropenodePlacement;
+
 static inline f32 DFRope_S32AsFloat(s32 value)
 {
     u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)((u32)value ^ 0x80000000)));
@@ -76,7 +86,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
     int result;
 
     extra = ((GameObject*)obj)->extra;
-    if ((*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) & 1) == 0)
+    if ((((DfropenodePlacement*)((GameObject*)obj)->anim.placementData)->flags18 & 1) == 0)
     {
         return 0;
     }
@@ -100,14 +110,14 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
         best = lbl_803E4DFC;
         for (; i < extra->rope->count - 1; i++)
         {
-            int node;
+            DFRopeNode* node;
 
             x = localX;
             y = localY;
             z = localZ;
-            node = (int)extra->rope->nodes + offset;
-            phase = fn_801C1698(&x, &y, &z, *(f32*)(node + 0), *(f32*)(node + 4), *(f32*)(node + 8),
-                                *(f32*)(node + 0x34), *(f32*)(node + 0x38), *(f32*)(node + 0x3c));
+            node = (DFRopeNode*)((int)extra->rope->nodes + offset);
+            phase = fn_801C1698(&x, &y, &z, node->pos[0], node->pos[1], node->pos[2],
+                                node[1].pos[0], node[1].pos[1], node[1].pos[2]);
             if (phase >= best && phase < lbl_803E4E18)
             {
                 dx = x - localX;
@@ -140,26 +150,26 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distan
 
 void dfropenode_render2(f32 phase, f32 force, int obj)
 {
-    int extra;
+    DFropenodeExtra* extra;
     s8 idx;
     f32 fraction;
-    int node;
+    DFRopeNode* node;
 
-    extra = *(int*)&((GameObject*)obj)->extra;
+    extra = ((GameObject*)obj)->extra;
     phase = phase - (f32)(s8)
     phase;
     idx = (s8)phase;
     fraction = phase - (f32)idx;
-    node = **(int**)(extra + 0x2c) + idx * 0x34;
-    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
+    node = &extra->rope->nodes[idx];
+    node->force[1] = force * fraction + node->force[1];
     fraction = lbl_803E4E18 - fraction;
-    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
-    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
+    node = &extra->rope->nodes[idx];
+    node->force[1] = force * fraction + node->force[1];
 }
 
 void dfropenode_modelMtxFn(int obj, float* phase, f32 distance)
 {
-    int extra;
+    DFropenodeExtra* extra;
     s32 raw;
     s8 idx;
     int node;
@@ -169,12 +179,12 @@ void dfropenode_modelMtxFn(int obj, float* phase, f32 distance)
     f32 dz;
     f32 len;
 
-    extra = *(int*)&((GameObject*)obj)->extra;
+    extra = ((GameObject*)obj)->extra;
     ph = *phase;
     raw = (s32)ph;
     idx = (s8)raw;
     *phase = ph - (f32)idx;
-    node = **(int**)&((DFropenodeExtra*)extra)->rope;
+    node = (int)extra->rope->nodes;
     x0 = *((f32*)node + idx * 13);
     node = node + idx * 0x34;
     dx = x0 - *(f32*)(node + 0x34);
@@ -216,11 +226,11 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
 #pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)
 {
-    int* p = (int*)obj[0xb8 / 4];
-    out[0] = *(f32*)((char*)p + 0x1c);
-    out[1] = *(f32*)((char*)p + 0x20);
-    out[2] = *(f32*)((char*)p + 0x24);
-    out[3] = *(f32*)((char*)p + 0x28);
+    DFropenodeExtra* p = ((GameObject*)obj)->extra;
+    out[0] = p->planeNormalX;
+    out[1] = p->planeNormalY;
+    out[2] = p->planeNormalZ;
+    out[3] = p->planeDistance;
 }
 
 #pragma scheduling off
@@ -368,16 +378,6 @@ void dfropenode_free(void* obj)
     }
 }
 
-typedef struct DfropenodePlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 flags18; /* bit0 enables rope-render pass */
-    u8 pad19[0x1B - 0x19];
-    u8 textureIndex; /* gRopeNodeTextures index; 1 = white/active style */
-    s16 fadeGameBit; /* game bit gating the node fade-out */
-    u8 pad1E[0x20 - 0x1E];
-} DfropenodePlacement;
-
 typedef struct DfropenodeRenderState
 {
     u32 objAndParam;
@@ -403,7 +403,7 @@ void dfropenode_render(int obj, int p2, int p3)
     renderState.objAndParam = (u32)p2;
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
-    objDef = *(int*)&objAnim->placementData;
+    objDef = (int)objAnim->placementData;
     eventId = ((DfropenodePlacement*)objDef)->fadeGameBit;
     if ((eventId != 0) && (GameBit_Get(eventId) != 0))
     {
@@ -436,7 +436,7 @@ void dfropenode_render(int obj, int p2, int p3)
         }
     }
 
-    if (((((DfropenodePlacement*)objDef)->flags18 & 1) != 0) && (*(void**)&extra->linkedObj != NULL) &&
+    if (((((DfropenodePlacement*)objDef)->flags18 & 1) != 0) && (extra->linkedObj != NULL) &&
         (extra->rope != NULL))
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
