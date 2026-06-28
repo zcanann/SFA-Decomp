@@ -53,6 +53,34 @@ typedef struct Dim2pathgeneratorObjectDef
     u8 pad22[0x28 - 0x22];
 } Dim2pathgeneratorObjectDef;
 
+/* RomCurve definition record (subset) returned by gRomCurveInterface->getById. */
+typedef struct Dim2RomCurveDef
+{
+    u8 pad0[0x8 - 0x0];
+    f32 originX;
+    f32 originY;
+    f32 originZ;
+} Dim2RomCurveDef;
+
+/* Object spawn-setup descriptor written before Obj_SetupObject. */
+typedef struct Dim2SpawnSetup
+{
+    u8 pad0[0x3 - 0x0];
+    u8 unk3;
+    u8 colorR;
+    u8 colorG;
+    u8 colorB;
+    u8 colorA;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    s32 mapId;
+    s8 unk18;
+    u8 pad19;
+    s16 unk1A;
+    s16 unk1C;
+} Dim2SpawnSetup;
+
 typedef struct Dim2pathgeneratorPlacement
 {
     u8 pad0[0x3 - 0x0];
@@ -197,9 +225,9 @@ void dim2pathgenerator_update(int* obj)
                         cv, (char*)extra + 0xc, (char*)extra + 0x32c, (char*)extra + 0x64c,
                         (char*)extra + 0x96c);
                 ((Dim2PathGeneratorState*)extra)->flags |= 2;
-                ((Dim2PathGeneratorState*)extra)->originX = *(f32*)((char*)cv + 8);
-                ((Dim2PathGeneratorState*)extra)->originY = *(f32*)((char*)cv + 0xc);
-                ((Dim2PathGeneratorState*)extra)->originZ = *(f32*)((char*)cv + 0x10);
+                ((Dim2PathGeneratorState*)extra)->originX = ((Dim2RomCurveDef*)cv)->originX;
+                ((Dim2PathGeneratorState*)extra)->originY = ((Dim2RomCurveDef*)cv)->originY;
+                ((Dim2PathGeneratorState*)extra)->originZ = ((Dim2RomCurveDef*)cv)->originZ;
             }
         }
     }
@@ -224,10 +252,10 @@ void dim2pathgenerator_update(int* obj)
             int* p = *(int**)((char*)objs[i] + 0x4c);
             int j;
             int** o2;
-            *(f32*)((char*)p + 8) = ((Dim2PathGeneratorState*)extra)->originX;
-            *(f32*)((char*)p + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
-            *(f32*)((char*)p + 0x10) = ((Dim2PathGeneratorState*)extra)->originZ;
-            *(int*)((char*)p + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
+            ((Dim2SpawnSetup*)p)->posX = ((Dim2PathGeneratorState*)extra)->originX;
+            ((Dim2SpawnSetup*)p)->posY = ((Dim2PathGeneratorState*)extra)->originY;
+            ((Dim2SpawnSetup*)p)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
+            ((Dim2SpawnSetup*)p)->mapId = ((Dim2pathgeneratorPlacement*)def)->unk14;
             (*(void (**)(int*, int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], p, 1);
             ObjGroup_RemoveObject(objs[i], OBJ_GROUP_SNOWBALL_POOL);
             o2 = ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
@@ -241,19 +269,19 @@ void dim2pathgenerator_update(int* obj)
     if (Obj_IsLoadingLocked())
     {
         int* np = (int*)Obj_AllocObjectSetup(36, ((volatile s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
-        *(f32*)((char*)np + 8) = ((Dim2PathGeneratorState*)extra)->originX;
-        *(f32*)((char*)np + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
-        *(f32*)&((ObjDef*)np)->jointData = ((Dim2PathGeneratorState*)extra)->originZ;
-        *(u8*)((char*)np + 4) = ((Dim2pathgeneratorPlacement*)def)->colorR;
-        *(u8*)((char*)np + 6) = ((Dim2pathgeneratorPlacement*)def)->colorB;
-        *(u8*)((char*)np + 5) = ((Dim2pathgeneratorPlacement*)def)->colorG;
-        *(u8*)((char*)np + 7) = ((Dim2pathgeneratorPlacement*)def)->colorA;
-        *(u8*)((char*)np + 7) = 255;
-        *(u8*)((char*)np + 3) = ((Dim2pathgeneratorPlacement*)def)->unk3;
-        *(s8*)((char*)np + 0x18) = (s8) * (u8*)((char*)def + 0x1c);
-        *(s16*)((char*)np + 0x1a) = *(u8*)((char*)def + 0x1a);
-        *(s16*)((char*)np + 0x1c) = *(u8*)((char*)def + 0x1b);
-        *(int*)((char*)np + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
+        ((Dim2SpawnSetup*)np)->posX = ((Dim2PathGeneratorState*)extra)->originX;
+        ((Dim2SpawnSetup*)np)->posY = ((Dim2PathGeneratorState*)extra)->originY;
+        ((Dim2SpawnSetup*)np)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
+        ((Dim2SpawnSetup*)np)->colorR = ((Dim2pathgeneratorPlacement*)def)->colorR;
+        ((Dim2SpawnSetup*)np)->colorB = ((Dim2pathgeneratorPlacement*)def)->colorB;
+        ((Dim2SpawnSetup*)np)->colorG = ((Dim2pathgeneratorPlacement*)def)->colorG;
+        ((Dim2SpawnSetup*)np)->colorA = ((Dim2pathgeneratorPlacement*)def)->colorA;
+        ((Dim2SpawnSetup*)np)->colorA = 255;
+        ((Dim2SpawnSetup*)np)->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
+        ((Dim2SpawnSetup*)np)->unk18 = (s8) * (u8*)((char*)def + 0x1c);
+        ((Dim2SpawnSetup*)np)->unk1A = *(u8*)((char*)def + 0x1a);
+        ((Dim2SpawnSetup*)np)->unk1C = *(u8*)((char*)def + 0x1b);
+        ((Dim2SpawnSetup*)np)->mapId = ((Dim2pathgeneratorPlacement*)def)->unk14;
         Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
         ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
