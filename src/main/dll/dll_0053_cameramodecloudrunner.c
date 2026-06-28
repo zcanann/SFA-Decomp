@@ -49,6 +49,17 @@ extern int lbl_803DB9D4;
 /* curve-node tag selecting the matrix-based base point in update() */
 #define CLOUDRUNNER_CURVE_TAG 1049
 
+/* object-placement transform fed to setMatrixFromObjectPos() (24 bytes) */
+typedef struct CloudRunnerObjectPos
+{
+    s16 angles[3];
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} CloudRunnerObjectPos;
+
 #pragma scheduling off
 #pragma peephole off
 void CameraModeForceBehind_func06_nop(void)
@@ -127,7 +138,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
     f32 rx, ry, rz, rs;
-    u8 mxin[24];
+    CloudRunnerObjectPos mxin;
     f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
@@ -136,14 +147,14 @@ void CameraModeCloudRunner_update(u8* obj)
     {
         if (*(s16*)(curve + 70) == CLOUDRUNNER_CURVE_TAG)
         {
-            *(f32*)(mxin + 12) = *(f32*)(curve + 24);
-            *(f32*)(mxin + 16) = *(f32*)(curve + 28);
-            *(f32*)(mxin + 20) = *(f32*)(curve + 32);
-            *(s16*)(mxin + 0) = *(s16*)(curve + 0);
-            *(s16*)(mxin + 2) = *(s16*)(curve + 2);
-            *(s16*)(mxin + 4) = *(s16*)(curve + 4);
-            *(f32*)(mxin + 8) = lbl_803E1B20;
-            setMatrixFromObjectPos(matrix, mxin);
+            mxin.x = *(f32*)(curve + 24);
+            mxin.y = *(f32*)(curve + 28);
+            mxin.z = *(f32*)(curve + 32);
+            mxin.angles[0] = *(s16*)(curve + 0);
+            mxin.angles[1] = *(s16*)(curve + 2);
+            mxin.angles[2] = *(s16*)(curve + 4);
+            mxin.scale = lbl_803E1B20;
+            setMatrixFromObjectPos(matrix, &mxin);
             Matrix_TransformPoint(matrix, lbl_803E1B24, lbl_803E1B28, lbl_803E1B2C,
                                   &baseX, &baseY, &baseZ);
         }
