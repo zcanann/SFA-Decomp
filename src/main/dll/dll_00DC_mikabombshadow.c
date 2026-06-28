@@ -287,17 +287,31 @@ void staticCamera_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
 }
 
-void staticCamera_init(short* obj, int params, int flag)
+typedef struct StaticCameraPlacement
 {
+    u8 pad00[0x19 - 0x00]; /* ObjPlacement head + class-specific lead-in */
+    u8 typeByte;
+    u8 scaleByte;
+    u8 pad1B[0x1C - 0x1B];
+    s16 rotZ;
+    s16 rotY;
+    s16 rotX;
+} StaticCameraPlacement;
+STATIC_ASSERT(sizeof(StaticCameraPlacement) == 0x22);
+
+void staticCamera_init(short* obj, int paramsArg, int flag)
+{
+    StaticCameraPlacement* params;
     u8* dst;
 
-    *obj = -*(short*)(params + 0x1c);
-    obj[1] = -*(short*)(params + 0x1e);
-    obj[2] = -*(short*)(params + 0x20);
+    params = (StaticCameraPlacement*)paramsArg;
+    *obj = -params->rotZ;
+    obj[1] = -params->rotY;
+    obj[2] = -params->rotX;
     dst = *(u8**)(obj + 0x5c);
-    *dst = *(u8*)(params + 0x19);
+    *dst = params->typeByte;
     *(float*)(dst + 4) =
-        (float)((double)(u32) * (u8*)(params + 0x1a));
+        (float)((double)(u32)params->scaleByte);
     dst[1] = 0;
     if (flag == 0)
     {
