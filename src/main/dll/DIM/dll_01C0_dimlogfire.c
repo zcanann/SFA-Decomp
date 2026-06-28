@@ -80,9 +80,9 @@ int dimlogfire_getObjectTypeId(void) { return 0x1; }
 
 int fn_801B0784(int obj, int delta)
 {
-    s8* inner = ((GameObject*)obj)->extra;
-    inner[0x1c] = (s8)(inner[0x1c] - delta);
-    return inner[0x1c] <= 0;
+    DimLogFireState* inner = ((GameObject*)obj)->extra;
+    inner->strengthInit = (s8)(inner->strengthInit - delta);
+    return inner->strengthInit <= 0;
 }
 
 void dimlogfire_free(int* obj, int mode)
@@ -203,7 +203,7 @@ void dimlogfire_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     tricky = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     switch (state->mode)
     {
     case 1:
@@ -253,12 +253,12 @@ void dimlogfire_update(int obj)
         tricky = getTrickyObject();
         if ((u32)tricky != 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+            if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->unk68 + 0x28))(
                     tricky, obj, 1, 4);
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
         ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
         break;
@@ -276,7 +276,7 @@ void dimlogfire_update(int obj)
         }
         break;
     }
-    if (*(s8*)&state->dousedLatch != 0)
+    if ((s8)state->dousedLatch != 0)
     {
         state->dousedLatch = 0;
     }
@@ -317,7 +317,7 @@ void dimlogfire_init(int obj, int def)
     state->unk20 = 0;
     state->initMode = ((DimlogfireObjectDef*)def)->initMode;
     state->strengthInit = (s8)((DimlogfireObjectDef*)def)->strengthInit;
-    *(u8*)&state->strength = *(u8*)&state->strengthInit;
+    state->strength = *(u8*)&state->strengthInit;
     if (GameBit_Get(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
     {
         state->mode = 1;
