@@ -125,11 +125,11 @@ extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 
 void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 {
-    int byteOff;
-    int glyphLang;
-    int curTexPage;
     int realign;
-    u32 ch;
+    void* tex;
+    f32 fx0, fy0, fx1, fy1;
+    int byteOff;
+    f32 u0, v0;
     int charLen;
     int n2;
     int i;
@@ -138,12 +138,12 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     u8* p;
     TextGlyph* g;
     u8* winBase;
-    void* tex;
+    int glyphLang;
     f32 spaceExtra;
     f32 measW;
     f32 measN;
-    f32 fx0, fy0, fx1, fy1;
-    f32 u0, v0;
+    int curTexPage;
+    u32 ch;
     int params[8];
     u32 scisX, scisY, scisW, scisH;
 
