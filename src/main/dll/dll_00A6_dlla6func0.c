@@ -198,9 +198,9 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != 0 && posSource != 0)
         {
-            buf.pos[0] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosX + *(f32*)(posSource + 0xc));
-            buf.pos[1] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosY + *(f32*)(posSource + 0x10));
-            buf.pos[2] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosZ + *(f32*)(posSource + 0x14));
+            buf.pos[0] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
+            buf.pos[1] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
+            buf.pos[2] = lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
         }
         else if (sourceObj != 0)
         {
@@ -210,9 +210,9 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
         }
         else if (posSource != 0)
         {
-            buf.pos[0] = buf.pos[0] + *(f32*)(posSource + 0xc);
-            buf.pos[1] = buf.pos[1] + *(f32*)(posSource + 0x10);
-            buf.pos[2] = buf.pos[2] + *(f32*)(posSource + 0x14);
+            buf.pos[0] = buf.pos[0] + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = buf.pos[1] + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = buf.pos[2] + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, &lbl_803DB980, 0x26a, 0);
