@@ -610,11 +610,11 @@ void gameTimerRun(void)
         sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
         sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + lbl_803DB280 + lbl_803DB27C, 3);
         sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
         sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + lbl_803DB280 * 2 + lbl_803DB27C, 3);
         if (minutes & 1)
         {
             gameTextShowStr(&lbl_803DB29C, 0xD, lbl_803DB284, 3);
