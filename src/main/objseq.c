@@ -3744,8 +3744,7 @@ int objRunSeq(int seqIdx, u8* obj, int flags)
     }
 
     val = seqIdx + 1;
-    slotPtr = base + slot * 2;
-    slotPtr += 0x3a98;
+    slotPtr = slot * 2 + 0x3a98 + base;
     *(s16*)slotPtr = val;
     lbl_803DB714 = -1;
     lbl_803DB718 = -1;
