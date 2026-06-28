@@ -539,10 +539,10 @@ void fn_8015EA48(int obj, GroundBaddieState* state)
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = lbl_803E2DF4 + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s8*)(setup + 4) = 1;
-        *(s8*)(setup + 5) = 1;
-        *(u8*)(setup + 6) = 0xff;
-        *(u8*)(setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         o = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (o != NULL)
         {
@@ -642,9 +642,9 @@ void fn_8015ED1C(int obj, int state, int target)
     t = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
     if (t != NULL)
     {
-        d.x = *(f32*)(t + 0x18) - ((GameObject*)obj)->anim.worldPosX;
-        d.y = *(f32*)(t + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
-        d.z = *(f32*)(t + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        d.x = ((GameObject*)t)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = ((GameObject*)t)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = ((GameObject*)t)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         ((GroundBaddieState*)target)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
 
@@ -885,7 +885,7 @@ int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
 
-s16 dll_CE_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
+s16 dll_CE_setScale(int* obj) { return ((BaddieState*)((GameObject*)obj)->extra)->controlMode; }
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
