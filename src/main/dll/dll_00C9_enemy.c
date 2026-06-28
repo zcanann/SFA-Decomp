@@ -832,7 +832,7 @@ double FUN_8014cbcc(int obj)
 #pragma peephole off
 void FUN_8014ccac(int obj, u32 value)
 {
-    *(u32*)(*(int*)&((GameObject*)obj)->extra + 0x29c) = value;
+    *(u32*)&((EnemyState*)((GameObject*)obj)->extra)->trackedObj = value;
     return;
 }
 
