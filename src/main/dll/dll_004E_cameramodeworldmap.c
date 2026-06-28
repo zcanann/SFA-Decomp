@@ -86,7 +86,7 @@ void CameraModeWorldMap_init(int* obj)
     gCamWorldMapState->settleFrames = 1;
     gCamWorldMapState->focusBlendTimer = 0;
     gCamWorldMapState->focusObjectId = 0;
-    *(f32*)((char*)obj + 0xB4) = lbl_803E1A80;
+    *(f32*)&((GameObject*)obj)->seqIndex = lbl_803E1A80;
     ((GameObject*)obj)->anim.rotX = -32768;
 }
 
