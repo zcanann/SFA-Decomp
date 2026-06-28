@@ -1452,14 +1452,14 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
     extern int ObjHits_IsObjectEnabled(int obj);
-    f32 r;
     f32 maxX;
     f32 minX;
-    f32 maxY;
+    f32 r;
+    f32 v;
     f32 minY;
     f32 maxZ;
     f32 minZ;
-    f32 v;
+    f32 maxY;
     f32* pin;
     int idx3;
     int byteOff;
