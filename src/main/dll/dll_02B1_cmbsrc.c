@@ -211,7 +211,6 @@ int cmbsrc_cycleColor(int obj, int state)
     CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
     CmbSrcState* sourceState = (CmbSrcState*)state;
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
-    int base;
     int idx;
 
     sourceState->colorCycleTimer -= timeDelta;
@@ -226,28 +225,27 @@ int cmbsrc_cycleColor(int obj, int state)
         idx = gCmbsrcColorCycleIndexTable[sourceState->colorCycleIndex];
         if (sourceState->light != NULL)
         {
-            base = idx * 3;
-            modelLightStruct_setDiffuseColor(sourceState->light, gCmbsrcColorRgbTable[base],
-                                             gCmbsrcColorRgbTable[base + 1], gCmbsrcColorRgbTable[base + 2], 0xff);
-            modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[base],
-                                              gCmbsrcColorRgbTable[base + 1], gCmbsrcColorRgbTable[base + 2], 0xff);
+            modelLightStruct_setDiffuseColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
+                                             gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2], 0xff);
+            modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
+                                              gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2], 0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base + 1]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[base + 2]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
+                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]),
                                                    0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE)
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[base], gCmbsrcColorRgbTable[base + 1],
-                                               gCmbsrcColorRgbTable[base + 2], 0x87,
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
+                                               gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
                                                lbl_803E736C * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
-                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[base], gCmbsrcColorRgbTable[base + 1],
-                                               gCmbsrcColorRgbTable[base + 2], 0x87,
+                    modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
+                                               gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
                                                lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
                 }
             }
