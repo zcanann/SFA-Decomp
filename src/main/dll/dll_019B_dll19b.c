@@ -144,12 +144,20 @@ void dll_19B_free(int* obj)
 
 typedef struct Dll19BState
 {
-    u8 pad0[0x12 - 0x0];
-    u8 unlockCount;
-    u8 phase;
-    u8 pendingEvent;
+    s16 activationDist; /* 0x00: st[0], proximity trigger distance */
+    s16 timer;          /* 0x02: st[1], frame countdown */
+    s16 brightnessA;    /* 0x04: st[2] */
+    s16 brightnessAVel; /* 0x06: st[3] */
+    s16 brightnessB;    /* 0x08: st[4] */
+    s16 brightnessBVel; /* 0x0a: st[5] */
+    s16 gfxHandle;      /* 0x0c: st[6], modgfx source handle */
+    s16 countdown;      /* 0x0e: st[7], shrine timer */
+    s16 unk10;          /* 0x10: init=0xc8 */
+    u8 unlockCount;     /* 0x12 */
+    u8 phase;           /* 0x13 */
+    u8 pendingEvent;    /* 0x14 */
     u8 pad15[0x16 - 0x15];
-    u8 displayedFlag;
+    u8 displayedFlag;   /* 0x16 */
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
@@ -157,10 +165,10 @@ void dll_19B_update(int obj)
 {
     extern void* gTitleMenuControlInterface;
 
-    s16* st;
+    Dll19BState* st;
     int player;
     int near;
-    s16* st2;
+    Dll19BState* st2;
     int v;
     f32 dy;
     f32 dist;
@@ -178,55 +186,55 @@ void dll_19B_update(int obj)
         switch (msg)
         {
         case 0x30005:
-            st2[3] = -3;
+            st2->brightnessAVel = -3;
             break;
         case 0x30006:
-            st2[3] = 0x10;
+            st2->brightnessAVel = 0x10;
             break;
         }
     }
     GameBit_Set(0x127, 1);
-    if ((v = st[3]) != 0)
+    if ((v = st->brightnessAVel) != 0)
     {
-        st[2] += (s16)v;
-        if (st[2] <= 12)
+        st->brightnessA += (s16)v;
+        if (st->brightnessA <= 12)
         {
-            st[2] = 12;
-            st[3] = 0;
+            st->brightnessA = 12;
+            st->brightnessAVel = 0;
         }
-        else if (st[2] >= 70)
+        else if (st->brightnessA >= 70)
         {
-            st[2] = 70;
-            st[3] = 0;
+            st->brightnessA = 70;
+            st->brightnessAVel = 0;
         }
-        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, st[2] & 0xff);
+        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, st->brightnessA & 0xff);
     }
-    if ((v = st[5]) != 0)
+    if ((v = st->brightnessBVel) != 0)
     {
-        st[4] += (s16)v;
-        if (st[4] <= 1 && st[5] <= 0)
+        st->brightnessB += (s16)v;
+        if (st->brightnessB <= 1 && st->brightnessBVel <= 0)
         {
-            st[4] = 1;
-            st[5] = 0;
+            st->brightnessB = 1;
+            st->brightnessBVel = 0;
         }
-        else if (st[4] >= 70 && st[5] >= 0)
+        else if (st->brightnessB >= 70 && st->brightnessBVel >= 0)
         {
-            st[4] = 70;
-            st[5] = 0;
+            st->brightnessB = 70;
+            st->brightnessBVel = 0;
         }
-        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, st[4] & 0xff);
+        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, st->brightnessB & 0xff);
     }
-    if (st[1] > 0)
+    if (st->timer > 0)
     {
-        st[1] -= framesThisStep;
-        if (st[1] <= 0)
+        st->timer -= framesThisStep;
+        if (st->timer <= 0)
         {
-            st[1] = 0;
-            if (((Dll19BState*)st)->displayedFlag == 0)
+            st->timer = 0;
+            if (st->displayedFlag == 0)
             {
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2c, 0x50, st[4], 0);
-                ((Dll19BState*)st)->displayedFlag = 1;
+                    3, 0x2c, 0x50, st->brightnessB, 0);
+                st->displayedFlag = 1;
             }
         }
     }
@@ -242,17 +250,17 @@ void dll_19B_update(int obj)
                 {
                     dy = dy * lbl_803E519C;
                 }
-                if (st[4] != 30)
+                if (st->brightnessB != 30)
                 {
-                    st[4] = 30;
+                    st->brightnessB = 30;
                 }
-                v = (int)((f32)st[4] * ((dy - lbl_803E5194) / lbl_803E51A0));
+                v = (int)((f32)st->brightnessB * ((dy - lbl_803E5194) / lbl_803E51A0));
                 if ((s16)v < 1)
                 {
                     v = 1;
                 }
                 (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, v & 0xff);
-                v = (int)((f32)st[2] * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32*)&lbl_803E51A0));
+                v = (int)((f32)st->brightnessA * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32*)&lbl_803E51A0));
                 if ((s16)v < 1)
                 {
                     v = 1;
@@ -260,12 +268,12 @@ void dll_19B_update(int obj)
                 (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, v & 0xff);
             }
         }
-        switch (((Dll19BState*)st)->phase)
+        switch (st->phase)
         {
         case 0:
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st[0])
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < st->activationDist)
             {
-                ((Dll19BState*)st)->phase = 1;
+                st->phase = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
@@ -279,65 +287,65 @@ void dll_19B_update(int obj)
                     Resource_Release(handle);
                 }
                 GameBit_Set(0x126, 0);
-                (*gModgfxInterface)->releaseHandle(st + 6);
+                (*gModgfxInterface)->releaseHandle(&st->gfxHandle);
             }
             break;
         case 1:
-            if (((Dll19BState*)st)->pendingEvent == 1)
+            if (st->pendingEvent == 1)
             {
-                ((Dll19BState*)st)->phase = 2;
-                st[1] = 160;
+                st->phase = 2;
+                st->timer = 160;
             }
             break;
         case 2:
-            if (((Dll19BState*)st)->unlockCount == 0 && GameBit_Get(0x1d3) == 0)
+            if (st->unlockCount == 0 && GameBit_Get(0x1d3) == 0)
             {
                 GameBit_Set(0x1d3, 1);
             }
             if ((u32)GameBit_Get(0x1d8) != 0)
             {
-                ((Dll19BState*)st)->unlockCount += 1;
+                st->unlockCount += 1;
                 GameBit_Set(0x1d8, 0);
             }
-            st[7] -= (s16)timeDelta;
-            fn_80137948(sShrineTimeFormat, st[7]);
-            if (st[7] <= 0)
+            st->countdown -= (s16)timeDelta;
+            fn_80137948(sShrineTimeFormat, st->countdown);
+            if (st->countdown <= 0)
             {
                 GameBit_Set(0x1d4, 1);
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                st[1] = 10;
-                ((Dll19BState*)st)->phase = 6;
+                st->timer = 10;
+                st->phase = 6;
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x35, 0x50, st[4] & 0xff, 0);
-                st[5] = 1;
+                    3, 0x35, 0x50, st->brightnessB & 0xff, 0);
+                st->brightnessBVel = 1;
                 GameBit_Set(0x1d3, 0);
             }
-            else if (((Dll19BState*)st)->unlockCount == 1)
+            else if (st->unlockCount == 1)
             {
-                ((Dll19BState*)st)->phase = 3;
-                st[1] = 200;
-                st[5] = -3;
+                st->phase = 3;
+                st->timer = 200;
+                st->brightnessBVel = -3;
             }
             break;
         case 3:
             if ((u32)GameBit_Get(0x1d1) != 0)
             {
-                st[4] = 1;
+                st->brightnessB = 1;
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2c, 0x50, st[4] & 0xff, 0);
-                st[5] = 1;
+                    3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
+                st->brightnessBVel = 1;
                 GameBit_Set(0x129, 1);
-                ((Dll19BState*)st)->phase = 5;
+                st->phase = 5;
             }
             else
             {
                 fn_80296B78(player, -1);
                 GameBit_Set(0x126, 0);
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2a, 0x50, st[4] & 0xff, 0);
-                st[5] = 1;
+                    3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
+                st->brightnessBVel = 1;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                ((Dll19BState*)st)->phase = 4;
+                st->phase = 4;
             }
             break;
         case 4:
@@ -347,25 +355,25 @@ void dll_19B_update(int obj)
             }
             GameBit_Set(0x1d2, 0);
             GameBit_Set(0x127, 0);
-            ((Dll19BState*)st)->phase = 5;
+            st->phase = 5;
             (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                3, 0x2c, 0x50, st[4] & 0xff, 0);
+                3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
             break;
         case 6:
-            ((Dll19BState*)st)->phase = 0;
-            ((Dll19BState*)st)->pendingEvent = 0;
-            st[1] = 400;
+            st->phase = 0;
+            st->pendingEvent = 0;
+            st->timer = 400;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x126, 1);
             GameBit_Set(0x127, 1);
             {
                 void* handle = Resource_Acquire(0x6a, 1);
-                st[6] = (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                st->gfxHandle = (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             GameBit_Set(0x1d8, 0);
-            ((Dll19BState*)st)->unlockCount = 0;
-            st[7] = 4000;
+            st->unlockCount = 0;
+            st->countdown = 4000;
             GameBit_Set(0x1d4, 0);
             break;
         }
@@ -386,20 +394,20 @@ void dll_19B_init(u8* obj, u8* params)
 {
     extern void* gTitleMenuControlInterface;
 
-    register u8* sub;
+    register Dll19BState* sub;
     void* res;
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
-    *(s16*)sub = 0xa;
+    sub->activationDist = 0xa;
     if (*(s16*)(params + 0x1a) > 0)
     {
-        *(s16*)sub = (s16)(*(s16*)(params + 0x1a) >> 8);
+        sub->activationDist = (s16)(*(s16*)(params + 0x1a) >> 8);
     }
-    sub[0x13] = 0;
-    sub[0x14] = 0;
-    ((Dll19CState*)sub)->unk2 = 0;
-    sub[0x12] = 0;
+    sub->phase = 0;
+    sub->pendingEvent = 0;
+    sub->timer = 0;
+    sub->unlockCount = 0;
     ((GameObject*)obj)->animEventCallback = dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
@@ -410,17 +418,17 @@ void dll_19B_init(u8* obj, u8* params)
     GameBit_Set(0x40, 1);
     GameBit_Set(0x1d7, 1);
     GameBit_Set(0x1d8, 0);
-    ((Dll19CState*)sub)->spawnTimer = 0xc;
-    *(s16*)(sub + 8) = 0x1e;
-    ((Dll19CState*)sub)->unk2 = 0xc8;
+    sub->brightnessA = 0xc;
+    sub->brightnessB = 0x1e;
+    sub->timer = 0xc8;
     ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
-    ((Dll19CState*)sub)->active = 0;
-    *(s16*)(sub + 0xa) = 0;
-    sub[0x16] = 0;
-    *(s16*)(sub + 0x10) = 0xc8;
-    *(s16*)(sub + 0xe) = 0xfa0;
+    sub->brightnessAVel = 0;
+    sub->brightnessBVel = 0;
+    sub->displayedFlag = 0;
+    sub->unk10 = 0xc8;
+    sub->countdown = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    *(s16*)(sub + 0xc) = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    sub->gfxHandle = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
