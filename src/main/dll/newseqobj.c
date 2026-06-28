@@ -126,8 +126,8 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
     {
         if (msgId != 0x11)
         {
-            if (msgId != 0x1a && *(s16*)((char*)attacker + 0x46) != 0x6d &&
-                *(s16*)((char*)attacker + 0x46) != 0x754)
+            if (msgId != 0x1a && ((GameObject*)attacker)->anim.seqId != 0x6d &&
+                ((GameObject*)attacker)->anim.seqId != 0x754)
             {
                 Sfx_PlayFromObject(obj, 0x255);
                 Sfx_PlayFromObject(obj, 0x16);
@@ -221,7 +221,7 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
             return 0;
         }
         {
-            int* other = *(int**)((char*)attacker + 0xc4);
+            int* other = (int*)((GameObject*)attacker)->ownerObj;
             if (other != 0 && ((GameObject*)other)->anim.classId == 0x1c)
             {
                 return 0;
@@ -251,8 +251,8 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
         {
             Sfx_PlayFromObject(obj, 0x14);
         }
-        if (msgId != 0x1a && msgId != 0x1f && *(s16*)((char*)attacker + 0x46) != 0x6d &&
-            *(s16*)((char*)attacker + 0x46) != 0x754)
+        if (msgId != 0x1a && msgId != 0x1f && ((GameObject*)attacker)->anim.seqId != 0x6d &&
+            ((GameObject*)attacker)->anim.seqId != 0x754)
         {
             Sfx_PlayFromObject(obj, 0x22);
         }
@@ -372,7 +372,8 @@ void fn_80150EDC(void* obj, void* state)
     if ((*(u8*)((u8*)state + 0x323) & 8) == 0)
     {
         void* p_29c = ((BaddieState*)state)->trackedObj;
-        fn_8014CF7C(obj, state, *(f32*)((u8*)p_29c + 0xc), *(f32*)((u8*)p_29c + 0x14), 0xf, 0);
+        fn_8014CF7C(obj, state, ((GameObject*)p_29c)->anim.localPosX,
+                    ((GameObject*)p_29c)->anim.localPosZ, 0xf, 0);
     }
 }
 
