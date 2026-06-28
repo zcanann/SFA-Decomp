@@ -92,16 +92,16 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
     {
         work = Obj_AllocObjectSetup(0x24, 0x55e);
-        *(f32*)(work + 8) = ((GameObject*)obj)->anim.localPosX;
-        *(float*)(work + 0xc) = lbl_803E30A8 + ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(work + 0x10) = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)(work + 4) = *(u8*)(placement + 4);
-        *(u8*)(work + 5) = *(u8*)(placement + 5);
-        *(u8*)(work + 6) = *(u8*)(placement + 6);
-        *(u8*)(work + 7) = *(u8*)(placement + 7);
+        ((ObjPlacement*)work)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjPlacement*)work)->posY = lbl_803E30A8 + ((GameObject*)obj)->anim.localPosY;
+        ((ObjPlacement*)work)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)work)->color[0] = ((ObjPlacement*)placement)->color[0];
+        ((ObjPlacement*)work)->color[1] = ((ObjPlacement*)placement)->color[1];
+        ((ObjPlacement*)work)->color[2] = ((ObjPlacement*)placement)->color[2];
+        ((ObjPlacement*)work)->color[3] = ((ObjPlacement*)placement)->color[3];
         work = Obj_SetupObject(work, 5, 0xffffffff, 0xffffffff, 0);
         control->spawnedDustObj = (void*)work;
-        *(float*)((u8*)control->spawnedDustObj + 8) = gKaldachomDustSpawnScratch;
+        ((GameObject*)control->spawnedDustObj)->anim.rootMotionScale = gKaldachomDustSpawnScratch;
     }
 }
 
@@ -132,10 +132,10 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             ((ObjPlacement*)ref)->posY = control->lowerMouthPosY;
             ((ObjPlacement*)ref)->posZ = control->lowerMouthPosZ;
         }
-        *(u8*)(ref + 4) = 1;
-        *(u8*)(ref + 5) = 4;
-        *(u8*)(ref + 6) = 0xff;
-        *(u8*)(ref + 7) = 0xff;
+        ((ObjPlacement*)ref)->color[0] = 1;
+        ((ObjPlacement*)ref)->color[1] = 4;
+        ((ObjPlacement*)ref)->color[2] = 0xff;
+        ((ObjPlacement*)ref)->color[3] = 0xff;
         setup = (u8*)Obj_SetupObject(ref, 5, 0xffffffff, 0xffffffff, 0);
         if (setup != NULL)
         {
@@ -147,8 +147,8 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
             *(f32*)(setup + 0x28) =
-            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r - *
-                (f32*)(ref + 0xc)) / spd;
+            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r -
+                ((ObjPlacement*)ref)->posY) / spd;
             *(f32*)(setup + 0x2c) =
                 (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - ((ObjPlacement*)ref)->posZ) /
                 spd;
@@ -329,9 +329,9 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         {
             rnd = randomGetRange(0, (u8)(s32)control->hitFlashTimer);
             ((GameObject*)control->spawnedDustObj)->anim.alpha = rnd;
-            *(s16*)((u8*)control->spawnedDustObj + 4) = ((GameObject*)obj)->anim.rotZ;
-            *(s16*)((u8*)control->spawnedDustObj + 2) = ((GameObject*)obj)->anim.rotY;
-            *(s16*)control->spawnedDustObj = ((GameObject*)obj)->anim.rotX;
+            ((GameObject*)control->spawnedDustObj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ;
+            ((GameObject*)control->spawnedDustObj)->anim.rotY = ((GameObject*)obj)->anim.rotY;
+            ((GameObject*)control->spawnedDustObj)->anim.rotX = ((GameObject*)obj)->anim.rotX;
             control->hitFlashTimer = control->hitFlashTimer - lbl_803E30C4 * timeDelta;
         }
     }
@@ -341,7 +341,7 @@ void kaldachom_func0B(void)
 {
 }
 
-s16 kaldachom_setScale(int* obj) { return *(s16*)((char*)((GameObject*)obj)->extra + 0x274); }
+s16 kaldachom_setScale(int* obj) { return ((CampfireState*)((GameObject*)obj)->extra)->controlMode; }
 int kaldachom_getExtraSize(void) { return sizeof(CampfireState); }
 int kaldachom_getObjectTypeId(void) { return 0x49; }
 
@@ -371,7 +371,7 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
             (obj, p2, p3, p4, p5, lbl_803E3078);
-        if ((*(u16*)(state + 0x400) & 0x60) != 0)
+        if ((((GroundBaddieState*)state)->flags400 & 0x60) != 0)
         {
             objParticleFn_80099d84(obj, lbl_803E3078, 3, ((GroundBaddieState*)state)->glowAlpha, 0);
         }
