@@ -86,8 +86,6 @@ extern void Camera_EnableViewYOffset(void);
  * ramp the convergence charge, hum volume and per-beam chime timers. */
 void fn_8019D9F0(int* obj)
 {
-    char* p16;
-    char* p32;
     int i;
     CfMainCrystalState* sub = ((GameObject*)obj)->extra;
     int idx;
@@ -176,11 +174,9 @@ void fn_8019D9F0(int* obj)
             sub->charge = CFMAINCRYSTAL_CHARGE_START;
         }
         i = 0;
-        p16 = (char*)sub;
-        p32 = (char*)sub;
         do
         {
-            if (i <= 2 && *(s16*)(p16 + 0x30) != 0)
+            if (i <= 2 && sub->pylonTimer[i] != 0)
             {
                 CrystalBeam* sl = &sub->beams[idx++];
                 sl->b1b = 1;
@@ -190,47 +186,45 @@ void fn_8019D9F0(int* obj)
                 sl->f0 = sub->crystalX;
                 sl->f8 = lbl_803E41DC + sub->crystalY;
                 sl->f10 = sub->crystalZ;
-                dir[0] = *(f32*)p32 - sl->f0;
-                dir[1] = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - sl->f8;
-                dir[2] = *(f32*)(p32 + 0x20) - sl->f10;
+                dir[0] = sub->pylonX[i] - sl->f0;
+                dir[1] = (lbl_803E41E0 + sub->pylonY[i]) - sl->f8;
+                dir[2] = sub->pylonZ[i] - sl->f10;
                 PSVECNormalize(dir, dir);
-                pay.x = *(f32*)p32 - sub->crystalX;
-                pay.y = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - sub->crystalY;
-                pay.z = *(f32*)(p32 + 0x20) - sub->crystalZ;
+                pay.x = sub->pylonX[i] - sub->crystalX;
+                pay.y = (lbl_803E41E0 + sub->pylonY[i]) - sub->crystalY;
+                pay.z = sub->pylonZ[i] - sub->crystalZ;
                 dir[0] = -dir[0];
                 dir[1] = -dir[1];
                 dir[2] = -dir[2];
                 pay.d = i;
                 (*gPartfxInterface)->spawnObject(obj, 0x7f4, &pay, 2, -1, dir);
-                dir[0] = *(f32*)p32 - ((GameObject*)gCfMainCrystalObj)->anim.localPosX;
+                dir[0] = sub->pylonX[i] - ((GameObject*)gCfMainCrystalObj)->anim.localPosX;
                 dir[1] = lbl_803E41E4;
-                dir[2] = *(f32*)(p32 + 0x20) - ((GameObject*)gCfMainCrystalObj)->anim.localPosZ;
+                dir[2] = sub->pylonZ[i] - ((GameObject*)gCfMainCrystalObj)->anim.localPosZ;
                 PSVECNormalize(dir, dir);
                 pay.x = lbl_803E41E8;
                 pay.y = lbl_803E41DC;
                 pay.z = lbl_803E41E8;
                 pay.d = i + 3;
                 (*gPartfxInterface)->spawnObject(gCfMainCrystalObj, 0x7f4, &pay, 2, -1, dir);
-                pay.x = *(f32*)p32;
-                pay.y = *(f32*)(p32 + 0x10);
-                pay.z = *(f32*)(p32 + 0x20);
+                pay.x = sub->pylonX[i];
+                pay.y = sub->pylonY[i];
+                pay.z = sub->pylonZ[i];
                 if (sub->chime[3] > 0x14)
                 {
-                    pay.x = *(f32*)p32;
-                    pay.y = *(f32*)(p32 + 0x10);
-                    pay.z = *(f32*)(p32 + 0x20);
+                    pay.x = sub->pylonX[i];
+                    pay.y = sub->pylonY[i];
+                    pay.z = sub->pylonZ[i];
                     pay.c = i;
                 }
-                pay.x = *(f32*)p32;
-                pay.y = *(f32*)(p32 + 0x10);
-                pay.z = *(f32*)(p32 + 0x20);
+                pay.x = sub->pylonX[i];
+                pay.y = sub->pylonY[i];
+                pay.z = sub->pylonZ[i];
                 pay.c = i;
                 sl = &sub->beams[idx++];
                 sl->b1b = 1;
                 count++;
             }
-            p16 += 2;
-            p32 += 4;
             i++;
         }
         while (i < 3);
