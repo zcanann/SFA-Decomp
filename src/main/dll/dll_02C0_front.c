@@ -20,6 +20,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/objseq.h"
@@ -37,7 +38,7 @@ typedef struct TitlescreenState
     f32 unk1C;
     f32 unk20;
     u8 pad24[0x30 - 0x24];
-    u8 unk30; /* anim state-machine phase (0-5); raw-indexed as state[0x30] in titlescreen_update */
+    u8 unk30; /* anim state-machine phase (0-5) */
     s8 unk31; /* per-actor pose index (seqId - 0x77d), or -2 for non-Tricky */
     u8 pad32[0x34 - 0x32];
     f32 unk34;
@@ -251,7 +252,7 @@ void titlescreen_init(u8* obj, u8* p)
         else if (v == 0x781)
         {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
-            ObjModel_SetRenderCallback(*(int**)(*(int**)&((GameObject*)obj)->anim.banks),
+            ObjModel_SetRenderCallback((int*)((GameObject*)obj)->anim.banks[0],
                                        AttractMovie_DrawTextureCallback);
         }
     }
@@ -293,7 +294,7 @@ void fn_80133F70(void* obj)
     nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
     if (nearest != NULL)
     {
-        ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
+        ((void (*)(void*, int*, int*, int*))(*((GameObject*)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
     }
     b = c - (b - a);
     if (b < 0)
@@ -542,7 +543,7 @@ void titlescreen_update(u8* obj)
     extern void Sfx_StopFromObject(u8* obj, u32 sfxId);
     extern void Sfx_PlayFromObject(u8* obj, u32 sfxId);
     extern void fn_80134870(u8 * obj, u8 * arr);
-    extern int ObjModel_HasActiveBlendChannels(int* model);
+    extern int ObjModel_HasActiveBlendChannels(ObjModel* model);
     extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
     extern int getEnvfxAct(int a, int b, u16 idx, int d);
     extern void skyFn_80089710(int flags, int enabled, int startComplete);
@@ -556,8 +557,8 @@ void titlescreen_update(u8* obj)
     u8 c;
     int evt;
     f32 f;
-    int* model;
-    int tmp;
+    ObjModel* model;
+    ObjModelBlendChannel* blend;
     int n;
     int s;
     u8* row;
@@ -567,26 +568,26 @@ void titlescreen_update(u8* obj)
 
     if (lbl_803DD9AB != 0)
     {
-        if ((s8)state[0x31] != lbl_803DD990 && lbl_803DD991 == 0 &&
-            (c = state[0x30]) != 0 && c != 4 && c != 3)
+        if (((TitlescreenState*)state)->unk31 != lbl_803DD990 && lbl_803DD991 == 0 &&
+            (c = ((TitlescreenState*)state)->unk30) != 0 && c != 4 && c != 3)
         {
             if (((GameObject*)obj)->anim.seqId == 0x77d || ((GameObject*)obj)->anim.seqId == 0x780)
             {
-                state[0x30] = 3;
+                ((TitlescreenState*)state)->unk30 = 3;
                 ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E2318, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[3];
             }
             else
             {
-                state[0x30] = 0;
+                ((TitlescreenState*)state)->unk30 = 0;
                 ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                 ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
-        if ((s8)state[0x31] == lbl_803DD990 && lbl_803DD991 != 0 &&
-            (c = state[0x30]) != 1 && c != 2 && c != 5)
+        if (((TitlescreenState*)state)->unk31 == lbl_803DD990 && lbl_803DD991 != 0 &&
+            (c = ((TitlescreenState*)state)->unk30) != 1 && c != 2 && c != 5)
         {
-            state[0x30] = 1;
+            ((TitlescreenState*)state)->unk30 = 1;
             ObjAnim_SetCurrentMove(objHandle, 1, lbl_803E22F8, 0);
             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1];
             if (((GameObject*)obj)->anim.seqId == 0x77e)
@@ -599,12 +600,13 @@ void titlescreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x7a7)
         {
-            *(s16*)obj = lbl_803E2354 * timeDelta + (f32) * (s16*)obj;
+            ((GameObject*)obj)->anim.rotX =
+                lbl_803E2354 * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         }
         else if (t != 0x78a)
         {
             buf[0x1b] = 0;
-            if (t == 0x77d && state[0x30] == 2)
+            if (t == 0x77d && ((TitlescreenState*)state)->unk30 == 2)
             {
                 if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2358)
                 {
@@ -623,15 +625,15 @@ void titlescreen_update(u8* obj)
             evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, objHandle, (ObjAnimEventList*)buf);
             if (evt != 0)
             {
-                if ((s8)state[0x31] == lbl_803DD990 && state[0x30] == 1)
+                if (((TitlescreenState*)state)->unk31 == lbl_803DD990 && ((TitlescreenState*)state)->unk30 == 1)
                 {
-                    state[0x30] = 2;
+                    ((TitlescreenState*)state)->unk30 = 2;
                     ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[2];
                 }
-                else if (state[0x30] == 3)
+                else if (((TitlescreenState*)state)->unk30 == 3)
                 {
-                    state[0x30] = 0;
+                    ((TitlescreenState*)state)->unk30 = 0;
                     ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                     ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[0];
                 }
@@ -639,9 +641,9 @@ void titlescreen_update(u8* obj)
                 {
                     if (randomGetRange(0, 4) == 0)
                     {
-                        if ((c = state[0x30]) == 0 || c == 4)
+                        if ((c = ((TitlescreenState*)state)->unk30) == 0 || c == 4)
                         {
-                            state[0x30] = 4;
+                            ((TitlescreenState*)state)->unk30 = 4;
                             ObjAnim_SetCurrentMove(objHandle, randomGetRange(3, 4), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
@@ -649,7 +651,7 @@ void titlescreen_update(u8* obj)
                         }
                         else
                         {
-                            state[0x30] = 5;
+                            ((TitlescreenState*)state)->unk30 = 5;
                             ObjAnim_SetCurrentMove(objHandle, randomGetRange(5, 6), lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress =
                                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject*)obj)->anim.
@@ -658,17 +660,17 @@ void titlescreen_update(u8* obj)
                     }
                     else
                     {
-                        c = state[0x30];
+                        c = ((TitlescreenState*)state)->unk30;
                         if (c == 4)
                         {
-                            state[0x30] = 0;
+                            ((TitlescreenState*)state)->unk30 = 0;
                             ObjAnim_SetCurrentMove(objHandle, 0, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[0];
                         }
                         else if (c == 5)
                         {
-                            state[0x30] = 2;
+                            ((TitlescreenState*)state)->unk30 = 2;
                             ObjAnim_SetCurrentMove(objHandle, 2, lbl_803E22F8, 0);
                             ((TrickyState*)state)->moveProgress = gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].
                                 moves[2];
@@ -679,7 +681,7 @@ void titlescreen_update(u8* obj)
             fn_80134870(obj, buf);
         }
         t = ((GameObject*)obj)->anim.seqId;
-        if (t == 0x77e && ((c = state[0x30]) == 0 || c == 4))
+        if (t == 0x77e && ((c = ((TitlescreenState*)state)->unk30) == 0 || c == 4))
         {
             fn_8003B228(obj, state);
         }
@@ -688,16 +690,16 @@ void titlescreen_update(u8* obj)
             characterDoEyeAnims(obj, state);
         }
         model = Obj_GetActiveModel(obj);
-        if (*(u8*)(*model + 0xf9) != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
+        if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
             randomGetRange(0xf0, 0x168) == 0xf0)
         {
-            tmp = *(int*)&((ObjDef*)model)->weaponDaTable;
-            n = randomGetRange(0, *(u8*)(*model + 0xf9));
-            ObjModel_SetBlendChannelTargets((int)model, 0, *(s8*)(tmp + 0xd), n - 1, lbl_803E2360, 0);
+            blend = model->blendChannels;
+            n = randomGetRange(0, model->file->morphTargetCount);
+            ObjModel_SetBlendChannelTargets((int)model, 0, blend->morphTargetB, n - 1, lbl_803E2360, 0);
         }
         lbl_803DBC08 = -1;
         lbl_803DBC09 = -1;
-        s = state[0x30];
+        s = ((TitlescreenState*)state)->unk30;
         t = ((GameObject*)obj)->anim.seqId;
         switch (t)
         {
