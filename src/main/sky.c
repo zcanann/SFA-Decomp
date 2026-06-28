@@ -1108,10 +1108,10 @@ void sky2_run(void)
     f32* dst;
     int a1;
     int k;
-    f32* dirp;
+    int d;
     int off1;
     int off2;
-    int d;
+    f32* dirp;
     int amp;
     int ri;
     int gi;
