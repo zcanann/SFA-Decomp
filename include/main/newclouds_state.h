@@ -68,7 +68,8 @@ typedef struct NewCloud {
     s32 despawning;
     s32 flakeCount;
     s32 active;
-    u8 unk1404[0x8];
+    u8 unk1404[0x4];
+    s32 waveWriteIdx;
     f32 worldPosX;
     f32 worldPosY;
     f32 worldPosZ;
