@@ -1901,12 +1901,12 @@ void pauseMenuRunSubmenu(u8 p1)
 void cMenuRun(void)
 {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
+    s16* cursor;
     u8* player;
+    int flags;
     s8 isTricky;
     u16 btn16;
     u32 btn;
-    s16* cursor;
-    int flags;
 
     player = Obj_GetPlayerObject();
     isTricky = 0;
