@@ -578,7 +578,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             q[1] = q[0];
             q[0] = 0;
             dst = q + 1;
-            buffer[lineIdx + 1] = dst;
+            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst;
             dst++;
             boundary++;
             lineIdx++;
