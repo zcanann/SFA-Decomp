@@ -136,7 +136,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             SeqTrackEntry* d = (SeqTrackEntry*)((SeqEvent*)event)->data;
             SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
             u8* seq = sv->seqData;
-            SynthChanRec* rec = &sv->records[*(u8*)(event + 0x15)];
+            SynthChanRec* rec = &sv->records[((SeqEvent*)event)->trackId];
             u8* t = seq + *(u32*)(seq + d->pattern * 4 + *(u32*)(seq + 4));
             u8 prog;
 
@@ -182,7 +182,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                 rec->modTime = 0x7fffffff;
             }
             rec->modVal = 0;
-            rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + *(u8*)(event + 0x15) +
+            rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + ((SeqEvent*)event)->trackId +
                 *(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8));
             prog = d->prgChange;
             if (prog != 0xff)
@@ -301,7 +301,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             else
             {
                 SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
-                if (sv->chanBits[*(u8*)(event + 0x15) / 32] & (1 << (*(u8*)(event + 0x15) & 0x1f)))
+                if (sv->chanBits[((SeqEvent*)event)->trackId / 32] & (1 << (((SeqEvent*)event)->trackId & 0x1f)))
                 {
                     u16 macroId = sv->chanPatch[chan].macroId;
                     if (macroId != 0xFFFF)
@@ -445,7 +445,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
         *flag |= 1;
         return 0;
     }
-    return synthGetNextChannelEvent(*(u8*)(event + 0x15));
+    return synthGetNextChannelEvent(((SeqEvent*)event)->trackId);
 }
 
 /*
