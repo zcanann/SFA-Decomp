@@ -2146,10 +2146,10 @@ void Obj_UpdateModelBlendStates(void)
     ObjAnimComponent* objAnim;
     ObjAnimComponent* childAnim;
     int ioff;
-    u8* walker;
+    int k;
     int i;
     int j;
-    int k;
+    u8* walker;
     u8* obj;
     u8* child;
     u8* m;
