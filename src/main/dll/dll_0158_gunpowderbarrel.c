@@ -30,12 +30,14 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 
-/* Barrel placement data block (obj group 0x3a link id at 0x1A). The three
- * descriptor fns each read only unk1A; unk1C/unk1E are documented for the
- * adjacent placement words different call sites also reference raw. */
+/* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
+ * the respawn byte (unk19) and the return-home word (unk1C); the descriptor
+ * fns match the barrel by generatorLinkId. unk1E is the adjacent placement
+ * word other call sites reference raw. */
 typedef struct GunpowderbarrelPlacement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
     s16 generatorLinkId;
     s16 unk1C;
     s16 unk1E;
@@ -603,10 +605,11 @@ void gunpowderbarrel_init(int obj, u8* def)
     storeZeroToFloatParam(&state->releaseTimer);
     state->motionFlags |= 1;
     {
+        GunpowderbarrelPlacement* placement = (GunpowderbarrelPlacement*)def;
         u8 v;
-        v = ((s8)def[0x19] >= 1) ? 0 : 1;
+        v = (placement->unk19 >= 1) ? 0 : 1;
         ((GpbConfigFlags*)&state->configFlags)->respawns = v;
-        v = (*(s16*)(def + 0x1c) == 0) ? 0 : 1;
+        v = (placement->unk1C == 0) ? 0 : 1;
         ((GpbConfigFlags*)&state->configFlags)->returnHome = v;
     }
     ObjHits_EnableObject(obj);
