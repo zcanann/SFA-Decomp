@@ -431,8 +431,9 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
         {
             f = lbl_803E16A4;
         }
-        g = f * lbl_803E16A8;
-        g = lbl_803E16AC + g;
+        f = f * lbl_803E16A8;
+        g = lbl_803E16AC;
+        g += f;
         g = g + d / lbl_803E16B0;
         if (g < lbl_803E16B4)
         {
