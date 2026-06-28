@@ -2035,12 +2035,12 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x60;
         if (extraArgs != NULL)
         {
-            cfg.colorWord0 = *(u16*)((int)extraArgs + 6);
-            cfg.colorWord1 = *(u16*)(extraArgs + 2);
-            cfg.colorWord2 = *(u16*)((int)extraArgs + 10);
-            cfg.overrideColor0 = (u32) * (u16*)extraArgs;
-            cfg.overrideColor1 = (u32) * (u16*)((int)extraArgs + 2);
-            cfg.overrideColor2 = (u32) * (u16*)(extraArgs + 1);
+            cfg.colorWord0 = ((u16*)extraArgs)[3];
+            cfg.colorWord1 = ((u16*)extraArgs)[4];
+            cfg.colorWord2 = ((u16*)extraArgs)[5];
+            cfg.overrideColor0 = (u32)((u16*)extraArgs)[0];
+            cfg.overrideColor1 = (u32)((u16*)extraArgs)[1];
+            cfg.overrideColor2 = (u32)((u16*)extraArgs)[2];
         }
         cfg.renderFlags = 0x8400820;
         break;
@@ -2077,10 +2077,10 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x60;
         if (extraArgs != NULL)
         {
-            cfg.colorWord0 = *(u16*)extraArgs;
-            cfg.colorWord1 = *(u16*)((int)extraArgs + 2);
-            cfg.colorWord2 = *(u16*)(extraArgs + 1);
-            cfg.lifetimeFrames = (u32) * (u16*)((int)extraArgs + 6);
+            cfg.colorWord0 = ((u16*)extraArgs)[0];
+            cfg.colorWord1 = ((u16*)extraArgs)[1];
+            cfg.colorWord2 = ((u16*)extraArgs)[2];
+            cfg.lifetimeFrames = (u32)((u16*)extraArgs)[3];
         }
         else
         {
@@ -4768,11 +4768,11 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0xa5;
         if (extraArgs != NULL)
         {
-            cfg.overrideColor0 = (u32) * (u8*)extraArgs << 8;
+            cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
-            cfg.overrideColor1 = (u32) * (u8*)((int)extraArgs + 1) << 8;
+            cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
             cfg.colorWord1 = (u16)cfg.overrideColor1;
-            cfg.overrideColor2 = (u32) * (u8*)((int)extraArgs + 2) << 8;
+            cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
             cfg.renderFlags = 0x1000020;
         }
@@ -4817,11 +4817,11 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x77;
         if (extraArgs != NULL)
         {
-            cfg.overrideColor0 = (u32) * (u8*)extraArgs << 8;
+            cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
-            cfg.overrideColor1 = (u32) * (u8*)((int)extraArgs + 1) << 8;
+            cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
             cfg.colorWord1 = (u16)cfg.overrideColor1;
-            cfg.overrideColor2 = (u32) * (u8*)((int)extraArgs + 2) << 8;
+            cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
             cfg.renderFlags = 0x1000020;
         }
@@ -4861,11 +4861,11 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.textureId = 0x77;
         if (extraArgs != NULL)
         {
-            cfg.overrideColor0 = (u32) * (u8*)extraArgs << 8;
+            cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
-            cfg.overrideColor1 = (u32) * (u8*)((int)extraArgs + 1) << 8;
+            cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
             cfg.colorWord1 = (u16)cfg.overrideColor1;
-            cfg.overrideColor2 = (u32) * (u8*)((int)extraArgs + 2) << 8;
+            cfg.overrideColor2 = (u32)((u8*)extraArgs)[2] << 8;
             cfg.colorWord2 = (u16)cfg.overrideColor2;
             cfg.renderFlags = 0x1000020;
         }
