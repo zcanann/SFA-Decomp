@@ -3185,7 +3185,8 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 }
 
 extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
-extern const f32 lbl_803DECE0[2];
+extern const f32 lbl_803DECE0;
+extern const f32 lbl_803DECE4;
 
 void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
 {
@@ -3235,7 +3236,7 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         {
             f32 c30 = lbl_803DECC0;
             f32 c31 = __AR_Callback;
-            f32 c24 = lbl_803DECE0[1];
+            f32 c24 = lbl_803DECE4;
             for (i = 0; i < 3; i++)
             {
                 int nxt = i + 1;
@@ -4725,10 +4726,10 @@ u8 doEdges;
         z1 ^= z0;
         z0 ^= z1;
     }
-    gx0 = fastFloorf((f32)x0 / lbl_803DECE0[0]);
-    gz0 = fastFloorf((f32)z0 / lbl_803DECE0[0]);
-    gx1 = fastFloorf((f32)x1 / lbl_803DECE0[0]);
-    gz1 = fastFloorf((f32)z1 / lbl_803DECE0[0]);
+    gx0 = fastFloorf((f32)x0 / lbl_803DECE0);
+    gz0 = fastFloorf((f32)z0 / lbl_803DECE0);
+    gx1 = fastFloorf((f32)x1 / lbl_803DECE0);
+    gz1 = fastFloorf((f32)z1 / lbl_803DECE0);
 
     count = 0;
     layer = 0;
@@ -5114,7 +5115,7 @@ void trackIntersect(void)
 
     for (layer = 0; layer < 5; layer++)
     {
-        f32 scale = lbl_803DECE0[0];
+        f32 scale = lbl_803DECE0;
         u8* idx = mapGetBlockIdx(layer);
         int gz, gx, base;
         for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10)
@@ -5130,7 +5131,7 @@ void trackIntersect(void)
                     f32 fx0;
                     tn = 0;
                     toff = 0;
-                    fx0 = lbl_803DECE0[0] * gx;
+                    fx0 = lbl_803DECE0 * gx;
                     for (; tn < *(u16*)(blk + 0x9c); tn++, toff += 0x14)
                     {
                         if (gIntersectLineCount < 0x5dc)
