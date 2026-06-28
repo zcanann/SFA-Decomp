@@ -1,4 +1,4 @@
-/* DLL 0x00E4 (flamethrowerspe) — Flame thrower special effect [0x80170004-0x801702D4). */
+/* DLL 0x00E4 (flamethrowerspe) - Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
@@ -1593,7 +1593,7 @@ void flamethrowerspe_init(int* obj, int* params)
     extern void storeZeroToFloatParam(f32* p); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    storeZeroToFloatParam((f32*)((char*)state + 4));
+    storeZeroToFloatParam(&((FlamethrowerspeState*)state)->unk4);
     {
         f32 r = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
         ((FlamethrowerspeState*)state)->sizeScale = r * lbl_803DBD60;
@@ -1620,7 +1620,7 @@ void flamethrowerspe_update(int* obj)
     switch (((FlamethrowerspeState*)state)->phase)
     {
     case FLAMETHROWERSPE_PHASE_LAUNCH:
-        *(f32*)((char*)obj + 0x24) = lbl_803E338C;
+        ((GameObject*)obj)->anim.velocityX = lbl_803E338C;
         ((GameObject*)obj)->anim.velocityZ =
             lbl_803DBD68 * (lbl_803E3390 * (((FlamethrowerspeState*)state)->sizeScale *
                 (lbl_803E3394 * (f32)(s32)
@@ -1629,13 +1629,13 @@ void flamethrowerspe_update(int* obj)
         )
         )
         ;
-        vecRotateZXY(obj, (f32*)((char*)obj + 0x24));
+        vecRotateZXY(obj, &((GameObject*)obj)->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
-        s16toFloat((f32*)((char*)state + 4), lbl_803DBD64);
+        s16toFloat(&((FlamethrowerspeState*)state)->unk4, lbl_803DBD64);
         ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_ACTIVE;
         break;
     case FLAMETHROWERSPE_PHASE_ACTIVE:
-        if (timerCountDown((f32*)((char*)state + 4)) != 0)
+        if (timerCountDown(&((FlamethrowerspeState*)state)->unk4) != 0)
         {
             ObjHits_DisableObject(obj);
             firepipe_releaseEffectObject(obj);
@@ -1649,7 +1649,7 @@ void flamethrowerspe_update(int* obj)
                     ((GameObject*)obj)->anim.velocityZ * dt);
         }
         ObjHitbox_SetSphereRadius(obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
-                                      (((f32)lbl_803DBD64 - *(f32*)((char*)state + 4)) / lbl_803DBD64)));
+                                      (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->unk4) / lbl_803DBD64)));
         break;
     }
 }
