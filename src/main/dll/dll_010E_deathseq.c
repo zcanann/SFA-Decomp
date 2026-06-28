@@ -40,24 +40,39 @@ extern f32 gDeathSeqAngleHalfCircle;
 extern f32 gDeathSeqCameraFovY;
 extern f32 lbl_803E3D48;
 
+typedef struct
+{
+    f32 timer; // 0x0
+    f32 camX; // 0x4
+    f32 camY; // 0x8
+    f32 camZ; // 0xc
+    f32 dist; // 0x10
+    f32 distTarget; // 0x14
+    int camRotY; // 0x18
+    int camRotX; // 0x1c
+    u8 menuShown : 1; // 0x20 bit 7
+    u8 camActive : 1; // bit 6
+    u8 transitionStarted : 1; // bit 5
+} DeathSeqState;
+
 void deathseq_init(int* obj)
 {
-    f32* state = ((GameObject*)obj)->extra;
+    DeathSeqState* state = ((GameObject*)obj)->extra;
     s16* cam = Camera_GetCurrentViewSlot();
     f32 f;
 
     setScreenTransitionPause(1);
     (*gScreenTransitionInterface)->start(1, 1);
     ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
-    state[0] = lbl_803E3D58;
-    state[1] = ((GameObject*)cam)->anim.localPosX;
-    state[2] = ((GameObject*)cam)->anim.localPosY;
-    state[3] = ((GameObject*)cam)->anim.localPosZ;
-    *(int*)(state + 6) = cam[0];
-    *(int*)(state + 7) = cam[1];
+    state->timer = lbl_803E3D58;
+    state->camX = ((GameObject*)cam)->anim.localPosX;
+    state->camY = ((GameObject*)cam)->anim.localPosY;
+    state->camZ = ((GameObject*)cam)->anim.localPosZ;
+    state->camRotY = cam[0];
+    state->camRotX = cam[1];
     f = lbl_803E3D2C;
-    state[4] = f;
-    state[5] = f;
+    state->dist = f;
+    state->distTarget = f;
     addButtonObject(obj);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
 }
@@ -92,21 +107,6 @@ void deathseq_free(int* obj)
 }
 
 void deathgas_init(int* obj);
-
-typedef struct
-{
-    f32 timer; // 0x0
-    f32 camX; // 0x4
-    f32 camY; // 0x8
-    f32 camZ; // 0xc
-    f32 dist; // 0x10
-    f32 distTarget; // 0x14
-    int camRotY; // 0x18
-    int camRotX; // 0x1c
-    u8 menuShown : 1; // 0x20 bit 7
-    u8 camActive : 1; // bit 6
-    u8 transitionStarted : 1; // bit 5
-} DeathSeqState;
 
 void deathseq_update(int* obj)
 {
