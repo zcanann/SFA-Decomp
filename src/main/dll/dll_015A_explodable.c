@@ -253,7 +253,7 @@ extern f32 lbl_803E436C;
 
 void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
 {
-    int i15;
+    DrExplodableChunk* c;
     int i14;
     int i8;
     int i13;
@@ -276,19 +276,19 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
     if (objType != -1)
     {
         i13 = 0;
-        i15 = state;
+        c = (DrExplodableChunk*)state;
         i14 = 0;
         i8 = state;
         for (; i13 < ((DrExplodableState*)state)->count6D4; i13++)
         {
             *(u8*)(state + i13 + offsetof(DrExplodableState, spawnedFlags)) = 1;
-            *(u8*)(i15 + 0x6d) = entMode;
+            c->spinScale = entMode;
             if (skipCentroid == 0)
             {
                 z = lbl_803E4368;
-                *(f32*)(i15 + 4) = z;
-                *(f32*)(i15 + 8) = z;
-                *(f32*)(i15 + 0xc) = z;
+                c->centroidX = z;
+                c->centroidY = z;
+                c->centroidZ = z;
                 model = *(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.banks + i14));
                 s.acc[0] = z;
                 s.acc[1] = z;
@@ -300,18 +300,18 @@ void explodable_buildFragments(int obj, int def, int skipCentroid, int state)
                     s.acc[1] = s.v[1] + s.acc[1];
                     s.acc[2] = s.v[2] + s.acc[2];
                 }
-                *(f32*)(i15 + 4) = s.acc[0] * ((z = lbl_803E436C) / (f32)(u32) * (u16*)(model + 0xe4));
-                *(f32*)(i15 + 8) = s.acc[1] * (z / (f32)(u32) * (u16*)(model + 0xe4));
-                *(f32*)(i15 + 0xc) = s.acc[2] * (z / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidX = s.acc[0] * ((z = lbl_803E436C) / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidY = s.acc[1] * (z / (f32)(u32) * (u16*)(model + 0xe4));
+                c->centroidZ = s.acc[2] * (z / (f32)(u32) * (u16*)(model + 0xe4));
             }
-            *(f32*)(i15 + 0x10) = *(f32*)(i15 + 4);
-            *(f32*)(i15 + 0x14) = *(f32*)(i15 + 8);
-            *(f32*)(i15 + 0x18) = *(f32*)(i15 + 0xc);
-            explodable_computeFragmentLaunch(obj, i15, def);
-            *(u8*)(i15 + 0x6b) = 0xff;
-            *(u8*)(i15 + 0x6a) = (u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
-            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, i15, i13);
-            i15 += 0x70;
+            c->offX = c->centroidX;
+            c->offY = c->centroidY;
+            c->offZ = c->centroidZ;
+            explodable_computeFragmentLaunch(obj, (int)c, def);
+            c->unk6B = 0xff;
+            c->gameBitMode = (u32)GameBit_Get(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
+            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, (int)c, i13);
+            c++;
             i14 += 4;
             i8 += 4;
         }
