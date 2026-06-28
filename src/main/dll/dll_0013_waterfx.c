@@ -457,10 +457,11 @@ void waterfx_run(void)
     }
     for (i = 0; i < WATERFX_POOL_SIZE; i++)
     {
+        WaterParticle* wp;
         WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
         if (d->idx != -1)
         {
-            WaterParticle* wp = &((WaterParticle*)gWaterfxSplashPool)[d->idx];
+            wp = &((WaterParticle*)gWaterfxSplashPool)[d->idx];
             d->f10 += gWaterfxDropGravity * timeDelta;
             d->f0c *= gWaterfxDropDamping;
             d->f10 *= gWaterfxDropDamping;
@@ -468,7 +469,7 @@ void waterfx_run(void)
             d->x += d->f0c;
             d->y += d->f10;
             d->z += d->f14;
-            if (wp->y > d->y)
+            if (d->y < wp->y)
             {
                 wp->active--;
                 d->idx = -1;
