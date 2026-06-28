@@ -1945,14 +1945,14 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     u8* buf = animBase;
     int* tbl;
     int base;
-    int aln;
+    int woff;
     int sz;
     int o;
     int slot;
     int i;
     int cnt;
     int toff;
-    int woff;
+    int aln;
     int anim;
     int sz4;
     int idxout;
