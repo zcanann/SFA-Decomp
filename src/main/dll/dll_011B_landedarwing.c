@@ -46,9 +46,10 @@ typedef struct LandedArwingUpdateHitReactionPlacement
     u16 unk18;
     s16 unk1A;
     s16 triggerGameBit;
-    s16 unk1E;
+    u8 reactionType;
+    u8 spawnCount;
     s16 unk20;
-    u8 pad22[0x24 - 0x22];
+    s16 siblingGameBit;
     s16 reactionGameBit;
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateHitReactionPlacement;
@@ -534,7 +535,7 @@ void landed_arwing_init(int obj, int param)
     LandedArwingState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
     state->sequenceState = 1;
-    if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0)
+    if (GameBit_Get(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
     {
         unlockLevel(0, 0, 1);
     }
@@ -569,20 +570,20 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                 GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->reactionGameBit, 1);
             }
 
-            switch (*(u8*)(def + 0x1e))
+            switch (((LandedArwingUpdateHitReactionPlacement*)def)->reactionType)
             {
             case 0:
                 if (Obj_IsLoadingLocked() != 0)
                 {
                     i = 0;
                     yOffset = lbl_803E3BB8;
-                    while (i < *(u8*)(def + 0x1f))
+                    while (i < ((LandedArwingUpdateHitReactionPlacement*)def)->spawnCount)
                     {
                         setup = Obj_AllocObjectSetup(0x24, 0x259);
                         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                         ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
                         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                        *(u8*)(setup + 4) = 1;
+                        ((ObjPlacement*)setup)->color[0] = 1;
                         Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                         *(int*)&((GameObject*)obj)->anim.parent);
                         i++;
@@ -595,9 +596,9 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
                 if ((void*)other != NULL)
                 {
                     otherState = ((GameObject*)other)->extra;
-                    if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
+                    if (((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit > 0)
                     {
-                        GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
+                        GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)*(int*)&((GameObject*)other)->anim.placementData)->siblingGameBit, 1);
                     }
                     ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
                 }
@@ -613,7 +614,7 @@ void landed_arwing_updateHitReaction(int obj, LandedArwingState* state)
     }
     else
     {
-        if (*(u8*)(def + 0x1e) == 2)
+        if (((LandedArwingUpdateHitReactionPlacement*)def)->reactionType == 2)
         {
             ((GameObject*)obj)->anim.rotY = randomGetRange(-200, 200);
             ((GameObject*)obj)->anim.rotZ = randomGetRange(-200, 200);
