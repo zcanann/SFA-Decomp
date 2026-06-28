@@ -214,11 +214,11 @@ void SB_KyteCage_update(int obj)
     }
     if (((GameObject*)obj)->anim.parent != NULL)
     {
-        int kind = *(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0xf4);
+        int kind = ((GameObject*)((GameObject*)obj)->anim.parent)->unkF4;
         int* mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {
-            *(s16*)((char*)mvec + 4) = *(s16*)(*(int*)&((GameObject*)obj)->anim.parent + 4);
+            *(s16*)((char*)mvec + 4) = ((GameObject*)((GameObject*)obj)->anim.parent)->anim.rotZ;
             ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_NEAR, lbl_803E591C, 0);
         }
         else if (mvec != 0 && kind >= 9 && ((GameObject*)obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
