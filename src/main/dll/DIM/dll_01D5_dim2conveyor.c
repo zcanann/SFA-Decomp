@@ -14,6 +14,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -116,7 +117,7 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
         Music_Trigger(MUSIC_TRACK_CONVEYOR, 1);
     }
     state->musicHold = 20;
-    id = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    id = ((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId;
     switch (id)
     {
     case MAP_ID_SINGLE_BELT:
@@ -162,7 +163,7 @@ void dim2conveyor_init(int* obj, u8* params)
     extra->musicHold = 0;
     ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
     ((GameObject*)obj)->objectFlags |= 0x2000;
-    if (*(u32*)((char*)params + 0x14) == MAP_ID_DUAL_BELT)
+    if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
     {
         GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
     }
@@ -182,7 +183,7 @@ void dim2conveyor_update(int* obj)
             Music_Trigger(MUSIC_TRACK_CONVEYOR, 0);
         }
     }
-    switch (*(int*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x14))
+    switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
     {
     case MAP_ID_DUAL_BELT:
         if (GameBit_Get(GAMEBIT_CONVEYOR_SWAP) != 0)
