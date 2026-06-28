@@ -2439,7 +2439,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             if (*(u8*)((char*)p[slot] + 0x13e) != 0 || (*(int*)((char*)p[slot] + 0xa4) & 0x400))
             {
                 int j;
-                for (j = 0; j < n131p1; j++)
+                for (j = 0; j < (u8)n131p1; j++)
                 {
                     tex = *(void**)tex;
                 }
