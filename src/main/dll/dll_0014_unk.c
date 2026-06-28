@@ -345,11 +345,12 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 static inline int Objfsa_RomCurveIsBlocked(int curve)
 {
     int slot;
+    ObjfsaRomCurveDef* c = (ObjfsaRomCurveDef*)curve;
 
     for (slot = 0; slot < 4; slot++)
     {
-        if (*(int*)(curve + 0x1C + slot * 4) != -1 &&
-            (*(s8*)(curve + 0x1B) & (1 << slot)) == 0)
+        if (c->linkIds[slot] != -1 &&
+            (c->blockedLinkMask & (1 << slot)) == 0)
         {
             return 0;
         }
@@ -410,8 +411,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
             mask = 1;
             for (k = 0; k < 4; k++)
             {
-                n = *(int*)(found + 0x1C + k * 4);
-                if (n > -1 && (*(s8*)(found + 0x1B) & mask) == 0 && n != 0)
+                n = ((ObjfsaRomCurveDef*)found)->linkIds[k];
+                if (n > -1 && (((ObjfsaRomCurveDef*)found)->blockedLinkMask & mask) == 0 && n != 0)
                 {
                     cand1[count++] = n;
                 }
@@ -448,8 +449,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     mask = 1;
     for (k = 0; k < 4; k++)
     {
-        n = *(int*)(a + 0x1C + k * 4);
-        if (n > -1 && (*(s8*)(a + 0x1B) & mask) == 0 && n != 0)
+        n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
+        if (n > -1 && (((ObjfsaRomCurveDef*)a)->blockedLinkMask & mask) == 0 && n != 0)
         {
             cand2[count] = n;
             count++;
@@ -466,9 +467,9 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
     }
     found = Objfsa_FindRomCurveById(nextId);
     a = found;
-    dx = *(f32*)(found + 0x8) - posA[0];
-    dy = *(f32*)(found + 0xC) - posA[1];
-    dz = *(f32*)(found + 0x10) - posA[2];
+    dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
+    dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
+    dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
     total = sqrtf(dx * dx + dy * dy + dz * dz);
     done = 0;
 
@@ -477,9 +478,9 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         if (a == b)
         {
             done = 1;
-            dx = posB[0] - *(f32*)(a + 0x8);
-            dy = posB[1] - *(f32*)(a + 0xC);
-            dz = posB[2] - *(f32*)(a + 0x10);
+            dx = posB[0] - ((ObjfsaRomCurveDef*)a)->x;
+            dy = posB[1] - ((ObjfsaRomCurveDef*)a)->y;
+            dz = posB[2] - ((ObjfsaRomCurveDef*)a)->z;
             total = total + sqrtf(dx * dx + dy * dy + dz * dz);
         }
         else
@@ -488,8 +489,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
             mask = 1;
             for (k = 0; k < 4; k++)
             {
-                n = *(int*)(a + 0x1C + k * 4);
-                if (n > -1 && (*(s8*)(a + 0x1B) & mask) == 0 && n != 0)
+                n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
+                if (n > -1 && (((ObjfsaRomCurveDef*)a)->blockedLinkMask & mask) == 0 && n != 0)
                 {
                     cand3[count] = n;
                     count++;
@@ -505,9 +506,9 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
                 nextId = -1;
             }
             next = Objfsa_FindRomCurveById(nextId);
-            dx = *(f32*)(next + 0x8) - *(f32*)(a + 0x8);
-            dy = *(f32*)(next + 0xC) - *(f32*)(a + 0xC);
-            dz = *(f32*)(next + 0x10) - *(f32*)(a + 0x10);
+            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)a)->x;
+            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)a)->y;
+            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)a)->z;
             total = total + sqrtf(dx * dx + dy * dy + dz * dz);
             a = next;
         }
@@ -1625,8 +1626,8 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
     mask = 1;
     for (k = 0; k < 4; k++)
     {
-        n = *(int*)(curve + 0x1C + k * 4);
-        if (n > -1 && (*(s8*)(curve + 0x1B) & mask) == 0 && n != 0)
+        n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
+        if (n > -1 && (((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && n != 0)
         {
             candidates[count++] = n;
         }
@@ -1644,18 +1645,18 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 
     if ((void*)c2 == NULL)
     {
-        *outX = *(f32*)(curve + 8);
-        *outY = *(f32*)(curve + 0xc);
-        *outZ = *(f32*)(curve + 0x10);
+        *outX = ((ObjfsaRomCurveDef*)curve)->x;
+        *outY = ((ObjfsaRomCurveDef*)curve)->y;
+        *outZ = ((ObjfsaRomCurveDef*)curve)->z;
     }
     else
     {
-        dy = *(f32*)(c2 + 0xc) - *(f32*)(curve + 0xc);
-        dz = *(f32*)(c2 + 0x10) - *(f32*)(curve + 0x10);
-        dx = *(f32*)(c2 + 8) - *(f32*)(curve + 8);
-        *outX = dx * phase + *(f32*)(curve + 8);
-        *outY = dy * phase + *(f32*)(curve + 0xc);
-        *outZ = dz * phase + *(f32*)(curve + 0x10);
+        dy = ((ObjfsaRomCurveDef*)c2)->y - ((ObjfsaRomCurveDef*)curve)->y;
+        dz = ((ObjfsaRomCurveDef*)c2)->z - ((ObjfsaRomCurveDef*)curve)->z;
+        dx = ((ObjfsaRomCurveDef*)c2)->x - ((ObjfsaRomCurveDef*)curve)->x;
+        *outX = dx * phase + ((ObjfsaRomCurveDef*)curve)->x;
+        *outY = dy * phase + ((ObjfsaRomCurveDef*)curve)->y;
+        *outZ = dz * phase + ((ObjfsaRomCurveDef*)curve)->z;
     }
 }
 
@@ -2622,21 +2623,21 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
     bestDistances[1] = lbl_803E0644;
     bestDistances[0] = lbl_803E0644;
 
-    segment.startX = *(f32*)(curve + 0x8);
-    segment.startY = *(f32*)(curve + 0xc);
-    segment.startZ = *(f32*)(curve + 0x10);
+    segment.startX = ((ObjfsaRomCurveDef*)curve)->x;
+    segment.startY = ((ObjfsaRomCurveDef*)curve)->y;
+    segment.startZ = ((ObjfsaRomCurveDef*)curve)->z;
 
     for (i = 0; i < 4; i++)
     {
-        neighborId = *(int*)(curve + i * 4 + 0x1c);
+        neighborId = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
         if (neighborId > -1)
         {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
             if ((void*)neighborCurve != NULL)
             {
-                segment.endX = *(f32*)(neighborCurve + 0x8);
-                segment.endY = *(f32*)(neighborCurve + 0xc);
-                segment.endZ = *(f32*)(neighborCurve + 0x10);
+                segment.endX = ((ObjfsaRomCurveDef*)neighborCurve)->x;
+                segment.endY = ((ObjfsaRomCurveDef*)neighborCurve)->y;
+                segment.endZ = ((ObjfsaRomCurveDef*)neighborCurve)->z;
 
                 RomCurve_distanceToSegment(x, y, z, &segment);
                 dx = segment.nearestX - x;
@@ -2648,7 +2649,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
-                    bestNeighborIds[slot] = *(int*)(curve + i * 4 + 0x1c);
+                    bestNeighborIds[slot] = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
                 }
             }
         }
@@ -2686,9 +2687,9 @@ int RomCurve_func16(double x, double y, double z)
     for (; i < nRomCurves && candidateCount < 20; i++)
     {
         curve = curveList[i];
-        if (*(s8*)(curve + 0x19) == 0x17)
+        if (((ObjfsaRomCurveDef*)curve)->type == 0x17)
         {
-            candidateIds[candidateCount++] = *(u32*)(curve + 0x14);
+            candidateIds[candidateCount++] = ((ObjfsaRomCurveDef*)curve)->id;
         }
     }
 
@@ -2701,14 +2702,14 @@ int RomCurve_func16(double x, double y, double z)
         }
 
         currentCurve = Objfsa_FindRomCurveById(candidateIds[0]);
-        category = *(s8*)(currentCurve + 0x18);
+        category = ((ObjfsaRomCurveDef*)currentCurve)->action;
         i = 0;
         p = (int*)candidateIds;
         end = top;
         while (i < candidateCount)
         {
             currentCurve = Objfsa_FindRomCurveById(*p);
-            if (*(s8*)(currentCurve + 0x18) == category)
+            if (((ObjfsaRomCurveDef*)currentCurve)->action == category)
             {
                 end--;
                 top--;
