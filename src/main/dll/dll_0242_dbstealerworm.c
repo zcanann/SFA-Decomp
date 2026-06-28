@@ -2477,6 +2477,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     int target;
     f32 frac;
     f32 d;
+    f32 k;
     int msgA[3];
     int msgB[3];
     int msgC[3];
@@ -2500,11 +2501,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     ((BaddieState*)baddie)->unk34D = 1;
     if (d < lbl_803E62D0)
     {
-        {
-            f32 k = lbl_803E62D4;
-            ((BaddieState*)baddie)->animSpeedA *= k;
-            ((BaddieState*)baddie)->animSpeedB *= k;
-        }
+        ((BaddieState*)baddie)->animSpeedA = ((BaddieState*)baddie)->animSpeedA * (k = lbl_803E62D4);
+        ((BaddieState*)baddie)->animSpeedB *= k;
         target = *(int*)&((BaddieState*)baddie)->targetObj;
         tmpB = sub->unk2C;
         tmpA = sub->unk30;
