@@ -30,6 +30,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
@@ -412,9 +413,9 @@ void pollenFn_80155b10(u32 obj, int state)
         a[1] = lbl_803E2A48 + ((GameObject*)obj)->anim.localPosY;
         a[2] = ((GameObject*)obj)->anim.localPosZ;
         ref = *(int*)&((BaddieState*)state)->trackedObj;
-        b[0] = *(float*)(ref + 0xc);
-        b[1] = lbl_803E2A4C + *(float*)(ref + 0x10);
-        b[2] = *(float*)(ref + 0x14);
+        b[0] = ((GameObject*)ref)->anim.localPosX;
+        b[1] = lbl_803E2A4C + ((GameObject*)ref)->anim.localPosY;
+        b[2] = ((GameObject*)ref)->anim.localPosZ;
         spd = lbl_803E2A50 *
             (lbl_803E2A58 * (f32)(int)
         randomGetRange(-10, 10) + lbl_803E2A54
@@ -439,20 +440,20 @@ void pollenFn_80155b10(u32 obj, int state)
             velY = lbl_803E2A60;
         }
         setup = Obj_AllocObjectSetup(0x24, 0x47b);
-        *(float*)(setup + 4) = a[0];
-        *(float*)(setup + 6) = a[1];
-        *(float*)(setup + 8) = a[2];
-        *(u8*)(setup + 2) = 1;
-        *(u8*)((int)setup + 5) = 1;
-        *(u8*)(setup + 3) = 0xff;
-        *(u8*)((int)setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->posX = a[0];
+        ((ObjPlacement*)setup)->posY = a[1];
+        ((ObjPlacement*)setup)->posZ = a[2];
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         ref = Obj_SetupObject(setup, 5, -1, -1, 0);
         if ((void*)ref != NULL)
         {
-            *(float*)(ref + 0x24) = velXZ;
-            *(float*)(ref + 0x28) = cosVal;
-            *(float*)(ref + 0x2c) = velY;
-            *(u32*)(ref + 0xc4) = obj;
+            ((GameObject*)ref)->anim.velocityX = velXZ;
+            ((GameObject*)ref)->anim.velocityY = cosVal;
+            ((GameObject*)ref)->anim.velocityZ = velY;
+            *(u32*)&((GameObject*)ref)->ownerObj = obj;
             Sfx_PlayFromObject(obj, SFXfox_climbgrunt2);
         }
     }
@@ -735,12 +736,12 @@ void fn_8015652C(u32 obj, int state)
 {
     u32 randVal;
     RomCurveWalker* route;
-    int placement;
+    ObjPlacement* placement;
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
     route = *(RomCurveWalker**)state;
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    placement = ((GameObject*)obj)->anim.placement;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
@@ -806,8 +807,8 @@ void fn_8015652C(u32 obj, int state)
     }
     else
     {
-        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, *(float*)(placement + 8), *(float*)(placement + 0xc),
-                                                         *(float*)(placement + 0x10), lbl_803E2ABC, lbl_803E2AC0,
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, placement->posX, placement->posY,
+                                                         placement->posZ, lbl_803E2ABC, lbl_803E2AC0,
                                                          lbl_803E2AC4,
                                                          ((BaddieState*)state)->unk304);
     }
@@ -1078,11 +1079,12 @@ void fn_80156DA0(int obj, int state)
     }
     if (!resetting)
     {
-        *(short*)obj = (short)(*(short*)obj + *(u16*)(state + 0x338));
+        ((GameObject*)obj)->anim.rotX =
+            (short)(((GameObject*)obj)->anim.rotX + *(u16*)(state + 0x338));
         fromPos[0] = ((GameObject*)obj)->anim.localPosX;
         fromPos[1] = ((GameObject*)obj)->anim.localPosY;
         fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
-        fn_80292E20((u32)(u16) * (short*)obj, &sinYaw, &cosYaw);
+        fn_80292E20((u32)(u16)((GameObject*)obj)->anim.rotX, &sinYaw, &cosYaw);
         toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2B38 * sinYaw;
         toPos[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2B38 * cosYaw;
