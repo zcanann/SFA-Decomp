@@ -186,7 +186,7 @@ u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)&((GameObject*)obj)->extra + 0x
 /* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 . */
 s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)&((GameObject*)obj)->extra + 0x414); }
 /* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
-void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)&((GameObject*)obj)->extra + 0x408); }
+void* trickyGetQueuedPathParticlePos(u8* obj) { return &((TrickyImpressState*)((GameObject*)obj)->extra)->renderPosX; }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 
@@ -231,13 +231,13 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     u8 i = 0x14;
     u32 flags = ((TrickyImpressState*)b)->flags54;
     if ((flags & 0x1800) == 0) return;
-    stk.dx = ((TrickyImpressState*)b)->renderPosX - *(f32*)(a + 0x18);
-    stk.dy = ((TrickyImpressState*)b)->renderPosY - *(f32*)(a + 0x1c);
-    stk.dz = ((TrickyImpressState*)b)->renderPosZ - *(f32*)(a + 0x20);
+    stk.dx = ((TrickyImpressState*)b)->renderPosX - ((GameObject*)a)->anim.worldPosX;
+    stk.dy = ((TrickyImpressState*)b)->renderPosY - ((GameObject*)a)->anim.worldPosY;
+    stk.dz = ((TrickyImpressState*)b)->renderPosZ - ((GameObject*)a)->anim.worldPosZ;
     stk.fk = lbl_803E23E8;
-    stk.hx = *(s16*)(a + 0);
-    stk.hy = *(s16*)(a + 2);
-    stk.hz = *(s16*)(a + 4);
+    stk.hx = ((GameObject*)a)->anim.rotX;
+    stk.hy = ((GameObject*)a)->anim.rotY;
+    stk.hz = ((GameObject*)a)->anim.rotZ;
     if ((flags & 0x800) == 0)
     {
         while (i-- != 0)
@@ -266,7 +266,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     {
         if (*(s8*)(entry + 0x74d) == commandType)
         {
-            f32 dist = getXZDistance((f32*)(*(u8**)&((TrickyState*)state)->playerObj + 0x18),
+            f32 dist = getXZDistance(&((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX,
                                      (f32*)(*(u8**)(entry + 0x748) + 0x18));
 
             if (*(s8*)(entry + 0x74c) == 1)
@@ -634,7 +634,7 @@ void fn_80138D7C(int obj, int p2)
         {
             GameBit_Set(1005, 1);
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-            *(u32*)(p2 + 0x54) = *(u32*)(p2 + 0x54) | 0x4000;
+            ((TrickyImpressState*)p2)->flags54 |= 0x4000;
             *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) + lbl_803E2408;
         }
         *(f32*)(p2 + 0x828) = *(f32*)(p2 + 0x828) - timeDelta;
