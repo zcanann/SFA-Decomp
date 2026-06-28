@@ -475,9 +475,9 @@ void worldobj_update(int obj)
             child = ObjList_FindObjectById(state->attachChildObjectId);
             if ((void*)child != NULL)
             {
-                *(f32*)(child + 8) *= lbl_803E6668;
-                *(u8*)(child + 0x36) = 0x96;
-                *(s16*)(child + 6) |= 0x4000;
+                ((GameObject*)child)->anim.rootMotionScale *= lbl_803E6668;
+                ((GameObject*)child)->anim.alpha = 0x96;
+                ((GameObject*)child)->anim.flags |= 0x4000;
                 ObjLink_AttachChild(obj, child, 0);
                 ((GameObject*)obj)->unkF8 = 1;
             }
