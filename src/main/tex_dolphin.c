@@ -534,8 +534,8 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     float z2;
     u8 c[4];
     u8 g[4];
-    int* p;
     int i;
+    int* p;
     u32 vis;
     u32 flags;
     u32 word;
