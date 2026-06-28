@@ -584,9 +584,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         }
         else if (p.model != NULL)
         {
-            p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
-            p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
-            p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
+            p.posX = p.posX + ((GameObject*)p.model)->anim.worldPosX;
+            p.posY = p.posY + ((GameObject*)p.model)->anim.worldPosY;
+            p.posZ = p.posZ + ((GameObject*)p.model)->anim.worldPosZ;
         }
     }
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
