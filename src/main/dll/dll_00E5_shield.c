@@ -28,6 +28,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
@@ -792,12 +793,12 @@ int* fn_801702D4(int* obj, f32 fv)
     int* new_obj;
     if ((u8)Obj_IsLoadingLocked() == 0) return NULL;
     alloc = Obj_AllocObjectSetup(36, 2102);
-    *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.worldPosX;
-    *(f32*)((char*)alloc + 12) = ((GameObject*)obj)->anim.worldPosY;
-    *(f32*)&((ObjDef*)alloc)->jointData = ((GameObject*)obj)->anim.worldPosZ;
-    *(u8*)((char*)alloc + 4) = 1;
-    *(u8*)((char*)alloc + 5) = 1;
-    *(u8*)((char*)alloc + 7) = 255;
+    ((ObjPlacement*)alloc)->posX = ((GameObject*)obj)->anim.worldPosX;
+    ((ObjPlacement*)alloc)->posY = ((GameObject*)obj)->anim.worldPosY;
+    ((ObjPlacement*)alloc)->posZ = ((GameObject*)obj)->anim.worldPosZ;
+    ((ObjPlacement*)alloc)->color[0] = 1;
+    ((ObjPlacement*)alloc)->color[1] = 1;
+    ((ObjPlacement*)alloc)->color[3] = 255;
     new_obj = Obj_SetupObject(alloc, 5, -1, -1, 0);
     if (new_obj != NULL)
     {
