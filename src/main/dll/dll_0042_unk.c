@@ -86,9 +86,10 @@ extern f32 lbl_803E1738;
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
+    float zB;
     float zLim;
     float pt0;
-    float zB;
+    float wy;
     float diff;
     float bestUpper;
     float bestLower;
@@ -138,9 +139,10 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
             if ((*(float**)(hits + off))[2] < zLim)
             {
                 pt0 = **(float**)(hits + off);
-                if (pt0 > camera->anim.worldPosY - zB)
+                wy = camera->anim.worldPosY;
+                if (pt0 > wy - zB)
                 {
-                    diff = camera->anim.worldPosY - pt0;
+                    diff = wy - pt0;
                     if (diff < zLim)
                     {
                         diff = -diff;
@@ -163,9 +165,10 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
             if ((*(float**)(hits + off2))[2] > zLim)
             {
                 pt0 = **(float**)(hits + off2);
-                if (pt0 < zB + camera->anim.worldPosY)
+                wy = camera->anim.worldPosY;
+                if (pt0 < zB + wy)
                 {
-                    diff = camera->anim.worldPosY - pt0;
+                    diff = wy - pt0;
                     if (diff < zLim)
                     {
                         diff = -diff;
