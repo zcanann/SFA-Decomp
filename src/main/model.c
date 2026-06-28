@@ -2065,8 +2065,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                         q2 = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + o3);
                         if (q2 != 0)
                         {
-                            d = *q2 - 1;
-                            *q2 = d;
+                            d = (*q2 -= 1);
                             if ((s8)d <= 0)
                             {
                                 model_findIdxInModelList(gModelTexAtlasList, &q2, &idxout);
