@@ -128,8 +128,8 @@ void vfplift23_updateState(int obj)
     VfpLiftState* state;
     f32 raisedOffset;
 
-    state = vfplift_getState(obj);
-    setup = *(VfpLiftPlacement**)&((GameObject*)obj)->anim.placementData;
+    setup = (VfpLiftPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (VfpLiftState*)((GameObject*)obj)->extra;
     raisedOffset = lbl_803E60E0;
     if (((GameObject*)obj)->anim.seqId == VFPLIFT3_OBJTYPE)
     {
