@@ -2593,15 +2593,15 @@ void expgfx_free2(u32 sourceId)
 #pragma dont_inline on
 void expgfx_free(u32 sourceId)
 {
-    ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxSlot* slot;
+    s8* poolActiveCounts;
+    int slotIndex;
     ExpgfxTableEntry* tableEntry;
     u32* slotPoolBases;
-    u32* poolSourceIds;
-    s8* poolActiveCounts;
+    ExpgfxRuntimeDataLayout* runtime;
     int tableIndex;
+    u32* poolSourceIds;
     int poolIndex;
-    int slotIndex;
+    ExpgfxSlot* slot;
 
     runtime = EXPGFX_RUNTIME_DATA;
     if (sourceId == 0)
