@@ -140,9 +140,9 @@ int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animU
         }
         /* sic: setup->x is stored to the Z slot and overwritten just below,
            so localPosX (obj+0xc) is left unrestored - faithful to retail */
-        *(f32*)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->x;
-        *(f32*)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = setup->y;
-        *(f32*)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->z;
+        ((GameObject*)obj)->anim.localPosZ = setup->x;
+        ((GameObject*)obj)->anim.localPosY = setup->y;
+        ((GameObject*)obj)->anim.localPosZ = setup->z;
         GameBit_Set(setup->solvedBit, 0);
         animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
     }
@@ -153,8 +153,8 @@ int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState* animU
 int wcpressures_getObjectTypeId(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = *(u8*)(*(int*)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET) +
-        WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
+    WCPressuresSetup* setup = *(WCPressuresSetup**)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    int modelIndex = setup->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount)
