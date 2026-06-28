@@ -265,7 +265,7 @@ void drakord_thornbush_init(int obj, u8* init)
     ((DrakordThornbushState*)inner)->health = 0;
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject*)obj)->anim.rotY = (s16)((s8)init[0x18] << 8);
-    if (*(u32*)((char*)init + 0x14) == 0xffffffff)
+    if (*(u32*)&((ObjPlacement*)init)->mapId == 0xffffffff)
     {
         ((DrakorFlags*)((char*)inner + 0x79))->b80 = 1;
     }
@@ -276,22 +276,22 @@ void drakord_thornbush_init(int obj, u8* init)
     {
     case THORNBUSH_SEQ_THORN:
         ((DrakordThornbushState*)inner)->hitTable = &gThornBushThornHitTable;
-        ObjHitbox_SetSphereRadius(obj, *(s16*)((char*)init + 0x1c));
-        ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c);
+        ObjHitbox_SetSphereRadius(obj, ((DrakordThornbushPlacement*)init)->baseRadius);
+        ((DrakordThornbushState*)inner)->radius = ((DrakordThornbushPlacement*)init)->baseRadius;
         ((DrakordThornbushState*)inner)->baseScale = lbl_803E65C0;
         ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32)((DrakordThornbushPlacement*)init)->baseRadius /
             lbl_803E6590;
         break;
     case THORNBUSH_SEQ_LIGHTNING:
         ((DrakordThornbushState*)inner)->hitTable = &gThornBushLightningHitTable;
         ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32) * (s16*)((char*)init + 0x1c) /
+            ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(s32)((DrakordThornbushPlacement*)init)->baseRadius /
             lbl_803E65C4;
-        ObjHitbox_SetSphereRadius(obj, (s16)(*(s16*)((char*)init + 0x1c) / 7));
+        ObjHitbox_SetSphereRadius(obj, (s16)(((DrakordThornbushPlacement*)init)->baseRadius / 7));
         s16toFloat((f32*)((char*)inner + 0x10), gThornBushLightningTimerInit);
         ((DrakordThornbushState*)inner)->baseScale = lbl_803E65C8;
-        ((DrakordThornbushState*)inner)->radius = *(s16*)((char*)init + 0x1c) / 5;
+        ((DrakordThornbushState*)inner)->radius = ((DrakordThornbushPlacement*)init)->baseRadius / 5;
         ((DrakordThornbushState*)inner)->lightScale = lbl_803E6594;
         break;
     }
