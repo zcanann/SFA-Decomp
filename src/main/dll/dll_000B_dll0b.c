@@ -2778,13 +2778,13 @@ typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 
 void dll_0B_func05(void)
 {
-    int slot;
+    int emOff;
     int** pp;
     int* eff;
     int reprocess;
     int active;
     int emIdx;
-    int emOff;
+    int slot;
     int feFlag;
     int cntC;
     int cntA;
