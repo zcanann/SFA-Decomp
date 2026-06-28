@@ -366,8 +366,8 @@ int largecrate_spawnDropContents(int obj, int player, int state)
             ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
             ((ObjPlacement*)setup)->posY = lbl_803E39A8 + ((GameObject*)obj)->anim.localPosY;
             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-            *(u8*)(setup + 0x4) = 4;
-            *(u8*)(setup + 0x6) = 200;
+            ((ObjPlacement*)setup)->color[0] = 4;
+            ((ObjPlacement*)setup)->color[2] = 200;
             *(s16*)(setup + 0x20) = -1;
             *(s16*)(setup + 0x1a) = 0x7f;
             Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
@@ -605,7 +605,7 @@ void largecrate_init(int obj, u8* initData)
 
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = LargeCrate_SeqFn;
-    *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (short)((int)(signed char)initData[0x18] << 8);
     ((LargeCrateState*)state)->brokenGameBit = *(short*)(initData + 0x1e);
 
     id = *(short*)(initData + 0x1c);
@@ -635,7 +635,7 @@ void largecrate_init(int obj, u8* initData)
     ((LargeCrateState*)state)->unkC = LARGECRATE_DEFAULT_COUNTDOWN;
     ((LargeCrateState*)state)->unk12 = (u8) * (short*)(initData + 0x1a);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LARGECRATE_OBJECT_FLAGS);
-    *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (short)((int)(signed char)initData[0x18] << 8);
 
     id = ((GameObject*)obj)->anim.seqId;
     if (id == LARGECRATE_VARIANT_A)
