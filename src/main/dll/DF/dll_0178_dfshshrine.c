@@ -179,14 +179,14 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setMapAct(0xb, 2);
                 break;
             case 0xe:
-                *(s16*)(objLocal + 6) = (s16)(*(s16*)(objLocal + 6) | 0x4000);
+                ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags | 0x4000);
                 if (state->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)state->light, 0, lbl_803E4E88);
                 }
                 break;
             case 0xf:
-                *(s16*)(objLocal + 6) = (s16)(*(s16*)(objLocal + 6) & ~0x4000);
+                ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags & ~0x4000);
                 if (state->light != NULL)
                 {
                     modelLightStruct_setEnabled((int)state->light, 0, lbl_803E4E88);
