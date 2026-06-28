@@ -28,13 +28,20 @@ extern f32 lbl_803E3B6C; /* repeat-hit period */
 
 #define COLDWATER_HIT_PRIORITY 0x1c
 
+typedef struct ColdwaterControlState {
+    f32 timer;       /* 0x00 immersion timer */
+    void* playerObj; /* 0x04 cached player object */
+} ColdwaterControlState;
+STATIC_ASSERT(sizeof(ColdwaterControlState) == 0x8);
+STATIC_ASSERT(offsetof(ColdwaterControlState, playerObj) == 0x4);
+
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
 #pragma peephole off
 void coldwatercontrol_update(int obj)
 {
-    u8* state;
+    ColdwaterControlState* state;
 
     state = ((GameObject*)obj)->extra;
     if (GameBit_Get(GAMEBIT_COLDWATER_ARM) != 0 && GameBit_Get(GAMEBIT_COLDWATER_DONE) == 0)
@@ -44,37 +51,37 @@ void coldwatercontrol_update(int obj)
         return;
     }
 
-    if (*(void**)(state + 4) != NULL)
+    if (state->playerObj != NULL)
     {
-        if (fn_80295C40(*(int*)(state + 4)) != 0)
+        if (fn_80295C40((int)state->playerObj) != 0)
         {
-            if (lbl_803E3B68 == *(f32*)state)
+            if (lbl_803E3B68 == state->timer)
             {
-                ObjHits_RecordObjectHit(*(int*)(state + 4), obj, COLDWATER_HIT_PRIORITY, 0, 1);
+                ObjHits_RecordObjectHit((int)state->playerObj, obj, COLDWATER_HIT_PRIORITY, 0, 1);
             }
 
-            *(f32*)state = *(f32*)state + timeDelta;
-            if (*(f32*)state > lbl_803E3B6C)
+            state->timer = state->timer + timeDelta;
+            if (state->timer > lbl_803E3B6C)
             {
-                ObjHits_RecordObjectHit(*(int*)(state + 4), obj, COLDWATER_HIT_PRIORITY, 1, 1);
-                *(f32*)state = *(f32*)state - lbl_803E3B6C;
+                ObjHits_RecordObjectHit((int)state->playerObj, obj, COLDWATER_HIT_PRIORITY, 1, 1);
+                state->timer = state->timer - lbl_803E3B6C;
             }
         }
         else
         {
-            *(f32*)state = lbl_803E3B68;
+            state->timer = lbl_803E3B68;
         }
     }
     else
     {
-        *(int*)(state + 4) = (int)Obj_GetPlayerObject();
+        state->playerObj = Obj_GetPlayerObject();
     }
 }
 
 #pragma scheduling on
 void coldwatercontrol_init(int obj)
 {
-    int* p = (int*)((GameObject*)obj)->extra;
-    *(f32*)p = lbl_803E3B68;
+    ColdwaterControlState* p = (ColdwaterControlState*)((GameObject*)obj)->extra;
+    p->timer = lbl_803E3B68;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
