@@ -2426,8 +2426,10 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         s16 v = lbl_803DD776;
         s16 alpha = (s16)(v * 0xf);
         s16 h0;
+        s16 w;
+        s16 x;
+        s16 y;
         int h;
-        s16 x, y, w;
         if (alpha > 0xff)
         {
             alpha = 0xff;
