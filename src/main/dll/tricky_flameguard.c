@@ -142,7 +142,7 @@ void trickyFlame(int p1, int p2)
     {
     case 0:
         trickyDebugPrint(strBase + 0x700);
-        *(int*)(p2 + 0x71c) = Objfsa_FindNearestCurveType24((float*)((int)((TrickyRuntime*)p2)->homeObj + 0x18), -1, 4);
+        *(int*)(p2 + 0x71c) = Objfsa_FindNearestCurveType24(&((TrickyRuntime*)p2)->homeObj->worldPosX, -1, 4);
         if (*(u8*)(*(int*)(p2 + 0x71c) + 0x3) != 0)
         {
             newTarget = *(int*)(p2 + 0x71c) + 0x8;
