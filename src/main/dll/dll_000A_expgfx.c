@@ -321,14 +321,14 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
     ExpgfxRuntimeDataLayout* runtime;
     s8* poolActiveCounts;
     u32* poolActiveMasks;
-    s16* poolSlotTypeIds;
+    int searchIndex;
     u32* sourceIdWalk;
+    s16* poolSlotTypeIds;
     s8* activeCountWalk;
+    short foundPool;
     u32* activeMaskPtr;
     u32 currentMask;
     u32 activeBit;
-    int searchIndex;
-    short foundPool;
     int foundPoolIndex;
     int poolIndex;
     int slotIndex;
