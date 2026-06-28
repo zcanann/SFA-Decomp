@@ -191,7 +191,7 @@ void renderClouds(int a, int b, int c, int d)
         v = *(f32*)(view + 0x14);
         lbl_8039AB28.mainCloudObj->anim.worldPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
-        *(u16*)((u8*)lbl_8039AB28.mainCloudObj + 2) = 0;
+        lbl_8039AB28.mainCloudObj->anim.rotY = 0;
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
 
