@@ -1310,7 +1310,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     *(int*)((char*)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x18) + tabOff) - offset0;
 
     piRomLoadSection(*(int*)((lbl_803DCE7C + 0x18) + tabOff), p1, *(int*)((char*)lbl_803DCEA0 + 0x20));
-    *(int*)((char*)lbl_803DCEA0 + 0x10) = v2 + (*(int*)((lbl_803DCE7C + 0x1c) + tabOff) + (int)lbl_803DCEA0) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x10) = (*(int*)((lbl_803DCE7C + 0x1c) + tabOff) + v2) + (int)lbl_803DCEA0 - offset0;
 
     for (i = 0; i < (v0 + 7 >> 3) + 1; i++)
     {
