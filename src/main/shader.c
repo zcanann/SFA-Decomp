@@ -2918,9 +2918,15 @@ void doPendingMapLoads(void)
                 playerMapOffsetZ = gMapBlockWorldSize * lbl_803DCDD4;
                 lbl_803DCDC8 = playerMapOffsetX;
                 lbl_803DCDCC = playerMapOffsetZ;
-                for (i = 0; i < gShaderRomListSlotCount; i++)
                 {
-                    *(s8*)(base + 0x418C + i * 8 + 6) = 0;
+                    s8* sp = (s8*)(base + 0x418C + 6);
+                    int slotN = gShaderRomListSlotCount;
+                    i = 0;
+                    for (; i < slotN; i++)
+                    {
+                        *sp = 0;
+                        sp += 8;
+                    }
                 }
                 gShaderCurMapEventId = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
                 lbl_803DCEC0 = -1;
