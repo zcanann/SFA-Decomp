@@ -1504,11 +1504,11 @@ void debugPrintDraw(int ctx)
 {
     u32 xa, xb, ya, yb;
     u32 xs;
-    u32 x1;
+    u32 colw;
     u8* p;
     u16 tx, ty;
     u32 colb;
-    u32 colw;
+    u32 x1;
     f32 scale;
     int pass;
     u32 res;
