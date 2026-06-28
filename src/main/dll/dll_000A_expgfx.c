@@ -1931,13 +1931,13 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
     ExpgfxSourceObject* source;
     ExpgfxTrackedSourceFrameMask* mask;
-    u32 bit;
+    int signedPoolIndex;
     u32 highBits;
     int result;
     u32* poolSourceIds;
     int poolIndex;
     u8* poolFrameFlags;
-    int signedPoolIndex;
+    u32 bit;
 
     result = EXPGFX_SOURCE_FRAME_STATE_NONE;
     lbl_803DD253 = 0;
