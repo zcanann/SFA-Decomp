@@ -1185,7 +1185,7 @@ int fn_8011E0D8(int *this, int *p2, int p3)
     PSMTXTrans(m3, lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E3C);
     PSMTXConcat(m3, m1, m1);
     GXLoadTexMtxImm(m1, 0x21, 0);
-    GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7d);
+    GXSetTexCoordGen2(1, 0, 0, 0x21, 0, 0x7d);
     GXSetTevOrder(1, 1, 0, 0xff);
     GXSetTevColorIn(1, 0xf, 0xf, 0xf, 8);
     GXSetTevAlphaIn(1, 7, 7, 7, 0);
