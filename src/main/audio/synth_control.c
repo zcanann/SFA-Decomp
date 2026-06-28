@@ -105,6 +105,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     u32* delayBucket;
 
     state = lbl_803BCD90;
+    voiceOffset = 0;
     synthRealTimeLo = 0;
     synthRealTimeHi = 0;
     ((SynthGlobalState*)state)->sampleRate = sampleRate;
@@ -115,7 +116,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     synthVoice = salMalloc(voiceCount * SYNTH_VOICE_STRIDE);
     memset(synthVoice, 0, voiceCount * SYNTH_VOICE_STRIDE);
 
-    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += SYNTH_VOICE_STRIDE)
+    for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += SYNTH_VOICE_STRIDE)
     {
         u8 lowIndex;
 
