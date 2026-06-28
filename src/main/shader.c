@@ -2389,14 +2389,14 @@ void mapLoadUnloadObjects(int flag)
             int id2 = list[i];
             if (gShaderCurMapEventId == id2)
             {
-                char* page = *(char**)(base + id2 * 4 + 0x83A8);
+                char* page = *(char**)(base + (0x83A8 + id2 * 4));
                 if (page != 0)
                 {
                     m = 1;
                     bit = 0;
                     cur = *(u32*)(page + 0x20);
                     bp = *(u8**)(page + 0x10);
-                    end = cur + *(int*)(base + id2 * 0x8C + 0x4290);
+                    end = cur + *(int*)(base + (0x4290 + id2 * 0x8C));
                     while (cur < end)
                     {
                         o = cur;
@@ -2404,7 +2404,7 @@ void mapLoadUnloadObjects(int flag)
                         {
                             if (bit >= 0)
                             {
-                                char* pg = *(char**)(base + list[i] * 4 + 0x83A8);
+                                char* pg = *(char**)(base + (0x83A8 + list[i] * 4));
                                 int ix2 = bit >> 3;
                                 int msk = 1 << (bit & 7);
                                 *(s8*)(*(int*)(pg + 0x10) + ix2) =
@@ -2453,7 +2453,7 @@ void mapLoadUnloadObjects(int flag)
                     s8 lp = *(s8*)(obj2 + 0x35) + 1;
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
-                    end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
+                    end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
                     {
