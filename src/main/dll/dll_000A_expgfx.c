@@ -2739,8 +2739,8 @@ void expgfx_resetAllPools(void)
     }
 
     resourceEntry = runtime->resourceTable;
-    resourceIndex = 0;
-    while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT)
+    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++,
+         resourceIndex++)
     {
         gExpgfxTextureFreeInProgress = 1;
         if (resourceEntry->resource != NULL)
@@ -2752,8 +2752,6 @@ void expgfx_resetAllPools(void)
         resourceEntry->resourceId = 0;
         resourceEntry->evictionScore = 0;
         resourceEntry->reserved = 0;
-        resourceIndex++;
-        resourceEntry++;
     }
 }
 #pragma opt_propagation reset
