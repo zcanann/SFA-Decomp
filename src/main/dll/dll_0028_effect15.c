@@ -10,6 +10,7 @@
  * (object fields +0x18/+0x1c/+0x20). The remaining entry points are empty
  * DLL lifecycle stubs.
  */
+#include "main/game_object.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -354,9 +355,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
-            cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
-            cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
+            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
         }
         if ((int)randomGetRange(0, 0x28) == 0) cfg.scale = lbl_803E0130;
         else cfg.scale = lbl_803E015C;
@@ -387,9 +388,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
-            cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
-            cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
+            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             cfg.velocityZ = lbl_803E0174;
         }
         cfg.scale = lbl_803E015C;
@@ -419,9 +420,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
-            cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
-            cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
+            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             cfg.velocityZ = lbl_803E0134;
         }
         cfg.scale = lbl_803E015C;
@@ -437,9 +438,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
-            cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
-            cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
+            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             cfg.scale = spawnParams->scale;
         }
         cfg.lifetimeFrames = 5;
@@ -454,9 +455,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - *(f32*)((char*)cfg.attachedSource + 0x18);
-            cfg.startPosY = cfg.startPosY - *(f32*)((char*)cfg.attachedSource + 0x1c);
-            cfg.startPosZ = cfg.startPosZ - *(f32*)((char*)cfg.attachedSource + 0x20);
+            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             cfg.scale = spawnParams->scale;
         }
         cfg.lifetimeFrames = 5;
@@ -482,9 +483,9 @@ int Effect15_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         {
             if (cfg.attachedSource != 0)
             {
-                cfg.startPosX = cfg.startPosX + *(f32*)((char*)cfg.attachedSource + 0x18);
-                cfg.startPosY = cfg.startPosY + *(f32*)((char*)cfg.attachedSource + 0x1c);
-                cfg.startPosZ = cfg.startPosZ + *(f32*)((char*)cfg.attachedSource + 0x20);
+                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             }
         }
     }
