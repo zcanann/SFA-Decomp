@@ -702,7 +702,7 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
                     *(short*)(out + 1) = (short)(int)distSq;
                     if ((ctx & 2) != 0)
                     {
-                        if ((*(u32*)(state + 0x2e4) & 0x8000) == 0)
+                        if ((((EnemyState*)state)->flags2E4 & 0x8000) == 0)
                         {
                             target = *out;
                             deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(target + 0x18);
@@ -734,7 +734,7 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
                             angleDiff = angleDiff + 0xffff;
                         }
                         target = (short)((angleDiff & 0xffff) >> 0xd) * 4;
-                        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~*(u32*)(&DAT_8031e840 + target);
+                        ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags & ~*(u32*)(&DAT_8031e840 + target);
                         if ((ctx & 4) != 0)
                         {
                             *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) =
@@ -760,7 +760,7 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
             *(short*)(out + 1) = (short)(int)radius;
             if ((ctx & 2) != 0)
             {
-                if ((*(u32*)(state + 0x2e4) & 0x8000) == 0)
+                if ((((EnemyState*)state)->flags2E4 & 0x8000) == 0)
                 {
                     found = *out;
                     deltaX = ((GameObject*)self)->anim.worldPosX - *(float*)(found + 0x18);
@@ -792,7 +792,7 @@ void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
                     angleDiff = angleDiff + 0xffff;
                 }
                 found = (short)((angleDiff & 0xffff) >> 0xd) * 4;
-                *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~*(u32*)(&DAT_8031e840 + found);
+                ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags & ~*(u32*)(&DAT_8031e840 + found);
                 if ((ctx & 4) != 0)
                 {
                     *(u32*)(*(int*)(*out + 0xb8) + 0x2dc) =
