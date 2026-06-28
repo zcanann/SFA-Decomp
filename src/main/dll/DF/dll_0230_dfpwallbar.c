@@ -46,12 +46,12 @@ void chuka_free(int obj)
 
 void chuka_hitDetect(int obj)
 {
-    int* light;
-    int* inner = ((GameObject*)obj)->extra;
-    light = (int*)inner[1];
+    GameObject* light;
+    ChukaState* state = ((GameObject*)obj)->extra;
+    light = (GameObject*)state->linkedObject;
     if (light == NULL) return;
-    if ((*(s16*)((char*)light + 6) & 0x40) == 0) return;
-    inner[1] = 0;
+    if ((light->anim.flags & 0x40) == 0) return;
+    state->linkedObject = 0;
 }
 
 void chuka_update(int obj)
@@ -74,7 +74,7 @@ void chuka_update(int obj)
     ch = ((ChukaState*)blob)->linkedObject;
     if ((u32)ch != 0)
     {
-        if (*(s16*)(ch + 6) & 0x40)
+        if (((GameObject*)ch)->anim.flags & 0x40)
         {
             ((ChukaState*)blob)->linkedObject = 0;
             return;
@@ -98,7 +98,7 @@ void chuka_update(int obj)
         }
     }
     ch = ((ChukaState*)blob)->linkedObject;
-    (**(void (**)(int, u8*))(*(int*)(*(int*)(ch + 0x68)) + 0x20))(ch, gChukaModeTable);
+    (*(void (**)(int, u8*))(*((GameObject*)ch)->anim.dll + 8))(ch, gChukaModeTable);
     if (GameBit_Get(0x5e4) == 0)
     {
         ((ChukaState*)blob)->mode = 0;
