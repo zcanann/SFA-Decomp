@@ -510,10 +510,10 @@ void fn_80157CDC(int obj, int state)
         u8 pad[0x1c];
         char* p;
     } CrawlerDescE;
-    char* sub;
     CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
     char* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
     u8 i;
+    char* sub;
 
     gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
 
