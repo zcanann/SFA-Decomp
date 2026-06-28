@@ -93,9 +93,11 @@ typedef struct KTRexArenaState
     f32 vecY;
     f32 vecZ;
     void* light; /* 0x178 */
+    void* lightning[5]; /* 0x17c: active lightning-strike effect objects */
 } KTRexArenaState;
 
 STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
+STATIC_ASSERT(offsetof(KTRexArenaState, lightning) == 0x17c);
 
 /* Per-object extra block for the KT Rex boss (ktrex_getExtraSize == 0x5a4). */
 typedef struct KTRexRuntime
@@ -347,7 +349,7 @@ void ktrex_free(int obj)
     }
     for (i = 0; i < 5; i++)
     {
-        void* m = *(void**)((char*)gKTRexState + i * 4 + 0x17c);
+        void* m = ((KTRexArenaState*)gKTRexState)->lightning[i];
         if (m != 0)
         {
             mm_free(m);
@@ -440,11 +442,11 @@ int ktrex_updateArenaPathProgress(int obj)
     phase = (flags >> 1) & 3;
     if (dir != 0)
     {
-        speed = -*(f32*)((char*)obj + 0x294);
+        speed = -((KTRexRuntime*)obj)->unk294;
     }
     else
     {
-        speed = *(f32*)((char*)obj + 0x294);
+        speed = ((KTRexRuntime*)obj)->unk294;
     }
     ((KTRexArenaState*)gKTRexState)->laneLerpT = speed * timeDelta + ((KTRexArenaState*)gKTRexState)->laneLerpT;
     if ((((KTRexArenaState*)gKTRexState)->laneLerpT > gKTRexLaneSpeedMax[((KTRexArenaState*)gKTRexState)->laneIndex] && speed >
@@ -516,17 +518,17 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
     for (i = 0; i < 5; i++)
     {
-        e = *(void**)((char*)gKTRexState + 380 + i * 4);
+        e = ((KTRexArenaState*)gKTRexState)->lightning[i];
         if (e != NULL)
         {
             lightningRender(e);
-            *(u16*)((char*)*(void**)((char*)gKTRexState + 380 + i * 4) + 0x20) =
-                (f32)(u32) * (u16*)((char*)*(void**)((char*)gKTRexState + 380 + i * 4) + 0x20) + timeDelta;
-            if (*(u16*)((char*)*(void**)((char*)gKTRexState + 380 + i * 4) + 0x20) >=
-                *(u16*)((char*)*(void**)((char*)gKTRexState + 380 + i * 4) + 0x22))
+            *(u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) =
+                (f32)(u32) * (u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) + timeDelta;
+            if (*(u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x20) >=
+                *(u16*)((char*)((KTRexArenaState*)gKTRexState)->lightning[i] + 0x22))
             {
-                mm_free(*(void**)((char*)gKTRexState + 380 + i * 4));
-                *(int*)((char*)gKTRexState + 380 + i * 4) = 0;
+                mm_free(((KTRexArenaState*)gKTRexState)->lightning[i]);
+                *(int*)&((KTRexArenaState*)gKTRexState)->lightning[i] = 0;
             }
         }
     }
@@ -1057,7 +1059,7 @@ void ktrex_updateAttackEffects(int obj)
     {
         for (i = 0; i < 5; i++)
         {
-            if ((int)randomGetRange(0, 5) == 0 && *(void**)((char*)gKTRexState + i * 4 + 0x17c) == NULL)
+            if ((int)randomGetRange(0, 5) == 0 && ((KTRexArenaState*)gKTRexState)->lightning[i] == NULL)
             {
                 ktrex_spawnRandomEnergyArc(obj, randomGetRange(8, 0xc), lbl_803E6828, i);
             }
@@ -1808,12 +1810,12 @@ int ktrex_stateHandlerA01(int obj, int runtime)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         ((KTRexRuntime*)runtime)->unk349 = 0;
         ((KTRexRuntime*)runtime)->unk25F = 0;
-        *(f32*)((char*)gKTRexState + 4) = lbl_803E67EC;
+        ((KTRexArenaState*)gKTRexState)->stateTimer = lbl_803E67EC;
     }
     else
     {
-        *(f32*)((char*)gKTRexState + 4) -= timeDelta;
-        if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67F0)
+        ((KTRexArenaState*)gKTRexState)->stateTimer -= timeDelta;
+        if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67F0)
         {
             if (((GameObject*)obj)->unkF8 != 3)
             {
@@ -1821,7 +1823,7 @@ int ktrex_stateHandlerA01(int obj, int runtime)
                 ((GameObject*)obj)->unkF8 = 3;
             }
         }
-        if (*(f32*)((char*)gKTRexState + 4) <= lbl_803E67B8)
+        if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67B8)
         {
             Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
             Music_Trigger(40, 0);
