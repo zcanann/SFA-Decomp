@@ -457,8 +457,8 @@ int trickyMove(u8* obj, f32* targetPos)
     f32 moveSpeed;
     f32 length;
     s16 previousYaw;
-    s16 turnDelta;
     int td;
+    s16 turnDelta;
     int animId;
     u32 f;
 
