@@ -19,6 +19,7 @@
 #include "main/dll/scarab.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/curve_walker.h"
 #include "main/objseq.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
@@ -142,11 +143,11 @@ void fn_801606F0(int obj, void* p2, int sub, GroundBaddieState* p)
     {
         *(int*)&p->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
         *(s8*)&p->baddie.hasTarget = 0;
-        if (*(char*)(setup + 0x2e) != -1)
+        if (((DllCBPlacement*)setup)->unk2E != -1)
         {
             if (p2 != NULL)
             {
-                (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, *(s16*)(setup + 0x24));
+                (*gObjectTriggerInterface)->yield((ObjSeqState*)p2, ((DllCBPlacement*)setup)->unk24);
             }
             *(s8*)&((GroundBaddieState*)sub)->unk405 = 1;
         }
@@ -225,7 +226,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     extern f32 lbl_803E2E98;
     extern f32 lbl_803E2E9C;
     int setup;
-    int* path;
+    RomCurveWalker* path;
     int sub;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -250,14 +251,14 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
         switch (((GroundBaddieState*)sub)->unk405)
         {
         case 2:
-            *(s16*)(e + 0x6e) = 0;
+            ((ObjSeqState*)e)->flags = 0;
             fn_801606F0((int)obj, e, sub, (GroundBaddieState*)sub);
             if (((GroundBaddieState*)sub)->unk405 == 1)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
                 (*gPlayerInterface)->update(obj, (void*)sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C,
                                             gDllCBMoveHandlers, gDllCBStateHandlers);
-                *(s8*)(e + 0x56) = 0;
+                ((ObjSeqState*)e)->movementState = 0;
             }
             break;
         case 1:
@@ -270,26 +271,26 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             break;
         case 0:
         default:
-            *(s16*)(e + 0x6e) = -1;
-            *(s16*)(e + 0x6e) &= ~0x40;
-            path = *(int**)&((GroundBaddieState*)sub)->path;
+            ((ObjSeqState*)e)->flags = -1;
+            ((ObjSeqState*)e)->flags &= ~0x40;
+            path = (RomCurveWalker*)((GroundBaddieState*)sub)->path;
             if ((((GroundBaddieState*)sub)->flags400 & 8) != 0)
             {
-                if ((Curve_AdvanceAlongPath(path, ((GroundBaddieState*)sub)->baddie.animSpeedA) != 0 || path[4] != 0) &&
+                if ((Curve_AdvanceAlongPath((int*)path, ((GroundBaddieState*)sub)->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0) &&
                     (*gRomCurveInterface)->goNextPoint(path) != 0)
                 {
                     ((GroundBaddieState*)sub)->flags400 &= ~8;
                 }
                 ((GroundBaddieState*)sub)->baddie.animSpeedA = lbl_803E2E98;
-                ((GameObject*)obj)->anim.rotX = getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) +
+                ((GameObject*)obj)->anim.rotX = getAngle(path->tangentX, path->tangentZ) +
                     0x8000;
-                ((GameObject*)obj)->anim.rotY = getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) +
+                ((GameObject*)obj)->anim.rotY = getAngle(path->tangentZ, path->tangentY) +
                     0x4000;
-                ((GameObject*)obj)->anim.rotZ = getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) +
+                ((GameObject*)obj)->anim.rotZ = getAngle(path->tangentY, path->tangentX) +
                     0x4000;
-                ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)path + 0x68);
-                ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)path + 0x6c);
-                ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)path + 0x70);
+                ((GameObject*)obj)->anim.localPosX = path->posX;
+                ((GameObject*)obj)->anim.localPosY = path->posY;
+                ((GameObject*)obj)->anim.localPosZ = path->posZ;
             }
             break;
         }
@@ -365,7 +366,7 @@ extern f32 lbl_803E2E98;
 void dll_CB_update(int* obj)
 {
     extern int* gBaddieControlInterface;
-    int* path;
+    RomCurveWalker* path;
     GroundBaddieState* sub;
     u8* def;
 
@@ -388,9 +389,9 @@ void dll_CB_update(int* obj)
     }
     if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0) return;
     fn_8016083C(obj, sub, sub);
-    path = *(int**)&sub->path;
+    path = (RomCurveWalker*)sub->path;
     if ((sub->flags400 & 8) == 0) return;
-    if (Curve_AdvanceAlongPath(path, sub->baddie.animSpeedA) != 0 || path[4] != 0)
+    if (Curve_AdvanceAlongPath((int*)path, sub->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0)
     {
         if ((*gRomCurveInterface)->goNextPoint(path) != 0)
         {
@@ -398,12 +399,12 @@ void dll_CB_update(int* obj)
         }
     }
     sub->baddie.animSpeedA = lbl_803E2E98;
-    ((GameObject*)obj)->anim.rotX = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
-    ((GameObject*)obj)->anim.rotY = (s16)(getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) + 0x4000);
-    ((GameObject*)obj)->anim.rotZ = (s16)(getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) + 0x4000);
-    ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)path + 0x68);
-    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)path + 0x6c);
-    ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)path + 0x70);
+    ((GameObject*)obj)->anim.rotX = (s16)(getAngle(path->tangentX, path->tangentZ) + 0x8000);
+    ((GameObject*)obj)->anim.rotY = (s16)(getAngle(path->tangentZ, path->tangentY) + 0x4000);
+    ((GameObject*)obj)->anim.rotZ = (s16)(getAngle(path->tangentY, path->tangentX) + 0x4000);
+    ((GameObject*)obj)->anim.localPosX = path->posX;
+    ((GameObject*)obj)->anim.localPosY = path->posY;
+    ((GameObject*)obj)->anim.localPosZ = path->posZ;
 }
 
 int chukchuk_getExtraSize(void);
@@ -476,9 +477,9 @@ extern f32 lbl_803E2E68;
 int fn_801605A8(short* out, u8* obj)
 {
     f32 f = lbl_803E2E68;
-    *(f32*)(obj + 0x280) = f;
-    *(f32*)(obj + 0x284) = f;
-    *(s8*)(obj + 0x25f) = 1;
+    ((BaddieState*)obj)->animSpeedA = f;
+    ((BaddieState*)obj)->animSpeedB = f;
+    ((BaddieState*)obj)->physicsActive = 1;
     out[2] = ((BaddieState*)obj)->spawnRotZ;
     out[1] = ((BaddieState*)obj)->spawnRotY;
     return 0;
@@ -487,10 +488,10 @@ int fn_801605A8(short* out, u8* obj)
 int fn_80160690(short* out, u8* obj)
 {
     f32 f = lbl_803E2E68;
-    *(f32*)(obj + 0x280) = f;
-    *(f32*)(obj + 0x284) = f;
-    *(f32*)(obj + 0x2a0) = f;
-    *(s8*)(obj + 0x25f) = 1;
+    ((BaddieState*)obj)->animSpeedA = f;
+    ((BaddieState*)obj)->animSpeedB = f;
+    ((BaddieState*)obj)->moveSpeed = f;
+    ((BaddieState*)obj)->physicsActive = 1;
     out[2] = ((BaddieState*)obj)->spawnRotZ;
     out[1] = ((BaddieState*)obj)->spawnRotY;
     (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
