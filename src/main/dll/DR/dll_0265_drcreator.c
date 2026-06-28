@@ -26,13 +26,18 @@ STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 
 typedef struct DrcreatorPlacement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x18 - 0x0];
+    s16 gameBitId;    /* 0x18: copied into runtime gameBitId */
     s16 behaviorMode; /* 0x1A switch selector: 3/9 run-sequence, 4 spawn-projectiles */
-    u8 pad1C[0x20 - 0x1C];
+    s16 spawnInterval; /* 0x1C: copied into runtime spawnInterval */
+    s8 rotXByte;      /* 0x1E: <<8 seeds anim.rotX */
+    s8 timerVariance; /* 0x1F: copied into runtime timerVariance */
+    u8 speedScale;    /* 0x20: projectile speed scalar, stored at runtime[0] */
 } DrcreatorPlacement;
 
 STATIC_ASSERT(offsetof(DrcreatorPlacement, behaviorMode) == 0x1A);
-STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x20);
+STATIC_ASSERT(offsetof(DrcreatorPlacement, speedScale) == 0x20);
+STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x22);
 
 
 typedef struct DrcreatorSpawnProjectileCallbackState
@@ -96,12 +101,12 @@ void drcreator_render(void)
 void drcreator_init(int obj, char* arg)
 {
     char* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)arg[0x1e] << 8);
-    ((DrcreatorState*)state)->gameBitId = *(s16*)(arg + 0x18);
-    ((DrcreatorState*)state)->spawnInterval = *(s16*)(arg + 0x1c);
+    ((GameObject*)obj)->anim.rotX = (s16)(((DrcreatorPlacement*)arg)->rotXByte << 8);
+    ((DrcreatorState*)state)->gameBitId = ((DrcreatorPlacement*)arg)->gameBitId;
+    ((DrcreatorState*)state)->spawnInterval = ((DrcreatorPlacement*)arg)->spawnInterval;
     ((DrcreatorState*)state)->spawnTimer = randomGetRange(0, ((DrcreatorState*)state)->spawnInterval);
-    ((DrcreatorState*)state)->timerVariance = arg[0x1f];
-    *(int*)state = (u8)arg[0x20];
+    ((DrcreatorState*)state)->timerVariance = ((DrcreatorPlacement*)arg)->timerVariance;
+    *(int*)state = ((DrcreatorPlacement*)arg)->speedScale;
     ((BitFlags8*)(state + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
     ((GameObject*)obj)->animEventCallback = drcreator_spawnProjectileCallback;
