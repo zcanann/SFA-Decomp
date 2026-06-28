@@ -173,9 +173,10 @@ void cfpowerbase_update(int* obj)
 void cfpowerbase_init(int* obj, u8* params)
 {
     CfPowerBaseState* sub = ((GameObject*)obj)->extra;
+    CfPowerBaseMapData* mapData = (CfPowerBaseMapData*)params;
     s16 type;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
-    sub->typeBit = *(s16*)(params + 0x1e);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+    sub->typeBit = mapData->typeBit;
     type = sub->typeBit;
     switch (type)
     {
