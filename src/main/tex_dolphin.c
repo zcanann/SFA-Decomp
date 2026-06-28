@@ -65,6 +65,27 @@ typedef struct TexOverride
     u8 padF;
 } TexOverride;
 
+/*
+ * MapBlockBoundsRec - a 0x1c per-block render record (block->unk68 array,
+ * stride 0x1c). Offset 0 is the GX display-list pointer, offset 4 its u16
+ * byte-size; offsets 6..0x10 are the s16 AABB (min/max X,Y,Z in 1/8 units);
+ * offset 0x18 is an u8 selector. Pad covers unobserved ranges.
+ */
+typedef struct MapBlockBoundsRec
+{
+    void* dlist;
+    u16 dlistSize;
+    s16 minX;
+    s16 minY;
+    s16 minZ;
+    s16 maxX;
+    s16 maxY;
+    s16 maxZ;
+    u8 pad12[0x18 - 0x12];
+    u8 unk18;
+    u8 pad19[0x1C - 0x19];
+} MapBlockBoundsRec;
+
 extern int gTexIndMtxTable;
 extern u8 lbl_8037E0C0[];
 extern u8 lbl_803DB638;
@@ -79,6 +100,7 @@ extern int gTexLightmapFogColor;
 
 u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
 {
+    MapBlockBoundsRec* b = (MapBlockBoundsRec*)bounds;
     float v[3];
     u32 i;
     f32 fbset;
@@ -93,44 +115,44 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
             switch (i)
             {
             case 0:
-                v[0] = (f32) * (s16*)(bounds + 0x6);
-                v[1] = (f32) * (s16*)(bounds + 0x8);
-                v[2] = (f32) * (s16*)(bounds + 0xa);
+                v[0] = (f32)b->minX;
+                v[1] = (f32)b->minY;
+                v[2] = (f32)b->minZ;
                 break;
             case 1:
-                v[0] = (f32) * (s16*)(bounds + 0xc);
-                v[1] = (f32) * (s16*)(bounds + 0x8);
-                v[2] = (f32) * (s16*)(bounds + 0xa);
+                v[0] = (f32)b->maxX;
+                v[1] = (f32)b->minY;
+                v[2] = (f32)b->minZ;
                 break;
             case 2:
-                v[0] = (f32) * (s16*)(bounds + 0x6);
-                v[1] = (f32) * (s16*)(bounds + 0xe);
-                v[2] = (f32) * (s16*)(bounds + 0xa);
+                v[0] = (f32)b->minX;
+                v[1] = (f32)b->maxY;
+                v[2] = (f32)b->minZ;
                 break;
             case 3:
-                v[0] = (f32) * (s16*)(bounds + 0xc);
-                v[1] = (f32) * (s16*)(bounds + 0xe);
-                v[2] = (f32) * (s16*)(bounds + 0xa);
+                v[0] = (f32)b->maxX;
+                v[1] = (f32)b->maxY;
+                v[2] = (f32)b->minZ;
                 break;
             case 4:
-                v[0] = (f32) * (s16*)(bounds + 0x6);
-                v[1] = (f32) * (s16*)(bounds + 0x8);
-                v[2] = (f32) * (s16*)(bounds + 0x10);
+                v[0] = (f32)b->minX;
+                v[1] = (f32)b->minY;
+                v[2] = (f32)b->maxZ;
                 break;
             case 5:
-                v[0] = (f32) * (s16*)(bounds + 0xc);
-                v[1] = (f32) * (s16*)(bounds + 0x8);
-                v[2] = (f32) * (s16*)(bounds + 0x10);
+                v[0] = (f32)b->maxX;
+                v[1] = (f32)b->minY;
+                v[2] = (f32)b->maxZ;
                 break;
             case 6:
-                v[0] = (f32) * (s16*)(bounds + 0x6);
-                v[1] = (f32) * (s16*)(bounds + 0xe);
-                v[2] = (f32) * (s16*)(bounds + 0x10);
+                v[0] = (f32)b->minX;
+                v[1] = (f32)b->maxY;
+                v[2] = (f32)b->maxZ;
                 break;
             case 7:
-                v[0] = (f32) * (s16*)(bounds + 0xc);
-                v[1] = (f32) * (s16*)(bounds + 0xe);
-                v[2] = (f32) * (s16*)(bounds + 0x10);
+                v[0] = (f32)b->maxX;
+                v[1] = (f32)b->maxY;
+                v[2] = (f32)b->maxZ;
                 break;
             }
         }
@@ -155,6 +177,37 @@ typedef struct IndMtxCopy
 {
     int w[6];
 } IndMtxCopy;
+
+/*
+ * MapShader - a 0x44-stride shader record (block->unk64 array). Only the
+ * fields this file touches are named: a u32 render-flag word at 0x3c and a
+ * u8 layer count at 0x41. The record is otherwise opaque (queried via
+ * Shader_getLayer); pad covers unobserved bytes.
+ */
+typedef struct MapShader
+{
+    u8 pad0[0x3C - 0x0];
+    u32 flags;
+    u8 pad40[0x41 - 0x40];
+    u8 layerCount;
+    u8 pad42[0x44 - 0x42];
+} MapShader;
+#define SHADER_FLAGS(s) (((MapShader*)(s))->flags)
+
+/*
+ * TexLayer - a shader texture layer (returned by Shader_getLayer). Offset 0
+ * is the texture id, 4 a u8 type/blend byte (low 7 bits select the blend
+ * mode), 5 a u8 texture-override-table selector, 6 a u8 texture-matrix index
+ * (0xff = none).
+ */
+typedef struct TexLayer
+{
+    int texId;
+    u8 typeBits;
+    u8 overrideByte;
+    u8 mtxIndex;
+    u8 pad7;
+} TexLayer;
 
 void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bitReader, Mtx viewMtx)
 {
@@ -218,7 +271,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
         m[0][0] = (f32)((i & 0xff) + 1) * k24 * kH;
         m[1][1] = m[0][0];
         GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])m, gTexIndMtxScaleExp);
-        GXCallDisplayList(*(void**)ptr, (u32) * (u16*)(ptr + 4));
+        GXCallDisplayList(((MapBlockBoundsRec*)ptr)->dlist, (u32)((MapBlockBoundsRec*)ptr)->dlistSize);
     }
 }
 
@@ -249,25 +302,25 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
     selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
-    if ((*(u32*)(shader + 0x3c) & 4) != 0)
+    if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
         goto LAB_8005E630;
     }
     GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
 LAB_8005E630:
-    if ((*(u32*)(shader + 0x3c) & 1) == 0)
+    if ((SHADER_FLAGS(shader) & 1) == 0)
     {
-        if ((*(u32*)(shader + 0x3c) & 0x40000) == 0)
+        if ((SHADER_FLAGS(shader) & 0x40000) == 0)
         {
-            if ((*(u32*)(shader + 0x3c) & 0x800) == 0)
+            if ((SHADER_FLAGS(shader) & 0x800) == 0)
             {
-                if ((*(u32*)(shader + 0x3c) & 0x1000) == 0) goto LAB_8005E6D0;
+                if ((SHADER_FLAGS(shader) & 0x1000) == 0) goto LAB_8005E6D0;
             }
         }
     }
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexLightmapAmbColor);
-    if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
+    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
     {
         GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005E718;
@@ -295,21 +348,22 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     u8 colorR;
 
     {
+        MapBlockBoundsRec* b = (MapBlockBoundsRec*)bounds;
         f32 fz = playerMapOffsetZ;
         f32 fldZ = *(float*)((int)blockXform + 0x38);
         f32 fldY = *(float*)((int)blockXform + 0x28);
         f32 fx = playerMapOffsetX;
         f32 fldX = *(float*)((int)blockXform + 0x18);
-        f32 ax0 = (f32)(*(short*)((int)bounds + 6) >> 3) + fldX;
-        f32 az0 = (f32)(*(short*)((int)bounds + 10) >> 3) + fldZ;
-        f32 ax1 = (f32)(*(short*)((int)bounds + 0xc) >> 3) + fldX;
-        f32 az1 = (f32)(*(short*)((int)bounds + 0x10) >> 3) + fldZ;
+        f32 ax0 = (f32)(b->minX >> 3) + fldX;
+        f32 az0 = (f32)(b->minZ >> 3) + fldZ;
+        f32 ax1 = (f32)(b->maxX >> 3) + fldX;
+        f32 az1 = (f32)(b->maxZ >> 3) + fldZ;
         modelLightStruct_selectBrightestAabbLights(
             ax0 + fx,
-            (f32)(*(short*)((int)bounds + 8) >> 3) + fldY,
+            (f32)(b->minY >> 3) + fldY,
             az0 + fz,
             ax1 + fx,
-            (f32)(*(short*)((int)bounds + 0xe) >> 3) + fldY,
+            (f32)(b->maxY >> 3) + fldY,
             az1 + fz,
             (u8*)&gTexDimmedLightList, 2, &lightCount);
     }
@@ -413,13 +467,14 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
     float farY;
     float farZ;
     int i;
+    MapBlockBoundsRec* b = (MapBlockBoundsRec*)bounds;
 
-    *maxX = (f32)(*(short*)(bounds + 0xc) >> 3) + *(float*)(block + 0x18);
-    *minX = (f32)(*(short*)(bounds + 6) >> 3) + *(float*)(block + 0x18);
-    *maxY = (f32)(*(short*)(bounds + 0xe) >> 3) + *(float*)(block + 0x28);
-    *minY = (f32)(*(short*)(bounds + 8) >> 3) + *(float*)(block + 0x28);
-    *maxZ = (f32)(*(short*)(bounds + 0x10) >> 3) + *(float*)(block + 0x38);
-    *minZ = (f32)(*(short*)(bounds + 10) >> 3) + *(float*)(block + 0x38);
+    *maxX = (f32)(b->maxX >> 3) + *(float*)(block + 0x18);
+    *minX = (f32)(b->minX >> 3) + *(float*)(block + 0x18);
+    *maxY = (f32)(b->maxY >> 3) + *(float*)(block + 0x28);
+    *minY = (f32)(b->minY >> 3) + *(float*)(block + 0x28);
+    *maxZ = (f32)(b->maxZ >> 3) + *(float*)(block + 0x38);
+    *minZ = (f32)(b->minZ >> 3) + *(float*)(block + 0x38);
     for (i = 0; i < planeCount; i = i + 1)
     {
         cornerIndex = planes->aabbCornerIndex;
@@ -511,7 +566,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         flags = *(u32*)(obj + 0x3c);
         if ((flags & 0x80000000) != 0)
         {
-            fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
+            fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
             {
                 int shadowType = 5;
                 int* row = (int*)(base + lbl_803DCE30 * 16);
@@ -521,7 +576,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
         }
         else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
         {
-            fn_8005D3B4(ptr, block, *(u8*)(ptr + 0x18));
+            fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
             {
                 int shadowType = 4;
                 int* row = (int*)(base + lbl_803DCE30 * 16);
@@ -639,7 +694,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                 textureFn_800528bc();
             }
         }
-        GXCallDisplayList(*(void**)ptr, *(u16*)(ptr + 4));
+        GXCallDisplayList(((MapBlockBoundsRec*)ptr)->dlist, ((MapBlockBoundsRec*)ptr)->dlistSize);
         flags = *(u32*)(obj + 0x3c);
         if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
             (mapBlockBounds_HasCornerPastDepthThreshold(ptr, mtx) != 0))
@@ -672,11 +727,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     Mtx texMatrix;
 
     colorWord = lbl_803DEBB0;
-    if ((*(u8*)(shader + 0x41) == 2) &&
-        (texId = Shader_getLayer(shader, 1), (*(u8*)(texId + 4) & 0x7f) == 9u))
+    if ((((MapShader*)shader)->layerCount == 2) &&
+        (texId = Shader_getLayer(shader, 1), (((TexLayer*)texId)->typeBits & 0x7f) == 9u))
     {
         layer = (int*)Shader_getLayer(shader, 0);
-        layerByte = *(u8*)((int)layer + 5);
+        layerByte = ((TexLayer*)layer)->overrideByte;
         if (layerByte != '\0')
         {
             int texVal = *layer;
@@ -702,9 +757,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             texId = *layer;
         }
     layer0_done:
-        if (*(u8*)((int)layer + 6) != 0xff)
+        if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
-            layerIdx = (u32) * (u8*)((int)layer + 6) << 4;
+            layerIdx = (u32)((TexLayer*)layer)->mtxIndex << 4;
             PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)((lbl_803DCE68 + 4) + layerIdx) / lbl_803DEBC8,
@@ -716,12 +771,12 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             texMtx = (float*)0x0;
         }
         fn_80051B00(texId, texMtx, 0, &colorWord);
-        if ((*(u32*)(shader + 0x3c) & 0x100) != 0)
+        if ((SHADER_FLAGS(shader) & 0x100) != 0)
         {
             fn_8004D928();
         }
         layer = (int*)Shader_getLayer(shader, 1);
-        layerByte = *(u8*)((int)layer + 5);
+        layerByte = ((TexLayer*)layer)->overrideByte;
         if (layerByte != '\0')
         {
             int texVal = *layer;
@@ -747,9 +802,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             texId = *layer;
         }
     layer1_done:
-        if (*(u8*)((int)layer + 6) != 0xff)
+        if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
-            layerIdx = (u32) * (u8*)((int)layer + 6) << 4;
+            layerIdx = (u32)((TexLayer*)layer)->mtxIndex << 4;
             PSMTXTrans(texMatrix,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)((lbl_803DCE68 + 4) + layerIdx) / lbl_803DEBC8,
@@ -765,13 +820,13 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     }
     else
     {
-        for (layerIdx = 0; layerIdx < (int)(u32) * (u8*)(shader + 0x41); layerIdx = layerIdx + 1)
+        for (layerIdx = 0; layerIdx < (int)(u32)((MapShader*)shader)->layerCount; layerIdx = layerIdx + 1)
         {
             layer = (int*)Shader_getLayer(shader, layerIdx);
             if (*(void**)layer != NULL)
             {
                 int texVal = *layer;
-                u8 ovrLayerByte = *(u8*)((int)layer + 5);
+                u8 ovrLayerByte = ((TexLayer*)layer)->overrideByte;
                 if (ovrLayerByte != '\0')
                 {
                     TexOverride* base;
@@ -792,9 +847,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 }
                 texId = texVal;
             layerN_done:
-                if (*(u8*)((int)layer + 6) != 0xff)
+                if (((TexLayer*)layer)->mtxIndex != 0xff)
                 {
-                    int mtxOff = (u32) * (u8*)((int)layer + 6) * 0x10;
+                    int mtxOff = (u32)((TexLayer*)layer)->mtxIndex * 0x10;
                     PSMTXTrans(texMatrix,
                                *(float*)(lbl_803DCE68 + mtxOff) / lbl_803DEBC8,
                                *(float*)(lbl_803DCE68 + mtxOff + 4) / lbl_803DEBC8,
@@ -805,8 +860,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 {
                     texMtx = (float*)0x0;
                 }
-                layerByte = *(u8*)(layer + 1) & 0x7f;
-                if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
+                layerByte = ((TexLayer*)layer)->typeBits & 0x7f;
+                if ((SHADER_FLAGS(shader) & 0x40000) != 0)
                 {
                     fn_80051528(texId, texMtx);
                 }
@@ -820,7 +875,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 gxColorFn_800523d0();
             }
         }
-        if ((*(u32*)(shader + 0x3c) & 0x100) != 0)
+        if ((SHADER_FLAGS(shader) & 0x100) != 0)
         {
             fn_8004D928();
         }
@@ -860,18 +915,18 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         return shader;
     }
 
-    if ((*(u32*)(shader + 0x3c) & 4) != 0)
+    if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
         goto LAB_8005F608;
     }
     GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColorWord);
 LAB_8005F608:
-    if ((shader != 0) && ((*(u32*)(shader + 0x3c) & 0x80000000) != 0))
+    if ((shader != 0) && ((SHADER_FLAGS(shader) & 0x80000000) != 0))
     {
         return shader;
     }
-    if ((shader != 0) && ((*(u32*)(shader + 0x3c) & 0x20000) != 0))
+    if ((shader != 0) && ((SHADER_FLAGS(shader) & 0x20000) != 0))
     {
         u32 res;
         res = AttractMovie_DrawTextureCallback(0, 0, 0);
@@ -881,14 +936,14 @@ LAB_8005F608:
         }
     }
     resetLotsOfRenderVars();
-    if ((*(u32*)(shader + 0x3c) & 0x80) != 0)
+    if ((SHADER_FLAGS(shader) & 0x80) != 0)
     {
         fn_8004DA54(shader);
         goto LAB_8005F690;
     }
     mapBlockRender_setupShaderTextures(shader, 0x80);
 LAB_8005F690:
-    if ((*(u32*)(shader + 0x3c) & 0x20) != 0)
+    if ((SHADER_FLAGS(shader) & 0x20) != 0)
     {
         int* lPtr = lbl_803DCE34;
         if (lPtr != 0)
@@ -897,7 +952,7 @@ LAB_8005F690:
             goto LAB_8005F6F4;
         }
     }
-    if ((*(u32*)(shader + 0x3c) & 0x40) != 0)
+    if ((SHADER_FLAGS(shader) & 0x40) != 0)
     {
         fn_8004E0FC();
         goto LAB_8005F6F4;
@@ -908,7 +963,7 @@ LAB_8005F690:
         renderHeavyFog(fogRgba);
     }
 LAB_8005F6F4:
-    if (((*(u32*)(shader + 0x3c) & 0x40000000) != 0) || ((*(u32*)(shader + 0x3c) & 0x20000000) != 0))
+    if (((SHADER_FLAGS(shader) & 0x40000000) != 0) || ((SHADER_FLAGS(shader) & 0x20000000) != 0))
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         gxSetZMode_(1, 3, 0);
@@ -916,9 +971,9 @@ LAB_8005F6F4:
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         goto LAB_8005F7FC;
     }
-    if ((*(u32*)(shader + 0x3c) & 0x400) != 0)
+    if ((SHADER_FLAGS(shader) & 0x400) != 0)
     {
-        if ((*(u32*)(shader + 0x3c) & 0x80) == 0)
+        if ((SHADER_FLAGS(shader) & 0x80) == 0)
         {
             GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             gxSetZMode_(1, 3, 1);
@@ -932,18 +987,18 @@ LAB_8005F6F4:
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 LAB_8005F7FC:
-    if ((*(u32*)(shader + 0x3c) & 1) == 0)
+    if ((SHADER_FLAGS(shader) & 1) == 0)
     {
-        if ((*(u32*)(shader + 0x3c) & 0x40000) == 0)
+        if ((SHADER_FLAGS(shader) & 0x40000) == 0)
         {
-            if ((*(u32*)(shader + 0x3c) & 0x800) == 0)
+            if ((SHADER_FLAGS(shader) & 0x800) == 0)
             {
-                if ((*(u32*)(shader + 0x3c) & 0x1000) == 0) goto LAB_8005F89C;
+                if ((SHADER_FLAGS(shader) & 0x1000) == 0) goto LAB_8005F89C;
             }
         }
     }
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
-    if ((*(u32*)(shader + 0x3c) & 0x40000) != 0)
+    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
     {
         GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         goto LAB_8005F8E4;
@@ -955,7 +1010,7 @@ LAB_8005F89C:
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambR);
 LAB_8005F8E4:
-    if ((*(u32*)(shader + 0x3c) & 0x8) != 0)
+    if ((SHADER_FLAGS(shader) & 0x8) != 0)
     {
         GXSetCullMode(GX_CULL_BACK);
         goto LAB_8005F908;
