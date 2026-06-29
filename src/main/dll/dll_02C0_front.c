@@ -553,7 +553,7 @@ void titlescreen_update(u8* obj)
 
     u8* state = ((GameObject*)obj)->extra;
     int objHandle = (int)obj;
-    s16 t;
+    u8* p;
     u8 c;
     int evt;
     f32 f;
@@ -563,7 +563,7 @@ void titlescreen_update(u8* obj)
     int s;
     u8* row;
     int col;
-    u8* p;
+    s16 t;
     u8 buf[0x1c];
 
     if (lbl_803DD9AB != 0)
