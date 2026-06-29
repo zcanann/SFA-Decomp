@@ -143,8 +143,8 @@ void animsharpclaw_update(int* obj)
     int kind2;
     int matchCount;
     int* objects;
-    int i;
     int count;
+    int i;
 
     inner = ((GameObject*)obj)->extra;
     placement = *(int**)&((GameObject*)obj)->anim.placementData;
