@@ -1167,7 +1167,7 @@ typedef struct TrickyPackedSlots
     u8 d : 2;
 } TrickyPackedSlots;
 
-int trickyFoodFn_801437d4(u8* obj, u8* state)
+int trickyFoodFn_801437d4(int obj, int* state)
 {
     s8 slots[4];
     u8* ptr;
@@ -1175,14 +1175,14 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
     int idx;
     f32 z;
 
-    if (trickyFoodFn_8014460c((int)obj, (int*)state) != 0)
+    if (trickyFoodFn_8014460c(obj, state) != 0)
     {
-        state[0xa] = 0;
+        ((u8*)state)[0xa] = 0;
         return 1;
     }
     if (cMenuGetSelectedItem() == 0xc1)
     {
-        state[0xa] = 0;
+        ((u8*)state)[0xa] = 0;
         return 1;
     }
     ((TrickyState*)state)->unk738 -= timeDelta;
@@ -1205,15 +1205,15 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
         slots[2] = -1;
         if (((TrickyState*)state)->unk7A8 != NULL)
         {
-            slots[((TrickyPackedSlots*)(state + 0x7bc))->a] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->a] = 1;
         }
         if (((TrickyState*)state)->unk7B0 != NULL)
         {
-            slots[((TrickyPackedSlots*)(state + 0x7bc))->b] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->b] = 1;
         }
         if (((TrickyState*)state)->child != NULL)
         {
-            slots[((TrickyPackedSlots*)(state + 0x7bc))->c] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->c] = 1;
         }
         if (slots[0] == -1)
         {
@@ -1235,9 +1235,9 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
         {
             idx = -1;
         }
-        ((TrickyPackedSlots*)(state + 0x7bc))->c = idx;
+        ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c = idx;
         ((TrickyState*)state)->child = Obj_SetupObject(e, 4, -1, -1, ((GameObject*)obj)->anim.parent);
-        ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)(state + 0x7bc))->c);
+        ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState*)state)->unk7C0 = z;
         ((TrickyState*)state)->unk7C4 = z;
@@ -1256,7 +1256,7 @@ int trickyFoodFn_801437d4(u8* obj, u8* state)
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
         ((TrickyState*)state)->stateFlags |= 0x10;
-        state[0xa] = 4;
+        ((u8*)state)[0xa] = 4;
         ((TrickyState*)state)->unk73C = (f32)(int)
         randomGetRange(0x78, 0xf0);
     }

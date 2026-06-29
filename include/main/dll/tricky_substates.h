@@ -15,7 +15,7 @@ u32 trickyFn_80143210(int param_1,int *param_2);
 u32 trickyFn_801432cc(int param_1,int *param_2);
 u32 trickyFn_80143388(int param_1,int *param_2);
 int trickyFn_801434b0(int param_1, int *param_2);
-int trickyFoodFn_801437d4(u8 *obj, u8 *state);
+int trickyFoodFn_801437d4(int obj, int *state);
 u32 trickyFn_80143b04(int param_1,int *param_2);
 u32 trickyFn_80143b78(int param_1,int *param_2);
 int trickyFn_80143c04(int obj, int state);
