@@ -178,7 +178,7 @@ typedef struct SwitchFlags
 
 void pressureswitchfb_update(int obj)
 {
-    u32 nearest;
+    u32 j2;
     int off;
     u32 other;
     int def;
@@ -193,8 +193,8 @@ void pressureswitchfb_update(int obj)
     f32 cur;
     f32 target;
     int slots2;
+    u32 nearest;
     s8 found;
-    u32 j2;
     u32 ju2;
     u32 o;
     int base2;
