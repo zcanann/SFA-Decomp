@@ -283,7 +283,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
 void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);
 void camcontrol_applyState(CamcontrolCameraState *cameraState);
 void camcontrol_applyQueuedAction(void);
-void camcontrol_activateHandler(u32 actionId, void *actionData);
+void camcontrol_activateHandler(u16 actionId, void *actionData);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);

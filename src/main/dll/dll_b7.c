@@ -19,7 +19,7 @@
 #include "main/mm.h"
 #include "main/resource.h"
 
-void camcontrol_activateHandler(u32 actionId, void *actionData)
+void camcontrol_activateHandler(u16 actionId, void *actionData)
 {
     CamcontrolHandlerEntry *entry;
     int idx;
@@ -27,7 +27,7 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
     int priority;
 
     if (gCamcontrolCurrentHandler != NULL) {
-        if (gCamcontrolActiveActionId != (int)(u16)actionId) {
+        if (gCamcontrolActiveActionId != actionId) {
             gCamcontrolCurrentHandler->handler->vtable->release(pCamera);
             if (gCamcontrolCurrentHandler->priority == CAMCONTROL_HANDLER_PRIORITY_DYNAMIC) {
                 idx = gCamcontrolCurrentHandlerIndex;
@@ -47,7 +47,7 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
         CamcontrolHandlerEntry **p = gCamcontrolHandlerEntries;
         n = gCamcontrolHandlerCount;
         for (; idx < n; idx++) {
-            if ((u16)actionId == (*p)->actionId) {
+            if (actionId == (*p)->actionId) {
                 goto found;
             }
             p++;

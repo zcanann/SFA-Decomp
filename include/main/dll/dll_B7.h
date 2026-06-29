@@ -3,6 +3,6 @@
 
 #include "global.h"
 
-void camcontrol_activateHandler(u32 actionId, void *actionData);
+void camcontrol_activateHandler(u16 actionId, void *actionData);
 
 #endif /* MAIN_DLL_DLL_B7_H_ */
