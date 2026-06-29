@@ -2919,12 +2919,12 @@ void doPendingMapLoads(void)
                 lbl_803DCDC8 = playerMapOffsetX;
                 lbl_803DCDCC = playerMapOffsetZ;
                 {
-                    s8* sp = (s8*)(base + 0x418C + 6);
+                    s8* sp = (s8*)(base + 0x418C);
                     int slotN = gShaderRomListSlotCount;
                     i = 0;
                     for (; i < slotN; i++)
                     {
-                        *sp = 0;
+                        sp[6] = 0;
                         sp += 8;
                     }
                 }
