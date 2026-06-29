@@ -329,19 +329,29 @@ fail:
 
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
 {
+    f32 ra;
     f32 x = v[0];
     f32 y = v[1];
     f32 z = v[2];
-    f32 ra = gAudioPi * angX / gAudioAngleToRadDivisor;
-    f32 ca = mathSinf(ra);
-    f32 rb = gAudioPi * angY / gAudioAngleToRadDivisor;
-    f32 cb = mathSinf(rb);
-    f32 rc = gAudioPi * angZ / gAudioAngleToRadDivisor;
-    f32 cc = mathSinf(rc);
-    f32 sa = mathCosf(ra);
-    f32 sb = mathCosf(rb);
-    f32 sc = mathCosf(rc);
+    f32 ca;
+    f32 rb;
+    f32 cb;
+    f32 rc;
+    f32 cc;
+    f32 sa;
+    f32 sb;
+    f32 sc;
     f32 t0, t1, A, B, p;
+
+    ra = gAudioPi * angX / gAudioAngleToRadDivisor;
+    ca = mathSinf(ra);
+    rb = gAudioPi * angY / gAudioAngleToRadDivisor;
+    cb = mathSinf(rb);
+    rc = gAudioPi * angZ / gAudioAngleToRadDivisor;
+    cc = mathSinf(rc);
+    sa = mathCosf(ra);
+    sb = mathCosf(rb);
+    sc = mathCosf(rc);
 
     t0 = x * ca;
     t1 = z * ca;
