@@ -558,14 +558,15 @@ void fn_80150910(int* obj, u8* state)
             else
             {
                 int off;
-                if (((GameObject*)obj)->anim.currentMove != tbl4[(off = r * 12) + 8] || tbl4[off + 8] != 0)
+                IdleRow* row;
+                if (((GameObject*)obj)->anim.currentMove != (row = (IdleRow*)(tbl4 + (off = r * 12)))->anim || row->anim != 0)
                 {
                     state[0x2f2] = 0;
                     state[0x2f3] = 0;
                     state[0x2f4] = 0;
-                    Baddie_SetMove(obj, state, tbl4[off + 8], *(f32*)(tbl4 + off), 0, 3);
+                    Baddie_SetMove(obj, state, row->anim, *(f32*)(tbl4 + off), 0, 3);
                     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
-                                            *(f32*)(lbl_8031DD30 + tbl4[off + 8] * 4));
+                                            *(f32*)(lbl_8031DD30 + row->anim * 4));
                 }
             }
         }
