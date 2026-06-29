@@ -2011,6 +2011,7 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
     int i;
     f32 best;
     f32 cur;
+    f32* arCb;
 
     n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
     if (n != 0)
@@ -2020,8 +2021,10 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
         arrp = arr + 1;
         for (i = 1; i < n; i++, arrp++)
         {
-            cur = val - *(f32*)*arrp;
-            if (*(f32*)&__AR_Callback <= cur)
+            cur = *(f32*)*arrp;
+            cur = val - cur;
+            arCb = &__AR_Callback;
+            if (cur >= *(f32*)arCb)
             {
                 if (best < *(f32*)&__AR_Callback || cur < best)
                 {
