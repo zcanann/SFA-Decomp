@@ -1918,7 +1918,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DF7C8;
         cfg.lifetimeFrames = randomGetRange(0, 0xa) + 0x3c;
         cfg.behaviorFlags = 0x6100100;
-        cfg.renderFlags = 0x200000;
+        cfg.renderFlags = 0x2000000;
         cfg.textureId = 0x64;
         break;
     case 0x397: /* L_800B095C */
@@ -1939,7 +1939,7 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = lbl_803DF7D0;
         cfg.lifetimeFrames = 0x1e;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = 0x8000210;
+        cfg.behaviorFlags = 0x80210;
         cfg.renderFlags = 0x2000000;
         cfg.textureId = 0xc0d;
         break;
