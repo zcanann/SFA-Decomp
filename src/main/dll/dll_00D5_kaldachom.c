@@ -396,7 +396,6 @@ void kaldachom_update(int obj)
     ObjTextureRuntimeSlot* texture;
     int ref;
     int state;
-    KaldaChomControl* control;
     f32 scrollPhase;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -428,7 +427,7 @@ void kaldachom_update(int obj)
             kaldachom_updateCombat(obj, state, state);
             if (((CampfireState*)state)->targetState == 0)
             {
-                control = ((CampfireState*)state)->control;
+                KaldaChomControl* control = ((CampfireState*)state)->control;
                 control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
                 if (control->pullupSfxTimer <= lbl_803E3060)
                 {
@@ -454,7 +453,7 @@ void kaldachom_update(int obj)
             }
             else
             {
-                control = ((CampfireState*)state)->control;
+                KaldaChomControl* control = ((CampfireState*)state)->control;
                 texture = objFindTexture((void*)obj, 0, 0);
                 control->textureScrollAngle += 0x1000;
                 scrollPhase = mathSinf((gKaldachomPi * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
