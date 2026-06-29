@@ -699,7 +699,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
                 int n;
                 SpecialGlyph* g = lbl_802C86F0;
                 int val;
-                for (n = 46; n != 0; n--)
+                for (n = 46; n-- != 0;)
                 {
                     if (g->key == ch)
                     {
