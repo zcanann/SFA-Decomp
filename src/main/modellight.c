@@ -1501,17 +1501,17 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
                 red = (red < 0.0f)
                           ? 0.0f
                           : ((red > 255.0f) ? 255.0f : red);
-                green = intensity * light[0xa9];
+                green = ((ModelLightStruct*)light)->lightAmount * light[0xa9];
                 green = (green < 0.0f)
                             ? 0.0f
                             : ((green > 255.0f) ? 255.0f : green);
-                blue = intensity * light[0xaa];
+                blue = ((ModelLightStruct*)light)->lightAmount * light[0xaa];
                 blue = (blue < 0.0f)
                            ? 0.0f
                            : ((blue > 255.0f) ? 255.0f : blue);
-                green = (green > red) ? green : red;
+                green = (red < green) ? green : red;
                 ((ModelLightStruct*)light)->selectionScore = green;
-                blue = (blue > ((ModelLightStruct*)light)->selectionScore) ? blue : ((ModelLightStruct*)light)->selectionScore;
+                blue = (((ModelLightStruct*)light)->selectionScore > blue) ? ((ModelLightStruct*)light)->selectionScore : blue;
                 ((ModelLightStruct*)light)->selectionScore = blue;
             }
 
