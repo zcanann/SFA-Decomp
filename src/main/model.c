@@ -479,6 +479,7 @@ extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, i
 void* ObjModel_LoadModelData(int id)
 {
     int fileOffset, dataLen, jointCount, headerSize, amapFlag;
+    int amapSize;
     void* model;
     if (getTableFileEntry(0x2a, id, &fileOffset) == 0)
     {
@@ -487,7 +488,8 @@ void* ObjModel_LoadModelData(int id)
     ((void (*)(int, int*, int*, int*, int*, int))loadModelsBin)(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
     headerSize = roundUpTo8(headerSize);
     headerSize += 0xb0;
-    model = (void*)roundUpTo16((int)mmAlloc(dataLen + modelGetAmapSize(id, amapFlag, jointCount) + 0x1f4, 9, 0));
+    amapSize = modelGetAmapSize(id, amapFlag, jointCount);
+    model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(0x2b, model, fileOffset, dataLen, 0, id, 0);
     *(s16*)((u8*)model + 0x84) = headerSize;
     *(u16*)((u8*)model + 0x4) = id;
