@@ -1544,7 +1544,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                     ((ParticleSlot*)*grp)[k + row].unk02 = dy + (s.vy - ((GameObject*)o)->anim.localPosY);
                     ((ParticleSlot*)*grp)[k + row].unk04 = dz + (s.vz - ((GameObject*)o)->anim.localPosZ);
                     ((ParticleSlot*)*grp)[k + row].alpha = 0x9b;
-                    ((ParticleSlot*)*grp)[k + row].unk0A = (s16)(*(s16*)(base + (k + row) * 0x10 + 0x1ba) - (gBoneParticleScrollOffset << 2));
+                    ((ParticleSlot*)*grp)[k + row].unk0A = (s16)(((ParticleSlot*)(base + 0x1b0))[k + row].unk0A - (gBoneParticleScrollOffset << 2));
                     pa += 3;
                     pb += 3;
                     pc += 3;
