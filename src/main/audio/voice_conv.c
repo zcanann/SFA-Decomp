@@ -24,44 +24,15 @@ extern f32 lbl_803E7838;
  */
 void voiceInitRegistrationTables(void)
 {
-    u8* p = &voiceMidiKeySlots[0][0];
-    int i;
+    int channel;
+    int key;
 
-    for (i = 0; i < SYNTH_VOICE_REGISTRATION_CLEAR_BLOCKS; i++)
+    for (channel = 0; channel < SYNTH_VOICE_MIDI_CHANNEL_COUNT; channel++)
     {
-        p[0] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[1] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[2] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[3] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[4] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[5] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[6] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[7] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[8] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[9] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[10] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[11] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[12] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[13] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[14] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[15] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[16] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[17] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[18] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[19] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[20] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[21] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[22] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[23] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[24] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[25] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[26] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[27] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[28] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[29] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[30] = SYNTH_VOICE_REGISTRATION_FREE;
-        p[31] = SYNTH_VOICE_REGISTRATION_FREE;
-        p += SYNTH_VOICE_REGISTRATION_CLEAR_STRIDE;
+        for (key = 0; key < SYNTH_VOICE_MIDI_KEY_COUNT; key++)
+        {
+            voiceMidiKeySlots[channel][key] = SYNTH_VOICE_REGISTRATION_FREE;
+        }
     }
     voiceDirectSlots[0] = SYNTH_VOICE_REGISTRATION_FREE;
     voiceDirectSlots[1] = SYNTH_VOICE_REGISTRATION_FREE;
@@ -200,11 +171,13 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 u32 voiceConvertDbToLinear(u32 dbCents)
 {
     f32 scaledDb;
+    f32 ex;
     f32 base;
     f32 result;
 
     scaledDb = (f32)(s32)dbCents;
-    base = powf(lbl_803E7834, scaledDb * lbl_803E7838);
+    ex = lbl_803E7838 * scaledDb;
+    base = powf(lbl_803E7834, ex);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
 }

@@ -456,7 +456,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                 voice->keyBase = key;
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
-                voice->outputFlags |= 0x20000LL;
+                voice->outputFlags = voice->outputFlags | 0x20000LL;
                 vidRemoveVoice((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE));
                 if (result == 0xffffffff)
                 {

@@ -120,13 +120,14 @@ void fn_80179678(int obj)
 void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
 {
     SidekickBallState* state = obj->extra;
+    int objId;
     state->ballMode = SIDEKICK_BALL_THROWN;
     state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
-    ObjHits_EnableObject((int)obj);
-    ObjHits_SyncObjectPositionIfDirty((int)obj);
+    ObjHits_EnableObject(objId = (int)obj);
+    ObjHits_SyncObjectPositionIfDirty(objId);
     state->hittableLatch = 1;
     state->launchX = obj->anim.localPosX;
     state->launchY = obj->anim.localPosY;
@@ -393,7 +394,7 @@ u8 trickyBallMove(u8* obj)
         state->floorDepth = state->floorHeight;
         hasFloorDepth = 1;
     }
-    else if (state->floorY != lbl_803E369C)
+    else if (lbl_803E369C != state->floorY)
     {
         if (((GameObject*)obj)->anim.localPosY > state->floorY)
         {
@@ -413,10 +414,9 @@ u8 trickyBallMove(u8* obj)
 
     if (hasFloorDepth != 0)
     {
-        f32 damp = gSidekickBallFloorDamping;
-        ((GameObject*)obj)->anim.velocityX *= damp;
-        ((GameObject*)obj)->anim.velocityY *= damp;
-        ((GameObject*)obj)->anim.velocityZ *= damp;
+        ((GameObject*)obj)->anim.velocityX *= gSidekickBallFloorDamping;
+        ((GameObject*)obj)->anim.velocityY *= gSidekickBallFloorDamping;
+        ((GameObject*)obj)->anim.velocityZ *= gSidekickBallFloorDamping;
         ((GameObject*)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, ((GameObject*)obj)->anim.velocityY, state->floorDepth);
         if ((((GameObject*)obj)->anim.velocityY < lbl_803E36C0) &&

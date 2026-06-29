@@ -207,8 +207,8 @@ void bombplantspore_updateDrift(void* obj, void* state)
     }
     ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
     {
-        f32 amplitude = ((BombPlantSporeState*)state)->driftAmplitude;
-        f32 amplitudeStep = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amplitude);
+        f32 amplitude;
+        f32 amplitudeStep = (((BombPlantSporeState*)state)->randomPhase - (amplitude = ((BombPlantSporeState*)state)->driftAmplitude)) * lbl_803E53B4;
         ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
     }
 
@@ -249,6 +249,7 @@ void bombplantspore_update(void* obj)
     void* playerObj;
     int detonateMessage;
     int i;
+    int j;
 
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0u)
@@ -349,8 +350,8 @@ void bombplantspore_update(void* obj)
             }
             else
             {
-                f32 driftSpeed = state->driftSpeed;
-                f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+                f32 driftSpeed;
+                f32 driftStep = (state->driftSpeedTarget - (driftSpeed = state->driftSpeed)) * lbl_803E53EC;
                 state->driftSpeed = driftStep * timeDelta + driftSpeed;
             }
         }
@@ -401,7 +402,7 @@ void bombplantspore_update(void* obj)
         {
             Sfx_PlayFromObject(obj, SFXmv_torclp_6);
             (*gExpgfxInterface)->freeSource((u32)obj);
-            for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
+            for (j = 0; j < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; j++)
             {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);

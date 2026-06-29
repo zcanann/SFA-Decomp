@@ -311,7 +311,7 @@ void CameraModeTestStrength_update(short* cam)
         if (m2 != 0)
         {
             int d;
-            yaw = (u16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+            yaw = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
             d = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) -
                 (f32)(cam[1] & 0xffff));
             if (d > 0x8000)

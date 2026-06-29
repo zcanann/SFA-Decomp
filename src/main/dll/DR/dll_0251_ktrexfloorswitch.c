@@ -221,7 +221,7 @@ void ktrexfloorswitch_update(int obj)
     }
     else
     {
-        if (((GameObject*)obj)->unkF8 == 0)
+        if (((GameObject*)obj)->unkF8 != 0)
         {
             tex->textureId = 0x100;
             ((KtrexfloorswitchState*)state)->flags &= ~1;

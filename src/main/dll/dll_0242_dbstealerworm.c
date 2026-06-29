@@ -1975,9 +1975,9 @@ void dbstealerworm_update(u8* objp)
     int obj;
     int off;
     char* entry;
+    int sub3;
     int n;
     int sub2;
-    int sub3;
     int t;
     struct
     {

@@ -407,8 +407,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         }
         else
         {
-            count = 0;
             mask = 1;
+            count = 0;
             for (k = 0; k < 4; k++)
             {
                 n = ((ObjfsaRomCurveDef*)found)->linkIds[k];
@@ -445,8 +445,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         posB = tmpPos;
     }
 
-    count = 0;
     mask = 1;
+    count = 0;
     for (k = 0; k < 4; k++)
     {
         n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
@@ -484,8 +484,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         }
         else
         {
-            count = 0;
             mask = 1;
+            count = 0;
             for (k = 0; k < 4; k++)
             {
                 n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
@@ -765,9 +765,9 @@ u32 isInWalkGroupOrPatch(float* point)
     s16* nx;
     char* offs;
     ObjfsaPatch* patch;
-    s16 idx;
-    s16 i;
     int count;
+    s16 i;
+    s16 idx;
     f32 y;
 
     if (mathFn_800dbff0(point) != 0)
@@ -1168,10 +1168,10 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
     char* stateBytes;
-    int neighborId;
     int low;
     int high;
     int mid;
+    int neighborId;
     int nextCurve;
     float t;
 
@@ -1286,13 +1286,13 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         goto clearAndReturn;
     }
 
-    if (state->reverse == 0)
+    if (state->reverse != 0)
     {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
+        ROMCURVE_REFRESH_CONTROL(0x9c);
     }
     else
     {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
+        ROMCURVE_REFRESH_CONTROL(0xa4);
     }
 
     if (state->moveNetwork != 0)
@@ -1663,7 +1663,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
     char* stateBytes;
-    int currentCurve;
+    u32 currentCurve;
     int nextId;
     int nextCurve;
     f32 t;
@@ -1689,9 +1689,9 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
         startCurveId = nextId;
     }
 
-    *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
-    currentCurve = *(s32*)&state->nodeA0;
-    if (state->nodeA0 == NULL)
+    currentCurve = Objfsa_FindRomCurveById(startCurveId);
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (currentCurve == 0)
     {
         state->nodeA0 = NULL;
         return 1;
@@ -1740,7 +1740,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int curveId;
-    int currentCurve;
+    u32 currentCurve;
     int nextId;
     int nextCurve;
     int distanceCurve;
@@ -1843,16 +1843,16 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
-    int directIndex;
-    int startIndex;
-    int candidateCount;
+    f32* scanBase;
     u32 cur;
+    int queueCurve;
+    int directIndex;
     int directSlot;
     int directLinkId;
     u32 directCurve;
+    int startIndex;
+    int candidateCount;
     int queueCount;
-    int queueCurve;
-    int linkSlot;
     int linkId;
     int linkCurve;
     int insertIndex;
@@ -1860,7 +1860,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int found;
     int i;
     int j;
-    f32* scanBase;
+    int linkSlot;
     f32 distance;
     f32 linkDistance;
     int candidateIds[4];
@@ -2715,8 +2715,8 @@ int RomCurve_func16(double x, double y, double z)
             }
             else
             {
-                i++;
                 p++;
+                i++;
             }
         }
     }
@@ -3149,8 +3149,8 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                                     pq = qscan;
                                     while ((pos < count) && (*pq > newDist))
                                     {
-                                        pos++;
                                         pq++;
+                                        pos++;
                                     }
                                     for (m = count; m > pos; m--)
                                     {
@@ -3295,8 +3295,8 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     pq = qscan;
                                     while ((pos < count) && (*pq > newDist))
                                     {
-                                        pos++;
                                         pq++;
+                                        pos++;
                                     }
                                     for (m = count; m > pos; m--)
                                     {

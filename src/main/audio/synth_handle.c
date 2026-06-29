@@ -242,12 +242,8 @@ resolved_initial:
         slot = SYNTH_HANDLE_INVALID;
 
     resolved_reuse:
-        if (slot == SYNTH_HANDLE_INVALID)
+        if (slot != SYNTH_HANDLE_INVALID)
         {
-            *outHandle = SYNTH_HANDLE_INVALID;
-            return;
-        }
-
         if (noLock != 0)
         {
             synthRestoreQueuedHandle(request->reuseHandle);
@@ -318,12 +314,15 @@ resolved_initial:
         }
         *outHandle = request->reuseHandle;
         return;
+        }
+        *outHandle = SYNTH_HANDLE_INVALID;
+        return;
     }
 
     params.flags = 4;
     if ((request->flags & SYNTH_START_FLAG_PARAM_14) != 0)
     {
-        params.flags = 0x14;
+        params.flags |= 0x10;
     }
     if ((request->flags & SYNTH_START_FLAG_SPEED) != 0)
     {

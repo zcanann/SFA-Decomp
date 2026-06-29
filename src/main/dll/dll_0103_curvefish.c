@@ -180,9 +180,10 @@ void curvefish_update(int obj)
         getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
         (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
     {
-        speedDelta = lbl_803E38F8 * (f32)(u32)setup2->speedChange;
+        f32 hitSpeedFactor = lbl_803E38F8;
+        speedDelta = hitSpeedFactor * (f32)(u32)setup2->speedChange;
         state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
-        if (state->speed > (maxHitSpeed = lbl_803E38F8 * state->maxSpeed))
+        if (state->speed > (maxHitSpeed = hitSpeedFactor * state->maxSpeed))
         {
             state->speed = maxHitSpeed;
         }

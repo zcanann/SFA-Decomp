@@ -203,7 +203,8 @@ void andross_init(int obj, u8* setup)
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject*)obj)->animEventCallback = andross_updateModelAlpha;
     fn_8006CB50();
-    model = *(int*)Obj_GetActiveModel(obj);
+    i = Obj_GetActiveModel(obj);
+    model = *(int*)i;
     for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)
     {
         *(u8*)(ObjModel_GetRenderOp(model, i) + 0x43) = val;

@@ -1492,8 +1492,7 @@ void intersectModLineBuild(int* obj)
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
     segCount = *(u8*)((char*)obj + 0x5c);
-    sp = *(u8**)&((GameObject*)obj)->anim.parent;
-    for (seg = 0; seg < segCount; seg++, sp += 0x14)
+    for (seg = 0, sp = *(u8**)&((GameObject*)obj)->anim.parent; seg < segCount; sp += 0x14, seg++)
     {
         u8* line;
         int i;
@@ -1522,7 +1521,7 @@ void intersectModLineBuild(int* obj)
     }
     {
         int off;
-        for (li = 0, off = 0; li < gIntersectLineCount; li++, off += 0x10)
+        for (li = 0, off = 0; li < gIntersectLineCount; off += 0x10, li++)
         {
             u8* L = (u8*)lbl_803DCF34 + off;
             int t0 = *(s16*)(L + 4) * 2;
@@ -2012,6 +2011,7 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
     int i;
     f32 best;
     f32 cur;
+    f32* arCb;
 
     n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
     if (n != 0)
@@ -2021,8 +2021,10 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
         arrp = arr + 1;
         for (i = 1; i < n; i++, arrp++)
         {
-            cur = val - *(f32*)*arrp;
-            if (cur >= *(f32*)&__AR_Callback)
+            cur = *(f32*)*arrp;
+            cur = val - cur;
+            arCb = &__AR_Callback;
+            if (cur >= *(f32*)arCb)
             {
                 if (best < *(f32*)&__AR_Callback || cur < best)
                 {
@@ -2705,9 +2707,9 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
     f32 lm[12];
     u8* d = fn_80069944((u32*)&j);
     u8* end = d + j * 0x18;
+    int total;
     int grp = 0;
     int outOff = 0;
-    int total;
 
     j = 0;
     total = 0;

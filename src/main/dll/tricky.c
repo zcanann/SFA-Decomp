@@ -1361,7 +1361,7 @@ void hudDrawFn_80121440(void)
                 if ((int)(u8)i < (b74 >> 2)) sel = 0x16;
                 else if ((int)(u8)i > (b74 >> 2)) sel = 0x12;
                 else sel = (b74 & 3) + 0x12;
-                drawTexture(base->icons[sel],
+                drawTexture(*(void**)((u8*)&base->icons[0] + sel * 4),
                             (f32)(int)((u8)i * 0x21 + 0x1e), lbl_803E1FAC, alpha, 0x100);
             }
         }
@@ -1377,7 +1377,7 @@ void hudDrawFn_80121440(void)
     if ((u8)magicId != 0)
     {
         drawTexture(base->icons[(u8)magicId],
-                    (f32)(int)(s16)(krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
+                    (f32)(int)(s16)((u8)krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
     if ((u8)krazoa != 0)
     {
@@ -1407,7 +1407,7 @@ void hudDrawFn_80121440(void)
             {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(base->icons[sel], (f32)(int)(yo + 0x40),
+                drawTexture(*(void**)((u8*)&base->icons[0] + sel * 4), (f32)(int)(yo + 0x40),
                             lbl_803E1FB4, alpha, 0x100);
             }
         }

@@ -3691,9 +3691,9 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     u32 stab0;
     GXColor temp;
     GXColor color2;
-    GXColor fog_var;
     f32 vec3[3];
     int handle;
+    GXColor fog_var;
     int stage_idx;
     u32 stage_count;
     int stage_base;
@@ -3710,7 +3710,7 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, f32 scale)
     ((u8*)&stab1)[2] = lbl_803DEEB2;
     *(u32*)&fog_var = lbl_803E8450;
 
-    PSMTXConcat((f32(*)[4])((u8*)lbl_802C1EA8 + 0xB8), mtx, mtx_110);
+    PSMTXConcat((f32(*)[4])obj, mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, 0x1e, 1);
     GXSetTexCoordGen2(0, 1, 0, 0x1e, 0, 0x7d);
 
@@ -4597,7 +4597,7 @@ void doHeatEffect(u8 alpha)
     extern void getReflectionTexture2(int* out);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
-    extern void fn_80293C64(f32* a, f32* b, f32 c);
+    extern void fn_80293C64(f32 c, f32* a, f32* b);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -4637,7 +4637,7 @@ void doHeatEffect(u8 alpha)
     getTextureFn_8006c5e4(&handle2);
     selectTexture(handle2, 2);
 
-    fn_80293C64(&mulX, &mulY, lbl_803DEF70 * fA);
+    fn_80293C64(lbl_803DEF70 * fA, &mulX, &mulY);
     mulY *= gSynthDelayedActionWord0;
     mulX *= gSynthDelayedActionWord0;
 

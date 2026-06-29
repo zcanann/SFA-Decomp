@@ -458,8 +458,8 @@ void drlasercannon_update(int obj)
     DrLaserCannonState* state = ((GameObject*)obj)->extra;
     DrLaserCannonSetup* setup = (DrLaserCannonSetup*)((GameObject*)obj)->anim.placementData;
     int player = (int)Obj_GetPlayerObject();
-    int hit;
     int spawned;
+    int hit;
     f32 dist;
     f32 nearDist;
     int spawnFlag;

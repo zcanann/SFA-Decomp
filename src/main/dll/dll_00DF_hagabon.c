@@ -161,9 +161,9 @@ void fn_8014E1DC(int obj, HagabonState* state)
 
     *(int*)&lbl_803DDA58 = *(int*)(curve + 0x10);
 
-    state->wavePhaseA += (s32)(lbl_803E260C * timeDelta);
-    state->wavePhaseB += (s32)(lbl_803E2610 * timeDelta);
-    state->wavePhaseC += (s32)(lbl_803E2614 * timeDelta);
+    *(u16*)&state->wavePhaseA += (u16)(lbl_803E260C * timeDelta);
+    *(u16*)&state->wavePhaseB += (u16)(lbl_803E2610 * timeDelta);
+    *(u16*)&state->wavePhaseC += (u16)(lbl_803E2614 * timeDelta);
 
     waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) /
         lbl_803E2620

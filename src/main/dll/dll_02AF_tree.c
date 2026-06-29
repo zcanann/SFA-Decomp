@@ -141,9 +141,11 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 void tree_updateAmbientEffects(int obj, int state)
 {
     int i;
+    TreeState* ts;
 
     if (((GameObject*)obj)->unkF8 != 0)
     {
+        ts = (TreeState*)state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
         {
             if ((void*)((TreeState*)state)->ambientEffectHandles[i] == NULL)
@@ -165,7 +167,7 @@ void tree_updateAmbientEffects(int obj, int state)
                 else
                 {
                     (*(void (**)(int, int))(*(int*)(*(int*)(((TreeState*)state)->ambientEffectHandles[i] + 0x68)) + 0x24))(
-                        ((TreeState*)state)->ambientEffectHandles[i], (int)&((TreeState*)state)->ambientEffectPos[i][0]);
+                        ((TreeState*)state)->ambientEffectHandles[i], (int)&ts->ambientEffectPos[i][0]);
                 }
             }
         }

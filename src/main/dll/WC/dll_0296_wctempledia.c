@@ -76,6 +76,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
                 int entry = fn_8006070C(block, slot);
                 if (*(u8*)(entry + 0x29) == part)
                 {
+                    bit = mask & (1 << (part - 1));
                     if (bit != 0)
                     {
                         mapTextureOverrideSetValue(part, *(int*)(entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
@@ -137,6 +138,7 @@ void wctempledia_update(int obj)
     int k;
 
     state = go->extra;
+    k = (u32)obj;
     setup = (WCTempleDiaSetup*)go->anim.placementData;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
@@ -146,7 +148,7 @@ void wctempledia_update(int obj)
     }
     state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
     go->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)go->anim.rotZ);
-    Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXmn_sml_trex_roar);
+    Sfx_KeepAliveLoopedObjectSound(k, SFXmn_sml_trex_roar);
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         f32 ratio = state->currentSpeed / state->targetTable[2];

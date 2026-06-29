@@ -241,7 +241,10 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
 
     sndBegin();
 
-    for (i = 0; i < dataCurveNum && t->curve[i].id < cid; ++i);
+    {
+        DATA_TAB* c = &t->curve[0];
+        for (i = 0; i < dataCurveNum && c->id < cid; ++c, ++i);
+    }
 
     if (i < dataCurveNum)
     {
@@ -250,12 +253,9 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
             if (dataCurveNum < 2048)
             {
                 {
-                    DATA_TAB* p = &t->curve[dataCurveNum - 1];
+                    DATA_TAB* curve = t->curve;
                     for (j = dataCurveNum - 1; j >= i; --j)
-                    {
-                        p[1] = p[0];
-                        p--;
-                    }
+                        curve[j + 1] = curve[j];
                 }
                 ++dataCurveNum;
             }
@@ -389,7 +389,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 s32 dataAddSampleReference(u16 sid)
 {
     u32 i;
+    SDIR_TAB* tab;
     SAMPLE_HEADER* header;
+    SynthDataTables* t;
     SDIR_DATA* data;
     SDIR_DATA* sdir;
 
@@ -410,7 +412,8 @@ done:
 
     if (sdir->ref_cnt == 0)
     {
-        sdir->addr = (void*)(sdir->offset + (u32)dataSmpSDirs[i].base);
+        tab = (t = (SynthDataTables*)dataSmpSDirTable)->sdir;
+        sdir->addr = (void*)(sdir->offset + (u32)tab[i].base);
         header = &sdir->header;
         hwSaveSample(&header, &sdir->addr);
     }
@@ -488,16 +491,15 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     sndBegin();
 
     main = (mid >> 6) & 0x3ff;
-    m = &t->macMain[main];
-    num = m->num;
+    num = t->macMain[main].num;
 
     if (num == 0)
     {
-        pos = base = m->subTabIndex = dataMacTotal;
+        pos = base = t->macMain[main].subTabIndex = dataMacTotal;
     }
     else
     {
-        base = m->subTabIndex;
+        base = t->macMain[main].subTabIndex;
         for (i = 0; i < num && t->macSub[base + i].id < mid; ++i)
         {
         }
@@ -529,10 +531,10 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
             }
         }
 
-        i = dataMacTotal - 1;
-        for (; i >= pos; --i)
         {
-            t->macSub[i + 1] = t->macSub[i];
+            MAC_SUBTAB* sub = t->macSub;
+            for (i = dataMacTotal - 1; i >= pos; --i)
+                sub[i + 1] = sub[i];
         }
 
         t->macSub[pos].id = mid;
@@ -560,7 +562,7 @@ s32 dataRemoveMacro(u16 mid)
     if (m->num != 0)
     {
         base = m->subTabIndex;
-        for (i = 0; i < m->num && mid != t->macSub[base + i].id; ++i)
+        for (i = 0; i < m->num && mid != ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id; ++i)
         {
         }
 
@@ -720,14 +722,17 @@ FX_TAB* dataGetFX(u16 fid)
 {
     FX_TAB* ret;
     long i;
+    FX_TAB* tab;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     FX_GROUP* g;
+    int zero;
 
     t->getFXKey.id = fid;
     g = t->fxGroup;
-    for (i = 0; i < dataFXGroupNum; ++i)
+    for (i = (zero = 0); i < dataFXGroupNum; ++i)
     {
-        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, g[i].fxTab, g[i].fxNum, sizeof(FX_TAB),
+        tab = g[i].fxTab;
+        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, tab, g[i].fxNum, sizeof(FX_TAB),
                                        fxcmp)))
         {
             return ret;

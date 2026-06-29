@@ -117,7 +117,8 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 dx;
     f32 dy;
     f32 dz;
-    f32 spd;
+    f32 foldScale;
+    f32 scatterScale;
     f32 t;
     f32 scale;
     f32 bx;
@@ -210,12 +211,12 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     state->fadeTimer = state->fadeTimer - timeDelta;
                     if (state->fadeTimer <= lbl_803E54D4)
                     {
-                        spd = lbl_803E54D8;
+                        foldScale = lbl_803E54D8;
                     }
                     else
                     {
                         state->fadeTimer = state->fadeTimer - timeDelta;
-                        spd = lbl_803E54DC * state->fadeTimer;
+                        foldScale = lbl_803E54DC * state->fadeTimer;
                     }
                 }
                 else
@@ -225,7 +226,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     {
                         state->fadeTimer = *(f32*)&lbl_803E54E0;
                     }
-                    spd = lbl_803E54E4 * state->fadeTimer;
+                    foldScale = lbl_803E54E4 * state->fadeTimer;
                 }
                 j = 0;
                 for (; j < 5; j++)
@@ -239,7 +240,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                             t * (y0 - ((GameObject*)state->slots[4])->anim.localPosY) + ((GameObject*)state->slots[4])->anim.localPosY;
                         ((GameObject*)state->slots[j])->anim.localPosZ =
                             t * (z0 - ((GameObject*)state->slots[4])->anim.localPosZ) + ((GameObject*)state->slots[4])->anim.localPosZ;
-                        ((GameObject*)state->slots[j])->anim.rootMotionScale = spd;
+                        ((GameObject*)state->slots[j])->anim.rootMotionScale = foldScale;
                     }
                 }
                 j = 9;
@@ -254,13 +255,13 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                             t * (y1 - ((GameObject*)state->slots[5])->anim.localPosY) + ((GameObject*)state->slots[5])->anim.localPosY;
                         ((GameObject*)state->slots[j])->anim.localPosZ =
                             t * (z1 - ((GameObject*)state->slots[5])->anim.localPosZ) + ((GameObject*)state->slots[5])->anim.localPosZ;
-                        ((GameObject*)state->slots[j])->anim.rootMotionScale = spd;
+                        ((GameObject*)state->slots[j])->anim.rootMotionScale = foldScale;
                     }
                 }
             }
             else
             {
-                spd = lbl_803E54D8;
+                scatterScale = lbl_803E54D8;
                 if ((state->flags & 0x10) != 0)
                 {
                     state->fadeTimer = state->fadeTimer - timeDelta;
@@ -270,7 +271,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     }
                     else
                     {
-                        spd = lbl_803E54E4 * state->fadeTimer;
+                        scatterScale = lbl_803E54E4 * state->fadeTimer;
                     }
                 }
                 for (j = 0; j < 10; j++)
@@ -283,7 +284,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                         ((GameObject*)state->slots[j])->anim.localPosX = dx * t + x0;
                         ((GameObject*)state->slots[j])->anim.localPosY = dy * t + y0;
                         ((GameObject*)state->slots[j])->anim.localPosZ = dz * t + z0;
-                        ((GameObject*)state->slots[j])->anim.rootMotionScale = spd;
+                        ((GameObject*)state->slots[j])->anim.rootMotionScale = scatterScale;
                     }
                 }
             }

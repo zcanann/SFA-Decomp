@@ -14,7 +14,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/baddie_setmove.h"
+void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
+#define Baddie_SetMove(obj, state, moveId, speed, p5, flags) \
+    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -343,7 +345,6 @@ void fn_80153640(int obj, int state)
 {
     u8* fx;
     int newObj;
-    u32 rnd;
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
@@ -361,12 +362,11 @@ void fn_80153640(int obj, int state)
             ((GameObject*)newObj)->anim.velocityX = 0.02f *
                 (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
                  ((GameObject*)fx)->anim.rootMotionScale);
-            rnd = randomGetRange(-10, 10);
             {
                 ((GameObject*)newObj)->anim.velocityY = 0.02f *
                     ((lbl_803E28F0 +
                       ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
-                      (f32)(s32)rnd) -
+                      (f32)(s32)randomGetRange(-10, 10)) -
                      ((GameObject*)fx)->anim.localPosX);
                 ((GameObject*)newObj)->anim.velocityZ = 0.02f *
                     (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -

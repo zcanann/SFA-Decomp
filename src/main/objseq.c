@@ -1696,6 +1696,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 #pragma opt_loop_invariants reset
 #pragma reset
 
+#pragma opt_loop_invariants off
 void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 {
     u8* model;
@@ -1706,10 +1707,10 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     ObjTextureRuntimeSlot* tex2;
     ObjTextureRuntimeSlot* tex5;
     int* modelIds;
-    int vol;
-    int i;
-    int k;
     int slots;
+    int k;
+    int i;
+    int vol;
     s16 scroll;
     f32 val;
 
@@ -1914,8 +1915,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
             {
                 val = DBGCallback;
             }
-            seqObj[0x36] = (u8)(int)
-            val;
+            seqObj[0x36] = val;
         }
 
         if (((ObjSeqState*)seq)->trackRunLength[4] != 0)
@@ -2175,6 +2175,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
         gObjSeqLinkedTransformValid = 1;
     }
 }
+#pragma opt_loop_invariants reset
 
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, void* out)
 {
@@ -3570,7 +3571,8 @@ void ObjSeq_seqState_init(u8* seq)
     while (animIndex < ((ObjSeqState*)seq)->animCount)
     {
         runLength = 0;
-        while (animIndex + runLength < ((ObjSeqState*)seq)->animCount &&
+        commandIndex = ((ObjSeqState*)seq)->animCount;
+        while (animIndex + runLength < commandIndex &&
             track == ((s8)(((ObjSeqState*)seq)->animEntries + (animIndex + runLength) * 8)[5] & 0x1f))
         {
             runLength++;
@@ -4002,8 +4004,8 @@ checked:
             ((ObjSeqState*)seq)->unk70 = ((ObjSeqState*)seq)->flags;
             if (idx == 0)
             {
-                st->cmdFlags[((GameObject*)obj)->seqIndex] = *(u16*)(walk2 + 4);
-                st->handles[((GameObject*)obj)->seqIndex] =
+                *(u8*)((u8*)&st->cmdFlags[0] + ((GameObject*)obj)->seqIndex) = *(u16*)(walk2 + 4);
+                *(int*)((u8*)&st->handles[0] + ((GameObject*)obj)->seqIndex * 4) =
                     *(int*)(*(u8**)&((GameObject*)newObj)->anim.placementData + 0x14);
                 mapFlags = ((ObjAnimComponent*)obj)->modelInstance->flags;
                 if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000))
@@ -4950,9 +4952,9 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     ObjCurveKey* key;
     ObjCurveKey* prev;
     f32 values[4];
-    f32 span;
-    f32 deltaPrev;
     f32 deltaNext;
+    f32 deltaPrev;
+    f32 span;
     f32 t;
 
     if (count <= 0)

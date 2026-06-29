@@ -341,7 +341,7 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
     f32 sa = mathCosf(ra);
     f32 sb = mathCosf(rb);
     f32 sc = mathCosf(rc);
-    f32 t0, t1, A, p, B;
+    f32 t0, t1, A, B, p;
 
     t0 = x * ca;
     t1 = z * ca;
@@ -824,10 +824,10 @@ void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
-    s16 i;
-    u32* op;
     int index;
     int index2;
+    s16 i;
+    u32* op;
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
@@ -1693,9 +1693,9 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
 int musicInitMidiWad(void)
 {
     MusicTrackSlot* table;
-    MusicTrackSlot* found;
     MusicChannel* ch;
     int track, j;
+    MusicTrackSlot* found;
     u32 size;
     int arenaOffset;
     int saved;
@@ -1732,7 +1732,8 @@ int musicInitMidiWad(void)
             size = (size | 0x1f) + 1;
         }
         gMidiWadPayloadStart = (u8*)gMidiWadFileData + 0x1a0;
-        gMidiWadPayloadSize = size - 0x1a0;
+        track = size - 0x1a0;
+        gMidiWadPayloadSize = track;
         gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
         arenaOffset = gMidiWadArenaSize;
         for (track = 0; track <= 0x63; track++)
@@ -2573,17 +2574,11 @@ void Music_Update(void)
     }
     if ((int)fadeB != 0)
     {
-        if (activeVol >= 0x1f4)
-        {
-            activeVol = 0x1f4;
-        }
+        activeVol = activeVol < 0x1f4 ? activeVol : 0x1f4;
     }
     if ((int)fadeA != 0)
     {
-        if (lowVol >= 0x1f4)
-        {
-            lowVol = 0x1f4;
-        }
+        lowVol = lowVol < 0x1f4 ? lowVol : 0x1f4;
     }
 
     ch = gMusicChannels;

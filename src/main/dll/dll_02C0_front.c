@@ -996,18 +996,18 @@ extern f32 lbl_803E2340;
 #pragma opt_propagation off
 void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
-    int xb;
-    int yb;
-    int i;
-    int r;
-    int a;
-    u16 v;
-    Texture* tex;
     int box;
-    u8 idx;
+    int yb;
+    Texture* tex;
+    int xb;
+    f32* mtx;
     f32 m;
     f32 sc3;
-    f32* mtx;
+    int a;
+    u16 v;
+    u8 idx;
+    int i;
+    int r;
 
     m = (lbl_803DD9C4 = lbl_803DD9C4 + timeDelta);
     if (m > *(f32*)&lbl_803E22F0)

@@ -76,7 +76,7 @@ extern u16 gSkeetlaFootstepSfxId2;
 extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
-extern int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags);
+extern int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags);
 extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guardPoint);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
@@ -520,7 +520,7 @@ int trickyMove(u8* obj, f32* targetPos)
         skeetla_updateFacingFromMoveVector(obj, &turnDelta);
         if (skeetla_isInWater(state) != 0)
         {
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 7, 0x2000000);
+            objAnimFn_8013a3f0((int)obj, 7, lbl_803E2468, 0x2000000);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
             ((TrickyState*)state)->unk838 = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
@@ -568,23 +568,23 @@ int trickyMove(u8* obj, f32* targetPos)
         if (moveSpeed > lbl_803E246C)
         {
             ((TrickyState*)state)->unk7A0f = lbl_803E2440;
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 0x30, 0x3000000);
+            objAnimFn_8013a3f0((int)obj, 0x30, lbl_803E2468, 0x3000000);
         }
         else if (moveSpeed > lbl_803E23E8)
         {
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 5, 0x3000000);
+            objAnimFn_8013a3f0((int)obj, 5, lbl_803E2468, 0x3000000);
         }
         else if (moveSpeed > lbl_803E2470)
         {
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 4, 0x3000000);
+            objAnimFn_8013a3f0((int)obj, 4, lbl_803E2468, 0x3000000);
         }
         else if (moveSpeed > lbl_803E2474)
         {
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 2, 0x3000000);
+            objAnimFn_8013a3f0((int)obj, 2, lbl_803E2468, 0x3000000);
         }
         else
         {
-            objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 1, 0x3000000);
+            objAnimFn_8013a3f0((int)obj, 1, lbl_803E2468, 0x3000000);
         }
         trickyDebugPrint(debugStrings + 0x1a0);
         return 1;
@@ -600,7 +600,7 @@ int trickyMove(u8* obj, f32* targetPos)
         if (skeetla_isInWater(state) != 0)
         {
             trickyDebugPrint(debugStrings + 0x1bc);
-            objAnimFn_8013a3f0(lbl_803E243C, (int)obj, 8, 0);
+            objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
             ((TrickyState*)state)->unk79C = lbl_803E2440;
             ((TrickyState*)state)->unk838 = lbl_803E23DC;
         }
@@ -640,7 +640,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 }
             }
             ((GameObject*)obj)->anim.rotX = previousYaw;
-            objAnimFn_8013a3f0(lbl_803E2478, (int)obj, animId, 0x1000100);
+            objAnimFn_8013a3f0((int)obj, animId, lbl_803E2478, 0x1000100);
         }
     }
 
@@ -653,7 +653,7 @@ int trickyMove(u8* obj, f32* targetPos)
     return 1;
 }
 
-int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
+int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
     f32 fz;
@@ -1147,7 +1147,7 @@ void skeetla_spawnLinkedSparks(u8* obj)
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance)
 {
     f32 projection[3];
-    f32 centerToStart;
+    f32 dx;
     f32 centerToEnd;
     f32 minDistanceSq;
     f32 limitDistanceSq;
@@ -1157,7 +1157,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 intercept;
     f32 perpSlope;
     f32 dz;
-    f32 dx;
+    f32 centerToStart;
     f32 length;
     int useBlendedDistance;
 

@@ -304,40 +304,41 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
             bitVal = GameBit_Get((int)state->stateSfxId);
             state->stateSfxReady = bitVal;
         }
-        if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-            (mode = state->mode, mode != DFPTARGETBLOCK_MODE_SETTLED))
+        if ((state->completionSfxReady != '\0') || (state->stateSfxReady == '\0') ||
+            (mode = state->mode, mode == DFPTARGETBLOCK_MODE_SETTLED))
         {
-            if ((mode == DFPTARGETBLOCK_MODE_RAISING) || (mode == DFPTARGETBLOCK_MODE_RESETTING))
+            return;
+        }
+        if ((mode == DFPTARGETBLOCK_MODE_RAISING) || (mode == DFPTARGETBLOCK_MODE_RESETTING))
+        {
+            if (obj->y <= home->y)
             {
-                if (obj->y <= home->y)
+                obj->y = obj->y + timeDelta;
+                if (obj->y >= home->y)
                 {
-                    obj->y = obj->y + timeDelta;
-                    if (obj->y >= home->y)
-                    {
-                        obj->y = home->y;
-                        state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
-                    }
+                    obj->y = home->y;
+                    state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
                 }
             }
-            else if (mode == DFPTARGETBLOCK_MODE_LOWERING)
+        }
+        else if (mode == DFPTARGETBLOCK_MODE_LOWERING)
+        {
+            if (obj->y >= home->y - lbl_803E64AC)
             {
-                if (obj->y >= home->y - lbl_803E64AC)
+                obj->y = lbl_803E6494 * timeDelta + obj->y;
+                if (obj->y <= home->y - lbl_803E64AC)
                 {
-                    obj->y = lbl_803E6494 * timeDelta + obj->y;
-                    if (obj->y <= home->y - lbl_803E64AC)
-                    {
-                        obj->y = home->y - lbl_803E64AC;
-                        state->mode = DFPTARGETBLOCK_MODE_SETTLED;
-                        GameBit_Set((int)state->completionSfxId, 1);
-                    }
+                    obj->y = home->y - lbl_803E64AC;
+                    state->mode = DFPTARGETBLOCK_MODE_SETTLED;
+                    GameBit_Set((int)state->completionSfxId, 1);
                 }
             }
-            else if (state->pathState != NULL)
-            {
-                (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
-                (*gPathControlInterface)->apply(obj, state->pathState);
-                (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
-            }
+        }
+        else if (state->pathState != NULL)
+        {
+            (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
+            (*gPathControlInterface)->apply(obj, state->pathState);
+            (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
         }
     }
     return;
@@ -345,7 +346,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
 
 void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
 {
-    char pointCount;
+    s8 pointCount;
     bool found;
     int count;
     u8 bitVal;

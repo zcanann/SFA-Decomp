@@ -113,6 +113,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     f32 r;
     f32 spd;
     f32 h;
+    f32 mouthY;
 
     control = ((CampfireState*)state)->control;
     ref = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -146,9 +147,8 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
                 spd;
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
-            *(f32*)(setup + 0x28) =
-            (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY + r -
-                ((ObjPlacement*)ref)->posY) / spd;
+            mouthY = lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY;
+            *(f32*)(setup + 0x28) = (mouthY + r - ((ObjPlacement*)ref)->posY) / spd;
             *(f32*)(setup + 0x2c) =
                 (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ - ((ObjPlacement*)ref)->posZ) /
                 spd;
@@ -396,7 +396,6 @@ void kaldachom_update(int obj)
     ObjTextureRuntimeSlot* texture;
     int ref;
     int state;
-    KaldaChomControl* control;
     f32 scrollPhase;
 
     state = *(int*)&((GameObject*)obj)->extra;
@@ -428,7 +427,7 @@ void kaldachom_update(int obj)
             kaldachom_updateCombat(obj, state, state);
             if (((CampfireState*)state)->targetState == 0)
             {
-                control = ((CampfireState*)state)->control;
+                KaldaChomControl* control = ((CampfireState*)state)->control;
                 control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
                 if (control->pullupSfxTimer <= lbl_803E3060)
                 {
@@ -454,7 +453,7 @@ void kaldachom_update(int obj)
             }
             else
             {
-                control = ((CampfireState*)state)->control;
+                KaldaChomControl* control = ((CampfireState*)state)->control;
                 texture = objFindTexture((void*)obj, 0, 0);
                 control->textureScrollAngle += 0x1000;
                 scrollPhase = mathSinf((gKaldachomPi * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8

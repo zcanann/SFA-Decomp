@@ -1576,8 +1576,8 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     s32 dy, dx;
     ModgfxVertexData* slot;
     ModgfxVertexData* cur;
-    u8 ovy, ovx;
     ModgfxVertexData* prev;
+    u8 ovx, ovy;
     int j;
 
     dx = (s32)(*(f32*)&lbl_803DF438 * (in[1] * gModgfxMotionStep));

@@ -766,6 +766,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[4].y = lbl_803E0948;
     e[4].z = lbl_803E0944;
     e[5].layer = 1;
+    e[5].layer = 1;
     e[5].flags = 0x12;
     e[5].tex = &base[212];
     e[5].mode = 0x100;

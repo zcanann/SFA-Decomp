@@ -808,7 +808,7 @@ void hoodedZyck_update(s16* obj, u8* state)
 {
     int moved;
     int turnRaw;
-    u32 mag;
+    u16 mag;
     u32 grabbed;
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
@@ -1850,8 +1850,9 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    if (*(f32*)(state + 0x328) != (cap = lbl_803E2BA8) && *(u8*)(state + 0x33f) != 0)
+    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0)
     {
+        cap = lbl_803E2BA8;
         *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
         if (*(f32*)(state + 0x328) <= cap)
         {

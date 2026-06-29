@@ -1549,6 +1549,7 @@ void skyFn_80088c94(int flags, int mode)
     u8* env;
     u8* sky;
     int i;
+    u8* entry;
 
     for (i = 0; i < 2; i++)
     {
@@ -1560,7 +1561,9 @@ void skyFn_80088c94(int flags, int mode)
             }
             else
             {
-                ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 = 0;
+                entry = gSkyState;
+                entry = entry + i * 0xa4;
+                ((SkyBlendStateFlags*)(entry + 0xc1))->unused80 = 0;
             }
         }
     }

@@ -1869,6 +1869,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
+    walker = objects + startIndex;
     if (defNo != -1)
     {
         objectIndex = startIndex;
@@ -2206,19 +2207,19 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
 {
 
     PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
-    ObjAnimComponent* objAnim;
-    u8 step;
-    f32 leftScale;
-    f32 rightScale;
-    f32 phase;
-    f32 wave;
-    int joint;
     ObjModelInstance* model;
-    u8* jointData;
     int jointDataOffset;
+    f32 leftScale;
     int poseOffset;
-    int jointCount;
+    u8* jointData;
     s16 rotation;
+    int joint;
+    ObjAnimComponent* objAnim;
+    f32 phase;
+    u8 step;
+    f32 rightScale;
+    int jointCount;
+    f32 wave;
 
     objAnim = (ObjAnimComponent*)obj;
     step = lbl_803DE998 * timeDelta;

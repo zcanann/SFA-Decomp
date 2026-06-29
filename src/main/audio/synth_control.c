@@ -119,11 +119,13 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += SYNTH_VOICE_STRIDE)
     {
         u8 lowIndex;
+        u32* link;
 
         lowIndex = voiceIndex;
         *(u32*)(synthVoice + voiceOffset + 0xF4) = SYNTH_INVALID_LINK_ID;
-        *(u32*)(synthVoice + voiceOffset + 0x114) = 0;
-        *(u32*)(synthVoice + voiceOffset + 0x118) = 0;
+        link = (u32*)(synthVoice + voiceOffset + 0x114);
+        link[0] = 0;
+        link[1] = 0;
         *(u32*)(synthVoice + voiceOffset + 0x110) = 0;
         *(u8*)(synthVoice + voiceOffset + 0x10C) = 0;
         *(u8*)(synthVoice + voiceOffset + 0x121) = 0xFF;

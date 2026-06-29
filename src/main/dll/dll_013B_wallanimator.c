@@ -219,11 +219,15 @@ void wallanimator_update(int obj)
 #pragma peephole on
 void wallanimator_init(s16* obj, s16* placement)
 {
+    int oi;
     WallanimatorState* state;
+    GameObject* go;
 
-    state = ((GameObject*)obj)->extra;
+    go = (GameObject*)obj;
+    oi = (int)obj;
+    state = go->extra;
     *obj = ((WallanimatorPlacement*)placement)->initialRotX;
-    ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
+    ObjGroup_AddObject(oi, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
     {

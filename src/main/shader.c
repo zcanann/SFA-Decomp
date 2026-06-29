@@ -866,8 +866,7 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     }
     else
     {
-        tabEntry = lbl_803DCE78;
-        getTabEntry(tabEntry, 0x1f, mapId << 5, 0x20);
+        getTabEntry(tabEntry = lbl_803DCE78, 0x1f, mapId << 5, 0x20);
         curMapType = *(s8*)(tabEntry + 0x1c);
     }
     lbl_803DCEB4 = 0;
@@ -898,14 +897,14 @@ extern int return0_80060B90(void* blk);
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
-    int blockId;
-    int byteOff;
-    char* entry;
-    int slotIdx;
     s16* arr;
-    int i;
     void* blk;
+    int byteOff;
+    int i;
+    int slotIdx;
+    int blockId;
     s8* statusArr;
+    char* entry;
 
     entry = (char*)lbl_803822A0[layer];
     statusArr = (s8*)gMapBlockLayerTables[layer];
@@ -1214,8 +1213,8 @@ int mapProcessRomList(int slot)
     int i;
     char* cur;
     u8 flag;
-    int count;
     ShaderRomListSlot* p;
+    int count;
     ShaderRomListSlot* slots;
     ShaderRomListSlot* entry;
     s16* rects;
@@ -1257,7 +1256,7 @@ int mapProcessRomList(int slot)
     entry = &slots[i];
     entry->romlist = (void*)rl;
     *(int*)(slot * 4 + 0x83A8 + (char*)base) = rl;
-    *(s16*)(base + i * 8 + 0x4190) = slot;
+    *(s16*)((char*)&slots[i] + 4) = slot;
     lbl_803DCEA0 = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
@@ -1368,10 +1367,11 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy
 void playerUpdateFn_8005649c(void)
 {
     int count;
+    int slot;
     int** objs;
     char* cam;
     int** e;
-    int i, slot;
+    int i;
     f32 lx, ly, lz;
 
     objs = ObjGroup_GetObjects(6, &count);
@@ -2539,7 +2539,7 @@ extern void mapSetupPlayer(void);
 extern void* saveGameGetEnvState(void);
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void skyFn_80088c94(int flags, u8 mode);
-extern void skyFn_80088e54(f32 a, int on);
+extern void skyFn_80088e54(int on, f32 a);
 
 void beginLoadingMap(void)
 {
@@ -2666,7 +2666,7 @@ void beginLoadingMap(void)
         }
         skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
         skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
-        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) ? 1 : 0);
+        skyFn_80088e54((*(u8*)(env + 0x40) & 0x10) ? 1 : 0, lbl_803DEBCC);
         if (*(u8*)(env + 0x40) & 1)
             bo = 1;
         else
@@ -3244,9 +3244,12 @@ static inline int mapFindRomListSlot(char* p2, int id)
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
-    int slot;
-    int cv3, cv4;
+    char* p6;
     char* entry;
+    char* p2;
+    int cv4;
+    int slot;
+    int cv3;
     s16* pairs;
     s16* rects;
     u32 v;
@@ -3255,8 +3258,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     id = mapCoordsToId(x, z, layer);
     if (id != -1)
     {
-        char* p2 = (char*)gShaderRomListSlots;
-        char* p6;
+        p2 = (char*)gShaderRomListSlots;
         slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
@@ -3325,19 +3327,26 @@ extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 #pragma optimization_level 2
 void mapDebugRender(int* state)
 {
-    int bx, bz;
+    int sz;
+    int wz;
     char* blk;
-    s8* tbl;
-    int sx, sz;
-    int wx, wz;
+    int dy;
+    int sx;
+    int y1;
+    int y0a;
+    int bz;
     int ci;
     int y0;
-    int y0a;
+    int wx;
     f32 cy;
-    int y1;
-    int yy, dy, h;
+    int bx;
+    int yy;
+    s8* tbl;
+    int h;
     int step;
-    int row, cx, cz;
+    int row;
+    int cx;
+    int cz;
     int cell;
     int v;
     int n;

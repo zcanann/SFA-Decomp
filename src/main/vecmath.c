@@ -626,6 +626,7 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     f32 c1;
     f32 c2;
     f32 b0;
+    f32 scale;
     f32 b1;
     f32 a2;
     f32 roll;
@@ -658,7 +659,8 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     {
         f32 d;
         f32 s;
-        *out0 = (s = gVecMathAngleScale) * yaw / (d = gVecMathTwoPi);
+        scale = (s = gVecMathAngleScale);
+        *out0 = scale * yaw / (d = gVecMathTwoPi);
         *out1 = s * sinp / d;
         *out2 = s * roll / d;
     }

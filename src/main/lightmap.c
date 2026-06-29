@@ -1530,6 +1530,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     int newR;
     int nibble;
     int i;
+    u8* s0;
 
     countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
     modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
@@ -1542,8 +1543,9 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     cursor = state[4] + 4;
     state[4] = cursor;
     countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
-    base = (int*)(countShifted + state[0]);
+    s0 = (u8*)state[0];
+    v = s0[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
@@ -2461,9 +2463,11 @@ extern s16 lbl_803DCEB8;
 extern void* lbl_803DCE6C;
 extern void* lbl_803DCE68;
 
+#pragma opt_propagation off
 void initMapBlocks(void)
 {
     u8* mb = (u8*)lbl_8037E0C0;
+    u32 zero;
     u32* q;
     u16* p;
     void* tmp;
@@ -2495,48 +2499,49 @@ void initMapBlocks(void)
     loadAssetFileById(&lbl_803DCE80, 0x29);
 
     q = (u32*)(mb + 0x83a8);
+    zero = 0;
     for (i = 0; i < 3; i++)
     {
-        q[0] = 0;
-        q[1] = 0;
-        q[2] = 0;
-        q[3] = 0;
-        q[4] = 0;
-        q[5] = 0;
-        q[6] = 0;
-        q[7] = 0;
-        q[8] = 0;
-        q[9] = 0;
-        q[10] = 0;
-        q[11] = 0;
-        q[12] = 0;
-        q[13] = 0;
-        q[14] = 0;
-        q[15] = 0;
-        q[16] = 0;
-        q[17] = 0;
-        q[18] = 0;
-        q[19] = 0;
-        q[20] = 0;
-        q[21] = 0;
-        q[22] = 0;
-        q[23] = 0;
-        q[24] = 0;
-        q[25] = 0;
-        q[26] = 0;
-        q[27] = 0;
-        q[28] = 0;
-        q[29] = 0;
-        q[30] = 0;
-        q[31] = 0;
-        q[32] = 0;
-        q[33] = 0;
-        q[34] = 0;
-        q[35] = 0;
-        q[36] = 0;
-        q[37] = 0;
-        q[38] = 0;
-        q[39] = 0;
+        q[0] = zero;
+        q[1] = zero;
+        q[2] = zero;
+        q[3] = zero;
+        q[4] = zero;
+        q[5] = zero;
+        q[6] = zero;
+        q[7] = zero;
+        q[8] = zero;
+        q[9] = zero;
+        q[10] = zero;
+        q[11] = zero;
+        q[12] = zero;
+        q[13] = zero;
+        q[14] = zero;
+        q[15] = zero;
+        q[16] = zero;
+        q[17] = zero;
+        q[18] = zero;
+        q[19] = zero;
+        q[20] = zero;
+        q[21] = zero;
+        q[22] = zero;
+        q[23] = zero;
+        q[24] = zero;
+        q[25] = zero;
+        q[26] = zero;
+        q[27] = zero;
+        q[28] = zero;
+        q[29] = zero;
+        q[30] = zero;
+        q[31] = zero;
+        q[32] = zero;
+        q[33] = zero;
+        q[34] = zero;
+        q[35] = zero;
+        q[36] = zero;
+        q[37] = zero;
+        q[38] = zero;
+        q[39] = zero;
         q += 40;
     }
 
@@ -2564,6 +2569,7 @@ void initMapBlocks(void)
     memset(mb + 0x8818, 0, 0xfa0);
     *(u32*)(mb + 0x8818) = -1;
 }
+#pragma opt_propagation reset
 
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);

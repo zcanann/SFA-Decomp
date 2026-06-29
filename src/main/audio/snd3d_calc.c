@@ -331,6 +331,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
     u8* base;
     int groupCount;
     int groupIndex;
+    int gi;
 
     base = lbl_803CC8C0;
     group = (S3DMixGroup*)(base + 0x50);
@@ -353,8 +354,8 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
         lbl_803DE36B++;
     }
 
-    ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedCount++;
-    node = ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead;
+    ((S3DMixGroup*)(base + 0x50))[gi = groupIndex].sortedCount++;
+    node = ((S3DMixGroup*)(base + 0x50))[gi].sortedHead;
     prev = (S3DSortedNode*)0x0;
     while (node != (S3DSortedNode*)0x0)
     {
@@ -368,7 +369,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
 
     if (prev == (S3DSortedNode*)0x0)
     {
-        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead = &((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D];
+        ((S3DMixGroup*)(base + 0x50))[gi].sortedHead = &((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D];
     }
     else
     {

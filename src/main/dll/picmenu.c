@@ -190,14 +190,13 @@ void AttractMovieAudio_Shutdown(void)
 
 BOOL AttractMovieAudio_Init(int audioMode)
 {
-    register char* base;
     u32 saved;
     AIDCallback oldCb;
     register AIDCallback dmaCallback;
 
-    base = (char*)(int)lbl_803A57C0;
-    memset((AttractMoviePlayer*)(base + 0x5A0), 0, sizeof(AttractMoviePlayer));
-    OSInitMessageQueue((OSMessageQueue*)(base + 0x50C), (void*)(base + ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES), 3);
+    memset((AttractMoviePlayer*)((char*)(int)lbl_803A57C0 + 0x5A0), 0, sizeof(AttractMoviePlayer));
+    OSInitMessageQueue((OSMessageQueue*)((char*)(int)lbl_803A57C0 + 0x50C),
+                       (void*)((char*)(int)lbl_803A57C0 + ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES), 3);
 
     if (!THPInit())
     {
@@ -227,9 +226,9 @@ BOOL AttractMovieAudio_Init(int audioMode)
 
     if (lbl_803DD66C == 0)
     {
-        memset(base, 0, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
-        DCFlushRange(base, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
-        AIInitDMA((u32)(base + lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+        memset((char*)(int)lbl_803A57C0, 0, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
+        DCFlushRange((char*)(int)lbl_803A57C0, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
+        AIInitDMA((u32)((char*)(int)lbl_803A57C0 + lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
                   ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         AIStartDMA();
     }

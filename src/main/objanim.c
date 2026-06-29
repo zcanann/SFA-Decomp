@@ -139,14 +139,14 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     f32 value;
     int wrapped;
     int countdown;
-    int previousFrame;
-    int currentFrame;
-    int scanMode;
     int eventCount;
     int eventIndex;
     ObjAnimPackedEvent eventEntry;
-    int eventFrame;
+    int previousFrame;
+    int currentFrame;
     int eventId;
+    int eventFrame;
+    int scanMode;
 
     objAnim = (ObjAnimComponent*)objAnimHandle;
     wrapped = 0;
@@ -474,32 +474,32 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount
 int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float* phaseOut)
 {
     ObjAnimBank* bank;
-    ObjAnimDef* animDef;
-    ObjAnimState* state;
-    ObjAnimMoveData* moveData;
     ObjAnimRootCurve* curve;
+    f32 previousDistance;
+    ObjAnimMoveData* moveData;
+    ObjAnimState* state;
     ObjAnimRootCurve* blendCurve;
     ObjModelInstance* model;
     s16* axis;
     s16* blendSamples;
+    s16 axisFirstSample;
+    f32 nextDistance;
+    int sampleIndex;
+    f32 targetDistance;
+    f32 sampleProgress;
+    f32 phase;
+    int lastSample;
+    f32 phaseStep;
+    f32 sampleFraction;
     f32 rootScale;
+    int segmentCount;
+    f32 sampleCount;
     f32 blendScale;
     f32 blendWeight;
     f32 moveWeight;
-    f32 targetDistance;
-    f32 sampleCount;
-    f32 phaseStep;
-    f32 sampleProgress;
-    f32 sampleFraction;
-    f32 previousDistance;
-    f32 nextDistance;
-    f32 phase;
-    int segmentCount;
-    int sampleIndex;
-    int lastSample;
     int hasFirstAxis;
     int broke;
-    s16 axisFirstSample;
+    ObjAnimDef* animDef;
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;

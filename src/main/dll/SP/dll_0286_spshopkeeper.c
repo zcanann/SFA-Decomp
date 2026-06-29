@@ -247,11 +247,11 @@ void shopkeeper_init(int obj)
 int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
 {
     int state;
-    int state2;
-    void* player;
+    int digit;
     int slot;
     int i;
-    int digit;
+    int state2;
+    void* player;
     int hundreds;
     ObjTextureRuntimeSlot* tex;
     int* uiDll;

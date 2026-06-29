@@ -193,10 +193,7 @@ void vfplift1_updateState(int obj)
     VfpLiftPlacement* setup;
     VfpLiftState* state;
     void* player;
-    s16 gate0;
-    s16 gate1;
-    s16 gate2;
-    s16 gate3;
+    s16 gate[4];
 
     setup = (VfpLiftPlacement*)((GameObject*)obj)->anim.placementData;
     state = (VfpLiftState*)((GameObject*)obj)->extra;
@@ -207,18 +204,18 @@ void vfplift1_updateState(int obj)
         return;
     }
 
-    gate0 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_0);
-    gate1 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_1);
-    gate2 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_2);
-    gate3 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_3);
+    gate[0] = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_0);
+    gate[1] = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_1);
+    gate[2] = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_2);
+    gate[3] = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_3);
     if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) == 2)
     {
-        gate0 = 1;
-        gate1 = gate0;
-        gate2 = gate0;
-        gate3 = gate0;
+        gate[0] = 1;
+        gate[1] = gate[0];
+        gate[2] = gate[0];
+        gate[3] = gate[0];
     }
-    if (gate0 != 0 && gate1 != 0 && gate2 != 0 && gate3 != 0 &&
+    if (gate[0] != 0 && gate[1] != 0 && gate[2] != 0 && gate[3] != 0 &&
         state->mode == VFPLIFT_STATE_IDLE && GameBit_Get(VFPLIFT1_READY_GAMEBIT) == 0)
     {
         vfplift_trigger(VFPLIFT1_TRIGGER_READY, obj);

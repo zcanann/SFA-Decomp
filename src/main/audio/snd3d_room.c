@@ -244,9 +244,9 @@ void s3dUpdateRoomDistances(void)
  */
 void s3dAllocateRoomStudios(void)
 {
-    SndSpatialEntry* entry;
     SndSpatialListener* listener;
     u32 listenerCount;
+    SndSpatialEntry* entry;
     f32 fadeScale;
     f64 fadeThreshold;
 

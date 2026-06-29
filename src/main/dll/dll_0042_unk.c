@@ -86,13 +86,13 @@ extern f32 lbl_803E1738;
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
-    float zB;
+    float bestLower;
     float zLim;
     float pt0;
     float wy;
     float diff;
     float bestUpper;
-    float bestLower;
+    float zB;
     int res;
     int count;
     int i;
@@ -578,7 +578,8 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         dy = dy / dist;
     }
     ratio = PSVECMag(&target->velocityX);
-    speed = ratio * (lbl_803E1704 * timeDelta);
+    speed = lbl_803E1704 * timeDelta;
+    speed = ratio * speed;
     if (speed < lbl_803E16A4)
     {
         speed = lbl_803E16A4;
@@ -703,8 +704,8 @@ void camstatic_update(CameraObject* camera)
     float dz;
     float dy;
     float dx;
-    u8 probeTraceScratch[112];
     u8 wallTraceScratch[116];
+    u8 probeTraceScratch[112];
 
     target = (GameObject*)camera->anim.targetObj;
     if (target == NULL)

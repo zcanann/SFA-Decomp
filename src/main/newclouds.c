@@ -195,8 +195,7 @@ void newclouds_onMapSetup(void)
     gNewCloudScrollPhaseB = a;
     gNewCloudScrollPhaseC = a;
     lbl_803DD190 = a;
-    b = lbl_803DF1A4;
-    gNewCloudOvercastFadeLevel = b;
+    b = (gNewCloudOvercastFadeLevel = lbl_803DF1A4);
     gNewCloudOvercastFadeRate = a;
     gNewCloudSnowFlashAlpha = 0;
     lbl_803DB764 = b;
@@ -923,6 +922,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
         }
         else if (i < segs)
         {
+            f32 e2, e1, e0;
             PSVECScale(up, offset,
                        lbl_803DF1BC *
                        (lbl_803DF1C0 * (len * randomGetRange(1, 100))
@@ -940,9 +940,15 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
             px += scaled[0] * (step = weight * (len * (segs - i)));
             py += scaled[1] * step;
             pz += scaled[2] * step;
-            GXWGFifo.f32 = px + offset[0];
-            GXWGFifo.f32 = py + offset[1];
-            GXWGFifo.f32 = pz + offset[2];
+            e0 = offset[0];
+            e0 = px + e0;
+            e1 = offset[1];
+            e1 = py + e1;
+            e2 = offset[2];
+            e2 = pz + e2;
+            GXWGFifo.f32 = e0;
+            GXWGFifo.f32 = e1;
+            GXWGFifo.f32 = e2;
             GXWGFifo.f32 = lbl_803DF1A0;
             GXWGFifo.f32 = lbl_803DF1A0;
         }
@@ -1047,14 +1053,14 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 {
     f32 len;
     f32 total;
-    f32 progress;
-    f32 weight;
+    f32 py;
+    f32 pz;
     f32 nx;
     f32 ny;
     f32 nz;
     f32 px;
-    f32 py;
-    f32 pz;
+    f32 weight;
+    f32 progress;
     f32 step;
     int i;
     int halfWidth;
@@ -1974,7 +1980,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && cloud->unk144E != 0)
     {
-        env[*(u16*)(params + 0x26) + 0x41] = (s8)cloud->unk144D;
+        *(s8*)&env[*(u16*)(params + 0x26) + 0x41] = cloud->unk144D;
         ((NewCloud*)NC_CLOUD)->unk144D = 1 - ((NewCloud*)NC_CLOUD)->unk144D;
         if (((NewCloud*)NC_CLOUD)->unk144D == 1)
         {
@@ -2544,8 +2550,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     {
         GXBegin(0x90, 4, (((NewCloud*)p)->flakeCount * 3 / 4));
     }
-    part = *(SnowFlake**)(p + 4);
-    for (j = 0; j < ((NewCloud*)p)->flakeCount; j++)
+    for (j = 0, part = *(SnowFlake**)(p + 4); j < ((NewCloud*)p)->flakeCount; j++)
     {
         if (part->unk16 != (u8)texIdx)
         {

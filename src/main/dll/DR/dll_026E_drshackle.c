@@ -82,8 +82,10 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     f32 jointPos[3];
     f32 parentPos[3];
+    char* mdPtr;
     int i;
     BitFlags8* bf = (BitFlags8*)(p + 0x1a);
+    DrshacklePlacement* placement;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
 
     if (bf->b0 == 0)
@@ -101,18 +103,19 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
     }
     model = DrShackle_GetActiveModel((void*)a);
     modelData = *(int**)model;
+    mdPtr = (char*)modelData + 0x3c;
 
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rotY = 0;
     ObjModel_CopyJointTranslation(model, joint1, jointPos);
-    ObjModel_CopyJointTranslation(model, *(s8*)(*(int*)((char*)modelData + 0x3c) + joint1 * 28),
+    ObjModel_CopyJointTranslation(model, *(s8*)(*(int*)mdPtr + joint1 * 28),
                                   parentPos);
     PSVECSubtract(parentPos, jointPos, jointPos);
 
     if (((DrshacklePlacement*)q)->quarterTurns != 0)
     {
         ((GameObject*)obj)->anim.rotZ =
-            (s16)((((DrshacklePlacement*)q)->quarterTurns << 14) + getAngle(jointPos[2], jointPos[0]));
+            (s16)(((placement = (DrshacklePlacement*)q)->quarterTurns << 14) + getAngle(jointPos[2], jointPos[0]));
         ((GameObject*)obj)->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
     }
     else
@@ -249,7 +252,7 @@ void drshackle_update(int obj)
     }
 }
 
-void drshackle_hitDetect(int obj)
+void drshackle_hitDetect(unsigned long obj)
 {
     char* p = ((GameObject*)obj)->extra;
     if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(p + 0x1a))->b0 != 0)

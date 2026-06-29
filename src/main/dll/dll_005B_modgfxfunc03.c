@@ -76,14 +76,14 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         GfxCmd entries[32];
     } buf;
     u8* base = lbl_80311E30;
-    int ret = 0;
-    u8* spr;
-    u8* obj;
-    GfxCmd* entries;
     GfxCmd* e;
-    void* tex;
-    int n;
+    u8* spr;
     int cnt;
+    GfxCmd* entries;
+    int n;
+    void* tex;
+    int ret = 0;
+    u8* obj;
     spr = Gameplay_GetActiveModel(sourceObj);
     *(u32*)&r = lbl_803E0730;
     if (countRange != NULL)

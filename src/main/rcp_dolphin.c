@@ -2010,10 +2010,10 @@ extern f32 lbl_803DEB64;
 void lightFn_80052974(f32 a, f32 b)
 {
     f32 z;
+    f32 x0;
     f32 scale;
     f32 half;
     f32 w;
-    f32 x0;
     f32 y;
     f32 yy;
     f32 x1;
@@ -2638,8 +2638,8 @@ void texRestructRefs(int mode)
     printHeapStats(1);
     OSReport(strs + 0x1194);
     testAndSet_onlyUseHeaps1and2(1);
-    i = 0;
     off = 0;
+    i = 0;
     for (; i < gLoadedTextureCount; off += 16, i++)
     {
         tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
@@ -2677,7 +2677,7 @@ void texRestructRefs(int mode)
         done = 1;
         i = 0;
         off = 0;
-        for (; i < gLoadedTextureCount; i++, off += 16)
+        for (; i < gLoadedTextureCount; off += 16, i++)
         {
             tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
             if (tex != NULL && ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->flag != 0 &&
@@ -2781,23 +2781,23 @@ void* textureLoad(int texId, u8 flag)
     LoadedTextureEntry* entry;
     u8* walk;
     u8* tex;
-    u8* first;
+    int word;
     int orig;
-    u8* buf;
+    int packed;
     int restore;
     int disabled;
-    int n;
-    u16 m;
-    int bank;
+    u32 size;
     int file;
+    int bank;
+    u16 m;
     int id16;
-    int word;
+    int base19;
     int mips;
     int k;
     int sz2;
-    u32 size;
-    int packed;
-    int base19;
+    u8* first;
+    u8* buf;
+    int n;
     int* p;
     int sizeOut;
     int frameOut;

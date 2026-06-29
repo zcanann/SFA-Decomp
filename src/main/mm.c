@@ -1042,7 +1042,8 @@ void* stackCreate(int count, int size)
     u8* next;
     int n;
 
-    prev = testAndSet_onlyUseHeaps1and2(2);
+    n = testAndSet_onlyUseHeaps1and2(2);
+    prev = n;
     s = mmAlloc(size * count + 0x20, 0x11, 0);
     testAndSet_onlyUseHeaps1and2(prev);
     *(s16*)(s + 0xc) = size;

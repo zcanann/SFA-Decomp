@@ -307,9 +307,9 @@ void pressureswitch_update(int obj)
         if (sub->retriggerTimer == 0)
         {
             self->anim.localPosY = gPressureSwitchRiseSpeed * timeDelta + self->anim.localPosY;
-            if (self->anim.localPosY > t->restPosY)
+            if (self->anim.localPosY > (f = t->restPosY))
             {
-                self->anim.localPosY = t->restPosY;
+                self->anim.localPosY = f;
             }
             else
             {

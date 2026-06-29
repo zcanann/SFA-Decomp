@@ -565,7 +565,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     break;
                 case 0x22:
                     id = (p[2] << 8) | p[3];
-                    c = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
+                    c = (u8)(*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
                     (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:

@@ -277,6 +277,7 @@ s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
     u16* sampleRef;
     GSTACK* gs = synthLoadedGroupTable;
     s16 sp;
+    void* poolPtr;
 
     if (gSynthInitialized && (sp = synthLoadedGroupCount) < 128)
     {
@@ -288,14 +289,15 @@ s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
             {
                 gs[sp].gAddr = g;
                 gs[sp].prjAddr = prj_data;
+                poolPtr = pool;
                 gs[sp].sdirAddr = sdir;
                 sampleRef = (u16*)((u8*)prj_data + g->sampleOff);
                 if (dataInsertSDir(sdir, hwInitStream(samples)))
                 {
                     audioFn_8027b690(sampleRef, sdir, 1, 0);
                 }
-                audioFn_8027b690((u16*)((u8*)prj_data + g->macroOff), pool, 0, 0);
-                audioFn_8027b690((u16*)((u8*)prj_data + g->curveOff), pool, 4, 0);
+                audioFn_8027b690((u16*)((u8*)prj_data + g->macroOff), poolPtr, 0, 0);
+                audioFn_8027b690((u16*)((u8*)prj_data + g->curveOff), poolPtr, 4, 0);
                 audioFn_8027b690((u16*)((u8*)prj_data + g->keymapOff), pool, 2, 0);
                 audioFn_8027b690((u16*)((u8*)prj_data + g->layerOff), pool, 3, 0);
                 if (g->type == 1)

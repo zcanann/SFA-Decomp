@@ -70,8 +70,9 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     if (((args->value >> 8) & 0xff) == 0)
     {
         k2 = args->flags >> 0x18;
-        k1 = (args->flags >> 8) & 0xff;
-        if (((args->flags >> 8) & 0xff) > (args->flags >> 0x18))
+        k1 = args->flags >> 8;
+        detune = args->flags >> 0x18;
+        if (((args->flags >> 8) & 0xff) > detune)
         {
             t = k1;
             k1 = k2;
@@ -115,8 +116,9 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
 {
     int comb;
     s32 scale;
+    int destAddr;
 
-    if (!(MAC_CFLAGS(svoice) & tstflag))
+    if ((MAC_CFLAGS(svoice) & tstflag) == 0)
     {
         comb = 0;
         MAC_CFLAGS(svoice) |= tstflag;
@@ -136,7 +138,8 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
         scale += ((s8)(cstep->value >> 0x10) << 8) / 100;
     }
 
-    inpAddCtrl((int)dest, (cstep->flags >> 8) & 0xff, scale, comb,
+    destAddr = (int)dest;
+    inpAddCtrl(destAddr, (cstep->flags >> 8) & 0xff, scale, comb,
                (u8)(cstep->value >> 8) != 0);
 
     if (dirtyFlag & 0x80000000)

@@ -134,7 +134,7 @@ void drawFn_80125424(void)
     int i;
     u32 width;
     u32 height;
-    s16 alpha;
+    int xLeft;
     int type;
     int ypos;
     int alphaI;
@@ -144,7 +144,7 @@ void drawFn_80125424(void)
     s16 panelW;
     s16 panelH;
     int xRight;
-    int xLeft;
+    s16 alpha;
     f32 wave;
     f32 camPos;
 

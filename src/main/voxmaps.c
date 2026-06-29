@@ -1376,9 +1376,9 @@ int fn_80011EB0(RouteState* state, int count)
     int idx;
     RouteNode* cand;
     RouteNode* lastClear;
-    RouteNode* node;
-    int i;
     int j;
+    int i;
+    RouteNode* node;
 
     if (count < 0)
     {

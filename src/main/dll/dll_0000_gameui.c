@@ -1350,13 +1350,13 @@ void pauseMenuFn_8012b77c(void)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
-    s8 idx;
-    s8 j;
-    int alpha;
-    int i;
     int t;
     int a;
     int u;
+    int i;
+    s8 idx;
+    s8 j;
+    int alpha;
     f64 scaled;
 
     if (lbl_803DD770 == 0)
@@ -1444,11 +1444,11 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     {
         drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
     }
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + (s16)w), y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
@@ -1470,8 +1470,8 @@ void drawWorldMapHud(void)
     lbl_803DD776 = 0x78;
     if (sv < 0x1e)
     {
-        u8* base;
         s8 fi;
+        u8* base;
         s8 li_;
         u8 lv;
         int n;
@@ -1674,7 +1674,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     int pulse;
     char buf[0x20];
 
-    gHighScorePulseAngle = gHighScorePulseAngle + gHighScorePulseAngleStep;
+    gHighScorePulseAngle += gHighScorePulseAngleStep;
     pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16) * (u16*)(box + 0xa);
     w = (s16) * (u16*)(box + 0x8);
@@ -4065,11 +4065,11 @@ void GameUI_update(void)
 {
     u8* player = Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
-    s16 angDelta;
-    s16 cx;
-    u8 f25 = 1;
-    u8 f26 = 0;
     u8 r29v;
+    s16 cx;
+    s16 angDelta;
+    u8 f26 = 0;
+    u8 f25 = 1;
     int flags;
 
     gCMenuButtons = getButtonsJustPressed(0);
@@ -4307,7 +4307,7 @@ void GameUI_update(void)
                         dir = -1;
                         lbl_803DD79A = 1;
                     }
-                    next = (u8)(st + dir);
+                    next = (u8)(dir + st);
                     if (next > 4) next = 2;
                     if (next < 2) next = 4;
                     switch ((u8)next)
@@ -4325,9 +4325,9 @@ void GameUI_update(void)
                         r29v = 2;
                         break;
                     }
-                    if ((u8)next != (s8)cMenuState)
+                    if ((u8)next != (s8)st)
                     {
-                        shouldOpenCMenu = (s8)next;
+                        *(s8*)&shouldOpenCMenu = (s8)next;
                         lbl_803DD8B7 = r29v;
                     }
                     goto afterDispatch;

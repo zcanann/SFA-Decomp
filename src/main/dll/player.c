@@ -4131,14 +4131,14 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     } pfx;
     u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
     SweepHit buf;
-    f32 ang;
+    u8 useAlt;
     f32 hd;
     f32 dp;
     int i;
     s8 ok;
-    s8 flagA;
+    f32 ang;
     s8 flagB;
-    u8 useAlt;
+    s8 flagA;
     u8 hit;
     f32* dir;
 
@@ -7599,7 +7599,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         spd = sqrtf(((PlayerState*)state)->baddie.animSpeedA * ((PlayerState*)state)->baddie.animSpeedA +
             ((PlayerState*)state)->baddie.animSpeedB * ((PlayerState*)state)->baddie.animSpeedB);
-        t = (spd < (t = lbl_803E7EA4))
+        t = ((t = lbl_803E7EA4), spd < t)
                 ? t
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
         if (lbl_803E7EE0 == ((PlayerState*)inner)->targetAnimSpeed)
@@ -7938,20 +7938,21 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             if (((PlayerState*)state)->baddie.unk276 == 2)
             {
-                int mA = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30);
+                int mA;
                 int mB;
-                if (((GameObject*)obj)->anim.currentMove != mA &&
+                if (((GameObject*)obj)->anim.currentMove !=
+                        (mA = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30)) &&
                     (mB = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x32),
                         ((GameObject*)obj)->anim.currentMove != mB) &&
                     ((ByteFlags*)((char*)inner + 0x3f3))->b40 == 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E98)
+                    if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E7E98)
                     {
-                        ObjAnim_SetCurrentMove(obj, mB, lbl_803E7EA4, 0);
+                        ObjAnim_SetCurrentMove(obj, mA, lbl_803E7EA4, 0);
                     }
                     else
                     {
-                        ObjAnim_SetCurrentMove(obj, mA, lbl_803E7EA4, 0);
+                        ObjAnim_SetCurrentMove(obj, mB, lbl_803E7EA4, 0);
                     }
                 }
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8088;
@@ -12592,13 +12593,13 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void objLoadPlayerFromSave(int obj)
 {
     char* base = (char*)lbl_80332EC0;
+    s16* gb;
     int inner = *(int*)&((GameObject*)obj)->extra;
-    u8* pathState;
+    int i;
+    f32 fz;
     int me;
     int off;
-    int i;
-    s16* gb;
-    f32 fz;
+    u8* pathState;
 
     lbl_803DE459 = 0;
     ObjGroup_AddObject(obj, 0);
@@ -14699,12 +14700,12 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     int inner;
     void** list;
 
-    f32 y1;
-    f32 y2;
-    f32 z1;
-    f32 z2;
-    f32 x1;
     f32 x2;
+    f32 x1;
+    f32 z2;
+    f32 z1;
+    f32 y2;
+    f32 y1;
     f32 dists[4];
     f32 z9c;
     f32 planes[8];
@@ -16756,7 +16757,7 @@ void fn_802ADE80(int obj, int inner, int state)
         s16 angles[4];
         f32 mat[4];
     } v;
-    f32 mtx[16];
+    f32 mtx[20];
     f32 angle;
     int playEffect;
     int loopCount;

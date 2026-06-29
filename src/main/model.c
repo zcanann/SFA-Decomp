@@ -479,6 +479,7 @@ extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, i
 void* ObjModel_LoadModelData(int id)
 {
     int fileOffset, dataLen, jointCount, headerSize, amapFlag;
+    int amapSize;
     void* model;
     if (getTableFileEntry(0x2a, id, &fileOffset) == 0)
     {
@@ -487,7 +488,8 @@ void* ObjModel_LoadModelData(int id)
     ((void (*)(int, int*, int*, int*, int*, int))loadModelsBin)(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
     headerSize = roundUpTo8(headerSize);
     headerSize += 0xb0;
-    model = (void*)roundUpTo16((int)mmAlloc(dataLen + modelGetAmapSize(id, amapFlag, jointCount) + 0x1f4, 9, 0));
+    amapSize = modelGetAmapSize(id, amapFlag, jointCount);
+    model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(0x2b, model, fileOffset, dataLen, 0, id, 0);
     *(s16*)((u8*)model + 0x84) = headerSize;
     *(u16*)((u8*)model + 0x4) = id;
@@ -1747,13 +1749,13 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
-    u8* out;
+    int o2;
     u8* out2;
     int szs[7];
     int pos;
     int end;
     int n;
-    int o2;
+    u8* out;
     int k;
     u8* q;
     f32 f;
@@ -1874,7 +1876,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->unk48 = pos;
-        pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
+        o2 = ((ModelFileHeader*)p)->unkF7;
+        pos += o2 * 0x10;
         *(int*)&((ObjModel*)out2)->unk4C = pos;
         pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
         *(int*)&((ObjModel*)out2)->unk50 = *(int*)&((ObjModel*)out2)->unk48;
@@ -2898,7 +2901,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     int px;
     u8* hdr;
     u32 i1;
-    u32 i2;
+    u8 i2;
     int fl;
     int vo;
     u8* p;
@@ -3106,7 +3109,7 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
             copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[nb] = words;
+            sizes[(i + 1) & 1] = words;
             {
                 u8* q2;
                 int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
@@ -3438,7 +3441,7 @@ void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs,
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
             copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[nb] = words;
+            sizes[(i + 1) & 1] = words;
             {
                 u8* q2;
                 int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
