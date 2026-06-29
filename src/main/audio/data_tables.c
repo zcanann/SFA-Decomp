@@ -720,14 +720,17 @@ FX_TAB* dataGetFX(u16 fid)
 {
     FX_TAB* ret;
     long i;
+    FX_TAB* tab;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     FX_GROUP* g;
+    int zero;
 
     t->getFXKey.id = fid;
     g = t->fxGroup;
-    for (i = 0; i < dataFXGroupNum; ++i)
+    for (i = (zero = 0); i < dataFXGroupNum; ++i)
     {
-        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, g[i].fxTab, g[i].fxNum, sizeof(FX_TAB),
+        tab = g[i].fxTab;
+        if ((ret = (FX_TAB*)sndBSearch(&t->getFXKey, tab, g[i].fxNum, sizeof(FX_TAB),
                                        fxcmp)))
         {
             return ret;
