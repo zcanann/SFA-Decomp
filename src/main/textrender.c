@@ -2400,7 +2400,8 @@ void setLanguageFn_8001ad64(void* reqp)
         strs[i] = strs[i] + (int)txt;
     }
     texHdr = (int*)(txt + ofs);
-    p = (u16*)((u8*)texHdr + texHdr[0] + 4);
+    p = (u16*)((u8*)texHdr + texHdr[0]);
+    p = (u16*)((u8*)p + 4);
     texStart = p;
     slot = (int**)cs;
     while (1)
