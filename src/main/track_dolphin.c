@@ -2704,9 +2704,9 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
     f32 lm[12];
     u8* d = fn_80069944((u32*)&j);
     u8* end = d + j * 0x18;
+    int total;
     int grp = 0;
     int outOff = 0;
-    int total;
 
     j = 0;
     total = 0;
