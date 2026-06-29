@@ -673,10 +673,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 prevZ;
     f32 workA;
     f32 workB;
-    f32 attractRatio;
     f32 camScale;
     f32 playerRange;
     f32 trickyRange;
+    f32 attractRatio;
 
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
