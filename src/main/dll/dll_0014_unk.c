@@ -1843,16 +1843,16 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
-    int directIndex;
-    int startIndex;
-    int candidateCount;
+    f32* scanBase;
     u32 cur;
+    int queueCurve;
+    int directIndex;
     int directSlot;
     int directLinkId;
     u32 directCurve;
+    int startIndex;
+    int candidateCount;
     int queueCount;
-    int queueCurve;
-    int linkSlot;
     int linkId;
     int linkCurve;
     int insertIndex;
@@ -1860,7 +1860,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     int found;
     int i;
     int j;
-    f32* scanBase;
+    int linkSlot;
     f32 distance;
     f32 linkDistance;
     int candidateIds[4];
