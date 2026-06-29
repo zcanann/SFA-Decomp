@@ -898,14 +898,14 @@ extern int return0_80060B90(void* blk);
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
-    int blockId;
-    int byteOff;
-    char* entry;
-    int slotIdx;
     s16* arr;
-    int i;
     void* blk;
+    int byteOff;
+    int i;
+    int slotIdx;
+    int blockId;
     s8* statusArr;
+    char* entry;
 
     entry = (char*)lbl_803822A0[layer];
     statusArr = (s8*)gMapBlockLayerTables[layer];
