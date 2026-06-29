@@ -120,13 +120,14 @@ void fn_80179678(int obj)
 void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
 {
     SidekickBallState* state = obj->extra;
+    int objId;
     state->ballMode = SIDEKICK_BALL_THROWN;
     state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
-    ObjHits_EnableObject((int)obj);
-    ObjHits_SyncObjectPositionIfDirty((int)obj);
+    ObjHits_EnableObject(objId = (int)obj);
+    ObjHits_SyncObjectPositionIfDirty(objId);
     state->hittableLatch = 1;
     state->launchX = obj->anim.localPosX;
     state->launchY = obj->anim.localPosY;
