@@ -2282,12 +2282,12 @@ void fn_80026928(int* obj, int b, int* desc)
         off54 += 0x54;
     }
     {
-        int out = *desc + i * 0x54;
-        f32 z = lbl_803DE828;
         int e2;
         u8* hdr2;
         u32 n2;
         int lim2;
+        int out = *desc + i * 0x54;
+        f32 z = lbl_803DE828;
 
         *(f32*)(out + 0x18) = z;
         *(f32*)(out + 0x1c) = z;
