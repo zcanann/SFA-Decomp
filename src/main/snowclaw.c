@@ -545,10 +545,12 @@ void snowclaw_update(int obj)
     u32 pulseModes[4];
     f32 pulseVec[3];
     SnowClawAnimTbl dropTable;
+    SnowClawPulse4* pulseSrc;
 
     pulseTable = gSnowClawPulseTable;
     inner = ((GameObject*)obj)->extra;
-    if (((SnowclawState*)inner)->hitFlag != 0 && (u32)((((SnowclawState*)inner)->flags >> 6) & 1) != 0)
+    if (((SnowclawState*)((GameObject*)obj)->extra)->hitFlag != 0 &&
+        (u32)((((SnowclawState*)((GameObject*)obj)->extra)->flags >> 6) & 1) != 0)
     {
         ((SnowclawState*)inner)->particleAlpha = lbl_803E66F0;
     }
@@ -656,7 +658,8 @@ void snowclaw_update(int obj)
     if (*(s8*)&((SnowclawState*)inner)->health < 4)
     {
         *(SnowClawPulse4*)pulseTypes = *(SnowClawPulse4*)&pulseTable[0];
-        *(SnowClawPulse4*)pulseModes = *(SnowClawPulse4*)&pulseTable[4];
+        pulseSrc = (SnowClawPulse4*)&pulseTable[4];
+        *(SnowClawPulse4*)pulseModes = *pulseSrc;
         pulseIndex = 3 - *(s8*)&((SnowclawState*)inner)->health;
         i = ((SnowclawState*)inner)->tickCounter++;
         if ((i % lbl_803DC220) != 0)
