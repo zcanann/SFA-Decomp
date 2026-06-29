@@ -3051,12 +3051,12 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
                 }
                 v = src[n2];
                 dst[n2] = v;
-                if (v > lim)
+                if (v > (s16)lim)
                 {
                     dst[n2] = lim;
                     src[n2] = v - lim;
                 }
-                else if (v < -lim)
+                else if (v < -(s16)lim)
                 {
                     dst[n2] = (s16) - lim;
                     src[n2] = v + lim;
