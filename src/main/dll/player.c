@@ -4131,14 +4131,14 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     } pfx;
     u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
     SweepHit buf;
-    f32 ang;
+    u8 useAlt;
     f32 hd;
     f32 dp;
     int i;
     s8 ok;
-    s8 flagA;
+    f32 ang;
     s8 flagB;
-    u8 useAlt;
+    s8 flagA;
     u8 hit;
     f32* dir;
 
