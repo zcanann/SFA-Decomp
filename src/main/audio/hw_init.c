@@ -22,6 +22,11 @@ void snd_handle_irq(void)
     u32 offset;
     u32 voiceIndex;
     u32 timeOffset;
+    u32 zero0;
+    u32 zero1;
+    u32 zero2;
+    u32 zero3;
+    u32 zero4;
     u8* entry;
 
     if (gSynthInitialized == 0)
@@ -42,19 +47,24 @@ void snd_handle_irq(void)
     salFrame ^= 1;
 
     offset = 0;
+    zero0 = offset;
+    zero1 = offset;
+    zero2 = offset;
+    zero3 = offset;
+    zero4 = offset;
     voiceIndex = 0;
     while ((u8)voiceIndex < salNumVoices)
     {
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[0] = 0;
+        ((DSPvoice*)(entry + offset))->changed[0] = zero0;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[1] = 0;
+        ((DSPvoice*)(entry + offset))->changed[1] = zero1;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[2] = 0;
+        ((DSPvoice*)(entry + offset))->changed[2] = zero2;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[3] = 0;
+        ((DSPvoice*)(entry + offset))->changed[3] = zero3;
         entry = dspVoice;
-        ((DSPvoice*)(entry + offset))->changed[4] = 0;
+        ((DSPvoice*)(entry + offset))->changed[4] = zero4;
         offset += 0xf4;
         voiceIndex++;
     }
