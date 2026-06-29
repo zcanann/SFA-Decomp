@@ -888,7 +888,7 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     }
 }
 
-void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
 {
     SfxLoopedObjectSoundTable* table;
     u32* objectIt;
@@ -904,7 +904,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
     count = gSfxLoopedObjectSoundCount;
     for (; i < count; i++)
     {
-        if ((*objectIt == obj) && ((u16)sfxId == *idIt))
+        if ((*objectIt == obj) && (sfxId == *idIt))
         {
             found = 1;
             goto checked;
