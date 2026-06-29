@@ -4004,8 +4004,8 @@ checked:
             ((ObjSeqState*)seq)->unk70 = ((ObjSeqState*)seq)->flags;
             if (idx == 0)
             {
-                st->cmdFlags[((GameObject*)obj)->seqIndex] = *(u16*)(walk2 + 4);
-                st->handles[((GameObject*)obj)->seqIndex] =
+                *(u8*)((u8*)&st->cmdFlags[0] + ((GameObject*)obj)->seqIndex) = *(u16*)(walk2 + 4);
+                *(int*)((u8*)&st->handles[0] + ((GameObject*)obj)->seqIndex * 4) =
                     *(int*)(*(u8**)&((GameObject*)newObj)->anim.placementData + 0x14);
                 mapFlags = ((ObjAnimComponent*)obj)->modelInstance->flags;
                 if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000))
