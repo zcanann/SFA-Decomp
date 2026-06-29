@@ -1508,7 +1508,7 @@ void Sfx_UpdateObjectSounds(void)
     if ((u8)globalCtrl != (s32)(gSfxGlobalCtrlLevel / 5))
     {
         objectChannel = gSfxObjectChannels;
-        gSfxGlobalCtrlLevel = (u8)(globalCtrl * 5);
+        gSfxGlobalCtrlLevel = (u8)((u8)globalCtrl * 5);
         i = SFX_OBJECT_CHANNEL_COUNT - 1;
         do
         {
