@@ -353,15 +353,15 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 {
     int lineStarts[32];
     int params[8];
-    int* boundary;
-    int cursor = 0;
+    int i;
+    char* dst;
     f32 penX;
     int langIdx;
     FontSizeEntry* sizeEntry;
     int* bp;
     int lineCount = 0;
     int breakPos = 0;
-    int haveSpace = 0;
+    int lineIdx;
     int lineOff = 0;
     f32 maxWidth;
     f32 scale;
@@ -369,11 +369,11 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int charLen2;
     int total;
     u32 ch;
-    int i;
-    char** buffer;
-    char* dst;
+    int* boundary;
+    int cursor = 0;
+    int haveSpace = 0;
     char* src;
-    int lineIdx;
+    char** buffer;
     int charPos;
 
     maxWidth = width;
