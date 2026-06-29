@@ -220,8 +220,9 @@ void CameraModeArwing_update(u8* obj)
     {
         f32 va, vb, vc, vd;
         int step;
-        CameraArwingWork* work = (CameraArwingWork*)gCamArwingWork;
-        work->rollRate = lbl_803E1BA8;
+        CameraArwingWork* work;
+        ((CameraArwingWork*)gCamArwingWork)->rollRate = lbl_803E1BA8;
+        work = (CameraArwingWork*)gCamArwingWork;
         (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(
             obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
         ((GameObject*)obj)->anim.rotZ = work->rollRate * timeDelta +
