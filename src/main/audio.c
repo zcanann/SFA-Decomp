@@ -1693,9 +1693,9 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
 int musicInitMidiWad(void)
 {
     MusicTrackSlot* table;
-    MusicTrackSlot* found;
     MusicChannel* ch;
     int track, j;
+    MusicTrackSlot* found;
     u32 size;
     int arenaOffset;
     int saved;
