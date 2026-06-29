@@ -2924,8 +2924,7 @@ void doPendingMapLoads(void)
                     i = 0;
                     for (; i < slotN; i++)
                     {
-                        sp[6] = 0;
-                        sp += 8;
+                        sp[i * 8 + 6] = 0;
                     }
                 }
                 gShaderCurMapEventId = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
