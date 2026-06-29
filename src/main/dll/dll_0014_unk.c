@@ -1286,13 +1286,13 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         goto clearAndReturn;
     }
 
-    if (state->reverse == 0)
+    if (state->reverse != 0)
     {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
+        ROMCURVE_REFRESH_CONTROL(0x9c);
     }
     else
     {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
+        ROMCURVE_REFRESH_CONTROL(0xa4);
     }
 
     if (state->moveNetwork != 0)
