@@ -957,9 +957,13 @@ state_selected:
         }
         ((TrickyState*)state)->speed = v;
         {
-            f32 dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
-            f32 dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
-            if (dx * dx + dz * dz > lbl_803E23EC)
+            f32 dx;
+            f32 dz;
+            dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
+            sqx = dx * dx;
+            dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
+            sqz = dz * dz;
+            if (sqx + sqz > lbl_803E23EC)
             {
                 trickyTurnTowardYaw(obj, getAngle(-dx, -dz));
             }
