@@ -388,13 +388,13 @@ u8 trickyBallMove(u8* obj)
         movedFromCache = 1;
     }
 
-    if (state->floorHeight > lbl_803E369C)
+    if (lbl_803E369C < state->floorHeight)
     {
         state->floorY = state->floorBaseY;
         state->floorDepth = state->floorHeight;
         hasFloorDepth = 1;
     }
-    else if (state->floorY != lbl_803E369C)
+    else if (lbl_803E369C != state->floorY)
     {
         if (((GameObject*)obj)->anim.localPosY > state->floorY)
         {

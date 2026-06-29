@@ -208,8 +208,8 @@ void fn_801EAE4C(short* obj, int stateRaw)
 void fn_801EB0D4(u32 obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
-    f32 lim;
     f32 rate;
+    f32 lim;
     f32 td;
 
     if ((u32)(st->flags428 >> 5 & 1) != 0)
