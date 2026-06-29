@@ -4050,9 +4050,9 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
                 DCStoreRange(buf, 0x400);
                 if (queryMode == 1 && frameTable != 0)
                 {
-                    int e = *(int*)(frameTable + count * 4) + 4;
+                    int e = *(int*)(frameTable + count * 4);
                     int v;
-                    e = (int)buf + e;
+                    e = (int)buf + e + 4;
                     v = *(int*)(e + 4);
                     *outB = *(int*)(e + 8);
                     *outA = v;
