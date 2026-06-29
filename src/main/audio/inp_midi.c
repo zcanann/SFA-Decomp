@@ -42,12 +42,10 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
         int i;
         for (i = 0; i < 0x86; i++)
         {
-            if (*src != 0xff)
+            if (src[i] != 0xff)
             {
-                *dst = *src;
+                dst[i] = src[i];
             }
-            dst++;
-            src++;
         }
     }
 
