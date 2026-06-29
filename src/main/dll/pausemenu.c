@@ -149,10 +149,10 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     int* model;
     s32 alpha;
     s32 x;
-    s32 y;
+    s32 idx;
     s32 rnd1;
     s32 rnd2;
-    s32 idx;
+    s32 y;
     s32 i;
     s32 acc;
     s32 val;
