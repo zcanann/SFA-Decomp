@@ -4561,24 +4561,26 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             if (buf.kind == 0xd)
             {
                 int k;
+                f32 inv;
                 if (((PlayerState*)state2)->baddie.animSpeedA <= lbl_803E80A0)
                 {
                     continue;
                 }
                 if (((PlayerState*)state)->particleBurstCooldown <= lbl_803E7EA4)
                 {
+                    inv = lbl_803E7F5C;
                     for (k = 0; k < 0x4b; k++)
                     {
                         f32 lo;
                         lo = buf.minX;
                         pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
+                            inv;
                         lo = buf.minY;
                         pfx.y = lo + (buf.g3c - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
+                            inv;
                         lo = buf.minZ;
                         pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
+                            inv;
                         pfx.scale = cEE0;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
