@@ -2239,19 +2239,19 @@ extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 #pragma opt_propagation off
 void mapLoadUnloadObjects(int flag)
 {
-    char* base;
-    s16 count;
+    int b;
+    int k;
     int i;
     int n;
     s16 list[8];
     s16* q;
-    int k;
-    int* tp;
+    char* base;
+    s16 count;
     char* obj;
     char* fp;
     int unload;
     u32 bits;
-    int b;
+    int* tp;
     int bit;
     u32 cur;
     u32 end;
