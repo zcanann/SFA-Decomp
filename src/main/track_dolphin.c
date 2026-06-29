@@ -1492,8 +1492,7 @@ void intersectModLineBuild(int* obj)
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
     segCount = *(u8*)((char*)obj + 0x5c);
-    sp = *(u8**)&((GameObject*)obj)->anim.parent;
-    for (seg = 0; seg < segCount; seg++, sp += 0x14)
+    for (seg = 0, sp = *(u8**)&((GameObject*)obj)->anim.parent; seg < segCount; seg++, sp += 0x14)
     {
         u8* line;
         int i;
