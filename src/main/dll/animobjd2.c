@@ -533,8 +533,8 @@ void fn_8013E0D0(int* obj, register u8* st)
             else
             {
                 int count;
-                int i = 0;
                 void** list = (void**)ObjGroup_GetObjects(0x4b, &count);
+                int i = 0;
                 f32 ratio = lbl_803E23F8;
                 for (; i < count; i++)
                 {
