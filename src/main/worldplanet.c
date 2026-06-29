@@ -349,6 +349,7 @@ void worldplanet_update(int obj)
         ((WorldObjState*)((GameObject*)galleon)->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
+            u8 ok;
             u32 m = 0;
             int k = m;
             int* ids = &tbl[15];
@@ -357,7 +358,7 @@ void worldplanet_update(int obj)
             {
                 if (GameBit_Get(*ids) != 0)
                 {
-                    u8 ok = 1;
+                    ok = 1;
                     if (*hints != 0 && (s32)getNextTaskHintText() > 0xad)
                     {
                         ok = 0;
