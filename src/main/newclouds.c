@@ -2550,8 +2550,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     {
         GXBegin(0x90, 4, (((NewCloud*)p)->flakeCount * 3 / 4));
     }
-    part = *(SnowFlake**)(p + 4);
-    for (j = 0; j < ((NewCloud*)p)->flakeCount; j++)
+    for (j = 0, part = *(SnowFlake**)(p + 4); j < ((NewCloud*)p)->flakeCount; j++)
     {
         if (part->unk16 != (u8)texIdx)
         {
