@@ -1883,11 +1883,11 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.textureId = 0x17c;
         break;
     case 0x39e: /* L_800B0788 */
+        cfg.velocityZ = lbl_803DF764 * (f32)(s32)
+        randomGetRange(-0x28, 0x28);
         cfg.velocityX = lbl_803DF764 * (f32)(s32)
         randomGetRange(-0x28, 0x28);
         cfg.velocityY = lbl_803DF764 * (f32)(s32)
-        randomGetRange(-0x28, 0x28);
-        cfg.velocityZ = lbl_803DF764 * (f32)(s32)
         randomGetRange(-0x28, 0x28);
         cfg.initialAlpha = 0x87;
         cfg.scale = lbl_803DF7C0 * (f32)(s32)
