@@ -158,6 +158,7 @@ int fn_80198B68(u8* obj, f32* point)
 
 void fn_80198DE8(u8* obj, int seqArg)
 {
+    f32 ny;
     MmpTriggerPlaneState* state;
     s8 triggerState;
     u8* data;
@@ -213,8 +214,9 @@ void fn_80198DE8(u8* obj, int seqArg)
         deltaX = farX - nearX;
         deltaY = farY - nearY;
         deltaZ = farZ - nearZ;
+        ny = normalY * deltaY;
         t = (((-normalX * nearX - prodY) - prodZ) - planeBase) /
-            ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
+            ((ny + (normalX * deltaX)) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
         localPos[1] = t * deltaY + state->ptA[1];
