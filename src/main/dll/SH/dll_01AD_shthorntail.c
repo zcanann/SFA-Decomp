@@ -369,7 +369,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
     extern u8 ObjHitReact_Update();
     SHthorntailConfig* config;
-    SHthorntailRuntime* runtime;
+    s8* eventId;
     int i;
     u8 hitResult;
     u8 mode;
@@ -377,7 +377,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     int val;
     u32 uval;
     int ref;
-    s8* eventId;
+    SHthorntailRuntime* runtime;
     u8* stateTables;
     s32 activeConfigToken;
     f32 facingAngleRadians;
