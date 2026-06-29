@@ -770,13 +770,17 @@ void ZeroOffsetHandler(int voice)
             pan = sv->panning[0] + (inpGetPanning((McmdVoiceState*)sv) - 0x2000) * 0x200;
             if (pan < 0)
             {
-                pan = 0;
+                lfoInt = 0;
             }
-            else if (pan > 0x7F0000)
+            else if (pan <= 0x7F0000)
             {
-                pan = 0x7F0000;
+                lfoInt = pan;
             }
-            sv->lastPan = pan;
+            else
+            {
+                lfoInt = 0x7F0000;
+            }
+            sv->lastPan = lfoInt;
 
             if ((synthFlags & 2) != 0)
             {

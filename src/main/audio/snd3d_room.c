@@ -325,7 +325,7 @@ void s3dAllocateRoomStudios(void)
                             evictedEntry = scanEntry;
                         }
                     }
-                    if (!listenerOwned && worstDistance <= distanceSq)
+                    if (!listenerOwned && !(worstDistance > distanceSq))
                     {
                         continue;
                     }
@@ -349,14 +349,7 @@ void s3dAllocateRoomStudios(void)
                 }
 
                 entry->averageDistanceSq = distanceSq;
-                if (listenerOwned)
-                {
-                    entry->fade = 0x7f0000;
-                }
-                else
-                {
-                    entry->fade = 0;
-                }
+                entry->fade = listenerOwned ? 0x7f0000 : 0;
                 if ((f32)(fadeScale * entry->fade) >= fadeThreshold)
                 {
                     synthActivateStudio(entry->assignedVoice, 1, 0);

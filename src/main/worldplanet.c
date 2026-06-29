@@ -584,7 +584,6 @@ void worldplanet_update(int obj)
             {
                 int* row = &tbl[b];
                 s16* p = (s16*)ObjList_FindObjectById(row[0]);
-                int* off = &row[5];
                 if (row[0] == 0x4300d)
                 {
                     *p = ang + row[5] + 0x4000;
@@ -597,11 +596,11 @@ void worldplanet_update(int obj)
                 {
                     Sfx_KeepAliveLoopedObjectSound((u32)p, 0x96);
                 }
-                *(f32*)(p + 6) = r * fsin16Approx((ang + *off) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(p + 6) = r * fsin16Approx((ang + row[5]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosX;
-                *(f32*)(p + 8) = r * fsin16Approx((ang + *off) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(p + 8) = r * fsin16Approx((ang + row[5]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosY;
-                *(f32*)(p + 10) = r * fcos16Approx((ang + *off) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
+                *(f32*)(p + 10) = r * fcos16Approx((ang + row[5]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;
