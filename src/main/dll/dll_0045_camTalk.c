@@ -144,9 +144,9 @@ void CameraModeBike_update(CameraObject* camera)
         {
             angleDelta = angleDelta + 0xFFFF;
         }
+        sinYaw = (f32)(s32)angleDelta * timeDelta;
         rotVal = (int)
-        ((f32)(s32)
-        angleDelta * timeDelta * lbl_803E17B4 + (f32)(s32)
+        (sinYaw * lbl_803E17B4 + (f32)(s32)
         *(s16*)((char*)&camera->anim.rotZ)
         )
         ;
