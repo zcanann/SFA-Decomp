@@ -319,17 +319,17 @@ void expgfxRemoveAll(void)
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType,
                   int preferredPoolIndex, u32 sourceId)
 {
-    ExpgfxRuntimeDataLayout* runtime;
+    u32 currentMask;
     s8* poolActiveCounts;
     u32* poolActiveMasks;
     int searchIndex;
     u32* sourceIdWalk;
     s16* poolSlotTypeIds;
     s8* activeCountWalk;
-    short foundPool;
-    u32* activeMaskPtr;
-    u32 currentMask;
     u32 activeBit;
+    ExpgfxRuntimeDataLayout* runtime;
+    u32* activeMaskPtr;
+    short foundPool;
     int foundPoolIndex;
     int poolIndex;
     int slotIndex;
