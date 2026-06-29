@@ -1211,11 +1211,11 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
 {
     void* slot;
-    f32 volf;
     int level;
+    f32 dist;
     f32 near;
     f32 far;
-    f32 dist;
+    f32 volf;
     f32 delta[3];
 
     slot = Camera_GetCurrentViewSlot();
