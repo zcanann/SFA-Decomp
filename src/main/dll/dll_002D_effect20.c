@@ -645,7 +645,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             randomGetRange(100, 200)
             )
             ;
-            cfg.startPosY = (lbl_803E038C + spawnParams->posY) * spawnParams->scale;
+            radius = lbl_803E038C + spawnParams->posY;
+            cfg.startPosY = radius * spawnParams->scale;
             cfg.scale = lbl_803E0390 * spawnParams->scale;
             cfg.lifetimeFrames = 5;
             cfg.textureId = 0x5e6;
@@ -667,7 +668,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             randomGetRange(100, 200)
             )
             ;
-            cfg.startPosY = (lbl_803E038C + spawnParams->posY) * spawnParams->scale;
+            radius = lbl_803E038C + spawnParams->posY;
+            cfg.startPosY = radius * spawnParams->scale;
             cfg.scale = lbl_803E0390 * spawnParams->scale;
             cfg.lifetimeFrames = 0xf;
             cfg.textureId = 0x5e6;
