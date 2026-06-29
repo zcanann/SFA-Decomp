@@ -2574,17 +2574,11 @@ void Music_Update(void)
     }
     if ((int)fadeB != 0)
     {
-        if (activeVol >= 0x1f4)
-        {
-            activeVol = 0x1f4;
-        }
+        activeVol = activeVol < 0x1f4 ? activeVol : 0x1f4;
     }
     if ((int)fadeA != 0)
     {
-        if (lowVol >= 0x1f4)
-        {
-            lowVol = 0x1f4;
-        }
+        lowVol = lowVol < 0x1f4 ? lowVol : 0x1f4;
     }
 
     ch = gMusicChannels;
