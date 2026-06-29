@@ -2010,10 +2010,10 @@ extern f32 lbl_803DEB64;
 void lightFn_80052974(f32 a, f32 b)
 {
     f32 z;
+    f32 x0;
     f32 scale;
     f32 half;
     f32 w;
-    f32 x0;
     f32 y;
     f32 yy;
     f32 x1;
