@@ -14915,7 +14915,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         out[0] = out[1] - out[2];
         *(u8*)((char*)out + 0x5e) = *(u8*)((char*)cam + 0x50);
         *(u8*)((char*)out + 0x60) = *(u8*)((char*)cam + 0x53);
-        if (*(int*)&((GameObject*)obj)->anim.parent != 0)
+        if (((GameObject*)obj)->anim.parent != NULL)
         {
             ((void (*)(f32, f32, f32, f32*, f32*, f32*))Obj_TransformLocalPointToWorld)(
                 out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd);
