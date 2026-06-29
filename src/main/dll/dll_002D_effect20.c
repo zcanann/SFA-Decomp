@@ -327,15 +327,11 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         /
         lbl_803E0348;
         trigVal = mathCosf(angle);
-        cfg.velocityX = (lbl_803E0340 * (f32)(s32)
-        randomGetRange(100, 0x96)
-        )
-        *trigVal;
+        radius = lbl_803E0340 * (f32)(s32)randomGetRange(100, 0x96);
+        cfg.velocityX = radius * trigVal;
         trigVal = mathSinf(angle);
-        cfg.velocityY = (lbl_803E0340 * (f32)(s32)
-        randomGetRange(100, 0x96)
-        )
-        *trigVal;
+        radius = lbl_803E0340 * (f32)(s32)randomGetRange(100, 0x96);
+        cfg.velocityY = radius * trigVal;
         cfg.velocityZ = lbl_803E0324;
         cfg.lifetimeFrames = randomGetRange(0x14, 0x1e);
         cfg.behaviorFlags = 0x480000;
@@ -371,15 +367,11 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         /
         lbl_803E0348;
         trigVal = mathCosf(angle);
-        cfg.velocityX = (lbl_803E0330 * (f32)(s32)
-        randomGetRange(100, 0x96)
-        )
-        *trigVal;
+        radius = lbl_803E0330 * (f32)(s32)randomGetRange(100, 0x96);
+        cfg.velocityX = radius * trigVal;
         trigVal = mathSinf(angle);
-        cfg.velocityY = (lbl_803E0330 * (f32)(s32)
-        randomGetRange(100, 0x96)
-        )
-        *trigVal;
+        radius = lbl_803E0330 * (f32)(s32)randomGetRange(100, 0x96);
+        cfg.velocityY = radius * trigVal;
         cfg.velocityZ = lbl_803E0324;
         cfg.lifetimeFrames = randomGetRange(0x1e, 0x28);
         cfg.behaviorFlags = 0x480000;
