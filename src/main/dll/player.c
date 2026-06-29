@@ -11014,9 +11014,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
-    f32 posZ;
-    f32 posY;
-    f32 posX;
+    f32 pos[3];
     f32 queryParams[4];
     f32** nearList;
     f32 pushX;
@@ -11090,8 +11088,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (*(s16*)&((PlayerState*)state)->hitIntervalTimer <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
+                ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x14, 2, 0xffffffff);
             }
             break;
         case 8:
@@ -11105,8 +11103,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 if (0x78 < ((PlayerState*)state)->periodicHitTimer)
                 {
                     ((PlayerState*)state)->periodicHitTimer = ((PlayerState*)state)->periodicHitTimer - 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                    ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                    ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x16, 2,
                                               0xffffffff);
                 }
             }
