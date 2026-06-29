@@ -2297,13 +2297,13 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 gb;
     char* slotPtr;
     int flagIndex;
-    int checksum;
+    u8 found;
     int curveCount;
-    int** curveList;
+    u8* pp;
     int** listWalk;
     int listIndex;
-    int slot;
     int back;
+    int slot;
     int curve;
     u32 linked;
     int myId;
@@ -2315,12 +2315,12 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 e;
     u32 j2;
     int pairId;
-    u8 found;
+    int checksum;
     int searchCount;
     ObjfsaWalkGroup* wg;
-    ObjfsaPatch* p;
+    int** curveList;
     ObjfsaPatch* sp;
-    u8* pp;
+    ObjfsaPatch* p;
     char* lp;
     f32 div;
     f32 scale;
@@ -2341,7 +2341,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 z3;
     f32 fy0;
     f32 fy1;
-
     mapBlockFn_80059c2c(blockFlags);
 
     checksum = 1;
