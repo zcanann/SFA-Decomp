@@ -140,7 +140,7 @@ extern u8 gIceBaddiePaletteIndexTable[];
 
 
 
-extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void voxmaps_updateRoutePath(void* from, void* to);
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
@@ -967,7 +967,8 @@ void iceBaddie_updateEffectAnchors(int obj, int state)
         transformedX = lbl_803E2DA8;
         transformedY = lbl_803E2DAC;
         transformedZ = lbl_803E2DA4;
-        Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
+        Matrix_TransformPoint(pathMtx, transformedX, transformedY, transformedZ, &transformedX,
+                              &transformedY, &transformedZ);
         memcpy((void*)(control + 0x38), transformed, 0xc);
         memcpy((void*)(control + 8), transformScratch, 0x18);
         ((IceBaddieControl*)control)->effectFlags |= 1;
