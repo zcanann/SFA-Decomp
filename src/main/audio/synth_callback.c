@@ -6,56 +6,26 @@
 void synthRecycleVoiceCallbacks(SynthVoice* voice)
 {
     SynthCallbackLink* callback;
+    s32 listIndex;
 
-    if ((callback = voice->callbackLists[0]) != 0)
+    for (listIndex = 0; listIndex < 3; listIndex++)
     {
-        while (callback->next != 0)
+        if ((callback = voice->callbackLists[listIndex]) != 0)
         {
-            callback = callback->next;
+            while (callback->next != 0)
+            {
+                callback = callback->next;
+            }
+
+            if (gSynthFreeCallbacks != 0)
+            {
+                callback->next = gSynthFreeCallbacks;
+                gSynthFreeCallbacks->prev = callback;
+            }
+
+            gSynthFreeCallbacks = voice->callbackLists[listIndex];
+            voice->callbackLists[listIndex] = 0;
         }
-
-        if (gSynthFreeCallbacks != 0)
-        {
-            callback->next = gSynthFreeCallbacks;
-            gSynthFreeCallbacks->prev = callback;
-        }
-
-        gSynthFreeCallbacks = voice->callbackLists[0];
-        voice->callbackLists[0] = 0;
-    }
-
-    if ((callback = voice->callbackLists[1]) != 0)
-    {
-        while (callback->next != 0)
-        {
-            callback = callback->next;
-        }
-
-        if (gSynthFreeCallbacks != 0)
-        {
-            callback->next = gSynthFreeCallbacks;
-            gSynthFreeCallbacks->prev = callback;
-        }
-
-        gSynthFreeCallbacks = voice->callbackLists[1];
-        voice->callbackLists[1] = 0;
-    }
-
-    if ((callback = voice->callbackLists[2]) != 0)
-    {
-        while (callback->next != 0)
-        {
-            callback = callback->next;
-        }
-
-        if (gSynthFreeCallbacks != 0)
-        {
-            callback->next = gSynthFreeCallbacks;
-            gSynthFreeCallbacks->prev = callback;
-        }
-
-        gSynthFreeCallbacks = voice->callbackLists[2];
-        voice->callbackLists[2] = 0;
     }
 }
 
