@@ -233,15 +233,15 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     int sw;
     int sh;
     HudColor col;
-    u32 halfSpan;
+    u8 maxAlpha;
     u32 cur;
     u32 span;
     u32 edge;
     u32 hiEdge;
-    u32 hStep;
+    u32 halfSpan;
     u32 loEdge;
     u32 inset;
-    u8 maxAlpha;
+    u32 hStep;
     u8 step;
     u8 fadeAlpha;
     f32 conv;
