@@ -1547,6 +1547,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                         if (first)
                         {
                             int n;
+                            int ip;
                             int* pidx;
                             f32 *pE, *pF, *pG, *pH, *pI, *pJ;
                             idx[0] = ibase - 1;
@@ -1579,7 +1580,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                             for (n = 4; n != 0; n--)
                             {
                                 f32 a, b, t1, t2;
-                                int ip = *pidx * 12;
+                                ip = *pidx * 12;
                                 *pE = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
                                 *pF = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
                                 *pG = (f32) * (s16*)((char*)tbl + ip + 4) / lbl_803E32F4;
