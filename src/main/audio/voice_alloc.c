@@ -56,6 +56,15 @@ typedef struct AllocVoice
 #define ALLOC_VOICE ((AllocVoice*)synthVoice)
 #define VOICE_CFLAGS(i) (*(u64*)&ALLOC_VOICE[i].cFlagsHi)
 
+#define VB_PRIO_HEAD(vb, p) \
+    (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
+#define VB_PRIO_LINK_NEXT(vb, i) \
+    (((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))->next)
+#define VB_PRIO_SORT_NEXT(vb, p) \
+    (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
+#define AV_PRIO(i)   (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
+#define AV_FXFLAG(i) (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
+
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded. (musyx synthvoice.c
@@ -102,8 +111,8 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             p = voicePrioSortRootListRoot;
             while (p != 0xFFFF && priority >= p && voice == -1)
             {
-                for (i = vb->priorityGroupHeads[p]; i != 0xff;
-                     i = vb->priorityLinks[i].next)
+                for (i = VB_PRIO_HEAD(vb, p); i != 0xff;
+                     i = VB_PRIO_LINK_NEXT(vb, i))
                 {
                     if (allocId != ALLOC_VOICE[i].allocId)
                         continue;
@@ -125,7 +134,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                     }
                 }
 
-                p = vb->prioritySortLinks[p].next;
+                p = VB_PRIO_SORT_NEXT(vb, p);
             }
         }
 
@@ -133,7 +142,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         {
             while (p != 0xffff && num < maxVoices)
             {
-                i = vb->priorityGroupHeads[p];
+                i = VB_PRIO_HEAD(vb, p);
                 while (i != 0xff)
                 {
                     if (allocId == ALLOC_VOICE[i].allocId)
@@ -141,10 +150,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                         num++;
                     }
 
-                    i = vb->priorityLinks[i].next;
+                    i = VB_PRIO_LINK_NEXT(vb, i);
                 }
 
-                p = vb->prioritySortLinks[p].next;
+                p = VB_PRIO_SORT_NEXT(vb, p);
             }
 
             if (num < maxVoices)
@@ -166,8 +175,8 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
                 while (p != 0xFFFF && priority >= p && voice == -1)
                 {
-                    for (i = vb->priorityGroupHeads[p]; i != 0xff;
-                         i = vb->priorityLinks[i].next)
+                    for (i = VB_PRIO_HEAD(vb, p); i != 0xff;
+                         i = VB_PRIO_LINK_NEXT(vb, i))
                     {
                         if (ALLOC_VOICE[i].block != 0)
                             continue;
@@ -185,7 +194,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                                 voice = i;
                         }
                     }
-                    p = vb->prioritySortLinks[p].next;
+                    p = VB_PRIO_SORT_NEXT(vb, p);
                 }
 
                 if (voice == -1)
@@ -194,7 +203,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 }
 
             _update:
-                if (ALLOC_VOICE[voice].prio > priority)
+                if (AV_PRIO(voice) > priority)
                 {
                     goto _fail;
                 }
@@ -233,7 +242,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
             sfv->user = 0;
         }
-        else if (ALLOC_VOICE[voice].fxFlag)
+        else if (AV_FXFLAG(voice))
         {
             voiceFxRunning--;
         }
