@@ -42,7 +42,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
 {
     FbBuf buf;
     u8* base = lbl_80316728;
-    f32 ca4, c94, ca0, c9c, c98, c7c, c78, zero;
+    f32 c94, ca0, c9c, c98, c7c, c78, ca4, zero;
     f32 zoff;
     f32 v60 = lbl_803E1060;
     f32 v64 = lbl_803E1064;
