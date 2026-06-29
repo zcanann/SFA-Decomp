@@ -7938,20 +7938,21 @@ int fn_802A6694(int obj, int state, f32 fv)
         {
             if (((PlayerState*)state)->baddie.unk276 == 2)
             {
-                int mA = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30);
+                int mA;
                 int mB;
-                if (((GameObject*)obj)->anim.currentMove != mA &&
+                if (((GameObject*)obj)->anim.currentMove !=
+                        (mA = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x30)) &&
                     (mB = *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x32),
                         ((GameObject*)obj)->anim.currentMove != mB) &&
                     ((ByteFlags*)((char*)inner + 0x3f3))->b40 == 0)
                 {
-                    if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7E98)
+                    if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E7E98)
                     {
-                        ObjAnim_SetCurrentMove(obj, mB, lbl_803E7EA4, 0);
+                        ObjAnim_SetCurrentMove(obj, mA, lbl_803E7EA4, 0);
                     }
                     else
                     {
-                        ObjAnim_SetCurrentMove(obj, mA, lbl_803E7EA4, 0);
+                        ObjAnim_SetCurrentMove(obj, mB, lbl_803E7EA4, 0);
                     }
                 }
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E8088;
