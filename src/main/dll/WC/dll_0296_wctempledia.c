@@ -76,6 +76,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
                 int entry = fn_8006070C(block, slot);
                 if (*(u8*)(entry + 0x29) == part)
                 {
+                    bit = mask & (1 << (part - 1));
                     if (bit != 0)
                     {
                         mapTextureOverrideSetValue(part, *(int*)(entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
