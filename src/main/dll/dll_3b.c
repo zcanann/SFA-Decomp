@@ -83,11 +83,11 @@ void AttractMovieAudio_Decode(void* readBufferArg)
 
 void* AudioDecoderForOnMemory(void* param)
 {
-    register int frame;
     register AttractMoviePlayer* player;
     int stride;
     u32 framesPerGroup;
     u32 frameInGroup;
+    register int frame;
     AttractMovieReadBuffer readBuffer;
 
     player = &lbl_803A5D60;
