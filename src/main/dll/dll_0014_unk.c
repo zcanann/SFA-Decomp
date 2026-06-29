@@ -407,8 +407,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         }
         else
         {
-            count = 0;
             mask = 1;
+            count = 0;
             for (k = 0; k < 4; k++)
             {
                 n = ((ObjfsaRomCurveDef*)found)->linkIds[k];
@@ -445,8 +445,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         posB = tmpPos;
     }
 
-    count = 0;
     mask = 1;
+    count = 0;
     for (k = 0; k < 4; k++)
     {
         n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
@@ -484,8 +484,8 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2)
         }
         else
         {
-            count = 0;
             mask = 1;
+            count = 0;
             for (k = 0; k < 4; k++)
             {
                 n = ((ObjfsaRomCurveDef*)a)->linkIds[k];
