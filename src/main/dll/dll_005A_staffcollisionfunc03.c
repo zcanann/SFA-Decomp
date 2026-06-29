@@ -59,9 +59,9 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, u32 spaw
     } buf;
     GfxCmd ents[32];
     int cnt;
-    int i;
-    s16 r, g, b;
     u8* base = lbl_80311DA8;
+    s16 r, g, b;
+    int i;
     cnt = 1;
     r = 0xff;
     g = 0xff;
