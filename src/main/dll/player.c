@@ -14879,7 +14879,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                         best = dy;
                         bi = i2;
                     }
-                    if (lbl_803E80B0 < ((f32*)*pp)[2] && dy >= lbl_803E7EA4 &&
+                    if (((f32*)*pp)[2] > lbl_803E80B0 && dy >= lbl_803E7EA4 &&
                         (best2 < lbl_803E7EA4 || dy < best2))
                     {
                         best2 = dy;
@@ -14888,7 +14888,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                     i2++;
                 }
                 if (best < lbl_803E80C4 && bi != -1 && ((f32*)list[bi])[2] <= lbl_803E80B0 &&
-                    lbl_803E7EB0 < ((f32*)list[bi])[2])
+                    ((f32*)list[bi])[2] > lbl_803E7EB0)
                 {
                     return 0;
                 }
