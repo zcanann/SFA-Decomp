@@ -2021,7 +2021,7 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
         for (i = 1; i < n; i++, arrp++)
         {
             cur = val - *(f32*)*arrp;
-            if (cur >= *(f32*)&__AR_Callback)
+            if (*(f32*)&__AR_Callback <= cur)
             {
                 if (best < *(f32*)&__AR_Callback || cur < best)
                 {
