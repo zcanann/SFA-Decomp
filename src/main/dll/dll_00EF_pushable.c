@@ -742,9 +742,9 @@ void pushable_init(s16* obj, char* def)
     PushableState* state;
     int* model;
     int* entry;
-    f32* mtx;
     int i;
     char* e;
+    f32* mtx;
     f32 vtx[3];
 
     if (((ObjPlacement*)def)->mapId == 0x30398)
