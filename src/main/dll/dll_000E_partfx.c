@@ -1759,8 +1759,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule00 = Resource_Acquire(0x1a, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule00 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule00 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x257 < effectId) && (effectId < 0x2bc))
     {
@@ -1770,8 +1770,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule01 = Resource_Acquire(0x1b, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule01 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule01 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x1f3 < effectId) && (effectId < 0x258))
     {
@@ -1781,8 +1781,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule02 = Resource_Acquire(0x1c, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule02 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule02 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x18f < effectId) && (effectId < 0x1f4))
     {
@@ -1792,8 +1792,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule03 = Resource_Acquire(0x1d, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule03 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule03 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0xc7 < effectId) && (effectId < 0x12c))
     {
@@ -1803,8 +1803,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule04 = Resource_Acquire(0x1e, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule04 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule04 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x419 < effectId) && (effectId < 0x44c))
     {
@@ -1814,8 +1814,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule05 = Resource_Acquire(0x1f, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule05 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule05 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x739 < effectId) && (effectId < 0x76c))
     {
@@ -1825,8 +1825,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule16 = Resource_Acquire(0x2a, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule16 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule16 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId - 0x84U < 2) || ((0x89 < effectId && (effectId < 200))))
     {
@@ -1836,8 +1836,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule06 = Resource_Acquire(0x20, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule06 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule06 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x3b5 < effectId) && (effectId < 0x3de))
     {
@@ -1847,8 +1847,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule08 = Resource_Acquire(0x22, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule08 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule08 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x351 < effectId) && (effectId < 0x384))
     {
@@ -1858,8 +1858,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule07 = Resource_Acquire(0x21, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule07 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule07 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x329 < effectId) && (effectId < 0x351))
     {
@@ -1869,8 +1869,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule09 = Resource_Acquire(0x23, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule09 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule09 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x12b < effectId) && (effectId < 0x190))
     {
@@ -1880,8 +1880,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule10 = Resource_Acquire(0x24, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule10 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule10 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x47d < effectId) && (effectId < 0x4b0))
     {
@@ -1891,8 +1891,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule11 = Resource_Acquire(0x25, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule11 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule11 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x4af < effectId) && (effectId < 0x4e2))
     {
@@ -1902,8 +1902,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule12 = Resource_Acquire(0x27, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule12 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule12 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId >= 0x3e8) && (effectId <= 0x419))
     {
@@ -1913,8 +1913,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule13 = Resource_Acquire(0x28, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule13 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule13 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((0x44b < effectId) && (effectId < 0x47e))
     {
@@ -1924,8 +1924,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule14 = Resource_Acquire(0x26, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule14 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule14 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId >= 0x6d7) && (effectId <= 0x707))
     {
@@ -1935,8 +1935,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule15 = Resource_Acquire(0x29, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule15 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule15 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId >= 0x708) && (effectId <= 0x739))
     {
@@ -1946,8 +1946,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule17 = Resource_Acquire(0x2b, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule17 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule17 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId >= 0x76c) && (effectId <= 0x79d))
     {
@@ -1957,8 +1957,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule18 = Resource_Acquire(0x2c, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule18 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule18 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     if ((effectId >= 0x79e) && (effectId <= 0x833))
     {
@@ -1968,8 +1968,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule19 = Resource_Acquire(0x2d, 2);
         }
-        return (*(int (**)())(*(int*)gPartfxResourceModule19 + 8))(sourceObj, effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return (*(int (**)())(*(int*)gPartfxResourceModule19 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
+                                                                   modelIdArg, extraArgsArg);
     }
     gPartfxSpawnAnimPhase0 = gPartfxSpawnAnimPhase0 + lbl_803DF4C8;
     if (gPartfxSpawnAnimPhase0 > 1.0f)
