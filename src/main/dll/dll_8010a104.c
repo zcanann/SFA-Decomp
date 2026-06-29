@@ -56,6 +56,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     int linked;
     int noForwardExit;
     int slot;
+    int slot2;
     int step;
     int window[4];
     int span;
@@ -131,18 +132,18 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     for (step = 0; step < span; step++)
     {
         node = (int)(*gRomCurveInterface)->getById(*p2);
-        for (slot = 0; slot < 5; slot++)
+        for (slot2 = 0; slot2 < 5; slot2++)
         {
-            if (((PathCurveNode*)node)->links[slot] > -1 &&
-                (((PathCurveNode*)node)->directionMask & (1 << slot)) == 0)
+            if (((PathCurveNode*)node)->links[slot2] > -1 &&
+                (((PathCurveNode*)node)->directionMask & (1 << slot2)) == 0)
             {
-                linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)node)->links[slot]);
+                linked = (int)(*gRomCurveInterface)->getById(((PathCurveNode*)node)->links[slot2]);
                 if ((u32)linked != 0 &&
                     (((PathCurveNode*)linked)->tag0 == tag || ((PathCurveNode*)linked)->tag1 == tag ||
                         ((PathCurveNode*)linked)->tag2 == tag))
                 {
-                    *p2 = ((PathCurveNode*)node)->links[slot];
-                    slot = 5;
+                    *p2 = ((PathCurveNode*)node)->links[slot2];
+                    slot2 = 5;
                 }
             }
         }
