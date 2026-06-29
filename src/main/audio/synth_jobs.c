@@ -45,8 +45,8 @@ void synthUpdateJobTable(void)
     SynthSampleInfo newsmp;
     u32 i;
     SynthJob* si;
-    f32 volScale;
     f32 freqScale;
+    f32 volScale;
 
     if (synthJobTableCountdown != 0)
     {
@@ -54,8 +54,8 @@ void synthUpdateJobTable(void)
         return;
     }
     synthJobTableCountdown = synthJobTablePeriod;
-    volScale = lbl_803E77D8;
     freqScale = lbl_803E77E8;
+    volScale = lbl_803E77D8;
     si = synthJobTable;
     for (i = 0; i < lbl_803BD150[0x210]; ++i, ++si)
     {
