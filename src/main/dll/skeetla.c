@@ -1147,7 +1147,7 @@ void skeetla_spawnLinkedSparks(u8* obj)
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance)
 {
     f32 projection[3];
-    f32 centerToStart;
+    f32 dx;
     f32 centerToEnd;
     f32 minDistanceSq;
     f32 limitDistanceSq;
@@ -1157,7 +1157,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 intercept;
     f32 perpSlope;
     f32 dz;
-    f32 dx;
+    f32 centerToStart;
     f32 length;
     int useBlendedDistance;
 
