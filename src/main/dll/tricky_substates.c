@@ -1615,16 +1615,14 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
     }
 }
 
-int trickyFoodFn_8014460c(int objArg, int* trickyState)
+int trickyFoodFn_8014460c(int obj, int* state)
 {
-    u8* obj = (u8*)objArg;
-    u8* state = (u8*)trickyState;
     u8* b;
     u8 flag;
     u8 a;
     u8 c;
     u8 d;
-    u32 n;
+    u8 n;
     u8 cnt;
     u8 g;
     int inWater;
@@ -1686,7 +1684,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
-                    (*gObjectTriggerInterface)->runSequence(3, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
                     ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
                 }
                 else
@@ -1741,7 +1739,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
-                    (*gObjectTriggerInterface)->runSequence(2, obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                     ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
                     ((TrickyState*)state)->stateFlags |= 0x40000000LL;
                 }
@@ -1797,7 +1795,7 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
                     objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
-                (*gObjectTriggerInterface)->runSequence(g, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(g, (void*)obj, -1);
                 ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
                 buttonDisable(0, 0x100);
                 return 1;
