@@ -477,9 +477,9 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     int i;
     int j;
     f32 kB;
-    f32 dx;
-    f32 kA;
     f32 dz;
+    f32 kA;
+    f32 dx;
     f32 rad;
     f32 sinv;
     f32 cosv;
