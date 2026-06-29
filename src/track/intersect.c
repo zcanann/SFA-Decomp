@@ -4597,7 +4597,7 @@ void doHeatEffect(u8 alpha)
     extern void getReflectionTexture2(int* out);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
-    extern void fn_80293C64(f32* a, f32* b, f32 c);
+    extern void fn_80293C64(f32 c, f32* a, f32* b);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -4637,7 +4637,7 @@ void doHeatEffect(u8 alpha)
     getTextureFn_8006c5e4(&handle2);
     selectTexture(handle2, 2);
 
-    fn_80293C64(&mulX, &mulY, lbl_803DEF70 * fA);
+    fn_80293C64(lbl_803DEF70 * fA, &mulX, &mulY);
     mulY *= gSynthDelayedActionWord0;
     mulX *= gSynthDelayedActionWord0;
 
