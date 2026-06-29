@@ -2842,9 +2842,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.colorWord0 = 0xb1df;
         cfg.colorWord1 = 0xb1df;
         cfg.colorWord2 = 0xffff;
-        cfg.overrideColor0 = 0xb1df;
-        cfg.overrideColor1 = 0xb1df;
-        cfg.overrideColor2 = 0xffff;
+        cfg.overrideColor0 = cfg.colorWord0;
+        cfg.overrideColor1 = cfg.colorWord1;
+        cfg.overrideColor2 = cfg.colorWord2;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
         cfg.startPosZ = lbl_803DF554;
         cfg.initialAlpha = 0x69;
@@ -2854,9 +2854,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.colorWord0 = 0xffff;
         cfg.colorWord1 = 0xb1df;
         cfg.colorWord2 = 0xffff;
-        cfg.overrideColor0 = 0xffff;
-        cfg.overrideColor1 = 0xb1df;
-        cfg.overrideColor2 = 0xffff;
+        cfg.overrideColor0 = cfg.colorWord0;
+        cfg.overrideColor1 = cfg.colorWord1;
+        cfg.overrideColor2 = cfg.colorWord2;
         cfg.lifetimeFrames = 0;
         cfg.textureId = 0x4ff;
         (*gExpgfxInterface)->spawnEffect(&cfg, 0, effectId, 0);
@@ -2868,9 +2868,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.colorWord0 = 0xb1df;
         cfg.colorWord1 = 0xffff;
         cfg.colorWord2 = 0xffff;
-        cfg.overrideColor0 = 0xb1df;
-        cfg.overrideColor1 = 0xffff;
-        cfg.overrideColor2 = 0xffff;
+        cfg.overrideColor0 = cfg.colorWord0;
+        cfg.overrideColor1 = cfg.colorWord1;
+        cfg.overrideColor2 = cfg.colorWord2;
         cfg.lifetimeFrames = 0;
         cfg.textureId = 0x4fe;
         break;
