@@ -1144,21 +1144,33 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     VoxPos cur = *(VoxPos*)dest;
     VoxPos found;
     VoxState* st;
-    VoxActiveMap* map;
-    int z6lo, z6hi, bitmapCol;
+    int shiftHi;
+    int z6lo;
+    int z6hi;
+    int bitmapCol;
     u8 buf[12];
     int sumA, sumB;
     int adj, blocked;
-    int i, next;
+    int voxXand7;
     int row;
     int slot;
     u8* node;
-    int voxXand7, shiftLo, shiftHi;
-    int voxX6, voxZ6, voxX, voxZ;
+    int i, next;
+    int shiftLo;
+    VoxActiveMap* map;
+    int voxX6;
+    int voxZ6;
+    int voxX;
+    int voxZ;
     int err, steps;
     int xstep, ystep;
     int dx2, dy2;
     int dx, dy;
+
+
+
+
+
 
 
 
