@@ -892,16 +892,16 @@ int fn_8019E3F4(int* obj)
  * then steer toward the player (or Tricky) per the current behaviour state. */
 int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    u8* animUpdateBytes = (u8*)animUpdate;
+    BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     s8 inRange;
     s8 i;
     int yaw;
-    char* player;
+    u8* animUpdateBytes = (u8*)animUpdate;
     f32 dx;
     f32 dz;
     f32 distSq;
     BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
+    char* player;
     if (((GameObject*)obj)->seqIndex == 4)
     {
         return 0;
