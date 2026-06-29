@@ -503,6 +503,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
     s16 pair[2];
     int mode;
     int player;
+    u8* phasePtr;
 
     player = Obj_GetPlayerObject();
     pair[0] = a;
@@ -511,6 +512,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
         char* p = *(char**)&((GameObject*)obj)->anim.hitReactState;
         *(s16*)(p + 0x60) = *(s16*)(p + 0x60) | 1;
     }
+    phasePtr = &s->phase;
     mode = (s8)seq->movementState;
     if (mode == 4)
     {
@@ -528,7 +530,7 @@ int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
     }
     else if (mode == 5)
     {
-        if (s->phase >= 2 && s->phase <= 7)
+        if (s->phase >= 2 && *phasePtr <= 7)
         {
             void* types = seqFn_800394a0();
             switch (s->phase)

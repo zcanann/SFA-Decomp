@@ -451,6 +451,7 @@ u32 GameBit_Get(int eventId)
     s16 id = (s16)eventId & 0xfff;
     u8 flags;
     u8* base;
+    int* endPtr;
     int start;
     int i;
     int end;
@@ -492,8 +493,9 @@ u32 GameBit_Get(int eventId)
     start = *(u16*)(gGameBitTable + id * 4);
     result = 0;
     bit = 1;
+    endPtr = &end;
     end = (flags & GAMEBIT_FLAG_WIDTH_MASK) + start;
-    for (i = start; i < end + 1; i++)
+    for (i = start; i < *endPtr + 1; i++)
     {
         if ((1 << (i & 7)) & base[i >> 3])
         {

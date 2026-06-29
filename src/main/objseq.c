@@ -3570,7 +3570,8 @@ void ObjSeq_seqState_init(u8* seq)
     while (animIndex < ((ObjSeqState*)seq)->animCount)
     {
         runLength = 0;
-        while (animIndex + runLength < ((ObjSeqState*)seq)->animCount &&
+        commandIndex = ((ObjSeqState*)seq)->animCount;
+        while (animIndex + runLength < commandIndex &&
             track == ((s8)(((ObjSeqState*)seq)->animEntries + (animIndex + runLength) * 8)[5] & 0x1f))
         {
             runLength++;

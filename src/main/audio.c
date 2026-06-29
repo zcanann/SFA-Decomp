@@ -1732,7 +1732,8 @@ int musicInitMidiWad(void)
             size = (size | 0x1f) + 1;
         }
         gMidiWadPayloadStart = (u8*)gMidiWadFileData + 0x1a0;
-        gMidiWadPayloadSize = size - 0x1a0;
+        track = size - 0x1a0;
+        gMidiWadPayloadSize = track;
         gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
         arenaOffset = gMidiWadArenaSize;
         for (track = 0; track <= 0x63; track++)
