@@ -385,20 +385,20 @@ void pauseMenuCreateHeads(void)
 
 void drawArwingHud(void)
 {
-    u8 buf[8];
+    u8 bombSlot;
     int* arwing;
-    int shield;
+    int fullPips;
     int maxShield;
     int bombs;
-    int rings;
+    u8 buf[8];
     int req;
-    int fullPips;
+    int rings;
     int partialFrame;
     int maxPips;
     u32 i;
     u32 pip;
     u8 texIdx;
-    u8 bombSlot;
+    int shield;
 
     arwing = getArwing();
     *(int*)buf = lbl_803E1E08;
