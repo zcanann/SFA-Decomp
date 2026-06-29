@@ -209,7 +209,7 @@ typedef struct
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
-        *(s8 *)((st) + 0xd) = -1; \
+        *(u8 *)((st) + 0xd) = 0xFF; \
     }
 #define TRICKY_RESET(st) \
     *(u8 *)((st) + 8) = 1; \
