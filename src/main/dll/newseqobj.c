@@ -384,17 +384,16 @@ void fn_80150EDC(void* obj, void* state)
 void fn_80150910(int* obj, u8* state)
 {
     RomCurveWalker* path = *(RomCurveWalker**)state;
-    u8 idx = state[0x33b];
     u8* tbl4;
     u8* tbl0;
     u8* tbl1c;
     u32 flags;
 
-    tbl4 = lbl_8031F16C[idx].tbl4;
-    tbl0 = lbl_8031F16C[idx].tbl0;
-    tbl1c = lbl_8031F16C[idx].tbl1c;
+    tbl4 = lbl_8031F16C[state[0x33b]].tbl4;
+    tbl0 = lbl_8031F16C[state[0x33b]].tbl0;
+    tbl1c = lbl_8031F16C[state[0x33b]].tbl1c;
 
-    if (idx == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
+    if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
         GameBit_Set(0x1c8, 1);
     }
