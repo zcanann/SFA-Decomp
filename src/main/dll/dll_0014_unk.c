@@ -1740,7 +1740,7 @@ int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType,
     extern float mathSinf(float x); /* #57 */
     char* stateBytes;
     int curveId;
-    int currentCurve;
+    u32 currentCurve;
     int nextId;
     int nextCurve;
     int distanceCurve;
