@@ -2715,8 +2715,8 @@ int RomCurve_func16(double x, double y, double z)
             }
             else
             {
-                i++;
                 p++;
+                i++;
             }
         }
     }
