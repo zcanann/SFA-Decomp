@@ -247,11 +247,11 @@ void fn_801E9C00(int obj, int state)
     baseOffset = -4;
     baseOffset2 = 8;
     slot = (u8*)state;
-    pEndX = &endX;
-    pEndY = &endY;
-    pEndZ = &endZ;
-    pStartY = &startY;
     pStartZ = &startZ;
+    pStartY = &startY;
+    pEndZ = &endZ;
+    pEndY = &endY;
+    pEndX = &endX;
     zero = lbl_803E5AE8;
     maxDelta = lbl_803E5AF4;
     minDelta = lbl_803E5AFC;
