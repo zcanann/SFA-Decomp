@@ -1747,13 +1747,13 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
-    u8* out;
+    int o2;
     u8* out2;
     int szs[7];
     int pos;
     int end;
     int n;
-    int o2;
+    u8* out;
     int k;
     u8* q;
     f32 f;
