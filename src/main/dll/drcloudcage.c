@@ -184,7 +184,7 @@ void fn_801E9C00(int obj, int state)
         {
             pairIndex = trail->count - 2;
             points = (u8*)trail->points;
-            pair = (DRCloudCagePointPair*)(points + pairIndex * DRCLOUDCAGE_PAIR_SIZE);
+            pair = (DRCloudCagePointPair*)((u8*)trail->points + pairIndex * DRCLOUDCAGE_PAIR_SIZE);
             fade = lbl_803E5AF0;
             for (; pairIndex >= 0; pair--, pairIndex -= 2)
             {
