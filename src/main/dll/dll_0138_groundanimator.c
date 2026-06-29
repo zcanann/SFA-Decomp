@@ -556,9 +556,10 @@ void groundanimator_update(int* obj)
             for (blkIdx = 0; blkIdx < g->entryCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
+                mid = *(u16*)entry;
                 foffEntry = foff;
                 hoffEntry = hoff;
-                for (mid = *(u16*)entry; mid < *(u16*)((char*)entry + 0x14); mid++)
+                for (; mid < *(u16*)((char*)entry + 0x14); mid++)
                 {
                     vtx = fn_800606DC(block, mid);
                     foffVtx = foffEntry;
