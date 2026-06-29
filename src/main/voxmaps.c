@@ -734,7 +734,8 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     p = &occ[0][0];
     for (i = 0; i < 3; i++)
     {
-        y = i + box[1] - 1;
+        y = i + box[1];
+        y = y - 1;
         if (y < map->minY)
         {
             slot = 0;
