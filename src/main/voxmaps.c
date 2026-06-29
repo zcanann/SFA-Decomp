@@ -652,7 +652,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     int nodeCount;
     int key, oldp;
     int dx, dz;
-    int voxX, voxZ, col, shift, xbit2, xbit2p, zlo, zlo1;
+    int xbit2p;
+    int voxZ;
+    int shift;
+    int xbit2;
+    int col;
+    int zlo;
+    int voxX;
+    int zlo1;
     VoxState* vs;
     int blocked, dir, next, chosen, sumCur, sumNext;
     int i, slot, y;
