@@ -317,8 +317,6 @@ void andross_update(int obj)
     f32 searchDist;
     u32 randOffsetY;
     state = ((GameObject*)obj)->extra;
-    moveChanged = 0;
-    stateChanged = 0;
     pathFlag = 0;
     if (*(u8*)((int)state + 0xb6) != 0)
     {
@@ -380,6 +378,8 @@ void andross_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
+    moveChanged = 0;
+    stateChanged = 0;
     found = ((AndrossState*)state)->fightPhase;
     if (found != ((AndrossState*)state)->prevFightPhase)
     {
