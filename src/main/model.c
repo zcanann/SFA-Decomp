@@ -3109,7 +3109,7 @@ void ObjModel_BlendPrimaryVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
             copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[nb] = words;
+            sizes[(i + 1) & 1] = words;
             {
                 u8* q2;
                 int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
@@ -3441,7 +3441,7 @@ void ObjModel_BlendSecondaryVertexStream(u8* mtxs, u8* hdr, u8* data, u8** outs,
             words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
             nb = (i + 1) & 1;
             copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[nb] = words;
+            sizes[(i + 1) & 1] = words;
             {
                 u8* q2;
                 int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
