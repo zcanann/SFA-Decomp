@@ -400,6 +400,7 @@ void padUpdate(void)
     useprev = 0;
     joypadDisabled = 0;
 
+    i = 0;
     prevStickY = (s8*)&gPadPrevStickY;
     prevStickX = (s8*)&gPadPrevStickX;
     repeatY = (s8*)&gPadRepeatY;
@@ -417,7 +418,7 @@ void padUpdate(void)
     statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
     buttonMask = gPadButtonMask;
 
-    for (i = 0; i < 4; i++)
+    for (; i < 4; i++)
     {
         if (readPad->error == PAD_ERR_NO_CONTROLLER)
         {
