@@ -2881,7 +2881,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             )
             ;
             intVal = randomGetRange(0, 1) * 100;
-            cfg.lifetimeFrames = randomGetRange(0x32, 0xb4) + intVal;
+            variant = randomGetRange(0x32, 0xb4);
+            cfg.lifetimeFrames = variant + intVal;
             cfg.textureId = 0xc10;
             cfg.colorWord0 = 0xffcf;
             cfg.colorWord1 = 0xf987;
