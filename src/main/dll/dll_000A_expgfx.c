@@ -1949,10 +1949,10 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
     poolIndex = 0;
     source = (ExpgfxSourceObject*)sourceObject;
     poolSourceIds = gExpgfxTrackedPoolSourceIds;
-    poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
     while ((s16)poolIndex < EXPGFX_POOL_COUNT)
     {
+        poolFrameFlags = &gExpgfxStaticPoolFrameFlags[poolIndex];
         if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
             (*poolSourceIds == (u32)sourceObject))
         {
@@ -1990,7 +1990,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
             *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
         poolSourceIds++;
-        poolFrameFlags++;
         poolIndex++;
     }
 
