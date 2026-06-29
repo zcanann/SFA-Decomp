@@ -138,6 +138,7 @@ void wctempledia_update(int obj)
     int k;
 
     state = go->extra;
+    k = (u32)obj;
     setup = (WCTempleDiaSetup*)go->anim.placementData;
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
@@ -147,7 +148,7 @@ void wctempledia_update(int obj)
     }
     state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
     go->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)go->anim.rotZ);
-    Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXmn_sml_trex_roar);
+    Sfx_KeepAliveLoopedObjectSound(k, SFXmn_sml_trex_roar);
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, int volume, f32 volumeScale);
         f32 ratio = state->currentSpeed / state->targetTable[2];
