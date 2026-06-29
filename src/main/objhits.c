@@ -2505,28 +2505,14 @@ void ObjHits_Update(int objectCount)
                     if ((slotIndex != candidateIndex) &&
                         ((u32)((GameObject*)obj)->anim.parent != candObj))
                     {
-                        axisDiff = ((GameObject*)obj)->anim.worldPosZ -
+                        diff = ((GameObject*)obj)->anim.worldPosZ -
                             ((GameObject*)candObj)->anim.worldPosZ;
-                        if (axisDiff > gObjHitsScalarZero)
-                        {
-                            diff = axisDiff;
-                        }
-                        else
-                        {
-                            diff = -axisDiff;
-                        }
+                        diff = (diff > gObjHitsScalarZero) ? diff : -diff;
                         if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ)
                         {
-                            axisDiff = ((GameObject*)obj)->anim.worldPosY -
+                            diff = ((GameObject*)obj)->anim.worldPosY -
                                 ((GameObject*)candObj)->anim.worldPosY;
-                            if (axisDiff > *(const f32*)&gObjHitsScalarZero)
-                            {
-                                diff = axisDiff;
-                            }
-                            else
-                            {
-                                diff = -axisDiff;
-                            }
+                            diff = (diff > *(const f32*)&gObjHitsScalarZero) ? diff : -diff;
                             if ((diff < objState->primaryRadiusY + candState->primaryRadiusY) &&
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
