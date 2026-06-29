@@ -346,7 +346,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
 
 void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
 {
-    char pointCount;
+    s8 pointCount;
     bool found;
     int count;
     u8 bitVal;
