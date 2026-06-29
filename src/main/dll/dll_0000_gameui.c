@@ -1470,8 +1470,8 @@ void drawWorldMapHud(void)
     lbl_803DD776 = 0x78;
     if (sv < 0x1e)
     {
-        u8* base;
         s8 fi;
+        u8* base;
         s8 li_;
         u8 lv;
         int n;
