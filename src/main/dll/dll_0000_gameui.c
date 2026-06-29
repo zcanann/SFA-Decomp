@@ -1350,13 +1350,13 @@ void pauseMenuFn_8012b77c(void)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
-    s8 idx;
-    s8 j;
-    int alpha;
-    int i;
     int t;
     int a;
     int u;
+    int i;
+    s8 idx;
+    s8 j;
+    int alpha;
     f64 scaled;
 
     if (lbl_803DD770 == 0)
