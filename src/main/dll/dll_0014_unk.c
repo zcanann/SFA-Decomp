@@ -1168,10 +1168,10 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     extern float mathCosf(float x); /* #57 */
     extern float mathSinf(float x); /* #57 */
     char* stateBytes;
-    int neighborId;
     int low;
     int high;
     int mid;
+    int neighborId;
     int nextCurve;
     float t;
 
