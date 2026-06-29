@@ -643,19 +643,19 @@ static void heapSiftUp(CurveHeapNode* q, int i)
 
 void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
-    VoxState* vs;
+    int foundIdx, savedFlag, foundSlot;
     VoxActiveMap* map;
     CurveHeapNode* q;
     RouteNode* n;
     u8 occ[3][4];
     u8* p;
     int dxh, dyh;
-    int foundIdx, savedFlag, foundSlot;
+    int i, slot, y;
     int nodeCount;
     int key, oldp;
     int dx, dz;
     int voxX, voxZ, col, shift, xbit2, xbit2p, zlo, zlo1;
-    int i, slot, y;
+    VoxState* vs;
     int blocked, dir, next, chosen, sumCur, sumNext;
 
     if (box[0] == state->tgtX && box[2] == state->tgtY)
