@@ -2764,19 +2764,19 @@ extern u8 lbl_803DCDED;
 
 void doPendingMapLoads(void)
 {
-    char* base;
+    s16* p5;
     u8 waited;
+    int slot;
+    s16* p7;
     int gx, gz;
-    int doLoad;
-    int layer;
     int row;
-    int col;
+    int layer;
     int cell;
     int i;
-    int slot;
+    char* base;
     s16* p13;
-    s16* p5;
-    s16* p7;
+    int col;
+    int doLoad;
     int cnt;
     int* o1;
     f32 dz;
