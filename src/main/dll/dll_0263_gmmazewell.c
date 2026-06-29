@@ -81,8 +81,9 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
     return 0;
 }
 
-void gmmazewell_update(int obj)
+void gmmazewell_update(unsigned int obj)
 {
+    int objId;
     s16* questBits = lbl_8032A730;
     s32* questBits32 = (s32*)questBits;
     GmmazewellState* state = ((GameObject*)obj)->extra;
@@ -124,7 +125,8 @@ checkValue:
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+    objId = obj;
+    if ((((GameObject*)objId)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         int found;
         for (i = 0, p = questBits; (u32)i < QUEST_BIT_COUNT; i++)
