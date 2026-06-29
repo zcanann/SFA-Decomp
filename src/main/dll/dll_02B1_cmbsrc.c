@@ -558,7 +558,7 @@ void cmbsrc_init(int obj, u8* setup)
             }
             else
             {
-                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
+                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, *(f32*)&lbl_803E7360);
             }
             modelLightStruct_setDiffuseColor(state->light,
                                              (c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30])[mapData->colorIndex * 3],
