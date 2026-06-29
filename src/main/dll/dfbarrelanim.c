@@ -84,19 +84,18 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
 
     nodes = rope->nodes;
     node = nodes;
+    zero = lbl_803E4DFC;
     for (i = 0; i < count; i++, node++)
     {
-        f32 nzero;
         node->pos[0] = i * dx + rope->start[0];
         node->pos[1] = i * dy + rope->start[1];
         node->pos[2] = i * dz + rope->start[2];
-        nzero = lbl_803E4DFC;
-        node->velocity[2] = nzero;
-        node->velocity[1] = nzero;
-        node->velocity[0] = nzero;
-        node->force[2] = nzero;
-        node->force[1] = nzero;
-        node->force[0] = nzero;
+        node->velocity[2] = zero;
+        node->velocity[1] = zero;
+        node->velocity[0] = zero;
+        node->force[2] = zero;
+        node->force[1] = zero;
+        node->force[0] = zero;
         node->locked = 0;
         if ((i == 0) || (i == count - 1))
         {
@@ -122,7 +121,6 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     nodes[count - 1].locked = 1;
     nodes[0].locked = 1;
 
-    zero = lbl_803E4DFC;
     i = 0;
     link = rope->links;
     node = nodes;
