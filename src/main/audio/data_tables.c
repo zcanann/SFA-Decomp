@@ -241,7 +241,10 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
 
     sndBegin();
 
-    for (i = 0; i < dataCurveNum && t->curve[i].id < cid; ++i);
+    {
+        DATA_TAB* c = &t->curve[0];
+        for (i = 0; i < dataCurveNum && c->id < cid; ++c, ++i);
+    }
 
     if (i < dataCurveNum)
     {
@@ -250,12 +253,9 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
             if (dataCurveNum < 2048)
             {
                 {
-                    DATA_TAB* p = &t->curve[dataCurveNum - 1];
+                    DATA_TAB* curve = t->curve;
                     for (j = dataCurveNum - 1; j >= i; --j)
-                    {
-                        p[1] = p[0];
-                        p--;
-                    }
+                        curve[j + 1] = curve[j];
                 }
                 ++dataCurveNum;
             }
