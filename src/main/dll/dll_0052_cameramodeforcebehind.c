@@ -174,13 +174,13 @@ void CameraModeForceBehind_update(u8* obj)
     cosPitch = mathSinf(gCamForceBehindPi * (f32)(s32)camera->anim.rotY / gCamForceBehindBamsToRadDivisor);
     radius = gCamForceBehindPlacementRadius;
     {
-        f32 rh = radius * sinPitch;
         f32 ry = radius * cosPitch;
+        f32 rh = radius * sinPitch;
         f32 rx = rh * sinYaw;
-        f32 rz = rh * cosYaw;
+        rh = rh * cosYaw;
         camera->anim.worldPosX = baseX + rx;
         camera->anim.worldPosY = baseY + ry;
-        camera->anim.worldPosZ = baseZ + rz;
+        camera->anim.worldPosZ = baseZ + rh;
     }
     camcontrol_traceFromTarget(&camera->anim.worldPosX, target, &camera->anim.worldPosX, &camera->anim.rotY);
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,

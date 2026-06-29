@@ -1575,6 +1575,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     int* base;
     int nibble;
     int i;
+    u8* s0;
 
     fn_8000F8F8();
     countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
@@ -1587,8 +1588,9 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     cursor = state[4] + 4;
     state[4] = cursor;
     countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
-    base = (int*)(countShifted + state[0]);
+    s0 = (u8*)state[0];
+    v = s0[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;

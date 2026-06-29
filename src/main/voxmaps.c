@@ -856,18 +856,16 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
 
     foundIdx = -1;
     {
-        int kkk;
         int boff = 0;
         s16 bz = box[2];
         s16 bx = box[0];
         nodeCount = state->nodeCount;
-        for (kkk = 0; kkk < nodeCount; kkk++)
+        for (foundIdx = 0; foundIdx < nodeCount; foundIdx++)
         {
             RouteNode* nn = (RouteNode*)((char*)state->nodes + boff);
             if (nn->x == bx && nn->y == bz)
             {
                 savedFlag = nn->flag;
-                foundIdx = kkk;
                 goto searched;
             }
             boff += 14;
@@ -943,8 +941,7 @@ searched:
     {
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = nodeCount;
+        q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
@@ -956,8 +953,7 @@ searched:
         }
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = nodeCount;
+        q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
