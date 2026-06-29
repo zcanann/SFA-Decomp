@@ -252,7 +252,7 @@ void drshackle_update(int obj)
     }
 }
 
-void drshackle_hitDetect(int obj)
+void drshackle_hitDetect(unsigned long obj)
 {
     char* p = ((GameObject*)obj)->extra;
     if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(p + 0x1a))->b0 != 0)
