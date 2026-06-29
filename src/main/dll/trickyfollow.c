@@ -77,11 +77,11 @@ extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* t
 #pragma opt_loop_invariants off
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
-    u8 moved;
-    int wg;
-    char* strs = lbl_8031D2E8;
     int tp;
     u8* target;
+    char* strs = lbl_8031D2E8;
+    u8 moved;
+    int wg;
     int targetWg;
     u8 slot;
     u16 pp;
