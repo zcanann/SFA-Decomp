@@ -1526,7 +1526,7 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x469);
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref = ref + 1)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
