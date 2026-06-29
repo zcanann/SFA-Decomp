@@ -857,7 +857,7 @@ void loadMemCardImages(void)
     {
         u64 v = p[i];
         x = x ^ v;
-        a = v + a;
+        a = a + v;
     }
     chk = x ^ (a + 13);
     ((u32*)q)[0xfff] = (u32)chk;
@@ -1190,7 +1190,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                 {
                     u64 v = p[i];
                     x = x ^ v;
-                    acc = v + acc;
+                    acc = acc + v;
                 }
                 c = x ^ (acc + 13);
                 chk = c;
@@ -1256,7 +1256,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             {
                 u64 v = p[i];
                 x = x ^ v;
-                acc = v + acc;
+                acc = acc + v;
             }
             chk2 = x ^ (acc + 13);
             if (chk2 != *(u64*)(lbl_803DD044 + 0xa40))
