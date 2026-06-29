@@ -70,7 +70,7 @@ void tumbleweed_updateRollingMotion(int obj, int state)
         dy = ((GameObject*)obj)->anim.localPosY - *(float*)*hitEntry;
         if (dy < lbl_803E2F68)
         {
-            dy = lbl_803E2F7C * dy + lbl_803E2F5C;
+            dy = dy * lbl_803E2F7C + lbl_803E2F5C;
         }
         if (dy < bestDy)
         {
