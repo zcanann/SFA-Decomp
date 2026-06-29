@@ -74,9 +74,16 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagB
     u16 rvec[3];
     int i;
     f32 r;
-    u32 fts = framesThisStep;
-    u8 frames = fts > 3 ? 3 : fts;
+    u8 frames;
 
+    if (framesThisStep > 3)
+    {
+        frames = 3;
+    }
+    else
+    {
+        frames = framesThisStep;
+    }
     for (i = 0; i < frames * count; i++)
     {
         r = randomGetRange(0, 1000) / 1000.0f;
