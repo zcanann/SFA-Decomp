@@ -16756,7 +16756,7 @@ void fn_802ADE80(int obj, int inner, int state)
         s16 angles[4];
         f32 mat[4];
     } v;
-    f32 mtx[16];
+    f32 mtx[20];
     f32 angle;
     int playEffect;
     int loopCount;
