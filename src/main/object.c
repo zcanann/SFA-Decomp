@@ -1158,22 +1158,22 @@ typedef struct LoadedObj
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
-    int size;
+    int id;
     int offsets[20];
     void* models[20];
     LoadedObj tmpl;
     LoadedObj* tp;
     s16 seq;
-    int id;
+    int m;
     u8* def;
     int fnFlags;
     int (*fp)(void*);
     int (*fp2)(void*, int);
     int flags29;
-    int total;
+    int idx;
     int i;
     int count;
-    int idx;
+    int total;
     ObjModelInstance* modelDef;
     LoadedObj* obj;
     int base;
@@ -1182,9 +1182,9 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     u16 h;
     u8 cb;
     f32 max;
-    int m;
-    u32 v;
     s16 seq2;
+    u32 v;
+    int size;
     int sz;
     int tmp;
 
