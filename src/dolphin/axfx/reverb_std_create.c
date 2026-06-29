@@ -20,12 +20,12 @@ static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
     }
 }
 
-static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len)
+static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len, f32 zero)
 {
     dl->length = len * 4;
     dl->inputs = salMalloc(len * 4);
     memset(dl->inputs, 0, len * 4);
-    dl->lastOutput = axfx_reverb_std_f32_0;
+    dl->lastOutput = zero;
     DLsetdelay(dl, len >> 1);
     dl->inPoint = 0;
     dl->outPoint = 0;
@@ -52,14 +52,14 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 2; i++) {
-            DLcreate(&rv->C[i + k * 2], sReverbStdDelayLengths[i] + 2);
+            DLcreate(&rv->C[i + k * 2], sReverbStdDelayLengths[i] + 2, zero);
             DLsetdelay(&rv->C[i + k * 2], sReverbStdDelayLengths[i]);
             rv->combCoef[i + k * 2] =
                 powf(axfx_reverb_std_f32_10, (sReverbStdDelayLengths[i] * -3) / timeFactor);
         }
 
         for (i = 0; i < 2; i++) {
-            DLcreate(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2] + 2);
+            DLcreate(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2] + 2, zero);
             DLsetdelay(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2]);
         }
         rv->lpLastout[k] = zero;
