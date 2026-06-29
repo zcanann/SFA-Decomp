@@ -86,13 +86,13 @@ extern f32 lbl_803E1738;
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
-    float zB;
+    float bestLower;
     float zLim;
     float pt0;
     float wy;
     float diff;
     float bestUpper;
-    float bestLower;
+    float zB;
     int res;
     int count;
     int i;
