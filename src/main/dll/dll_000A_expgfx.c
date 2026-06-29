@@ -367,10 +367,11 @@ poolSearchDone:
 
     if (foundPool)
     {
+        slotIndex = 0;
         chosenPool = (s16)foundPoolIndex;
         activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * 4);
         currentMask = *activeMaskPtr;
-        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
+        for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
             if ((activeBit & currentMask) == 0)
@@ -412,10 +413,11 @@ poolSearchDone:
 
     if (foundPool)
     {
+        slotIndex = 0;
         chosenPool = (s16)foundPoolIndex;
         activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * 4);
         currentMask = *activeMaskPtr;
-        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
+        for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
             if ((activeBit & currentMask) == 0)
