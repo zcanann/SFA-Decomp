@@ -1368,10 +1368,11 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy
 void playerUpdateFn_8005649c(void)
 {
     int count;
+    int slot;
     int** objs;
     char* cam;
     int** e;
-    int i, slot;
+    int i;
     f32 lx, ly, lz;
 
     objs = ObjGroup_GetObjects(6, &count);
