@@ -131,6 +131,8 @@ void trickyFlame(int p1, int p2)
     register char* strBase = lbl_8031D2E8;
     void** slot;
     int i;
+    void** slot2;
+    int i2;
     void* setup;
     void* state;
     void* target;
@@ -347,10 +349,10 @@ void trickyFlame(int p1, int p2)
                 else if ((double)((GameObject*)p1)->anim.currentMoveProgress > (double)lbl_803E2504)
                 {
                     TRICKY_MARK_HELPERS_FINISHED(p2);
-                    for (i = 0, slot = (void**)p2; i < TRICKY_GUARD_HELPER_COUNT; i++)
+                    for (i2 = 0, slot2 = (void**)p2; i2 < TRICKY_GUARD_HELPER_COUNT; i2++)
                     {
-                        objSetAnimSpeedTo1(slot[0x700 / 4]);
-                        slot++;
+                        objSetAnimSpeedTo1(slot2[0x700 / 4]);
+                        slot2++;
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
                     state = ((GameObject*)p1)->extra;
