@@ -1795,7 +1795,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 
 extern int testAndSet_onlyUseHeap3(int v);
 extern float fn_802943F4(float x);
-extern double floor(double);
+extern float floor(float);
 extern f32 __PADFixBits;
 extern const f32 Yachuff_803DEDE0;
 extern f32 gNewShadowPlacements[];
