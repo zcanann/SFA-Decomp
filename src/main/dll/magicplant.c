@@ -345,7 +345,6 @@ void fn_80153640(int obj, int state)
 {
     u8* fx;
     int newObj;
-    u32 rnd;
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
@@ -363,12 +362,11 @@ void fn_80153640(int obj, int state)
             ((GameObject*)newObj)->anim.velocityX = 0.02f *
                 (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosX -
                  ((GameObject*)fx)->anim.rootMotionScale);
-            rnd = randomGetRange(-10, 10);
             {
                 ((GameObject*)newObj)->anim.velocityY = 0.02f *
                     ((lbl_803E28F0 +
                       ((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosY +
-                      (f32)(s32)rnd) -
+                      (f32)(s32)randomGetRange(-10, 10)) -
                      ((GameObject*)fx)->anim.localPosX);
                 ((GameObject*)newObj)->anim.velocityZ = 0.02f *
                     (((GameObject*)*(int*)&((BaddieState*)state)->trackedObj)->anim.localPosZ -
