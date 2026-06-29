@@ -486,7 +486,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     f32 t;
     f32 z;
     u8 trace;
-    u8 blocked;
+    u32 blocked;
     s16 spin;
 
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
