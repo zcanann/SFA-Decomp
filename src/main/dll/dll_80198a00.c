@@ -166,10 +166,10 @@ void fn_80198DE8(u8* obj, int seqArg)
     f32 normalX;
     f32 normalZ;
     f32 nearX;
-    f32 nearY;
-    f32 nearZ;
     f32 farX;
+    f32 nearY;
     f32 farY;
+    f32 nearZ;
     f32 farZ;
     f32 prodY;
     f32 prodZ;
