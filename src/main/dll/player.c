@@ -12592,13 +12592,13 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void objLoadPlayerFromSave(int obj)
 {
     char* base = (char*)lbl_80332EC0;
+    s16* gb;
     int inner = *(int*)&((GameObject*)obj)->extra;
-    u8* pathState;
+    int i;
+    f32 fz;
     int me;
     int off;
-    int i;
-    s16* gb;
-    f32 fz;
+    u8* pathState;
 
     lbl_803DE459 = 0;
     ObjGroup_AddObject(obj, 0);
