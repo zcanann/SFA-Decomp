@@ -14699,12 +14699,12 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     int inner;
     void** list;
 
-    f32 y1;
-    f32 y2;
-    f32 z1;
-    f32 z2;
-    f32 x1;
     f32 x2;
+    f32 x1;
+    f32 z2;
+    f32 z1;
+    f32 y2;
+    f32 y1;
     f32 dists[4];
     f32 z9c;
     f32 planes[8];
