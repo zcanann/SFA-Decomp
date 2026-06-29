@@ -3183,9 +3183,8 @@ void doPendingMapLoads(void)
                                         if (*(u8*)(cur2 + 0x2a) != 0xFF)
                                         {
                                             int ix = *(u8*)(cur2 + 0x2a) * 16 + 12;
-                                            u8 c2 = *(u8*)(lbl_803DCE68 + ix);
-                                            if (c2 != 0)
-                                                *(u8*)(lbl_803DCE68 + ix) = c2 - 1;
+                                            if (*(u8*)(lbl_803DCE68 + ix) != 0)
+                                                *(u8*)(lbl_803DCE68 + ix) -= 1;
                                         }
                                         if (*(u8*)(cur2 + 0x29) != 0)
                                             mapTextureOverrideRelease(*(int*)(cur2 + 0x24),
