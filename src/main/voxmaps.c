@@ -941,8 +941,7 @@ searched:
     {
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = nodeCount;
+        q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
@@ -954,8 +953,7 @@ searched:
         }
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        state->queueCount++;
-        q[state->queueCount].value = nodeCount;
+        q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     }
