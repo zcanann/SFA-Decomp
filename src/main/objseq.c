@@ -1556,9 +1556,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         {
             if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
             {
+                f32 dx = posp[0] - prevX;
                 if (ObjAnim_SampleRootCurvePhase(
-                    sqrtf((posp[0] - prevX) * (posp[0] - prevX) +
-                        (posp[2] - prevZ) * (posp[2] - prevZ)),
+                    sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
                     (ObjAnimComponent*)activeObj, &speed) == 0)
                 {
                     frame = ((ObjSeqState*)seq)->curFrame - 1;
