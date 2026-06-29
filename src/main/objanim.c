@@ -139,14 +139,14 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     f32 value;
     int wrapped;
     int countdown;
-    int previousFrame;
-    int currentFrame;
-    int scanMode;
     int eventCount;
     int eventIndex;
     ObjAnimPackedEvent eventEntry;
-    int eventFrame;
+    int previousFrame;
+    int currentFrame;
     int eventId;
+    int eventFrame;
+    int scanMode;
 
     objAnim = (ObjAnimComponent*)objAnimHandle;
     wrapped = 0;
