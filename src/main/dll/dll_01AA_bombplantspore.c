@@ -249,6 +249,7 @@ void bombplantspore_update(void* obj)
     void* playerObj;
     int detonateMessage;
     int i;
+    int j;
 
     state = ((GameObject*)obj)->extra;
     if ((state->stateFlags >> 6 & 1) != 0u)
@@ -401,7 +402,7 @@ void bombplantspore_update(void* obj)
         {
             Sfx_PlayFromObject(obj, SFXmv_torclp_6);
             (*gExpgfxInterface)->freeSource((u32)obj);
-            for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++)
+            for (j = 0; j < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; j++)
             {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E53B0, 7, 1, 0x3c, lbl_803E53B8, NULL, 0);
                 (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
