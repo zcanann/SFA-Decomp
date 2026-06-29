@@ -101,7 +101,6 @@ void bossdrakor_update(int obj)
     int shakeY;
     f32 shake;
     f32 shakeScaleZ;
-    f32 v;
     f32 t;
     s16 d;
     int step;
@@ -309,8 +308,10 @@ void bossdrakor_update(int obj)
     {
         ((BossDrakorState*)state)->shakeVel = -(lbl_803E6578 * timeDelta - ((BossDrakorState*)state)->shakeVel);
         ((BossDrakorState*)state)->shakeAmount = ((BossDrakorState*)state)->shakeAmount + ((BossDrakorState*)state)->shakeVel;
-        v = ((BossDrakorState*)state)->shakeAmount;
-        t = (v < t) ? t : ((v > lbl_803E6550) ? lbl_803E6550 : v);
+        t = (((BossDrakorState*)state)->shakeAmount < t)
+                ? t
+                : ((((BossDrakorState*)state)->shakeAmount > lbl_803E6550) ? lbl_803E6550
+                                                                           : ((BossDrakorState*)state)->shakeAmount);
         ((BossDrakorState*)state)->shakeAmount = t;
         shakeScaleZ = ((BossDrakorState*)state)->shakeScaleZ;
         shake = ((BossDrakorState*)state)->shakeAmount;
