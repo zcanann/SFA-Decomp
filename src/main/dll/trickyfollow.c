@@ -296,7 +296,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                     }
                     else
                     {
-                        if (trickyPatch != 0)
+                        if ((u32)trickyPatch != 0)
                         {
                             for (i = 0; i < 4; i++)
                             {
