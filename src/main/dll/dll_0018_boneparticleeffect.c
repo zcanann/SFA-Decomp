@@ -1512,31 +1512,27 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
                 pc = (f32*)(base + 0x120);
                 while (k < 4)
                 {
-                    u8* t4;
                     u8* idr;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
                     idr = base + id;
                     cls = idr[0x590];
                     if (cls == 0)
                     {
-                        t4 = base + id * 4;
-                        s.vx = pa[0] * *(f32*)(t4 + 0x5d8);
-                        s.vy = pa[1] * *(f32*)(t4 + 0x5d8);
-                        s.vz = pa[2] * *(f32*)(t4 + 0x664);
+                        s.vx = pa[0] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vy = pa[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vz = pa[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 1)
                     {
-                        t4 = base + id * 4;
-                        s.vx = pb[0] * *(f32*)(t4 + 0x5d8);
-                        s.vy = pb[1] * *(f32*)(t4 + 0x5d8);
-                        s.vz = pb[2] * *(f32*)(t4 + 0x664);
+                        s.vx = pb[0] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vy = pb[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vz = pb[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     else if (cls == 2)
                     {
-                        t4 = base + id * 4;
-                        s.vx = pc[0] * *(f32*)(t4 + 0x5d8);
-                        s.vy = pc[1] * *(f32*)(t4 + 0x5d8);
-                        s.vz = pc[2] * *(f32*)(t4 + 0x664);
+                        s.vx = pc[0] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vy = pc[1] * *(f32*)(base + id * 4 + 0x5d8);
+                        s.vz = pc[2] * *(f32*)(base + id * 4 + 0x664);
                     }
                     Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
                     s.vx = s.vx + playerMapOffsetX;
