@@ -151,6 +151,7 @@ void fn_801E9C00(int obj, int state)
     int nextOffset;
     int activeOffset;
     u8 hitDetected;
+    u8* slot;
     int activeIndex;
     int endpointIndex;
     DRCloudCageTrail* selectedTrail;
@@ -159,7 +160,6 @@ void fn_801E9C00(int obj, int state)
     f32* pEndZ;
     f32* pStartY;
     f32* pStartZ;
-    u8* slot;
     f32* endpoint;
     int scanIndex;
     int hitIndex;
