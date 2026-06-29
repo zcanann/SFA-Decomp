@@ -129,26 +129,26 @@ extern f64 lbl_803E2030;
 
 int cMenuSetItems(s16* itemsIn, char useTricky)
 {
-    int* wordP;
-    s16* src;
-    int active;
-    u8* base;
-    s16* ids;
-    u8* flP;
+    s16* w2;
     s16* stP;
+    int active;
+    s16* w3;
+    s16* src;
+    u8* w4;
+    s16* ids;
+    void** texW;
+    int* wordP;
+    u8* base;
     s16* dst;
+    u8* flP;
     s16* items;
     int halfOff;
-    int wordOff;
-    int count;
-    int i;
-    s16* w1;
-    s16* w2;
-    s16* w3;
-    u8* w4;
     s16* idsW2;
-    void** texW;
+    int count;
+    s16* w1;
+    int wordOff;
     void** texP2;
+    int i;
     s16 saved[CMENU_ITEM_SLOT_COUNT];
 
     items = itemsIn;
