@@ -2560,41 +2560,41 @@ void walkgroupFindExitPointFn_800dc398(void)
 
         pp = &pairs[2];
         div = lbl_803E060C;
-        p = patchBase;
+        p = &patchBase[1];
         for (pi = 1; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
             ga = pp[0];
             gb = pp[1];
-            fdx = (f32)(p[1].exit1X - p[1].exit0X);
-            fdz = (f32)(p[1].exit1Z - p[1].exit0Z);
+            fdx = (f32)(p->exit1X - p->exit0X);
+            fdz = (f32)(p->exit1Z - p->exit0Z);
 
             iter = 0;
             do
             {
-                OBJFSA_EXIT_INSIDE(ga, p[1].exit0X, p[1].exit0Z);
+                OBJFSA_EXIT_INSIDE(ga, p->exit0X, p->exit0Z);
                 if (e == 4) goto exit0Done;
-                OBJFSA_EXIT_INSIDE(gb, p[1].exit0X, p[1].exit0Z);
+                OBJFSA_EXIT_INSIDE(gb, p->exit0X, p->exit0Z);
                 if (e == 4) goto exit0Done;
-                p[1].exit0X = (s16)((f32)p[1].exit0X + fdx / div);
-                p[1].exit0Z = (s16)((f32)p[1].exit0Z + fdz / div);
+                p->exit0X = (s16)((f32)p->exit0X + fdx / div);
+                p->exit0Z = (s16)((f32)p->exit0Z + fdz / div);
             }
             while (iter++ != 100);
-            OSReport(sObjfsaMissingPatchExitPoint0, p[1].groupId & 0xff,
-                     (int)(u32)p[1].groupId >> 8);
+            OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff,
+                     (int)(u32)p->groupId >> 8);
         exit0Done:
             iter = 0;
             do
             {
-                OBJFSA_EXIT_INSIDE(ga, p[1].exit1X, p[1].exit1Z);
+                OBJFSA_EXIT_INSIDE(ga, p->exit1X, p->exit1Z);
                 if (e == 4) goto exit1Done;
-                OBJFSA_EXIT_INSIDE(gb, p[1].exit1X, p[1].exit1Z);
+                OBJFSA_EXIT_INSIDE(gb, p->exit1X, p->exit1Z);
                 if (e == 4) goto exit1Done;
-                p[1].exit1X = (s16)((f32)p[1].exit1X - fdx / div);
-                p[1].exit1Z = (s16)((f32)p[1].exit1Z - fdz / div);
+                p->exit1X = (s16)((f32)p->exit1X - fdx / div);
+                p->exit1Z = (s16)((f32)p->exit1Z - fdz / div);
             }
             while (iter++ != 100);
-            OSReport(sObjfsaMissingPatchExitPoint1, p[1].groupId & 0xff,
-                     (int)(u32)p[1].groupId >> 8);
+            OSReport(sObjfsaMissingPatchExitPoint1, p->groupId & 0xff,
+                     (int)(u32)p->groupId >> 8);
         exit1Done:
             ;
         }
