@@ -171,11 +171,13 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 u32 voiceConvertDbToLinear(u32 dbCents)
 {
     f32 scaledDb;
+    f32 ex;
     f32 base;
     f32 result;
 
     scaledDb = (f32)(s32)dbCents;
-    base = powf(lbl_803E7834, scaledDb * lbl_803E7838);
+    ex = lbl_803E7838 * scaledDb;
+    base = powf(lbl_803E7834, ex);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
 }
