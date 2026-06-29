@@ -765,9 +765,9 @@ u32 isInWalkGroupOrPatch(float* point)
     s16* nx;
     char* offs;
     ObjfsaPatch* patch;
-    s16 idx;
-    s16 i;
     int count;
+    s16 i;
+    s16 idx;
     f32 y;
 
     if (mathFn_800dbff0(point) != 0)
