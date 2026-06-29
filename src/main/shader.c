@@ -3325,19 +3325,26 @@ extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 #pragma optimization_level 2
 void mapDebugRender(int* state)
 {
-    int bx, bz;
+    int sz;
+    int wz;
     char* blk;
-    s8* tbl;
-    int sx, sz;
-    int wx, wz;
+    int dy;
+    int sx;
+    int y1;
+    int y0a;
+    int bz;
     int ci;
     int y0;
-    int y0a;
+    int wx;
     f32 cy;
-    int y1;
-    int yy, dy, h;
+    int bx;
+    int yy;
+    s8* tbl;
+    int h;
     int step;
-    int row, cx, cz;
+    int row;
+    int cx;
+    int cz;
     int cell;
     int v;
     int n;
