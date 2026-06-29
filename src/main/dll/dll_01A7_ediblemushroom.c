@@ -149,8 +149,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         else
         {
-            t = ((EdibleMushroomState*)state)->tailSwingFxTimer - timeDelta;
-            ((EdibleMushroomState*)state)->tailSwingFxTimer = t;
+            t = (((EdibleMushroomState*)state)->tailSwingFxTimer -= timeDelta);
             if (t <= lbl_803E5288)
             {
                 if (((GameObject*)obj)->objectFlags & 0x800)
