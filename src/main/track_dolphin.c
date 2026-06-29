@@ -1521,7 +1521,7 @@ void intersectModLineBuild(int* obj)
     }
     {
         int off;
-        for (li = 0, off = 0; li < gIntersectLineCount; li++, off += 0x10)
+        for (li = 0, off = 0; li < gIntersectLineCount; off += 0x10, li++)
         {
             u8* L = (u8*)lbl_803DCF34 + off;
             int t0 = *(s16*)(L + 4) * 2;
