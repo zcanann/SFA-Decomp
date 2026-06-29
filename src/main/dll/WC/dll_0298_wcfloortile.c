@@ -607,7 +607,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
         {
             int tgt = ((ArwingState*)state)->rotZTrimCur;
             int hi = tgt + 0xffff;
-            int mid = tgt + 0x8000;
+            int mid = hi - 0x7fff;
             if (((ArwingState*)state)->barrelRollAngle > hi)
             {
                 ((ArwingState*)state)->mode = 0;
@@ -637,7 +637,7 @@ void arwarwing_updateBarrelRoll(int obj, int state)
         {
             int tgt = ((ArwingState*)state)->rotZTrimCur;
             int lo = tgt - 0xffff;
-            int mid = tgt - 0x8000;
+            int mid = lo + 0x7fff;
             if (((ArwingState*)state)->barrelRollAngle < lo)
             {
                 ((ArwingState*)state)->mode = 0;
