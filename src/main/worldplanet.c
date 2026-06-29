@@ -347,7 +347,7 @@ void worldplanet_update(int obj)
         }
         galleon = ObjList_FindObjectById(0x4300c);
         ((WorldObjState*)((GameObject*)galleon)->extra)->effectState = state->selectionLocked;
-        prevPlanet = *(u8*)&state->selectedPlanet;
+        prevPlanet = state->selectedPlanet;
         {
             u32 m = 0;
             int k = m;
