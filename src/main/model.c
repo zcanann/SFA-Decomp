@@ -2900,7 +2900,7 @@ void modelAnimFn_800246a0(u8* a, u8* b, u8* c, f32 t, int d, int e, int f, int g
     int px;
     u8* hdr;
     u32 i1;
-    u32 i2;
+    u8 i2;
     int fl;
     int vo;
     u8* p;
