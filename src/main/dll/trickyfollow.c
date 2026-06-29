@@ -741,8 +741,7 @@ state_selected:
                     fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C, ((TrickyState*)state)->unk28,
                                 ((TrickyState*)state)->unk532, route->reverse ^ 1);
                     found = 0;
-                    step = 0;
-                    while ((step = step + 1, step < 100 && (found != 1)))
+                    for (step = 0; (step = step + 1) < 100 && (found != 1);)
                     {
                         found = fn_8004B218(((TrickyState*)state)->voxBlocks[0], 1);
                         if (found != 1)
