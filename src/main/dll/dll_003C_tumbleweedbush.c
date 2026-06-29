@@ -131,8 +131,7 @@ void linkInitTextures(LinkMenuItemDB* item)
     {
         item->slots[i] = -1;
     }
-    i = 1;
-    item->slots[0] = 0;
+    item->slots[(i = 1) - 1] = 0;
     budget -= linkTextures[6] + linkTextures[14];
     while (budget != 0)
     {
