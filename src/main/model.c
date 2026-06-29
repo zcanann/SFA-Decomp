@@ -1876,7 +1876,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->unk48 = pos;
-        pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
+        o2 = ((ModelFileHeader*)p)->unkF7;
+        pos += o2 * 0x10;
         *(int*)&((ObjModel*)out2)->unk4C = pos;
         pos += ((ModelFileHeader*)p)->unkF7 * 0x10;
         *(int*)&((ObjModel*)out2)->unk50 = *(int*)&((ObjModel*)out2)->unk48;
