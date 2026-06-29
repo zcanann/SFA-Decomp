@@ -55,7 +55,7 @@ extern f32 lbl_803E250C;
 void trickyFn_80141290(int obj, int ball)
 {
     TrickyState *ts = (TrickyState *)ball;
-    int nodeIds[4];
+    int toNode;
     u8 nodeCount;
     int node;
     int nodeSet;
@@ -64,7 +64,7 @@ void trickyFn_80141290(int obj, int ball)
     int i;
     int curve;
     int fromNode;
-    int toNode;
+    int nodeIds[4];
     int nextNode;
     int candidateNode;
     int targetNode;
