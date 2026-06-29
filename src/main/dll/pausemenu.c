@@ -522,13 +522,13 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 
 void pauseMenuDrawStatus_801274a0(int* arg1)
 {
-    int* model;
+    s8 i8;
     s32 alpha;
     s32 ty;
     s32 ty1;
     s32 i;
     s32 j;
-    s8 i8;
+    int* model;
     int* info;
 
     pauseMenuDoSave();
