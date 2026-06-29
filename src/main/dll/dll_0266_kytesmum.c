@@ -149,15 +149,10 @@ void kytesmum_update(int obj)
         {
             ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
         }
-        kytesMum->yaw = (s16)(kytesMum->yaw + (((d = diff) + 1) >> 4));
-        runtime->animSpeed = lbl_803E699C * (f32)(d / 1024);
-        if (d >= 0)
-        {
-        }
-        else
-        {
-            d = -d;
-        }
+        kytesMum->yaw = (s16)(kytesMum->yaw + ((diff + 1) >> 4));
+        runtime->animSpeed = lbl_803E699C * (f32)(diff / 1024);
+        d = diff;
+        d = (d >= 0) ? d : -d;
         if (d < 0x400)
         {
             kytesMum->yaw = (s16)(setup->yaw << 8);
