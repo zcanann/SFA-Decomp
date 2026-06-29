@@ -14871,26 +14871,21 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 int bi = -1;
                 int i2 = 0;
                 void** pp = list;
-                if (cnt > 0)
+                for (; cnt > 0; cnt--)
                 {
-                    do
+                    f32 dy = dists[3] - *(f32*)*pp;
+                    if (dy >= lbl_803E7EA4 && (best < lbl_803E7EA4 || dy < best))
                     {
-                        f32 dy = dists[3] - *(f32*)*pp;
-                        if (lbl_803E7EA4 <= dy && (best < lbl_803E7EA4 || dy < best))
-                        {
-                            best = dy;
-                            bi = i2;
-                        }
-                        if (lbl_803E80B0 < ((f32*)*pp)[2] && lbl_803E7EA4 <= dy &&
-                            (best2 < lbl_803E7EA4 || dy < best2))
-                        {
-                            best2 = dy;
-                        }
-                        pp++;
-                        i2++;
-                        cnt--;
+                        best = dy;
+                        bi = i2;
                     }
-                    while (cnt != 0);
+                    if (lbl_803E80B0 < ((f32*)*pp)[2] && dy >= lbl_803E7EA4 &&
+                        (best2 < lbl_803E7EA4 || dy < best2))
+                    {
+                        best2 = dy;
+                    }
+                    pp++;
+                    i2++;
                 }
                 if (best < lbl_803E80C4 && bi != -1 && ((f32*)list[bi])[2] <= lbl_803E80B0 &&
                     lbl_803E7EB0 < ((f32*)list[bi])[2])
