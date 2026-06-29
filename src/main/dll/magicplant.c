@@ -14,7 +14,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/baddie_setmove.h"
+void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
+#define Baddie_SetMove(obj, state, moveId, speed, p5, flags) \
+    fn_8014D08C((int)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
