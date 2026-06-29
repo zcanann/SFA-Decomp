@@ -176,7 +176,7 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
     current = obj;
     base = (u8*)gObjInverseYawTransformMatrices;
     matrixIndex = yawIndex << 4;
-    yawMatrix = (f32*)(base + (matrixIndex << 2) + 1920);
+    yawMatrix = (f32*)(base + ((matrixIndex << 2) + 1920));
     inverseYawMatrix = (f32*)(base + (matrixIndex << 2));
     hasParent = 0;
     ancestorCount = 0;
