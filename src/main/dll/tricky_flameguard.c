@@ -430,8 +430,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     char* strBase = lbl_8031D2E8;
     int i;
     void** slot;
-    int i2;
     void** slot2;
+    int i2;
     void* setup;
     void* state;
     int found;
