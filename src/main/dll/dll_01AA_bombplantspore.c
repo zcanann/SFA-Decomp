@@ -350,8 +350,8 @@ void bombplantspore_update(void* obj)
             }
             else
             {
-                f32 driftSpeed = state->driftSpeed;
-                f32 driftStep = lbl_803E53EC * (state->driftSpeedTarget - driftSpeed);
+                f32 driftSpeed;
+                f32 driftStep = (state->driftSpeedTarget - (driftSpeed = state->driftSpeed)) * lbl_803E53EC;
                 state->driftSpeed = driftStep * timeDelta + driftSpeed;
             }
         }

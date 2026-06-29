@@ -1086,7 +1086,10 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    if (((FireballState*)state)->startupDelay == lbl_803E3330)
+    if (((FireballState*)state)->startupDelay != lbl_803E3330)
+    {
+    }
+    else
     {
         ((ObjAnimComponent*)obj)->bankIndex = 1;
         model = Obj_GetActiveModel(obj);
@@ -1134,6 +1137,7 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 queueGlowRender(*(int*)state);
             }
         }
+    }
     }
 }
 
