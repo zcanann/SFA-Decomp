@@ -143,9 +143,9 @@ void fn_801E9C00(int obj, int state)
     u8* p;
     int trailIndex;
     DRCloudCageTrail* trail;
+    int pairIndex;
     u8* points;
     DRCloudCagePointPair* pair;
-    int pairIndex;
     s32 a;
     f32 fade;
     int copyOffset;
@@ -153,12 +153,12 @@ void fn_801E9C00(int obj, int state)
     f32* endpoint;
     u8* slot;
     f32* pStartZ;
-    int endpointIndex;
-    DRCloudCageTrail* selectedTrail;
+    f32* pStartY;
     f32* pEndZ;
     f32* pEndY;
     f32* pEndX;
-    f32* pStartY;
+    int endpointIndex;
+    DRCloudCageTrail* selectedTrail;
     int activeIndex;
     int nextOffset;
     int scanIndex;
