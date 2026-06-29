@@ -4950,9 +4950,9 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     ObjCurveKey* key;
     ObjCurveKey* prev;
     f32 values[4];
-    f32 span;
-    f32 deltaPrev;
     f32 deltaNext;
+    f32 deltaPrev;
+    f32 span;
     f32 t;
 
     if (count <= 0)
