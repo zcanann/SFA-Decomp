@@ -1214,8 +1214,8 @@ int mapProcessRomList(int slot)
     int i;
     char* cur;
     u8 flag;
-    int count;
     ShaderRomListSlot* p;
+    int count;
     ShaderRomListSlot* slots;
     ShaderRomListSlot* entry;
     s16* rects;
