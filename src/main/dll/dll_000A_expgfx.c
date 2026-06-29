@@ -400,10 +400,14 @@ poolSearchDone:
             }
         }
     }
-    else if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
+    else
     {
-        foundPoolIndex = (s16)preferredPoolIndex;
-        foundPool = 1;
+        foundPoolIndex = preferredPoolIndex;
+        if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
+        {
+            foundPoolIndex = (s16)preferredPoolIndex;
+            foundPool = 1;
+        }
     }
 
     if (foundPool)
@@ -2742,16 +2746,18 @@ void expgfx_resetAllPools(void)
     for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++,
          resourceIndex++)
     {
+        s32 zero = 0;
+
         gExpgfxTextureFreeInProgress = 1;
         if (resourceEntry->resource != NULL)
         {
             textureFree(resourceEntry->resource);
         }
-        gExpgfxTextureFreeInProgress = 0;
-        resourceEntry->resource = NULL;
-        resourceEntry->resourceId = 0;
-        resourceEntry->evictionScore = 0;
-        resourceEntry->reserved = 0;
+        gExpgfxTextureFreeInProgress = zero;
+        resourceEntry->resource = (void*)zero;
+        resourceEntry->resourceId = zero;
+        resourceEntry->evictionScore = zero;
+        resourceEntry->reserved = zero;
     }
 }
 #pragma opt_propagation reset
