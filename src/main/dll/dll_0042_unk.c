@@ -703,8 +703,8 @@ void camstatic_update(CameraObject* camera)
     float dz;
     float dy;
     float dx;
-    u8 probeTraceScratch[112];
     u8 wallTraceScratch[116];
+    u8 probeTraceScratch[112];
 
     target = (GameObject*)camera->anim.targetObj;
     if (target == NULL)
