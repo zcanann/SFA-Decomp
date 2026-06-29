@@ -3295,8 +3295,8 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                                     pq = qscan;
                                     while ((pos < count) && (*pq > newDist))
                                     {
-                                        pos++;
                                         pq++;
+                                        pos++;
                                     }
                                     for (m = count; m > pos; m--)
                                     {
