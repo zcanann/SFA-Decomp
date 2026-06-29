@@ -4110,6 +4110,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         u8 padC[2];
     } SweepHit;
     f32 nearDist;
+    f32 cEE0;
     int objCount;
     s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
     volatile f32 sc0[3];
@@ -4156,6 +4157,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
+    cEE0 = lbl_803E7EE0;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -4481,7 +4483,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             return 0;
         case 5:
         case 6:
-            if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+            if (hd > cEE0 + lbl_803DC6C0)
             {
                 continue;
             }
@@ -4507,7 +4509,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             break;
         case 2:
         case 9:
-            if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+            if (hd > cEE0 + lbl_803DC6C0)
             {
                 continue;
             }
@@ -4527,7 +4529,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             {
                 s8 ok2;
                 int t8;
-                if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+                if (hd > cEE0 + lbl_803DC6C0)
                 {
                     continue;
                 }
@@ -4577,7 +4579,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                         lo = buf.minZ;
                         pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) /
                             lbl_803E7F5C;
-                        pfx.scale = lbl_803E7EE0;
+                        pfx.scale = cEE0;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
                                                          -1, NULL);
