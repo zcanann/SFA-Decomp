@@ -816,9 +816,10 @@ void fn_801FBAC8(int obj)
     case 2:
         {
             f32 thr;
-            if (((GameObject*)obj)->anim.localPosZ < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
+            f32 z = ((GameObject*)obj)->anim.localPosZ;
+            if (z < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
             {
-                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                ((GameObject*)obj)->anim.localPosZ = z + timeDelta;
                 if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
                 {
                     ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
