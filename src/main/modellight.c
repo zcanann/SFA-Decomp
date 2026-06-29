@@ -1470,9 +1470,10 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
     for (i = 0; i < gModelLightCount; i++)
     {
         light = gModelLightList[i];
-        if (light[0x4c] != 0 && (typeMask & (lightType = ((ModelLightStruct*)light)->lightKind)) != 0 &&
+        if (light[0x4c] != 0 && (((ModelLightStruct*)light)->lightKind & typeMask) != 0 &&
             (light[0x64] & objectLightMask) != 0)
         {
+            lightType = ((ModelLightStruct*)light)->lightKind;
             if (lightType == 4)
             {
                 ((ModelLightStruct*)light)->selectionScore = lbl_803DE768;
@@ -1542,8 +1543,8 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
         {
             if (((ModelLightStruct*)candidates[i])->selectionScore > intensity)
             {
+                intensity = ((ModelLightStruct*)candidates[i])->selectionScore;
                 light = candidates[i];
-                intensity = ((ModelLightStruct*)light)->selectionScore;
             }
         }
         outLights[(*outCount)++] = light;
