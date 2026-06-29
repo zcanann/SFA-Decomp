@@ -929,16 +929,16 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        ShieldFxVec s;
-        u8 hud;
-        f32 savedF8;
         u8 i;
-        u8 savedB36;
         s16 saved0;
-        int* model;
-        f32 dt;
+        f32 savedF8;
         s16 saved2;
         s16 saved4;
+        u8 hud;
+        int* model;
+        f32 dt;
+        ShieldFxVec s;
+        u8 savedB36;
         model = Obj_GetActiveModel((int)obj);
         savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
         savedB36 = ((GameObject*)obj)->anim.alpha;
@@ -980,9 +980,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         else
         {
-            f32* pv;
             i = 0;
-            pv = s.pos;
             for (; i < 4; i++)
             {
                 if ((*(u8*)(state + i + 0x5c) & 1) == 0)
@@ -1012,14 +1010,14 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         for (; j < 2; j++)
                         {
                             f32 f8v = ((GameObject*)obj)->anim.rootMotionScale;
-                            pv[0] = cA * f8v;
-                            pv[1] = cB * f8v;
-                            pv[2] = cC;
+                            s.pos[0] = cA * f8v;
+                            s.pos[1] = cB * f8v;
+                            s.pos[2] = cC;
                             ((GameObject*)obj)->anim.rotX += 32767;
-                            vecRotateZXY(obj, pv);
-                            pv[0] += ((GameObject*)obj)->anim.localPosX;
-                            pv[1] += ((GameObject*)obj)->anim.localPosY;
-                            pv[2] += ((GameObject*)obj)->anim.localPosZ;
+                            vecRotateZXY(obj, s.pos);
+                            s.pos[0] += ((GameObject*)obj)->anim.localPosX;
+                            s.pos[1] += ((GameObject*)obj)->anim.localPosY;
+                            s.pos[2] += ((GameObject*)obj)->anim.localPosZ;
                             s.alpha = cD;
                             (*gPartfxInterface)->spawnObject(obj, 2028, &s, 0x200001, -1,
                                                              NULL);
