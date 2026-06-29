@@ -2052,9 +2052,9 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.colorWord0 = 0xffff;
         cfg.colorWord1 = 0xffff;
         cfg.colorWord2 = 0xffff;
-        cfg.overrideColor0 = 0xffff;
-        cfg.overrideColor1 = 0xffff;
-        cfg.overrideColor2 = 0xffff;
+        cfg.overrideColor0 = cfg.colorWord0;
+        cfg.overrideColor1 = cfg.colorWord1;
+        cfg.overrideColor2 = cfg.colorWord2;
         cfg.renderFlags = 0x8000820;
         break;
     case 0x60:
