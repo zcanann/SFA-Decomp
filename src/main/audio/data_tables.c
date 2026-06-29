@@ -389,7 +389,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 s32 dataAddSampleReference(u16 sid)
 {
     u32 i;
+    SDIR_TAB* tab;
     SAMPLE_HEADER* header;
+    SynthDataTables* t;
     SDIR_DATA* data;
     SDIR_DATA* sdir;
 
@@ -410,7 +412,8 @@ done:
 
     if (sdir->ref_cnt == 0)
     {
-        sdir->addr = (void*)(sdir->offset + (u32)dataSmpSDirs[i].base);
+        tab = (t = (SynthDataTables*)dataSmpSDirTable)->sdir;
+        sdir->addr = (void*)(sdir->offset + (u32)tab[i].base);
         header = &sdir->header;
         hwSaveSample(&header, &sdir->addr);
     }
