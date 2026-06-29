@@ -156,8 +156,7 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
     for (i = count / 2; i > 0; i--)
     {
         MODEL_DECODE_NIBBLE(*p & 0xf);
-        MODEL_DECODE_NIBBLE((*p >> 4) & 0xf);
-        p++;
+        MODEL_DECODE_NIBBLE((*p++ >> 4) & 0xf);
     }
     if (count & 1)
     {
