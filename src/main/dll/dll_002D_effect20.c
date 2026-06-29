@@ -232,7 +232,8 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     case 0x79f:
         trigVal = lbl_803E0310 * (f32)(s32)
         randomGetRange(0x32, 100);
-        cfg.scale = (extraArgs != NULL ? *extraArgs : gEffect20DefaultScale) * trigVal;
+        radius = (extraArgs != NULL ? *extraArgs : gEffect20DefaultScale);
+        cfg.scale = radius * trigVal;
         cfg.lifetimeFrames = 0x1e;
         cfg.behaviorFlags = 0x180010;
         cfg.renderFlags = 0x8000;
