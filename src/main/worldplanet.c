@@ -462,11 +462,11 @@ void worldplanet_update(int obj)
                     dyaw = dyaw - (u16)yaw;
                     if (dyaw > 0x8000)
                     {
-                        dyaw -= 0xffff;
+                        dyaw = (s16)(dyaw - 0xffff);
                     }
                     if (dyaw < -0x8000)
                     {
-                        dyaw += 0xffff;
+                        dyaw = (s16)(dyaw + 0xffff);
                     }
                     if (fn_8012DDAC() != 0)
                     {
