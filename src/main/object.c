@@ -1461,7 +1461,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (*(u8*)(def + 0x61) != 0)
     {
         cursor = ObjHits_AllocObjectState((int)obj, cursor);
-        if (modelDef->primaryHitboxShapeFlags & 8)
+        if ((s8)modelDef->primaryHitboxShapeFlags & 8)
         {
             cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox*)obj, cursor);
         }
