@@ -2762,6 +2762,7 @@ extern int lbl_803DCEB0;
 extern s16 lbl_803DCE70;
 extern u8 lbl_803DCDED;
 
+#pragma opt_strength_reduction off
 void doPendingMapLoads(void)
 {
     s16* p5;
@@ -3221,6 +3222,7 @@ void doPendingMapLoads(void)
         }
     }
 }
+#pragma opt_strength_reduction reset
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
