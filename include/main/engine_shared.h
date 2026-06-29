@@ -1053,7 +1053,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
-void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex);
 void Obj_UpdateWorldTransform(s16 *obj);
 s32 Angle_AddWrappedS16(s32 angle, s16 *delta);

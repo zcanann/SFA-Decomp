@@ -1779,7 +1779,6 @@ int pushable_savePos(int obj)
 {
     int i;
     CurvesSaveGameObjectPosition* slot;
-    int off;
     CurvesSaveGameObjectPosition* position;
     u32 objectId;
     f32 savedX;
@@ -1791,8 +1790,7 @@ int pushable_savePos(int obj)
         if (objectId == *(u32*)((u8*)&position->objectId + SAVEGAME_OBJECT_POSITION_OFFSET))
         {
             if ((((GameObject*)obj)->anim.localPosX ==
-                    (savedX = *(f32*)((u8*)&(slot = (CurvesSaveGameObjectPosition*)((int)gSaveGameData +
-                                      (off = i * sizeof(CurvesSaveGameObjectPosition))))->x +
+                    (savedX = *(f32*)((u8*)&(slot = &((CurvesSaveGameObjectPosition*)gSaveGameData)[i])->x +
                                       SAVEGAME_OBJECT_POSITION_OFFSET))) &&
                 (((GameObject*)obj)->anim.localPosY == *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET)) &&
                 (((GameObject*)obj)->anim.localPosZ == *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET)))
@@ -1800,7 +1798,7 @@ int pushable_savePos(int obj)
                 return 0;
             }
             ((GameObject*)obj)->anim.localPosX = savedX;
-            slot = (CurvesSaveGameObjectPosition*)((u8*)gSaveGameData + off);
+            slot = (CurvesSaveGameObjectPosition*)((u8*)gSaveGameData + i * sizeof(CurvesSaveGameObjectPosition));
             ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)&slot->y + SAVEGAME_OBJECT_POSITION_OFFSET);
             ((GameObject*)obj)->anim.localPosZ = *(f32*)((u8*)&slot->z + SAVEGAME_OBJECT_POSITION_OFFSET);
             return 1;

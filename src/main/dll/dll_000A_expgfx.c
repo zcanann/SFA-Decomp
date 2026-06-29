@@ -675,10 +675,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 prevZ;
     f32 workA;
     f32 workB;
-    f32 attractRatio;
     f32 camScale;
     f32 playerRange;
     f32 trickyRange;
+    f32 attractRatio;
 
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
@@ -1951,10 +1951,10 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
     poolIndex = 0;
     source = (ExpgfxSourceObject*)sourceObject;
     poolSourceIds = gExpgfxTrackedPoolSourceIds;
-    poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
     while ((s16)poolIndex < EXPGFX_POOL_COUNT)
     {
+        poolFrameFlags = &gExpgfxStaticPoolFrameFlags[poolIndex];
         if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
             (*poolSourceIds == (u32)sourceObject))
         {
@@ -1992,7 +1992,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
             *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
         poolSourceIds++;
-        poolFrameFlags++;
         poolIndex++;
     }
 

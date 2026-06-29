@@ -18,7 +18,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 

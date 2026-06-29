@@ -137,7 +137,8 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
             SynthMidiState* sv = (SynthMidiState*)gSynthCurrentVoice;
             u8* seq = sv->seqData;
             u8* t = seq + *(u32*)(seq + d->pattern * 4 + *(u32*)(seq + 4));
-            SynthChanRec* rec = &sv->records[((SeqEvent*)event)->trackId];
+            u8 trackId = ((SeqEvent*)event)->trackId;
+            SynthChanRec* rec = &sv->records[trackId];
             u8 prog;
 
             rec->dataPtr = (u32)(t + 0xc);
@@ -182,7 +183,7 @@ int fn_8026E0E4(int event, u8 voice, u32* flag)
                 rec->modTime = 0x7fffffff;
             }
             rec->modVal = 0;
-            rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + ((SeqEvent*)event)->trackId +
+            rec->chan = *(u8*)((u32)((SynthMidiState*)gSynthCurrentVoice)->seqData + trackId +
                 *(u32*)(((SynthMidiState*)gSynthCurrentVoice)->seqData + 8));
             prog = d->prgChange;
             if (prog != 0xff)

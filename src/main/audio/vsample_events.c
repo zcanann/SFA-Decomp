@@ -23,12 +23,11 @@ void synthHandleVirtualSampleDone(u32 packed)
     u32 generation;
 
     state = (SynthVirtualSampleState*)synthVirtualSampleState;
-    slots = state->voiceMap;
     if (packed == SYNTH_VIRTUAL_SAMPLE_INVALID_ID)
     {
         return;
     }
-    vid = slots[packed];
+    vid = (slots = state->voiceMap)[(u8)packed];
     if (vid == SYNTH_VIRTUAL_SAMPLE_FREE_SLOT)
     {
         return;
