@@ -1696,6 +1696,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 #pragma opt_loop_invariants reset
 #pragma reset
 
+#pragma opt_loop_invariants off
 void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 {
     u8* model;
@@ -1708,8 +1709,8 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     int* modelIds;
     int slots;
     int k;
-    int vol;
     int i;
+    int vol;
     s16 scroll;
     f32 val;
 
@@ -1914,8 +1915,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
             {
                 val = DBGCallback;
             }
-            seqObj[0x36] = (u8)(int)
-            val;
+            seqObj[0x36] = val;
         }
 
         if (((ObjSeqState*)seq)->trackRunLength[4] != 0)
@@ -2175,6 +2175,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
         gObjSeqLinkedTransformValid = 1;
     }
 }
+#pragma opt_loop_invariants reset
 
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, void* out)
 {
