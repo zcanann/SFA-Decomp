@@ -722,7 +722,7 @@ int saveGame_doWrite(int slot)
             {
                 u64 v = p[i];
                 x = x ^ v;
-                a = v + a;
+                a = a + v;
             }
             chk2 = x ^ (a + 13);
             if (chk != chk2)
