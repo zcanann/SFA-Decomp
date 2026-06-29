@@ -15,33 +15,35 @@ void hwRemoveInput(u32 idx, void* input)
     salRemoveStudioInput(lbl_803CC1E0 + offset, input);
 }
 
+#pragma optimization_level 1
 int hwChangeStudio(int slot)
 {
     int mode;
     u32 pos;
     u32 lowBits;
     int samplePos;
-    u8* voice;
-    u8* base;
+    DSPvoice* voice;
+    DSPvoice* curVoice;
     int offset;
+    u8* base;
 
     offset = slot * 0xf4;
     base = dspVoice;
-    voice = base + offset;
-    if (((DSPvoice*)voice)->state != 2)
+    voice = (DSPvoice*)(base + offset);
+    if (voice->state != 2)
     {
         return 0;
     }
-    mode = ((DSPvoice*)voice)->smp_info.compType;
+    mode = voice->smp_info.compType;
     switch (mode)
     {
     case 0:
     case 1:
     case 4:
     case 5:
-        voice = base + offset;
-        pos = ((DSPvoice*)voice)->currentAddr;
-        samplePos = ((pos - 2 * *(int*)&((DSPvoice*)voice)->smp_info.addr) >> 4) * 0xe;
+        curVoice = (DSPvoice*)(base + offset);
+        pos = curVoice->currentAddr;
+        samplePos = ((pos - 2 * *(int*)&curVoice->smp_info.addr) >> 4) * 0xe;
         lowBits = pos & 0xf;
         if (lowBits < 2)
         {
@@ -50,13 +52,14 @@ int hwChangeStudio(int slot)
         samplePos = lowBits + samplePos;
         return samplePos - 2;
     case 3:
-        return (int)((DSPvoice*)voice)->currentAddr - *(int*)&((DSPvoice*)voice)->smp_info.addr;
+        return (int)voice->currentAddr - *(int*)&voice->smp_info.addr;
     case 2:
-        return (int)((DSPvoice*)voice)->currentAddr - (*(u32*)&((DSPvoice*)voice)->smp_info.addr >> 1);
+        return (int)voice->currentAddr - (*(u32*)&voice->smp_info.addr >> 1);
     default:
         return slot;
     }
 }
+#pragma optimization_level reset
 
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback,
               u32 callbackArg)
