@@ -3244,9 +3244,12 @@ static inline int mapFindRomListSlot(char* p2, int id)
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
-    int slot;
-    int cv3, cv4;
+    char* p6;
     char* entry;
+    char* p2;
+    int cv4;
+    int slot;
+    int cv3;
     s16* pairs;
     s16* rects;
     u32 v;
@@ -3255,8 +3258,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     id = mapCoordsToId(x, z, layer);
     if (id != -1)
     {
-        char* p2 = (char*)gShaderRomListSlots;
-        char* p6;
+        p2 = (char*)gShaderRomListSlots;
         slot = mapFindRomListSlot(p2, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
