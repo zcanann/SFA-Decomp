@@ -1408,8 +1408,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
 {
     BoneFxVtx s;
     void** grp;
-    s16 k;
     s16 j;
+    s16 k;
     int row;
     u32 id;
     u32 cls;
