@@ -727,14 +727,12 @@ state_selected:
             vecRotateZXY(&rot, delta);
             if ((delta[2] > lbl_803E23DC) && (lbl_803E23DC != ((TrickyState*)state)->speed))
             {
-                step = 0;
-                while (step < 4)
+                for (step = 0; step < 4; step++)
                 {
                     if (*(u8*)(node + step + 4) == ((TrickyState*)state)->unk532)
                     {
                         break;
                     }
-                    step = step + 1;
                 }
                 if (step == 4)
                 {
