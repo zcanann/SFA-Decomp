@@ -185,20 +185,23 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
                 return SHTHORNTAIL_STATE_CLOSE_ATTACK;
             }
         }
-        value = ViewFrustum_IsSphereVisible((float*)&object->modelPos,
-                                            object->cullRadius * object->modelScale);
-        if (value == 0)
-        {
-            return SHTHORNTAIL_STATE_CLOSE_ATTACK;
-        }
-        behaviorState = runtime->behaviorState;
-        if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
-            (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
-        {
-            nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
-            return nextState & 0xff;
-        }
-        return SHTHORNTAIL_STATE_MOVE_2;
     }
-    return SHTHORNTAIL_STATE_CLOSE_ATTACK;
+    else
+    {
+        return SHTHORNTAIL_STATE_CLOSE_ATTACK;
+    }
+    value = ViewFrustum_IsSphereVisible((float*)&object->modelPos,
+                                        object->cullRadius * object->modelScale);
+    if (value == 0)
+    {
+        return SHTHORNTAIL_STATE_CLOSE_ATTACK;
+    }
+    behaviorState = runtime->behaviorState;
+    if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+        (behaviorState <= SHTHORNTAIL_STATE_MOVE_5))
+    {
+        nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3, SHTHORNTAIL_STATE_MOVE_5);
+        return nextState & 0xff;
+    }
+    return SHTHORNTAIL_STATE_MOVE_2;
 }
