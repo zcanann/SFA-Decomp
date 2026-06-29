@@ -207,8 +207,8 @@ void bombplantspore_updateDrift(void* obj, void* state)
     }
     ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
     {
-        f32 amplitude = ((BombPlantSporeState*)state)->driftAmplitude;
-        f32 amplitudeStep = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - amplitude);
+        f32 amplitude;
+        f32 amplitudeStep = lbl_803E53B4 * (((BombPlantSporeState*)state)->randomPhase - (amplitude = ((BombPlantSporeState*)state)->driftAmplitude));
         ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
     }
 
