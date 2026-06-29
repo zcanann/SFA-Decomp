@@ -730,7 +730,7 @@ state_selected:
                 step = 0;
                 while (step < 4)
                 {
-                    if ((u16) * (u8*)(node + step + 4) == ((TrickyState*)state)->unk532)
+                    if (*(u8*)(node + step + 4) == ((TrickyState*)state)->unk532)
                     {
                         break;
                     }
