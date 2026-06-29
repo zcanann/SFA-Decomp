@@ -278,10 +278,10 @@ void andross_update(int obj)
 {
     int* state;
     u8 stateChanged;
-    u8 moveChanged;
+    int work;
     int ref;
     u8 pathFlag;
-    int work;
+    u8 moveChanged;
     u32 val;
     f32 fval;
     s16 sval;
@@ -649,7 +649,7 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -685,7 +685,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 2;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -731,7 +731,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 3;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -797,7 +797,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionPending = 1;
             GameBit_Set(0xd, 0);
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
