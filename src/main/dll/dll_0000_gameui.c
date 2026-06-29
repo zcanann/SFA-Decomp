@@ -1674,7 +1674,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     int pulse;
     char buf[0x20];
 
-    gHighScorePulseAngle = gHighScorePulseAngle + gHighScorePulseAngleStep;
+    gHighScorePulseAngle += gHighScorePulseAngleStep;
     pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16) * (u16*)(box + 0xa);
     w = (s16) * (u16*)(box + 0x8);
