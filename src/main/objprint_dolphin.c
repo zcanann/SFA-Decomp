@@ -5390,7 +5390,7 @@ void defragMemory(int mode)
         } while (i <= 0x57);
         testAndSet_onlyUseHeaps1and2(-1);
     }
-    base += 0x20000;
+    base = (u8*)((char*)base + 0x20000);
     while (done == 0 && pass < 10)
     {
         char* q1;
