@@ -2656,24 +2656,24 @@ void expgfx_free(u32 sourceId)
 #pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
-    ExpgfxStaticDataLayout* staticData;
     u32* slotPoolBases;
+    u16* refCountPtr;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
     s16* poolSlotTypeIds;
     u32* poolSourceIds;
     u8* poolFrameFlags;
-    ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxSlot* slot;
+    int resourceIndex;
+    int poolIndex;
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTableEntry* tableEntry;
-    u16* refCountPtr;
+    ExpgfxStaticDataLayout* staticData;
     u32 activeBit;
     u32 inactiveBitMask;
     int tableIndex;
-    int poolIndex;
+    ExpgfxRuntimeDataLayout* runtime;
     int slotIndex;
-    int resourceIndex;
+    ExpgfxSlot* slot;
 
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
