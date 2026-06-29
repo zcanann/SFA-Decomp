@@ -1024,7 +1024,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         yb = (int)mtx[7];
         tex = (Texture*)gTitleScreenTextures[4];
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x5a),
+                          (f32)(int)(xb + 0x5a + ((Texture*)gTitleScreenTextures[6])->width),
                           (f32)(int)(yb - 0x10), alpha, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = (Texture*)gTitleScreenTextures[6];
@@ -1032,8 +1032,8 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = (Texture*)gTitleScreenTextures[6];
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb + ((Texture*)gTitleScreenTextures[4])->width +
-                              tex->width + 0x57),
+                          (f32)(int)(xb + 0x57 + ((Texture*)gTitleScreenTextures[4])->width +
+                              tex->width),
                           (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
