@@ -3149,8 +3149,8 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                                     pq = qscan;
                                     while ((pos < count) && (*pq > newDist))
                                     {
-                                        pos++;
                                         pq++;
+                                        pos++;
                                     }
                                     for (m = count; m > pos; m--)
                                     {
