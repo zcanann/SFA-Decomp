@@ -864,7 +864,6 @@ searched:
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        foundSlot = 0;
         for (slot = 0; slot <= state->queueCount; slot++)
         {
             if ((u16)foundIdx == q[slot].value)
