@@ -398,8 +398,8 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    int off;
     u32 i;
+    int off;
     u32 kg;
     u32 kill;
     McmdVoiceState* voice;
