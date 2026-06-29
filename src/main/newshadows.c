@@ -2380,7 +2380,7 @@ void maybeHudFn_8006c91c(void)
     gNewShadowCurrentViewSlot = Camera_GetCurrentViewSlot();
     lbl_803DCFA0 = (u16)(lbl_803DCFA0 + framesThisStep * 0x28a);
     lbl_803DCFA4 = 0.2f *
-        (f32)floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
+        floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
     fn_80060BB0();
     gNewShadowFrameIndex = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     if (isHeavyFogEnabled())
