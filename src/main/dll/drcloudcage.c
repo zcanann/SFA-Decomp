@@ -254,8 +254,9 @@ void fn_801E9C00(int obj, int state)
     maxDelta = lbl_803E5AF4;
     minDelta = lbl_803E5AFC;
     scaleV = lbl_803E5AEC;
-    for (; activeIndex < 3; activeOffset += 0x18, nextOffset += 0x18, slot += 4, activeIndex++)
+    for (; activeIndex < 3; activeOffset += 0x18, slot += 4, activeIndex++)
     {
+        nextOffset = activeOffset + 0xc;
         transform.x = ((GameObject*)obj)->anim.worldPosX;
         transform.y = ((GameObject*)obj)->anim.worldPosY;
         transform.z = ((GameObject*)obj)->anim.worldPosZ;
