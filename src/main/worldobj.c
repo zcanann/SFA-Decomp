@@ -718,7 +718,6 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         break;
     case 0x5da:
     case 0x5db:
-    case 0x5dc:
     default:
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
         break;
