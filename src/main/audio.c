@@ -341,7 +341,7 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
     f32 sa = mathCosf(ra);
     f32 sb = mathCosf(rb);
     f32 sc = mathCosf(rc);
-    f32 t0, t1, A, p, B;
+    f32 t0, t1, A, B, p;
 
     t0 = x * ca;
     t1 = z * ca;
