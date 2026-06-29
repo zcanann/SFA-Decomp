@@ -1076,7 +1076,7 @@ void hudDrawAirMeter(void)
             }
             {
                 int base = (0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1)) + lbl_803DBAEC;
-                base = base + ((s8)off + lbl_803DD7F8);
+                base = base + (lbl_803DD7F8 + (s8)off);
                 drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
                             (f32)(int)base,
                             ((TrickyAirMeter*)m)->unk18, 0x100);
