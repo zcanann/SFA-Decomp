@@ -85,7 +85,7 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     nodes = rope->nodes;
     node = nodes;
     zero = lbl_803E4DFC;
-    for (i = 0; i < count; i++, node++)
+    for (i = 0; i < count; node++, i++)
     {
         node->pos[0] = i * dx + rope->start[0];
         node->pos[1] = i * dy + rope->start[1];
@@ -135,8 +135,8 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
         link->maxLength = lbl_803E4E14 * link->restLength;
         nextNode = (DFRopeNode*)((u8*)nodes + (i + 1) * sizeof(DFRopeNode));
         DFRopeLink_AttachNodes(link, node, nextNode);
-        link++;
         node++;
+        link++;
     }
     return rope;
 }
