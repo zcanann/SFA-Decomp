@@ -527,7 +527,7 @@ void SaveSelectScreen_render(int param)
             saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
             arr = gSaveSelectTextBuffers;
             ptrs = gSaveSelectSlotTextIds;
-            for (i = 0, off = 0; i < 3; off += 0x24, i++)
+            for (off = 0, i = 0; i < 3; off += 0x24, i++)
             {
                 sprintf(arr[i], &sFrontendPercentFormat, *((u8*)saveFileSelect_saveSlots + off + 4));
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
