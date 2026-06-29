@@ -4327,7 +4327,7 @@ void GameUI_update(void)
                     }
                     if ((u8)next != (s8)cMenuState)
                     {
-                        shouldOpenCMenu = (s8)next;
+                        *(s8*)&shouldOpenCMenu = (s8)next;
                         lbl_803DD8B7 = r29v;
                     }
                     goto afterDispatch;
