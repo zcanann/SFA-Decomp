@@ -14838,10 +14838,9 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         }
         if (wallHit != 0)
         {
-            f32 e = lbl_803E7E98;
-            out[0xb] = out[0xb] + ((e + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
+            out[0xb] = out[0xb] + ((lbl_803E7E98 + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
                 planes[(u32) * (u8*)((char*)out + 0x5f) * 4];
-            out[0xd] = out[0xd] + ((e + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
+            out[0xd] = out[0xd] + ((lbl_803E7E98 + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
                 planes[(u32) * (u8*)((char*)out + 0x5f) * 4 + 2];
         }
         {
