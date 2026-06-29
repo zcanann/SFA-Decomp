@@ -222,16 +222,18 @@ void vfplavastar_release(void)
     gVfpLavaPoolEffectResource = NULL;
 }
 
+#pragma peephole off
 int fn_801FD4A8(void* obj, int x)
 {
     VfpFlamePointData* extra = ((GameObject*)obj)->extra;
     if (extra != NULL)
     {
         extra->counter -= x;
-        return extra->counter <= 0 ? 1 : 0;
+        return extra->counter <= 0;
     }
     return 0;
 }
+#pragma peephole on
 
 int dbegg_setScale(int obj);
 
