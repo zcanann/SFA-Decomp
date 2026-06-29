@@ -278,12 +278,15 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     VoxMaps* vm = &gVoxMaps;
     int gridX;
     int gridY;
-    int blockId;
+    int bestVal;
     int i;
     int found;
     int bestSlot;
-    int bestVal;
+    int blockId;
     VoxBlock* block;
+
+
+
     int ay = obj->z * 10 + 5 - lbl_803DCDCC;
 
     gridX = fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / gVoxMapsBlockWorldSize);
