@@ -2577,14 +2577,14 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         randomGetRange(1, 5);
         cfg.startPosZ = (f32)(s32)
         randomGetRange(-5, 5);
-        es.a = lbl_803DF7DC * (f32)(s32)
+        es.w = lbl_803DF7DC * (f32)(s32)
         randomGetRange(0, 0x258) + lbl_803DF844;
         cfg.velocityY = lbl_803DF720 * (f32)(s32)
         randomGetRange(0, 0xc8) + 1.0f;
         cfg.velocityX = lbl_803DF7B0 * (f32)(s32)
         randomGetRange(0, 0x14) + lbl_803DF724;
-        cfg.velocityY = cfg.velocityY * es.a;
-        cfg.velocityX = cfg.velocityX * es.a;
+        cfg.velocityY = cfg.velocityY * es.w;
+        cfg.velocityX = cfg.velocityX * es.w;
         cfg.scale = lbl_803DF84C * (f32)(s32)
         randomGetRange(0, 0xa) + lbl_803DF848;
         cfg.lifetimeFrames = randomGetRange(0xb4, 0xc8);
