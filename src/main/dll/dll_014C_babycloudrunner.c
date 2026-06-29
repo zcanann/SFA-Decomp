@@ -1017,8 +1017,8 @@ void babycloudrunner_update(int* obj)
     BabyCloudRunnerPlacement* def;
     int found;
     BabyCloudRunnerPlacement* def2;
-    int* near;
     BabyCloudRunnerState* sub2;
+    int* near;
     int inRange;
     RunnerTarget tgt;
     int mode;
