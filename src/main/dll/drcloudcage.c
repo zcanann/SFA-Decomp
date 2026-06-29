@@ -150,8 +150,6 @@ void fn_801E9C00(int obj, int state)
     f32 fade;
     int nextOffset;
     int activeOffset;
-    int baseOffset;
-    int baseOffset2;
     u8 hitDetected;
     int activeIndex;
     int endpointIndex;
@@ -173,6 +171,8 @@ void fn_801E9C00(int obj, int state)
     f32 zero;
     f32 scaleV;
     f32 minDelta;
+    int baseOffset;
+    int baseOffset2;
 
     localPoints = gDrCloudCagePointTemplate;
 
