@@ -16779,15 +16779,8 @@ void fn_802ADE80(int obj, int inner, int state)
         ((GameObject*)obj)->anim.velocityY * powfBitEstimate(lbl_803E7FD0, timeDelta);
     {
         f32 v = ((GameObject*)obj)->anim.velocityY;
-        if (v < lbl_803E811C)
-        {
-            v = lbl_803E811C;
-        }
-        else if (v > lbl_803E8120)
-        {
-            v = lbl_803E8120;
-        }
-        ((GameObject*)obj)->anim.velocityY = v;
+        ((GameObject*)obj)->anim.velocityY =
+            (v < lbl_803E811C) ? lbl_803E811C : ((v > lbl_803E8120) ? lbl_803E8120 : v);
     }
     ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
     {
