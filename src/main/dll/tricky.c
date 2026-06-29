@@ -1603,14 +1603,13 @@ void drawViewFinderHud(void)
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
-            f32 kOpac, kF4C;
-            f32 kF30, kEC8, kF34, kEC4, kE94;
-            f64 kF38;
-            f32 kF48;
-            f64 kF40;
+            f32 f31, f30, f29, fdx, f27;
             f32 kE68;
-            f32 f27;
-            f32 fdx, f29, f30, f31;
+            f64 kF40;
+            f32 kF48;
+            f64 kF38;
+            f32 kE94, kEC4, kF34, kEC8, kF30;
+            f32 kOpac, kF4C;
             f27 = lbl_803E1E3C;
             kF30 = lbl_803E1F30;
             kEC8 = lbl_803E1EC8;

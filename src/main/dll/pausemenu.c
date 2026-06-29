@@ -29,7 +29,7 @@ extern void gameTextFn_80016810(int a, int b, int c);
 
 extern float mathCosf(float x);
 extern float fn_802943F4(float x);
-extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
+extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 extern void* Obj_GetActiveModel(u8* obj);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -189,8 +189,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
-                    lbl_803DBA3C);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
+                    *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16*)((u8*)model + 0x18) &= ~0x8;
@@ -255,8 +255,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
-                    lbl_803DBA3C);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
+                    *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16*)((u8*)model + 0x18) &= ~0x8;
@@ -339,8 +339,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
-                    lbl_803DBA3C);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
+                    *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16*)((u8*)model + 0x18) &= ~0x8;
@@ -450,8 +450,8 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
-                    lbl_803DBA3C);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
+                    *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16*)((u8*)model + 0x18) &= ~0x8;
@@ -540,7 +540,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
     lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-    fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C);
+    fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
     *(u16*)((u8*)model + 0x18) &= ~0x8;

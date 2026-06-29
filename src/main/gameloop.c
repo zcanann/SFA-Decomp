@@ -1321,14 +1321,14 @@ extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
 
 #pragma peephole off
-#pragma optimization_level 3
+#pragma optimization_level 2
 void askProgressiveScanMode(void)
 {
+    int showId;
     u32 counter;
     int sel;
     u8* box;
     u8 savedByte;
-    int showId;
 
     counter = 0;
     sel = 1;
