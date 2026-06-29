@@ -824,10 +824,10 @@ void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
-    s16 i;
-    u32* op;
     int index;
     int index2;
+    s16 i;
+    u32* op;
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
