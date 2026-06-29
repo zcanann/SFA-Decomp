@@ -3481,8 +3481,8 @@ void objRenderFn_8003d980(void* objArg, int* p2)
         f32 scale;
         f32 pos[3];
     } blk;
-    f32* vm;
     s16* uvs;
+    f32* vm;
     s16* verts;
     u8* data = *(u8**)((char*)p2 + 0x58);
     vm = Camera_GetViewMatrix();
