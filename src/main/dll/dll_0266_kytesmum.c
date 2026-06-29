@@ -121,7 +121,7 @@ void kytesmum_update(int obj)
     f32 nearDist;
     s16 diff;
     int d;
-    int moveIdx;
+    short moveIdx;
     int nearest;
 
     nearDist = gKytesMumNearestSearchDist;
