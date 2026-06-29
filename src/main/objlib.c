@@ -1869,6 +1869,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
+    walker = objects + startIndex;
     if (defNo != -1)
     {
         objectIndex = startIndex;
