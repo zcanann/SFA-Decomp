@@ -699,8 +699,10 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
     LinkMenuItem* item;
     LinkMenuItem* ip;
     const char* defaultText;
+    const char* errBase;
 
-    defaultText = sTumbleweedBushNavLinkRangeErr;
+    errBase = sTumbleweedBushNavLinkRangeErr;
+    defaultText = errBase;
     if (count <= 40)
     {
         gTumbleweedBushItemCount = count;
@@ -717,22 +719,22 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             item = &gTumbleweedBushItems[i];
             if ((item->upLink < -1) || (item->upLink >= count))
             {
-                OSReport(defaultText + 0xa4, item->upLink);
+                OSReport(errBase + 0xa4, item->upLink);
             }
 
             if ((item->downLink < -1) || (item->downLink >= count))
             {
-                OSReport(defaultText + 0xb8, item->downLink);
+                OSReport(errBase + 0xb8, item->downLink);
             }
 
             if ((item->leftLink < -1) || (item->leftLink >= count))
             {
-                OSReport(defaultText + 0xd0, item->leftLink);
+                OSReport(errBase + 0xd0, item->leftLink);
             }
 
             if ((item->rightLink < -1) || (item->rightLink >= count))
             {
-                OSReport(defaultText + 0xe8, item->rightLink);
+                OSReport(errBase + 0xe8, item->rightLink);
             }
 
             if (ip->textureAssetId != -1)
