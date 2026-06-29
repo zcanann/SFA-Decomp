@@ -1199,9 +1199,9 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
     int i;
-    int n;
-    int state;
     TrickyTargetRec* cur;
+    int state;
+    int n;
     short** arr;
     short ang;
     short* tgt;
