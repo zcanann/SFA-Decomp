@@ -151,6 +151,7 @@ void fn_801E9C00(int obj, int state)
     int nextOffset;
     int activeOffset;
     int baseOffset;
+    int baseOffset2;
     u8 hitDetected;
     int activeIndex;
     int endpointIndex;
@@ -244,6 +245,7 @@ void fn_801E9C00(int obj, int state)
 
     activeIndex = 0;
     baseOffset = -4;
+    baseOffset2 = 8;
     slot = (u8*)state;
     pEndX = &endX;
     pEndY = &endY;
@@ -254,10 +256,10 @@ void fn_801E9C00(int obj, int state)
     maxDelta = lbl_803E5AF4;
     minDelta = lbl_803E5AFC;
     scaleV = lbl_803E5AEC;
-    for (; activeIndex < 3; baseOffset += 0x18, slot += 4, activeIndex++)
+    for (; activeIndex < 3; baseOffset += 0x18, baseOffset2 += 0x18, slot += 4, activeIndex++)
     {
         activeOffset = baseOffset + 4;
-        nextOffset = baseOffset + 0x10;
+        nextOffset = baseOffset2 + 4;
         transform.x = ((GameObject*)obj)->anim.worldPosX;
         transform.y = ((GameObject*)obj)->anim.worldPosY;
         transform.z = ((GameObject*)obj)->anim.worldPosZ;
