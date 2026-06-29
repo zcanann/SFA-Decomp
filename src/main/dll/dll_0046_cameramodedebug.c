@@ -94,18 +94,18 @@ void CameraModeDebug_update(CameraObject* cam)
         f32 sinYaw = mathCosf(gCamDebugPi * (f32)(s32)(cam->anim.rotX - 0x4000) / gCamDebugAngleUnitScale);
         f32 sinPitch = mathCosf(gCamDebugPi * (f32)(s32)cam->anim.rotY / gCamDebugAngleUnitScale);
         f32 cosPitch = mathSinf(gCamDebugPi * (f32)(s32)cam->anim.rotY / gCamDebugAngleUnitScale);
-        f32 vy, h, px, pz;
+        f32 vy, h, px;
         radius = gCamDebugState->orbitRadius;
         vy = radius * cosPitch;
         h = radius * sinPitch;
         px = h * sinYaw;
-        pz = h * cosYaw;
+        h = h * cosYaw;
         cam->anim.worldPosX = state->anim.worldPosX + px;
         {
             f32 base28 = gCamDebugOrbitRadiusMin + state->anim.worldPosY;
             cam->anim.worldPosY = base28 + vy;
         }
-        cam->anim.worldPosZ = state->anim.worldPosZ + pz;
+        cam->anim.worldPosZ = state->anim.worldPosZ + h;
     }
     Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                    &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,

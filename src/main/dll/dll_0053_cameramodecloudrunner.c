@@ -137,7 +137,7 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 baseX, baseY, baseZ;
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
-    f32 rx, ry, rz, rs;
+    f32 rx, ry, rs;
     CloudRunnerObjectPos mxin;
     f32 matrix[16];
 
@@ -205,10 +205,10 @@ void CameraModeCloudRunner_update(u8* obj)
     ry = radius * cosPitch;
     rs = radius * sinPitch;
     rx = rs * sinYaw;
-    rz = rs * cosYaw;
+    rs = rs * cosYaw;
     camera->anim.worldPosX = baseX + rx;
     camera->anim.worldPosY = baseY + ry;
-    camera->anim.worldPosZ = baseZ + rz;
+    camera->anim.worldPosZ = baseZ + rs;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
