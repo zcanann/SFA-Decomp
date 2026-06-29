@@ -2671,7 +2671,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                 {
                     v = (s16)(int)(f64)prodB;
                 }
-                *ap = v;
+                *ap = (s16)v;
                 *(s16*)(p + 0x14) += *ap;
                 if (*(s16*)(p + 0x14) > limA)
                 {
