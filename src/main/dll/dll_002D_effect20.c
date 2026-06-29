@@ -2282,7 +2282,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.scale = lbl_803E0330 * spawnParams->scale;
         cfg.lifetimeFrames = 0x14;
         cfg.textureId = spawnParams->unk6;
-        cfg.initialAlpha = 0x0;
+        cfg.initialAlpha = 0x30;
         cfg.behaviorFlags = 0x80100;
         cfg.renderFlags = 0x800;
         break;
@@ -2296,7 +2296,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         cfg.scale = lbl_803E0330 * spawnParams->scale;
         cfg.lifetimeFrames = 0x14;
         cfg.textureId = spawnParams->unk6;
-        cfg.initialAlpha = 0x0;
+        cfg.initialAlpha = 0x30;
         cfg.behaviorFlags = 0x80100;
         cfg.renderFlags = 0x4000800;
         break;
