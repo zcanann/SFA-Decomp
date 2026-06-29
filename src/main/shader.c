@@ -2539,7 +2539,7 @@ extern void mapSetupPlayer(void);
 extern void* saveGameGetEnvState(void);
 extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
 extern void skyFn_80088c94(int flags, u8 mode);
-extern void skyFn_80088e54(f32 a, int on);
+extern void skyFn_80088e54(int on, f32 a);
 
 void beginLoadingMap(void)
 {
@@ -2666,7 +2666,7 @@ void beginLoadingMap(void)
         }
         skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
         skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
-        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) ? 1 : 0);
+        skyFn_80088e54((*(u8*)(env + 0x40) & 0x10) ? 1 : 0, lbl_803DEBCC);
         if (*(u8*)(env + 0x40) & 1)
             bo = 1;
         else
