@@ -489,7 +489,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                     bp++;
                     lineCount++;
                     lineOff += 4;
-                    *bp = breakPos;
+                    *(int*)((char*)lineStarts + lineOff) = breakPos;
                     if (lineCount > 1 && bp[0] == bp[-1])
                     {
                         return 0;
