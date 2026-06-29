@@ -141,6 +141,7 @@ void blasted_update(int obj)
     {
         for (i = 0; i < ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
         {
+            int cnt;
             u32 v;
             s8 m;
             int found;
@@ -159,7 +160,7 @@ void blasted_update(int obj)
             if (m == 5)
             {
                 int k = 0;
-                int cnt = state->damageStep;
+                cnt = state->damageStep;
                 while (k != cnt)
                 {
                     if (v == state->destroyedHitObjects[k++])
