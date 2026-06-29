@@ -2988,8 +2988,8 @@ void doPendingMapLoads(void)
                             slot = mapProcessRomList(gShaderCurMapEventId);
                         {
                             int m2 = gShaderCurMapEventId;
-                            u32 sz = getDataFileSize(0x1f);
-                            if (m2 < 0 || m2 >= (int)(sz >> 5))
+                            int sz = (int)(getDataFileSize(0x1f) >> 5);
+                            if (m2 < 0 || m2 >= sz)
                             {
                                 curMapType = 0;
                             }
