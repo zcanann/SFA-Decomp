@@ -1430,10 +1430,10 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
         intensity = lbl_803DE75C;
         for (i = 0; i < candidateCount; i++)
         {
-            if (*(f32*)(candidates[i] + 0x130) > intensity)
+            if (((ModelLightStruct*)candidates[i])->selectionScore > intensity)
             {
+                intensity = ((ModelLightStruct*)candidates[i])->selectionScore;
                 light = candidates[i];
-                intensity = ((ModelLightStruct*)light)->selectionScore;
             }
         }
         outLights[(*outCount)++] = light;
