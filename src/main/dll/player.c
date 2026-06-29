@@ -7599,7 +7599,7 @@ void fn_802B0EA4(int obj, int inner, int state)
     {
         spd = sqrtf(((PlayerState*)state)->baddie.animSpeedA * ((PlayerState*)state)->baddie.animSpeedA +
             ((PlayerState*)state)->baddie.animSpeedB * ((PlayerState*)state)->baddie.animSpeedB);
-        t = (spd < (t = lbl_803E7EA4))
+        t = ((t = lbl_803E7EA4), spd < t)
                 ? t
                 : ((spd > (t = ((PlayerState*)inner)->maxSpeed)) ? t : spd);
         if (lbl_803E7EE0 == ((PlayerState*)inner)->targetAnimSpeed)
