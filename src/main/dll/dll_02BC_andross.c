@@ -277,11 +277,11 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
 void andross_update(int obj)
 {
     int* state;
-    u8 stateChanged;
+    u8 moveChanged;
     int work;
     int ref;
     u8 pathFlag;
-    u8 moveChanged;
+    u8 stateChanged;
     u32 val;
     f32 fval;
     s16 sval;
