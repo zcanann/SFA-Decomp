@@ -808,7 +808,7 @@ void hoodedZyck_update(s16* obj, u8* state)
 {
     int moved;
     int turnRaw;
-    u32 mag;
+    u16 mag;
     u32 grabbed;
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
