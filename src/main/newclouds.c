@@ -923,6 +923,7 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
         }
         else if (i < segs)
         {
+            f32 e0, e1, e2;
             PSVECScale(up, offset,
                        lbl_803DF1BC *
                        (lbl_803DF1C0 * (len * randomGetRange(1, 100))
@@ -940,9 +941,15 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
             px += scaled[0] * (step = weight * (len * (segs - i)));
             py += scaled[1] * step;
             pz += scaled[2] * step;
-            GXWGFifo.f32 = px + offset[0];
-            GXWGFifo.f32 = py + offset[1];
-            GXWGFifo.f32 = pz + offset[2];
+            e2 = offset[2];
+            e1 = offset[1];
+            e0 = offset[0];
+            e2 = pz + e2;
+            e1 = py + e1;
+            e0 = px + e0;
+            GXWGFifo.f32 = e0;
+            GXWGFifo.f32 = e1;
+            GXWGFifo.f32 = e2;
             GXWGFifo.f32 = lbl_803DF1A0;
             GXWGFifo.f32 = lbl_803DF1A0;
         }
