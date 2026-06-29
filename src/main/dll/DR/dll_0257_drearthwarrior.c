@@ -27,11 +27,11 @@ typedef struct DREarthWarriorState
     u8 padF54[0xF58 - 0xF54];
     s32 unkF58;
     u8 padF5C[0xFA8 - 0xF5C];
-    s32 unkFA8;
-    s32 unkFAC;
-    s32 unkFB0;
-    s32 unkFB4;
-    s32 unkFB8;
+    u8* unkFA8;
+    u8* unkFAC;
+    u8* unkFB0;
+    u8* unkFB4;
+    u8* unkFB8;
     u8 padFBC[0xFCC - 0xFBC];
     s32 unkFCC;
     s16 unkFD0;
@@ -1380,15 +1380,15 @@ void DR_EarthWarrior_init(int obj, int p2)
         ((DREarthWarriorState*)inner)->unk1384 = v;
     }
     ((DREarthWarriorState*)inner)->unk1388 = lbl_803E838C;
-    ((DREarthWarriorState*)inner)->unkFA8 = (int)(base + 0x118);
+    ((DREarthWarriorState*)inner)->unkFA8 = base + 0x118;
     ((DREarthWarriorState*)inner)->unk1428 = 0x29;
-    ((DREarthWarriorState*)inner)->unkFAC = (int)(base + 0x1bc);
+    ((DREarthWarriorState*)inner)->unkFAC = base + 0x1bc;
     ((DREarthWarriorState*)inner)->unk1429 = 0x29;
-    ((DREarthWarriorState*)inner)->unkFB0 = (int)(base + 0x260);
+    ((DREarthWarriorState*)inner)->unkFB0 = base + 0x260;
     ((DREarthWarriorState*)inner)->unk142A = 0x2e;
-    ((DREarthWarriorState*)inner)->unkFB4 = (int)(base + 0x1bc);
+    ((DREarthWarriorState*)inner)->unkFB4 = base + 0x1bc;
     ((DREarthWarriorState*)inner)->unk142B = 0x29;
-    ((DREarthWarriorState*)inner)->unkFB8 = (int)(base + 0x260);
+    ((DREarthWarriorState*)inner)->unkFB8 = base + 0x260;
     ((DREarthWarriorState*)inner)->unk142C = 0x2e;
     ((DREarthWarriorState*)inner)->unk1338 = GXIndTexMtxScale1024;
     {
