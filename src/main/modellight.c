@@ -1402,7 +1402,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                 blue = (blue < 0.0f)
                            ? 0.0f
                            : ((blue > 255.0f) ? 255.0f : blue);
-                green = (green > red) ? green : red;
+                green = (red < green) ? green : red;
                 ((ModelLightStruct*)light)->selectionScore = green;
                 blue = (((ModelLightStruct*)light)->selectionScore > blue) ? ((ModelLightStruct*)light)->selectionScore : blue;
                 ((ModelLightStruct*)light)->selectionScore = blue;
