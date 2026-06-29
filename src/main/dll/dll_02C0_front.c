@@ -1069,7 +1069,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         {
             tex = (Texture*)gTitleScreenTextures[4];
             drawScaledTexture((char*)tex,
-                              (f32)(int)(xb + ((Texture*)gTitleScreenTextures[6])->width + 0x5a -
+                              (f32)(int)(xb + 0x5a + ((Texture*)gTitleScreenTextures[6])->width -
                                   (i + 1) * 4),
                               (f32)(int)(yb - (i + 1) * 3),
                               (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
