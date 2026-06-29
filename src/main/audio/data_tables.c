@@ -560,7 +560,7 @@ s32 dataRemoveMacro(u16 mid)
     if (m->num != 0)
     {
         base = m->subTabIndex;
-        for (i = 0; i < m->num && mid != t->macSub[base + i].id; ++i)
+        for (i = 0; i < m->num && mid != ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id; ++i)
         {
         }
 
