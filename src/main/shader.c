@@ -866,8 +866,7 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     }
     else
     {
-        tabEntry = lbl_803DCE78;
-        getTabEntry(tabEntry, 0x1f, mapId << 5, 0x20);
+        getTabEntry(tabEntry = lbl_803DCE78, 0x1f, mapId << 5, 0x20);
         curMapType = *(s8*)(tabEntry + 0x1c);
     }
     lbl_803DCEB4 = 0;
