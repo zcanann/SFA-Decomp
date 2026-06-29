@@ -231,7 +231,6 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     int active;
     int* list;
     int* player;
-    int i;
     DoorF4Placement* def;
     DoorF4State* sub;
     int** walk;
@@ -244,6 +243,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     f32 dx;
     f32 dy;
     f32 thr;
+    int i;
 
     def = *(DoorF4Placement**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
@@ -365,7 +365,7 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         if (gb != 0)
         {
             for (i = objIdx, walk = (int**)((char*)list + i * 4); i < objCount && active == 0;
-                 i++, walk++)
+                 walk++, i++)
             {
                 other = *walk;
                 if (((GameObject*)other)->anim.seqId == 0x7c)
