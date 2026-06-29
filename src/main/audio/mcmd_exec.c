@@ -70,8 +70,9 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     if (((args->value >> 8) & 0xff) == 0)
     {
         k2 = args->flags >> 0x18;
-        k1 = (args->flags >> 8) & 0xff;
-        if (((args->flags >> 8) & 0xff) > (args->flags >> 0x18))
+        k1 = args->flags >> 8;
+        detune = args->flags >> 0x18;
+        if (((args->flags >> 8) & 0xff) > detune)
         {
             t = k1;
             k1 = k2;
