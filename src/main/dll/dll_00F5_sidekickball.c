@@ -388,7 +388,7 @@ u8 trickyBallMove(u8* obj)
         movedFromCache = 1;
     }
 
-    if (lbl_803E369C < state->floorHeight)
+    if (state->floorHeight > lbl_803E369C)
     {
         state->floorY = state->floorBaseY;
         state->floorDepth = state->floorHeight;
@@ -414,10 +414,9 @@ u8 trickyBallMove(u8* obj)
 
     if (hasFloorDepth != 0)
     {
-        f32 damp = gSidekickBallFloorDamping;
-        ((GameObject*)obj)->anim.velocityX *= damp;
-        ((GameObject*)obj)->anim.velocityY *= damp;
-        ((GameObject*)obj)->anim.velocityZ *= damp;
+        ((GameObject*)obj)->anim.velocityX *= gSidekickBallFloorDamping;
+        ((GameObject*)obj)->anim.velocityY *= gSidekickBallFloorDamping;
+        ((GameObject*)obj)->anim.velocityZ *= gSidekickBallFloorDamping;
         ((GameObject*)obj)->anim.velocityY += lbl_803E36BC * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, ((GameObject*)obj)->anim.velocityY, state->floorDepth);
         if ((((GameObject*)obj)->anim.velocityY < lbl_803E36C0) &&
