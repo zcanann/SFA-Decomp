@@ -227,10 +227,12 @@ void CameraModeWorldMap_update(u8* obj)
                     GameObject* f = (GameObject*)ObjList_FindObjectById(gCamWorldMapState->focusObjectId);
                     f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     f32 dz = f->anim.worldPosZ - objA->anim.worldPosZ;
+                    CameraModeWorldMapState* st;
                     s16 d;
                     f32 cur;
                     gCamWorldMapState->targetAngle = (s16)(0x8000 - getAngle(dx, dz));
-                    d = (s16)(gCamWorldMapState->targetAngle - (u16)camera->anim.rotX);
+                    st = gCamWorldMapState;
+                    d = (s16)(st->targetAngle - (u16)camera->anim.rotX);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -239,11 +241,12 @@ void CameraModeWorldMap_update(u8* obj)
                     {
                         d += 0xffff;
                     }
-                    camera->anim.rotX = camera->anim.rotX + d / gCamWorldMapState->focusBlendTimer;
+                    camera->anim.rotX = camera->anim.rotX + d / st->focusBlendTimer;
                     gCamWorldMapState->targetAngle =
                         (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
                                                 f->anim.worldPosY - objA->anim.worldPosY));
-                    d = (s16)(gCamWorldMapState->targetAngle - (u16)camera->anim.rotY);
+                    st = gCamWorldMapState;
+                    d = (s16)(st->targetAngle - (u16)camera->anim.rotY);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -252,11 +255,12 @@ void CameraModeWorldMap_update(u8* obj)
                     {
                         d += 0xffff;
                     }
-                    camera->anim.rotY = camera->anim.rotY + d / gCamWorldMapState->focusBlendTimer;
-                    cur = gCamWorldMapState->distance;
-                    gCamWorldMapState->distance =
+                    camera->anim.rotY = camera->anim.rotY + d / st->focusBlendTimer;
+                    st = gCamWorldMapState;
+                    cur = st->distance;
+                    st->distance =
                         cur + (f32)((s16)(s32)(lbl_803E1A44 - cur) /
-                            gCamWorldMapState->focusBlendTimer);
+                            st->focusBlendTimer);
                     gCamWorldMapState->focusBlendTimer -= 1;
                 }
                 camera->anim.rotX += dYaw;

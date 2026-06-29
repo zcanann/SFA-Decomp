@@ -4110,6 +4110,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         u8 padC[2];
     } SweepHit;
     f32 nearDist;
+    f32 cEE0;
     int objCount;
     s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
     volatile f32 sc0[3];
@@ -4156,6 +4157,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
+    cEE0 = lbl_803E7EE0;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -4481,7 +4483,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             return 0;
         case 5:
         case 6:
-            if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+            if (hd > cEE0 + lbl_803DC6C0)
             {
                 continue;
             }
@@ -4507,7 +4509,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             break;
         case 2:
         case 9:
-            if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+            if (hd > cEE0 + lbl_803DC6C0)
             {
                 continue;
             }
@@ -4527,7 +4529,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             {
                 s8 ok2;
                 int t8;
-                if (hd > lbl_803E7EE0 + lbl_803DC6C0)
+                if (hd > cEE0 + lbl_803DC6C0)
                 {
                     continue;
                 }
@@ -4559,25 +4561,27 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             if (buf.kind == 0xd)
             {
                 int k;
+                f32 inv;
                 if (((PlayerState*)state2)->baddie.animSpeedA <= lbl_803E80A0)
                 {
                     continue;
                 }
                 if (((PlayerState*)state)->particleBurstCooldown <= lbl_803E7EA4)
                 {
+                    inv = lbl_803E7F5C;
                     for (k = 0; k < 0x4b; k++)
                     {
                         f32 lo;
                         lo = buf.minX;
                         pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
+                            inv;
                         lo = buf.minY;
                         pfx.y = lo + (buf.g3c - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
+                            inv;
                         lo = buf.minZ;
                         pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) /
-                            lbl_803E7F5C;
-                        pfx.scale = lbl_803E7EE0;
+                            inv;
+                        pfx.scale = cEE0;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
                                                          -1, NULL);
@@ -11014,13 +11018,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
-    f32** nearList;
-    f32 posZ;
-    f32 posY;
-    f32 posX;
+    f32 pos[3];
     f32 queryParams[4];
+    f32** nearList;
     f32 pushX;
     f32 pushZ;
+
 
     found = 0;
     {
@@ -11089,8 +11092,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (*(s16*)&((PlayerState*)state)->hitIntervalTimer <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
+                ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x14, 2, 0xffffffff);
             }
             break;
         case 8:
@@ -11104,8 +11107,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 if (0x78 < ((PlayerState*)state)->periodicHitTimer)
                 {
                     ((PlayerState*)state)->periodicHitTimer = ((PlayerState*)state)->periodicHitTimer - 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
-                    ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
+                    ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x16, 2,
                                               0xffffffff);
                 }
             }
@@ -14688,13 +14691,14 @@ extern f32 lbl_803E80C0;
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
-    void** list;
-    int tris;
-    int verts;
-    int inner;
     void* parent;
-    s8 mode;
+    int verts;
     int wallHit;
+    int tris;
+    s8 mode;
+    int inner;
+    void** list;
+
     f32 y1;
     f32 y2;
     f32 z1;

@@ -342,14 +342,14 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     f32 sx;
     f32 cy;
     f32 sy;
-    f32 cz;
+    f32 z;
     f32 t1, t2, u, v;
-    f32 sz;
+    f32 cz;
     f32 s, t;
     f32 c;
     f32 x;
     f32 y;
-    f32 z;
+    f32 sz;
     f32 zero;
 
     c = (f32)(int)(gVecMathAngleScale * fcos16((u16) * (s16*)transform));

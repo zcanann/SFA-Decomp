@@ -162,20 +162,20 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
     extern u32 mapBlockFn_80060678(int* block); /* #57 */
     extern void* mapBlockFn_800606ec(int* obj, int idx); /* #57 */
-    u16 blockEnd;
-    f32 scale;
-    int edgeData;
-    u16* mapBlock;
-    int blockLayer;
-    void* shader;
     VertexS16* vtx;
-    int triangle;
     int vertexOffset;
-    int coordOffset;
-    int blockIndex;
-    int edgeIndex;
-    int edgeOffset;
+    int edgeData;
     int vertexIndex;
+    int blockIndex;
+    int blockLayer;
+    int edgeOffset;
+    u16* mapBlock;
+    f32 scale;
+    u16 blockEnd;
+    int triangle;
+    int edgeIndex;
+    int coordOffset;
+    void* shader;
 
     coordOffset = 0;
     vertexOffset = coordOffset;

@@ -277,11 +277,11 @@ int fn_8023A6A4(int state, f32 clampRange, f32 scale, f32 zVel)
 void andross_update(int obj)
 {
     int* state;
-    u8 stateChanged;
     u8 moveChanged;
+    int work;
     int ref;
     u8 pathFlag;
-    int work;
+    u8 stateChanged;
     u32 val;
     f32 fval;
     s16 sval;
@@ -317,8 +317,6 @@ void andross_update(int obj)
     f32 searchDist;
     u32 randOffsetY;
     state = ((GameObject*)obj)->extra;
-    moveChanged = 0;
-    stateChanged = 0;
     pathFlag = 0;
     if (*(u8*)((int)state + 0xb6) != 0)
     {
@@ -380,6 +378,8 @@ void andross_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
+    moveChanged = 0;
+    stateChanged = 0;
     found = ((AndrossState*)state)->fightPhase;
     if (found != ((AndrossState*)state)->prevFightPhase)
     {
@@ -649,7 +649,7 @@ void andross_update(int obj)
         {
             ((AndrossState*)state)->actionPending = 1;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -685,7 +685,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 2;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -731,7 +731,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionState = 3;
             ((AndrossState*)state)->actionPending = 0;
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -797,7 +797,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionPending = 1;
             GameBit_Set(0xd, 0);
         }
-        if ((u16)(val = ((AndrossState*)state)->unkAE + ((AndrossState*)state)->unkAF,
+        if ((u16)(val = ((AndrossState*)state)->unkAE, val += ((AndrossState*)state)->unkAF,
             val + ((AndrossState*)state)->unkB0) == 0)
         {
             ((AndrossState*)state)->fightPhase++;
@@ -1526,7 +1526,7 @@ void andross_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x469);
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
-            for (ref = 0; ref < 6; ref = ref + 1)
+            for (ref = 0; (u8)ref < 6; ref = ref + 1)
             {
                 if ((u32)GameBit_Get((u8)ref + GAMEBIT_ANDROSS_HIT_CUE_BASE) != 0)
                 {
