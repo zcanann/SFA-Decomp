@@ -4065,11 +4065,11 @@ void GameUI_update(void)
 {
     u8* player = Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
-    s16 angDelta;
-    s16 cx;
-    u8 f25 = 1;
-    u8 f26 = 0;
     u8 r29v;
+    s16 cx;
+    s16 angDelta;
+    u8 f26 = 0;
+    u8 f25 = 1;
     int flags;
 
     gCMenuButtons = getButtonsJustPressed(0);
@@ -4307,7 +4307,7 @@ void GameUI_update(void)
                         dir = -1;
                         lbl_803DD79A = 1;
                     }
-                    next = (u8)(st + dir);
+                    next = (u8)(dir + st);
                     if (next > 4) next = 2;
                     if (next < 2) next = 4;
                     switch ((u8)next)
@@ -4325,7 +4325,7 @@ void GameUI_update(void)
                         r29v = 2;
                         break;
                     }
-                    if ((u8)next != (s8)cMenuState)
+                    if ((u8)next != (s8)st)
                     {
                         *(s8*)&shouldOpenCMenu = (s8)next;
                         lbl_803DD8B7 = r29v;
