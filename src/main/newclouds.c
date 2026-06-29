@@ -195,8 +195,7 @@ void newclouds_onMapSetup(void)
     gNewCloudScrollPhaseB = a;
     gNewCloudScrollPhaseC = a;
     lbl_803DD190 = a;
-    b = lbl_803DF1A4;
-    gNewCloudOvercastFadeLevel = b;
+    b = (gNewCloudOvercastFadeLevel = lbl_803DF1A4);
     gNewCloudOvercastFadeRate = a;
     gNewCloudSnowFlashAlpha = 0;
     lbl_803DB764 = b;
