@@ -117,9 +117,9 @@ void worldplanet_init(int obj)
     WorldPlanetState* state;
     int i;
     int mask;
-    int flag;
     int layer;
     int j;
+    int flag;
 
     state = ((GameObject*)obj)->extra;
     gWorldPlanetSelectConfirmTimer = 0;
