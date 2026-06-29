@@ -231,8 +231,7 @@ void CameraModeWorldMap_update(u8* obj)
                     s16 d;
                     f32 cur;
                     gCamWorldMapState->targetAngle = (s16)(0x8000 - getAngle(dx, dz));
-                    st = gCamWorldMapState;
-                    d = (s16)(st->targetAngle - (u16)camera->anim.rotX);
+                    d = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotX);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -245,8 +244,7 @@ void CameraModeWorldMap_update(u8* obj)
                     gCamWorldMapState->targetAngle =
                         (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
                                                 f->anim.worldPosY - objA->anim.worldPosY));
-                    st = gCamWorldMapState;
-                    d = (s16)(st->targetAngle - (u16)camera->anim.rotY);
+                    d = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotY);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
@@ -341,7 +339,7 @@ void CameraModeWorldMap_update(u8* obj)
                         d += 0xffff;
                     }
                     camera->anim.rotX = camera->anim.rotX + d / gCamWorldMapState->settleFrames;
-                    d = (s16)(0x7d0 - camera->anim.rotY);
+                    d = (s16)(0x7d0 - (u16)camera->anim.rotY);
                     if (d > 0x8000)
                     {
                         d = (s16)(d - 0xffff);
