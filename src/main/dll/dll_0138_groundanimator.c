@@ -315,11 +315,11 @@ f32 groundanimator_setScale(int* obj, int* target)
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 {
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
-    void* block;
-    void* entry;
-    void* vtx;
     int mid;
+    void* entry;
     int inner;
+    void* block;
+    void* vtx;
     int ix;
     int fallInn;
     int htInn;
