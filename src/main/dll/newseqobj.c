@@ -557,8 +557,8 @@ void fn_80150910(int* obj, u8* state)
             }
             else
             {
-                int off = r * 12;
-                if (((GameObject*)obj)->anim.currentMove != tbl4[off + 8] || tbl4[off + 8] != 0)
+                int off;
+                if (((GameObject*)obj)->anim.currentMove != tbl4[(off = r * 12) + 8] || tbl4[off + 8] != 0)
                 {
                     state[0x2f2] = 0;
                     state[0x2f3] = 0;
