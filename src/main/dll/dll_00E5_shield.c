@@ -930,15 +930,15 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
     {
         ShieldFxVec s;
-        int* model;
+        u8 hud;
         f32 savedF8;
+        u8 i;
         u8 savedB36;
         s16 saved0;
+        int* model;
+        f32 dt;
         s16 saved2;
         s16 saved4;
-        u8 hud;
-        f32 dt;
-        u8 i;
         model = Obj_GetActiveModel((int)obj);
         savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
         savedB36 = ((GameObject*)obj)->anim.alpha;
