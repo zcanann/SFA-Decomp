@@ -19,14 +19,14 @@ extern void audioFn_80271498(u32 value);
 
 void snd_handle_irq(void)
 {
-    u32 offset;
-    u32 voiceIndex;
-    u32 timeOffset;
-    u32 zero0;
-    u32 zero1;
-    u32 zero2;
     u32 zero3;
     u32 zero4;
+    u32 zero2;
+    u32 offset;
+    u32 zero1;
+    u32 timeOffset;
+    u32 zero0;
+    u32 voiceIndex;
     u8* entry;
 
     if (gSynthInitialized == 0)
