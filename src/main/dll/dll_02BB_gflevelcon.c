@@ -380,17 +380,17 @@ void fn_8023A268(int p1, int p2, int p3)
 void fn_80239FCC(int obj, int state)
 {
     f32 ang;
-    int yaw;
-    int rndYaw;
     int rndDur;
     int newObj;
     int proj;
+    int yaw;
+    s16 rndYaw;
 
     if (Obj_IsLoadingLocked())
     {
         yaw = gGfLevelConProjectileYaw;
         lbl_803DDDC0 = lbl_803DDDC6;
-        rndYaw = (s16)randomGetRange(-0x8000, 0x7fff);
+        rndYaw = randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
         newObj = Obj_AllocObjectSetup(0x20, 0x859);
         ang = lbl_803E74A0 * (f32)(int)rndYaw / lbl_803E74A4;
