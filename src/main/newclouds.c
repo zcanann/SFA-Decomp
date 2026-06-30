@@ -264,7 +264,7 @@ void dll_07_func07(int arg)
     int total;
     NewCloud* snow;
 
-    GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f,
              *(FogColor*)&gNewCloudSnowFogColor);
     for (i = 0, total = 0; i < 8; i++)
     {
