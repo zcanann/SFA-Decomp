@@ -277,7 +277,7 @@ void pressureswitchfb_update(int obj)
         }
         slots2 = *(volatile int*)&((GameObject*)obj)->extra;
         found = 0;
-        for (j2 = 0; (j2 & 0xff) < 10; j2++)
+        for (j2 = 0; (j2 & 0xff) < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; j2++)
         {
             ju2 = j2 & 0xff;
             o = *(u32*)(slots2 + ju2 * 4 + 4);
