@@ -216,8 +216,9 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
 {
-    f32 a;
+    f32 sp2;
     f32 dist;
+    f32 a;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -231,7 +232,7 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
     dist = dist * lbl_803E3110;
     a = grav * (lbl_803E3114 * grav);
     {
-        f32 vel = -(grav * dy) - (speed = speed * speed); /* speed is now speed^2 */
+        f32 vel = -(grav * dy) - (sp2 = speed * speed); /* sp2 is speed^2 */
         disc = vel * vel - (lbl_803E3118 * a) * (dy * dy + dist * dist);
         if (disc >= lbl_803E311C)
         {
@@ -245,7 +246,7 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
             }
             t = sqrtf(t);
             a = dist / t; /* a is now the horizontal velocity */
-            return getAngle(sqrtf(-(a * a - speed)), a);
+            return getAngle(sqrtf(-(a * a - sp2)), a);
         }
     }
     return 0x2000;
