@@ -140,7 +140,7 @@ void levelname_init(int obj, int objDef)
     ((TFrameAnimatorState*)state)->unkC = *(u8*)(objDef + 0x20);
     ((TFrameAnimatorState*)state)->enableGameBit = *(s16*)(objDef + 0x18);
     ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_WAIT;
-    ((TFrameAnimatorState*)state)->unk12 = 0;
+    ((TFrameAnimatorState*)state)->bannerY = 0;
     ((TFrameAnimatorState*)state)->elapsedFrames = 0;
     if (((TFrameAnimatorState*)state)->enableGameBit != -1)
     {

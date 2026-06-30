@@ -17,11 +17,11 @@ typedef struct TFrameAnimatorState {
     u8 unkD[0xE - 0xD];
     s16 enableGameBit;
     s16 elapsedFrames;
-    s16 unk12;
+    s16 bannerY;
     u8 phase;
     u8 unk15[0x268 - 0x15];
     f32 primaryRadius;
-    f32 unk26C;
+    f32 fadeTimer;
     u8 unk270[0x274 - 0x270];
 } TFrameAnimatorState;
 

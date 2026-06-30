@@ -510,7 +510,7 @@ void sidekickball_init(int obj)
     memset(state, 0, 0x2cc);
     Obj_GetPlayerObject(); /* result discarded; the call is emitted in the target */
     ((SidekickBallState*)state)->ballMode = SIDEKICK_BALL_IDLE; /* explicit post-memset store in target */
-    ((TFrameAnimatorState*)state)->unk26C = lbl_803E369C;
+    ((TFrameAnimatorState*)state)->fadeTimer = lbl_803E369C;
     ((GameObject*)obj)->objectFlags |= 0x2000;
     objDef = *(int*)&((GameObject*)obj)->anim.hitReactState;
     ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
