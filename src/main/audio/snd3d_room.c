@@ -247,8 +247,9 @@ void s3dAllocateRoomStudios(void)
     SndSpatialListener* listener;
     u32 listenerCount;
     SndSpatialEntry* entry;
-    f32 fadeScale;
+    f32 distanceSq;
     f64 fadeThreshold;
+    f32 fadeScale;
 
     s3dUpdateRoomDistances();
 
@@ -268,7 +269,6 @@ void s3dAllocateRoomStudios(void)
             {
                 SndSpatialEntry* evictedEntry;
                 u32 studioCount;
-                f32 distanceSq;
                 u8 listenerOwned;
                 struct
                 {
