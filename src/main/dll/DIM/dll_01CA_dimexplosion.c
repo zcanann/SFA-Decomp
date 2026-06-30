@@ -99,6 +99,12 @@ extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, int n);
+
+#define GX_VA_POS 9
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_QUADS 0x80
+#define GX_VTXFMT2 2
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
@@ -306,8 +312,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0)
     {
         GXClearVtxDesc();
-        GXSetVtxDesc(9, 1);
-        GXSetVtxDesc(0xd, 1);
+        GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+        GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
         GXSetCurrentMtx(0);
         for (i = 0, p = state; i < ((ExplosionState*)state)->flameCount; i++)
         {
@@ -351,7 +357,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 colB2 = colB;
                 colA2 = colA;
                 fn_80073AAC(tex, &colA2, &colB2, k);
-                GXBegin(0x80, 2, 4);
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 {
                     f32 fc = 1.0f;
                     f32 fb = 0.0f;
