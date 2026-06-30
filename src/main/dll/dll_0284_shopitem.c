@@ -66,6 +66,15 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
+#define GX_BM_NONE 0
+#define GX_BM_BLEND 1
+#define GX_BL_ZERO 0
+#define GX_BL_ONE 1
+#define GX_BL_SRCALPHA 4
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
@@ -202,15 +211,15 @@ void fn_801E832C(int obj)
 {
     if (*(u8*)(obj + 0x37) == 0xFF)
     {
-        GXSetBlendMode(0, 1, 0, 5);
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     }
     else
     {
-        GXSetBlendMode(1, 4, 1, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
 void shopitem_init(int obj, int data)
