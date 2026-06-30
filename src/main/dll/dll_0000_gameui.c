@@ -179,9 +179,9 @@ extern const f64 lbl_803E2158;
 extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
 extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
 extern int getNextTaskHintText(void);
-extern u8 lbl_803DBA9C[6];
 /* Segments in the task-hint progress bar (lbl_803DBA9C[6], size 0x6). */
 #define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
+extern u8 lbl_803DBA9C[GAMEUI_HINT_BAR_SEGMENT_COUNT];
 extern f32 lbl_803E1FA8;
 extern f32 lbl_803E1FD0;
 extern f32 lbl_803E20D4;
