@@ -42,15 +42,15 @@ void texscroll2_setScale(TexScroll2Object* obj, s8 stepY)
 
 void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* state)
 {
-    s16* placement;
-    void* block;
-    int* tables;
-    void* tex;
-    int layerIdx;
     void* material;
     void* layer;
+    int* tables;
+    void* tex;
     int matIdx;
     int texWidthFixed, texHeightFixed;
+    void* block;
+    int layerIdx;
+    s16* placement;
 
     placement = obj->objAnim.placementData;
     block = mapGetBlock(objPosToMapBlockIdx(
