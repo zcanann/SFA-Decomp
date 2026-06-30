@@ -2246,7 +2246,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
         gGxZCompLocValid = 1;
     }
     GXSetCullMode(0);
-    GXSetFog(GX_FOG_NONE, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, colorFog);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, colorFog);
     return 1;
 }
 
