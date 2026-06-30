@@ -100,8 +100,8 @@ void fn_8026EC44(u32 dt)
     f64 absRange;
     f32 range;
     f32 c1;
-    f32 freq;
     f32 val;
+    f32 freq;
     u8 fade;
     u32* node;
     u32* nnode;
