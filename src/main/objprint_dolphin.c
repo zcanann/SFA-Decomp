@@ -2690,8 +2690,10 @@ void objRenderFuzz(int* obj)
 {
     int n;
     u8 maxN;
-    u8 strong;
     int cnt;
+    int* model;
+    u32 savedMtx;
+    u8 strong;
     f32 dx, dy, dz, dist;
     int* cam = Camera_GetCurrentViewSlot();
     if ((((GameObject*)obj)->objectFlags & 0x1000) || ((GameObject*)obj)->anim.mapEventSlot == 0x3f
@@ -2745,8 +2747,6 @@ void objRenderFuzz(int* obj)
     n = 16 - cnt;
     if (n > 0)
     {
-        int* model;
-        u32 savedMtx;
         if (n > maxN)
         {
             n = maxN;
