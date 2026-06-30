@@ -5919,6 +5919,7 @@ void showMemCardError(u8 err)
     u8 submenu;
     int timer;
     u8 held;
+    int *m;
     int y;
     int i;
     int j;
@@ -5931,13 +5932,8 @@ void showMemCardError(u8 err)
     timer = 0;
     held = 0;
     gSaveCardRetry = 0;
-    if (lbl_803DB700 == 0xd) {
+    if (lbl_803DB700 == 0xd || (err != 0 && lbl_803DB700 == 0xc)) {
         return;
-    }
-    if (err != 0) {
-        if (lbl_803DB700 == 0xc) {
-            return;
-        }
     }
     do {
         checkReset();
@@ -5958,9 +5954,8 @@ void showMemCardError(u8 err)
             cardGetMessage((u32 *)opts, (u32 *)msgs, (u32 *)&count);
         }
         gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
-        y = 0x64;
-        for (i = 0; i < count + 1; i++) {
-            t = (char *)gameTextGet(msgs[i]);
+        for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++) {
+            t = (char *)gameTextGet(*m);
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < *(u16 *)(t + 2); j++) {
                 gameTextShowStr((*(int **)(t + 8))[j], 0, 0, yy);
@@ -5972,7 +5967,6 @@ void showMemCardError(u8 err)
             } else {
                 gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
             }
-            y += 0x14;
         }
         gameTextRun();
         GXFlush_(1, 0);
