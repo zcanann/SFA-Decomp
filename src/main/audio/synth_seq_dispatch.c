@@ -124,10 +124,10 @@ extern f32 lbl_803E7788;
 int fn_8026E0E4(int event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
-    u16 timeVal2;
-    u16 timeVal;
     u16 pbVal2;
     u16 pbVal1;
+    u16 timeVal2;
+    u16 timeVal;
 
     switch (((SeqEvent*)event)->type)
     {
