@@ -17,7 +17,27 @@
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_B7.h"
 #include "main/mm.h"
-#include "main/resource.h"
+
+extern BOOL Resource_Release(void *handleSlot);
+extern void *Resource_Acquire(u16 id, int unused);
+
+static inline int camcontrol_findHandlerIndex(u16 actionId)
+{
+    int handlerCount;
+    register CamcontrolHandlerEntry **handlerEntry;
+    int handlerIndex;
+
+    handlerIndex = 0;
+    handlerEntry = gCamcontrolHandlerEntries;
+    for (handlerCount = gCamcontrolHandlerCount; 0 < handlerCount; handlerCount--) {
+        if (actionId == (*handlerEntry)->actionId) {
+            return handlerIndex;
+        }
+        handlerEntry++;
+        handlerIndex++;
+    }
+    return -1;
+}
 
 void camcontrol_activateHandler(u16 actionId, void *actionData)
 {
@@ -42,19 +62,7 @@ void camcontrol_activateHandler(u16 actionId, void *actionData)
         }
     }
 
-    idx = 0;
-    { /* scope p to the search loop */
-        CamcontrolHandlerEntry **p = gCamcontrolHandlerEntries;
-        n = gCamcontrolHandlerCount;
-        for (; idx < n; idx++) {
-            if (actionId == (*p)->actionId) {
-                goto found;
-            }
-            p++;
-        }
-    }
-    idx = -1;
-found:
+    idx = camcontrol_findHandlerIndex(actionId);
     gCamcontrolCurrentHandlerIndex = idx;
 
     if (idx == -1) {
