@@ -1477,6 +1477,7 @@ void drawWorldMapHud(void)
         int n;
         int t;
         int hint;
+        int hv;
 
         {
             int i;
@@ -1517,16 +1518,20 @@ void drawWorldMapHud(void)
                 n++;
             }
 
-            if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[0];
-            else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[1];
-            else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[2];
-            else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[3];
-            else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[4];
+            {
+            TaskHintEntry* he = gTaskHintTable;
+            if (n >= he[base[0]].thresh) li_ = gGameUiTaskHintCandidates[0];
+            else if (n >= he[base[1]].thresh) li_ = gGameUiTaskHintCandidates[1];
+            else if (n >= he[base[2]].thresh) li_ = gGameUiTaskHintCandidates[2];
+            else if (n >= he[base[3]].thresh) li_ = gGameUiTaskHintCandidates[3];
+            else if (n >= he[base[4]].thresh) li_ = gGameUiTaskHintCandidates[4];
             else li_ = -1;
+            }
         }
 
+        hv = (u16)getNextTaskHintText();
         lv = 0;
-        if ((int)(u16)getNextTaskHintText() > 0xad)
+        if (hv > 0xad)
         {
             lv = 1;
         }
