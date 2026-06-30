@@ -2166,8 +2166,8 @@ void allocLotsOfTextures(void)
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = __fabsf(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0);
             f32 d2 = sqrtf(cx * cx + cy * cy);
-            f32 v = 1.0f - d2;
-            if (v < 0.0f) v = 0.0f;
+            f32 v = lbl_803DED2C - d2;
+            if (v < lbl_803DED28) v = lbl_803DED28;
             *(u8*)(base + off) = 255.0f * v;
         }
     }
