@@ -139,7 +139,7 @@ void fn_8013F100(int obj, register int state)
                 {
                     objAnimFn_8013a3f0(obj, 17, lbl_803E24F4, 0x4000000);
                 }
-                *(int*)&((TrickyState*)state)->stateFlags |= 0x10;
+                *(int*)&((TrickyState*)state)->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 ((TrickyState*)state)->substate = 3;
                 fn_80179678(*(int*)&((TrickyState*)state)->unk700, obj);
             }
@@ -425,7 +425,7 @@ void fn_8013F100(int obj, register int state)
     case 7:
         break;
     }
-    if (((((TrickyState*)state)->stateFlags & 0x10000) != 0) &&
+    if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_RESET_FLAG_10000) != 0) &&
         ViewFrustum_IsSphereVisible((float*)(obj + 0xc), lbl_803E2500) == 0)
     {
         Obj_FreeObject(*(int*)&((TrickyState*)state)->followObj);
