@@ -1318,7 +1318,6 @@ int dbstealerworm_stateHandlerB06(int obj, int baddie)
     GroundBaddieState* tmp = ((GameObject*)obj)->extra;
     DbStealerwormControl* sub;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
-    int off;
     int n;
     char* entry;
     char* ptr;
@@ -1343,11 +1342,9 @@ int dbstealerworm_stateHandlerB06(int obj, int baddie)
             }
             entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->cfgTableIndex * 8];
             n = *(s16*)(entry + 4);
-            off = n * 12;
             for (; n != 0;)
             {
-                n--;
-                Stack_Push(sub->msgStack, (int*)(*(int*)entry + (off -= 12)));
+                Stack_Push(sub->msgStack, (int*)(*(int*)entry + --n * 12));
             }
             sub->unk34 = 1;
             ((GameObject*)obj)->anim.localPosX = ((DbstealerwormPlacement*)data)->homePosX;
