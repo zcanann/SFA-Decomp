@@ -1295,10 +1295,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                 }
                 t = yaw;
                 *(u16*)(state + 0x338) = t;
-                if (t < 0)
-                {
-                    t = -t;
-                }
+                t = yaw >= 0 ? yaw : -yaw;
                 if (t < 0x4000)
                 {
                     *(s16*)obj = -*(s16*)obj;
