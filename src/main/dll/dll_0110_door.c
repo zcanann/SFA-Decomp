@@ -97,16 +97,23 @@ void Door_init(int* obj, u8* def)
         case 1101:
             {
                 s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if ((subtype < 35 && subtype >= 31) || (subtype >= 40 && subtype < 43))
+                if (subtype < 40)
                 {
-                    state->openSfx = 832;
-                    state->latchSfx = 833;
+                    if (subtype >= 35)
+                        goto close;
+                    if (subtype >= 31)
+                        goto open;
+                    goto close;
                 }
-                else
-                {
-                    state->openSfx = 1154;
-                    state->latchSfx = 1155;
-                }
+                if (subtype >= 43)
+                    goto close;
+            open:
+                state->openSfx = 832;
+                state->latchSfx = 833;
+                break;
+            close:
+                state->openSfx = 1154;
+                state->latchSfx = 1155;
                 break;
             }
         case 358:
