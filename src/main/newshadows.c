@@ -1871,7 +1871,7 @@ void initFn_8006d020(void)
 
     padFix = __PADFixBits;
     th = (int*)gNewShadowNoiseTexFrames;
-    for (tex = 0; tex < 0x10; tex++, th++)
+    for (tex = 0; tex < 0x10; th++, tex++)
     {
         *th = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
         for (row = 0; row < 0x40; row++)
