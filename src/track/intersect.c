@@ -2439,6 +2439,12 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     return 1;
 }
 
+static inline void forceSingle_inl(f32 *p)
+{
+    volatile f32 v = *p;
+    *p = v;
+}
+
 u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
@@ -2482,13 +2488,12 @@ u32 objCallback_80074d04(int handle, void* model)
         dist = px*px + py*py + pz*pz;
         if (dist > lbl_803DEEDC) {
             extern double lbl_803DEF10, lbl_803DEF18;
-            volatile float vdist;
             double g = __frsqrte((double)dist);
             g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
             g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
             g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
-            vdist = (float)(dist * g);
-            dist = vdist;
+            dist = (float)(dist * g);
+            forceSingle_inl(&dist);
         }
         f31_val = lbl_803DEF3C / dist;
         if (f31_val > lbl_803DEEE4) f31_val = lbl_803DEEE4;
@@ -2505,7 +2510,7 @@ u32 objCallback_80074d04(int handle, void* model)
     getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
 
-    PSMTXScale(mtx_ec, hudScale, hudScale, hudScale);
+    PSMTXScale(mtx_ec, 4.0f, 4.0f, 4.0f);
     mtx_ec[0][3] = f1;
     GXLoadTexMtxImm(mtx_ec, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
@@ -2524,7 +2529,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_44, -4);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
 
-    PSMTXScale(mtx_bc, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
+    PSMTXScale(mtx_bc, 0.83f, 0.83f, 0.83f);
     PSMTXRotRad(mtx_5c, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_5c, mtx_bc, mtx_bc);
     mtx_bc[0][3] = f2;
