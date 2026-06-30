@@ -679,7 +679,7 @@ void player_init(int unused, void* obj, int a, int b)
 void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 {
     int iterations;
-    int currentState;
+    s16 currentState;
     int done;
     int result;
     void (*exitFn)(char*, char*);
@@ -700,7 +700,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
     {
         done = 0;
         currentState = ((BaddieState*)state)->controlMode;
-        result = (*(int (**)(char*, char*, f32))(stateFns + currentState * 4))(pos, state, dt);
+        result = ((int (*)(char*, char*, f32))((int**)stateFns)[currentState])(pos, state, dt);
         if (result > 0)
         {
             ((BaddieState*)state)->unk276 = ((BaddieState*)state)->controlMode;
@@ -729,7 +729,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             ((BaddieState*)state)->controlMode = result;
             if (result != currentState)
             {
-                ((BaddieState*)state)->unk276 = (s16)currentState;
+                ((BaddieState*)state)->unk276 = (s16)(int)currentState;
                 exitFn = *(void (**)(char*, char*))(state + 0x304);
                 if (exitFn != NULL)
                 {
@@ -789,15 +789,12 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 
     if ((*(int*)state & 0x4000) == 0)
     {
-        int decay;
         f32 t;
 
         t = (f32)(int) * (s16*)(pos + 2) * dt;
-        decay = (s32)(t * lbl_803E05C0);
-        *(s16*)(pos + 2) -= decay;
+        *(s16*)(pos + 2) -= (s16)(t * lbl_803E05C0);
         t = (f32)(int) * (s16*)(pos + 4) * dt;
-        decay = (s32)(t * lbl_803E05C0);
-        *(s16*)(pos + 4) -= decay;
+        *(s16*)(pos + 4) -= (s16)(t * lbl_803E05C0);
     }
 }
 
