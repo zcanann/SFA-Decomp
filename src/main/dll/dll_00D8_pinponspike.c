@@ -230,7 +230,8 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
     dist = sqrtf(dx * dx + dz * dz);
     dy = from[1] - to[1];
     dist = dist * lbl_803E3110;
-    a = grav * (lbl_803E3114 * grav);
+    sp2 = lbl_803E3114 * grav;
+    a = sp2 * grav;
     {
         f32 vel = -(grav * dy) - (sp2 = speed * speed); /* sp2 is speed^2 */
         disc = vel * vel - (lbl_803E3118 * a) * (dy * dy + dist * dist);
