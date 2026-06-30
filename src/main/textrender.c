@@ -2991,11 +2991,13 @@ int GameText_CountPrintableChars(u8 * str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 extern char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 
+#define SUBTITLE_LINE_COUNT 256
+
 typedef struct SubtitleLineTable
 {
-    void* blocks[256];
-    char* lines[256];
-    f32 times[256];
+    void* blocks[SUBTITLE_LINE_COUNT];
+    char* lines[SUBTITLE_LINE_COUNT];
+    f32 times[SUBTITLE_LINE_COUNT];
 } SubtitleLineTable;
 
 typedef struct SubtitleTextEntry
@@ -3043,7 +3045,7 @@ void subtitleBuildLineTable(void)
     win = gTextBoxes + 0x140;
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;
-    for (i = 0; i < 256; i++)
+    for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
     {
         s->times[i] = gSubtitleNoTimeSentinel;
     }
@@ -3086,7 +3088,7 @@ void subtitleBuildLineTable(void)
         {
             found = 0;
             m = k;
-            for (i = 0; i < 256; i++)
+            for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
             {
                 ftotal = total;
                 if (m < 255)
