@@ -264,6 +264,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     RomCurvePoint* point;
     RomCurvePoint* points;
     int hitCount;
+    int count;
     int pointIndex;
     f32 delta[3];
     CurvesHitScratch hitScratch;
@@ -280,7 +281,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
-    for (pointIndex = 0, point = points; pointIndex < hitCount;)
+    for (pointIndex = 0, point = points, count = hitCount; pointIndex < count;)
     {
         if (((s8)point->type != ROMCURVE_POINT_TYPE_WATER) && (point->z > gCurvesSurfaceNormalZThreshold) &&
             (point->x <= collision->points[1][1]) && (point->x > collision->points[0][1]))
