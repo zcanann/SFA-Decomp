@@ -2912,12 +2912,19 @@ extern f32 __PADFixBits;
 void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 {
     u32 fmt;
-    u32 w, h;
-    int i, j;
-    u32 wA, wB;
-    int texA, texB;
-    u8 redA, redB;
-    int rf, gf, bf;
+    u32 w;
+    u32 h;
+    int texA;
+    u32 wB;
+    u32 wA;
+    u8 redA;
+    int i;
+    int j;
+    int texB;
+    u8 redB;
+    int rf;
+    int gf;
+    int bf;
 
     if (src1 == NULL) return;
     if (src2 == NULL) return;
