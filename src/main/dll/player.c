@@ -18583,13 +18583,8 @@ void fn_80295918(int obj, int sel, f32 fval)
     {
     case 1:
         {
-            u8 n = ((PlayerState*)state)->queuedBitCount;
-            u8 v = (u8)iv;
-            if (n < 4)
-            {
-                ((PlayerState*)state)->queuedBitCount += 1;
-                *((u8*)((char*)state + 0x8b9) + n) = v;
-            }
+            if (((PlayerState*)state)->queuedBitCount < 4)
+                *((u8*)((char*)state + 0x8b9) + ((PlayerState*)state)->queuedBitCount++) = (u8)iv;
             break;
         }
     case 6:
