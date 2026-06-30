@@ -180,15 +180,15 @@ void fn_801DFA28(u8* obj)
     f32 tx;
     f32 ty;
     f32 tz;
-    f32 dx;
+    f32 ambA;
     f32 dy;
     f32 dz;
     f32 dist;
-    f32 speedTarget;
-    f32 threshold;
-    f32 ambA;
-    f32 ambB;
     f32 ambC;
+    f32 ambB;
+    f32 threshold;
+    f32 dx;
+    f32 speedTarget;
     f32 zero;
     f32 mtx[17];
     struct
