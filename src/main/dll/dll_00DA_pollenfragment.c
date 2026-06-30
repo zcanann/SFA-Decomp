@@ -63,9 +63,9 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DBD48;
 extern f32 lbl_803DBD4C;
-extern f32 lbl_803E315C;
+extern const f32 lbl_803E315C;
 extern f32 lbl_803E3160;
-extern f32 lbl_803E3164;
+extern const f32 lbl_803E3164;
 extern f32 lbl_803E3168;
 extern f32 lbl_803E316C;
 extern f32 lbl_803E3170;
@@ -339,7 +339,6 @@ void pollenfragment_update(int obj)
     u8* nearObj;
     void* hit;
     int i;
-    f32 m;
     f32 w;
     f32 t;
     XyzVec dir;
@@ -430,13 +429,13 @@ void pollenfragment_update(int obj)
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX +
-            (((w = lbl_803E315C) + ((PollenFragmentExtra*)extra)->timer) * (dir.x * ((PollenFragmentExtra*)extra)->speed)) / (m = lbl_803E3164);
+            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.x * ((PollenFragmentExtra*)extra)->speed)) / lbl_803E3164;
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ +
-            ((w + ((PollenFragmentExtra*)extra)->timer) * (dir.z * ((PollenFragmentExtra*)extra)->speed)) / m;
+            ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (dir.z * ((PollenFragmentExtra*)extra)->speed)) / lbl_803E3164;
         if (!(((PollenFragmentExtra*)extra)->def)->noVertical)
         {
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY +
-                ((w + ((PollenFragmentExtra*)extra)->timer) * (lbl_803E316C * (dir.y * ((PollenFragmentExtra*)extra)->speed))) / m;
+                ((lbl_803E315C + ((PollenFragmentExtra*)extra)->timer) * (lbl_803E316C * (dir.y * ((PollenFragmentExtra*)extra)->speed))) / lbl_803E3164;
         }
     }
     ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (w = lbl_803E3170);
