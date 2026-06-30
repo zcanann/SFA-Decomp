@@ -1746,6 +1746,7 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
     u8* sk;
     u8* found;
     u8* cur;
+    int offset;
 
     found = NULL;
     cur = NULL;
@@ -1828,10 +1829,14 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
             }
             else
             {
-                slot *= 0xa4;
-                *x = *(f32*)&gSkyState[slot + 0x90];
-                *y = *(f32*)&gSkyState[slot + 0x94];
-                *z = *(f32*)&gSkyState[slot + 0x98];
+                offset = slot * 0xa4;
+                sk = gSkyState + offset;
+                *x = ((SkyState*)sk)->lights[0].directionX;
+                sk = gSkyState + offset;
+                *y = ((SkyState*)sk)->lights[0].directionY;
+                sk = gSkyState + offset;
+                sk = (u8*)sk;
+                *z = ((SkyState*)sk)->lights[0].directionZ;
             }
         }
     }
