@@ -174,9 +174,18 @@ void CameraModeCrawl_update(u8* obj)
         camera->anim.worldPosY = lbl_803E1AD4 + target->anim.worldPosY;
         dx = camera->anim.localPosX - target->anim.worldPosX;
         dz = camera->anim.localPosZ - target->anim.worldPosZ;
-        delta = (0x8000 - (u16)getAngle(dx, dz)) - (u16)camera->anim.rotX;
-        delta = (delta > 0x8000) ? delta - 0xffff : delta;
-        delta = (delta < -0x8000) ? delta + 0xffff : delta;
+        {
+            int t = 0x8000 - (u16)getAngle(dx, dz);
+            delta = t - (u16)camera->anim.rotX;
+        }
+        if (0x8000 < delta)
+        {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000)
+        {
+            delta = delta + 0xffff;
+        }
         camera->anim.rotX = (s16)((f32)(s32)camera->anim.rotX +
                                   interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
         camera->anim.rotX = (s16)(0x8000 - getAngle(dx, dz));
@@ -187,9 +196,18 @@ void CameraModeCrawl_update(u8* obj)
         other = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(
             obj, &dx, &outY, &dz, &outW, lbl_803E1ADC, 0);
-        delta = (0x8000 - (u16)getAngle(dx, dz)) - (u16)camera->anim.rotX;
-        delta = (delta > 0x8000) ? delta - 0xffff : delta;
-        delta = (delta < -0x8000) ? delta + 0xffff : delta;
+        {
+            int t = 0x8000 - (u16)getAngle(dx, dz);
+            delta = t - (u16)camera->anim.rotX;
+        }
+        if (0x8000 < delta)
+        {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000)
+        {
+            delta = delta + 0xffff;
+        }
         camera->anim.rotX += delta;
         (*(void (**)(u8*, f32, f32))(*(int*)(*(int*)(other + 4)) + 24))(
             obj, target->anim.worldPosY, outW);
