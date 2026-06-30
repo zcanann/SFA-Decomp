@@ -2217,9 +2217,10 @@ int objUpdateOpacity(char* obj)
     else
     {
         prod = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        i = 0;
         offZ = playerMapOffsetZ;
         offX = playerMapOffsetX;
-        for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
+        for (; i < FRUSTUM_PLANE_COUNT; i++)
         {
             FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
             if (prod
