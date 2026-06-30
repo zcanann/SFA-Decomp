@@ -269,9 +269,9 @@ OSMessage PopReadedBuffer(void)
 
 void THPRead_Reader(void)
 {
-    char* base = gPicMenuReadThreadArea;
-    int i = 0;
     AttractMoviePlayer* player = (AttractMoviePlayer*)&lbl_803A5D60;
+    int i = 0;
+    char* base = gPicMenuReadThreadArea;
     AttractMovieReadBuffer* req;
     u32 readOff = player->initOffset;
     u32 readSize = player->initReadSize;
