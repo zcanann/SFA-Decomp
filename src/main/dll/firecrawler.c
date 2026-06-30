@@ -1116,8 +1116,8 @@ void hagabonMK2_update(s16* obj, u8* state)
         }
         else
         {
-            modelLightStruct_setPosition(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                         ((GameObject*)obj)->anim.localPosZ);
+            modelLightStruct_setPosition(((FireCrawlerState*)state)->engineLight, ((GameObject*)obj)->anim.localPosX,
+                                         ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
         }
     }
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0)
@@ -1128,7 +1128,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     sidekickToy_accelerateTowardTarget3D(obj, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosX,
                                          lbl_803E2C48 + ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosY,
                                          ((GameObject*)((BaddieState*)state)->trackedObj)->anim.worldPosZ,
-                                         lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, ((BaddieState*)state)->unk304);
+                                         *(f32*)&lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, ((BaddieState*)state)->unk304);
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
         i = ((BaddieState*)state)->seqEntryIndex * 0xc;
@@ -1172,7 +1172,7 @@ void hagabonMK2_update(s16* obj, u8* state)
         {
             f32 t = *(f32*)(state + 0x324);
             Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                   t / lbl_803E2C70);
+                                   t / *(f32*)&lbl_803E2C70);
         }
     }
     else
