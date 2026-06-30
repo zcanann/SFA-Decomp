@@ -14737,15 +14737,15 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     parent = *(void**)cam;
     if (mode == 4)
     {
-        char* cp;
+        f32* b6b8;
         f32* pl;
         f32* dp;
-        int i;
-        f32* b6b8;
+        f32 thresh;
+        char* cp;
         f32* px2;
         f32* py2;
         f32* pz2;
-        f32 thresh;
+        int i;
         wallHit = 0;
         if (parent != NULL)
         {
