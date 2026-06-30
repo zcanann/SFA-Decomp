@@ -1,6 +1,10 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 
+// AISetStreamPlayState() states
+#define AI_STREAM_STOP 0
+#define AI_STREAM_START 1
+
 void audioStopByMask(int mask)
 {
     if ((mask & 4) != 0)
@@ -519,7 +523,7 @@ void AudioStream_CancelCallback(s32 result)
 {
     if (result == 0)
     {
-        AISetStreamPlayState(0);
+        AISetStreamPlayState(AI_STREAM_STOP);
     }
     gAudioActiveChannelMask = 0;
     gAudioStreamPlaying = 0;
@@ -586,7 +590,7 @@ void AudioStream_StartPrepared(void)
             {
                 AISetStreamVolLeft(gAudioStreamVolumeLeft);
                 AISetStreamVolRight(gAudioStreamVolumeRight);
-                AISetStreamPlayState(1);
+                AISetStreamPlayState(AI_STREAM_START);
                 gAudioStreamPlaying = 1;
                 gAudioStreamPos = lbl_803DE5D0;
                 gAudioStreamCurrentId = gAudioStreamPreparedId;
@@ -657,7 +661,7 @@ void AudioStream_PrepareCallback(void)
         {
             AISetStreamVolLeft(gAudioStreamVolumeLeft);
             AISetStreamVolRight(gAudioStreamVolumeRight);
-            AISetStreamPlayState(1);
+            AISetStreamPlayState(AI_STREAM_START);
             gAudioStreamPlaying = 1;
             gAudioStreamPos = lbl_803DE5D0;
             gAudioStreamCurrentId = gAudioStreamPreparedId;
@@ -688,7 +692,7 @@ void AudioStream_PlayAddrCallback(u32 result)
             AISetStreamVolRight(0);
             gAudioStreamCurrentId = 0;
             gAudioActiveChannelMask = 0;
-            AISetStreamPlayState(0);
+            AISetStreamPlayState(AI_STREAM_STOP);
             gAudioStreamMusicFadeFlagB = 0;
             gAudioStreamMusicFadeFlagA = 0;
         }
