@@ -395,12 +395,16 @@ int fn_80138920(u8* obj, int sfxId, int vol)
     s16 v;
     if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
     v = ((GameObject*)obj)->anim.currentMove;
-    if (v < 48)
+    switch (v)
     {
-        if (v >= 41)
-        {
-            return 0;
-        }
+    case 41:
+    case 42:
+    case 43:
+    case 44:
+    case 45:
+    case 46:
+    case 47:
+        return 0;
     }
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     objAudioFn_800393f8(obj, b + 936, sfxId, vol, -1, 0);
