@@ -2473,8 +2473,8 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     int n = 0x1f40 / blob->aggression;
     int tmpB;
     int tmpA;
-    int q;
-    int target;
+    int tmpD;
+    int tmpC;
     f32 frac;
     f32 d;
     f32 k;
@@ -2503,24 +2503,24 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     {
         ((BaddieState*)baddie)->animSpeedA = ((BaddieState*)baddie)->animSpeedA * (k = lbl_803E62D4);
         ((BaddieState*)baddie)->animSpeedB *= k;
-        target = *(int*)&((BaddieState*)baddie)->targetObj;
-        tmpB = sub->unk2C;
+        obj = *(int*)&((BaddieState*)baddie)->targetObj;
         tmpA = sub->unk30;
-        q = sub->msgStack;
+        tmpB = sub->unk2C;
+        baddie = sub->msgStack;
         msgA[0] = sub->unk28;
         msgA[1] = tmpB;
         msgA[2] = tmpA;
-        if (Stack_IsFull(q) == 0)
+        if (Stack_IsFull(baddie) == 0)
         {
-            Stack_Push(q, msgA);
+            Stack_Push(baddie, msgA);
         }
-        q = sub->msgStack;
+        baddie = sub->msgStack;
         msgB[0] = 2;
         msgB[1] = 1;
-        msgB[2] = target;
-        if (Stack_IsFull(q) == 0)
+        msgB[2] = obj;
+        if (Stack_IsFull(baddie) == 0)
         {
-            Stack_Push(q, msgB);
+            Stack_Push(baddie, msgB);
         }
         sub->unk34 = 1;
         return 0;
@@ -2528,24 +2528,24 @@ int dbstealerworm_stateHandlerA0F(int obj, int baddie, f32 t)
     if (d < lbl_803E62D8 && randomGetRange(0, n) == 0)
     {
         ((BaddieState*)baddie)->animSpeedB = ((BaddieState*)baddie)->animSpeedA = lbl_803E62A8;
-        target = *(int*)&((BaddieState*)baddie)->targetObj;
-        tmpA = sub->unk30;
-        tmpB = sub->unk2C;
-        q = sub->msgStack;
+        obj = *(int*)&((BaddieState*)baddie)->targetObj;
+        tmpC = sub->unk30;
+        tmpD = sub->unk2C;
+        baddie = sub->msgStack;
         msgC[0] = sub->unk28;
-        msgC[1] = tmpB;
-        msgC[2] = tmpA;
-        if (Stack_IsFull(q) == 0)
+        msgC[1] = tmpD;
+        msgC[2] = tmpC;
+        if (Stack_IsFull(baddie) == 0)
         {
-            Stack_Push(q, msgC);
+            Stack_Push(baddie, msgC);
         }
-        q = sub->msgStack;
+        baddie = sub->msgStack;
         msgD[0] = 4;
         msgD[1] = 1;
-        msgD[2] = target;
-        if (Stack_IsFull(q) == 0)
+        msgD[2] = obj;
+        if (Stack_IsFull(baddie) == 0)
         {
-            Stack_Push(q, msgD);
+            Stack_Push(baddie, msgD);
         }
         sub->unk34 = 1;
         return 0;
