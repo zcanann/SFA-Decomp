@@ -1859,8 +1859,8 @@ void initFn_8006d020(void)
                 if (tmp < mz) mz = tmp;
                 d = sqrtf(mx * mx + mz * mz);
                 if (d < *p4 + o[3]) collide = 1;
-                o += 5;
                 j++;
+                o += 5;
             }
             attempts++;
         }
