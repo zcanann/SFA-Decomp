@@ -490,7 +490,7 @@ void worldplanet_update(int obj)
         objId = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(0) == 0 && gWorldPlanetInputLockTimer == 0)
         {
-            switch (state->selectionLocked)
+            switch ((u8)state->selectionLocked)
             {
             case 0:
                 if (gWorldPlanetReselectDelayTimer != 0)
