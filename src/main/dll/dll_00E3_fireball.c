@@ -27,6 +27,8 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+
+#define FIREBALL_ROT_COUNT 5
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -221,10 +223,10 @@ typedef struct FireballState
     s16 unk42;
     u8 pad44[0x46 - 0x44];
     u16 spiralPhase;
-    u16 rotZBase[5];  /* 0x48 */
-    u16 rotZDelta[5]; /* 0x52 */
-    u16 rotYBase[5];  /* 0x5C */
-    u16 rotYDelta[5]; /* 0x66 */
+    u16 rotZBase[FIREBALL_ROT_COUNT];  /* 0x48 */
+    u16 rotZDelta[FIREBALL_ROT_COUNT]; /* 0x52 */
+    u16 rotYBase[FIREBALL_ROT_COUNT];  /* 0x5C */
+    u16 rotYDelta[FIREBALL_ROT_COUNT]; /* 0x66 */
     u8 stateFlags;
     u8 colorIndex;
     u8 pad72[0x94 - 0x72];
@@ -898,7 +900,7 @@ void fireball_init(int* obj)
             }
         }
         ((GameObject*)obj)->anim.alpha = 200;
-        for (i = 0, fs = (FireballState*)state; i < 5; i++)
+        for (i = 0, fs = (FireballState*)state; i < FIREBALL_ROT_COUNT; i++)
         {
             fs->rotZBase[0] = randomGetRange(-32767, 32767);
             fs->rotZDelta[0] = randomGetRange(-1024, 1024);
@@ -1090,7 +1092,7 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     savedRot2 = ((GameObject*)obj)->anim.rotY;
     savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3350;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < FIREBALL_ROT_COUNT; i++)
     {
         FireballState* fs = (FireballState*)(state + i * 2);
         fs->rotZBase[0] += fs->rotZDelta[0];
