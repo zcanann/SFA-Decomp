@@ -370,6 +370,7 @@ void hagabon_update(int obj)
     int hitObject;
     int hitSphereIndex;
     u32 hitVolume;
+    u8 flags;
 
     state = *(HagabonState**)&((GameObject*)obj)->extra;
     oldCurve = state->curve;
@@ -404,9 +405,9 @@ void hagabon_update(int obj)
     }
 
     if ((((GameObject*)obj)->anim.alpha != 0) &&
-        ((state->flags & (HAGABON_FLAG_FADE_IN | HAGABON_FLAG_FADE_OUT)) != 0))
+        (((flags = state->flags) & (HAGABON_FLAG_FADE_IN | HAGABON_FLAG_FADE_OUT)) != 0))
     {
-        if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
+        if ((flags & HAGABON_FLAG_FADE_OUT) != 0)
         {
             ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta;
             if (((GameObject*)obj)->anim.alpha <= 6)
