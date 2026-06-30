@@ -272,6 +272,11 @@ void arwingandrossstuff_update(int obj)
                 Obj_FreeObject(obj);
                 return;
             }
+        }
+        else
+        {
+            return;
+        }
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             if (((GameObject*)obj)->anim.seqId != ARW_SEQID_INVINCIBLE)
@@ -299,7 +304,6 @@ void arwingandrossstuff_update(int obj)
             ((GameObject*)obj)->anim.rootMotionScale += lbl_803DC3D0;
             ObjHitbox_SetSphereRadius(obj, (int)(((GameObject*)obj)->anim.rootMotionScale * lbl_803DC3D8));
             ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + lbl_803DC3D4;
-        }
         }
     }
 }
