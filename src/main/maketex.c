@@ -1271,7 +1271,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                     memset((void*)gSaveCardImageBuffer, 0, 0x4000);
                     loadMemCardImages();
                     result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x2000, 0);
-                    if (result == -5)
+                    if (result == CARD_RESULT_IOERROR)
                     {
                         CARDDelete(0, sMemoryCardFileName);
                     }
