@@ -203,12 +203,12 @@ void fn_8026EC44(u32 dt)
                                 u32* cv = (u32*)evt[1];
                                 st->cur = (u32)cv;
                                 synthSetStudioChannelScale((u32)cv >> 10,
-                                                           gSynthCurrentVoiceSlotIndex, (u8)ch);
+                                                           gSynthCurrentVoiceSlotIndex, ch & 0xff);
                             }
                             else
                             {
                                 synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex,
-                                                           (u8)ch);
+                                                           ch & 0xff);
                                 st->cur = st->evt[1] << 10;
                             }
                             st->evt = st->evt + 2;
@@ -227,7 +227,7 @@ void fn_8026EC44(u32 dt)
                     }
                     *(u32*)((u8*)st + st->idx * 8 + 0xc) = val;
                     *(int*)((u8*)st + st->idx * 8 + 0x10) = floorf(freq);
-                    ret |= fn_8026E9D0((u8)ch, dt);
+                    ret |= fn_8026E9D0(ch & 0xff, dt);
                 }
                 cb = synthUpdateCallbacks();
                 if (gSynthCurrentVoice->counter == 0)
