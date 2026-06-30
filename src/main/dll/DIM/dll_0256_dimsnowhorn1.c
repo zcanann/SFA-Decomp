@@ -313,14 +313,11 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
         ((DIMSnowHorn1State*)state)->baddie.turnRate = -((DIMSnowHorn1State*)state)->baddie.turnRate;
     }
     d = ((DIMSnowHorn1State*)state)->baddie.turnRate;
-    if (d > 0)
+    if (d > 0 && ((GameObject*)obj)->anim.currentMove != 0x201)
     {
-        if (((GameObject*)obj)->anim.currentMove != 0x201)
-        {
-            ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
-        }
+        ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
     }
-    else if (d < 1)
+    else if (d <= 0)
     {
         if (((GameObject*)obj)->anim.currentMove != 0x200)
         {
