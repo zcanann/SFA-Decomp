@@ -232,6 +232,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag,
                 u8 vGroup, u8 studio, u32 itd)
 {
+    u32 fullKey;
     u8* keymap;
     s32 idx;
     s32 p;
@@ -251,7 +252,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
             {
                 if ((((KeymapEntry*)(keymap + idx))->panning & 0x80) == 0)
                 {
-                    p = keymap[key * 8 + 3] - 0x40;
+                    p = keymap[fullKey * 8 + 3] - 0x40;
                     p += pan;
                     if (p < 0)
                     {
@@ -271,7 +272,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     pan = 0x80;
                 }
 
-                k = (key & 0x7F) + ((KeymapEntry*)(keymap + idx))->transpose;
+                k = (fullKey & 0x7F) + ((KeymapEntry*)(keymap + idx))->transpose;
                 if (k > 0x7F)
                 {
                     k = 0x7F;
@@ -311,11 +312,11 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                     {
                         return handle;
                     }
-                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                    return macStart(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (fullKey & 0x80), vol,
                                     pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                     studio, itd);
                 }
-                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                return audioLayerFn_8026f8b8(((KeymapEntry*)(keymap + idx))->id, prio, maxVoices, allocId, k | (fullKey & 0x80), vol,
                                              pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                              studio, itd);
             }
