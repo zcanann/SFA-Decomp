@@ -2560,8 +2560,8 @@ extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 #pragma opt_loop_invariants off
 void renderShadows(void)
 {
-    char* B = (char*)gNewShadowEntries;
-    int* slot;
+    char* casterPtr;
+    f32 *vAp1, *vAp2, *mc54p;
     f32 savedFovY, sCamX, sCamY, sCamZ;
     int s170;
     s16 s14, s19;
@@ -2570,12 +2570,12 @@ void renderShadows(void)
     f32 mc54[3], mc48[3];
     f32 vA[3], v30[3];
     f32 dot24[3], proj[3];
+    int* slot;
+    char* B = (char*)gNewShadowEntries;
     int blkArr, blkCount;
     s8 r22;
-    int r23, r24;
-    char* casterPtr;
     f32 dirX, dirY, dirZ, f22, f21, f23, vAy;
-    f32 *vAp1, *vAp2, *mc54p;
+    int r23, r24;
 
     if (gNewShadowCasterCount == 0) return;
     Camera_DisableViewYOffset();
