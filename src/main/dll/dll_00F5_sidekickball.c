@@ -388,28 +388,29 @@ u8 trickyBallMove(u8* obj)
         movedFromCache = 1;
     }
 
-    if (state->floorHeight > lbl_803E369C)
+    if (state->floorHeight > *(f32*)&lbl_803E369C)
     {
         state->floorY = state->floorBaseY;
         state->floorDepth = state->floorHeight;
         hasFloorDepth = 1;
     }
-    else if (lbl_803E369C != state->floorY)
-    {
-        if (((GameObject*)obj)->anim.localPosY > state->floorY)
-        {
-            state->floorY = lbl_803E369C;
-            hasFloorDepth = 0;
-        }
-        else
-        {
-            state->floorDepth = state->floorY - ((GameObject*)obj)->anim.localPosY;
-            hasFloorDepth = 1;
-        }
-    }
     else
     {
+        if (state->floorY != lbl_803E369C)
+        {
+            if (((GameObject*)obj)->anim.localPosY > state->floorY)
+            {
+                state->floorY = lbl_803E369C;
+            }
+            else
+            {
+                state->floorDepth = state->floorY - ((GameObject*)obj)->anim.localPosY;
+                hasFloorDepth = 1;
+                goto floor_done;
+            }
+        }
         hasFloorDepth = 0;
+    floor_done:;
     }
 
     if (hasFloorDepth != 0)
