@@ -2248,21 +2248,21 @@ int fn_800626C8(int* obj, int delta)
 void fn_80069EB8(int param)
 {
     u8* cache;
-    int blk;
+    int hi, mid;
+    u32 scaled;
     u32 j;
+    int blk;
 
     cache = getCache();
     for (blk = 0; (u32)blk < 0x40; blk++)
     {
-        int hi, mid;
-        u32 scaled;
         j = 0;
         hi = ((u32)blk >> 2) << 8;
         mid = (blk & 3) << 3;
         scaled = (blk + param) * 0xff;
         for (; j < 0x40; j++)
         {
-            int idx = (j & 7) + ((j >> 3) << 5) + mid + hi;
+            int idx = (j & 7) + ((j >> 3) << 5) + hi + mid;
             u32 s = scaled;
             if (s > 0x3fc0)
             {
