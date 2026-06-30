@@ -82,9 +82,9 @@ int pressureswitchfb_updateStateMode(int obj, int unused, int stateParam)
             handle = *(u32*)(runtime + offset);
             if (handle != 0)
             {
-                *(f32*)(runtime + (u32)i * 8 + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
+                *(f32*)((trackedObjectSlot = runtime + (u32)i * 8) + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
                     *(f32*)(handle + 0xc);
-                *(f32*)(runtime + (u32)i * 8 + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
+                *(f32*)(trackedObjectSlot + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
                     *(f32*)(*(int*)(runtime + offset) + 0x14);
             }
         }
@@ -97,8 +97,7 @@ int pressureswitchfb_updateStateMode(int obj, int unused, int stateParam)
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
              i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
         {
-            trackedObjectSlot = runtime + i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-            *(int*)(trackedObjectSlot + 0x0) = 0;
+            *(int*)(trackedObjectSlot = runtime + i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET) = 0;
             *(int*)(trackedObjectSlot + 0x4) = 0;
             *(int*)(trackedObjectSlot + 0x8) = 0;
             *(int*)(trackedObjectSlot + 0xc) = 0;
