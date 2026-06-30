@@ -176,14 +176,14 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     buf.variantA = variant;
     buf.ctx = (int)sourceObj;
     buf.variantB = variant;
-    buf.pos[0] = lbl_803E1570;
+    buf.pos[0] = *(f32*)&lbl_803E1570;
     if (posSource != 0)
     {
         buf.pos[1] = ((PartFxSpawnParams*)posSource)->posY;
     }
     else
     {
-        buf.pos[1] = lbl_803E1570;
+        buf.pos[1] = *(f32*)&lbl_803E1570;
     }
     buf.pos[2] = *(f32*)&lbl_803E1570;
     buf.col[0] = *(f32*)&lbl_803E1570;
