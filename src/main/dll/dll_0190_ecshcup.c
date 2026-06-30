@@ -84,7 +84,7 @@ typedef struct
     f32 z;
 } CupVec3;
 
-#pragma peephole on
+#pragma peephole off
 void ecsh_cup_update(short* obj)
 {
     f32 dist;
@@ -107,7 +107,7 @@ void ecsh_cup_update(short* obj)
     if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
     {
         (*(void (*)(int*, u8*))*(int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x28))(&mode, buf);
-        *obj = *obj + state->spinRate;
+        *obj += state->spinRate;
         if (mode != 6)
         {
             state->spawnTimer -= timeDelta;
@@ -159,8 +159,7 @@ void ecsh_cup_update(short* obj)
                 {
                     a = lbl_803E5080;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)(int)
-                a;
+                *(u8*)((char*)obj + 0x37) = (u8)a;
             }
             state->spawnTimer -= timeDelta;
             if (state->spawnTimer <= lbl_803E5068)
@@ -192,8 +191,7 @@ void ecsh_cup_update(short* obj)
                 {
                     a = lbl_803E5068;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)(int)
-                a;
+                *(u8*)((char*)obj + 0x37) = (u8)a;
             }
         }
         else if (m == 8 && m != state->currentMode)
