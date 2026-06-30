@@ -1557,6 +1557,9 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
+
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureSetupFn_800799c0(void);
 extern void geomDrawFn_800796f0(void);
@@ -2246,7 +2249,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     {
         getAmbientColor(0, &ar, &ag, &ab);
     }
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     if (renderModeSetOrGet(-1) == 1)
     {
         return 1;
@@ -2500,11 +2503,11 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if (*(int*)((char*)p[slot] + 0xa4) & 0x40)
         {
-            GXSetCullMode(1);
+            GXSetCullMode(GX_CULL_FRONT);
         }
         else
         {
-            GXSetCullMode(0);
+            GXSetCullMode(GX_CULL_NONE);
         }
         if (*(u8*)((char*)p[slot] + 0x13e) != 0 || (*(int*)((char*)p[slot] + 0xa4) & 0x400))
         {
