@@ -169,43 +169,38 @@ void fn_80204BF8(int obj)
     switch (blob->mode)
     {
     case DLL22C_MODE_ARMED:
-        if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1)
+        if (GameBit_Get(blob->gameBit) != 0 && blob->unk0C != 1 &&
+            Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
         {
-            if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
+            if (object->anim.localPosY < lbl_803E63A0 + placement->posY)
             {
-                if (object->anim.localPosY < lbl_803E63A0 + placement->posY)
+                if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
-                    {
-                        Sfx_PlayFromObject(obj, 0x116);
-                        blob->sfxLatch = 1;
-                    }
-                    object->anim.localPosY += timeDelta;
-                    if (object->anim.localPosY >= lbl_803E63A0 + placement->posY)
-                    {
-                        object->anim.localPosY = lbl_803E63A0 + placement->posY;
-                        blob->mode = DLL22C_MODE_HOLD_SETUP;
-                        Sfx_StopObjectChannel(obj, 8);
-                    }
+                    Sfx_PlayFromObject(obj, 0x116);
+                    blob->sfxLatch = 1;
+                }
+                object->anim.localPosY += timeDelta;
+                if (object->anim.localPosY >= lbl_803E63A0 + placement->posY)
+                {
+                    object->anim.localPosY = lbl_803E63A0 + placement->posY;
+                    blob->mode = DLL22C_MODE_HOLD_SETUP;
+                    Sfx_StopObjectChannel(obj, 8);
                 }
             }
         }
-        else
+        else if (blob->unk0C == 1)
         {
-            if (blob->unk0C == 1)
+            if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
             {
-                if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < lbl_803E639C)
+                y = object->anim.localPosY;
+                k = lbl_803E63A0;
+                if (y < k + placement->posY)
                 {
-                    y = object->anim.localPosY;
-                    k = lbl_803E63A0;
-                    if (y < k + placement->posY)
+                    object->anim.localPosY = y + timeDelta;
+                    if (object->anim.localPosY >= k + placement->posY)
                     {
-                        object->anim.localPosY = y + timeDelta;
-                        if (object->anim.localPosY >= k + placement->posY)
-                        {
-                            object->anim.localPosY = k + placement->posY;
-                            blob->mode = DLL22C_MODE_HOLD_SETUP;
-                        }
+                        object->anim.localPosY = k + placement->posY;
+                        blob->mode = DLL22C_MODE_HOLD_SETUP;
                     }
                 }
             }
