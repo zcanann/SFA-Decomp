@@ -2638,8 +2638,8 @@ void texRestructRefs(int mode)
     printHeapStats(1);
     OSReport(strs + 0x1194);
     testAndSet_onlyUseHeaps1and2(1);
-    off = 0;
     i = 0;
+    off = 0;
     for (; i < gLoadedTextureCount; off += 16, i++)
     {
         tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
@@ -2654,7 +2654,7 @@ void texRestructRefs(int mode)
             {
                 OSReport(strs + 0x11b4, tex, getHeapItemSize(tex));
             }
-            else
+            else if (na != NULL)
             {
                 OSReport(strs + 0x11f4, tex, na, getHeapItemSize(tex));
                 done = 0;
@@ -2675,8 +2675,8 @@ void texRestructRefs(int mode)
     while (done == 0 && pass < 4)
     {
         done = 1;
-        i = 0;
         off = 0;
+        i = off;
         for (; i < gLoadedTextureCount; off += 16, i++)
         {
             tex = ((LoadedTextureEntry*)((u8*)gLoadedTextures + off))->texture;
