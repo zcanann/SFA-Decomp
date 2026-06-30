@@ -15,7 +15,7 @@ typedef struct DoorObjectDef
     u8 unk1C;
     u8 unk1D;
     u8 pad1E[0x20 - 0x1E];
-    u8 unk20;
+    u8 triggerArg; /* 0x20: low 7 bits passed to preempt sequence (== DoorPlacement.triggerArg) */
     u8 rootMotionScaleInput; /* 0x21 */
     s16 closeGameBit;        /* 0x22 */
     u8 pad24[0x28 - 0x24];
