@@ -584,7 +584,7 @@ u32 FUN_80057690(int obj)
     }
     else
     {
-        for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
+        for (planeIdx = 0; planeIdx < FRUSTUM_PLANE_COUNT; planeIdx = planeIdx + 1)
         {
             alpha = planeIdx;
             if (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
@@ -972,7 +972,7 @@ typedef struct
 
 typedef struct
 {
-    f32 v[5];
+    f32 v[FRUSTUM_PLANE_COUNT];
 } _ScalePack;
 
 typedef struct
