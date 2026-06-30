@@ -147,14 +147,14 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
     player = Obj_GetPlayerObject();
     playerState = ((GameObject*)player)->extra;
 
-    if (params->triggerArmed == 1) goto end;
+    if (params->triggerArmed == 1) return;
 
     if (params->triggerHit == 0)
     {
         params->triggerHit = 1;
-        if (params->triggerHit == 0) goto end;
+        if (params->triggerHit == 0) return;
         params->pad2CA[0] = 1;
-        goto end;
+        return;
     }
 
     ObjHits_DisableObject(obj);
