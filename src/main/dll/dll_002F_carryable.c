@@ -175,9 +175,8 @@ int Carryable_updateHeld(u8* obj)
         }
         if (((GameObject*)obj)->unkF8 == 0)
         {
-            int cnt, i, j;
             u8* hit;
-            f32** p;
+            int cnt, i, j;
             ObjHits_SyncObjectPositionIfDirty(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
@@ -190,12 +189,11 @@ int Carryable_updateHeld(u8* obj)
                                        ((GameObject*)obj)->anim.localPosZ, &list, 0, 1);
             hit = 0;
             i = 0;
-            p = list;
             for (j = cnt; j > 0; j--)
             {
-                if (*(s8*)((u8*)*p + 0x14) != 0xe)
+                if (*(s8*)((u8*)list[i] + 0x14) != 0xe)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < **p && ((GameObject*)obj)->anim.localPosY > **p -
+                    if (((GameObject*)obj)->anim.localPosY < *list[i] && ((GameObject*)obj)->anim.localPosY > *list[i] -
                         lbl_803E06E0)
                     {
                         hit = *(u8**)(list[i] + 4);
@@ -204,7 +202,6 @@ int Carryable_updateHeld(u8* obj)
                         break;
                     }
                 }
-                p++;
                 i++;
             }
             i = 0;
