@@ -28,7 +28,7 @@ extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
 
-extern void Obj_PredictInterceptPoint(int, int, f32*, f32);
+extern int Obj_PredictInterceptPoint(int, f32, f32*, f32*);
 extern void PSVECSubtract(f32*, f32*, f32*);
 extern void PSVECNormalize(f32*, f32*);
 extern void PSVECScale(f32*, f32*, f32);
@@ -206,8 +206,8 @@ void drakorenergy_update(int obj)
         }
         else
         {
-            v = (spd = gDrakorEnergyChaseSpeed) / lbl_803E6294;
-            Obj_PredictInterceptPoint(player, obj + 0xc, v1, v);
+            spd = gDrakorEnergyChaseSpeed;
+            Obj_PredictInterceptPoint(player, spd / lbl_803E6294, (f32*)(obj + 0xc), v1);
             PSVECSubtract(v1, (f32*)(obj + 0xc), v2);
             PSVECNormalize(v2, v2);
             if (dist < spd)
