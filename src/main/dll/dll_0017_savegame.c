@@ -219,8 +219,8 @@ extern MapBitTransient gTransientMapBits[];
  * addresses them through a single base register (#16 overlay). */
 typedef struct SaveGameMapState
 {
-    MapBitTransient transient[20]; /* 0x000 */
-    u32 groupStatuses[120];        /* 0x03C */
+    MapBitTransient transient[SAVEGAME_TRANSIENT_MAP_BIT_COUNT]; /* 0x000 */
+    u32 groupStatuses[SAVEGAME_MAP_COUNT];                       /* 0x03C */
     u8 extendedMapActLookup[40];   /* 0x21C */
 } SaveGameMapState;
 #define gSaveGameMapState (*(SaveGameMapState*)gTransientMapBits)
