@@ -128,7 +128,7 @@ int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if ((mode == 1) || (mode == 2))
     {
-        flags = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
+        flags = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = flags;
     }
     animUpdate->activeHitVolumePair = -1;
@@ -162,7 +162,7 @@ void dll_1FB_update(int* obj)
 {
     Dll1FBState* state = (Dll1FBState*)((GameObject*)obj)->extra;
 
-    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0) && (state->triggerMode == 2) &&
+    if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0) && (state->triggerMode == 2) &&
         (GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
