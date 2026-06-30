@@ -2825,15 +2825,7 @@ extern f32 lbl_803DCF58;
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
-    f32 px;
-    f32 dx, dy, sum, cc;
-    f32 dx2, dy2;
-    f32 B, nB, disc, root, denom;
-    f32 t1, t2, t;
-    f32 hitX, hitY, nx, ny, dot, proj;
-    f32 vy4, vy5;
-    f32 step8, step_x, step_y;
-    f32 len2;
+    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, nx, step_y, dot, proj, vy4, vy5, disc, dy, ny, len2;
 
     if (__AR_Callback == r) return 0;
 
