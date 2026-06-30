@@ -72,16 +72,16 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
     textureFn_800528bc();
     if (obj->anim.alpha < 0xff || renderOp->distanceTier <= tier)
     {
-        GXSetBlendMode(1, 4, 5, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         gxSetZMode_(1, 3, 0);
     }
     else
     {
-        GXSetBlendMode(0, 1, 0, 5);
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         gxSetZMode_(1, 3, 1);
     }
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(2);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetCullMode(GX_CULL_BACK);
     return 1;
 }
