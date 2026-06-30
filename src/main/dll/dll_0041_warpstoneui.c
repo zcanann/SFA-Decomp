@@ -57,11 +57,11 @@ extern int* gTitleMenuLinkInterface;
 #pragma peephole off
 int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 {
+    int yoff;
+    u8* idp;
     u8* lastDst;
     int n;
     int k;
-    u8* idp;
-    int yoff;
 
     lastDst = NULL;
     n = 0;
