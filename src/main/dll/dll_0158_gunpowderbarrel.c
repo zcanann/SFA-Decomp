@@ -75,7 +75,7 @@ extern f32 PSVECMag(f32 * v);
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DBE84;
 extern f32 lbl_803E4324;
-extern f32 lbl_803E4328;
+extern const f32 lbl_803E4328;
 extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
@@ -510,14 +510,14 @@ void gunpowderbarrel_hitDetect(int obj)
         state->throwVelX = ((f32*)sp1c)[0] + state->throwVelX;
         state->throwVelY = ((f32*)sp1c)[1] + state->throwVelY;
         state->throwVelZ = ((f32*)sp1c)[2] + state->throwVelZ;
-        sp1c[1] = lbl_803E42C0;
         {
-            f32 g = lbl_803E4328;
-            state->throwVelX = g * state->throwVelX;
-            state->throwVelY = g * state->throwVelY;
-            state->throwVelZ = g * state->throwVelZ;
+            f32 zero = lbl_803E42C0;
+            sp1c[1] = zero;
+            state->throwVelX = lbl_803E4328 * state->throwVelX;
+            state->throwVelY = lbl_803E4328 * state->throwVelY;
+            state->throwVelZ = lbl_803E4328 * state->throwVelZ;
+            state->throwVelY = zero;
         }
-        state->throwVelY = sp1c[1];
         state->motionFlags = (u8)(state->motionFlags | 1);
     }
 
