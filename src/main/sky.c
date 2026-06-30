@@ -1507,8 +1507,8 @@ void sky2_run(void)
 
 void sky2_onMapSetup(void)
 {
-    int i;
     void** slot;
+    int i;
     f32 b;
     f32 a;
 
@@ -1516,30 +1516,31 @@ void sky2_onMapSetup(void)
     (&lbl_803DB610)[1] = -1;
     i = 0;
     slot = (void**)&gSky2State;
+    a = lbl_803DF190;
+    b = lbl_803DF194;
     for (; i < 2; i++)
     {
-        a = lbl_803DF190;
-        b = lbl_803DF194;
-        if (slot[i] == NULL)
+        if (*slot == NULL)
         {
-            slot[i] = mmAlloc(792, 23, 0);
+            *slot = mmAlloc(792, 23, 0);
         }
-        memset(slot[i], 0, 792);
-        *(int*)((char*)slot[i] + 0x24) = 255;
-        *(int*)((char*)slot[i] + 0x28) = 255;
-        *(int*)((char*)slot[i] + 0x2c) = 255;
-        *(f32*)((char*)slot[i] + 0x14) = a;
-        *(f32*)((char*)slot[i] + 0x18) = b;
-        *(int*)((char*)slot[i] + 0x30) = 255;
-        *(int*)((char*)slot[i] + 0x34) = 255;
-        *(int*)((char*)slot[i] + 0x38) = 255;
-        *(f32*)((char*)slot[i] + 0x1c) = a;
-        *(f32*)((char*)slot[i] + 0x20) = b;
+        memset(*slot, 0, 792);
+        *(int*)((char*)*slot + 0x24) = 255;
+        *(int*)((char*)*slot + 0x28) = 255;
+        *(int*)((char*)*slot + 0x2c) = 255;
+        *(f32*)((char*)*slot + 0x14) = a;
+        *(f32*)((char*)*slot + 0x18) = b;
+        *(int*)((char*)*slot + 0x30) = 255;
+        *(int*)((char*)*slot + 0x34) = 255;
+        *(int*)((char*)*slot + 0x38) = 255;
+        *(f32*)((char*)*slot + 0x1c) = a;
+        *(f32*)((char*)*slot + 0x20) = b;
         if (lbl_803DB754 != 0)
         {
             getEnvfxAct(NULL, NULL, 9, 0);
             lbl_803DB754 = 0;
         }
+        slot++;
     }
 }
 
