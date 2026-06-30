@@ -759,10 +759,10 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     extern int ObjHits_IsObjectEnabled(int obj);
     u32 flags;
     int matrixSource;
-    int worldIdx;
+    int iv[2];
     int pointIndex;
     u8* worldBase;
-    int pointOffset;
+    int matrixOffset;
     f32* localPoint;
     f32 resetMin;
     f32 resetRange;
@@ -778,8 +778,8 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
                 (ObjHits_IsObjectEnabled(*(int*)&((GameObject*)obj)->anim.parent) != 0))
             {
                 matrixSource = *(int*)(*(int*)&((GameObject*)obj)->anim.parent + 0x58);
-                pointOffset = (*(u8*)(matrixSource + 0x10c) + 2) * 0x10;
-                Matrix_TransformPoint((f32*)matrixSource + pointOffset,
+                matrixOffset = (*(u8*)(matrixSource + 0x10c) + 2) * 0x10;
+                Matrix_TransformPoint((f32*)matrixSource + matrixOffset,
                                       ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                       ((GameObject*)obj)->anim.localPosZ,
                                       &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
@@ -818,19 +818,21 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             transform.y = ((GameObject*)obj)->anim.worldPosY;
             transform.z = ((GameObject*)obj)->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
-            pointOffset = pointIndex = worldIdx = 0;
+            iv[0] = 0;
             worldBase = (u8*)collision;
+            pointIndex = iv[0];
+            iv[1] = iv[0];
             while (pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
-                localPoint = (f32*)((u8*)collision->segmentLocalPoints + pointOffset);
+                localPoint = (f32*)((u8*)collision->segmentLocalPoints + iv[1]);
                 Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                       (f32*)(worldBase + 8),
-                                      &collision->points[0][worldIdx + 1],
-                                      &collision->points[0][worldIdx + 2]);
+                                      &collision->points[0][iv[0] + 1],
+                                      &collision->points[0][iv[0] + 2]);
                 collision->segmentHitTypes[pointIndex] = -1;
                 worldBase += 0xc;
-                pointOffset += 0xc;
-                worldIdx += 3;
+                iv[1] += 0xc;
+                iv[0] += 3;
                 pointIndex++;
             }
             for (pointIndex = 0;
