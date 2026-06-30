@@ -744,7 +744,7 @@ extern f32 gModelDefaultOriginX;
 extern f32 gModelDefaultOriginY;
 extern f32 gModelDefaultOriginZ;
 extern f32 lbl_803DE828;
-extern f32 gModelVertexScale;
+extern const f32 gModelVertexScale;
 
 ObjModelChain* ObjModelChain_Alloc(void* models, int count)
 {
@@ -780,7 +780,6 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
 void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
 {
     s16* vertex;
-    f32 scale;
 
     vertex = (s16*)(((ModelFileHeader*)model)->vertices + vertexIndex * 6);
     if ((((ModelFileHeader*)model)->flags & 0x800) != 0)
@@ -791,9 +790,9 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     }
     else
     {
-        out[0] = vertex[0] * (scale = gModelVertexScale);
-        out[1] = vertex[1] * scale;
-        out[2] = vertex[2] * scale;
+        out[0] = vertex[0] * gModelVertexScale;
+        out[1] = vertex[1] * gModelVertexScale;
+        out[2] = vertex[2] * gModelVertexScale;
     }
 }
 
