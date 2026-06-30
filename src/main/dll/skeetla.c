@@ -707,12 +707,16 @@ static void* skeetla_validateRouteEntry(void* entry)
 {
     if (entry == NULL)
     {
-        entry = NULL;
+        return NULL;
     }
-    else if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
+    if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
         ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
     {
         entry = NULL;
+    }
+    else
+    {
+        return entry;
     }
 
     return entry;
@@ -947,12 +951,12 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
                     ((TrickyState*)state)->unk532 = ((TrickyState*)state)->unk534;
                 }
             }
-        }
 
-        if (entry == NULL)
-        {
-            entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
-            ((TrickyState*)state)->unk532 = 0;
+            if (entry == NULL)
+            {
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
+                ((TrickyState*)state)->unk532 = 0;
+            }
         }
     }
 
