@@ -270,8 +270,8 @@ void fn_801627F4(int obj)
     f32 hitY;
     f32 unk;
     f32 f;
-    char* state;
     int* ptr;
+    char* state;
     int i;
     int diff;
     int facing;
