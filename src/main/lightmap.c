@@ -1618,11 +1618,12 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     f32 m[12];
     int countShifted;
     int newR;
+    int cursor;
     u32 v;
     int* base;
-    int cursor;
     int nibble;
     int i;
+    u8* s0;
 
     PSMTXConcat(lbl_80396850, p3, m);
     GXLoadTexMtxImm(m, 30, 0);
@@ -1636,11 +1637,12 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, obj, newR, state);
-    state[4] += 4;
-    cursor = state[4];
+    cursor = state[4] + 4;
+    state[4] = cursor;
     countShifted = cursor >> 3;
-    v = ((u8*)state[0])[countShifted];
-    base = (int*)(countShifted + state[0]);
+    s0 = (u8*)state[0];
+    v = s0[countShifted];
+    base = (int*)(state[0] + countShifted);
     v = v | ((u32) * (u8*)((char*)base + 1) << 8);
     v = v | ((u32) * (u8*)((char*)base + 2) << 16);
     state[4] += 4;
