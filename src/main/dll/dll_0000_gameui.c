@@ -1213,7 +1213,7 @@ void pauseMenuDrawText(void)
         s16 clamped;
         clamped = (s16)((target < blit_x) ? target : blit_x);
         if (clamped < 0) clamped = 0;
-        *(s16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
+        *(u16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (clamped >> 1));
     }
 
