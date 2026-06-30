@@ -257,6 +257,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     }
 }
 
+#pragma optimization_level 1
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
     f32 bestPriorityDist;
@@ -313,7 +314,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (((TrickyState*)state)->unk28 != targetPos)
         {
             ((TrickyState*)state)->unk28 = targetPos;
-            *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
+            *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->unkD2 = 0;
         }
     }
@@ -322,6 +323,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     return 1;
 }
 
+#pragma optimization_level reset
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
