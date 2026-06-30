@@ -26,6 +26,26 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define WATERFX_POOL_SIZE 30
 #define WATERFX_MAX_SPLASHES 10
 
+#define GX_BM_BLEND 1
+#define GX_BL_SRCALPHA 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
+#define GX_VA_PNMTXIDX 0
+#define GX_VA_TEX0MTXIDX 1
+#define GX_VA_POS 9
+#define GX_VA_CLR0 11
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_INDEX16 3
+#define GX_POINTS 0xb8
+#define GX_TRIANGLESTRIP 152
+#define GX_VTXFMT2 2
+
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(void* a, void* b, void* ab);
@@ -53,7 +73,7 @@ void waterfx_setupSplashDropPointRender(void)
     u8 ignoredLightColor;
     GXSetPointSize(0x12, 5);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
     GXSetTevKColorSel(0, 0xc);
@@ -69,11 +89,11 @@ void waterfx_setupSplashDropPointRender(void)
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetCullMode(GX_CULL_NONE);
     (*gSkyInterface)->getCurrentAmbientAndLightColors(
         &col[0], &col[1], &col[2], &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
     col[0] = (col[0] >> 2) + 0x80;
@@ -316,7 +336,7 @@ void waterfx_func05(int obj, int renderParam)
     if ((int)gWaterfxRippleCount != 0 || (int)gWaterfxWakeCount != 0 || (int)gWaterfxSplashCount != 0 ||
         (int)gWaterfxDropCount != 0)
     {
-        GXSetCullMode(0);
+        GXSetCullMode(GX_CULL_NONE);
         if ((int)gWaterfxRippleCount != 0)
         {
             fn_8007CAF4((int)gWaterfxRippleTexture);
@@ -348,11 +368,11 @@ void waterfx_func05(int obj, int renderParam)
             GXSetArray(9, gWaterfxSplashPosArray, 0xc);
             GXSetArray(0xd, gWaterfxSplashTexCoordArray, 8);
             GXClearVtxDesc();
-            GXSetVtxDesc(0, 1);
-            GXSetVtxDesc(1, 1);
-            GXSetVtxDesc(9, 3);
-            GXSetVtxDesc(0xb, 3);
-            GXSetVtxDesc(0xd, 3);
+            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+            GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
+            GXSetVtxDesc(GX_VA_POS, GX_INDEX16);
+            GXSetVtxDesc(GX_VA_CLR0, GX_INDEX16);
+            GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
         thr = lbl_803DF2EC;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
@@ -373,7 +393,7 @@ void waterfx_func05(int obj, int renderParam)
             if (d->idx != -1)
             {
                 f32 vx, vy, vz;
-                GXBegin(0xb8, 2, 1);
+                GXBegin(GX_POINTS, GX_VTXFMT2, 1);
                 vz = d->z - playerMapOffsetZ;
                 vy = d->y;
                 vx = d->x - playerMapOffsetX;
@@ -721,9 +741,9 @@ void fn_80095164(WaterParticle* s)
     }
     DCStoreRange(s->pad18, 32);
     GXSetArray(11, s->pad18, 4);
-    GXSetCullMode(1);
+    GXSetCullMode(GX_CULL_FRONT);
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
-    GXSetCullMode(2);
+    GXSetCullMode(GX_CULL_BACK);
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
 }
 
@@ -769,7 +789,7 @@ void waterfx_drawFn_800953fc(void)
     GXResetWriteGatherPipe();
     for (k = 0; k < 15; k++)
     {
-        GXBegin(152, 2, 16);
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT2, 16);
         for (m = 7; m >= 0; m--)
         {
             u8 a = m * 3;
