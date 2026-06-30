@@ -99,11 +99,11 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
 
     listenerCount = 0;
     zero = lbl_803E7880;
-    frontBackSum = zero;
     *distanceOut = zero;
+    frontBackSum = zero;
     one = lbl_803E78A4;
-    pitchSum = frontBackSum;
     *panOut = one;
+    pitchSum = frontBackSum;
     azimuthSum = pitchSum;
     half = lbl_803E78B0;
     k3 = lbl_803E7898;
