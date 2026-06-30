@@ -204,7 +204,7 @@ void drakord_thornbush_hitDetect(int obj)
         {
             if (((GameObject*)hitObj)->anim.seqId != 0x35f &&
                 *(void**)&((DrakordThornbushState*)inner)->lastHitObj != (void*)hitObj &&
-                arrayIndexOf(((DrakordThornbushState*)inner)->hitTable, 2) != -1)
+                arrayIndexOf(((DrakordThornbushState*)inner)->hitTable, 2, hit) != -1)
             {
                 ((DrakordThornbushState*)inner)->lastHitObj = hitObj;
                 Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E6598);
