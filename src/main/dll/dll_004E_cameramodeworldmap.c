@@ -161,10 +161,12 @@ void CameraModeWorldMap_update(u8* obj)
             if (gCamWorldMapState->flags.transitionActive != 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0)
             {
+                u8* mk;
                 fn_8012DDB8(0);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 gCamWorldMapState->flags.transitionActive = 0;
-                *(u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d) = 0;
+                mk = (u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d);
+                *mk = 0;
             }
             if (gCamWorldMapState->flags.transitionActive == 0)
             {
@@ -312,10 +314,12 @@ void CameraModeWorldMap_update(u8* obj)
                 if (gCamWorldMapState->flags.transitionActive != 0 &&
                     (*gScreenTransitionInterface)->isFinished() != 0)
                 {
+                    u8* mk;
                     fn_8012DDB8(1);
                     (*gScreenTransitionInterface)->step(0xc, 1);
                     gCamWorldMapState->flags.transitionActive = 0;
-                    *(u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d) = 1;
+                    mk = (u8*)(*(int*)&((GameObject*)ObjList_FindObjectById(0x43077))->extra + 0x27d);
+                    *mk = 1;
                 }
                 if (gCamWorldMapState->flags.transitionActive == 0)
                 {
