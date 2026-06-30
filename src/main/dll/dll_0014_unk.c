@@ -231,13 +231,15 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     int bboxHit[20];
     int typeIndex;
     u8 traceResult;
+    u64 objPos;
 
     bestDistance = lbl_803E063C;
     bestCurve = NULL;
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
-    curvePos[0] = *(f32*)(obj + 0xc);
+    objPos = obj + 0xc;
+    curvePos[0] = *(f32*)objPos;
     curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
     curvePos[2] = *(f32*)(obj + 0x14);
     voxmaps_worldToGrid(curvePos, objGrid);
