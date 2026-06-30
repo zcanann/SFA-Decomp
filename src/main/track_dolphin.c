@@ -3418,7 +3418,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     f32 e[3];
     f32 tmp14[3];
     f32 hit[3];
-    f32 len, f29, f12;
+    f32 len, f29, f12, zero;
     f32* T = tri;
 
     Vec3_Cross(rayDir, T + 6, nrm);
@@ -3449,7 +3449,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             if (r < *(f32*)&__AR_Callback) r = -r;
             len = len - r;
         }
-        if (len >= __AR_Callback)
+        zero = __AR_Callback;
+        if (len >= zero)
         {
             if (len <= maxd)
             {
@@ -3465,7 +3466,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
                     f12 = (d1 + hit[0] * T[6] + hit[2] * T[8]) -
                         (d2 + T[6] * T[0] + T[8] * T[2]);
                 }
-                if (f12 >= __AR_Callback)
+                if (f12 >= zero)
                 {
                     if (f12 <= T[11])
                     {
