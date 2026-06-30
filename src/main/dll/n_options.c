@@ -86,12 +86,12 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXTexObj vTexObj;
 
     gxSetZMode_(1, 3, 1);
-    GXSetBlendMode(0, 1, 0, 0);
+    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_CLEAR);
     GXSetColorUpdate(1);
     GXSetAlphaUpdate(0);
-    GXSetCullMode(2);
+    GXSetCullMode(GX_CULL_BACK);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetNumTexGens(2);
     GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
     GXSetTexCoordGen2(1, 1, 4, 0x3c, 0, 0x7d);
