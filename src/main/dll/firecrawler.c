@@ -937,13 +937,13 @@ void crawler_update(int* obj, u8* state)
     {
         u8 pad[0xc];
         u8* tC;
-        u8* t10;
+        CrawlerSeq12* t10;
         CrawlerSeq16* t14;
         u8* t18;
         u8 pad2[4];
     } CrawlerDescL;
     CrawlerDescL* d = (CrawlerDescL*)gCrawlerDescriptorTable;
-    u8* t9 = d[((BaddieState*)state)->inWhirlpoolGroup].t10;
+    CrawlerSeq12* t9 = d[((BaddieState*)state)->inWhirlpoolGroup].t10;
     u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].t18;
     u8* t7 = d[((BaddieState*)state)->inWhirlpoolGroup].tC;
     CrawlerSeq16* t6 = d[((BaddieState*)state)->inWhirlpoolGroup].t14;
@@ -994,9 +994,8 @@ void crawler_update(int* obj, u8* state)
         }
         if (*(u8*)(state + 0x33f) != 0)
         {
-            i = *(u8*)(state + 0x33f) * 0x10;
-            Baddie_SetMove(obj, state, *(u8*)((char*)t6 + i + 8), *(f32*)((int)t6 + i), 0,
-                        *(int*)((char*)t6 + i + 4) & 0xff);
+            Baddie_SetMove(obj, state, t6[*(u8*)(state + 0x33f)].moveId,
+                        t6[*(u8*)(state + 0x33f)].spd, 0, t6[*(u8*)(state + 0x33f)].mask & 0xff);
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
             ((GameObject*)obj)->hitVolumeIndex = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].next9;
@@ -1012,19 +1011,16 @@ void crawler_update(int* obj, u8* state)
                 }
                 fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, gCrawlerNearbyObjectBuffer);
                 if ((((BaddieState*)state)->controlFlags &
-                     *(u32*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 4)) == 0
-                    && *(u8*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 9) != 0)
+                     t9[((BaddieState*)state)->seqEntryIndex].mask) == 0
+                    && t9[((BaddieState*)state)->seqEntryIndex].next != 0)
                 {
                     ((BaddieState*)state)->seqEntryIndex =
-                        *(u8*)(t9 + ((BaddieState*)state)->seqEntryIndex * 0xc + 9);
+                        t9[((BaddieState*)state)->seqEntryIndex].next;
                 }
-                i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-                Baddie_SetMove(obj, state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
-                            *(u8*)(t9 + i + 0xa));
-                {
-                    u8* p9 = t9 + 9;
-                    ((BaddieState*)state)->seqEntryIndex = p9[((BaddieState*)state)->seqEntryIndex * 0xc];
-                }
+                Baddie_SetMove(obj, state, t9[((BaddieState*)state)->seqEntryIndex].moveId,
+                            t9[((BaddieState*)state)->seqEntryIndex].spd, 0,
+                            t9[((BaddieState*)state)->seqEntryIndex].mode);
+                ((BaddieState*)state)->seqEntryIndex = t9[((BaddieState*)state)->seqEntryIndex].next;
             }
             else
             {
