@@ -78,6 +78,8 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float len2;
     float inv;
     float d;
+    float jx;
+    float pxv;
     ObjHitsVec3 jointPos;
     ObjHitsVec3 parentPos;
     ObjHitsVec3 axisDir;
@@ -129,7 +131,9 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
             if ((!(jointPos.y - radJ > yMax) || !(parentPos.y - radP > yMax)) &&
                 (!(jointPos.y + radJ < yMin) || !(parentPos.y + radP < yMin)))
             {
-                sumX = (parentPos.x + jointPos.x) - px2;
+                pxv = parentPos.x;
+                jx = jointPos.x;
+                sumX = (pxv + jx) - px2;
                 sumZ = (parentPos.z + jointPos.z) - pz2;
                 limit = *(float*)((u8*)jointData->jointLengths + idx4);
                 if (radJ > radP)
@@ -144,7 +148,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
                 limit = limit * limit;
                 if (sumX * sumX + gObjHitsScalarZero + sumZ * sumZ < limit)
                 {
-                    axisDir.x = parentPos.x - jointPos.x;
+                    axisDir.x = pxv - jx;
                     axisDir.y = parentPos.y - jointPos.y;
                     axisDir.z = parentPos.z - jointPos.z;
                     len2 = *(float*)((u8*)jointData->jointLengths + idx4);
@@ -235,6 +239,8 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float limit;
     float inv;
     float d;
+    float jx;
+    float pxv;
     ObjHitsVec3 jointPos;
     ObjHitsVec3 parentPos;
     ObjHitsVec3 axisDir;
@@ -283,7 +289,9 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
             radP = radii[parent];
             jointData->touchedJoints[joint] = 1;
             jointData->touchedJoints[parent] = 1;
-            sumX = (parentPos.x + jointPos.x) - px2;
+            pxv = parentPos.x;
+            jx = jointPos.x;
+            sumX = (pxv + jx) - px2;
             sumZ = (parentPos.z + jointPos.z) - pz2;
             limit = *(float*)((u8*)jointData->jointLengths + idx4);
             if (radJ > radP)
@@ -298,7 +306,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
             limit = limit * limit;
             if (sumX * sumX + gObjHitsScalarZero + sumZ * sumZ < limit)
             {
-                axisDir.x = parentPos.x - jointPos.x;
+                axisDir.x = pxv - jx;
                 axisDir.y = parentPos.y - jointPos.y;
                 axisDir.z = parentPos.z - jointPos.z;
                 inv = gObjHitsScalarOne / *(float*)((u8*)jointData->jointLengths + idx4);
