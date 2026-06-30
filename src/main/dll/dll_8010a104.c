@@ -21,6 +21,8 @@
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/rom_curve_interface.h"
 
+#define PATHCURVE_NODE_LINK_COUNT 5
+
 /*
  * Local view of the ROM curve-node graph as walked by this DLL. Mirrors the
  * sibling camshipbattle5C node but exposes the five-way neighbour array and the
@@ -36,7 +38,7 @@ typedef struct PathCurveNode {
     s8 type;
     u8 pad1a;
     s8 directionMask;
-    s32 links[5];
+    s32 links[PATHCURVE_NODE_LINK_COUNT];
     u8 pad30;
     u8 tag0;
     u8 tag1;
@@ -67,7 +69,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
 
     node = (int)(*gRomCurveInterface)->getById(*p1);
     noForwardExit = 1;
-    for (slot = 0; slot < 5; slot++)
+    for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
     {
         if (((PathCurveNode*)node)->links[slot] > -1 &&
             (((PathCurveNode*)node)->directionMask & (1 << slot)) == 0)
@@ -78,13 +80,13 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                     ((PathCurveNode*)linked)->tag2 == tag))
             {
                 noForwardExit = 0;
-                slot = 5;
+                slot = PATHCURVE_NODE_LINK_COUNT;
             }
         }
     }
     if (noForwardExit != 0)
     {
-        for (slot = 0; slot < 5; slot++)
+        for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
         {
             if (((PathCurveNode*)node)->links[slot] > -1 &&
                 (((PathCurveNode*)node)->directionMask & (1 << slot)) != 0)
@@ -95,7 +97,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                         ((PathCurveNode*)linked)->tag2 == tag))
                 {
                     *p1 = ((PathCurveNode*)node)->links[slot];
-                    slot = 5;
+                    slot = PATHCURVE_NODE_LINK_COUNT;
                 }
             }
         }
@@ -132,7 +134,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
     for (step = 0; step < span; step++)
     {
         node = (int)(*gRomCurveInterface)->getById(*p2);
-        for (slot2 = 0; slot2 < 5; slot2++)
+        for (slot2 = 0; slot2 < PATHCURVE_NODE_LINK_COUNT; slot2++)
         {
             if (((PathCurveNode*)node)->links[slot2] > -1 &&
                 (((PathCurveNode*)node)->directionMask & (1 << slot2)) == 0)
@@ -143,7 +145,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
                         ((PathCurveNode*)linked)->tag2 == tag))
                 {
                     *p2 = ((PathCurveNode*)node)->links[slot2];
-                    slot2 = 5;
+                    slot2 = PATHCURVE_NODE_LINK_COUNT;
                 }
             }
         }
@@ -163,7 +165,7 @@ int fn_8010A47C(int curve, int* count, int tag)
         done = 1;
         if ((((PathCurveNode*)curve)->type != 0x1b) && (((PathCurveNode*)curve)->type != 0x1a))
         {
-            for (slot = 0; slot < 5; slot++)
+            for (slot = 0; slot < PATHCURVE_NODE_LINK_COUNT; slot++)
             {
                 if ((((PathCurveNode*)curve)->links[slot] > -1) &&
                     ((((PathCurveNode*)curve)->directionMask & (1 << slot)) != 0))
@@ -175,7 +177,7 @@ int fn_8010A47C(int curve, int* count, int tag)
                     {
                         curve = linked;
                         done = 0;
-                        slot = 5;
+                        slot = PATHCURVE_NODE_LINK_COUNT;
                     }
                 }
             }
