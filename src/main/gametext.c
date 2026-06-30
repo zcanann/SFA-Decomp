@@ -661,15 +661,54 @@ void gameTextRenderStrs(char* str, int boxIdx)
     }
 }
 
+static inline int textCountChars(char* lineStr)
+{
+    int charCount;
+    int byteOffset;
+    u32 ch;
+    int charLen;
+
+    charCount = 0;
+    byteOffset = 0;
+    if (lineStr == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
+    {
+        byteOffset += charLen;
+        if (ch >= 0xe000 && ch <= 0xf8ff)
+        {
+            SpecialGlyph* g = lbl_802C86F0;
+            int n;
+            int val;
+            for (n = 46; n-- != 0;)
+            {
+                if (g->key == ch)
+                {
+                    val = g->val;
+                    goto haveVal;
+                }
+                g++;
+            }
+            val = 0;
+        haveVal:
+            byteOffset += val * 2;
+        }
+        else
+        {
+            charCount++;
+        }
+    }
+    return charCount;
+}
+
 void textDisplayFn_800168dc(int textId, TextDisplayState* state)
 {
     GameTextDef* def;
     int charCount;
-    int byteOffset;
     char* lineStr;
     int special;
-    u32 ch;
-    int charLen;
 
     if (*(int*)((u8*)gameTextFonts + 0x1c) == 1)
     {
@@ -687,37 +726,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
         return;
     }
     lineStr = def->strings[state->charIndex];
-    charCount = 0;
-    byteOffset = 0;
-    if (lineStr != NULL)
-    {
-        while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
-        {
-            byteOffset += charLen;
-            if (ch >= 0xe000 && ch <= 0xf8ff)
-            {
-                int n;
-                SpecialGlyph* g = lbl_802C86F0;
-                int val;
-                for (n = 46; n-- != 0;)
-                {
-                    if (g->key == ch)
-                    {
-                        val = g->val;
-                        goto haveVal;
-                    }
-                    g++;
-                }
-                val = 0;
-            haveVal:
-                byteOffset += val * 2;
-            }
-            else
-            {
-                charCount++;
-            }
-        }
-    }
+    charCount = textCountChars(lineStr);
     if (state->active == 0)
     {
         lbl_803DC998 = 0;
