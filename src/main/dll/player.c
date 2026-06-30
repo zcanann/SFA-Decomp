@@ -10686,15 +10686,13 @@ void Lightfoot_RecordCompletedChallengeTargetHit(int obj, int inner, int animSta
 
 void fn_802A96D8(void)
 {
-    void** p;
-    int idx3;
     int obj;
     s8 i;
 
     if (!Obj_IsLoadingLocked()) return;
-    for (i = 0, p = gPlayerSpawnedObjects, idx3 = 0; i < 7; i++)
+    for (i = 0; i < 7; i++)
     {
-        if (*p == NULL)
+        if (gPlayerSpawnedObjects[i] == NULL)
         {
             obj = Obj_AllocObjectSetup(0x24, 0x4ec);
             ObjPath_GetPointWorldPosition(gPlayerPathObject, 0, (char*)obj + 8,
@@ -10703,12 +10701,10 @@ void fn_802A96D8(void)
             *(u8*)((char*)obj + 5) = 1;
             *(u8*)((char*)obj + 6) = 0xff;
             *(u8*)((char*)obj + 7) = 0xff;
-            *(s16*)((char*)obj + 0x1a) = (s16)idx3;
+            *(s16*)((char*)obj + 0x1a) = (s16)(i * 3);
             *(s16*)((char*)obj + 0x1c) = 0;
-            *p = (void*)Obj_SetupObject(obj, 5, -1, -1, 0);
+            gPlayerSpawnedObjects[i] = (void*)Obj_SetupObject(obj, 5, -1, -1, 0);
         }
-        p++;
-        idx3 += 3;
     }
 }
 
