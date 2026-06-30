@@ -11,6 +11,25 @@
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "dolphin/os/OSFastCast.h"
+
+#define GX_BM_NONE 0
+#define GX_BM_BLEND 1
+#define GX_BL_ZERO 0
+#define GX_BL_ONE 1
+#define GX_BL_SRCALPHA 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP 5
+#define GX_GREATER 4
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+#define GX_CULL_NONE 0
+#define GX_VA_POS 9
+#define GX_VA_CLR0 11
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_QUADS 0x80
+#define GX_VTXFMT4 4
+
 extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
@@ -2115,14 +2134,14 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     copyToCache(dstBuf, (void*)slotPoolBase, EXPGFX_POOL_CACHE_LINE_COUNT);
 
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCurrentMtx(0);
     GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
     GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
     GXSetNumChans(1);
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     viewMatrix = Camera_GetViewMatrix();
     GXLoadPosMtxImm((void*)viewMatrix, 0);
     PSMTXCopy((void*)viewMatrix, lbl_803967C0);
@@ -2391,9 +2410,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 Camera_ApplyFullViewport();
                 gxSetZMode_(1, 3, 1);
-                GXSetBlendMode(0, 1, 0, 5);
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 gxSetPeControl_ZCompLoc_(0);
-                GXSetAlphaCompare(4, 0xfe, 0, 4, 0xfe);
+                GXSetAlphaCompare(GX_GREATER, 0xfe, GX_AOP_AND, GX_GREATER, 0xfe);
                 blendMode = 0;
                 zMode = 0;
                 zCompLoc = 0;
@@ -2404,7 +2423,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             if ((s8)zCompLoc != 1)
             {
                 gxSetPeControl_ZCompLoc_(1);
-                GXSetAlphaCompare(7, 0, 0, 7, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 zCompLoc = 1;
             }
             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_DEPTH_MODE_OVERRIDE) != 0)
@@ -2426,13 +2445,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 if ((s8)blendMode != 1)
                 {
-                    GXSetBlendMode(1, 4, 1, 5);
+                    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
                     blendMode = 1;
                 }
             }
             else if ((s8)blendMode != 2)
             {
-                GXSetBlendMode(1, 4, 5, 5);
+                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
                 blendMode = 2;
             }
         }
@@ -2440,7 +2459,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sx -= playerMapOffsetX;
         sz -= playerMapOffsetZ;
         vtxStream = (s16*)slot;
-        GXBegin(0x80, 4, 4);
+        GXBegin(GX_QUADS, GX_VTXFMT4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
             f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
