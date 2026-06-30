@@ -215,7 +215,7 @@ extern f32 gEarthWarriorDegToAngle;
 extern f32 lbl_803E834C;
 extern f32 lbl_803E8350;
 extern f32 lbl_803E8358;
-extern f32 lbl_803E835C;
+extern const f32 lbl_803E835C;
 extern f32 lbl_803E8368;
 extern f32 lbl_803E836C;
 extern f32 lbl_803E8370;
@@ -1225,6 +1225,9 @@ void DR_EarthWarrior_hitDetect(int obj)
 void DR_EarthWarrior_update(int obj)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
+    int p;
+    int j;
+    int i;
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     Obj_GetPlayerObject();
     hitState->hitVolumePriority = 0;
@@ -1309,22 +1312,15 @@ void DR_EarthWarrior_update(int obj)
             s16 angles[4];
             f32 mat[4];
         } w;
-        int p;
-        int j;
-        int i;
-        f32 c8338;
-        f32 c835c;
         vecA[0] = lbl_803E833C * ((GameObject*)obj)->anim.velocityX;
         vecA[1] = lbl_803E8304;
         vecA[2] = lbl_803E833C * ((GameObject*)obj)->anim.velocityZ;
-        c835c = lbl_803E835C;
-        c8338 = lbl_803E8338;
         for (i = 0, p = (int)inner; i < 4; i++)
         {
-            w.mat[1] = c835c * ((GameObject*)obj)->anim.velocityX + ((DREarthWarriorPlacement*)p)->unkB18;
+            w.mat[1] = lbl_803E835C * ((GameObject*)obj)->anim.velocityX + ((DREarthWarriorPlacement*)p)->unkB18;
             w.mat[2] = ((DREarthWarriorPlacement*)p)->unkB1C;
-            w.mat[3] = c835c * ((GameObject*)obj)->anim.velocityZ + ((DREarthWarriorPlacement*)p)->unkB20;
-            w.mat[0] = c8338;
+            w.mat[3] = lbl_803E835C * ((GameObject*)obj)->anim.velocityZ + ((DREarthWarriorPlacement*)p)->unkB20;
+            w.mat[0] = lbl_803E8338;
             w.angles[0] = 2;
             for (j = 2; j != 0; j--)
             {
