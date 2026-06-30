@@ -96,6 +96,15 @@ extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
 extern void OSResumeThread(u8 * thread);
 extern void OSSetErrorHandler(int kind, void* handler);
+// OSSetErrorHandler() error kinds (OSError)
+#define OS_ERROR_SYSTEM_RESET 0
+#define OS_ERROR_MACHINE_CHECK 1
+#define OS_ERROR_DSI 2
+#define OS_ERROR_ISI 3
+#define OS_ERROR_ALIGNMENT 5
+#define OS_ERROR_PERFORMACE_MONITOR 11
+#define OS_ERROR_SYSTEM_INTERRUPT 13
+#define OS_ERROR_PROTECTION 15
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 
 extern u8 gErrDisplayThreadStack[];
@@ -525,14 +534,14 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 
 void fn_80137D28(void)
 {
-    OSSetErrorHandler(0, fn_801388D0);
-    OSSetErrorHandler(1, fn_801388D0);
-    OSSetErrorHandler(2, fn_801388D0);
-    OSSetErrorHandler(11, fn_801388D0);
-    OSSetErrorHandler(13, fn_801388D0);
-    OSSetErrorHandler(15, fn_801388D0);
-    OSSetErrorHandler(3, fn_801388D0);
-    OSSetErrorHandler(5, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_DSI, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_PROTECTION, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_ISI, fn_801388D0);
+    OSSetErrorHandler(OS_ERROR_ALIGNMENT, fn_801388D0);
     OSCreateThread(gErrDisplayThread, fn_80137DF8, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
