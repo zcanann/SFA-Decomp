@@ -18496,7 +18496,6 @@ void fn_802AAD44(int obj)
     int state = *(int*)&((GameObject*)obj)->extra;
     u8* vp = gPlayerHudVtxBuf;
     u8* p = vp;
-    f32* src;
     int i;
     f32 height;
     f32 v;
@@ -18517,10 +18516,9 @@ void fn_802AAD44(int obj)
     GXSetColorUpdate(0);
 
     i = 0;
-    src = lbl_802C2BF0;
-    v = lbl_803E7FA4 * (lbl_803E80C4 - height);
     for (; i < 8; i++)
     {
+        v = lbl_803E7FA4 * (lbl_803E80C4 - height);
         if (i < 4)
         {
             *(s16*)(p + 2) = 0x320;
@@ -18531,20 +18529,19 @@ void fn_802AAD44(int obj)
         }
         if (i < 4)
         {
-            *(s16*)(p + 0) = (lbl_803E7FA4 * src[0]);
-            *(s16*)(p + 4) = (lbl_803E7FA4 * src[2]);
+            *(s16*)(p + 0) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
+            *(s16*)(p + 4) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
         }
         else
         {
-            *(s16*)(p + 0) = (lbl_803E7FA4 * src[0]);
-            *(s16*)(p + 4) = (lbl_803E7FA4 * src[2]);
+            *(s16*)(p + 0) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
+            *(s16*)(p + 4) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
         }
         p[0xc] = 0xff;
         p[0xd] = 0;
         p[0xe] = 0;
         p[0xf] = 0x40;
         p += 0x10;
-        src += 3;
     }
 
     xf.px = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
