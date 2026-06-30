@@ -70,6 +70,21 @@ extern void GXSetVtxDesc(int attr, int type);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int prim, int fmt, int n);
+
+#define GX_BM_BLEND 1
+#define GX_BL_SRCALPHA 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+#define GX_CULL_NONE 0
+#define GX_VA_POS 9
+#define GX_VA_CLR0 11
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_QUADS 0x80
+#define GX_VTXFMT2 2
+
 extern int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
@@ -96,14 +111,14 @@ void fn_801E991C(int p1, char* table)
     textRenderSetupFn_80079804();
     GXSetTevColor(2, color);
     gxSetZMode_(1, 3, 0);
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetCullMode(GX_CULL_NONE);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
     getAmbientColor(0, &r, &g, &b);
@@ -117,7 +132,7 @@ void fn_801E991C(int p1, char* table)
             verts = *(f32**)(p + 0x4c8);
             while (j < *(s16*)(p + 0x4cc) - 2)
             {
-                GXBegin(0x80, 2, 4);
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
                 shColor4u8(*(u8*)&r, *(u8*)&g, *(u8*)&b, (u8) * (s16*)((char*)verts + 0xc));
                 shTexCoord2f32(lbl_803E5AE8, lbl_803E5AE8);
