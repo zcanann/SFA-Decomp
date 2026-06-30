@@ -13,6 +13,15 @@ extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
+
+#define GX_BM_NONE 0
+#define GX_BM_BLEND 1
+#define GX_BL_ZERO 0
+#define GX_BL_ONE 1
+#define GX_BL_SRCALPHA 4
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderFn_8003b8f4(int* obj);
@@ -82,15 +91,15 @@ void fuelcell_modelMtxFn(u8* model)
 {
     if (model[0x37] == 0xff)
     {
-        GXSetBlendMode(0, 1, 0, 5);
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     }
     else
     {
-        GXSetBlendMode(1, 4, 1, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
 void fuelcell_free(int* obj)
