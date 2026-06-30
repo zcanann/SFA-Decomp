@@ -28,6 +28,8 @@
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 
+#define TITLE_SCREEN_TEXTURE_COUNT 19
+
 typedef struct TitlescreenState
 {
     s16 unk0;
@@ -112,7 +114,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
 };
 
 extern void* gTitleScreenMainTex;
-extern void* gTitleScreenTextures[0x13];
+extern void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 extern u8 gTitleScreenSetupDone;
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
@@ -136,7 +138,7 @@ void titlescreen_release(void)
         }
         i++;
     }
-    while (i < 19);
+    while (i < TITLE_SCREEN_TEXTURE_COUNT);
     gTitleScreenSetupDone = 0;
 }
 
@@ -179,7 +181,7 @@ void titlescreen_initialise(void)
     lbl_803DD9D0 = lbl_803E2318;
     lbl_803DD9CC = lbl_803E2318;
     PSMTXIdentity(gTitleScreenMtx);
-    for (i = 0; i < 19; i++)
+    for (i = 0; i < TITLE_SCREEN_TEXTURE_COUNT; i++)
     {
         gTitleScreenTextures[i] = textureLoadAsset(gTitleScreenTextureIds[i]);
     }
