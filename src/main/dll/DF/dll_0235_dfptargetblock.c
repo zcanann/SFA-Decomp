@@ -346,11 +346,9 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
 
 void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
 {
-    s8 pointCount;
-    bool found;
-    int count;
-    u8 bitVal;
     int j;
+    bool found;
+    u8 bitVal;
     int i;
     DfpTargetBlockState* state;
     int model;
@@ -383,18 +381,17 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
             if ((double)point.y == fconv)
             {
                 found = false;
-                pointCount = state->floorPointCount;
-                for (j = 0; j < pointCount; j = j + 1)
+                for (j = 0; j < state->floorPointCount; j = j + 1)
                 {
-                    if ((point.z == state->floorPoints[j].z) && (point.x == state->floorPoints[j].x))
+                    if ((point.x == state->floorPoints[j].x) && (point.z == state->floorPoints[j].z))
                     {
                         found = true;
-                        j = pointCount;
+                        j = state->floorPointCount;
                     }
                 }
                 if (!found)
                 {
-                    state->floorPoints[(int)pointCount].x = point.x;
+                    state->floorPoints[state->floorPointCount].x = *(f32*)&point.x;
                     state->floorPoints[state->floorPointCount].y = point.y;
                     state->floorPoints[state->floorPointCount].z = point.z;
                     state->floorPointCount++;
