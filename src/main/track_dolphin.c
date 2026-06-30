@@ -5439,9 +5439,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
             u8* rec;
             int i0, i1;
             f32 *va, *vb;
-            f32 ax2, ay2, az2, bx2, by2, bz2;
-            f32 ylo, yhi, ha, hb;
-            f32 dx, dz, len;
+            f32 dx, dz, ay2, by2, ha, bz2, az2, ylo, bx2, hb, ax2, yhi, len;
             int mi;
 
             dist = lbl_803DECD0;
