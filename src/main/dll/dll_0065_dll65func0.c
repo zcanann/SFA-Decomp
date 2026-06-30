@@ -837,7 +837,7 @@ void dll_65_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     else
     {
-        buf.scale = lbl_803E0960;
+        buf.scale = lbl_803E0948;
     }
     buf.v40 = 1;
     buf.v3c = 0;
