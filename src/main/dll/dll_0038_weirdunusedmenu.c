@@ -105,7 +105,8 @@ int WeirdUnusedMenu_run(void)
                     (u16)(gWeirdMenuWidgetWork.widgetFlagsA | WIDGET_FLAG_SAVING);
                 gWeirdMenuWidgetWork.widgetFlagsB =
                     (u16)(gWeirdMenuWidgetWork.widgetFlagsB | WIDGET_FLAG_SAVING);
-                (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))();
+                (*(void (*)(u32*))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))(
+                    (u32*)&gWeirdMenuWidgetWork);
             }
         }
         else if (selection == 0)
@@ -129,7 +130,8 @@ int WeirdUnusedMenu_run(void)
                 (u16)(gWeirdMenuWidgetWork.widgetFlagsA & ~WIDGET_FLAG_SAVING);
             gWeirdMenuWidgetWork.widgetFlagsB =
                 (u16)(gWeirdMenuWidgetWork.widgetFlagsB & ~WIDGET_FLAG_SAVING);
-            (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))();
+            (*(void (*)(u32*))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))(
+                (u32*)&gWeirdMenuWidgetWork);
             (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SET_STATE)))(0);
         }
     }
