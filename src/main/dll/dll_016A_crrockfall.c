@@ -320,6 +320,7 @@ void crrockfall_update(int* obj)
                 *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumeId = 1;
                 *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
                 break;
+            case zcEn3_ROCKFALL_MODE_SHATTERED:
             case zcEn3_ROCKFALL_MODE_4:
                 break;
             }
