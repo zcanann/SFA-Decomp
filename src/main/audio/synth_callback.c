@@ -206,10 +206,10 @@ u32 synthAssignHandle(s32 voiceIndex)
     u32 handle;
     SynthVoice* current;
 
+    queuedVoices = gSynthQueuedVoices;
+    allocatedVoices = gSynthAllocatedVoices;
     do
     {
-        queuedVoices = gSynthQueuedVoices;
-        allocatedVoices = gSynthAllocatedVoices;
         handle = gSynthNextHandle;
         gSynthNextHandle = handle + 1;
         gSynthNextHandle &= SYNTH_HANDLE_ID_MASK;
