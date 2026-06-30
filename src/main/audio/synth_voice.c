@@ -245,7 +245,8 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
 
     if ((keymap = dataGetKeymap(id)) != 0)
     {
-        idx = (key & 0x7F) * 8;
+        fullKey = key & 0xFF;
+        idx = (fullKey & 0x7F) * 8;
         if (((KeymapEntry*)(keymap + idx))->id != 0xFFFF)
         {
             if ((((KeymapEntry*)(keymap + idx))->id & 0xC000) != 0x4000)
