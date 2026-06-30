@@ -2313,7 +2313,7 @@ void allocLotsOfTextures(void)
 #pragma opt_propagation reset
 #pragma opt_loop_invariants reset
 #pragma ppc_unroll_speculative on
-#pragma opt_common_subs off
+#pragma opt_common_subs on
 void shadowCreate(int* obj)
 {
     int* cam;
