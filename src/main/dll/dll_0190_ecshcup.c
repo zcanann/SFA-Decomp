@@ -123,7 +123,7 @@ void ecsh_cup_update(short* obj)
         state->bobTimer -= timeDelta;
         if (state->bobTimer <= lbl_803E5068)
         {
-            state->bobDir *= -1;
+            state->bobDir = -state->bobDir;
             state->bobTimer = lbl_803E5070;
         }
         ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->bobDir + ((GameObject*)obj)->
