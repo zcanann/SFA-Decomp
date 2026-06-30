@@ -1364,9 +1364,9 @@ typedef struct EmitterCfg
     f32 vel[7][3];
     f32 g08[3];
     f32 f60;
-    int emit[6];
-    int sub[6];
-    u16 col[6];
+    int emit[EFFECT2_VELOCITY_RANGE_COUNT];
+    int sub[EFFECT2_VELOCITY_RANGE_COUNT];
+    u16 col[EFFECT2_VELOCITY_RANGE_COUNT];
     u8 b_a0;
     u8 b_a1;
     u8 pad[2];
