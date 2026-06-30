@@ -2500,7 +2500,7 @@ void initMapBlocks(void)
     loadAssetFileById(&lbl_803DCE7C, 0x1e);
     loadAssetFileById(&lbl_803DCE80, 0x29);
 
-    q = (u32*)(mb + 0x83a8);
+    q = (u32*)((u8*)(mb + 0x10000) - 0x7c58);
     zero = 0;
     for (i = 0; i < 3; i++)
     {
