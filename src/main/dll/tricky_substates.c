@@ -1483,13 +1483,18 @@ u32 fn_80143DD4(int obj, int* trickyState)
             else
             {
                 bitVal = randomGetRange(0, 6);
-                if (((int)bitVal < 5) && ((int)bitVal >= 0))
+                switch ((int)bitVal)
                 {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
                     tricky_startRandomIdleMove(obj, (int)trickyState);
-                }
-                else
-                {
+                    break;
+                default:
                     objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
+                    break;
                 }
             }
         }
