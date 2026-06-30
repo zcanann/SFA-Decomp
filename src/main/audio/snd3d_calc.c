@@ -468,7 +468,6 @@ void s3dStartQueuedEmitters(void)
     int groupIndex;
     S3DActiveNode* node;
     Snd3DEmitter* emitter;
-    SndSpatialEntry* entry;
     u32 handle;
     u8 studio;
     f32 one;
@@ -517,8 +516,7 @@ void s3dStartQueuedEmitters(void)
 
         start_voice:
             emitter = node->emitter;
-            entry = emitter->entry;
-            if ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice == 0xff))
+            if ((emitter->entry != (SndSpatialEntry*)0x0) && (emitter->entry->assignedVoice == 0xff))
             {
                 goto stop_voice;
             }
