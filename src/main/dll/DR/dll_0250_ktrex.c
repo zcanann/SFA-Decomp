@@ -3,6 +3,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define KTREX_LIGHTNING_COUNT 5
+
 typedef struct KtrexMsgBlob
 {
     int w[4];
@@ -93,7 +95,7 @@ typedef struct KTRexArenaState
     f32 vecY;
     f32 vecZ;
     void* light; /* 0x178 */
-    void* lightning[5]; /* 0x17c: active lightning-strike effect objects */
+    void* lightning[KTREX_LIGHTNING_COUNT]; /* 0x17c: active lightning-strike effect objects */
 } KTRexArenaState;
 
 STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
@@ -347,7 +349,7 @@ void ktrex_free(int obj)
     {
         ModelLightStruct_free(((KTRexArenaState*)gKTRexState)->light);
     }
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < KTREX_LIGHTNING_COUNT; i++)
     {
         void* m = ((KTRexArenaState*)gKTRexState)->lightning[i];
         if (m != 0)
@@ -520,7 +522,7 @@ void ktrex_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     {
         queueGlowRender(((KTRexArenaState*)gKTRexState)->light);
     }
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < KTREX_LIGHTNING_COUNT; i++)
     {
         e = ((KTRexArenaState*)gKTRexState)->lightning[i];
         if (e != NULL)
@@ -1061,7 +1063,7 @@ void ktrex_updateAttackEffects(int obj)
     }
     if ((((KTRexArenaState*)gKTRexState)->timerFA & 0x10) != 0)
     {
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < KTREX_LIGHTNING_COUNT; i++)
         {
             if ((int)randomGetRange(0, 5) == 0 && ((KTRexArenaState*)gKTRexState)->lightning[i] == NULL)
             {
