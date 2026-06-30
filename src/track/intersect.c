@@ -1933,7 +1933,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
 {
     extern Mtx lbl_80396820;
     extern f32 lbl_803DEF28;
-    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEEEC;
@@ -1967,7 +1966,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     a = a * lbl_803DEF28;
     getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
-    PSMTXScale((f32(*)[4])tex_mtx, hudScale, hudScale, hudScale);
+    PSMTXScale((f32(*)[4])tex_mtx, 4.0f, 4.0f, 4.0f);
     tex_mtx[0][3] = a;
     GXLoadTexMtxImm(tex_mtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7D);
