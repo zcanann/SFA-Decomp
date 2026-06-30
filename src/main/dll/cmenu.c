@@ -477,10 +477,10 @@ int cMenuRingModelRenderFn(int obj, int param2, int param3)
     cfg[3] = *(u8*)(obj + 0x37);
     gxFn_80051fb8(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
     textureFn_800528bc();
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, 7, 0);
     gxSetPeControl_ZCompLoc_(0);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     return 1;
 }
 
@@ -567,10 +567,10 @@ int cMenuRingIconRenderFn(int obj, int param2, int param3)
         gxColorFn_80052764(cfg);
     }
     textureFn_800528bc();
-    GXSetBlendMode(1, 4, 5, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, 7, 0);
     gxSetPeControl_ZCompLoc_(0);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     return 1;
 }
 
