@@ -1224,6 +1224,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     f32 extent;
     f32 scaledExtent;
     u8 clipMask;
+    f32* cv;
     int i;
     u8 combinedClipMask;
     f32 zero;
@@ -1257,12 +1258,14 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     }
 
     combinedClipMask = 0x3f;
-    for (i = 0; i < 8; i++)
+    i = 0;
+    cv = cornerBlock.v;
+    zero = lbl_803DE75C;
+    for (; i < 8; i++)
     {
-        zero = lbl_803DE75C;
-        worldPos[0] = localPos[0] + scaledExtent * cornerBlock.v[i * 3 + 0];
-        worldPos[1] = localPos[1] + scaledExtent * cornerBlock.v[i * 3 + 1];
-        worldPos[2] = localPos[2] + scaledExtent * cornerBlock.v[i * 3 + 2];
+        worldPos[0] = localPos[0] + scaledExtent * cv[0];
+        worldPos[1] = localPos[1] + scaledExtent * cv[1];
+        worldPos[2] = localPos[2] + scaledExtent * cv[2];
         PSMTXMultVec((f32*)(light + 0x1f0), worldPos, projected);
         if (zero != projected[2])
         {
@@ -1304,6 +1307,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         {
             return 1;
         }
+        cv += 3;
     }
 
     return 0;
