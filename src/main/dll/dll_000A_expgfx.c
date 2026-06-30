@@ -1912,15 +1912,16 @@ foundFirst:
 }
 
 #pragma dont_inline on
+#pragma opt_strength_reduction on
 int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId)
 {
     ExpgfxTableEntry* entry;
-    ExpgfxTableEntry* table;
     int tableIndex;
     int freeIndex;
 
-    for (tableIndex = 0, entry = gExpgfxTableEntries, table = entry; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++)
+    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++)
     {
+        entry = &gExpgfxTableEntries[tableIndex];
         if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
             (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey))
         {
@@ -1934,9 +1935,9 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
         }
     }
 
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; table++, freeIndex++)
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
     {
-        if (table->refCount == 0)
+        if (gExpgfxTableEntries[freeIndex].refCount == 0)
         {
             gExpgfxTableEntries[freeIndex].refCount = 1;
             gExpgfxTableEntries[freeIndex].resource = resourceHandle;
@@ -1950,6 +1951,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
     debugPrintf(sExpgfxExpTabIsFull);
     return EXPGFX_INVALID_TABLE_INDEX;
 }
+#pragma opt_strength_reduction off
 #pragma dont_inline reset
 
 #pragma opt_propagation off
