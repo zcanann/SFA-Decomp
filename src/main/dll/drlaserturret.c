@@ -321,12 +321,9 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         }
         cv = state->countValue;
         texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-        texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = (cv % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-        {
-            int tens = (int)((long)cv / 10);
-            texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-        }
+        texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         cv = cv / 100;
         if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
         texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
@@ -360,12 +357,9 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             cv = state->digitCount;
             texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-            texture->textureId = (cv - cv / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = (cv % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-            {
-                int tens = (int)((long)cv / 10);
-                texture->textureId = (tens - tens / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-            }
+            texture->textureId = ((cv / 10) % 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             cv = cv / 100;
             if (cv > DR_LASERTURRET_MAX_DIGIT) cv = DR_LASERTURRET_MAX_DIGIT;
             texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
