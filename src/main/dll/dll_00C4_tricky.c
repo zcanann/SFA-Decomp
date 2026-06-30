@@ -1344,7 +1344,7 @@ void Tricky_update(int obj)
             if (*(u32*)&((TrickyState*)state)->unk28 != (u32) & ((TrickyState*)state)->unk72C)
             {
                 *(u32*)&((TrickyState*)state)->unk28 = (u32) & ((TrickyState*)state)->unk72C;
-                *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
+                ((TrickyState*)state)->stateFlags &= ~0x400LL;
                 ((TrickyState*)state)->unkD2 = 0;
             }
         }
