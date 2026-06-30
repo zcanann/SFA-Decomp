@@ -805,10 +805,8 @@ void linkDrawFn_801302c0(void)
 {
     extern s8 gTumbleweedBushItemCount; /* #57 */
     extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* base;
     LinkMenuItemDB* sel;
-    LinkMenuItemDB* p;
-    int four = 4;
+    int four;
     void* tex;
     int i;
     int selLeft;
@@ -817,10 +815,9 @@ void linkDrawFn_801302c0(void)
     int itemRight;
     int w;
 
-    base = gTumbleweedBushItems;
-    sel = base;
-    sel += linkSelected;
-    sel->field38 = four;
+    four = 4;
+    gTumbleweedBushItems[linkSelected].field38 = four;
+    sel = &gTumbleweedBushItems[linkSelected];
     if (((sel->flags & 4) != 0) && ((s8)sel->slots[0] != -1))
     {
         tex = *(void**)(linkTextures + sel->slots[0] * 8);
@@ -847,22 +844,22 @@ void linkDrawFn_801302c0(void)
         selLeft = sel->field06 - 2;
     }
     selRight = selLeft + w;
-    for (i = 0, p = gTumbleweedBushItems; i < gTumbleweedBushItemCount; i++)
+    for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
         if (i != linkSelected)
         {
-            if (((p->flags & 4) != 0) && ((s8)p->slots[0] != -1))
+            if (((gTumbleweedBushItems[i].flags & 4) != 0) && ((s8)gTumbleweedBushItems[i].slots[0] != -1))
             {
-                tex = *(void**)(linkTextures + p->slots[0] * 8);
+                tex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
             }
             else
             {
-                tex = p->texture;
+                tex = gTumbleweedBushItems[i].texture;
             }
             if (tex != NULL)
             {
                 w = ((Texture*)tex)->height;
-                itemLeft = p->field0C;
+                itemLeft = gTumbleweedBushItems[i].field0C;
             }
             else
             {
@@ -874,15 +871,14 @@ void linkDrawFn_801302c0(void)
                 {
                     w = *(u16*)(lbl_802C8680 + 0x4a) + 2;
                 }
-                itemLeft = p->field06 - 2;
+                itemLeft = gTumbleweedBushItems[i].field06 - 2;
             }
             itemRight = itemLeft + w;
             if (itemLeft < selRight && itemRight > selLeft)
             {
-                p->field38 = four;
+                gTumbleweedBushItems[i].field38 = four;
             }
         }
-        p++;
     }
 }
 
