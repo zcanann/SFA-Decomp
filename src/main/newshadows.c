@@ -1804,9 +1804,14 @@ extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 void initFn_8006d020(void)
 {
     u8 saved;
-    f32* e;
+    int attempts;
+    int col;
+    int row;
     int* th;
-    int placed, attempts, tex, row, col, j;
+    int j;
+    f32* e;
+    int tex;
+    int placed;
     u8 collide;
     f32 padFix;
 
