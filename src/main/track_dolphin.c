@@ -1862,9 +1862,9 @@ void MapBlock_initShaders(int obj)
     for (i = 0, outerOff = 0; i < *(u8*)(obj + 0xa2); i++)
     {
         block = *(int*)&((GameObject*)obj)->anim.modelState + outerOff;
-        p = (char*)block;
         for (j = 0; j < *(u8*)(block + 0x41); j++)
         {
+            p = (char*)block + j * 8;
             v = *(int*)&((ObjModelState*)p)->overrideWorldPosY;
             if (v != -1)
             {
@@ -1880,7 +1880,6 @@ void MapBlock_initShaders(int obj)
                 *(int*)&((ObjModelState*)p)->overrideWorldPosY = 0;
             }
             *(u8*)(p + 0x2a) = 0xff;
-            p += 8;
         }
         v = *(int*)(block + 0x34);
         if (v != -1)
