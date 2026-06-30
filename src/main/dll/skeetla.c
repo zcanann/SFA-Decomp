@@ -839,7 +839,7 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 
 int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId)
 {
-    s8 status[8];
+    s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 i;
     u32* route;
     u8* search;
@@ -966,7 +966,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 #pragma peephole off
 void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
 {
-    f32 bestDistances[8];
+    f32 bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT];
     int i;
     void** curves;
     void* curve;
