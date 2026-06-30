@@ -420,7 +420,7 @@ void fn_8023A3E4(int objArg, int hitState)
     int hitType;
     int hitObj;
     int got;
-    GfHitState* s;
+    u8* s;
     int obj;
     u8 adjusted;
     int texIdx;
@@ -428,18 +428,17 @@ void fn_8023A3E4(int objArg, int hitState)
     ObjTextureRuntimeSlot* tex;
 
     obj = objArg;
-    s = (GfHitState*)hitState;
+    s = (u8*)hitState;
     got = ObjHits_GetPriorityHit(objArg, &hitObj, &hitType, &hitVol);
     {
         u8 j;
+        int off;
         for (j = 0; j < 4; j++)
         {
-            int fts = framesThisStep;
-            int off = j + 178;
-            int v = ((u8*)s)[off] - fts;
+            int v = s[off = j + 178] - framesThisStep;
             if (v < 0)
                 v = 0;
-            ((u8*)s)[off] = v;
+            s[off] = v;
         }
     }
     if (got != 0)
@@ -451,25 +450,25 @@ void fn_8023A3E4(int objArg, int hitState)
         case 1:
         case 2:
         {
-            u8* hp = (u8*)s + ht;
+            u8* hp = s + ht;
             if (hp[0xAE] != 0 && hp[0xB2] == 0)
             {
                 hp[0xAE] -= 1;
-                s->timer[hitType] = 6;
-                if (s->hits[hitType] != 0)
+                (s + hitType)[0xB2] = 6;
+                if ((s + hitType)[0xAE] != 0)
                     Sfx_PlayFromObject(obj, 0x484);
                 else
                     Sfx_PlayFromObject(obj, 0x485);
                 switch (hitType)
                 {
                 case 0:
-                    s->pitchVel = -0xfa;
+                    ((GfHitState*)s)->pitchVel = -0xfa;
                     break;
                 case 1:
-                    s->pitchVel = 0xfa;
+                    ((GfHitState*)s)->pitchVel = 0xfa;
                     break;
                 case 2:
-                    s->rollVel = -0xc8;
+                    ((GfHitState*)s)->rollVel = -0xc8;
                     break;
                 }
             }
@@ -479,12 +478,12 @@ void fn_8023A3E4(int objArg, int hitState)
         {
             if (((GameObject*)hitObj)->anim.seqId == 0x605)
             {
-                u8* hp = (u8*)s + ht;
-                if (hp[0xB2] == 0 && hp[0xAE] != 0 && s->mode == 0xc)
+                u8* hp = s + ht;
+                if (hp[0xB2] == 0 && hp[0xAE] != 0 && ((GfHitState*)s)->mode == 0xc)
                 {
                     Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
-                    s->hits[hitType] -= 1;
-                    s->timer[hitType] = 0xc8;
+                    (s + hitType)[0xAE] -= 1;
+                    (s + hitType)[0xB2] = 0xc8;
                 }
             }
             break;
@@ -494,7 +493,7 @@ void fn_8023A3E4(int objArg, int hitState)
     for (i = 0; i < 3; i++)
     {
         int idx = i;
-        u8* p = (u8*)s + idx;
+        u8* p = s + idx;
         if (p[0xAE] != 0)
         {
             if (p[0xB2] != 0)
