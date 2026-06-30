@@ -679,23 +679,29 @@ typedef struct
 extern BlockEntry gShaderRomListSlots[8];
 extern s8 gShaderRomListSlotCount;
 
+static inline int mapFindRomListSlot(char* p2, int id)
+{
+    int i2 = 0;
+    char* q2 = p2;
+    int cn = gShaderRomListSlotCount;
+    int k;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
+            return i2;
+        q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
 void mapBlockFn_80059c2c(u8* outFlags)
 {
     int i;
-    BlockEntry* p;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
-        s8 limit = gShaderRomListSlotCount;
-        for (i = 0, p = gShaderRomListSlots; i < limit; p++, i++)
-        {
-            if (p->field_0 != 0 && outer == p->field_4)
-            {
-                goto checked;
-            }
-        }
-        i = -1;
-    checked:
+        i = mapFindRomListSlot((char*)gShaderRomListSlots, outer);
         if (i == -1)
         {
             outFlags[outer] = 0;
@@ -3226,22 +3232,6 @@ void doPendingMapLoads(void)
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
-
-static inline int mapFindRomListSlot(char* p2, int id)
-{
-    int i2 = 0;
-    char* q2 = p2;
-    int cn = gShaderRomListSlotCount;
-    int k;
-    for (k = 0; k < cn; k++)
-    {
-        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
-            return i2;
-        q2 += 8;
-        i2++;
-    }
-    return -1;
-}
 
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
