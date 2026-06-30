@@ -584,7 +584,7 @@ u32 FUN_80057690(int obj)
     }
     else
     {
-        for (planeIdx = 0; planeIdx < FRUSTUM_PLANE_COUNT; planeIdx = planeIdx + 1)
+        for (planeIdx = 0; planeIdx < 5; planeIdx = planeIdx + 1)
         {
             alpha = planeIdx;
             if (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
@@ -972,7 +972,7 @@ typedef struct
 
 typedef struct
 {
-    f32 v[FRUSTUM_PLANE_COUNT];
+    f32 v[5];
 } _ScalePack;
 
 typedef struct
@@ -1370,6 +1370,7 @@ void playerUpdateFn_8005649c(void)
     int slot;
     int** objs;
     char* cam;
+    int k;
     int** e;
     int i;
     f32 lx, ly, lz;
@@ -1377,13 +1378,13 @@ void playerUpdateFn_8005649c(void)
     objs = ObjGroup_GetObjects(6, &count);
     cam = (char*)Camera_GetCurrentViewSlot();
     Obj_UpdateWorldTransform();
-    for (i = 0; i < 31; i++)
-        *(int*)(lbl_80386648 + i * 0x10 + 0xc) = 0;
+    for (k = 0; k < 31; k++)
+        *(int*)(lbl_80386648 + k * 0x10 + 0xc) = 0;
     *(f32*)(lbl_80386648 + 0) = *(f32*)(cam + 0x44);
     *(f32*)(lbl_80386648 + 4) = *(f32*)(cam + 0x48);
     *(f32*)(lbl_80386648 + 8) = *(f32*)&((GameObject*)cam)->anim.placementData;
     *(int*)(lbl_80386648 + 0xc) = 1;
-    for (i = 0, e = objs; i < count; i++, e++)
+    for (i = 0, e = objs; i < count; e++, i++)
     {
         int* obj = *e;
         slot = *(s8*)((char*)obj + 0x35) + 1;
@@ -2264,7 +2265,7 @@ void mapLoadUnloadObjects(int flag)
     base = lbl_8037E0C0;
     count = 0;
     tp = (int*)(base + 0x41E0);
-    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
+    for (i = 0; i < 5; i++)
     {
         k = 0;
         q = (s16*)(*tp + 0x594);
@@ -2566,7 +2567,7 @@ void beginLoadingMap(void)
     }
     (*gObjectTriggerInterface)->onMapSetup();
     mapInitFn_80069990();
-    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
+    for (i = 0; i < 5; i++)
     {
         a = ((s8**)(base + 0x41F4))[i];
         b = ((s8**)(base + 0x41E0))[i];
@@ -2850,7 +2851,7 @@ void doPendingMapLoads(void)
                     int k8;
                     s8 c;
                     p13 = recs;
-                    for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++)
+                    for (layer = 0; layer < 5; layer++)
                     {
                         s16* ent = (s16*)*bp2;
                         char* g = (char*)*ap2;
@@ -3020,7 +3021,7 @@ void doPendingMapLoads(void)
                         lbl_803DCEB0 = lbl_803DCEB0 - 1;
                         {
                             int* tp2 = eBase;
-                            for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
+                            for (i = 0; i < 5; i++)
                             {
                                 char* g2 = (char*)*tp2;
                                 int t2 = 0;
@@ -3050,7 +3051,7 @@ void doPendingMapLoads(void)
                         {
                             int* ap3 = aBase;
                             int* cp3 = cBase;
-                            for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++)
+                            for (layer = 0; layer < 5; layer++)
                             {
                                 char* g3;
                                 int zz, xx;
