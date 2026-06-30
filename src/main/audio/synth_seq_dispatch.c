@@ -526,12 +526,12 @@ int fn_8026E9D0(u8 voice, u32 param)
     u8* event;
     u32 v;
     int res;
-    f32 k88;
-    f64 k88abs;
-    f32 k80;
-    f32 k84;
     f32 ftotal;
     f32 fm;
+    f64 k88abs;
+    f32 k88;
+    f32 k84;
+    f32 k80;
     u32 flag;
 
     flag = 0;
