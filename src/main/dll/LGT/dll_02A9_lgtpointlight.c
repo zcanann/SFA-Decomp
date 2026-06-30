@@ -216,11 +216,9 @@ void pointlight_init(int obj, int setup)
                                                 (f32)(u32)setupData->distanceFar);
 
         {
-            int brightness = setupData->brightness;
-            if ((u32)brightness >= POINTLIGHT_MAX_SPOT_BRIGHTNESS)
-            {
-                brightness = POINTLIGHT_MAX_SPOT_BRIGHTNESS;
-            }
+            int brightness = (u32)setupData->brightness < POINTLIGHT_MAX_SPOT_BRIGHTNESS
+                                 ? setupData->brightness
+                                 : POINTLIGHT_MAX_SPOT_BRIGHTNESS;
             modelLightStruct_setSpotAttenuation(state->light, brightness, setupData->spotMode);
         }
 
