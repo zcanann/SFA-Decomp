@@ -875,7 +875,7 @@ void dll_D3_update(int* obj)
     int rc;
     int hits;
     f32 vec[4];
-    int aiStack_80[24];
+    int aiStack_80[21];
 #define searchRadius vec[0]
 #define dx vec[1]
 #define dy vec[2]
@@ -948,15 +948,15 @@ void dll_D3_update(int* obj)
             ((TreasureChestState*)state)->targetState = 1;
             ((TreasureChestState*)state)->unk405 = 2;
         }
-    }
 
-    if ((u32)((TreasureChestState*)state)->targetObj != 0 &&
-        ((TreasureChestState*)state)->targetState == 2)
-    {
-        if (((TreasureChestState*)state)->targetDistance <=
-            (f32)(u32)((TreasureChestState*)state)->aggroRange)
+        if ((u32)((TreasureChestState*)state)->targetObj != 0 &&
+            ((TreasureChestState*)state)->targetState == 2)
         {
-            ((TreasureChestState*)state)->targetState = 1;
+            if (((TreasureChestState*)state)->targetDistance <=
+                (f32)(u32)((TreasureChestState*)state)->aggroRange)
+            {
+                ((TreasureChestState*)state)->targetState = 1;
+            }
         }
     }
 
