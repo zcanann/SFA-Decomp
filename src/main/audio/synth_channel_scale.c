@@ -89,13 +89,13 @@ void fn_8026EC44(u32 dt)
     SynthSong* cs;
     SynthStream* st;
     u32* evt;
-    u32 ch;
     u32 ret;
     u32 cb;
     int i;
     int hasFree;
     u32 sum;
     int cnt;
+    u32 ch;
     f32 c0;
     f64 absRange;
     f32 range;
