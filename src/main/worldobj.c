@@ -141,6 +141,7 @@ void worldobj_free(int obj)
     (*gExpgfxInterface)->freeSource(obj);
 }
 
+#pragma opt_common_subs off
 void worldobj_init(int obj, int arg)
 {
     WorldObjState* state = ((GameObject*)obj)->extra;
@@ -260,7 +261,7 @@ void worldobj_init(int obj, int arg)
         state->lookAtTargetRef = 0x4ab03;
         state->attachChildObjectId = 0x4ab09;
         break;
-    case 0x5d9:
+    case 0x5d8:
         state->lookAtTargetRef = 0x4ab04;
         state->attachChildObjectId = 0x4ab0a;
         break;
@@ -270,6 +271,7 @@ void worldobj_init(int obj, int arg)
         break;
     }
 }
+#pragma opt_common_subs reset
 
 void worldobj_update(int obj)
 {
