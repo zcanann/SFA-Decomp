@@ -44,7 +44,7 @@ typedef struct AlphaanimatorPlacement
     u8 startAlpha;
     u8 targetAlpha;
     u8 active;
-    u8 rate;
+    s8 rate;
     u8 modeFlags;
     u8 pad21[0x22 - 0x21];
     u16 fadeMax;
@@ -211,7 +211,7 @@ void alphaanimator_update(int* obj)
         if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                (s16)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
             if (s->alphaLevel <= ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
@@ -225,7 +225,7 @@ void alphaanimator_update(int* obj)
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                (s16)(s->alphaLevel + ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
             if (s->alphaLevel >= ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel = ((AlphaanimatorPlacement*)d)->targetAlpha;
@@ -241,7 +241,7 @@ void alphaanimator_update(int* obj)
         if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                (s16)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
             if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
@@ -252,7 +252,7 @@ void alphaanimator_update(int* obj)
         else
         {
             s->alphaLevel =
-                (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                (s16)(s->alphaLevel + ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
             if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->startAlpha)
             {
                 s->alphaLevel =
@@ -267,7 +267,7 @@ void alphaanimator_update(int* obj)
             if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                    (s16)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
                 if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->targetAlpha)
                 {
                     return;
@@ -282,7 +282,7 @@ void alphaanimator_update(int* obj)
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                    (s16)(s->alphaLevel + ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
                 if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->targetAlpha)
                 {
                     return;
@@ -300,7 +300,7 @@ void alphaanimator_update(int* obj)
             if (((AlphaanimatorPlacement*)d)->startAlpha > ((AlphaanimatorPlacement*)d)->targetAlpha)
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                    (s16)(s->alphaLevel + ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
                 if (s->alphaLevel < ((AlphaanimatorPlacement*)d)->startAlpha)
                 {
                     return;
@@ -315,7 +315,7 @@ void alphaanimator_update(int* obj)
             else
             {
                 s->alphaLevel =
-                    (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement*)d)->rate * framesThisStep);
+                    (s16)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
                 if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->startAlpha)
                 {
                     return;
@@ -331,7 +331,7 @@ void alphaanimator_update(int* obj)
         break;
     case ALPHAANIM_MODE_TIMED:
     {
-        int rate = (s8)((AlphaanimatorPlacement*)d)->rate;
+        int rate = ((AlphaanimatorPlacement*)d)->rate;
         if (rate < 0)
         {
             rate = -rate;
