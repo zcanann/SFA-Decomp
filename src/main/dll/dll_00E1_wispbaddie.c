@@ -752,7 +752,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
             ((BaddieState*)state)->controlFlags =
-                ((BaddieState*)state)->controlFlags & ~0x40LL;
+                ((BaddieState*)state)->controlFlags & ~0x40;
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags | 0x40000000LL;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
