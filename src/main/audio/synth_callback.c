@@ -126,8 +126,7 @@ s32 synthUpdateCallbacks(void)
                 }
             checkThreshold:
                 if (callback->triggerValue >
-                    *(s32*)((u8*)gSynthCurrentVoice + 0x150C +
-                        (callback->controllerIndex * 0x38) + (listIndex * 8)))
+                    (s32)gSynthCurrentVoice->section[callback->controllerIndex].time[listIndex].high)
                 {
                     break;
                 }
