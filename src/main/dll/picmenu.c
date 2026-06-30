@@ -379,8 +379,8 @@ void AttractMovieVideo_Decode(void* param)
     AttractMoviePlayer* player;
     char* db;
     u32 i;
-    u32* compSizes;
     char* dvdData;
+    u32* compSizes;
 
     db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
@@ -390,8 +390,8 @@ void AttractMovieVideo_Decode(void* param)
 
     {
         AttractMoviePlayer* player2;
-        void** readMsg;
         u8* componentKind;
+        void** readMsg;
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
