@@ -143,9 +143,9 @@ extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
-extern TaskHintEntry gTaskHintTable[5];
 /* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
 #define GAMEUI_TASK_HINT_COUNT 5
+extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
 extern u8 pauseMenuState;
 extern s8 pauseMenuFrameCounter;
 extern void padGetAnalogInput(int port, u8* x, u8* y);
