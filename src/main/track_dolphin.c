@@ -4001,9 +4001,9 @@ extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
 
 void renderGlows(void)
 {
-    GlowGXColor fogCol;
-    int sx, sy, sz;
     f32 px, py, pz;
+    int sx, sy, sz;
+    GlowGXColor fogCol;
     f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
