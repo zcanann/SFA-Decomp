@@ -35,6 +35,17 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 extern void GXSetCullMode(int mode);
 
+#define GX_BM_NONE 0
+#define GX_BM_BLEND 1
+#define GX_BL_ZERO 0
+#define GX_BL_ONE 1
+#define GX_BL_SRCALPHA 4
+#define GX_BL_INVSRCALPHA 5
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+#define GX_CULL_BACK 2
+
 #define ICON_VARIANT_PRESS_A 1
 
 int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
@@ -67,16 +78,16 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     textureFn_800528bc();
     if (color.a < 0xff)
     {
-        GXSetBlendMode(1, 4, 5, 5);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         gxSetZMode_(1, 3, 0);
     }
     else
     {
-        GXSetBlendMode(0, 1, 0, 5);
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         gxSetZMode_(1, 3, 1);
     }
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(2);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetCullMode(GX_CULL_BACK);
     return 1;
 }
