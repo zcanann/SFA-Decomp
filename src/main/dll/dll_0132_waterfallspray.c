@@ -165,14 +165,17 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
     *(u32*)&((GameObject*)obj)->unkF4 = 0;
     ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
     v = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
-    if (v < WATERFALLSPRAY_ALT_SFX_DEF_END && v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
+    switch (v)
     {
+    case WATERFALLSPRAY_ALT_SFX_DEF_MIN:
+    case WATERFALLSPRAY_ALT_SFX_DEF_END - 1:
         ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_ALT_SFX_A;
         ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_ALT_SFX_B;
         return;
+    default:
+        ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
+        ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
     }
-    ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
-    ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
 }
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
