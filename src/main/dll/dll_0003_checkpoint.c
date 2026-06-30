@@ -620,8 +620,9 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
         {
             return ang;
         }
-        sum = t0 + dist2 / proj2;
+        sum = dist2 / proj2;
         frac = lbl_803E04E8;
+        sum = t0 + sum;
         if (lbl_803E04E8 != sum)
         {
             frac = t0 / sum;
