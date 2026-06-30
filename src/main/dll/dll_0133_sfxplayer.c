@@ -110,30 +110,30 @@ void sfxplayerObj_free(u8* obj)
     }
 }
 
-#define SFXPLAYER_START_SOUND(sfxExpr) \
-    do { \
-        soundId = (sfxExpr); \
-        if (soundId != 0) { \
-            soundObj = obj; \
-            state->flags = state->flags | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
-            if ((data[0x1c] & 0x10) == 0) { \
-                soundObj = NULL; \
-            } \
-            if (soundObj == NULL || (data[0x1c] & 1) != 0) { \
-                if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
-                    Sfx_AddLoopedObjectSound(soundObj, soundId); \
-                } \
-                else { \
-                    Sfx_PlayFromObject(soundObj, soundId); \
-                } \
-            } \
-            else { \
-                Sfx_PlayAtPositionFromObject(((GameObject*)soundObj)->anim.localPosX, \
-                                             ((GameObject*)soundObj)->anim.localPosY, \
-                                             ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId); \
-            } \
-        } \
-    } while (0)
+static inline void sfxplayerStartSound(u8* obj, u8* data, SfxplayerObjState* state, u16 soundId)
+{
+    u8* soundObj;
+    if (soundId != 0) {
+        soundObj = obj;
+        state->flags = state->flags | SFXPLAYER_RUNTIME_ACTIVE_FLAG;
+        if ((data[0x1c] & 0x10) == 0) {
+            soundObj = NULL;
+        }
+        if (soundObj == NULL || (data[0x1c] & 1) != 0) {
+            if (data[0x1d] == SFXPLAYER_MODE_LOOPED) {
+                Sfx_AddLoopedObjectSound(soundObj, soundId);
+            } else {
+                Sfx_PlayFromObject(soundObj, soundId);
+            }
+        } else {
+            Sfx_PlayAtPositionFromObject(((GameObject*)soundObj)->anim.localPosX,
+                                         ((GameObject*)soundObj)->anim.localPosY,
+                                         ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId);
+        }
+    }
+}
+
+#define SFXPLAYER_START_SOUND(sfxExpr) sfxplayerStartSound(obj, data, state, (sfxExpr))
 
 #define SFXPLAYER_STOP_PAIR() \
     do { \
@@ -164,7 +164,6 @@ void sfxplayerObj_update(u8* obj)
     SfxplayerObjState* state;
     u8* data;
     u8* focusObj;
-    u8* soundObj;
     u16 soundId;
     int bitState;
 
