@@ -18701,10 +18701,11 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
     }
 
     {
+        f32 s4 = *(f32*)((char*)src + 0x4);
         f32 t = lbl_803E7E98;
         *(f32*)((char*)dst + 0x48) =
-            *(f32*)((char*)src + 0x4) +
-            t * (*(f32*)((char*)src + 0x8) - *(f32*)((char*)src + 0x4));
+            s4 +
+            t * (*(f32*)((char*)src + 0x8) - s4);
         *(f32*)((char*)dst + 0x4c) = *(f32*)((char*)src + 0xc);
         *(f32*)((char*)dst + 0x50) =
             *(f32*)((char*)src + 0x14) +
