@@ -1243,7 +1243,8 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         return;
     }
-    contactPoints = KTRex_GetActiveContactPointTable(obj);
+    contactPoints =
+        *(f32**)((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex] + 0x50);
     if ((s8)((KTRexRuntime*)runtime)->hitCountdown != 0 && (hitType == 3 || hitType == 2) &&
         (((KTRexArenaState*)gKTRexState)->timerFA & 0x10) != 0 && hit == 5)
     {
@@ -1276,9 +1277,9 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + (pt = contactPoints + hitType * 4)[1];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posY = pt[2];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + pt[3];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + contactPoints[hitType * 4 + 1];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + contactPoints[hitType * 4 + 3];
         (*gPartfxInterface)->spawnObject((void*)obj, 0x328, gKTRexEffectSpawnWork, 0x200001, -1,
                                          NULL);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
