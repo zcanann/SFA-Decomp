@@ -236,35 +236,27 @@ void saveFileSelect_init(int sel, int slot)
 #pragma dont_inline reset
 void saveSelectSetupMenuItems(SaveSelectPanel* p)
 {
-    int off1;
-    int off2;
     int i;
     char* base;
 
-    i = 0;
-    off1 = 0;
-    off2 = off1;
-    while (i < p->count)
+    for (i = 0; i < p->count; i++)
     {
         base = (char*)saveFileSelect_saveSlotsBase;
         saveFileSelect_saveSlots = (FrontendSaveSlot*)base;
-        if (*(u8*)(base + off1 + 0x20) == 0)
+        if (*(u8*)(base + i * 0x24 + 0x20) == 0)
         {
-            *(u16*)((char*)p->entries + off2) = 0x39d;
-            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) & ~0x1);
-            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) | 0x2);
-            *(int*)((char*)p->entries + off2 + 0x10) = -1;
+            *(u16*)((char*)p->entries + i * 0x3c) = 0x39d;
+            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) & ~0x1);
+            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) | 0x2);
+            *(int*)((char*)p->entries + i * 0x3c + 0x10) = -1;
         }
         else
         {
-            *(u16*)((char*)p->entries + off2) = i;
-            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) & ~0x2);
-            *(u16*)((char*)p->entries + off2 + 0x16) = (u16)(*(u16*)((char*)p->entries + off2 + 0x16) | 0x1);
-            *(int*)((char*)p->entries + off2 + 0x10) = -1;
+            *(u16*)((char*)p->entries + i * 0x3c) = i;
+            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) & ~0x2);
+            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) | 0x1);
+            *(int*)((char*)p->entries + i * 0x3c + 0x10) = -1;
         }
-        off1 += 0x24;
-        off2 += 0x3c;
-        i++;
     }
 }
 
