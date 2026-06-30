@@ -184,7 +184,7 @@ extern f32 lbl_803E25A0;
 extern f32 lbl_803E25A8;
 extern f32 lbl_803E25AC;
 extern const f32 enemySightRange;
-extern f32 lbl_803E25B4;
+extern const f32 lbl_803E25B4;
 extern const f32 lbl_803E25B8;
 extern f32 lbl_803E25BC;
 extern f32 lbl_803E25C0;
@@ -2482,7 +2482,6 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     s16 baseAngle;
     u16 i;
     u8 visible;
-    f32 angleScale;
     f32 angle;
     s16 setupId;
 
@@ -2499,10 +2498,9 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     {
         baseAngle = *(s16*)obj;
     }
-    angleScale = lbl_803E25B4;
     for (i = 0; i < 4; i++)
     {
-        angle = (angleScale * (f32)(s32)((s32)baseAngle + ((u32)(u16)i << 0xe))
+        angle = (lbl_803E25B4 * (f32)(s32)((s32)baseAngle + ((u32)(u16)i << 0xe))
         )
         /
         lbl_803E25B8;
