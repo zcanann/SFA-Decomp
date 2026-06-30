@@ -713,12 +713,14 @@ void arwsquadron_update(int obj)
                 ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 ObjHits_EnableObject(obj);
                 state->phase = ARW_SQUADRON_STATE_ACTIVE;
-                setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
-                if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                 {
-                    flags->f20 = 0;
-                    storeZeroToFloatParam(&state->volleyCooldownTimer);
-                    s16toFloat(&state->volleyCooldownTimer, setupL->volleyCooldown);
+                    ArwSquadronSetup* setupF = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
+                    if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
+                    {
+                        flags->f20 = 0;
+                        storeZeroToFloatParam(&state->volleyCooldownTimer);
+                        s16toFloat(&state->volleyCooldownTimer, setupF->volleyCooldown);
+                    }
                 }
             }
             return;
@@ -726,9 +728,10 @@ void arwsquadron_update(int obj)
     case ARW_SQUADRON_STATE_ACTIVE:
         {
             int leader;
-            ArwSquadronSetup* setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
+            ArwSquadronSetup* setupL;
             int disable;
             ((GameObject*)obj)->anim.alpha = 0xff;
+            setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
             getArwing();
             leader = obj;
             if ((u32)state->leaderObj != 0)
@@ -802,10 +805,10 @@ void arwsquadron_update(int obj)
             }
             if (flags->f80)
             {
-                setupL = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
+                ArwSquadronSetup* setupF = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
                 ObjHits_SetHitVolumeSlot(obj, 0x13, state->hitVolumeMode, 0);
                 if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
-                    arwsquadron_updateVolley(obj, (int)state, (int)setupL);
+                    arwsquadron_updateVolley(obj, (int)state, (int)setupF);
             }
             break;
         }
