@@ -56,7 +56,6 @@ extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
 extern u32 lbl_803E1D38;
 extern u32 lbl_803E1D3C;
 extern u32 lbl_803E1D40;
-extern f32 lbl_803E1D44; /* texture LOD */
 extern s32 gAttractMovieState;
 extern s32 lbl_803DD660;       /* texture-set free queue active */
 extern AIDCallback lbl_803DD668; /* AI DMA done callback */
@@ -140,13 +139,13 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevKColor(2, &kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
     GXInitTexObj(&yTexObj, yBuf, width, height, 1, 0, 0, 0);
-    GXInitTexObjLOD(&yTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
+    GXInitTexObjLOD(&yTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
     GXLoadTexObj(&yTexObj, 0);
     GXInitTexObj(&uTexObj, uBuf, halfWidth = (short)width >> 1, halfHeight = (short)height >> 1, 1, 0, 0, 0);
-    GXInitTexObjLOD(&uTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
+    GXInitTexObjLOD(&uTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
     GXLoadTexObj(&uTexObj, 1);
     GXInitTexObj(&vTexObj, vBuf, halfWidth, halfHeight, 1, 0, 0, 0);
-    GXInitTexObjLOD(&vTexObj, 0, 0, lbl_803E1D44, lbl_803E1D44, lbl_803E1D44, 0, 0, 0);
+    GXInitTexObjLOD(&vTexObj, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
     GXLoadTexObj(&vTexObj, 2);
 }
 
