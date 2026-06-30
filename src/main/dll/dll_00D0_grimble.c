@@ -199,7 +199,7 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg)
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg)
 {
-    extern double sqrtf(double x); /* #57 */
+    extern f32 sqrtf(f32); /* #57 */
  /* #57 */
     u16 zone;
     u16 pad;
@@ -207,6 +207,7 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     f32 z2, y2, x2, z, y, x;
     s16 angle;
     double d;
+    f32 r;
     char* sub;
 
     sub = *(char**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
@@ -254,8 +255,10 @@ int grimble_stateHandlerA00(int obj, char* state, f32 arg)
     x = x - x2;
     y = y - y2;
     z = z - z2;
-    d = sqrtf(x * x + z * z);
-    angle = getAngle(y, (x = d));
+    r = sqrtf(x * x + z * z);
+    d = r;
+    x = r;
+    angle = getAngle(y, d);
     ((GameObject*)obj)->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
