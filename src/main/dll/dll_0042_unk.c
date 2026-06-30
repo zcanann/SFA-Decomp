@@ -463,15 +463,14 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     }
 }
 
-void firstperson_updatePitch(f32 targetY, CameraObject* camera)
+void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
 {
     extern u32 getAngle();
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     int v;
-    f64 d;
 
     v = getAngle((f64)(camera->anim.worldPosY -
-        (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff;
+        (targetY + gCamcontrolModeSettings->targetHeight)), dist) & 0xffff;
     v -= camera->anim.rotY & 0xffff;
     if (v > 0x8000)
     {
@@ -481,10 +480,10 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
     {
         v += 0xffff;
     }
-    d = interpolate((f64)(f32)v,
-                    (f64)(lbl_803E16A4 / gCamcontrolModeSettings->yawResponseFrames),
-                    timeDelta);
-    camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
+    camera->anim.rotY = (s16)(camera->anim.rotY +
+        (int)interpolate((f64)(f32)v,
+                         (f64)(lbl_803E16A4 / gCamcontrolModeSettings->yawResponseFrames),
+                         timeDelta));
 }
 
 void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
