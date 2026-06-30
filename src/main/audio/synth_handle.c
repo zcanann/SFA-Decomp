@@ -30,6 +30,7 @@ typedef struct SynthStartParams
     u8 volume;
     u8 pad11[7];
     u8 active;
+    u8 pad25[15];
 } SynthStartParams;
 
 /*
