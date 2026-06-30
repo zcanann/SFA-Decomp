@@ -321,9 +321,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int state;
     int i;
+    int slot;
     int j;
     int k;
-    int slot;
+    u8* p;
     int setup;
     bool playing;
     u8 blockFlags[120];
@@ -387,13 +388,13 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             else if (Obj_IsLoadingLocked())
             {
                 ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x800;
-                for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
+                for (k = 0, p = (u8*)state; k < 7; p += 4, k = k + 1)
                 {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8*)(setup + 4) = 2;
                     *(u8*)(setup + 5) = 1;
-                    *(s16*)(setup + 0x1a) = j;
-                    *(int*)(slot + 0x700) = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                    *(s16*)(setup + 0x1a) = k;
+                    *(int*)(p + 0x700) = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                             *(int*)&((GameObject*)obj)->anim.parent);
                 }
                 Sfx_PlayFromObject(obj, 0x3db);
