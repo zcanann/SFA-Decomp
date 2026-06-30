@@ -705,11 +705,11 @@ void Sfx_ClearLoopedObjectSounds(void)
 void Sfx_UpdateLoopedObjectSounds(void)
 {
     SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
-    int index;
-    int index2;
-    u8* fp;
     u32* op;
     u16* ip;
+    u8* fp;
+    int index;
+    int index2;
     s16 i;
     u32 obj;
     int removeSound;
