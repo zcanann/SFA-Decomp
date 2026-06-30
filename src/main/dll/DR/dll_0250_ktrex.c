@@ -1277,9 +1277,9 @@ void ktrex_updateContactEffects(int obj, void* runtime)
     {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = playerMapOffsetX + contactPoints[hitType * 4 + 1];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         ((KTRexWork*)gKTRexEffectSpawnWork)->posY = contactPoints[hitType * 4 + 2];
-        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = playerMapOffsetZ + contactPoints[hitType * 4 + 3];
+        ((KTRexWork*)gKTRexEffectSpawnWork)->posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, 0x328, gKTRexEffectSpawnWork, 0x200001, -1,
                                          NULL);
         ((KTRexWork*)gKTRexEffectSpawnWork)->posX -= ((GameObject*)obj)->anim.worldPosX;
