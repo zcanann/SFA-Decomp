@@ -12,11 +12,6 @@ extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
 
-static inline WorldAsteroidsState* worldasteroids_getState(WorldAsteroidsObject* obj)
-{
-    return obj->state;
-}
-
 static inline f32 worldasteroids_s32AsFloat(s32 value)
 {
     return (f32)(s32)
@@ -90,11 +85,11 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
 {
     int baseAngle;
     s16 randomValue;
+    int radiusSeed;
     WorldAsteroidsState* state;
     f32 orbitShape;
-    int radiusSeed;
 
-    state = worldasteroids_getState(obj);
+    state = obj->state;
     baseAngle = randomGetRange(-0x7fff, 0x7fff);
     orbitShape = fsin16Approx(baseAngle);
     if (orbitShape < lbl_803E65E0)
