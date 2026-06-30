@@ -1450,6 +1450,7 @@ extern void AISetStreamVolLeft(int vol);
 extern void AISetStreamVolRight(int vol);
 extern void audioStopAll(void);
 extern void AISetStreamPlayState(int state);
+#define AI_STREAM_STOP 0
 extern void audioReset(void);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
@@ -1567,7 +1568,7 @@ void checkReset(void)
                 break;
             }
         }
-        AISetStreamPlayState(0);
+        AISetStreamPlayState(AI_STREAM_STOP);
         audioReset();
         OSReport(msg + 0x104);
         stopRumble2();
