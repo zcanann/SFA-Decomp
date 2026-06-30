@@ -147,10 +147,8 @@ void fn_8026EC44(u32 dt)
                 }
                 cs = gSynthCurrentVoice;
                 st = &cs->streams[0];
-                freq = (c0 * ((f32)st->cur * dt)) * (c1 * (f32)(u32)
-                st->vol
-                )
-                ;
+                freq = c0 * ((f32)st->cur * dt);
+                freq = freq * (c1 * (f32)(u32)st->vol);
                 val = range * freq;
                 if (!(absRange > fabs(val)))
                 {
