@@ -177,9 +177,10 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     int coordOffset;
     void* shader;
 
+    blockIndex = 0;
     coordOffset = 0;
     vertexOffset = coordOffset;
-    for (blockIndex = 0; blockIndex < (int)(u32)((MapBlockData*)block)->unk9A; blockIndex++)
+    for (; blockIndex < (int)(u32)((MapBlockData*)block)->unk9A; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
         blockLayer = mapBlockFn_80060678((int*)mapBlock);
