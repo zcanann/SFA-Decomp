@@ -380,7 +380,6 @@ void dfropenode_free(void* obj)
 
 typedef struct DfropenodeRenderState
 {
-    u32 objAndParam;
     u8 red;
     u8 green;
     u8 blue;
@@ -400,7 +399,6 @@ void dfropenode_render(int obj, int p2, int p3)
     s16 matrix[0x30];
     f32 originalScale;
 
-    renderState.objAndParam = (u32)p2;
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
     objDef = (int)objAnim->placementData;
@@ -473,7 +471,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
             selectTexture((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex], 0);
-            setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
+            setTextColor((u32*)&p2, renderState.blue, renderState.green, renderState.red,
                          (u8)alpha);
         }
         node = extra->rope->nodes;
@@ -491,7 +489,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 int alpha;
 
                 alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
-                setTextColor(&renderState.objAndParam, renderState.blue, renderState.green,
+                setTextColor((u32*)&p2, renderState.blue, renderState.green,
                              renderState.red, alpha);
             }
             node = extra->rope->nodes;
