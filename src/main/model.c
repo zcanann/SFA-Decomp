@@ -2411,7 +2411,6 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     f32 amp;
     int off;
     int i;
-    int r;
 
     idx = 0;
     hdr = *(u8**)model;
@@ -2440,8 +2439,7 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
         dot = lbl_803DE828;
     }
     scaled = lbl_803DCB48 * (lbl_803DE844 - dot);
-    r = randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
-    amp = r * lbl_803DE848;
+    amp = lbl_803DE848 * randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
     i = 0;
     off = 0;
     while (i < *(int*)(anim + 8) + 1)
@@ -2470,11 +2468,11 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     extern f32 lbl_803DE828;
     extern f32 lbl_803DCED0;
     extern f32 lbl_803DCECC;
+    u8* mtx;
+    int srcOff;
     int dstOff;
     u8* prev;
     int i;
-    u8* mtx;
-    int srcOff;
     u8* state;
     u8* arr;
     u8* src;
