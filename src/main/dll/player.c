@@ -14249,12 +14249,12 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 {
                     py = py + lbl_803E7ED4;
                 }
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x18) = px;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xc) = px;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x1c) = py;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x10) = py;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x20) = pz;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x14) = pz;
+                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xc) =
+                    *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x18) = px;
+                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x10) =
+                    *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x1c) = py;
+                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x14) =
+                    *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x20) = pz;
                 if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
                 {
                     *(s16*)*(int*)((char*)in2 + 0x7f8) =
