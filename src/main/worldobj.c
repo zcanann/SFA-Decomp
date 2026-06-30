@@ -477,7 +477,7 @@ void worldobj_update(int obj)
             {
                 ((GameObject*)child)->anim.rootMotionScale *= lbl_803E6668;
                 ((GameObject*)child)->anim.alpha = 0x96;
-                ((GameObject*)child)->anim.flags |= 0x4000;
+                ((GameObject*)child)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjLink_AttachChild(obj, child, 0);
                 ((GameObject*)obj)->unkF8 = 1;
             }
