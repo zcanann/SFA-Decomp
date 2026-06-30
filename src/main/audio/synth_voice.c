@@ -1093,14 +1093,14 @@ void audioFn_80271498(u32 delta)
     f32 zeroThreshold;
     u8* stateBase;
     f32 fadeDelta;
-    u8* auxAIndex;
-    u8* auxAMIDI;
-    u8* auxBIndex;
-    u8* auxBMIDI;
-    SynthAuxCallback* auxACallback;
     u32* auxAData;
     SynthAuxCallback* auxBCallback;
+    u8* auxBIndex;
+    u8* auxAIndex;
+    u8* auxAMIDI;
+    u8* auxBMIDI;
     u32* auxBData;
+    SynthAuxCallback* auxACallback;
     u16 auxSamplesA[8];
     u16 auxSamplesB[6];
 
