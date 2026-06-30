@@ -270,11 +270,11 @@ void fn_801627F4(int obj)
     f32 hitY;
     f32 unk;
     f32 f;
+    char* state;
     int* ptr;
     int i;
     int diff;
     int facing;
-    char* state;
     char* sub;
 
     state = ((GameObject*)obj)->extra;
@@ -286,17 +286,16 @@ void fn_801627F4(int obj)
         ((GrimbleControl*)sub)->nearestDist = gGrimblePathSearchMaxDist;
         for (i = 0; i < count; i++)
         {
-            if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(*ptr + 0x68)) + 0x30))(
-                    *ptr, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(*(int*)(*(int*)(ptr[i] + 0x68)) + 0x30))(
+                    ptr[i], ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, &dist,
                     &hitY, &unk) != 0 &&
                 dist < ((GrimbleControl*)sub)->nearestDist)
             {
-                ((GrimbleControl*)sub)->candidatePathObj = *ptr;
+                ((GrimbleControl*)sub)->candidatePathObj = ptr[i];
                 ((GrimbleControl*)sub)->nearestDist = dist;
                 ((GrimbleControl*)sub)->candidateProgress = hitY;
             }
-            ptr++;
         }
         if (*(void**)&((GrimbleControl*)sub)->candidatePathObj != NULL)
         {
