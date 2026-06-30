@@ -64,6 +64,7 @@ int Credits_frameStart(void)
     f32 frac;
     CreditsLine* line;
     u8 a;
+    int off;
 
     idx = lbl_803DD970;
     if (idx < 10)
@@ -77,10 +78,11 @@ int Credits_frameStart(void)
         if (lbl_803DD970 < 10)
         {
             i = 0;
+            off = 0;
             cur = *(volatile f32*)&lbl_803DD968;
-            for (; i < gCreditsPages[lbl_803DD970].count; i++)
+            for (; i < gCreditsPages[lbl_803DD970].count; off += 16, i++)
             {
-                line = &gCreditsPages[lbl_803DD970].lines[i];
+                line = (CreditsLine*)((char*)gCreditsPages[lbl_803DD970].lines + off);
                 if (cur < line->t0)
                 {
                     a = 0;
