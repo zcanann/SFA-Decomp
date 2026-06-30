@@ -694,9 +694,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
     extern LinkMenuItem gTumbleweedBushItems[40]; /* #57 */
     extern s8 gTumbleweedBushItemCount; /* #57 */
     int i;
-    int linkedIndex;
     LinkMenuItem* item;
-    LinkMenuItem* ip;
     const char* defaultText;
     const char* errBase;
 
@@ -712,7 +710,6 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
         memcpy(gTumbleweedBushItems, items, count * sizeof(LinkMenuItem));
 
-        ip = items;
         for (i = 0; i < count; i++)
         {
             item = &gTumbleweedBushItems[i];
@@ -736,9 +733,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 OSReport(errBase + 0xe8, item->rightLink);
             }
 
-            if (ip->textureAssetId != -1)
+            if (items[i].textureAssetId != -1)
             {
-                item->texture = textureLoadAsset(ip->textureAssetId);
+                item->texture = textureLoadAsset(items[i].textureAssetId);
             }
             else
             {
@@ -756,10 +753,9 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 linkInitTextures((LinkMenuItemDB*)item);
             }
 
-            linkedIndex = item->leftLink;
-            if ((linkedIndex != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0))
+            if ((item->leftLink != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0))
             {
-                LinkMenuItem* linked = &gTumbleweedBushItems[linkedIndex];
+                LinkMenuItem* linked = &gTumbleweedBushItems[item->leftLink];
                 item->x = linked->x + linked->field14;
                 item->field04 = linked->field04 + linked->field14;
             }
@@ -771,7 +767,6 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             }
 
             item->timer = 4;
-            ip++;
         }
 
         gTumbleweedBushBaseColorR = baseRed;
