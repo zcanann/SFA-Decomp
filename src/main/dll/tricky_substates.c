@@ -1318,7 +1318,7 @@ int trickyFn_80143c04(int obj, int state)
     if (*(u32*)&((TrickyState*)state)->unk28 != followBase)
     {
         *(int*)&((TrickyState*)state)->unk28 = followBase;
-        *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+        *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
         *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
