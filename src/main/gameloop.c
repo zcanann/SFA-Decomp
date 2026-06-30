@@ -240,7 +240,7 @@ void cutsceneExit(void)
 
 
 
-extern void* loadAsset(void* req);
+extern void loadAsset(void* req);
 extern u8 gGameLoopReloadRequested;
 
 typedef struct
@@ -266,7 +266,7 @@ extern void* textureLoad(int texId, u8 flag);
 #pragma peephole on
 #pragma scheduling off
 #pragma peephole off
-void* loadAsset(void* reqVoid)
+void loadAsset(void* reqVoid)
 {
     u8 tmp[0x10];
     AssetReq* req;
@@ -323,7 +323,7 @@ void* loadAssetFileById(int id, int arg)
     gGameLoopAssetReq.f1 = 0;
     gGameLoopAssetReq.f4 = arg;
     gGameLoopAssetReq.f8 = id;
-    return loadAsset(&gGameLoopAssetReq);
+    loadAsset(&gGameLoopAssetReq);
 }
 
 void* loadTextureFile(int id, int arg)
@@ -332,7 +332,7 @@ void* loadTextureFile(int id, int arg)
     gGameLoopAssetReq.f1 = 3;
     gGameLoopAssetReq.f4 = arg;
     gGameLoopAssetReq.f8 = id;
-    return loadAsset(&gGameLoopAssetReq);
+    loadAsset(&gGameLoopAssetReq);
 }
 
 void gameTextLoadDir(int dirId);
@@ -345,7 +345,7 @@ void* getTabEntry(void* dst, int fileId, int offset, int size)
     gGameLoopAssetReq.f8 = (int)dst;
     gGameLoopAssetReq.f10 = offset;
     gGameLoopAssetReq.fc = size;
-    return loadAsset(&gGameLoopAssetReq);
+    loadAsset(&gGameLoopAssetReq);
 }
 
 typedef f32 Mtx[3][4];
@@ -427,7 +427,7 @@ void* animationLoad(int id, s16 a, s16 b, int e, int f)
     gGameLoopAssetReq.fc = b;
     gGameLoopAssetReq.f20 = e;
     gGameLoopAssetReq.f24 = f;
-    return loadAsset(&gGameLoopAssetReq);
+    loadAsset(&gGameLoopAssetReq);
 }
 
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
