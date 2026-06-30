@@ -67,7 +67,7 @@ extern f32 lbl_803E2474;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E2478;
 extern f32 lbl_803E2480;
-extern f32 lbl_803E2484;
+extern const f32 lbl_803E2484;
 extern f32 oneOverTimeDelta;
 extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
@@ -1238,17 +1238,15 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
     u8* def;
     ObjHitsPriorityState* hitState;
     u16 minRadius;
-    f32 scale;
 
     objects = ObjGroup_GetObjects(0x40, &count);
-    scale = lbl_803E2484;
     for (i = 0; i < count; i++)
     {
         obj = objects[i];
         def = *(u8**)&((GameObject*)obj)->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject*)obj)->anim.worldPosX,
-                                    scale * (f32)(u32) * (u16*)(def + 0x18),
-                                    scale * (f32)(u32) * (u16*)(def + 0x1a));
+                                    lbl_803E2484 * (f32)(u32) * (u16*)(def + 0x18),
+                                    lbl_803E2484 * (f32)(u32) * (u16*)(def + 0x1a));
     }
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
@@ -1263,8 +1261,8 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
             if ((hitState != NULL) && ((*(s16*)&hitState->flags & 1) != 0))
             {
                 trickyAdjustStepAroundPoint(start, end, guardPoint, &((GameObject*)obj)->anim.worldPosX,
-                                            scale * (f32)(u32)minRadius,
-                                            scale * (f32)(u32) * (u16*)(def + 0x86));
+                                            lbl_803E2484 * (f32)(u32)minRadius,
+                                            *(f32*)&lbl_803E2484 * (f32)(u32) * (u16*)(def + 0x86));
             }
         }
     }
