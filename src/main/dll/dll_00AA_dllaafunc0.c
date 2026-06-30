@@ -56,7 +56,7 @@ void dll_AA_func03(int sourceObj, int variant, u8* posSource, u32 seqFlags)
         (2, scale, lbl_803E1624, scale, 0x15, &tab[0x1b0]);
     (*gModgfxInterface)->nextSequenceParam();
     (*gModgfxInterface)->addSequenceSpawn
-        (4, lbl_803E160C, lbl_803E160C, lbl_803E160C, 7, &tab[0x174]);
+        (4, 0.0f, 0.0f, 0.0f, 7, &tab[0x174]);
     (*gModgfxInterface)->spawnSequence
         (posSource, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
