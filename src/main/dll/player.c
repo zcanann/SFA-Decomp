@@ -5488,7 +5488,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
-            inner->activeHitWindow = -1;
+            *(u8*)&inner->activeHitWindow = 0xFF;
             ((PlayerState*)state)->baddie.animSpeedC = z;
             ((PlayerState*)state)->baddie.animSpeedB = z;
             ((PlayerState*)state)->baddie.animSpeedA = z;
