@@ -771,7 +771,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
         }
         if (tableB != NULL)
         {
-            int hitVal = ((s8*)tableB)[hit - 2];
+            int hitVal = (s8)tableB[hit - 2];
             if (hitVal != -1)
             {
                 v24 = hitVal;
@@ -814,9 +814,9 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 }
                 *(s8*)(baddieState + 847) = hit;
             }
-            Sfx_StopObjectChannel((int*)obj, 16);
-            ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
         }
+        Sfx_StopObjectChannel((int*)obj, 16);
+        ObjMsg_SendToObject(hitId, 0xe0001, obj, 0);
     }
     return hit;
 }
