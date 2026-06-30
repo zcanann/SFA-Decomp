@@ -31,10 +31,10 @@ void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
 void nw_ice_update(int* obj)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */
+    int** scan;
+    int i;
     NwIcePlacement* setup;
     NwIceState* state;
-    int i;
-    int** scan;
     int** objects;
     int* candidate;
     int count;
