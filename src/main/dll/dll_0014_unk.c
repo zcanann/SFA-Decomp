@@ -2677,8 +2677,6 @@ int RomCurve_func16(double x, double y, double z)
     int* curveList;
     int out;
     int currentCurve;
-    int* p;
-    u32* end;
 
     candidateCount = 0;
     i = 0;
@@ -2703,21 +2701,16 @@ int RomCurve_func16(double x, double y, double z)
         currentCurve = Objfsa_FindRomCurveById(candidateIds[0]);
         category = ((ObjfsaRomCurveDef*)currentCurve)->action;
         i = 0;
-        p = (int*)candidateIds;
-        end = top;
         while (i < candidateCount)
         {
-            currentCurve = Objfsa_FindRomCurveById(*p);
+            currentCurve = Objfsa_FindRomCurveById(candidateIds[i]);
             if (((ObjfsaRomCurveDef*)currentCurve)->action == category)
             {
-                end--;
-                top--;
                 candidateCount--;
-                *p = *end;
+                candidateIds[i] = candidateIds[candidateCount];
             }
             else
             {
-                p++;
                 i++;
             }
         }
