@@ -1393,6 +1393,8 @@ extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* 
 extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
+
+#define GX_CULL_NONE 0
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
 
@@ -1583,7 +1585,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
     Camera_LoadModelViewMatrix(ctx, renderParam, &s, lbl_803DF4B8, lbl_803DF4A8, 0);
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
