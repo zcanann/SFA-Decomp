@@ -124,7 +124,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
         {
             ((GameObject*)effectObj)->objectFlags |= 0x200;
             memcpy(((GameObject*)effectObj)->anim.placement, spawnDef, *(u8*)((int)spawnDef + 2));
-            ((GameObject*)effectObj)->anim.flags &= ~0x4000;
+            ((GameObject*)effectObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((GameObject*)effectObj)->anim.localPosX = *(float*)((int)spawnDef + 8);
             ((GameObject*)effectObj)->anim.localPosY = *(float*)((int)spawnDef + 0xc);
             ((GameObject*)effectObj)->anim.localPosZ = *(float*)((int)spawnDef + 0x10);
@@ -156,7 +156,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
         ((GameObject*)obj)->objectFlags &= ~0x200;
         Obj_RemoveFromUpdateList(obj);
         ((GameObject*)obj)->objectFlags |= 0x8000;
-        ((GameObject*)obj)->anim.flags |= 0x4000;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else
     {
