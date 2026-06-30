@@ -9,10 +9,7 @@
 typedef struct Dll19APlacement
 {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
+    u8 color[4]; /* 0x04: RGBA tint -> spawn setup color[4] */
     u8 pad8[0x1F - 0x8];
     s8 gateBitIndex; /* added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child as link index */
 } Dll19APlacement;
@@ -100,10 +97,10 @@ void dll_19A_update(int obj)
             newObj->posX = ((ObjPlacement*)setup)->posX;
             newObj->posY = ((ObjPlacement*)setup)->posY;
             newObj->posZ = ((ObjPlacement*)setup)->posZ;
-            newObj->color[0] = ((Dll19APlacement*)setup)->unk4;
-            newObj->color[1] = ((Dll19APlacement*)setup)->unk5;
-            newObj->color[2] = ((Dll19APlacement*)setup)->unk6;
-            newObj->color[3] = ((Dll19APlacement*)setup)->unk7;
+            newObj->color[0] = ((Dll19APlacement*)setup)->color[0];
+            newObj->color[1] = ((Dll19APlacement*)setup)->color[1];
+            newObj->color[2] = ((Dll19APlacement*)setup)->color[2];
+            newObj->color[3] = ((Dll19APlacement*)setup)->color[3];
             newObj->unk27 = 1;
             newObj->unk18 = 0x1e7;
             newObj->unk30 = 0xffff;
