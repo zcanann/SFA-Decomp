@@ -686,6 +686,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
     }
 }
 
+#pragma peephole on
 int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
 {
     int count;
@@ -693,10 +694,13 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     f32 bestDist;
     int* list;
     int i;
+    int* groupObjects;
     u32 best = 0;
 
-    list = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
-    for (i = 0; (s16)i < count; i++)
+    groupObjects = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
+    i = 0;
+    list = groupObjects;
+    for (; (s16)i < count; i++)
     {
         d = getXZDistance((float*)(*list + 0x18), trickyState->guardPoint);
         if (best == 0)
@@ -731,6 +735,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     }
     return 0;
 }
+#pragma peephole off
 
 void fn_8014128C(void)
 {
