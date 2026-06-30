@@ -393,7 +393,7 @@ void kaldachom_update(int obj)
 {
     int cond;
     u32 player;
-    ObjTextureRuntimeSlot* texture;
+    int texture;
     int ref;
     int state;
     f32 scrollPhase;
@@ -427,12 +427,12 @@ void kaldachom_update(int obj)
             kaldachom_updateCombat(obj, state, state);
             if (((CampfireState*)state)->targetState == 0)
             {
-                KaldaChomControl* control = ((CampfireState*)state)->control;
-                control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
-                if (control->pullupSfxTimer <= lbl_803E3060)
+                texture = (int)((CampfireState*)state)->control;
+                ((KaldaChomControl*)texture)->pullupSfxTimer = ((KaldaChomControl*)texture)->pullupSfxTimer - timeDelta;
+                if (((KaldaChomControl*)texture)->pullupSfxTimer <= lbl_803E3060)
                 {
                     Sfx_PlayFromObject(obj, SFXkr_pullup2);
-                    control->pullupSfxTimer = (f32)(int)
+                    ((KaldaChomControl*)texture)->pullupSfxTimer = (f32)(int)
                     randomGetRange(300, 600);
                 }
                 player = Obj_GetPlayerObject();
@@ -453,14 +453,14 @@ void kaldachom_update(int obj)
             }
             else
             {
-                KaldaChomControl* control = ((CampfireState*)state)->control;
-                texture = objFindTexture((void*)obj, 0, 0);
-                control->textureScrollAngle += 0x1000;
-                scrollPhase = mathSinf((gKaldachomPi * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
+                ref = (int)((CampfireState*)state)->control;
+                texture = (int)objFindTexture((void*)obj, 0, 0);
+                ((KaldaChomControl*)ref)->textureScrollAngle += 0x1000;
+                scrollPhase = mathSinf((gKaldachomPi * (f32)(s32)((KaldaChomControl*)ref)->textureScrollAngle) / lbl_803E30B8
                 )
                 ;
                 scrollPhase = lbl_803E3078 + scrollPhase;
-                texture->textureId = (int)(lbl_803E30B0 * scrollPhase);
+                ((ObjTextureRuntimeSlot*)texture)->textureId = (int)(lbl_803E30B0 * scrollPhase);
                 player = Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 kaldachom_handleAnimEvents(obj, state, state);
