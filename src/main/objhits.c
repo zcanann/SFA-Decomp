@@ -1541,10 +1541,10 @@ void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState
 
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
 {
-    ObjHitsPriorityState* stateA;
+    ObjHitsPriorityState* attStateB;
     ObjHitsPriorityState* stateB;
     ObjHitsPriorityState* attStateA;
-    ObjHitsPriorityState* attStateB;
+    ObjHitsPriorityState* stateA;
     ObjHitsModelBank* hitboxBuf;
     u32 bufIndex;
     u32 mask;
