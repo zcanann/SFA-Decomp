@@ -2211,23 +2211,21 @@ void lightmap_sortTransparentDrawQueue(void)
 {
     int i, j;
     int gap = 1;
-    LightSortEntry* arr;
     LightSortEntry tmp;
     while (gap <= (lbl_803DCE30 - 1) / 9)
         gap = gap * 3 + 1;
-    arr = (LightSortEntry*)lbl_8037E0C0;
     while (gap > 0)
     {
         for (i = gap + 1; i <= lbl_803DCE30; i++)
         {
-            tmp = arr[i - 1];
+            tmp = ((LightSortEntry*)lbl_8037E0C0)[i - 1];
             j = i;
-            while (j > gap && arr[j - gap - 1].key < tmp.key)
+            while (j > gap && ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1].key < tmp.key)
             {
-                arr[j - 1] = arr[j - gap - 1];
+                ((LightSortEntry*)lbl_8037E0C0)[j - 1] = ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1];
                 j -= gap;
             }
-            arr[j - 1] = tmp;
+            ((LightSortEntry*)lbl_8037E0C0)[j - 1] = tmp;
         }
         gap /= 3;
     }
