@@ -2132,14 +2132,14 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - 64.0f;
+        cy = i - Dev_803DED1C;
         isum = lowoff + rowoff;
-        cy = cy * 0.015625f;
+        cy = cy * Yachuff_803DEDE0;
         for (; j < 0x80; j++)
         {
             int base = gNewShadowFalloffTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
             f32 d2 = sqrtf(cx * cx + cy * cy);
             *(u8*)(base + off) = (d2 < 0.5f)
                                      ? 0xa0
@@ -2156,15 +2156,15 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - 64.0f;
+        cy = i - Dev_803DED1C;
         isum = lowoff + rowoff;
-        cy = cy * 0.015625f;
+        cy = cy * Yachuff_803DEDE0;
         cy = __fabsf(cy);
         for (; j < 0x80; j++)
         {
             int base = gNewShadowRadialTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = __fabsf(((f32)j - 64.0f) * 0.015625f);
+            f32 cx = __fabsf(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0);
             f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v = 1.0f - d2;
             if (v < 0.0f) v = 0.0f;
@@ -2208,14 +2208,14 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - 64.0f;
+        cy = i - Dev_803DED1C;
         isum = lowoff + rowoff;
-        cy = cy * 0.015625f;
+        cy = cy * Yachuff_803DEDE0;
         for (; j < 0x80; j++)
         {
             int base = gNewShadowRingTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
             f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v;
             if (d2 < 0.25f || d2 > 0.75f)
