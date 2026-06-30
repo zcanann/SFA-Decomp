@@ -16870,8 +16870,8 @@ void fn_802ADE80(int obj, int inner, int state)
     loopCount = (((PlayerState*)inner)->waterSurfaceY - v.mat[2] > lbl_803E7F10) ? 1 : 0;
     {
         f32 div0 = lbl_803E7FA4;
-        f32 div1 = lbl_803E808C;
         f32 zero = lbl_803E7EA4;
+        f32 div1 = lbl_803E808C;
         for (i = 0; i < loopCount; i++)
         {
             pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / div0;
