@@ -97,7 +97,6 @@ void dll_1DA_update(int obj)
     f32 d;
     int n;
     int list;
-    int p;
     int i;
     RockHitInfo out;
 
@@ -151,17 +150,15 @@ void dll_1DA_update(int obj)
                              &list, 0, 0x11);
     ((Dll1DAState*)sub)->grounded = 0;
     i = 0;
-    p = list;
     for (; n > 0; n--)
     {
-        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + **(f32**)p)
+        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + **(f32**)(list + i * 4))
         {
             ((GameObject*)obj)->anim.localPosY = **(f32**)(list + i * 4);
             ObjHits_AddContactObject(*(int*)(*(int*)(list + i * 4) + 0x10), obj);
             ((Dll1DAState*)sub)->grounded = 1;
             break;
         }
-        p += 4;
         i++;
     }
     if (((GameObject*)obj)->anim.localPosY < *(f32*)sub)
