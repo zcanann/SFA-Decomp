@@ -2403,13 +2403,13 @@ void ObjHits_Update(int objectCount)
     u8 skeletonHits[1512];
     u8 skeletonScratchD[100];
     u8 skeletonScratchE[100];
+    ObjHitsSweepEntry** entrySlot;
     int listCount;
-    int startIndex;
     int* objectList;
     ObjHitsSweepEntry* sweepEntries;
     ObjHitsSweepEntry* nextEntry;
-    ObjHitsSweepEntry** entrySlotBase;
-    ObjHitsSweepEntry** entrySlot;
+    int slotCount;
+    int startIndex;
     ObjHitsSweepEntry* entry;
     ObjHitsSweepEntry* candidateEntry;
     int obj;
@@ -2418,7 +2418,7 @@ void ObjHits_Update(int objectCount)
     u32 candAttachedObj;
     ObjHitsPriorityState* objState;
     ObjHitsPriorityState* candState;
-    int slotCount;
+    ObjHitsSweepEntry** entrySlotBase;
     int slotIndex;
     int currentIndex;
     int candidateIndex;
