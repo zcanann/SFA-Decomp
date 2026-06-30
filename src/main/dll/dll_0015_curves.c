@@ -875,10 +875,10 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
-    int worldIdx;
+    int iv[2];
     int pointIndex;
     u8* worldBase;
-    int pointOffset;
+
     f32* localPoint;
     f32 one;
     CurvesTransformScratch transform;
@@ -904,20 +904,20 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        worldIdx = 0;
+        iv[0] = 0;
         worldBase = (u8*)collision;
-        pointIndex = worldIdx;
-        pointOffset = worldIdx;
+        pointIndex = iv[0];
+        iv[1] = iv[0];
         while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
+            localPoint = (f32*)((u8*)collision->localPointPositions + iv[1]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   (f32*)(worldBase + 228),
-                                  &collision->localPointWorld[0][worldIdx + 1],
-                                  &collision->localPointWorld[0][worldIdx + 2]);
+                                  &collision->localPointWorld[0][iv[0] + 1],
+                                  &collision->localPointWorld[0][iv[0] + 2]);
             worldBase += 0xc;
-            pointOffset += 0xc;
-            worldIdx += 3;
+            iv[1] += 0xc;
+            iv[0] += 3;
             pointIndex++;
         }
         pointIndex = 0;
