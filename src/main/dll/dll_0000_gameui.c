@@ -1593,7 +1593,7 @@ void drawWorldMapHud(void)
  * best-time entries with a pulsing header. */
 void timeListDraw(void)
 {
-    u16 bits[6] = {0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8};
+    u16 bits[GAMEUI_TIME_LIST_COUNT] = {0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8};
     char buf[0x24];
 
     if (pauseMenuState != 0)
