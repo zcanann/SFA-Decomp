@@ -888,8 +888,8 @@ void fireball_init(int* obj)
                 lightSetFieldBC_8001db14(*(int*)state, 1);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(*(int**)state, ((u8*)lbl_80320978)[c],
-                                                 (base1 = (u8*)lbl_80320978 + 1)[c],
-                                                 (base2 = (u8*)lbl_80320978 + 2)[c], 0);
+                                                 (base1 = (u8*)lbl_80320978 + 1)[((FireballState*)state)->colorIndex * 3],
+                                                 (base2 = (u8*)lbl_80320978 + 2)[((FireballState*)state)->colorIndex * 3], 0);
                 modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E3358, lbl_803E3378);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], base1[c],
