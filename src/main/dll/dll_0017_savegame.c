@@ -255,14 +255,8 @@ void saveGame_unsaveObjectPos(u8* obj)
     int i;
     SaveGameObjectPosition* slot;
     u32 objectId;
-    int status;
 
-    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
-    {
-        return;
-    }
-    status = saveGameLoadStatus;
-    if (status != 0)
+    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0 || (s32)saveGameLoadStatus != 0)
     {
         return;
     }
