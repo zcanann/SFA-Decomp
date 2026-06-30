@@ -1249,6 +1249,21 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int a, int b);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int type, int fmt, int n);
+
+#define GX_BM_BLEND 1
+#define GX_BL_ONE 1
+#define GX_BL_SRCALPHA 4
+#define GX_LO_NOOP 5
+#define GX_ALWAYS 7
+#define GX_AOP_AND 0
+#define GX_CULL_NONE 0
+#define GX_VA_POS 9
+#define GX_VA_CLR0 11
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_QUADS 128
+#define GX_VTXFMT2 2
+
 extern f32 lbl_803E3294;
 
 #pragma opt_common_subs off
@@ -1262,14 +1277,14 @@ void staffDrawSwipe(int* obj, int* swipe)
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();
     gxSetZMode_(1, 3, 0);
-    GXSetBlendMode(1, 4, 1, 5);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(0);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GXSetCullMode(GX_CULL_NONE);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(11, 1);
-    GXSetVtxDesc(13, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
 
@@ -1289,7 +1304,7 @@ void staffDrawSwipe(int* obj, int* swipe)
                 u = 0.5f;
                 v0 = 0.0f;
                 v1 = 1.0f;
-                GXBegin(128, 2, 4);
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 swipePos3f32(*(f32*)(vp + 0) - playerMapOffsetX, *(f32*)(vp + 4), *(f32*)(vp + 8) - playerMapOffsetZ);
                 swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x10));
                 swipeTexCoord2f32(u, v0);
