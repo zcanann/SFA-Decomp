@@ -488,11 +488,11 @@ done:
  */
 void synthFreeHandle(u32 handle)
 {
+    SynthVoice* voice;
+    SynthVoiceRuntime* runtime;
     u32 key;
     u32 found;
     u32 i;
-    SynthVoiceRuntime* runtime;
-    SynthVoice* voice;
 
     runtime = SYNTH_VOICE_RUNTIME();
     key = handle & 0x7fffffffu;
