@@ -163,14 +163,14 @@ void hwSetPriority(int slot, u32 value)
 void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc,
                           u32 itdMode)
 {
-    u8* entry;
-    u32 offset;
-    u32 inputOffset;
-    u32 flags;
-    u32 i;
     u32 zero;
-    u32 valueA;
     u32 valueB;
+    u32 inputOffset;
+    u8* entry;
+    u32 i;
+    u32 flags;
+    u32 valueA;
+    u32 offset;
 
     inputOffset = 0;
     zero = inputOffset;
