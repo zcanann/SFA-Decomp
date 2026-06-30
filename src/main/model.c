@@ -2470,11 +2470,11 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     extern f32 lbl_803DE828;
     extern f32 lbl_803DCED0;
     extern f32 lbl_803DCECC;
-    u8* mtx;
-    int srcOff;
     int dstOff;
     u8* prev;
     int i;
+    u8* mtx;
+    int srcOff;
     u8* state;
     u8* arr;
     u8* src;
