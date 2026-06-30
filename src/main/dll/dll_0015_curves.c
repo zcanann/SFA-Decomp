@@ -555,6 +555,7 @@ void fn_800E5E38(int obj, CurvesCollisionState* collision)
 }
 #pragma dont_inline reset
 
+#pragma opt_propagation off
 void fn_800E5F1C(int obj, CurvesCollisionState* collision)
 {
     int seg;
@@ -607,7 +608,6 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     }
     if (foundBelow == 0)
     {
-        seg = 0;
         collision->floorGap[0] = lbl_803E06B0;
     }
     if (((s8)collision->surfaceFlags & (0x10 << seg)) != 0)
@@ -638,6 +638,7 @@ void fn_800E5F1C(int obj, CurvesCollisionState* collision)
     collision->resultWaterDepth = collision->waterDepth[0];
     collision->resultFloorGap = collision->floorGap[0];
 }
+#pragma opt_propagation reset
 
 #pragma opt_unroll_count 4
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
