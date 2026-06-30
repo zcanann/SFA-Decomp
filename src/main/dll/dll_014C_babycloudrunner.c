@@ -676,6 +676,7 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
 {
     int shifted;
@@ -717,6 +718,7 @@ void sandworm_turnTowardTargetAnim(int a, int b, u8* c, int d)
         }
     }
 }
+#pragma opt_common_subs reset
 #pragma peephole on
 #pragma dont_inline reset
 
