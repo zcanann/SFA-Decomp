@@ -639,11 +639,11 @@ void dbegg_update(int obj)
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     int player;
     int blob;
-    int playerObj;
-    int b2;
     int d2;
-    int n;
+    int b2;
     int i;
+    int n;
+    int playerObj;
     f32 v;
     f32 fx;
     f32 fz;
