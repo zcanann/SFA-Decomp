@@ -464,12 +464,13 @@ void tumbleweed_updateStateMachine(int obj)
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
             if (getXZDistance((f32*)(obj + 0xc), ((BackpackState*)aux)->targetPos) > d)
             {
-                ((GameObject*)obj)->anim.localPosX += ((((BackpackState*)aux)->targetPos)[0] - ((GameObject*)obj)->anim.
-                    localPosX) * lbl_803E2F98;
-                ((GameObject*)obj)->anim.localPosY += ((((BackpackState*)aux)->targetPos)[1] - ((GameObject*)obj)->anim.
-                    localPosY) * lbl_803E2F98;
-                ((GameObject*)obj)->anim.localPosZ += ((((BackpackState*)aux)->targetPos)[2] - ((GameObject*)obj)->anim.
-                    localPosZ) * lbl_803E2F98;
+                f32 ldx, ldy, ldz;
+                ldx = (((BackpackState*)aux)->targetPos)[0] - ((GameObject*)obj)->anim.localPosX;
+                ((GameObject*)obj)->anim.localPosX += ldx * lbl_803E2F98;
+                ldy = (((BackpackState*)aux)->targetPos)[1] - ((GameObject*)obj)->anim.localPosY;
+                ((GameObject*)obj)->anim.localPosY += ldy * lbl_803E2F98;
+                ldz = (((BackpackState*)aux)->targetPos)[2] - ((GameObject*)obj)->anim.localPosZ;
+                ((GameObject*)obj)->anim.localPosZ += ldz * lbl_803E2F98;
             }
         }
         else if (state == 7)
