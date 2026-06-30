@@ -340,6 +340,7 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             if (i == 0)
             {
                 cmd = cmds->primaryCommand;
+                cmd |= cmds->primaryCommand;
                 val = cmds->primaryValue;
             }
             else
