@@ -892,6 +892,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     u32 ret;
     double distance;
     void* secondary;
+    s16 turnDelta;
 
     motion = seqFn_800394a0();
     if (obj->motion != 0)
@@ -977,7 +978,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
             {
                 turnAmount = turnAmount / 0x14;
             }
-            yawDelta = (s16)turnAmount;
+            turnDelta = turnAmount;
         }
         else
         {
@@ -990,11 +991,11 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
             {
                 turnAmount = (turnAmount + 0x500) / 0x14;
             }
-            yawDelta = (s16)turnAmount;
+            turnDelta = turnAmount;
         }
 
-        objAnim->yaw += yawDelta;
-        ret = (u32)(s16)yawDelta;
+        objAnim->yaw += turnDelta;
+        ret = (u32)(s16)turnDelta;
         ret = ((int)ret >= 0) ? ret : -ret;
         *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
     }
