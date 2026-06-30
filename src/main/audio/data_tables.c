@@ -480,7 +480,6 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 
 s32 dataInsertMacro(u16 mid, void* macroaddr)
 {
-    long main;
     SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
     long pos;
     long base;
@@ -490,16 +489,15 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
 
     sndBegin();
 
-    main = (mid >> 6) & 0x3ff;
-    num = t->macMain[main].num;
+    num = t->macMain[(mid >> 6) & 0x3ff].num;
 
     if (num == 0)
     {
-        pos = base = t->macMain[main].subTabIndex = dataMacTotal;
+        pos = base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex = dataMacTotal;
     }
     else
     {
-        base = t->macMain[main].subTabIndex;
+        base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex;
         for (i = 0; i < num && t->macSub[base + i].id < mid; ++i)
         {
         }
@@ -540,7 +538,7 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
         t->macSub[pos].id = mid;
         t->macSub[pos].data = macroaddr;
         t->macSub[pos].refCount = 1;
-        t->macMain[main].num++;
+        t->macMain[(mid >> 6) & 0x3ff].num++;
         dataMacTotal++;
         sndEnd();
         return 1;
