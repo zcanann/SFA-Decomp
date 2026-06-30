@@ -2141,9 +2141,9 @@ void allocLotsOfTextures(void)
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
             f32 d2 = sqrtf(cx * cx + cy * cy);
-            *(u8*)(base + off) = (d2 < 0.5f)
+            *(u8*)(base + off) = (d2 < CPUFifo_803DED38)
                                      ? 0xa0
-                                     : ((d2 > 1.0f) ? 0 : (int)(160.0f * (1.0f - (d2 - 0.5f) / 0.5f)));
+                                     : ((d2 > lbl_803DED2C) ? 0 : (int)(160.0f * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38)));
         }
     }
     DCFlushRange((void*)(gNewShadowFalloffTexture + 0x60), *(int*)(gNewShadowFalloffTexture + 0x44));
