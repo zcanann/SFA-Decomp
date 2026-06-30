@@ -1084,15 +1084,15 @@ void synthDispatchFadeAction(SynthFade* fade)
  */
 void audioFn_80271498(u32 delta)
 {
-    u8* stateBase;
-    SynthJobTab* jobTab;
     u32 fadeIndex;
-    u32 mask;
     f32* fade;
-    f32 zeroThreshold;
-    f32 fadeDelta;
+    u32 mask;
+    SynthJobTab* jobTab;
     u32 i;
     u32 channel;
+    f32 zeroThreshold;
+    u8* stateBase;
+    f32 fadeDelta;
     u8* auxAIndex;
     u8* auxAMIDI;
     u8* auxBIndex;
