@@ -1494,7 +1494,7 @@ extern void gameTextSetColor(int, int, int, int);
     s16 _a; \
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
-    _c.a = hudElementOpacity * gViewFinderFadeLevel; \
+    _c.a = gViewFinderFadeLevel * hudElementOpacity; \
     _a = getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * _a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
@@ -1511,7 +1511,7 @@ extern void gameTextSetColor(int, int, int, int);
     s16 _a; \
     f32 _r, _cs, _sn, _cx, _sx; \
     *(int *)&_c = lbl_803E1E2C; \
-    _c.a = hudElementOpacity * gViewFinderFadeLevel; \
+    _c.a = gViewFinderFadeLevel * hudElementOpacity; \
     _a = getAngle(gA1, gA2); \
     _r = lbl_803E1EC8 * _a / lbl_803E1E94; \
     _cs = mathSinf(_r); \
