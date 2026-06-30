@@ -1570,14 +1570,23 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 bl
             *(u32*)(stk + 0x24) = *(u32*)&((GameObject*)channel)->anim.velocityX;
             *(u32*)(stk + 0x28) = *(u32*)&((GameObject*)channel)->anim.velocityY;
             {
-                u8* cbase = channel + 0x60;
+                u8* su = channel;
+                u8* du = stk;
+                u8* db = stk;
+                u8* sf = channel;
+                u8* df = stk;
                 for (j = 0; j < n; j++)
                 {
-                    *(u16*)(stk + j * 2 + 0x44) = *(u16*)(channel + j * 2 + 0x44);
-                    *(u8*)(stk + j + 0x60) = cbase[j];
-                    *(f32*)(stk + j * 4 + 0x14) = *(f32*)(channel + j * 4 + 0x14);
-                    *(f32*)(stk + j * 4 + 4) = *(f32*)(channel + j * 4 + 4);
-                    *(u32*)(stk + j * 4 + 0x34) = *(u32*)(channel + j * 4 + 0x34);
+                    *(u16*)(du + 0x44) = *(u16*)(su + 0x44);
+                    *(u8*)(db + 0x60) = *(u8*)(channel + j + 0x60);
+                    *(f32*)(df + 0x14) = *(f32*)(sf + 0x14);
+                    *(f32*)(df + 4) = *(f32*)(sf + 4);
+                    *(u32*)(df + 0x34) = *(u32*)(sf + 0x34);
+                    su += 2;
+                    du += 2;
+                    db += 1;
+                    sf += 4;
+                    df += 4;
                 }
             }
             *(u16*)(stk + 0x58) = *(u16*)(channel + 0x58);
