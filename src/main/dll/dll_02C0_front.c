@@ -444,6 +444,13 @@ extern void GXBegin(int type, int fmt, int n);
 extern void Camera_RebuildProjectionMatrix(void);
 extern f32 hudMatrix[];
 
+#define GX_VA_POS 9
+#define GX_VA_TEX0 13
+#define GX_DIRECT 1
+#define GX_CULL_NONE 0
+#define GX_QUADS 0x80
+#define GX_VTXFMT1 1
+
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
@@ -452,10 +459,10 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
     GXSetCurrentMtx(0);
     GXSetProjection(hudMatrix, 1);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
-    GXSetCullMode(0);
-    GXBegin(0x80, 1, 4);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = x0;
     GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
@@ -485,12 +492,12 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
     GXSetCurrentMtx(0);
     GXSetProjection(hudMatrix, 1);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
-    GXSetCullMode(0);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
     GXSetScissor((int)((u32) * (f32*)(gTitleScreenMtx + 0xc) + 0x39),
                  (int)((u32) * (f32*)(gTitleScreenMtx + 0x1c) + 0x4e), 0x104, 0x16);
-    GXBegin(0x80, 1, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = (s16)(x0 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
     GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
