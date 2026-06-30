@@ -442,7 +442,8 @@ typedef struct WindSource
     s16 pad1a;
 } WindSource;
 
-extern WindSource gNewCloudWindSources[];
+#define NEWCLOUD_WIND_SOURCE_COUNT 6
+extern WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 extern s16 renderModeSetOrGet(int mode);
 extern void normalize(f32 * x, f32 * y, f32 * z);
 
@@ -454,7 +455,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     f32 dx;
     f32 dz;
     f32 dSq;
-    f32 dists[6];
+    f32 dists[NEWCLOUD_WIND_SOURCE_COUNT];
     int i;
 
     if (renderModeSetOrGet(-1) == 1)
@@ -463,7 +464,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     }
     accX = 0.0f;
     accZ = 0.0f;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < NEWCLOUD_WIND_SOURCE_COUNT; i++)
     {
         dx = gNewCloudWindSources[i].x - pos[0];
         dSq = dx * dx;
@@ -483,11 +484,11 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
             dists[i] = lbl_803DF1DC;
         }
     }
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < NEWCLOUD_WIND_SOURCE_COUNT; i++)
     {
         dists[i] = 1.0f / sqrtf__inline(dists[i]);
     }
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < NEWCLOUD_WIND_SOURCE_COUNT; i++)
     {
         accX += gNewCloudWindSources[i].vx * dists[i];
         accZ += gNewCloudWindSources[i].vz * dists[i];
