@@ -2644,7 +2644,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
                 dz = segment.nearestZ - z;
                 dySq = dy * dy;
                 distance = dySq + dx * dx + dz * dz;
-                slot = (neighborId == preferredNeighborId);
+                slot = (u32)__cntlzw(preferredNeighborId - neighborId) >> 5;
                 if (distance < bestDistances[slot])
                 {
                     bestDistances[slot] = distance;
