@@ -109,10 +109,11 @@ void fn_8026EC44(u32 dt)
     if (dt != 0)
     {
         range = lbl_803E7788;
+        song = gSynthQueuedVoices;
         absRange = fabs(range);
         c0 = lbl_803E7780;
         c1 = lbl_803E7784;
-        for (song = gSynthQueuedVoices; song != NULL; song = next)
+        for (; song != NULL; song = next)
         {
             next = song->next;
             gSynthCurrentVoice = song;
