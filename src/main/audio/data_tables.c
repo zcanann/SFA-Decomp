@@ -555,10 +555,10 @@ s32 dataRemoveMacro(u16 mid)
     MAC_MAINTAB* m;
 
     sndBegin();
-    m = &t->macMain[(mid >> 6) & 0x3ff];
 
-    if (m->num != 0)
+    if (t->macMain[(mid >> 6) & 0x3ff].num != 0)
     {
+        m = &t->macMain[(mid >> 6) & 0x3ff];
         base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex;
         for (i = 0; i < m->num && mid != ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id; ++i)
         {
