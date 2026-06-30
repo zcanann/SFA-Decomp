@@ -301,6 +301,7 @@ void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
     return light;
 }
 
+#pragma opt_common_subs off
 void* objAllocLight(void* owner)
 {
     u8* light;
@@ -437,6 +438,7 @@ void* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->attenuationK2 = zero;
     return light;
 }
+#pragma opt_common_subs reset
 
 void modelLightStruct_setProjectionTevModes(ModelLightStruct* p, void* a, void* b)
 {
