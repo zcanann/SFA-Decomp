@@ -3243,13 +3243,13 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         arrC[2] = (f32)(s16) * (s16*)(v + 0x20);
         inside = 1;
         {
-            f32 c30 = lbl_803DECC0;
             f32 c31 = __AR_Callback;
+            f32 c30 = lbl_803DECC0;
             f32 c24 = lbl_803DECE4;
             for (i = 0; i < 3; i++)
             {
                 int nxt = i + 1;
-                f32 nx, ny, nz, mag;
+                f32 ny, nx, nz, mag;
 
                 if (nxt > 2) nxt = 0;
                 arrA[3] = c30 * vec[0] + arrA[i];
