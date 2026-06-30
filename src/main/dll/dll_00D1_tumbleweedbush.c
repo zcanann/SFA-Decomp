@@ -340,23 +340,29 @@ s8 fn_801631C8(int* obj)
     *((u8*)newObj + 7) = p4c[7];
     *(f32*)((char*)newObj + 0x1c) = lbl_803E2F40;
 
-    if ((state[0x4c] & 1) != 0
-        && *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) == 0x292c
-        && *(u16*)(state + 0x4e) == 6)
+    if ((state[0x4c] & 1) != 0)
     {
-        *((u8*)newObj + 0x1b) = 1;
-        list = ObjList_GetObjects(&idx, &outCount);
-        while (idx < outCount)
+        switch (*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14))
         {
-            int* child = list[idx];
-            if (((GameObject*)child)->anim.seqId == 0x27f)
+        case 0x292c:
+            if (*(u16*)(state + 0x4e) == 6)
             {
-                *(f32*)((char*)newObj + 0x8) = ((GameObject*)child)->anim.localPosX;
-                *(f32*)((char*)newObj + 0xc) = *(f32*)((char*)list[idx] + 0x10);
-                *(f32*)&((ObjDef*)newObj)->jointData = *(f32*)((char*)list[idx] + 0x14);
-                idx = outCount;
+                *((u8*)newObj + 0x1b) = 1;
+                list = ObjList_GetObjects(&idx, &outCount);
+                while (idx < outCount)
+                {
+                    int* child = list[idx];
+                    if (((GameObject*)child)->anim.seqId == 0x27f)
+                    {
+                        *(f32*)((char*)newObj + 0x8) = ((GameObject*)child)->anim.localPosX;
+                        *(f32*)((char*)newObj + 0xc) = *(f32*)((char*)list[idx] + 0x10);
+                        *(f32*)&((ObjDef*)newObj)->jointData = *(f32*)((char*)list[idx] + 0x14);
+                        idx = outCount;
+                    }
+                    idx++;
+                }
             }
-            idx++;
+            break;
         }
     }
 
