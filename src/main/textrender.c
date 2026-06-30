@@ -1755,11 +1755,11 @@ void gameTextRun(void)
 
     zero = lbl_803DE704;
     fadeLimit = gGameTextFadeLimit;
+    i = GAMETEXT_LOAD_SLOT_COUNT;
     {
         f32* timer = (f32*)(gameTextBase + 0x40);
         f32* alpha = (f32*)(gameTextBase + 0x20);
         u8* entry = gameTextBase + 0xa0;
-        i = GAMETEXT_LOAD_SLOT_COUNT;
         do
         {
             if ((double)*timer > zero)
