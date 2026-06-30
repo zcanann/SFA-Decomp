@@ -236,42 +236,25 @@ void inpInit(u32 state)
         a[0x47e] = 0;
         b[0x47e] = 0;
 
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 8; i++)
         {
-            p[0] = 0xff;
-            p[1] = 0xff;
-            p[2] = 0xff;
-            p[3] = 0xff;
-            p[4] = 0xff;
-            p[5] = 0xff;
-            p[6] = 0xff;
-            p[7] = 0xff;
-            p[8] = 0xff;
-            p[9] = 0xff;
-            p[10] = 0xff;
-            p[11] = 0xff;
-            p[12] = 0xff;
-            p[13] = 0xff;
-            p[14] = 0xff;
-            p[15] = 0xff;
-            p += 16;
-            p[0] = 0xff;
-            p[1] = 0xff;
-            p[2] = 0xff;
-            p[3] = 0xff;
-            p[4] = 0xff;
-            p[5] = 0xff;
-            p[6] = 0xff;
-            p[7] = 0xff;
-            p[8] = 0xff;
-            p[9] = 0xff;
-            p[10] = 0xff;
-            p[11] = 0xff;
-            p[12] = 0xff;
-            p[13] = 0xff;
-            p[14] = 0xff;
-            p[15] = 0xff;
-            p += 16;
+            u32* row = p + i * 16;
+            row[0] = 0xff;
+            row[1] = 0xff;
+            row[2] = 0xff;
+            row[3] = 0xff;
+            row[4] = 0xff;
+            row[5] = 0xff;
+            row[6] = 0xff;
+            row[7] = 0xff;
+            row[8] = 0xff;
+            row[9] = 0xff;
+            row[10] = 0xff;
+            row[11] = 0xff;
+            row[12] = 0xff;
+            row[13] = 0xff;
+            row[14] = 0xff;
+            row[15] = 0xff;
         }
     }
 }
