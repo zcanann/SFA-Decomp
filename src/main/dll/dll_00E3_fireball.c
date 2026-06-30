@@ -1078,61 +1078,55 @@ void fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     u16 savedRot2;
     u8 i;
     f32 savedF8;
-    if (visible == 0)
+    if (visible == 0 || (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED) != 0 ||
+        ((FireballState*)state)->startupDelay != lbl_803E3330)
     {
         return;
     }
-    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED) != 0)
+    ((ObjAnimComponent*)obj)->bankIndex = 1;
+    model = Obj_GetActiveModel(obj);
+    *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
+    savedRot4 = ((GameObject*)obj)->anim.rotZ;
+    savedRot2 = ((GameObject*)obj)->anim.rotY;
+    savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3350;
+    for (i = 0; i < 5; i++)
     {
-        return;
-    }
-    if (((FireballState*)state)->startupDelay == lbl_803E3330)
-    {
-        ((ObjAnimComponent*)obj)->bankIndex = 1;
-        model = Obj_GetActiveModel(obj);
-        *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
-        savedRot4 = ((GameObject*)obj)->anim.rotZ;
-        savedRot2 = ((GameObject*)obj)->anim.rotY;
-        savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3350;
-        for (i = 0; i < 5; i++)
-        {
-            FireballState* fs = (FireballState*)(state + i * 2);
-            fs->rotZBase[0] += fs->rotZDelta[0];
-            fs->rotYBase[0] += fs->rotYDelta[0];
-            ((GameObject*)obj)->anim.rotZ = (s16)fs->rotZBase[0];
-            ((GameObject*)obj)->anim.rotY = (s16)fs->rotYBase[0];
-            *(u16*)((char*)model + 0x18) &= ~0x8;
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
-        }
-        ((GameObject*)obj)->anim.rotZ = savedRot4;
-        ((GameObject*)obj)->anim.rotY = savedRot2;
-        ((GameObject*)obj)->anim.rootMotionScale = savedF8;
-        ((ObjAnimComponent*)obj)->bankIndex = 0;
-        model = Obj_GetActiveModel(obj);
-        *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) =
-            gFireballColorIndexTable[((FireballState*)state)->colorIndex];
+        FireballState* fs = (FireballState*)(state + i * 2);
+        fs->rotZBase[0] += fs->rotZDelta[0];
+        fs->rotYBase[0] += fs->rotYDelta[0];
+        ((GameObject*)obj)->anim.rotZ = (s16)fs->rotZBase[0];
+        ((GameObject*)obj)->anim.rotY = (s16)fs->rotYBase[0];
+        *(u16*)((char*)model + 0x18) &= ~0x8;
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
-        if (*(int**)state != NULL)
+    }
+    ((GameObject*)obj)->anim.rotZ = savedRot4;
+    ((GameObject*)obj)->anim.rotY = savedRot2;
+    ((GameObject*)obj)->anim.rootMotionScale = savedF8;
+    ((ObjAnimComponent*)obj)->bankIndex = 0;
+    model = Obj_GetActiveModel(obj);
+    *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) =
+        gFireballColorIndexTable[((FireballState*)state)->colorIndex];
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+    if (*(int**)state != NULL)
+    {
+        if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
         {
-            if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
+            u16 sum = *(u8*)((char*)*(int**)state + 0x2f9) + *(s8*)((char*)*(int**)state + 0x2fa);
+            if (sum > 12)
             {
-                u16 sum = *(u8*)((char*)*(int**)state + 0x2f9) + *(s8*)((char*)*(int**)state + 0x2fa);
-                if (sum > 12)
+                sum += randomGetRange(-12, 12);
+                if (sum > 255)
                 {
-                    sum += randomGetRange(-12, 12);
-                    if (sum > 255)
-                    {
-                        sum = 255;
-                        *(u8*)((char*)*(int**)state + 0x2fa) = 0;
-                    }
+                    sum = 255;
+                    *(u8*)((char*)*(int**)state + 0x2fa) = 0;
                 }
-                *(u8*)((char*)*(int**)state + 0x2f9) = sum;
             }
-            if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
-            {
-                queueGlowRender(*(int*)state);
-            }
+            *(u8*)((char*)*(int**)state + 0x2f9) = sum;
+        }
+        if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
+        {
+            queueGlowRender(*(int*)state);
         }
     }
 }
