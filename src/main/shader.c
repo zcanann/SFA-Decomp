@@ -2264,7 +2264,7 @@ void mapLoadUnloadObjects(int flag)
     base = lbl_8037E0C0;
     count = 0;
     tp = (int*)(base + 0x41E0);
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
     {
         k = 0;
         q = (s16*)(*tp + 0x594);
@@ -2566,7 +2566,7 @@ void beginLoadingMap(void)
     }
     (*gObjectTriggerInterface)->onMapSetup();
     mapInitFn_80069990();
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
     {
         a = ((s8**)(base + 0x41F4))[i];
         b = ((s8**)(base + 0x41E0))[i];
@@ -2850,7 +2850,7 @@ void doPendingMapLoads(void)
                     int k8;
                     s8 c;
                     p13 = recs;
-                    for (layer = 0; layer < 5; layer++)
+                    for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++)
                     {
                         s16* ent = (s16*)*bp2;
                         char* g = (char*)*ap2;
@@ -3020,7 +3020,7 @@ void doPendingMapLoads(void)
                         lbl_803DCEB0 = lbl_803DCEB0 - 1;
                         {
                             int* tp2 = eBase;
-                            for (i = 0; i < 5; i++)
+                            for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
                             {
                                 char* g2 = (char*)*tp2;
                                 int t2 = 0;
@@ -3050,7 +3050,7 @@ void doPendingMapLoads(void)
                         {
                             int* ap3 = aBase;
                             int* cp3 = cBase;
-                            for (layer = 0; layer < 5; layer++)
+                            for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++)
                             {
                                 char* g3;
                                 int zz, xx;
