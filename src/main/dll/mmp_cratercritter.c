@@ -17,6 +17,7 @@ extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
+#pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)
 {
     u8* nearest;
@@ -25,6 +26,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
     f32 dist;
     f32 z;
     u8** objs;
+    u8** objsList;
     int count;
     int i;
     int waterFlag;
@@ -49,9 +51,11 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         return;
     }
 
-    objs = ObjGroup_GetObjects(0x4B, &count);
+    objsList = ObjGroup_GetObjects(0x4B, &count);
+    i = 0;
+    objs = objsList;
     rejectDist = lbl_803E24C4;
-    for (i = 0; i < count; i++)
+    for (; i < count; i++)
     {
         dist = getXZDistance((f32*)((u8*)((TrickyState*)state)->playerObj + 0x18),
                              (f32*)(*objs + 0x18));
@@ -110,3 +114,4 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         trickyDebugPrint(lbl_8031D478);
     }
 }
+#pragma peephole off
