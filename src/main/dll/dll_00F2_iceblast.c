@@ -60,6 +60,8 @@ void iceblast_init(int obj, IceblastPlacement* p)
 }
 #pragma reset
 
+#pragma peephole off
+#pragma opt_common_subs off
 void iceblast_update(int* obj)
 {
     int* path;
@@ -119,3 +121,5 @@ void iceblast_update(int* obj)
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
 }
+#pragma opt_common_subs reset
+#pragma peephole reset
