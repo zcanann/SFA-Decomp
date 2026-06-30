@@ -1913,10 +1913,10 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
 void ObjHits_DetectObjectPair(int objA, int objB)
 {
     ObjHitsPriorityState* stateA;
-    ObjHitsPriorityState* stateB;
-    char vertical;
+    f32 cy;
+    f32 cz;
     int distInt;
-    int distClamped;
+    f32 segSq;
     f32 dist;
     f32 sumRadius;
     f32 radiusA;
@@ -1930,13 +1930,13 @@ void ObjHits_DetectObjectPair(int objA, int objB)
     f32 yA;
     f32 yB;
     f32 tmp;
-    f32 sx;
+    ObjHitsPriorityState* stateB;
     f32 sy;
-    f32 sz;
-    f32 segSq;
+    char vertical;
+    int distClamped;
     f32 cx;
-    f32 cy;
-    f32 cz;
+    f32 sx;
+    f32 sz;
 
     stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
