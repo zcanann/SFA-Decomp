@@ -1869,7 +1869,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     f32 candidateDistances[4];
     int queueIndices[40];
     f32 queueDistances[40];
-    u8 visited[0x514];
+    u8 visited[ROMCURVE_MAX_CURVES];
 
     if (startCurve == 0)
     {
@@ -1890,7 +1890,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             continue;
         }
 
-        for (i = 0; i < 0x514; i++)
+        for (i = 0; i < ROMCURVE_MAX_CURVES; i++)
         {
             visited[i] = 0;
         }
@@ -1941,7 +1941,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 }
 
                 linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
-                if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 || queueCount >= 0x28)
+                if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 || queueCount >= ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)
                 {
                     continue;
                 }
@@ -3097,7 +3097,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     {
         if (-1 < (int)start->linkIds[li])
         {
-            for (off = 0; off < 0x514; off++)
+            for (off = 0; off < ROMCURVE_MAX_CURVES; off++)
             {
                 visited[off] = 0;
             }
@@ -3250,7 +3250,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     {
         if (-1 < (int)curve->linkIds[li])
         {
-            for (off = 0; off < 0x514; off++)
+            for (off = 0; off < ROMCURVE_MAX_CURVES; off++)
             {
                 visited[off] = 0;
             }
