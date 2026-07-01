@@ -99,7 +99,6 @@ void softbody_initialise(void)
     lbl_803DDD9C = lbl_803E7298;
 }
 
-#pragma opt_common_subs off
 void softbody_update(int obj)
 {
     GameObject* object = (GameObject*)obj;
@@ -112,28 +111,33 @@ void softbody_update(int obj)
 
     if ((void*)obj == lbl_803DDD98)
     {
-        f32 phase;
-        f32 td;
-        lbl_803DDDA0 = phase = lbl_803E728C * (td = timeDelta) + lbl_803DDDA0;
-        while (phase > lbl_803E7288)
+        f32 a;
+
+        a = lbl_803E728C * timeDelta + lbl_803DDDA0;
+        lbl_803DDDA0 = a;
+        while (a > *(f32*)&lbl_803E7288)
         {
-            lbl_803DDDA0 = phase -= lbl_803E7288;
+            a -= *(f32*)&lbl_803E7288;
         }
-        lbl_803DDD9C = phase = lbl_803E7290 * td + lbl_803DDD9C;
-        while (phase > lbl_803E7288)
+        lbl_803DDDA0 = a;
+        a = lbl_803E7290 * timeDelta + lbl_803DDD9C;
+        lbl_803DDD9C = a;
+        while (a > *(f32*)&lbl_803E7288)
         {
-            lbl_803DDD9C = phase -= lbl_803E7288;
+            a -= *(f32*)&lbl_803E7288;
         }
+        lbl_803DDD9C = a;
     }
 
-    if (object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END &&
-        object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST)
+    switch (object->anim.seqId)
     {
+    case SOFTBODY_MOVE_PHASE_A_FIRST:
+    case SOFTBODY_MOVE_PHASE_A_FIRST + 1:
+    case SOFTBODY_MOVE_PHASE_A_FIRST + 2:
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
-    }
-    else
-    {
+        break;
+    default:
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
+        break;
     }
 }
-#pragma opt_common_subs reset
