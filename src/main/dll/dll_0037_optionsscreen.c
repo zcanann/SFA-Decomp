@@ -80,7 +80,7 @@ void OptionsScreen_render(int arg)
     else
     {
         titleScreenPositionElements(lbl_803E1DD8, lbl_803E1DE4);
-        fade = (((u8)alpha & 0x7f) << 1);
+        fade = ((int)((u8)alpha & 0x7f) << 1) & 0xff;
     }
 
     gameTextBoxFn_80134d40(fade, 0, 0);
