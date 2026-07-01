@@ -14964,6 +14964,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     int tbl1, tbl2;
     void* hit;
     int i;
+    int j;
     f32 bx, ax, bz, az, by, ay;
     f32 threshold;
     EmitPlane planes[2];
@@ -15021,16 +15022,20 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 (((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 6 ||
                  ((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 0x10))
             {
-                ax = ((f32*)tbl2)[*(s16*)((char*)face + 0x4) * 3];
+                j = *(s16*)((char*)face + 0x4) * 0xc;
+                ax = *(f32*)(tbl2 + j);
                 ay = lbl_803E7EA4;
-                az = ((f32*)tbl2)[*(s16*)((char*)face + 0x4) * 3 + 2];
-                bx = ((f32*)tbl2)[*(s16*)((char*)face + 0x6) * 3];
+                az = *(f32*)(tbl2 + (j + 8));
+                j = *(s16*)((char*)face + 0x6) * 0xc;
+                bx = *(f32*)(tbl2 + j);
                 by = lbl_803E7EA4;
-                bz = ((f32*)tbl2)[*(s16*)((char*)face + 0x6) * 3 + 2];
+                bz = *(f32*)(tbl2 + (j + 8));
                 if (hit != NULL)
                 {
-                    ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, hit);
-                    ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(pbx, pby, pbz, hit);
+                    ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
+                        ax, ay, az, &ax, &ay, &az, hit);
+                    ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
+                        bx, by, bz, pbx, pby, pbz, hit);
                 }
                 {
                     f32 dz = bz - az;
@@ -15058,9 +15063,9 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     *(f32*)((char*)d + 0x30) = *(f32*)((char*)e + 0x4);
     *(f32*)((char*)d + 0x34) = *(f32*)((char*)e + 0x8);
     {
-        f32 e2 = lbl_803E7E98;
+        f32 e2;
         *(f32*)((char*)d + 0x44) =
-            -(*(f32*)((char*)d + 0x1c) * (e2 + lbl_803DC6C0) - *(f32*)((char*)d + 0x2c));
+            -(*(f32*)((char*)d + 0x1c) * ((e2 = lbl_803E7E98) + lbl_803DC6C0) - *(f32*)((char*)d + 0x2c));
         *(f32*)((char*)d + 0x4c) =
             -(*(f32*)((char*)d + 0x24) * (e2 + lbl_803DC6C0) - *(f32*)((char*)d + 0x34));
     }
@@ -15079,11 +15084,14 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     *(u8*)((char*)d + 0x61) = 1;
     if (((int (*)(int, f32, f32, f32, char*, int))hitDetectFn_800658a4)(
             a, *(f32*)((char*)d + 0x44), *(f32*)((char*)d + 0x4), *(f32*)((char*)d + 0x4c),
-            (char*)d + 0x48, 0x205) != 0)
+            (char*)d + 0x48, 0x205) == 0)
+    {
+        *(f32*)((int)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((int)d + 0x48);
+    }
+    else
     {
         return 0;
     }
-    *(f32*)((int)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((int)d + 0x48);
     if ((s8) * (s8*)((char*)c + 0x50) != 0x10)
     {
         *(f32*)((char*)d + 0x8) = ((GameObject*)a)->anim.previousLocalPosY;
@@ -15106,24 +15114,23 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 return 3;
             }
-            return 0;
         }
         else
         {
-            f32 q = *(f32*)((char*)d + 0x4) -
-            (*(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x10) - *(f32*)((char*)c + 0xc)) +
-                *(f32*)((char*)c + 0xc));
-            if (!(*(f32*)((char*)d + 0x0) >= lbl_803E7ED8) ||
-                !(*(f32*)((char*)d + 0x0) <= lbl_803E7FBC) ||
-                !(q >= lbl_803E80C4))
+            f32 q;
+            q = *(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x10) - *(f32*)((char*)c + 0xc)) +
+                *(f32*)((char*)c + 0xc);
+            q = *(f32*)((char*)d + 0x4) - q;
+            if (*(f32*)((char*)d + 0x0) >= lbl_803E7ED8 &&
+                *(f32*)((char*)d + 0x0) <= lbl_803E7FBC &&
+                q >= lbl_803E80C4)
             {
-                return 0;
+                if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
+                {
+                    ((PlayerState*)b)->groundObject = (int)hit;
+                }
+                return 6;
             }
-            if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
-            {
-                ((PlayerState*)b)->groundObject = (int)hit;
-            }
-            return 6;
         }
     }
     else
@@ -15140,6 +15147,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         }
         return 3;
     }
+    return 0;
 }
 #pragma peephole reset
 
