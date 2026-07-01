@@ -198,6 +198,18 @@ typedef struct DllF7Vec
     u8 b[16];
 } DllF7Vec;
 
+typedef struct DllF7HitBlock
+{
+    DllF7Vec params;
+    s16 a;
+    s16 b;
+    s16 c;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} DllF7HitBlock;
+
 extern DllF7Vec lbl_802C2260;
 
 /* dll_F7 (bouncing prop) object extra-state */
@@ -249,7 +261,7 @@ void staticCamera_init(short* obj, int placement, int addToGroup)
 extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern const f32 lbl_803E3400;
-extern f32 lbl_803E3404;
+extern const f32 lbl_803E3404;
 extern f32 lbl_803E3408;
 extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
@@ -797,14 +809,11 @@ void dll_F7_update(int* obj)
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
     extern u32 ObjGroup_FindNearestObject(); /* #57 */
     DllF7State* state = ((GameObject*)obj)->extra;
-    f32 pz;
-    f32 py;
-    f32 px;
-    s16 trio[3];
-    DllF7Vec vec = lbl_802C2260;
+    DllF7HitBlock blk;
     f32 radius;
     u32 hitVolume;
 
+    blk.params = lbl_802C2260;
     if (state->byte9 != 0)
     {
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -823,24 +832,22 @@ void dll_F7_update(int* obj)
         }
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition((int)obj, 0, 0, &hitVolume, &px, &py, &pz) != 0)
+    if (ObjHits_GetPriorityHitWithPosition((int)obj, 0, 0, &hitVolume, &blk.x, &blk.y, &blk.z) != 0)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
-            Sfx_PlayAtPositionFromObject(obj, px, py, pz, 72);
+            Sfx_PlayAtPositionFromObject(obj, blk.x, blk.y, blk.z, 72);
             Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
-            {
-                f32 fz = lbl_803E3404;
-                state->bounceOffset = fz;
-                state->bounceVelocity = lbl_803E3408;
-                px += playerMapOffsetX;
-                pz += playerMapOffsetZ;
-            }
-            trio[2] = 0;
-            trio[1] = 0;
-            trio[0] = 0;
+            state->bounceOffset = lbl_803E3404;
+            state->bounceVelocity = lbl_803E3408;
+            blk.x += playerMapOffsetX;
+            blk.z += playerMapOffsetZ;
+            blk.scale = lbl_803E3404;
+            blk.c = 0;
+            blk.b = 0;
+            blk.a = 0;
             ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[
-                1])(0, 1, trio, 1025, -1, &vec);
+                1])(0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
         }
     }
     if (state->hitsRemaining <= 0)
@@ -858,20 +865,17 @@ void dll_F7_update(int* obj)
         {
             GameBit_Set((int)((DllF7Placement*)params)->completeGameBit, 1);
         }
-        if (state->byteB == 0)
+        if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {
-            if ((u8)Obj_IsLoadingLocked() != 0)
-            {
-                s16* alloc = Obj_AllocObjectSetup(0x30, 0xb);
-                alloc[0xe] = -1;
-                *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.localPosX;
-                *(f32*)((char*)alloc + 0xc) = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
-                *(f32*)&((ObjDef*)alloc)->jointData = ((GameObject*)obj)->anim.localPosZ;
-                *(u8*)((char*)alloc + 0x1a) = 3;
-                alloc[0x16] = -1;
-                alloc[0x12] = -1;
-                Obj_SetupObject(alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
-            }
+            s16* alloc = Obj_AllocObjectSetup(0x30, 0xb);
+            alloc[0xe] = -1;
+            *(f32*)((char*)alloc + 8) = ((GameObject*)obj)->anim.localPosX;
+            *(f32*)((char*)alloc + 0xc) = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
+            *(f32*)&((ObjDef*)alloc)->jointData = ((GameObject*)obj)->anim.localPosZ;
+            *(u8*)((char*)alloc + 0x1a) = 3;
+            alloc[0x16] = -1;
+            alloc[0x12] = -1;
+            Obj_SetupObject(alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         }
         else
         {
