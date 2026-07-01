@@ -8121,21 +8121,21 @@ void playerDoHitDetection(int obj)
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
-                if ((((HitDesc*)((PlayerState*)inner)->moveSlots)[
-                        (u32)((PlayerState*)inner)->moveSlotIndex].flags & 1) != 0)
+                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 1) != 0)
                 {
                     ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
-                if ((((HitDesc*)((PlayerState*)inner)->moveSlots)[
-                        (u32)((PlayerState*)inner)->moveSlotIndex].flags & 2) != 0)
+                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 2) != 0)
                     {
                         ((PlayerState*)inner)->hitInterval =
-                            ((HitDesc*)((PlayerState*)inner)->moveSlots)[
-                                (u32)((PlayerState*)inner)->moveSlotIndex].valsA[
+                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsA[
                                 ((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitCountMax =
-                            ((HitDesc*)((PlayerState*)inner)->moveSlots)[
-                                (u32)((PlayerState*)inner)->moveSlotIndex].valsB[
+                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsB[
                                 ((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitTimer =
                             (f32)(u32)((PlayerState*)inner)->hitInterval;
@@ -8186,22 +8186,22 @@ void playerDoHitDetection(int obj)
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 1;
                 ((PlayerState*)inner)->unk7D8 = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
-                if ((((u8*)(((PlayerState*)inner)->moveSlots +
-                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 1) != 0)
+                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 1) != 0)
                 {
                     ((PlayerState*)inner)->cutsceneTimer = lbl_803E80A8;
                 }
-                if ((((u8*)(((PlayerState*)inner)->moveSlots +
-                        (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0))[0x88] & 2) != 0)
+                if ((((HitDesc*)((PlayerState*)inner)->moveSlots +
+                        (u32)((PlayerState*)inner)->moveSlotIndex)->flags & 2) != 0)
                     {
                         ((PlayerState*)inner)->hitInterval =
-                            ((u8*)(((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
-                                ((PlayerState*)inner)->activeHitWindow)[0xa8];
+                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsA[
+                                ((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitCountMax =
-                            ((u8*)(((PlayerState*)inner)->moveSlots +
-                                (u32)((PlayerState*)inner)->moveSlotIndex * 0xb0) +
-                                ((PlayerState*)inner)->activeHitWindow)[0xab];
+                            ((HitDesc*)((PlayerState*)inner)->moveSlots +
+                                (u32)((PlayerState*)inner)->moveSlotIndex)->valsB[
+                                ((PlayerState*)inner)->activeHitWindow];
                         ((PlayerState*)inner)->hitTimer =
                             (f32)(u32)((PlayerState*)inner)->hitInterval;
                         ((PlayerState*)inner)->hitCount += 1;
@@ -8344,7 +8344,7 @@ void playerDoHitDetection(int obj)
                 *(u32*)&((PlayerState*)inner)->flags360 |= 0x8000000LL;
             }
         }
-        *(u32*)&((PlayerState*)inner)->flags360 &= 0xffbfffff;
+        *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400000LL;
     }
 }
 
