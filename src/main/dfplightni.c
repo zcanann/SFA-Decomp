@@ -90,9 +90,6 @@ void dfplightni_update(DfpLightniObject* obj)
     float* effectEnd;
     float start[3];
     float end[3];
-    int randomZ;
-    int randomY;
-    int randomX;
 
     if (obj != 0)
     {
@@ -113,21 +110,15 @@ void dfplightni_update(DfpLightniObject* obj)
                 start[2] = obj->position[2];
                 if (eventActive != 0)
                 {
-                    randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = randomZ * gDfpLightningOffsetScale + playerObj->position[0];
-                    randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = randomY * gDfpLightningOffsetScale + playerObj->position[1];
-                    randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = randomX * gDfpLightningOffsetScale + playerObj->position[2];
+                    end[0] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) + playerObj->position[0];
+                    end[1] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) + playerObj->position[1];
+                    end[2] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) + playerObj->position[2];
                 }
                 else
                 {
-                    randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[0] = randomX * gDfpLightningOffsetScale + start[0];
-                    randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX);
-                    end[1] = randomY * gDfpLightningOffsetScale + obj->position[1];
-                    randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX);
-                    end[2] = randomZ * gDfpLightningOffsetScale + start[2];
+                    end[0] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) + start[0];
+                    end[1] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) + obj->position[1];
+                    end[2] = gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) + start[2];
                 }
                 if (state->effectHandle != 0)
                 {
