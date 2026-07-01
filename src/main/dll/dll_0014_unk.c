@@ -924,12 +924,13 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         }                                                                          \
     }
 
+#pragma opt_common_subs off
 int mathFn_800dbff0(float* point)
 {
     s16 up;
     s16 down;
-    u8 i;
     u8 j;
+    u8 i;
     ObjfsaWalkGroup* g;
     f32 y;
     f32 x;
@@ -965,6 +966,7 @@ int mathFn_800dbff0(float* point)
     WALKGROUP_TRY_RETURN(down);
     return 0;
 }
+#pragma opt_common_subs on
 
 #pragma scheduling on
 #pragma peephole on
