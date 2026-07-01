@@ -2668,7 +2668,7 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 int RomCurve_func16(double x, double y, double z)
 {
     extern int curves_distFn15(); /* #57 */
-    u32 candidateIds[24];
+    u32 candidateIds[20];
     u32* top;
     int candidateCount;
     int category;
