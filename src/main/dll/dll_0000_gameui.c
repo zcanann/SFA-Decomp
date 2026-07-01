@@ -2300,7 +2300,7 @@ void fn_80128A7C(u8 i, int p2, int p3);
 #pragma opt_common_subs off
 void fn_80128470(int p1)
 {
-    int sp1 = (s16)p1;
+    int sp1;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
@@ -2344,8 +2344,11 @@ void fn_80128470(int p1)
         f32 amp = base * s + base;
         fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)p1), 4);
     }
-    gameTextSetColor(0xff, 0xff, 0xff,
-                     (int)((double)(sp1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
+    sp1 = (s16)p1;
+    {
+        int n = sp1 * (0x200 - lbl_803DD75C);
+        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
+    }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
     if ((int)pauseMenuState < 0xb && (int)pauseMenuState >= 8)
     {
@@ -2358,8 +2361,8 @@ void fn_80128470(int p1)
     if (lbl_803DD75C != 0)
     {
         s16 tx;
-        gameTextSetColor(0xff, 0xff, 0xff,
-                         (int)((double)(sp1 * lbl_803DD75C) * lbl_803E2088));
+        int n = sp1 * lbl_803DD75C;
+        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818)
         {
@@ -2377,12 +2380,14 @@ void fn_80128470(int p1)
     if (lbl_803DD75C == 0)
     {
         HudTextures* tex;
-        GridEntry* e = &lbl_803DD824[lbl_803DD7D8];
-        f32 scale = (f32)(lbl_803E2108 * e->f10);
+        GridEntry* e;
+        f32 scale = (f32)(lbl_803E2108 * (e = &lbl_803DD824[lbl_803DD7D8])->f10);
         int w = lbl_803E1F34;
         int cw = (int)(scale * (f32) * (u8*)((char*)e + 0x8));
         int ch = (int)(scale * (f32) * (u8*)((char*)e + 0x9));
         int vx = *(u16*)((char*)e + 0x2) + *(s8*)((char*)e + 0xb);
+        u16 w16;
+        s16 alpha;
         int x1 = (int)
         ((f32)vx - lbl_803E2110 - (f32)(u8)
         cw
@@ -2398,8 +2403,6 @@ void fn_80128470(int p1)
         ;
         s16 y2 = (s16)((u8)ch + vy);
         s16 ph = (s16)((int)lbl_803DD748 & 0x3f);
-        s16 alpha;
-        u16 w16;
         if (ph & 0x20)
         {
             ph = (s16)(ph ^ 0x3f);
