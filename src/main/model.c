@@ -3572,7 +3572,7 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
         {
             *(s16*)(ch + 0x4c) = (s16)(-bv * n);
         }
-        *(u8**)(ch + 0x2c) = anim + (*(s16*)(anim + 2) + bv * n);
+        *(u8**)(ch + 0x2c) = anim + *(s16*)(anim + 2) + bv * n;
     }
     fn_80007F78(ch, srot, outRot);
     *(int*)(ch + 0x34) = saved;
