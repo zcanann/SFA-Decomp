@@ -63,16 +63,16 @@ void fn_801627F4(int obj);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
-    extern double sqrtf(double x); /* #57 */
+    extern f32 sqrtf(f32); /* #57 */
     u16 zone;
     u16 pad;
     u16 dist;
     f32 z2, y2, x2, z, y, x;
-    f32 f;
     f32 spd;
     f32 vel;
     s16 angle;
     double d;
+    f32 r;
     char* sub;
 
     sub = *(char**)(*(int*)&((GameObject*)obj)->extra + 0x40c);
@@ -101,8 +101,10 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
     x = x - x2;
     y = y - y2;
     z = z - z2;
-    d = sqrtf(x * x + z * z);
-    angle = getAngle(y, (x = d));
+    r = sqrtf(x * x + z * z);
+    d = r;
+    x = r;
+    angle = getAngle(y, d);
     ((GameObject*)obj)->anim.rotY = (lbl_803E2EBC - lbl_803E2F00 * ((GameObject*)obj)->anim.currentMoveProgress) *
         (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
@@ -126,12 +128,12 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg)
             }
         }
         ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->pathProgress - vel;
-        f = ((GrimbleControl*)sub)->targetProgress;
-        f = (f < lbl_803E2EBC) ? lbl_803E2EBC : f;
-        ((GrimbleControl*)sub)->targetProgress = f;
-        f = ((GrimbleControl*)sub)->targetProgress;
-        f = (f < lbl_803E2F0C) ? f : lbl_803E2F0C;
-        ((GrimbleControl*)sub)->targetProgress = f;
+        spd = ((GrimbleControl*)sub)->targetProgress;
+        spd = (spd > lbl_803E2EBC) ? spd : lbl_803E2EBC;
+        ((GrimbleControl*)sub)->targetProgress = spd;
+        spd = ((GrimbleControl*)sub)->targetProgress;
+        spd = (spd < lbl_803E2F0C) ? spd : lbl_803E2F0C;
+        ((GrimbleControl*)sub)->targetProgress = spd;
         return 4;
     }
     return 0;
