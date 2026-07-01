@@ -4424,26 +4424,25 @@ void GameUI_update(void)
 #pragma opt_propagation off
 void textureFreeFn_8012fcec(void)
 {
-    u8* base = lbl_803A87F0;
-    u8 i;
+    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
+    u8 j;
     s16* rowS16;
     u8* rowU8;
-    void* nullTex = NULL;
 
     gameUiResetMenuState();
-    for (i = 0; i < 64; i++)
+    for (j = 0; j < 64; j++)
     {
-        int j = i;
-        void** tex = (void**)(base + j * 4);
-        tex = (void**)((u8*)tex + 2504);
+        void** tex;
+        int k = j;
+        tex = (void**)((u8*)&g->itemTextures + k * 4);
         if (*tex != NULL)
         {
             textureFree(*tex);
-            *tex = nullTex;
+            *tex = NULL;
         }
-        rowS16 = (s16*)(base + j * 2);
+        rowS16 = (s16*)((u8*)g + k * 2);
         rowS16[1188] = -1;
-        rowU8 = base + j;
+        rowU8 = (u8*)g + k;
         rowU8[1096] = 1;
     }
     if (lbl_803DD7C8 != NULL)
