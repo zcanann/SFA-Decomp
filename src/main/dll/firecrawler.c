@@ -507,13 +507,21 @@ void fn_80157CDC(int obj, int state)
     extern f32 lbl_803E2BA4;
     typedef struct
     {
+        u8 pad[4];
+        u32 sfxId;   /* 0x4 */
+        u8 pad2;
+        u8 shakeAmt; /* 0x9 */
+        u8 rumbleAmt;/* 0xa */
+        u8 flags;    /* 0xb */
+    } CrawlerSubDesc;
+    typedef struct
+    {
         u8 pad[0x1c];
-        char* p;
+        CrawlerSubDesc* p;
     } CrawlerDescE;
     CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
-    char* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
+    CrawlerSubDesc* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
     u8 i;
-    char* sub;
 
     gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
 
@@ -521,17 +529,17 @@ void fn_80157CDC(int obj, int state)
     {
         if ((*(u16*)(state + 0x2f8) & (1 << i)) != 0)
         {
-            sub = entry + i * 12;
-            if (*(u32*)(sub + 4) != 0)
+            CrawlerSubDesc* sub = &entry[i];
+            if (sub->sfxId != 0)
             {
-                Sfx_PlayFromObject(obj, (u16) * (u32*)(sub + 4));
+                Sfx_PlayFromObject(obj, (u16)sub->sfxId);
             }
-            if (*(u8*)(sub + 9) != 0)
+            if (sub->shakeAmt != 0)
             {
                 CameraShake_ApplyRadial(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                        ((GameObject*)obj)->anim.localPosZ, lbl_803E2BA0, (f32)(u32) * (u8*)(sub + 9));
+                                        ((GameObject*)obj)->anim.localPosZ, lbl_803E2BA0, (f32)(u32)sub->shakeAmt);
             }
-            if (*(u8*)(sub + 10) != 0)
+            if (sub->rumbleAmt != 0)
             {
                 void* player = Obj_GetPlayerObject();
                 if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
@@ -540,13 +548,13 @@ void fn_80157CDC(int obj, int state)
                     if (dist <= lbl_803E2B80)
                     {
                         f32 amt = lbl_803E2BA4 - dist / lbl_803E2B80;
-                        doRumble(amt * (f32)(u32) * (u8*)(sub + 10));
+                        doRumble(amt * (f32)(u32)sub->rumbleAmt);
                     }
                 }
             }
-            if (*(u8*)(sub + 11) != 0)
+            if (sub->flags != 0)
             {
-                if ((*(u8*)(sub + 11) & 1) != 0)
+                if ((sub->flags & 1) != 0)
                 {
                     *(u8*)(state + 0x33d) = (u8)(*(u8*)(state + 0x33d) ^ 0x40);
                     if ((*(u8*)(state + 0x33d) & 0x40) != 0)
@@ -565,7 +573,7 @@ void fn_80157CDC(int obj, int state)
                         firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
                     }
                 }
-                if ((*(u8*)(sub + 11) & 2) != 0)
+                if ((sub->flags & 2) != 0)
                 {
                     fn_80157B58(obj, state);
                 }
