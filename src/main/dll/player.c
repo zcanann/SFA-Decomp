@@ -12528,15 +12528,19 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     u8 j;
     f32 scale;
     f32 zero;
+    f32 fv;
     f32 snd[3];
     f32 arr[6];
 
     timerRec = *(int*)((char*)inner + 0x40c);
-    if (*(f32*)((char*)timerRec + 0x10) != (zero = lbl_803E8180) &&
-        (*(f32*)((char*)timerRec + 0x10) = *(f32*)((char*)timerRec + 0x10) - timeDelta,
-            *(f32*)((char*)timerRec + 0x10) <= zero))
+    fv = *(f32*)((char*)timerRec + 0x10);
+    if (fv != (zero = lbl_803E8180))
     {
-        Obj_FreeObject(obj);
+        *(f32*)((char*)timerRec + 0x10) = fv - timeDelta;
+        if (*(f32*)((char*)timerRec + 0x10) <= zero)
+        {
+            Obj_FreeObject(obj);
+        }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -12552,7 +12556,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             scale = lbl_803E8210;
             for (; j != 0; j--)
             {
-                fn_80098B18(scale * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, 0, 0, arr);
+                ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(obj, scale * ((GameObject*)obj)->anim.rootMotionScale, 3, 0, 0, arr);
             }
             break;
         }
@@ -12578,7 +12582,7 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
-            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, snd);
+            ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(obj, lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, 3, mode, 0, snd);
         }
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;
