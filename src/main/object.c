@@ -2737,7 +2737,8 @@ void modelInitBones(f32 scale, void* model)
                 vz = *(f32*)(bone + 0xc);
                 len = sqrtf(vx * vx + vy * vy + vz * vz);
                 *(f32*)(*(u8**)(tbl + 0xc) + off) = sc * len;
-                if (*(f32*)(*(u8**)(tbl + 0xc) + off) == zero)
+                v = *(f32*)(*(u8**)(tbl + 0xc) + off);
+                if (v == zero)
                 {
                     *(f32*)(*(u8**)(tbl + 0xc) + off) = lbl_803DE8D8;
                 }
