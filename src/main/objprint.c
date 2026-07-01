@@ -2907,13 +2907,18 @@ void modelCalcVtxGroupMtxs(int def, int model)
 
     for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
     {
-        u8* grp = (u8*)(*(int*)(def + 0x54) + off);
-        f32* out = ObjModel_GetJointMatrix((int*)model, i + *(u8*)(def + 0xf3));
-        f32* m1 = ObjModel_GetJointMatrix((int*)model, grp[0]);
-        f32* m2 = ObjModel_GetJointMatrix((int*)model, grp[1]);
+        u8* grp;
+        f32* out;
+        f32* m2;
+        f32* m1;
         f32 w;
         f32 wi;
         char* jd;
+
+        grp = (u8*)(*(int*)(def + 0x54) + off);
+        out = ObjModel_GetJointMatrix((int*)model, i + *(u8*)(def + 0xf3));
+        m1 = ObjModel_GetJointMatrix((int*)model, grp[0]);
+        m2 = ObjModel_GetJointMatrix((int*)model, grp[1]);
 
         w = grp[2];
         w *= 0.25f;
