@@ -2328,17 +2328,12 @@ void Obj_FreeObject(u8* obj)
     Sfx_StopObjectChannel((u32)obj, 0x7f);
     if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
-        i = 0;
-        n = gObjCount;
-        p = gObjList;
-        for (; n > 0; n--)
+        for (i = 0; i < gObjCount; i++)
         {
-            if (*p == obj)
+            if (((u8**)gObjList)[i] == obj)
             {
                 break;
             }
-            p++;
-            i++;
         }
         if (i < gObjCount)
         {
@@ -2369,24 +2364,24 @@ void Obj_FreeObject(u8* obj)
     {
         i = 0;
         base = lbl_803DCB90;
-        p = base;
-        for (n = lbl_803DCB8C; n > 0; n--)
+        for (; i < lbl_803DCB8C; i++)
         {
-            if (*p == obj)
+            if (base[i] == obj)
             {
                 break;
             }
-            p++;
-            i++;
         }
-        if (i != lbl_803DCB8C)
+        if (i == lbl_803DCB8C)
         {
-            return;
+            if (lbl_803DCB8C < 0x18)
+            {
+                ((u8**)lbl_803DCB90)[lbl_803DCB8C] = obj;
+                lbl_803DCB8C++;
+                return;
+            }
         }
-        if (lbl_803DCB8C < 0x18)
+        else
         {
-            base[lbl_803DCB8C] = obj;
-            lbl_803DCB8C++;
             return;
         }
     }
@@ -2395,16 +2390,12 @@ void Obj_FreeObject(u8* obj)
         i = gObjDeferredFreeCount;
         if (gObjDeferredFreeCount != 0)
         {
-            i = 0;
-            p = (u8**)gObjDeferredFreeList;
-            for (n = gObjDeferredFreeCount; n > 0; n--)
+            for (i = 0; i < gObjDeferredFreeCount; i++)
             {
-                if (*p == obj)
+                if (((u8**)gObjDeferredFreeList)[i] == obj)
                 {
                     break;
                 }
-                p++;
-                i++;
             }
         }
         if (i == gObjDeferredFreeCount)
