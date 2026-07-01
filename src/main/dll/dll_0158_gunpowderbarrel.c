@@ -204,11 +204,12 @@ void gunpowderbarrel_triggerExplosion(int* obj)
     int count;
     u8* tricky;
     int* timer;
+    int objI = (int)obj;
 
     sub = ((GameObject*)obj)->extra;
     /* Arm detonation if we took a priority hit, OR we're in flight (motionFlags
      * bit 2) and made contact with a surface. Also mark the barrel sleeping. */
-    if (ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0) != 0 ||
+    if (ObjHits_GetPriorityHit(objI, &hitObj, 0, 0) != 0 ||
         (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (((GunpowderBarrelState*)sub)->motionFlags & 2) != 0))
     {
         ((GunpowderBarrelState*)sub)->detonateTrigger += 1;
@@ -240,7 +241,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(0x3a, (u32)obj, 0);
+                best = (int*)ObjGroup_FindNearestObject(0x3a, objI, 0);
             }
             if (best != 0)
             {
@@ -259,12 +260,12 @@ void gunpowderbarrel_triggerExplosion(int* obj)
         }
         /* Reconfigure the hitbox into a blast-damage volume, play the boom SFX
          * and spawn the explosion effect at a raised Y. */
-        ObjHits_ClearFlags((int)obj, 0x80);
-        ObjHits_SetSourceMask((int)obj, 1);
-        ObjHitbox_SetCapsuleBounds((int)obj, 0x14, -5, 0x14);
-        ObjHits_EnableObject((int)obj);
-        ObjHits_SetHitVolumeSlot((int)obj, 5, 4, 0);
-        Sfx_PlayFromObject((u32)obj, SFXsk_bapt11_c);
+        ObjHits_ClearFlags(objI, 0x80);
+        ObjHits_SetSourceMask(objI, 1);
+        ObjHitbox_SetCapsuleBounds(objI, 0x14, -5, 0x14);
+        ObjHits_EnableObject(objI);
+        ObjHits_SetHitVolumeSlot(objI, 5, 4, 0);
+        Sfx_PlayFromObject(objI, SFXsk_bapt11_c);
         ((GameObject*)obj)->anim.localPosY += lbl_803E4308;
         spawnExplosion(obj, lbl_803E42C0, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
@@ -276,7 +277,7 @@ void gunpowderbarrel_triggerExplosion(int* obj)
          * fuseFrames > 0x14, finishes the detonation (hide + respawn/remove). */
         ((GunpowderBarrelState*)sub)->fuseFrames = 1;
         ((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->held = 0;
-        ObjGroup_RemoveObject((u32)obj, 0x19);
+        ObjGroup_RemoveObject(objI, 0x19);
         if (((GameObject*)obj)->anim.parent != 0)
         {
             ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
