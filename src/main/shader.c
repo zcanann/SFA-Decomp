@@ -2291,8 +2291,9 @@ void mapLoadUnloadObjects(int flag)
 
     base = lbl_8037E0C0;
     count = 0;
+    i = 0;
     tp = (int*)(base + 0x41E0);
-    for (i = 0; i < 5; i++)
+    for (; i < 5; i++)
     {
         k = 0;
         q = (s16*)(*tp + 0x594);
@@ -2414,17 +2415,16 @@ void mapLoadUnloadObjects(int flag)
         }
         for (i = 0; i < count; i++)
         {
-            int id2 = list[i];
-            if (gShaderCurMapEventId == id2)
+            if (gShaderCurMapEventId == list[i])
             {
-                char* page = *(char**)(base + (0x83A8 + id2 * 4));
+                char* page = *(char**)(base + (0x83A8 + list[i] * 4));
                 if (page != 0)
                 {
                     m = 1;
                     bit = 0;
                     cur = *(u32*)(page + 0x20);
                     bp = *(u8**)(page + 0x10);
-                    end = cur + *(int*)(base + (0x4290 + id2 * 0x8C));
+                    end = cur + *(int*)(base + (0x4290 + list[i] * 0x8C));
                     while (cur < end)
                     {
                         o = cur;
@@ -2507,16 +2507,16 @@ void mapLoadUnloadObjects(int flag)
                         {
                             char* pg2 = *slot;
                             idx = bit >> 3;
-                            if (idx < 0xc4)
+                            if (idx >= 0xc4)
+                            {
+                                vis = 0;
+                            }
+                            else
                             {
                                 vis = 1;
                                 if (((1 << (bit & 7)) &
                                     *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
                                     vis = 0;
-                            }
-                            else
-                            {
-                                vis = 0;
                             }
                         }
                         if (vis == 0 && objShouldLoad(cur, lp, mid2) != 0)
