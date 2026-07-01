@@ -1580,9 +1580,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                                                                             &((ObjSeqState*)seq)->animEvents);
                 if (mode != 0)
                 {
-                    if (((ObjSeqState*)seq)->fade > 0.0f)
+                    if (((ObjSeqState*)seq)->fade > lbl_803DEFB0)
                     {
-                        rate = gObjSeqDefaultFadeRate;
                         if (((ObjSeqState*)seq)->trackRunLength[10] != 0)
                         {
                             frame = ((ObjSeqState*)seq)->curFrame - 1;
@@ -1594,6 +1593,10 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                                         ((ObjSeqState*)seq)->trackAnimStart[10] * 8),
                                     ((ObjSeqState*)seq)->trackRunLength[10] & 0xfff, frame);
                             }
+                            else
+                            {
+                                rate = gObjSeqDefaultFadeRate;
+                            }
                         }
                         else
                         {
@@ -1603,10 +1606,11 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                         {
                             rate = lbl_803DEFC8;
                         }
-                        ((ObjSeqState*)seq)->fade = ((ObjSeqState*)seq)->fade - lbl_803DEFC8 / rate;
-                        if (((ObjSeqState*)seq)->fade < 0.0f)
+                        val = *(f32*)&lbl_803DEFC8 / rate;
+                        ((ObjSeqState*)seq)->fade = ((ObjSeqState*)seq)->fade - val;
+                        if (((ObjSeqState*)seq)->fade < lbl_803DEFB0)
                         {
-                            ((ObjSeqState*)seq)->fade = 0.0f;
+                            ((ObjSeqState*)seq)->fade = lbl_803DEFB0;
                         }
                     }
                 }
