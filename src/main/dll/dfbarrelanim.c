@@ -20,7 +20,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 extern f32 lbl_803E4DF8;
-extern f32 lbl_803E4DFC;
+extern const f32 lbl_803E4DFC;
 extern const f32 lbl_803E4E00;
 extern f32 lbl_803E4E04;
 extern const f32 lbl_803E4E08;
@@ -29,8 +29,8 @@ extern const f32 lbl_803E4E10;
 extern const f32 lbl_803E4E14;
 extern f32 lbl_803E4E18;
 
-DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
-                      f32 unused, f32 tickScale)
+DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
+                      s32 count, f32 tickScale)
 {
     DFRope* rope;
     DFRopeNode* nodes;
@@ -43,7 +43,6 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     f32 dy;
     f32 dz;
     f32 length;
-    f32 zero;
 
     dx = endX - startX;
     dy = endY - startY;
@@ -84,18 +83,17 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
 
     nodes = rope->nodes;
     node = nodes;
-    zero = lbl_803E4DFC;
     for (i = 0; i < count; node++, i++)
     {
         node->pos[0] = i * dx + rope->start[0];
         node->pos[1] = i * dy + rope->start[1];
         node->pos[2] = i * dz + rope->start[2];
-        node->velocity[2] = zero;
-        node->velocity[1] = zero;
-        node->velocity[0] = zero;
-        node->force[2] = zero;
-        node->force[1] = zero;
-        node->force[0] = zero;
+        node->velocity[2] = lbl_803E4DFC;
+        node->velocity[1] = lbl_803E4DFC;
+        node->velocity[0] = lbl_803E4DFC;
+        node->force[2] = lbl_803E4DFC;
+        node->force[1] = lbl_803E4DFC;
+        node->force[0] = lbl_803E4DFC;
         node->locked = 0;
         if ((i == 0) || (i == count - 1))
         {
@@ -129,14 +127,14 @@ DFRope* DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
     {
         link->restLength = rope->totalLength / linkCount;
         link->stiffness = lbl_803E4E10;
-        link->force[2] = zero;
-        link->force[1] = zero;
-        link->force[0] = zero;
+        link->force[2] = lbl_803E4DFC;
+        link->force[1] = lbl_803E4DFC;
+        link->force[0] = lbl_803E4DFC;
         link->maxLength = lbl_803E4E14 * link->restLength;
         nextNode = (DFRopeNode*)((u8*)nodes + (i + 1) * sizeof(DFRopeNode));
         DFRopeLink_AttachNodes(link, node, nextNode);
-        node++;
         link++;
+        node++;
     }
     return rope;
 }
