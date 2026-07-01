@@ -2086,7 +2086,7 @@ void renderSceneGeometry(int* p1, s8* order)
     int y, x0;
     int k;
     int row, col;
-    s8 *op, *ip;
+    int oi, ii;
     int layer;
     u8* blk;
     s8* table;
@@ -2094,7 +2094,6 @@ void renderSceneGeometry(int* p1, s8* order)
     f32 rowF, colF;
     int cell;
     u8* p;
-    int oi, ii;
 
     layer = 4;
     lt = &gMapBlockLayerTables[4];
@@ -2148,17 +2147,13 @@ void renderSceneGeometry(int* p1, s8* order)
                 p++;
             }
         }
-        oi = 0;
-        op = order;
-        for (; oi < 16; oi++)
+        for (oi = 0; oi < 16; oi++)
         {
-            row = *op;
+            row = order[oi];
             rowF = ws * (f32)row;
-            ii = 0;
-            ip = order;
-            for (; ii < 16; ii++)
+            for (ii = 0; ii < 16; ii++)
             {
-                col = *ip;
+                col = order[ii];
                 cell = row + col * 0x10;
                 idx = table[cell];
                 if (idx < 0)
@@ -2182,10 +2177,8 @@ void renderSceneGeometry(int* p1, s8* order)
                     PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)*(s16*)(blk + 0x8e), colF);
                     renderMapBlock(blk, p1);
                 }
-            next:
-                ip++;
+            next:;
             }
-            op++;
         }
         lt--;
         lt2--;
