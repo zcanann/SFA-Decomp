@@ -156,7 +156,7 @@ extern u8 lbl_803DD7C4;
 extern int lbl_803DD7D8;
 extern f32 gPauseMenuSwivelWrapMax;
 extern f32 gPauseMenuSwivelWrapMin;
-extern f32 lbl_803E1E94;
+extern const f32 lbl_803E1E94;
 extern GridEntry* lbl_803DD824;
 extern f32 lbl_803DD760;
 extern f32 lbl_803DD764;
@@ -277,7 +277,7 @@ extern f32 lbl_803DD748;
 extern f64 lbl_803E2088;
 extern f32 lbl_803E20A0;
 extern f32 lbl_803E2104;
-extern f32 lbl_803E1EC8;
+extern const f32 lbl_803E1EC8;
 extern f64 lbl_803E2108;
 extern f32 lbl_803E2110;
 extern f32 lbl_803E2114;
@@ -292,9 +292,9 @@ extern f32 lbl_803E1F48;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FB8;
 extern f32 lbl_803E1FF0;
-extern f32 lbl_803E2010;
+extern const f32 lbl_803E2010;
 extern f32 lbl_803E204C;
-extern f32 lbl_803E2050;
+extern const f32 lbl_803E2050;
 extern f32 lbl_803E2058;
 extern f32 lbl_803E2198;
 extern f32 lbl_803E219C;
@@ -357,14 +357,14 @@ extern f32 lbl_8031BFA8[30];
 extern s16 gPauseMenuSwivelAngle;
 extern s16 gPauseMenuPodiumSpinFrame;
 extern f32 lbl_803E1E58;
-extern f32 lbl_803E1E64;
+extern const f32 lbl_803E1E64;
 extern f32 lbl_803E1FC0;
 extern f32 lbl_803E2178;
 extern f32 lbl_803E217C;
 extern f64 lbl_803E2180;
 extern f32 lbl_803E2188;
 extern f32 lbl_803E218C;
-extern f32 lbl_803E2190;
+extern const f32 lbl_803E2190;
 extern f32 lbl_803E2194;
 extern float mathCosf(float x);
 extern u8 gGameUiHelpTextPending;
@@ -3647,12 +3647,6 @@ void fn_8012C000(void)
     int kk;
     s16 delta;
     u32 watermark;
-    f32 c2190;
-    f32 c1EC8;
-    f32 c1E94;
-    f32 c1E64;
-    f32 c2050;
-    f32 c2010;
     f32 base;
     ObjAnimEventList animEvents;
 
@@ -3668,13 +3662,8 @@ void fn_8012C000(void)
     }
     if (player != NULL)
     {
-        int t = 0;
-        if (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
-            fn_802972A8(player) == 0)
-        {
-            t = 1;
-        }
-        flag = t;
+        flag = (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
+            fn_802972A8(player) == 0);
     }
     else
     {
@@ -3721,12 +3710,6 @@ void fn_8012C000(void)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
                                                                  &animEvents);
     watermark = 0x90000000;
-    c2010 = lbl_803E2010;
-    c2050 = lbl_803E2050;
-    c1E64 = lbl_803E1E64;
-    c1E94 = lbl_803E1E94;
-    c1EC8 = lbl_803E1EC8;
-    c2190 = lbl_803E2190;
     for (; k <= last; k++)
     {
         f32 sel;
@@ -3745,23 +3728,23 @@ void fn_8012C000(void)
             sel = lbl_803E2194;
         }
         sel = sel * lbl_803DD784;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * c2190;
+        *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * lbl_803E2190;
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
                                                                      &animEvents);
-        a = c1E64 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
+        a = lbl_803E1E64 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0xc) =
-            a * c2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
-        base = c2050 * mathSinf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94) +
-            (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + c2010);
-        a = c1E64 - mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
+            a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
+        base = lbl_803E2050 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94) +
+            (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + lbl_803E2010);
+        a = lbl_803E1E64 - mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x10) = a * c2190 + base;
-        a = c1E64 * mathCosf(c1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / c1E94);
+        *(f32*)((u8*)lbl_803A9410[k] + 0x10) = a * lbl_803E2190 + base;
+        a = lbl_803E1E64 * mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
         *(f32*)((u8*)lbl_803A9410[k] + 0x14) =
-            a * c2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
+            a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
     }
 }
 
