@@ -41,7 +41,8 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
                    f32* arg6)
 {
     FbBuf buf;
-    u8* base = lbl_80316728;
+    u8* base = (u8*)(int)lbl_80316728;
+    void* mbuf = base;
     f32 c94, ca0, c9c, c98, c7c, c78, ca4, zero;
     f32 zoff;
     f32 v60 = lbl_803E1060;
@@ -54,6 +55,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     {
         s = *arg6;
     }
+    i = 0;
     zoff = lbl_803E106C + s;
     e = buf.entries;
     zero = lbl_803E1074;
@@ -64,7 +66,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     ca0 = lbl_803E10A0;
     c94 = lbl_803E1094;
     ca4 = lbl_803E10A4;
-    for (i = 0; i < 2; i++)
+    for (; i < 2; i++)
     {
         if (i == 1)
         {
@@ -255,7 +257,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
                 buf.pos[2] = zero + ((PartFxSpawnParams*)posSource)->posZ;
             }
         }
-        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, 0xd9, 0);
+        (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, mbuf, 0x18, base + 0xd4, 0xd9, 0);
     }
 }
 
