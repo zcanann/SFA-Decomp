@@ -1508,16 +1508,17 @@ void fn_80137DF8(void)
         }
     }
 }
-#pragma opt_propagation on
+#pragma opt_propagation off
 #pragma opt_strength_reduction on
 #pragma ppc_unroll_speculative on
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma optimization_level 2
 void debugPrintDraw(int ctx)
 {
+    u32 ys;
+    u32 y2;
     u32 xa, xb, ya, yb;
     u32 xs;
     u32 colw;
@@ -1530,9 +1531,7 @@ void debugPrintDraw(int ctx)
     u32 res;
     u32 sw;
     u32 yv;
-    u32 ys;
     u32 sh;
-    u32 y2;
 
     res = getScreenResolution();
     gDebugScreenHeight = res >> 0x10;
