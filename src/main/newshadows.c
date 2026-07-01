@@ -1801,6 +1801,7 @@ extern const f32 Yachuff_803DEDE0;
 extern f32 gNewShadowPlacements[];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
+#pragma opt_common_subs off
 void initFn_8006d020(void)
 {
     u8 saved;
@@ -1921,6 +1922,7 @@ void initFn_8006d020(void)
     gNewShadowReflectionScrollY = 0.0f;
     testAndSet_onlyUseHeap3(saved);
 }
+#pragma opt_common_subs reset
 
 extern void fn_80069EB8();
 extern f32 lbl_803DED10, lbl_803DED34;
