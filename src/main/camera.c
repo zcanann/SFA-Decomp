@@ -595,6 +595,7 @@ void viewportEffectFn_8000e380(void)
     f32 falloffTime;
     f32 shakeTimer;
     f32 sinePhase;
+    f32 phaseScale;
     s32 i;
 
     gCameraViewportYOffset = cameraViewportYOffset;
@@ -622,9 +623,7 @@ void viewportEffectFn_8000e380(void)
     }
     else if (slot->shakeActive == 1)
     {
-        falloffTime = -slot->shakeFalloff;
-        shakeTimer = slot->shakeTimer;
-        falloffTime *= shakeTimer;
+        falloffTime = -slot->shakeFalloff * (shakeTimer = slot->shakeTimer);
         expTerm = *(f32*)&lbl_803DE5F0;
         n = expTerm;
         term = falloffTime;
@@ -675,7 +674,8 @@ void viewportEffectFn_8000e380(void)
             factorial *= n;
         }
 
-        sinePhase = (gCameraPi * (lbl_803DE5FC * slot->shakeDuration * shakeTimer)) / lbl_803DE600;
+        phaseScale = lbl_803DE5FC * slot->shakeDuration;
+        sinePhase = (gCameraPi * (phaseScale * shakeTimer)) / lbl_803DE600;
         slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * mathCosf(sinePhase);
         if ((slot->shakeMagnitude < gCameraShakeStopThreshold) && (slot->shakeMagnitude > gCameraShakeStopThresholdNeg))
         {
