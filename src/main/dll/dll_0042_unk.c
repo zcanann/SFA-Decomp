@@ -86,12 +86,12 @@ extern f32 lbl_803E1738;
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
-    float bestLower;
-    float zLim;
     float pt0;
     float wy;
     float diff;
     float bestUpper;
+    float bestLower;
+    float zLim;
     float zB;
     int res;
     int count;
@@ -109,7 +109,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
     camObj = (int)camera->anim.targetObj;
     if ((flags & 1) != 0)
     {
-        *(float*)(cameraAddr + 0x74) = lbl_803E1688;
+        *(float*)(cameraAddr + 0x74) = 4.0f;
         *(s8*)(cameraAddr + 0x84) = -1;
         *(s8*)(cameraAddr + 0x88) = collisionFlag;
         res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
@@ -128,14 +128,15 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
     {
         count = hitDetectFn_80065e50(camObj, camera->anim.worldPosX, camera->anim.worldPosY,
                                      camera->anim.worldPosZ, &hits, 1, 0x40);
-        *upperBound = lbl_803E16D0;
-        bestUpper = (*lowerBound = lbl_803E16D4);
-        bestLower = bestUpper;
+        *upperBound = -100000.0f;
+        *lowerBound = 100000.0f;
+        bestUpper = 100000.0f;
+        bestLower = 100000.0f;
         off = 0;
-        zLim = lbl_803E16AC;
+        zLim = 0.0f;
         for (i = 0; i < count; i++)
         {
-            zB = lbl_803E16B4;
+            zB = 10.0f;
             if ((*(float**)(hits + off))[2] < zLim)
             {
                 pt0 = **(float**)(hits + off);
@@ -158,10 +159,10 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
             off += 4;
         }
         off2 = 0;
-        zLim = lbl_803E16AC;
+        zLim = 0.0f;
         for (j = 0; j < count; j++)
         {
-            zB = lbl_803E16B4;
+            zB = 10.0f;
             if ((*(float**)(hits + off2))[2] > zLim)
             {
                 pt0 = **(float**)(hits + off2);
