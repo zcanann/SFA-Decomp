@@ -930,6 +930,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
     {
         u8 i;
+        u8 j;
         s16 saved0;
         f32 savedF8;
         s16 saved2;
@@ -958,17 +959,18 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             for (i = 0; i < 4; i++)
             {
-                if ((*(u8*)(state + i + 0x5c) & 1) == 0)
+                if ((state[i + 0x5c] & 1) == 0)
                 {
-                    u8* q = state + i * 2;
-                    ((GameObject*)obj)->anim.rotX = *(s16*)(q + 0x44);
-                    ((GameObject*)obj)->anim.rotY = *(s16*)(q + 0x4c);
-                    ((GameObject*)obj)->anim.rotZ = *(s16*)(q + 0x54);
-                    *(s16*)(q + 0x44) = dt * lbl_803DBD78[i] + (f32) * (s16*)(q + 0x44);
-                    *(s16*)(q + 0x4c) = dt * lbl_803DBD80[i] + (f32) * (s16*)(q + 0x4c);
-                    *(s16*)(q + 0x54) = dt * lbl_803DBD88[i] + (f32) * (s16*)(q + 0x54);
+                    u32 k = i;
+                    u32 off = k * 2;
+                    ((GameObject*)obj)->anim.rotX = *(s16*)(state + off + 0x44);
+                    ((GameObject*)obj)->anim.rotY = *(s16*)(state + off + 0x4c);
+                    ((GameObject*)obj)->anim.rotZ = *(s16*)(state + off + 0x54);
+                    *(s16*)(state + off + 0x44) = dt * lbl_803DBD78[k] + (f32) * (s16*)(state + off + 0x44);
+                    *(s16*)(state + off + 0x4c) = dt * lbl_803DBD80[k] + (f32) * (s16*)(state + off + 0x4c);
+                    *(s16*)(state + off + 0x54) = dt * lbl_803DBD88[k] + (f32) * (s16*)(state + off + 0x54);
                     {
-                        u8* r = state + i * 4;
+                        u8* r = state + k * 4;
                         ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8 *
                             (((ShieldState*)state)->unk4 / *(f32*)&((ShieldState*)state)->unk10);
                         *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
@@ -983,13 +985,14 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             i = 0;
             for (; i < 4; i++)
             {
-                if ((*(u8*)(state + i + 0x5c) & 1) == 0)
+                if ((state[i + 0x5c] & 1) == 0)
                 {
-                    u32 off = i * 2 + 0x44;
+                    u32 k = i;
+                    u32 off = k * 2 + 0x44;
                     ((GameObject*)obj)->anim.rotX = *(s16*)(state + off);
-                    *(s16*)(state + off) = dt * lbl_803DBD70[i] + (f32) * (s16*)(state + off);
+                    *(s16*)(state + off) = dt * lbl_803DBD70[k] + (f32) * (s16*)(state + off);
                     {
-                        u8* r = state + i * 4;
+                        u8* r = state + k * 4;
                         ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(r + 0x24) * savedF8;
                         *(u8*)((char*)obj + 0x37) = *(f32*)(r + 0x14) * savedB36;
                     }
@@ -997,7 +1000,6 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E33C4);
                     if (hud == 0)
                     {
-                        u8 j;
                         f32 cD;
                         f32 cC;
                         f32 cB;
