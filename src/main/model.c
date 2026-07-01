@@ -1577,7 +1577,7 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 bl
                 for (j = 0; j < n; j++)
                 {
                     *(u16*)(du + 0x44) = *(u16*)(su + 0x44);
-                    *(u8*)(db + 0x60) = *(u8*)(channel + j + 0x60);
+                    *(u8*)(db + 0x60) = *(u8*)(channel + (j + 0x60));
                     *(f32*)(df + 0x14) = *(f32*)(sf + 0x14);
                     *(f32*)(df + 4) = *(f32*)(sf + 4);
                     *(u32*)(df + 0x34) = *(u32*)(sf + 0x34);
