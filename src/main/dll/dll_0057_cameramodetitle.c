@@ -171,6 +171,7 @@ void CameraModeTitle_update(CameraObject* camera)
     {
         u8* save = getSaveFileStruct();
         f32 v;
+        f32 bf0;
 
         titleScreenCamProgress = titleScreenCamProgress + gCamTitleProgressStep;
         if (titleScreenCamProgress >= lbl_803E1BE0)
@@ -206,16 +207,16 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
 
-        if (titleScreenCamProgress < *(f32*)&lbl_803E1BF0)
+        if (titleScreenCamProgress < (bf0 = *(f32*)&lbl_803E1BF0))
         {
-            v = lbl_803E1BF0 *
+            v = bf0 *
                 ((lbl_803E1BF4 * titleScreenCamProgress) * (lbl_803E1BF4 * titleScreenCamProgress));
         }
         else
         {
-            f32 w = -(lbl_803E1BF4 * (titleScreenCamProgress - lbl_803E1BF0) - lbl_803E1BE0);
+            f32 w = -(lbl_803E1BF4 * (titleScreenCamProgress - bf0) - lbl_803E1BE0);
             w = w * w;
-            v = lbl_803E1BF0 * (lbl_803E1BE0 - w) + lbl_803E1BF0;
+            v = bf0 * (lbl_803E1BE0 - w) + bf0;
         }
         v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
 
