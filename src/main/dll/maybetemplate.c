@@ -674,6 +674,7 @@ void pauseMenuDrawStatus(void)
         for (; i < PAUSE_MENU_HUD_ITEM_COUNT; i++)
         {
             ji = i;
+            off = ji * 4;
             op = ((f32*)(base + 0xAFC)) + ji;
             prev = *op;
             newOp = prev - timeDelta;
@@ -686,7 +687,7 @@ void pauseMenuDrawStatus(void)
                     Sfx_PlayFromObject(0, 0x38D);
                     dp = ((int*)(base + 0xB74)) + ji;
                     cur = *dp;
-                    sv = statuses[ji];
+                    sv = *(int*)((u8*)statuses + off);
                     if (cur > sv)
                     {
                         *dp = cur - 1;
@@ -701,11 +702,11 @@ void pauseMenuDrawStatus(void)
                     }
                     break;
                 default:
-                    ((int*)(base + 0xB74))[ji] = statuses[ji];
+                    ((int*)(base + 0xB74))[ji] = *(int*)((u8*)statuses + off);
                     break;
                 }
             }
-            if (statuses[ji] != 0)
+            if (*(int*)((u8*)statuses + off) != 0)
             {
                 bp = base + ji;
                 bp += 0xB64;
@@ -740,9 +741,9 @@ void pauseMenuDrawStatus(void)
                     }
                 }
             }
-            if (statuses[ji] != ((int*)(base + 0xB30))[ji])
+            if (*(int*)((u8*)statuses + off) != ((int*)(base + 0xB30))[ji])
             {
-                ((int*)(base + 0xB30))[ji] = statuses[ji];
+                ((int*)(base + 0xB30))[ji] = *(int*)((u8*)statuses + off);
                 if (*op <= lbl_803E1FA8)
                 {
                     *op = lbl_803E1FC8 - timeDelta;
