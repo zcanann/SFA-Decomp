@@ -3218,7 +3218,7 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
         {
             int i;
             int n2;
-            u8* q;
+            u16* q;
 
             n++;
             if (n > 0x10)
@@ -3226,7 +3226,7 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
                 break;
             }
             *(u32*)tbl = ch;
-            q = tbl + 4;
+            q = (u16*)(tbl + 4);
             n2 = getControlCharLen(ch);
             if (n2 > 4)
             {
@@ -3236,8 +3236,7 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
             {
                 u32 hi = ((u8*)str)[off++];
                 u32 lo = ((u8*)str)[off++];
-                *(u16*)q = (hi << 8) | lo;
-                q = (u8*)((u16*)q + 1);
+                *q++ = (hi << 8) | lo;
             }
         }
     }
