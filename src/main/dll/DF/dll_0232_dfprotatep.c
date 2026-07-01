@@ -479,8 +479,6 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 #pragma peephole off
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
-    SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
-    SfxplayerStateFlags* flags = &state->flags;
     struct
     {
         s16 rotation[4];
@@ -488,9 +486,10 @@ void TrickyCurve_updateEffectHandleRing(int obj)
     } buf;
     int* handles;
     s16 angleStep;
+    SfxplayerState* state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
     s16 i;
 
-    if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32)
+    if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot) ==
@@ -504,7 +503,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         }
     }
 
-    if (state->variantSfxTimer != 0 && flags->bit10 != 0)
+    if (state->variantSfxTimer != 0 && state->flags.bit10 != 0)
     {
         state->variantSfxTimer -= (s16)timeDelta;
         if (state->variantSfxTimer <= 0)
