@@ -96,8 +96,9 @@ void wcfloortile_update(int obj)
 {
     ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     WcFloorTileState* state = ((GameObject*)obj)->extra;
+    int off;
+    int i;
     WcFloorTileSetup* setup = (WcFloorTileSetup*)((GameObject*)obj)->anim.placementData;
-    f32 shakeMax;
 
     if ((u32)GameBit_Get(824) != 0)
     {
@@ -110,10 +111,9 @@ void wcfloortile_update(int obj)
     default:
         if (state->flags & 4)
         {
-            int off, i;
             if (0 < *(s8*)(*(int*)(obj + 0x58) + 0x10f))
             {
-                f32 z = lbl_803E6E9C;
+                f32 z = 0.0f;
                 for (i = 0, off = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); off += 4, i++)
                 {
                     int e = *(int*)(*(int*)(obj + 0x58) + off + 0x100);
@@ -134,13 +134,13 @@ void wcfloortile_update(int obj)
         break;
     case WCFLOORTILE_PHASE_FALLING:
         state->shakeTime = state->shakeTime + timeDelta;
-        if (state->shakeTime > (shakeMax = lbl_803E6EA0))
+        if (state->shakeTime > 120.0f)
         {
             state->flags |= 3;
-            state->shakeTime = shakeMax;
+            state->shakeTime = 120.0f;
             ((GameObject*)obj)->anim.velocityY = lbl_803E6EA4 * timeDelta + ((GameObject*)obj)->anim.velocityY;
         }
-        state->shakeMag = lbl_803E6EA8 * (state->shakeTime / lbl_803E6EA0);
+        state->shakeMag = lbl_803E6EA8 * (state->shakeTime / 120.0f);
         ((GameObject*)obj)->anim.rotY = randomGetRange(-state->shakeMag, state->shakeMag);
         ((GameObject*)obj)->anim.rotZ = randomGetRange(-state->shakeMag, state->shakeMag);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
