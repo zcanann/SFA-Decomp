@@ -147,10 +147,11 @@ void drmusiccont_update(int obj)
         }
     }
     {
+        f32 st = ((DrmusiccontState*)state)->stingerTimer;
         f32 zero = lbl_803E6BD8;
-        if (((DrmusiccontState*)state)->stingerTimer > zero)
+        if (st > zero)
         {
-            ((DrmusiccontState*)state)->stingerTimer = ((DrmusiccontState*)state)->stingerTimer - timeDelta;
+            ((DrmusiccontState*)state)->stingerTimer = st - timeDelta;
             if (((DrmusiccontState*)state)->stingerTimer <= zero)
             {
                 Sfx_PlayFromObject(0, 0x4bd); /* sfx id */
