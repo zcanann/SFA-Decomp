@@ -343,6 +343,7 @@ int initControllers(void)
     return 0;
 }
 
+#pragma opt_common_subs off
 void padUpdate(void)
 {
     u32* padStateBlock;
@@ -384,7 +385,7 @@ void padUpdate(void)
     PADClamp(readPad);
     if (rumbleEnabled != 0)
     {
-        if (lbl_803DE6E8 < gRumbleTimer)
+        if (gRumbleTimer > lbl_803DE6E8)
         {
             gRumbleTimer = gRumbleTimer - timeDelta;
             if (gRumbleTimer <= lbl_803DE6E8)
@@ -578,3 +579,4 @@ void padUpdate(void)
     }
     lbl_803DCCA5 = 0;
 }
+#pragma opt_common_subs reset
