@@ -60,10 +60,11 @@ void trickyGrowl(void* obj, void* trickyState)
 {
     void* state;
     int i;
+    int j;
+    void* digState;
     void** slot;
     void* setup;
     void** slot2;
-    int j;
     char* strBase = lbl_8031D2E8;
 
     switch (((TrickyState*)trickyState)->substate)
@@ -156,15 +157,15 @@ void trickyGrowl(void* obj, void* trickyState)
                 objSetAnimSpeedTo1(slot2[0x700 / 4]);
             }
             Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
-            state = ((GameObject*)obj)->extra;
-            if (((((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
+            digState = ((GameObject*)obj)->extra;
+            if (((((TrickyGrowlState*)digState)->unk58 >> 6) & 1) == 0u)
             {
                 s16 move = ((GameObject*)obj)->anim.currentMove;
                 if (move >= 0x30 || move < 0x29)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)(int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8(obj, (char*)digState + 0x3a8, 0x29d, 0, -1, 0);
                     }
                 }
             }
