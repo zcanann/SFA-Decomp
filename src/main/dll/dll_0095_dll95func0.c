@@ -88,7 +88,7 @@ STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 void dll_95_func03(int sourceObj, int variant, int posSource)
 {
     GfxBuf buf;
-    u8* base = lbl_80317528;
+    u8* base = (u8*)(int)lbl_80317528;
     GfxCmd* e = buf.entries;
 
     e[0].layer = 0;
@@ -163,7 +163,7 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
     buf.unk_46[4] = *(s16*)(base + 0x98);
     buf.unk_46[5] = *(s16*)(base + 0x9a);
     buf.unk_46[6] = *(s16*)(base + 0x9c);
-    buf.cmds = e;
+    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.spawnFlags = 0x4002400;
     if ((buf.spawnFlags & 1) != 0)
     {
