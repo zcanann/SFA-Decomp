@@ -420,7 +420,7 @@ poolSearchDone:
             }
         }
     }
-    else
+    if (preferredPoolIndex != EXPGFX_INVALID_POOL_INDEX)
     {
         foundPoolIndex = preferredPoolIndex;
         if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
