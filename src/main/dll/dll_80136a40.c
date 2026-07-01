@@ -367,19 +367,20 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
     u8* p;
+    u8* p2;
     u8 tag;
     u8 term;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
     if (n > 0xfa) return;
     tag = 0x81;
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = tag; }
+    p = debugLogEnd; debugLogEnd = p + 1; *p = tag;
     { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = r; }
     { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = g; }
     { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = b; }
     { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = a; }
     term = 0;
-    { u8* q = debugLogEnd; debugLogEnd = q + 1; *q = term; }
+    p2 = debugLogEnd; debugLogEnd = p2 + 1; *p2 = term;
 }
 #pragma optimization_level reset
 
