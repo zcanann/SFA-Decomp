@@ -503,6 +503,24 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     }
 }
 
+static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
+{
+    TextGlyph* g;
+    int cnt;
+
+    g = gameTextFonts->glyphs;
+    cnt = gameTextFonts->glyphCount;
+    while (cnt-- != 0)
+    {
+        if (g->key == ch && g->lang == glyphLang)
+        {
+            return g;
+        }
+        g++;
+    }
+    return NULL;
+}
+
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
 {
     int byteOff;
@@ -588,18 +606,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             continue;
         }
 
-        g = gameTextFonts->glyphs;
-        cnt = gameTextFonts->glyphCount;
-        while (cnt-- != 0)
-        {
-            if (g->key == ch && g->lang == glyphLang)
-            {
-                goto matched;
-            }
-            g++;
-        }
-        g = NULL;
-    matched:
+        g = findGlyph(ch, glyphLang);
         if (g == NULL)
         {
             continue;
@@ -608,7 +615,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         {
             continue;
         }
-        width = scale * (f32)(g->width + (g->advance + g->offsetX)) + width;
+        width = scale * (f32)(g->advance + (g->width + g->offsetX)) + width;
     }
 
     if (outW != NULL)
