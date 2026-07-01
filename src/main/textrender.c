@@ -2447,9 +2447,7 @@ void setLanguageFn_8001ad64(void* reqp)
                 n = (int)(w * h) >> 1;
                 while (n--)
                 {
-                    *dst8 = *src8;
-                    src8++;
-                    dst8++;
+                    *dst8++ = *src8++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
@@ -2460,9 +2458,7 @@ void setLanguageFn_8001ad64(void* reqp)
                 n = w * h;
                 while (n--)
                 {
-                    *dst16 = *src16;
-                    src16++;
-                    dst16++;
+                    *dst16++ = *src16++;
                 }
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
@@ -2472,17 +2468,16 @@ void setLanguageFn_8001ad64(void* reqp)
     }
     size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
     newBuf = mmAlloc(size, 0x1a, 0);
-    old = *(u16**)(req + 0x3c);
-    delta = (int)newBuf - (int)old;
     n = size >> 1;
     {
         u16* d = newBuf;
-        u16* s = old;
+        u16* s;
+        old = *(u16**)(req + 0x3c);
+        s = old;
+        delta = (int)newBuf - (int)old;
         while (n--)
         {
-            *d = *s;
-            d++;
-            s++;
+            *d++ = *s++;
         }
     }
     cs->strings = cs->strings + delta;
