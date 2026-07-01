@@ -360,7 +360,7 @@ void drawFn_8006f500(void)
             }
             PSMTXTrans(trans, lbl_803DEE48, *(f32 *)&lbl_803DEE48, Vachuff_803DEE20);
             PSMTXConcat(rot, trans, rot);
-            PSMTXTrans(trans, __THPHuffmanBits_803DEE24, __THPHuffmanBits_803DEE24, Vachuff_803DEE20);
+            PSMTXTrans(trans, __THPHuffmanBits_803DEE24, *(f32 *)&__THPHuffmanBits_803DEE24, Vachuff_803DEE20);
             PSMTXConcat(trans, rot, rot);
             GXLoadTexMtxImm(rot, 0x1e, 1);
             GXBegin(0x80, 2, 4);
