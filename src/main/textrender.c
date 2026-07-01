@@ -801,6 +801,7 @@ void* gameTextGetStr(int textId)
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
+#pragma peephole off
 void* gameTextGet(int textId)
 {
     u8* gameTextBase;
@@ -831,7 +832,7 @@ void* gameTextGet(int textId)
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        gGameTextFallbackBuf = (int)(gameTextBase + 0x20 + *(volatile int*)&gGameTextBufferIndex * 4);
+        { u8* fb = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 4; gGameTextFallbackBuf = (int)(fb + 0x20); }
 
         switch (gameTextFonts->mode)
         {
@@ -898,13 +899,14 @@ void* gameTextGet(int textId)
     gGameTextLastEntry = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
-    gGameTextFallbackBuf = (int)(gameTextBase + 0x20 + *(volatile int*)&gGameTextBufferIndex * 4);
+    { u8* fb = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 4; gGameTextFallbackBuf = (int)(fb + 0x20); }
     sprintf((char*)*(volatile int*)&gCurTextBuffer, &lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)gGameTextLastEntry = textId;
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
 }
+#pragma peephole reset
 
 u32
 #pragma scheduling on
