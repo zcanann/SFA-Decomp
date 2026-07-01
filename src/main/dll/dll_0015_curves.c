@@ -1561,8 +1561,7 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         minZ = minX;
         for (n = 0; n < ((int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
-            r = *radWrite;
-            v = *ptsRead + r;
+            v = *ptsRead + (r = *radWrite);
             if (v > maxX)
             {
                 maxX = v;
