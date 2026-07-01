@@ -356,13 +356,17 @@ typedef struct SHthorntailTailSwingEffectScratch
 } SHthorntailTailSwingEffectScratch;
 
 #pragma optimization_level 3
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
 void SHthorntail_update(SHthorntailObject* obj)
 {
     extern int randomGetRange(int lo, int hi); /* #57 */
     extern f32 getXZDistance(f32 * posA, f32 * posB); /* #57 */
-    extern u8 ObjHitReact_Update();
-    SHthorntailConfig* config;
+    extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* table, u32 count, u8 state, float* scratch);
+    u8* stateTables;
     s8* eventId;
+    SHthorntailRuntime* runtime;
+    SHthorntailConfig* config;
     int i;
     u8 hitResult;
     u8 mode;
@@ -370,8 +374,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     int val;
     u32 uval;
     int ref;
-    SHthorntailRuntime* runtime;
-    u8* stateTables;
     s32 activeConfigToken;
     f32 facingAngleRadians;
     f32 facingCos;
@@ -409,7 +411,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, 0x19, runtime->hitReactState, (float*)runtime->hitReactScratch);
+    hitResult = runtime->hitReactState = ObjHitReact_Update((int)obj, hitReactEntries, val, runtime->hitReactState, (float*)runtime->hitReactScratch);
     if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);
@@ -441,9 +443,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0)
         {
-            u8 newCounter = runtime->freezeFrameCounter + 1;
-            runtime->freezeFrameCounter = newCounter;
-            if (newCounter > 0xa)
+            if (++runtime->freezeFrameCounter > 0xa)
             {
                 runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             }
@@ -461,9 +461,9 @@ void SHthorntail_update(SHthorntailObject* obj)
                                    SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->facingAngle;
         }
-        val = ObjAnim_AdvanceCurrentMove(
-            SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState], timeDelta,
-            (int)obj, &animEvents);
+        val = ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+            (int)obj, SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState],
+            timeDelta, &animEvents);
         if (val != 0)
         {
             runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
@@ -499,7 +499,6 @@ void SHthorntail_update(SHthorntailObject* obj)
             obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
             obj->facingAngle += animEvents.rootPitch;
         }
-        uval = (u32)obj;
         for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1)
         {
             if (eventId[0x13] == '\0')
@@ -507,14 +506,14 @@ void SHthorntail_update(SHthorntailObject* obj)
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0)
                 {
                     Sfx_PlayFromObject(
-                        uval,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
+                        (u32)obj,SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
             }
             else if ((eventId[0x13] == '\a') &&
                 (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0))
             {
                 Sfx_PlayFromObject(
-                    uval, SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
+                    (u32)obj, SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
@@ -595,6 +594,8 @@ void SHthorntail_update(SHthorntailObject* obj)
     }
     return;
 }
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
 #pragma optimization_level reset
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
