@@ -571,11 +571,11 @@ void ktrex_update(int obj)
     f32* dp;
     u32 tmp;
     s16* bitA;
-    u8 maskA;
+    u8 mask;
     int i;
     s16* bitB;
-    u8 maskB;
     u8 flags;
+    int mm;
     int phase;
     f32 dx, dz, frac;
 
@@ -604,17 +604,16 @@ void ktrex_update(int obj)
         ((KTRexRuntime*)runtime)->unk2C0 = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     characterDoEyeAnims(obj, (char*)gKTRexRuntime + 0x3ac);
-    maskA = 0;
-    bitA = lbl_803DC290;
-    for (i = 0; i < 4; i++)
+    mask = 0;
+    for (i = 0, bitA = lbl_803DC290; i < 4; i++)
     {
         if (GameBit_Get(*bitA) != 0)
         {
-            maskA |= 1 << i;
+            mask |= 1 << i;
         }
         bitA++;
     }
-    ((KTRexArenaState*)gKTRexState)->unkFF = maskA;
+    ((KTRexArenaState*)gKTRexState)->unkFF = mask;
     player = ((KTRexRuntime*)runtime)->unk2D0;
     {
         KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
@@ -642,17 +641,17 @@ void ktrex_update(int obj)
         st->unkFE = ((u8*)&tmp)[(t >> 1) & 3];
     }
     flags = ((KTRexArenaState*)gKTRexState)->unkFE;
-    maskB = 0;
-    bitB = lbl_803DC298;
-    for (i = 0; i < 4; i++)
+    mask = 0;
+    for (i = 0, bitB = lbl_803DC298; i < 4; i++)
     {
-        if ((flags & (1 << i)) != 0 && GameBit_Get(*bitB) != 0)
+        mm = 1 << i;
+        if ((flags & mm) != 0 && GameBit_Get(*bitB) != 0)
         {
-            maskB |= 1 << i;
+            mask |= mm;
         }
         bitB++;
     }
-    ((KTRexArenaState*)gKTRexState)->laneMode = maskB;
+    ((KTRexArenaState*)gKTRexState)->laneMode = mask;
     (*(void (**)(int, void*, void*, int, void*, int, int, int))((char*)*gBaddieControlInterface + 0x54))(
         obj, runtime, (char*)gKTRexRuntime + 0x35c, ((KTRexRuntime*)gKTRexRuntime)->unk3F4,
         (char*)gKTRexRuntime + 0x405, 2, 2, 0);
