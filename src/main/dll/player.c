@@ -9725,7 +9725,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
             v = *(s16*)((char*)vec + 0x2);
             if (v > 0)
             {
-                *(s16*)((char*)vec + 0x2) = v - (int)(lbl_803E8050 * timeDelta);
+                *(s16*)((char*)vec + 0x2) -= (s16)(lbl_803E8050 * timeDelta);
                 if (*(s16*)((char*)vec + 0x2) < 0)
                 {
                     *(s16*)((char*)vec + 0x2) = 0;
@@ -9733,7 +9733,7 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
             }
             else
             {
-                *(s16*)((char*)vec + 0x2) = v + (int)(lbl_803E8050 * timeDelta);
+                *(s16*)((char*)vec + 0x2) += (s16)(lbl_803E8050 * timeDelta);
                 if (*(s16*)((char*)vec + 0x2) > 0)
                 {
                     *(s16*)((char*)vec + 0x2) = 0;
