@@ -759,8 +759,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     extern int ObjHits_IsObjectEnabled(int obj);
     u32 flags;
     int matrixSource;
-    int iv[2];
-    int pointIndex;
+    int iv[3];
     u8* worldBase;
     int matrixOffset;
     f32* localPoint;
@@ -819,31 +818,31 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
             transform.z = ((GameObject*)obj)->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
             iv[0] = 0;
-            worldBase = (u8*)collision;
-            pointIndex = iv[0];
             iv[1] = iv[0];
-            while (pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
+            worldBase = (u8*)collision;
+            iv[2] = iv[0];
+            while (iv[1] < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT))
             {
-                localPoint = (f32*)((u8*)collision->segmentLocalPoints + iv[1]);
+                localPoint = (f32*)((u8*)collision->segmentLocalPoints + iv[2]);
                 Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                       (f32*)(worldBase + 8),
                                       &collision->points[0][iv[0] + 1],
                                       &collision->points[0][iv[0] + 2]);
-                collision->segmentHitTypes[pointIndex] = -1;
+                collision->segmentHitTypes[iv[1]] = -1;
                 worldBase += 0xc;
-                iv[1] += 0xc;
+                iv[2] += 0xc;
                 iv[0] += 3;
-                pointIndex++;
+                iv[1]++;
             }
-            for (pointIndex = 0;
-                 pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
-                 pointIndex++)
+            for (iv[1] = 0;
+                 iv[1] < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
+                 iv[1]++)
             {
-                collision->traceStart[pointIndex][0] = collision->points[pointIndex][0];
-                collision->traceStart[pointIndex][1] =
+                collision->traceStart[iv[1]][0] = collision->points[iv[1]][0];
+                collision->traceStart[iv[1]][1] =
                     lbl_803E06B8 +
-                    (collision->points[pointIndex][1] + collision->segmentRadii[pointIndex]);
-                collision->traceStart[pointIndex][2] = collision->points[pointIndex][2];
+                    (collision->points[iv[1]][1] + collision->segmentRadii[iv[1]]);
+                collision->traceStart[iv[1]][2] = collision->points[iv[1]][2];
             }
         }
         if (((GameObject*)obj)->anim.classId == 1)
@@ -863,13 +862,13 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
         collision->resultWaterDepth = resetZero;
         collision->resultFloorGap = resetZero;
         collision->contactObj = 0;
-        for (pointIndex = 0;
-             pointIndex < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
-             pointIndex++)
+        for (iv[1] = 0;
+             iv[1] < ((int)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT);
+             iv[1]++)
         {
-            collision->waterY[pointIndex] = resetRange;
-            collision->floorY[pointIndex] = resetRange;
-            collision->ceilingY[pointIndex] = resetMin;
+            collision->waterY[iv[1]] = resetRange;
+            collision->floorY[iv[1]] = resetRange;
+            collision->ceilingY[iv[1]] = resetMin;
         }
     }
 }
