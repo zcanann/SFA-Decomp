@@ -453,7 +453,7 @@ void mmFreeTick(int arg)
     }
 
     {
-        MmStore** sp = (MmStore**)g->stores;
+        MmStore** sp = (MmStore**)gMmStoreArray;
         for (k = 0; k < 0x20; k += 8, sp += 8)
         {
             if (sp[0] != NULL) { sp[0]->bufCur = sp[0]->buf; }
