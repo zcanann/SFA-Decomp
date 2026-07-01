@@ -72,6 +72,7 @@ int magicdust_getExtraSize(void) { return 0x288; }
 
 void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
 
+#pragma opt_loop_invariants off
 void magicdust_update(int obj)
 {
     extern u32 ObjHits_DisableObject(); /* #57 */
@@ -305,6 +306,7 @@ void magicdust_update(int obj)
 LAB_80173f80:
     return;
 }
+#pragma opt_loop_invariants reset
 
 typedef struct MagicdustObjectDef
 {
