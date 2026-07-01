@@ -1228,8 +1228,6 @@ void fn_802BF4D8(int obj)
 int DR_CloudRunner_stateHandler04(int obj, int baddie)
 {
     CloudRunnerState * inner = ((GameObject*)obj)->extra;
-    int a0;
-    int a1;
     *(int*)((char*)baddie + 0) |= 0x1204000;
     ((CloudRunnerState*)baddie)->baddie.physicsActive = 0;
     if (*(s8*)&((CloudRunnerState*)baddie)->baddie.moveJustStartedA != 0)
@@ -1266,11 +1264,14 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
     ((GameObject*)obj)->anim.localPosX = inner->unk3C4;
     ((GameObject*)obj)->anim.localPosY = inner->unk3C8;
     ((GameObject*)obj)->anim.localPosZ = inner->unk3CC;
-    a0 = (u16)getAngle(-inner->pathPointX, -inner->pathPointZ);
-    a1 = (u16)getAngle(inner->pathPointY,
-                       sqrtf(inner->pathPointX * inner->pathPointX +
-                           inner->pathPointZ * inner->pathPointZ));
-    a0 = a0 - (u16)((GameObject*)obj)->anim.rotX;
+    {
+    int a0;
+    int a1;
+    a0 = getAngle(-inner->pathPointX, -inner->pathPointZ) & 0xffff;
+    a1 = getAngle(inner->pathPointY,
+                  sqrtf(inner->pathPointX * inner->pathPointX +
+                      inner->pathPointZ * inner->pathPointZ)) & 0xffff;
+    a0 -= (u16)((GameObject*)obj)->anim.rotX;
     if (a0 > 0x8000)
     {
         a0 -= 0xffff;
@@ -1281,7 +1282,7 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
     }
     ((GameObject*)obj)->anim.rotX =
         (f32)(s32)((GameObject*)obj)->anim.rotX + interpolate((f32)(s32)a0, lbl_803E83FC, timeDelta);
-    a1 = a1 - (u16)((GameObject*)obj)->anim.rotY;
+    a1 -= (u16)((GameObject*)obj)->anim.rotY;
     if (a1 > 0x8000)
     {
         a1 -= 0xffff;
@@ -1293,6 +1294,7 @@ int DR_CloudRunner_stateHandler04(int obj, int baddie)
     ((GameObject*)obj)->anim.rotY =
         (f32)(s32)((GameObject*)obj)->anim.rotY + interpolate((f32)(s32)a1, lbl_803E83FC, timeDelta);
     ((GameObject*)obj)->anim.rotZ = (s16)(a0 >> 5);
+    }
     {
         int v = ((GameObject*)obj)->anim.rotZ;
         if (v < -0x1000)
