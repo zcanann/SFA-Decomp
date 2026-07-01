@@ -90,8 +90,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
 {
     CameraObject* camera = (CameraObject*)obj;
 #define target ((GameObject*)camera->anim.targetObj)
+    u16 yawA, yawB;
     int mode = 0;
-    int yawA, yawB;
     int spd;
     int d1, d2;
     void* npc;
