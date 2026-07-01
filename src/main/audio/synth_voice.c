@@ -330,7 +330,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
-int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+int synthStartSound(u32 id, s32 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                     u8 section, u16 step, u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
     u32 handle;
@@ -341,15 +341,14 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     s32 p;
     extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
     extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
-    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
                         u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                         u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol,
                                      u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                      u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
-    p = prio;
-    p += prioOffset;
+    p = prio + prioOffset;
     if ((u8)p > 0xFF)
     {
         p = 0xFF;
@@ -1119,8 +1118,7 @@ void audioFn_80271498(u32 delta)
             {
                 zeroThreshold = lbl_803E77D0;
                 fade = (f32*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-                mask = 1;
-                for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++)
+                for (fadeIndex = 0, mask = 1; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++)
                 {
                     if ((synthMasterFaderActiveFlags & mask) != 0)
                     {
