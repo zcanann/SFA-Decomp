@@ -95,3 +95,39 @@ rebuilt add's operand order depends on *which side the constant was attached to*
   conversion temp; every unsigned spelling introduces a `mr r4,r0` sink.
 - `treasurechest_SeqFn`: both params homed at entry in index order (mr r27,r3 then
   mr r28,r5); ours emits animUpdate's home before the `o = obj` statement copy.
+
+
+## E. Branch-fold gap (fn_8007FE04, fn_8016A660/pollen) and the compiler-revision hypothesis
+
+Retail shape: `cmp; bne +8; b EXIT` where the bne merely skips the b -- a
+trivially foldable pair -- plus a kept tautological `li r6,-1; cmpwi r6,-1`.
+Ours folds both (`beq EXIT`), losing one instruction.
+
+Probe evidence (direct-compile harness, fn_8007FE04's exact code):
+- ALL 20 available GC compilers (1.0 .. 3.0a5.2) fold it, at every opt level
+  (-O0..-O4 x ,p x nopeephole/noschedule), C and C++ frontends, and with up to
+  250 filler functions before it in the TU (no pass-budget effect).
+- Source space exhausted: goto/continue/else/empty-then/switch (beq+b appears
+  but with cmpwi sign + inverted sense)/while/do-while/two-label chains/
+  in-loop labels/bool materialization/ternary-wrapped conditions/1- and
+  2-term logical operators. All fold.
+- Corpus check: matched functions DO contain cond+b pairs, but only the
+  STRUCTURALLY unfoldable kind (two distinct non-fallthrough targets): switch
+  range dispatch (UpdateIconOffsets), nested and-or chains (IsCard), FP clamp
+  ternaries (fogFn_80070404). The retail pairs in fn_8007FE04/fn_8016A660 are
+  the FOLDABLE kind -- adjacent-target -- which no available toolchain leaves.
+
+## Root-cause hypothesis (now backed by two independent proofs)
+
+Class A (copy fold: level>=3 intrinsic, no toggle) and class E (branch fold:
+universal across our compiler set) are both *unreachable* behaviors whose
+retail counterparts appear across unrelated TUs (DLL and main binary alike).
+The simplest consistent explanation: the retail build used an mwcc revision
+not in our set (a 2.0-era internal/patch build with weaker late IR folding).
+If true, a handful of 1-instruction residues per function are permanently
+unmatchable with GC/2.0 proper, and these functions should be banked at their
+current 96-99.9% as PRINCIPLED. Recommend: (a) treat adjacent-target cond+b
+and li-vs-mr residues as non-actionable in matching work; (b) if anyone can
+source other mwcc 2.0-era builds (2.0a/2.0b/OEM revisions), test the two
+probes in this doc against them first -- a hit would likely convert dozens of
+functions at once.
