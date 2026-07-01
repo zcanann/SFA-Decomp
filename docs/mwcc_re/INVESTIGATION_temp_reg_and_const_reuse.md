@@ -37,8 +37,19 @@ Target reuses a register that already holds the same constant; ours re-materiali
   addr-deref). The target's adjacent `li r25,0; mr r26,r25` (no inbound edge
   between them) is NOT reproducible as a local-to-local copy at function scope
   with these flags. Remaining hypotheses are unit-level: a different -opt string
-  for these TUs, or a compiler micro-revision whose VN skips u8 webs. Next probe:
-  brute-force the -opt keyword space against the sc_totembond object.
+  for these TUs, or a compiler micro-revision whose VN skips u8 webs.
+- OPT-LEVEL BOUNDARY FOUND (probe): the copy SURVIVES as `li;mr` at -O0/-O1/-O2
+  and folds at -O3/-O4 (any peephole/schedule combination). No -opt keyword
+  ([no]strength/loopinvariants/lifetimes/dead*/prop/cse) re-enables it at -O4 --
+  the fold is intrinsic to level>=3 (the IRO linearization/repeated-CSE stage),
+  with no pragma/flag toggle. `#pragma optimization_level 2` around the real
+  sc_totembond_update produces the mr but rewrites the whole function (149 word
+  diffs) -- the rest of the body needs level 4. CONCLUSION: class A is NOT
+  source/pragma/flag-reachable with GC/2.0; the retail mr implies either a
+  compiler micro-revision with a weaker fold, or IR arriving at the fold with
+  distinct value numbers for reasons outside function-local C. These ~6
+  functions are principled banks at 99.2-99.8 until the fold's disasm
+  (IroLinearForm.c band) identifies the exact value-identity test.
 
 ## B. Temp-register selection r0 vs rN for short-lived values
 
