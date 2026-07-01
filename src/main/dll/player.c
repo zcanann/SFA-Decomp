@@ -4082,6 +4082,7 @@ extern f32 lbl_803E80A0;
 extern char sNotOnGroundFailureMessage[];
 
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
+int player_probeClimbable(int obj, int p4, int src, int dst, int flag);
 
 /* Number of directional sweep probes (parallel dirs[13]/dirMasks[13] tables). */
 #define PLAYER_SWEEP_DIR_COUNT 13
@@ -4110,16 +4111,17 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         s8 kind;
         u8 padC[2];
     } SweepHit;
+    f32* dir;
     f32 nearDist;
-    f32 cEE0;
     int objCount;
-    s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
-    volatile f32 sc0[3];
-    volatile f32 sc1[3];
-    f32 end[3];
-    f32 start[3];
-    f32 vec[3];
     f32 rot[3];
+    f32 vec[3];
+    f32 start[3];
+    f32 end[3];
+    volatile f32 sc1[3];
+    volatile f32 sc0[3];
+    s8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
+    u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
     struct
     {
         u8 pad[2];
@@ -4130,7 +4132,6 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         f32 y;
         f32 z;
     } pfx;
-    u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
     SweepHit buf;
     u8 useAlt;
     f32 hd;
@@ -4138,15 +4139,16 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     int i;
     s8 ok;
     f32 ang;
+    f32 lo;
+    int k;
     s8 flagB;
     s8 flagA;
     u8 hit;
-    f32* dir;
+    int ai;
 
-    ang = (gPlayerPi *
-            (f32)((u16)getAngle(((PlayerState*)state2)->baddie.moveInputX, -((PlayerState*)state2)->baddie.moveInputZ) -
-                ((PlayerState*)state2)->baddie.cameraYaw)) /
-        lbl_803E7F98;
+    ai = (u16)getAngle(((PlayerState*)state2)->baddie.moveInputX, -((PlayerState*)state2)->baddie.moveInputZ) -
+        ((PlayerState*)state2)->baddie.cameraYaw;
+    ang = (gPlayerPi * (f32)ai) / lbl_803E7F98;
     rot[0] = -mathSinf(ang);
     rot[1] = lbl_803E7EA4;
     rot[2] = -mathCosf(ang);
@@ -4158,7 +4160,6 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
     *(u32*)&((PlayerState*)state)->flags360 &= ~0x100LL;
-    cEE0 = lbl_803E7EE0;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -4176,7 +4177,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         case 12:
             {
                 u8 b;
-                s16 v = ((PlayerState*)state)->baddie.controlMode;
+                s16 v = ((PlayerState*)state2)->baddie.controlMode;
                 if (v == 0xc)
                 {
                     continue;
@@ -4397,7 +4398,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 {
                     continue;
                 }
-                if ((*(int (*)(int))*(int*)((char*)*(int*)(t + 0x68) + 0x2c))(t) != 0 &&
+                if ((*(int (*)(int))*(int*)((char*)*(int*)*(int*)(t + 0x68) + 0x2c))(t) != 0 &&
                     *(f32*)(state2 + 0x298) > lbl_803E7EFC &&
                     hd <= lbl_803E7ED4 + lbl_803DC6C0)
                 {
@@ -4410,7 +4411,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                         return 5;
                     }
                 }
-                if (hd >= lbl_803E7FA4)
+                if (!(hd < lbl_803E7FA4))
                 {
                     continue;
                 }
@@ -4444,7 +4445,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 return 6;
             }
         case 10:
-            if (hd >= lbl_803E8098)
+            if (!(hd < lbl_803E8098))
             {
                 continue;
             }
@@ -4473,22 +4474,22 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             return 0xd;
         case 3:
         case 4:
-            if (hd > lbl_803E7F58)
+            if (!(hd <= lbl_803E7F58))
             {
                 continue;
             }
-            if (player_probeClimbable(obj, state, (int)&buf, state + 0x4e4, i == 3) == 0)
+            if (((int (*)(int, int, void*, int, int))player_probeClimbable)(obj, state, &buf, state + 0x4e4, i == 3) == 0)
             {
                 continue;
             }
             return 0;
         case 5:
         case 6:
-            if (hd > cEE0 + lbl_803DC6C0)
+            if (!(hd <= lbl_803E7EE0 + lbl_803DC6C0))
             {
                 continue;
             }
-            if (fn_802A8680(obj, state, (int)&buf, (int)end, state + 0x548, i == 5) == 0)
+            if (((int (*)(int, int, void*, f32*, int, int))fn_802A8680)(obj, state, &buf, end, state + 0x548, i == 5) == 0)
             {
                 continue;
             }
@@ -4496,7 +4497,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         case 1:
         case 7:
         case 12:
-            if (hd >= lbl_803E7F58)
+            if (!(hd < lbl_803E7F58))
             {
                 continue;
             }
@@ -4510,7 +4511,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             break;
         case 2:
         case 9:
-            if (hd > cEE0 + lbl_803DC6C0)
+            if (!(hd <= lbl_803E7EE0 + lbl_803DC6C0))
             {
                 continue;
             }
@@ -4530,7 +4531,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             {
                 s8 ok2;
                 int t8;
-                if (hd > cEE0 + lbl_803DC6C0)
+                if (!(hd <= lbl_803E7EE0 + lbl_803DC6C0))
                 {
                     continue;
                 }
@@ -4539,7 +4540,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 ok2 = 1;
                 if ((u32)t8 != 0)
                 {
-                    if ((*(u8 (*)(int))*(int*)((char*)*(int*)(t8 + 0x68) + 0x24))(t8) == 0)
+                    if ((*(u8 (*)(int))*(int*)((char*)*(int*)*(int*)(t8 + 0x68) + 0x24))(t8) == 0)
                     {
                         ok2 = 0;
                     }
@@ -4555,34 +4556,30 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 return 0xb;
             }
         case 11:
-            if (hd >= lbl_803E809C)
+            if (!(hd < lbl_803E809C))
             {
                 continue;
             }
             if (buf.kind == 0xd)
             {
-                int k;
-                f32 inv;
                 if (((PlayerState*)state2)->baddie.animSpeedA <= lbl_803E80A0)
                 {
                     continue;
                 }
                 if (((PlayerState*)state)->particleBurstCooldown <= lbl_803E7EA4)
                 {
-                    inv = lbl_803E7F5C;
                     for (k = 0; k < 0x4b; k++)
                     {
-                        f32 lo;
                         lo = buf.minX;
                         pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) /
-                            inv;
+                            lbl_803E7F5C;
                         lo = buf.minY;
                         pfx.y = lo + (buf.g3c - lo) * (f32)randomGetRange(0, 100) /
-                            inv;
+                            lbl_803E7F5C;
                         lo = buf.minZ;
                         pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) /
-                            inv;
-                        pfx.scale = cEE0;
+                            lbl_803E7F5C;
+                        pfx.scale = lbl_803E7EE0;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001,
                                                          -1, NULL);
