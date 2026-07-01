@@ -934,82 +934,64 @@ void vfpplatform_update(int obj)
                         break;
                     }
                 case 2:
-                    if (s3 == 3)
+                    if (s3 == 3 && xi < txi)
                     {
-                        if (xi < txi)
+                        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosX >= txi)
                         {
-                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosX >= txi)
-                            {
-                                ((GameObject*)obj)->anim.localPosX = txi;
-                                state->state = 1;
-                            }
+                            ((GameObject*)obj)->anim.localPosX = txi;
+                            state->state = 1;
                         }
                     }
-                    else
+                    else if (yi < tyi)
                     {
-                        if (yi < tyi)
+                        ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosZ >= tyi)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosZ >= tyi)
-                            {
-                                ((GameObject*)obj)->anim.localPosZ = tyi;
-                                state->state = 1;
-                            }
+                            ((GameObject*)obj)->anim.localPosZ = tyi;
+                            state->state = 1;
                         }
                     }
                     break;
                 case 3:
-                    if (s3 == 3)
+                    if (s3 == 3 && xi > txi - 60)
                     {
-                        if (xi > txi - 60)
+                        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosX <= txi - 60)
                         {
-                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosX <= txi - 60)
-                            {
-                                ((GameObject*)obj)->anim.localPosX = (txi - 60);
-                                state->state = 1;
-                                state->timer = 200;
-                            }
+                            ((GameObject*)obj)->anim.localPosX = (txi - 60);
+                            state->state = 1;
+                            state->timer = 200;
                         }
                     }
-                    else
+                    else if (yi > tyi - 60)
                     {
-                        if (yi > tyi - 60)
+                        ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosZ <= tyi - 60)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosZ <= tyi - 60)
-                            {
-                                ((GameObject*)obj)->anim.localPosZ = (tyi - 60);
-                                state->state = 1;
-                                state->timer = 200;
-                            }
+                            ((GameObject*)obj)->anim.localPosZ = (tyi - 60);
+                            state->state = 1;
+                            state->timer = 200;
                         }
                     }
                     break;
                 case 4:
-                    if (s3 == 3)
+                    if (s3 == 3 && xi > txi)
                     {
-                        if (xi > txi)
+                        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosX <= txi)
                         {
-                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosX <= txi)
-                            {
-                                ((GameObject*)obj)->anim.localPosX = txi;
-                                state->state = 1;
-                            }
+                            ((GameObject*)obj)->anim.localPosX = txi;
+                            state->state = 1;
                         }
                     }
-                    else
+                    else if (yi > tyi)
                     {
-                        if (yi > tyi)
+                        ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosZ <= tyi)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ - timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosZ <= tyi)
-                            {
-                                ((GameObject*)obj)->anim.localPosZ = tyi;
-                                state->state = 1;
-                            }
+                            ((GameObject*)obj)->anim.localPosZ = tyi;
+                            state->state = 1;
                         }
                     }
                     break;
