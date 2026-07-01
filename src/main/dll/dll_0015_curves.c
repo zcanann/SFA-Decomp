@@ -338,6 +338,7 @@ void fn_800E56A4(int obj, CurvesCollisionState* collision)
 #pragma opt_common_subs off
 void fn_800E58FC(int obj, CurvesCollisionState* collision)
 {
+    f32 sumY;
     CurvesTransformScratch transform;
     f32 localX[4];
     f32 localY[4];
@@ -429,24 +430,34 @@ void fn_800E58FC(int obj, CurvesCollisionState* collision)
             }
             if ((s32)(collision->flags & 0x8000) != 0)
             {
-                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]),
-                                 (localZ[0] + localZ[idx1]) - (localZ[idx3] + localZ[idx2]));
+                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
+                                 (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
                 ((GameObject*)obj)->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
             {
-                f32 sumZ = (localZ[idx2] - localZ[idx1]) + (localZ[idx3] - localZ[0]);
-                f32 sumY = (localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0]);
-                secondArg = sumZ * lbl_803E0690;
-                angle = getAngle(sumY * lbl_803E0690, secondArg);
+                f32 sumZ;
+                f32 k;
+                sumZ = localZ[idx2] - localZ[idx1];
+                sumZ += localZ[idx3] - localZ[0];
+                secondArg = sumZ * (k = lbl_803E0690);
+                sumY = localY[idx2] - localY[idx1];
+                sumY += localY[idx3] - localY[0];
+                sumY *= k;
+                angle = getAngle(sumY, secondArg);
                 collision->tiltPitch = -angle;
             }
             if ((pointCount == 4) && ((s32)(collision->flags & 0x400) != 0))
             {
-                f32 sumX = (localX[idx1] - localX[0]) + (localX[idx2] - localX[idx3]);
-                f32 sumY = (localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3]);
-                secondArg = sumX * lbl_803E0690;
-                angle = getAngle(sumY * lbl_803E0690, secondArg);
+                f32 sumX;
+                f32 k;
+                sumX = localX[idx1] - localX[0];
+                sumX += localX[idx2] - localX[idx3];
+                secondArg = sumX * (k = lbl_803E0690);
+                sumY = localY[idx1] - localY[0];
+                sumY += localY[idx2] - localY[idx3];
+                sumY *= k;
+                angle = getAngle(sumY, secondArg);
                 collision->tiltRoll = angle;
             }
         }
