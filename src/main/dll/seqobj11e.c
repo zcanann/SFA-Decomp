@@ -39,6 +39,7 @@ extern u32 ObjLink_AttachChild();
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void fn_80152440(GameObject* obj, int p, int p3, int msg)
 {
     extern void fn_8014D08C(GameObject* obj, int p, int type, f32 t, int a, int b);
@@ -63,6 +64,7 @@ void fn_80152440(GameObject* obj, int p, int p3, int msg)
     obj->anim.velocityY = fz;
     obj->anim.velocityX = fz;
 }
+#pragma opt_common_subs reset
 
 /* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
  * follow, heading steps, landing sfx, light-pulse fx, child spark spawn. */
