@@ -933,11 +933,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                {
-                    int a = fn_8003BB74();
-                    int b = fn_8003BB74();
-                    GXSetAlphaCompare(4, b, 0, 4, a);
-                }
+                GXSetAlphaCompare(4, fn_8003BB74(), 0, 4, fn_8003BB74());
             } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 ||
                     gGxZModeUpdateEnable != 0 || gGxZModeValid == 0) {
@@ -5713,7 +5709,7 @@ int cardLoadFn_8007d72c(void)
     } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
         if (res == 0) {
-            u64 cache = gSaveCardSerialLo | (u64)lbl_803DD048 << 32;
+            u64 cache = *(u64*)&lbl_803DD048;
             if (cache == 0 || cache != serial) {
                 res = -0x55;
                 lbl_803DB700 = 0xB;

@@ -143,9 +143,9 @@ void blasted_update(int obj)
         {
             int cnt;
             u32 v;
-            s8 m;
+            int m;
             int found;
-            m = *(u8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->priorities[i];
+            m = *(s8*)((int)((GameObject*)obj)->anim.hitReactState + i + 117);
             v = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
             found = 0;
             if (m != 5)

@@ -2951,11 +2951,11 @@ void trickyFn_801451d8(int obj, int state)
         resetTimer = lbl_803E23DC;
         ((TrickyState*)state)->unk71C = resetTimer;
         ((TrickyState*)state)->unk720 = resetTimer;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10000LL;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x20000LL;
-        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x40000LL;
-        *(u8*)&((TrickyState*)state)->unkD = 0xFF;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10000u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x20000u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x40000u;
+        *(s8*)&((TrickyState*)state)->unkD = -1;
     }
     if (gTrickyHelperObject == 0)
     {

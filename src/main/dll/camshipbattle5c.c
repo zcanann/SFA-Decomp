@@ -21,10 +21,10 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/engine_shared.h"
-extern f32 lbl_803E1890; /* angle delta upper bound */
-extern f32 lbl_803E1894; /* angle delta lower bound */
-extern f32 lbl_803E1898; /* angle unwrap step */
-extern f32 lbl_803E1888; /* angle near/zero threshold */
+extern const f32 lbl_803E1890; /* angle delta upper bound */
+extern const f32 lbl_803E1894; /* angle delta lower bound */
+extern const f32 lbl_803E1898; /* angle unwrap step */
+extern const f32 lbl_803E1888; /* angle near/zero threshold */
 extern char sPathCamNeedTwoControlPointsError[];
 
 
@@ -203,21 +203,18 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                 upper = lbl_803E1890;
                 for (step = 0; step < 3; step++)
                 {
-                    near = lbl_803E1888;
-                    lower = lbl_803E1894;
-                    wrap = lbl_803E1898;
                     v0 = wp[0];
                     v1 = wp[1];
                     d = v0 - v1;
-                    if (d > upper || d < lower)
+                    if (d > upper || d < lbl_803E1894)
                     {
-                        if (v0 < near)
+                        if (v0 < lbl_803E1888)
                         {
-                            wp[0] = wp[0] + wrap;
+                            wp[0] = wp[0] + lbl_803E1898;
                         }
-                        else if (v1 < near)
+                        else if (v1 < lbl_803E1888)
                         {
-                            wp[1] = wp[1] + wrap;
+                            wp[1] = wp[1] + lbl_803E1898;
                         }
                     }
                     wp++;

@@ -3448,15 +3448,16 @@ void pauseMenuFn_80129ee0(void)
  * the camera state and pops the save-confirm text when flagged. */
 void pauseMenuDoSave(void)
 {
-    u32 color[2];
+    u32 texture;
+    f32 scale;
     int x;
     int y;
-    f32 scale;
-    u32 texture;
+    volatile u32 colorB;
+    u32 colorA;
     u8 i;
     u8 j;
 
-    color[1] = lbl_803E1E00;
+    colorB = lbl_803E1E00;
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2044);
     Camera_SetCurrentViewIndex(1);
@@ -3489,8 +3490,8 @@ void pauseMenuDoSave(void)
             if (lbl_803DD78C > 0x1f4)
             {
                 objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
-                color[0] = color[1];
-                hudDrawColored(texture, x, y, color, (s32)(lbl_803E20B8 * scale), 1);
+                colorA = colorB;
+                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
             }
         }
     }
