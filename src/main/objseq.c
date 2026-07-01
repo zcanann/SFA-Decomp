@@ -696,11 +696,11 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
     }
 }
 
-int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int countArg,
+int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 countArg,
                   s8 flag1, s8 flag2)
 {
-    int count;
     u8* cmds;
+    int count;
     int opcode;
     int arg10;
     int top16;
@@ -717,7 +717,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, int co
 
     i = 0;
     cmds = cmdsArg;
-    count = (s16)countArg;
+    count = countArg;
     for (; i < count; i++)
     {
         packed = *(u32*)cmds;
