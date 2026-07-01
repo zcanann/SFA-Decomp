@@ -1505,7 +1505,7 @@ void unloadMap(void)
     int i;
     int layer;
     s8* cur;
-    int mapType;
+    s8 mapType;
     int j;
     int rb;
     char* p;
