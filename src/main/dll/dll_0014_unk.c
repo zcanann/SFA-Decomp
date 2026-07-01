@@ -596,9 +596,8 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         {
             continue;
         }
-        patch = &gObjfsaPatches[pidx];
         clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
-        pgid = patch->groupId;
+        pgid = gObjfsaPatches[pidx].groupId;
         if (((int)clz & pgid) != 0)
         {
             lidx = (int)(pgid & 0xff00) >> 8;
@@ -607,8 +606,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         {
             lidx = pgid & 0xff;
         }
-        lwg = (u8*)gObjfsaWalkGroups + lidx * OBJFSA_PATCHGROUP_STRIDE;
-        for (k2 = 0; k2 < 4; k2++)
+        for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + lidx * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
         {
             lpidx = lwg[k2 + 0x24];
             if (lpidx == 0)
@@ -616,7 +614,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
                 continue;
             }
             lp = &gObjfsaPatches[lpidx];
-            if (lp->groupId != pgid)
+            if (lp->groupId != patch->groupId)
             {
                 y = prevPoint[1];
                 if (y < lp->maxY && y > lp->minY)
