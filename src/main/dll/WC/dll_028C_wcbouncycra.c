@@ -93,26 +93,31 @@ void wcbouncycra_update(int obj)
         state->cooldown = n;
         if (n <= 0)
         {
-            f32 v = gBouncyCrateTriggerSearchRadius;
             f32 dist;
+            f32 v = gBouncyCrateTriggerSearchRadius;
 
             if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, obj, &v) == NULL)
             {
                 dist = lbl_803E6D24;
             }
-            else if (v < gBouncyCrateNearDistance)
-            {
-                dist = lbl_803E6D2C;
-            }
-            else if (v > gBouncyCrateFarDistance)
-            {
-                dist = lbl_803E6D24;
-            }
             else
             {
-                f32 t = (v - *(f32*)&gBouncyCrateNearDistance) / lbl_803E6D34;
-                t = lbl_803E6D38 - t;
-                dist = t * lbl_803E6D2C;
+                f32 vv = v;
+                dist = gBouncyCrateNearDistance;
+                if (vv < dist)
+                {
+                    dist = lbl_803E6D2C;
+                }
+                else if (vv > gBouncyCrateFarDistance)
+                {
+                    dist = lbl_803E6D24;
+                }
+                else
+                {
+                    dist = (vv - dist) / lbl_803E6D34;
+                    dist = lbl_803E6D38 - dist;
+                    dist = dist * lbl_803E6D2C;
+                }
             }
             ((GameObject*)obj)->anim.velocityY = dist;
             state->flags |= WBOUNCY_FLAG_ACTIVE;
