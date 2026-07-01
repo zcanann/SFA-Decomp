@@ -572,9 +572,8 @@ void mapInitFn_8006fccc(void)
 int depthReadRequestPoll(int x, int y, int requestKey)
 {
     bool ok;
-    DepthReadRequest* p;
     int i;
-    u32 n;
+    u16 n;
 
     ok = false;
     if (x >= 0 && x < 0x280 && y >= 0 && y < 0x1E0) {
@@ -591,13 +590,11 @@ int depthReadRequestPoll(int x, int y, int requestKey)
             gDepthReadPendingCount++;
         }
         i = 0;
-        p = gDepthReadResults;
         n = gDepthReadResultCount;
         for (; (u32)i < n; i++) {
-            if (requestKey == p->key) {
+            if (requestKey == gDepthReadResults[i].key) {
                 return gDepthReadResults[i].value;
             }
-            p++;
         }
         return 0;
     }
