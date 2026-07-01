@@ -2324,6 +2324,7 @@ void fn_8008BDA8(void)
     while (i < 3);
 }
 
+#pragma opt_common_subs off
 void skyFn_8008a04c(void)
 {
     int part;
@@ -2474,6 +2475,7 @@ void skyFn_8008a04c(void)
                     0xff);
     }
 }
+#pragma opt_common_subs reset
 
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2)
 {
