@@ -127,8 +127,6 @@ void curvefish_update(int obj)
 
     switch (state->mode)
     {
-    default:
-        return;
     case CURVEFISH_MODE_WAIT:
         {
             f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
@@ -169,135 +167,135 @@ void curvefish_update(int obj)
         ((GameObject*)obj)->anim.alpha = 0xff;
         state->mode = CURVEFISH_MODE_CRUISE;
     case CURVEFISH_MODE_CRUISE:
-        break;
-    }
-
-    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
-    {
-        state->speed = lbl_803E38F8 * state->maxSpeed;
-    }
-    else if (fn_80296448((int)player) != 0 &&
-        getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
-        (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
-    {
-        f32 hitSpeedFactor = lbl_803E38F8;
-        speedDelta = hitSpeedFactor * (f32)(u32)setup2->speedChange;
-        state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
-        if (state->speed > (maxHitSpeed = hitSpeedFactor * state->maxSpeed))
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
-            state->speed = maxHitSpeed;
+            state->speed = lbl_803E38F8 * state->maxSpeed;
         }
-    }
-    else
-    {
-        speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
-                                              setup2->speedChange << 1);
-        state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
-        if (state->speed < lbl_803E38F0)
+        else if (fn_80296448((int)player) != 0 &&
+            getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
+            (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
         {
-            state->speed = lbl_803E38F0;
-        }
-        else if (state->speed > state->maxSpeed)
-        {
-            state->speed = state->maxSpeed;
-        }
-    }
-
-    speedThreshold = state->maxSpeed * lbl_803E3900;
-    if (state->speed < speedThreshold)
-    {
-        if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3904)
-        {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-            state->animTimer = lbl_803E38F0;
-        }
-        state->moveStepScale = lbl_803E3908;
-    }
-    else if (state->speed > lbl_803E390C * state->maxSpeed * lbl_803E3900)
-    {
-        if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3910)
-        {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-            state->animTimer = lbl_803E38F0;
-        }
-        state->moveStepScale = lbl_803E3914;
-    }
-    else
-    {
-        if (((GameObject*)obj)->anim.currentMove == 1 && state->animTimer > lbl_803E3910)
-        {
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
-            state->animTimer = lbl_803E38F0;
-        }
-        state->moveStepScale = (lbl_803E3914 * state->speed) / state->maxSpeed;
-    }
-
-    if (lbl_803E38F0 != state->speed)
-    {
-        distLimit = state->speed * timeDelta;
-        distLimit *= distLimit;
-        distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
-        i = 0;
-        while (distLimit > distance && i < 5)
-        {
-            Curve_AdvanceAlongPath((RomCurveWalker*)state, lbl_803E38F8);
-            distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
-            i++;
-        }
-
-        if (state->hasRouteEdge != 0)
-        {
-            nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
-            if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
+            f32 hitSpeedFactor = lbl_803E38F8;
+            speedDelta = hitSpeedFactor * (f32)(u32)setup2->speedChange;
+            state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
+            if (state->speed > (maxHitSpeed = hitSpeedFactor * state->maxSpeed))
             {
-                state->mode = CURVEFISH_MODE_WAIT;
-                state->phaseTimer = lbl_803E38F0;
-                ((GameObject*)obj)->anim.alpha = 0;
-                return;
+                state->speed = maxHitSpeed;
             }
-        }
-
-        dx = state->targetX - ((GameObject*)obj)->anim.localPosX;
-        dy = (state->targetY + (f32)(u32)setup->targetYOffset) - ((GameObject*)obj)->anim.localPosY;
-        dz = state->targetZ - ((GameObject*)obj)->anim.localPosZ;
-        mag = sqrtf(dx * dx + dy * dy + dz * dz);
-        dx /= mag;
-        dy /= mag;
-        dz /= mag;
-
-        ((GameObject*)obj)->anim.localPosX += dx * state->speed;
-        ((GameObject*)obj)->anim.localPosY += dy * state->speed;
-        ((GameObject*)obj)->anim.localPosZ += dz * state->speed;
-
-        targetYaw = getAngle(dx, dz);
-        yawDelta = targetYaw - ((u16)(((GameObject*)obj)->anim.rotX));
-        if (yawDelta > 0x8000)
-        {
-            yawDelta -= 0xffff;
-        }
-        if (yawDelta < -0x8000)
-        {
-            yawDelta += 0xffff;
-        }
-        if (yawDelta > CURVEFISH_MAX_YAW_TURN)
-        {
-            ((GameObject*)obj)->anim.rotX += CURVEFISH_MAX_YAW_TURN;
-        }
-        else if (yawDelta < -CURVEFISH_MAX_YAW_TURN)
-        {
-            ((GameObject*)obj)->anim.rotX -= CURVEFISH_MAX_YAW_TURN;
         }
         else
         {
-            ((GameObject*)obj)->anim.rotX = targetYaw;
+            speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
+                                                  setup2->speedChange << 1);
+            state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
+            if (state->speed < lbl_803E38F0)
+            {
+                state->speed = lbl_803E38F0;
+            }
+            else if (state->speed > state->maxSpeed)
+            {
+                state->speed = state->maxSpeed;
+            }
         }
-    }
 
-    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
-    state->animTimer += timeDelta;
+        speedThreshold = state->maxSpeed * lbl_803E3900;
+        if (state->speed < speedThreshold)
+        {
+            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3904)
+            {
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
+                state->animTimer = lbl_803E38F0;
+            }
+            state->moveStepScale = lbl_803E3908;
+        }
+        else if (state->speed > lbl_803E390C * state->maxSpeed * lbl_803E3900)
+        {
+            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3910)
+            {
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
+                state->animTimer = lbl_803E38F0;
+            }
+            state->moveStepScale = lbl_803E3914;
+        }
+        else
+        {
+            if (((GameObject*)obj)->anim.currentMove == 1 && state->animTimer > lbl_803E3910)
+            {
+                ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
+                state->animTimer = lbl_803E38F0;
+            }
+            state->moveStepScale = (lbl_803E3914 * state->speed) / state->maxSpeed;
+        }
+
+        if (lbl_803E38F0 != state->speed)
+        {
+            distLimit = state->speed * timeDelta;
+            distLimit *= distLimit;
+            distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
+            i = 0;
+            while (distLimit > distance && i < 5)
+            {
+                Curve_AdvanceAlongPath((RomCurveWalker*)state, lbl_803E38F8);
+                distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
+                i++;
+            }
+
+            if (state->hasRouteEdge != 0)
+            {
+                nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
+                if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
+                {
+                    state->mode = CURVEFISH_MODE_WAIT;
+                    state->phaseTimer = lbl_803E38F0;
+                    ((GameObject*)obj)->anim.alpha = 0;
+                    return;
+                }
+            }
+
+            dx = state->targetX - ((GameObject*)obj)->anim.localPosX;
+            dy = (state->targetY + (f32)(u32)setup->targetYOffset) - ((GameObject*)obj)->anim.localPosY;
+            dz = state->targetZ - ((GameObject*)obj)->anim.localPosZ;
+            mag = sqrtf(dx * dx + dy * dy + dz * dz);
+            dx /= mag;
+            dy /= mag;
+            dz /= mag;
+
+            ((GameObject*)obj)->anim.localPosX += dx * state->speed;
+            ((GameObject*)obj)->anim.localPosY += dy * state->speed;
+            ((GameObject*)obj)->anim.localPosZ += dz * state->speed;
+
+            targetYaw = getAngle(dx, dz);
+            yawDelta = targetYaw - ((u16)(((GameObject*)obj)->anim.rotX));
+            if (yawDelta > 0x8000)
+            {
+                yawDelta -= 0xffff;
+            }
+            if (yawDelta < -0x8000)
+            {
+                yawDelta += 0xffff;
+            }
+            if (yawDelta > CURVEFISH_MAX_YAW_TURN)
+            {
+                ((GameObject*)obj)->anim.rotX += CURVEFISH_MAX_YAW_TURN;
+            }
+            else if (yawDelta < -CURVEFISH_MAX_YAW_TURN)
+            {
+                ((GameObject*)obj)->anim.rotX -= CURVEFISH_MAX_YAW_TURN;
+            }
+            else
+            {
+                ((GameObject*)obj)->anim.rotX = targetYaw;
+            }
+        }
+
+        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
+        state->animTimer += timeDelta;
+    default:
+        return;
+    }
 }
 
 void curvefish_init(int obj, u8* setup)
