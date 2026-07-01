@@ -247,7 +247,7 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     f32 low;
     f32 range;
     f32 slide;
-    f32 approach;
+    f64 approach;
     f32 mtx[16];
     CamSlideRot rot;
     f32 velX;
@@ -394,9 +394,10 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
             {
                 if (speed <= range)
                 {
-                    if (range - lbl_803E16DC > lbl_803E16AC)
+                    f32 d = range - lbl_803E16DC;
+                    if (d > lbl_803E16AC)
                     {
-                        speed = (speed - lbl_803E16DC) / (range - lbl_803E16DC);
+                        speed = (speed - lbl_803E16DC) / d;
                     }
                     if (speed < *(f32*)&lbl_803E16AC)
                     {
@@ -408,10 +409,10 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
                     }
                     low = speed * ((gCamcontrolModeSettings->targetHeight +
                         gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) +
-                        (lbl_803E16F0 + target->anim.worldPosY);
+                        (*(f32*)&lbl_803E16F0 + target->anim.worldPosY);
                     high = speed * ((gCamcontrolModeSettings->targetHeight +
                         gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) +
-                        (lbl_803E16F0 + target->anim.worldPosY);
+                        (*(f32*)&lbl_803E16F0 + target->anim.worldPosY);
                 }
             }
             else
