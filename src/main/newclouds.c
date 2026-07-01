@@ -711,7 +711,7 @@ extern char* gNewCloudStarTextureB;
 extern const f32 gNewCloudStarFadeInTime;
 extern const f32 lbl_803DF284;
 extern const f32 gNewCloudStarFadeOutTime;
-extern f32 lbl_803DF28C;
+extern const f32 lbl_803DF28C;
 
 void drawSkyStars(void)
 {
@@ -1216,7 +1216,6 @@ void titleScreenDrawFn_80093db4(void)
     int j;
     f32* constellation;
     int idx;
-    f32 zero;
     f32 v[3];
     f32 mtx1[12];
     f32 mtx2[12];
@@ -1225,9 +1224,7 @@ void titleScreenDrawFn_80093db4(void)
     testAndSet_onlyUseHeap3(0);
     constellation = mmAlloc(0x4b0, 0x7f7f7fff, 0);
     testAndSet_onlyUseHeap3(1);
-    cp = constellation;
-    zero = lbl_803DF28C;
-    for (i = 0; i < 0x64; i++)
+    for (i = 0, cp = constellation; i < 0x64; i++)
     {
         do
         {
@@ -1238,7 +1235,7 @@ void titleScreenDrawFn_80093db4(void)
             v[2] = (int)
             randomGetRange(-5000, 5000);
         }
-        while (zero == v[0] && zero == v[1] && zero == v[2]);
+        while (lbl_803DF28C == v[0] && lbl_803DF28C == v[1] && lbl_803DF28C == v[2]);
         PSVECNormalize(v, v);
         PSVECScale(v, v, gNewCloudStarRadius);
         cp[0] = v[0];
@@ -1269,7 +1266,7 @@ void titleScreenDrawFn_80093db4(void)
                     v[2] = (int)
                     randomGetRange(-5000, 5000);
                 }
-                while (zero == v[0] && zero == v[1] && zero == v[2]);
+                while (lbl_803DF28C == v[0] && lbl_803DF28C == v[1] && lbl_803DF28C == v[2]);
                 PSVECNormalize(v, v);
                 PSVECScale(v, v, gNewCloudStarRadius);
             }
