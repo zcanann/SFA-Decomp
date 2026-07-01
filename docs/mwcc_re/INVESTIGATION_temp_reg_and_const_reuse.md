@@ -21,6 +21,11 @@ Target reuses a register that already holds the same constant; ours re-materiali
 - Working theory: the reuse is emitted by a VN/peephole-like pass over *compiler
   generated* materializations (SR inits, unroll folds); front-end constants don't
   join. Our builds either fold the copy (const-prop) or re-materialize.
+- Negative results against LEVERS.md 5a/5b on sc_totembond: self-OR (`orbIndex |=
+  orbIndex`) does NOT bump the value number (copy still folds to li); both sides
+  are u8 in the target (no type-straddle available); splitting the chain, for-init
+  comma forms, and an lvalue-read second statement all fold. The survivor in the
+  target may be a VN-ineligible *compiler-generated* copy (cf. class A theory).
 
 ## B. Temp-register selection r0 vs rN for short-lived values
 
