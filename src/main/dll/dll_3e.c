@@ -417,7 +417,6 @@ void PrepareReady(void* msg)
 void InitAllMessageQueue(void)
 {
     AttractMoviePlayer* buf;
-    char* q;
     s32 i;
 
     buf = &lbl_803A5D60;
@@ -431,7 +430,6 @@ void InitAllMessageQueue(void)
 
     i = 0;
     buf = &lbl_803A5D60;
-    q = (char*)buf;
     do
     {
         PushFreeTextureSet((OSMessage)&buf->textureSet[i]);
@@ -444,8 +442,7 @@ void InitAllMessageQueue(void)
         i = 0;
         do
         {
-            PushFreeAudioBuffer((OSMessage)(q + 0x174));
-            q += sizeof(AttractMovieAudioBuffer);
+            PushFreeAudioBuffer((OSMessage)&buf->audioBuffer[i]);
             i++;
         }
         while (i < 3);
