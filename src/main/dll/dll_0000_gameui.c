@@ -3452,12 +3452,14 @@ void pauseMenuDoSave(void)
     f32 scale;
     int x;
     int y;
-    volatile u32 colorB;
-    u32 colorA;
+    struct PmColor
+    {
+        u8 r, g, b, a;
+    } colorB, colorA;
     u8 i;
     u8 j;
 
-    colorB = lbl_803E1E00;
+    colorB = *(struct PmColor*)&lbl_803E1E00;
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2044);
     Camera_SetCurrentViewIndex(1);
