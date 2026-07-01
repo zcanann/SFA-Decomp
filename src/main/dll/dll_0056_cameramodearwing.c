@@ -263,16 +263,16 @@ void CameraModeArwing_update(u8* obj)
         f32 step;
         int roll0 = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputRoll *
             ((CameraArwingWork*)gCamArwingWork)->rollScale);
-        d = roll0 - (u16)((GameObject*)obj)->anim.rotZ;
-        if (d > 0x8000)
+        roll0 = roll0 - (u16)((GameObject*)obj)->anim.rotZ;
+        if (roll0 > 0x8000)
         {
-            d -= 0xffff;
+            roll0 -= 0xffff;
         }
-        if (d < -0x8000)
+        if (roll0 < -0x8000)
         {
-            d += 0xffff;
+            roll0 += 0xffff;
         }
-        step = (f32)d * timeDelta;
+        step = (f32)roll0 * timeDelta;
         ((GameObject*)obj)->anim.rotZ = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotZ;
         yaw0 = yaw0 - (u16)((GameObject*)obj)->anim.rotX;
         if (yaw0 > 0x8000)
