@@ -16079,17 +16079,17 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
     {
         *(u16*)((char*)data + 0x1a) = *(u16*)((char*)data + 0x1c);
         *(u16*)((char*)data + 0x1c) = *(u16*)((char*)data + 0x18);
-        *(u16*)((char*)data + 0x18) += (int)(lbl_803E81AC * timeDelta);
+        *(u16*)((char*)data + 0x18) += (u16)(lbl_803E81AC * timeDelta);
     }
     if (*(u16*)((char*)data + 0x24) < 4)
     {
-        int v = (s16)(int)(lbl_803E81B0 *
+        int v = (s16)(lbl_803E81B0 *
             mathSinf(gPlayerPi2 * (f32) * (u16*)((char*)data + 0x18) /
                 lbl_803E81B8));
-        int w = (u16)(int)(lbl_803E81B0 * t->scales[*(u8*)((char*)data + 0x2d)]);
+        int w = (int)(lbl_803E81B0 * t->scales[*(u8*)((char*)data + 0x2d)]);
         if (((GameObject*)obj)->unkF8 == 0)
         {
-            if ((s16) * (u16*)((char*)data + 0x1c) * (s16) * (u16*)((char*)data + 0x18) < 0)
+            if ((s16) * (u16*)((char*)data + 0x18) * (s16) * (u16*)((char*)data + 0x1c) < 0)
             {
                 Sfx_PlayFromObject(0, 0x44c);
             }
@@ -16123,10 +16123,11 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
         if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
         {
             int i;
+            u16* b;
             *(u8*)((char*)data + 0x2d) = 0;
-            for (i = 0; i < 8; i++)
+            for (i = 0, b = t->bits; i < 8; b++, i++)
             {
-                if (GameBit_Get(t->bits[i]) != 0)
+                if (GameBit_Get(*b) != 0)
                 {
                     *(u8*)((char*)data + 0x2d) += 1;
                 }
