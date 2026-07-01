@@ -152,14 +152,14 @@ void updateVisibleGeometry(void)
     f32 m[17];
 
     cam = (u8*)Camera_GetCurrentViewSlot();
-    n = 0;
     if ((renderFlags & 8) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
     {
         scale = Camera_GetFovY() / encoderType_803DEBF8;
     }
     else
     {
-        scale = Camera_GetFovY() * displayOffsetH_803DEBFC;
+        scale = Camera_GetFovY();
+        scale *= displayOffsetH_803DEBFC;
     }
     xx = *(f32*)(cam + 0x44) - playerMapOffsetX;
     yy = *(f32*)(cam + 0x48);
@@ -172,10 +172,9 @@ void updateVisibleGeometry(void)
     st.ry = -*(s16*)(cam + 0x52);
     st.rz = *(s16*)(cam + 0x54);
     setMatrixFromObjectPos(m, &st);
-    Matrix_TransformPoint(m, lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
-    n = 0;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
+    Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
+    gViewFrustumPlanes[0].normalX = ox;
+    gViewFrustumPlanes[n = 0].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
@@ -183,30 +182,26 @@ void updateVisibleGeometry(void)
     ratio = fn_80293D0C(fov) / tt;
     ratio2 = ratio * ratio;
     tt = changed_803DEC08.lo * ratio2;
-    tt = fn_80292248(sqrtf(changed_803DEC08.lo * tt + ratio2));
+    tt = fn_80292248(sqrtf(tt * changed_803DEC08.lo + ratio2));
     ff = floor(tt);
     ss = fn_802943F4(tt);
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
-    n = 1;
-    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n = 1].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, -ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
-    n = 2;
-    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n = 2].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, lbl_803DEBCC, -ss, -ff, &ox, &oy, &oz);
-    n = 3;
-    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n = 3].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, lbl_803DEBCC, ss, -ff, &ox, &oy, &oz);
-    n = 4;
-    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n = 4].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
