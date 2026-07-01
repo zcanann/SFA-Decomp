@@ -2691,6 +2691,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 }
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 {
     extern f32 playerMapOffsetX;
@@ -2714,13 +2715,14 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             {
                 void* jm;
                 char* t;
-                jm = ObjModel_GetJointMatrix((int*)model,
-                                             (s8)(*(u8**)(*(char**)(staff + 0x50) + 0x2c))[off +
-                                                 OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a]);
+                int joint;
+                joint = (s8)(*(u8**)(*(char**)(staff + 0x50) + 0x2c))[off +
+                            OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
+                jm = ObjModel_GetJointMatrix((int*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                vp[0] = ((f32*)t)[(off + 0x18) >> 2];
-                va[1] = ((f32*)t)[(off + 0x1c) >> 2];
-                va[2] = ((f32*)t)[(off + 0x20) >> 2];
+                vp[0] = *(f32*)(t + off + 0x18);
+                va[1] = *(f32*)(t + off + 0x1c);
+                va[2] = *(f32*)(t + off + 0x20);
                 PSMTXMultVec(jm, vp, vp);
                 vp[0] = vp[0] + playerMapOffsetX;
                 va[2] = va[2] + playerMapOffsetZ;
@@ -2735,8 +2737,8 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
                 int idx2 = (s8) * (s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
                 char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
                 vb[0] = *(f32*)row;
-                vb[1] = ((f32*)t)[(off + 4) >> 2];
-                vb[2] = ((f32*)t)[(off + 8) >> 2];
+                vb[1] = *(f32*)(t + off + 4);
+                vb[2] = *(f32*)(t + off + 8);
                 PSMTXMultVec(mtx2, vb, vb);
                 vb[0] = vb[0] + playerMapOffsetX;
                 vb[2] = vb[2] + playerMapOffsetZ;
@@ -2761,11 +2763,16 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             va[1] = va[1] - vb[1];
             va[2] = va[2] - vb[2];
             ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
-            ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
+            {
+                f32 dx = va[0] * va[0];
+                f32 dz = va[2] * va[2];
+                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
+            }
             ((GameObject*)staff)->anim.rotZ = 0;
         }
     }
 }
+#pragma opt_common_subs reset
 #pragma opt_propagation reset
 
 void characterDoEyeAnims(int obj, int state)
