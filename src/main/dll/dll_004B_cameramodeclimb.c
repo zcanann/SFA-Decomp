@@ -53,6 +53,7 @@ void CameraModeClimb_update(CameraObject* camObj)
     f32 targetY;
     f32 hi;
     f32 lo;
+    u32 angle;
     int yawDelta;
     GameObject* viewObj;
     f32 trigValue;
@@ -137,7 +138,9 @@ void CameraModeClimb_update(CameraObject* camObj)
     camObj->anim.rotX += yawDelta;
     clamped = camObj->anim.worldPosY -
               (viewObj->anim.worldPosY + (f32)(u32)(u16)gCamClimbState->relativePosition);
-    yawDelta = (u16)getAngle(clamped, dist) - (u16)camObj->anim.rotY;
+    angle = getAngle(clamped, dist);
+    yawDelta = angle & 0xffff;
+    yawDelta -= (u16)camObj->anim.rotY;
     if (0x8000 < yawDelta)
     {
         yawDelta = yawDelta - 0xffff;
