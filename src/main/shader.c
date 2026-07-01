@@ -695,13 +695,32 @@ static inline int mapFindRomListSlot(char* p2, int id)
     return -1;
 }
 
+static inline int mapFindRomListSlotById(int id)
+{
+    char* q2;
+    int i2;
+    int cn;
+    int k;
+    i2 = 0;
+    q2 = (char*)gShaderRomListSlots;
+    cn = gShaderRomListSlotCount;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
+            return i2;
+        q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
 void mapBlockFn_80059c2c(u8* outFlags)
 {
     int i;
     int outer;
     for (outer = 0; outer < 0x78; outer++)
     {
-        i = mapFindRomListSlot((char*)gShaderRomListSlots, outer);
+        i = mapFindRomListSlotById(outer);
         if (i == -1)
         {
             outFlags[outer] = 0;
