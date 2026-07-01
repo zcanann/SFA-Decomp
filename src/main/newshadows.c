@@ -2469,23 +2469,36 @@ extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 
 #pragma opt_loop_invariants off
+#pragma opt_propagation off
 void fn_8006CB50(void)
 {
     int y, x;
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
-        int yhi = (y >> 2) * 0x20;
-        int ylo = (y & 3) * 2;
-        f32 fy = y - Udchuff_803DEDAC;
-        for (x = 0; x < 0x100; x++)
+        int yhi;
+        int ylo;
+        f32 fy;
+        x = 0;
+        yhi = (y >> 2) * 0x20;
+        ylo = (y & 3) * 2;
+        fy = y - Udchuff_803DEDAC;
+        for (; x < 0x100; x++)
         {
-            char* addr = (char*)lbl_803DCFBC + (ylo + yhi) + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = x - Udchuff_803DEDAC;
-            f32 dist = sqrtf(fy * fy + fx * fx);
-            f32 ny = fy / dist;
-            f32 nx = fx / dist;
+            char* addr;
+            f32 fx;
+            f32 dist;
+            f32 ny;
+            f32 nx;
             f32 s;
+            addr = (char*)lbl_803DCFBC + ylo;
+            addr += yhi;
+            addr += (x & 3) * 8;
+            addr += (x >> 2) * 0x800;
+            fx = x - Udchuff_803DEDAC;
+            dist = sqrtf(fy * fy + fx * fx);
+            ny = fy / dist;
+            nx = fx / dist;
             if (dist <= Udchuff_803DEDB8)
             {
                 f32 t = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist);
@@ -2508,6 +2521,7 @@ void fn_8006CB50(void)
     }
     DCFlushRange((char*)lbl_803DCFBC + 0x60, *(u32*)((char*)lbl_803DCFBC + 0x44));
 }
+#pragma opt_propagation reset
 #pragma opt_loop_invariants reset
 
 extern void Camera_DisableViewYOffset(void);
