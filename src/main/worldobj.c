@@ -678,7 +678,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     switch (modelId)
     {
     case 0x61e:
-        break;
+        return;
     case 0x5de:
         if (state->effectState == 0)
         {
