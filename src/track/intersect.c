@@ -842,7 +842,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    PSMTXScale(scaleMtx, 1.0f, 1.0f, 1.0f);
     scaleMtx[1][3] = -fA;
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
