@@ -137,7 +137,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     u8 j;
     u8 cnt;
     f32 *vec;
-    s8 n;
+    int n;
     void *desc;
 
     tbl = lbl_8030E8B0;
@@ -172,10 +172,11 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
     }
     n = ((BaddieState *)st)->surfaceSoundIndex;
     if (n < 0 || n >= 0x23) {
-        sfx = 0;
+        n = 0;
     } else {
-        sfx = tbl[0xb4 + n];
+        n = tbl[0xb4 + n];
     }
+    sfx = n;
     desc = ((BaddieState *)st)->contactObj;
     if (desc != NULL) {
         switch (((GameObject *)desc)->anim.seqId) {
