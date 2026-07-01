@@ -109,46 +109,82 @@ extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 
+static inline void screenTransitionFadeBlack(void)
+{
+    HudColor col;
+    int sx;
+    int sy;
+    int sw;
+    int sh;
+    GXGetScissor(&sx, &sy, &sw, &sh);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    col.b = 0;
+    col.g = 0;
+    col.r = 0;
+    col.a = screenTransitionAlpha;
+    hudDrawRect(sx, sy, sw, sh, col);
+    GXSetScissor(sx, sy, sw, sh);
+}
+
+static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
+{
+    HudColor col;
+    int sx;
+    int sy;
+    int sw;
+    int sh;
+    GXGetScissor(&sx, &sy, &sw, &sh);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    col.r = r;
+    col.g = g;
+    col.b = b;
+    col.a = screenTransitionAlpha;
+    hudDrawRect(sx, sy, sw, sh, col);
+    GXSetScissor(sx, sy, sw, sh);
+}
+
 #pragma opt_common_subs off
 void screenTransition_do2(int p1, int p2, int p3)
 {
     if (gScreenTransitionDelay != 0)
     {
         gScreenTransitionDelay--;
-        return;
-    }
-    if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
-    {
-        (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
-        gScreenTransitionHoldTimer = lbl_803E0560;
-    }
-    screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
-    if (screenTransitionAlpha < lbl_803E0560)
-    {
-        screenTransitionAlpha = lbl_803E0560;
-        gScreenTransitionDone = 1;
-        if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
-        {
-            setHudOpacity(0xff);
-        }
-        return;
-    }
-    if (screenTransitionAlpha > gScreenTransitionAlphaMax)
-    {
-        screenTransitionAlpha = gScreenTransitionAlphaMax;
-        gScreenTransitionDone = 1;
-        if (screenTransitionPause == 0)
-        {
-            gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
-        }
-        if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
-        {
-            setHudOpacity(0xff);
-        }
     }
     else
     {
-        gScreenTransitionDone = 0;
+        if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
+        {
+            (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
+            gScreenTransitionHoldTimer = lbl_803E0560;
+        }
+        screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
+        if (screenTransitionAlpha < lbl_803E0560)
+        {
+            screenTransitionAlpha = lbl_803E0560;
+            gScreenTransitionDone = 1;
+            if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
+            {
+                setHudOpacity(0xff);
+            }
+            return;
+        }
+        if (screenTransitionAlpha > gScreenTransitionAlphaMax)
+        {
+            screenTransitionAlpha = gScreenTransitionAlphaMax;
+            gScreenTransitionDone = 1;
+            if (screenTransitionPause == 0)
+            {
+                gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
+            }
+            if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
+            {
+                setHudOpacity(0xff);
+            }
+        }
+        else
+        {
+            gScreenTransitionDone = 0;
+        }
     }
     if (gDvdErrorPauseActive != 0)
     {
@@ -158,36 +194,12 @@ void screenTransition_do2(int p1, int p2, int p3)
     {
     case SCREEN_TRANSITION_BLACK:
     {
-        HudColor col;
-        int sh;
-        int sw;
-        int sy;
-        int sx;
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.b = 0;
-        col.g = 0;
-        col.r = 0;
-        col.a = screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
+        screenTransitionFadeBlack();
         break;
     }
     case SCREEN_TRANSITION_WHITE:
     {
-        HudColor col;
-        int sh;
-        int sw;
-        int sy;
-        int sx;
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
+        screenTransitionFadeColor(0xff, 0xff, 0xff);
         break;
     }
     case SCREEN_TRANSITION_WHITE_WIPE:
@@ -195,19 +207,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         break;
     case SCREEN_TRANSITION_RED:
     {
-        HudColor col;
-        int sh;
-        int sw;
-        int sy;
-        int sx;
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.r = 0xff;
-        col.g = 0;
-        col.b = 0;
-        col.a = screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
+        screenTransitionFadeColor(0xff, 0, 0);
         break;
     }
     case SCREEN_TRANSITION_HUD:
