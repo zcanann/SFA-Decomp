@@ -766,8 +766,8 @@ void dll_2E_func03(u16* obj, int state, int unused)
                         blendB = lbl_803E1C90;
                         blendB = (blendA < blendB) ? blendB : ((blendA > blendMax) ? blendMax : blendA);
                         blendB = lbl_803E1CA4 - blendB;
-                        blendA = *(f32*)&lbl_803E1CA4 - blendB;
-                        s->targetX = s->targetX * blendA + ((GameObject*)obj)->anim.localPosX * blendB;
+                        s->targetX = s->targetX * (blendA = *(f32*)&lbl_803E1CA4 - blendB) +
+                                     ((GameObject*)obj)->anim.localPosX * blendB;
                         s->targetZ = s->targetZ * blendA + ((GameObject*)obj)->anim.localPosZ * blendB;
                     }
                 }
