@@ -2960,6 +2960,7 @@ typedef struct ObjPrintFlipFlag
     u8 rest : 7;
 } ObjPrintFlipFlag;
 
+#pragma opt_loop_invariants off
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
@@ -3126,6 +3127,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     }
     return ang[2];
 }
+#pragma opt_loop_invariants reset
 
 typedef struct ObjPrintGXColor
 {
