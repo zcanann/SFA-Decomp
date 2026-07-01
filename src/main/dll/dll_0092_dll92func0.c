@@ -201,5 +201,5 @@ void dll_92_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, (u8*)(int)lbl_803171C0, 4, base + 0x3c, 0x3c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, 0x3c, 0);
 }
