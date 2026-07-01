@@ -114,12 +114,12 @@ extern f32 lbl_803DBAC4;
 extern f32 lbl_803DBAC8;
 extern int gCMenuRingFrontObjs[3];
 extern int gCMenuRingObjs[3];
-extern f32 lbl_803E1E3C;
+extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40;
 extern f32 lbl_803E1E68;
-extern f32 lbl_803E1E94;
+extern const f32 lbl_803E1E94;
 extern f32 lbl_803E1EC4;
-extern f32 lbl_803E1EC8;
+extern const f32 lbl_803E1EC8;
 extern f32 lbl_803E1F34;
 extern f32 lbl_803E201C;
 extern f32 lbl_803E2020;
@@ -581,13 +581,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
     int j;
     int sel;
     int model;
-    int* objs;
-    u8* u;
-    f32* v;
     int i;
-    f32 thresh;
-    f32 div;
-    f32 mul;
     f32 sx;
     f32 sy;
     u8 used[4];
@@ -626,23 +620,14 @@ void hudDrawCMenu(int p1, int p2, int p3)
     GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32) * (u16*)(gRenderModeObj + 4),
                   (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
     i = 0;
-    u = used;
-    objs = gCMenuRingObjs;
-    v = vals;
-    mul = lbl_803E1EC8;
-    div = lbl_803E1E94;
     do
     {
-        *u = 0;
-        *v = mathCosf(mul * (f32) * (s16*)*objs / div);
-        u++;
-        objs++;
-        v++;
+        used[i] = 0;
+        vals[i] = mathCosf(lbl_803E1EC8 * (f32) * (s16*)gCMenuRingObjs[i] / lbl_803E1E94);
         i++;
     }
     while (i < 3);
     j = 0;
-    thresh = lbl_803E1E3C;
     do
     {
         f32 best = lbl_803E1EC4;
@@ -672,7 +657,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
         model = Obj_GetActiveModel(gCMenuRingFrontObjs[sel]);
         *(u16*)(model + 0x18) &= ~8;
         *(u8*)(gCMenuRingFrontObjs[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
-        if (best > thresh)
+        if (best > lbl_803E1E3C)
         {
             objRender(p1, p2, p3, 0, gCMenuRingObjs[sel], 1);
             GXSetScissor(0, 0x79, 0x280, 0x95);
