@@ -26,6 +26,19 @@ Target reuses a register that already holds the same constant; ours re-materiali
   are u8 in the target (no type-straddle available); splitting the chain, for-init
   comma forms, and an lvalue-read second statement all fold. The survivor in the
   target may be a VN-ineligible *compiler-generated* copy (cf. class A theory).
+- CONTROLLED-HARNESS DISPROOF (probe compiled directly with GC/2.0 -O4,p -opt
+  nopeephole,noschedule, sc_totembond shape: u8 avail/idx, call-crossing saved
+  webs, in-loop calls): the copy folds to `li;li` under EVERY tested variable:
+  compiler {2.0, 1.3.2, 1.2.5n} x opt {-O3, -O4, -O4,p} x {peephole on/off};
+  chain/split/reversed statements; int/u8 type mixes; cross-block def (idx=0
+  outside the guarded if -- the li then stays at its own statement, unlike the
+  target's post-call position); 200-statement padding (no VN capacity effect);
+  RHS spellings (|self, &self, ^0, <<0, +=0-value, volatile read, ptr read,
+  addr-deref). The target's adjacent `li r25,0; mr r26,r25` (no inbound edge
+  between them) is NOT reproducible as a local-to-local copy at function scope
+  with these flags. Remaining hypotheses are unit-level: a different -opt string
+  for these TUs, or a compiler micro-revision whose VN skips u8 webs. Next probe:
+  brute-force the -opt keyword space against the sc_totembond object.
 
 ## B. Temp-register selection r0 vs rN for short-lived values
 
