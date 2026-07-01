@@ -743,7 +743,6 @@ void pushable_init(s16* obj, char* def)
     int* model;
     int* entry;
     int i;
-    char* e;
     f32* mtx;
     f32 vtx[3];
 
@@ -794,24 +793,22 @@ void pushable_init(s16* obj, char* def)
             {
                 int found = 0;
                 int j = 0;
-                s8 cnt = *(s8*)&state->pointCount;
                 f32 vx = vtx[0];
                 f32 vz = vtx[2];
 
-                for (; j < cnt; j++)
+                for (; j < *(s8*)&state->pointCount; j++)
                 {
-                    char* p = (char*)state + j * 0xc;
-                    if (vx == *(f32*)(p + 0x48) && vz == *(f32*)(p + 0x50))
+                    if (vx == state->cornerLocal[j].x && vz == state->cornerLocal[j].z)
                     {
                         found = 1;
-                        j = cnt;
+                        j = *(s8*)&state->pointCount;
                     }
                 }
                 if (found == 0)
                 {
-                    *(f32*)((u8*)state + state->pointCount * 0xc + 0x48) = vtx[0];
-                    *(f32*)((u8*)state + state->pointCount * 0xc + 0x4c) = vtx[1];
-                    *(f32*)((u8*)state + state->pointCount * 0xc + 0x50) = vtx[2];
+                    state->cornerLocal[state->pointCount].x = vtx[0];
+                    state->cornerLocal[state->pointCount].y = vtx[1];
+                    state->cornerLocal[state->pointCount].z = vtx[2];
                     state->pointCount += 1;
                 }
             }
@@ -826,81 +823,73 @@ void pushable_init(s16* obj, char* def)
         char* mi = *(char**)((char*)obj + 0x58);
         mtx = (f32*)(mi + ((*(u8*)(mi + 0x10c) + 2) << 4) * 4);
     }
-    i = 0;
-    e = (char*)state;
     {
-        f32 zero = lbl_803E3528;
-        for (; i < state->pointCount; i++)
+        f32 zero;
+        for (i = 0, zero = lbl_803E3528; i < state->pointCount; i++)
         {
             f32 v;
-            ((PushableState*)e)->probeLocal[0].x = ((PushableState*)e)->cornerLocal[0].x;
-            ((PushableState*)e)->probeLocal[0].y = ((PushableState*)e)->cornerLocal[0].y;
-            ((PushableState*)e)->probeLocal[0].z = ((PushableState*)e)->cornerLocal[0].z;
-            v = ((PushableState*)e)->probeLocal[0].x;
+            state->probeLocal[i].x = state->cornerLocal[i].x;
+            state->probeLocal[i].y = state->cornerLocal[i].y;
+            state->probeLocal[i].z = state->cornerLocal[i].z;
+            v = state->probeLocal[i].x;
             if (v < zero)
             {
-                ((PushableState*)e)->probeLocal[0].x = v + lbl_803E358C;
+                state->probeLocal[i].x = v + lbl_803E358C;
             }
             else
             {
-                ((PushableState*)e)->probeLocal[0].x = v - lbl_803E358C;
+                state->probeLocal[i].x = v - lbl_803E358C;
             }
-            v = ((PushableState*)e)->probeLocal[0].z;
+            v = state->probeLocal[i].z;
             if (v < zero)
             {
-                ((PushableState*)e)->probeLocal[0].z = v + lbl_803E358C;
+                state->probeLocal[i].z = v + lbl_803E358C;
             }
             else
             {
-                ((PushableState*)e)->probeLocal[0].z = v - lbl_803E358C;
+                state->probeLocal[i].z = v - lbl_803E358C;
             }
-            v = ((PushableState*)e)->cornerLocal[0].x;
+            v = state->cornerLocal[i].x;
             if (v < zero)
             {
-                ((PushableState*)e)->cornerLocal[0].x = v + lbl_803E3588;
+                state->cornerLocal[i].x = v + lbl_803E3588;
             }
             else
             {
-                ((PushableState*)e)->cornerLocal[0].x = v - lbl_803E3588;
+                state->cornerLocal[i].x = v - lbl_803E3588;
                 state->cornerIdxPosX = i;
             }
-            v = ((PushableState*)e)->cornerLocal[0].z;
+            v = state->cornerLocal[i].z;
             if (v < zero)
             {
-                ((PushableState*)e)->cornerLocal[0].z = v + lbl_803E3588;
+                state->cornerLocal[i].z = v + lbl_803E3588;
             }
             else
             {
-                ((PushableState*)e)->cornerLocal[0].z = v - lbl_803E3588;
+                state->cornerLocal[i].z = v - lbl_803E3588;
                 state->cornerIdxPosZ = i;
             }
-            Matrix_TransformPoint(mtx, ((PushableState*)e)->probeLocal[0].x, ((PushableState*)e)->probeLocal[0].y,
-                                  ((PushableState*)e)->probeLocal[0].z,
-                                  (f32*)(e + 0x78), (f32*)(e + 0x7c), (f32*)(e + 0x80));
-            e += 0xc;
+            Matrix_TransformPoint(mtx, state->probeLocal[i].x, state->probeLocal[i].y,
+                                  state->probeLocal[i].z,
+                                  &state->cornerWorld[i].x, &state->cornerWorld[i].y, &state->cornerWorld[i].z);
         }
     }
-    i = 0;
-    e = (char*)state;
-    for (; i < state->pointCount; i++)
+    for (i = 0; i < state->pointCount; i++)
     {
-        if (i != state->cornerIdxPosX && ((PushableState*)e)->cornerLocal[0].x < lbl_803E3528)
+        if (i != state->cornerIdxPosX && state->cornerLocal[i].x < lbl_803E3528)
         {
-            if ((int)((PushableState*)e)->cornerLocal[0].z == (int)*(f32*)((u8*)state + state->cornerIdxPosX * 0xc +
-                0x50))
+            if ((int)state->cornerLocal[i].z == (int)state->cornerLocal[state->cornerIdxPosX].z)
             {
                 state->cornerIdxNegX = i;
             }
         }
-        if (i != state->cornerIdxPosZ && ((PushableState*)e)->cornerLocal[0].z < lbl_803E3528)
+        if (i != state->cornerIdxPosZ && state->cornerLocal[i].z < lbl_803E3528)
         {
-            if ((int)((PushableState*)e)->cornerLocal[0].x == (int)*(f32*)((u8*)state + state->cornerIdxPosZ * 0xc +
-                0x48))
+            if ((int)state->cornerLocal[i].x == (int)state->cornerLocal[state->cornerIdxPosZ].x)
             {
                 state->cornerIdxNegZ = i;
             }
         }
-        e += 0xc;
     }
     state->savePosEnabled = 1;
     switch (((GameObject*)obj)->anim.seqId)
