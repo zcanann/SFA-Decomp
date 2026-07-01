@@ -173,6 +173,7 @@ void invhit_init(int* obj, u8* def)
 void invhit_update(int* obj)
 {
     InvHitState* state;
+    char* targetObj;
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -253,7 +254,6 @@ void invhit_update(int* obj)
     case 4:
         {
             char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-            char* targetObj;
             f32** hits[2];
             f32 dx2;
             f32 dz2;
@@ -305,8 +305,9 @@ void invhit_update(int* obj)
             }
             cnt = (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
+            i = 0;
             thr = lbl_803E35F4;
-            for (i = 0; i < cnt; i++)
+            for (; i < cnt; i++)
             {
                 f32 h = *hits[0][i];
                 f32 oy = ((GameObject*)obj)->anim.localPosY;
