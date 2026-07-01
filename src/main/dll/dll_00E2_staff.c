@@ -1585,13 +1585,13 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                             {
                                 idx[3] = count;
                             }
+                            pidx = idx;
                             pE = arrE;
                             pF = arrF;
                             pG = arrG;
                             pH = arrH;
                             pI = arrI;
                             pJ = arrJ;
-                            pidx = idx;
                             for (n = 4; n != 0; n--)
                             {
                                 f32 a, b, t1, t2;
@@ -1689,15 +1689,6 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                         count2 -= 1;
                     }
                 }
-            }
-            else
-            {
-                if (*(f32*)(model2 + 4) > prog)
-                {
-                    *(f32*)(swipe + 0x98) = *(f32*)(model2 + 4);
-                    return;
-                }
-                return;
             }
         }
         *(f32*)(swipe + 0x8c) = ((GameObject*)obj)->anim.worldPosX;
