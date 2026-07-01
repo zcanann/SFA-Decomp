@@ -747,10 +747,10 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
         if ((curveId > -1) && (((((ObjfsaRomCurveDef*)routeDef)->blockedLinkMask & mask) ^ routeFlagValue) == 0))
         {
             candidates[count] = (*gRomCurveInterface)->getById(curveId);
-            entry = candidates[count];
-            if (entry != NULL)
+            if (candidates[count] != NULL)
             {
-                if ((linkSelector == 0) || (routeDef[count + 4] == linkSelector))
+                entry = candidates[count];
+                if ((linkSelector == 0) || (*(u8*)((u8*)routeDef + 4 + count) == linkSelector))
                 {
                     requiredBit = ((ObjfsaRomCurveDef*)entry)->requiredBit;
                     if ((requiredBit == -1) || (GameBit_Get(requiredBit) != 0))
