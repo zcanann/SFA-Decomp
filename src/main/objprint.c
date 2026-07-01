@@ -2782,8 +2782,11 @@ void characterDoEyeAnims(int obj, int state)
         return;
     }
     {
-        int v = b->textureId;
-        int st = (s8) * (s8*)(state + 0x1e);
+        int st;
+        int v;
+
+        v = b->textureId;
+        st = *(s8*)(state + 0x1e);
 
         switch (st & 0xf)
         {
