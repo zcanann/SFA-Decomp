@@ -2591,14 +2591,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
             u32 val;
             int hi;
             u8 lo;
-            for (i = 0xfd; i > 0; i -= 2)
+            for (i = 0xfd; i >= 0; i--)
             {
-                if (p[0] == c)
-                {
-                    val = p[1];
-                    goto found;
-                }
-                p++;
                 if (p[0] == c)
                 {
                     val = p[1];
