@@ -1569,9 +1569,9 @@ void objFreeObjDef(u8* obj, int flag)
                     }
                 }
             }
-            for (i = 0; i < count; i++)
+            for (n = 0; n < count; n++)
             {
-                Obj_FreeObject((void*)defs[i]);
+                Obj_FreeObject((void*)defs[n]);
             }
             fn_80059A50(*(u8*)(obj + 0x34));
         }
