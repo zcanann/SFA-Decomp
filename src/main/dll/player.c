@@ -15231,7 +15231,7 @@ int fn_802A2918(int obj, int state, f32 fv)
             {
                 delta += 0xffff;
             }
-            inner->targetYaw = (s16)(inner->targetYaw + delta);
+            inner->targetYaw += delta;
             inner->yaw = inner->targetYaw;
         }
         inner->unk504 = ((GameObject*)obj)->anim.localPosX;
@@ -15239,7 +15239,14 @@ int fn_802A2918(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.localPosX = inner->unk52C;
         ((GameObject*)obj)->anim.localPosZ = inner->unk534;
         sel = inner->unk4FC >= *(f32*)&lbl_803E7EA4 ? 0 : 4;
-        tbl = flag ? lbl_80332F88 : lbl_80332F78;
+        if (flag)
+        {
+            tbl = lbl_80332F88;
+        }
+        else
+        {
+            tbl = lbl_80332F78;
+        }
         inner->unk544 =
             fn_802A71E0(obj, tbl[sel], tbl[sel + 2], (int*)inner->unk538, (int*)&vb.vx,
                         lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
@@ -15250,11 +15257,11 @@ int fn_802A2918(int obj, int state, f32 fv)
                 f9 |= 0x40;
             }
             fn_802A71E0(obj, tbl[sel], tbl[sel + 1], (int*)inner->unk538,
-                        (int*)((char*)inner + 0x51c), lbl_803E7EA4,
-                        ((PlayerState*)state)->baddie.moveSpeed, 0, f9);
+                        (int*)inner->pad51C, lbl_803E7EA4,
+                        ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
         }
         fn_802A71E0(obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->unk538,
-                    (int*)((char*)inner + 0x51c), lbl_803E7EA4,
+                    (int*)inner->pad51C, lbl_803E7EA4,
                     ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY =
             inner->climbStepHeight * (f32)(int)
@@ -15287,12 +15294,15 @@ int fn_802A2918(int obj, int state, f32 fv)
             return 0x10;
         }
     }
-    if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7F18)
     {
-        f32 g = lbl_803E8028 * (lbl_803E802C * ((GameObject*)obj)->anim.currentMoveProgress - lbl_803E7F18);
-        f32 c;
-        c = (g < lbl_803E7EA4) ? lbl_803E7EA4 : ((g > lbl_803E7EE0) ? lbl_803E7EE0 : g);
-        ((GameObject*)obj)->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->climbStartY;
+        f32 mp = ((GameObject*)obj)->anim.currentMoveProgress;
+        if (mp >= lbl_803E7F18)
+        {
+            f32 g = lbl_803E8028 * (lbl_803E802C * mp - lbl_803E7F18);
+            f32 c;
+            c = (g < lbl_803E7EA4) ? lbl_803E7EA4 : ((g > lbl_803E7EE0) ? lbl_803E7EE0 : g);
+            ((GameObject*)obj)->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->climbStartY;
+        }
     }
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
         (obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
