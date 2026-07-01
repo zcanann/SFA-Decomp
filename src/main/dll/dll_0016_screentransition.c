@@ -266,19 +266,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     edge = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
     if (edge == halfSpan)
     {
-        int sh2;
-        int sw2;
-        int sy2;
-        int sx2;
-        HudColor col2;
-        GXGetScissor(&sx2, &sy2, &sw2, &sh2);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col2.r = r;
-        col2.g = b;
-        col2.b = g;
-        col2.a = screenTransitionAlpha;
-        hudDrawRect(sx2, sy2, sw2, sh2, col2);
-        GXSetScissor(sx2, sy2, sw2, sh2);
+        screenTransitionFadeColor(r, b, g);
     }
     else
     {
