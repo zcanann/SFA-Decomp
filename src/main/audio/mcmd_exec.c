@@ -239,8 +239,11 @@ void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
         break;
     }
 
-    varSet32(state, (args->flags >> 8) & 0xff, (args->flags >> 0x10) & 0xff,
-             (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+    {
+        u8 d1 = (args->flags >> 8) & 0xff;
+        u8 d2 = (args->flags >> 0x10) & 0xff;
+        varSet32(state, d1, d2, (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+    }
 }
 
 /*
