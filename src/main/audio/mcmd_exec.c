@@ -1096,13 +1096,16 @@ void macHandleActive(McmdVoiceState* sv)
                 time = (cmd >> 0x10) & 0xffff;
                 sndConvertMs(&time);
                 n = (cmd >> 8) & 0xff;
-                if (sv->exCtrls[n].rampFrames != 0)
                 {
-                    phase = *para1 & 0xffff;
-                    sndConvertMs(&phase);
-                    sv->exCtrls[n].unk00 = phase;
+                    McmdExCtrlState* ec = &sv->exCtrls[n];
+                    if (ec->rampFrames != 0)
+                    {
+                        phase = *para1 & 0xffff;
+                        sndConvertMs(&phase);
+                        ec->unk00 = phase;
+                    }
+                    ec->rampFrames = time;
                 }
-                sv->exCtrls[n].rampFrames = time;
                 break;
             }
         case 0x58: /* mode select */
