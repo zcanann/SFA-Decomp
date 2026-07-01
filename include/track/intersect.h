@@ -76,7 +76,7 @@ void textureSetupFn_800799c0(void);
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
-void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1);
+void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3);
 void doHeatEffect(u8 alpha);
 void renderMotionBlur(f32 alpha);
 void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5);

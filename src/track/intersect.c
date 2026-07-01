@@ -4388,7 +4388,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetCurrentMtx(0);
 }
 
-void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
+void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
@@ -4454,7 +4454,7 @@ void drawFn_80079e64(f32 s1, f32 s2, f32 s3, u8 mtxIdx, void* vec, u8 alpha0, u8
 
     PSMTXScale(mtx_58, lbl_803DEF64 * (f32)s2, lbl_803DEF64 * (f32)s2, lbl_803DEEDC);
     fade1 = gSynthFadeMask * ratio1;
-    fade2 = gSynthFadeMask * ratio2;
+    fade2 = *(f32 *)&gSynthFadeMask * ratio2;
     PSMTXTrans(mtx_28, fade1 * (f32)s3,
                        lbl_803DEF68 * (f32)s1 + fade2 * (f32)s3,
                        lbl_803DEEDC);
