@@ -34,26 +34,27 @@ void dll_9C_func03(int a, int b, int p, u32 flags)
     ScreenFxHdr hdr;
     ScreenFxPart parts[32];
     ScreenFxPart* cur;
-    u8* base = (u8*)lbl_80317E00;
-    ScreenFxPart* pp = (ScreenFxPart*)(int)parts;
+    u8* base = (u8*)(int)lbl_80317E00;
+    ScreenFxPart* pp = parts;
     int idx;
     u8* q;
 
-    parts[0].state = 0;
-    parts[0].id = 0x15;
-    parts[0].tex = base + 0x1b0;
-    parts[0].flags = 4;
-    parts[0].x = lbl_803E13C8;
-    parts[0].y = lbl_803E13C8;
-    parts[0].z = lbl_803E13C8;
-    parts[1].state = 0;
-    parts[1].id = 0x15;
-    parts[1].tex = base + 0x1b0;
-    parts[1].flags = 2;
-    parts[1].x = lbl_803E13CC;
-    parts[1].y = lbl_803E13D0;
-    parts[1].z = lbl_803E13CC;
-    cur = pp + 2;
+    cur = pp;
+    cur[0].state = 0;
+    cur[0].id = 0x15;
+    cur[0].tex = base + 0x1b0;
+    cur[0].flags = 4;
+    cur[0].x = lbl_803E13C8;
+    cur[0].y = lbl_803E13C8;
+    cur[0].z = lbl_803E13C8;
+    cur[1].state = 0;
+    cur[1].id = 0x15;
+    cur[1].tex = base + 0x1b0;
+    cur[1].flags = 2;
+    cur[1].x = lbl_803E13CC;
+    cur[1].y = lbl_803E13D0;
+    cur[1].z = *(f32*)&lbl_803E13CC;
+    cur += 2;
     if (b != 1)
     {
         cur->state = 0;
@@ -194,7 +195,7 @@ void dll_9C_func03(int a, int b, int p, u32 flags)
             hdr.bz = lbl_803E13C8 + *(f32*)(p + 0x14);
         }
     }
-    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x154, 0);
+    (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, 0x154, 0);
 }
 #pragma optimization_level reset
 
