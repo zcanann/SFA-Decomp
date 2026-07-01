@@ -2765,21 +2765,26 @@ void expgfx_resetAllPools(void)
     }
 
     resourceEntry = runtime->resourceTable;
-    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++,
-         resourceIndex++)
     {
-        s32 zero = 0;
-
-        gExpgfxTextureFreeInProgress = 1;
-        if (resourceEntry->resource != NULL)
+        s32 zeroResource = 0;
+        s32 zeroId = 0;
+        s32 zeroScore = 0;
+        s32 zeroReserved = 0;
+        s32 zeroFlag = 0;
+        for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++,
+             resourceIndex++)
         {
-            textureFree(resourceEntry->resource);
+            gExpgfxTextureFreeInProgress = 1;
+            if (resourceEntry->resource != NULL)
+            {
+                textureFree(resourceEntry->resource);
+            }
+            gExpgfxTextureFreeInProgress = zeroFlag;
+            resourceEntry->resource = (void*)zeroResource;
+            resourceEntry->resourceId = zeroId;
+            resourceEntry->evictionScore = zeroScore;
+            resourceEntry->reserved = zeroReserved;
         }
-        gExpgfxTextureFreeInProgress = zero;
-        resourceEntry->resource = (void*)zero;
-        resourceEntry->resourceId = zero;
-        resourceEntry->evictionScore = zero;
-        resourceEntry->reserved = zero;
     }
 }
 #pragma opt_propagation reset
