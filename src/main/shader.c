@@ -922,10 +922,11 @@ extern int return0_80060B90(void* blk);
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
+    int j;
     s16* arr;
     void* blk;
-    int byteOff;
     int i;
+    int byteOff;
     int slotIdx;
     int blockId;
     s8* statusArr;
@@ -955,13 +956,14 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
     }
     statusArr[slotIdx] = -1;
 
+    j = 0;
     arr = lbl_803DCE94;
-    for (i = 0; i < lbl_803DCE98; i++)
+    for (; j < lbl_803DCE98; j++)
     {
         if (blockId == *arr)
         {
-            lbl_803DCE8C[i]++;
-            statusArr[slotIdx] = i;
+            lbl_803DCE8C[j]++;
+            statusArr[slotIdx] = j;
             return 1;
         }
         arr++;
