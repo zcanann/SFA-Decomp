@@ -2114,11 +2114,11 @@ int dbstealerworm_stateHandlerA08(int obj, int baddie, f32 t)
     extern f32 lbl_803E6328;
     extern int lbl_803296FC[];
     extern f32 lbl_8032970C[];
+    int q;
+    int* ptr;
     GroundBaddieState* blob = ((GameObject*)obj)->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     int tmpB;
-    int q;
-    int* ptr;
     s16 h;
     int tmpA;
     int tmp2B;
