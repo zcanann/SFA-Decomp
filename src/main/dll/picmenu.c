@@ -580,10 +580,10 @@ void VideoDecodeThreadStart(void)
     }
 }
 
-#pragma peephole on
 BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
 {
     char* db = gPicMenuVideoDecodeThreadArea;
+    void* mbuf = db;
 
     if (onMemoryArg != 0)
     {
@@ -604,9 +604,8 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
     }
 
     OSInitMessageQueue((OSMessageQueue*)(db + 0x38), (void*)(db + 0x0C), 3);
-    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), db, 3);
+    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), mbuf, 3);
     gPicMenuVideoDecodeThreadCreated = 1;
     gPicMenuVideoDecodePrepareReady = 1;
     return 1;
 }
-#pragma peephole reset
