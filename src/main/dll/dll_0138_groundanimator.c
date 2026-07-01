@@ -345,8 +345,8 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     iz = fastFloorf((((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
     fracX = ((GameObject*)obj)->anim.localPosX - (lbl_803E3FC0 * ix + playerMapOffsetX);
     fracZ = ((GameObject*)obj)->anim.localPosZ - (lbl_803E3FC0 * iz + playerMapOffsetZ);
-    fallOff = 0;
-    state->entryCount = fallOff;
+    state->entryCount = 0;
+    fallOff = state->entryCount;
     radsq = state->radius * state->radius;
     for (blkIdx = 0, htOff = fallOff; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
     {
