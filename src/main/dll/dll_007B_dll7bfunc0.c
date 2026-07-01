@@ -713,10 +713,9 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* entries;
+    u8* base = (u8*)(int)gDll7BEffectResourceData;
     GfxCmd* e;
-    u8* base = gDll7BEffectResourceData;
-    entries = buf.entries;
+    GfxCmd* entries = buf.entries;
     if (variant == 1)
     {
         *(s16*)&base[0x128] = 0x1130;
@@ -902,5 +901,5 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)gDll7BEffectResourceData, 0xc, &base[0x8c], 0x8e, 0);
 }
