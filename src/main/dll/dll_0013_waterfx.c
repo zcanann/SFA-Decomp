@@ -362,6 +362,7 @@ void waterfx_func05(int obj, int renderParam)
             }
         }
         }
+        i = 0;
         if ((int)gWaterfxSplashCount != 0)
         {
             fn_8007BD8C((int)gWaterfxSplashTexture0, (int)gWaterfxSplashTexture1);
@@ -375,7 +376,7 @@ void waterfx_func05(int obj, int renderParam)
             GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
         thr = lbl_803DF2EC;
-        for (i = 0; i < WATERFX_MAX_SPLASHES; i++)
+        for (; i < WATERFX_MAX_SPLASHES; i++)
         {
             WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
             if (s->f10 < thr)
