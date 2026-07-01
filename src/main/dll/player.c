@@ -863,6 +863,7 @@ int fn_802A36EC(int obj, int state)
             f32 hi;
             f32 t;
             f32 r;
+            f32 v;
             if (inner->unk606 == 0x10)
             {
                 gPlayerCurrentMoveId = 0x1a;
@@ -870,14 +871,14 @@ int fn_802A36EC(int obj, int state)
                 hi = lbl_803E8044;
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F28;
             }
-            else if (inner->unk5A8 >= lbl_803E8040)
+            else if ((v = inner->unk5A8) >= lbl_803E8040)
             {
                 gPlayerCurrentMoveId = 0xe;
                 lo = lbl_803E8040;
                 hi = lbl_803E7F30;
                 ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F0C;
             }
-            else if (inner->unk5A8 >= lbl_803E8048)
+            else if (v >= *(f32*)&lbl_803E8048)
             {
                 gPlayerCurrentMoveId = 0x16;
                 lo = lbl_803E8048;
