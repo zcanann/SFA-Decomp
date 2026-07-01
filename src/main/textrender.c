@@ -1813,10 +1813,10 @@ void gameTextRun(void)
         {
         case 3:
             {
-                u8 c3 = cmd->f10;
-                u8 c2 = cmd->fc;
-                u8 c1 = cmd->f8;
                 u8 c0 = cmd->f4;
+                u8 c1 = cmd->f8;
+                u8 c2 = cmd->fc;
+                u8 c3 = cmd->f10;
                 lbl_803DC9A7 = c0;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
@@ -1887,9 +1887,9 @@ void gameTextRun(void)
             break;
         case 14:
             {
-                u8 e2 = cmd->fc;
-                u8 e1 = cmd->f8;
                 u8 e0 = cmd->f4;
+                u8 e1 = cmd->f8;
+                u8 e2 = cmd->fc;
                 lbl_803DC992 = e0;
                 lbl_803DC991 = e1;
                 lbl_803DC990 = e2;
@@ -1923,8 +1923,8 @@ void gameTextRun(void)
     lbl_803DC9C8 = 0;
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
-    textWindow = gTextBoxes + 0x1280;
     i = 0x94;
+    textWindow = gTextBoxes + 0x1280;
     do
     {
         textWindow -= 0x20;
