@@ -782,13 +782,15 @@ void baddieinterestp_update(int* obj)
                             if ((int)randomGetRange(1, 100) <= ((BaddieinterestpPlacement*)params)->prob)
                             {
                                 f32 sunTime;
+                                int* target;
+                                int kind;
                                 int b = ((BaddieinterestpPlacement*)params)->modeKind;
                                 switch ((b & 0x30) >> 4)
                                 {
                                 case 0:
                                     {
-                                        int kind = b & 0xf;
-                                        int* target = (int*)objs[i];
+                                        kind = b & 0xf;
+                                        target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
@@ -810,8 +812,8 @@ void baddieinterestp_update(int* obj)
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) == 0)
                                     {
                                         u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
-                                        int kind = b2 & 0xf;
-                                        int* target = (int*)objs[i];
+                                        kind = b2 & 0xf;
+                                        target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
@@ -833,8 +835,8 @@ void baddieinterestp_update(int* obj)
                                     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                                     {
                                         u8 b2 = (u8)((BaddieinterestpPlacement*)params)->modeKind;
-                                        int kind = b2 & 0xf;
-                                        int* target = (int*)objs[i];
+                                        kind = b2 & 0xf;
+                                        target = (int*)objs[i];
                                         if ((int)((BaddieinterestpPlacement*)params)->doneGameBit != -1)
                                         {
                                             GameBit_Set((int)((BaddieinterestpPlacement*)params)->doneGameBit, 1);
