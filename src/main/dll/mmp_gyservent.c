@@ -72,16 +72,26 @@ extern f32 lbl_803E40E8;     /* 145.0f - near-radius multiplier */
 void objFn_80198fa4(s16* obj, void* placement)
 {
     MmpGyserventState* state;
-    s16 rot[3];
+    struct
+    {
+        s16 rotX;
+        s16 rotY;
+        s16 rotZ;
+        s16 pad;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } xf;
     union
     {
-        f32 m[18];
+        f32 m[16];
         f64 a8;
     } rotU;
     f32 outY;
     f32 outZ;
     f32 outX;
-    f32 mtx[20];
+    f32 posMtx[16];
 #define rotMtx rotU.m
 
     state = (MmpGyserventState*)((GameObject*)obj)->extra;
@@ -91,15 +101,15 @@ void objFn_80198fa4(s16* obj, void* placement)
         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
         (((float)(u32)(*(u8*)((char*)placement + MMP_GYSERVENT_PLACE_REACH))) * lbl_803E40DC);
 
-    rot[0] = obj[0];
-    rot[1] = obj[1];
-    rot[2] = obj[2];
-    mtx[0] = lbl_803E40E0;
-    mtx[1] = lbl_803E40D8;
-    mtx[2] = lbl_803E40D8;
-    mtx[3] = lbl_803E40D8;
-    setMatrixFromObjectPos(&mtx[4], rot);
-    Matrix_TransformPoint((f32*)((char*)mtx + 16), lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outY, &outZ, &outX);
+    xf.rotX = obj[0];
+    xf.rotY = obj[1];
+    xf.rotZ = obj[2];
+    xf.scale = lbl_803E40E0;
+    xf.x = lbl_803E40D8;
+    xf.y = lbl_803E40D8;
+    xf.z = lbl_803E40D8;
+    setMatrixFromObjectPos(posMtx, &xf);
+    Matrix_TransformPoint(posMtx, lbl_803E40D8, *(f32*)&lbl_803E40D8, lbl_803E40E0, &outY, &outZ, &outX);
     state->planeNormalX = outY;
     state->planeNormalY = outZ;
     state->planeNormalZ = outX;
@@ -108,14 +118,14 @@ void objFn_80198fa4(s16* obj, void* placement)
             (((GameObject*)obj)->anim.worldPosX * outY +
                 ((GameObject*)obj)->anim.worldPosY * outZ));
 
-    rot[0] = (s16)(-obj[0]);
-    rot[1] = (s16)(-obj[1]);
-    rot[2] = 0;
-    mtx[0] = lbl_803E40E0;
-    mtx[1] = -((GameObject*)obj)->anim.worldPosX;
-    mtx[2] = -((GameObject*)obj)->anim.worldPosY;
-    mtx[3] = -((GameObject*)obj)->anim.worldPosZ;
-    mtxRotateByVec3s(rotMtx, rot);
+    xf.rotX = (s16)(-obj[0]);
+    xf.rotY = (s16)(-obj[1]);
+    xf.rotZ = 0;
+    xf.scale = lbl_803E40E0;
+    xf.x = -((GameObject*)obj)->anim.worldPosX;
+    xf.y = -((GameObject*)obj)->anim.worldPosY;
+    xf.z = -((GameObject*)obj)->anim.worldPosZ;
+    mtxRotateByVec3s(rotMtx, &xf);
     mtx44Transpose(rotMtx, (char*)state + 0x38);
 
     state->reach = lbl_803E40E4 * *(f32*)(obj + 4);
