@@ -14694,7 +14694,6 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     int tris;
     s8 mode;
     int inner;
-    void** list;
 
     f32 x2;
     f32 x1;
@@ -14702,9 +14701,9 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     f32 z1;
     f32 y2;
     f32 y1;
-    f32 dists[4];
-    f32 z9c;
+    void** list;
     f32 planes[8];
+    f32 dists[5];
 
     mode = 0;
     inner = *(int*)&((GameObject*)obj)->extra;
@@ -14746,6 +14745,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         f32* py2;
         f32* pz2;
         int i;
+        int j;
         wallHit = 0;
         if (parent != NULL)
         {
@@ -14793,12 +14793,14 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 }
                 if ((void*)tri != NULL && ((*(s8*)(tri + 3) & 0x3f) == 5 || (*(s8*)(tri + 3) & 0x3f) == 2))
                 {
-                    x1 = *(f32*)(verts + *(s16*)(tri + 4) * 0xc);
+                    j = *(s16*)(tri + 4) * 0xc;
+                    x1 = *(f32*)(verts + j);
                     y1 = lbl_803E7EA4;
-                    z1 = *(f32*)(verts + *(s16*)(tri + 4) * 0xc + 8);
-                    x2 = *(f32*)(verts + *(s16*)(tri + 6) * 0xc);
+                    z1 = *(f32*)(verts + (j + 8));
+                    j = *(s16*)(tri + 6) * 0xc;
+                    x2 = *(f32*)(verts + j);
                     y2 = lbl_803E7EA4;
-                    z2 = *(f32*)(verts + *(s16*)(tri + 6) * 0xc + 8);
+                    z2 = *(f32*)(verts + (j + 8));
                     if (parent != NULL)
                     {
                         ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
@@ -14845,8 +14847,8 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 planes[(u32) * (u8*)((char*)out + 0x5f) * 4 + 2];
         }
         {
-            f32 e2 = lbl_803E7E98;
-            out[0x11] = -(out[7] * (e2 + lbl_803DC6C0) - out[0xb]);
+            f32 e2;
+            out[0x11] = -(out[7] * ((e2 = lbl_803E7E98) + lbl_803DC6C0) - out[0xb]);
             out[0x13] = -(out[9] * (e2 + lbl_803DC6C0) - out[0xd]);
         }
         {
@@ -14859,11 +14861,11 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
             (((GameObject*)cam)->anim.localPosY - ((GameObject*)cam)->anim.localPosX);
         dists[2] = out[0x14];
         dists[3] = out[1];
-        z9c = out[0x16];
+        dists[4] = out[0x16];
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            &dists[2], &dists[3], &z9c, *(int*)&((GameObject*)obj)->anim.parent);
+            &dists[2], &dists[3], &dists[4], *(int*)&((GameObject*)obj)->anim.parent);
         {
-            int cnt = hitDetectFn_80065e50(obj, dists[2], dists[3], z9c, (int***)&list, 0, 0x201);
+            int cnt = hitDetectFn_80065e50(obj, dists[2], dists[3], dists[4], (int***)&list, 0, 0x201);
             if (cnt != 0)
             {
                 f32 best = lbl_803E80AC;
@@ -14900,10 +14902,10 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         }
         dists[2] = out[0x11];
         dists[3] = out[1];
-        z9c = out[0x13];
+        dists[4] = out[0x13];
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            &dists[2], &dists[3], &z9c, *(int*)&((GameObject*)obj)->anim.parent);
-        if (hitDetectFn_800658a4(obj, out + 0x12, 0x205, dists[2], dists[3], z9c) == 0)
+            &dists[2], &dists[3], &dists[4], *(int*)&((GameObject*)obj)->anim.parent);
+        if (hitDetectFn_800658a4(obj, out + 0x12, 0x205, dists[2], dists[3], dists[4]) == 0)
         {
             out[0x12] = out[1] - out[0x12];
         }
