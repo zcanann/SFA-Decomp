@@ -503,7 +503,8 @@ void ObjSeq_run(void)
 
     count = gObjSeqBgCmdCount;
     keepCount = 0;
-    cmd = base + count * 6 + 0x2a80;
+    cmd = base + count * 6;
+    cmd += 0x2a80;
     keepBase = keepBuf;
     keepWalk = keepBase;
     while (count > 0)
