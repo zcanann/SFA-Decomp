@@ -1429,9 +1429,9 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
     if (found)
     {
         int j;
-        PlayerShadowTriHit* e = table;
         for (j = 0; j < count; j++)
         {
+            PlayerShadowTriHit* e = &((PlayerShadowTriHit*)table)[j];
             u8 t = e->surfaceType;
             if ((s8)t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || (s8)t == 0x17)
             {
@@ -1491,7 +1491,6 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
                     (*gPartfxInterface)->spawnObject(ctx, 0x190, &data, 0x111, -1, NULL);
                 }
             }
-            e++;
         }
     }
 }
