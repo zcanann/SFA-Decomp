@@ -1469,6 +1469,7 @@ void objModelClearVecFn_8003aa40(int obj)
     int n;
     int i;
     int j;
+    int bank;
     int slot;
 
     for (slot = 0; slot < 0x16; slot++)
@@ -1477,7 +1478,6 @@ void objModelClearVecFn_8003aa40(int obj)
         table = (void*)((GameObject*)obj)->anim.modelInstance;
         if (table != NULL)
         {
-            int bank;
             i = 0;
             j = 0;
             n = (s32)(u32)((ObjDef*)table)->jointCount;
