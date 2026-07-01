@@ -303,35 +303,38 @@ typedef struct DfshShrineFlagsBits
 
 #define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
 
-void dfsh_shrine_update(int obj)
+void dfsh_shrine_update(int objArg)
 {
 
     extern int Obj_GetPlayerObject(void);
-    u16* base = gDfShShrineRewardTable;
-    int player;
+    u16* base;
     DfshShrineState* state;
+    int player;
     s16 i;
     u8 anyMissing;
+    u16* required;
+    GameObject* obj = (GameObject*)objArg;
 
-    state = ((GameObject*)obj)->extra;
+    base = gDfShShrineRewardTable;
+    state = obj->extra;
     player = Obj_GetPlayerObject();
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (obj->unkF4 != 0)
     {
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
-        if (((GameObject*)obj)->unkF4 == 0)
+        obj->unkF4 = obj->unkF4 - 1;
+        if (obj->unkF4 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxAct(obj, player, 0x78, 0);
-            getEnvfxAct(obj, player, 0x79, 0);
-            getEnvfxAct(obj, player, 0x222, 0);
+            getEnvfxAct((int)obj, player, 0x78, 0);
+            getEnvfxAct((int)obj, player, 0x79, 0);
+            getEnvfxAct((int)obj, player, 0x222, 0);
         }
     }
-    fn_801C2914(obj);
+    fn_801C2914((int)obj);
     if (gDfShShrinePendingReward != 0)
     {
-        ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+        obj->anim.worldPosX = obj->anim.localPosX;
+        obj->anim.worldPosY = obj->anim.localPosY;
+        obj->anim.worldPosZ = obj->anim.localPosZ;
         playerAddRemoveMagic(player, 0x14);
         GameBit_Set(0x1d7, 1);
         gDfShShrinePendingReward = 0;
@@ -358,12 +361,12 @@ void dfsh_shrine_update(int obj)
             state->idleChimeTimer = t;
             if (t <= lbl_803E4E8C)
             {
-                Sfx_PlayFromObject(obj, 0x343);
+                Sfx_PlayFromObject((int)obj, 0x343);
                 state->idleChimeTimer = (f32)(s32)
                 randomGetRange(500, 1000);
             }
         }
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             GameBit_Set(0x589, 0);
             state->mode = 5;
@@ -376,7 +379,7 @@ void dfsh_shrine_update(int obj)
         state->transitionTimer = 0x1f;
         (*gScreenTransitionInterface)->step(0x1e, 1);
         state->mode = 1;
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     case 1:
         if (DFSH_FLAGS(state)->openedBySequence == 1)
@@ -472,12 +475,15 @@ void dfsh_shrine_update(int obj)
         GameBit_Set(0xb71, 0);
         GameBit_Set(0xb76, 0);
         GameBit_Set(0x589, 1);
+        required = (u16*)((u8*)base + 40);
         for (i = 0; i < 10; i++)
         {
-            GameBit_Set(DFSH_REQUIRED_BIT(i), 0);
-            GameBit_Set(DFSH_REWARD_BIT(i), 0);
+            GameBit_Set(*required, 0);
+            GameBit_Set(*base, 0);
+            required++;
+            base++;
         }
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
     }
 }
