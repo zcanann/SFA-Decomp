@@ -9846,9 +9846,11 @@ int fn_80299E44(int obj, int state, f32 fv)
             getCurSeqNo() != 0)
         {
             int i;
-            void** p = gPlayerSpawnedObjects;
+            void** p;
             lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            i = 0;
+            p = gPlayerSpawnedObjects;
+            for (; i < 7; i++)
             {
                 if (*p != NULL)
                 {
