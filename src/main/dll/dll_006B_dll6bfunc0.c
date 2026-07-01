@@ -771,20 +771,20 @@ void dll_6B_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[5].flags = 5;
     buf.entries[5].tex = &base[84];
     buf.entries[5].mode = 2;
-    buf.entries[5].x = lbl_803E0A68;
-    buf.entries[5].y = lbl_803E0A6C;
-    buf.entries[5].z = lbl_803E0A68;
+    buf.entries[5].x = (*(f32*)&lbl_803E0A68);
+    buf.entries[5].y = (*(f32*)&lbl_803E0A6C);
+    buf.entries[5].z = (*(f32*)&lbl_803E0A68);
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0A5C;
-    buf.pos[1] = lbl_803E0A70;
+    buf.pos[1] = (*(f32*)&lbl_803E0A70);
     buf.pos[2] = lbl_803E0A5C;
     buf.col[0] = lbl_803E0A5C;
     buf.col[1] = lbl_803E0A5C;
     buf.col[2] = lbl_803E0A5C;
-    buf.scale = lbl_803E0A6C;
+    buf.scale = (*(f32*)&lbl_803E0A6C);
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 5;
@@ -803,11 +803,11 @@ void dll_6B_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (*(void**)&buf.ctx != 0)
+        if ((void*)ctx != NULL)
         {
-            buf.pos[0] = lbl_803E0A5C + *(f32*)(buf.ctx + 0x18);
-            buf.pos[1] = lbl_803E0A70 + *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] = lbl_803E0A5C + *(f32*)(buf.ctx + 0x20);
+            buf.pos[0] = lbl_803E0A5C + *(f32*)(ctx + 0x18);
+            buf.pos[1] = lbl_803E0A70 + *(f32*)(ctx + 0x1c);
+            buf.pos[2] = lbl_803E0A5C + *(f32*)(ctx + 0x20);
         }
         else
         {
