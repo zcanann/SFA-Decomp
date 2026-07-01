@@ -702,12 +702,12 @@ enum
 };
 
 #pragma fp_contract off
-void dll_61_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     struct
     {
         GfxCmd* cmds;
-        u8* ctx;
+        int ctx;
         u8 pad0[0x18];
         f32 col[3];
         f32 pos[3];
@@ -724,7 +724,8 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     } buf;
     f32 t;
     u8* base = (u8*)(int)lbl_803128E8;
-    GfxCmd* e = buf.entries;
+    GfxCmd* e;
+    e = buf.entries;
     e[0].layer = 0;
     e[0].flags = 8;
     e[0].tex = &base[0xa0];
@@ -847,7 +848,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v59 = 9;
     buf.v5a = 0;
     buf.v5b = 0;
-    buf.count = (e + 15) - buf.entries;
+    buf.count = (GfxCmd*)((u8*)e + 0x168) - e;
     buf.hw[0] = *(s16*)&base[0xb0];
     buf.hw[1] = *(s16*)&base[0xb2];
     buf.hw[2] = *(s16*)&base[0xb4];
@@ -860,7 +861,7 @@ void dll_61_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (sourceObj != 0)
+        if ((void*)sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E0858 + ((GameObject*)sourceObj)->anim.worldPosX;
             buf.pos[1] = lbl_803E0864 + ((GameObject*)sourceObj)->anim.worldPosY;
