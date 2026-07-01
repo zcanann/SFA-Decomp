@@ -1445,40 +1445,41 @@ typedef struct TexOverrideEntry
 
 int mapTextureOverrideAcquire(int key, int value, int type)
 {
-    TexOverrideEntry* e;
+    TexOverrideEntry* base;
     int idx;
     int found;
-    TexOverrideEntry* e2;
     int idx2;
 
     found = -1;
     idx = 0;
-    e = (TexOverrideEntry*)lbl_803DCE6C;
+    base = (TexOverrideEntry*)lbl_803DCE6C;
     for (; idx < 80; idx++)
     {
-        if (e->refs != 0 && e->key == key && type == e->type)
+        if (base[idx].refs != 0)
         {
-            found = idx;
-            break;
+            u32 entryKey = base[idx].key;
+            if (entryKey == key && type == base[idx].type)
+            {
+                found = idx;
+                break;
+            }
         }
-        e++;
     }
     if (found != -1)
     {
-        *(s16*)((char*)(lbl_803DCE6C + 12) + found * 16) += 1;
+        base[found].refs += 1;
         return found;
     }
     found = -1;
     idx2 = 0;
-    e2 = (TexOverrideEntry*)lbl_803DCE6C;
+    base = (TexOverrideEntry*)lbl_803DCE6C;
     for (; idx2 < 80; idx2++)
     {
-        if (e2->refs == 0)
+        if (base[idx2].refs == 0)
         {
             found = idx2;
             break;
         }
-        e2++;
     }
     if (found != -1)
     {
