@@ -45,12 +45,14 @@ extern f32 lbl_803E1128;
 int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
+    u8* base = (u8*)(int)gDll8DEffectParamBlock;
     FbCmd* p;
-    u8* base = gDll8DEffectParamBlock;
+    FbCmd* entries;
     int ret = 0;
     f32 jitter;
 
-    p = buf.entries;
+    entries = buf.entries;
+    p = entries;
 
     if (variant == 0)
     {
@@ -382,7 +384,7 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v59 = 9;
     buf.v5a = 0;
     buf.v5b = 0;
-    buf.count = p - buf.entries;
+    buf.count = p - entries;
     buf.hw[0] = *(s16*)(base + 0xb0);
     buf.hw[1] = *(s16*)(base + 0xb2);
     buf.hw[2] = *(s16*)(base + 0xb4);
@@ -411,19 +413,19 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
     if (variant == 0)
     {
         buf.v58 = 0;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base, 8, base + 0x5c, 0x156, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0x156, 0);
     }
     else if (variant == 1)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base, 8, base + 0x5c, 0xc0d, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0xc0d, 0);
     }
     else if (variant == 2)
     {
         buf.v58 = 0;
         buf.flags |= 4;
-        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, base, 8, base + 0x5c, 0x23b, 0);
+        ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)gDll8DEffectParamBlock, 8, base + 0x5c, 0x23b, 0);
     }
     return ret;
 }
