@@ -2027,6 +2027,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
 
 void gameTextLoadForCurMap(int sourceId)
 {
+    u8* dirPtr;
+    u8* langPtr;
     int oldHeap;
     int dirId;
     int languageId;
@@ -2084,8 +2086,8 @@ void gameTextLoadForCurMap(int sourceId)
     request = (GameTextLoadRequest*)(gameTextBase +
         sourceId * sizeof(GameTextLoadRequest));
     *(int*)((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
-    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
-    *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
+    *(dirPtr = (u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
+    *(langPtr = (u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)
@@ -2108,8 +2110,8 @@ void gameTextLoadForCurMap(int sourceId)
 
     if (freeSlot != NULL)
     {
-        int slotDir = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8);
-        int slotLang = *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9);
+        int slotDir = *dirPtr;
+        int slotLang = *langPtr;
         freeSlot->state = 1;
         freeSlot->dirId = slotDir;
         freeSlot->languageId = slotLang;
@@ -2122,8 +2124,8 @@ void gameTextLoadForCurMap(int sourceId)
             loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
                                 &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
-        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = GAMETEXT_INVALID_DIR;
-        *((u8*)request + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = GAMETEXT_INVALID_LANGUAGE;
+        *dirPtr = GAMETEXT_INVALID_DIR;
+        *langPtr = GAMETEXT_INVALID_LANGUAGE;
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
