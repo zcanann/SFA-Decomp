@@ -85,7 +85,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable)
     state->light = objCreateLight(obj, 1);
     if (state->light == NULL)
         return;
-    modelLightStruct_setLightKind(state->light, 2);
+    modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
     modelLightStruct_setPosition(state->light, lbl_803E7008, lbl_803E7008, lbl_803E7008);
     lightSetFieldBC_8001db14(state->light, 1);
     if (((GameObject*)obj)->anim.seqId == ARW_SEQID_INVINCIBLE)
