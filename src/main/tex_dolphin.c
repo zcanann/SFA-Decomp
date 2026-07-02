@@ -9,6 +9,7 @@
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
 #define GX_FOG_NONE 0
+#define GX_LEQUAL 3
 extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
@@ -437,7 +438,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
     textureFn_800528bc();
     GXSetNumChans(1);
     GXSetCullMode(GX_CULL_BACK);
-    gxSetZMode_(1, 3, 0);
+    gxSetZMode_(1, GX_LEQUAL, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
@@ -723,7 +724,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         if ((u8)visArg != 0)
                         {
                             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-                            gxSetZMode_(1, 3, 0);
+                            gxSetZMode_(1, GX_LEQUAL, 0);
                             gxSetPeControl_ZCompLoc_(1);
                             GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                         }
@@ -1005,7 +1006,7 @@ LAB_8005F6F4:
     if (((SHADER_FLAGS(shader) & 0x40000000) != 0) || ((SHADER_FLAGS(shader) & 0x20000000) != 0))
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-        gxSetZMode_(1, 3, 0);
+        gxSetZMode_(1, GX_LEQUAL, 0);
         gxSetPeControl_ZCompLoc_(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         goto LAB_8005F7FC;
@@ -1015,14 +1016,14 @@ LAB_8005F6F4:
         if ((SHADER_FLAGS(shader) & 0x80) == 0)
         {
             GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-            gxSetZMode_(1, 3, 1);
+            gxSetZMode_(1, GX_LEQUAL, 1);
             gxSetPeControl_ZCompLoc_(0);
             GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_GREATER, 0);
             goto LAB_8005F7FC;
         }
     }
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    gxSetZMode_(1, 3, 1);
+    gxSetZMode_(1, GX_LEQUAL, 1);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 LAB_8005F7FC:
