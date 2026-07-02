@@ -17409,9 +17409,11 @@ int fn_802994D0(int obj, int state, f32 fv)
             inner->chargeLevel = lbl_803E7E98 * fv + inner->chargeLevel;
             if (inner->chargeLevel >= lbl_803E7ED8)
             {
-                int sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
-                int v = *(s16*)((char*)sub + 0x4) - 0xa;
+                int sub;
+                int v;
                 inner->chargeLevel = lbl_803E7EA4;
+                sub = *(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c);
+                v = *(s16*)((char*)sub + 0x4) - 0xa;
                 if (v < 0)
                 {
                     v = 0;
@@ -17473,7 +17475,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.velocityY = lbl_803E7EFC * fv + ((GameObject*)obj)->anim.velocityY;
         if (((GameObject*)obj)->anim.velocityY > lbl_803E7F10)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E7F10;
+            ((GameObject*)obj)->anim.velocityY = *(f32*)&lbl_803E7F10;
         }
         if (((GameObject*)obj)->anim.localPosY > lbl_803DE490)
         {
@@ -17502,7 +17504,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         {
             f32 fromVec[3];
             f32 toVec[3];
-            u8 hitBuf[0x40];
+            u8 hitBuf[0x58];
             f32 zero = lbl_803E7EA4;
             ((PlayerState*)state)->baddie.animSpeedC = zero;
             ((PlayerState*)state)->baddie.animSpeedB = zero;
@@ -17528,7 +17530,8 @@ int fn_802994D0(int obj, int state, f32 fv)
             toVec[2] = fromVec[2] -
                 lbl_803E7F5C * mathCosf(gPlayerPi * (f32)(int)inner->targetYaw /
                                         lbl_803E7F98);
-            if (objBboxFn_800640cc(lbl_803E7EA4, fromVec, toVec, 3, hitBuf, obj, 1, 1, 0xff, 0) != 0)
+            if (((int (*)(void*, void*, f32, int, void*, int, int, int, int, int))objBboxFn_800640cc)(
+                    fromVec, toVec, lbl_803E7EA4, 3, hitBuf, obj, 1, 1, 0xff, 0) != 0)
             {
                 lbl_803DE490 = *(f32*)(hitBuf + 0x3c) - lbl_803E7F30;
             }
