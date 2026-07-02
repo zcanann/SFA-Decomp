@@ -7,6 +7,8 @@
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMSNOWBALL1C2_OBJFLAG_HIDDEN 0x4000
 
 typedef struct Dimsnowball1c2State
 {
@@ -85,7 +87,7 @@ void dimsnowball1c2_init(int obj, u8* p)
     inner = ((GameObject*)obj)->extra;
     ((DimicewallState*)inner)->unk2 = def->unk18;
     *(s16*)inner = def->unk18;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimicewall_init(int obj, s8* p);
