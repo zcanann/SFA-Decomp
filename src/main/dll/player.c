@@ -12397,6 +12397,8 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(int*)state &= ~0x1000000;
 }
 
+#pragma opt_common_subs off
+#pragma opt_lifetimes off
 void fn_802AC32C(int p1, int p2, int p3)
 {
     void* near;
@@ -12541,6 +12543,8 @@ void fn_802AC32C(int p1, int p2, int p3)
         (f32) * (s16*)((char*)p3 + 0x4d6) *
             powfBitEstimate(lbl_803E7F1C, timeDelta);
 }
+#pragma opt_common_subs reset
+#pragma opt_lifetimes reset
 
 #pragma opt_loop_invariants off
 int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
