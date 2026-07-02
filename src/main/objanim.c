@@ -194,19 +194,14 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 
         if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0)
         {
-            countdown =
-                (int)
-            ((f32)(s32)
-            state->eventCountdown - ((f32)state->eventStep * deltaTime)
-            )
-            ;
+            countdown = (int)((f32)(s32)state->eventCountdown -
+                              ((f32)state->eventStep * deltaTime));
             value = (countdown < 0)
                         ? gObjAnimProgressZero
                         : (((f32)countdown > gObjAnimEventStepScale)
                                ? gObjAnimEventStepScale
                                : (f32)countdown);
-            state->eventCountdown = (u16)(int)
-            value;
+            state->eventCountdown = (u16)(int)value;
         }
         if (state->eventCountdown == 0)
         {
@@ -650,9 +645,12 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
             if (blendSamples != NULL)
             {
                 s16* axisAt = &axis[sampleIndex];
-                nextDistance +=
-                    (rootScale * ((f32)axisAt[2] - axisAt[1]) * moveWeight) +
-                    (blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]) * blendWeight);
+                f32 blendDelta;
+                f32 moveDelta;
+                blendDelta =
+                    blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
+                moveDelta = rootScale * ((f32)axisAt[2] - axisAt[1]);
+                nextDistance += (moveDelta * moveWeight) + (blendDelta * blendWeight);
             }
             else
             {
