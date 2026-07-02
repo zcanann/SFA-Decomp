@@ -16,6 +16,8 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 extern int getAngle(float y, float x);
 extern void objRenderFn_8003b8f4(f32);
 #include "main/game_object.h"
@@ -161,7 +163,7 @@ void SB_CloudBall_init(GameObject* obj)
         state->light = objCreateLight((int*)obj, 1);
         if ((void*)state->light != NULL)
         {
-            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
             lightSetFieldBC_8001db14(state->light, 1);
             modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear, gSbCloudBallLightAttenFar);
