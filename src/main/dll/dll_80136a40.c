@@ -1235,6 +1235,7 @@ int fn_80136E00(int p1, u8* p)
 void fn_80137DF8(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
+    void (*self)(void);
     int y;
     u32* sp;
     int depth;
@@ -1266,6 +1267,7 @@ void fn_80137DF8(void)
         GXSetBreakPtCallback(NULL);
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
+        self = fn_80137DF8;
         while (1)
         {
             if (enableDebugText != 0)
@@ -1298,7 +1300,7 @@ void fn_80137DF8(void)
                     col += 2;
                 }
             }
-            debugPrintfxy(0x10, 0x15, strs + 0x140, fn_80137DF8);
+            debugPrintfxy(0x10, 0x15, strs + 0x140, self);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
             switch (*(u16*)&gErrExceptionType)
             {
