@@ -1025,30 +1025,30 @@ void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out)
     }
 }
 
-void ObjList_PartitionForRender(int* out)
+int ObjList_PartitionForRender(int* out)
 {
-    void** arr;
     void* tmp;
-    int stop;
     int i;
     int j;
     int hi;
 
     *out = gObjCount;
-    if (gObjPartitionPivot != 0)
+    i = gObjPartitionPivot;
+    if (i != 0)
     {
-        return;
+        return i;
     }
     i = 0;
     j = gObjCount - 1;
     hi = j;
     while (i <= j)
     {
+        int stop;
+
         stop = 0;
-        arr = gObjList;
         while (i <= hi && stop == 0)
         {
-            if (((ObjAnimComponent*)arr[i])->modelInstance->flags & 1)
+            if (((ObjAnimComponent*)((void**)gObjList)[i])->modelInstance->flags & 1)
             {
                 i++;
             }
@@ -1060,7 +1060,7 @@ void ObjList_PartitionForRender(int* out)
         stop = 0;
         while (j >= 0 && stop == 0)
         {
-            if (!(((ObjAnimComponent*)arr[j])->modelInstance->flags & 1))
+            if (!(((ObjAnimComponent*)((void**)gObjList)[j])->modelInstance->flags & 1))
             {
                 j--;
             }
@@ -1071,14 +1071,15 @@ void ObjList_PartitionForRender(int* out)
         }
         if (i < j)
         {
-            tmp = arr[i];
-            arr[i] = arr[j];
+            tmp = ((void**)gObjList)[i];
+            ((void**)gObjList)[i] = ((void**)gObjList)[j];
             ((void**)gObjList)[j] = tmp;
             i++;
             j--;
         }
     }
     gObjPartitionPivot = i;
+    return i;
 }
 
 #pragma dont_inline on
