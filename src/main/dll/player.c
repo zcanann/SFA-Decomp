@@ -7157,9 +7157,9 @@ void playerUpdate(int obj)
             }
         }
     }
-    else if (getCurUiDll() != 4)
+    else
     {
-        if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x200000) != 0)
+        if (getCurUiDll() == 4 || (*(u32*)&((PlayerState*)inner)->flags360 & 0x200000) != 0)
         {
             return;
         }
