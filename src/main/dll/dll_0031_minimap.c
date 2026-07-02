@@ -701,19 +701,19 @@ void fn_80133718(void)
 #pragma peephole off
 static inline void Minimap_freeObjectSlots(void** slots, int count)
 {
-    u8 i;
+    u8 z[1];
     void* null;
 
-    i = 0;
-    null = NULL;
-    while ((u32)i < count)
+    z[0] = 0;
+    null = (void*)z[0];
+    while ((u32)z[0] < count)
     {
-        if (slots[(u8)i] != NULL)
+        if (slots[(u8)z[0]] != NULL)
         {
-            Obj_FreeObject(slots[(u8)i]);
-            slots[(u8)i] = null;
+            Obj_FreeObject(slots[(u8)z[0]]);
+            slots[(u8)z[0]] = null;
         }
-        i++;
+        z[0]++;
     }
 }
 
