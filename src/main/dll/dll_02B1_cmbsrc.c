@@ -214,9 +214,9 @@ int cmbsrc_cycleColor(int obj, int state)
     int idx;
 
     sourceState->colorCycleTimer -= timeDelta;
-    if (sourceState->colorCycleTimer <= lbl_803E7360)
+    if (sourceState->colorCycleTimer <= 0.0f)
     {
-        sourceState->colorCycleTimer = lbl_803E7364;
+        sourceState->colorCycleTimer = 100.0f;
         sourceState->colorCycleIndex += 1;
         if (sourceState->colorCycleIndex >= CMBSRC_COLOR_CYCLE_COUNT)
         {
@@ -230,9 +230,9 @@ int cmbsrc_cycleColor(int obj, int state)
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
                                               gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2], 0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]),
+                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
+                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
+                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]),
                                                    0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
@@ -240,13 +240,13 @@ int cmbsrc_cycleColor(int obj, int state)
                 {
                     modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
                                                gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
-                                               lbl_803E736C * cmbsrc->objAnim.rootMotionScale);
+                                               660.0f * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
                     modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[idx * 3], gCmbsrcColorRgbTable[idx * 3 + 1],
                                                gCmbsrcColorRgbTable[idx * 3 + 2], 0x87,
-                                               lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
+                                               220.0f * cmbsrc->objAnim.rootMotionScale);
                 }
             }
         }
