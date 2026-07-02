@@ -21,6 +21,7 @@
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
+#define GX_LEQUAL 3
 extern u32 FUN_80003494();
 extern u32 FUN_8000697c();
 extern u32 FUN_80006988();
@@ -2952,7 +2953,7 @@ u32 FUN_80045c4c(char tick)
     u32 local_18;
 
     one = 1;
-    gxSetZMode_(1, 3, 1);
+    gxSetZMode_(1, GX_LEQUAL, 1);
     pairWord = FUN_8025ce2c(1);
     FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, one);
     matPtr = &mat0;
@@ -4665,7 +4666,7 @@ int GXFlush_(u8 visible, int unused)
     void* item[3];
     int s;
     void* next;
-    gxSetZMode_(1, 3, 1);
+    gxSetZMode_(1, GX_LEQUAL, 1);
     GXSetAlphaUpdate(GX_TRUE);
     GXFlush();
     GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
@@ -7951,7 +7952,7 @@ void videoInit(void)
     lbl_803DCD00 = 1;
     lbl_803DCCFC = 3;
     lbl_803DCCF8 = 1;
-    gxSetZMode_(1, 3, 1);
+    gxSetZMode_(1, GX_LEQUAL, 1);
     gxSetPeControl_ZCompLoc_(1);
     GXEnableTexOffsets(0, 1, 1);
     PSMTXIdentity(mtx);
