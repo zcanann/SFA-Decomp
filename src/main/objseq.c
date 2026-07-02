@@ -1101,10 +1101,11 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     u8* slotPtr;
     int pair[2];
     u8* player;
-    u8* slotFlags;
     u8 v;
-    int slot;
+    u8* slotFlags;
     int trackId;
+    int slot;
+    int off;
     int* streams;
     f32 dist;
     f32 strength;
@@ -1122,10 +1123,10 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         if (((ObjSeqState*)seq)->curveId < 0)
         {
             ((ObjSeqState*)seq)->curveId =
-                (*gRomCurveInterface)->find(pair, 2, cmdArg,
-                                            ((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.localPosY,
-                                            ((GameObject*)obj)->anim.localPosZ);
+                ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                    ((GameObject*)obj)->anim.localPosX,
+                    ((GameObject*)obj)->anim.localPosY,
+                    ((GameObject*)obj)->anim.localPosZ, pair, 2, cmdArg);
             if (((ObjSeqState*)seq)->curveId > -1)
             {
                 if (((ObjSeqState*)seq)->curveInterp != NULL)
@@ -1159,8 +1160,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             break;
         }
         slotFlags = base + (s8)((ObjSeqState*)seq)->slot;
-        slotFlags = (u8*)((int)slotFlags + 0x3538);
-        v = *slotFlags;
+        v = *(slotFlags += 0x3538);
         if ((v & 0x10) != 0)
         {
             *slotFlags = v & ~0x10;
@@ -1396,7 +1396,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         }
         break;
     case 40:
-        slot = (s8)((ObjSeqState*)seq)->slot;
+        slot = *(s8*)&((ObjSeqState*)seq)->slot;
         if (base[slot + 0x3334] == 0)
         {
             trackId = (u32)(((s16*)(base + 0x3a98))[slot] - 1) & 0x3fff;
@@ -1404,15 +1404,16 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             streams = seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, 5, trackId);
             if (streams != NULL)
             {
-                if (AudioStream_Play(streams[cmdArg], streamCb_80080384) != 0)
+                off = cmdArg * 4;
+                if (AudioStream_Play(*(int*)((u8*)streams + off), streamCb_80080384) != 0)
                 {
                     lbl_803DB720 = slot;
                 }
-            }
-            streams = seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, 5, trackId);
-            if (streams != NULL)
-            {
-                lbl_803DB718 = streams[cmdArg];
+                streams = seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, 5, trackId);
+                if (streams != NULL)
+                {
+                    lbl_803DB718 = *(int*)((u8*)streams + off);
+                }
             }
         }
         break;
