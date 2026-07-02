@@ -1182,8 +1182,8 @@ void staffFn_80170380(int* obj, int cmd)
                     *(f32*)(w + 0x14) = *t1;
                     *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
                     hw += 2;
-                    w += 4;
                     tbl += 1;
+                    w += 4;
                     t1 += 1;
                 }
             }
@@ -1288,8 +1288,8 @@ void staffFn_80170380(int* obj, int cmd)
             {
                 int i;
                 u8* hw;
-                u8* w;
                 f32* t0;
+                u8* w;
                 f32* t1;
                 f32 k;
                 /* kc inlined as lbl_803E33C8 (created after bias) */
@@ -1325,8 +1325,8 @@ void staffFn_80170380(int* obj, int cmd)
         {
             int i;
             u8* hw;
-            u8* w;
             f32* t0;
+            u8* w;
             f32* t1;
             f32 amp;
             f32 k;
