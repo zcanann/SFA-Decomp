@@ -2399,34 +2399,37 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
     extern f32 sqrtf(f32);
     extern f32 gObjPrintDegToAngle;
     s16 ang[2];
-    s16* found;
-    void* m;
+    s16* found[1];
+    void* m[1];
 
-    found = NULL;
-    m = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (m != NULL)
+    found[0] = NULL;
+    m[0] = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (m[0] != NULL)
     {
-        int entryIdx = (int)found, vecOffset = (int)found;
-        int n = ((ObjDef*)m)->jointCount;
+        int iv[2];
+        int n;
         int j;
+        iv[0] = (int)found[0];
+        iv[1] = (int)found[0];
+        n = ((ObjDef*)m[0])->jointCount;
         for (j = 0; j < n; j++)
         {
-            int entries = *(int*)&((ObjDef*)m)->jointData;
-            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                (int)*(u8*)(entries + entryIdx) == 0)
+            int entries = *(int*)&((ObjDef*)m[0])->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
+                (int)*(u8*)(entries + iv[0]) == 0)
             {
-                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                found[0] = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + iv[1]);
             }
-            entryIdx += ((ObjDef*)m)->modelCount + 1;
-            vecOffset += 0x12;
+            iv[0] += ((ObjDef*)m[0])->modelCount + 1;
+            iv[1] += 0x12;
         }
     }
-    if (found != NULL)
+    if (found[0] != NULL)
     {
         if (tgt == NULL)
         {
-            found[1] = found[1] >> 1;
-            found[0] = found[0] >> 1;
+            found[0][1] = found[0][1] >> 1;
+            found[0][0] = found[0][0] >> 1;
         }
         else
         {
@@ -2436,8 +2439,8 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             f32 dist = sqrtf(dx * dx + dy * dy);
             int minB;
             int negA;
-            char* p;
-            s16* ap;
+            char* p[1];
+            s16* ap[1];
             int i;
             f32 prodB;
 
@@ -2457,8 +2460,8 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(s32)(gObjPrintDegToAngle * a);
-            p = p3;
-            ap = ang;
+            p[0] = p3;
+            ap[0] = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
             negA = -a;
@@ -2466,8 +2469,8 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             {
                 int v;
                 int w;
-                *ap -= *(s16*)(p + 0x14);
-                v = *ap;
+                *ap[0] -= *(s16*)(p[0] + 0x14);
+                v = *ap[0];
                 if (v < minB)
                 {
                     w = minB;
@@ -2480,21 +2483,21 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
                     }
                     w = (s16)v;
                 }
-                *ap = (s16)w;
-                *(s16*)(p + 0x14) += *ap;
-                if (*(s16*)(p + 0x14) > a)
+                *ap[0] = (s16)w;
+                *(s16*)(p[0] + 0x14) += *ap[0];
+                if (*(s16*)(p[0] + 0x14) > a)
                 {
-                    *(s16*)(p + 0x14) = a;
+                    *(s16*)(p[0] + 0x14) = a;
                 }
-                if (*(s16*)(p + 0x14) < negA)
+                if (*(s16*)(p[0] + 0x14) < negA)
                 {
-                    *(s16*)(p + 0x14) = negA;
+                    *(s16*)(p[0] + 0x14) = negA;
                 }
-                p += 0x30;
-                ap++;
+                p[0] += 0x30;
+                ap[0]++;
             }
-            found[1] = *(s16*)(p3 + 0x14);
-            found[0] = *(s16*)(p3 + 0x44);
+            found[0][1] = *(s16*)(p3 + 0x14);
+            found[0][0] = *(s16*)(p3 + 0x44);
         }
     }
 }
