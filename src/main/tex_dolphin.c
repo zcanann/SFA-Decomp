@@ -288,9 +288,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     int _base;
     u32 _bits;
     u32 bitPos;
-    u8 colR;
-    u8 colG;
-    u8 colB;
+    u8 col[3];
 
     colorWord = gTexLightmapFogColor;
     bitPos = bitReader[4];
@@ -333,9 +331,9 @@ LAB_8005E630:
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005E718;
 LAB_8005E6D0:
-    objGetColor(0, &colB, &colG, &colR);
+    objGetColor(0, &col[0], &col[1], &col[2]);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&colB);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&col[0]);
 LAB_8005E718:
     return shader;
 }
@@ -888,12 +886,10 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
 {
     u32 shader;
     u32 shaderIdx;
-    int fogColorWord;
-    u8 ambB;
-    u8 ambG;
-    u8 ambR;
-    u8 fogRgba[4];
     int _base;
+    int fogColorWord;
+    u8 amb[3];
+    u8 fogRgba[4];
     u32 _bits;
     u32 uPos;
 
@@ -1007,9 +1003,9 @@ LAB_8005F7FC:
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     goto LAB_8005F8E4;
 LAB_8005F89C:
-    objGetColor(0, &ambR, &ambG, &ambB);
+    objGetColor(0, &amb[0], &amb[1], &amb[2]);
     GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambR);
+    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&amb[0]);
 LAB_8005F8E4:
     if ((SHADER_FLAGS(shader) & 0x8) != 0)
     {
