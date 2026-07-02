@@ -459,6 +459,7 @@ void FUN_801d8480(u32 p1, u32 p2, short clearIfSetBit, short clearIfClearBit, sh
 #define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
 #define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80
 #define SHOPKEEPER_LOADING_FLAG 0x1000
+#define SHOPKEEPER_OBJFLAG_HIDDEN 0x4000
 
 typedef struct ShopkeeperObject
 {
@@ -966,7 +967,7 @@ void sh_levelcontrol_init(int obj)
     u32 v;
 
     ((GameObject*)obj)->animEventCallback = SH_LevelControl_SeqFn;
-    v = (u32)((GameObject*)obj)->objectFlags | 0x4000;
+    v = (u32)((GameObject*)obj)->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
     ((GameObject*)obj)->objectFlags = v;
     ((GameObject*)obj)->unkF8 = 3;
 
