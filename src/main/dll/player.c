@@ -14212,7 +14212,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                 arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
-                int held = ((PlayerState*)inner)->focusObject;
+                int held = *(volatile int*)&((PlayerState*)inner)->focusObject;
                 (*(void (*)(f32))*(int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
             }
