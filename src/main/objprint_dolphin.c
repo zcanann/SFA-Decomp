@@ -4805,6 +4805,7 @@ extern void gxColorFn_80052764(u8 * color);
 extern void textureFn_800524ec(u8 * color);
 extern f32 lbl_803DEA48;
 
+#pragma opt_propagation off
 u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
 {
     u16 alpha;
@@ -4853,7 +4854,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                 if (*(u32*)layer != 0)
                 {
                     f32* mtxp;
-                    int fl;
+                    u8 fl;
                     tex = textureIdxToPtr(*(u32*)layer);
                     {
                         u32 jid = layer[5];
@@ -4992,6 +4993,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
     }
     return ok;
 }
+#pragma opt_propagation reset
 
 extern ObjModelRenderCb ObjModel_GetPostRenderCallback(int* am);
 extern u8 textureFn_80050ad8(void* tex, int n, int p3, u32 p4);
