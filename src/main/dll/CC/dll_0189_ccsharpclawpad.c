@@ -12,6 +12,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -46,7 +47,7 @@ int ccsharpclawpad_getExtraSize(void) { return 0x4; }
 void ccsharpclawpad_init(int* obj, int* placement)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);
 }
 
 void ccsharpclawpad_update(int obj)
