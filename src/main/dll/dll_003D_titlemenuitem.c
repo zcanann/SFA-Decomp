@@ -35,6 +35,8 @@
 #define TITLE_MENU_KIND_TOGGLE 1
 #define TITLE_MENU_KIND_WINDOW 2
 
+#define PAD_BUTTON_A 0x100
+
 /* count of shared title-menu-item textures (and their asset-id table) */
 #define TITLE_MENU_ITEM_TEXTURE_COUNT 6
 
@@ -267,7 +269,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         break;
     default:
         if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE_PENDING) == 0) &&
-            ((getButtonsJustPressed(0) & 0x100) != 0))
+            ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0))
         {
             Sfx_PlayFromObject(0, SFXsp_sa_def02);
             item->value = (s16)(item->value ^ 1);
