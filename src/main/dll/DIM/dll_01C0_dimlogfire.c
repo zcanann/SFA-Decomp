@@ -19,6 +19,7 @@
 #include "main/dll/DIM/DIMboulder.h"
 
 #define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MODEL_LIGHT_KIND_POINT 2
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -334,7 +335,7 @@ void dimlogfire_init(int obj, int def)
     }
     if (*(int**)&state->light != NULL)
     {
-        modelLightStruct_setLightKind(state->light, 2);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * ((GameObject*)obj)->anim.rootMotionScale);
