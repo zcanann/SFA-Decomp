@@ -4,6 +4,9 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 
+#define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN 0x4000
+#define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct TexframeanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -134,8 +137,8 @@ void texframeanimator_init(int* obj, u8* params)
         state->frame = state->endFrame;
         state->active = 1;
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HIDDEN);
 }
 
 int explodeanimator_getExtraSize(void);
