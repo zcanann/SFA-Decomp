@@ -12612,12 +12612,11 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void objLoadPlayerFromSave(int obj)
 {
     char* base = (char*)lbl_80332EC0;
-    s16* gb;
+    int off;
     int inner = *(int*)&((GameObject*)obj)->extra;
     int i;
     f32 fz;
     int me;
-    int off;
     u8* pathState;
 
     lbl_803DE459 = 0;
@@ -12671,7 +12670,7 @@ void objLoadPlayerFromSave(int obj)
         ((GameObject*)obj)->anim.modelState->flags |= 0x4008;
     }
     (*(void (*)(GameUIInterface*))(*(int*)((char*)*gGameUIInterface + 0x14)))(*gGameUIInterface);
-    gPlayerChildObject = NULL;
+    *(int*)&gPlayerChildObject = (off = 0);
     ((ByteFlags*)((char*)inner + 0x3f4))->b40 = 1;
     ((PlayerState*)inner)->moveAnimTable = (int)(base + 0x190);
     ((PlayerState*)inner)->moveSlots = (int)(base + 0x854);
@@ -12687,7 +12686,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->paramCurve4 = (int)(base + 0x6f4);
     ((PlayerState*)inner)->unk8D4 = 0x2e;
     ((PlayerState*)inner)->curveSpeedScale = lbl_803E7ED8;
-    for (i = 0, off = 0; i < ((PlayerState*)inner)->moveSlotCount; i++)
+    for (i = 0; i < ((PlayerState*)inner)->moveSlotCount; i++)
     {
         int da;
         *(int*)(((PlayerState*)inner)->moveSlots + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
@@ -12700,15 +12699,15 @@ void objLoadPlayerFromSave(int obj)
     fn_802AABE4(obj);
     gPlayerSelectedItem = 0x2d;
     gPlayerEggObject = 0;
-    gb = (s16*)(base + 0x1b94);
+    base += 0x1b94;
     for (i = 0; (u32)i < 0xb; i++)
     {
-        if (GameBit_Get(*gb) != 0)
+        if (GameBit_Get(*(s16*)base) != 0)
         {
             ((PlayerState*)inner)->staffUnlockedFlags =
                 (u8)(((PlayerState*)inner)->staffUnlockedFlags | (1 << i));
         }
-        gb++;
+        base += 2;
     }
     if (((PlayerState*)inner)->characterId == 0)
     {
@@ -12726,6 +12725,9 @@ void objLoadPlayerFromSave(int obj)
     {
         int v = gPlayerPendingHealth;
         int hi;
+        PlayerState* in1;
+        PlayerState* in2;
+        in1 = (PlayerState*)((GameObject*)obj)->extra;
         if (v < 0)
         {
             v = 0;
@@ -12734,21 +12736,22 @@ void objLoadPlayerFromSave(int obj)
         {
             v = 0x50;
         }
-        *(s8*)(((PlayerState*)inner)->playerStatus + 1) = (s8)v;
+        *(s8*)(in1->playerStatus + 1) = (s8)v;
         v = gPlayerPendingHealth;
+        in2 = (PlayerState*)((GameObject*)obj)->extra;
         if (v < 0)
         {
             v = 0;
         }
         else
         {
-            hi = *(s8*)(((PlayerState*)inner)->playerStatus + 1);
+            hi = *(s8*)(in2->playerStatus + 1);
             if (v > hi)
             {
                 v = hi;
             }
         }
-        *(s8*)(((PlayerState*)inner)->playerStatus + 0) = (s8)v;
+        *(s8*)(in2->playerStatus + 0) = (s8)v;
         gPlayerPendingHealth = 0;
     }
     gPlayerHeldObject = 0;
