@@ -1940,8 +1940,10 @@ void ObjHits_DetectObjectPair(int objA, int objB)
 
     stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
-    if (stateA->activeHitboxMode != 0) goto end;
-    if (stateB->activeHitboxMode != 0) goto end;
+    if (stateA->activeHitboxMode != 0 || stateB->activeHitboxMode != 0)
+    {
+        return;
+    }
     dx = ((GameObject*)objB)->anim.worldPosX - ((GameObject*)objA)->anim.worldPosX;
     yB = ((GameObject*)objB)->anim.worldPosY;
     yA = ((GameObject*)objA)->anim.worldPosY;
@@ -2110,110 +2112,106 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
 
     objBState = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
     objAState = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
-    if (((*(s8*)&objAState->resetHitboxMode == 0) && (*(s8*)&objBState->resetHitboxMode == 0)) &&
-        (objBState->activeHitboxMode == 0))
+    if (*(s8*)&objAState->resetHitboxMode != 0 || *(s8*)&objBState->resetHitboxMode != 0 ||
+        objBState->activeHitboxMode != 0 || objAState->activeHitboxMode != 0)
     {
-        switch (objAState->activeHitboxMode)
+        return;
+    }
+    hitboxBuf = (int*)ObjHits_GetActiveModel(objA);
+    shapeFlags = objBState->shapeFlags;
+    if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0)
+    {
+        point.x = ((GameObject*)objB)->anim.worldPosX - playerMapOffsetX;
+        point.y = ((GameObject*)objB)->anim.worldPosY;
+        point.z = ((GameObject*)objB)->anim.worldPosZ - playerMapOffsetZ;
+        point3D = point;
+        hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius,
+                                                 (ObjHitsSkeletonJointData*)hitboxBuf[5], hitboxBuf,
+                                                 (ObjHitsSkeletonHit*)hits, &bestHit, &outAxial);
+        if (hitCount != 0)
         {
-        case 0:
-            hitboxBuf = (int*)ObjHits_GetActiveModel(objA);
-            shapeFlags = objBState->shapeFlags;
-            if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0)
-            {
-                point.x = ((GameObject*)objB)->anim.worldPosX - playerMapOffsetX;
-                point.y = ((GameObject*)objB)->anim.worldPosY;
-                point.z = ((GameObject*)objB)->anim.worldPosZ - playerMapOffsetZ;
-                point3D = point;
-                hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius,
-                                                         (ObjHitsSkeletonJointData*)hitboxBuf[5], hitboxBuf,
-                                                         (ObjHitsSkeletonHit*)hits, &bestHit, &outAxial);
-                if (hitCount != 0)
-                {
-                    ratio = (((GameObject*)objB)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale) /
-                        (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objA)->anim.rootMotionScale);
+            ratio = (((GameObject*)objB)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale) /
+                (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objA)->anim.rootMotionScale);
 
-                    {
-                        f32* pos = &point.x;
-                        f32 rad = objBState->primaryRadius;
-                        ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
-                        ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
-                        int mf = *hitboxBuf;
-                        ObjHitsSkeletonHit* bh = bestHit;
-                        ObjHits_CalcSkeletonResponse3D(pos, rad, objB, hh, jd, mf,
-                                                       bh,
-                                                       (ratio < gObjHitsScalarZero)
-                                                           ? gObjHitsScalarZero
-                                                           : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
-                                                       outAxial, response);
-                    }
-                    responseX = response[0];
-                    response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
-                    responseY = response[1];
-                    response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
-                    responseZ = response[2];
-                    response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
-                }
-            }
-            else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)
             {
-                point.x = ((GameObject*)objB)->anim.worldPosX - playerMapOffsetX;
-                point.y = ((GameObject*)objB)->anim.worldPosY;
-                point.z = ((GameObject*)objB)->anim.worldPosZ - playerMapOffsetZ;
-                pointXZ = point;
-                hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius,
-                                                         (ObjHitsSkeletonJointData*)hitboxBuf[5], hitboxBuf,
-                                                         (ObjHitsSkeletonHit*)hits, &bestHit,
-                                                         point.y + objBState->primaryCapsuleOffsetB,
-                                                         point.y + objBState->primaryCapsuleOffsetA,
-                                                         &outAxial);
-                if (hitCount != 0)
-                {
-                    ratio = (((GameObject*)objB)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale) /
-                        (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale);
-
-                    {
-                        f32* pos = &point.x;
-                        f32 rad = objBState->primaryRadius;
-                        ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
-                        ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
-                        int mf = *hitboxBuf;
-                        ObjHitsSkeletonHit* bh = bestHit;
-                        ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, hh, jd, mf,
-                                                       bh,
-                                                       (ratio < gObjHitsScalarZero)
-                                                           ? gObjHitsScalarZero
-                                                           : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
-                                                       outAxial, response);
-                    }
-                    responseX = response[0];
-                    response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
-                    responseY = response[1];
-                    response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
-                    responseZ = response[2];
-                    response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
-                                ? *(f32*)&gObjHitsResponseClampMin
-                                : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
-                }
+                f32* pos = &point.x;
+                f32 rad = objBState->primaryRadius;
+                ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
+                ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
+                int mf = *hitboxBuf;
+                ObjHitsSkeletonHit* bh = bestHit;
+                ObjHits_CalcSkeletonResponse3D(pos, rad, objB, hh, jd, mf,
+                                               bh,
+                                               (ratio < gObjHitsScalarZero)
+                                                   ? gObjHitsScalarZero
+                                                   : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
+                                               outAxial, response);
             }
-            else if (((shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) && (depth < 1))
-            {
-                ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE,
-                                          depth + 1);
-            }
-            break;
+            responseX = response[0];
+            response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
+            responseY = response[1];
+            response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
+            responseZ = response[2];
+            response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
+            ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
         }
+    }
+    else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)
+    {
+        point.x = ((GameObject*)objB)->anim.worldPosX - playerMapOffsetX;
+        point.y = ((GameObject*)objB)->anim.worldPosY;
+        point.z = ((GameObject*)objB)->anim.worldPosZ - playerMapOffsetZ;
+        pointXZ = point;
+        hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius,
+                                                 (ObjHitsSkeletonJointData*)hitboxBuf[5], hitboxBuf,
+                                                 (ObjHitsSkeletonHit*)hits, &bestHit,
+                                                 point.y + objBState->primaryCapsuleOffsetB,
+                                                 point.y + objBState->primaryCapsuleOffsetA,
+                                                 &outAxial);
+        if (hitCount != 0)
+        {
+            ratio = (((GameObject*)objB)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale) /
+                (((GameObject*)objA)->anim.hitboxScale * ((GameObject*)objB)->anim.rootMotionScale);
+
+            {
+                f32* pos = &point.x;
+                f32 rad = objBState->primaryRadius;
+                ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
+                ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
+                int mf = *hitboxBuf;
+                ObjHitsSkeletonHit* bh = bestHit;
+                ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, hh, jd, mf,
+                                               bh,
+                                               (ratio < gObjHitsScalarZero)
+                                                   ? gObjHitsScalarZero
+                                                   : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
+                                               outAxial, response);
+            }
+            responseX = response[0];
+            response[0] = (responseX < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
+            responseY = response[1];
+            response[1] = (responseY < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseY > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseY);
+            responseZ = response[2];
+            response[2] = (responseZ < *(f32*)&gObjHitsResponseClampMin)
+                        ? *(f32*)&gObjHitsResponseClampMin
+                        : ((responseZ > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseZ);
+            ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)response[2], 0);
+        }
+    }
+    else if (((shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) && (depth < 1))
+    {
+        ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE,
+                                  depth + 1);
     }
 }
 
