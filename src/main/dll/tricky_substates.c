@@ -1639,13 +1639,14 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
 int trickyFoodFn_8014460c(int obj, int* state)
 {
     u8* b;
+    u8 gu;
+    int g;
     u8 flag;
     u8 a;
     u8 c;
     u8 d;
     u8 n;
     u8 cnt;
-    u8 g;
     int inWater;
     s16 item[4];
 
@@ -1776,13 +1777,14 @@ int trickyFoodFn_8014460c(int obj, int* state)
     }
     else
     {
-        g = GameBit_Get(0x4e3);
-        if (g != 0xff && cMenuGetSelectedItem() == -1)
+        gu = GameBit_Get(0x4e3);
+        if (gu != 0xff && cMenuGetSelectedItem() == -1)
         {
             if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 GameBit_Set(0x4e3, 0xff);
                 b = ((GameObject*)obj)->extra;
+                g = gu;
                 ((TrickyState*)b)->stateFlags |= 0x4000;
                 if (g != 2)
                 {
