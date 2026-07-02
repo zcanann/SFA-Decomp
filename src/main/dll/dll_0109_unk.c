@@ -21,6 +21,8 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
 
+#define UNK_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* per-object extra block; 0xA is the object phase enum
    (0=carrying/active, 1=just broke, 2=respawning) */
 typedef struct Dll109State
@@ -136,7 +138,7 @@ void carryable_break_respawn_update(int obj)
 void dll_109_init(int obj, Dll109MapData* p)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p->rotX << 8);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;
     (*gCarryableInterface)->initAnim((void*)obj, *(int*)&((GameObject*)obj)->extra, 0x21);
     (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))(((GameObject*)obj)->extra, 1);
 }
