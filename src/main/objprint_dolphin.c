@@ -3484,9 +3484,9 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
 
-void objRenderFn_8003d980(void* objArg, int* p2)
+#pragma opt_propagation off
+void objRenderFn_8003d980(u8* obj, int* p2)
 {
-    u8* obj = objArg;
     f32 wm[16];
     f32 cm[16];
     f32 sm[12];
@@ -3496,11 +3496,13 @@ void objRenderFn_8003d980(void* objArg, int* p2)
         f32 scale;
         f32 pos[3];
     } blk;
+    int* mdl = p2;
+    u8* data = (u8*)mdl[22];
+    f32* vm = Camera_GetViewMatrix();
     s16* uvs;
-    f32* vm;
     s16* verts;
-    u8* data = *(u8**)((char*)p2 + 0x58);
-    vm = Camera_GetViewMatrix();
+    int i;
+    int off;
     Obj_BuildWorldTransformMatrix((int*)obj, wm, 0);
     PSMTXConcat(vm, wm, cm);
     GXLoadPosMtxImm(cm, gObjGxPosMtxIdTable[0]);
@@ -3512,7 +3514,7 @@ void objRenderFn_8003d980(void* objArg, int* p2)
     cm[11] = lbl_803DEA04;
     PSMTXConcat(cm, sm, cm);
     GXLoadTexMtxImm(cm, 0x1e, 0);
-    gxTextureFn_80072dfc(obj, p2, 0);
+    gxTextureFn_80072dfc(obj, mdl, 0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
@@ -3521,8 +3523,8 @@ void objRenderFn_8003d980(void* objArg, int* p2)
     uvs = *(s16**)(data + 8);
     GXBegin(GX_TRIANGLES, GX_VTXFMT7, *(u16*)(data + 0xc) * 3);
     {
-        int i = 0;
-        int off = 0;
+        i = 0;
+        off = 0;
         for (; i < *(u16*)(data + 0xc); i++)
         {
             u8* tri = *(u8**)data + off;
@@ -3576,6 +3578,7 @@ void objRenderFn_8003d980(void* objArg, int* p2)
         (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }
+#pragma opt_propagation reset
 
 extern s32 lbl_803DCC5C;
 extern int lbl_803DCC64;
