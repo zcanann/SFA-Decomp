@@ -40,11 +40,11 @@ extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 rend
 
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
-extern f32 displayOffsetH_803DEBFC;
+extern const f32 displayOffsetH_803DEBFC;
 extern f32 CurrTiming_803DEC20;
-extern f32 gTexIndMtxScale;
+extern const f32 gTexIndMtxScale;
 extern f32 FBSet_803DEC28;
-extern f32 lbl_803DEC2C;
+extern const f32 lbl_803DEC2C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int lbl_803DEBB0;
@@ -94,7 +94,7 @@ typedef struct TexShadowRow
     int type;
 } TexShadowRow;
 
-extern int gTexIndMtxTable;
+extern int gTexIndMtxTable[];
 extern u8 lbl_8037E0C0[];
 extern u8 lbl_803DB638;
 extern int gTexShaderAmbColor;
@@ -223,17 +223,14 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
     float m[2][3];
     int lb;
     int la;
+    u8 count;
     int ptr;
     int bptr;
-    int pos;
     u32 word;
+    int pos;
     u32 flags;
     u8* tbl;
-    u8 count;
     int i;
-    f32 kH;
-    f32 k24;
-    f32 k;
 
     pos = bitReader[4];
     {
@@ -264,19 +261,19 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* bit
         return;
     }
     i = 0;
-    k = lbl_803DEC2C;
-    tbl = (u8*)&gTexIndMtxTable;
     for (; i < count; i = i + 1)
     {
-        k24 = gTexIndMtxScale;
-        kH = displayOffsetH_803DEBFC;
-        PSMTXTrans(m2, lbl_803DEBCC, k * (f32)(i + 1), lbl_803DEBCC);
+        PSMTXTrans(m2, lbl_803DEBCC, lbl_803DEC2C * (f32)(i + 1), lbl_803DEBCC);
         PSMTXConcat(viewMtx, m2, m2);
         GXLoadPosMtxImm(m2, 0);
+        tbl = (u8*)gTexIndMtxTable;
         *(IndMtxCopy*)m = *(IndMtxCopy*)tbl;
         textureFn_8006c4e0(&la, &lb);
         selectTexture(*(int*)(la + (u8)i * 4), 1);
-        m[0][0] = (f32)((i & 0xff) + 1) * k24 * kH;
+        {
+            f32 s = (f32)((i & 0xff) + 1) * gTexIndMtxScale;
+            m[0][0] = s * displayOffsetH_803DEBFC;
+        }
         m[1][1] = m[0][0];
         GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])m, gTexIndMtxScaleExp);
         GXCallDisplayList(((MapBlockBoundsRec*)ptr)->dlist, (u32)((MapBlockBoundsRec*)ptr)->dlistSize);
