@@ -2961,7 +2961,7 @@ typedef struct ObjPrintFlipFlag
 } ObjPrintFlipFlag;
 
 #pragma opt_loop_invariants off
-int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6, int p7, f32 yOff)
+int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
     extern f32 gObjPrintDegToAngle;
@@ -2969,59 +2969,57 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
     extern f32 lbl_803DE9DC;
     extern int lbl_803DB460;
     extern ObjPrintFlipFlag lbl_803DCC00;
-    s16 ang[4];
+    s16 src[2];
+    s16 dst[2];
     int i;
     s16 ret;
-    char* p;
-    int* keys;
+    GameObject* go = (GameObject*)obj;
+    s16* found[1];
     s16* sp2;
     f32 dx, dy, dz, dist;
 
-    p = (char*)p4;
     sp2 = spd + 0xf;
     dx = pos[0] - *(f32*)(tgt + 0xc);
     dz = pos[2] - *(f32*)(tgt + 0x14);
     dy = (pos[1] + yOff) - *(f32*)(tgt + 0x10);
     dist = sqrtf(dx * dx + dz * dz);
 
-    ang[2] = (s16)getAngle(dx, dz) - (u16)((GameObject*)obj)->anim.rotX;
-    if (ang[2] > 0x8000)
+    src[0] = (s16)getAngle(dx, dz) - (u16)go->anim.rotX;
+    if (src[0] > 0x8000)
     {
-        ang[2] = (s16)(ang[2] - 0xffff);
+        src[0] = (s16)(src[0] - 0xffff);
     }
-    if (ang[2] < -0x8000)
+    if (src[0] < -0x8000)
     {
-        ang[2] = (s16)(ang[2] + 0xffff);
+        src[0] = (s16)(src[0] + 0xffff);
     }
-    ang[3] = p7 - (u16) - getAngle(dist, dy);
-    if (ang[3] > 0x8000)
+    src[1] = p7 - (u16) - getAngle(dist, dy);
+    if (src[1] > 0x8000)
     {
-        ang[3] = (s16)(ang[3] - 0xffff);
+        src[1] = (s16)(src[1] - 0xffff);
     }
-    if (ang[3] < -0x8000)
+    if (src[1] < -0x8000)
     {
-        ang[3] = (s16)(ang[3] + 0xffff);
+        src[1] = (s16)(src[1] + 0xffff);
     }
 
-    ret = ang[2];
+    ret = src[0];
     if (lbl_803DCC00.flip)
     {
-        ang[2] -= 0x8000;
-        ang[3] = -ang[3];
+        src[0] -= 0x8000;
+        src[1] = -src[1];
         lbl_803DCC00.flip = 0;
     }
 
     i = 0;
-    keys = lbl_802CAE88;
     while (i < 10)
     {
         int key;
-        s16* found;
         void* m;
 
-        key = *keys;
-        found = NULL;
-        m = (void*)((GameObject*)obj)->anim.modelInstance;
+        key = lbl_802CAE88[i];
+        found[0] = NULL;
+        m = (void*)go->anim.modelInstance;
         if (m != NULL)
         {
             int entryIdx = 0, vecOffset = 0;
@@ -3030,52 +3028,47 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
             for (j = 0; j < n; j++)
             {
                 int entries = *(int*)&((ObjDef*)m)->jointData;
-                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + entryIdx + 1) != 0xff &&
                     key == (int)*(u8*)(entries + entryIdx))
                 {
-                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
+                    found[0] = (s16*)((int)go->anim.jointPoseData + vecOffset);
                 }
                 entryIdx += ((ObjDef*)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
-        if (found == NULL)
+        if (found[0] == NULL)
         {
             int t = (s16)ret;
-            if (t < 0)
-            {
-                t = -t;
-            }
+            t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
         }
 
         {
-            s16* src = (s16*)((char*)ang + 4);
-            s16* dst = &ang[0];
             int n2;
             for (n2 = 0; n2 < 2; n2++)
             {
-                int lim;
+                s16 lim;
                 s16 v;
                 if (n2 % 2 != 0)
                 {
-                    lim = (s32)(gObjPrintDegToAngle * (f32) * sp2);
+                    lim = (s32)(gObjPrintDegToAngle * (f32)sp2[i]);
                 }
                 else
                 {
-                    lim = (s32)(gObjPrintDegToAngle * (f32) * spd);
+                    lim = (s32)(gObjPrintDegToAngle * (f32)spd[i]);
                 }
                 v = src[n2];
                 dst[n2] = v;
-                if (v > (s16)lim)
+                if (v > lim)
                 {
                     dst[n2] = lim;
-                    src[n2] = v - lim;
+                    src[n2] -= lim;
                 }
-                else if (v < -(s16)lim)
+                else if (v < -lim)
                 {
-                    dst[n2] = (s16) - lim;
-                    src[n2] = v + lim;
+                    dst[n2] = -lim;
+                    src[n2] += lim;
                 }
                 else
                 {
@@ -3084,48 +3077,44 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6,
             }
         }
 
-        if (p != NULL)
+        if (p4 != NULL)
         {
-            *(s16*)(p + 0x14) = ang[0];
-            fn_800399C0((s16*)p, found);
-            *(s16*)(p + 0x44) = ang[1];
-            fn_80039834((s16*)(p + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
-            p += 0x60;
+            *(s16*)(p4 + 0x14) = dst[0];
+            fn_800399C0((s16*)p4, found[0]);
+            *(s16*)(p4 + 0x44) = dst[1];
+            fn_80039834((s16*)(p4 + 0x30), found[0], lbl_803DE9D8, lbl_803DE9DC);
+            p4 += 0x60;
         }
         else
         {
-            int d1 = (s16)((s16)((found[1] + ang[0]) >> 1) - found[1]);
-            int lim;
+            s16* fv = found[0];
+            int d1 = (s16)((s16)((fv[1] + dst[0]) >> 1) - fv[1]);
+            s16 lim;
             int d2;
             int t2;
-            int div2;
             int lim3;
 
-            lim = (d1 < framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *spd) / lbl_803DB460))
-                      ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) - *spd) / lbl_803DB460)
-                      : ((d1 > framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * spd) / lbl_803DB460))
-                             ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32) * spd) / lbl_803DB460)
+            lim = (d1 < framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32)-spd[i]) / lbl_803DB460))
+                      ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32)-spd[i]) / lbl_803DB460)
+                      : ((d1 > framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32)spd[i]) / lbl_803DB460))
+                             ? framesThisStep * ((s16)(s32)(gObjPrintDegToAngle * (f32)spd[i]) / lbl_803DB460)
                              : d1);
-            d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
-            t2 = (s16)(s32)(*(volatile f32*)&gObjPrintDegToAngle * (f32) * sp2);
-            div2 = lbl_803DB460 << 1;
-            lim3 = (d2 < framesThisStep * (-t2 / div2))
-                       ? framesThisStep * (-t2 / div2)
-                       : ((d2 > framesThisStep * (t2 / div2)) ? framesThisStep * (t2 / div2) : d2);
-            found[0] += lim3;
-            found[1] += lim;
+            d2 = (s16)((s16)((fv[0] + dst[1]) >> 1) - fv[0]);
+            t2 = (s16)(s32)(*(f32*)&gObjPrintDegToAngle * (f32)sp2[i]);
+            lim3 = (d2 < framesThisStep * (-t2 / (lbl_803DB460 << 1)))
+                       ? framesThisStep * (-t2 / (lbl_803DB460 << 1))
+                       : ((d2 > framesThisStep * (t2 / (lbl_803DB460 << 1))) ? framesThisStep * (t2 / (lbl_803DB460 << 1)) : d2);
+            fv[0] += (s16)lim3;
+            fv[1] += lim;
         }
 
         if (i == 0)
         {
-            ret -= found[1];
+            ret -= found[0][1];
         }
-        keys++;
-        sp2++;
-        spd++;
         i++;
     }
-    return ang[2];
+    return src[0];
 }
 #pragma opt_loop_invariants reset
 
