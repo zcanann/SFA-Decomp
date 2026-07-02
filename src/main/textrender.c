@@ -2506,6 +2506,7 @@ extern int lbl_803DB3C4;
 
 #pragma peephole off
 #pragma ppc_unroll_speculative off
+#pragma ppc_unroll_instructions_limit 16
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
@@ -2628,7 +2629,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
         {
             u32* q = (u32*)buf;
             int j = 0x47;
-            do
+            while (j > 0)
             {
                 q[0] = 0;
                 q[1] = 0;
@@ -2642,7 +2643,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
                 q += 9;
                 j -= 9;
             }
-            while (j > 0);
         }
         OSGetFontTexel(s, buf, 0, 6, &width);
         if (x + 0x18 > 0x200)
@@ -2701,6 +2701,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int*)(base31 + 0x6c) = 2;
 }
+#pragma ppc_unroll_instructions_limit 96
 #pragma ppc_unroll_speculative on
 
 
