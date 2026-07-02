@@ -16,6 +16,7 @@
 #define GAMEBIT_SNOWHORN_AIR_DRAIN 0x3e2 /* set to drain the air meter each frame */
 #define GAMEBIT_SNOWHORN_AIR_RESET 0x3e9 /* set to reset the air meter to full */
 #define GAMEBIT_SNOWHORN_PUZZLE    0x170 /* puzzle-step trigger, counts pushes */
+#define PAD_BUTTON_A               0x100 /* A button */
 
 /* Per-object extra state (getExtraSize == 0xD0C); BaddieState is the prefix. */
 typedef struct DIMSnowHorn1State
@@ -86,7 +87,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     {
         (*gObjectTriggerInterface)->runSequence(
             randomGetRange(0, 2) + 6, (void*)obj, -1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
@@ -151,7 +152,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     {
         (*gObjectTriggerInterface)->runSequence(
             randomGetRange(0, 2) + 6, (void*)obj, -1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
@@ -192,7 +193,7 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
             (*gObjectTriggerInterface)->runSequence(
                 5, (void*)obj, -1);
         }
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
@@ -239,7 +240,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
             (*gObjectTriggerInterface)->runSequence(
                 5, (void*)obj, -1);
         }
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
@@ -523,7 +524,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
             (*gObjectTriggerInterface)->runSequence(
                 inner->triggerMode, (void*)obj, -1);
             GameBit_Set(GAMEBIT_SNOWHORN_PUZZLE, GameBit_Get(GAMEBIT_SNOWHORN_PUZZLE) - bit170);
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
         }
         else
         {
@@ -539,7 +540,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
                 }
                 (*gObjectTriggerInterface)->runSequence(
                     inner->triggerMode, (void*)obj, -1);
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
             }
         }
     }
@@ -614,7 +615,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
         }
         (*gObjectTriggerInterface)->runSequence(
             inner->triggerMode, (void*)obj, -1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     else
     {
@@ -1049,7 +1050,7 @@ int DIMSnowHorn1_setScale(int obj)
     nearest = (void*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &range);
     if ((nearest != NULL) && ((*(u8*)&((GameObject*)nearest)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0))
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         return 1;
     }
     return 0;
@@ -1337,7 +1338,7 @@ void DIMSnowHorn1_update(int obj)
                 {
                     int layer = getCurMapLayer();
                     (*gMapEventInterface)->restartPoint((void*)(player + 0xc), 0x584, layer, 0);
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 1);
                     d = ((GameObject*)obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
                     if (d > 0x8000)
@@ -1371,7 +1372,7 @@ void DIMSnowHorn1_update(int obj)
                 setAButtonIcon(0x15);
                 if (*(u8*)&((GameObject*)found)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
                 {
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     GameBit_Set(GAMEBIT_SNOWHORN_RIDING, 0);
                     switch (((DIMSnowHorn1State*)data)->mode)
                     {
