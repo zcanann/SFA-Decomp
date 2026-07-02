@@ -1063,6 +1063,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     f32 weight;
     f32 progress;
     f32 step;
+    f32 bfrac;
     int i;
     int halfWidth;
     int oddFlag;
@@ -1166,15 +1167,10 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 )
                 ;
                 PSMTXMultVecSR(mtx, offset, offset);
-                PSVECScale(scaled, branchEnd,
-                           (lbl_803DF1CC * ((lbl_803DF1A4 - progress) *
-                               randomGetRange(0, 1000)) +
-                    progress
-                )
-                *
-                    len
-                )
-                ;
+                bfrac = lbl_803DF1CC * ((lbl_803DF1A4 - progress) *
+                            randomGetRange(0, 1000)) +
+                    progress;
+                PSVECScale(scaled, branchEnd, bfrac * len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
                 lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1,
