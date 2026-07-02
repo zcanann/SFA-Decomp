@@ -23,6 +23,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll_000A_expgfx.h"
 #include "main/engine_shared.h"
 
+#define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
+
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
@@ -212,7 +214,7 @@ void SB_CloudBall_update(GameObject* obj)
         obj->anim.localPosY = state->posY;
         obj->anim.localPosZ = state->posZ;
         obj->unkF4 = obj->unkF4 - framesThisStep;
-        if (obj->unkF4 < 0 || (player != NULL && (((GameObject*)player)->objectFlags & 0x1000) != 0))
+        if (obj->unkF4 < 0 || (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
             if (state->fadeTimer == lbl_803E58EC)
             {
