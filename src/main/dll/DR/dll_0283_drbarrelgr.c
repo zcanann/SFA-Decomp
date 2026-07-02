@@ -16,6 +16,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DRBARRELGR_OBJFLAG_RENDERED 0x800
+
 typedef struct DrbarrelgrPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -280,7 +282,7 @@ void drbarrelgr_update(int obj)
         ((DrbarrelgrState*)state)->prevMode = ((DrbarrelgrState*)state)->mode;
         ((DrbarrelgrState*)state)->mode = newMode;
     }
-    if ((((GameObject*)obj)->objectFlags & 0x800) == 0 && *(void**)&((DrbarrelgrState*)state)->heldBarrel != 0)
+    if ((((GameObject*)obj)->objectFlags & DRBARRELGR_OBJFLAG_RENDERED) == 0 && *(void**)&((DrbarrelgrState*)state)->heldBarrel != 0)
     {
         ((DrbarrelgrState*)state)->grabX = ((GameObject*)obj)->anim.localPosX;
         ((DrbarrelgrState*)state)->grabY = ((GameObject*)obj)->anim.localPosY + gDrBarrelGenGrabYOffset;
