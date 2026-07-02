@@ -699,17 +699,14 @@ void fn_80133718(void)
 
 #pragma scheduling off
 #pragma peephole off
-void Minimap_release(void)
+static inline void Minimap_freeObjectSlots(void** slots, int count)
 {
     u8 i;
-    void** slots;
     void* null;
-    if (minimapTexture != NULL) textureFree(minimapTexture);
-    textureFree(lbl_803DD940);
+
     i = 0;
-    slots = lbl_803DBBC8;
     null = NULL;
-    while ((u32)i < 2)
+    while ((u32)i < count)
     {
         if (slots[(u8)i] != NULL)
         {
@@ -718,6 +715,13 @@ void Minimap_release(void)
         }
         i++;
     }
+}
+
+void Minimap_release(void)
+{
+    if (minimapTexture != NULL) textureFree(minimapTexture);
+    textureFree(lbl_803DD940);
+    Minimap_freeObjectSlots(lbl_803DBBC8, 2);
     minimapTexture = NULL;
     lbl_803DD940 = NULL;
 }
