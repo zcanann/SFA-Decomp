@@ -4758,8 +4758,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                     bs.pos = pos + 6;
                     idx = (w >> (pos & 7)) & 0x3f;
                     op = ObjModel_GetRenderOp(m, idx);
-                    refs = ObjModel_GetRenderOpTextureRefs(am, idx);
                 }
+                refs = ObjModel_GetRenderOpTextureRefs(am, idx);
             }
             break;
         case 2:
