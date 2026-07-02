@@ -15011,6 +15011,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     void* hit;
     int i;
     int j;
+    int k;
     f32 bx, ax, bz, az, by, ay;
     f32 threshold;
     EmitPlane planes[2];
@@ -15071,11 +15072,13 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
                 j = *(s16*)((char*)face + 0x4) * 0xc;
                 ax = *(f32*)(tbl2 + j);
                 ay = lbl_803E7EA4;
-                az = *(f32*)(tbl2 + (j + 8));
+                k = j + 8;
+                az = *(f32*)(tbl2 + k);
                 j = *(s16*)((char*)face + 0x6) * 0xc;
                 bx = *(f32*)(tbl2 + j);
                 by = lbl_803E7EA4;
-                bz = *(f32*)(tbl2 + (j + 8));
+                k = j + 8;
+                bz = *(f32*)(tbl2 + k);
                 if (hit != NULL)
                 {
                     ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
@@ -15110,8 +15113,10 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     *(f32*)((char*)d + 0x34) = *(f32*)((char*)e + 0x8);
     {
         f32 e2;
+        f32 e3;
         *(f32*)((char*)d + 0x44) =
-            -(*(f32*)((char*)d + 0x1c) * ((e2 = lbl_803E7E98) + lbl_803DC6C0) - *(f32*)((char*)d + 0x2c));
+            -(*(f32*)((char*)d + 0x1c) * ((e2 = lbl_803E7E98) + (e3 = lbl_803DC6C0)) -
+              *(f32*)((char*)d + 0x2c));
         *(f32*)((char*)d + 0x4c) =
             -(*(f32*)((char*)d + 0x24) * (e2 + lbl_803DC6C0) - *(f32*)((char*)d + 0x34));
     }
