@@ -1978,7 +1978,7 @@ void newclouds_update(u8* objA, u8* objB, u8* params)
     }
     if ((fl & 8) && cloud->unk144E != 0)
     {
-        *(s8*)&env[*(u16*)(params + 0x26) + 0x41] = cloud->unk144D;
+        ((s8*)(env + 0x41))[*(u16*)(params + 0x26)] = cloud->unk144D;
         ((NewCloud*)NC_CLOUD)->unk144D = 1 - ((NewCloud*)NC_CLOUD)->unk144D;
         if (((NewCloud*)NC_CLOUD)->unk144D == 1)
         {
