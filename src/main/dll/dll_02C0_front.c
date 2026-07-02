@@ -1003,18 +1003,20 @@ extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
 #pragma opt_propagation off
+#pragma opt_common_subs off
 void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
-    int box;
     int yb;
     Texture* tex;
     int xb;
     f32* mtx;
+    Texture** texs;
+    Texture** texs2;
     f32 m;
     f32 sc3;
     int a;
     u16 v;
-    u8 idx;
+    int idx;
     int i;
     int r;
 
@@ -1028,41 +1030,50 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         lbl_803E2328;
     if (gTitleScreenCursorY > lbl_803E22F8)
     {
-        mtx = (f32*)gTitleScreenMtx;
-        xb = (int)mtx[3] - 0x32;
-        yb = (int)mtx[7];
-        tex = (Texture*)gTitleScreenTextures[4];
+        int xb;
+        int yb;
+        f32* m2 = (f32*)gTitleScreenMtx;
+        int w;
+        xb = (int)m2[3] - 0x32;
+        yb = (int)m2[7];
+        texs = (Texture**)gTitleScreenTextures;
+        tex = texs[4];
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb + 0x5a + ((Texture*)gTitleScreenTextures[6])->width),
+                          (f32)(int)(xb + 0x5a + (texs2 = (Texture**)gTitleScreenTextures)[6]->width),
                           (f32)(int)(yb - 0x10), alpha, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
-        tex = (Texture*)gTitleScreenTextures[6];
+        tex = texs2[6];
         drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
-        tex = (Texture*)gTitleScreenTextures[6];
+        tex = texs2[6];
+        w = tex->width;
         drawScaledTexture((char*)tex,
-                          (f32)(int)(xb + 0x57 + ((Texture*)gTitleScreenTextures[4])->width +
-                              tex->width),
-                          (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
+                          (f32)(int)(xb + texs[4]->width + w + 0x57),
+                          (f32)(int)(yb - 0x10), 0xff, 0x100, w,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
         drawScaledTexture((char*)tex, (f32)(int)(xb + 0x23), (f32)(int)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
     }
     mtx = (f32*)gTitleScreenMtx;
-    xb = (int)mtx[3];
-    yb = (int)mtx[7];
-    a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
-    drawTexture(gTitleScreenTextures[1], (f32)(int)(xb - 0x18),
-                (f32)(int)(yb - ((Texture*)gTitleScreenTextures[1])->height + 3), 0xff, 0xff);
-    drawTexture(gTitleScreenTextures[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
-    xb = (int)mtx[3];
-    yb = (int)mtx[7];
-    a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
-    drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18),
-                lbl_803E22FC + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), 0xff, 0xff);
-    drawTexture(gTitleScreenTextures[7], (f32)(int)(xb + 0xa1),
-                lbl_803E2304 + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), a, 0xff);
+    {
+        int xb = (int)mtx[3];
+        int yb = (int)mtx[7];
+        int a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
+        drawTexture(gTitleScreenTextures[1], (f32)(int)(xb - 0x18),
+                    (f32)(int)(yb - ((Texture*)gTitleScreenTextures[1])->height + 3), 0xff, 0xff);
+        texs2 = (Texture**)gTitleScreenTextures;
+        drawTexture(texs2[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
+    }
+    {
+        int xb = (int)mtx[3];
+        int yb = (int)mtx[7];
+        int a = (gTitleScreenCursorY > lbl_803E22F8) ? 0xff : lbl_803DD9C0;
+        drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18),
+                    lbl_803E22FC + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), 0xff, 0xff);
+        drawTexture(texs2[7], (f32)(int)(xb + 0xa1),
+                    lbl_803E2304 + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb), a, 0xff);
+    }
     gameTextSetColor(0xff, 0xff, 0xff,
                      (int)((f64)lbl_803DD9C0 * (lbl_803E2308 - gTitleScreenCursorY)));
     gameTextShow(0x3da);
@@ -1070,17 +1081,18 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
     if (gTitleScreenCursorY >= lbl_803E2338 && (hideHighlight & 0xff) == 0u)
     {
-        xb = (int)mtx[3] - 0x32;
-        yb = (int)mtx[7] - 0x10;
+        int xb = (int)mtx[3] - 0x32;
+        int yb = (int)mtx[7];
         i = 0;
+        texs = (Texture**)gTitleScreenTextures;
         sc3 = lbl_803E2300;
         do
         {
-            tex = (Texture*)gTitleScreenTextures[4];
+            tex = texs[4];
             drawScaledTexture((char*)tex,
-                              (f32)(int)(xb + 0x5a + ((Texture*)gTitleScreenTextures[6])->width -
+                              (f32)(int)(xb + 0x5a + texs[6]->width -
                                   (i + 1) * 4),
-                              (f32)(int)(yb - (i + 1) * 3),
+                              (f32)(int)(yb - 0x10 - (i + 1) * 3),
                               (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
                               tex->width + (i + 1) * 8,
                               (u32)(sc3 * gTitleScreenCursorY) + ((i + 1) * 6 + 0x10), 4);
@@ -1090,8 +1102,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     }
     if (gTitleScreenCursorY > lbl_803E22F8 && (v = fn_80130124()) != 0xFFFF)
     {
-        box = (int)gameTextGetBox(v);
-        yb = *(s16*)(box + 0x16);
+        yb = *(s16*)((int)gameTextGetBox(v) + 0x16);
         xb = (int)mtx[3];
         yb += (int)mtx[7];
         if ((hideHighlight & 0xff) == 0u)
@@ -1100,30 +1111,40 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
                         (f32)(int)(yb - 1), alpha, 0xff);
         }
     }
-    idx = (int)((u32)lbl_803DD9C0 << 3) / 0x100;
-    drawScaledTexture((char*)gTitleScreenTextures[18],
-                      (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50),
-                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      ((Texture*)gTitleScreenTextures[18])->width,
-                      ((Texture*)gTitleScreenTextures[18])->height, 1);
-    tex = (Texture*)gTitleScreenTextures[8 + idx];
-    drawScaledTexture((char*)tex,
-                      (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) +
-                          ((Texture*)gTitleScreenTextures[18])->width - 0x4a),
-                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      tex->width, tex->height, 0);
-    drawScaledTexture((char*)gTitleScreenTextures[18],
-                      (f32)(int)(0x280 - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) -
-                          ((Texture*)gTitleScreenTextures[18])->width),
-                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      ((Texture*)gTitleScreenTextures[18])->width,
-                      ((Texture*)gTitleScreenTextures[18])->height, 0);
-    tex = (Texture*)gTitleScreenTextures[8 + idx];
-    drawScaledTexture((char*)tex,
-                      (f32)(int)(0x27a - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) -
-                          ((Texture*)gTitleScreenTextures[18])->width - tex->width),
-                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      tex->width, tex->height, 1);
+    idx = (u8)((int)((u32)lbl_803DD9C0 << 3) / 0x100);
+    texs = (Texture**)gTitleScreenTextures;
+    {
+        Texture* t = texs[18];
+        drawScaledTexture((char*)t,
+                          (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50),
+                          (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                          t->width, t->height, 1);
+    }
+    idx = (int)((Texture**)gTitleScreenTextures + idx + 8);
+    {
+        Texture* t = *(Texture**)idx;
+        drawScaledTexture((char*)t,
+                          (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) +
+                              texs[18]->width - 0x4a),
+                          (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                          t->width, t->height, 0);
+    }
+    {
+        Texture* t = texs[18];
+        drawScaledTexture((char*)t,
+                          (f32)(int)(0x280 - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) -
+                              texs[18]->width),
+                          (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                          t->width, t->height, 0);
+    }
+    {
+        Texture* t = *(Texture**)idx;
+        drawScaledTexture((char*)t,
+                          (f32)(int)(0x27a - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) -
+                              texs[18]->width - t->width),
+                          (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                          t->width, t->height, 1);
+    }
     m = lbl_803DD9B4;
     if (lbl_803DD9B4 > gTitleScreenCursorX)
     {
@@ -1143,6 +1164,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     }
 }
 #pragma opt_propagation reset
+#pragma opt_common_subs reset
 
 #pragma scheduling on
 #pragma peephole on
