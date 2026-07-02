@@ -17,6 +17,8 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 
+#define WMCOLUMN_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct WmColumnPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -169,7 +171,7 @@ void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
 {
     int state = *(int*)&obj->extra;
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
-    obj->objectFlags |= 0x2000;
+    obj->objectFlags |= WMCOLUMN_OBJFLAG_HITDETECT_DISABLED;
     obj->unkF4 = 0;
     obj->anim.bankIndex = mapData->modelIndex;
     if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
