@@ -118,6 +118,7 @@ void lightning_update(u8* obj)
     LightningState* state;
     u8* data;
     u32* objects;
+    u32* slot;
     int objectCount;
     int objectIndex;
     int spawnLightning;
@@ -175,20 +176,21 @@ void lightning_update(u8* obj)
             }
 
             delay = (u16)(state->delayBase + randomGetRange(-5, 5));
-            handle = lightningCreate((float*)(obj + 0x0c), (float*)(objects[objectIndex] + 0x0c),
+            slot = &objects[objectIndex];
+            handle = lightningCreate((float*)(obj + 0x0c), (float*)(*slot + 0x0c),
                                      state->radiusX, state->radiusY,
                                      delay, state->param1D,
-                                     (u8)(state->flags.style == 1));
+                                     (u8)(state->flags.style ? 1 : 0));
             state->handle = handle;
             state->ageTimer = lbl_803E4088;
             if ((state->modeBits.mode & 1) != 0)
             {
                 hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, 0);
             }
-            data = *(u8**)(objects[objectIndex] + 0xb8);
+            data = *(u8**)(*slot + 0xb8);
             if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
             {
-                hitDetectFn_80097070((u8*)objects[objectIndex], *(f32*)(data + 0x10), 1, 7,
+                hitDetectFn_80097070((u8*)*slot, *(f32*)(data + 0x10), 1, 7,
                                      0x1e, 0);
             }
             if ((state->modeBits.mode & 2) != 0)
@@ -198,7 +200,7 @@ void lightning_update(u8* obj)
             }
             if ((((LightningMode*)(data + 0x24))->mode & 2) != 0)
             {
-                objfx_spawnDirectionalBurst((u8*)objects[objectIndex], 5, *(f32*)(data + 0x14),
+                objfx_spawnDirectionalBurst((u8*)*slot, 5, *(f32*)(data + 0x14),
                                             1, 1, 100, lbl_803E408C, 0, 0);
             }
         }
