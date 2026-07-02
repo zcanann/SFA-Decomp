@@ -3815,9 +3815,8 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 #pragma ppc_unroll_speculative off
 int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {
-    int i = 0;
-    int o4;
-    int o8;
+    int i;
+    int z[3];
     int* node;
     u32* heap;
     int s;
@@ -3827,30 +3826,31 @@ int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFl
     u16* hh;
     u16 v;
 
-    *(s16*)((char*)queue + 0x22) = i;
-    *(s16*)((char*)queue + 0x20) = i;
-    o4 = i;
-    o8 = i;
-    for (; i < 0xf8; i += 8)
+    z[0] = 0;
+    *(s16*)((char*)queue + 0x22) = z[0];
+    *(s16*)((char*)queue + 0x20) = z[0];
+    z[2] = z[0];
+    z[1] = z[0];
+    for (i = 0; i < 0xf8; i += 8)
     {
-        *(int*)(queue[1] + o4) = 0;
-        *(u8*)(*queue + o8 + 0xe) = 0;
-        *(int*)(queue[1] + o4 + 8) = 0;
-        *(u8*)(*queue + o8 + 0x1e) = 0;
-        *(int*)(queue[1] + o4 + 0x10) = 0;
-        *(u8*)(*queue + o8 + 0x2e) = 0;
-        *(int*)(queue[1] + o4 + 0x18) = 0;
-        *(u8*)(*queue + o8 + 0x3e) = 0;
-        *(int*)(queue[1] + o4 + 0x20) = 0;
-        *(u8*)(*queue + o8 + 0x4e) = 0;
-        *(int*)(queue[1] + o4 + 0x28) = 0;
-        *(u8*)(*queue + o8 + 0x5e) = 0;
-        *(int*)(queue[1] + o4 + 0x30) = 0;
-        *(u8*)(*queue + o8 + 0x6e) = 0;
-        *(int*)(queue[1] + o4 + 0x38) = 0;
-        *(u8*)(*queue + o8 + 0x7e) = 0;
-        o4 += 0x40;
-        o8 += 0x80;
+        *(int*)(queue[1] + z[1]) = 0;
+        *(u8*)(*queue + z[2] + 0xe) = 0;
+        *(int*)(queue[1] + z[1] + 8) = 0;
+        *(u8*)(*queue + z[2] + 0x1e) = 0;
+        *(int*)(queue[1] + z[1] + 0x10) = 0;
+        *(u8*)(*queue + z[2] + 0x2e) = 0;
+        *(int*)(queue[1] + z[1] + 0x18) = 0;
+        *(u8*)(*queue + z[2] + 0x3e) = 0;
+        *(int*)(queue[1] + z[1] + 0x20) = 0;
+        *(u8*)(*queue + z[2] + 0x4e) = 0;
+        *(int*)(queue[1] + z[1] + 0x28) = 0;
+        *(u8*)(*queue + z[2] + 0x5e) = 0;
+        *(int*)(queue[1] + z[1] + 0x30) = 0;
+        *(u8*)(*queue + z[2] + 0x6e) = 0;
+        *(int*)(queue[1] + z[1] + 0x38) = 0;
+        *(u8*)(*queue + z[2] + 0x7e) = 0;
+        z[1] += 0x40;
+        z[2] += 0x80;
     }
     for (; i < 0xfe; i++)
     {
