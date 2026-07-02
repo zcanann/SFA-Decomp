@@ -11,6 +11,8 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/gamebits.h"
+
+#define DFPTARGETBLOCK_OBJFLAG_HIDDEN 0x4000
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
@@ -357,7 +359,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
 
     state = (DfpTargetBlockState*)obj->state;
     model = *ZBomb_GetActiveModel(obj);
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTARGETBLOCK_OBJFLAG_HIDDEN;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
         gTargetBlockHomePos[0] = obj->x;
