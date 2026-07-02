@@ -511,86 +511,86 @@ void arwarwing_updateThrusters(int obj, int state)
     *(s16*)(((ArwingState*)state)->thrusterR + 0) = 0x8000 - *(s16*)slot;
 }
 
+/* the shared header leaves dont_inline stuck on; clamps must inline to match */
+#pragma dont_inline off
+static inline f32 clampPos(f32 v, f32 lo, f32 hi)
+{
+    return (v < lo) ? lo : ((v > hi) ? hi : v);
+}
+
+static inline f32 clampNeg(f32 v, f32 lo, f32 hi)
+{
+    return (v < lo) ? lo : ((v > hi) ? hi : v);
+}
+
 void arwarwing_readControls(int obj, int state)
 {
+    ArwingState* aw = (ArwingState*)state;
     f32 nx;
     f32 ny;
     f32 tv;
     int btn;
 
     debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
-    ((ArwingState*)state)->stickX = (f32)(s8)
-    padGetStickX(0) / lbl_803E6EC8;
-    ((ArwingState*)state)->stickY = (f32)(s8)
-    padGetStickY(0) / lbl_803E6EC8;
-    if (((ArwingState*)state)->damageFlashTimer > lbl_803E6ECC)
+    aw->stickX = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
+    aw->stickY = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
+    if (aw->damageFlashTimer > lbl_803E6ECC)
     {
         f32 zero = lbl_803E6ECC;
-        nx = -((ArwingState*)state)->knockVelX;
-        ny = -((ArwingState*)state)->knockVelZ;
-        ((ArwingState*)state)->damageFlashTimer = ((ArwingState*)state)->damageFlashTimer - timeDelta;
-        tv = lbl_8032B4A8[(int)((ArwingState*)state)->damageFlashTimer];
-        if (((ArwingState*)state)->damageFlashTimer <= zero)
+        nx = -aw->knockVelX;
+        ny = -aw->knockVelZ;
+        aw->damageFlashTimer = aw->damageFlashTimer - timeDelta;
+        tv = lbl_8032B4A8[(int)aw->damageFlashTimer];
+        if (aw->damageFlashTimer <= zero)
         {
-            ((ArwingState*)state)->hitShake = 0;
-            (*gPathControlInterface)->attachObject((void*)obj, ((ArwingState*)state)->pathBlock);
+            aw->hitShake = 0;
+            (*gPathControlInterface)->attachObject((void*)obj, aw->pathBlock);
         }
         {
             f32 inv;
-            ((ArwingState*)state)->stickX =
-                ((ArwingState*)state)->stickX * (inv = lbl_803E6ED0 - tv) + nx * tv;
-            ((ArwingState*)state)->stickY =
-                ((ArwingState*)state)->stickY * inv + ny * tv;
+            aw->stickX =
+                aw->stickX * (inv = lbl_803E6ED0 - tv) + nx * tv;
+            aw->stickY =
+                aw->stickY * inv + ny * tv;
         }
     }
-    ((ArwingState*)state)->rTriggerTrim = (f32)(u32)(u8)
-    padGetRTrigger(0) / lbl_803E6ED4;
+    aw->rTriggerTrim = (f32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
+    aw->rTriggerTrim = clampPos(aw->rTriggerTrim, 0.0f, 1.0f);
+    aw->lTriggerTrim = -(f32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
+    aw->lTriggerTrim = clampNeg(aw->lTriggerTrim, -1.0f, 0.0f);
+    aw->inputFlags = getButtonsJustPressed(0);
+    aw->inputFlagsPrev = getButtonsJustPressedIfNotBusy(0);
+    aw->inputFlags2 = getButtonsHeld(0);
+    if (aw->mode == 0)
     {
-        f32 rt = ((ArwingState*)state)->rTriggerTrim;
-        ((ArwingState*)state)->rTriggerTrim =
-            (rt < lbl_803E6ECC) ? lbl_803E6ECC : ((rt > lbl_803E6ED0) ? lbl_803E6ED0 : rt);
-    }
-    ((ArwingState*)state)->lTriggerTrim = -(f32)(u32)(u8)
-    padGetLTrigger(0) / lbl_803E6ED4;
-    {
-        f32 lt = ((ArwingState*)state)->lTriggerTrim;
-        ((ArwingState*)state)->lTriggerTrim =
-            (lt < lbl_803E6ED8) ? lbl_803E6ED8 : ((lt > lbl_803E6ECC) ? lbl_803E6ECC : lt);
-    }
-    ((ArwingState*)state)->inputFlags = getButtonsJustPressed(0);
-    ((ArwingState*)state)->inputFlagsPrev = getButtonsJustPressedIfNotBusy(0);
-    ((ArwingState*)state)->inputFlags2 = getButtonsHeld(0);
-    if (((ArwingState*)state)->mode == 0)
-    {
-        btn = ((ArwingState*)state)->inputFlags;
+        btn = aw->inputFlags;
         if ((btn & 0x20) != 0)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
-            ((ArwingState*)state)->mode = 1;
-            ((ArwingState*)state)->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
-            ((ArwingState*)state)->barrelRollDirection = ((ArwingState*)state)->barrelRollSpeed;
-            ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6ED0;
-            ((ArwingState*)state)->maxSpeedX = ((ArwingState*)state)->maxSpeedX * ((ArwingState*)state)->
-                barrelRollMaxSpeedScale;
-            ((ArwingState*)state)->accelX = ((ArwingState*)state)->accelX * ((ArwingState*)state)->barrelRollAccelScale;
-            arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 1, 0);
+            aw->mode = 1;
+            aw->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
+            aw->barrelRollDirection = aw->barrelRollSpeed;
+            aw->barrelRollSpeedScale = lbl_803E6ED0;
+            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
+            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            arwarwingbo_setActiveVisible(aw->bombObj, 1, 0);
         }
         else if ((btn & 0x40) != 0)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
-            ((ArwingState*)state)->mode = 1;
-            ((ArwingState*)state)->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
-            ((ArwingState*)state)->barrelRollDirection = -((ArwingState*)state)->barrelRollSpeed;
-            ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6ED0;
-            ((ArwingState*)state)->maxSpeedX = ((ArwingState*)state)->maxSpeedX * ((ArwingState*)state)->
-                barrelRollMaxSpeedScale;
-            ((ArwingState*)state)->accelX = ((ArwingState*)state)->accelX * ((ArwingState*)state)->barrelRollAccelScale;
-            arwarwingbo_setActiveVisible(((ArwingState*)state)->bombObj, 1, 1);
+            aw->mode = 1;
+            aw->barrelRollAngle = ((GameObject*)obj)->anim.rotZ;
+            aw->barrelRollDirection = -aw->barrelRollSpeed;
+            aw->barrelRollSpeedScale = lbl_803E6ED0;
+            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
+            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            arwarwingbo_setActiveVisible(aw->bombObj, 1, 1);
         }
     }
 }
 
 #pragma peephole off
+#pragma dont_inline on
 void arwarwing_updateBarrelRoll(int obj, int state)
 {
     f32 zero;
