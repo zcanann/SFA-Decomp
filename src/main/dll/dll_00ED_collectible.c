@@ -35,6 +35,7 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -1162,7 +1163,7 @@ void collectible_init(int obj, int setup)
     {
         objAnim->bankIndex = 0;
     }
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED;
     ((CollectibleState*)state)->unkC = ((CollectibleSetup*)setup)->unkC;
     ((CollectibleState*)state)->unkD = ((CollectibleSetup*)setup)->unkD;
     ((CollectibleState*)state)->unkF = 0;
