@@ -11,6 +11,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+#define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
+
 typedef struct BrokenPipeSetup
 {
     ObjPlacement base;
@@ -62,5 +64,5 @@ void brokenpipe_init(int obj, int setup)
                                         object->anim.rootMotionScale));
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
-    object->objectFlags |= 0x4000;
+    object->objectFlags |= BROKENPIPE_OBJFLAG_HIDDEN;
 }
