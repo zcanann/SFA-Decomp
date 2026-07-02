@@ -235,6 +235,8 @@ struct MldfTables
 #define MLDF_SP_ID(p) (*(int *)&t->pad0[(slot << 2) + 0x19138])
 #define MLDF_SP_SIZE(p) (*(int *)&t->pad0[(slot << 2) + 0x19298])
 #define MLDF_SP_PTR(p) (*(u32 *)&t->pad0[(slot << 2) + 0x195D8])
+#define MLDF_PTR_F(s) (*(u32 *)((u8 *)t + 0x20000 + ((s) << 2) - 0x6A28))
+#define MLDF_QPTR (*(u32 *)(q - 0x6A28))
 
 #pragma scheduling off
 #pragma peephole off
@@ -1546,11 +1548,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     u32 a = 0;
     u8 frame = 0;
     u32 hi;
-    int flags;
     int entryOff;
+    int flags;
     int s;
     int i;
     int k;
+    u8* q;
     u32 fileBuf;
     u32 alignedSize;
     int tmp;
@@ -2134,7 +2137,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = MLDF_PTR(fileId) + offsetFlags;
+            fileBuf = t->ptrs[fileId] + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2156,7 +2159,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = MLDF_PTR(fileId) + offsetFlags;
+            fileBuf = t->ptrs[fileId] + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2586,62 +2589,72 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     {
         return 0;
     }
-    if (MLDF_PTR(fileId) != 0)
+    q = (u8*)t + 0x20000 + (fileId << 2);
+    if (MLDF_QPTR != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
     {
-        if (MLDF_PTR(fileId) == 0)
+        if (MLDF_QPTR == 0)
         {
             return 0;
         }
-        memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
     }
     else if (fileId == 0x1b || fileId == 0x54)
     {
-        if (MLDF_PTR(fileId) == 0)
+        if (MLDF_QPTR == 0)
         {
             return 0;
         }
-        fileBuf = MLDF_PTR(fileId) + offsetFlags;
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
+        fileBuf = MLDF_QPTR + offsetFlags;
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+        {
+            decompSize = *(u32*)(fileBuf + 8);
+            zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+                          &decompSize);
+            DCStoreRange((void*)destBuf, decompSize);
+        }
+        else
         {
             return 0;
         }
-        decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
-        DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x25 || fileId == 0x47)
     {
-        if (MLDF_PTR(fileId) == 0)
+        if (MLDF_QPTR == 0)
         {
             return 0;
         }
-        fileBuf = MLDF_PTR(fileId) + offsetFlags;
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
+        fileBuf = MLDF_QPTR + offsetFlags;
+        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+        {
+            decompSize = *(u32*)(fileBuf + 8);
+            zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+                          &decompSize);
+            DCStoreRange((void*)destBuf, decompSize);
+        }
+        else
         {
             return 0;
         }
-        decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
-        DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
-        int* p = (int*)(MLDF_PTR(fileId) + offsetFlags);
+        int* p = (int*)(MLDF_QPTR + offsetFlags);
         if (*p == 0xe0e0e0e0)
         {
-            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + (offsetFlags + p[2] + 0x18)), p[1]);
+            memcpy((void*)destBuf, (void*)(((int)p + p[2] + 0x18 - MLDF_QPTR) + MLDF_QPTR), p[1]);
         }
         else if (*p == 0xfacefeed)
         {
-            zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + p[2] + 0x28)), p[3] - 0x10, destBuf, p + 1);
+            zlbDecompress((void*)(((int)p + p[2] + 0x28 - MLDF_QPTR) + MLDF_QPTR), p[3] - 0x10,
+                          destBuf, p + 1);
             DCStoreRange((void*)destBuf, p[1]);
         }
     }
     else if (fileId == 0x23 || fileId == 0x4d)
     {
-        fileBuf = MLDF_PTR(fileId) + (offsetFlags & 0xffffff);
+        fileBuf = MLDF_QPTR + (offsetFlags & 0xffffff);
         decompSize = *(u32*)(fileBuf + 8);
         zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
@@ -2649,15 +2662,15 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     else if (fileId == 0x20 || fileId == 0x4b)
     {
         entryIndex = offsetFlags & 0xffffff;
-        fileBuf = MLDF_PTR(fileId) + entryIndex;
+        fileBuf = MLDF_QPTR + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
-            return MLDF_PTR(fileId) + (entryIndex + 0x20);
+            return MLDF_QPTR + (entryIndex + 0x20);
         }
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(MLDF_PTR(fileId) + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+            zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
                           &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
@@ -2665,22 +2678,22 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     else if (fileId == 0x4f)
     {
         entryIndex = offsetFlags & 0xffffff;
-        fileBuf = MLDF_PTR(fileId) + entryIndex;
+        fileBuf = MLDF_QPTR + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
-            return MLDF_PTR(fileId) + (entryIndex + 0x20);
+            return MLDF_QPTR + (entryIndex + 0x20);
         }
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(MLDF_PTR(fileId) + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+            zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
                           &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
     }
     else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
     {
-        fileBuf = MLDF_PTR(fileId) + offsetFlags;
+        fileBuf = MLDF_QPTR + offsetFlags;
         tmp = return0_8002A5B8(fileBuf);
         if (tmp != 0)
         {
@@ -2688,12 +2701,12 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         }
         else
         {
-            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
+            memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
         }
     }
     else
     {
-        memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(MLDF_QPTR + offsetFlags), length);
     }
     }
     else if (fileId == 0x20 || fileId == 0x4b)
