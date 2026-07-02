@@ -2632,7 +2632,7 @@ extern f32 lbl_803DEA60;
 extern f32 lbl_803DEA5C;
 extern f32 lbl_803DEA64;
 extern f32 lbl_803DEA68;
-extern f32 lbl_803DEA1C;
+extern const f32 lbl_803DEA1C;
 extern f32 lbl_803DEA6C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -4559,12 +4559,11 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     {
         int joff;
         int j;
-        f32 a1c = lbl_803DEA1C;
         j = 0;
         joff = 0;
         for (; j < ((ModelFileHeader*)m)->jointCount; j++)
         {
-            f32 sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->unk40 + joff + 0xc)) + a1c;
+            f32 sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->unk40 + joff + 0xc)) + lbl_803DEA1C;
             f32* jm = (f32*)ObjModel_GetJointMatrix((u8*)am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0)
