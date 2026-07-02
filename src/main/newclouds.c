@@ -1634,9 +1634,10 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     if (lbl_803DF1A0 != *(f32*)(params + 8))
     {
         ((NewCloud*)NC_CLOUD)->driftRate = lbl_803DF23C;
-        ((NewCloud*)NC_CLOUD)->driftLimit =
-            (int)
-        randomGetRange(1, *(f32*)(params + 8)) * lbl_803DF214;
+        {
+            int r = randomGetRange(1, *(f32*)(params + 8));
+            ((NewCloud*)NC_CLOUD)->driftLimit = r * lbl_803DF214;
+        }
     }
     ((NewCloud*)NC_CLOUD)->active = 1;
     fl = ((NewCloud*)NC_CLOUD)->unk144B;
