@@ -56,6 +56,7 @@ enum
     TRICKYGROWL_DIG_END = 3
 };
 
+#pragma opt_propagation off
 void trickyGrowl(void* obj, void* trickyState)
 {
     void* state;
@@ -180,7 +181,10 @@ void trickyGrowl(void* obj, void* trickyState)
             ((TrickyState*)trickyState)->stateFlags &= ~0x10000LL;
             ((TrickyState*)trickyState)->stateFlags &= ~0x20000LL;
             ((TrickyState*)trickyState)->stateFlags &= ~0x40000LL;
-            ((TrickyState*)trickyState)->unkD = -1;
+            {
+                s8 mm = -1;
+                ((TrickyState*)trickyState)->unkD = mm;
+            }
         }
         else
         {
@@ -192,3 +196,5 @@ void trickyGrowl(void* obj, void* trickyState)
         break;
     }
 }
+#pragma opt_propagation reset
+
