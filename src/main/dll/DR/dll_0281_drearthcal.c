@@ -1,6 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+#define DREARTHCAL_OBJFLAG_RENDERED 0x800
+
 #define DREARTHCAL_SETUP_YAW 0x18
 #define DREARTHCAL_INIT_FLAGS 0x6000
 
@@ -80,7 +82,7 @@ void drearthcal_update(int obj)
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         }
     }
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & DREARTHCAL_OBJFLAG_RENDERED) != 0)
     {
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
