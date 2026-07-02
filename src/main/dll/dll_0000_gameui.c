@@ -2480,9 +2480,9 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int n, t;
             int hint;
             {
-                int i;
                 u8* base;
                 u8* p;
+                int i;
                 int tmp;
                 i = 0;
                 base = (u8*)(int)gGameUiTaskHintCandidates;
@@ -2589,30 +2589,29 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
         {
             int row;
-            int ph1 = 0;
-            int ph2 = ph1;
+            int iv[2];
             f32 k = lbl_803E204C;
-            f32 c0 = lbl_803E2050;
-            f32 c1 = lbl_803E2010;
+            iv[0] = 0;
+            iv[1] = iv[0];
             for (row = 0; row < 0x96; row += 4)
             {
-                f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + ph1));
+                f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
                 int a2, b2, r1, r2, raw;
-                s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + ph2)) + s;
-                raw = (int)((f32)alpha * (c0 + s));
+                s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + iv[1])) + s;
+                raw = (int)((f32)alpha * (lbl_803E2050 + s));
                 a2 = raw < 0 ? 0 : raw;
                 r1 = randomGetRange(0, 0x1e) << 1;
                 r2 = randomGetRange(0, 0x1e) << 1;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x32),
                                    (u8)(a2 > 0xff ? 0xff : a2), 0x100, 0x82, 2, r2, r1);
-                raw = (int)((f32)alpha * (c1 + s));
+                raw = (int)((f32)alpha * (lbl_803E2010 + s));
                 b2 = raw < 0 ? 0 : raw;
                 r1 = randomGetRange(0, 0x1e) << 1;
                 r2 = randomGetRange(0, 0x1e) << 1;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x34),
                                    (u8)(b2 > 0xff ? 0xff : b2), 0x100, 0x82, 2, r2, r1);
-                ph1 += 0x3520;
-                ph2 += 0x1f40;
+                iv[0] += 0x3520;
+                iv[1] += 0x1f40;
             }
         }
         gameTextFn_80016810(0x3dd, 0x64, 0x15e);
