@@ -13,6 +13,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
+#define DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct TrickyCurveObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -641,5 +643,5 @@ void TrickyCurve_init(int* obj, u8* def)
     ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->gateGameBit;
     ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->triggerGameBit;
     ((TrickyCurveObjState*)state)->unk6 = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED);
 }
