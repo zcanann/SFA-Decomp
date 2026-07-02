@@ -193,6 +193,7 @@ void crrockfall_update(int* obj)
             modelState->overrideWorldPosY = state->floorY;
             fn_800628CC(obj);
         }
+        return;
     }
     else
     {
@@ -321,7 +322,6 @@ void crrockfall_update(int* obj)
                 *(u8*)&((ObjHitsPriorityState*)hitState)->hitVolumePriority = 13;
                 break;
             case zcEn3_ROCKFALL_MODE_SHATTERED:
-            case zcEn3_ROCKFALL_MODE_4:
                 break;
             }
 
