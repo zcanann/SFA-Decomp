@@ -41,6 +41,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DLL22C_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -114,7 +116,7 @@ void dll_22C_init(int obj, char* p)
     state->raiseHeight = md->raiseHeight;
     state->unk0C = md->unk1C;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E63A8;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DLL22C_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_22C_hitDetect_nop(void)
