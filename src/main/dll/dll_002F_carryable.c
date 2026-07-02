@@ -23,6 +23,8 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 
+#define PAD_BUTTON_A 0x100
+
 typedef struct CarryableUpdateHeldState
 {
     u8 pad0[0x2 - 0x0];
@@ -234,7 +236,7 @@ int Carryable_updateHeld(u8* obj)
     {
         ObjHits_MarkObjectPositionDirty(obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        if ((getButtonsJustPressed(0) & 0x100) != 0)
+        if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
         {
             if ((((CarryableUpdateHeldState*)held)->flags & 4) != 0 || fn_80295BF0(player) == 0)
             {
