@@ -1728,8 +1728,9 @@ extern f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern const f32 lbl_803DED2C;
 extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDC8;
-extern f32 Vdchuff_803DEDD0, Vdchuff_803DEDD4;
-extern f32 Uachuff_803DEE00;
+extern const f32 Vdchuff_803DEDD0;
+extern f32 Vdchuff_803DEDD4;
+extern const f32 Uachuff_803DEE00;
 extern float __fabsf(float);
 
 void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
@@ -1797,7 +1798,7 @@ void fn_8006CD20(f32* arr, int n, f32* out1, f32* out2, f32 a, f32 b, f32 c)
 extern int testAndSet_onlyUseHeap3(int v);
 extern float fn_802943F4(float x);
 extern float floor(float);
-extern f32 __PADFixBits;
+extern const f32 __PADFixBits;
 extern const f32 Yachuff_803DEDE0;
 extern f32 gNewShadowPlacements[];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
@@ -1926,8 +1927,13 @@ void initFn_8006d020(void)
 #pragma opt_common_subs reset
 
 extern void fn_80069EB8();
-extern f32 lbl_803DED10, lbl_803DED34;
+extern const f32 lbl_803DED10;
+extern f32 lbl_803DED34;
 extern const f32 Dev_803DED1C;
+extern const f32 Yachuff_803DEDEC, Yachuff_803DEDF0, Yachuff_803DEDF4, Yachuff_803DEDF8, Yachuff_803DEDFC;
+extern const f32 Uachuff_803DEE04, Uachuff_803DEE08, Uachuff_803DEE0C, Uachuff_803DEE10;
+extern const f32 Uachuff_803DEE14, Uachuff_803DEE18, Uachuff_803DEE1C;
+extern const f32 Udchuff_803DEDBC;
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma ppc_unroll_speculative off
@@ -1962,28 +1968,22 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - 16.0f;
+        cy = i - Yachuff_803DEDEC;
         isum = lowoff + rowoff;
         for (; j < 0x20; j++)
         {
             int base = gNewShadowDiskTexture;
-            int off = isum + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60;
-            f32 dx = cy * 0.0625f;
-            f32 dz = ((f32)j - 16.0f) * 0.0625f;
-            f32 d2;
-            f32 v;
-            dx = dx * 1.1f;
-            dz = dz * 1.1f;
+            int off = isum + (j & 3) * 8;
+            f32 dx, dz, d2;
+            off += (j >> 2) * 0x80;
+            off += 0x60;
+            dx = cy * Vdchuff_803DEDD0;
+            dz = (f32)j - Yachuff_803DEDEC;
+            dz = dz * Vdchuff_803DEDD0;
+            dx = dx * Yachuff_803DEDF0;
+            dz = dz * Yachuff_803DEDF0;
             d2 = dx * dx + dz * dz;
-            if (d2 > 1.0f)
-            {
-                v = 0.0f;
-            }
-            else
-            {
-                v = 1.0f - d2;
-            }
-            *(u8*)(base + off) = 255.0f * v;
+            *(u8*)(base + off) = __PADFixBits * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
         }
     }
     DCFlushRange((void*)(gNewShadowDiskTexture + 0x60), *(int*)(gNewShadowDiskTexture + 0x44));
@@ -1996,61 +1996,71 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - 8.0f;
+        cy = i - lbl_803DED10;
         isum = lowoff + rowoff;
         for (; j < 0x10; j++)
         {
             int base = gNewShadowSmallDiskTexture;
-            int off = isum + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60;
-            f32 dx = cy * 0.125f;
-            f32 dz = ((f32)j - 8.0f) * 0.125f;
-            f32 d2;
+            int off = isum + (j & 3) * 8;
+            f32 dx, dz, d2;
             f32 v;
-            dx = dx * 1.2f;
-            dz = dz * 1.2f;
+            off += (j >> 2) * 0x40;
+            off += 0x60;
+            dx = cy * __GXCurrentThread_803DED40;
+            dz = (f32)j - lbl_803DED10;
+            dz = dz * __GXCurrentThread_803DED40;
+            dx = dx * Yachuff_803DEDF4;
+            dz = dz * Yachuff_803DEDF4;
             d2 = dx * dx + dz * dz;
-            if (d2 > 1.0f)
+            if (d2 > lbl_803DED2C)
             {
-                v = 0.0f;
+                v = lbl_803DED28;
             }
             else
             {
-                v = sqrtf(1.0f - d2);
+                v = sqrtf(lbl_803DED2C - d2);
             }
-            *(u8*)(base + off) = 255.0f * v;
+            *(u8*)(base + off) = __PADFixBits * v;
         }
     }
     DCFlushRange((void*)(gNewShadowSmallDiskTexture + 0x60), *(int*)(gNewShadowSmallDiskTexture + 0x44));
 
     gNewShadowBumpTexture = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
     {
-        f32 mx = 0.0f;
+        f32 mx = lbl_803DED28;
         for (i = 0; i < 0x40; i++)
         {
             f32 fi, fi2, rc, rc2;
             j = 0;
-            fi = i - 32.0f;
-            fi2 = (f32)(i + 1) - 32.0f;
-            rc = fi * 0.03125f;
-            rc2 = fi2 * 0.03125f;
+            fi = i - Yachuff_803DEDF8;
+            fi2 = (f32)(i + 1) - Yachuff_803DEDF8;
+            rc = fi * Yachuff_803DEDFC;
+            rc2 = fi2 * Yachuff_803DEDFC;
             for (; j < 0x40; j++)
             {
-                f32 cc = ((f32)j - 32.0f) * 0.03125f;
-                f32 d1 = sqrtf(cc * cc + rc * rc);
-                f32 d2 = sqrtf(cc * cc + rc2 * rc2);
-                f32 cc2 = ((f32)(j + 1) - 32.0f) * 0.03125f;
-                f32 d3 = sqrtf(cc2 * cc2 + rc * rc);
-                f32 n1 = -fn_802943F4(18.852f * d1);
-                f64 n2 = __fabs(fn_802943F4(18.852f * d2));
-                f64 n3 = __fabs(fn_802943F4(18.852f * d3));
-                f32 a = n1 - (f32)n2;
-                f32 b = n1 - (f32)n3;
+                f32 cc = (f32)j - Yachuff_803DEDF8;
+                f32 d1, d2, cc2, d3, n1, a, b;
+                f64 n2, n3;
+                cc = cc * Yachuff_803DEDFC;
+                d1 = sqrtf(cc * cc + rc * rc);
+                d2 = sqrtf(cc * cc + rc2 * rc2);
+                cc2 = (f32)(j + 1) - Yachuff_803DEDF8;
+                cc2 = cc2 * Yachuff_803DEDFC;
+                {
+                    f32 rcb = rc;
+                    d3 = sqrtf(rcb * rcb + cc2 * cc2);
+                }
+                n1 = -fn_802943F4(Uachuff_803DEE00 * d1);
+                n2 = __fabs(fn_802943F4(Uachuff_803DEE00 * d2));
+                n3 = __fabs(fn_802943F4(Uachuff_803DEE00 * d3));
+                a = n1 - (f32)n2;
+                b = n1 - (f32)n3;
                 if (a > mx) mx = a;
                 if (b > mx) mx = b;
             }
         }
         {
-            f32 inv = 1.0f / mx;
+            f32 inv = lbl_803DED2C / mx;
             for (j = 0; j < 0x40; j++)
             {
                 int rowoff, lowoff;
@@ -2058,38 +2068,47 @@ void allocLotsOfTextures(void)
                 i = 0;
                 rowoff = (j >> 2) * 0x20;
                 lowoff = (j & 3) * 2;
-                fj = j - 32.0f;
-                fj2 = (f32)(j + 1) - 32.0f;
-                rc = fj * 0.03125f;
-                rc2 = fj2 * 0.03125f;
+                fj = j - Yachuff_803DEDF8;
+                fj2 = (f32)(j + 1) - Yachuff_803DEDF8;
+                rc = fj * Yachuff_803DEDFC;
+                rc2 = fj2 * Yachuff_803DEDFC;
                 for (; i < 0x40; i++)
                 {
-                    int dst = gNewShadowBumpTexture + lowoff + rowoff + (i & 3) * 8 + (i >> 2) * 0x200;
-                    f32 cc = ((f32)i - 32.0f) * 0.03125f;
-                    f32 d1 = sqrtf(cc * cc + rc * rc);
-                    f32 d2 = sqrtf(cc * cc + rc2 * rc2);
-                    f32 cc2 = ((f32)(i + 1) - 32.0f) * 0.03125f;
-                    f32 d3 = sqrtf(cc2 * cc2 + rc * rc);
-                    f32 n1 = -fn_802943F4(18.852f * d1);
-                    f32 n2 = -fn_802943F4(18.852f * d2);
-                    f32 n3 = -fn_802943F4(18.852f * d3);
-                    f32 a = inv * (127.0f * (n1 - n2)) + 127.0f;
-                    f32 b = inv * (127.0f * (n1 - n3)) + 127.0f;
+                    int dst = gNewShadowBumpTexture + lowoff;
+                    f32 cc, d1, d2, cc2, d3, n1, n2, n3, a, b;
                     f32 dd;
                     f32 c;
                     int bi, ci, ai;
-                    if (d1 < 1.0f)
+                    dst += rowoff;
+                    dst += (i & 3) * 8;
+                    dst += (i >> 2) * 0x200;
+                    cc = (f32)i - Yachuff_803DEDF8;
+                    cc = cc * Yachuff_803DEDFC;
+                    d1 = sqrtf(cc * cc + rc * rc);
+                    d2 = sqrtf(cc * cc + rc2 * rc2);
+                    cc2 = (f32)(i + 1) - Yachuff_803DEDF8;
+                    cc2 = cc2 * Yachuff_803DEDFC;
                     {
-                        dd = sqrtf(1.0f - d1);
+                        f32 rcb = rc;
+                        d3 = sqrtf(rcb * rcb + cc2 * cc2);
+                    }
+                    n1 = -fn_802943F4(Uachuff_803DEE00 * d1);
+                    n2 = -fn_802943F4(Uachuff_803DEE00 * d2);
+                    n3 = -fn_802943F4(Uachuff_803DEE00 * d3);
+                    a = inv * (Vdchuff_803DEDC0 * (n1 - n2)) + Vdchuff_803DEDC0;
+                    b = inv * (Vdchuff_803DEDC0 * (n1 - n3)) + Vdchuff_803DEDC0;
+                    if (d1 < lbl_803DED2C)
+                    {
+                        dd = sqrtf(lbl_803DED2C - d1);
                     }
                     else
                     {
-                        dd = 0.0f;
+                        dd = lbl_803DED28;
                     }
-                    c = 32.0f * dd;
-                    if (c > 15.0f) c = 15.0f;
-                    a = a * 0.03125f;
-                    b = b * 0.0625f;
+                    c = Yachuff_803DEDF8 * dd;
+                    if (c > Uachuff_803DEE04) c = Uachuff_803DEE04;
+                    a = a * Yachuff_803DEDFC;
+                    b = b * Vdchuff_803DEDD0;
                     bi = (int)b & 0xf;
                     ci = ((u16)(int)
                     c & 0xf
@@ -2255,11 +2274,11 @@ void allocLotsOfTextures(void)
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x60) =
             (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)CPUFifo_803DED38 & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x68) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[5] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE14 & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x70) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[6] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE18 & 0xff));
         *(u16*)((u8*)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20) + 0x78) =
-            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)(&Uachuff_803DEE00)[7] & 0xff));
+            (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE1C & 0xff));
     }
     DCFlushRange((void*)(lbl_803DCF94 + 0x60), *(int*)(lbl_803DCF94 + 0x44));
 
@@ -2405,7 +2424,7 @@ void maybeHudFn_8006c91c(void)
 
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* mtx, int x);
 extern f32 playerMapOffsetX, playerMapOffsetZ;
-extern f32 lbl_803DED0C, lbl_803DED10;
+extern f32 lbl_803DED0C;
 extern const f32 lbl_803DED14, Chan_803DED18;
 extern f32 Enabled_803DED20, BarnacleEnabled_803DED24;
 extern void Camera_ProjectWorldSphere( f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
