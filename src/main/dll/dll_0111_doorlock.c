@@ -22,6 +22,8 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
+#define PAD_BUTTON_A 0x100
+
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
 {
@@ -106,7 +108,7 @@ void doorlock_update(int obj)
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0) && (GameBit_Get(GAMEBIT_DOORLOCK_UNLOCKED) == 0))
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         GameBit_Set(GAMEBIT_DOORLOCK_UNLOCKED, 1);
@@ -169,7 +171,7 @@ void doorlock_update(int obj)
                     state->unlocked = 1;
                     ((GameObject*)obj)->unkF4 = 1;
                 }
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
             }
         }
         else
