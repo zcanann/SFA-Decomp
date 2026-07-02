@@ -25,6 +25,8 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define BABYCLOUDRUNNER_OBJFLAG_HIDDEN 0x4000
+
 typedef struct BabyCloudRunnerPlacement
 {
     ObjPlacement base;
@@ -223,7 +225,7 @@ void dll_FC_init(int obj, int objDef)
     placement = (BabyCloudRunnerPlacement*)objDef;
     state->mode = BABYCLOUDRUNNER_MODE_UNINIT;
     state->triggerId = placement->triggerIdMax;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= BABYCLOUDRUNNER_OBJFLAG_HIDDEN;
 }
 
 void dll_FC_release_nop(void)
