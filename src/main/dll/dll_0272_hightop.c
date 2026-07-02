@@ -916,14 +916,7 @@ int hightop_stateHandler04(int obj, int p)
         {
             goto inRange;
         }
-        if (dy >= *(f32*)&lbl_803E6AA8)
-        {
-        }
-        else
-        {
-            dy = -dy;
-        }
-        if (dy > lbl_803E6AF0)
+        if ((dy >= *(f32*)&lbl_803E6AA8 ? dy : -dy) > lbl_803E6AF0)
         {
         inRange:
             state->flags |= 1;
