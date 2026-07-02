@@ -7,6 +7,8 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define DLL00FD_OBJFLAG_HIDDEN 0x4000
 extern void objRenderFn_80041018(void);
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
@@ -203,7 +205,7 @@ void dll_14D_init(int* obj)
     Dll14DState* p = ((GameObject*)obj)->extra;
     p->mode = 0;
     p->anchorObj = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL00FD_OBJFLAG_HIDDEN);
 }
 
 void fn_8017F334(int obj, void* setup, void* stateArg)
