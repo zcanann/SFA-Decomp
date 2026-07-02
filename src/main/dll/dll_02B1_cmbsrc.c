@@ -451,23 +451,24 @@ int cmbsrc_update(int obj)
             if (state->light != NULL && ((CmbSrcLight*)state->light)->glowType != 0 &&
                 ((CmbSrcLight*)state->light)->enabled != 0)
             {
-                s16 v = (s16)(((CmbSrcLight*)state->light)->glowAlpha +
+                s16 v[1];
+                v[0] = (s16)(((CmbSrcLight*)state->light)->glowAlpha +
                               ((CmbSrcLight*)state->light)->glowAlphaStep);
-                if (v < 0)
+                if (v[0] < 0)
                 {
-                    v = 0;
-                    ((CmbSrcLight*)state->light)->glowAlphaStep = v;
+                    v[0] = 0;
+                    ((CmbSrcLight*)state->light)->glowAlphaStep = v[0];
                 }
-                else if (v > 0xc)
+                else if (v[0] > 0xc)
                 {
-                    v = (s16)(v + randomGetRange(-0xc, 0xc));
-                    if (v > 0xff)
+                    v[0] = (s16)(v[0] + randomGetRange(-0xc, 0xc));
+                    if (v[0] > 0xff)
                     {
-                        v = 0xff;
+                        v[0] = 0xff;
                         ((CmbSrcLight*)state->light)->glowAlphaStep = 0;
                     }
                 }
-                ((CmbSrcLight*)state->light)->glowAlpha = v;
+                ((CmbSrcLight*)state->light)->glowAlpha = v[0];
             }
         }
         break;
