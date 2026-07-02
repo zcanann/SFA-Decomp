@@ -915,7 +915,7 @@ void arwarwing_initAttachments(int obj, int state)
             *(int*)&((ArwingState*)state)->light = (int)objCreateLight(obj, 1);
             if (((ArwingState*)state)->light != 0)
             {
-                modelLightStruct_setLightKind(((ArwingState*)state)->light, 2);
+                modelLightStruct_setLightKind(((ArwingState*)state)->light, MODEL_LIGHT_KIND_POINT);
                 modelLightStruct_setPosition(((ArwingState*)state)->light, lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
                 lightSetFieldBC_8001db14(((ArwingState*)state)->light, 1);
                 modelLightStruct_setDiffuseColor(((ArwingState*)state)->light, 0x28, 0x7d, 0xff, 0);
