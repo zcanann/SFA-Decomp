@@ -220,7 +220,9 @@ void Trigger_init(u8* obj, u8* params)
         ((TriggerState*)sub)->gateBits[3] = *(s16*)(params + 0x4e);
         ((TriggerFlags8A*)(sub + 0x8a))->bit7 = 0;
         break;
-    case 0x51:
+    case 0x4e:
+    case 0x4f:
+    case 0x50:
         break;
     case 0xf4:
         break;
@@ -309,6 +311,15 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 1:
                     switch (p[2])
                     {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        break;
                     case 8:
                         t = Obj_GetPlayerObject();
                         if ((void*)t != NULL)
@@ -474,28 +485,21 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         {
                             continue;
                         }
-                        d = *(s16*)tbl;
-                        if (d == 0x54)
+                        switch (*(s16*)tbl)
                         {
-                            goto match;
-                        }
-                        if (d < 0x54)
-                        {
-                            if (d >= 0x51 || d < 0x4b)
+                        case 0x4b:
+                        case 0x4c:
+                        case 0x4d:
+                        case 0x4e:
+                        case 0x4f:
+                        case 0x50:
+                        case 0x54:
+                        case 0x230:
+                            if (*(s16*)((char*)tbl + 0x38) == id)
                             {
-                                continue;
+                                objInterpretSeq(t2, seqArg, legCode, distSq);
                             }
-                            goto match;
-                        }
-                        if (d == 0x230)
-                        {
-                            goto match;
-                        }
-                        continue;
-                    match:
-                        if (*(s16*)((char*)tbl + 0x38) == id)
-                        {
-                            objInterpretSeq(t2, seqArg, legCode, distSq);
+                            break;
                         }
                     }
                     break;
@@ -524,7 +528,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 0x21:
                     op = (u16)((p[2] << 8) | p[3]);
                     bit = op & 0x1fff;
-                    GameBit_Set(bit, (1 << (op >> 13 & 7)) ^ GameBit_Get(bit));
+                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (op >> 13 & 7)));
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setObjGroupStatus(
@@ -622,10 +626,13 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     {
                         d = (d + 0x10000) - 1;
                     }
-                    ang = d;
-                    if (ang < 0)
+                    if (d >= 0)
                     {
-                        ang = -ang;
+                        ang = d;
+                    }
+                    else
+                    {
+                        ang = -d;
                     }
                     if (ang > 0x4000)
                     {
@@ -688,7 +695,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             }
                             if ((void*)t2 != NULL)
                             {
-                                (*(VtableFn*)(**(int**)(t + 0x68) + 0x38))(t);
+                                (*(VtableFn*)(**(int**)(t + 0x68) + 0x38))(t, t2);
                             }
                             break;
                         case 3:
