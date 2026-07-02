@@ -21,6 +21,9 @@
 #include "main/dll/ARW/arwing_state.h"
 #include "main/audio/sfx_ids.h"
 
+#define PAD_TRIGGER_Z 0x20
+#define PAD_TRIGGER_R 0x40
+
 typedef struct WcFloorTileState
 {
     f32 shakeTime;
@@ -569,7 +572,7 @@ void arwarwing_readControls(int obj, int state)
     if (aw->mode == 0)
     {
         btn = aw->inputFlags;
-        if ((btn & 0x20) != 0)
+        if ((btn & PAD_TRIGGER_Z) != 0)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             aw->mode = 1;
@@ -580,7 +583,7 @@ void arwarwing_readControls(int obj, int state)
             aw->accelX = aw->accelX * aw->barrelRollAccelScale;
             arwarwingbo_setActiveVisible(aw->bombObj, 1, 0);
         }
-        else if ((btn & 0x40) != 0)
+        else if ((btn & PAD_TRIGGER_R) != 0)
         {
             Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             aw->mode = 1;
