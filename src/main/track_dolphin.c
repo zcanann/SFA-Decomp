@@ -1182,12 +1182,12 @@ extern u32 gSunFlareScissorY;
 extern u32 gSunFlareScissorWidth;
 extern u32 gSunFlareScissorHeight;
 
-void fn_80060490(u32* a, u32* b, u32* c, u32* d)
+void fn_80060490(u32* outX, u32* outY, u32* outWidth, u32* outHeight)
 {
-    *a = gSunFlareScissorX;
-    *b = gSunFlareScissorY;
-    *c = gSunFlareScissorWidth;
-    *d = gSunFlareScissorHeight;
+    *outX = gSunFlareScissorX;
+    *outY = gSunFlareScissorY;
+    *outWidth = gSunFlareScissorWidth;
+    *outHeight = gSunFlareScissorHeight;
 }
 
 void setShadowFlag_803db658(s32 v)
@@ -1726,9 +1726,12 @@ extern int lbl_803DCF1C;
 extern int lbl_803DCF20;
 extern int lbl_803DCF24;
 
+/* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
+ * counts, flip the three double-buffer selectors, and rotate the current
+ * write pointers to the buffer picked by this frame's flip index. */
 void fn_80062808(void)
 {
-    int v;
+    int bufPtr;
     if ((s8)gShadowFlag == 0)
     {
         return;
@@ -1739,12 +1742,12 @@ void fn_80062808(void)
     lbl_803DCEEC = 1 - lbl_803DCEEC;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
-    v = (&lbl_803DCF24)[lbl_803DCEEC];
-    lbl_803DCF08 = v;
+    bufPtr = (&lbl_803DCF24)[lbl_803DCEEC];
+    lbl_803DCF08 = bufPtr;
     lbl_803DCEF4 = 0;
     lbl_803DCF10 = lbl_803DCF20;
     lbl_803DCF18 = lbl_803DCF1C;
-    lbl_803DCF04 = v;
+    lbl_803DCF04 = bufPtr;
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
@@ -1913,38 +1916,38 @@ extern int mapTextureOverrideAcquire(int tex, int value, int type);
 
 void MapBlock_initShaders(int obj)
 {
-    char* p;
+    char* sh;
     int block;
     int i;
     int j;
-    int v;
+    int ref;
     int outerOff;
     for (i = 0, outerOff = 0; i < *(u8*)(obj + 0xa2); i++)
     {
         block = *(int*)&((GameObject*)obj)->anim.modelState + outerOff;
         for (j = 0; j < *(u8*)(block + 0x41); j++)
         {
-            p = (char*)block + j * 8;
-            v = *(int*)&((ObjModelState*)p)->overrideWorldPosY;
-            if (v != -1)
+            sh = (char*)block + j * 8;
+            ref = *(int*)&((ObjModelState*)sh)->overrideWorldPosY;
+            if (ref != -1)
             {
-                *(int*)&((ObjModelState*)p)->overrideWorldPosY = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
-                v = *(u8*)(p + 0x29);
-                if ((u32)v != 0u)
+                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
+                ref = *(u8*)(sh + 0x29);
+                if ((u32)ref != 0u)
                 {
-                    mapTextureOverrideAcquire(*(int*)&((ObjModelState*)p)->overrideWorldPosY, 0, v);
+                    mapTextureOverrideAcquire(*(int*)&((ObjModelState*)sh)->overrideWorldPosY, 0, ref);
                 }
             }
             else
             {
-                *(int*)&((ObjModelState*)p)->overrideWorldPosY = 0;
+                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = 0;
             }
-            *(u8*)(p + 0x2a) = 0xff;
+            *(u8*)(sh + 0x2a) = 0xff;
         }
-        v = *(int*)(block + 0x34);
-        if (v != -1)
+        ref = *(int*)(block + 0x34);
+        if (ref != -1)
         {
-            *(int*)(block + 0x34) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
+            *(int*)(block + 0x34) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[ref];
         }
         else
         {
@@ -2063,7 +2066,7 @@ int objShadowFn_80062378(void* obj, u8 param)
 }
 #pragma dont_inline reset
 
-int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
+int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 {
     void** arr;
     int n;
@@ -2072,16 +2075,16 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
     f32 cur;
     f32* arCb;
 
-    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, kinds);
     if (n != 0)
     {
         void** arrp;
-        best = val - *(f32*)arr[0];
+        best = y - *(f32*)arr[0];
         arrp = arr + 1;
         for (i = 1; i < n; i++, arrp++)
         {
             cur = *(f32*)*arrp;
-            cur = val - cur;
+            cur = y - cur;
             arCb = &__AR_Callback;
             if (cur >= *(f32*)arCb)
             {
@@ -2093,13 +2096,13 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
         }
         if (best >= __AR_Callback)
         {
-            *out = best;
+            *outDepth = best;
             return 1;
         }
-        *out = __AR_Callback;
+        *outDepth = __AR_Callback;
         return 0;
     }
-    *out = __AR_Callback;
+    *outDepth = __AR_Callback;
     return 0;
 }
 
@@ -2769,13 +2772,13 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 
 #pragma opt_propagation off
-int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8, int p9)
+int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
 {
     int j;
     f32 lm[12];
     int grp;
-    u8* d = fn_80069944((u32*)&j);
-    u8* end = d + j * 0x18;
+    u8* descBytes = fn_80069944((u32*)&j);
+    u8* end = descBytes + j * 0x18;
     int total;
     int outOff;
 
@@ -2783,10 +2786,10 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
     outOff = 0;
     j = grp;
     total = 0;
-    p9 = p9 ? 4 : 8;
-    for (; d < end; d += 0x18)
+    kindMask = kindMask ? 4 : 8;
+    for (; descBytes < end; descBytes += 0x18)
     {
-        u32 id = *(u32*)d;
+        u32 id = *(u32*)descBytes;
         if (id == 0 || id == *(u32*)&((GameObject*)obj)->anim.parent)
         {
             f32 fx = ((GameObject*)obj)->anim.localPosX;
@@ -2795,32 +2798,32 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
 
             if (id == 0)
             {
-                fx -= a;
-                fz -= b;
+                fx -= offX;
+                fz -= offZ;
             }
-            j = (s16)((TrackBlockDescriptor*)d)->firstTriangle;
-            outA = (f32*)((char*)p5 + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)d)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
+            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
+            outA = (f32*)((char*)planesOut + outOff);
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
             {
-                if (p9 & ((TrackTriangle*)p4 + j)->flags)
+                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
                 {
-                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[0]) - fx;
-                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[0]) - ((GameObject*)obj)
+                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[0]) - fz;
-                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[1]) - fx;
-                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[1]) - ((GameObject*)obj)
+                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]) - fz;
+                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[1]) - fz;
-                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[2]) - fx;
-                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[2]) - ((GameObject*)obj)
+                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]) - fz;
+                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[2]) - fz;
-                    outA[0] = ((TrackTriangle*)p4 + j)->planeN[0];
-                    outA[1] = ((TrackTriangle*)p4 + j)->planeN[1];
-                    outA[2] = ((TrackTriangle*)p4 + j)->planeN[2];
-                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)p4 + j)->flags;
-                    p6 += 0x24;
+                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]) - fz;
+                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
+                    vertsOut += 0x24;
                     total += 3;
                     outA = (f32*)((char*)outA + 0x14);
                     grp += 1;
@@ -2831,7 +2834,7 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
         }
         else
         {
-            f32* m = *(f32**)((char*)d + 0xc);
+            f32* m = *(f32**)((char*)descBytes + 0xc);
             f32* p6start;
             int totalStart;
             f32* outA;
@@ -2848,28 +2851,28 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
             lm[9] = m[6];
             lm[10] = m[10];
             lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
-            p6start = (f32*)p6;
+            p6start = (f32*)vertsOut;
             totalStart = total;
-            j = (s16)((TrackBlockDescriptor*)d)->firstTriangle;
-            outA = (f32*)((char*)p5 + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)d)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
+            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
+            outA = (f32*)((char*)planesOut + outOff);
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
             {
-                if (p9 & ((TrackTriangle*)p4 + j)->flags)
+                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
                 {
-                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[0]);
-                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[0]);
-                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[0]);
-                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[1]);
-                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[1]);
-                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[1]);
-                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[2]);
-                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[2]);
-                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[2]);
-                    outA[0] = ((TrackTriangle*)p4 + j)->planeN[0];
-                    outA[1] = ((TrackTriangle*)p4 + j)->planeN[1];
-                    outA[2] = ((TrackTriangle*)p4 + j)->planeN[2];
-                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)p4 + j)->flags;
-                    p6 += 0x24;
+                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]);
+                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]);
+                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]);
+                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]);
+                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]);
+                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]);
+                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]);
+                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]);
+                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]);
+                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
+                    vertsOut += 0x24;
                     total += 3;
                     outA = (f32*)((char*)outA + 0x14);
                     grp += 1;
@@ -3260,25 +3263,25 @@ extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
 extern const f32 lbl_803DECE0;
 extern const f32 lbl_803DECE4;
 
-void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
+void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown)
 {
-    TrackTriangle* v;
+    TrackTriangle* tri;
     f32 ox;
-    f32 planeC;
+    f32 planeY;
     f32 oz;
-    f32 arrA[7];
-    f32 arrB[7];
-    f32 arrC[7];
+    f32 vxs[7];
+    f32 vys[7];
+    f32 vzs[7];
     f32 vec[4];
 
     if (((TrackBlockDescriptor*)desc)->object == NULL)
     {
-        a -= (f32)((int*)gTrackGridOrigin)[0];
-        b -= (f32)((int*)gTrackGridOrigin)[2];
+        qx -= (f32)((int*)gTrackGridOrigin)[0];
+        qz -= (f32)((int*)gTrackGridOrigin)[2];
     }
-    for (v = p3; (void*)v < p4; v++)
+    for (tri = triStart; (void*)tri < triEnd; tri++)
     {
-        s8 fl = v->flags;
+        s8 fl = tri->flags;
         int i;
         int inside;
 
@@ -3286,24 +3289,24 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         {
             if (!(fl & 0x4)) continue;
         }
-        vec[0] = v->planeN[0];
-        vec[1] = v->planeN[1];
-        vec[2] = v->planeN[2];
+        vec[0] = tri->planeN[0];
+        vec[1] = tri->planeN[1];
+        vec[2] = tri->planeN[2];
         if (!(vec[1] > __AR_Callback))
         {
-            if (e == 0) continue;
+            if (allowDown == 0) continue;
             if (__AR_Callback == vec[1]) continue;
         }
-        planeC = -(vec[0] * a + vec[2] * b + v->planeD) / vec[1];
-        arrA[0] = (f32)v->vx[0];
-        arrB[0] = (f32)v->vy[0];
-        arrC[0] = (f32)v->vz[0];
-        arrA[1] = (f32)v->vx[1];
-        arrB[1] = (f32)v->vy[1];
-        arrC[1] = (f32)v->vz[1];
-        arrA[2] = (f32)v->vx[2];
-        arrB[2] = (f32)v->vy[2];
-        arrC[2] = (f32)v->vz[2];
+        planeY = -(vec[0] * qx + vec[2] * qz + tri->planeD) / vec[1];
+        vxs[0] = (f32)tri->vx[0];
+        vys[0] = (f32)tri->vy[0];
+        vzs[0] = (f32)tri->vz[0];
+        vxs[1] = (f32)tri->vx[1];
+        vys[1] = (f32)tri->vy[1];
+        vzs[1] = (f32)tri->vz[1];
+        vxs[2] = (f32)tri->vx[2];
+        vys[2] = (f32)tri->vy[2];
+        vzs[2] = (f32)tri->vz[2];
         inside = 1;
         {
             f32 c31 = __AR_Callback;
@@ -3315,14 +3318,14 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
                 f32 ny, nx, nz, mag;
 
                 if (nxt > 2) nxt = 0;
-                arrA[3] = c30 * vec[0] + arrA[i];
-                arrB[3] = c30 * vec[1] + arrB[i];
-                arrC[3] = c30 * vec[2] + arrC[i];
-                nx = arrB[3] * (arrC[i] - arrC[nxt]) + (arrB[i] * (arrC[nxt] - arrC[3]) + arrB[nxt] * (arrC[3] - arrC[
+                vxs[3] = c30 * vec[0] + vxs[i];
+                vys[3] = c30 * vec[1] + vys[i];
+                vzs[3] = c30 * vec[2] + vzs[i];
+                nx = vys[3] * (vzs[i] - vzs[nxt]) + (vys[i] * (vzs[nxt] - vzs[3]) + vys[nxt] * (vzs[3] - vzs[
                     i]));
-                ny = arrC[3] * (arrA[i] - arrA[nxt]) + (arrC[i] * (arrA[nxt] - arrA[3]) + arrC[nxt] * (arrA[3] - arrA[
+                ny = vzs[3] * (vxs[i] - vxs[nxt]) + (vzs[i] * (vxs[nxt] - vxs[3]) + vzs[nxt] * (vxs[3] - vxs[
                     i]));
-                nz = arrA[3] * (arrB[i] - arrB[nxt]) + (arrA[i] * (arrB[nxt] - arrB[3]) + arrA[nxt] * (arrB[3] - arrB[
+                nz = vxs[3] * (vys[i] - vys[nxt]) + (vxs[i] * (vys[nxt] - vys[3]) + vxs[nxt] * (vys[3] - vys[
                     i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
                 if (mag > c31)
@@ -3332,8 +3335,8 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
                     ny *= s;
                     nz *= s;
                 }
-                if (-(nx * arrA[i] + ny * arrB[i] + nz * arrC[i]) +
-                    (nx * a + ny * planeC + nz * b) > c24)
+                if (-(nx * vxs[i] + ny * vys[i] + nz * vzs[i]) +
+                    (nx * qx + ny * planeY + nz * qz) > c24)
                 {
                     inside = 0;
                     break;
@@ -3344,11 +3347,11 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         if ((s8)lbl_803DCF60 >= 0x23) break;
         if (((TrackBlockDescriptor*)desc)->object != NULL)
         {
-            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, a, planeC, b, &ox, &planeC, &oz);
+            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, qx, planeY, qz, &ox, &planeY, &oz);
             Matrix_TransformVector(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, vec, vec);
         }
-        *(f32*)(lbl_803DCF68 + 0) = planeC;
-        *(u8*)(lbl_803DCF68 + 0x14) = v->surfaceType;
+        *(f32*)(lbl_803DCF68 + 0) = planeY;
+        *(u8*)(lbl_803DCF68 + 0x14) = tri->surfaceType;
         *(f32*)(lbl_803DCF68 + 0x4) = vec[0];
         *(f32*)(lbl_803DCF68 + 0x8) = vec[1];
         *(f32*)(lbl_803DCF68 + 0xc) = vec[2];
