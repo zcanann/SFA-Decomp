@@ -24,6 +24,8 @@
 #include "sfa_light_decls.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define LINKLEVCONTROL_OBJFLAG_HIDDEN 0x4000
+
 /* Area cells handled by this controller (GameObject::anim.mapEventSlot). */
 enum
 {
@@ -226,7 +228,7 @@ void link_levcontrol_init(int* obj)
     state->areaCell = -1;
     state->unk04 = -1;
     state->musicTrack = -1;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= LINKLEVCONTROL_OBJFLAG_HIDDEN;
     if (getSaveGameLoadStatus() != 0)
     {
         ((GameObject*)obj)->unkF4 = LEVCON_SAVE_STATUS_LOADED;
