@@ -1394,7 +1394,7 @@ int Effect9_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    switch (effectId)
+    switch ((u32)effectId)
     {
     case 950:
         if (spawnParams == 0)
