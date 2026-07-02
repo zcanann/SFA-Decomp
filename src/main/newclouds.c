@@ -479,9 +479,9 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
         {
             dists[i] = 0.0f;
         }
-        if (dists[i] < lbl_803DF1DC)
+        if (dists[i] < 50.0f)
         {
-            dists[i] = lbl_803DF1DC;
+            dists[i] = 50.0f;
         }
     }
     for (i = 0; i < NEWCLOUD_WIND_SOURCE_COUNT; i++)
