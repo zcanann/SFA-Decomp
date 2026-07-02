@@ -21,6 +21,8 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/objlib.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct ShipBattleObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -130,7 +132,7 @@ light_setup:
         light = objCreateLight((int*)obj, 1);
         if ((u32)light != 0)
         {
-            modelLightStruct_setLightKind(light, 2);
+            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E5970, lbl_803E5974);
         }
