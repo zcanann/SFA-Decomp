@@ -3500,12 +3500,8 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 8
-#pragma ppc_unroll_instructions_limit 160
 u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
-    f32 initB, initA;
     void** pp;
     f32* fp;
     s16 i;
@@ -3515,17 +3511,42 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     if (count > 4) count = 4;
     *(u16*)((u8*)results + 0x6c) = 0;
 
-    initA = __AR_Callback;
-    initB = lbl_803DECC4;
-    fp = results;
-    pp = results;
-    for (i = 0; i < count; i++)
+    i = 0;
+    if (count > 0)
     {
-        fp[i * 4 + 0] = initA;
-        fp[i * 4 + 1] = initB;
-        fp[i * 4 + 2] = initA;
-        fp[i * 4 + 3] = initA;
-        pp[i + 0x17] = NULL;
+        int lim = count - 8;
+        if (count > 8)
+        {
+            f32 b, a;
+            fp = results;
+            pp = results;
+            a = __AR_Callback;
+            b = lbl_803DECC4;
+            while (i < lim)
+            {
+                fp[0] = a; fp[1] = b; fp[2] = a; fp[3] = a; pp[0x17] = NULL;
+                fp[4] = a; fp[5] = b; fp[6] = a; fp[7] = a; pp[0x18] = NULL;
+                fp[8] = a; fp[9] = b; fp[10] = a; fp[11] = a; pp[0x19] = NULL;
+                fp[12] = a; fp[13] = b; fp[14] = a; fp[15] = a; pp[0x1a] = NULL;
+                fp[16] = a; fp[17] = b; fp[18] = a; fp[19] = a; pp[0x1b] = NULL;
+                fp[20] = a; fp[21] = b; fp[22] = a; fp[23] = a; pp[0x1c] = NULL;
+                fp[24] = a; fp[25] = b; fp[26] = a; fp[27] = a; pp[0x1d] = NULL;
+                fp[28] = a; fp[29] = b; fp[30] = a; fp[31] = a; pp[0x1e] = NULL;
+                fp += 32; pp += 8; i += 8;
+            }
+        }
+        {
+            f32 b, a;
+            fp = (f32*)results + i * 4;
+            pp = (void**)results + i;
+            a = __AR_Callback;
+            b = lbl_803DECC4;
+            while (i < count)
+            {
+                fp[0] = a; fp[1] = b; fp[2] = a; fp[3] = a; pp[0x17] = NULL;
+                fp += 4; pp += 1; i++;
+            }
+        }
     }
 
     {
@@ -3553,7 +3574,6 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     *(u8*)((u8*)results + 0x6e) = hitCount;
     return hitCount;
 }
-#pragma ppc_unroll_speculative off
 
 typedef union
 {
