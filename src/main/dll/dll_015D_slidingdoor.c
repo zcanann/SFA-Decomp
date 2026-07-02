@@ -43,6 +43,15 @@ typedef struct SlidingdoorPlacement
     u8 pad24[0x28 - 0x24];
 } SlidingdoorPlacement;
 
+/* 3-bit door state machine (see file header): */
+enum SlidingdoorMode
+{
+    SLIDINGDOOR_MODE_CLOSED = 0,
+    SLIDINGDOOR_MODE_OPEN = 1,
+    SLIDINGDOOR_MODE_OPENING = 2,
+    SLIDINGDOOR_MODE_CLOSING = 3
+};
+
 typedef struct SlidingdoorState
 {
     u8 mode : 3;
@@ -115,7 +124,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     params = *(u8**)&((GameObject*)obj)->anim.placementData;
     mode = ((u32)state[0] >> 5) & 7;
 
-    if (mode == 0)
+    if (mode == SLIDINGDOOR_MODE_CLOSED)
     {
         if (GameBit_Get(((SlidingdoorPlacement*)params)->openGameBit) != 0 &&
             (((SlidingdoorPlacement*)params)->gateGameBit == -1 ||
@@ -124,35 +133,35 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
             GameBit_Set(((SlidingdoorPlacement*)params)->openedGameBit, 1);
             if (playerNear != 0 || trickyNear != 0)
             {
-                ((SlidingdoorState*)state)->mode = 2;
+                ((SlidingdoorState*)state)->mode = SLIDINGDOOR_MODE_OPENING;
             }
         }
     }
-    else if (mode == 1)
+    else if (mode == SLIDINGDOOR_MODE_OPEN)
     {
         if ((GameBit_Get(((SlidingdoorPlacement*)params)->openGameBit) != 0 ||
                 (((SlidingdoorPlacement*)params)->gateGameBit != -1 &&
                     GameBit_Get(((SlidingdoorPlacement*)params)->gateGameBit) != 0)) &&
             playerNear == 0 && trickyNear == 0)
         {
-            ((SlidingdoorState*)state)->mode = 3;
+            ((SlidingdoorState*)state)->mode = SLIDINGDOOR_MODE_CLOSING;
         }
     }
 
     {
         register SlidingdoorState* fl = (SlidingdoorState*)state;
-        if (fl->mode == 2)
+        if (fl->mode == SLIDINGDOOR_MODE_OPENING)
         {
             if (animUpdate->triggerCommand == 2)
             {
-                fl->mode = 1;
+                fl->mode = SLIDINGDOOR_MODE_OPEN;
             }
         }
-        else if (fl->mode == 3)
+        else if (fl->mode == SLIDINGDOOR_MODE_CLOSING)
         {
             if (animUpdate->triggerCommand == 1)
             {
-                fl->mode = 0;
+                fl->mode = SLIDINGDOOR_MODE_CLOSED;
             }
         }
     }
@@ -160,9 +169,9 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     result = 0;
     {
         u32 modeAfter = ((u32)state[0] >> 5) & 7;
-        if (modeAfter != 2)
+        if (modeAfter != SLIDINGDOOR_MODE_OPENING)
         {
-            if (modeAfter != 3) result = 1;
+            if (modeAfter != SLIDINGDOOR_MODE_CLOSING) result = 1;
         }
     }
     return result;
@@ -178,7 +187,7 @@ void slidingdoor_update(u8* obj)
     if (((SlidingdoorPlacement*)data)->preemptEvent != 0)
     {
         u32 mode = (u32)((sub[0] >> 5) & 7);
-        if (mode != 0)
+        if (mode != SLIDINGDOOR_MODE_CLOSED)
         {
             (*gObjectTriggerInterface)->preempt((int)obj, ((SlidingdoorPlacement*)data)->preemptEvent);
         }
