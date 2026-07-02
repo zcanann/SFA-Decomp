@@ -19,8 +19,8 @@
 #include "main/dll/dll_801b1d84.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+#define DIMCANNON_OBJFLAG_HIDDEN 0x4000
+#define DIMCANNON_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
@@ -178,7 +178,7 @@ void dimcannon_init(int* obj, int* arg)
         {
             *(s16*)&((ObjHitsPriorityState*)p)->trackContactMask = 1;
         }
-        ((GameObject*)obj)->objectFlags |= 0x4000;
+        ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HIDDEN;
     }
     else
     {
@@ -230,7 +230,7 @@ void dimcannon_init(int* obj, int* arg)
         ((DimCannonState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
     }
 
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dimcannon_update(int* obj)
@@ -470,7 +470,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             {
                 ((DimCannonState*)state)->aimPitch -= framesThisStep;
             }
-            if ((getButtonsHeld(0) & PAD_BUTTON_A) && ((DimCannonState*)state)->aimYaw <= 0)
+            if ((getButtonsHeld(0) & 0x100) && ((DimCannonState*)state)->aimYaw <= 0)
             {
                 buttonDisable(0, 0x100);
                 if (Player_GetCurrentMagic((int)player) >= 1)
@@ -497,7 +497,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             (*gGameUIInterface)->runAirMeter(((DimCannonState*)state)->airMeterCharge);
             ((DimCannonState*)state)->unk98 = (f32)((DimCannonState*)state)->airMeterCharge * lbl_803DBEFC + lbl_803DBEF8;
-            if ((getButtonsJustPressedIfNotBusy(0) & PAD_BUTTON_A) ||
+            if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
                 ((DimCannonState*)state)->airMeterCharge == gDimCannonMaxCharge)
             {
                 if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
@@ -526,7 +526,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                     }
                 }
             }
-            if (done != 0 || (getButtonsJustPressed(0) & PAD_BUTTON_B))
+            if (done != 0 || (getButtonsJustPressed(0) & 0x200))
             {
                 buttonDisable(0, 0x200);
                 hudFn_8011f38c(0);
