@@ -27,6 +27,8 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
 
+#define LANDEDARWING_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct LandedArwingPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -533,7 +535,7 @@ void landed_arwing_update(int obj)
 void landed_arwing_init(int obj, int param)
 {
     LandedArwingState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
     state->sequenceState = 1;
     if (GameBit_Get(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
     {
