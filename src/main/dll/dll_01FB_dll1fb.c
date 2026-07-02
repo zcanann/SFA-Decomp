@@ -52,6 +52,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 extern void buttonDisable(int port, u32 mask);
+#define PAD_BUTTON_A 0x100
 extern f32 timeDelta;
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D04;
@@ -166,7 +167,7 @@ void dll_1FB_update(int* obj)
         (GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
