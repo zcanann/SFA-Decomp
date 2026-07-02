@@ -21,6 +21,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
+
 enum ArwSeqId
 {
     ARW_SEQID_BOMB = 0x80d,
@@ -240,7 +242,7 @@ void arwingandrossstuff_update(int obj)
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
 
-    if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & 0x1000) != 0)
+    if ((void*)arwing != NULL && (((GameObject*)arwing)->objectFlags & ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK) != 0)
     {
         Obj_FreeObject(obj);
         return;
