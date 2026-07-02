@@ -687,11 +687,11 @@ void CameraModeNormal_free(CameraObject* camera)
     gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
 }
 
-#pragma opt_common_subs off
-void camstatic_update(CameraObject* camera)
+void camstatic_update(u8* obj)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    GameObject* target;
+    CameraObject* camera = (CameraObject*)obj;
+    GameObject* target = (GameObject*)camera->anim.targetObj;
     float fa;
     int val;
     u32 angleDelta;
@@ -710,7 +710,6 @@ void camstatic_update(CameraObject* camera)
     u8 wallTraceScratch[116];
     u8 probeTraceScratch[112];
 
-    target = (GameObject*)camera->anim.targetObj;
     if (target == NULL)
     {
         return;
@@ -799,17 +798,15 @@ void camstatic_update(CameraObject* camera)
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         }
     }
+    if (gCamcontrolModeSettings->clampFlags.b7 != 0)
     {
-        CamcontrolModeSettings* cs = gCamcontrolModeSettings;
-        if (cs->clampFlags.b7 != 0)
+        if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->cameraCollisionActive != 0))
         {
-        if ((cs->targetActionFlags == 1) || (camera->cameraCollisionActive != 0))
-        {
-            cs->wallAvoidanceTimer += 1;
+            gCamcontrolModeSettings->wallAvoidanceTimer += 1;
         }
         else
         {
-            cs->wallAvoidanceTimer = 0;
+            gCamcontrolModeSettings->wallAvoidanceTimer = 0;
         }
         if (10 < gCamcontrolModeSettings->wallAvoidanceTimer)
         {
@@ -830,7 +827,6 @@ void camstatic_update(CameraObject* camera)
             camera->probePosZ = camera->anim.worldPosZ;
             gCamcontrolModeSettings->wallAvoidanceTimer = 0;
         }
-    }
     }
     if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
     {
@@ -862,12 +858,12 @@ void camstatic_update(CameraObject* camera)
             gCamcontrolModeSettings->collisionProbeTimer = 0;
         }
     }
-    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
+    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, gCamcontrolModeSettings->targetHeight, 0);
     yaw = 0x8000 - (u16)getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = yaw - gCamcontrolModeSettings->pitchOffset;
-    angleDelta = (u16)getAngle(camera->anim.worldPosY -
+    angleDelta = 0xffffu & getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                      dy);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
@@ -891,8 +887,6 @@ void camstatic_update(CameraObject* camera)
                                    &camera->anim.localPosY, &camera->anim.localPosZ,
                                    (u32)camera->anim.parent);
 }
-#pragma opt_common_subs reset
-
 
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 {
