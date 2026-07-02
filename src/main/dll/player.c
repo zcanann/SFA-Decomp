@@ -7157,6 +7157,8 @@ typedef struct
     int a[6];
 } UiMsgBlock;
 
+#pragma opt_propagation off
+#pragma opt_common_subs off
 void playerUpdate(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -7282,8 +7284,9 @@ void playerUpdate(int obj)
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
+                u32 acc = *(u32*)((char*)inner + 0x310);
                 int idx = i + 0x8b9;
-                *(u32*)((char*)inner + 0x310) |= 1 << *(u8*)((char*)inner + idx);
+                *(u32*)((char*)inner + 0x310) = acc | (1 << *(u8*)((char*)inner + idx));
             }
             *(u32*)&((PlayerState*)inner)->flags360 &= 0xfffff4ff;
             dt = timeDelta;
@@ -7321,9 +7324,7 @@ void playerUpdate(int obj)
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&m, 6);
             fn_802B0920(obj, inner);
             {
-                s16 nv = ((PlayerState*)inner)->stepEventTimer - framesThisStep;
-                ((PlayerState*)inner)->stepEventTimer = nv;
-                if (nv < 0)
+                if ((((PlayerState*)inner)->stepEventTimer -= framesThisStep) < 0)
                 {
                     ((PlayerState*)inner)->stepEventTimer =
                         lbl_803DC6A8[((PlayerState*)inner)->gaitStepLevel];
@@ -7352,21 +7353,24 @@ void playerUpdate(int obj)
                 Obj_IsObjectAlive(((PlayerState*)inner)->heldObj) == 0)
             {
                 ((PlayerState*)inner)->isHoldingObject = 0;
-                if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
-                    s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.seqId;
-                    if (typ == 0x3cf || typ == 0x662)
+                    GameObject* held = (GameObject*)((PlayerState*)inner)->heldObj;
+                    if (held != NULL)
                     {
-                        objThrowFn_80182504(((PlayerState*)inner)->heldObj);
+                        s16 typ = held->anim.seqId;
+                        if (typ == 0x3cf || typ == 0x662)
+                        {
+                            objThrowFn_80182504((int)held);
+                        }
+                        else
+                        {
+                            objSaveFn_800ea774((int)held);
+                        }
+                        *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x6) =
+                            *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x6) & ~0x4000;
+                        *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
+                        ((PlayerState*)inner)->heldObj = 0;
                     }
-                    else
-                    {
-                        objSaveFn_800ea774(((PlayerState*)inner)->heldObj);
-                    }
-                    *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x6) =
-                        *(s16*)((char*)((PlayerState*)inner)->heldObj + 0x6) & ~0x4000;
-                    *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
-                    ((PlayerState*)inner)->heldObj = 0;
                 }
             }
             if ((*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xc4) & 0x40) != 0)
@@ -7459,6 +7463,8 @@ void playerUpdate(int obj)
         }
     }
 }
+#pragma opt_propagation reset
+#pragma opt_common_subs reset
 
 extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
 
