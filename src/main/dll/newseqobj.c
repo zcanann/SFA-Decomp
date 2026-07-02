@@ -32,9 +32,12 @@ typedef struct
 {
     u8* tbl0;     /* 0x00 */
     u8* tbl4;     /* 0x04 */
-    u8  pad08[0x14]; /* 0x08 */
+    u8  pad08[0x08]; /* 0x08 */
+    u8* tbl10;    /* 0x10 */
+    u8  pad14[0x08]; /* 0x14 */
     u8* tbl1c;    /* 0x1c */
-    u8  pad20[0x08]; /* 0x20 */
+    u8* tbl20;    /* 0x20 */
+    u8* tbl24;    /* 0x24 */
 } FamilyTable;
 
 extern FamilyTable lbl_8031F16C[];   /* per-family table-of-tables, 0x28-byte rows */
@@ -88,21 +91,16 @@ typedef struct
 
 int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
 {
-    char* slot;
     u8* animRows;
     u8* rowsC;
     u8* rowsB;
     u8* trig;
     int ret;
-    u8 type;
 
-    slot = (char*)lbl_8031F16C;
-    type = state[0x33b];
-    slot += type * 0x28;
-    animRows = *(u8**)(slot + 0x10);
-    rowsC = *(u8**)(slot + 0x24);
-    rowsB = *(u8**)(slot + 0x1c);
-    trig = *(u8**)(slot + 0x20);
+    animRows = lbl_8031F16C[state[0x33b]].tbl10;
+    rowsC = lbl_8031F16C[state[0x33b]].tbl24;
+    rowsB = lbl_8031F16C[state[0x33b]].tbl1c;
+    trig = lbl_8031F16C[state[0x33b]].tbl20;
     ret = 0;
 
     if (state[0x33b] == 5)
