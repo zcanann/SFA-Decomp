@@ -9,6 +9,8 @@
 #include "main/resource.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
  * Only getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
@@ -332,7 +334,7 @@ void vfpplatform_init(int obj, int data)
     state->gameBitId = *(s16*)(data + 0x20);
     state->state = 0;
     state->axisMode = *(u8*)(data + 0x19);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void vfpcoreplat_init(int obj, int data)
@@ -354,7 +356,7 @@ void vfpcoreplat_init(int obj, int data)
                 lbl_803E6148 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         }
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 typedef struct SpellStoneUseState
@@ -452,7 +454,7 @@ void seqpoint_init(int obj, int data)
     state->mode = *(u8*)(data + 0x19);
     state->conditionBit = *(s16*)(data + 0x1e);
     state->disableBit = *(s16*)(data + 0x20);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -518,7 +520,7 @@ void vfpdoorswitch_init(int obj, int data)
     {
         *&((GameObject*)obj)->anim.bankIndex = 1;
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
