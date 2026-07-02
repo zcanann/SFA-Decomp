@@ -10,6 +10,8 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define BOMBPLANT_OBJFLAG_RENDERED 0x800
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -208,7 +210,7 @@ int bombplant_SeqFn(int* obj)
             v = ((BombplantPlacement*)base)->timerBase + randomGetRange(-0x32, 0x32);
             ((EnemyMushroomState*)state)->timer = v;
         }
-        if (((GameObject*)obj)->objectFlags & 0x800)
+        if (((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED)
         {
             (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
         }
@@ -228,7 +230,7 @@ void bombplant_init(void* obj, void* param, int flag)
 
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= BOMBPLANT_OBJFLAG_HITDETECT_DISABLED;
     ((GameObject*)obj)->animEventCallback = bombplant_SeqFn;
     ((BombPlantState*)state)->growTargetScale = ((GameObject*)obj)->anim.rootMotionScale;
 
@@ -399,7 +401,7 @@ void bombplant_update(void* obj)
             ((BombPlantState*)state)->growTimer =
                 (f32)(int)(((BombplantPlacement*)param)->timerBase + randomGetRange(-0x32, 0x32));
         }
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED) != 0)
         {
             (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);
         }
