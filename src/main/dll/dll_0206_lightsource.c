@@ -21,6 +21,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define LIGHTSOURCE_OBJFLAG_RENDERED 0x800
+
 /* The glow-light object referenced by LightSourceState.light is a shared
    ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
    in render/update are declared here, to keep the rest of this DLL's call
@@ -157,7 +160,7 @@ void lightsource_update(int obj)
         }
         break;
     }
-    if (b->lit != 0 && (((GameObject*)obj)->objectFlags & 0x800))
+    if (b->lit != 0 && (((GameObject*)obj)->objectFlags & LIGHTSOURCE_OBJFLAG_RENDERED))
     {
         b->fxTimer = b->fxTimer - timeDelta;
         if (b->fxTimer <= lbl_803E5E0C)
@@ -371,7 +374,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     {
         state->fxType = 0;
     }
-    obj->objectFlags |= 0x2000;
+    obj->objectFlags |= LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED;
     state->fxTimer = gLightSourceFxTimerPeriod;
     state->sparkTimer = 1.0f;
 }
