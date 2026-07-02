@@ -6525,7 +6525,10 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             i++;
         }
     }
-    tbl[i - 1] = 0xffffffff;
+    {
+        int last = i - 1;
+        tbl[last] = 0xffffffff;
+    }
     return 1;
 }
 
