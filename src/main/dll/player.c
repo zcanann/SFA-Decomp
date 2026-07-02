@@ -12890,7 +12890,7 @@ void fn_802AF7F8(int obj, int state)
     int inner;
     u8 result;
     void** p;
-    int i;
+    int z[2];
     int v;
     if (fn_802A9C0C(obj, state, 0x2d) != 0)
     {
@@ -12994,14 +12994,16 @@ void fn_802AF7F8(int obj, int state)
         if (lbl_803DE42C != 0 && getCurSeqNo() != 0)
         {
             ((PlayerState*)state)->animState = -1;
-            lbl_803DE42C = 0;
+            z[0] = 0;
+            lbl_803DE42C = z[0];
+            z[1] = z[0];
             p = gPlayerSpawnedObjects;
-            for (i = 0; i < 7; i++)
+            for (; z[1] < 7; z[1]++)
             {
-                if (p[i] != NULL)
+                if (p[z[1]] != NULL)
                 {
-                    Obj_FreeObject((int)p[i]);
-                    p[i] = NULL;
+                    Obj_FreeObject((int)p[z[1]]);
+                    p[z[1]] = NULL;
                 }
             }
             if (gPlayerResource != NULL)
@@ -14271,7 +14273,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             tbl[0] = lbl_803E7E68;
             tbl[1] = lbl_803E7E6C;
             objParticleFn_80099d84(obj, lbl_803E7E9C,
-                                   tbl[(((PlayerState*)inner)->unk7A8 >> 5) & 7] & 0xff,
+                                   tbl[((((PlayerState*)inner)->unk7A8 >> 5) & 7) - 1] & 0xff,
                                    lbl_803E7EE0, 0);
         }
         if ((((PlayerState*)inner)->pendingFxFlags & 1) != 0)
@@ -15195,6 +15197,7 @@ int fn_802A2918(int obj, int state, f32 fv)
         extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
         s16* tbl;
         int sel;
+        f32 jp[3];
         struct
         {
             f32 vx;
@@ -15277,10 +15280,10 @@ int fn_802A2918(int obj, int state, f32 fv)
         inner->climbStartY = ((GameObject*)obj)->anim.localPosY;
         {
             int joint = (int)Player_GetActiveModel(obj);
-            f32 camBuf[2], scratch, jp[3];
+            f32 scratch[2], camBuf[2];
             ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
-                                          jp, &scratch);
-            lbl_803DE438 = ((GameObject*)obj)->anim.localPosY + jp[0];
+                                          jp, scratch);
+            lbl_803DE438 = ((GameObject*)obj)->anim.localPosY + jp[1];
             lbl_803DE43C = inner->climbTargetY + lbl_803DAF88[1];
             camBuf[0] = inner->unk4E8;
             camBuf[1] = inner->climbBaseY;
@@ -15295,8 +15298,8 @@ int fn_802A2918(int obj, int state, f32 fv)
     {
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7FF4)
         {
-            ((int (*)(f32, f32, int, int))Object_ObjAnimAdvanceMove)(
-                ((PlayerState*)state)->baddie.moveSpeed, fv, obj, 0);
+            ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
+                obj, ((PlayerState*)state)->baddie.moveSpeed, fv, 0);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
             return 0x10;
         }
@@ -15318,8 +15321,8 @@ int fn_802A2918(int obj, int state, f32 fv)
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
     (obj, OBJANIM_STATE_INDEX_ACTIVE, OBJANIM_STATE_WORD_EVENT_COUNTDOWN,
      inner->unk544);
-    ((int (*)(f32, f32, int, int))Object_ObjAnimAdvanceMove)(
-        ((PlayerState*)state)->baddie.moveSpeed, fv, obj, 0);
+    ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
+        obj, ((PlayerState*)state)->baddie.moveSpeed, fv, 0);
     (*gCameraInterface)->overridePos(
         ((GameObject*)obj)->anim.localPosX,
         ((GameObject*)obj)->anim.currentMoveProgress *
@@ -15335,6 +15338,8 @@ int fn_8029FA24(int obj, int state, f32 fv)
     char* base = (char*)lbl_80332EC0;
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sub = inner->focusObject;
+    f32 j0[3];
+    f32 j1[3];
     f32 wpos[3];
 
     inner->flags360 &= ~0x2LL;
@@ -15360,9 +15365,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     {
         int sel;
         int joint;
-        f32 scratch;
-        f32 j1[3];
-        f32 j0[3];
+        f32 scratch[2];
 
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
@@ -15429,9 +15432,9 @@ int fn_8029FA24(int obj, int state, f32 fv)
                                lbl_803E7EA4, 4);
         joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale,
-                                      j0, &scratch);
+                                      j0, scratch);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject*)obj)->anim.rootMotionScale,
-                                      j1, &scratch);
+                                      j1, scratch);
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x28)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         wpos[0] = wpos[0] - ((GameObject*)obj)->anim.localPosX;
