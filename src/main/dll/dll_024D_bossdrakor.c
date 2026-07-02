@@ -24,6 +24,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
+
 void bossdrakor_release(void)
 {
 }
@@ -293,7 +295,7 @@ void bossdrakor_update(int obj)
                        (int)((BossDrakorState*)state)->attackTimerDuration);
         }
     }
-    if ((((GameObject*)obj)->objectFlags & 0x800) == 0)
+    if ((((GameObject*)obj)->objectFlags & BOSSDRAKOR_OBJFLAG_RENDERED) == 0)
     {
         ((BossDrakorState*)state)->homePosX = ((GameObject*)obj)->anim.localPosX;
         ((BossDrakorState*)state)->homePosY = ((GameObject*)obj)->anim.localPosY - lbl_803E655C;
