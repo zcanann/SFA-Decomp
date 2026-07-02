@@ -39,6 +39,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
 /* mirrors CfperchState for the fields used here, but unk6/unk9 are s8 (not u8)
@@ -739,7 +741,7 @@ void smallbasket_init(int obj, int def)
         ((CfperchState*)state)->leashRange = 0x14;
     }
     ((CfperchState*)state)->respawnTimer = 0x320;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
     ((CfperchState*)state)->subtype = ((SmallbasketObjectDef*)def)->subtype;
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
