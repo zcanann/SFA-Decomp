@@ -3,14 +3,6 @@
 #include "main/audio/sal_dsp.h"
 extern f32 powf(f32 x, f32 y);
 extern const s32 sReverbStdDelayLengths[4];
-extern const f32 axfx_reverb_std_f32_0;
-extern const f32 axfx_reverb_std_f32_1;
-extern const f32 axfx_reverb_std_f32_0p01;
-extern const f32 axfx_reverb_std_f32_10;
-extern const f32 axfx_reverb_std_f32_0p1;
-extern const f32 axfx_reverb_std_f32_32000;
-extern const f32 axfx_reverb_std_f32_0p05;
-extern const f32 axfx_reverb_std_f32_0p8;
 
 static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
 {
@@ -20,12 +12,12 @@ static void DLsetdelay(AXFX_REVSTD_DELAYLINE *dl, s32 lag)
     }
 }
 
-static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len, f32 zero)
+static void DLcreate(AXFX_REVSTD_DELAYLINE *dl, s32 len)
 {
     dl->length = len * 4;
     dl->inputs = salMalloc(len * 4);
     memset(dl->inputs, 0, len * 4);
-    dl->lastOutput = zero;
+    dl->lastOutput = 0.0f;
     DLsetdelay(dl, len >> 1);
     dl->inPoint = 0;
     dl->outPoint = 0;
@@ -35,49 +27,47 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
 {
     u8 i;
     u8 k;
-    f32 zero;
     f32 timeFactor;
 
-    if ((coloration < axfx_reverb_std_f32_0) || (coloration > *(f32 *)&axfx_reverb_std_f32_1) ||
-        (time < axfx_reverb_std_f32_0p01) || (time > axfx_reverb_std_f32_10) ||
-        (mix < axfx_reverb_std_f32_0) || (mix > axfx_reverb_std_f32_1) ||
-        (damping < axfx_reverb_std_f32_0) || (damping > axfx_reverb_std_f32_1) ||
-        (predelay < axfx_reverb_std_f32_0) || (predelay > axfx_reverb_std_f32_0p1)) {
+    if ((coloration < 0.0f) || (coloration > 1.0f) ||
+        (time < 0.01f) || (time > 10.0f) ||
+        (mix < 0.0f) || (mix > 1.0f) ||
+        (damping < 0.0f) || (damping > 1.0f) ||
+        (predelay < 0.0f) || (predelay > 0.1f)) {
         return 0;
     }
 
     memset(rv, 0, sizeof(AXFX_REVSTD_WORK));
-    timeFactor = axfx_reverb_std_f32_32000 * time;
-    zero = axfx_reverb_std_f32_0;
+    timeFactor = 32000.0f * time;
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 2; i++) {
-            DLcreate(&rv->C[i + k * 2], sReverbStdDelayLengths[i] + 2, zero);
+            DLcreate(&rv->C[i + k * 2], sReverbStdDelayLengths[i] + 2);
             DLsetdelay(&rv->C[i + k * 2], sReverbStdDelayLengths[i]);
             rv->combCoef[i + k * 2] =
-                powf(axfx_reverb_std_f32_10, (sReverbStdDelayLengths[i] * -3) / timeFactor);
+                powf(10.0f, (sReverbStdDelayLengths[i] * -3) / timeFactor);
         }
 
         for (i = 0; i < 2; i++) {
-            DLcreate(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2] + 2, zero);
+            DLcreate(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2] + 2);
             DLsetdelay(&rv->AP[i + k * 2], sReverbStdDelayLengths[i + 2]);
         }
-        rv->lpLastout[k] = zero;
+        rv->lpLastout[k] = 0.0f;
     }
 
     rv->allPassCoeff = coloration;
     rv->level = mix;
     rv->damping = damping;
-    if (rv->damping < axfx_reverb_std_f32_0p05) {
-        rv->damping = axfx_reverb_std_f32_0p05;
+    if (rv->damping < 0.05f) {
+        rv->damping = 0.05f;
     }
     {
-        f32 damp = axfx_reverb_std_f32_0p8 * rv->damping;
-        rv->damping = axfx_reverb_std_f32_1 - (axfx_reverb_std_f32_0p05 + damp);
+        f32 damp = 0.8f * rv->damping;
+        rv->damping = 1.0f - (0.05f + damp);
     }
 
-    if (axfx_reverb_std_f32_0 != predelay) {
-        rv->preDelayTime = axfx_reverb_std_f32_32000 * predelay;
+    if (0.0f != predelay) {
+        rv->preDelayTime = 32000.0f * predelay;
         for (i = 0; i < 3; i++) {
             rv->preDelayLine[i] = salMalloc(rv->preDelayTime * 4);
             memset(rv->preDelayLine[i], 0, rv->preDelayTime * 4);
