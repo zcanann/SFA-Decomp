@@ -769,7 +769,7 @@ void drawSkyStars(void)
     textRenderSetupFn_80079804();
     gxBlendFn_800789ac();
     color = *(FogColor*)&gNewCloudStarFogColor;
-    GXSetFog(0, lbl_803DF28C, lbl_803DF28C, lbl_803DF28C, lbl_803DF28C, color);
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), 0);
     GXSetCurrentMtx(0);
