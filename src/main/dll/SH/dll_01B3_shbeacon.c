@@ -21,6 +21,10 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SHBEACON_OBJFLAG_HIDDEN 0x4000
+#define SHBEACON_OBJFLAG_RENDERED 0x800
+#define SHBEACON_OBJFLAG_FREED 0x40
+
 typedef struct ShBeaconPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -64,7 +68,7 @@ int sh_beacon_SeqFn(int obj)
     if (((ShBeaconState*)extra)->seqTimer >= lbl_803E5528)
     {
         ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer - lbl_803E5528;
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
             fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
         }
@@ -85,7 +89,7 @@ void sh_beacon_free(int obj, int keepChild)
     if (keepChild == 0)
     {
         void* p = *(void**)&((ShBeaconState*)extra)->childObj;
-        if (p != NULL && (((GameObject*)p)->objectFlags & 0x40) == 0)
+        if (p != NULL && (((GameObject*)p)->objectFlags & SHBEACON_OBJFLAG_FREED) == 0)
         {
             Obj_FreeObject((int)p);
         }
@@ -99,7 +103,7 @@ void sh_beacon_init(int obj, int defData)
 
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)(defData + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SHBEACON_OBJFLAG_HIDDEN);
 
     ((ShBeaconState*)state)->mode = GameBit_Get(((ShBeaconPlacement*)defData)->litGameBit);
     if (((ShBeaconState*)state)->mode == SH_BEACON_MODE_UNLIT)
@@ -164,7 +168,7 @@ void sh_beacon_update(int obj)
         if (((ShBeaconState*)state2)->seqTimer >= lbl_803E5528)
         {
             ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer - lbl_803E5528;
-            if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+            if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
             {
                 fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
             }
@@ -176,7 +180,7 @@ void sh_beacon_update(int obj)
             Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             ((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping = 1;
         }
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
             ((ShBeaconState*)state)->modeTimer = ((ShBeaconState*)state)->modeTimer + timeDelta;
             if (((ShBeaconState*)state)->modeTimer > lbl_803E5530)
@@ -232,7 +236,7 @@ void sh_beacon_update(int obj)
     if (((ShBeaconState*)state)->fadeTimer > lbl_803E5538)
     {
         ((ShBeaconState*)state)->fadeTimer = ((ShBeaconState*)state)->fadeTimer - timeDelta;
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & SHBEACON_OBJFLAG_RENDERED) != 0)
         {
             fn_80098B18(obj, lbl_803E553C * ((GameObject*)obj)->anim.rootMotionScale, 3, 0, 0, 0);
         }
