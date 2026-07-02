@@ -597,7 +597,7 @@ extern const f32 gNewCloudPi;
 extern const f32 lbl_803DF1F4;
 extern const f32 lbl_803DF1F8;
 
-void snowCloudInitFlakes(f32* buf, int cloudId, f32 a, f32 b)
+void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
 {
     u8* p;
     SnowQuad* e;
@@ -1656,8 +1656,8 @@ void newClouds(u8* params, void* owner, f32 x, f32 y, f32 z)
     {
         ((NewCloud*)NC_CLOUD)->lightningTimer = 0x64;
     }
-    snowCloudInitFlakes((f32*)(NC_CLOUD + 8), id, ((NewCloud*)NC_CLOUD)->cloudHeight,
-                        ((NewCloud*)NC_CLOUD)->scale);
+    snowCloudInitFlakes((f32*)(NC_CLOUD + 8), ((NewCloud*)NC_CLOUD)->cloudHeight,
+                        ((NewCloud*)NC_CLOUD)->scale, id);
     snowCloudBuildBoxVerts(&((NewCloud*)NC_CLOUD)->flakeMinX, ((NewCloud*)NC_CLOUD)->cloudHeight,
                            ((NewCloud*)NC_CLOUD)->scale);
     *(void**)(NC_CLOUD + 4) = mmAlloc(((NewCloud*)NC_CLOUD)->flakeCount * 0x18, 0x17, 0);
@@ -2070,24 +2070,25 @@ extern const f32 lbl_803DF270;
 extern const f32 lbl_803DF274;
 extern const f32 lbl_803DF278;
 
-#define D7_CLOUD (*(u8 **)((u8 *)(clouds + i) + 16))
+#define D7_CLOUD (*pp)
 
+#pragma opt_propagation off
 void dll_07_func06(void)
 {
     s16* cam;
-    u8* p;
-    f32* py;
-    f32* pz;
+    void** clouds;
+    u8** pp;
     int i;
-    f32* m;
     u8* nearestCloud;
     u8 activeCount;
+    int off;
+    u8* p;
+    f32* m;
     f32 wrap;
     f32 mag;
     f32 t;
     f32 rot;
     f32 nearest;
-    void** clouds;
     f32 inpos[3];
     f32 wind[3];
     f32 pos[3];
@@ -2107,9 +2108,11 @@ void dll_07_func06(void)
     f32 mtx[12];
 
     clouds = gNewCloudLayerTextures;
-    nearestCloud = NULL;
+    i = 0;
+    off = 0;
     cam = Camera_GetCurrentViewSlot();
     activeCount = 0;
+    nearestCloud = NULL;
     nearest = gNewCloudNearestInit;
     if (gNewCloudInitialized == 0)
     {
@@ -2127,21 +2130,23 @@ void dll_07_func06(void)
     }
     gNewCloudBlizzardActivePrev = gNewCloudBlizzardActive;
     gNewCloudBlizzardActive = 0;
-    py = &pos[1];
-    pz = &pos[2];
-    for (i = 0; i < 8; i++)
+    while (i < 8)
     {
-        p = D7_CLOUD;
+        pp = (u8**)((u8*)clouds + off);
+        pp += 4;
+        p = *pp;
         if (p != NULL &&
-            (*(u8**)p == NULL || !(*(u16*)(*(u8**)p + 0xb0) & 0x40)))
+            (*(u8**)p == NULL || (*(u16*)(*(u8**)p + 0xb0) & 0x40)))
         {
             snowFreeSnowCloud(((NewCloud*)p)->cloudId);
+            i++;
+            off += 4;
             continue;
         }
         if (p != NULL && ((NewCloud*)p)->active != 0)
         {
-            snowCloudInitFlakes((f32*)(p + 8), i, ((NewCloud*)p)->cloudHeight,
-                                ((NewCloud*)p)->scale);
+            snowCloudInitFlakes((f32*)(p + 8), ((NewCloud*)p)->cloudHeight,
+                                ((NewCloud*)p)->scale, i);
         }
         else if (p != NULL && ((NewCloud*)p)->unk144F == 0)
         {
@@ -2176,7 +2181,7 @@ void dll_07_func06(void)
             }
             if (*(u8**)D7_CLOUD != NULL)
             {
-                Obj_GetWorldPosition((u32)*(u8 **)D7_CLOUD, &pos[0], py, pz);
+                Obj_GetWorldPosition((u32)*(u8 **)D7_CLOUD, &pos[0], &pos[1], &pos[2]);
             }
             if (((NewCloud*)D7_CLOUD)->unk1452 != 0 && cam != NULL)
             {
@@ -2194,7 +2199,8 @@ void dll_07_func06(void)
                     args.f8 = 0xffff - *cam;
                     vecRotateZXY(&args.f8, vec);
                     pos[0] = *(f32*)((u8*)cam + 0x44) + vec[0];
-                    pos[1] = (*(f32*)((u8*)cam + 0x48) - gNewCloudCameraYOffset) + vec[1];
+                    t = *(f32*)((u8*)cam + 0x48) - gNewCloudCameraYOffset;
+                    pos[1] = t + vec[1];
                     pos[2] = *(f32*)((u8*)cam + 0x4c) + vec[2];
                 }
                 else
@@ -2292,6 +2298,8 @@ void dll_07_func06(void)
         {
             activeCount++;
         }
+        i++;
+        off += 4;
     }
     if (activeCount != 0)
     {
@@ -2310,19 +2318,17 @@ void dll_07_func06(void)
             lbl_803DD19C = NULL;
         }
     }
-    t = lbl_803DF254 * timeDelta + gNewCloudScrollPhaseA;
-    gNewCloudScrollPhaseA = t;
+    gNewCloudScrollPhaseA += lbl_803DF254 * timeDelta;
     wrap = *(volatile f32*)&gNewCloudScrollWrap;
-    if (t > wrap)
+    if (gNewCloudScrollPhaseA > wrap)
     {
-        gNewCloudScrollPhaseA = t - wrap;
+        gNewCloudScrollPhaseA -= wrap;
     }
-    t = lbl_803DF25C * timeDelta + gNewCloudScrollPhaseB;
-    gNewCloudScrollPhaseB = t;
+    gNewCloudScrollPhaseB += lbl_803DF25C * timeDelta;
     wrap = *(volatile f32*)&gNewCloudScrollWrap;
-    if (t > wrap)
+    if (gNewCloudScrollPhaseB > wrap)
     {
-        gNewCloudScrollPhaseB = t - wrap;
+        gNewCloudScrollPhaseB -= wrap;
     }
     t = gNewCloudScrollPhaseC - lbl_803DF260 * timeDelta;
     gNewCloudScrollPhaseC = t;
@@ -2351,9 +2357,9 @@ void dll_07_func06(void)
                     -(lbl_803DF20C * (((NewCloud*)nearestCloud)->driftOffset / lbl_803DF210) +
                         lbl_803DF208)) /
                 gNewCloudFlashRotScale;
-            *(f32*)((u8*)clouds + 0xd8) = lbl_803DF1A0;
-            *(f32*)((u8*)clouds + 0xdc) = lbl_803DF244;
-            *(f32*)((u8*)clouds + 0xe0) = lbl_803DF1A0;
+            ((f32*)clouds)[54] = lbl_803DF1A0;
+            ((f32*)clouds)[55] = lbl_803DF244;
+            ((f32*)clouds)[56] = lbl_803DF1A0;
             m = Camera_GetViewRotationMatrix();
             if (((NewCloud*)nearestCloud)->cloudType == 0)
             {
@@ -2374,8 +2380,8 @@ void dll_07_func06(void)
                 PSMTXRotRad(mtx, 0x7a, rot);
             }
             PSMTXConcat((void*)m, (void*)mtx, (void*)mtx);
-            PSMTXMultVec(mtx, (f32*)((u8*)clouds + 0xd8),
-                         (f32*)((u8*)clouds + 0xd8));
+            PSMTXMultVec(mtx, (f32*)((u32)clouds + 0xd8),
+                         (f32*)((u32)clouds + 0xd8));
             if (lbl_803DD190 < lbl_803DF278)
             {
                 lbl_803DD190 = lbl_803DD190 + gSnowFlakeSizeLarge;
@@ -2391,6 +2397,7 @@ void dll_07_func06(void)
         Music_Trigger(0xeb, 0);
     }
 }
+#pragma opt_propagation reset
 
 extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
