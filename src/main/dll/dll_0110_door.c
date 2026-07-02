@@ -10,6 +10,12 @@
 
 #define DOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* DoorState.phase values (see DoorState.phase comment). */
+#define DOOR_PHASE_IDLE 0
+#define DOOR_PHASE_LATCHED 1
+#define DOOR_PHASE_OPENING 2
+#define DOOR_PHASE_CLOSING 3
+
 typedef struct DoorObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -88,7 +94,7 @@ void Door_init(int* obj, u8* def)
     }
     else
     {
-        state->phase = 0;
+        state->phase = DOOR_PHASE_IDLE;
     }
     state->flags = 0;
     if (GameBit_Get(((DoorObjectDef*)def)->openGameBit) != 0) state->flags = (u8)(state->flags | 1);
@@ -139,7 +145,7 @@ void Door_update(int obj)
     if (state->initPending != 0)
     {
         triggerId = def->triggerSequenceId;
-        if ((triggerId != 0) && (state->phase != 0))
+        if ((triggerId != 0) && (state->phase != DOOR_PHASE_IDLE))
         {
             triggerArg = def->triggerArg & 0x7f;
             (*gObjectTriggerInterface)->preempt(obj, triggerId);
@@ -193,7 +199,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
         }
     }
-    if (state->phase == 0)
+    if (state->phase == DOOR_PHASE_IDLE)
     {
         opened = GameBit_Get(def->openGameBit);
         closeReady = 0;
@@ -219,31 +225,31 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (state->flags == 3)
         {
-            state->phase = 2;
+            state->phase = DOOR_PHASE_OPENING;
             if (state->openSfx != 0)
             {
                 Sfx_PlayFromObject(obj, state->openSfx);
             }
         }
     }
-    else if (state->phase == 1)
+    else if (state->phase == DOOR_PHASE_LATCHED)
     {
         if (GameBit_Get(def->openGameBit) == 0)
         {
-            state->phase = 3;
+            state->phase = DOOR_PHASE_CLOSING;
             if (state->openSfx != 0)
             {
                 Sfx_PlayFromObject(obj, state->openSfx);
             }
         }
     }
-    if (state->phase == 2)
+    if (state->phase == DOOR_PHASE_OPENING)
     {
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             if (animUpdate->eventIds[i] == 2)
             {
-                state->phase = 1;
+                state->phase = DOOR_PHASE_LATCHED;
                 if (def->latchGameBit != -1)
                 {
                     GameBit_Set(def->latchGameBit, 1);
@@ -259,13 +265,13 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
         }
     }
-    else if (state->phase == 3)
+    else if (state->phase == DOOR_PHASE_CLOSING)
     {
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             if (animUpdate->eventIds[i] == 1)
             {
-                state->phase = 0;
+                state->phase = DOOR_PHASE_IDLE;
                 state->flags = 0;
                 if (def->latchGameBit != -1)
                 {
@@ -283,7 +289,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
     }
     ret = 0;
-    if ((state->phase != 2) && (state->phase != 3))
+    if ((state->phase != DOOR_PHASE_OPENING) && (state->phase != DOOR_PHASE_CLOSING))
     {
         ret = 1;
     }
