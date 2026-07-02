@@ -68,7 +68,6 @@ typedef struct LoadingScreenTexture
 
 void runLoadingScreens(void)
 {
-    int alpha;
     int textureSlot;
     u8 dvdErrorActive;
     u32 color;
@@ -80,9 +79,10 @@ void runLoadingScreens(void)
 
     if (gTitleScreenInitLoadingFrameCounter < 0xf0)
     {
+        u8 alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x1e)
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * gTitleScreenInitLoadingFrameCounter) / gTitleScreenInitFadeFrames);
+            alpha = ((gTitleScreenInitAlphaMax * gTitleScreenInitLoadingFrameCounter) / gTitleScreenInitFadeFrames);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0xd2)
         {
@@ -90,7 +90,7 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
+            alpha = ((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) / gTitleScreenInitFadeFrames);
         }
 
         textureSlot = gTitleScreenInitLoadingTextures[0];
@@ -112,6 +112,7 @@ void runLoadingScreens(void)
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x1e0)
     {
+        int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x10e)
         {
             alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) / gTitleScreenInitFadeFrames);
@@ -130,6 +131,7 @@ void runLoadingScreens(void)
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x258)
     {
+        int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x1fe)
         {
             alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) / gTitleScreenInitFadeFrames);
@@ -148,7 +150,7 @@ void runLoadingScreens(void)
     }
 
     dvdErrorActive = gDvdErrorPauseActive;
-    if (dvdErrorActive != 0)
+    if (dvdErrorActive & 0xffu)
     {
         gTitleScreenInitDvdErrorLatched = 1;
     }
