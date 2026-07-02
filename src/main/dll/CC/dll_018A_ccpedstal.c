@@ -10,6 +10,8 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+
+#define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000
 void ccpedstal_updateGameBitGate(int obj, u8* state2);
 void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -49,7 +51,7 @@ void ccpedstal_init(int* obj, u8* params)
 {
     CcpedstalState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((u32)params[0x1a] << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCPEDSTAL_OBJFLAG_HIDDEN);
     switch (*(int*)(params + 0x14))
     {
     case PEDSTAL_DEF_ALT:
