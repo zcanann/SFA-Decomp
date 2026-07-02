@@ -4639,6 +4639,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
     return -1;
 }
 
+#pragma opt_common_subs off
 int fn_802ABAE8(int obj, int state, int inner, f32 fv)
 {
     int d = ((PlayerState*)inner)->targetYaw - (u16)((PlayerState*)inner)->prevTargetYaw;
@@ -4771,6 +4772,7 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
         ((PlayerState*)inner)->headYaw = *(s16*)((int)inner + 0x4D6) + k;
     }
 }
+#pragma opt_common_subs reset
 
 void fn_80296EB4(int obj, int newParent)
 {
