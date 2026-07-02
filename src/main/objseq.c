@@ -2642,7 +2642,8 @@ int ObjSeq_update(u8* obj, f32 t)
     }
 
     p = seq + 6;
-    for (i = 3; i != 0; i--)
+    i = 3;
+    while (p -= 2, i-- != 0)
     {
         if (*(s16*)(p + 0x30) > 0)
         {
@@ -2653,7 +2654,6 @@ int ObjSeq_update(u8* obj, f32 t)
                 Sfx_RemoveLoopedObjectSound((u32)obj, (u16) * (s16*)(p + 0x38));
             }
         }
-        p -= 2;
     }
     (base + (s8)((ObjSeqState*)seq)->slot)[0x3cf4] = 0;
 
