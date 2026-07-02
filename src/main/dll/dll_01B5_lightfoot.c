@@ -17,6 +17,9 @@
 #include "main/dll/player_80295318_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define LIGHTFOOT_OBJFLAG_RENDERED 0x800
+
 typedef struct LightfootState
 {
     u8 pad0[0x40C - 0x0];
@@ -254,7 +257,7 @@ void lightfoot_update(int obj)
             ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
-        if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & 0x800))
+        if ((((GroundBaddieState*)inner)->configFlags & 1) && (((GameObject*)obj)->objectFlags & LIGHTFOOT_OBJFLAG_RENDERED))
         {
             int a40c = ((LightfootState*)inner)->unk40C;
             ((LightfootSub*)a40c)->animTimer -= timeDelta;
@@ -294,7 +297,7 @@ void lightfoot_init(int obj, int p2, int p3)
     ((GameObject*)obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED);
     sub = ((LightfootState*)inner)->unk40C;
     ((LightfootSub*)sub)->unk26 = -1;
     ((LightfootSub*)sub)->unk28 = ((LightfootSub*)sub)->unk26;
