@@ -9,6 +9,8 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
 
+#define DFPWALLBAR_OBJFLAG_HIDDEN 0x4000
+
 typedef struct ChukaPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -224,7 +226,7 @@ void chuka_init(int obj, int params)
         ((GameObject*)obj)->anim.rotZ = placement->rotZInit;
     }
 
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= DFPWALLBAR_OBJFLAG_HIDDEN;
     state->linkedObject = 0;
 
     modeTable = gChukaModeTable;
