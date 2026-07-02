@@ -1254,6 +1254,7 @@ extern void GXBegin(int type, int fmt, int n);
 #define GX_BL_ONE 1
 #define GX_BL_SRCALPHA 4
 #define GX_LO_NOOP 5
+#define GX_LEQUAL 3
 #define GX_ALWAYS 7
 #define GX_AOP_AND 0
 #define GX_CULL_NONE 0
@@ -1276,7 +1277,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();
-    gxSetZMode_(1, 3, 0);
+    gxSetZMode_(1, GX_LEQUAL, 0);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
