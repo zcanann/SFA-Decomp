@@ -737,16 +737,16 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].flags = 1;
     e[1].tex = 0;
     e[1].mode = 0x2008000;
-    e[1].x = lbl_803E085C;
-    e[1].y = lbl_803E0860;
-    e[1].z = lbl_803E085C;
+    e[1].x = 125.0f;
+    e[1].y = 255.0f;
+    e[1].z = 125.0f;
     e[2].layer = 0;
     e[2].flags = 0;
     e[2].tex = 0;
     e[2].mode = 0x2080000;
     e[2].x = lbl_803E0858;
-    e[2].y = lbl_803E0864;
-    e[2].z = lbl_803E0868;
+    e[2].y = 17.0f;
+    e[2].z = -17.0f;
     e[3].layer = 0;
     e[3].flags = 9;
     e[3].tex = &base[0x8c];
@@ -765,7 +765,7 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].flags = 9;
     e[5].tex = &base[0x8c];
     e[5].mode = 2;
-    t = lbl_803E0870 + lbl_803E086C * (f32)(int)
+    t = 2.6f + 0.05f * (f32)(int)
     randomGetRange(0, 0xc);
     e[5].x = t;
     e[5].y = t;
@@ -774,21 +774,21 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[6].flags = 0;
     e[6].tex = 0;
     e[6].mode = 0x10000000;
-    e[6].x = lbl_803E0874;
-    e[6].y = lbl_803E0878;
+    e[6].x = 28.0f;
+    e[6].y = 2.0f;
     e[6].z = lbl_803E0858;
     e[7].layer = 1;
     e[7].flags = 8;
     e[7].tex = &base[0xa0];
     e[7].mode = 0x4000;
     e[7].x = lbl_803E0858;
-    e[7].y = lbl_803E087C;
+    e[7].y = -4.0f;
     e[7].z = lbl_803E0858;
     e[8].layer = 1;
     e[8].flags = 9;
     e[8].tex = &base[0x8c];
     e[8].mode = 0x100;
-    e[8].x = lbl_803E0880;
+    e[8].x = 600.0f;
     e[8].y = lbl_803E0858;
     e[8].z = lbl_803E0858;
     e[9].layer = 1;
@@ -797,26 +797,26 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[9].mode = 0x400000;
     e[9].x = lbl_803E0858;
     e[9].y = lbl_803E0858;
-    e[9].z = lbl_803E0884;
+    e[9].z = -200.0f;
     e[10].layer = 1;
     e[10].flags = 0;
     e[10].tex = 0;
     e[10].mode = 0x2080000;
     e[10].x = lbl_803E0858;
-    e[10].y = lbl_803E0864;
-    e[10].z = lbl_803E0884;
+    e[10].y = 17.0f;
+    e[10].z = -200.0f;
     e[11].layer = 2;
     e[11].flags = 8;
     e[11].tex = &base[0xa0];
     e[11].mode = 0x4000;
     e[11].x = lbl_803E0858;
-    e[11].y = lbl_803E087C;
+    e[11].y = -4.0f;
     e[11].z = lbl_803E0858;
     e[12].layer = 2;
     e[12].flags = 9;
     e[12].tex = &base[0x8c];
     e[12].mode = 0x100;
-    e[12].x = lbl_803E0880;
+    e[12].x = 600.0f;
     e[12].y = lbl_803E0858;
     e[12].z = lbl_803E0858;
     e[13].layer = 2;
@@ -837,12 +837,12 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.ctx = sourceObj;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0858;
-    buf.pos[1] = lbl_803E0864;
-    buf.pos[2] = lbl_803E0888;
+    buf.pos[1] = 17.0f;
+    buf.pos[2] = -40.0f;
     buf.col[0] = lbl_803E0858;
     buf.col[1] = lbl_803E0858;
     buf.col[2] = lbl_803E0858;
-    buf.scale = lbl_803E088C;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 9;
@@ -864,14 +864,14 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
         if ((void*)sourceObj != NULL)
         {
             buf.pos[0] = lbl_803E0858 + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0864 + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0888 + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[1] = 17.0f + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = -40.0f + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
             buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[1] = 17.0f + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = -40.0f + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], 0x90, 0);
