@@ -2221,14 +2221,14 @@ int objUpdateOpacity(char* obj)
                                   &o1, &o2, &o3, &sz, &o5, &o6);
         sz = __fabsf(sz);
         sz = sz * gMapBlockWorldSize;
-        if (sz < retraceCount_803DEBE0)
+        if (sz < 10.0f)
         {
             *(u8*)(obj + 0x37) = 0;
             return 0;
         }
-        if (sz < retraceQueue_803DEBE8)
+        if (sz < 15.0f)
         {
-            alpha = (int)(((f32)alpha * (sz - retraceCount_803DEBE0)) / flushFlag_803DEBE4);
+            alpha = (int)(((f32)alpha * (sz - 10.0f)) / 5.0f);
         }
         *(u8*)(obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
     }
