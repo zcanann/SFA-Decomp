@@ -1554,15 +1554,16 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     int i;
     int j;
     int idx;
+    int bank;
+    int key;
 
     for (idx = 0; idx < count;)
     {
-        int key = *keys;
+        key = *keys;
         found = NULL;
         table = (void*)((GameObject*)obj)->anim.modelInstance;
         if (table != NULL)
         {
-            int bank;
             i = 0;
             j = 0;
             n = (s32)(u32)((ObjDef*)table)->jointCount;
