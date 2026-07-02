@@ -431,7 +431,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     rotation[2] = 0;
     rotation[1] = 0;
     handles = gSfxplayerEffectHandles;
-    for (i = 0; i < 4; i = i + 1)
+    for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i = i + 1)
     {
         if (*handles != 0)
         {
