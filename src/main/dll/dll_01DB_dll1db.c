@@ -31,6 +31,8 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define DLL1DB_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
@@ -253,5 +255,5 @@ void dll_1DB_init(void* obj, void* p)
     {
         ((Dll1DBState*)sub)->state = STATE_TOP;
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DLL1DB_OBJFLAG_HITDETECT_DISABLED;
 }
