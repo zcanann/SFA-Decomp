@@ -384,7 +384,7 @@ void renderMapBlock(int* o, u8 type)
                 state[4] = pos2 + 4;
                 cnt = (word2 >> (pos2 & 7)) & 0xf;
                 for (j = 0; j < cnt; j++)
-                    ((int volatile*)state)[4] = state[4] + 8;
+                    ((int *)state)[4] = state[4] + 8;
                 break;
             }
         case 5:
@@ -3328,7 +3328,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         return 1;
     }
     {
-        f32 p1 = *(volatile f32*)(p + 1);
+        f32 p1 = *(f32*)(p + 1);
         if (p1 < __AR_Size && p1 > lbl_803DECEC)
     {
         switch ((u8)type)
@@ -3348,7 +3348,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                     if (__AR_Callback != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = *(volatile f32*)&__AR_Callback;
+                    d1[1] = *(f32*)&__AR_Callback;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];

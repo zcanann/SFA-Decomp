@@ -1547,7 +1547,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++)
     {
-        *(volatile int*)&state[4] = state[4] + 8;
+        *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     mapBlockRender_drawLightmapIndirectPasses(obj, newR, state, p3);
@@ -1592,7 +1592,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++)
     {
-        *(volatile int*)&state[4] = state[4] + 8;
+        *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
@@ -1644,7 +1644,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++)
     {
-        *(volatile int*)&state[4] = state[4] + 8;
+        *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     mapBlockRender_callList(1, 1, obj, newR, state, p3);

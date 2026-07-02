@@ -1543,7 +1543,7 @@ void drawViewFinderHud(void)
             ? lbl_803E1E3C
             : ((v > lbl_803E1E68) ? lbl_803E1E68 : v);
     gViewFinderFadeLevel = v;
-    if (v == *(volatile f32 *)&lbl_803E1E3C) return;
+    if (v == *(f32 *)&lbl_803E1E3C) return;
     gViewFinderBaseY = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
     gViewFinderCamAngle = -*(s16*)slot;
 

@@ -6585,7 +6585,7 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
     {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 5);
     }
-    if (*(volatile int*)&lbl_803DCD90 == 0)
+    if (*(int*)&lbl_803DCD90 == 0)
     {
         inputSel = 0xc;
     }
