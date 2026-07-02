@@ -1241,8 +1241,8 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
                     1.5f * (f32)(u32) * (u8*)((char*)*(int*)((char*)o + 0x4c) + 0x19);
                 if (dist < thresh)
                 {
-                    ratio = lbl_803E7EA4;
-                    if (thresh > lbl_803E7EA4)
+                    ratio = 0.0f;
+                    if (thresh > 0.0f)
                     {
                         ratio = (thresh - dist) / thresh;
                     }
@@ -1291,16 +1291,20 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
     if (any)
     {
         f32 mag;
+        f32 k;
         sumC = sumC / (f32)(int)
         any;
         sumS = sumS / (f32)(int)
         any;
         inner->avoidVelX =
-            inner->avoidVelX - lbl_803E7F6C * sumC;
+            inner->avoidVelX - (k = lbl_803E7F6C) * sumC;
         inner->avoidVelZ =
-            inner->avoidVelZ - lbl_803E7F6C * sumS;
-        inner->avoidVelX = inner->avoidVelX * lbl_803E7F68;
-        inner->avoidVelZ = inner->avoidVelZ * lbl_803E7F68;
+            inner->avoidVelZ - k * sumS;
+        {
+            f32 k;
+            inner->avoidVelX = inner->avoidVelX * (k = lbl_803E7F68);
+            inner->avoidVelZ = inner->avoidVelZ * k;
+        }
         mag = sqrtf(inner->avoidVelX * inner->avoidVelX +
             inner->avoidVelZ * inner->avoidVelZ);
         if (mag > lbl_803E7F1C)
@@ -1314,8 +1318,8 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
     }
     else
     {
-        *outX = lbl_803E7EA4;
-        *outZ = lbl_803E7EA4;
+        *outX = 0.0f;
+        *outZ = 0.0f;
     }
 }
 
