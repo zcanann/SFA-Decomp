@@ -6,6 +6,7 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
@@ -317,7 +318,7 @@ void fn_801A5D88(int obj, int explosionVariant)
     ObjHitbox_SetSphereRadius(obj,
                               (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
     player = Obj_GetPlayerObject();
-    if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
         dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
         if (dist <= gRollingBarrelShakeMaxDist)
