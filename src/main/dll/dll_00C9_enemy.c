@@ -29,6 +29,9 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
+#define ENEMY_OBJFLAG_PARENT_SLACK 0x1000
+#define ENEMY_OBJFLAG_FREED 0x40
+
 typedef struct BaddieAfterUpdateBonesCbState
 {
     u8 pad0[0x2B0 - 0x0];
@@ -1431,7 +1434,7 @@ void fn_8014B878(int* arg1, int* sub)
     tricky = getTrickyObject();
     target = *(int**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
-        (target != player || (((GameObject*)player)->objectFlags & 0x1000) == 0))
+        (target != player || (((GameObject*)player)->objectFlags & ENEMY_OBJFLAG_PARENT_SLACK) == 0))
     {
         ((TrickyState*)sub)->flags2DC &= ~0x800000LL;
         camTarget = (int*)(*gCameraInterface)->getOverrideTarget();
@@ -1471,7 +1474,7 @@ void fn_8014B878(int* arg1, int* sub)
     {
         ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
         if ((((TrickyState*)sub)->controlFlags & 0x10000) != 0 ||
-            (*(int**)&((TrickyState*)sub)->actionTargetObj == player && (((GameObject*)player)->objectFlags & 0x1000) !=
+            (*(int**)&((TrickyState*)sub)->actionTargetObj == player && (((GameObject*)player)->objectFlags & ENEMY_OBJFLAG_PARENT_SLACK) !=
                 0))
         {
             ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
@@ -2131,7 +2134,7 @@ void enemy_update(int obj)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
-    else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & 0x40) != 0)
+    else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & ENEMY_OBJFLAG_FREED) != 0)
     {
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
