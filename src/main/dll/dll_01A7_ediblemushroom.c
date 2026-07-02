@@ -10,6 +10,9 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
+#define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
+#define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -153,7 +156,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             t = (((EdibleMushroomState*)state)->tailSwingFxTimer -= timeDelta);
             if (t <= lbl_803E5288)
             {
-                if (((GameObject*)obj)->objectFlags & 0x800)
+                if (((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_RENDERED)
                 {
                     fx.x = ((GameObject*)obj)->anim.worldPosX;
                     fx.y = lbl_803E528C + ((GameObject*)obj)->anim.worldPosY;
@@ -352,7 +355,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             {
                 fx.x = lbl_803E5294;
                 fx.y = lbl_803E529C;
-                if (((GameObject*)obj)->objectFlags & 0x800)
+                if (((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_RENDERED)
                 {
                     (*gPartfxInterface)->spawnObject(obj, 0x51d, &fx, 2, -1,
                                                      NULL);
@@ -361,7 +364,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             }
             if (GameBit_Get(0x12e) == 0)
             {
-                if (!(((GameObject*)player)->objectFlags & 0x1000))
+                if (!(((GameObject*)player)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK))
                 {
                     if (Vec_xzDistance((f32*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX) <
                         lbl_803E52A4)
@@ -545,7 +548,7 @@ void ediblemushroom_hitDetect(u8* obj)
     state = ((GameObject*)obj)->extra;
     mapObj = *(u8**)&((GameObject*)obj)->anim.placementData;
 
-    if (((((GameObject*)obj)->objectFlags & 0x1000) == 0) &&
+    if (((((GameObject*)obj)->objectFlags & EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK) == 0) &&
         (((((EdibleMushroomState*)state)->flags & 8) != 0) ||
          ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)))
     {
@@ -686,7 +689,7 @@ void ediblemushroom_init(int obj, int aux)
     player = (int)Obj_GetPlayerObject();
 
     ((GameObject*)obj)->animEventCallback = EdibleMushroom_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | EDIBLEMUSHROOM_OBJFLAG_HIDDEN);
 
     if (GameBit_Get(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
     {
