@@ -79,11 +79,14 @@ void androsshand_render(int obj, int p2, int p3, int p4, int p5)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E75B0);
 }
 
+#pragma opt_common_subs off
 void androsshand_update(int obj)
 {
     f32 fScale = lbl_803DC4F8;
     AndrossHandState* state = ((GameObject*)obj)->extra;
     u8 changed = 0;
+    SunVec3 va;
+    SunVec3 vb;
 
     if (state->androssObj == 0u)
     {
@@ -189,11 +192,11 @@ void androsshand_update(int obj)
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 v, w;
-                v.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
-                v.y = lbl_803E75AC;
-                v.z = lbl_803E75AC;
-                w = v;
+                SunVec3 w;
+                va.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
+                va.y = lbl_803E75AC;
+                va.z = lbl_803E75AC;
+                w = va;
                 arwarwing_setVelocity(state->arwingObj, (int)&w);
                 doRumble(lbl_803E75C8);
             }
@@ -244,11 +247,11 @@ void androsshand_update(int obj)
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             if (hitState->lastHitObject != 0)
             {
-                SunVec3 v, w;
-                v.x = lbl_803E75AC;
-                v.y = lbl_803E75F4;
-                v.z = lbl_803E75AC;
-                w = v;
+                SunVec3 w;
+                vb.x = lbl_803E75AC;
+                vb.y = lbl_803E75F4;
+                vb.z = lbl_803E75AC;
+                w = vb;
                 arwarwing_setVelocity(state->arwingObj, (int)&w);
                 doRumble(lbl_803E75C8);
             }
@@ -328,6 +331,8 @@ void androsshand_update(int obj)
     }
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
 }
+#pragma opt_common_subs reset
+
 
 void androsshand_hitDetect(void)
 {
