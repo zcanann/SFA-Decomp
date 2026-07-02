@@ -231,13 +231,13 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->spinZ = c->spinZ * (f32)(u32)
     c->spinScale;
     f1 = lbl_803E4354;
-    s->unk32 = lbl_803E4354 * c->spin2X;
-    s->unk36 = f1 * c->spin2Z;
-    s->unk34 = f1 * c->spin2Y;
+    s->spin2X = lbl_803E4354 * c->spin2X;
+    s->spin2Z = f1 * c->spin2Z;
+    s->spin2Y = f1 * c->spin2Y;
     f1 = lbl_803E4358;
-    s->unk26 = lbl_803E4358 * c->vel2X;
-    s->unk28 = f1 * c->vel2Y;
-    s->unk2A = f1 * c->vel2Z;
+    s->vel2X = lbl_803E4358 * c->vel2X;
+    s->vel2Y = f1 * c->vel2Y;
+    s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
     s->scale = (s8)(int)(
         lbl_803E435C * (((GameObject*)obj)->anim.rootMotionScale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance

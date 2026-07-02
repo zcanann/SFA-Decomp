@@ -84,15 +84,15 @@ typedef struct ExplodableFragmentSetup
     u16 velX;             /* 0x20 */
     u16 velY;             /* 0x22 */
     u16 velZ;             /* 0x24 */
-    u16 unk26;            /* 0x26: secondary velocity vector */
-    u16 unk28;            /* 0x28 */
-    u16 unk2A;            /* 0x2a */
+    u16 vel2X;            /* 0x26: secondary velocity vector */
+    u16 vel2Y;            /* 0x28 */
+    u16 vel2Z;            /* 0x2a */
     u16 spinX;            /* 0x2c */
     u16 spinY;            /* 0x2e */
     u16 spinZ;            /* 0x30 */
-    u16 unk32;            /* 0x32: secondary spin vector */
-    u16 unk34;            /* 0x34 */
-    u16 unk36;            /* 0x36 */
+    u16 spin2X;           /* 0x32: secondary spin vector */
+    u16 spin2Y;           /* 0x34 */
+    u16 spin2Z;           /* 0x36 */
     u16 launchDelayBase;  /* 0x38 */
     u16 height;           /* 0x3a */
     u8 pad3C[1];
