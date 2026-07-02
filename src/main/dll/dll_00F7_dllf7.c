@@ -31,6 +31,8 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DLLF7_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 void mikabomb_hitDetect(void);
 
 extern ModgfxInterface** gModgfxInterface;
@@ -780,7 +782,7 @@ void dll_F7_init(int* obj, int* params)
     int* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject((int)obj, 0x3e);
     *(s16*)obj = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DLLF7_OBJFLAG_HITDETECT_DISABLED;
     gDllF7Resource5B = Resource_Acquire(0x5b, 1);
     gDllF7Resource5A = Resource_Acquire(0x5a, 1);
     {
