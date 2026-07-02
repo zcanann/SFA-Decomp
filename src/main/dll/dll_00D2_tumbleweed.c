@@ -179,7 +179,7 @@ void tumbleweed_modelMtxFn(int obj)
         ObjHits_EnableObject((u32)obj);
         ((TumbleweedState*)state)->mode = 2;
         ((TumbleweedState*)state)->effectFlags |= 3;
-        if (((GameObject*)obj)->anim.seqId == 0x4c1)
+        if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
         {
             ((BackpackState*)state)->phaseTimer = lbl_803E2F9C;
         }
@@ -214,16 +214,16 @@ void tumbleweed_free(int* obj)
 
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x39d:
+    case TUMBLEWEED_TYPE_1:
         target_id = 0x28d;
         break;
     case 0x3fb:
         target_id = 0x3fd;
         break;
-    case 0x4ba:
+    case TUMBLEWEED_TYPE_3:
         target_id = 0x4b9;
         break;
-    case 0x4c1:
+    case TUMBLEWEED_TYPE_4:
         target_id = 0x4be;
         break;
     }
