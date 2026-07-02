@@ -10,6 +10,9 @@
 #include "main/dll/dll_B3.h"
 #include "main/dll/dll_B2.h"
 #include "main/model_light.h"
+
+#define MODEL_LIGHT_KIND_DIRECTIONAL 4
+
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* obj, int a, int b, int c, int d);
 extern void* Obj_GetActiveModel(u8* obj);
@@ -35,7 +38,7 @@ void lockIconInit(void)
         lbl_803DD4C4 = objCreateLight(0, 1);
         if (lbl_803DD4C4 != NULL)
         {
-            modelLightStruct_setLightKind(lbl_803DD4C4, 4);
+            modelLightStruct_setLightKind(lbl_803DD4C4, MODEL_LIGHT_KIND_DIRECTIONAL);
             modelLightStruct_setObjectLightMaskIndex(lbl_803DD4C4, 1);
             objSetEventName(lbl_803DD4C4, 1);
             modelLightStruct_setDirection(lbl_803DD4C4, gCamcontrolNormalizedMax, gCamcontrolNormalizedMin, lbl_803E1640);
