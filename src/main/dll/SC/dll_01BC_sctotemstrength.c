@@ -18,6 +18,9 @@
 #include "main/pad.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define PAD_BUTTON_A 0x100
+
 extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern u32 Sfx_KeepAliveLoopedObjectSound();
@@ -206,7 +209,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
             push = lbl_803E5684 * wob1 + lbl_803E5680;
             push = push * wob2 + lbl_803E567C;
             buttons = getButtonsJustPressedIfNotBusy(0);
-            if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0)
+            if ((buttons & PAD_BUTTON_A) != 0 && isGameTimerDisabled() == 0)
             {
                 st->offsetVelocity = st->offsetVelocity - lbl_803E5688;
             }
