@@ -17,6 +17,8 @@
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+
+#define PAD_BUTTON_A 0x100
 extern f32 timeDelta;
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
@@ -191,7 +193,7 @@ void SB_KyteCage_update(int obj)
     {
         if (GameBit_Get(GAMEBIT_KYTE_OPENED) == 0)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_OPEN, (void*)obj, -1);
             GameBit_Set(GAMEBIT_KYTE_OPENED, 1);
@@ -200,7 +202,7 @@ void SB_KyteCage_update(int obj)
     }
     if ((((GameObject*)obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_RELEASE) != 0)
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
         if (state->doorChoice != 0)
         {
