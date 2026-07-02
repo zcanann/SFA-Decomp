@@ -30,6 +30,8 @@
 #define DBSH_PARTNER_OBJTYPE 0x20f /* mirror symbol spun alongside this one */
 #define DBSH_SPIN_DONE 0x7ef4      /* spinProgress at a full turn */
 
+#define PAD_BUTTON_A 0x100
+
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -118,7 +120,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             state->flags.active = 1;
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
         }
-        if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0)
+        if ((getButtonsJustPressedIfNotBusy(0) & PAD_BUTTON_A) != 0)
         {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
         }
