@@ -673,13 +673,13 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                     {
                         u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr, block, (FrustumPlane*)(base + 0x9818), FRUSTUM_PLANE_COUNT,
                                                                       &x1, &y1, &z1, &x2, &y2, &z2);
-                        if (((res2 == 0) || ((u8)lo == 0)) && ((res2 != 0) || ((u8)lo != 0)))
+                        if ((res2 != 0 && (u8)lo != 0) || (res2 == 0 && (u8)lo == 0))
                         {
-                            vis = 0;
+                            vis = 1;
                         }
                         else
                         {
-                            vis = 1;
+                            vis = 0;
                         }
                         if ((u8)lo != 0)
                         {
