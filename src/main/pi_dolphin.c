@@ -3831,7 +3831,6 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {
     int i;
-    int z[3];
     int* node;
     u32* heap;
     int s;
@@ -3841,33 +3840,9 @@ int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFl
     u16* hh;
     u16 v;
 
-    z[0] = 0;
-    *(s16*)((char*)queue + 0x22) = z[0];
-    *(s16*)((char*)queue + 0x20) = z[0];
-    z[2] = z[0];
-    z[1] = z[0];
-    for (i = 0; i < 0xf8; i += 8)
-    {
-        *(int*)(queue[1] + z[1]) = 0;
-        *(u8*)(*queue + z[2] + 0xe) = 0;
-        *(int*)(queue[1] + z[1] + 8) = 0;
-        *(u8*)(*queue + z[2] + 0x1e) = 0;
-        *(int*)(queue[1] + z[1] + 0x10) = 0;
-        *(u8*)(*queue + z[2] + 0x2e) = 0;
-        *(int*)(queue[1] + z[1] + 0x18) = 0;
-        *(u8*)(*queue + z[2] + 0x3e) = 0;
-        *(int*)(queue[1] + z[1] + 0x20) = 0;
-        *(u8*)(*queue + z[2] + 0x4e) = 0;
-        *(int*)(queue[1] + z[1] + 0x28) = 0;
-        *(u8*)(*queue + z[2] + 0x5e) = 0;
-        *(int*)(queue[1] + z[1] + 0x30) = 0;
-        *(u8*)(*queue + z[2] + 0x6e) = 0;
-        *(int*)(queue[1] + z[1] + 0x38) = 0;
-        *(u8*)(*queue + z[2] + 0x7e) = 0;
-        z[1] += 0x40;
-        z[2] += 0x80;
-    }
-    for (; i < 0xfe; i++)
+    *(s16*)((char*)queue + 0x22) = 0;
+    *(s16*)((char*)queue + 0x20) = 0;
+    for (i = 0; i < 0xfe; i++)
     {
         *(int*)(queue[1] + i * 8) = 0;
         *(u8*)(*queue + i * 16 + 0xe) = 0;
