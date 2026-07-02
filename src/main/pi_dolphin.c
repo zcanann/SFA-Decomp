@@ -1538,8 +1538,8 @@ void loadDataFiles(int);
 int GXFlush_(u8 visible, int unused);
 
 #pragma dont_inline on
-void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
-                               u32 flagBits)
+int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
+                              u32 flagBits)
 {
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
     u32 b = 0;
@@ -1770,17 +1770,18 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         break;
     case 0x2b:
         s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
+        entryOff = lbl_803DCC80;
         OSRestoreInterrupts(s);
-        if ((flags & 4) == 0 && (flags & 1) == 0)
+        if ((entryOff & 4) == 0 && (entryOff & 1) == 0)
         {
             b = MLDF_PTR(0x2a);
         }
-        if ((flags & 8) == 0 && (flags & 2) == 0)
+        if ((entryOff & 8) == 0 && (entryOff & 2) == 0)
         {
             a = MLDF_PTR(0x45);
         }
-        if ((offsetFlags & 0x10000000) != 0 && b == 0)
+        entryOff = offsetFlags & 0x10000000;
+        if (entryOff != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -1885,7 +1886,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                 }
             }
         }
-        else if (b != 0 && (offsetFlags & 0x10000000) != 0)
+        else if (b != 0 && entryOff != 0)
         {
             fileId = 0x2b;
             if (sizeOut != NULL)
@@ -2133,11 +2134,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = MLDF_PTR(fileId);
-            tmp = return0_8002A5B8(fileBuf + offsetFlags);
+            fileBuf = MLDF_PTR(fileId) + offsetFlags;
+            tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf + offsetFlags, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
             }
         }
         break;
@@ -2155,11 +2156,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = MLDF_PTR(fileId);
-            tmp = return0_8002A5B8(fileBuf + offsetFlags);
+            fileBuf = MLDF_PTR(fileId) + offsetFlags;
+            tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf + offsetFlags, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
             }
         }
         break;
@@ -2238,8 +2239,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                entryOff = *(int*)((u8*)a + e4) & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = *(int*)((u8*)a + e4) & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2247,8 +2248,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2258,8 +2259,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2268,8 +2269,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x23;
             if (sizeOut != NULL)
             {
-                entryOff = *(int*)((u8*)b + e4) & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = *(int*)((u8*)b + e4) & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2277,8 +2278,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2288,38 +2289,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
-                }
-            }
-        }
-        else if (b != 0)
-        {
-            fileId = 0x23;
-            if (sizeOut != NULL)
-            {
-                entryOff = ((int*)b)[entryIndex] & 0xffffff;
-                if (entryOff == 0)
-                {
-                    i = 0;
-                    do
-                    {
-                        k = i;
-                        i = i + 1;
-                    }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
-                }
-                else
-                {
-                    i = entryIndex;
-                    do
-                    {
-                        k = i;
-                        i = i + 1;
-                    }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2328,8 +2299,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)a)[entryIndex] & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = ((int*)a)[entryIndex] & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2337,8 +2308,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2348,8 +2319,38 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                }
+            }
+        }
+        else if (b != 0)
+        {
+            fileId = 0x23;
+            if (sizeOut != NULL)
+            {
+                offsetFlags = ((int*)b)[entryIndex] & 0xffffff;
+                if (offsetFlags == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        k = i;
+                        i = i + 1;
+                    }
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                }
+                else
+                {
+                    i = entryIndex;
+                    do
+                    {
+                        k = i;
+                        i = i + 1;
+                    }
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2430,8 +2431,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                entryOff = *(int*)((u8*)a + e4) & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = *(int*)((u8*)a + e4) & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2439,8 +2440,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2450,8 +2451,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2460,8 +2461,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x20;
             if (sizeOut != NULL)
             {
-                entryOff = *(int*)((u8*)b + e4) & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = *(int*)((u8*)b + e4) & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2469,8 +2470,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2480,38 +2481,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
-                }
-            }
-        }
-        else if (b != 0)
-        {
-            fileId = 0x20;
-            if (sizeOut != NULL)
-            {
-                entryOff = ((int*)b)[entryIndex] & 0xffffff;
-                if (entryOff == 0)
-                {
-                    i = 0;
-                    do
-                    {
-                        k = i;
-                        i = i + 1;
-                    }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
-                }
-                else
-                {
-                    i = entryIndex;
-                    do
-                    {
-                        k = i;
-                        i = i + 1;
-                    }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2520,8 +2491,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)a)[entryIndex] & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = ((int*)a)[entryIndex] & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2529,8 +2500,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
@@ -2540,22 +2511,18 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
-        break;
-    case 0x4f:
-        b = MLDF_PTR(0x50);
-        if (b != 0)
+        else if (b != 0)
         {
-            fileId = 0x4f;
+            fileId = 0x20;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)b)[entryIndex] & 0xffffff;
-                if (entryOff == 0)
+                offsetFlags = ((int*)b)[entryIndex] & 0xffffff;
+                if (offsetFlags == 0)
                 {
                     i = 0;
                     do
@@ -2563,18 +2530,52 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
                         k = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
+                    i = entryIndex;
                     do
                     {
-                        k = entryIndex;
-                        entryIndex = entryIndex + 1;
+                        k = i;
+                        i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[entryIndex] & 0xffffff) - entryOff;
+                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                }
+            }
+        }
+        offsetFlags = offsetFlags & 0xfffffff;
+        break;
+    case 0x4f:
+        hi = MLDF_PTR(0x50);
+        if (hi != 0)
+        {
+            fileId = 0x4f;
+            if (sizeOut != NULL)
+            {
+                offsetFlags = ((int*)hi)[entryIndex] & 0xffffff;
+                if (offsetFlags == 0)
+                {
+                    do
+                    {
+                        k = b;
+                        b = b + 1;
+                    }
+                    while ((((int*)hi)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(hi - 4))[b] & 0xffffff) - offsetFlags;
+                }
+                else
+                {
+                    i = entryIndex;
+                    do
+                    {
+                        k = i;
+                        i = i + 1;
+                    }
+                    while ((((int*)hi)[k] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(hi - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2583,116 +2584,116 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
     }
     if (((u8)flagBits & 1) != 0)
     {
-        return;
+        return 0;
     }
-    fileBuf = t->ptrs[fileId];
-    if (fileBuf != 0)
+    if (MLDF_PTR(fileId) != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
     {
-        if (fileBuf == 0)
+        if (MLDF_PTR(fileId) == 0)
         {
-            return;
+            return 0;
         }
-        memcpy((void*)destBuf, (void*)(fileBuf + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
     }
     else if (fileId == 0x1b || fileId == 0x54)
     {
-        if (fileBuf == 0)
+        if (MLDF_PTR(fileId) == 0)
         {
-            return;
+            return 0;
         }
-        fileBuf = fileBuf + offsetFlags;
+        fileBuf = MLDF_PTR(fileId) + offsetFlags;
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
         {
-            return;
+            return 0;
         }
         decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x25 || fileId == 0x47)
     {
-        if (fileBuf == 0)
+        if (MLDF_PTR(fileId) == 0)
         {
-            return;
+            return 0;
         }
-        fileBuf = fileBuf + offsetFlags;
+        fileBuf = MLDF_PTR(fileId) + offsetFlags;
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) != 0)
         {
-            return;
+            return 0;
         }
         decompSize = *(u32*)(fileBuf + 8);
-        zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + 0x10)), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
-        int* p = (int*)(fileBuf + offsetFlags);
+        int* p = (int*)(MLDF_PTR(fileId) + offsetFlags);
         if (*p == 0xe0e0e0e0)
         {
-            memcpy((void*)destBuf, (void*)((int)p + p[2] + 0x18), p[1]);
+            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + (offsetFlags + p[2] + 0x18)), p[1]);
         }
         else if (*p == 0xfacefeed)
         {
-            zlbDecompress((void*)((int)p + p[2] + 0x28), p[3] - 0x10, destBuf, p + 1);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + (offsetFlags + p[2] + 0x28)), p[3] - 0x10, destBuf, p + 1);
             DCStoreRange((void*)destBuf, p[1]);
         }
     }
     else if (fileId == 0x23 || fileId == 0x4d)
     {
-        fileBuf = fileBuf + (offsetFlags & 0xffffff);
+        fileBuf = MLDF_PTR(fileId) + (offsetFlags & 0xffffff);
         decompSize = *(u32*)(fileBuf + 8);
         zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
         DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x20 || fileId == 0x4b)
     {
-        offsetFlags = offsetFlags & 0xffffff;
-        fileBuf = fileBuf + offsetFlags;
+        entryIndex = offsetFlags & 0xffffff;
+        fileBuf = MLDF_PTR(fileId) + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
-            return;
+            return MLDF_PTR(fileId) + (entryIndex + 0x20);
         }
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+                          &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
     }
     else if (fileId == 0x4f)
     {
-        offsetFlags = offsetFlags & 0xffffff;
-        fileBuf = fileBuf + offsetFlags;
+        entryIndex = offsetFlags & 0xffffff;
+        fileBuf = MLDF_PTR(fileId) + entryIndex;
         if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
-            return;
+            return MLDF_PTR(fileId) + (entryIndex + 0x20);
         }
         if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
         {
             decompSize = *(u32*)(fileBuf + 8);
-            zlbDecompress((void*)(t->ptrs[fileId] + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + (entryIndex + 0x10)), *(int*)(fileBuf + 0xc), destBuf,
+                          &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
     }
     else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
     {
-        fileBuf = fileBuf + offsetFlags;
+        fileBuf = MLDF_PTR(fileId) + offsetFlags;
         tmp = return0_8002A5B8(fileBuf);
-        if (tmp == 0)
+        if (tmp != 0)
         {
-            memcpy((void*)destBuf, (void*)(t->ptrs[fileId] + offsetFlags), length);
+            ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf, ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut));
         }
         else
         {
-            alignedSize = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
-            ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf, alignedSize);
+            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
         }
     }
     else
     {
-        memcpy((void*)destBuf, (void*)(fileBuf + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
     }
     }
     else if (fileId == 0x20 || fileId == 0x4b)
@@ -2734,6 +2735,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         DCStoreRange((void*)destBuf, length);
         DVDClose(buf);
     }
+    return 0;
 }
 #pragma dont_inline reset
 
