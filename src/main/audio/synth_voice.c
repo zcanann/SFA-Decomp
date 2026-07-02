@@ -1092,9 +1092,7 @@ void audioFn_80271498(u32 delta)
     f32 zeroThreshold;
     u8* stateBase;
     f32 fadeDelta;
-    u32* auxBData;
     SynthAuxCallback* auxBCallback;
-    u32* auxAData;
     u8* auxAIndex;
     u8* auxAMIDI;
     u8* auxBIndex;
@@ -1159,8 +1157,6 @@ void audioFn_80271498(u32 delta)
             auxBCallback = (SynthAuxCallback*)(stateBase + 0xc74);
             auxAIndex = &synthAuxAIndex;
             auxBIndex = &synthAuxBIndex;
-            auxAData = (u32*)(stateBase + 0xc14);
-            auxBData = (u32*)(stateBase + 0xc54);
             for (i = 0; i < 8; i++)
             {
                 if (*auxAIndex != 0xff)
@@ -1170,7 +1166,7 @@ void audioFn_80271498(u32 delta)
                         auxSamplesA[channel] =
                             inpGetAuxA(i & 0xff, channel & 0xff, *auxAIndex, *auxAMIDI);
                     }
-                    (*auxACallback)(1, auxSamplesA, *auxAData);
+                    (*auxACallback)(1, auxSamplesA, ((u32*)(stateBase + 0xc14))[i]);
                 }
                 if (*auxBIndex != 0xff)
                 {
@@ -1179,16 +1175,14 @@ void audioFn_80271498(u32 delta)
                         auxSamplesB[channel] =
                             inpGetAuxB(i & 0xff, channel & 0xff, *auxBIndex, *auxBMIDI);
                     }
-                    (*auxBCallback)(1, auxSamplesB, *auxBData);
+                    (*auxBCallback)(1, auxSamplesB, ((u32*)(stateBase + 0xc54))[i]);
                 }
                 auxAIndex++;
                 auxAMIDI++;
                 auxBIndex++;
                 auxBMIDI++;
                 auxACallback++;
-                auxAData++;
                 auxBCallback++;
-                auxBData++;
             }
         }
         hwFrameDone();
