@@ -12,6 +12,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
+
 typedef union ArwingBombControl
 {
     f32 fuseTimer;
@@ -103,7 +105,7 @@ void arwarwingbo_update(int obj)
     f32 zero;
     extern u32 getButtonsJustPressed(int port);
 
-    if (((GameObject*)arwing)->objectFlags & 0x1000)
+    if (((GameObject*)arwing)->objectFlags & ARWARWINGBO_OBJFLAG_PARENT_SLACK)
     {
         arwarwing_clearActiveBomb(arwing);
         Obj_FreeObject(obj);
