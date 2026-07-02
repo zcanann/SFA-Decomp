@@ -13,6 +13,8 @@
 #include "main/objlib.h"
 #include "main/objhits.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct DIMbossspitUpdateBurstState
 {
     u8 pad0[0x4 - 0x0];
@@ -258,7 +260,7 @@ void DIMbossspit_init(int obj)
     *(void**)&((DIMbossspitState*)state)->light = objCreateLight(obj, 1);
     if (*(void**)&((DIMbossspitState*)state)->light != NULL)
     {
-        modelLightStruct_setLightKind(((DIMbossspitState*)state)->light, 2);
+        modelLightStruct_setLightKind(((DIMbossspitState*)state)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
         modelLightStruct_setSpecularColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
         modelLightStruct_setDistanceAttenuation(((DIMbossspitState*)state)->light, lbl_803E4D70, lbl_803E4D74);
