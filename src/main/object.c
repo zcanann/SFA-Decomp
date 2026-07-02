@@ -21,6 +21,8 @@
 #include "main/track_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define OBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* GameObject::colorFadeFlags bits (freeze / color-fade state machine) */
 #define OBJ_COLOR_FADE_FLAG_FROZEN 0x1     /* freeze render attachment active (objIsFrozen) */
 #define OBJ_COLOR_FADE_FLAG_ACTIVE 0x2     /* color fade running (objGetFlagsE5_2) */
@@ -1930,7 +1932,7 @@ void Obj_UpdateAllObjects(u8 flags)
         obj3 = *(int*)((u8*)&gObjUpdateList + 4);
         for (; obj3 != 0; obj3 = *(int*)(obj3 + off))
         {
-            if ((((GameObject*)obj3)->objectFlags & 0x2000) == 0)
+            if ((((GameObject*)obj3)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
                 switch (((GameObject*)obj3)->anim.seqId)
                 {
@@ -1961,7 +1963,7 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
-            if ((((GameObject*)child)->objectFlags & 0x2000) == 0)
+            if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
                 switch (((GameObject*)child)->anim.seqId)
                 {
