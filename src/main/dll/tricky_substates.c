@@ -1897,6 +1897,7 @@ int trickyFoodFn_8014460c(int obj, int* state)
     return 0;
 }
 
+#pragma opt_common_subs off
 void fn_80144B50(u8* obj, u8* state)
 {
     int hit[1];
@@ -1996,3 +1997,5 @@ void fn_80144B50(u8* obj, u8* state)
         }
     }
 }
+#pragma opt_common_subs reset
+

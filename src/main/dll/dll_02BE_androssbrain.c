@@ -100,6 +100,7 @@ void androssbrain_init(int obj)
     ObjHits_SetTargetMask(obj, 4);
 }
 
+#pragma opt_common_subs off
 void androssbrain_update(int obj)
 {
     AndrossBrainState* state = ((GameObject*)obj)->extra;
@@ -189,3 +190,5 @@ void androssbrain_update(int obj)
         break;
     }
 }
+#pragma opt_common_subs reset
+

@@ -318,6 +318,7 @@ void fn_80155884(int* obj, int state)
     return;
 }
 
+#pragma opt_common_subs off
 void fn_80155948(int* obj, int state)
 {
     short move;
@@ -363,6 +364,8 @@ void fn_80155948(int* obj, int state)
     }
     return;
 }
+#pragma opt_common_subs reset
+
 
 void rachnopInit(u32 unused, int state)
 {

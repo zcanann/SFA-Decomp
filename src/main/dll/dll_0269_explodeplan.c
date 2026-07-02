@@ -61,6 +61,7 @@ void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
 }
 
+#pragma opt_common_subs off
 void explodeplan_init(int obj, char* arg)
 {
     ExplodePlanPlacement* def = (ExplodePlanPlacement*)arg;
@@ -72,6 +73,8 @@ void explodeplan_init(int obj, char* arg)
     }
     ((GameObject*)obj)->anim.rotX = (s16)(def->rotXByte << 8);
 }
+#pragma opt_common_subs reset
+
 
 void explodeplan_update(int obj)
 {
