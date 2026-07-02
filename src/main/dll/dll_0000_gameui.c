@@ -2450,7 +2450,11 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             alpha = 0xff;
         }
         h0 = (s16)(v - 0x14);
-        h0 = (s16)((h0 < 0 ? 0 : h0) << 4);
+        if (h0 < 0)
+        {
+            h0 = 0;
+        }
+        h0 <<= 4;
         if (h0 > *(u16*)(gTextBoxes + 0x186))
         {
             h0 = (s16) * (u16*)(gTextBoxes + 0x186);
@@ -2479,6 +2483,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 int i;
                 u8* base;
                 u8* p;
+                int tmp;
                 i = 0;
                 base = (u8*)(int)gGameUiTaskHintCandidates;
                 p = base;
@@ -2486,13 +2491,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     if (GameBit_Get(gTaskHintTable[*p].bit_id))
                     {
-                        fi = gGameUiTaskHintCandidates[i];
+                        tmp = (s8)gGameUiTaskHintCandidates[i];
                         goto haveIdx2;
                     }
                     p++;
                 }
-                fi = -1;
+                tmp = -1;
             haveIdx2:
+                fi = (s8)tmp;
                 n = GameBit_Get(0x63c);
                 t = GameBit_Get(0x4e9);
                 n += GameBit_Get(0x5f3);
@@ -2514,29 +2520,32 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     n++;
                 }
-                if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[0];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[1];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[2];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[3];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) li_ = gGameUiTaskHintCandidates[4];
-                else li_ = -1;
-            }
-            lv = 0;
-            if ((int)(u16)getNextTaskHintText() > 0xad)
-            {
-                lv = 1;
+                if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[0];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[1];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[2];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[3];
+                else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[4];
+                else tmp = -1;
+                li_ = (s8)tmp;
             }
             {
-                u8 cur = gPauseMenuHintIndex;
-                if (cur == 2 && lv != 0)
+                int hv = (u16)getNextTaskHintText();
+                lv = 0;
+                if (hv > 0xad)
+                {
+                    lv = 1;
+                }
+            }
+            {
+                if (gPauseMenuHintIndex == 2 && lv != 0)
                 {
                     hint = 0x574;
                 }
-                else if (fi == cur && li_ != cur)
+                else if (fi == gPauseMenuHintIndex && li_ != gPauseMenuHintIndex)
                 {
-                    hint = gTaskHintTable[cur].hint0;
+                    hint = gTaskHintTable[gPauseMenuHintIndex].hint0;
                 }
-                else if (cur == 2)
+                else if (gPauseMenuHintIndex == 2)
                 {
                     if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                     {
@@ -2558,7 +2567,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                         hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
                     }
                 }
-                else if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
+                else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
                 {
                     hint = 0x568;
                 }
@@ -2581,41 +2590,27 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         {
             int row;
             int ph1 = 0;
-            int ph2 = 0;
+            int ph2 = ph1;
             f32 k = lbl_803E204C;
             f32 c0 = lbl_803E2050;
             f32 c1 = lbl_803E2010;
             for (row = 0; row < 0x96; row += 4)
             {
                 f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + ph1));
-                int a2, b2, r1, r2;
+                int a2, b2, r1, r2, raw;
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + ph2)) + s;
-                a2 = (int)((f32)alpha * (c0 + s));
-                if (a2 < 0)
-                {
-                    a2 = 0;
-                }
+                raw = (int)((f32)alpha * (c0 + s));
+                a2 = raw < 0 ? 0 : raw;
                 r1 = randomGetRange(0, 0x1e) << 1;
                 r2 = randomGetRange(0, 0x1e) << 1;
-                if (a2 > 0xff)
-                {
-                    a2 = 0xff;
-                }
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x32),
-                                   (u8)a2, 0x100, 0x82, 2, r2, r1);
-                b2 = (int)((f32)alpha * (c1 + s));
-                if (b2 < 0)
-                {
-                    b2 = 0;
-                }
+                                   (u8)(a2 > 0xff ? 0xff : a2), 0x100, 0x82, 2, r2, r1);
+                raw = (int)((f32)alpha * (c1 + s));
+                b2 = raw < 0 ? 0 : raw;
                 r1 = randomGetRange(0, 0x1e) << 1;
                 r2 = randomGetRange(0, 0x1e) << 1;
-                if (b2 > 0xff)
-                {
-                    b2 = 0xff;
-                }
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x34),
-                                   (u8)b2, 0x100, 0x82, 2, r2, r1);
+                                   (u8)(b2 > 0xff ? 0xff : b2), 0x100, 0x82, 2, r2, r1);
                 ph1 += 0x3520;
                 ph2 += 0x1f40;
             }
