@@ -315,20 +315,19 @@ f32 groundanimator_setScale(int* obj, int* target)
 void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
 {
     extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
-    int mid;
     void* entry;
-    int inner;
-    void* block;
     void* vtx;
-    int ix;
     int fallInn;
     int htInn;
     int fallMid;
     int htMid;
-    int fallOff;
-    int htOff;
+    int off[2];
+    int inner;
+    void* block;
+    int ix;
     int iz;
     int blkIdx;
+    int mid;
     f32 fracX;
     f32 clampMax;
     f32 fracZ;
@@ -345,21 +344,19 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     iz = fastFloorf((((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ) / lbl_803E3FC0);
     fracX = ((GameObject*)obj)->anim.localPosX - (lbl_803E3FC0 * ix + playerMapOffsetX);
     fracZ = ((GameObject*)obj)->anim.localPosZ - (lbl_803E3FC0 * iz + playerMapOffsetZ);
-    state->entryCount = 0;
-    fallOff = state->entryCount;
+    off[0] = 0;
+    state->entryCount = off[0];
     radsq = state->radius * state->radius;
-    for (blkIdx = 0, htOff = fallOff; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
+    for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->unk9A; blkIdx++)
     {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
-            fallMid = fallOff;
-            fallMid |= fallOff;
-            htMid = htOff;
-            htMid |= htOff;
+            fallMid = off[0];
+            htMid = off[1];
             clampMax = lbl_803E3FC4;
-            for (; mid < ((MapBlockData*)block)->unk14; mid++)
+            for (; mid < *(u16*)((char*)entry + 0x14); mid++)
             {
                 vtx = fn_800606DC(block, mid);
                 fallInn = fallMid;
@@ -385,8 +382,8 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
                     htInn += 2;
                     fallMid += 4;
                     htMid += 2;
-                    fallOff += 4;
-                    htOff += 2;
+                    off[0] += 4;
+                    off[1] += 2;
                     vtx = (char*)vtx + 2;
                 }
             }
