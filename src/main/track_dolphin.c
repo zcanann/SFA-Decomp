@@ -4232,6 +4232,7 @@ extern const f32 __AR_ExpansionSize;
 extern const f32 __AR_InternalSize;
 extern void allocLotsOfTextures(void);
 
+#pragma opt_common_subs off
 void initTextures(void)
 {
     f32* a = lbl_8038D77C;
@@ -4289,6 +4290,8 @@ void initTextures(void)
     a[23] = __AR_StackPointer;
     allocLotsOfTextures();
 }
+#pragma opt_common_subs reset
+
 
 extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, int i, int self, f32 f);
 extern char sTrackNoFreeLastLineError[];
