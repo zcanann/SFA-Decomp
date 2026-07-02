@@ -5600,7 +5600,7 @@ void fn_8004E0FC(void)
     m1e8[2][0] = lbl_803DEACC;
     m1e8[2][1] = lbl_803DEACC;
     m1e8[2][2] = lbl_803DEB1C;
-    m1e8[2][3] = SaveStart_803DEAD0 * (*(f32*)&lbl_803DEB20 * playerMapOffsetZ);
+    m1e8[2][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetZ);
     m1b8[0][0] = LastLength_803DEB24;
     m1b8[0][1] = lbl_803DEACC;
     m1b8[0][2] = lbl_803DEACC;
