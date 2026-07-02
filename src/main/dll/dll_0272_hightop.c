@@ -22,6 +22,8 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_A 0x100
+
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * hightop_takeHit when the air meter empties (death follow-up spawn). */
 typedef struct HighTopDeathSpawn
@@ -725,7 +727,7 @@ void hightop_update(int obj)
     if (ObjTrigger_IsSet(obj) != 0)
     {
         s8 v;
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         v = (s8)((HighTopRuntime*)p)->substate;
         if (v != -1)
         {
