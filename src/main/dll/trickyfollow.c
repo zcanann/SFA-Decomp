@@ -73,8 +73,28 @@ extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
+static u8* trickyfollow_validateRouteNode(u8* node)
+{
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    if (((*(s16*)(node + 0x30) != -1) && (GameBit_Get(*(s16*)(node + 0x30)) == 0)) ||
+        ((*(s16*)(node + 0x32) != -1) && (GameBit_Get(*(s16*)(node + 0x32)) != 0)))
+    {
+        node = NULL;
+    }
+    else
+    {
+        return node;
+    }
+
+    return node;
+}
+
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
+#pragma inline_max_total_size(100000)
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
     int tp;
@@ -667,27 +687,16 @@ state_selected:
         }
         else
         {
-            node = (u8*)((TrickyState*)state)->routeSeedNode;
-            if (node == 0)
-            {
-                node = 0;
-            }
-            else if (((*(s16*)(node + 0x30) != -1) &&
-                    (GameBit_Get(*(s16*)(node + 0x30)) == 0)) ||
-                ((*(s16*)(node + 0x32) != -1 &&
-                    (GameBit_Get(*(s16*)(node + 0x32)) != 0))))
-            {
-                node = 0;
-            }
-            if ((node == 0) && (wg != 0))
-            {
-                ((TrickyState*)state)->unk09 = 0;
-            }
-            else
+            node = trickyfollow_validateRouteNode((u8*)((TrickyState*)state)->routeSeedNode);
+            if ((node != 0) || (wg == 0))
             {
                 ((TrickyState*)state)->speed = velBefore;
                 trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)((u8*)((TrickyState*)state)->routeSeedNode + 8), 1);
                 moved = trickyMove(obj, ((u8*)((TrickyState*)state)->routeSeedNode + 8));
+            }
+            else
+            {
+                ((TrickyState*)state)->unk09 = 0;
             }
         }
         break;
