@@ -7678,7 +7678,7 @@ void fn_802B0EA4(int obj, int inner, int state)
                 v430 * (diff * ((frac < lbl_803E7EA4)
                                     ? lbl_803E7EA4
                                     : ((frac > lbl_803E7EE0) ? lbl_803E7EE0 : frac)) +
-                    lbl_803E7EE0);
+                    *(volatile f32*)&lbl_803E7EE0);
         }
     }
     if (*(void**)((char*)inner + 0x464) != NULL)
@@ -7694,12 +7694,15 @@ void fn_802B0EA4(int obj, int inner, int state)
     one = lbl_803E7EE0;
     ((PlayerState*)inner)->leanCurveScale = one;
     if (((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
-        ((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
+        ((PlayerState*)inner)->waterDepth > (v = lbl_803E7EA4))
     {
         ((PlayerState*)inner)->speedScale =
             (((PlayerState*)inner)->waterDepth - lbl_803E7FFC) / lbl_803E8098;
-        v = ((PlayerState*)inner)->speedScale;
-        ((PlayerState*)inner)->speedScale = (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > one) ? one : v);
+        if (!(((PlayerState*)inner)->speedScale < v))
+        {
+            v = (((PlayerState*)inner)->speedScale > one) ? one : ((PlayerState*)inner)->speedScale;
+        }
+        ((PlayerState*)inner)->speedScale = v;
         ((PlayerState*)inner)->speedScale =
             -(lbl_803E7E98 * ((PlayerState*)inner)->speedScale - lbl_803E7EE0);
     }
