@@ -191,12 +191,11 @@ int Minimap_update(void)
     int xl;
     s16 m;
     s16 sv, sw;
-    u16 hw;
     u32 texW, texH;
     f32 s2, fz, panx, yrel, xrel, pany;
     f32 ox, oy;
     f32 t, e, a, b;
-    f32 uq, vq, fx;
+    f32 uq, fx;
     f32 cx, cy, frac;
     u32 u, vv;
     f32 s1, c2, c1, c3, s3, fv;
@@ -276,17 +275,12 @@ int Minimap_update(void)
                         gMinimapRegionMinZ = 0x7fff;
                         for (; j < gMinimapCellTable[i].count; j++)
                         {
-                            r2 = &rows[j];
-                            if (marker == r2->mapId)
+                            if (marker == rows[j].mapId)
                             {
-                                m = r2->x0;
-                                gMinimapRegionMinX = (gMinimapRegionMinX >= m) ? gMinimapRegionMinX : m;
-                                m = r2->x1;
-                                gMinimapRegionMaxX = (gMinimapRegionMaxX <= m) ? gMinimapRegionMaxX : m;
-                                m = r2->z0;
-                                gMinimapRegionMinZ = (gMinimapRegionMinZ >= m) ? gMinimapRegionMinZ : m;
-                                m = r2->z1;
-                                gMinimapRegionMaxZ = (gMinimapRegionMaxZ <= m) ? gMinimapRegionMaxZ : m;
+                                gMinimapRegionMinX = (rows[j].x0 < gMinimapRegionMinX) ? rows[j].x0 : gMinimapRegionMinX;
+                                gMinimapRegionMaxX = (rows[j].x1 > gMinimapRegionMaxX) ? rows[j].x1 : gMinimapRegionMaxX;
+                                gMinimapRegionMinZ = (rows[j].z0 < gMinimapRegionMinZ) ? rows[j].z0 : gMinimapRegionMinZ;
+                                gMinimapRegionMaxZ = (rows[j].z1 > gMinimapRegionMaxZ) ? rows[j].z1 : gMinimapRegionMaxZ;
                             }
                         }
                         gMinimapTexU = rows[k].texU;
@@ -340,16 +334,11 @@ int Minimap_update(void)
         if ((int)lbl_803DD92C == marker)
         {
             gMinimapContentAlpha += 0x20;
-            n = gMinimapContentAlpha;
-            if (n < 0)
-            {
-                n = 0;
-            }
-            else
-            {
-                n = (s16)((n > gMinimapFadeAlpha) ? gMinimapFadeAlpha : n);
-            }
-            gMinimapContentAlpha = n;
+            gMinimapContentAlpha =
+                (s16)((gMinimapContentAlpha < 0)
+                          ? 0
+                          : (s16)((gMinimapContentAlpha > gMinimapFadeAlpha) ? gMinimapFadeAlpha
+                                                                             : gMinimapContentAlpha));
         }
         else
         {
@@ -436,10 +425,9 @@ int Minimap_update(void)
                     if (t == panx)
                     {
                         a = gMinimapZoom * (xrel * gMinimapWorldToTexScale) - (f32)(boxW / 2);
-                        if (t > a) {} else { t = a; }
+                        t = (t > a) ? t : a;
                         b = texW * gMinimapZoom - boxW;
-                        if (t < b) {} else { t = b; }
-                        ox = t;
+                        ox = t = (t < b) ? t : b;
                     }
                     t = *(f32*)&gMinimapZero;
                     if (t == pany)
@@ -447,21 +435,20 @@ int Minimap_update(void)
                         a = gMinimapZoom * (yrel * gMinimapWorldToTexScale) - (f32)(boxH / 2);
                         t = (t > a) ? t : a;
                         b = texH * gMinimapZoom - boxH;
-                        t = (t < b) ? t : b;
-                        oy = t;
+                        oy = t = (t < b) ? t : b;
                     }
                     uq = ox / gMinimapZoom;
                     u = uq;
                     frac = gMinimapZoom * (uq - (f32)u);
-                    vq = oy / gMinimapZoom;
-                    vv = vq;
+                    uq = oy / gMinimapZoom;
+                    vv = uq;
                     ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
-                    fv = gMinimapZoom * (vq - vv);
+                    fv = gMinimapZoom * (uq - vv);
                     drawPartialTexture(minimapTexture,
                                        (gMinimapF50 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
@@ -515,8 +502,7 @@ int Minimap_update(void)
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
-                    hw = box[4];
-                    box[4] = (hw >= box[0]) ? box[0] : hw;
+                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
                     n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
@@ -537,8 +523,7 @@ int Minimap_update(void)
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
-                    hw = box[4];
-                    box[4] = (hw >= box[0]) ? box[0] : hw;
+                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
                     n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
@@ -572,8 +557,7 @@ int Minimap_update(void)
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
                     box[4] = (u16)((n > 2) ? n : 2);
-                    hw = box[4];
-                    box[4] = (hw >= box[0]) ? box[0] : hw;
+                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
                     n = gMinimapBoxHeight;
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
