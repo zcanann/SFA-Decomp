@@ -438,6 +438,7 @@ void titleScreenShowCopyright(u8 arg)
 
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(u32 id);
+#define GX_ORTHOGRAPHIC 1 /* GXProjectionType (GXEnum.h): GX_PERSPECTIVE=0, GX_ORTHOGRAPHIC=1 */
 extern void GXSetProjection(f32* matrix, s32 mode);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
@@ -459,7 +460,7 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 {
     GXLoadPosMtxImm((f32*)gTitleScreenMtx, 0);
     GXSetCurrentMtx(0);
-    GXSetProjection(hudMatrix, 1);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -492,7 +493,7 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 {
     GXLoadPosMtxImm((f32*)gTitleScreenMtx, 0);
     GXSetCurrentMtx(0);
-    GXSetProjection(hudMatrix, 1);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
