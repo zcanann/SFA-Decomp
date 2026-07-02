@@ -450,7 +450,7 @@ void padUpdate(void)
             *triggersReleased = 0;
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PadStatusLite));
-            memset((u8*)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
+            memset((i + 4) * 0xc + 0x40 + (u8*)padStateBlock, 0, sizeof(PadStatusLite));
             gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
             rp->error = PAD_ERR_NO_CONTROLLER;
         }
