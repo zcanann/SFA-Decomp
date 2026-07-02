@@ -310,7 +310,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         _gxSetFogParams();
         goto LAB_8005E630;
     }
-    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&colorWord);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&colorWord);
 LAB_8005E630:
     if ((SHADER_FLAGS(shader) & 1) == 0)
     {
