@@ -12,6 +12,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -251,7 +253,7 @@ void LanternFireFly_update(int obj)
         }
         else
         {
-            modelLightStruct_setLightKind(light, 2);
+            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(light, 100, 0xff, 100, 0);
             lightSetFieldBC_8001db14(light, 1);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E3A98, lbl_803E3A9C);
