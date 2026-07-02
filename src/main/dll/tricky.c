@@ -33,6 +33,8 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
 
+#define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
+
 typedef struct GameUIWork10
 {
     u8 pad0[0x8 - 0x0];
@@ -1019,7 +1021,7 @@ void hudDrawAirMeter(void)
     if (m == NULL) return;
     alpha = ((TrickyAirMeter*)m)->unk18;
     if (p->bit7 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0 ||
-        (player != NULL && (((GameObject*)player)->objectFlags & 0x1000) != 0 &&
+        (player != NULL && (((GameObject*)player)->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK) != 0 &&
             ((TrickyAirMeter*)m)->unk2C != 0x5d5))
     {
         s16 clamped;
