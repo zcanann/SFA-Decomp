@@ -40,7 +40,8 @@ void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 x
         phase = state[0x12 + i];
         state[0xe + i] = (phase * timeDelta + state[0xe + i]);
         phase = fcos16(state[0xe + i]);
-        *(f32*)((char*)state + 0xc + i * 4) = gObjFxCrystalAmpTbl[i] * ((1.0f + phase) * 0.5f);
+        phase = (1.0f + phase) / 2.0f;
+        *(f32*)((char*)state + 0xc + i * 4) = phase * gObjFxCrystalAmpTbl[i];
 
         state[0x16 + i] = (timeDelta * gObjFxCrystalSpinSpeed[i] + state[0x16 + i]);
         *(u16*)state = state[0x16 + i];
