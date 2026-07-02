@@ -12,6 +12,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define PAD_BUTTON_A 0x100
 
 typedef struct Dim2prisonmammothPlacement
 {
@@ -178,7 +179,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int state)
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
@@ -206,7 +207,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
     if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         GameBit_Set(0x223, 1);
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), lbl_803E82C8, lbl_803E82CC))
     {
