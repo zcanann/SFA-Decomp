@@ -18,6 +18,8 @@
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SPSCARAB_OBJFLAG_RENDERED 0x800
+
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -142,7 +144,7 @@ void spscarab_update(int obj)
         }
     }
 
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & SPSCARAB_OBJFLAG_RENDERED) != 0)
     {
         if (((SpscarabState*)state)->burstCount != 0)
         {
