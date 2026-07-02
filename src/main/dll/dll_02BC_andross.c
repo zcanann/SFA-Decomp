@@ -1683,8 +1683,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosX = ((AndrossState*)state)->homePosX;
         ((AndrossState*)state)->targetPosY = ((AndrossState*)state)->homePosY;
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        if (((u32)GameBit_Get(0x10) != 0) &&
-            (sval = ((AndrossState*)state)->actionTimer, ((AndrossState*)state)->actionTimer = sval + -1, sval == 0))
+        if (((u32)GameBit_Get(0x10) != 0) && (((AndrossState*)state)->actionTimer-- == 0))
         {
             GameBit_Set(0x10, 0);
             ((AndrossState*)state)->actionPending = 1;
