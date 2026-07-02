@@ -18,6 +18,8 @@
 #include "main/objseq.h"
 #include "main/sfa_shared_decls.h"
 
+#define SEQOBJECT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjGroup_AddObject();
 extern void objRenderFn_8003b8f4(f32);
@@ -84,7 +86,7 @@ void seqobject_init(int* obj, SeqObjectPlacement* params)
         }
     }
     state->triggerBitState = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 int seqobject_getExtraSize(void) { return sizeof(SeqObjectState); }
