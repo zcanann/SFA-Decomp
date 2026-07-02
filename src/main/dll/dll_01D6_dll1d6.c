@@ -85,6 +85,8 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/mm.h"
 #include "main/vecmath.h"
 
+#define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dll1D6Placement
 {
     u8 pad0[0x1A - 0x0];
@@ -270,7 +272,7 @@ void dll_1D6_init(int* obj, u8* params)
     extra->bufB = mmAlloc(40, 18, 0);
     getTabEntry(extra->bufB, 12,
                 ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
 }
 
 #pragma opt_common_subs off
