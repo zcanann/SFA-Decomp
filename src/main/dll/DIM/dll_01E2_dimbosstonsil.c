@@ -14,6 +14,9 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+
+#define MODEL_LIGHT_KIND_POINT 2
+
 extern void Music_Trigger(int id, int arg);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
@@ -399,7 +402,7 @@ void DIMbosstonsil_init(int obj, u32 p2, int isAltVariant)
     gDIMbosstonsilLight = objCreateLight(0, 1);
     if (gDIMbosstonsilLight != 0)
     {
-        modelLightStruct_setLightKind(gDIMbosstonsilLight, 2);
+        modelLightStruct_setLightKind(gDIMbosstonsilLight, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(gDIMbosstonsilLight, 0xff, 0, 0, 0x7f);
         modelLightStruct_setSpecularColor(gDIMbosstonsilLight, 0xff, 0, 0, 0x7f);
         modelLightStruct_setDistanceAttenuation(gDIMbosstonsilLight, lbl_803E4C9C, lbl_803E4CA0);
