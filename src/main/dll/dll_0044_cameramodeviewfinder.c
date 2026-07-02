@@ -32,6 +32,8 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_B 0x200
+
 /* ViewfinderState.mode state machine (see file header) */
 #define VIEWFINDER_MODE_ENTER_BLEND 0
 #define VIEWFINDER_MODE_YAW_SETTLE 1
@@ -350,7 +352,7 @@ void CameraModeViewfinder_update(s16* obj)
         firstPersonDoControls(obj);
         if (getButtonsJustPressed(0) & 0x210)
         {
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
             firstPersonExit((CameraObject*)obj);
             Rcp_SetViewFinderHudEnabled(0);
             lbl_803DD548->mode = VIEWFINDER_MODE_EXIT_BLEND;
