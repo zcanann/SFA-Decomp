@@ -7784,6 +7784,7 @@ extern u8 lbl_803DCCF8;
 extern f32 lbl_803DEA94;
 extern f32 lbl_803DEA98;
 
+#pragma opt_common_subs off
 void videoInit(void)
 {
     u8 fifo[0x80];
@@ -7919,6 +7920,7 @@ void videoInit(void)
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
 
+#pragma opt_common_subs reset
 #pragma optimize_for_size on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
