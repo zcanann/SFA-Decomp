@@ -164,6 +164,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00E5_shield.h"
 #include "main/dll/dll_00F7_dllf7.h"
 
+#define DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN 0x4000
+
 void depthoffieldpoint_init(int* obj);
 void depthoffieldpoint_update(int* obj);
 
@@ -641,7 +643,7 @@ void depthoffieldpoint_init(int* obj)
     s->enabled = 0;
     ((GameObject*)obj)->animEventCallback = depthoffieldpoint_SeqFn;
     s->mode0 = 0;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN;
 }
 
 void depthoffieldpoint_update(int* obj)
