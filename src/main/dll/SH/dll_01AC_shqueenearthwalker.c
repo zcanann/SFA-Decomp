@@ -19,6 +19,8 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
+
 extern int ObjTrigger_IsSetById();
 
 extern f32 getXZDistance(f32* a, f32* b);
@@ -364,5 +366,5 @@ void sh_queenearthwalker_init(void* obj, QueenEarthWalkerMapData* mapData)
 {
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
     ((GameObject*)obj)->animEventCallback = sh_queenearthwalker_processAnimEvents;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= SHQUEENEARTHWALKER_OBJFLAG_HIDDEN;
 }
