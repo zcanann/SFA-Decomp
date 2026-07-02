@@ -43,7 +43,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#define CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED 0x8000
+#define CCLIGHTFOOT_OBJFLAG_HIDDEN 0x4000
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -56,7 +56,7 @@ int cclightfoot_getExtraSize(void) { return 0x18; }
 void cclightfoot_init(int* obj, int* def)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_HIDDEN);
     ((GameObject*)obj)->animEventCallback = ccqueen_SeqFn;
 }
 
@@ -567,7 +567,7 @@ void cclightfoot_update(int obj)
             state->childObj = 0;
         }
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
         ObjHits_DisableObject(obj);
         return;
     }
