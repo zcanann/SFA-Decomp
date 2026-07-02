@@ -552,7 +552,7 @@ void cmbsrc_init(int obj, u8* setup)
         }
         if (state->light != NULL)
         {
-            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             if (cmbsrc->objAnim.seqId == CMBSRC_SEQ_THUSTER_SOURCE)
             {
                 modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
