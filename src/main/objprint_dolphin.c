@@ -3430,16 +3430,16 @@ void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mt
             }
             if (lbl_803DCC48 == 2)
             {
-                hdr = (u8*)(cache + idx * 0x30);
-                hdr = hdr + 0x12c0;
-                GXLoadPosMtxImm((f32*)hdr, *tbl);
+                u8* pm = (u8*)(cache + idx * 0x30);
+                u8* nm = pm + 0x12c0;
+                GXLoadPosMtxImm((f32*)pm, *tbl);
                 if (skip == 0 && tex != 0)
                 {
-                    GXLoadTexMtxImm((f32*)hdr, *tbl2, 0);
+                    GXLoadTexMtxImm((f32*)nm, *tbl2, 0);
                 }
                 if (skip == 0 && nrm != 0)
                 {
-                    GXLoadNrmMtxImm((f32*)hdr, *tbl);
+                    GXLoadNrmMtxImm((f32*)nm, *tbl);
                 }
             }
             else
