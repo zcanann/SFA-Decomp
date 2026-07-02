@@ -8,6 +8,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
+#define WATERFALLSPRAY_OBJFLAG_RENDERED 0x800
+
 typedef struct WaterFallSprayState
 {
     u32 sfxIdA;
@@ -109,7 +111,7 @@ void WaterFallSpray_update(int* objParam)
                 dz = ((GameObject*)obj)->anim.worldPosZ - playerObj->anim.worldPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (((distance <= (f32)(s32)((u32)data->distance << 4)) || (data->distance == 0)) &&
-                    ((((GameObject*)obj)->objectFlags & 0x800) != 0))
+                    ((((GameObject*)obj)->objectFlags & WATERFALLSPRAY_OBJFLAG_RENDERED) != 0))
                 {
                     for (i = 0; i < data->count; i++)
                     {
