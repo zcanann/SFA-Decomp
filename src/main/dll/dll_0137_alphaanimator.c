@@ -114,6 +114,7 @@ void alphaanimator_update(int* obj)
     int mode;
     void* block;
     f32 absRate;
+    int lvl;
     d = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
     s = (AlphaAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     mode = ((AlphaanimatorPlacement*)d)->modeFlags & 3;
@@ -253,11 +254,11 @@ void alphaanimator_update(int* obj)
         {
             s->alphaLevel =
                 (s16)(s->alphaLevel + ((AlphaanimatorPlacement*)d)->rate * framesThisStep);
-            if (s->alphaLevel > ((AlphaanimatorPlacement*)d)->startAlpha)
+            lvl = s->alphaLevel;
+            if (lvl > ((AlphaanimatorPlacement*)d)->startAlpha)
             {
-                s->alphaLevel =
-                    (s16)(((AlphaanimatorPlacement*)d)->targetAlpha +
-                        (int)(s->alphaLevel - ((AlphaanimatorPlacement*)d)->targetAlpha));
+                lvl -= ((AlphaanimatorPlacement*)d)->targetAlpha;
+                s->alphaLevel = (s16)(((AlphaanimatorPlacement*)d)->targetAlpha + lvl);
             }
         }
         break;
