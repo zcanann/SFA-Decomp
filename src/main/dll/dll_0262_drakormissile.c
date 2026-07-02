@@ -17,6 +17,8 @@
 
 #include "main/audio/sfx_ids.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 #define DRAKORMISSILE_EXTRA_SIZE 0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2
 #define DRAKORMISSILE_GROUP_ID 0x2
@@ -92,7 +94,7 @@ void drakormissile_startActiveLaunch(int obj)
     light = objCreateLight(obj, 1);
     if (light != NULL)
     {
-        modelLightStruct_setLightKind(light, 2);
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(light, 255, 128, 0, 0);
         lightSetFieldBC_8001db14(light, 1);
         modelLightStruct_setDistanceAttenuation(light, lbl_803E6940, lbl_803E6944);
@@ -183,7 +185,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     light = objCreateLight(obj, 1);
     if (light != NULL)
     {
-        modelLightStruct_setLightKind(light, 2);
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(light, 0, 255, 255, 0);
         lightSetFieldBC_8001db14(light, 1);
         modelLightStruct_setDistanceAttenuation(light, lbl_803E6940, lbl_803E6944);
