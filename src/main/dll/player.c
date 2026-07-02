@@ -9488,18 +9488,18 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     sel = uf & 0x4;
     if (sel != 0)
     {
-        ObjAnim_SetCurrentMove(obj, a, lbl_803E7EA4, mf);
+        ((int (*)(int, int, u8, f32))ObjAnim_SetCurrentMove)(obj, a, mf, lbl_803E7EA4);
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, f, lbl_803E7EA4, NULL);
         ObjModel_SampleJointTransform(model, 0, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     else
     {
-        Object_ObjAnimSetMove(lbl_803E7EA4, obj, a, mf);
+        ((int (*)(int, int, u8, f32))Object_ObjAnimSetMove)(obj, a, mf, lbl_803E7EA4);
         Object_ObjAnimAdvanceMove(f, lbl_803E7EA4, obj, NULL);
         ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     v1 = *(f32*)((char*)buf1 + ((u8)n << 2));
-    if (v1 < 0.0f)
+    if (v1 < lbl_803E7EA4)
     {
         v1 = -v1;
     }
