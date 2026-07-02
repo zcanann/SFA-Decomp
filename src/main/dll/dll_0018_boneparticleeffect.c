@@ -9,6 +9,7 @@
 #include "main/texture.h"
 #include "main/model.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_ids.h"
 
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
@@ -1435,7 +1436,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     {
         GameBit_Set(0x468, 0);
         gBoneParticleEffectTimer = 0xf;
-        Sfx_PlayFromObject(o, 0x281);
+        Sfx_PlayFromObject(o, SFXsc_mumble01);
     }
     m = Modgfx_GetActiveModel((void*)o);
     if (gBoneParticleStageIndex > 6)
@@ -1456,13 +1457,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* o)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMax;
-        Sfx_PlayFromObject(o, 0x282);
+        Sfx_PlayFromObject(o, SFXsc_mumble02);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMin;
-        Sfx_PlayFromObject(o, 0x282);
+        Sfx_PlayFromObject(o, SFXsc_mumble02);
     }
     slot = 0;
     grp2 = gBoneParticleEffectBuffers;
