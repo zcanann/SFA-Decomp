@@ -2854,6 +2854,12 @@ void audioLoadTriggerData(void)
 }
 #pragma dont_inline reset
 
+typedef struct AudioMemHookPair
+{
+    s32 alloc;
+    s32 free;
+} AudioMemHookPair;
+
 int audioInit(void)
 {
     char* base = sSampleBufferSLoadedCallbackLoadError;
@@ -2862,8 +2868,7 @@ int audioInit(void)
     int delay;
     int v;
 
-    hooks[0] = gAudioMemAllocHook;
-    hooks[1] = gAudioMemFreeHook;
+    *(AudioMemHookPair*)hooks = *(AudioMemHookPair*)&gAudioMemAllocHook;
     if (!gAudioInitStarted)
     {
         gAudioInitStarted = 1;
