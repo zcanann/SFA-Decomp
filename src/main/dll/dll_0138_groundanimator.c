@@ -14,6 +14,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/track_dolphin.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define GROUNDANIMATOR_OBJFLAG_FREED 0x40
+
 typedef struct GroundanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -493,7 +495,7 @@ void groundanimator_update(int* obj)
                 }
             }
         }
-        else if ((((GameObject*)g->linkedObj)->objectFlags & 0x40) != 0)
+        else if ((((GameObject*)g->linkedObj)->objectFlags & GROUNDANIMATOR_OBJFLAG_FREED) != 0)
         {
             g->linkedObj = 0;
         }
