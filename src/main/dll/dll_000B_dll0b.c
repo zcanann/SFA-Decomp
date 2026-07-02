@@ -34,6 +34,8 @@
 #include "main/dll/dll_000B_dll0b.h"
 #include "main/objlib.h"
 
+#define DLL0B_OBJFLAG_RENDERED 0x800
+
 typedef struct ModgfxEffectSlot
 {
     u8 pad0[0x4 - 0x0];
@@ -1796,7 +1798,7 @@ void dll_0B_func0E(void)
         if (effect != NULL)
         {
             sourceObject = effect->sourceObject;
-            if (sourceObject != NULL && (sourceObject->objectFlags & 0x800) != 0)
+            if (sourceObject != NULL && (sourceObject->objectFlags & DLL0B_OBJFLAG_RENDERED) != 0)
             {
                 effect->frameUpdated = 1;
             }
