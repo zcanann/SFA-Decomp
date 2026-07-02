@@ -113,9 +113,9 @@ void fn_8015F5B0(short* obj)
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = lbl_803E2E20 + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s8*)(setup + 4) = 1;
-        *(s8*)(setup + 5) = 4;
-        *(u8*)(setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 4;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         o = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (o != NULL)
         {
