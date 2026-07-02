@@ -1139,12 +1139,15 @@ void fn_802AA4B0(int obj, int state, f32 unused)
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             int sp = *(int*)&((PlayerState*)state)->baddie.targetObj;
-            ObjHitVolumeRuntimeTransform* pt =
-                &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->hitVolumeIndex];
-            f32 dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
-            f32 dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
-            f32 dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
+            ObjHitVolumeRuntimeTransform* pt;
+            f32 dx;
+            f32 dz;
+            f32 dy;
             spawned = sp;
+            pt = &((GameObject*)sp)->anim.hitVolumeTransforms[((GameObject*)sp)->hitVolumeIndex];
+            dx = pt->jointX - ((GameObject*)gPlayerPathObject)->anim.localPosX;
+            dy = pt->jointY - ((GameObject*)gPlayerPathObject)->anim.localPosY;
+            dz = pt->jointZ - ((GameObject*)gPlayerPathObject)->anim.localPosZ;
             v.mat[1] = lbl_803E7EA4;
             v.mat[2] = lbl_803E7EA4;
             v.mat[3] = lbl_803E7EA4;
@@ -1177,7 +1180,9 @@ void fn_802AA4B0(int obj, int state, f32 unused)
             f32 k;
             f32 m;
             *(s16*)((char*)setup + 0x0) = *(s16*)((char*)slot + 0x0);
-            fov = gPlayerPi * (Camera_GetFovY() * lbl_803E80D4) / lbl_803E7F98;
+            fov = Camera_GetFovY();
+            fov *= lbl_803E80D4;
+            fov = gPlayerPi * fov / lbl_803E7F98;
             {
                 f32 sn = mathSinf(fov);
                 cot = lbl_803E7F5C * (sn / mathCosf(fov));
@@ -1195,11 +1200,11 @@ void fn_802AA4B0(int obj, int state, f32 unused)
             *(f32*)((char*)setup + 0x28) = m * vec[1];
             *(f32*)((char*)setup + 0x2c) = m * vec[2];
             k = lbl_803E7ED4;
-            *(f32*)((char*)setup + 0x18) = ((ObjPlacement*)setup)->posY =
+            ((ObjPlacement*)setup)->posY = *(f32*)((char*)setup + 0x18) =
                 k * *(f32*)((char*)setup + 0x24) + *(f32*)((char*)slot + 0xc);
-            *(f32*)((char*)setup + 0x1c) = ((ObjPlacement*)setup)->posZ =
+            ((ObjPlacement*)setup)->posZ = *(f32*)((char*)setup + 0x1c) =
                 k * *(f32*)((char*)setup + 0x28) + *(f32*)((char*)slot + 0x10);
-            *(f32*)((char*)setup + 0x20) = *(f32*)&((ObjPlacement*)setup)->mapId =
+            *(f32*)&((ObjPlacement*)setup)->mapId = *(f32*)((char*)setup + 0x20) =
                 k * *(f32*)((char*)setup + 0x2c) + *(f32*)((char*)slot + 0x14);
             ((ObjPlacement*)setup)->unk02 = *(s16*)((char*)slot + 0x2) / 2;
             *(s16*)((char*)setup + 0x0) = -*(s16*)((char*)slot + 0x0);
