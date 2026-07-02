@@ -268,7 +268,7 @@ void dim2pathgenerator_update(int* obj)
     }
     if (Obj_IsLoadingLocked())
     {
-        int* np = (int*)Obj_AllocObjectSetup(36, ((volatile s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
+        int* np = (int*)Obj_AllocObjectSetup(36, ((s16*)((Dim2PathGeneratorState*)extra)->spawnTypes)[toggle]);
         ((Dim2SpawnSetup*)np)->posX = ((Dim2PathGeneratorState*)extra)->originX;
         ((Dim2SpawnSetup*)np)->posY = ((Dim2PathGeneratorState*)extra)->originY;
         ((Dim2SpawnSetup*)np)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;

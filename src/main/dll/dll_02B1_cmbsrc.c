@@ -392,7 +392,7 @@ void cmbsrc_updateVisuals(int obj, int state)
                     vec[1] = lbl_803E7360;
                 }
             }
-            vec[2] = *(volatile f32*)&lbl_803E7360;
+            vec[2] = *(f32*)&lbl_803E7360;
             fn_80098B18(obj, sourceState->radius, colorIdx, effectMode, subMode, vec);
             break;
         }

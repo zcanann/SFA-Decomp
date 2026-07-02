@@ -1386,7 +1386,7 @@ void andross_update(int obj)
         fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
-        zero = *(volatile f32*)&lbl_803E74D4;
+        zero = *(f32*)&lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) /
             lbl_803E74A4));
@@ -1429,7 +1429,7 @@ void andross_update(int obj)
         fa = (((GameObject*)*state)->anim.localPosY - ((AndrossState*)state)->homePosY);
         zero = lbl_803E74D4;
         fc = (fb < zero) ? zero : ((fb > zero) ? zero : fb);
-        zero = *(volatile f32*)&lbl_803E74D4;
+        zero = *(f32*)&lbl_803E74D4;
         fb = (fa < zero) ? zero : ((fa > zero) ? zero : fa);
         fa = mathSinf(((lbl_803E74A0 * (f32)(gAndrossSwayPhaseX)) /
             lbl_803E74A4));

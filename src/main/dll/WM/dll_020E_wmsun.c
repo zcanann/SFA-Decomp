@@ -184,7 +184,7 @@ void wmsun_updateGlare(int obj)
         dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(cam + 0x10);
         dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (*(volatile f32*)&lbl_803E5F20 != len)
+        if (*(f32*)&lbl_803E5F20 != len)
         {
             dx = dx / len;
             dy = dy / len;
@@ -205,13 +205,13 @@ void wmsun_updateGlare(int obj)
         {
             cosang = cz;
         }
-        hy = *(volatile f32*)&lbl_803E5F20;
+        hy = *(f32*)&lbl_803E5F20;
         if (cosang > hy)
         {
             dot = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
             hz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
             hlen = sqrtf(hz * hz + (dot * dot + hy));
-            if (*(volatile f32*)&lbl_803E5F20 != hlen)
+            if (*(f32*)&lbl_803E5F20 != hlen)
             {
                 dot = dot / hlen;
                 hy = hy / hlen;

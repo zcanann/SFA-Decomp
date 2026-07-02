@@ -79,7 +79,7 @@ int Credits_frameStart(void)
         {
             i = 0;
             off = 0;
-            cur = *(volatile f32*)&lbl_803DD968;
+            cur = *(f32*)&lbl_803DD968;
             for (; i < gCreditsPages[lbl_803DD970].count; off += 16, i++)
             {
                 line = (CreditsLine*)((char*)gCreditsPages[lbl_803DD970].lines + off);

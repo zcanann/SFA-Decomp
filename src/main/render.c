@@ -145,7 +145,7 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
     hi = hi << shamt;
     acc = hi;
     {
-        int lo = *(volatile u8*)p;
+        int lo = *(u8*)p;
         p = p + 1;
         idx = (lo & 0xf) << 3;
     }

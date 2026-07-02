@@ -112,7 +112,7 @@ void InvisibleHitSwitch_update(int obj)
         }
     }
 
-    if (((InvisibleHitSwitchState*)state)->activationTimer != *(volatile f32*)&lbl_803E3730)
+    if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730)
     {
         ((InvisibleHitSwitchState*)state)->activationTimer = ((InvisibleHitSwitchState*)state)->activationTimer - timeDelta;
         if (((InvisibleHitSwitchState*)state)->activationTimer < lbl_803E3734)

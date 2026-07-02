@@ -441,7 +441,7 @@ void CameraModeViewfinder_update(s16* obj)
             {
                 angleDiff = angleDiff + 0xffff;
             }
-            obj[1] = *(volatile s16*)&obj[1] + (int)((f32)angleDiff * timeDelta) / 8;
+            obj[1] = *(s16*)&obj[1] + (int)((f32)angleDiff * timeDelta) / 8;
         }
         if (brightness != 0)
         {

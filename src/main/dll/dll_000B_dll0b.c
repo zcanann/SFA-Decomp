@@ -2331,7 +2331,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             rot[0] = -playerMapOffsetX;
         }
-        if (rot[1] > *(volatile f32*)&gModgfxOffsetRangeMax || rot[1] < gModgfxOffsetRangeMin)
+        if (rot[1] > *(f32*)&gModgfxOffsetRangeMax || rot[1] < gModgfxOffsetRangeMin)
         {
             rot[1] = lbl_803DF430;
         }

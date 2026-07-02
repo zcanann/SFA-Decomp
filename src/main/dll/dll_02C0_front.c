@@ -498,22 +498,22 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
     GXSetScissor((int)((u32) * (f32*)(gTitleScreenMtx + 0xc) + 0x39),
                  (int)((u32) * (f32*)(gTitleScreenMtx + 0x1c) + 0x4e), 0x104, 0x16);
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
-    GXWGFifo.s16 = (s16)(x0 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
+    GXWGFifo.s16 = (s16)(x0 - *(u32*)&lbl_803DD9BC * 4 + 0x208);
     GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v0;
-    GXWGFifo.s16 = (s16)(x1 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
+    GXWGFifo.s16 = (s16)(x1 - *(u32*)&lbl_803DD9BC * 4 + 0x208);
     GXWGFifo.s16 = y0;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v0;
-    GXWGFifo.s16 = (s16)(x1 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
+    GXWGFifo.s16 = (s16)(x1 - *(u32*)&lbl_803DD9BC * 4 + 0x208);
     GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
-    GXWGFifo.s16 = (s16)(x0 - *(volatile u32*)&lbl_803DD9BC * 4 + 0x208);
+    GXWGFifo.s16 = (s16)(x0 - *(u32*)&lbl_803DD9BC * 4 + 0x208);
     GXWGFifo.s16 = y1;
     GXWGFifo.s16 = -0x20;
     GXWGFifo.f32 = u0;

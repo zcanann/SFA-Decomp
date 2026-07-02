@@ -431,7 +431,7 @@ int TitleMenu_run(void)
         {
             inputPressed = 1;
         }
-        if (*(volatile u8*)&gAttractMovieLoopCompleted != 0)
+        if (*(u8*)&gAttractMovieLoopCompleted != 0)
         {
             gAttractMovieLoopCompleted = 0;
         }

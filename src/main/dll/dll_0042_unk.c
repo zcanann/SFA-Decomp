@@ -587,7 +587,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
         speed = lbl_803E16A4;
     }
     dist = dist < lbl_803E16AC ? lbl_803E16AC : (dist > speed ? speed : dist);
-    dist = dist < *(volatile f32*)&lbl_803E16AC ? lbl_803E16AC : (dist > lbl_803E1708 ? lbl_803E1708 : dist);
+    dist = dist < *(f32*)&lbl_803E16AC ? lbl_803E16AC : (dist > lbl_803E1708 ? lbl_803E1708 : dist);
     camera->anim.localPosX = dx * dist + camera->anim.localPosX;
     camera->anim.localPosZ = dy * dist + camera->anim.localPosZ;
 

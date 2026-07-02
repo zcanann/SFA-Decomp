@@ -157,7 +157,7 @@ void runLoadingScreens(void)
         gTitleScreenInitLoadingFrameCounter++;
     }
 
-    if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) && (*(volatile u8*)&gDvdErrorPauseActive == 0))
+    if ((gTitleScreenInitDvdErrorLatched != 0) && (gTitleScreenInitLoadingFrameCounter > 0x258) && (*(u8*)&gDvdErrorPauseActive == 0))
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShowStr(gameTextGetStr(0x565), 0, 0x118, 300);

@@ -916,7 +916,7 @@ int hightop_stateHandler04(int obj, int p)
         {
             goto inRange;
         }
-        if (dy >= *(volatile f32*)&lbl_803E6AA8)
+        if (dy >= *(f32*)&lbl_803E6AA8)
         {
         }
         else

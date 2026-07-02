@@ -324,7 +324,7 @@ void sc_levelcontrol_update(int obj)
             GameBit_Set(0x7cf, 1);
         }
     }
-    else if (((ScLevelControlState*)state)->timer10 != *(volatile f32*)&lbl_803E5558 &&
+    else if (((ScLevelControlState*)state)->timer10 != *(f32*)&lbl_803E5558 &&
              (((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)

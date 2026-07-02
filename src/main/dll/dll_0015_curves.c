@@ -1735,7 +1735,7 @@ u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
 
 void saveFileStruct_setCheatActive(u8 optionIndex, u8 active)
 {
-    volatile SaveData* save;
+    SaveData* save;
 
     save = &saveData;
     if ((save->registeredDebugOptions & (1 << optionIndex)) == 0)
@@ -1845,7 +1845,7 @@ void saveFileStruct_unlockCheat(u8 idx)
 
 int saveFileStruct_isCheatActive(u8 idx)
 {
-    volatile SaveData* save;
+    SaveData* save;
 
     save = &saveData;
     if ((save->registeredDebugOptions & (1 << idx)) != 0)

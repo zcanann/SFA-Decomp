@@ -554,11 +554,11 @@ int fn_801C49B8(void* objArg)
     {
         runtime->swayAccel -= lbl_803E4F48 * timeDelta;
     }
-    else if (target > *(volatile f32*)&lbl_803E4F40)
+    else if (target > *(f32*)&lbl_803E4F40)
     {
         if (runtime->swayAccel < target)
         {
-            runtime->swayAccel += *(volatile f32*)&lbl_803E4F48 * timeDelta;
+            runtime->swayAccel += *(f32*)&lbl_803E4F48 * timeDelta;
         }
     }
 

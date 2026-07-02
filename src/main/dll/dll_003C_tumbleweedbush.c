@@ -599,12 +599,12 @@ u32 Link_update(void)
     if (linkCount_803dd90e > 0xff)
     {
         linkCount_803dd90e = (s16)(0xff - (linkCount_803dd90e - 0xff));
-        gTumbleweedBushPulseDir = (s8)(*(volatile s8*)&gTumbleweedBushPulseDir ^ 1);
+        gTumbleweedBushPulseDir = (s8)(*(s8*)&gTumbleweedBushPulseDir ^ 1);
     }
     else if (linkCount_803dd90e < 0)
     {
         linkCount_803dd90e = (s16) - linkCount_803dd90e;
-        gTumbleweedBushPulseDir = (s8)(*(volatile s8*)&gTumbleweedBushPulseDir ^ 1);
+        gTumbleweedBushPulseDir = (s8)(*(s8*)&gTumbleweedBushPulseDir ^ 1);
     }
 
     gTumbleweedBushInputEnabled = 1;

@@ -184,7 +184,7 @@ void dll_19E_update(void* obj)
     struct
     {
         u8 args[16];
-        volatile f32 scale;
+        f32 scale;
     } effectBuf;
     u32 resourceArgs[4];
     int i;
@@ -316,7 +316,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     struct
     {
         u8 args[16];
-        volatile f32 scale;
+        f32 scale;
     } stackArg;
 
     state = ((GameObject*)obj)->extra;

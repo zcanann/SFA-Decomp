@@ -279,7 +279,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
     int shader;
     u32 shaderIdx;
-    volatile int colorWord;
+    int colorWord;
     int _base;
     u32 _bits;
     u32 bitPos;

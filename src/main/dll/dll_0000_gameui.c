@@ -1303,11 +1303,11 @@ void pauseMenuFn_8012b77c(void)
     f32 speed = lbl_803DD764;
     f32 v = speed * timeDelta + lbl_803DD760;
 
-    *(volatile f32*)&lbl_803DD760 = v;
+    *(f32*)&lbl_803DD760 = v;
     v = (v < lbl_803E2160) ? lbl_803E2160 : v;
-    *(volatile f32*)&lbl_803DD760 = v;
+    *(f32*)&lbl_803DD760 = v;
     v = (v < lbl_803E1F60) ? v : lbl_803E1F60;
-    *(volatile f32*)&lbl_803DD760 = v;
+    *(f32*)&lbl_803DD760 = v;
 
     if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) &&
         ((int)btn & 0x200) && speed > lbl_803E2160)
@@ -1750,17 +1750,17 @@ void pauseMenuRunSubmenu(u8 p1)
             lbl_803DD75E = -0x28;
         }
         v = lbl_803DD75C + lbl_803DD75E;
-        *(volatile s16*)&lbl_803DD75C = v;
+        *(s16*)&lbl_803DD75C = v;
         if ((s16)v > 0x200)
         {
             v = 0x200;
         }
-        *(volatile s16*)&lbl_803DD75C = v;
+        *(s16*)&lbl_803DD75C = v;
         if ((s16)v < 0)
         {
             v = 0;
         }
-        *(volatile s16*)&lbl_803DD75C = v;
+        *(s16*)&lbl_803DD75C = v;
     }
     else
     {
@@ -4475,11 +4475,11 @@ void GameUI_initialise(void)
     gCMenuCloseSfx = 0;
     gTrickyHudCachedIconIndex = -1;
     res = getScreenResolution();
-    *(volatile int*)&gGameUiScreenWidthOffset = res;
+    *(int*)&gGameUiScreenWidthOffset = res;
     height = res >> 16;
-    *(volatile int*)&lbl_803DD740 = height;
+    *(int*)&lbl_803DD740 = height;
     width = res & 0xffff;
-    *(volatile int*)&gGameUiScreenWidthOffset = width;
+    *(int*)&gGameUiScreenWidthOffset = width;
     gGameUiScreenWidthOffset = width - 320;
     lbl_803DD740 = height - 240;
     for (i = 0; i < 102; i++)
