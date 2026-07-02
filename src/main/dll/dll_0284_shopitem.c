@@ -22,6 +22,8 @@
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/sfa_shared_decls.h"
 
+#define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct ShopSparkleSpawn
 {
     f32 x;
@@ -228,7 +230,7 @@ void shopitem_init(int obj, int data)
     int state = *(int*)&((GameObject*)obj)->extra;
 
     objAnim = (ObjAnimComponent*)obj;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
     ((GameObject*)obj)->animEventCallback = fn_801E86F4;
     objAnim->bankIndex = (s8)((ShopItemDef*)data)->bankIndex;
     ((GameObject*)obj)->anim.rotX = (s16)(((ShopItemDef*)data)->rotXByte << 8);
