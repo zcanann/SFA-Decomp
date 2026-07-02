@@ -17,6 +17,8 @@
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define DLL1DF_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern f32 lbl_803E4B98;
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4, lbl_803E4BA8, lbl_803E4BAC;
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -91,7 +93,7 @@ void dll_1DF_init(GameObject* obj, Dll1DFPlaceData* p)
     {
         ((ObjModelState*)modelState)->flags |= 0x810;
     }
-    obj->objectFlags |= 0x2000;
+    obj->objectFlags |= DLL1DF_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_1DF_update(GameObject* obj)
