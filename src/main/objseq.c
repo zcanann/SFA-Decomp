@@ -1585,18 +1585,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                         if (((ObjSeqState*)seq)->trackRunLength[10] != 0)
                         {
                             frame = ((ObjSeqState*)seq)->curFrame - 1;
-                            if (((ObjSeqState*)seq)->animEntries != NULL && ((ObjSeqState*)seq)->trackRunLength[10] !=
-                                0)
-                            {
-                                rate = objCurveInterpolate(
-                                    (ObjCurveKey*)(((ObjSeqState*)seq)->animEntries +
-                                        ((ObjSeqState*)seq)->trackAnimStart[10] * 8),
-                                    ((ObjSeqState*)seq)->trackRunLength[10] & 0xfff, frame);
-                            }
-                            else
-                            {
-                                rate = gObjSeqDefaultFadeRate;
-                            }
+                            rate = ObjSeq_SampleTrackCurve(seq, 10, frame);
                         }
                         else
                         {
@@ -2847,18 +2836,7 @@ int ObjSeq_update(u8* obj, f32 t)
                         if (((ObjSeqState*)seq)->trackRunLength[10] != 0)
                         {
                             i = ((ObjSeqState*)seq)->curFrame - 1;
-                            if (((ObjSeqState*)seq)->animEntries != NULL && ((ObjSeqState*)seq)->trackRunLength[10] !=
-                                0)
-                            {
-                                rate = objCurveInterpolate(
-                                    (ObjCurveKey*)(((ObjSeqState*)seq)->animEntries +
-                                        ((ObjSeqState*)seq)->trackAnimStart[10] * 8),
-                                    ((ObjSeqState*)seq)->trackRunLength[10] & 0xfff, i);
-                            }
-                            else
-                            {
-                                rate = gObjSeqDefaultFadeRate;
-                            }
+                            rate = ObjSeq_SampleTrackCurve(seq, 10, i);
                         }
                         else
                         {
