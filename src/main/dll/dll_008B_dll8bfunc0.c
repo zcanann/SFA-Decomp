@@ -45,9 +45,9 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     void* mbuf = base;
     f32 zero;
     f32 zoff;
-    f32 v60 = lbl_803E1060;
-    f32 v64 = lbl_803E1064;
-    f32 s = lbl_803E1068;
+    f32 v60 = 2.0f;
+    f32 v64 = -1.7f;
+    f32 s = 1.0f;
     FbCmd* e;
     FbCmd* p;
     int i;
@@ -56,15 +56,15 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         s = *arg6;
     }
     i = 0;
-    zoff = lbl_803E106C + s;
+    zoff = 0.01f + s;
     e = buf.entries;
-    zero = lbl_803E1074;
+    zero = 0.0f;
     for (; i < 2; i++)
     {
         if (i == 1)
         {
-            v60 = lbl_803E1060;
-            v64 = lbl_803E1070;
+            v60 = 2.0f;
+            v64 = -4.2f;
         }
         e[0].layer = 0;
         e[0].flags = 0x15;
@@ -89,14 +89,14 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
             p->mode = 2;
             if (variant == 4)
             {
-                p->x = lbl_803E1080;
-                p->y = lbl_803E1080;
+                p->x = 0.0375f;
+                p->y = 0.0375f;
                 p->z = zoff;
             }
             else
             {
-                p->x = lbl_803E1084;
-                p->y = lbl_803E1084;
+                p->x = 0.0125f;
+                p->y = 0.0125f;
                 p->z = zoff;
             }
             p++;
@@ -109,14 +109,14 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
             p->mode = 2;
             if (variant == 4)
             {
-                p->x = lbl_803E1088;
-                p->y = lbl_803E1088;
+                p->x = 0.03f;
+                p->y = 0.03f;
                 p->z = zoff;
             }
             else
             {
-                p->x = lbl_803E106C;
-                p->y = lbl_803E106C;
+                p->x = 0.01f;
+                p->y = 0.01f;
                 p->z = zoff;
             }
             p++;
@@ -128,29 +128,29 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         switch (variant)
         {
         case 0:
-            p[0].x = lbl_803E1074;
-            p[0].y = lbl_803E108C;
-            p[0].z = lbl_803E1074;
+            p[0].x = 0.0f;
+            p[0].y = 30.0f;
+            p[0].z = 0.0f;
             break;
         case 1:
-            p[0].x = lbl_803E1074;
-            p[0].y = lbl_803E1090;
-            p[0].z = lbl_803E1074;
+            p[0].x = 0.0f;
+            p[0].y = -30.0f;
+            p[0].z = 0.0f;
             break;
         case 2:
-            p[0].x = lbl_803E108C;
-            p[0].y = lbl_803E1074;
-            p[0].z = lbl_803E1074;
+            p[0].x = 30.0f;
+            p[0].y = 0.0f;
+            p[0].z = 0.0f;
             break;
         case 3:
-            p[0].x = lbl_803E1090;
-            p[0].y = lbl_803E1074;
-            p[0].z = lbl_803E1074;
+            p[0].x = -30.0f;
+            p[0].y = 0.0f;
+            p[0].z = 0.0f;
             break;
         case 4:
-            p[0].x = lbl_803E1074;
-            p[0].y = lbl_803E1094;
-            p[0].z = lbl_803E1074;
+            p[0].x = 0.0f;
+            p[0].y = 0.1f;
+            p[0].z = 0.0f;
             break;
         }
         p[1].layer = 1;
