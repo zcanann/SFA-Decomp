@@ -2902,13 +2902,13 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
     u32 w;
     u32 h;
     int texA;
-    u32 wB;
     u32 wA;
-    u8 redA;
-    int i;
+    u32 wB;
+    int redA;
     int j;
+    int i;
     int texB;
-    u8 redB;
+    int redB;
     int rf;
     int gf;
     int bf;
@@ -2945,23 +2945,25 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     int i4;
                     int i12;
                     u8 *p;
+                    u16 outv;
                     p = src1 + i6;
                     i4 = (j >> 2) * 0x20;
                     p += i4; p += i5;
                     i12 = (int)*(u16*)(src1 + 0xa) * im * 2;
                     p += i12;
                     texA = *(u16*)(p + 0x60);
-                    redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
+                    redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
                     p = src2 + i6; p += i4; p += i5; p += i12;
                     texB = *(u16*)(p + 0x60);
-                    redB = ((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13);
+                    redB = (u8)(((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13));
                     bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8)
                         + ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
                     rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
                         + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
+                    outv = bf | (rf | gf);
                     p = dst + i6; p += i4; p += i5; p += i12;
-                    *(u16*)(p + 0x60) = bf | (rf | gf);
+                    *(u16*)(p + 0x60) = outv;
                 }
             }
         }
@@ -2979,19 +2981,19 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     int i12;
                     int i6;
                     u8 *ad, *bd, *cd;
-                    u8 aLo, bLo, aHi, bHi;
+                    int aLo, bLo, aHi, bHi;
                     ad = src1 + i9;
                     i12 = (j >> 2) * 0x40;
                     ad += i12; ad += i4;
                     i6 = (int)*(u16*)(src1 + 0xa) * i5 * 2;
                     ad += i6;
                     bd = src2 + i9; bd += i12; bd += i4; bd += i6;
-                    aLo = *(u16*)(ad + 0x60);
-                    bLo = *(u16*)(bd + 0x60);
+                    aLo = (u8)*(u16*)(ad + 0x60);
+                    bLo = (u8)*(u16*)(bd + 0x60);
                     texA = *(u16*)(ad + 0x80);
-                    aHi = (int)(texA & 0xff00) >> 8;
+                    aHi = (u8)((int)(texA & 0xff00) >> 8);
                     texB = *(u16*)(bd + 0x80);
-                    bHi = (int)(texB & 0xff00) >> 8;
+                    bHi = (u8)((int)(texB & 0xff00) >> 8);
                     cd = dst + i9 + i12 + i4 + 0x60;
                     *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
                     *(u16*)(cd + (int)*(u16*)(src1 + 0xa) * i5 * 2 + 0x20) =
