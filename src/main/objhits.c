@@ -1973,7 +1973,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
             {
                 tmp = yB - radiusB;
             }
-            if (tmp > yA) goto end;
+            if (!(tmp > yA)) goto spanOverlap;
+            goto end;
         }
         else
         {
@@ -1995,6 +1996,7 @@ void ObjHits_DetectObjectPair(int objA, int objB)
             }
             if (tmp > yB) goto end;
         }
+    spanOverlap:
         dy = gObjHitsScalarZero;
         vertical = 1;
     }
@@ -2068,7 +2070,7 @@ void ObjHits_DetectObjectPair(int objA, int objB)
                 {
                     ny = gObjHitsScalarZero;
                 }
-                tmp = sqrtf(ny * ny + nx * nx + nz * nz);
+                tmp = sqrtf(nx * nx + ny * ny + nz * nz);
                 if (tmp > gObjHitsScalarZero)
                 {
                     dx = nx / tmp;
