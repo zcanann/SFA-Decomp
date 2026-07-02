@@ -9,6 +9,8 @@
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
 
+#define PROJECTILESWITCH_OBJFLAG_HIDDEN 0x4000
+
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -293,7 +295,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
     }
     if ((initData[0x23] & 1) == 0)
     {
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | PROJECTILESWITCH_OBJFLAG_HIDDEN);
     }
 }
 
