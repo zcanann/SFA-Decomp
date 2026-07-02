@@ -591,6 +591,12 @@ void dbegg_init(int obj)
     }
 }
 
+typedef struct DbEggIntPair
+{
+    s32 a;
+    s32 b;
+} DbEggIntPair;
+
 void dbegg_update(int obj)
 {
     extern void dbegg_setupFromDef(int obj, int* state);
@@ -654,10 +660,7 @@ void dbegg_update(int obj)
 
     player = Obj_GetPlayerObject();
     blob = *(int*)&((GameObject*)obj)->extra;
-    n = lbl_803E61C0;
-    i = lbl_803E61C4;
-    buf2[0] = n;
-    buf2[1] = i;
+    *(DbEggIntPair*)buf2 = *(DbEggIntPair*)&lbl_803E61C0;
     if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ) != -1)
     {
