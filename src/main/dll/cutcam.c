@@ -28,6 +28,10 @@
 #include "main/pad.h"
 #include "main/curve.h"
 #include "sfa_light_decls.h"
+
+#define PAD_TRIGGER_Z 0x10
+#define PAD_TRIGGER_L 0x40
+
 extern u16 getPadFn_80014d9c(int controller);
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
@@ -219,7 +223,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             cameraSetInterpMode(1);
             (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         }
-        else if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+        else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
                  (cond = objFn_802962b4((int)target), cond != 0))
         {
             action44Payload.distance = cameraMtxVar57->minDistance;
@@ -231,7 +235,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         else
         {
             cond = getCurSeqNo();
-            if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & 0x40) != 0)) &&
+            if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & PAD_TRIGGER_L) != 0)) &&
                 ((camera->anim.flags & 4) == 0))
             {
                 action43Payload.action = 5;
