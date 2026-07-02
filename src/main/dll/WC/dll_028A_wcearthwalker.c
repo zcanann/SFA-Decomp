@@ -37,6 +37,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_A 0x100
+
 int earthwalker_getExtraSize(void) { return 0x660; }
 
 int earthwalker_getObjectTypeId(void) { return 0; }
@@ -126,7 +128,7 @@ void earthwalker_update(int obj)
     case 0:
         if (ewObj->statusFlags & 1)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             GameBit_Set(0x7fb, 1);
             ewState->interactionState = 2;
             ewState->flags |= 1;
@@ -362,7 +364,7 @@ void earthwalker_update(int obj)
                 if ((u32)GameBit_Get(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0)
                 {
                     newState = 4;
-                    buttonDisable(0, 0x100);
+                    buttonDisable(0, PAD_BUTTON_A);
                     GameBit_Set(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
                 }
                 else
@@ -373,7 +375,7 @@ void earthwalker_update(int obj)
             }
             if (newState != -1)
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 (*gObjectTriggerInterface)->runSequence(
                     newState, (void*)obj, -1);
                 ewState->lastTriggeredState = newState;
