@@ -2394,14 +2394,14 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
 
     gShadowVisibleCount = 0;
-    for (; n < count; n++)
+    for (; n < count; n++, input += 5)
     {
         int vis = 1;
         int i = n * 3;
         f32 dot = modelState->shadowOffsetX * input[0] +
             modelState->shadowOffsetY * input[1] +
             modelState->shadowOffsetZ * input[2];
-        if (dot < 0.0f)
+        if (dot < lbl_803DEC58)
         {
             vis = -1;
         }
@@ -2431,7 +2431,6 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
                 return 0;
             }
         }
-        input += 5;
     }
     return gShadowVisibleCount > 0;
 }
