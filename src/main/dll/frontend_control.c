@@ -41,6 +41,8 @@ __declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
 #define SECONDS_PER_HOUR 3600
 #define SECONDS_PER_MINUTE 60
 
+#define PAD_TRIGGER_Z 0x10
+
 void saveFileSelect_checkCheatCodes(void)
 {
     u32 held;
@@ -62,7 +64,7 @@ void saveFileSelect_checkCheatCodes(void)
         }
     }
     held = getButtonsHeld(0);
-    if ((held & 0x10) == 0) return;
+    if ((held & PAD_TRIGGER_Z) == 0) return;
 
     if (saveFileSelect_saveCheatProgress == 0)
     {
