@@ -2836,7 +2836,9 @@ extern u16 gGameTextBoxCornerTexSrc[];
 extern u16 lbl_802CA100[];
 
 #pragma opt_strength_reduction off
-#pragma optimization_level 1
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
 #pragma scheduling off
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
@@ -2868,12 +2870,15 @@ void gameTextInitFn_8001c794(void)
     tex = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
     gGameTextBoxCornerTexture = tex;
     dst = (u16*)((u8*)tex + 0x60);
+    i = 0;
     y = 0;
     src = gGameTextBoxCornerTexSrc;
-    for (i = 0; i < 4; i++)
+    for (; i < 4; i++)
     {
+        j = 0;
+        x = 0;
         x0 = 0;
-        for (x = 0; x < 16; x += 8)
+        while (j < 2)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
@@ -2931,7 +2936,9 @@ void gameTextInitFn_8001c794(void)
             dst[30] = *(u16*)(rowBase + x2);
             dst[31] = *(u16*)(rowBase + x3);
             dst += 32;
+            x += 8;
             x0 += 8;
+            j = j + 1;
         }
         y += 4;
     }
@@ -2981,7 +2988,9 @@ void gameTextInitFn_8001c794(void)
     }
     DCFlushRange((u8*)gGameTextBoxEdgeTexture + 0x60, 800);
 }
-#pragma optimization_level reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma opt_propagation reset
 #pragma peephole reset
 #pragma scheduling reset
 
