@@ -764,6 +764,20 @@ void Obj_ApplyPendingParentLinks(void)
     }
 }
 
+static inline void Obj_FreeDeferredObjects(void)
+{
+    int i;
+    for (i = 0; i < gObjDeferredFreeCount; i++)
+    {
+        void* p = gObjDeferredFreeList[i];
+        if (p != NULL)
+        {
+            objFreeObjDef(p, 0);
+            gObjDeferredFreeList[i] = NULL;
+        }
+    }
+}
+
 void Obj_FlushDeferredFreeList(void)
 {
     int i;
@@ -2089,20 +2103,8 @@ void Obj_ResetObjectSystem(void)
 {
     int off;
     int i;
-    int zero;
 
-    i = 0;
-    off = i;
-    zero = i;
-    for (; i < gObjDeferredFreeCount; i++)
-    {
-        if (*(void**)((int)gObjDeferredFreeList + off) != 0)
-        {
-            objFreeObjDef(*(void**)((int)gObjDeferredFreeList + off), 0);
-            *(int*)((int)gObjDeferredFreeList + off) = zero;
-        }
-        off += 4;
-    }
+    Obj_FreeDeferredObjects();
     gObjDeferredFreeCount = 0;
     gObjDefCaptureMode = 0;
     i = gObjCount - 1;
@@ -2112,18 +2114,7 @@ void Obj_ResetObjectSystem(void)
         Obj_FreeObject(*(void**)((int)gObjList + off));
         off -= 4;
     }
-    i = 0;
-    off = i;
-    zero = i;
-    for (; i < gObjDeferredFreeCount; i++)
-    {
-        if (*(void**)((int)gObjDeferredFreeList + off) != 0)
-        {
-            objFreeObjDef(*(void**)((int)gObjDeferredFreeList + off), 0);
-            *(int*)((int)gObjDeferredFreeList + off) = zero;
-        }
-        off += 4;
-    }
+    Obj_FreeDeferredObjects();
     gObjDefCaptureMode = 2;
     gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
