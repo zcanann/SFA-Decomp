@@ -1248,6 +1248,7 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     f32 cosv;
     f32 sinv;
     f32 v;
+    f32 w;
     struct
     {
         f32 range;
@@ -1277,12 +1278,11 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
             stk.d[0] = ((GameObject*)o)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             stk.d[1] = ((GameObject*)o)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
             stk.d[2] = ((GameObject*)o)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-            scale = scale / stk.range;
-            stk.d[0] *= scale;
-            stk.d[1] *= scale;
-            stk.d[2] *= scale;
-            accX = accX - limit * (stk.d[0] * k * *pw);
-            accZ = accZ - limit * (stk.d[2] * k * *pw);
+            stk.d[0] = stk.d[0] * (scale / stk.range);
+            stk.d[1] = stk.d[1] * (scale / stk.range);
+            stk.d[2] = stk.d[2] * (scale / stk.range);
+            accX = accX - limit * (stk.d[0] * k * (w = *pw));
+            accZ = accZ - limit * (stk.d[2] * k * (v = w));
         }
         po++;
         pw++;
