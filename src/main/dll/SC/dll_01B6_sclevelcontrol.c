@@ -18,6 +18,8 @@
 #include "main/lightmap.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define SCLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
 /* the four LightFoot totem-pole lit-state bits, reset on entry */
@@ -304,7 +306,7 @@ void sc_levelcontrol_update(int obj)
         }
     }
     if (((ScLevelControlState*)state)->fadeTimer != lbl_803E5558 &&
-        (((GameObject*)player)->objectFlags & 0x1000) == 0)
+        (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->fadeTimer)
         {
@@ -326,7 +328,7 @@ void sc_levelcontrol_update(int obj)
         }
     }
     else if (((ScLevelControlState*)state)->timer10 != *(f32*)&lbl_803E5558 &&
-             (((GameObject*)player)->objectFlags & 0x1000) == 0)
+             (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)
         {
