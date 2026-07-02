@@ -5012,6 +5012,7 @@ extern void gxTextureFn_80052638(u8 * color);
 extern f32 lbl_803967F0[];
 extern u8 lbl_803DCC3C;
 
+#pragma opt_propagation off
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
 {
     int* op;
@@ -5306,6 +5307,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     return idx;
 }
+#pragma opt_propagation reset
 
 extern u8 lbl_80345E10[];
 extern void mm_free(void* p);
