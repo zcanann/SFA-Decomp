@@ -117,7 +117,7 @@ void dll_1FF_update(int obj)
     extern const f32 lbl_803E5D8C;
     void* player;
     Dll1FFState* state;
-    int grab;
+    int grab[1];
     int count;
     char* landed;
     int i;
@@ -129,15 +129,15 @@ void dll_1FF_update(int obj)
     player = Obj_GetPlayerObject();
     if (state->grabPhase == 0)
     {
-        grab = 0;
+        grab[0] = 0;
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && ((GameObject*)obj)->unkF8 == 0)
         {
-            state->msgLo = grab;
+            state->msgLo = grab[0];
             state->msgHi = 0x28;
             buttonDisable(0, DLL1FF_BUTTON_ACTION);
-            grab = 1;
+            grab[0] = 1;
         }
-        state->grabPhase = grab;
+        state->grabPhase = grab[0];
         if (state->grabPhase != 0)
         {
             state->sendFlag = 1;
