@@ -156,7 +156,7 @@ extern char* sResourceFileNameTable[];
 extern char sRomlistZlbPathFormat[];
 extern u8 uRam803dc24f;
 extern char sResourceFileNameAudioTab[];
-extern u8 lbl_80345E10[];
+extern u8 lbl_80345E10[]; /* resource file table -- see struct MldfTables */
 extern char sArchivePathFormat;
 extern s16 lbl_803DCC92;
 extern int lbl_803DCC70;
@@ -7041,6 +7041,8 @@ void tvInit(void)
     VIWaitForRetrace();
 }
 
+/* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
+   bin/tab); the byte-offset spelling is codegen-load-bearing */
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
     char* base = (char*)lbl_8035F3E8;
