@@ -1487,7 +1487,7 @@ void intersectModLineBuild(int* obj)
     int segCount;
     u8* sp;
     int li;
-    int prev;
+    s16 prev;
 
     mapBlockFlag = 1;
     gIntersectLineCount = 0;
@@ -1522,7 +1522,7 @@ void intersectModLineBuild(int* obj)
     }
     {
         int off;
-        for (li = 0, off = 0; li < gIntersectLineCount; off += 0x10, li++)
+        for (li = 0, off = li; li < gIntersectLineCount; off += 0x10, li++)
         {
             u8* L = (u8*)lbl_803DCF34 + off;
             int t0 = *(s16*)(L + 4) * 2;
@@ -1574,7 +1574,7 @@ void intersectModLineBuild(int* obj)
             grp = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
-        if ((s16)grp != (s16)prev)
+        if ((s16)grp != prev)
         {
             *(u8*)(*(int*)((char*)obj + 0x38) + grp * 2) = li;
             if (prev != -1)
