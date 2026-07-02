@@ -14,6 +14,8 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 
+#define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 #pragma scheduling on
 #pragma peephole on
 
@@ -223,7 +225,7 @@ void dimlavasmash_init(s16* obj, s8* def)
     objAnim->bankIndex = def[0x19];
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->flags &= ~1;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimlavasmash_release(void)
