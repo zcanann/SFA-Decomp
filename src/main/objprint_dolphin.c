@@ -3779,11 +3779,11 @@ void objFn_8003dc50(u8* obj, u8* model)
 
 void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5, u8* out1, u8* out2)
 {
+    int next;
+    int back;
     GXClearVtxDesc();
     if (hdr[0xf3] > 1)
     {
-        int next;
-        int back;
         GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
         next = 1;
         back = 8;
@@ -3798,8 +3798,9 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
             GXSetVtxDesc(next++, 1);
         }
         {
+            u32 t;
             int i = 0;
-            u32 t = p5;
+            t = p5;
             for (; i < hdr[0xfa]; i++)
             {
                 u8 use;
