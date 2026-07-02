@@ -447,13 +447,13 @@ void ObjSeq_run(void)
     u8** mp;
     int n;
     int k;
-    u8* pending;
+    s8* pending;
     u8* results;
     u8* actions;
     f32* dists;
     f32* frames;
     u8* marks;
-    int frames8;
+    s8 frames8;
     u8* matched[0x28];
     s16 keepBuf[0x5a];
     int objectCount;
@@ -466,7 +466,7 @@ void ObjSeq_run(void)
         lbl_803DD062 = lbl_803DD060;
     }
 
-    pending = base + 0x39e8;
+    pending = (s8*)(base + 0x39e8);
     results = base + 0x3bf4;
     actions = base + 0x3c4c;
     dists = (f32*)(base + 0x3740);
@@ -584,8 +584,9 @@ void ObjSeq_run(void)
 
     for (k = 0; k < keepCount; k++)
     {
-        ((s16*)(base + 0x2a80))[k * 3] = keepBase[k * 3];
-        ((s16*)(base + 0x2a80))[k * 3 + 1] = keepBase[k * 3 + 1];
+        ((s16*)(base + 0x2a80))[k * 3] = keepBase[0];
+        ((s16*)(base + 0x2a80))[k * 3 + 1] = keepBase[1];
+        keepBase += 3;
     }
     gObjSeqBgCmdCount = keepCount;
 }
