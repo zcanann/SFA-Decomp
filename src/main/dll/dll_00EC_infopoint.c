@@ -17,6 +17,8 @@
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define PAD_BUTTON_A 0x100
+
 typedef struct InfopointObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -68,7 +70,7 @@ void infopoint_update(GameObject* obj)
 {
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
     }
 }
