@@ -2401,9 +2401,9 @@ void ObjHits_Update(int objectCount)
     u8 skeletonHits[1512];
     u8 skeletonScratchD[100];
     u8 skeletonScratchE[100];
+    int candidateIndex;
     ObjHitsSweepEntry** entrySlot;
     int listCount;
-    int* objectList;
     ObjHitsSweepEntry* sweepEntries;
     ObjHitsSweepEntry* nextEntry;
     int slotCount;
@@ -2411,15 +2411,15 @@ void ObjHits_Update(int objectCount)
     ObjHitsSweepEntry* entry;
     ObjHitsSweepEntry* candidateEntry;
     int obj;
-    int candObj;
+    int* objectList;
     u32 attachedObj;
     u32 candAttachedObj;
     ObjHitsPriorityState* objState;
     ObjHitsPriorityState* candState;
-    ObjHitsSweepEntry** entrySlotBase;
+    int candObj;
     int slotIndex;
+    ObjHitsSweepEntry** entrySlotBase;
     int currentIndex;
-    int candidateIndex;
     f32 axisDiff;
     f32 diff;
 
@@ -2473,7 +2473,7 @@ void ObjHits_Update(int objectCount)
     currentIndex = 1;
     slotIndex = 1;
     entrySlot = entrySlotBase;
-    for (; slotIndex < slotCount; slotIndex++, entrySlot++)
+    for (; slotIndex < slotCount; entrySlot++, slotIndex++)
     {
         entry = *entrySlot;
         obj = entry->obj;
@@ -2496,13 +2496,13 @@ void ObjHits_Update(int objectCount)
                 skipSlot++;
             }
             currentIndex = candidateIndex;
-            for (; (candidateIndex < slotCount) &&
-                   ((*entrySlot)->maxX > gObjHitsSweepEntryPtrs[candidateIndex]->minX);
-                   candidateIndex++)
+            while ((candidateIndex < slotCount) &&
+                   ((*entrySlot)->maxX > gObjHitsSweepEntryPtrs[candidateIndex]->minX))
             {
                 candidateEntry = gObjHitsSweepEntryPtrs[candidateIndex];
                 if ((*entrySlot)->minX > candidateEntry->maxX)
                 {
+                    candidateIndex++;
                     continue;
                 }
                 {
@@ -2587,11 +2587,11 @@ void ObjHits_Update(int objectCount)
                         }
                     }
                 }
+                candidateIndex++;
             }
         }
     }
-    entrySlot = entrySlotBase;
-    for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlot++)
+    for (slotIndex = 1, entrySlot = entrySlotBase; slotIndex < slotCount; entrySlot++, slotIndex++)
     {
         obj = (*entrySlot)->obj;
         if (((((GameObject*)obj)->anim.hitReactState)->flags &
@@ -2605,7 +2605,7 @@ void ObjHits_Update(int objectCount)
             }
         }
     }
-    for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlotBase++)
+    for (slotIndex = 1; slotIndex < slotCount; entrySlotBase++, slotIndex++)
     {
         obj = (*entrySlotBase)->obj;
         objState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -2637,9 +2637,10 @@ void ObjHits_Update(int objectCount)
                 obj)->anim.previousLocalPosZ);
         }
     }
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[slotIndex = 0] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
-    ((int*)(int)gObjHitsActiveHitVolumeObjects)[++slotIndex] = 0;
+    slotIndex = 0;
+    gObjHitsActiveHitVolumeObjects[slotIndex] = 0;
+    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
+    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
+    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
+    gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
 }
