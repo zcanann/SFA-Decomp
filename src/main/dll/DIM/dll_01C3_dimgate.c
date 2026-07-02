@@ -8,6 +8,8 @@
 #include "main/dll/VF/vf_shared.h"
 
 #define DIMGATE_TRIGGER_OBJ_TYPE 399
+#define DIMGATE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMGATE_OBJFLAG_HIDDEN 0x4000
 
 enum DimgateState
 {
@@ -73,7 +75,7 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
     }
     ((GameObject*)obj)->animEventCallback = dimgate_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(param + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimbarrier_init(int obj, s8* p);
