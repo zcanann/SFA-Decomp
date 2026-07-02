@@ -1375,10 +1375,10 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
                                 if (!(bb > gObjHitsScalarZero) || !(cc > gObjHitsScalarZero))
                                 {
                                     disc = bb * bb - lenSq * cc;
-                                    if (disc >= gObjHitsScalarZero)
+                                    if (disc >= *(f32*)&gObjHitsScalarZero)
                                     {
                                         q = lenSq + bb;
-                                        if (q >= gObjHitsScalarZero || q * q <= disc)
+                                        if (q >= *(f32*)&gObjHitsScalarZero || q * q <= disc)
                                         {
                                             hit = 1;
                                             sc = sqrtf(disc);
