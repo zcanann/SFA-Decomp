@@ -42,6 +42,7 @@ extern void GXSetCullMode(int mode);
 #define GX_BL_SRCALPHA 4
 #define GX_BL_INVSRCALPHA 5
 #define GX_LO_NOOP 5
+#define GX_LEQUAL 3
 #define GX_ALWAYS 7
 #define GX_AOP_AND 0
 #define GX_CULL_BACK 2
@@ -79,12 +80,12 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     if (color.a < 0xff)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-        gxSetZMode_(1, 3, 0);
+        gxSetZMode_(1, GX_LEQUAL, 0);
     }
     else
     {
         GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-        gxSetZMode_(1, 3, 1);
+        gxSetZMode_(1, GX_LEQUAL, 1);
     }
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
