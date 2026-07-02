@@ -255,7 +255,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     }
     else
     {
-        obj->anim.rootMotionScale = lbl_803E5E24;
+        obj->anim.rootMotionScale = 0.1f;
     }
 
     state->mode = setup->mode;
@@ -316,11 +316,11 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
         {
             if (obj->anim.seqId == 0x705 || obj->anim.seqId == 0x712)
             {
-                modelLightStruct_setPosition(state->light, lbl_803E5E0C, lbl_803E5E0C, lbl_803E5E0C);
+                modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
             }
             else
             {
-                modelLightStruct_setPosition(state->light, lbl_803E5E0C, lbl_803E5E28, lbl_803E5E0C);
+                modelLightStruct_setPosition(state->light, 0.0f, 7.0f, 0.0f);
             }
 
             colorBase = state->fxType * 3;
@@ -329,15 +329,15 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             colorBase = state->fxType * 3;
             modelLightStruct_setSpecularColor(state->light, colors.c[colorBase], colors.c[colorBase + 1],
                                               colors.c[colorBase + 2], 0xff);
-            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E5E2C, lbl_803E5E30);
-            modelLightStruct_setEnabled(state->light, 1, lbl_803E5E0C);
+            modelLightStruct_setDistanceAttenuation(state->light, 40.0f, 65.0f);
+            modelLightStruct_setEnabled(state->light, 1, 0.0f);
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
             modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),
-                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 1]),
-                                                   (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 2]),
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase]),
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]),
                                                    0xff);
             lightSetField4D(state->light, 1);
 
@@ -348,16 +348,16 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
                     colorBase = state->fxType * 3;
                     modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1],
                                                colors.c[colorBase + 2],
-                                               0x8c, lbl_803E5E38 * (lbl_803E5E3C * obj->anim.rootMotionScale));
+                                               0x8c, 0.6f * (250.0f * obj->anim.rootMotionScale));
                 }
                 else
                 {
                     colorBase = state->fxType * 3;
                     modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1],
                                                colors.c[colorBase + 2],
-                                               0x8c, lbl_803E5E3C * obj->anim.rootMotionScale);
+                                               0x8c, 250.0f * obj->anim.rootMotionScale);
                 }
-                modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E5E40);
+                modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
             }
         }
     }
@@ -372,7 +372,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     }
     obj->objectFlags |= 0x2000;
     state->fxTimer = gLightSourceFxTimerPeriod;
-    state->sparkTimer = lbl_803E5E08;
+    state->sparkTimer = 1.0f;
 }
 
 void lightsource_release(void)

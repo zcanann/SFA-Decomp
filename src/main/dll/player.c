@@ -18773,7 +18773,7 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
 
     {
         f32 s4 = *(f32*)((char*)src + 0x4);
-        f32 t = lbl_803E7E98;
+        f32 t = 0.5f;
         *(f32*)((char*)dst + 0x48) =
             s4 +
             t * (*(f32*)((char*)src + 0x8) - s4);
@@ -18799,7 +18799,7 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
     }
 
     *(f32*)((char*)dst + 0x38) = -*(f32*)((char*)src + 0x24);
-    *(f32*)((char*)dst + 0x3c) = zero = lbl_803E7EA4;
+    *(f32*)((char*)dst + 0x3c) = zero = 0.0f;
     *(f32*)((char*)dst + 0x40) = *(f32*)((int)src + 0x1c);
     *(f32*)((char*)dst + 0x44) =
         -(*(f32*)((char*)dst + 0x48) * *(f32*)((char*)dst + 0x38) +
@@ -18817,8 +18817,8 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
 
     *(s8*)((char*)dst + 0x62) = (s8)(int)*(s8*)((char*)src + 0x53);
 
-    if (*(f32*)((char*)dst + 0x18) > lbl_803E80A4 &&
-        *(f32*)((char*)dst + 0x18) < lbl_803E80A8)
+    if (*(f32*)((char*)dst + 0x18) > -9.0f &&
+        *(f32*)((char*)dst + 0x18) < 9.0f)
     {
     *(f32*)((char*)dst + 0x8) = *(f32*)((char*)src + 0xc);
     PSVECScale((f32*)((char*)src + 0x1c), pos, -(&lbl_803DC6B8)[1]);
@@ -18827,15 +18827,15 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
     pos[1] = y;
     count = hitDetectFn_80065e50(obj, pos[0], y, pos[2], &hits, 0, HITQUERY_CLIMB_SURFACE);
 
-    minDist = lbl_803E80AC;
+    minDist = 10000.0f;
     best = -1;
     for (i = 0; i < count; i++)
     {
         int* entry = hits[i];
-        if (*(f32*)((char*)entry + 0x8) > lbl_803E80B0)
+        if (*(f32*)((char*)entry + 0x8) > 0.707f)
         {
             f32 d = pos[1] - *(f32*)((char*)entry + 0x0);
-            if (d < lbl_803E7EA4)
+            if (d < 0.0f)
             {
                 d = -d;
             }
@@ -18850,13 +18850,13 @@ int player_probeClimbable(int obj, int p4, int src, int dst, int flag)
     chosen = hits[best];
     *(f32*)((char*)dst + 0x4) = *(f32*)((char*)chosen + 0x0);
     *(s8*)((char*)dst + 0x1) =
-        (s8)(s32)((lbl_803E80B4 + (*(f32*)((char*)src + 0x3c) - *(f32*)((char*)dst + 0x8))) /
-            lbl_803E80B8);
+        (s8)(s32)((2.2f + (*(f32*)((char*)src + 0x3c) - *(f32*)((char*)dst + 0x8))) /
+            8.8f);
     *(f32*)((char*)dst + 0xc) =
         (*(f32*)((char*)src + 0x3c) - *(f32*)((char*)dst + 0x8)) /
         (f32) * (s8*)((char*)dst + 0x1);
 
-    if (((GameObject*)obj)->anim.localPosY > *(f32*)((char*)dst + 0x4) - lbl_803E7ED8)
+    if (((GameObject*)obj)->anim.localPosY > *(f32*)((char*)dst + 0x4) - 10.0f)
     {
         *(s8*)((char*)dst + 0x0) = *(u8*)((char*)dst + 0x1) - 3;
     }
