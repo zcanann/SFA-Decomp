@@ -28,6 +28,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/objlib.h"
+#include "main/objHitReact.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
@@ -1203,7 +1204,9 @@ void staff_hitDetectGeometry(int* obj)
             v.x = hitState->contactPosX;
             v.y = hitState->contactPosY;
             v.z = hitState->contactPosZ;
-            ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(0, 1, &v, 0x401, -1,
+            ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(
+                OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v,
+                OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                 (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
             Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
                                          hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
