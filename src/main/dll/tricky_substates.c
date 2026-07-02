@@ -938,13 +938,13 @@ int trickyFn_801430e0(u8* obj, u8* state)
         else
         {
             ret = randomGetRange(0, 6);
-            if (ret >= 5 || ret < 0)
+            if (ret < 5 && ret >= 0)
             {
-                objAnimFn_801441c0(obj, state);
+                tricky_startRandomIdleMove((int)obj, (int)state);
             }
             else
             {
-                tricky_startRandomIdleMove((int)obj, (int)state);
+                objAnimFn_801441c0(obj, state);
             }
         }
     }
