@@ -173,7 +173,7 @@ void ktrexfloorswitch_update(int obj)
     ObjTextureRuntimeSlot* tex;
     int* player;
     int moved;
-    u8 level;
+    u32 level;
     int scroll;
     f32 vecA[3];
     f32 vecB[3];
@@ -264,18 +264,20 @@ void ktrexfloorswitch_update(int obj)
             cx = ((GameObject*)obj)->anim.localPosX;
             xLo = cx;
             xHi = vecB[0] + (cx + vecA[0]);
-            if (xHi < cx)
+            if (xHi < xLo)
             {
-                xLo = xHi;
-                xHi = cx;
+                f32 t = xHi;
+                xHi = xLo;
+                xLo = t;
             }
             cz = ((GameObject*)obj)->anim.localPosZ;
             zLo = cz;
             zHi = vecB[2] + (cz + vecA[2]);
-            if (zHi < cz)
+            if (zHi < zLo)
             {
-                zLo = zHi;
-                zHi = cz;
+                f32 t = zHi;
+                zHi = zLo;
+                zLo = t;
             }
             xLo += gKTrexFloorSwitchTriggerBoxInset;
             xHi -= gKTrexFloorSwitchTriggerBoxInset;
@@ -345,9 +347,8 @@ void ktrexfloorswitch_update(int obj)
             level = GameBit_Get(((KtrexfloorswitchPlacement*)placement)->levelBit) & 0xff;
             if (level < 0xf)
             {
-                level += 1;
-                GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, level);
-                if (level == 0xf)
+                GameBit_Set(((KtrexfloorswitchPlacement*)placement)->levelBit, (u8)(level += 1));
+                if ((u8)level == 0xf)
                 {
                     ((KtrexfloorswitchState*)state)->flags |= 0x8;
                 }
