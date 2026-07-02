@@ -1178,13 +1178,14 @@ void ObjModel_InitResourceCaches(void)
 void ObjModel_Release(u8* model)
 {
     u8* header;
-    int i;
+    int z[2];
     if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
     {
         ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-        for (i = 0; i < (*(u8**)model)[0xf8]; i++)
+        z[0] = 0;
+        for (z[1] = z[0]; z[0] < (*(u8**)model)[0xf8]; z[1] += 0xc, z[0]++)
         {
-            ShaderDef_free((int*)(((ObjModel*)model)->textureRefs + i * 0xc));
+            ShaderDef_free((int*)(((ObjModel*)model)->textureRefs + z[1]));
         }
     }
     header = *(u8**)model;
@@ -1195,16 +1196,18 @@ void ObjModel_Release(u8* model)
     if (--*(u8*)header == 0)
     {
         model_adjustModelList(gModelList, *(u16*)(header + 0x4));
-        for (i = 0; i < ((ModelFileHeader*)header)->textureCount; i++)
+        z[0] = 0;
+        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
         {
-            textureFree(textureIdxToPtr(((ModelFileHeader*)header)->textureIds[i]));
+            textureFree(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1])));
         }
         if (((ModelFileHeader*)header)->animationModelPtrs != NULL && ((ModelFileHeader*)header)->animationCount != 0)
         {
-            for (i = 0; i < ((ModelFileHeader*)header)->animationCount; i++)
+            z[0] = 0;
+            for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->animationCount; z[1] += 4, z[0]++)
             {
                 int idx;
-                void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + i * 4);
+                void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + z[1]);
                 if (tex != NULL && (s8)-- * (u8*)tex <= 0)
                 {
                     model_findIdxInModelList(gModelTexAtlasList, &tex, &idx);
