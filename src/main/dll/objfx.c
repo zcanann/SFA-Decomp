@@ -17,6 +17,7 @@
  * constants in the DLL's shared .sdata2 pool.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/obj_placement.h"
 
 extern f32 gObjFxCrystalAmpTbl[];
 extern s16 gObjFxCrystalSpinSpeed[4];
@@ -1216,8 +1217,8 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
     if (Obj_IsLoadingLocked() != 0)
     {
         obj = Obj_AllocObjectSetup(0x24, 0x253);
-        *(u8*)(obj + 4) = 2;
-        *(u8*)(obj + 5) = 1;
+        ((ObjPlacement*)obj)->color[0] = 2;
+        ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = vx;
         ((GameObject*)obj)->anim.localPosX = vy;
         ((GameObject*)obj)->anim.localPosY = vz;
@@ -1267,8 +1268,8 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
     if (Obj_IsLoadingLocked() != 0)
     {
         obj = Obj_AllocObjectSetup(0x24, 0x253);
-        *(u8*)(obj + 4) = 2;
-        *(u8*)(obj + 5) = 1;
+        ((ObjPlacement*)obj)->color[0] = 2;
+        ((ObjPlacement*)obj)->color[1] = 1;
         ((GameObject*)obj)->anim.rootMotionScale = ((ObjAnimComponent*)src)->worldPosX;
         ((GameObject*)obj)->anim.localPosX = ((ObjAnimComponent*)src)->worldPosY;
         ((GameObject*)obj)->anim.localPosY = ((ObjAnimComponent*)src)->worldPosZ;
