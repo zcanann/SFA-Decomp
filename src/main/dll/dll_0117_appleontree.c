@@ -246,18 +246,17 @@ void fn_8017D854(int obj, int msg)
         f32 g = lbl_803E37D8 * m;
         f32 q = sqrtf(-(g * ((AppleOnTreeState*)state)->unk30 - lbl_803E37D4));
         f32 t = lbl_803E37DC * m;
-        f32 a;
         f32 r;
 
         if (t >= lbl_803E37D4)
         {
-            a = t;
+            r = t;
         }
         else
         {
-            a = -t;
+            r = -t;
         }
-        if (a <= lbl_803E37E0)
+        if (r <= lbl_803E37E0)
         {
             r = lbl_803E37C8;
         }
@@ -266,13 +265,7 @@ void fn_8017D854(int obj, int msg)
             f32 r2;
             r = (lbl_803E37E4 - q) / t;
             r2 = (lbl_803E37E4 + q) / t;
-            if (r > *(f32*)&lbl_803E37D4)
-            {
-            }
-            else
-            {
-                r = r2;
-            }
+            r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
         ((AppleOnTreeState*)state)->unk50 = r;
 
@@ -331,18 +324,17 @@ int fn_8017DCD4(int p, int state, f32 y)
                 f32 g = lbl_803E37D8 * m;
                 f32 q = sqrtf(b * b - g * ((AppleOnTreeState*)state)->unk30);
                 f32 t = lbl_803E37DC * m;
-                f32 a;
                 f32 r;
 
                 if (t >= lbl_803E37D4)
                 {
-                    a = t;
+                    r = t;
                 }
                 else
                 {
-                    a = -t;
+                    r = -t;
                 }
-                if (a <= lbl_803E37E0)
+                if (r <= lbl_803E37E0)
                 {
                     r = lbl_803E37C8;
                 }
@@ -353,13 +345,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                     nb = -b;
                     r = (nb - q) / t;
                     r2 = (nb + q) / t;
-                    if (r > *(f32*)&lbl_803E37D4)
-                    {
-                    }
-                    else
-                    {
-                        r = r2;
-                    }
+                    r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
                 ((AppleOnTreeState*)state)->posY = ((AppleOnTreeState*)state)->posY - ((AppleOnTreeState*)state)->
@@ -389,7 +375,6 @@ int fn_8017DCD4(int p, int state, f32 y)
                 f32 g;
                 f32 q;
                 f32 t;
-                f32 a;
                 f32 r;
                 m = m + ((AppleOnTreeState*)state)->unk3C;
                 g = lbl_803E37D8 * m;
@@ -398,13 +383,13 @@ int fn_8017DCD4(int p, int state, f32 y)
 
                 if (t >= lbl_803E37D4)
                 {
-                    a = t;
+                    r = t;
                 }
                 else
                 {
-                    a = -t;
+                    r = -t;
                 }
-                if (a <= lbl_803E37E0)
+                if (r <= lbl_803E37E0)
                 {
                     r = lbl_803E37C8;
                 }
@@ -415,13 +400,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                     nb = -b;
                     r = (nb - q) / t;
                     r2 = (nb + q) / t;
-                    if (r > *(f32*)&lbl_803E37D4)
-                    {
-                    }
-                    else
-                    {
-                        r = r2;
-                    }
+                    r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
                 }
                 ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
                 ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
@@ -507,7 +486,6 @@ int fn_8017DF34(int p, int state, f32 y)
         f32 g;
         f32 q;
         f32 t;
-        f32 a;
         f32 r;
         b = ((AppleOnTreeState*)state)->bounceVel;
         g = lbl_803E37D8 * m;
@@ -516,13 +494,13 @@ int fn_8017DF34(int p, int state, f32 y)
 
         if (t >= lbl_803E37D4)
         {
-            a = t;
+            r = t;
         }
         else
         {
-            a = -t;
+            r = -t;
         }
-        if (a <= lbl_803E37E0)
+        if (r <= lbl_803E37E0)
         {
             r = lbl_803E37C8;
         }
@@ -533,13 +511,7 @@ int fn_8017DF34(int p, int state, f32 y)
             nb = -b;
             r = (nb - q) / t;
             r2 = (nb + q) / t;
-            if (r > *(f32*)&lbl_803E37D4)
-            {
-            }
-            else
-            {
-                r = r2;
-            }
+            r = (r > *(f32*)&lbl_803E37D4) ? r : r2;
         }
         ((AppleOnTreeState*)state)->unk0C = ((AppleOnTreeState*)state)->unk0C - r;
         ((GameObject*)p)->anim.localPosY = ((AppleOnTreeState*)state)->posY;
@@ -571,13 +543,11 @@ typedef struct AppleontreeObjectDef
     s16 gameBit;
 } AppleontreeObjectDef;
 
+#pragma inline_max_size(1)
 void appleontree_update(int objArg)
 {
     extern void playerAddHealth(u8* player, int v); /* #57 */
     extern u8* Obj_GetPlayerObject(void); /* #57 */
-    extern int FUN_8017e3c0(); /* #57 */
-    extern int FUN_8017e15c(); /* #57 */
-    extern u32 FUN_8017de58(); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     float fa;
     int obj;
@@ -639,7 +609,7 @@ void appleontree_update(int objArg)
         switch (((AppleOnTreeState*)state)->animState)
         {
         case 0:
-            val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
+            val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                     (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
@@ -654,7 +624,7 @@ void appleontree_update(int objArg)
                 while (i < 8);
                 if (*(void**)((u8*)obj + 0x54) != 0)
                 {
-                    ObjHits_DisableObject((int)obj);
+                    ObjHits_DisableObject(obj);
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
@@ -669,16 +639,16 @@ void appleontree_update(int objArg)
                 }
                 else
                 {
-                    fb = (*(float*)(*(int*)&((GameObject*)obj)->extra + 8) /
-                          *(float*)(*(int*)&((GameObject*)obj)->extra + 4)) *
-                         (lbl_803E37C8 / *(float*)(*(int*)&((GameObject*)obj)->extra + 0x10));
+                    fb = *(float*)(*(int*)&((GameObject*)obj)->extra + 8) /
+                          *(float*)(*(int*)&((GameObject*)obj)->extra + 4);
+                    fb = fb * (lbl_803E37C8 / *(float*)(*(int*)&((GameObject*)obj)->extra + 0x10));
                     ((GameObject*)obj)->anim.rootMotionScale =
                         *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * fb;
                 }
             }
             break;
         case 1:
-            val = ObjHits_GetPriorityHit((int)obj, 0x0, 0x0, 0x0);
+            val = ObjHits_GetPriorityHit(obj, 0x0, 0x0, 0x0);
             if ((val != 0) ||
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                     (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
@@ -693,7 +663,7 @@ void appleontree_update(int objArg)
                 while (i < 8);
                 if (*(void**)((u8*)obj + 0x54) != 0)
                 {
-                    ObjHits_DisableObject((int)obj);
+                    ObjHits_DisableObject(obj);
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
@@ -757,14 +727,14 @@ void appleontree_update(int objArg)
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                     (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
-                FUN_8017db40((u32)obj, 1);
+                fn_8017D854(obj, 1);
             }
             break;
         case 3:
             ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
             if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
-                FUN_8017db40((u32)obj, 0);
+                fn_8017D854(obj, 0);
             }
             else
             {
@@ -773,7 +743,7 @@ void appleontree_update(int objArg)
                     ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                         (bitVal = GameBit_Get((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
-                    FUN_8017db40((u32)obj, 2);
+                    fn_8017D854(obj, 2);
                 }
             }
             break;
@@ -786,8 +756,8 @@ void appleontree_update(int objArg)
             else
             {
                 placement = 0;
-                fd = lbl_803E37D4;
                 val = 0;
+                fd = lbl_803E37D4;
                 while (placement == 0)
                 {
                     f32 t = ((AppleOnTreeState*)state)->unk0C;
@@ -795,11 +765,11 @@ void appleontree_update(int objArg)
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
                     if (((AppleOnTreeState*)state)->unk28 > fd)
                     {
-                        placement = FUN_8017e3c0(fc, obj, state);
+                        placement = fn_8017DF34(obj, state, fc);
                     }
                     else
                     {
-                        placement = FUN_8017e15c(fc, obj, state);
+                        placement = fn_8017DCD4(obj, state, fc);
                     }
                     val = val + 1;
                     if (!((val == 100) || (val != 0x66))) break;
@@ -813,7 +783,7 @@ void appleontree_update(int objArg)
                 }
                 modelIdxPtr = (int*)objFindTexture((void*)obj, 0, 0);
                 *modelIdxPtr = (int)(lbl_803E380C * frac);
-                FUN_8017de58((u32)obj);
+                appleontree_handleCollectableHit(obj);
             }
             break;
         case 5:
@@ -856,13 +826,14 @@ void appleontree_update(int objArg)
             {
                 placement = (int)(lbl_803E3818 * fb / frac);
                 ((GameObject*)obj)->anim.alpha = 0xff - placement;
-                FUN_8017de58((u32)obj);
+                appleontree_handleCollectableHit(obj);
             }
         }
     }
 switchD_8017e864_caseD_7:
     return;
 }
+#pragma inline_max_size reset
 
 void appleontree_init(int obj, int def)
 {
