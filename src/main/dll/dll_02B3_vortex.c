@@ -1,6 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+#define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int vortex_getExtraSize(void) { return 0x28; }
 
 int vortex_getObjectTypeId(void) { return 0; }
@@ -257,7 +259,7 @@ void vortex_init(int obj, int initData)
             }
         }
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= VORTEX_OBJFLAG_HITDETECT_DISABLED;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     if (state->flags.active != 0)
         state->alpha = lbl_803E73E0;
