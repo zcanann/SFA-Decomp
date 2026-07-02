@@ -24,6 +24,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
@@ -279,7 +282,7 @@ void dim_levelcontrol_init(int obj)
     st->b4 = GameBit_Get(0xd0e);
     st->b3 = GameBit_Get(0xa21);
     (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 1);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DIMLEVELCONTROL_OBJFLAG_HIDDEN | DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
     unlockLevel(0, 0, 1);
 }
 
