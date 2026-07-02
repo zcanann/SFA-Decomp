@@ -11,6 +11,8 @@
 #include "main/dll/anim.h"
 #include "main/objseq.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void objRenderFn_8003b8f4(f32);
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
@@ -65,7 +67,7 @@ void dfpseqpoint_init(int* obj, u8* init)
     sub->triggerMode = init[0x19];
     sub->gameBitGate = *(s16*)(init + 0x1e);
     sub->gameBitDone = *(s16*)(init + 0x20);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED);
     ((DfpFlags7*)&sub->flags0F)->b80 = 0;
 }
 
