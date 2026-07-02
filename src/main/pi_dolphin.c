@@ -5268,6 +5268,7 @@ extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, int wrap_s
 extern void GXInitTexObjLOD(void* obj, int min_filt, int mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias,
                             int bias_clamp, int do_edge_lod, int max_aniso);
 
+#pragma opt_common_subs off
 void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
 {
     u8 buf5c[0x20];
@@ -5328,8 +5329,7 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
         GXSetTevSwapMode(lbl_803DCD90 + 4, 0, 0);
         GXSetTevKColorSel(lbl_803DCD90 + 4, 6);
         lbl_803DCD30 = 1;
-        cs10.a = WidthTable_803DEAB0;
-        cs10.b = CharsInSheet_803DEAB4;
+        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
         GXSetTevColorS10(1, &cs10);
         ck1 = lbl_803DEAB8;
         GXSetTevKColor(lbl_803DCD74, &ck1);
@@ -5375,6 +5375,7 @@ extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
+#pragma opt_common_subs reset
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
