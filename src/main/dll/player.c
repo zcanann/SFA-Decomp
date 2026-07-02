@@ -2039,8 +2039,8 @@ int fn_802A5384(int obj, int state)
         if ((fl >> 7 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 4 & 1) == 0 &&
             (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 1 & 1) == 0)
         {
-            int locked;
             int step;
+            int locked;
             locked = 0;
             if (((u32) * (u8*)((char*)inner + 0x3f1) >> 3 & 1) != 0)
             {
@@ -2071,12 +2071,12 @@ int fn_802A5384(int obj, int state)
             }
             {
                 f32 v = ((PlayerState*)state)->baddie.animSpeedC;
-                int tb = ((PlayerState*)inner)->moveParams;
-                if (v < *(f32*)(tb + step * 4))
+                f32* tb = (f32*)((PlayerState*)inner)->moveParams;
+                if (v < tb[step])
                 {
                     if (((PlayerState*)inner)->gaitLevel == 4)
                     {
-                        if (((PlayerState*)state)->baddie.animSpeedA < *(f32*)(tb + 0x10) &&
+                        if (((PlayerState*)state)->baddie.animSpeedA < tb[4] &&
                             ((PlayerState*)state)->baddie.inputMagnitude < lbl_803E7F14)
                         {
                             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
@@ -2088,7 +2088,7 @@ int fn_802A5384(int obj, int state)
                         *(u8*)&((PlayerState*)inner)->gaitLevel -= 4;
                     }
                 }
-                else if (v >= *(f32*)(tb + step * 4 + 4))
+                else if (v >= tb[step + 1])
                 {
                     int cc = ((PlayerState*)inner)->gaitLevel;
                     if (cc < 0x14)
