@@ -3327,7 +3327,9 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
         b[2] = b[2] + a[2];
         return 1;
     }
-    if (p[1] < __AR_Size && p[1] > lbl_803DECEC)
+    {
+        f32 p1 = *(volatile f32*)(p + 1);
+        if (p1 < __AR_Size && p1 > lbl_803DECEC)
     {
         switch ((u8)type)
         {
@@ -3346,7 +3348,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                     if (__AR_Callback != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = __AR_Callback;
+                    d1[1] = *(volatile f32*)&__AR_Callback;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];
@@ -3405,6 +3407,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
                 break;
             }
         }
+    }
     }
     return 1;
 }
