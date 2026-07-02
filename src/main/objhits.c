@@ -2223,18 +2223,13 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     u8 contact;
     ObjHitsPriorityState* stateA;
     u32 bits;
-    int volOff;
-    float* curWalk;
     ObjHitsModelBank* modelBank;
-    int prevWalk;
     int i;
     ObjHitsModelFileHeader* modelFile;
     float* curSpheres;
     int prevSpheres;
-    int rOff;
-    int ptOff;
-    int pointCount;
     ObjHitsPriorityState* stateB;
+    int pointCount;
     ObjHitsModelHitVolume* hitVolume;
     u32 bounds[6];
     struct
@@ -2265,22 +2260,15 @@ void ObjHits_CheckTrackContact(int objA, int objB)
             curSpheres = modelBank->hitVolumeSphereBuffers[bits];
             prevSpheres = (int)modelBank->hitVolumeSphereBuffers[bits ^ 1];
             pointCount = 0;
-            rOff = 0;
-            ptOff = 0;
-            for (i = 0, volOff = 0, curWalk = curSpheres, prevWalk = prevSpheres;
-                 i < (int)(u32)modelFile->hitVolumeCount; i = i + 1)
+            for (i = 0; i < (int)(u32)modelFile->hitVolumeCount; i = i + 1)
             {
-                hitVolume = (ObjHitsModelHitVolume*)((u8*)modelFile->hitVolumes + volOff);
+                hitVolume = &modelFile->hitVolumes[i];
                 if ((i == hitVolume->sphereIndex) &&
                     ((mask2 & 1 << hitVolume->maskBit) != 0))
                 {
                     bits = hitVolume->linkedSpheres;
                     if (bits != 0)
                     {
-                        float* endPtr = (float*)((int)endPoints + ptOff);
-                        float* startPtr = (float*)((int)startPoints + ptOff);
-                        u8* radPtr = (u8*)&hb + rOff;
-                        u8* idPtr = (u8*)&hb + pointCount;
                         f32 offX = playerMapOffsetX;
                         f32 offZ = playerMapOffsetZ;
                         for (; (u16)bits != 0; bits = (u16)((bits & 0xffff) << 4))
@@ -2290,24 +2278,19 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                             {
                                 float* curEntry;
                                 int prevEntry;
-                                curEntry = curSpheres + sphereIdx * 4;
-                                *endPtr = offX + curEntry[1];
-                                endPtr[1] = curEntry[2];
-                                endPtr[2] = offZ + curEntry[3];
-                                prevEntry = prevSpheres + sphereIdx * 0x10;
-                                *startPtr = offX + *(float*)(prevEntry + 4);
-                                startPtr[1] = *(float*)(prevEntry + 8);
-                                startPtr[2] = offZ + *(float*)(prevEntry + 0xc);
-                                *(float*)(radPtr + 0x40) = *curEntry;
-                                *(s8*)(idPtr + 0x50) = -1;
-                                *(idPtr + 0x54) = 7;
-                                endPtr = endPtr + 3;
-                                startPtr = startPtr + 3;
-                                radPtr = radPtr + 4;
-                                idPtr = idPtr + 1;
+                                int sphereOff = sphereIdx * 0x10;
+                                curEntry = (float*)((u8*)curSpheres + sphereOff);
+                                endPoints[pointCount * 3] = offX + curEntry[1];
+                                endPoints[pointCount * 3 + 1] = curEntry[2];
+                                endPoints[pointCount * 3 + 2] = offZ + curEntry[3];
+                                prevEntry = prevSpheres + sphereOff;
+                                startPoints[pointCount * 3] = offX + *(float*)(prevEntry + 4);
+                                startPoints[pointCount * 3 + 1] = *(float*)(prevEntry + 8);
+                                startPoints[pointCount * 3 + 2] = offZ + *(float*)(prevEntry + 0xc);
+                                hb.radii[pointCount] = *curEntry;
+                                *(s8*)&hb.ids[pointCount] = -1;
+                                hb.sevens[pointCount] = 7;
                                 pointCount = pointCount + 1;
-                                rOff = rOff + 4;
-                                ptOff = ptOff + 0xc;
                             }
                         }
                     }
@@ -2315,24 +2298,19 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                     {
                         if (pointCount < 4)
                         {
-                            *(float*)((int)endPoints + ptOff) = playerMapOffsetX + curWalk[1];
-                            *(float*)((int)endPoints + ptOff + 4) = curWalk[2];
-                            *(float*)((int)endPoints + ptOff + 8) = playerMapOffsetZ + curWalk[3];
-                            *(float*)((int)startPoints + ptOff) = playerMapOffsetX + *(float*)(prevWalk + 4);
-                            *(float*)((int)startPoints + ptOff + 4) = *(float*)(prevWalk + 8);
-                            *(float*)((int)startPoints + ptOff + 8) = playerMapOffsetZ + *(float*)(prevWalk + 0xc);
-                            *(float*)(((u8*)&hb + rOff) + 0x40) = *curWalk;
-                            *(s8*)(((u8*)&hb + 0x50) + pointCount) = -1;
-                            *(((u8*)&hb + 0x54) + pointCount) = 7;
+                            endPoints[pointCount * 3] = playerMapOffsetX + curSpheres[i * 4 + 1];
+                            endPoints[pointCount * 3 + 1] = curSpheres[i * 4 + 2];
+                            endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curSpheres[i * 4 + 3];
+                            startPoints[pointCount * 3] = playerMapOffsetX + *(float*)(prevSpheres + i * 0x10 + 4);
+                            startPoints[pointCount * 3 + 1] = *(float*)(prevSpheres + i * 0x10 + 8);
+                            startPoints[pointCount * 3 + 2] = playerMapOffsetZ + *(float*)(prevSpheres + i * 0x10 + 0xc);
+                            hb.radii[pointCount] = curSpheres[i * 4];
+                            *(s8*)&hb.ids[pointCount] = -1;
+                            hb.sevens[pointCount] = 7;
                             pointCount = pointCount + 1;
-                            rOff = rOff + 4;
-                            ptOff = ptOff + 0xc;
                         }
                     }
                 }
-                volOff = volOff + OBJHITS_MODEL_HIT_VOLUME_SIZE;
-                curWalk = curWalk + 4;
-                prevWalk = prevWalk + 0x10;
             }
         }
         else
