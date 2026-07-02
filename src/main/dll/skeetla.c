@@ -791,11 +791,8 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
     return NULL;
 }
 
-#pragma dont_inline on
 void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 {
-    void* entry;
-
     if (pathId == 0)
     {
         return NULL;
@@ -804,26 +801,15 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     if ((((TrickyState*)state)->unk6EC == pathId) && (*(u32*)&((TrickyState*)state)->unk6E8 == route))
     {
         ((TrickyState*)state)->unk6E8 = fn_8004B118(state + 0x6b8);
-        entry = ((TrickyState*)state)->unk6E8;
-        if (entry == NULL)
+        if (((TrickyState*)state)->unk6E8 == NULL)
         {
             return NULL;
         }
 
-        if (entry == NULL)
+        ((TrickyState*)state)->unk6E8 = skeetla_validateRouteEntry(((TrickyState*)state)->unk6E8);
+        if (((TrickyState*)state)->unk6E8 != NULL)
         {
-            entry = NULL;
-        }
-        else if (((((ObjfsaRomCurveDef*)entry)->requiredBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->requiredBit) == 0)) ||
-            ((((ObjfsaRomCurveDef*)entry)->forbiddenBit != -1) && (GameBit_Get(((ObjfsaRomCurveDef*)entry)->forbiddenBit) != 0)))
-        {
-            entry = NULL;
-        }
-        ((TrickyState*)state)->unk6E8 = entry;
-        entry = ((TrickyState*)state)->unk6E8;
-        if (entry != NULL)
-        {
-            return entry;
+            return ((TrickyState*)state)->unk6E8;
         }
     }
 
@@ -839,7 +825,6 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     ((TrickyState*)state)->unk6EC = pathId;
     return ((TrickyState*)state)->unk6E8;
 }
-#pragma dont_inline reset
 
 int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId)
 {
@@ -905,6 +890,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
 }
 
 #pragma peephole on
+#pragma inline_max_size(100)
 void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 {
     void* entry;
@@ -957,6 +943,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     ((TrickyState*)state)->unk536 = routeFlagValue;
     return entry;
 }
+#pragma inline_max_size reset
 
 #pragma peephole off
 void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
