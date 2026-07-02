@@ -192,7 +192,7 @@ int Minimap_update(void)
     s16 m;
     int sv;
     u32 texW, texH;
-    f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, uq, fx, cx, cy, frac;
+    f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, uq, cx, cy, frac, fx;
     u32 vv, u;
     f32 c2, s1, c1, c3, s3, fv;
     u32 col;
