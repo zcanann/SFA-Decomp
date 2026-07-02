@@ -16,6 +16,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+#define VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 #define VFP_OBJCREATOR_FALLING_MODE 1
 #define VFP_OBJCREATOR_PROJECTILE_MODE 6
 
@@ -117,7 +119,7 @@ void vfpobjcreator_init(int* obj, u8* init)
     state->spawnTimer = state->spawnInterval;
     state->spawnParam = placement->spawnParam;
     state->spawnRadius = placement->spawnRadius;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= VFPOBJCREATOR_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void vfpobjcreator_update(int* obj)
