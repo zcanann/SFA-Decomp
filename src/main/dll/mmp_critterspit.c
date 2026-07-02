@@ -18,6 +18,8 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+
+#define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
 extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
@@ -53,7 +55,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
     {
         u8* levelObj = (u8*)*(u32*)(critter + 4);
 
-        if ((((GameObject*)levelObj)->objectFlags & 0x1000) != 0)
+        if ((((GameObject*)levelObj)->objectFlags & MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK) != 0)
         {
             if (coordsToMapCell(levelObj, ((GameObject*)tricky)->anim.localPosX,
                                 ((GameObject*)tricky)->anim.localPosZ) == 0x38)
