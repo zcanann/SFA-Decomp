@@ -14698,14 +14698,21 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
 
 extern f32 lbl_803E80C0;
 
+#pragma opt_loop_invariants off
 int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
-    void* parent;
-    int verts;
+    f32* pl;
+    f32* dp;
+    char* cp;
+    f32* py2;
+    f32* pz2;
+    int inner;
+    f32* b6b8;
+    s8 mode;
     int wallHit;
     int tris;
-    s8 mode;
-    int inner;
+    int verts;
+    void* parent;
 
     f32 x2;
     f32 x1;
@@ -14748,14 +14755,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     parent = *(void**)cam;
     if (mode == 4)
     {
-        f32* b6b8;
-        f32* pl;
-        f32* dp;
         f32 thresh;
-        char* cp;
-        f32* px2;
-        f32* py2;
-        f32* pz2;
         int i;
         int j;
         wallHit = 0;
@@ -14784,7 +14784,6 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         dp = dists;
         cp = cam;
         b6b8 = &lbl_803DC6B8;
-        px2 = &x2;
         py2 = &y2;
         pz2 = &z2;
         thresh = lbl_803E7E98;
@@ -14818,7 +14817,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                         ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
                             &x1, &y1, &z1, parent);
                         ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))
-                            Obj_TransformLocalPointToWorld)(x2, y2, z2, px2, py2, pz2, parent);
+                            Obj_TransformLocalPointToWorld)(x2, y2, z2, &x2, py2, pz2, parent);
                     }
                     {
                         f32 dz = z2 - z1;
@@ -14917,7 +14916,8 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         dists[4] = out[0x13];
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
             &dists[2], &dists[3], &dists[4], *(int*)&((GameObject*)obj)->anim.parent);
-        if (hitDetectFn_800658a4(obj, out + 0x12, 0x205, dists[2], dists[3], dists[4]) == 0)
+        if (((int (*)(int, f32, f32, f32, f32*, int))hitDetectFn_800658a4)(
+                obj, dists[2], dists[3], dists[4], out + 0x12, 0x205) == 0)
         {
             out[0x12] = out[1] - out[0x12];
         }
@@ -14960,6 +14960,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     }
     return mode;
 }
+#pragma opt_loop_invariants reset
 
 #pragma peephole off
 int fn_802A8EE4(int a, int b, int c, int d, int e)
