@@ -1918,33 +1918,9 @@ extern f32 lbl_803DE9E4;
 void fn_8003A230(int obj, void* state, f32 val)
 {
     s16* found;
-    int* table;
-    int i;
-    int j;
-    int k;
-    int n;
     int flag;
 
-    found = NULL;
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
-    {
-        int bank;
-        i = 0;
-        j = 0;
-        n = (s32)(u32)((ObjDef*)table)->jointCount;
-        for (k = 0; k < n; k++)
-        {
-            bank = *(int*)&((ObjDef*)table)->jointData;
-            if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(bank + i) == 0)
-            {
-                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-            }
-            i = i + ((ObjDef*)table)->modelCount + 1;
-            j += 0x12;
-        }
-    }
+    found = objFindJointVecByKey(obj, 0);
     if (found != NULL)
     {
         if (found[0] != 0)
@@ -1979,35 +1955,11 @@ void fn_8003A230(int obj, void* state, f32 val)
 extern int getAngle(float y, float x);
 extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(int obj, int target, int state, int maxAngle)
+void fn_8003B0D0(int obj, int target, int state, s16 maxAngle)
 {
     s16* found;
-    int* table;
-    int i;
-    int j;
-    int k;
-    int n;
-    s16 limit;
 
-    found = NULL;
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
-    {
-        i = 0;
-        j = 0;
-        n = (s32)(u32)((ObjDef*)table)->jointCount;
-        for (k = 0; k < n; k++)
-        {
-            int bankI = *(int*)((int)table + 0x10);
-            if ((int)*(u8*)(bankI + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(bankI + i) == 0)
-            {
-                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-            }
-            i = i + ((ObjDef*)table)->modelCount + 1;
-            j += 0x12;
-        }
-    }
+    found = objFindJointVecByKey(obj, 0);
     if (found != NULL)
     {
         *(s16*)((char*)state + 0x14) = (s16)((s16)getAngle(((GameObject*)obj)->anim.localPosX -
@@ -2015,14 +1967,14 @@ void fn_8003B0D0(int obj, int target, int state, int maxAngle)
                                                         ((GameObject*)obj)->anim.localPosZ -
                                                             *(f32*)((char*)target + 0x14)) -
                                           ((GameObject*)obj)->anim.rotX);
-        limit = (s16)(int)(gObjPrintDegToAngle * (f32)(s32)maxAngle);
-        if (*(s16*)((char*)state + 0x14) > limit)
+        maxAngle = (s16)(int)(gObjPrintDegToAngle * maxAngle);
+        if (*(s16*)((char*)state + 0x14) > maxAngle)
         {
-            *(s16*)((char*)state + 0x14) = limit;
+            *(s16*)((char*)state + 0x14) = maxAngle;
         }
-        if (*(s16*)((char*)state + 0x14) < -limit)
+        if (*(s16*)((char*)state + 0x14) < -maxAngle)
         {
-            *(s16*)((char*)state + 0x14) = -limit;
+            *(s16*)((char*)state + 0x14) = -maxAngle;
         }
         found[1] = *(s16*)((char*)state + 0x14);
     }
@@ -2034,12 +1986,13 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
-    int count;
-    int total;
-    char* p4;
     int* keys;
     int i;
+    int total;
+    char* p4;
+    int count;
     int obj;
+    s16* found;
 
     obj = objArg;
     count = countArg;
@@ -2049,33 +2002,9 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
     keys = keyList;
     while (i < count)
     {
-        int key;
-        int found;
-        void* m;
-
-        key = *keys;
-        found = 0;
-        m = (void*)((GameObject*)obj)->anim.modelInstance;
-        if (m != NULL)
-        {
-            int entryIdx = found;
-            int vecOffset = found;
-            int n = ((ObjDef*)m)->jointCount;
-            int j;
-            for (j = 0; j < n; j++)
-            {
-                int entries = *(int*)&((ObjDef*)m)->jointData;
-                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                    key == (int)*(u8*)(entries + entryIdx))
-                {
-                    found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
-                }
-                entryIdx += ((ObjDef*)m)->modelCount + 1;
-                vecOffset += 0x12;
-            }
-        }
-        total += fn_800399C0((s16*)p4, (s16*)found);
-        total += fn_80039834((s16*)(p4 + 0x30), (s16*)found, lbl_803DE9D8, lbl_803DE9DC);
+        found = objFindJointVecByKey(obj, *keys);
+        total += fn_800399C0((s16*)p4, found);
+        total += fn_80039834((s16*)(p4 + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
         keys++;
         i++;
         p4 += 0x60;
