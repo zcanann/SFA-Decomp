@@ -1235,8 +1235,8 @@ void textureFn_80053d58(void* vobj)
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
     void* texObj;
-    *(int*)(obj + 64) = 0;
-    obj[72] = 0;
+    *(int*)(obj + 64) = mipmap;
+    obj[72] = mipmap;
     texObj = (void*)(obj + 32);
     if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
     GXInitTexObj(texObj, obj + 96,
@@ -1620,10 +1620,10 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                     void* bm2 = gLoadedRomListPages[mapId];
                     byteIdx = objIndex >> 3;
                     bit = 1 << (objIndex & 7);
-                    ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] =
-                        ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] & ~bit;
-                    ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] =
-                        ((s8*)*(s8**)((char*)bm2 + 0x10))[byteIdx] | bit;
+                    vis = *(s8**)((char*)bm2 + 0x10);
+                    vis[byteIdx] = vis[byteIdx] & ~bit;
+                    vis = *(s8**)((char*)bm2 + 0x10);
+                    vis[byteIdx] = vis[byteIdx] | bit;
                 }
                 Obj_SetupObject((int*)obj, 1, mapId, objIndex, p4);
             }
