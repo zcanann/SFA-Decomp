@@ -14,6 +14,14 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
+/* phase values written by the SeqFn (author comment: 1 = hidden,
+   2/3 = slam variants, 0 = idle). SLAM0/SLAM1 are neutral names - the
+   comment does not distinguish what 2 vs 3 mean. */
+#define WMGENERALSCALES_PHASE_IDLE 0
+#define WMGENERALSCALES_PHASE_HIDDEN 1
+#define WMGENERALSCALES_PHASE_SLAM0 2
+#define WMGENERALSCALES_PHASE_SLAM1 3
+
 /* per-object extra state (getExtraSize == 0x8). unk00 is written here
    (0.0 / 800.0 on the slam events) but only read by other TUs. */
 typedef struct WmGeneralScalesState
@@ -73,24 +81,24 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1: /* hide */
-            state->phase = 1;
+            state->phase = WMGENERALSCALES_PHASE_HIDDEN;
             break;
         case 2: /* slam, tracked fx */
-            state->phase = 2;
+            state->phase = WMGENERALSCALES_PHASE_SLAM0;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, buf);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             state->unk00 = lbl_803E5E98;
             break;
         case 3: /* slam variant */
-            state->phase = 3;
+            state->phase = WMGENERALSCALES_PHASE_SLAM1;
             (*gPartfxInterface)->spawnObject((void*)obj, 0x556, NULL, 2, -1, NULL);
             Sfx_PlayFromObject(obj, 0x7b);
             Sfx_PlayFromObject(obj, 0x7c);
             state->unk00 = lbl_803E5E9C;
             break;
         case 4: /* back to idle */
-            state->phase = 0;
+            state->phase = WMGENERALSCALES_PHASE_IDLE;
             break;
         case 5: /* draw the sword: spawn + attach a scalessword child */
             if (((GameObject*)obj)->childObjs[0] == NULL && Obj_IsLoadingLocked() != 0)
@@ -148,7 +156,7 @@ void wmgeneralscales_free(int* obj)
 void wmgeneralscales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
-    if (state->phase == 1) return;
+    if (state->phase == WMGENERALSCALES_PHASE_HIDDEN) return;
     if (visible == 0) return;
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
@@ -166,7 +174,7 @@ void wmgeneralscales_init(int* obj)
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = wmgeneralscales_SeqFn;
     state->unk00 = lbl_803E5E98;
-    state->phase = 1;
+    state->phase = WMGENERALSCALES_PHASE_HIDDEN;
     *(int*)&((GameObject*)obj)->childObjs[0] = 0;
 }
 
