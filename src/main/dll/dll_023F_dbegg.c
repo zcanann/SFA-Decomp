@@ -46,6 +46,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define PAD_BUTTON_A 0x100
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -822,7 +823,7 @@ void dbegg_update(int obj)
                 ObjMsg_SendToObject(playerObj, 0x7000a, obj, b2 + 0x11c);
                 ((GameObject*)obj)->unkF8 = 0;
             }
-            else if (getButtonsJustPressed(0) & 0x100)
+            else if (getButtonsJustPressed(0) & PAD_BUTTON_A)
             {
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
