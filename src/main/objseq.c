@@ -270,7 +270,7 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
 
     if (((GameObject*)obj)->animEventCallback != NULL)
     {
-        callbackResult = (*(int (**)(void))(obj + 0xbc))();
+        callbackResult = (*(int (**)(u8*, u8*, u8*, int))(obj + 0xbc))(obj, sourceObj, seq, action);
         if (callbackResult == 4)
         {
             gObjSeqStop = 1;
