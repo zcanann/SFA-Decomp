@@ -190,7 +190,7 @@ int Minimap_update(void)
     int xr;
     int xl;
     s16 m;
-    s16 sv, sw;
+    int sv;
     u32 texW, texH;
     f32 s2, fz, panx, yrel, xrel, pany;
     f32 ox, oy;
@@ -213,7 +213,7 @@ int Minimap_update(void)
     i = 0;
     k = 0;
     found = 0;
-    ox = oy = gMinimapZero;
+    oy = ox = gMinimapZero;
     col = gMinimapBaseColor;
     player = Obj_GetPlayerObject();
     if (player != NULL)
@@ -452,7 +452,7 @@ int Minimap_update(void)
                     drawPartialTexture(minimapTexture,
                                        (gMinimapF50 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
-                                       gMinimapContentAlpha,
+                                       gMinimapContentAlpha & 0xff,
                                        (int)(gMinimapF256 * *(f32*)&gMinimapZoom),
                                        texW - u, texH - vv, u, vv);
                     cx = 0.5f +
@@ -584,22 +584,27 @@ int Minimap_update(void)
                 {
                     if (gMinimapZoom < gMinimapMaxZoom)
                     {
+                        t = (f32)(sv = xc - 0x14);
                         cwL = col2;
-                        hudDrawTriangle(gMinimapF44, (f32)(xc - 0x14),
-                                        gMinimapF52, (f32)(xc - 0x14),
+                        hudDrawTriangle(gMinimapF44, t,
+                                        gMinimapF52, (f32)sv,
                                         gMinimapF48, (f32)(xc - 0x1a), &cwL);
                     }
                     if (gMinimapZoom > gMinimapMinZoom)
                     {
+                        t = (f32)(sv = xc + 0x14);
                         cwR = col2;
-                        hudDrawTriangle(gMinimapF44, (f32)(xc + 0x14),
-                                        gMinimapF52, (f32)(xc + 0x14),
+                        hudDrawTriangle(gMinimapF44, t,
+                                        gMinimapF52, (f32)sv,
                                         gMinimapF48, (f32)(xc + 0x1a), &cwR);
                     }
                 }
+                t = (f32)(xl = xc - 4);
+                e = (f32)(xr = xc + 4);
+                a = (f32)(sv = xc);
                 cwM = col2;
-                hudDrawTriangle(gMinimapF28, (xl = xc - 4), gMinimapF28, (xr = xc + 4),
-                                gMinimapF22, xc, &cwM);
+                hudDrawTriangle(gMinimapF28, t, gMinimapF28, e,
+                                gMinimapF22, a, &cwM);
                 cwB = col2;
                 hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr,
                                 gMinimapF74, xc, &cwB);
