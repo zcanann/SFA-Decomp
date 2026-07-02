@@ -24,6 +24,8 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 
+#define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -421,7 +423,7 @@ void dll_1CE_init(u8* obj, u8* params)
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
     sub = ((GameObject*)obj)->extra;
     sub->igniteCountdown = 1;
     if (GameBit_Get(((Dll1CEPlacement*)params)->gameBitId) != 0)
