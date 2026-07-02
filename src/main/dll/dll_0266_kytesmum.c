@@ -24,6 +24,8 @@
 
 #define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+#define PAD_BUTTON_A 0x100
+
 #define KYTESMUM_OBJECT_TYPE_ID 0x43
 #define KYTESMUM_EXTRA_SIZE 0x6ec
 
@@ -215,7 +217,7 @@ int kytesmum_spawnInteractionCallback(int obj)
     Obj_GetPlayerObject();
     if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
@@ -331,7 +333,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
     {
         if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
         {
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 4;
             (*gObjectTriggerInterface)
