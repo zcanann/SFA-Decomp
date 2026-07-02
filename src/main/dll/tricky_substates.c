@@ -771,6 +771,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     return 1;
 }
 
+#pragma opt_propagation off
 int trickyFoodFn_80142d2c(int obj, int state)
 {
     int tex;
@@ -785,8 +786,12 @@ int trickyFoodFn_80142d2c(int obj, int state)
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->unk720 = lbl_803E23DC;
-        result = *(u32*)&((TrickyState*)state)->stateFlags;
-        *(u32*)&((TrickyState*)state)->stateFlags = result & ~0x10LL;
+        {
+            u32 m;
+            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            m = ~0x10;
+            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+        }
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
@@ -819,8 +824,12 @@ int trickyFoodFn_80142d2c(int obj, int state)
 skip:
     if (lbl_803E23DC == ((TrickyState*)state)->unk720)
     {
-        result = *(u32*)&((TrickyState*)state)->stateFlags;
-        *(u32*)&((TrickyState*)state)->stateFlags = result & ~0x10LL;
+        {
+            u32 m;
+            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            m = ~0x10;
+            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+        }
         ((TrickyState*)state)->substate = 0;
     }
     if ((u8)trickyFn_8013b368(obj, lbl_803E2408, state) == 1)
