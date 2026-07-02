@@ -101,29 +101,10 @@ void objAnimFn_80038f38(int obj, char* state)
     extern f32 lbl_803DB464;
     extern u8 framesThisStep;
     s16* found;
-    void* m;
     int t;
 
     t = (s32) * (f32*)(state + 0xc);
-    found = NULL;
-    m = OBJPRINT_MODEL_INSTANCE(obj);
-    if (m != NULL)
-    {
-        int entryIdx = 0, vecOffset = 0;
-        int n = OBJPRINT_JOINT_COUNT(m);
-        int j;
-        for (j = 0; j < n; j++)
-        {
-            int entries = *(int*)&((ObjDef*)m)->jointData;
-            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                (int)*(u8*)(entries + entryIdx) == 1)
-            {
-                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
-            }
-            entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
-            vecOffset += 0x12;
-        }
-    }
+    found = objFindJointVecByKey(obj, 1);
 
     if (*(s8*)state != 0)
     {
@@ -1278,16 +1259,24 @@ extern void objRenderFn_80041018(int* obj);
 
 void* objModelGetVecFn_800395d8(void* obj, int target)
 {
-    void* result = NULL;
-    void* m = OBJPRINT_MODEL_INSTANCE(obj);
+    int vecOffset;
+    int entries;
+    int entryIdx;
+    void* m;
+    void* result;
+    int count;
+    int i;
+
+    result = NULL;
+    m = OBJPRINT_MODEL_INSTANCE(obj);
     if (m != NULL)
     {
-        int entryIdx = 0, vecOffset = 0;
-        int count = OBJPRINT_JOINT_COUNT(m);
-        int i;
+        entryIdx = 0;
+        vecOffset = 0;
+        count = OBJPRINT_JOINT_COUNT(m);
         for (i = 0; i < count; i++)
         {
-            int entries = *(int*)&((ObjDef*)m)->jointData;
+            entries = *(int*)&((ObjDef*)m)->jointData;
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32)*(u8*)(entries + entryIdx) == target)
             {
