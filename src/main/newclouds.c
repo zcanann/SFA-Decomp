@@ -713,6 +713,8 @@ extern const f32 lbl_803DF284;
 extern const f32 gNewCloudStarFadeOutTime;
 extern const f32 lbl_803DF28C;
 
+#pragma opt_common_subs off
+#pragma opt_common_subs off
 void drawSkyStars(void)
 {
     int timeOk;
@@ -781,9 +783,8 @@ void drawSkyStars(void)
         blue = randomGetRange(colRange[4], colRange[5]);
         if (i < 0x4c)
         {
-            a = (alpha * randomGetRange(gNewCloudStarAlphaRanges[((i & 0xc) >> 2) * 2],
-                                        gNewCloudStarAlphaRanges[((i & 0xc) >> 2) * 2 + 1])) >>
-                8;
+            colRange = &gNewCloudStarAlphaRanges[((i & 0xc) >> 2) * 2];
+            a = (alpha * randomGetRange(colRange[0], colRange[1])) >> 8;
         }
         else
         {
@@ -816,6 +817,10 @@ void drawSkyStars(void)
         GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
     }
 }
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs reset
+
 
 typedef union PPCWGPipe2
 {
