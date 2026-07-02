@@ -193,7 +193,7 @@ int Minimap_update(void)
     int sv;
     u32 texW, texH;
     f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, uq, fx, cx, cy, frac;
-    u32 u, vv;
+    u32 vv, u;
     f32 c2, s1, c1, c3, s3, fv;
     u32 col;
     u32 col2;
@@ -425,7 +425,7 @@ int Minimap_update(void)
                         t = (t < (b = texW * gMinimapZoom - boxW)) ? t : b;
                         ox = t;
                     }
-                    t = *(f32*)&gMinimapZero;
+                    t = 0.0f;
                     if (t == pany)
                     {
                         a = gMinimapZoom * (yrel * gMinimapWorldToTexScale) - (f32)(boxH / 2);
