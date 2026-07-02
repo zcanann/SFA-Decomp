@@ -24,6 +24,8 @@
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/engine_shared.h"
+
+#define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E36E0;
@@ -149,7 +151,7 @@ void levelname_init(int obj, int objDef)
             ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_IDLE;
         }
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
 }
 
 int levelname_getExtraSize(void) { return 0x18; }
