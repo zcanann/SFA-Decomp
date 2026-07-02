@@ -16,6 +16,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define DFPLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
+
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
 extern s16 lbl_80329848[];
@@ -156,7 +158,7 @@ void dfplevelcontrol_init(int obj, int param2)
     }
     (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     unlockLevel(0, 0, 1);
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPLEVELCONTROL_OBJFLAG_HIDDEN;
     if (((GameObject*)obj)->anim.mapEventSlot == 0x15)
     {
         GameBit_Set(0xdce, 0);
