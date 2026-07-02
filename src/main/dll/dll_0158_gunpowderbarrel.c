@@ -813,7 +813,6 @@ void gunpowderbarrel_update(int obj)
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            return;
         }
         return;
     }
