@@ -1411,7 +1411,7 @@ void andross_update(int obj)
         velCalc3.z = fc * lbl_803DC468;
         velArg3 = velCalc3;
         arwarwing_setVelocity(*state, (int)&velArg3);
-        fval = (lbl_803E74EC < -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E74EC;
+        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? lbl_803E74EC : -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
         ((AndrossState*)state)->unkA8 = fval;
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
         {
@@ -1428,7 +1428,7 @@ void andross_update(int obj)
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[21];
             arwarwing_addShield(*state, 0xfffffffc);
         }
-        fval = (lbl_803E74EC < -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E74EC;
+        fval = (lbl_803E74EC > -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? lbl_803E74EC : -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8);
         ((AndrossState*)state)->unkA8 = fval;
         gAndrossSwayPhaseX += gAndrossSwayPhaseStepX;
         gAndrossSwayPhaseY += gAndrossSwayPhaseStepY;
@@ -1824,7 +1824,7 @@ void andross_update(int obj)
             velCalc2.z = fc * lbl_803DC488;
             velArg2 = velCalc2;
             arwarwing_setVelocity(*state, (int)&velArg2);
-            fval = (lbl_803E7538 < -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E7538;
+            fval = (lbl_803E7538 > -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8)) ? lbl_803E7538 : -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8);
             ((AndrossState*)state)->unkA8 = fval;
         }
         sval = ((AndrossState*)state)->targetRotX - (u16)((GameObject*)obj)->anim.rotX;
@@ -1843,9 +1843,10 @@ void andross_update(int obj)
         }
         if (ref < 2000)
         {
+            found = *(int*)(((AndrossState*)state)->handObjB + 0xb8);
             bval = *(char*)(*(int*)(((AndrossState*)state)->handObjA + 0xb8) + 0x23);
             if ((((bval != 2) && (bval != 1)) &&
-                    (bval = *(char*)(*(int*)(((AndrossState*)state)->handObjB + 0xb8) + 0x23), bval != 2)) &&
+                    (bval = *(char*)&((AndrossState*)found)->unk23, bval != 2)) &&
                 (bval != 1))
             {
                 ((AndrossState*)state)->actionPending = 1;
@@ -1986,11 +1987,8 @@ void andross_update(int obj)
         else
         {
             fc = (((AndrossState*)state)->savedPosZ - ((GameObject*)*state)->anim.localPosZ);
-            fval = lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8;
-            if (lbl_803E74D4 < fval)
-            {
-                fval = lbl_803E74D4;
-            }
+            fval = (lbl_803E74D4 < lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8) ? lbl_803E74D4 :
+                lbl_803E7514 * timeDelta + ((AndrossState*)state)->unkA8;
             ((AndrossState*)state)->unkA8 = fval;
             *(u8*)(state + 0x2e) = 0;
             *(s16*)(*state + 6) = *(s16*)(*state + 6) & ~0x4000;
