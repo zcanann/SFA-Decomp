@@ -83,3 +83,22 @@ desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
   with the class appearing exactly and only at relocated address materializations.
   Checking the DLL conversion tooling for a relaxation pass is the next (and likely
   final) step for this class; if confirmed, the fix is in tools/configure, not source.
+
+## Update (decode session 5): relaxation hypothesis REFUTED - it is source-level
+- Scanned all 1852 retail DLL objects: the `addi r0,rX,lo; mr rD,r0` temp+copy shape
+  SURVIVES in 14 retail sites (e.g. Tumbleweed.o debugPrintDraw: lis/addi r0/mr r27
+  for debugLogBuffer@ha/lo, mid-function, right after a bl). Our builds have 61.
+  So there is no blanket post-processing relaxation; the retail compiler emitted BOTH
+  forms and the distinction is in the source/position.
+- Pattern in the data: every DIRECT-form retail site examined (shield_update,
+  SnowBike_init, nw_mammoth_update, dll_92/94/97/99_func03, subtitleBuildLineTable)
+  has the address init as (one of) the FIRST statement(s) at function entry; the
+  temp+mr survivor (debugPrintDraw) is a MID-FUNCTION init after a call. Our compiler
+  produces the direct form at entry ONLY when the first use is in the same BB
+  (dll_93); entry + cross-BB use gives temp+mr on every MWCC version tested.
+- Open question is now sharp: what does the retail entry-position init look like in
+  source such that the fold survives across the following branch? Candidates left
+  untested: the init being part of the PROLOGUE-adjacent parameter/local setup that
+  CFunc lowers differently from statement-position assignments (the 0x4f7e14 paths),
+  e.g. a local whose initializer is lowered during function-entry object setup
+  rather than as a body statement.
