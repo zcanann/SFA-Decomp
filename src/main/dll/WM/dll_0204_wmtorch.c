@@ -14,6 +14,8 @@
 #include "main/resource.h"
 #include "main/engine_shared.h"
 
+#define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct WmTorchPlacement
 {
     ObjPlacement base;
@@ -136,7 +138,7 @@ void wmtorch_init(u8* obj, u8* params)
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WMTORCH_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void wmtorch_release(void)
