@@ -128,27 +128,22 @@ int voiceScaleSampleRate(u16 x)
 u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 {
     u8 baseNote;
-    u8 inputNote;
     f32 freq;
-    u32 d;
 
     if (packed == 0xffffffffU)
     {
         packed = 0x40005622;
     }
     baseNote = (u8)(packed >> 24);
-    inputNote = noteIn;
-    if (inputNote != baseNote)
+    if (noteIn != baseNote)
     {
-        if (baseNote < inputNote)
+        if (baseNote < noteIn)
         {
-            d = inputNote - baseNote;
-            freq = voicePitchUpTable[d];
+            freq = voicePitchUpTable[noteIn - baseNote];
         }
         else
         {
-            d = baseNote - inputNote;
-            freq = voicePitchDownTable[d];
+            freq = voicePitchDownTable[baseNote - noteIn];
         }
         freq = (f32)(u32)(packed & 0xffffff) * freq;
     }
