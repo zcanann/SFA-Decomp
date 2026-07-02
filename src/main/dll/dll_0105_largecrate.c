@@ -543,7 +543,7 @@ void largecrate_update(int obj)
                     {
                         Sfx_PlayFromObject(obj, (u16)((LargeCrateState*)state)->hitSfxId);
                     }
-                    if (((GameObject*)obj)->anim.seqId == 0x3de)
+                    if (((GameObject*)obj)->anim.seqId == LARGECRATE_VARIANT_A)
                     {
                         ((LargeCrateState*)state)->spinSpeed = randomGetRange(600, 800);
                     }
@@ -566,7 +566,7 @@ void largecrate_update(int obj)
             vec3f_distanceSquared(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
             if ((((LargeCrateState*)state)->idleTimer -= framesThisStep) <= 0)
             {
-                ((LargeCrateState*)state)->idleTimer = (s16)(randomGetRange(0, 100) + 0x12c);
+                ((LargeCrateState*)state)->idleTimer = (s16)(randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX) + LARGECRATE_RANDOM_DELAY_BASE);
             }
             if (((GameObject*)obj)->anim.parent != NULL)
             {
