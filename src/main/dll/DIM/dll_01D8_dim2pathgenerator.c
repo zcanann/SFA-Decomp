@@ -41,6 +41,8 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
+#define DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dim2pathgeneratorObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -187,7 +189,7 @@ void dim2pathgenerator_init(int* obj, int* def)
         }
     }
     state->flags = (u8)(state->flags | 4);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimtruthhornice_init(int* obj, int* def);
