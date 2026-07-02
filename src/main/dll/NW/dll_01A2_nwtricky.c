@@ -13,6 +13,8 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
+
+#define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
 extern f32 timeDelta;
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
@@ -151,7 +153,7 @@ void nw_tricky_update(int* obj)
         }
         break;
     case 1:
-        if (!(((GameObject*)tricky)->objectFlags & 0x1000))
+        if (!(((GameObject*)tricky)->objectFlags & NWTRICKY_OBJFLAG_PARENT_SLACK))
         {
             ((NwTrickyState*)state)->timer += timeDelta;
         }
