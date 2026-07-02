@@ -31,6 +31,9 @@ extern int ObjList_FindObjectById(int id);
 #include "main/engine_shared.h"
 #include "main/obj_placement.h"
 
+#define DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIM2ICEFLOE_OBJFLAG_FREED 0x40
+
 /* dim2icefloe romlist placement: ObjPlacement head (mapId@0x14 repurposed as
    the target-object id consumed at init), then class-specific bytes. */
 typedef struct Dim2IceFloePlacement
@@ -86,7 +89,7 @@ void dim2icefloe_update(int obj)
     extern int Obj_FreeObject(int obj);
     int sub = *(int*)&((GameObject*)obj)->extra;
     if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL &&
-        (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & 0x40) != 0)
+        (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & DIM2ICEFLOE_OBJFLAG_FREED) != 0)
     {
         ((Dim2IceFloeState*)sub)->flags &= ~1;
         ((Dim2IceFloeState*)sub)->followedObj = 0;
@@ -183,7 +186,7 @@ void dim2icefloe_init(int obj, int p)
         ((Dim2IceFloeState*)sub)->bobBase = lbl_803E4B50;
         break;
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
