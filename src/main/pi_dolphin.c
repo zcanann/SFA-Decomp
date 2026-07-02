@@ -5290,8 +5290,7 @@ typedef struct
     int b;
 } PiColorS10;
 
-extern int WidthTable_803DEAB0;
-extern int CharsInSheet_803DEAB4;
+extern int WidthTable_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
 extern int lbl_803DEAB8;
 extern int lbl_803DEABC;
 extern int lbl_803DEAC0;
@@ -5306,7 +5305,7 @@ extern void GXInitTexObjLOD(void* obj, int min_filt, int mag_filt, f32 min_lod, 
                             int bias_clamp, int do_edge_lod, int max_aniso);
 
 #pragma opt_common_subs off
-void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
+void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
 {
     u8 buf5c[0x20];
     u8 buf3c[0x20];
@@ -5377,7 +5376,7 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, int w, int h)
         GXInitTexObj(buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
         GXInitTexObjLOD(buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj(buf5c, lbl_803DCD8C);
-        GXInitTexObj(buf3c, tex1, w2 = (s16)w >> 1, h2 = (s16)h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObj(buf3c, tex1, w2 = w >> 1, h2 = h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
         GXInitTexObjLOD(buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj(buf3c, lbl_803DCD8C + 1);
         GXInitTexObj(buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
@@ -7006,6 +7005,8 @@ void loadDataFiles(int arg)
         }
         lbl_803DCC78--;
     }
+    /* banked residual: retail runs this scan as a counted mtctr/bdnz loop
+       (subfic 87-i trip count); the do-while shape emits cmpwi/blt */
     i = 0;
     do
     {
@@ -7358,7 +7359,9 @@ int initLoadFiles(void)
         }
         lbl_803DCC98 = 0;
         /* the walkers must derive from the shared end-of-table base (himem) --
-           re-spelling them as tbl->field changes the address web */
+           re-spelling them as tbl->field changes the address web. Banked residual:
+           some walker bases materialize via an r0 addi+mr detour where retail
+           addi's straight into the saved reg, plus a saved-reg permutation. */
         himem = (u8*)tbl + 0x20000;
         ptrs = (u32*)(himem - 27176);  /* tbl->ptrs */
         owners = (s16*)(himem - 26824); /* tbl->owners */
