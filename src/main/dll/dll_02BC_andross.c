@@ -279,10 +279,10 @@ void andross_update(int obj)
 {
     int* state;
     u8 moveChanged;
+    u8 stateChanged;
+    u8 pathFlag;
     int work;
     int ref;
-    u8 pathFlag;
-    u8 stateChanged;
     u32 val;
     f32 fval;
     s16 sval;
@@ -297,19 +297,19 @@ void andross_update(int obj)
     f32 zero;
     f32 fc;
     s16 delayPair[2];
-    SunVec3 velCalc0;
-    SunVec3 velArg0;
-    SunVec3 velCalc1;
-    SunVec3 velArg1;
-    SunVec3 velCalc2;
-    SunVec3 velArg2;
-    SunVec3 velCalc3;
-    SunVec3 velArg3;
-    SunVec3 velAdd;
-    SunVec3 thrustAArg;
-    SunVec3 thrustBArg;
-    SunVec3 thrustA;
     SunVec3 thrustB;
+    SunVec3 thrustA;
+    SunVec3 thrustBArg;
+    SunVec3 thrustAArg;
+    SunVec3 velAdd;
+    SunVec3 velArg3;
+    SunVec3 velCalc3;
+    SunVec3 velArg2;
+    SunVec3 velCalc2;
+    SunVec3 velArg1;
+    SunVec3 velCalc1;
+    SunVec3 velArg0;
+    SunVec3 velCalc0;
     f32 camActionParam;
     f32 searchDist0;
     f32 searchDist1;
@@ -318,11 +318,13 @@ void andross_update(int obj)
     f32 searchDist;
     u32 randOffsetY;
     state = ((GameObject*)obj)->extra;
+    moveChanged = 0;
+    stateChanged = 0;
     pathFlag = 0;
     if (*(u8*)((int)state + 0xb6) != 0)
     {
         *(u8*)((int)state + 0xb6) -= 1;
-        goto LAB_8023ef14;
+        return;
     }
     if (*(void* *)&((AndrossState*)state)->handObjA == NULL)
     {
@@ -343,9 +345,15 @@ void andross_update(int obj)
     {
         found = getArwing();
         *state = found;
-        if (*(void**)state == NULL) goto LAB_8023ef14;
-        ((AndrossState*)state)->savedPosZ = ((GameObject*)*state)->anim.localPosZ;
-        arwarwing_setFlightHalfWidth(*state, gAndrossFlightHalfWidth);
+        if (*(void**)state != NULL)
+        {
+            ((AndrossState*)state)->savedPosZ = ((GameObject*)*state)->anim.localPosZ;
+            arwarwing_setFlightHalfWidth(*state, gAndrossFlightHalfWidth);
+        }
+        else
+        {
+            return;
+        }
     }
     /*
      * spawnObj[val] (state+0x18+val*4) intentionally kept as the indexed raw
@@ -379,8 +387,6 @@ void andross_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ + ((AndrossState*)state)->spawnDelta[val].z;
         }
     }
-    moveChanged = 0;
-    stateChanged = 0;
     found = ((AndrossState*)state)->fightPhase;
     if (found != ((AndrossState*)state)->prevFightPhase)
     {
