@@ -16,6 +16,9 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SPDRAPE_OBJFLAG_HIDDEN 0x4000
+#define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* indices into a swing-direction move table (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) */
 enum
 {
@@ -204,8 +207,8 @@ void spdrape_init(int* obj, u8* def)
     f32* state;
     int* player;
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= SPDRAPE_OBJFLAG_HITDETECT_DISABLED;
+    ((GameObject*)obj)->objectFlags |= SPDRAPE_OBJFLAG_HIDDEN;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((SpdrapeObjectDef*)def)->facingByte << 8);
     if (((SpdrapeObjectDef*)def)->motionScaleNum != 0)
     {
