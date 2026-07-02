@@ -375,6 +375,7 @@ int Obj_UpdateLightningCluster(int obj, void** entries, int count, f32 intensity
     return 1;
 }
 
+#pragma opt_common_subs off
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
     ObjAnimComponent* anim = &((GameObject*)a)->anim;
@@ -424,7 +425,11 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 
     if (lbl_803E6C38 != e)
     {
-        dist = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]);
+        {
+            f32 xx = vel[0] * vel[0];
+            f32 zz = vel[2] * vel[2];
+            dist = sqrtf(xx + zz);
+        }
         delta = (f32)(int)((u16)getAngle(vel[1] * e, dist) - (u16)anim->rotY);
         if (delta > gBarrelGenAngleHalfRange)
         {
@@ -437,6 +442,8 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         anim->rotY += (int)(delta * rate);
     }
 }
+#pragma opt_common_subs reset
+
 
 #pragma opt_loop_invariants off
 int Obj_PredictInterceptPoint(int obj, f32 dt, int p3, int p4)
