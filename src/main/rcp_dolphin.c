@@ -2007,13 +2007,14 @@ extern f32 lbl_803DEB54;
 extern f32 lbl_803DEB64;
 
 #pragma opt_loop_invariants off
+#pragma opt_propagation off
 void lightFn_80052974(f32 a, f32 b)
 {
     f32 z;
-    f32 x0;
     f32 scale;
     f32 half;
     f32 w;
+    f32 x0;
     f32 y;
     f32 yy;
     f32 x1;
@@ -2032,11 +2033,11 @@ void lightFn_80052974(f32 a, f32 b)
         w = LastReadIssued_803DEB58.lo;
         half = lbl_803DEB5C;
         scale = lbl_803DEB54;
+        z = lbl_803DEB64;
         for (i = 0; i < 0x10; i++)
         {
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
             fa = scale * (f32)i;
-            z = lbl_803DEB64;
             fb = scale * (f32)(i + 1);
             x0 = fa / w - half;
             x1 = fb / w - half;
@@ -2082,6 +2083,7 @@ void lightFn_80052974(f32 a, f32 b)
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
+#pragma opt_propagation reset
 #pragma opt_loop_invariants reset
 
 extern void* fn_80089A58(void);
