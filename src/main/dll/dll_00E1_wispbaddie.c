@@ -13,6 +13,8 @@
 #include "string.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define WISPBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803DC074;
 
@@ -412,7 +414,7 @@ void wispbaddie_init(int obj, int setup, int initialised)
         }
         Sfx_PlayFromObject(obj, 0x23b);
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void FUN_8014fef8(u32 obj, int state, u32 p3, int cmd)
@@ -789,7 +791,7 @@ void fn_8015039C(int obj, int animState)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
-        if ((player->objectFlags & 0x1000) == 0)
+        if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0)
         {
             distance = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
             if (distance <= lbl_803E2760)
