@@ -7,6 +7,8 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/sfa_shared_decls.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct BombplantsporeStartDriftBurstPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -442,7 +444,7 @@ void bombplantspore_init(void* obj, void* param2)
     light = objCreateLight(obj, 1);
     if (light != NULL)
     {
-        modelLightStruct_setLightKind(light, 2);
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(light, 0xff, 0, 0xff, 0);
         lightSetFieldBC_8001db14(light, 1);
         modelLightStruct_setDistanceAttenuation(light, lbl_803E5388, lbl_803E538C);
