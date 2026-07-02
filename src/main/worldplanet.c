@@ -49,7 +49,7 @@ extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;
 extern int lbl_803DDD10;
-extern int gWorldPlanetObjectIdTable[];
+extern int gWorldPlanetObjectIdTable[3][5];
 extern u8 gWorldPlanetSelectionToIndex[8];
 extern u8 gWorldPlanetTitleStringIds[8];
 extern u8 gWorldPlanetKrazoaControlBytes[8];
@@ -247,7 +247,7 @@ void worldplanet_update(int obj)
     u8 prevPlanet;
     int galleon;
     int buttons;
-    int* tbl;
+    int (*tbl)[5];
     WorldPlanetState* state;
     u8 done;
     u8 i;
@@ -313,7 +313,7 @@ void worldplanet_update(int obj)
         }
         else if ((state->flags & WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED) == 0)
         {
-            objId = tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
+            objId = tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]];
             (*gCameraInterface)->releaseAction(&objId, 2);
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
@@ -352,7 +352,7 @@ void worldplanet_update(int obj)
             u8 ok;
             u32 m = 0;
             int k = m;
-            int* ids = &tbl[15];
+            int* ids = tbl[3];
             u8* hints = gWorldPlanetHintFlagTable;
             do
             {
@@ -395,15 +395,15 @@ void worldplanet_update(int obj)
             {
                 if (((GameObject*)obj)->unkF4 != 0)
                 {
-                    objId = tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
+                    objId = tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
                     Sfx_PlayFromObject(0, 0x97);
                 }
                 gWorldPlanetPathProgress = lbl_803E65F8;
                 {
-                    int p = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[prevPlanet]]);
+                    int p = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
                     ((WorldObjState*)((GameObject*)p)->extra)->effectState = 0;
-                    p = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                    p = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)((GameObject*)p)->extra)->effectState = 1;
                 }
                 ((GameObject*)obj)->unkF4 = 1;
@@ -416,11 +416,7 @@ void worldplanet_update(int obj)
         }
         for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
         {
-            int planet = ObjList_FindObjectById(((struct
-            {
-                int ids[10];
-                int objs[WORLDPLANET_PLANET_COUNT];
-            }*)tbl)->objs[i]);
+            int planet = ObjList_FindObjectById(tbl[2][i]);
             WorldObjState* pstate = ((GameObject*)planet)->extra;
             ((GameObject*)planet)->anim.rotY = ((GameObject*)obj)->anim.rotY;
             ((GameObject*)planet)->anim.rotX = ((GameObject*)obj)->anim.rotX;
@@ -487,7 +483,7 @@ void worldplanet_update(int obj)
                 }
             }
         }
-        objId = ObjList_FindObjectById(tbl[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        objId = ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(0) == 0 && gWorldPlanetInputLockTimer == 0)
         {
             switch ((u8)state->selectionLocked)
@@ -577,17 +573,15 @@ void worldplanet_update(int obj)
             f32 r;
             for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                int p = ObjList_FindObjectById(tbl[b + 10]);
+                int p = ObjList_FindObjectById(tbl[2][b]);
                 ((GameObject*)p)->anim.rotZ = -ang;
             }
-            r = gWorldPlanetOrbitRadius;
-            for (b = 0; b < WORLDPLANET_PLANET_COUNT; b++)
+            for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                int* row = &tbl[b];
-                s16* p = (s16*)ObjList_FindObjectById(row[0]);
-                if (row[0] == 0x4300d)
+                s16* p = (s16*)ObjList_FindObjectById(tbl[0][b]);
+                if (tbl[0][b] == 0x4300d)
                 {
-                    *p = ang + row[5] + 0x4000;
+                    *p = ang + tbl[1][b] + 0x4000;
                 }
                 else
                 {
@@ -597,11 +591,11 @@ void worldplanet_update(int obj)
                 {
                     Sfx_KeepAliveLoopedObjectSound((u32)p, 0x96);
                 }
-                *(f32*)(p + 6) = r * fsin16Approx((ang + row[5]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(p + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosX;
-                *(f32*)(p + 8) = r * fsin16Approx((ang + row[5]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
+                *(f32*)(p + 8) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosY;
-                *(f32*)(p + 10) = r * fcos16Approx((ang + row[5]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
+                *(f32*)(p + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + ((GameObject*)obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;
