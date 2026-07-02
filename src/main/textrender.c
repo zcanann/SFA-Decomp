@@ -2836,8 +2836,8 @@ extern u16 lbl_802CA100[];
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
 {
-    void** q;
     s16* p;
+    void** q;
     int i;
     int j;
     int x;
