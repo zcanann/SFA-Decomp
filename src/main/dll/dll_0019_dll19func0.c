@@ -594,27 +594,27 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
     extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
     extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e); /* #57 */
     f32 bboxOut[20];
-    int objs[2];
+    int objs[3];
     f32 diff[3];
     f32 gridIn[3];
     int gridB[2];
     int gridA[2];
     u8 losOut;
-    f32* dp = diff;
+    f32* dp;
     int* list;
     int negHalfAngle;
     int obj;
     int found = 0;
-    int newangle;
     int delta;
     u8 traced;
 
     objs[0] = Obj_GetPlayerObject();
     objs[1] = 0;
+    dp = diff;
     list = objs;
     negHalfAngle = -halfAngle;
 
-    while ((void*)(obj = *list) != NULL)
+    while (found == 0 && (void*)(obj = *list) != NULL)
     {
         dp[0] = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)self)->anim.worldPosX;
         dp[1] = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)self)->anim.worldPosY;
@@ -627,10 +627,10 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                 {
                     found = 1;
                 }
-                newangle = (u16)getAngle(-dp[0], -dp[2]);
+                delta = getAngle(-dp[0], -dp[2]) & 0xffff;
                 if (*(void**)(self + 0x30) != NULL)
                 {
-                    delta = newangle - (u16)(*(s16*)self + *(s16*)(*(int*)&((GameObject*)self)->anim.parent));
+                    delta -= (*(s16*)self + *(s16*)(*(int*)&((GameObject*)self)->anim.parent)) & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -642,7 +642,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                 }
                 else
                 {
-                    delta = newangle - (u16) * (s16*)self;
+                    delta -= *(s16*)self & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -691,10 +691,6 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
             }
         }
         list++;
-        if (found != 0)
-        {
-            break;
-        }
     }
     return obj;
 }
