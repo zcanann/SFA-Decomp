@@ -64,6 +64,7 @@ extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern f32 lbl_803E2A08;
 
+#pragma opt_common_subs off
 void fn_80154870(int obj, int* state)
 {
     RomCurveWalker* curve;
@@ -102,7 +103,8 @@ void fn_80154870(int obj, int* state)
         fval = lbl_803E2990;
         ((GameObject*)obj)->anim.velocityX = fval;
         ((GameObject*)obj)->anim.velocityZ = fval;
-        fn_8014CF7C(obj, state, *(f32*)(state[0xa7] + 0xc), *(f32*)(state[0xa7] + 0x14), 10, 0);
+        curve = (RomCurveWalker*)state[0xa7];
+        fn_8014CF7C(obj, state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
     }
     else
     {
@@ -162,6 +164,8 @@ void fn_80154870(int obj, int* state)
         (f32)((GameObject*)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
+#pragma opt_common_subs reset
+
 
 void fn_80154C24(int obj, int state)
 {
