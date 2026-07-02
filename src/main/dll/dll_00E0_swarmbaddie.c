@@ -27,6 +27,8 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "string.h"
+
+#define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern u32 FUN_80006b0c();
 extern u32 FUN_80006b14();
 extern u32 DAT_803de6d0;
@@ -139,7 +141,7 @@ void swarmbaddie_init(int obj, int data, int skip_alloc)
         }
         Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void hagabon_init(int obj, int data, int skip_alloc);
