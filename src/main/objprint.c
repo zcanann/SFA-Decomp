@@ -84,9 +84,9 @@ void objAnimFn_80038f38(int obj, char* state)
         int j;
         for (j = 0; j < n; j++)
         {
-            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
-            int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1)
+            int entries = *(int*)&((ObjDef*)m)->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                (int)*(u8*)(entries + entryIdx) == 1)
             {
                 found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
