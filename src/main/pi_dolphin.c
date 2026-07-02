@@ -4436,12 +4436,7 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
     int cnt2;
     int* node;
     u32* heap;
-    u32 pri;
-    u16 idx16;
-    int parent;
-    int i;
-    int idx2;
-    int off;
+    int z[2];
     int n;
     int* node4;
     int visited;
@@ -4462,38 +4457,41 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
         v = cnt;
         hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
         *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = 0xfffffffe;
-        i = *(s16*)((char*)q + 0x22);
-        pri = *(u32*)((int)heap + i * 8);
-        idx16 = hh[i * 4 + 2];
-        *heap = -1;
-        while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
         {
-            *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-            *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
-            i = parent;
+            int i = *(s16*)((char*)q + 0x22);
+            u32 pri = *(u32*)((int)heap + i * 8);
+            u16 idx16 = hh[i * 4 + 2];
+            int parent;
+            *heap = -1;
+            while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+            {
+                *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
+                i = parent;
+            }
+            *(u32*)((int)heap + i * 8) = pri;
+            hh[i * 4 + 2] = idx16;
         }
-        *(u32*)((int)heap + i * 8) = pri;
-        hh[i * 4 + 2] = idx16;
     }
-    idx2 = 0;
-    off = idx2;
+    z[0] = 0;
+    z[1] = z[0];
     cnt2 = *(s16*)((char*)q + 0x20);
     for (n = cnt2; n > 0; n--)
     {
-        char** node2 = (char**)(*q + off);
+        char** node2 = (char**)(*q + z[1]);
         if (*node2 == obj)
         {
             visited = *(u8*)((char*)node2 + 0xe);
             goto found;
         }
-        off += 0x10;
-        idx2++;
+        z[1] += 0x10;
+        z[0]++;
     }
-    idx2 = -1;
+    z[0] = -1;
 found:
-    if (idx2 >= 0 && visited == 0)
+    if (z[0] >= 0 && visited == 0)
     {
-        int* node3 = (int*)(*q + idx2 * 0x10);
+        int* node3 = (int*)(*q + z[0] * 0x10);
         if (d < node3[2])
         {
             u32 newpri;
@@ -4509,7 +4507,7 @@ found:
             heap = (u32*)q[1];
             hh = (u16*)heap;
             j = 0;
-            target = idx2;
+            target = z[0];
             for (; j <= s2; j++)
             {
                 if (target == *(u16*)(heap + j * 2 + 1))
@@ -4527,8 +4525,9 @@ found:
             }
             else if (newpri > old)
             {
-                pri = *entry;
-                idx16 = ((u16*)entry)[2];
+                u32 pri = *entry;
+                u16 idx16 = ((u16*)entry)[2];
+                int parent;
                 *heap = -1;
                 while (parent = pos >> 1, *(u32*)(hh + parent * 4) < pri)
                 {
@@ -4541,7 +4540,7 @@ found:
             }
         }
     }
-    else if (idx2 < 0)
+    else if (z[0] < 0)
     {
         if (cnt2 == 0xfe)
         {
@@ -4565,18 +4564,21 @@ found:
                 v = cnt2;
                 hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
                 *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
-                i = *(s16*)((char*)q + 0x22);
-                pri = *(u32*)((int)heap + i * 8);
-                idx16 = hh[i * 4 + 2];
-                *heap = -1;
-                while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
                 {
-                    *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
-                    i = parent;
+                    int i = *(s16*)((char*)q + 0x22);
+                    u32 pri = *(u32*)((int)heap + i * 8);
+                    u16 idx16 = hh[i * 4 + 2];
+                    int parent;
+                    *heap = -1;
+                    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+                    {
+                        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
+                        i = parent;
+                    }
+                    *(u32*)((int)heap + i * 8) = pri;
+                    hh[i * 4 + 2] = idx16;
                 }
-                *(u32*)((int)heap + i * 8) = pri;
-                hh[i * 4 + 2] = idx16;
             }
             else
             {
@@ -4591,18 +4593,21 @@ found:
                 v = cnt2;
                 hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
                 *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
-                i = *(s16*)((char*)q + 0x22);
-                pri = *(u32*)((int)heap + i * 8);
-                idx16 = hh[i * 4 + 2];
-                *heap = -1;
-                while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
                 {
-                    *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
-                    i = parent;
+                    int i = *(s16*)((char*)q + 0x22);
+                    u32 pri = *(u32*)((int)heap + i * 8);
+                    u16 idx16 = hh[i * 4 + 2];
+                    int parent;
+                    *heap = -1;
+                    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+                    {
+                        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
+                        i = parent;
+                    }
+                    *(u32*)((int)heap + i * 8) = pri;
+                    hh[i * 4 + 2] = idx16;
                 }
-                *(u32*)((int)heap + i * 8) = pri;
-                hh[i * 4 + 2] = idx16;
             }
         }
     }
