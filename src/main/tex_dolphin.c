@@ -86,6 +86,14 @@ typedef struct MapBlockBoundsRec
     u8 pad19[0x1C - 0x19];
 } MapBlockBoundsRec;
 
+typedef struct TexShadowRow
+{
+    int unk0;
+    int unk4;
+    int unk8;
+    int type;
+} TexShadowRow;
+
 extern int gTexIndMtxTable;
 extern u8 lbl_8037E0C0[];
 extern u8 lbl_803DB638;
@@ -520,7 +528,6 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes,
     return 1;
 }
 
-#pragma opt_propagation off
 void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, float* mtx)
 {
     u8 dBig[16];
@@ -535,12 +542,13 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
     u8 c[4];
     u8 g[4];
     int i;
-    int* p;
     u32 vis;
     u32 flags;
     u32 word;
     int pos;
     int bptr;
+
+    {
     u8* base;
     int ptr;
 
@@ -573,8 +581,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
             fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
             {
                 int shadowType = 5;
-                int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
@@ -583,8 +590,7 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
             fn_8005D3B4(ptr, block, ((MapBlockBoundsRec*)ptr)->unk18);
             {
                 int shadowType = 4;
-                int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
@@ -632,14 +638,12 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                         modelLightStruct_getPosition((void*)gTexBlockLightList, &dOut[0], &dOut[1], &dOut[2]);
                         modelLightStruct_getRadius((void*)gTexBlockLightList);
                         fn_8004F6D8(c, &dOut[0], g);
-                        p = &gTexBlockLightList + 1;
                         for (i = 1; i < count; i = i + 1)
                         {
-                            modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
-                            modelLightStruct_getPosition((void*)*p, &dOut[0], &dOut[1], &dOut[2]);
-                            modelLightStruct_getRadius((void*)*p);
+                            modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &c[0], &c[1], &c[2], &c[3]);
+                            modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &dOut[0], &dOut[1], &dOut[2]);
+                            modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
                             fn_8004F380(c, &dOut[0]);
-                            p = p + 1;
                         }
                         if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x800) != 0))
                         {
@@ -653,14 +657,12 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
                 }
                 else
                 {
-                    p = &gTexBlockLightList;
                     for (i = 0; i < count; i = i + 1)
                     {
-                        modelLightStruct_getDiffuseColor((void*)*p, &c[0], &c[1], &c[2], &c[3]);
-                        modelLightStruct_getPosition((void*)*p, &dOut[0], &dOut[1], &dOut[2]);
-                        modelLightStruct_getRadius((void*)*p);
+                        modelLightStruct_getDiffuseColor((void*)(&gTexBlockLightList)[i], &c[0], &c[1], &c[2], &c[3]);
+                        modelLightStruct_getPosition((void*)(&gTexBlockLightList)[i], &dOut[0], &dOut[1], &dOut[2]);
+                        modelLightStruct_getRadius((void*)(&gTexBlockLightList)[i]);
                         fn_8004FA30(c, &dOut[0]);
-                        p = p + 1;
                     }
                 }
                 if ((obj != NULL) && ((*(u32*)(obj + 0x3c) & 0x2000) != 0))
@@ -706,16 +708,15 @@ void mapBlockRender_callList(u32 hi, u32 lo, int block, u8* obj, int* stream, fl
             fn_8005D3B4(ptr, block, 0x17);
             {
                 int shadowType = 6;
-                int* row = (int*)(base + lbl_803DCE30 * 16);
-                *(int*)((char*)row + 0xc) = shadowType;
+                *(int*)((u8*)&((TexShadowRow*)base)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
             }
             lbl_803DCE30 = lbl_803DCE30 + 1;
         }
     }
 end:
     return;
+    }
 }
-#pragma opt_propagation reset
 
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
