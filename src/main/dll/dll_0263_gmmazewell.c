@@ -17,6 +17,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define PAD_BUTTON_A 0x100
+
 typedef struct GmmazewellState
 {
     u8 unk0;            /* 0x00: cleared at init, never read */
@@ -175,7 +177,7 @@ checkValue:
         if (found != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            buttonDisable(0, 256);
+            buttonDisable(0, PAD_BUTTON_A);
         }
     }
 
