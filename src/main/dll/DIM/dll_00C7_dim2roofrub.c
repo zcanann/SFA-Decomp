@@ -171,6 +171,8 @@ extern f32 timeDelta;
 #include "main/dll/dll_00F7_dllf7.h"
 #include "main/objlib.h"
 
+#define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800
+
 typedef struct Dim2roofrubPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -860,7 +862,7 @@ void dim2roofrub_spawnEffects(int* obj)
     {
         int* model = Obj_GetActiveModel((int)obj);
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = 2;
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+        if ((((GameObject*)obj)->objectFlags & DIM2ROOFRUB_OBJFLAG_RENDERED) != 0)
         {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3270, 2, 1, 20, lbl_803E3278, 0, 0);
         }
