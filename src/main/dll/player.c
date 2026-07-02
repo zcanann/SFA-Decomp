@@ -1396,14 +1396,15 @@ int fn_8029A76C(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            int i;
-            lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            int z[2];
+            z[0] = 0;
+            lbl_803DE42C = z[0];
+            for (z[1] = z[0]; z[1] < 7; z[1]++)
             {
-                if (gPlayerSpawnedObjects[i] != NULL)
+                if (gPlayerSpawnedObjects[z[1]] != NULL)
                 {
-                    Obj_FreeObject((int)gPlayerSpawnedObjects[i]);
-                    gPlayerSpawnedObjects[i] = NULL;
+                    Obj_FreeObject((int)gPlayerSpawnedObjects[z[1]]);
+                    gPlayerSpawnedObjects[z[1]] = NULL;
                 }
             }
             if (gPlayerResource != NULL)
@@ -1423,6 +1424,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             int low;
             f32 b;
             f32 a;
+            f32 k;
             *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400LL;
             a = inner->aimInputZ;
             b = inner->aimInputX;
@@ -1430,7 +1432,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             half = res >> 17;
             low = (res & 0xffff) >> 1;
             inner->aimScreenY =
-                lbl_803E7E98 * (b * (f32)(int)
+                (k = lbl_803E7E98) * (b * (f32)(int)
             low
             )
             +(f32)(int)
@@ -1438,7 +1440,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
             if (a < lbl_803E7EA4)
             {
                 inner->aimScreenX =
-                    lbl_803E7E98 * (a * (f32)(int)
+                    k * (a * (f32)(int)
                 half
                 )
                 +(f32)(int)
@@ -4967,16 +4969,19 @@ int fn_8029ABD8(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            void** p = gPlayerSpawnedObjects;
-            int i;
+            void** p;
+            int z[2];
             inner->animState = -1;
-            lbl_803DE42C = 0;
-            for (i = 0; i < 7; i++)
+            z[0] = 0;
+            lbl_803DE42C = z[0];
+            z[1] = z[0];
+            p = gPlayerSpawnedObjects;
+            for (; z[1] < 7; z[1]++)
             {
-                if (p[i] != NULL)
+                if (p[z[1]] != NULL)
                 {
-                    Obj_FreeObject((int)p[i]);
-                    p[i] = NULL;
+                    Obj_FreeObject((int)p[z[1]]);
+                    p[z[1]] = NULL;
                 }
             }
             if (gPlayerResource != NULL)
@@ -5130,9 +5135,9 @@ int fn_8029AF9C(int obj, int state)
             inner->aimInputX =
                 inner->aimInputX +
                 interpolate(c - inner->aimInputX, lbl_803E7EFC, timeDelta);
-            if (inner->aimInputX > lbl_803E7EA4)
+            if ((t = inner->aimInputX) > lbl_803E7EA4)
             {
-                spin = inner->aimInputX - lbl_803E7EA0;
+                spin = t - lbl_803E7EA0;
                 if (spin < lbl_803E7EA4)
                 {
                     spin = lbl_803E7EA4;
@@ -5140,14 +5145,14 @@ int fn_8029AF9C(int obj, int state)
             }
             else
             {
-                spin = lbl_803E7EA0 + inner->aimInputX;
+                spin = lbl_803E7EA0 + t;
                 if (spin > lbl_803E7EA4)
                 {
                     spin = lbl_803E7EA4;
                 }
             }
             a = inner->aimInputZ;
-            if (a > lbl_803E7EA4)
+            if (a > *(volatile f32*)&lbl_803E7EA4)
             {
                 Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, 0x441,
                                                     (int)(lbl_803E7FAC * a));
@@ -5173,9 +5178,8 @@ int fn_8029AF9C(int obj, int state)
                 res = getScreenResolution();
                 half = res >> 17;
                 low = (res & 0xffff) >> 1;
-                k = lbl_803E7E98;
                 inner->aimScreenY =
-                    k * (bv * (f32)(int)
+                    (k = lbl_803E7E98) * (bv * (f32)(int)
                 low
                 )
                 +(f32)(int)
@@ -5235,17 +5239,18 @@ int fn_8029AF9C(int obj, int state)
                     *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
                     getCurSeqNo() != 0)
                 {
-                    int i;
+                    int z[2];
                     void** p;
-                    lbl_803DE42C = 0;
-                    i = 0;
+                    z[0] = 0;
+                    lbl_803DE42C = z[0];
+                    z[1] = z[0];
                     p = gPlayerSpawnedObjects;
-                    for (; i < 7; i++)
+                    for (; z[1] < 7; z[1]++)
                     {
-                        if (p[i] != NULL)
+                        if (p[z[1]] != NULL)
                         {
-                            Obj_FreeObject((int)p[i]);
-                            p[i] = NULL;
+                            Obj_FreeObject((int)p[z[1]]);
+                            p[z[1]] = NULL;
                         }
                     }
                     if (gPlayerResource != NULL)
@@ -9832,19 +9837,19 @@ int fn_80299E44(int obj, int state, f32 fv)
             *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
             getCurSeqNo() != 0)
         {
-            int i;
+            int z[2];
             void** p;
-            lbl_803DE42C = 0;
-            i = 0;
+            z[0] = 0;
+            lbl_803DE42C = z[0];
+            z[1] = z[0];
             p = gPlayerSpawnedObjects;
-            for (; i < 7; i++)
+            for (; z[1] < 7; z[1]++)
             {
-                if (*p != NULL)
+                if (p[z[1]] != NULL)
                 {
-                    Obj_FreeObject((int)*p);
-                    *p = NULL;
+                    Obj_FreeObject((int)p[z[1]]);
+                    p[z[1]] = NULL;
                 }
-                p++;
             }
             if (gPlayerResource != NULL)
             {
@@ -10366,15 +10371,17 @@ int fn_802A5048(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
         void** p;
-        int i;
-        lbl_803DE42C = 0;
+        int z[2];
+        z[0] = 0;
+        lbl_803DE42C = z[0];
+        z[1] = z[0];
         p = gPlayerSpawnedObjects;
-        for (i = 0; i < 7; i++)
+        for (; z[1] < 7; z[1]++)
         {
-            if (p[i] != NULL)
+            if (p[z[1]] != NULL)
             {
-                Obj_FreeObject((int)p[i]);
-                p[i] = NULL;
+                Obj_FreeObject((int)p[z[1]]);
+                p[z[1]] = NULL;
             }
         }
         if (gPlayerResource != NULL)
@@ -10506,15 +10513,16 @@ void fn_8029C8C8(int obj, int p2)
     if (((PlayerState*)p2)->baddie.controlMode != 0x24 && ((PlayerState*)p2)->baddie.controlMode != 0x25 &&
         lbl_803DE42C != 0)
     {
-        int i;
+        int z[2];
         inner->animState = -1;
-        lbl_803DE42C = 0;
-        for (i = 0; i < 7; i++)
+        z[0] = 0;
+        lbl_803DE42C = z[0];
+        for (z[1] = z[0]; z[1] < 7; z[1]++)
         {
-            if (gPlayerSpawnedObjects[i] != NULL)
+            if (gPlayerSpawnedObjects[z[1]] != NULL)
             {
-                Obj_FreeObject((int)gPlayerSpawnedObjects[i]);
-                gPlayerSpawnedObjects[i] = NULL;
+                Obj_FreeObject((int)gPlayerSpawnedObjects[z[1]]);
+                gPlayerSpawnedObjects[z[1]] = NULL;
             }
         }
         if (gPlayerResource != NULL)
@@ -11189,7 +11197,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
 
 void fn_8029A4A8(int obj, int p2)
 {
-    int i;
+    int z[2];
     PlayerState* inner = ((GameObject*)obj)->extra;
     int sel = ((PlayerState*)p2)->baddie.controlMode;
 
@@ -11212,13 +11220,14 @@ void fn_8029A4A8(int obj, int p2)
         ((ByteFlags*)((char*)inner + 0x3f6))->b40 = 0;
     }
 
-    lbl_803DE42C = 0;
-    for (i = 0; i < 7; i++)
+    z[0] = 0;
+    lbl_803DE42C = z[0];
+    for (z[1] = z[0]; z[1] < 7; z[1]++)
     {
-        if (gPlayerSpawnedObjects[i] != NULL)
+        if (gPlayerSpawnedObjects[z[1]] != NULL)
         {
-            Obj_FreeObject((int)gPlayerSpawnedObjects[i]);
-            gPlayerSpawnedObjects[i] = NULL;
+            Obj_FreeObject((int)gPlayerSpawnedObjects[z[1]]);
+            gPlayerSpawnedObjects[z[1]] = NULL;
         }
     }
     if (gPlayerResource != NULL)
@@ -13171,7 +13180,7 @@ void playerDie(int obj)
     PlayerState* inner = ((GameObject*)obj)->extra;
     int setup;
     int variant;
-    int i;
+    int z[2];
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
     setPendingMapLoad(1);
@@ -13197,13 +13206,14 @@ void playerDie(int obj)
     inner->spawnedObject = Obj_SetupObject(setup, 5, -1, -1, 0);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 0;
     ((ByteFlags*)((char*)inner + 0x3f3))->b02 = 1;
-    lbl_803DE42C = 0;
-    for (i = 0; i < 7; i++)
+    z[0] = 0;
+    lbl_803DE42C = z[0];
+    for (z[1] = z[0]; z[1] < 7; z[1]++)
     {
-        if (gPlayerSpawnedObjects[i] != NULL)
+        if (gPlayerSpawnedObjects[z[1]] != NULL)
         {
-            Obj_FreeObject((int)gPlayerSpawnedObjects[i]);
-            gPlayerSpawnedObjects[i] = NULL;
+            Obj_FreeObject((int)gPlayerSpawnedObjects[z[1]]);
+            gPlayerSpawnedObjects[z[1]] = NULL;
         }
     }
     if (gPlayerResource != NULL)
