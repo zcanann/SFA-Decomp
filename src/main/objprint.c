@@ -2844,19 +2844,22 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
         m = (void*)go->anim.modelInstance;
         if (m != NULL)
         {
-            int entryIdx = 0, vecOffset = 0;
-            int n = ((ObjDef*)m)->jointCount;
+            int iv[2];
+            int n;
             int j;
+            iv[0] = (int)found[0];
+            iv[1] = (int)found[0];
+            n = ((ObjDef*)m)->jointCount;
             for (j = 0; j < n; j++)
             {
                 int entries = *(int*)&((ObjDef*)m)->jointData;
-                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + entryIdx + 1) != 0xff &&
-                    key == (int)*(u8*)(entries + entryIdx))
+                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + iv[0] + 1) != 0xff &&
+                    key == (int)*(u8*)(entries + iv[0]))
                 {
-                    found[0] = (s16*)((int)go->anim.jointPoseData + vecOffset);
+                    found[0] = (s16*)((int)go->anim.jointPoseData + iv[1]);
                 }
-                entryIdx += ((ObjDef*)m)->modelCount + 1;
-                vecOffset += 0x12;
+                iv[0] += ((ObjDef*)m)->modelCount + 1;
+                iv[1] += 0x12;
             }
         }
         if (found[0] == NULL)
@@ -2870,7 +2873,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
             int n2;
             for (n2 = 0; n2 < 2; n2++)
             {
-                s16 lim;
+                int lim;
                 s16 v;
                 if (n2 % 2 != 0)
                 {
@@ -2882,14 +2885,14 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
                 }
                 v = src[n2];
                 dst[n2] = v;
-                if (v > lim)
+                if (v > (s16)lim)
                 {
                     dst[n2] = lim;
                     src[n2] -= lim;
                 }
-                else if (v < -lim)
+                else if (v < -(s16)lim)
                 {
-                    dst[n2] = -lim;
+                    dst[n2] = -(s16)lim;
                     src[n2] += lim;
                 }
                 else
