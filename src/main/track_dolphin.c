@@ -1211,6 +1211,29 @@ typedef struct TrackBlockDescriptor
 } TrackBlockDescriptor;
 
 extern TrackBlockDescriptor gTrackBlockDescriptors[];
+
+/* TrackTriangle -- the 0x4c-byte collision triangle record packed into
+ * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
+ * vertex coordinates are stored as s16 triplets grouped by axis
+ * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
+ * by field and as an s16 index off the record base. */
+typedef struct TrackTriangle
+{
+    f32 planeD;       /* 0x00 plane equation constant */
+    f32 planeN[3];    /* 0x04 plane normal xyz */
+    s16 vx[3];        /* 0x10 vertex x coords */
+    s16 vy[3];        /* 0x16 vertex y coords */
+    s16 vz[3];        /* 0x1c vertex z coords */
+    u8 pad22[2];      /* 0x22 */
+    f32 edgeN0[3];    /* 0x24 edge 0 outward normal */
+    f32 edgeN1[3];    /* 0x30 edge 1 outward normal */
+    f32 edgeN2[3];    /* 0x3c edge 2 outward normal */
+    u8 surfaceType;   /* 0x48 copied into intersect-line records */
+    s8 flags;         /* 0x49 0x10 = disabled, 0x4 = force */
+    u8 minMaxY;       /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
+    u8 edgeOutBits;   /* 0x4b per-edge outside bits from last query */
+} TrackTriangle;
+
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
 {
@@ -2734,28 +2757,28 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
                 fx -= a;
                 fz -= b;
             }
-            j = (s16) * (s16*)((char*)d + 4);
+            j = (s16)((TrackBlockDescriptor*)d)->firstTriangle;
             outA = (f32*)((char*)p5 + outOff);
-            while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
+            while (j < (s16)((TrackBlockDescriptor*)d)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
             {
-                if (p9 & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                if (p9 & ((TrackTriangle*)p4 + j)->flags)
                 {
-                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10)) - fx;
-                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16)) - ((GameObject*)obj)
+                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[0]) - fx;
+                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[0]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1c)) - fz;
-                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x12)) - fx;
-                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x18)) - ((GameObject*)obj)
+                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[0]) - fz;
+                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[1]) - fx;
+                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[1]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1e)) - fz;
-                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x14)) - fx;
-                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1a)) - ((GameObject*)obj)
+                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[1]) - fz;
+                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[2]) - fx;
+                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[2]) - ((GameObject*)obj)
                         ->anim.localPosY;
-                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x20)) - fz;
-                    outA[0] = *(f32*)((char*)p4 + j * 0x4c + 0x4);
-                    outA[1] = *(f32*)((char*)p4 + j * 0x4c + 0x8);
-                    outA[2] = *(f32*)((char*)p4 + j * 0x4c + 0xc);
-                    *(u8*)((char*)outA + 0x10) = *(u8*)((char*)p4 + j * 0x4c + 0x49);
+                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[2]) - fz;
+                    outA[0] = ((TrackTriangle*)p4 + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)p4 + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)p4 + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)p4 + j)->flags;
                     p6 += 0x24;
                     total += 3;
                     outA = (f32*)((char*)outA + 0x14);
@@ -2786,25 +2809,25 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
             lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
             p6start = (f32*)p6;
             totalStart = total;
-            j = (s16) * (s16*)((char*)d + 4);
+            j = (s16)((TrackBlockDescriptor*)d)->firstTriangle;
             outA = (f32*)((char*)p5 + outOff);
-            while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
+            while (j < (s16)((TrackBlockDescriptor*)d)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
             {
-                if (p9 & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                if (p9 & ((TrackTriangle*)p4 + j)->flags)
                 {
-                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10));
-                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16));
-                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1c));
-                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x12));
-                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x18));
-                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1e));
-                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x14));
-                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1a));
-                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x20));
-                    outA[0] = *(f32*)((char*)p4 + j * 0x4c + 0x4);
-                    outA[1] = *(f32*)((char*)p4 + j * 0x4c + 0x8);
-                    outA[2] = *(f32*)((char*)p4 + j * 0x4c + 0xc);
-                    *(u8*)((char*)outA + 0x10) = *(u8*)((char*)p4 + j * 0x4c + 0x49);
+                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[0]);
+                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[0]);
+                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[0]);
+                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[1]);
+                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[1]);
+                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[1]);
+                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vx[2]);
+                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vy[2]);
+                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32(&((TrackTriangle*)p4 + j)->vz[2]);
+                    outA[0] = ((TrackTriangle*)p4 + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)p4 + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)p4 + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)p4 + j)->flags;
                     p6 += 0x24;
                     total += 3;
                     outA = (f32*)((char*)outA + 0x14);
@@ -3198,7 +3221,7 @@ extern const f32 lbl_803DECE4;
 
 void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
 {
-    u8* v;
+    TrackTriangle* v;
     f32 ox;
     f32 planeC;
     f32 oz;
@@ -3207,14 +3230,14 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
     f32 arrC[7];
     f32 vec[4];
 
-    if (*(void**)desc == NULL)
+    if (((TrackBlockDescriptor*)desc)->object == NULL)
     {
         a -= (f32)((int*)gTrackGridOrigin)[0];
         b -= (f32)((int*)gTrackGridOrigin)[2];
     }
-    for (v = p3; v < p4; v += 0x4c)
+    for (v = p3; (void*)v < p4; v++)
     {
-        s8 fl = *(s8*)(v + 0x49);
+        s8 fl = v->flags;
         int i;
         int inside;
 
@@ -3222,24 +3245,24 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         {
             if (!(fl & 0x4)) continue;
         }
-        vec[0] = *(f32*)(v + 0x4);
-        vec[1] = *(f32*)(v + 0x8);
-        vec[2] = *(f32*)(v + 0xc);
+        vec[0] = v->planeN[0];
+        vec[1] = v->planeN[1];
+        vec[2] = v->planeN[2];
         if (!(vec[1] > __AR_Callback))
         {
             if (e == 0) continue;
             if (__AR_Callback == vec[1]) continue;
         }
-        planeC = -(vec[0] * a + vec[2] * b + *(f32*)v) / vec[1];
-        arrA[0] = (f32)(s16) * (s16*)(v + 0x10);
-        arrB[0] = (f32)(s16) * (s16*)(v + 0x16);
-        arrC[0] = (f32)(s16) * (s16*)(v + 0x1c);
-        arrA[1] = (f32)(s16) * (s16*)(v + 0x12);
-        arrB[1] = (f32)(s16) * (s16*)(v + 0x18);
-        arrC[1] = (f32)(s16) * (s16*)(v + 0x1e);
-        arrA[2] = (f32)(s16) * (s16*)(v + 0x14);
-        arrB[2] = (f32)(s16) * (s16*)(v + 0x1a);
-        arrC[2] = (f32)(s16) * (s16*)(v + 0x20);
+        planeC = -(vec[0] * a + vec[2] * b + v->planeD) / vec[1];
+        arrA[0] = (f32)v->vx[0];
+        arrB[0] = (f32)v->vy[0];
+        arrC[0] = (f32)v->vz[0];
+        arrA[1] = (f32)v->vx[1];
+        arrB[1] = (f32)v->vy[1];
+        arrC[1] = (f32)v->vz[1];
+        arrA[2] = (f32)v->vx[2];
+        arrB[2] = (f32)v->vy[2];
+        arrC[2] = (f32)v->vz[2];
         inside = 1;
         {
             f32 c31 = __AR_Callback;
@@ -3278,17 +3301,17 @@ void fn_800659A8(void* p3, void* p4, void* desc, f32 a, f32 b, int e)
         }
         if (inside == 0) continue;
         if ((s8)lbl_803DCF60 >= 0x23) break;
-        if (*(void**)desc != NULL)
+        if (((TrackBlockDescriptor*)desc)->object != NULL)
         {
-            Matrix_TransformPoint(*(void**)((char*)desc + 0xc), a, planeC, b, &ox, &planeC, &oz);
-            Matrix_TransformVector(*(void**)((char*)desc + 0xc), vec, vec);
+            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, a, planeC, b, &ox, &planeC, &oz);
+            Matrix_TransformVector(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, vec, vec);
         }
         *(f32*)(lbl_803DCF68 + 0) = planeC;
-        *(u8*)(lbl_803DCF68 + 0x14) = *(u8*)(v + 0x48);
+        *(u8*)(lbl_803DCF68 + 0x14) = v->surfaceType;
         *(f32*)(lbl_803DCF68 + 0x4) = vec[0];
         *(f32*)(lbl_803DCF68 + 0x8) = vec[1];
         *(f32*)(lbl_803DCF68 + 0xc) = vec[2];
-        *(int*)(lbl_803DCF68 + 0x10) = *(int*)desc;
+        *(int*)(lbl_803DCF68 + 0x10) = (int)((TrackBlockDescriptor*)desc)->object;
         lbl_803DCF68 = lbl_803DCF68 + 0x18;
         lbl_803DCF60++;
     }
@@ -3514,7 +3537,7 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     f32* fp;
     s16 i;
     u8 hitCount;
-    u8* tbl = (u8*)gTrackBlockDescriptors;
+    TrackBlockDescriptor* tbl = gTrackBlockDescriptors;
 
     if (count > 4) count = 4;
     *(u16*)((u8*)results + 0x6c) = 0;
@@ -3560,8 +3583,8 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
     {
         extern int hitDetect_800667ec();
         hitCount = hitDetect_800667ec(0,
-                               (void*)(gTrackTriangleBuffer + *(s16*)(tbl + 4) * 0x4c),
-                               (void*)(gTrackTriangleBuffer + *(s16*)(tbl + 0x1c) * 0x4c),
+                               (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
+                               (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c),
                                param_2, param_3, count, results, 0);
     }
 
@@ -5854,7 +5877,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 offX, offZ;
     f32 mag;
     TrackBlockDescriptor* desc;
-    u8* tri;
+    TrackTriangle* tri;
     int objmtx;
     u8 bounces;
     u8 found;
@@ -5925,18 +5948,18 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 {
                     PSVECNormalize(delta, dir);
                 }
-                for (tri = (u8*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     s16* ts = (s16*)tri;
                     f32 dE, dS;
                     u8 b;
-                    tri[0x4b] = 0;
-                    if ((s8)tri[0x49] & 0x10) continue;
-                    plane[0] = *(f32*)(tri + 4);
-                    plane[1] = *(f32*)(tri + 8);
-                    plane[2] = *(f32*)(tri + 0xc);
-                    plane[3] = *(f32*)tri;
+                    tri->edgeOutBits = 0;
+                    if (tri->flags & 0x10) continue;
+                    plane[0] = tri->planeN[0];
+                    plane[1] = tri->planeN[1];
+                    plane[2] = tri->planeN[2];
+                    plane[3] = tri->planeD;
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
                     if (!(dE <= (*(f32*)&__AR_Callback))) continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
@@ -5953,23 +5976,23 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         }
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
-                        lo = ts[(*(u8*)(tri + 0x4a) & 0xf) + 0xb] - maxStep;
+                        lo = ts[(tri->minMaxY & 0xf) + 0xb] - maxStep;
                         if (hitpt[1] < lo) continue;
-                        hi = ts[(*(u8*)(tri + 0x4a) >> 4) + 0xb] + maxStep;
+                        hi = ts[(tri->minMaxY >> 4) + 0xb] + maxStep;
                         if (hitpt[1] > hi) continue;
-                        edge0[0] = *(f32*)(tri + 0x24);
-                        edge0[1] = *(f32*)(tri + 0x28);
-                        edge0[2] = *(f32*)(tri + 0x2c);
+                        edge0[0] = tri->edgeN0[0];
+                        edge0[1] = tri->edgeN0[1];
+                        edge0[2] = tri->edgeN0[2];
                         edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1]))
                             + PSVECDotProduct(edge0, hitpt);
-                        edge1[0] = *(f32*)(tri + 0x30);
-                        edge1[1] = *(f32*)(tri + 0x34);
-                        edge1[2] = *(f32*)(tri + 0x38);
+                        edge1[0] = tri->edgeN1[0];
+                        edge1[1] = tri->edgeN1[1];
+                        edge1[2] = tri->edgeN1[2];
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
                             + PSVECDotProduct(edge1p, hitpt);
-                        edge2[0] = *(f32*)(tri + 0x3c);
-                        edge2[1] = *(f32*)(tri + 0x40);
-                        edge2[2] = *(f32*)(tri + 0x44);
+                        edge2[0] = tri->edgeN2[0];
+                        edge2[1] = tri->edgeN2[1];
+                        edge2[2] = tri->edgeN2[2];
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
                             + PSVECDotProduct(edge2p, hitpt);
                         b = 0;
@@ -5984,50 +6007,50 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                             hit = 1;
                             goto found_hit;
                         }
-                        tri[0x4b] = b;
+                        tri->edgeOutBits = b;
                     }
                     else if (dE >= negStep && radius > (*(f32*)&__AR_Callback))
                     {
-                        edge0[0] = *(f32*)(tri + 0x24);
-                        edge0[1] = *(f32*)(tri + 0x28);
-                        edge0[2] = *(f32*)(tri + 0x2c);
+                        edge0[0] = tri->edgeN0[0];
+                        edge0[1] = tri->edgeN0[1];
+                        edge0[2] = tri->edgeN0[2];
                         edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1]))
                             + PSVECDotProduct(edge0, ws);
-                        edge1[0] = *(f32*)(tri + 0x30);
-                        edge1[1] = *(f32*)(tri + 0x34);
-                        edge1[2] = *(f32*)(tri + 0x38);
+                        edge1[0] = tri->edgeN1[0];
+                        edge1[1] = tri->edgeN1[1];
+                        edge1[2] = tri->edgeN1[2];
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
                             + PSVECDotProduct(edge1p, ws);
-                        edge2[0] = *(f32*)(tri + 0x3c);
-                        edge2[1] = *(f32*)(tri + 0x40);
-                        edge2[2] = *(f32*)(tri + 0x44);
+                        edge2[0] = tri->edgeN2[0];
+                        edge2[1] = tri->edgeN2[1];
+                        edge2[2] = tri->edgeN2[2];
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
                             + PSVECDotProduct(edge2p, ws);
                         b = 0;
                         if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
                         if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
                         if (edge2[3] > (*(f32*)&__AR_Callback)) b |= 4;
-                        tri[0x4b] = b;
+                        tri->edgeOutBits = b;
                     }
                 }
                 if ((*(f32*)&__AR_Callback) == mag) goto found_hit;
-                for (tri = (u8*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     u8 bit;
-                    if (tri[0x4b] == 0) continue;
+                    if (tri->edgeOutBits == 0) continue;
                     for (bit = 0; bit < 3; bit++)
                     {
                         s16* vs;
                         u8 k;
-                        if ((tri[0x4b] & (1 << bit)) == 0) continue;
+                        if ((tri->edgeOutBits & (1 << bit)) == 0) continue;
                         k = bit + 1;
                         if (k > 2) k = 0;
-                        vs = (s16*)(tri + bit * 2);
+                        vs = (s16*)((u8*)tri + bit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
-                        vs = (s16*)(tri + k * 2);
+                        vs = (s16*)((u8*)tri + k * 2);
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
@@ -6040,21 +6063,21 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         }
                     }
                 }
-                for (tri = (u8*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     u8 bit;
-                    if (tri[0x4b] == 0) continue;
+                    if (tri->edgeOutBits == 0) continue;
                     for (bit = 0; bit < 3; bit++)
                     {
                         s16* vs;
                         u8 k;
                         int ok;
                         f32 dotv, sq, disc, root, tt, rr, rr2;
-                        if ((tri[0x4b] & (1 << bit)) == 0) continue;
+                        if ((tri->edgeOutBits & (1 << bit)) == 0) continue;
                         k = bit + 1;
                         if (k > 2) k = 0;
-                        vs = (s16*)(tri + bit * 2);
+                        vs = (s16*)((u8*)tri + bit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
@@ -6106,7 +6129,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                             hit = 1;
                             goto found_hit;
                         }
-                        vs = (s16*)(tri + k * 2);
+                        vs = (s16*)((u8*)tri + k * 2);
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
@@ -6170,8 +6193,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     norm4[1] = plane[1];
                     norm4[2] = plane[2];
                     norm4[3] = plane[3];
-                    typeb = tri[0x48];
-                    typeb2 = tri[0x49];
+                    typeb = tri->surfaceType;
+                    typeb2 = *(u8*)&tri->flags;
                     objmtx = *(int*)desc;
                     svWorld[0] = ws[0];
                     svWorld[1] = ws[1];
