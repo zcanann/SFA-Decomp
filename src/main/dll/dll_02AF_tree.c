@@ -370,8 +370,11 @@ void tree_update(int obj)
             }
         }
         player = Obj_GetPlayerObject();
-        if ((void*)player != NULL && !(state->flags & TREE_FLAG_DISABLE_PLAYER_PROXIMITY) &&
-            (state->flags & TREE_FLAG_BURST_MODE_MASK))
+        if ((void*)player == NULL || (state->flags & TREE_FLAG_DISABLE_PLAYER_PROXIMITY) ||
+            !(state->flags & TREE_FLAG_BURST_MODE_MASK))
+        {
+            return;
+        }
         {
             dx = object->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = object->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
