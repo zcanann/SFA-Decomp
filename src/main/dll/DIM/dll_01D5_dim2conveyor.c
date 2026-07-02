@@ -42,6 +42,8 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 
+#define DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
@@ -162,7 +164,7 @@ void dim2conveyor_init(int* obj, u8* params)
     extra->swapTimer = lbl_803E4A60;
     extra->musicHold = 0;
     ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
     if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
     {
         GameBit_Set(GAMEBIT_CONVEYOR_REVERSE, 1);
