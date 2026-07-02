@@ -223,7 +223,7 @@ void fn_801EB0D4(u32 obj, int stateRaw)
             lim = lbl_803E5AE8;
             if (lim != st->airMeterRefillTimer)
             {
-                rate = lbl_803E5B14;
+                rate = 200.0f;
                 st->airMeterCurrent =
                     rate * timeDelta + st->airMeterCurrent;
                 st->airMeterRefillTimer =
