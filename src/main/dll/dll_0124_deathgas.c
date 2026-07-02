@@ -3,6 +3,8 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+
+#define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
 extern u32 ObjHits_RecordObjectHit();
@@ -43,7 +45,7 @@ typedef struct
 void deathgas_init(int* obj)
 {
     register DeathGasState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
     state->radius = gDeathGasDefaultRadius;
     if (((GameObject*)obj)->anim.seqId != 2103) return;
     state->noFog = 1;
