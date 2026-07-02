@@ -25,6 +25,8 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/gameplay_runtime.h"
+
+#define WARPPAD_OBJFLAG_PARENT_SLACK 0x1000
 extern int ObjTrigger_IsSet();
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -250,7 +252,7 @@ void warpPadPlayerStandingOn(int obj)
     }
 
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
-        ((((GameObject*)obj)->objectFlags & 0x1000) == 0))
+        ((((GameObject*)obj)->objectFlags & WARPPAD_OBJFLAG_PARENT_SLACK) == 0))
     {
         if (lbl_803DCEB8 > -1)
         {
