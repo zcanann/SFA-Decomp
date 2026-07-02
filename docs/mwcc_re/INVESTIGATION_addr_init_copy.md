@@ -54,3 +54,19 @@ desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
   question is decided at VALUE CREATION (kind byte + embedded desc), i.e. in the front
   end when it builds the address-init temp — next read: what sets value+0x2 to 1 vs 0/2
   for compiler temps vs user locals in CFunc.c/CodeGen.c.
+
+## Update (decode session 3): the CodeGen temp pool and why bit1 dies
+- 0x43629f (CodeGen.c) = the pooled-temp allocator: walks pool list 0x5ddc98 for a
+  free (desc+0x24 & 0x20 clear) same-type temp and claims it; else allocates a fresh
+  value {tag(+0)=5, kind(+2)=1, type(+0xe)}, bzero-allocs the 0x2a-byte desc, copies
+  an 0x18-byte template from 0x43e470() into desc+0x8, ids it via counter 0x5ea19a,
+  sets 0x20 (claimed), then CALLS THE SLOT ASSIGNER 0x4f9e30 — which clears bit1.
+  The andb $0xdf sites in CodeGen (0x4337a6 etc.) release temps back to the pool.
+- Consequence: pooled CodeGen temps are never coalesce-eligible; the mr dies (when it
+  dies) via IroPropagate/VN, not Color_Coalesce. The retail direct `addi rHOME` for the
+  cross-BB address-init therefore means the retail IR had ONE def (AddrConst -> home)
+  with no intermediate temp at all — the divergence is in the FRONT-END LOWERING of
+  the initializer (when does an assignment RHS get a pooled temp vs. target the LHS
+  web directly), i.e. CExpr/CFunc assignment lowering, not any RA pass. Next read:
+  the assignment lowering call path into 0x43629f (who requests the temp for a
+  decl-init of an address constant, and under what condition it is skipped).
