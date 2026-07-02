@@ -388,9 +388,15 @@ int doorf4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             if (active != 0)
             {
-                if (ObjMsg_Pop((void*)obj, &msg, 0, 0) != 0 && msg < 10 && msg >= 8)
+                if (ObjMsg_Pop((void*)obj, &msg, 0, 0) != 0)
                 {
-                    ObjMsg_SendToObject(other, msg, (void*)obj, 0);
+                    switch (msg)
+                    {
+                    case 8:
+                    case 9:
+                        ObjMsg_SendToObject(other, msg, (void*)obj, 0);
+                        break;
+                    }
                 }
                 if (sd < lbl_803E3648 && ((GameObject*)obj)->unkF8 == 0)
                 {
