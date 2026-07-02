@@ -2998,6 +2998,7 @@ int Tricky_func12(int* obj)
     return r;
 }
 
+#pragma opt_propagation off
 int Tricky_func10(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
@@ -3013,7 +3014,12 @@ int Tricky_func10(int* obj, int targetObj)
         if ((void*)state[0x28 / 4] != (void*)(targetObj + 0x18))
         {
             state[0x28 / 4] = targetObj + 0x18;
-            state[0x54 / 4] = state[0x54 / 4] & ~0x400LL;
+            {
+                u32 m;
+                u32 f2 = *(u32*)&state[0x54 / 4];
+                m = ~0x400;
+                state[0x54 / 4] = f2 & m;
+            }
             *(s16*)((u8*)state + 0xd2) = 0;
         }
         *((u8*)state + 10) = 0;
@@ -3027,6 +3033,7 @@ int Tricky_func10(int* obj, int targetObj)
     }
     return 1;
 }
+#pragma opt_propagation reset
 
 #pragma optimization_level 1
 void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
