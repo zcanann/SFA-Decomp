@@ -29,6 +29,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MODEL_LIGHT_KIND_POINT 2
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -756,7 +757,7 @@ void explosion_init(int obj, int p2)
         ((ExplosionState*)state)->light = objCreateLight(0, 1);
         if (*(void**)&((ExplosionState*)state)->light != NULL)
         {
-            modelLightStruct_setLightKind(((ExplosionState*)state)->light, 2);
+            modelLightStruct_setLightKind(((ExplosionState*)state)->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition(((ExplosionState*)state)->light, ((GameObject*)obj)->anim.worldPosX,
                                          ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ);
             modelLightStruct_setAffectsAabbLightSelection(((ExplosionState*)state)->light, 1);
