@@ -20,6 +20,7 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 
@@ -151,7 +152,7 @@ void cclevcontrol_update(int obj)
     if (state[1] & 1)
     {
         if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
-            || (((GameObject*)tricky)->objectFlags & 0x1000) != 0)
+            || (((GameObject*)tricky)->objectFlags & CCLEVCONTROL_OBJFLAG_PARENT_SLACK) != 0)
         {
             state[1] &= ~1;
             (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
