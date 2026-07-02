@@ -2502,23 +2502,28 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 #pragma opt_loop_invariants reset
 #pragma opt_propagation off
 #pragma opt_common_subs off
-void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
+void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
 {
     extern f32 playerMapOffsetX;
     extern f32 playerMapOffsetZ;
     extern f32 sqrtf(f32);
     f32 va[3];
     f32 vb[3];
+    int k;
+    char* q;
+    f32* vp;
+    int i;
+    char* base;
+    int model;
+    int obj;
+    int staff;
 
+    staff = staffArg;
+    obj = objArg;
+    model = modelArg;
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
-        int k;
-        char* q;
-        f32* vp;
-        int i;
-        char* base;
         int off;
-
         base = (char*)((GameObject*)staff)->extra;
         i = 0;
         k = 1;
@@ -2533,7 +2538,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
                 void* jm;
                 char* t;
                 int joint;
-                joint = (s8)(*(u8**)(*(char**)(staff + 0x50) + 0x2c))[off +
+                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off +
                             OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
                 jm = ObjModel_GetJointMatrix((int*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
@@ -2551,7 +2556,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             {
                 char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 char* row = t + off;
-                int idx2 = (s8) * (s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
+                int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
                 char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
                 vb[0] = *(f32*)row;
                 vb[1] = *(f32*)(t + off + 4);
