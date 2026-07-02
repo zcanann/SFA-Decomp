@@ -3162,9 +3162,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
         }
     }
 
-    ptr = base + 0xdc;
-    i = 0;
-    for (j = 0; j < lbl_803DCF60; j++)
+    for (j = 0, ptr = base + 0xdc, i = 0; j < lbl_803DCF60; j++)
     {
         *(u8**)(lbl_803DCF64 + i) = ptr;
         ptr += 0x18;
