@@ -248,7 +248,7 @@ void waveanimator_init(int* obj, int* desc)
 {
     WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
     f32 scale;
-    state->unk18 = ((WaveanimatorObjectDef*)desc)->sinkDepthScale;
+    state->sinkDepthScale = ((WaveanimatorObjectDef*)desc)->sinkDepthScale;
     state->originX = ((WaveanimatorObjectDef*)desc)->originX;
     state->originY = ((WaveanimatorObjectDef*)desc)->originY;
     state->spanX = ((WaveanimatorObjectDef*)desc)->spanX;

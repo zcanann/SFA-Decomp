@@ -11,7 +11,7 @@ typedef struct WaveAnimatorState
     int spanY; /* 0x0c */
     f32 ampX; /* 0x10 */
     f32 ampY; /* 0x14 */
-    int unk18; /* 0x18 */
+    int sinkDepthScale; /* 0x18 */
     int period; /* 0x1c */
     int gridN; /* 0x20 */
     f32 minHeight; /* 0x24 */
