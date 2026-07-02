@@ -25,6 +25,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
+
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 /* CloudRunnerState::flightState high-level modes */
@@ -842,7 +844,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
     switch (mode)
     {
     case 2:
-        if ((((GameObject*)obj)->objectFlags & 0x1000) || ((ByteFlags*)&inner->flagsBC1)->b80)
+        if ((((GameObject*)obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK) || ((ByteFlags*)&inner->flagsBC1)->b80)
         {
             *out = ((GameObject*)obj)->anim.rotX;
             gDRCloudRunnerSmoothedRotX = ((GameObject*)obj)->anim.rotX;
@@ -897,7 +899,7 @@ void DR_CloudRunner_func23(int obj, int mode, int* out)
         }
         break;
     case 3:
-        if (((GameObject*)obj)->objectFlags & 0x1000)
+        if (((GameObject*)obj)->objectFlags & DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK)
         {
             *out = 0;
         }
