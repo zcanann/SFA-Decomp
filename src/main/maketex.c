@@ -685,25 +685,25 @@ extern u64 lbl_803DD050;
  * memory card, then reads it back and verifies the checksum. */
 int saveGame_doWrite(int slot)
 {
-    u64 x;
-    u16 i;
+    u64 x[1];
+    u16 i[1];
     u64* p;
-    u64 a;
+    u64 a[1];
     u64 chk;
     u64 chk2;
     int result;
     int offset;
 
     p = (u64*)lbl_803DD044;
-    x = 0;
-    a = 1;
-    for (i = 0; (int)i < 0x3ff; i++)
+    x[0] = 0;
+    a[0] = 1;
+    for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
     {
-        u64 v = p[i];
-        x = x ^ v;
-        a = v + a;
+        u64 v = p[i[0]];
+        x[0] = x[0] ^ v;
+        a[0] = a[0] + v;
     }
-    chk = x ^ (a + 13);
+    chk = x[0] ^ (a[0] + 13);
     ((u32*)p)[0x7ff] = (u32)chk;
     ((u32*)p)[0x7fe] = (u32)(chk >> 32);
     DCFlushRange((void*)lbl_803DD044, 0x2000);
@@ -719,15 +719,15 @@ int saveGame_doWrite(int slot)
         if (result == 0)
         {
             p = (u64*)lbl_803DD044;
-            x = 0;
-            a = 1;
-            for (i = 0; (int)i < 0x3ff; i++)
+            x[0] = 0;
+            a[0] = 1;
+            for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
             {
-                u64 v = p[i];
-                x = x ^ v;
-                a = a + v;
+                u64 v = p[i[0]];
+                x[0] = x[0] ^ v;
+                a[0] = a[0] + v;
             }
-            chk2 = x ^ (a + 13);
+            chk2 = x[0] ^ (a[0] + 13);
             if (chk != chk2)
             {
                 result = -0x55;
@@ -763,10 +763,10 @@ void loadMemCardImages(void)
     char* names = sMemoryCardFileNameString;
     DVDFileInfoStub fi;
     u64* p;
-    u16 i;
-    u64 x;
+    u16 i[1];
+    u64 x[1];
     u64* q;
-    u64 a;
+    u64 a[1];
     u64 chk;
 
     if (lbl_803DC968 != 0)
@@ -841,28 +841,28 @@ void loadMemCardImages(void)
         DVDClose(&fi);
     }
     p = (u64*)gSaveCardImageBuffer;
-    x = 0;
-    a = 1;
-    for (i = 0; (int)i < 0x400; i++)
+    x[0] = 0;
+    a[0] = 1;
+    for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
     {
-        u64 v = p[i];
-        x = x ^ v;
-        a = v + a;
+        u64 v = p[i[0]];
+        x[0] = x[0] ^ v;
+        a[0] = a[0] + v;
     }
-    chk = x ^ (a + 13);
+    chk = x[0] ^ (a[0] + 13);
     ((u32*)p)[0xa91] = (u32)chk;
     ((u32*)p)[0xa90] = (u32)(chk >> 32);
     q = (u64*)gSaveCardImageBuffer;
     p = q + 0x400;
-    x = 0;
-    a = 1;
-    for (i = 0; (int)i < 0x3ff; i++)
+    x[0] = 0;
+    a[0] = 1;
+    for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
     {
-        u64 v = p[i];
-        x = x ^ v;
-        a = a + v;
+        u64 v = p[i[0]];
+        x[0] = x[0] ^ v;
+        a[0] = a[0] + v;
     }
-    chk = x ^ (a + 13);
+    chk = x[0] ^ (a[0] + 13);
     ((u32*)q)[0xfff] = (u32)chk;
     ((u32*)q)[0xffe] = (u32)(chk >> 32);
     DCFlushRange((void*)gSaveCardImageBuffer, 0x4000);
@@ -1141,10 +1141,10 @@ int saveGame(int writeImages)
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
                              int (*cb)(int, int, int, int))
 {
-    u64 x;
-    u16 i;
+    u64 x[1];
+    u16 i[1];
     u64* p;
-    u64 acc;
+    u64 acc[1];
     u64 chk;
     u64 chk2;
     u64 c;
@@ -1170,15 +1170,15 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     if (result == 0)
     {
         p = (u64*)lbl_803DD044;
-        x = 0;
-        acc = 1;
-        for (i = 0; (int)i < 0x3ff; i++)
+        x[0] = 0;
+        acc[0] = 1;
+        for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
         {
-            u64 v = p[i];
-            x = x ^ v;
-            acc = v + acc;
+            u64 v = p[i[0]];
+            x[0] = x[0] ^ v;
+            acc[0] = acc[0] + v;
         }
-        c = x ^ (acc + 13);
+        c = x[0] ^ (acc[0] + 13);
         chk = c;
         if (c != *(u64*)(lbl_803DD044 + 0x1ff8))
         {
@@ -1187,15 +1187,15 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             if (result == 0)
             {
                 p = (u64*)lbl_803DD044;
-                x = 0;
-                acc = 1;
-                for (i = 0; (int)i < 0x3ff; i++)
+                x[0] = 0;
+                acc[0] = 1;
+                for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
                 {
-                    u64 v = p[i];
-                    x = x ^ v;
-                    acc = acc + v;
+                    u64 v = p[i[0]];
+                    x[0] = x[0] ^ v;
+                    acc[0] = acc[0] + v;
                 }
-                c = x ^ (acc + 13);
+                c = x[0] ^ (acc[0] + 13);
                 chk = c;
                 if (c == *(u64*)(lbl_803DD044 + 0x1ff8))
                 {
@@ -1253,15 +1253,15 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         if (result == 0)
         {
             p = (u64*)gSaveCardImageBuffer;
-            x = 0;
-            acc = 1;
-            for (i = 0; (int)i < 0x400; i++)
+            x[0] = 0;
+            acc[0] = 1;
+            for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
             {
-                u64 v = p[i];
-                x = x ^ v;
-                acc = acc + v;
+                u64 v = p[i[0]];
+                x[0] = x[0] ^ v;
+                acc[0] = acc[0] + v;
             }
-            chk2 = x ^ (acc + 13);
+            chk2 = x[0] ^ (acc[0] + 13);
             if (chk2 != *(u64*)(lbl_803DD044 + 0xa40))
             {
                 if ((u8)writeImages != 0)
