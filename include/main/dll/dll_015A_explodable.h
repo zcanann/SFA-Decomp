@@ -93,7 +93,7 @@ typedef struct ExplodableFragmentSetup
     u16 unk32;            /* 0x32: secondary spin vector */
     u16 unk34;            /* 0x34 */
     u16 unk36;            /* 0x36 */
-    u16 unk38;            /* 0x38 */
+    u16 launchDelayBase;  /* 0x38 */
     u16 height;           /* 0x3a */
     u8 pad3C[1];
     s8 scale;             /* 0x3d */

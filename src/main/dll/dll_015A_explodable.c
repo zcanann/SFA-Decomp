@@ -242,7 +242,7 @@ int explodable_spawnFragmentObject(int obj, int objType, int chunkSrc, int fragm
     s->scale = (s8)(int)(
         lbl_803E435C * (((GameObject*)obj)->anim.rootMotionScale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance
             + 4)));
-    s->unk38 = c->launchDelayBase;
+    s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
     return Obj_SetupObject((int)s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
 }
