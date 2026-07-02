@@ -1508,7 +1508,7 @@ void unloadMap(void)
     int layer;
     s8* cur;
     s8 mapType;
-    int j;
+    int z[2];
     int rb;
     char* p;
     int n;
@@ -1530,12 +1530,14 @@ void unloadMap(void)
                 {
                     blk = lbl_803DCE9C[mapType];
                     lbl_803DCE94[mapType] = -1;
-                    lbl_803DCE9C[mapType] = j = 0;
-                    for (; j < *(u8*)(blk + 0xa2); j++)
+                    lbl_803DCE9C[mapType] = z[0] = 0;
+                    z[1] = z[0];
+                    for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
                     {
-                        rb = *(int*)(blk + 0x64) + j * 68;
+                        rb = *(int*)(blk + 0x64) + z[1];
+                        k = 0;
                         p = (char*)rb;
-                        for (k = 0; k < *(u8*)(rb + 0x41); k++)
+                        for (; k < *(u8*)(rb + 0x41); k++)
                         {
                             u32 cell = *(u8*)(p + 0x2a);
                             if (cell != 0xff)
@@ -1548,8 +1550,10 @@ void unloadMap(void)
                             p += 8;
                         }
                     }
-                    for (j = 0; j < *(u8*)(blk + 0xa0); j++)
-                        textureFree(*(int*)(*(int*)(blk + 0x54) + j * 4));
+                    z[0] = 0;
+                    z[1] = z[0];
+                    for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
+                        textureFree(*(int*)(*(int*)(blk + 0x54) + z[1]));
                     if (*(void**)(blk + 0x74) != 0)
                         mm_free(*(void**)(blk + 0x74));
                     if (*(void**)(blk + 0x70) != 0)
@@ -1562,12 +1566,14 @@ void unloadMap(void)
     }
     lbl_803DCE98 = 0;
     Obj_ResetObjectSystem();
-    for (n = 0; n < ROM_LIST_PAGE_COUNT; n++)
+    z[0] = 0;
+    z[1] = z[0];
+    for (; z[0] < ROM_LIST_PAGE_COUNT; z[0]++)
     {
-        if (gLoadedRomListPages[n] != 0)
+        if (gLoadedRomListPages[z[0]] != 0)
         {
-            mm_free(gLoadedRomListPages[n]);
-            gLoadedRomListPages[n] = 0;
+            mm_free(gLoadedRomListPages[z[0]]);
+            gLoadedRomListPages[z[0]] = (void*)z[1];
         }
     }
     (*gCheckpointInterface)->reset();
