@@ -18,6 +18,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
+#define CMBSRC_OBJFLAG_RENDERED 0x800
+
 int cmbsrc_getExtraSize(void) { return CMBSRC_EXTRA_STATE_BYTES; }
 
 int cmbsrc_getObjectTypeId(void) { return 0; }
@@ -338,7 +340,7 @@ void cmbsrc_updateVisuals(int obj, int state)
             sourceState->effectTimer += lbl_803E7378;
         }
     }
-    if ((cmbsrc->objectFlags & 0x800) || (sourceState->flags & CMBSRC_STATE_EXTERNAL_ACTIVE))
+    if ((cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED) || (sourceState->flags & CMBSRC_STATE_EXTERNAL_ACTIVE))
     {
         switch (cmbsrc->objAnim.seqId)
         {
@@ -402,7 +404,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         sourceState->particleTimer -= timeDelta;
         if (sourceState->particleTimer <= lbl_803E7360)
         {
-            if (cmbsrc->objectFlags & 0x800)
+            if (cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED)
             {
                 param[2] = sourceState->radius;
                 (*gPartfxInterface)->spawnObject((void*)obj, CMBSRC_PARTICLE_EFFECT_ID, param,
