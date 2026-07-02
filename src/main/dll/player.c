@@ -6593,7 +6593,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
             gPlayerCurrentMoveId = 2;
             blend = lbl_803E7EF8;
             d2 = (lbl_803E7F10 + diff) - ((GameObject*)obj)->anim.localPosY;
-            v = lbl_803E8030 * -d2;
+            v = -d2 * lbl_803E8030;
             if (v >= lbl_803E7EA4)
             {
                 ((GameObject*)obj)->anim.velocityY = sqrtf(v);
@@ -17087,6 +17087,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
         f32 cx = ((GameObject*)obj)->anim.localPosX;
         f32 cy;
         f32 cz = ((GameObject*)obj)->anim.localPosZ;
+        f32 czOut = cz;
         switch (((GameObject*)obj)->anim.currentMove)
         {
         case 0x35:
@@ -17101,14 +17102,14 @@ int fn_802A16CC(int obj, int state, f32 fv)
                 cy = (lbl_803E7EE0 - w) *
                     (inner->moveStartPosY - ((GameObject*)obj)->anim.localPosY) +
                     ((GameObject*)obj)->anim.localPosY;
-                cz = w * (inner->savedPosZ - cz) + cz;
+                czOut = w * (inner->savedPosZ - cz) + cz;
             }
             break;
         default:
             cy = ((GameObject*)obj)->anim.localPosY;
             break;
         }
-        (*gCameraInterface)->overridePos(cx, cy, cz);
+        (*gCameraInterface)->overridePos(cx, cy, czOut);
     }
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
