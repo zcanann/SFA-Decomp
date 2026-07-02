@@ -1469,8 +1469,9 @@ void andross_update(int obj)
         ((AndrossState*)state)->fadeAlpha = fval;
         fc = ((AndrossState*)state)->fadeAlpha;
         work = *(int*)Obj_GetActiveModel(obj);
+        ref = 0;
         fval = gAndrossAlpha255 * fc;
-        for (ref = 0; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
+        for (; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
         {
             found = ObjModel_GetRenderOp(work, ref);
             ((AndrossState*)found)->unk43 = fval;
@@ -1775,8 +1776,9 @@ void andross_update(int obj)
         }
         fc = ((AndrossState*)state)->fadeAlpha;
         work = *(int*)Obj_GetActiveModel(obj);
+        ref = 0;
         fval = gAndrossAlpha255 * fc;
-        for (ref = 0; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
+        for (; ref < (int)(u32) * (u8*)(work + 0xf8); ref = ref + 1)
         {
             found = ObjModel_GetRenderOp(work, ref);
             ((AndrossState*)found)->unk43 = fval;
