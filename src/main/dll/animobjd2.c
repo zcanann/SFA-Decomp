@@ -29,6 +29,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define ANIMOBJD2_OBJFLAG_FREED 0x40
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern float fsin16Precise(int angle);
@@ -478,7 +479,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 }
                 {
                     int* c = *(int**)&t->unk724;
-                    if (c != NULL && (((GameObject*)c)->objectFlags & 0x40))
+                    if (c != NULL && (((GameObject*)c)->objectFlags & ANIMOBJD2_OBJFLAG_FREED))
                     {
                         *(int*)&t->unk724 = 0;
                         TRICKY_RETARGET((u8*)t, t->playerObj);
