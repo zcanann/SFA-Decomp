@@ -37,3 +37,20 @@ entirely, or (b) the eligibility test depends on something we haven't recovered.
 desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
 0x5e9b00/0x5e99c4/0x5e98f4). One decoded predicate likely unlocks ~10 functions at
 99.4-99.8. Until then: BANK this class; don't chase it with spellings.
+
+## Update (decode session 2): where the coalesce lists come from
+- `gCoalesce1` (0x5e99c4) is POPULATED IN CFunc.c (assert TU 0x5bb310), append site
+  0x4f4e26-0x4f4e39, during function-entry object setup (asserts at lines 0x5c7-0x5c9).
+  The GUARD is `value->kind (+0x2) == 1` (0x4f4e20) — only kind-1 values (embedded-desc
+  register candidates, per RegInfo_Desc's dispatch: kind1 -> desc at value+0x2a) get a
+  coalesce cell. Other head-writes: 0x4e924c (same TU region), 0x4f11ab, 0x55cc37 (CInline
+  band). gCoalesce0 (0x5e9b00) bulk-set at 0x4f0b96 from a 0x4f0e90 call result.
+- desc+0x24 bit1 is NOT set by any immediate `or` in the binary; RegInfo_Desc lazily
+  bzero-allocates descs (kind 0/2) so bit1 defaults to 0 — the bit must arrive via the
+  kind-1 embedded desc contents (value+0x2a+...) set during value creation in CFunc/CodeGen.
+- desc+0x24 bit1 is CLEARED (`andb $0xfd`) + 0x80 SET at 0x4f9eb7/0x4f9f4f/0x4f9fd6 inside
+  the stack-slot assigner (0x4f9e30, cursor global 0x5dfcdc, limit 0x5dfcd8): a value that
+  receives a MEMORY HOME becomes permanently un-coalesceable. This confirms the mr-class
+  question is decided at VALUE CREATION (kind byte + embedded desc), i.e. in the front
+  end when it builds the address-init temp — next read: what sets value+0x2 to 1 vs 0/2
+  for compiler temps vs user locals in CFunc.c/CodeGen.c.
