@@ -209,29 +209,24 @@ void voxmaps_worldToGrid(f32* in, s16* out)
 
 void voxmaps_resetLoadedMaps(void)
 {
-    VoxMaps* mgr = &gVoxMaps;
-    VoxMapSlotOrigin* slotOrigin = mgr->slotOrigin;
-    u8* b = gVoxMapsSlotInUse;
-    int* timer = mgr->timer;
-    int* blockId = mgr->blockId;
-    void** mapBuffer = mgr->mapBuffer;
+    void** mapBuffer;
+    int* blockId;
+    int* timer;
+    VoxMapSlotOrigin* slotOrigin;
     int i;
-    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
+
+    for (slotOrigin = gVoxMaps.slotOrigin, i = 0, mapBuffer = gVoxMaps.mapBuffer, blockId = gVoxMaps.blockId, timer = gVoxMaps.timer; i < VOXMAP_SLOT_COUNT; i++)
     {
-        if (*mapBuffer != NULL)
+        if (mapBuffer[i] != NULL)
         {
-            mm_free(*mapBuffer);
-            *mapBuffer = NULL;
+            mm_free(mapBuffer[i]);
+            mapBuffer[i] = NULL;
         }
-        *blockId = -2;
-        *timer = 0x40000000;
-        *b = 0;
+        blockId[i] = -2;
+        timer[i] = 0x40000000;
+        gVoxMapsSlotInUse[i] = 0;
         slotOrigin->gridX = 0;
         slotOrigin->gridZ = 0;
-        mapBuffer++;
-        blockId++;
-        timer++;
-        b++;
         slotOrigin++;
     }
 }
