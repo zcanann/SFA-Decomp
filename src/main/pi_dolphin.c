@@ -5141,6 +5141,8 @@ void textureFn_8004c330(void* p1, void* mtx)
     f32 sy;
     int out_c;
     int out_8;
+    int yhi;
+    int ylo;
     int y;
     int x;
     int v1;
@@ -5153,15 +5155,15 @@ void textureFn_8004c330(void* p1, void* mtx)
         lbl_803DCD2C = textureAlloc(0x20, 0x20, 4, 0, 0, 1, 1, 1, 1);
         for (y = 0; y < 0x20; y++)
         {
-            int yhi;
-            int ylo;
             x = 0;
             yhi = (y >> 2) * 0x20;
             ylo = (y & 3) * 2;
             for (; x < 0x20; x++)
             {
-                dst = lbl_803DCD2C + ylo;
-                dst = dst + yhi + (x & 3) * 8 + (x >> 2) * 0x100;
+                v3 = (int)lbl_803DCD2C + ylo;
+                v3 = v3 + yhi;
+                v3 = v3 + (x & 3) * 8;
+                dst = (u8*)v3 + (x >> 2) * 0x100;
                 v1 = randomGetRange(0x80, 0xff);
                 v2 = v1 - randomGetRange(0, 0x40);
                 v3 = v1 - randomGetRange(0x40, 0x80);
