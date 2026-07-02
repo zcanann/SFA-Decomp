@@ -11,6 +11,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DFPSTATUE1_OBJFLAG_HIDDEN 0x4000
+
 extern u32 sfxplayer_updateState(int obj, u32 unused, int animUpdate);
 extern f32 timeDelta;
 
@@ -95,7 +97,7 @@ void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
     }
     state->loopSfxStopTimer = 0;
     state->stateFlags = 0;
-    obj->objectFlags |= 0x4000;
+    obj->objectFlags |= DFPSTATUE1_OBJFLAG_HIDDEN;
 }
 
 void dfpstatue1_release(void)
