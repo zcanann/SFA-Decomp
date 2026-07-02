@@ -16,6 +16,8 @@
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
 
+#define PAD_BUTTON_A 0x100
+
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
@@ -298,7 +300,7 @@ void fn_80185B74(int obj)
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-            if ((getButtonsJustPressed(0) & 0x100) != 0)
+            if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
             {
                 state->riding = 0;
             }
