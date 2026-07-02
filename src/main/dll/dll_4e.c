@@ -135,7 +135,7 @@ void optionsMenu_applyAudioSetting(int action, int option)
 
 void optionsMenu_applyGameplaySetting(int action, int option)
 {
-    int i;
+    int z[2];
     u8 newState;
 
     if (lbl_803A87D0[option] != NULL &&
@@ -167,12 +167,14 @@ void optionsMenu_applyGameplaySetting(int action, int option)
                     (*(void(**)(void))(*gTitleMenuLinkInterface + 0x8))();
                     lbl_803DBA28 = -1;
                 }
-                for (i = 0; i < OPTIONS_MENU_ITEM_COUNT; i++)
+                z[0] = 0;
+                z[1] = z[0];
+                for (; z[0] < OPTIONS_MENU_ITEM_COUNT; z[0]++)
                 {
-                    if (lbl_803A87D0[i] != NULL)
+                    if (lbl_803A87D0[z[0]] != NULL)
                     {
-                        (*(void(**)(int*))(*gTitleMenuItemInterface + 0x10))(lbl_803A87D0[i]);
-                        lbl_803A87D0[i] = NULL;
+                        (*(void(**)(int*))(*gTitleMenuItemInterface + 0x10))(lbl_803A87D0[z[0]]);
+                        lbl_803A87D0[z[0]] = (int*)z[1];
                     }
                 }
             }
