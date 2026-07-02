@@ -1323,8 +1323,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         if (idx < count)
         {
             models[idx] = ObjModel_Load(-(*(int**)(def + 8))[idx], flags29, &size);
-            offsets[idx] = 0;
-            total = size;
+            offsets[idx] = total;
+            total += size;
         }
     }
     else if (!(flags29 & 0x200))
