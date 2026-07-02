@@ -1769,7 +1769,7 @@ void gameTextRun(void)
         f32* timer = (f32*)(gameTextBase + 0x40);
         u8* entry = gameTextBase + 0xa0;
         f32* alpha = (f32*)(gameTextBase + 0x20);
-        do
+        while (timer--, alpha--, entry -= 0xc, i-- != 0)
         {
             if ((double)*timer > zero)
             {
@@ -1781,11 +1781,7 @@ void gameTextRun(void)
                     sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
                 }
             }
-            timer--;
-            alpha--;
-            entry -= 0xc;
         }
-        while (i-- != 0);
     }
 
     if (gameTextFonts->mode == 1)
@@ -1815,11 +1811,10 @@ void gameTextRun(void)
         {
         case 3:
             {
-                u8 c0 = cmd->f4;
                 u8 c1 = cmd->f8;
                 u8 c2 = cmd->fc;
                 u8 c3 = cmd->f10;
-                lbl_803DC9A7 = c0;
+                lbl_803DC9A7 = cmd->f4;
                 lbl_803DC9A6 = c1;
                 lbl_803DC9A5 = c2;
                 lbl_803DC9A4 = c3;
@@ -1889,10 +1884,9 @@ void gameTextRun(void)
             break;
         case 14:
             {
-                u8 e0 = cmd->f4;
                 u8 e1 = cmd->f8;
                 u8 e2 = cmd->fc;
-                lbl_803DC992 = e0;
+                lbl_803DC992 = cmd->f4;
                 lbl_803DC991 = e1;
                 lbl_803DC990 = e2;
                 break;
@@ -1927,13 +1921,11 @@ void gameTextRun(void)
 
     i = 0x94;
     textWindow = gTextBoxes + 0x1280;
-    do
+    while (textWindow -= 0x20, i-- != 0)
     {
-        textWindow -= 0x20;
         *(s16*)(textWindow + 0x18) = 0;
         *(s16*)(textWindow + 0x1a) = 0;
     }
-    while (i-- != 0);
     gCurTextBox = NULL;
 }
 
