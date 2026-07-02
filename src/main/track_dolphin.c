@@ -5311,10 +5311,12 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     f32 dists[5];
     f32 fracs[5];
     f32 lb[4], la[4], ld[4];
-    f32 pos[4];
+    f32 posX[2];
+    f32 posZ[2];
     s16 m[2];
     int start, end;
-    int vt, vp, lineIdx;
+    int vt, vp;
+    u32 lineIdx;
     s8 flag1;
     int flag2;
     int flag4;
@@ -5368,32 +5370,37 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     }
 
     flag1 = !(flags & 1);
-    flag2 = flags & 2;
+    flag2 = (s8)(flags & 2);
     flag4 = flags & 4;
 
-    pos[2] = A[0];
-    pos[0] = A[2];
-    pos[3] = ((f32*)ptB)[0];
-    pos[1] = ((f32*)ptB)[2];
-    if (pos[2] < pos[3])
     {
-        minX = pos[2];
-        maxX = pos[3];
+        f32 x0, x1;
+        x0 = A[0];
+        posX[0] = x0;
+        posZ[0] = A[2];
+        x1 = ((f32*)ptB)[0];
+        posX[1] = x1;
+        posZ[1] = ((f32*)ptB)[2];
+        if (x0 < x1)
+        {
+            minX = x0;
+            maxX = x1;
+        }
+        else
+        {
+            minX = x1;
+            maxX = x0;
+        }
+    }
+    if (posZ[0] < posZ[1])
+    {
+        minZ = posZ[0];
+        maxZ = posZ[1];
     }
     else
     {
-        minX = pos[3];
-        maxX = pos[2];
-    }
-    if (pos[0] < pos[1])
-    {
-        minZ = pos[0];
-        maxZ = pos[1];
-    }
-    else
-    {
-        minZ = pos[1];
-        maxZ = pos[0];
+        minZ = posZ[1];
+        maxZ = posZ[0];
     }
     minX = minX - radius;
     maxX = maxX + radius;
@@ -5521,8 +5528,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
 
             {
                 s16* mp = m;
-                f32* zp = &pos[0];
-                f32* xp = &pos[2];
+                f32* zp = posZ;
+                f32* xp = posX;
                 for (mi = 0; mi < 2; mi++)
                 {
                     s16 mb = 1;
@@ -5563,38 +5570,38 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 {
                     if (m[0] & 1)
                     {
-                        found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
+                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
                         dist = __AR_Callback;
                     }
                     else if (m[0] & 2)
                     {
-                        found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
+                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (lineType != 0)
                     {
-                        pos[3] = pos[3] + lbl_803DCF54;
-                        pos[1] = pos[1] + lbl_803DCF50;
+                        posX[1] = posX[1] + lbl_803DCF54;
+                        posZ[1] = posZ[1] + lbl_803DCF50;
                     }
                 }
                 else if (mx & 0xc)
                 {
                     if (ma & 1)
                     {
-                        found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
+                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
                         dist = __AR_Callback;
                     }
                     else if (ma & 2)
                     {
-                        found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
+                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (m[0] & 4)
                     {
-                        f32 sx = pos[3] - pos[2];
-                        f32 sz = pos[1] - pos[0];
-                        f32 t0 = ld[3] + (pos[2] * lb[3] + pos[0] * la[3]);
-                        f32 t1 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
+                        f32 sx = posX[1] - posX[0];
+                        f32 sz = posZ[1] - posZ[0];
+                        f32 t0 = ld[3] + (posX[0] * lb[3] + posZ[0] * la[3]);
+                        f32 t1 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
                         f32 fr, cx, cz;
                         s16 ok;
                         if (t0 != t1)
@@ -5605,19 +5612,19 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                         {
                             fr = __AR_Callback;
                         }
-                        cx = sx * fr + pos[2];
-                        cz = sz * fr + pos[0];
+                        cx = sx * fr + posX[0];
+                        cz = sz * fr + posZ[0];
                         lbl_803DCF58 = fr;
                         ok = 1;
                         if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback)
                         {
-                            found = fn_800630D8(&pos[2], &pos[0], ax2, az2, radius, lineType);
+                            found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
                             ok = 0;
                             dist = __AR_Callback;
                         }
                         if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback)
                         {
-                            found = fn_800630D8(&pos[2], &pos[0], bx2, bz2, radius, lineType);
+                            found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
                             ok = 0;
                             dist = lbl_803DECC4;
                         }
@@ -5630,21 +5637,21 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                                 if (flag1 != 0)
                                 {
                                     f32 stepLb, stepLa;
-                                    f32 t3 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
-                                    pos[3] = -(t3 * lb[3] - pos[3]);
-                                    pos[1] = -(t3 * la[3] - pos[1]);
+                                    f32 t3 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
+                                    posX[1] = -(t3 * lb[3] - posX[1]);
+                                    posZ[1] = -(t3 * la[3] - posZ[1]);
                                     stepLb = lbl_803DB660 * lb[3];
                                     stepLa = lbl_803DB660 * la[3];
                                     j = 0;
-                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        pos[3] = pos[3] + stepLb;
-                                        pos[1] = pos[1] + stepLa;
+                                        posX[1] = posX[1] + stepLb;
+                                        posZ[1] = posZ[1] + stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
-                                            pos[3] = pos[2];
-                                            pos[1] = pos[0];
+                                            posX[1] = posX[0];
+                                            posZ[1] = posZ[0];
                                             break;
                                         }
                                     }
@@ -5652,25 +5659,25 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                                 else
                                 {
                                     f32 stepLb, stepLa;
-                                    pos[3] = cx;
-                                    pos[1] = cz;
+                                    posX[1] = cx;
+                                    posZ[1] = cz;
                                     stepLb = lbl_803DB660 * lb[3];
                                     stepLa = lbl_803DB660 * la[3];
                                     j = 0;
-                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        pos[3] = pos[3] + stepLb;
-                                        pos[1] = pos[1] + stepLa;
+                                        posX[1] = posX[1] + stepLb;
+                                        posZ[1] = posZ[1] + stepLa;
                                         j++;
                                         if (j > 0xa)
                                         {
-                                            pos[3] = pos[2];
-                                            pos[1] = pos[0];
+                                            posX[1] = posX[0];
+                                            posZ[1] = posZ[0];
                                             break;
                                         }
                                     }
                                 }
-                                dist = sqrtf((pos[3] - ax2) * (pos[3] - ax2) + (pos[1] - az2) * (pos[1] - az2)) / len;
+                                dist = sqrtf((posX[1] - ax2) * (posX[1] - ax2) + (posZ[1] - az2) * (posZ[1] - az2)) / len;
                             }
                         }
                     }
@@ -5692,8 +5699,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                 found = 0;
                 if (lineType != 0)
                 {
-                    pos[3] = pos[2];
-                    pos[1] = pos[0];
+                    posX[1] = posX[0];
+                    posZ[1] = posZ[0];
                 }
             }
         }
@@ -5711,8 +5718,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
         {
             pick = 0;
         }
-        outf[0x11] = fracs[0] * sqrtf((((f32*)ptB)[0] - pos[2]) * (((f32*)ptB)[0] - pos[2])
-            + (((f32*)ptB)[2] - pos[0]) * (((f32*)ptB)[2] - pos[0]));
+        outf[0x11] = fracs[0] * sqrtf((((f32*)ptB)[0] - posX[0]) * (((f32*)ptB)[0] - posX[0])
+            + (((f32*)ptB)[2] - posZ[0]) * (((f32*)ptB)[2] - posZ[0]));
         outf[0x12] = dists[pick];
         hi = hits[pick];
         if (lineIdx != 0)
@@ -5758,8 +5765,8 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     {
         lbl_803DCF4C++;
         count = 1;
-        ((f32*)ptB)[0] = pos[3];
-        ((f32*)ptB)[2] = pos[1];
+        ((f32*)ptB)[0] = posX[1];
+        ((f32*)ptB)[2] = posZ[1];
     }
     return count;
 }
