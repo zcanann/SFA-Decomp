@@ -13679,7 +13679,7 @@ int fn_8029C9C8(int obj, int state)
     {
         gPlayerSubState = 5;
     }
-    r = fn_8029B9FC(obj, state, lbl_803E7EA4);
+    r = ((int (*)(int, int))fn_8029B9FC)(obj, state);
     if (r != 0)
     {
         return r;
@@ -13722,8 +13722,8 @@ int fn_8029C9C8(int obj, int state)
         s = mathCosf(ang);
     }
     {
-        f32 c8 = inner->smoothVelX;
         f32 cc = inner->smoothVelZ;
+        f32 c8 = inner->smoothVelX;
         ((PlayerState*)state)->baddie.animSpeedA +=
             interpolate(-cc * s - c8 * c - ((PlayerState*)state)->baddie.animSpeedA,
                         inner->targetAnimSpeed, timeDelta);
@@ -13747,7 +13747,7 @@ int fn_8029C9C8(int obj, int state)
             }
             else
             {
-                *(u8*)&((PlayerState*)inner)->gaitLevel = phase - 4;
+                *(u8*)&((PlayerState*)inner)->gaitLevel -= 4;
             }
         }
         else
@@ -13778,7 +13778,7 @@ int fn_8029C9C8(int obj, int state)
         {
             ax = -ax;
         }
-        if (((int (*)(f32, int, f32*))ObjAnim_SampleRootCurvePhase)(((PlayerState*)state)->baddie.animSpeedC, obj,
+        if (((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(obj, ((PlayerState*)state)->baddie.animSpeedC,
                                                                     &curveOut) != 0)
         {
             ((PlayerState*)state)->baddie.moveSpeed = curveOut;
