@@ -3375,8 +3375,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             if (seq->posOffsetScale >= lbl_803E7EE0 &&
                 (*gCameraInterface)->isZooming() == 0)
             {
-                ((PlayerState *)inner)->headYaw = 0;
-                ((PlayerState *)inner)->bodyLeanAngle = 0;
+                ((PlayerState *)inner)->bodyLeanHalf = 0;
+                ((PlayerState *)inner)->headPitch = 0;
                 if ((s8)endFlag == 0)
                 {
                     seq->movementState = 0;
