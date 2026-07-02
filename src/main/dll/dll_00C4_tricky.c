@@ -1409,7 +1409,7 @@ void Tricky_update(int obj)
         step = (int)((f32)((TrickyState*)state)->rotRate * ((TrickyState*)state)->rotStepScale);
         if ((diff >= 0 ? diff : -diff) >= 4)
         {
-            if ((step > 0 && diff > 0) || (step < 0 && diff < 0))
+            if ((diff > 0 && step > 0) || (diff < 0 && step < 0))
             {
                 if ((step >= 0 ? step : -step) > (diff >= 0 ? diff : -diff))
                 {
