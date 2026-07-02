@@ -26,6 +26,8 @@
 #include "main/dll/VF/vf_shared.h"
 #include "dolphin/gx/GXTransform.h"
 
+#define CMENU_OBJFLAG_PARENT_SLACK 0x1000
+
 /* Number of slots in the parallel cMenu item arrays at lbl_803A87F0
    (ids/words/state/flags/textures); matches the s16 saved[64] snapshot. */
 #define CMENU_ITEM_SLOT_COUNT 64
@@ -503,7 +505,7 @@ void drawTrickyHudOverlay(int obj)
     }
     drawViewFinderHud();
     if ((*gCameraInterface)->getMode() != 0x44 &&
-        (((GameObject*)player)->objectFlags & 0x1000) == 0 &&
+        (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 &&
         pauseMenuState == 0 &&
         (void*)tricky != 0 &&
         getHudHiddenFrameCount() == 0)
