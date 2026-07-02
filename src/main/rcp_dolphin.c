@@ -20,6 +20,7 @@
 #define GX_LO_NOOP 5
 #define GX_AOP_AND 0
 #define GX_ALWAYS 7
+#define GX_EQUAL 2
 #define GX_MT_XF_FLUSH 1
 #define GX_TF_RGBA8 6
 #define GX_FALSE 0
@@ -1099,7 +1100,7 @@ void gxFn_80052dc0(void)
                lbl_803DEB5C, LastReadIssued_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    gxSetZMode_(0, 2, 0);
+    gxSetZMode_(0, GX_EQUAL, 0);
     GXSetCullMode(GX_CULL_NONE);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
