@@ -1596,9 +1596,10 @@ void objFreeObjDef(u8* obj, int flag)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            if (*(int*)(((u8**)gObjList)[i] + 0xc0) == (int)obj)
+            o = ((u8**)gObjList)[i];
+            if (*(int*)(o + 0xc0) == (int)obj)
             {
-                *(int*)(((u8**)gObjList)[i] + 0xc0) = 0;
+                *(int*)(o + 0xc0) = 0;
             }
         }
     }
