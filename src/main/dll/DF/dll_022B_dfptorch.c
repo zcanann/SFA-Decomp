@@ -12,6 +12,7 @@
 #include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define DFPTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
@@ -80,7 +81,7 @@ void DFP_Torch_init(int obj, int def)
         break;
     }
     state->colorIdx = (u8)place->colorIdx;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
 }
 
 #pragma opt_common_subs off
