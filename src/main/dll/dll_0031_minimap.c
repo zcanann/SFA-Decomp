@@ -422,16 +422,16 @@ int Minimap_update(void)
                     {
                         a = gMinimapZoom * (xrel * gMinimapWorldToTexScale) - (f32)(boxW / 2);
                         t = (t > a) ? t : a;
-                        b = texW * gMinimapZoom - boxW;
-                        ox = t = (t < b) ? t : b;
+                        t = (t < (b = texW * gMinimapZoom - boxW)) ? t : b;
+                        ox = t;
                     }
                     t = *(f32*)&gMinimapZero;
                     if (t == pany)
                     {
                         a = gMinimapZoom * (yrel * gMinimapWorldToTexScale) - (f32)(boxH / 2);
                         t = (t > a) ? t : a;
-                        b = texH * gMinimapZoom - boxH;
-                        oy = t = (t < b) ? t : b;
+                        t = (t < (b = texH * gMinimapZoom - boxH)) ? t : b;
+                        oy = t;
                     }
                     uq = ox / gMinimapZoom;
                     u = uq;
