@@ -193,7 +193,7 @@ void pressureswitchfb_update(int obj)
     f32 target;
     int slots2;
     u32 nearest;
-    s8 found;
+    int found;
     u32 ju2;
     u32 o;
     int base2;
@@ -294,7 +294,7 @@ void pressureswitchfb_update(int obj)
                 }
             }
         }
-        if (found)
+        if (found & 0xff)
         {
             *state = 5;
         }
