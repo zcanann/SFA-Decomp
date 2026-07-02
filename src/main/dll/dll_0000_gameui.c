@@ -2673,19 +2673,23 @@ void pauseMenuFn_80129ee0(void)
     PauseTbl* tbl = &lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
-    u16 btn = 0;
-    u8 isArwing = 0;
-    u8 menuMin = 1;
-    u8 menuMax = 5;
+    u16 btn;
+    u8 isArwing;
+    u8 menuMin;
+    u8 menuMax;
     u8* charState;
     u8 hintBuf[13];
     u8 a1;
     u8 a2;
 
     player = Obj_GetPlayerObject();
+    btn = 0;
+    isArwing = 0;
     objIsCurModelNotZero();
+    menuMin = 1;
+    menuMax = 5;
     charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
-    if (gameTextFn_80019c00() == 0.0f)
+    if (gameTextFn_80019c00() == lbl_803E1E3C)
     {
         btn = getButtonsJustPressed(0);
         getButtonsHeld(0);
@@ -2789,7 +2793,7 @@ void pauseMenuFn_80129ee0(void)
             }
         }
     }
-    if ((*gScreenTransitionInterface)->getProgress() == 0.0f)
+    if ((*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C)
     {
         int c = pauseMenuFrameCounter - framesThisStep;
         if (c < 0)
@@ -2827,7 +2831,7 @@ void pauseMenuFn_80129ee0(void)
                     canOpen = 0;
                 }
                 if ((btn & 0x1000) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
-                    (*gScreenTransitionInterface)->getProgress() == 0.0f &&
+                    (*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C &&
                     canOpen != 0 && lbl_803DD75B == 0 && getHudHiddenFrameCount() == 0)
                 {
                     pauseMenuFrameCounter = 0x3c;
