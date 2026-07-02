@@ -2590,6 +2590,7 @@ void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
     }
 }
 
+#pragma opt_loop_invariants off
 void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
@@ -2630,7 +2631,6 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             f32 dy = ((GameObject*)obj)->anim.localPosZ - *(f32*)(tgt + 0x14);
             f32 dz = ((GameObject*)obj)->anim.localPosY - *(f32*)(tgt + 0x10);
             f32 dist = sqrtf(dx * dx + dy * dy);
-            s16 limA;
             int minB;
             int negA;
             char* p;
@@ -2653,30 +2653,35 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             }
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
-            limA = (s16)(s32)(gObjPrintDegToAngle * a);
+            a = (s16)(s32)(gObjPrintDegToAngle * a);
             p = p3;
             ap = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
-            negA = -limA;
+            negA = -a;
             for (i = 0; i < 2; i++)
             {
-                s16 v;
+                int v;
+                int w;
                 *ap -= *(s16*)(p + 0x14);
                 v = *ap;
                 if (v < minB)
                 {
-                    v = minB;
+                    w = minB;
                 }
-                else if (v > (s16)(int)(f64)prodB)
+                else
                 {
-                    v = (s16)(int)(f64)prodB;
+                    if (v > (s16)(int)(f64)prodB)
+                    {
+                        v = (int)(f64)prodB;
+                    }
+                    w = (s16)v;
                 }
-                *ap = (s16)v;
+                *ap = (s16)w;
                 *(s16*)(p + 0x14) += *ap;
-                if (*(s16*)(p + 0x14) > limA)
+                if (*(s16*)(p + 0x14) > a)
                 {
-                    *(s16*)(p + 0x14) = limA;
+                    *(s16*)(p + 0x14) = a;
                 }
                 if (*(s16*)(p + 0x14) < negA)
                 {
@@ -2691,6 +2696,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
     }
 }
 
+#pragma opt_loop_invariants reset
 #pragma opt_propagation off
 #pragma opt_common_subs off
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
