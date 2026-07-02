@@ -6871,9 +6871,7 @@ int fn_802AD2F4(int obj, int inner, int state)
 {
     f32 hdiff;
     int sfx;
-    f32 z;
-    f32 y;
-    f32 x;
+    f32 v[6];
 
     ((GameObject*)obj)->anim.velocityY =
         -(lbl_803E7EFC * timeDelta - ((GameObject*)obj)->anim.velocityY);
@@ -6900,7 +6898,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             s8 hv;
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E7ED8);
-            ObjPath_GetPointWorldPosition(obj, 0xb, &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, 0xb, &v[3], &v[4], &v[5], 0);
             if (((PlayerState*)inner)->surfaceType == 0x1a)
             {
                 hv = 0x14;
@@ -6909,7 +6907,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, 0, hv, 1, 0, x, y, z);
+            ObjHits_RecordPositionHit(obj, 0, hv, 1, 0, v[3], v[4], v[5]);
             ((ByteFlags*)((char*)inner + 0x3f2))->b04 = 1;
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -6999,7 +6997,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
             Sfx_PlayFromObject(obj, SFXTRIG_foot_crawl2);
             Sfx_PlayFromObject(obj, SFXTRIG_watery_bubble);
-            ObjPath_GetPointWorldPosition(obj, 0xb, &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, 0xb, &v[3], &v[4], &v[5], 0);
             if (((PlayerState*)inner)->surfaceType == 0x1a)
             {
                 hv = 0x14;
@@ -7008,7 +7006,7 @@ int fn_802AD2F4(int obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, 0, hv, 2, 0, x, y, z);
+            ObjHits_RecordPositionHit(obj, 0, hv, 2, 0, v[3], v[4], v[5]);
             ((ByteFlags*)((char*)inner + 0x3f2))->b08 = 0;
             if (((PlayerState*)inner)->waterDepth > lbl_803E7FC4)
             {
@@ -7114,8 +7112,8 @@ int fn_802AD2F4(int obj, int inner, int state)
     if (((PlayerState*)inner)->fallSeverity == 0 &&
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 == 0)
     {
-        f32 a;
         f32 b;
+        f32 a;
         f32 c;
         ((PlayerState*)inner)->targetYawSmoothRate = (a = lbl_803E7FBC);
         ((PlayerState*)inner)->targetYawRateLimit = (b = lbl_803E7E98);
@@ -7136,13 +7134,12 @@ int fn_802AD2F4(int obj, int inner, int state)
         ((PlayerState*)inner)->targetAnimSpeed = b;
         ((PlayerState*)inner)->currentSpeed = ((PlayerState*)inner)->currentSpeed * b;
     }
-    {
-        f32 t = ((PlayerState*)inner)->currentSpeed;
-        ((PlayerState*)inner)->currentSpeed =
-            (t < lbl_803E8110)
-                ? lbl_803E8110
-                : ((t > ((PlayerState*)inner)->maxSpeed) ? ((PlayerState*)inner)->maxSpeed : t);
-    }
+    ((PlayerState*)inner)->currentSpeed =
+        (((PlayerState*)inner)->currentSpeed < lbl_803E8110)
+            ? lbl_803E8110
+            : ((((PlayerState*)inner)->currentSpeed > ((PlayerState*)inner)->maxSpeed)
+                   ? ((PlayerState*)inner)->maxSpeed
+                   : ((PlayerState*)inner)->currentSpeed);
     if (((PlayerState*)inner)->curAnimId == 0x4b)
     {
         (*gCameraInterface)->setMode(
