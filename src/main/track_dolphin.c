@@ -4673,7 +4673,7 @@ extern f32 PSVECMag(f32 * v);
 extern int lbl_803DCDC8;
 extern int lbl_803DCDCC;
 
-#pragma ppc_unroll_instructions_limit 16
+#pragma ppc_unroll_instructions_limit 56
 int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
 int cur;
 int x0;
@@ -4797,7 +4797,7 @@ u8 doEdges;
         int relx0, relx1, relz0, relz1;
         int dxoff, dzoff;
         int mask;
-        u32 bit;
+        s16 bit;
         int pos, k;
         int mask16;
         u8* tri;
@@ -4841,35 +4841,17 @@ u8 doEdges;
         mask = 0;
         bit = 1;
         pos = 0;
-        for (k = 2; k != 0; k--)
+        for (k = 8; k != 0; k--)
         {
             if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
+            bit = bit << 1;
             pos += 0x50;
         }
         pos = 0;
-        for (k = 2; k != 0; k--)
+        for (k = 8; k != 0; k--)
         {
             if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
-            pos += 0x50;
-            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
-            bit = (s16)(bit << 1);
+            bit = bit << 1;
             pos += 0x50;
         }
         tri = *(u8**)(blk + 0x50);
