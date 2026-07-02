@@ -2506,6 +2506,22 @@ extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 
+typedef struct RcpDistortSlot
+{
+    u8* texture;   // 0x00
+    int model;     // 0x04
+    int unk8;      // 0x08
+    u8 colR;       // 0x0c
+    u8 unkD;       // 0x0d
+    u8 colB;       // 0x0e
+    u8 unkF;       // 0x0f
+    f32 params[2]; // 0x10
+    u8 scaleR;     // 0x18
+    u8 scaleB;     // 0x19
+    u8 group;      // 0x1a
+    u8 mode;       // 0x1b
+} RcpDistortSlot;
+
 void gxTextureFn_80052efc(void)
 {
     union { f32 m[12]; f64 a8; } mtxu;
@@ -2513,10 +2529,9 @@ void gxTextureFn_80052efc(void)
     int lights[8];
     GXColor8 c2;
     GXColor8 c;
-    int count;
     u8* e;
-    int i;
     u8* base;
+    int i;
     int sel;
     int k;
     int n;
@@ -2535,39 +2550,39 @@ void gxTextureFn_80052efc(void)
     modelTextureFn_80089970(2);
     i = 0;
     base = gRcpDistortSlots;
-    e = base;
     for (; i < 6; i++)
     {
-        tex = *(u8**)e;
-        if (((Texture*)tex)->refCount != 0 && e[0x1b] == 1 && gRcpDistortGroup == e[0x1a])
+        tex = ((RcpDistortSlot*)base)[i].texture;
+        if (((Texture*)tex)->refCount != 0 && ((RcpDistortSlot*)base)[i].mode == 1 &&
+            gRcpDistortGroup == ((RcpDistortSlot*)base)[i].group)
         {
-            c.r = (e[0xc] * e[0x18]) >> 8;
+            c.r = (((RcpDistortSlot*)base)[i].colR * ((RcpDistortSlot*)base)[i].scaleR) >> 8;
             c.g = 0;
-            c.b = (e[0xe] * e[0x19]) >> 8;
+            c.b = (((RcpDistortSlot*)base)[i].colB * ((RcpDistortSlot*)base)[i].scaleB) >> 8;
             c.a = 0xff;
             GXSetChanMatColor(4, c);
             GXSetChanMatColor(5, c);
-            textureFn_80052bb4(*(int*)(e + 4), (f32*)(e + 0x10));
+            textureFn_80052bb4(((RcpDistortSlot*)base)[i].model, ((RcpDistortSlot*)base)[i].params);
             resetLotsOfRenderVars();
             textureFn_8004ff20(gRcpDistortTexture, mtx, &c2, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(*(u8**)e + 0x60, 0);
-            tex = *(u8**)e;
+            GXCopyTex(((RcpDistortSlot*)base)[i].texture + 0x60, 0);
+            tex = ((RcpDistortSlot*)base)[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
             }
         }
-        e += 0x1c;
     }
     resetLotsOfRenderVars();
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
     GXSetChanMatColor(0, *(GXColor8*)&gRcpDistortMatColor);
     sel = 5;
+    k = 5;
     e = gRcpDistortSlots + 0x8c;
-    for (k = 5; k >= 0; k--)
+    for (; k >= 0; k--)
     {
         if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && gRcpDistortGroup == e[0x1a])
         {
@@ -2579,9 +2594,11 @@ void gxTextureFn_80052efc(void)
     i = 0;
     for (; i < 6; i++)
     {
-        if (*(u16*)(*(u8**)base + 0xe) != 0 && base[0x1b] == 0 && gRcpDistortGroup == base[0x1a])
+        if (((Texture*)((RcpDistortSlot*)base)[i].texture)->refCount != 0 &&
+            ((RcpDistortSlot*)base)[i].mode == 0 && gRcpDistortGroup == ((RcpDistortSlot*)base)[i].group)
         {
-            model = *(int*)(base + 4);
+            int count;
+            model = ((RcpDistortSlot*)base)[i].model;
             modelTextureFn_80089970(2 - (i - 3));
             modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
             modelLightChannels_reset(1);
@@ -2596,14 +2613,13 @@ void gxTextureFn_80052efc(void)
             lightGetColor(0, &c2.r, &c2.g, &c2.b);
             GXSetChanAmbColor(GX_COLOR0, c2);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
-            GXCopyTex(*(u8**)base + 0x60, (i == sel) ? 1 : 0);
-            tex = *(u8**)base;
+            GXCopyTex(((RcpDistortSlot*)base)[i].texture + 0x60, (i == sel) ? 1 : 0);
+            tex = ((RcpDistortSlot*)base)[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
                 GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
             }
         }
-        base += 0x1c;
     }
     GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, gRcpScreenWidth,
                   gRcpScreenHeight, LastCommandWasRead_803DEB60, lbl_803DEB5C);
