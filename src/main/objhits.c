@@ -2094,17 +2094,17 @@ end:;
 void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, void* scratchC,
                                void* scratchD, void* scratchE, int depth)
 {
-    ObjHitsPriorityState* objAState;
-    ObjHitsPriorityState* objBState;
     int* hitboxBuf;
+    f32 outAxial;
+    ObjHitsPriorityState* objAState;
     u8 shapeFlags;
     int hitCount;
     f32 ratio;
     f32 responseX;
     f32 responseY;
     f32 responseZ;
-    f32 outAxial;
     ObjHitsSkeletonHit* bestHit;
+    ObjHitsPriorityState* objBState;
     ObjHitsVec3 point;
     f32 response[3];
     ObjHitsVec3 point3D;
@@ -2136,11 +2136,12 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
             {
                 f32* pos = &point.x;
                 f32 rad = objBState->primaryRadius;
+                u32 ob = objB;
                 ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
                 ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponse3D(pos, rad, objB, hh, jd, mf,
+                ObjHits_CalcSkeletonResponse3D(pos, rad, ob, hh, jd, mf,
                                                bh,
                                                (ratio < gObjHitsScalarZero)
                                                    ? gObjHitsScalarZero
@@ -2182,11 +2183,12 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
             {
                 f32* pos = &point.x;
                 f32 rad = objBState->primaryRadius;
+                u32 ob = objB;
                 ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
                 ObjHitsSkeletonJointData* jd = (ObjHitsSkeletonJointData*)hitboxBuf[5];
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponseXZ(pos, rad, objB, hh, jd, mf,
+                ObjHits_CalcSkeletonResponseXZ(pos, rad, ob, hh, jd, mf,
                                                bh,
                                                (ratio < gObjHitsScalarZero)
                                                    ? gObjHitsScalarZero
