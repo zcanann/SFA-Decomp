@@ -14,6 +14,9 @@
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
 #include "main/sfa_shared_decls.h"
+
+#define MODEL_LIGHT_KIND_POINT 2
+
 extern int randomGetRange(int lo, int hi);
 extern void Obj_FreeObject(int obj);
 extern u32 ObjMsg_SendToObject();
@@ -92,7 +95,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
     lightSlot[0] = objCreateLight(0, 1);
     if (*(void**)lightSlot == NULL) return;
 
-    modelLightStruct_setLightKind(lightSlot[0], 2);
+    modelLightStruct_setLightKind(lightSlot[0], MODEL_LIGHT_KIND_POINT);
     modelLightStruct_setPosition(lightSlot[0], ((f32*)lightSlot)[0x16], ((f32*)lightSlot)[0x17],
                                  ((f32*)lightSlot)[0x18]);
 
