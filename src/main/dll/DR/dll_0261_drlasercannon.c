@@ -3,6 +3,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DRLASERCANNON_OBJFLAG_PARENT_SLACK 0x1000
+#define DRLASERCANNON_OBJFLAG_FREED 0x40
+
 #define DR_LASERCANNON_EXTRA_SIZE 0x1ac
 
 #define DR_LASERCANNON_GROUP_ID 0x3
@@ -320,11 +323,11 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
     if (player != 0)
     {
         r = (void*)fn_802972A8();
-        if (r != 0 && (((GameObject*)r)->objectFlags & 0x1000) == 0)
+        if (r != 0 && (((GameObject*)r)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
             return (int)r;
         }
-        if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+        if ((((GameObject*)player)->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
             return (int)player;
         }
@@ -615,7 +618,7 @@ void drlasercannon_update(int obj)
     spawned = state->firepipeObject;
     if ((void*)spawned != NULL)
     {
-        if ((((GameObject*)spawned)->objectFlags & 0x40) != 0)
+        if ((((GameObject*)spawned)->objectFlags & DRLASERCANNON_OBJFLAG_FREED) != 0)
         {
             state->firepipeObject = 0;
         }
