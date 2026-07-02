@@ -161,7 +161,7 @@ extern char sArchivePathFormat;
 extern s16 lbl_803DCC92;
 extern int lbl_803DCC70;
 extern int lbl_803DCC7C;
-extern int lbl_803DCC80;
+extern volatile int lbl_803DCC80;
 extern int lbl_803DCC8C;
 
 extern int AtomicSList_Pop(int list);
