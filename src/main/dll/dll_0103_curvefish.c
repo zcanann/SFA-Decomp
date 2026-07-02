@@ -129,7 +129,7 @@ void curvefish_update(int obj)
     {
     case CURVEFISH_MODE_WAIT:
         {
-            f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
+            f32 waitTime = 60.0f * (f32)(u32)setup->waitFrames;
             if (!(state->phaseTimer >= waitTime))
             {
                 return;
@@ -158,10 +158,10 @@ void curvefish_update(int obj)
         state->mode = CURVEFISH_MODE_FADE_IN;
         state->speed = lbl_803E38F0;
     case CURVEFISH_MODE_FADE_IN:
-        if (state->phaseTimer <= lbl_803E38EC)
+        if (state->phaseTimer <= 60.0f)
         {
             ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(lbl_803E38F4 * (state->phaseTimer / lbl_803E38EC));
+                (u8)(int)(255.0f * (state->phaseTimer / 60.0f));
             return;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -169,16 +169,15 @@ void curvefish_update(int obj)
     case CURVEFISH_MODE_CRUISE:
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
-            state->speed = lbl_803E38F8 * state->maxSpeed;
+            state->speed = 2.0f * state->maxSpeed;
         }
         else if (fn_80296448((int)player) != 0 &&
             getXZDistance(&((GameObject*)player)->anim.localPosX, (f32*)(obj + 0xc)) <
             (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius)
         {
-            f32 hitSpeedFactor = lbl_803E38F8;
-            speedDelta = hitSpeedFactor * (f32)(u32)setup2->speedChange;
-            state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
-            if (state->speed > (maxHitSpeed = hitSpeedFactor * state->maxSpeed))
+            speedDelta = 2.0f * (f32)(u32)setup2->speedChange;
+            state->speed += (speedDelta * timeDelta) / 1000.0f;
+            if (state->speed > (maxHitSpeed = 2.0f * state->maxSpeed))
             {
                 state->speed = maxHitSpeed;
             }
@@ -187,7 +186,7 @@ void curvefish_update(int obj)
         {
             speedDelta = (f32)(int)randomGetRange(-setup2->speedChange,
                                                   setup2->speedChange << 1);
-            state->speed += (speedDelta * timeDelta) / lbl_803E38FC;
+            state->speed += (speedDelta * timeDelta) / 1000.0f;
             if (state->speed < lbl_803E38F0)
             {
                 state->speed = lbl_803E38F0;
@@ -201,33 +200,33 @@ void curvefish_update(int obj)
         speedThreshold = state->maxSpeed * lbl_803E3900;
         if (state->speed < speedThreshold)
         {
-            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3904)
+            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > 120.0f)
             {
                 ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
                 state->animTimer = lbl_803E38F0;
             }
-            state->moveStepScale = lbl_803E3908;
+            state->moveStepScale = 0.0075f;
         }
-        else if (state->speed > lbl_803E390C * state->maxSpeed * lbl_803E3900)
+        else if (state->speed > 3.0f * state->maxSpeed * lbl_803E3900)
         {
-            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > lbl_803E3910)
+            if (((GameObject*)obj)->anim.currentMove == 0 && state->animTimer > 240.0f)
             {
                 ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
                 state->animTimer = lbl_803E38F0;
             }
-            state->moveStepScale = lbl_803E3914;
+            state->moveStepScale = 0.015f;
         }
         else
         {
-            if (((GameObject*)obj)->anim.currentMove == 1 && state->animTimer > lbl_803E3910)
+            if (((GameObject*)obj)->anim.currentMove == 1 && state->animTimer > 240.0f)
             {
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x3c);
                 state->animTimer = lbl_803E38F0;
             }
-            state->moveStepScale = (lbl_803E3914 * state->speed) / state->maxSpeed;
+            state->moveStepScale = (0.015f * state->speed) / state->maxSpeed;
         }
 
         if (lbl_803E38F0 != state->speed)
@@ -238,7 +237,7 @@ void curvefish_update(int obj)
             i = 0;
             while (distLimit > distance && i < 5)
             {
-                Curve_AdvanceAlongPath((RomCurveWalker*)state, lbl_803E38F8);
+                Curve_AdvanceAlongPath((RomCurveWalker*)state, 2.0f);
                 distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
                 i++;
             }
