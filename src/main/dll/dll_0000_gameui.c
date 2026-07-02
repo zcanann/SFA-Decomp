@@ -2590,13 +2590,15 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         {
             int row;
             int iv[2];
-            f32 k = lbl_803E204C;
+            f32 s;
+            f32 k;
             iv[0] = 0;
             iv[1] = iv[0];
+            k = lbl_803E204C;
             for (row = 0; row < 0x96; row += 4)
             {
-                f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
                 int a2, b2, r1, r2, raw;
+                s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + iv[1])) + s;
                 raw = (int)((f32)alpha * (lbl_803E2050 + s));
                 a2 = raw < 0 ? 0 : raw;
