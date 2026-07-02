@@ -143,8 +143,8 @@ void animsharpclaw_update(int* obj)
     int kind2;
     int matchCount;
     int* objects;
-    int count;
     int i;
+    int count;
 
     inner = ((GameObject*)obj)->extra;
     placement = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -156,13 +156,11 @@ void animsharpclaw_update(int* obj)
     {
         return;
     }
+    i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)framesThisStep);
+    fn_801A8F88((int)obj, (ObjAnimUpdateState*)inner);
+    if (i == 0)
     {
-        volatile int vres = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)framesThisStep);
-        fn_801A8F88((int)obj, (ObjAnimUpdateState*)inner);
-        if (vres == 0)
-        {
-            return;
-        }
+        return;
     }
     if (((GameObject*)obj)->seqIndex != -2)
     {
