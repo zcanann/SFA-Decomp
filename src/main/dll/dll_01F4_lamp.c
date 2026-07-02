@@ -5,7 +5,7 @@
  * Lamp_init seeds the lamp's X rotation from its placement def (a different
  * byte per seqId) and installs Lamp_SeqFn as the animation-event callback.
  * Lamp_update advances the swing animation, plays/stops a looped object SFX
- * based on player distance, and (when objectFlags bit 0x800 is set) spawns
+ * based on player distance, and (when objectFlags bit LAMP_OBJFLAG_RENDERED is set) spawns
  * trail particles along the object's path each step. Lamp_SeqFn randomly
  * latches the sequence's "A" control flag and spawns a burst of impact
  * particles. Lamp_free stops the SFX channel and releases the exp-gfx source.
@@ -16,6 +16,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define LAMP_OBJFLAG_RENDERED 0x800
 
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
@@ -71,7 +73,7 @@ int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
         fx->scale = lbl_803E597C;
         fx->arg3 = 0xc0d;
@@ -141,7 +143,7 @@ void Lamp_update(int obj)
                                                                      timeDelta, NULL);
     }
 
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
         *(f32*)(effectArgs + 8) = lbl_803E597C;
         *(s16*)(effectArgs + 6) = 0xc0d;
