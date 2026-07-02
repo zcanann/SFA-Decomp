@@ -4123,7 +4123,7 @@ void renderGlows(void)
             if (e->glowAlpha != 0)
             {
                 f32 f = e->activeIntensity;
-                f32 cx, cy, cz, hs;
+                f32 cx, cy, cz;
                 selectTexture((int)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
                     (int)
@@ -4140,27 +4140,35 @@ void renderGlows(void)
                 )
                 ;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-                cx = e->viewX;
-                cy = e->viewY;
+                cx = e->viewX - e->glowScale;
+                cy = e->viewY - e->glowScale;
                 cz = e->viewZ;
-                hs = e->glowScale;
-                GXWGFifo.f32 = cx - hs;
-                GXWGFifo.f32 = cy - hs;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
                 GXWGFifo.f32 = cz;
                 GXWGFifo.f32 = lbl_803DEBCC;
                 GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = cx + hs;
-                GXWGFifo.f32 = cy - hs;
+                cx = e->viewX + e->glowScale;
+                cy = e->viewY - e->glowScale;
+                cz = e->viewZ;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
                 GXWGFifo.f32 = cz;
                 GXWGFifo.f32 = lbl_803DEBDC;
                 GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = cx + hs;
-                GXWGFifo.f32 = cy + hs;
+                cx = e->viewX + e->glowScale;
+                cy = e->viewY + e->glowScale;
+                cz = e->viewZ;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
                 GXWGFifo.f32 = cz;
                 GXWGFifo.f32 = lbl_803DEBDC;
                 GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = cx - hs;
-                GXWGFifo.f32 = cy + hs;
+                cx = e->viewX - e->glowScale;
+                cy = e->viewY + e->glowScale;
+                cz = e->viewZ;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
                 GXWGFifo.f32 = cz;
                 GXWGFifo.f32 = lbl_803DEBCC;
                 GXWGFifo.f32 = lbl_803DEBDC;
