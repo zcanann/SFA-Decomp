@@ -79,7 +79,7 @@ void controllight_update(int obj)
 {
 
     ControlLightState* state = ((GameObject*)obj)->extra;
-    u8 bit = (u8)GameBit_Get(state->gameBit);
+    u32 bit = GameBit_Get(state->gameBit) & 0xff;
 
     if (bit != state->lastBit)
     {
@@ -87,7 +87,7 @@ void controllight_update(int obj)
         {
         case CONTROLLIGHT_MODE_DIRECT:
             {
-                extern void pointlight_setEffectState(int obj, u8 enabled); /* #57 */
+                extern void pointlight_setEffectState(int obj, u32 enabled); /* #57 */
                 f32 radius = state->radius;
                 int count;
                 int i;
