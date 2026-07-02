@@ -2075,15 +2075,13 @@ void andross_update(int obj)
     {
         sval = sval + 0xffff;
     }
-    ((AndrossState*)state)->rotXSpeed =
-        ((AndrossState*)state)->rotXSpeed +
-        (short)(((int)sval / lbl_803DC430 - (int)((AndrossState*)state)->rotXSpeed) / lbl_803DC434);
-    ((AndrossState*)state)->rotYSpeed =
-        ((AndrossState*)state)->rotYSpeed +
-        (short)((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->rotYSpeed) /
-            lbl_803DC434);
-    ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + ((AndrossState*)state)->rotXSpeed;
-    ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + ((AndrossState*)state)->rotYSpeed;
+    ((AndrossState*)state)->rotXSpeed = (short)(((AndrossState*)state)->rotXSpeed +
+        (((int)sval / lbl_803DC430 - (int)((AndrossState*)state)->rotXSpeed) / lbl_803DC434));
+    ((AndrossState*)state)->rotYSpeed = (short)(((AndrossState*)state)->rotYSpeed +
+        ((-(int)((GameObject*)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState*)state)->rotYSpeed) /
+            lbl_803DC434));
+    ((GameObject*)obj)->anim.rotX += ((AndrossState*)state)->rotXSpeed;
+    ((GameObject*)obj)->anim.rotY += ((AndrossState*)state)->rotYSpeed;
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, ((AndrossState*)state)->animSpeed, timeDelta, 0);
     fn_8023A3E4(obj, (int)state);
     fn_8023A87C(obj, (int)state);
