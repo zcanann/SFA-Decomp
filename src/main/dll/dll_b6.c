@@ -32,6 +32,22 @@ extern f32 lbl_803E1644; /* vertical band lower bound */
 extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
 extern f32 lbl_803E1658; /* 1/5 move-average weight */
 
+static inline int camcontrol_isTargetCandidate(GameObject *obj, ObjHitVolumeRuntimeBounds *data)
+{
+    int accept;
+    if (data != NULL
+       && obj->anim.alpha == 0xff
+       && !(*(u8 *)&obj->anim.resetHitboxMode & 0x28)
+       && ((obj->objectFlags & 0x800) || (obj->anim.modelInstance->flags & 1))
+       && !(obj->anim.flags & OBJANIM_FLAG_HIDDEN)
+       && !(obj->objectFlags & 0x40)
+       && (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->hitVolumeIndex].flags & CAMCONTROL_TARGET_KIND_MASK))))
+    {
+        return accept;
+    }
+    return 0;
+}
+
 CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState, ObjAnimComponent *focus)
 {
     int objIndex;
@@ -76,15 +92,7 @@ CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraS
     for (; idx < objCount; ptr++, idx++) {
         obj = *ptr;
         data = obj->anim.hitVolumeBounds;
-        if (data == NULL
-           || obj->anim.alpha != 0xff
-           || (*(u8 *)&obj->anim.resetHitboxMode & 0x28)
-           || (!(obj->objectFlags & 0x800) && !(obj->anim.modelInstance->flags & 1))
-           || (obj->anim.flags & OBJANIM_FLAG_HIDDEN)
-           || (obj->objectFlags & 0x40)
-           || (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->hitVolumeIndex].flags & CAMCONTROL_TARGET_KIND_MASK))) == 0) {
-            accept = 0;
-        }
+        accept = camcontrol_isTargetCandidate(obj, data);
         if (accept == 0) {
             continue;
         }
