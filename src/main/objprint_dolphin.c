@@ -3362,9 +3362,8 @@ extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void OSReport(const char* msg, ...);
 
 #pragma optimization_level 2
-void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
+void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
-    u8* hdr = hdrArg;
     u8* tbl = gObjGxPosMtxIdTable;
     char* cache = getCache();
     if (lbl_803DCC48 == 1)
