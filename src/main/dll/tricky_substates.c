@@ -103,6 +103,7 @@ extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
 
+#pragma opt_propagation off
 void trickyDigTunnel(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -141,7 +142,12 @@ void trickyDigTunnel(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != ptr)
         {
             ((TrickyState*)state)->unk28 = ptr;
-            ((TrickyState*)state)->stateFlags &= ~0x400LL;
+            {
+                u32 m;
+                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                m = ~0x400;
+                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            }
             ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 1;
@@ -329,6 +335,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         break;
     }
 }
+#pragma opt_propagation reset
 
 #pragma opt_propagation off
 void trickyFn_80141fec(u8* obj, u8* state)
