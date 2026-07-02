@@ -28,6 +28,8 @@
 #include "sfa_light_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
@@ -669,7 +671,7 @@ void explosion_init(int obj, int p2)
     }
     ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)(obj, lbl_803E49AC * scale, 0, ((GameObject*)obj)->anim.localPosX,
                                       ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
     ((ExplosionState*)state)->modelKind = *(s16*)((char*)p2 + 0x1c) & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
     if (*(s16*)((char*)p2 + 0x1c) & 4)
