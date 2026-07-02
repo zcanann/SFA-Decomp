@@ -8,6 +8,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct DoorObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -72,7 +74,7 @@ void Door_init(int* obj, u8* def)
     state->initPending = 1;
     ((GameObject*)obj)->anim.rotX = (s16)(def[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = Door_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DOOR_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)((DoorObjectDef*)def)->rootMotionScaleInput * gDoorRootMotionScaleFactor;
     if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3788)
     {
