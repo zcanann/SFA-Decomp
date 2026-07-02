@@ -21,6 +21,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 #define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTSOURCE_OBJFLAG_RENDERED 0x800
 
@@ -313,7 +315,7 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             state->light = objCreateLight(obj, 1);
             if (state->light != NULL)
             {
-                modelLightStruct_setLightKind(state->light, 2);
+                modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             }
         }
         if (state->light != NULL)
