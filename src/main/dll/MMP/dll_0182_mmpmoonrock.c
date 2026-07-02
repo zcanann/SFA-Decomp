@@ -23,6 +23,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
 typedef struct MmpMoonrockPlacement
@@ -317,7 +319,7 @@ void mmp_moonrock_init(int obj, int param2)
     extern u32 ObjGroup_AddObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     u8 kind;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED;
     *(s16*)&state->flags = 0;
     state->kind = GameBit_Get(((MmpMoonrockPlacement*)param2)->kindGameBit);
     kind = state->kind;
