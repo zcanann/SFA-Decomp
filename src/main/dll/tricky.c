@@ -456,28 +456,30 @@ extern void Obj_FreeObject(int* obj);
 
 void gameUiResetMenuState(void)
 {
+    int z[2];
     cMenuEnabled = 0;
     curGameText = 0xffff;
     lbl_803DD8D0 = 0;
     lbl_803DD7A8 = 0;
     GameUI_airMeterShutdown();
-    pauseMenuState = 0;
-    lbl_803DD778 = 0;
-    lbl_803DD730 = 0;
-    lbl_803DD770 = 0;
+    z[0] = 0;
+    pauseMenuState = z[0];
+    lbl_803DD778 = z[0];
+    lbl_803DD730 = z[0];
+    lbl_803DD770 = z[0];
     lbl_803DD760 = lbl_803E1E3C;
+    z[1] = z[0];
     {
         int** arr = (int**)lbl_803A9410;
-        int j;
-        for (j = 0; j < 4; j++)
+        for (; z[1] < 4; z[1]++)
         {
-            if (arr[j] != NULL)
+            if (arr[z[1]] != NULL)
             {
-                ((int*)arr[j][0x19])[1] = 0;
-                ((int*)arr[j][0x19])[2] = 0;
-                if ((u32)arr[j][0x13] > 0x90000000) arr[j][0x13] = 0;
-                Obj_FreeObject(arr[j]);
-                arr[j] = NULL;
+                ((int*)arr[z[1]][0x19])[1] = 0;
+                ((int*)arr[z[1]][0x19])[2] = 0;
+                if ((u32)arr[z[1]][0x13] > 0x90000000) arr[z[1]][0x13] = 0;
+                Obj_FreeObject(arr[z[1]]);
+                arr[z[1]] = NULL;
             }
         }
     }
