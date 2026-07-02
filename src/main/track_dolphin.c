@@ -143,6 +143,7 @@ extern const f32 lbl_803DEC6C;
 extern const f32 lbl_803DEC70;
 extern const f32 lbl_803DEC74;
 extern void PSVECNormalize(f32 * src, f32 * dst);
+extern f32 PSVECSquareMag(f32 * v);
 extern f32 sqrtf(f32 x);
 extern f32 gPrevSunDir[];
 extern s16 gSunMagnitude;
@@ -5769,13 +5770,15 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
 extern char sTrackHitOverflowError[];
 extern void fn_80137948(char* fmt, ...);
 
+#pragma opt_strength_reduction off
 u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
 {
     TrackBlockDescriptor* descBase;
     f32 *ep1, *ep2;
     f32 *sp1, *sp2;
     u8* slotp;
-    int slotByte;
+    f32* outp;
+    f32 *edge1p, *edge2p, *vbp, *evecp;
     s16 i;
     u8 retLo;
     u8 curBit;
@@ -5787,27 +5790,29 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 edge2[4];
     f32 edge1[4];
     f32 edge0[4];
-    f32 va[3];
-    f32 vb[3];
-    f32 we[3];
     f32 rdata[3];
+    f32 evec[3];
+    f32 vb[3];
+    f32 va[3];
+    f32 ws[3];
+    f32 we[3];
+    f32 delta[3];
     f32 hitpt[3];
     f32 cur[3];
-    f32 delta[3];
-    f32 ws[3];
-    f32 evec[3];
     f32 plane[4];
     f32 norm4[4];
-    f32 sv[9];
+    volatile f32 svFrom[3];
+    f32 svHit[3];
+    f32 svWorld[3];
     f32 dir[3];
     f32 tmp1[3];
     f32 tmp2[3];
     f32 frac;
     TrackBlockDescriptor* descEnd;
-    f32 offX, offZ;
-    f32 radius, maxStep, negStep;
-    f32 mag;
     f32 eps;
+    f32 negStep, radius, maxStep;
+    f32 offX, offZ;
+    f32 mag;
     TrackBlockDescriptor* desc;
     u8* tri;
     int objmtx;
@@ -5829,17 +5834,21 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     sp1 = (f32*)startPos;
     sp2 = (f32*)startPos;
     slotp = slots;
-    for (; i < count; i++)
+    outp = slots;
+    edge1p = edge1;
+    edge2p = edge2;
+    vbp = vb;
+    evecp = evec;
+    while (i < count)
     {
         cur[0] = ep1[0];
         cur[1] = ep2[1];
         cur[2] = ep2[2];
-        sv[6] = sp1[0];
-        sv[7] = sp2[1];
-        sv[8] = sp2[2];
+        svFrom[0] = sp1[0];
+        svFrom[1] = sp2[1];
+        svFrom[2] = sp2[2];
         radius = *(f32*)(slotp + 0x40);
-        slotByte = (int)slots + i;
-        type = *(u8*)(slotByte + 0x54);
+        type = *((u8*)slots + i + 0x54);
         maxStep = radius + lbl_803DB660;
         rdata[0] = radius;
         rdata[1] = radius * radius;
@@ -5856,16 +5865,16 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
             {
                 if (desc->object != NULL)
                 {
-                    Matrix_TransformPoint(desc->alternateMatrix, sv[6], sv[7], sv[8],
+                    Matrix_TransformPoint(desc->alternateMatrix, svFrom[0], svFrom[1], svFrom[2],
                                           &ws[0], &ws[1], &ws[2]);
                     Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2],
                                           &we[0], &we[1], &we[2]);
                 }
                 else
                 {
-                    ws[0] = sv[6] - offX;
-                    ws[1] = sv[7];
-                    ws[2] = sv[8] - offZ;
+                    ws[0] = svFrom[0] - offX;
+                    ws[1] = svFrom[1];
+                    ws[2] = svFrom[2] - offZ;
                     we[0] = cur[0] - offX;
                     we[1] = cur[1];
                     we[2] = cur[2] - offZ;
@@ -5917,12 +5926,12 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         edge1[1] = *(f32*)(tri + 0x34);
                         edge1[2] = *(f32*)(tri + 0x38);
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
-                            + PSVECDotProduct(edge1, hitpt);
+                            + PSVECDotProduct(edge1p, hitpt);
                         edge2[0] = *(f32*)(tri + 0x3c);
                         edge2[1] = *(f32*)(tri + 0x40);
                         edge2[2] = *(f32*)(tri + 0x44);
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
-                            + PSVECDotProduct(edge2, hitpt);
+                            + PSVECDotProduct(edge2p, hitpt);
                         b = 0;
                         if (radius > (*(f32*)&__AR_Callback))
                         {
@@ -5948,12 +5957,12 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         edge1[1] = *(f32*)(tri + 0x34);
                         edge1[2] = *(f32*)(tri + 0x38);
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1]))
-                            + PSVECDotProduct(edge1, ws);
+                            + PSVECDotProduct(edge1p, ws);
                         edge2[0] = *(f32*)(tri + 0x3c);
                         edge2[1] = *(f32*)(tri + 0x40);
                         edge2[2] = *(f32*)(tri + 0x44);
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1]))
-                            + PSVECDotProduct(edge2, ws);
+                            + PSVECDotProduct(edge2p, ws);
                         b = 0;
                         if (edge0[3] > (*(f32*)&__AR_Callback)) b |= 1;
                         if (edge1[3] > (*(f32*)&__AR_Callback)) b |= 2;
@@ -5982,8 +5991,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        PSVECSubtract(vb, va, evec);
-                        rdata[2] = Vec3_Normalize(evec);
+                        PSVECSubtract(vbp, va, evecp);
+                        rdata[2] = Vec3_Normalize(evecp);
                         if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane, &frac))
                         {
                             hit = 1;
@@ -6061,8 +6070,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        rr2 = radius * radius;
-                        PSVECSubtract(vb, ws, tmp2);
+                        rr2 = *(volatile f32*)&rdata[1];
+                        PSVECSubtract(vbp, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
                         if (sq < (*(f32*)&__AR_Callback) && dotv > rr2)
@@ -6091,7 +6100,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                 {
                                     PSVECScale(dir, hitpt, sq);
                                     PSVECAdd(ws, hitpt, hitpt);
-                                    PSVECSubtract(hitpt, vb, plane);
+                                    PSVECSubtract(hitpt, vbp, plane);
                                     PSVECNormalize(plane, plane);
                                     root = sqrtf(rr2);
                                     plane[3] = -PSVECDotProduct(hitpt, plane) + root;
@@ -6124,23 +6133,22 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     typeb = tri[0x48];
                     typeb2 = tri[0x49];
                     objmtx = *(int*)desc;
-                    sv[0] = ws[0];
-                    sv[1] = ws[1];
-                    sv[2] = ws[2];
-                    sv[3] = hitpt[0];
-                    sv[4] = hitpt[1];
-                    sv[5] = hitpt[2];
+                    svWorld[0] = ws[0];
+                    svWorld[1] = ws[1];
+                    svWorld[2] = ws[2];
+                    svHit[0] = hitpt[0];
+                    svHit[1] = hitpt[1];
+                    svHit[2] = hitpt[2];
                     descSave = desc;
                     found = 1;
                     if (type == 7)
                     {
-                        f32* out4 = (f32*)((u8*)slots + i * 0x10);
-                        out4[0] = norm4[0];
-                        out4[1] = norm4[1];
-                        out4[2] = norm4[2];
-                        out4[3] = norm4[3];
-                        *(u8*)(slotByte + 0x50) = typeb;
-                        *(u8*)(slotByte + 0x58) = typeb2;
+                        outp[0] = norm4[0];
+                        outp[1] = norm4[1];
+                        outp[2] = norm4[2];
+                        outp[3] = norm4[3];
+                        *((u8*)slots + i + 0x50) = typeb;
+                        *((u8*)slots + i + 0x58) = typeb2;
                         *(int*)(slotp + 0x5c) = objmtx;
                         bounces++;
                         goto slot_done;
@@ -6154,14 +6162,13 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 if (bounces > 10)
                 {
                     fn_80137948(sTrackHitOverflowError);
-                    cur[0] = sv[6];
-                    cur[1] = sv[7];
-                    cur[2] = sv[8];
+                    cur[0] = svFrom[0];
+                    cur[1] = svFrom[1];
+                    cur[2] = svFrom[2];
                     found = 0;
                 }
                 else
                 {
-                    f32* out4;
                     f32 pen;
                     if (objmtx != 0)
                     {
@@ -6174,7 +6181,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         cur[2] = cur[2] - offZ;
                     }
                     pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
-                    fn_800660C8(sv, cur, &sv[3], norm4, type, pen, maxStep);
+                    fn_800660C8(svWorld, cur, svHit, norm4, type, pen, maxStep);
                     if (objmtx != 0)
                     {
                         Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2],
@@ -6185,13 +6192,12 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         cur[0] = cur[0] + offX;
                         cur[2] = cur[2] + offZ;
                     }
-                    out4 = (f32*)((u8*)slots + i * 0x10);
-                    out4[0] = norm4[0];
-                    out4[1] = norm4[1];
-                    out4[2] = norm4[2];
-                    out4[3] = norm4[3];
-                    *(u8*)(slotByte + 0x50) = typeb;
-                    *(u8*)(slotByte + 0x58) = typeb2;
+                    outp[0] = norm4[0];
+                    outp[1] = norm4[1];
+                    outp[2] = norm4[2];
+                    outp[3] = norm4[3];
+                    *((u8*)slots + i + 0x50) = typeb;
+                    *((u8*)slots + i + 0x58) = typeb2;
                     *(int*)(slotp + 0x5c) = objmtx;
                 }
             }
@@ -6212,6 +6218,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         }
         curBit = (u8)(curBit << 1);
         slotp += 4;
+        outp += 4;
+        i++;
         ep1 += 3;
         ep2 += 3;
         sp1 += 3;
@@ -6219,3 +6227,4 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     }
     return (u8)(retLo | (retHi << 4));
 }
+#pragma opt_strength_reduction reset
