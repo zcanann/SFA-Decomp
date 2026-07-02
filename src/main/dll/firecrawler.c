@@ -24,6 +24,7 @@
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
 #include "main/camera_interface.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/gamebits.h"
@@ -775,10 +776,10 @@ void fn_80157B58(int* obj, u8* state)
         int child;
         int setup = (int)Obj_AllocObjectSetup(0x24, 0x869);
         ObjPath_GetPointWorldPosition(obj, 0, setup + 8, setup + 0xc, setup + 0x10, 0);
-        *(u8*)(setup + 4) = 1;
-        *(u8*)(setup + 5) = 4;
-        *(u8*)(setup + 6) = 0xff;
-        *(u8*)(setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 4;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
         if ((u32)child != 0)
         {
