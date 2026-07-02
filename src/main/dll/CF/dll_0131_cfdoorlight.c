@@ -12,6 +12,9 @@
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 
+#define CFDOORLIGHT_OBJFLAG_HIDDEN 0x4000
+#define CFDOORLIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct CfDoorLightFlags
 {
     u8 unk80 : 1;
@@ -125,8 +128,8 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
         state->currentFrame = state->maxFrame;
         state->flags.active = 1;
     }
-    obj->objectFlags |= 0x2000;
-    obj->objectFlags |= 0x4000;
+    obj->objectFlags |= CFDOORLIGHT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= CFDOORLIGHT_OBJFLAG_HIDDEN;
 }
 
 void cf_doorlight_release(void)
