@@ -29,6 +29,10 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define FIREBALL_OBJFLAG_FREED 0x40
+
+#define MODEL_LIGHT_KIND_POINT 2
+
 #define FIREBALL_ROT_COUNT 5
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjHits_SetHitVolumeSlot();
@@ -885,7 +889,7 @@ void fireball_init(int* obj)
                 int c;
                 u8* base1;
                 u8* base2;
-                modelLightStruct_setLightKind(*(int*)state, 2);
+                modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
                 lightSetField4D(*(int*)state, 0);
                 modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int*)state, 1);
