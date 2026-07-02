@@ -1603,10 +1603,10 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                                 *pH = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
                                 *pI = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
                                 *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
-                                t1 = sinv * *pE - cosv * *pG;
-                                t2 = cosv * *pE + sinv * *pG;
-                                *pE = t1;
-                                *pG = t2;
+                                t1 = *pE;
+                                t2 = *pG;
+                                *pE = sinv * t1 - cosv * t2;
+                                *pG = cosv * t1 + sinv * t2;
                                 t2 = cosv * *pH + sinv * *pJ;
                                 t1 = sinv * *pH - cosv * *pJ;
                                 *pH = t1;
