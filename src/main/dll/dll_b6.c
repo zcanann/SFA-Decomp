@@ -20,6 +20,9 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
+
+#define DLLB6_OBJFLAG_RENDERED 0x800
+#define DLLB6_OBJFLAG_FREED 0x40
 extern int objAnimFn_80296328(void);
 extern int fn_80295C24(void *player);
 /* voxel map line-of-sight (engine); int-pointer spellings are required for this TU's match
@@ -38,9 +41,9 @@ static inline int camcontrol_isTargetCandidate(GameObject *obj, ObjHitVolumeRunt
     if (data != NULL
        && obj->anim.alpha == 0xff
        && !(*(u8 *)&obj->anim.resetHitboxMode & 0x28)
-       && ((obj->objectFlags & 0x800) || (obj->anim.modelInstance->flags & 1))
+       && ((obj->objectFlags & DLLB6_OBJFLAG_RENDERED) || (obj->anim.modelInstance->flags & 1))
        && !(obj->anim.flags & OBJANIM_FLAG_HIDDEN)
-       && !(obj->objectFlags & 0x40)
+       && !(obj->objectFlags & DLLB6_OBJFLAG_FREED)
        && (gCamcontrolTargetClassMask & ((accept = 1) << (data[obj->hitVolumeIndex].flags & CAMCONTROL_TARGET_KIND_MASK))))
     {
         return accept;
