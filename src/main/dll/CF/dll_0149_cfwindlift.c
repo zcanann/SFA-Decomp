@@ -15,6 +15,8 @@
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
+
 #define WINDLIFT_SLOTS 14   /* max tracked lift slots */
 
 typedef struct WindliftPlacement
@@ -482,7 +484,7 @@ void windlift_update(int* obj)
             sub->slots[found].link14 = found;
             {
                 int* rider = *objs;
-                if ((((GameObject*)rider)->objectFlags & 0x1000) != 0)
+                if ((((GameObject*)rider)->objectFlags & CFWINDLIFT_OBJFLAG_PARENT_SLACK) != 0)
                 {
                     objs++;
                 }
