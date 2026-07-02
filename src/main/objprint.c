@@ -1653,7 +1653,7 @@ void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
     *(f32*)((char*)p2 + 4) = lbl_803DE99C;
 }
 
-void fn_8003B500(int obj, int p4)
+void fn_8003B500(int obj, s16* state)
 {
     s16* found;
 
@@ -1664,8 +1664,8 @@ void fn_8003B500(int obj, int p4)
         {
             found[0] = (s16)(found[0] * 3 / 4);
         }
-        fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u16)(u8) * (s16*)(p4 + 0x1a);
+        fn_80039DF8(obj, state, found, lbl_803DE9A4);
+        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
     }
 }
 
