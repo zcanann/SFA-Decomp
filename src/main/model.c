@@ -2477,8 +2477,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     extern f32 lbl_803DCED0;
     extern f32 lbl_803DCECC;
     u8* mtx;
-    int srcOff;
-    int dstOff;
+    int off[2];
     u8* prev;
     int i;
     u8* state;
@@ -2486,6 +2485,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     u8* src;
     f32 vec[3];
     f32 zero;
+    f32 sc;
     u32 sel;
     int idx;
     int count;
@@ -2535,14 +2535,14 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     st->cur = st->bufs[sel];
     mtx = d;
     i = 0;
-    srcOff = 0;
-    dstOff = srcOff;
+    off[0] = 0;
+    off[1] = off[0];
     prev = st->bufs[sel ^ 1];
     for (; i < *(u8*)(b + 0xf7); i++)
     {
         if (d == NULL)
         {
-            idx = *(s16*)(*(u8**)(b + 0x58) + srcOff);
+            idx = *(s16*)(*(u8**)(b + 0x58) + off[0]);
             cnt = *(u8*)(*(u8**)a + 0xf3);
             if (cnt != 0)
             {
@@ -2570,15 +2570,15 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             ((GameObject*)c)->anim.localPosZ = vec[2] + playerMapOffsetZ;
             Obj_GetWorldPosition((u32)c, (f32 *)(c + 0x18), (f32 *)(c + 0x1c), (f32 *)(c + 0x20));
         }
-        vec[0] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 8);
-        vec[1] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 0xc);
-        vec[2] = *(f32*)(*(u8**)(b + 0x58) + srcOff + 0x10);
-        *(f32*)(st->cur + dstOff) = *(f32*)(*(u8**)(b + 0x58) + srcOff + 4) * ((GameObject*)e)->anim.rootMotionScale;
-        PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (dstOff + 4)));
+        vec[0] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 8);
+        vec[1] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 0xc);
+        vec[2] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 0x10);
+        *(f32*)(st->cur + off[1]) = *(f32*)(*(u8**)(b + 0x58) + off[0] + 4) * (sc = ((GameObject*)e)->anim.rootMotionScale);
+        PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (off[1] + 4)));
         *(f32*)(prev + 4) = (lbl_803DCED0 + *(f32*)(prev + 4)) - playerMapOffsetX;
         *(f32*)(prev + 0xc) = (lbl_803DCECC + *(f32*)(prev + 0xc)) - playerMapOffsetZ;
-        srcOff += 0x18;
-        dstOff += 0x10;
+        off[0] += 0x18;
+        off[1] += 0x10;
         prev += 0x10;
     }
 }
