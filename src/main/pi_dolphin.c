@@ -234,23 +234,23 @@ struct MldfTables
 #define MLDF_ADJ(i) (nm->adjacency[i])
 #define MLDF_REMAP (nm->remapGroups)
 /* Constant-index accessors (typed member form). */
-#define MLDF_ID(s) (t->ids[s])
-#define MLDF_SIZE(s) (t->sizes[s])
-#define MLDF_PTR(s) (t->ptrs[s])
-#define MLDF_OWNER(s) (t->owners[s])
+#define MLDF_ID(s) (tbl->ids[s])
+#define MLDF_SIZE(s) (tbl->sizes[s])
+#define MLDF_PTR(s) (tbl->ptrs[s])
+#define MLDF_OWNER(s) (tbl->owners[s])
 /* Runtime-index accessors must keep the flat pad0[idx + OFFSET] spelling: it
-   attaches the addis high-half to the SCALED INDEX (slwi; addis idx; add t),
-   matching target; the member form t->arr[i] attaches it to the base instead.
+   attaches the addis high-half to the SCALED INDEX (slwi; addis idx; add tbl),
+   matching target; the member form tbl->arr[i] attaches it to the base instead.
    The _SP forms deliberately ignore their argument and index by the local `slot`. */
-#define MLDF_ID_RT(s) (*(int *)&t->pad0[((s) << 2) + 0x19138])
-#define MLDF_OWNER_RT(s) (*(s16 *)&t->pad0[((s) << 1) + 0x19738])
-#define MLDF_FINFO4(s4) (*(int *)&t->pad0[(slot << 2) + 0x160])
-#define MLDF_SP_ID(p) (*(int *)&t->pad0[(slot << 2) + 0x19138])
-#define MLDF_SP_SIZE(p) (*(int *)&t->pad0[(slot << 2) + 0x19298])
-#define MLDF_SP_PTR(p) (*(u32 *)&t->pad0[(slot << 2) + 0x195D8])
-/* re-deref through the biased local `q` on every use; the -0x6A28 displacement
-   (== &t->ptrs[0] relative to t + 0x20000) matches target addressing */
-#define MLDF_QPTR (*(u32 *)(q - 0x6A28))
+#define MLDF_ID_RT(s) (*(int *)&tbl->pad0[((s) << 2) + 0x19138])
+#define MLDF_OWNER_RT(s) (*(s16 *)&tbl->pad0[((s) << 1) + 0x19738])
+#define MLDF_FINFO4(s4) (*(int *)&tbl->pad0[(slot << 2) + 0x160])
+#define MLDF_SP_ID(p) (*(int *)&tbl->pad0[(slot << 2) + 0x19138])
+#define MLDF_SP_SIZE(p) (*(int *)&tbl->pad0[(slot << 2) + 0x19298])
+#define MLDF_SP_PTR(p) (*(u32 *)&tbl->pad0[(slot << 2) + 0x195D8])
+/* re-deref through the biased local `slotPtrAddr` on every use; the -0x6A28 displacement
+   (== &tbl->ptrs[0] relative to tbl + 0x20000) matches target addressing */
+#define MLDF_QPTR (*(u32 *)(slotPtrAddr - 0x6A28))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
    follows at +0x10. "DIR"-tagged data is stored raw. */
@@ -281,7 +281,7 @@ struct PackHeader
 u32 mapLoadDataFile(int mapId, int fileId)
 {
     struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
-    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
+    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
     int fi;
     int sync = 0;
     u32 result;
@@ -299,19 +299,19 @@ u32 mapLoadDataFile(int mapId, int fileId)
     adj = MLDF_ADJ(mapId);
     if (adj != -1)
     {
-        int c = 0;
+        int nOwned = 0;
         s16 o25 = MLDF_OWNER(0x25);
         s16 o47;
         if (o25 != -1)
         {
-            c = 1;
+            nOwned = 1;
         }
         o47 = MLDF_OWNER(0x47);
         if (o47 != -1)
         {
-            c = c + 1;
+            nOwned = nOwned + 1;
         }
-        if (c == 0)
+        if (nOwned == 0)
         {
             lbl_803DCC92 = 1;
             if (o25 == adj)
@@ -416,7 +416,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                             AtomicSList_Push(lbl_803DCC8C, fi);
                             if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
                             {
-                                mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                                mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
                             }
                         }
                         else
@@ -494,7 +494,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
                         {
-                            mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                            mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
                         }
                     }
                     else
@@ -580,7 +580,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 AtomicSList_Push(lbl_803DCC8C, fi);
                 if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
                 {
-                    mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+                    mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
                 }
             }
             else
@@ -656,7 +656,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
                         {
-                            mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+                            mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
                         }
                     }
                     else
@@ -759,7 +759,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
                         {
-                            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+                            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
                         }
                     }
                     else
@@ -859,7 +859,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
                         {
-                            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+                            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
                         }
                     }
                     else
@@ -955,7 +955,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
                         {
-                            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+                            mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
                         }
                         lbl_803DCC7C = lbl_803DCC7C + 1;
                     }
@@ -1028,7 +1028,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
                     {
-                        mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+                        mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
                     }
                 }
                 else
@@ -1123,7 +1123,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
                         {
-                            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+                            mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
                         }
                     }
                     else
@@ -1194,7 +1194,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
                     {
-                        mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+                        mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
                     }
                 }
                 else
@@ -1289,7 +1289,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
                         {
-                            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+                            mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
                         }
                     }
                     else
@@ -1360,7 +1360,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
                     {
-                        mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+                        mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
                     }
                 }
                 else
@@ -1456,7 +1456,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
                         {
-                            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+                            mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
                         }
                     }
                     else
@@ -1527,7 +1527,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
                     {
-                        mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+                        mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
                     }
                 }
                 else
@@ -1581,46 +1581,46 @@ int GXFlush_(u8 visible, int unused);
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
 {
-    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
-    u32 b = 0;
-    u32 a = 0;
-    u8 frame = 0;
-    u32 hi;
+    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
+    u32 tab0 = 0;    /* TAB ptr of the primary slot of the pair, 0 = not ready */
+    u32 tab1 = 0;    /* TAB ptr of the alternate slot of the pair */
+    u8 frame = 0;    /* run a full frame per wait iteration once dvd error UI is up */
+    u32 hiSel;       /* caller's slot-select bit; cases 0x51/0x4f reuse it as the TAB ptr */
     int entryOff;
     int flags;
-    int s;
+    int intr;
     int i;
-    int k;
-    u32 q;
+    int prev;
+    u32 slotPtrAddr; /* &tbl->ptrs[fileId], biased +0x6A28 for MLDF_QPTR */
     u32 fileBuf;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
-    int e4;
-    char buf[0x3c];
+    int entryByteOff;
+    char buf[0x3c];  /* DVDFileInfo */
 
     switch (fileId)
     {
     case 0xd:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         entryIndex = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0)
         {
-            b = MLDF_PTR(0xe);
+            tab0 = MLDF_PTR(0xe);
         }
         if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0)
         {
-            a = MLDF_PTR(0x56);
+            tab1 = MLDF_PTR(0x56);
         }
-        hi = offsetFlags & 0x80000000;
-        if (hi != 0 && b == 0)
+        hiSel = offsetFlags & 0x80000000;
+        if (hiSel != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
+            while (intr = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(intr), entryIndex != 0)
             {
                 if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0)
                 {
-                    b = *(u32*)((char*)&MLDF_PTR(0) + 0x80000000);
+                    tab0 = *(u32*)((char*)&MLDF_PTR(0) + 0x80000000);
                     break;
                 }
                 padUpdate();
@@ -1643,13 +1643,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
+            while (intr = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(intr), entryIndex != 0)
             {
                 if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0)
                 {
-                    a = MLDF_PTR(0);
+                    tab1 = MLDF_PTR(0);
                     break;
                 }
                 padUpdate();
@@ -1672,44 +1672,44 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if ((offsetFlags & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && tab1 != 0)
         {
             fileId = 0x55;
         }
-        else if (hi != 0 && b != 0)
+        else if (hiSel != 0 && tab0 != 0)
         {
             fileId = 0xd;
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0xd;
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x55;
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x1b:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         entryIndex = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0)
         {
-            b = MLDF_PTR(0x1a);
+            tab0 = MLDF_PTR(0x1a);
         }
         if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0)
         {
-            a = MLDF_PTR(0x53);
+            tab1 = MLDF_PTR(0x53);
         }
-        hi = offsetFlags & 0x80000000;
-        if (hi != 0 && b == 0)
+        hiSel = offsetFlags & 0x80000000;
+        if (hiSel != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
+            while (intr = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(intr), entryIndex != 0)
             {
                 if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0)
                 {
-                    b = MLDF_PTR(0x1a);
+                    tab0 = MLDF_PTR(0x1a);
                     break;
                 }
                 padUpdate();
@@ -1732,13 +1732,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(s), entryIndex != 0)
+            while (intr = OSDisableInterrupts(), entryIndex = lbl_803DCC80, OSRestoreInterrupts(intr), entryIndex != 0)
             {
                 if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0)
                 {
-                    a = MLDF_PTR(0x53);
+                    tab1 = MLDF_PTR(0x53);
                     break;
                 }
                 padUpdate();
@@ -1761,74 +1761,74 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if ((offsetFlags & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && tab1 != 0)
         {
             fileId = 0x54;
         }
-        else if (hi != 0 && b != 0)
+        else if (hiSel != 0 && tab0 != 0)
         {
             fileId = 0x1b;
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x1b;
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x54;
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x25:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         entryIndex = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((entryIndex & 0x20000) == 0 && (entryIndex & 0x10000) == 0)
         {
-            b = MLDF_PTR(0x26);
+            tab0 = MLDF_PTR(0x26);
         }
         if ((entryIndex & 0x80000) == 0 && (entryIndex & 0x40000) == 0)
         {
-            a = MLDF_PTR(0x48);
+            tab1 = MLDF_PTR(0x48);
         }
-        if ((offsetFlags & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && tab1 != 0)
         {
             fileId = 0x47;
         }
-        else if ((offsetFlags & 0x10000000) != 0 && b != 0)
+        else if ((offsetFlags & 0x10000000) != 0 && tab0 != 0)
         {
             fileId = 0x25;
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x25;
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x47;
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x2b:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((flags & 4) == 0 && (flags & 1) == 0)
         {
-            b = MLDF_PTR(0x2a);
+            tab0 = MLDF_PTR(0x2a);
         }
         if ((flags & 8) == 0 && (flags & 2) == 0)
         {
-            a = MLDF_PTR(0x45);
+            tab1 = MLDF_PTR(0x45);
         }
         entryOff = offsetFlags & 0x10000000;
-        if (entryOff != 0 && b == 0)
+        if (entryOff != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (intr = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(intr), flags != 0)
             {
                 if ((flags & 4) == 0 && (flags & 1) == 0)
                 {
-                    b = MLDF_PTR(0x2a);
+                    tab0 = MLDF_PTR(0x2a);
                     break;
                 }
                 padUpdate();
@@ -1851,13 +1851,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (intr = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(intr), flags != 0)
             {
                 if ((flags & 8) == 0 && (flags & 2) == 0)
                 {
-                    a = MLDF_PTR(0x45);
+                    tab1 = MLDF_PTR(0x45);
                     break;
                 }
                 padUpdate();
@@ -1880,215 +1880,215 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if (a != 0 && (offsetFlags & 0x20000000) != 0)
+        if (tab1 != 0 && (offsetFlags & 0x20000000) != 0)
         {
             fileId = 0x46;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)a)[entryIndex] & 0xffffff;
+                entryOff = ((int*)tab1)[entryIndex] & 0xffffff;
                 i = 0;
                 if (entryOff == 0)
                 {
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
-                else if (entryOff < (((int*)(a - 4))[entryIndex] & 0xffffff))
+                else if (entryOff < (((int*)(tab1 - 4))[entryIndex] & 0xffffff))
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while (entryOff != (((int*)a)[k] & 0xffffff));
+                    while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
         }
-        else if (b != 0 && entryOff != 0)
+        else if (tab0 != 0 && entryOff != 0)
         {
             fileId = 0x2b;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)b)[entryIndex] & 0xffffff;
+                entryOff = ((int*)tab0)[entryIndex] & 0xffffff;
                 i = 0;
                 if (entryOff == 0)
                 {
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
-                else if (entryOff < (((int*)(b - 4))[entryIndex] & 0xffffff))
+                else if (entryOff < (((int*)(tab0 - 4))[entryIndex] & 0xffffff))
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while (entryOff != (((int*)b)[k] & 0xffffff));
+                    while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x2b;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)b)[entryIndex] & 0xffffff;
+                entryOff = ((int*)tab0)[entryIndex] & 0xffffff;
                 i = 0;
                 if (entryOff == 0)
                 {
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
-                else if (entryOff < (((int*)(b - 4))[entryIndex] & 0xffffff))
+                else if (entryOff < (((int*)(tab0 - 4))[entryIndex] & 0xffffff))
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while (entryOff != (((int*)b)[k] & 0xffffff));
+                    while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x46;
             if (sizeOut != NULL)
             {
-                entryOff = ((int*)a)[entryIndex] & 0xffffff;
+                entryOff = ((int*)tab1)[entryIndex] & 0xffffff;
                 i = 0;
                 if (entryOff == 0)
                 {
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
-                else if (entryOff < (((int*)(a - 4))[entryIndex] & 0xffffff))
+                else if (entryOff < (((int*)(tab1 - 4))[entryIndex] & 0xffffff))
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while (entryOff != (((int*)a)[k] & 0xffffff));
+                    while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= entryOff);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - entryOff;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x30:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((flags & 0x40) == 0 && (flags & 0x10) == 0)
         {
-            b = MLDF_PTR(0x2f);
+            tab0 = MLDF_PTR(0x2f);
         }
         if ((flags & 0x80) == 0 && (flags & 0x20) == 0)
         {
-            a = MLDF_PTR(0x49);
+            tab1 = MLDF_PTR(0x49);
         }
-        if ((offsetFlags & 0x10000000) != 0 && b == 0)
+        if ((offsetFlags & 0x10000000) != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (intr = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(intr), flags != 0)
             {
                 if ((flags & 0x40) == 0 && (flags & 0x10) == 0)
                 {
-                    b = MLDF_PTR(0x2f);
+                    tab0 = MLDF_PTR(0x2f);
                     break;
                 }
                 padUpdate();
@@ -2111,13 +2111,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            while (intr = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(intr), flags != 0)
             {
                 if ((flags & 0x80) == 0 && (flags & 0x20) == 0)
                 {
-                    a = MLDF_PTR(0x49);
+                    tab1 = MLDF_PTR(0x49);
                     break;
                 }
                 padUpdate();
@@ -2145,7 +2145,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileId = 0x4a;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(a + 4))[entryIndex] & 0xfffffff) - (((u32*)a)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(tab1 + 4))[entryIndex] & 0xfffffff) - (((u32*)tab1)[entryIndex] & 0xfffffff);
             }
         }
         else if ((offsetFlags & 0x10000000) != 0)
@@ -2153,29 +2153,29 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileId = 0x30;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(b + 4))[entryIndex] & 0xfffffff) - (((u32*)b)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(tab0 + 4))[entryIndex] & 0xfffffff) - (((u32*)tab0)[entryIndex] & 0xfffffff);
             }
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x30;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(b + 4))[entryIndex] & 0xfffffff) - (((u32*)b)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(tab0 + 4))[entryIndex] & 0xfffffff) - (((u32*)tab0)[entryIndex] & 0xfffffff);
             }
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x4a;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(a + 4))[entryIndex] & 0xfffffff) - (((u32*)a)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(tab1 + 4))[entryIndex] & 0xfffffff) - (((u32*)tab1)[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = t->ptrs[fileId] + offsetFlags;
+            fileBuf = tbl->ptrs[fileId] + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2184,20 +2184,20 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         }
         break;
     case 0x51:
-        hi = MLDF_PTR(0x52);
-        if (hi != 0)
+        hiSel = MLDF_PTR(0x52);
+        if (hiSel != 0)
         {
             fileId = 0x51;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(hi + 4))[entryIndex] & 0xfffffff) -
-                    (((u32*)hi)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(hiSel + 4))[entryIndex] & 0xfffffff) -
+                    (((u32*)hiSel)[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            fileBuf = t->ptrs[fileId] + offsetFlags;
+            fileBuf = tbl->ptrs[fileId] + offsetFlags;
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
@@ -2206,24 +2206,24 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         }
         break;
     case 0x23:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         i = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((i & 0x100) == 0 && (i & 0x100) == 0)
         {
-            b = MLDF_PTR(0x24);
+            tab0 = MLDF_PTR(0x24);
         }
         if ((i & 0x800) == 0 && (i & 0x200) == 0)
         {
-            a = MLDF_PTR(0x4e);
+            tab1 = MLDF_PTR(0x4e);
         }
-        if ((offsetFlags & 0x40000000) != 0 && b == 0)
+        if ((offsetFlags & 0x40000000) != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(s), i != 0)
+            while (intr = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(intr), i != 0)
             {
                 if ((i & 0x100) == 0 && (i & 0x100) == 0)
                 {
-                    b = MLDF_PTR(0x24);
+                    tab0 = MLDF_PTR(0x24);
                     break;
                 }
                 padUpdate();
@@ -2246,13 +2246,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x80000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x80000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(s), i != 0)
+            while (intr = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(intr), i != 0)
             {
                 if ((i & 0x800) == 0 && (i & 0x200) == 0)
                 {
-                    a = MLDF_PTR(0x4e);
+                    tab1 = MLDF_PTR(0x4e);
                     break;
                 }
                 padUpdate();
@@ -2275,147 +2275,147 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if (a != 0 && (e4 = entryIndex << 2, (*(u32*)((u8*)t->mergeTex0 + e4) & 0x80000000) != 0))
+        if (tab1 != 0 && (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x80000000) != 0))
         {
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                offsetFlags = *(int*)((u8*)a + e4) & 0xffffff;
+                offsetFlags = *(int*)((u8*)tab1 + entryByteOff) & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (b != 0 && (e4 = entryIndex << 2, (*(int*)((u8*)t->mergeTex0 + e4) & 0x40000000) != 0))
+        else if (tab0 != 0 && (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex0 + entryByteOff) & 0x40000000) != 0))
         {
             fileId = 0x23;
             if (sizeOut != NULL)
             {
-                offsetFlags = *(int*)((u8*)b + e4) & 0xffffff;
+                offsetFlags = *(int*)((u8*)tab0 + entryByteOff) & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                offsetFlags = ((int*)a)[entryIndex] & 0xffffff;
+                offsetFlags = ((int*)tab1)[entryIndex] & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x23;
             if (sizeOut != NULL)
             {
-                offsetFlags = ((int*)b)[entryIndex] & 0xffffff;
+                offsetFlags = ((int*)tab0)[entryIndex] & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x20:
-        s = OSDisableInterrupts();
+        intr = OSDisableInterrupts();
         i = lbl_803DCC80;
-        OSRestoreInterrupts(s);
+        OSRestoreInterrupts(intr);
         if ((i & 0x4000) == 0 && (i & 0x1000) == 0)
         {
-            b = MLDF_PTR(0x21);
+            tab0 = MLDF_PTR(0x21);
         }
         if ((i & 0x8000) == 0 && (i & 0x2000) == 0)
         {
-            a = MLDF_PTR(0x4c);
+            tab1 = MLDF_PTR(0x4c);
         }
-        if ((offsetFlags & 0x40000000) != 0 && b == 0)
+        if ((offsetFlags & 0x40000000) != 0 && tab0 == 0)
         {
-            while (s = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(s), i != 0)
+            while (intr = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(intr), i != 0)
             {
                 if ((i & 0x1000) == 0 && (i & 0x1000) == 0)
                 {
-                    b = MLDF_PTR(0x21);
+                    tab0 = MLDF_PTR(0x21);
                     break;
                 }
                 padUpdate();
@@ -2438,13 +2438,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        else if ((offsetFlags & 0x80000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x80000000) != 0 && tab1 == 0)
         {
-            while (s = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(s), i != 0)
+            while (intr = OSDisableInterrupts(), i = lbl_803DCC80, OSRestoreInterrupts(intr), i != 0)
             {
                 if ((i & 0x8000) == 0 && (i & 0x2000) == 0)
                 {
-                    a = MLDF_PTR(0x4c);
+                    tab1 = MLDF_PTR(0x4c);
                     break;
                 }
                 padUpdate();
@@ -2467,156 +2467,156 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 }
             }
         }
-        if (a != 0 && (e4 = entryIndex << 2, (*(u32*)((u8*)t->mergeTex1 + e4) & 0x80000000) != 0))
+        if (tab1 != 0 && (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x80000000) != 0))
         {
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                offsetFlags = *(int*)((u8*)a + e4) & 0xffffff;
+                offsetFlags = *(int*)((u8*)tab1 + entryByteOff) & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (b != 0 && (e4 = entryIndex << 2, (*(int*)((u8*)t->mergeTex1 + e4) & 0x40000000) != 0))
+        else if (tab0 != 0 && (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->mergeTex1 + entryByteOff) & 0x40000000) != 0))
         {
             fileId = 0x20;
             if (sizeOut != NULL)
             {
-                offsetFlags = *(int*)((u8*)b + e4) & 0xffffff;
+                offsetFlags = *(int*)((u8*)tab0 + entryByteOff) & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (a != 0)
+        else if (tab1 != 0)
         {
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                offsetFlags = ((int*)a)[entryIndex] & 0xffffff;
+                offsetFlags = ((int*)tab1)[entryIndex] & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)a)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(a - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        else if (b != 0)
+        else if (tab0 != 0)
         {
             fileId = 0x20;
             if (sizeOut != NULL)
             {
-                offsetFlags = ((int*)b)[entryIndex] & 0xffffff;
+                offsetFlags = ((int*)tab0)[entryIndex] & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     i = 0;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)b)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(b - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x4f:
-        hi = MLDF_PTR(0x50);
-        if (hi != 0)
+        hiSel = MLDF_PTR(0x50);
+        if (hiSel != 0)
         {
             fileId = 0x4f;
             if (sizeOut != NULL)
             {
-                offsetFlags = ((int*)hi)[entryIndex] & 0xffffff;
+                offsetFlags = ((int*)hiSel)[entryIndex] & 0xffffff;
                 if (offsetFlags == 0)
                 {
                     do
                     {
-                        k = b;
-                        b = b + 1;
+                        prev = tab0;
+                        tab0 = tab0 + 1;
                     }
-                    while ((((int*)hi)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(hi - 4))[b] & 0xffffff) - offsetFlags;
+                    while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(hiSel - 4))[tab0] & 0xffffff) - offsetFlags;
                 }
                 else
                 {
                     i = entryIndex;
                     do
                     {
-                        k = i;
+                        prev = i;
                         i = i + 1;
                     }
-                    while ((((int*)hi)[k] & 0xffffff) <= offsetFlags);
-                    *sizeOut = (((int*)(hi - 4))[i] & 0xffffff) - offsetFlags;
+                    while ((((int*)hiSel)[prev] & 0xffffff) <= offsetFlags);
+                    *sizeOut = (((int*)(hiSel - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
@@ -2627,7 +2627,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     {
         return 0;
     }
-    q = (u32)&t->ptrs[fileId] + 0x6A28;
+    slotPtrAddr = (u32)&tbl->ptrs[fileId] + 0x6A28;
     if (MLDF_QPTR != 0)
     {
     if (fileId == 0xd || fileId == 0x55)
@@ -2678,17 +2678,17 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
-        struct PackHeader* p = (struct PackHeader*)(MLDF_QPTR + offsetFlags);
-        if (p->magic == 0xe0e0e0e0)
+        struct PackHeader* hdr = (struct PackHeader*)(MLDF_QPTR + offsetFlags);
+        if (hdr->magic == 0xe0e0e0e0)
         {
-            memcpy((void*)destBuf, (void*)(((int)p + p->auxSize + 0x18 - MLDF_QPTR) + MLDF_QPTR),
-                   p->decompressedSize);
+            memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - MLDF_QPTR) + MLDF_QPTR),
+                   hdr->decompressedSize);
         }
-        else if (p->magic == 0xfacefeed)
+        else if (hdr->magic == 0xfacefeed)
         {
-            zlbDecompress((void*)(((int)p + p->auxSize + 0x28 - MLDF_QPTR) + MLDF_QPTR),
-                          p->compressedSize - 0x10, destBuf, &p->decompressedSize);
-            DCStoreRange((void*)destBuf, p->decompressedSize);
+            zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - MLDF_QPTR) + MLDF_QPTR),
+                          hdr->compressedSize - 0x10, destBuf, &hdr->decompressedSize);
+            DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
     else if (fileId == 0x23 || fileId == 0x4d)
@@ -2831,7 +2831,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     char buf[1024];
     int fi;
     int ok;
-    struct PackHeader* p;
+    struct PackHeader* hdr;
 
     if (((void*)destBuf == NULL) && ((void*)lbl_8035F208[mapIndex] == NULL))
     {
@@ -2861,12 +2861,12 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
             DVDClose((void*)fi);
             AtomicSList_Push(lbl_803DCC8C, fi);
         }
-        p = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
-        if (p->magic == 0xfacefeed)
+        hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
+        if (hdr->magic == 0xfacefeed)
         {
-            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), p->compressedSize, destBuf,
-                          &p->decompressedSize);
-            DCStoreRange((void*)destBuf, p->decompressedSize);
+            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf,
+                          &hdr->decompressedSize);
+            DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
 }
@@ -4757,14 +4757,14 @@ void selectTexture(u8* tex, int mapId)
     }
 }
 
-void loadModelsBin(int a, int* p1c, int* p20, int* p18, int* p4)
+void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
 {
-    u32 v31 = 0;
-    u32 v30 = 0;
+    u32 tab0 = 0;
+    u32 tab1 = 0;
     int idx = -1;
     int flags;
     int saved;
-    char* p;
+    char* entry;
     if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0)
     {
         saved = OSDisableInterrupts();
@@ -4772,33 +4772,33 @@ void loadModelsBin(int a, int* p1c, int* p20, int* p18, int* p4)
         OSRestoreInterrupts(saved);
         if ((flags & 4) == 0 && (flags & 1) == 0)
         {
-            v31 = lbl_8035F3E8[0x2a];
+            tab0 = lbl_8035F3E8[0x2a];
         }
         if ((flags & 8) == 0 && (flags & 2) == 0)
         {
-            v30 = lbl_8035F3E8[0x45];
+            tab1 = lbl_8035F3E8[0x45];
         }
-        if (v30 != 0 && (a & 0x20000000) != 0)
+        if (tab1 != 0 && (offsetFlags & 0x20000000) != 0)
         {
             idx = 0x46;
         }
-        else if (v31 != 0 && (a & 0x10000000) != 0)
+        else if (tab0 != 0 && (offsetFlags & 0x10000000) != 0)
         {
             idx = 0x2b;
         }
-        else if (v31 != 0)
+        else if (tab0 != 0)
         {
             idx = 0x2b;
         }
-        else if (v30 != 0)
+        else if (tab1 != 0)
         {
             idx = 0x46;
         }
-        p = (char*)lbl_8035F3E8[idx] + (a & 0x0fffffff);
-        *p18 = *(int*)(p + 0x18);
-        *p1c = *(int*)(p + 0x1c);
-        *p20 = *(int*)(p + 0x20);
-        *p4 = *(int*)(p + 0x4);
+        entry = (char*)lbl_8035F3E8[idx] + (offsetFlags & 0x0fffffff);
+        *p18 = *(int*)(entry + 0x18);
+        *p1c = *(int*)(entry + 0x1c);
+        *p20 = *(int*)(entry + 0x20);
+        *p4 = *(int*)(entry + 0x4);
     }
 }
 
@@ -7330,7 +7330,7 @@ extern int lbl_803DCC84;
 #pragma peephole off
 int initLoadFiles(void)
 {
-    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
+    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
     int i;
     int* rom;
     s16* owners;
@@ -7346,7 +7346,7 @@ int initLoadFiles(void)
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
         i = 0;
-        rom = t->romList;
+        rom = tbl->romList;
         for (; i < 0x75; i++)
         {
             *rom = 0;
@@ -7358,14 +7358,14 @@ int initLoadFiles(void)
         }
         lbl_803DCC98 = 0;
         /* the walkers must derive from the shared end-of-table base (himem) --
-           re-spelling them as t->field changes the address web */
-        himem = (u8*)t + 0x20000;
-        ptrs = (u32*)(himem - 27176);  /* t->ptrs */
-        owners = (s16*)(himem - 26824); /* t->owners */
-        ids = (int*)(himem - 28360);    /* t->ids */
+           re-spelling them as tbl->field changes the address web */
+        himem = (u8*)tbl + 0x20000;
+        ptrs = (u32*)(himem - 27176);  /* tbl->ptrs */
+        owners = (s16*)(himem - 26824); /* tbl->owners */
+        ids = (int*)(himem - 28360);    /* tbl->ids */
         names = sResourceFileNameTable;
-        sizes = (int*)(himem - 28008);  /* t->sizes */
-        flags = himem - 28448;          /* t->loadedFlags */
+        sizes = (int*)(himem - 28008);  /* tbl->sizes */
+        flags = himem - 28448;          /* tbl->loadedFlags */
         for (i = 0; i <= 0x57; i++)
         {
             switch (i)
@@ -7455,11 +7455,11 @@ int initLoadFiles(void)
         }
         else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
         {
-            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
-            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
-            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
-            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
-            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+            mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
+            mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
+            mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
+            mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
+            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
             lbl_803DCC84 = 0;
             lbl_803DCC80 = 0;
             return 1;
