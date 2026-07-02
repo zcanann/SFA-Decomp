@@ -17546,6 +17546,7 @@ int fn_802994D0(int obj, int state, f32 fv)
 int fn_8029E568(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
+    int curveId;
     int camArg = 0;
     f32 vec[3];
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -17634,8 +17635,8 @@ int fn_8029E568(int obj, int state, f32 fv)
                     {
                         ObjAnim_SetCurrentMove(obj, 0x40d, lbl_803E7EA4, 0);
                     }
-                    ObjAnim_SampleRootCurvePhase(((PlayerState*)state)->baddie.animSpeedC, (ObjAnimComponent*)obj,
-                                                 (f32*)((char*)state + 0x2a0));
+                    ((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(obj,
+                        ((PlayerState*)state)->baddie.animSpeedC, (f32*)((char*)state + 0x2a0));
                 }
             }
             atDest = inner->traveledDistance > inner->travelTargetDistance ||
@@ -17692,10 +17693,11 @@ int fn_8029E568(int obj, int state, f32 fv)
         break;
     default:
         {
-            int curveId = 0x1f;
-            int found = (*gRomCurveInterface)->find(&curveId, 1, 0, ((GameObject*)obj)->anim.localPosX,
-                                                    ((GameObject*)obj)->anim.localPosY,
-                                                    ((GameObject*)obj)->anim.localPosZ);
+            int found;
+            curveId = 0x1f;
+            found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+                ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                ((GameObject*)obj)->anim.localPosZ, &curveId, 1, 0);
             if (found != -1)
             {
                 int pt = (int)(*gRomCurveInterface)->getById(found);
