@@ -144,11 +144,11 @@ void timer_init(int obj, int setup)
 
 void timer_update(int obj)
 {
+    int textureId;
     int expiredThisFrame;
     TimerFlags* flags;
     TimerSetup* setup;
     TimerState* state;
-    int textureId;
     state = ((GameObject*)obj)->extra;
     setup = (TimerSetup*)((GameObject*)obj)->anim.placementData;
     flags = &state->flags;
@@ -178,7 +178,10 @@ void timer_update(int obj)
             GameBit_Set(setup->startGameBit, 0);
             expiredThisFrame = 1;
         }
-        if (expiredThisFrame != 0)
+        if (expiredThisFrame == 0)
+        {
+            goto tail;
+        }
         {
             flags->expired = 1;
             switch (state->mode)
@@ -223,6 +226,7 @@ void timer_update(int obj)
                 break;
             }
         }
+tail:
         if (state->mode == TIMER_MODE_EFFECT && fn_80080150((int)state) != 0)
         {
             void* light = state->lightSlot;
