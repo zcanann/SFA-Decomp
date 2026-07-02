@@ -195,6 +195,8 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/engine_shared.h"
+
+#define RESTARTMARKER_OBJFLAG_HIDDEN 0x4000
 extern u32 FUN_80006810();
 extern u64 FUN_80006824();
 extern u32 FUN_8001753c();
@@ -1144,7 +1146,7 @@ void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 void restartmarker_init(int* obj, int* placement)
 {
     *(s16*)obj = (s16)(*(u8*)((char*)placement + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | RESTARTMARKER_OBJFLAG_HIDDEN);
 }
 
 void staffFn_80170380(int* obj, int cmd);
