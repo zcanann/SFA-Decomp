@@ -15733,49 +15733,56 @@ void fn_80295334(int a, int b, f32* vec, int c, int mode, f32 angle)
 
 void fn_802AA014(int obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
-    int slot = Camera_GetCurrentViewSlot();
+    void* o;
+    int slot;
+    PlayerState* inner;
+    ObjPlacement* setup;
 
+    inner = ((GameObject*)obj)->extra;
+    slot = Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked())
     {
-        int setup = Obj_AllocObjectSetup(0x24, 0x14b);
-        void* o;
         f32 v[3];
 
+        setup = (ObjPlacement*)Obj_AllocObjectSetup(0x24, 0x14b);
         *(u8*)((char*)setup + 4) = 2;
         *(u8*)((char*)setup + 5) = 1;
         *(u8*)((char*)setup + 6) = 0xff;
         *(u8*)((char*)setup + 7) = 0xff;
-        ((ObjPlacement*)setup)->posX = *(f32*)((char*)slot + 0xc);
-        ((ObjPlacement*)setup)->posY = *(f32*)((char*)slot + 0x10);
-        ((ObjPlacement*)setup)->posZ = *(f32*)((char*)slot + 0x14);
+        setup->posX = *(f32*)((char*)slot + 0xc);
+        setup->posY = *(f32*)((char*)slot + 0x10);
+        setup->posZ = *(f32*)((char*)slot + 0x14);
         Sfx_PlayFromObject(obj, SFXmammoth_suck);
-        o = (void*)Obj_SetupObject(setup, 5, -1, -1, 0);
+        o = (void*)Obj_SetupObject((int)setup, 5, -1, -1, 0);
         if (o != NULL)
         {
-            f32 fov, cot, aspect, ycomp, xcomp, len;
+            f32 fov, ycomp, cot, aspect, xcomp, len;
             f32 scale;
             f32 mix;
+            f32 t;
             int res, h2, hw;
 
             *(s16*)((char*)o + 6) |= 0x2000;
             res = getScreenResolution();
             hw = res >> 17;
             *(s16*)((char*)o + 0) = *(s16*)((char*)slot + 0);
-            fov = (gPlayerPi * (Camera_GetFovY() * lbl_803E80D4)) / lbl_803E7F98;
+            t = Camera_GetFovY();
+            t *= lbl_803E80D4;
+            fov = (gPlayerPi * t) / lbl_803E7F98;
             cot = mathSinf(fov);
             cot = lbl_803E7F5C * (cot / mathCosf(fov));
             aspect = Camera_GetAspectRatio();
             h2 = (u16)res >> 1;
-            ycomp = cot * -(((inner->aimScreenY - (f32)h2) / (f32)h2) * aspect);
+            t = (inner->aimScreenY - (f32)h2) / (f32)h2;
+            t *= aspect;
+            ycomp = cot * -t;
             xcomp = cot * ((inner->aimScreenX - (f32)hw) / (f32)hw);
             len = sqrtf(lbl_803E80AC + (ycomp * ycomp + xcomp * xcomp));
             v[0] = ycomp / len;
             v[1] = xcomp / len;
             v[2] = lbl_803E7F5C / len;
             Matrix_TransformVector(fn_8000E814(), v, v);
-            scale = lbl_803E80D8;
-            *(f32*)((char*)o + 0x24) = v[0] * scale;
+            *(f32*)((char*)o + 0x24) = v[0] * (scale = lbl_803E80D8);
             *(f32*)((char*)o + 0x28) = v[1] * scale;
             *(f32*)((char*)o + 0x2c) = v[2] * scale;
             mix = lbl_803E7ED4;
