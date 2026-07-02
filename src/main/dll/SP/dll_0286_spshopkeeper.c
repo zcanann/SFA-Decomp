@@ -23,6 +23,8 @@
 #include "main/engine_shared.h"
 #include "main/dll/SP/dll_0286_spshopkeeper.h"
 
+#define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -233,7 +235,7 @@ void shopkeeper_update(int obj)
 void shopkeeper_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
     ((GameObject*)obj)->animEventCallback = fn_801E76A0;
     ((GameObject*)obj)->anim.modelState->flags |= 0x810;
     ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
