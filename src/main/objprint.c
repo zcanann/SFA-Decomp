@@ -2840,28 +2840,28 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     while (i < 10)
     {
         int key;
-        void* m;
+        void* m[1];
 
         key = lbl_802CAE88[i];
         found[0] = NULL;
-        m = (void*)go->anim.modelInstance;
-        if (m != NULL)
+        m[0] = (void*)go->anim.modelInstance;
+        if (m[0] != NULL)
         {
             int iv[2];
             int n;
             int j;
             iv[0] = (int)found[0];
             iv[1] = (int)found[0];
-            n = ((ObjDef*)m)->jointCount;
+            n = ((ObjDef*)m[0])->jointCount;
             for (j = 0; j < n; j++)
             {
-                int entries = *(int*)&((ObjDef*)m)->jointData;
+                int entries = *(int*)&((ObjDef*)m[0])->jointData;
                 if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + iv[0] + 1) != 0xff &&
                     key == (int)*(u8*)(entries + iv[0]))
                 {
                     found[0] = (s16*)((int)go->anim.jointPoseData + iv[1]);
                 }
-                iv[0] += ((ObjDef*)m)->modelCount + 1;
+                iv[0] += ((ObjDef*)m[0])->modelCount + 1;
                 iv[1] += 0x12;
             }
         }
