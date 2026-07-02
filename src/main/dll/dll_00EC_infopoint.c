@@ -15,6 +15,8 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/infopointstate_struct.h"
 
+#define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct InfopointObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -108,5 +110,5 @@ void infopoint_init(int* obj, u8* def)
     state->unk18 = 2;
     state->unk10 = ((InfopointObjectDef*)def)->unk1B;
     state->flag = 0;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
 }
