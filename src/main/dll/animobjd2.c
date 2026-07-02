@@ -414,8 +414,9 @@ void fn_8013E0D0(int* obj, u8* st)
                 *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) = fl & ~0x800LL;
                 *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_1000;
                 {
+                    u8* p;
                     int i = 0;
-                    u8* p = (u8*)t;
+                    p = (u8*)t;
                     for (; i < 7; i++)
                     {
                         objSetAnimSpeedTo1(*(int*)(p + 0x700));
