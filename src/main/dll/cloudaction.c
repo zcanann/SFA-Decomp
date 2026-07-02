@@ -17,6 +17,7 @@
  * texture each frame.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/gx/GXEnum.h"
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
@@ -218,11 +219,11 @@ void renderClouds(int a, int b, int c, int d)
         pos[0] -= playerMapOffsetX;
         pos[2] -= playerMapOffsetZ;
         viewMtx = Camera_GetViewMatrix();
-        GXSetCullMode(0);
+        GXSetCullMode(GX_CULL_NONE);
         Camera_RebuildProjectionMatrix();
         GXClearVtxDesc();
-        GXSetVtxDesc(9, 1);
-        GXSetVtxDesc(0xd, 1);
+        GXSetVtxDesc(GX_VA_POS, 1);
+        GXSetVtxDesc(GX_VA_TEX0, 1);
         textureSetupFn_800799c0();
         gxTextureFn_800794e0();
         textRenderSetupFn_80079804();
