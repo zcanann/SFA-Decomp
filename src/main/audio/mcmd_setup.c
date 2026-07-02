@@ -416,7 +416,7 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
     McmdAdsrData adsr;
     McmdAdsrCurve* adsr_ptr;
-    s32 sl;
+    u32 sl;
     s32 ascale;
     s32 dscale;
 
@@ -466,8 +466,7 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     svoice->pitchAdsr.unk24[2] = 0;
     svoice->pitchAdsr.attack = voiceConvertDbToLinear(adsr.dls.atime);
     svoice->pitchAdsr.decay = voiceConvertDbToLinear(adsr.dls.dtime);
-    sl = adsr.dls.slevel >> 2;
-    if (sl > 0x3ff)
+    if ((sl = adsr.dls.slevel >> 2) > 0x3ff)
     {
         sl = 0x3ff;
     }
