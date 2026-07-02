@@ -7397,9 +7397,17 @@ void playerUpdate(int obj)
                 }
                 else
                 {
-                    int ok = (*(void**)((char*)inner + 0x7f8) == NULL && hov != 0 &&
+                    int ok;
+                    if (*(void**)((char*)inner + 0x7f8) == NULL && hov != 0 &&
                         ((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
-                        ((ByteFlags*)((char*)inner + 0x3f0))->b10 == 0);
+                        ((ByteFlags*)((char*)inner + 0x3f0))->b10 == 0)
+                    {
+                        ok = 1;
+                    }
+                    else
+                    {
+                        ok = 0;
+                    }
                     if (ok)
                     {
                         setAButtonIcon(0xb);
@@ -18950,8 +18958,15 @@ void fn_802AEF34(int obj, int state)
                 else
                 {
                     s16 t = ((PlayerState*)state)->baddie.controlMode;
-                    ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
-                        ((PlayerState*)state)->baddie.targetObj != NULL;
+                    if ((u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
+                        ((PlayerState*)state)->baddie.targetObj != NULL)
+                    {
+                        ok = 1;
+                    }
+                    else
+                    {
+                        ok = 0;
+                    }
                 }
                 if (!ok)
                 {
@@ -18983,7 +18998,8 @@ void fn_802AEF34(int obj, int state)
             {
                 ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
                     obj, lbl_803E7EA4, timeDelta, 0);
-                Object_ObjAnimSetMoveProgress(((GameObject*)obj)->anim.currentMoveProgress, (ObjAnimComponent*)obj);
+                ((int (*)(ObjAnimComponent*, f32))Object_ObjAnimSetMoveProgress)(
+                    (ObjAnimComponent*)obj, ((GameObject*)obj)->anim.currentMoveProgress);
             }
             break;
         default:
