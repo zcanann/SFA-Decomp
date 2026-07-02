@@ -1625,12 +1625,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         *(f32*)(vp + 0) = Curve_EvalBSpline(arrH, frac, NULL);
                         *(f32*)(vp + 4) = Curve_EvalBSpline(arrI, frac, NULL);
                         *(f32*)(vp + 8) = Curve_EvalBSpline(arrJ, frac, NULL);
-                        *(f32*)(vp + 0) = *(f32*)(vp + 0) + (acc * (((GameObject*)obj)->anim.worldPosX - *(f32*)(swipe +
-                            0x8c)) + *(f32*)(swipe + 0x8c));
-                        *(f32*)(vp + 4) = *(f32*)(vp + 4) + (acc * (((GameObject*)obj)->anim.worldPosY - *(f32*)(swipe +
-                            0x90)) + *(f32*)(swipe + 0x90));
-                        *(f32*)(vp + 8) = *(f32*)(vp + 8) + (acc * (((GameObject*)obj)->anim.worldPosZ - *(f32*)(swipe +
-                            0x94)) + *(f32*)(swipe + 0x94));
+                        { f32 cur = *(f32*)(vp + 0); f32 bx = *(f32*)(swipe + 0x8c); *(f32*)(vp + 0) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
+                        { f32 cur = *(f32*)(vp + 4); f32 bx = *(f32*)(swipe + 0x90); *(f32*)(vp + 4) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
+                        { f32 cur = *(f32*)(vp + 8); f32 bx = *(f32*)(swipe + 0x94); *(f32*)(vp + 8) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
                         vidx = ibase + frac;
                         *(f32*)(vp + 0xc) = vidx;
                         {
@@ -1655,12 +1652,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         *(f32*)(vp + 0x14) = Curve_EvalBSpline(arrE, frac, NULL);
                         *(f32*)(vp + 0x18) = Curve_EvalBSpline(arrF, frac, NULL);
                         *(f32*)(vp + 0x1c) = Curve_EvalBSpline(arrG, frac, NULL);
-                        *(f32*)(vp + 0x14) = *(f32*)(vp + 0x14) + (acc * (((GameObject*)obj)->anim.worldPosX - *(f32*)(
-                            swipe + 0x8c)) + *(f32*)(swipe + 0x8c));
-                        *(f32*)(vp + 0x18) = *(f32*)(vp + 0x18) + (acc * (((GameObject*)obj)->anim.worldPosY - *(f32*)(
-                            swipe + 0x90)) + *(f32*)(swipe + 0x90));
-                        *(f32*)(vp + 0x1c) = *(f32*)(vp + 0x1c) + (acc * (((GameObject*)obj)->anim.worldPosZ - *(f32*)(
-                            swipe + 0x94)) + *(f32*)(swipe + 0x94));
+                        { f32 cur = *(f32*)(vp + 0x14); f32 bx = *(f32*)(swipe + 0x8c); *(f32*)(vp + 0x14) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosX - bx)); }
+                        { f32 cur = *(f32*)(vp + 0x18); f32 bx = *(f32*)(swipe + 0x90); *(f32*)(vp + 0x18) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosY - bx)); }
+                        { f32 cur = *(f32*)(vp + 0x1c); f32 bx = *(f32*)(swipe + 0x94); *(f32*)(vp + 0x1c) = cur + (bx + acc * (((GameObject*)obj)->anim.worldPosZ - bx)); }
                         *(f32*)(vp + 0x20) = vidx;
                         {
                             f32 k = lbl_803E32F4;
