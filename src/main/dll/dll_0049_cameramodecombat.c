@@ -8,6 +8,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
+#define PAD_BUTTON_B 0x200
 extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
@@ -236,7 +237,7 @@ void CameraModeCombat_update(short* cam)
                 if (hitVolumes != NULL)
                 {
                     range = (f32)(s32)((u32)tgt->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
-                    if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C((int)focus) != 0)
+                    if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_B) && (int)fn_8029630C((int)focus) != 0)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
                         {
