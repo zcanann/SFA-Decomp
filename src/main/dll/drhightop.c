@@ -471,6 +471,7 @@ void fn_801EB634(int obj, int stateRaw)
     }
 }
 
+#pragma opt_lifetimes off
 void fn_801EB940(short* obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
@@ -579,6 +580,8 @@ void fn_801EB940(short* obj, int stateRaw)
     }
     obj[2] = rotClamped;
 }
+#pragma opt_lifetimes reset
+
 
 void fn_801EBD60(int obj, int stateRaw)
 {

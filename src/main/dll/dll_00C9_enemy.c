@@ -1551,6 +1551,7 @@ void fn_8014B878(int* arg1, int* sub)
     }
 }
 
+#pragma opt_common_subs off
 void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
@@ -1643,6 +1644,8 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
         }
     }
 }
+#pragma opt_common_subs reset
+
 
 void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledRoll)
 {

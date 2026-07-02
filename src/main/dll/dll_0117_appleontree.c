@@ -194,6 +194,7 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
+#pragma opt_lifetimes off
 void fn_8017D854(int obj, int msg)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -308,6 +309,8 @@ void fn_8017D854(int obj, int msg)
         }
     }
 }
+#pragma opt_lifetimes reset
+
 
 int fn_8017DCD4(int p, int state, f32 y)
 {
