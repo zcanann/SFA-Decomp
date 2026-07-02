@@ -22,6 +22,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
+#define KYTESMUM_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 #define KYTESMUM_OBJECT_TYPE_ID 0x43
 #define KYTESMUM_EXTRA_SIZE 0x6ec
 
@@ -313,7 +315,7 @@ void kytesmum_init(int obj, KytesMumSetup* setup)
     startMove = randomGetRange(0, 1) * 2;
     startMove = *(s16*)((char*)runtime->moveSet + startMove);
     ObjAnim_SetCurrentMove(obj, startMove, lbl_803E698C, 0);
-    kytesMum->objectFlags |= 0x2000;
+    kytesMum->objectFlags |= KYTESMUM_OBJFLAG_HITDETECT_DISABLED;
 }
 
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8* arg)
