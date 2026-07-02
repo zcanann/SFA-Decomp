@@ -5118,6 +5118,7 @@ void trackIntersect(void)
                             u8* rec = (u8*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
                             f32 fx, fz;
                             u8* rp;
+                            s16* q;
                             int k;
                             rec[0] = *((u8*)tp + 0xc);
                             rec[1] = *((u8*)tp + 0xd);
@@ -5133,12 +5134,13 @@ void trackIntersect(void)
                             fx = fx0 + playerMapOffsetX;
                             fz = fz0 + playerMapOffsetZ;
                             k = 0;
+                            q = tp;
                             rp = rec;
-                            for (; k < 2; k++, tp++, rp += 2)
+                            for (; k < 2; k++, q++, rp += 2)
                             {
-                                f32 x = fx + tp[0];
-                                f32 y = tp[2];
-                                f32 z = tp[4] + fz;
+                                f32 x = fx + q[0];
+                                f32 y = q[2];
+                                f32 z = q[4] + fz;
                                 if (gIntersectPointCount < 0x6a4)
                                 {
                                     *(s16*)(rp + 4) = insertPoint(gIntersectLineCount, edges, x, y, z);
