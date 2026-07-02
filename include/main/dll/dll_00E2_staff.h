@@ -21,7 +21,7 @@ void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-void staff_setupSwipe(int p1, int p2, int p3, int p4);
+void staff_setupSwipe(int p1, u8* swipe, int p3, int p4);
 void quakeSpellTextureFn_8016dbf4(void);
 
 #endif

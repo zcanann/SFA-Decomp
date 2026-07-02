@@ -789,7 +789,7 @@ extern int getHudHiddenFrameCount(void);
 void staff_modelMtxFn(int* obj, int p4, int p5)
 {
     int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
-    staff_setupSwipe((int)obj, (int)inner, p5, p4);
+    staff_setupSwipe((int)obj, (u8*)inner, p5, p4);
     if (getHudHiddenFrameCount() != 0)
     {
         *(u8*)((char*)inner + 0xbc) = 1;
@@ -1457,12 +1457,11 @@ extern f32 gStaffAngleUnitScale;
 extern f32 lbl_803E32A4;
 extern f32 lbl_803E32AC;
 
-void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
+void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
     u8* slot;
     u8* obj;
     u8* model2;
-    u8* swipe;
     ObjWeaponDaTable* weaponDaTable;
     s16* tbl;
     int count;
@@ -1477,10 +1476,9 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
     f32 arrH[4];
     f32 arrI[4];
     f32 arrJ[4];
-    f32 sinv, cosv, vidx, flb, tmax, step, fla, angle, frac, acc, prog;
+    f32 sinv, cosv, vidx, flb, tmax, step, fla, angle, frac, acc, prog, m4;
     int ang;
 
-    swipe = (u8*)swipeArg;
     obj = (u8*)objArg;
     if (*(int**)(swipe + 0x48) != NULL)
     switch (swipe[0xbc])
@@ -1511,13 +1509,14 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                 slot[0x14] &= ~1;
             }
             sw = *(f32*)(swipe + 0x98);
-            tmax = *(f32*)(model2 + 4);
+            m4 = *(f32*)(model2 + 4);
+            tmax = m4;
             if (sw > prog)
             {
-                *(f32*)(swipe + 0x98) = tmax;
+                *(f32*)(swipe + 0x98) = m4;
                 return;
             }
-            if (tmax > prog)
+            if (m4 > prog)
             {
                 tmax = prog;
             }
@@ -1594,7 +1593,7 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                             pJ = arrJ;
                             for (n = 4; n != 0; n--)
                             {
-                                f32 a, b, t1, t2;
+                                f32 t1, t2;
                                 ip = *pidx * 12;
                                 *pE = (f32) * (s16*)((char*)tbl + ip) / lbl_803E32F4;
                                 *pF = (f32) * (s16*)((char*)tbl + ip + 2) / lbl_803E32F4;
@@ -1602,16 +1601,12 @@ void staff_setupSwipe(int unused1, int swipeArg, int unused3, int objArg)
                                 *pH = (f32) * (s16*)((char*)tbl + ip + 6) / lbl_803E32F4;
                                 *pI = (f32) * (s16*)((char*)tbl + ip + 8) / lbl_803E32F4;
                                 *pJ = (f32) * (s16*)((char*)tbl + ip + 10) / lbl_803E32F4;
-                                a = *pE;
-                                b = *pG;
-                                t1 = sinv * a - cosv * b;
-                                t2 = cosv * a + sinv * b;
+                                t1 = sinv * *pE - cosv * *pG;
+                                t2 = cosv * *pE + sinv * *pG;
                                 *pE = t1;
                                 *pG = t2;
-                                a = *pH;
-                                b = *pJ;
-                                t2 = cosv * a + sinv * b;
-                                t1 = sinv * a - cosv * b;
+                                t2 = cosv * *pH + sinv * *pJ;
+                                t1 = sinv * *pH - cosv * *pJ;
                                 *pH = t1;
                                 *pJ = t2;
                                 pidx++;
