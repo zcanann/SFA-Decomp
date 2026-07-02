@@ -1184,7 +1184,7 @@ void *fn_80089A50(void);
 void *fn_80089A58(void);
 int getSunPos(f32 *outTime);
 void fn_8008B88C(int *outTimer);
-void skyFn_80089710(int flags, int enabled, int startComplete);
+void skyFn_80089710(int flags, u8 enabled, int startComplete);
 void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z);
 void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
 void dll_06_func0B(int *x, int *y);

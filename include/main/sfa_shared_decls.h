@@ -194,7 +194,7 @@ void setWidescreen(u8 enabled);
 void shield_update(int* obj);
 void skyFn_80088c94(int flags, int mode);
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-void skyFn_80089710(int flags, int enabled, int startComplete);
+void skyFn_80089710(int flags, u8 enabled, int startComplete);
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 void skySetOverrideLightColorEnabled(u8 enabled);
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);

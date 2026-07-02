@@ -936,7 +936,7 @@ extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
 
 extern f32 lbl_803E70E4;
 extern f32 lbl_803E70E8;
-extern void skyFn_80089710(int p1, int p2, int p3);
+extern void skyFn_80089710(int p1, u8 p2, int p3);
 extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
 extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
 extern void getEnvfxAct(int p1, int p2, int p3, int p4);
