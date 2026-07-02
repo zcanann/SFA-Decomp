@@ -949,6 +949,7 @@ typedef struct
     f32 vz;
 } PushableObjPos;
 
+#pragma opt_common_subs off
 void pushable_hitDetect(int obj)
 {
     extern u32 fn_80174BFC(); /* #57 */
@@ -1166,6 +1167,8 @@ void pushable_hitDetect(int obj)
         e += 0xc;
     }
 }
+#pragma opt_common_subs reset
+
 
 typedef struct
 {

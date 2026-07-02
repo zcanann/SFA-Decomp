@@ -427,6 +427,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 }
 
 #pragma scheduling off
+#pragma opt_common_subs off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
     char* strBase = lbl_8031D2E8;
@@ -685,6 +686,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         break;
     }
 }
+#pragma opt_common_subs reset
+
 
 #pragma peephole on
 int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
