@@ -73,12 +73,12 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
     if (obj->anim.alpha < 0xff || renderOp->distanceTier <= tier)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-        gxSetZMode_(1, 3, 0);
+        gxSetZMode_(1, GX_LEQUAL, 0);
     }
     else
     {
         GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-        gxSetZMode_(1, 3, 1);
+        gxSetZMode_(1, GX_LEQUAL, 1);
     }
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
