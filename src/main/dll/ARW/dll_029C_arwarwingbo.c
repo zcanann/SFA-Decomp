@@ -13,6 +13,7 @@
 #include "main/audio/sfx_ids.h"
 
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
+#define PAD_BUTTON_B 0x200
 
 typedef union ArwingBombControl
 {
@@ -147,7 +148,7 @@ void arwarwingbo_update(int obj)
     ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
     if ((*(ObjHitsPriorityState**)&objAnim->hitReactState)->lastHitObject != 0 ||
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->contactFlags != 0 ||
-        (getButtonsJustPressed(0) & 0x200))
+        (getButtonsJustPressed(0) & PAD_BUTTON_B))
     {
         state = ((GameObject*)obj)->extra;
         arwarwing_clearActiveBomb(getArwing());
