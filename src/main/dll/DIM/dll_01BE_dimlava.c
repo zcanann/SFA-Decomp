@@ -60,6 +60,7 @@ extern void warpToMap(int idx, s8 transType);
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MODEL_LIGHT_KIND_POINT 2
 
 typedef struct Lavaball1bePlacement
 {
@@ -263,7 +264,7 @@ void lavaball1be_init(s16* obj, u8* p)
         light = state->light;
         if (light != NULL)
         {
-            modelLightStruct_setLightKind(light, 2);
+            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0x80, 0, 0);
             modelLightStruct_setDistanceAttenuation(state->light, gDimLavaLightAttenNear, gDimLavaLightAttenFar);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, gDimLavaGlowRadius);
