@@ -64,9 +64,6 @@ extern f32 lbl_803E5118;
 
 int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 {
-    f32 spdThresh;
-    f32 maxSpeed;
-    f32 animDiv;
     int v;
     int* list;
     int idx;
@@ -111,9 +108,6 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    maxSpeed = lbl_803E50E8;
-    spdThresh = lbl_803E50F8;
-    animDiv = lbl_803E5100;
     for (i = 0; i < framesThisStep; i++)
     {
         if (isGameTimerDisabled() != 0)
@@ -127,9 +121,9 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
         }
-        if (state->spinSpeed > maxSpeed)
+        if (state->spinSpeed > 80.0f)
         {
-            state->spinSpeed = maxSpeed;
+            state->spinSpeed = 80.0f;
         }
         state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
         if (state->spinProgress >= DBSH_SPIN_DONE)
@@ -158,12 +152,12 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             }
             return 0;
         }
-        if (state->spinSpeed > spdThresh)
+        if (state->spinSpeed > -80.0f)
         {
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-            player, ((f32)state->spinProgress - state->prevSpinProgress) / animDiv,
+            player, ((f32)state->spinProgress - state->prevSpinProgress) / 7500.0f,
             timeDelta, NULL) != 0)
         {
             if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
