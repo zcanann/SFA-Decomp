@@ -2335,6 +2335,8 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     f32 vec[3];
     f32 dot;
     f32 mag;
+    f32 lenv;
+    f32 lenp;
 
     vec[0] = a;
     vec[1] = b;
@@ -2350,24 +2352,27 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    mag = (gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] +
-        gPrevSunDir[2] * gPrevSunDir[2]) *
-    (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] +
+        gPrevSunDir[2] * gPrevSunDir[2];
+    lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    mag = lenv * lenp;
     if (mag != lbl_803DEC58)
     {
-        mag = sqrtf(mag);
+        lenp = sqrtf(mag);
     }
-    if (mag != lbl_803DEC58)
+    lenv = lbl_803DEC58;
+    if (lenp != lenv)
     {
-        gSunDotCos = dot / mag;
-        if (gSunDotCos < 0.0f)
-        {
-            gSunDotCos = gSunDotCos * __AR_init_flag;
-        }
-        if (gSunDotCos <= __AR_BlockLength)
-        {
-            gSunDirChanged = 1;
-        }
+        lenv = dot / lenp;
+    }
+    gSunDotCos = lenv;
+    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
+    {
+        gSunDotCos = (f32)gSunDotCos * __AR_init_flag;
+    }
+    if (gSunDotCos <= __AR_BlockLength)
+    {
+        gSunDirChanged = 1;
     }
     if (gSunDirChanged != 0)
     {
