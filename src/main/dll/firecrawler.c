@@ -453,9 +453,9 @@ void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5,
     PSMTXMultVecSR(mtx, vec, vec);
 }
 
-#pragma optimization_level 1
 void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
 {
+    int objI = (int)obj;
     if (cmd == 0x11)
     {
     }
@@ -466,12 +466,11 @@ void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
     else
     {
         ((BaddieState*)st)->reactionFlags |= 0x8;
-        Sfx_StopFromObject(obj, 0x3e8);
+        Sfx_StopFromObject(objI, 0x3e8);
         Sfx_PlayFromObject(obj, 0x3ea);
         *(s16*)&((BaddieState*)st)->hitCounter = 0;
     }
 }
-#pragma optimization_level reset
 
 void crawler_initVariant(int* obj, int* st)
 {
