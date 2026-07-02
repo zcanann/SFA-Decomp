@@ -431,6 +431,7 @@ void fn_8013E0D0(int* obj, u8* st)
         }
     case 5:
         {
+            void** p;
             int* tgt;
             void* found = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0);
             if (found != NULL && ((GameObject*)found)->anim.seqId == 0x6a3)
@@ -450,26 +451,28 @@ void fn_8013E0D0(int* obj, u8* st)
             {
                 void** list = (void**)ObjGroup_GetObjects(0x4b, &count);
                 int i = 0;
-                f32 ratio = lbl_803E23F8;
+                f32 ratio;
+                p = list;
+                ratio = lbl_803E23F8;
                 for (; i < count; i++)
                 {
-                    f32 d1 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                    f32 d1 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX,
                                             &((GameObject*)tgt)->anim.worldPosX);
-                    f32 d2 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                    f32 d2 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX,
                                             &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
                     f32 d3 = Vec_xzDistance(&((GameObject*)tgt)->anim.worldPosX,
                                             &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
                     if (d1 + d2 > ratio * d3)
                     {
-                        f32 d4 = Vec_xzDistance(&((GameObject*)list[0])->anim.worldPosX,
+                        f32 d4 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX,
                                                 &gobj->anim.worldPosX);
                         if (d2 - d4 > bestd)
                         {
                             bestd = d2 - d4;
-                            best = list[0];
+                            best = p[0];
                         }
                     }
-                    list++;
+                    p++;
                 }
                 {
                     int* c = *(int**)&t->unk724;
