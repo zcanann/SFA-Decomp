@@ -1755,35 +1755,41 @@ void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
     *(f32*)((char*)p2 + 4) = lbl_803DE99C;
 }
 
+typedef struct
+{
+    s16 v[9];
+} ObjJointPose18;
+
+static inline s16* objFindSilentJointVec(int obj)
+{
+    int i;
+    int k;
+    ObjDef* table;
+    s16* found;
+
+    found = NULL;
+    table = ((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
+        i = 0;
+        for (k = 0; k < (s32)(u32)table->jointCount; k++)
+        {
+            if ((int)*(u8*)(*(int*)&table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
+                (int)*(u8*)(*(int*)&table->jointData + i) == 0)
+            {
+                found = (s16*)&((ObjJointPose18*)((GameObject*)obj)->anim.jointPoseData)[k];
+            }
+            i = i + table->modelCount + 1;
+        }
+    }
+    return found;
+}
+
 void fn_8003B500(int obj, int p4)
 {
     s16* found;
-    int* table;
-    int i;
-    int j;
-    int k;
-    int n;
 
-    found = NULL;
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
-    {
-        int bank;
-        i = 0;
-        j = 0;
-        n = (s32)(u32)((ObjDef*)table)->jointCount;
-        for (k = 0; k < n; k++)
-        {
-            bank = *(int*)&((ObjDef*)table)->jointData;
-            if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(bank + i) == 0)
-            {
-                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-            }
-            i = i + ((ObjDef*)table)->modelCount + 1;
-            j += 0x12;
-        }
-    }
+    found = objFindSilentJointVec(obj);
     if (found != NULL)
     {
         if (found[0] != 0)
