@@ -20,6 +20,8 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+
+#define LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 extern void Music_Trigger(int id, int arg);
 extern int getSaveGameLoadStatus(void);
 
@@ -209,7 +211,7 @@ void linkb_levcontrol_update(int* obj)
         case 1:
             if (GameBit_Get(0xc1) != 0)
             {
-                if (!(((GameObject*)player)->objectFlags & 0x1000))
+                if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
                     GameBit_Set(GAMEBIT_LINKB_STAGE_2, 1);
                     fn_80138908(tricky, 1);
@@ -224,7 +226,7 @@ void linkb_levcontrol_update(int* obj)
             if (cur[0] != 0)
             {
                 fn_80138908(tricky, 1);
-                if (state->trickyHitCount-- == -1 && !(((GameObject*)tricky)->objectFlags & 0x1000))
+                if (state->trickyHitCount-- == -1 && !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
                     GameBit_Set(GAMEBIT_LINKB_STAGE_3, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
@@ -270,7 +272,7 @@ void linkb_levcontrol_update(int* obj)
     }
     if (tricky != NULL)
     {
-        if (!(((GameObject*)tricky)->objectFlags & 0x1000))
+        if (!(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
         {
             state->timer = state->timer + timeDelta;
         }
