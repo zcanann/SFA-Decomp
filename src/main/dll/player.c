@@ -8824,6 +8824,26 @@ void fn_802AFB0C(int obj, int inner, int state)
 }
 
 #pragma opt_loop_invariants off
+static inline void Player_ApplyStatusDamage(int obj, int param)
+{
+    int in2 = *(int*)&((GameObject*)obj)->extra;
+    s8* pc = *(s8**)((char*)in2 + 0x35c);
+    int v = pc[0] - param;
+    if (v < 0)
+    {
+        v = 0;
+    }
+    else if (v > pc[1])
+    {
+        v = pc[1];
+    }
+    pc[0] = (s8)v;
+    if (**(s8**)((char*)in2 + 0x35c) <= 0)
+    {
+        playerDie(obj);
+    }
+}
+
 void fn_802B249C(int obj, int inner, int state)
 {
     int p;
@@ -8866,24 +8886,7 @@ void fn_802B249C(int obj, int inner, int state)
                 }
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
-                {
-                    int in2 = *(int*)&((GameObject*)obj)->extra;
-                    s8* pc = *(s8**)((char*)in2 + 0x35c);
-                    int v = pc[0] - param;
-                    if (v < 0)
-                    {
-                        v = 0;
-                    }
-                    else if (v > pc[1])
-                    {
-                        v = pc[1];
-                    }
-                    pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
-                    {
-                        playerDie(obj);
-                    }
-                }
+                Player_ApplyStatusDamage(obj, param);
                 ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
@@ -8905,9 +8908,11 @@ void fn_802B249C(int obj, int inner, int state)
             }
         case 0x60004:
             {
+                f32 dz;
                 f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dz * dz + dx * dx);
+                f32 d;
+                dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
+                d = sqrtf(dx * dx + dz * dz);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8921,24 +8926,7 @@ void fn_802B249C(int obj, int inner, int state)
                 }
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
-                {
-                    int in2 = *(int*)&((GameObject*)obj)->extra;
-                    s8* pc = *(s8**)((char*)in2 + 0x35c);
-                    int v = pc[0] - param;
-                    if (v < 0)
-                    {
-                        v = 0;
-                    }
-                    else if (v > pc[1])
-                    {
-                        v = pc[1];
-                    }
-                    pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
-                    {
-                        playerDie(obj);
-                    }
-                }
+                Player_ApplyStatusDamage(obj, param);
                 ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
@@ -8962,9 +8950,11 @@ void fn_802B249C(int obj, int inner, int state)
             }
         case 0x60005:
             {
+                f32 dz;
                 f32 dx = *(f32*)(p + 0xc) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
-                f32 d = sqrtf(dz * dz + dx * dx);
+                f32 d;
+                dz = ((PlayerState*)p)->baddie.posX - ((GameObject*)obj)->anim.localPosZ;
+                d = sqrtf(dx * dx + dz * dz);
                 if (d > lbl_803E7EE0)
                 {
                     dx = dx / d;
@@ -8979,24 +8969,7 @@ void fn_802B249C(int obj, int inner, int state)
                 (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
                 ObjAnim_SetCurrentMove(obj, 0x450, lbl_803E7EA4, 0);
-                {
-                    int in2 = *(int*)&((GameObject*)obj)->extra;
-                    s8* pc = *(s8**)((char*)in2 + 0x35c);
-                    int v = pc[0] - param;
-                    if (v < 0)
-                    {
-                        v = 0;
-                    }
-                    else if (v > pc[1])
-                    {
-                        v = pc[1];
-                    }
-                    pc[0] = (s8)v;
-                    if (**(s8**)((char*)in2 + 0x35c) <= 0)
-                    {
-                        playerDie(obj);
-                    }
-                }
+                Player_ApplyStatusDamage(obj, param);
                 ((PlayerState*)inner)->isHoldingObject = 0;
                 if (*(void**)((char*)inner + 0x7f8) != NULL)
                 {
