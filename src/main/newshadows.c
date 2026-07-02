@@ -2134,20 +2134,38 @@ void allocLotsOfTextures(void)
     gNewShadowRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     for (i = 0; i < 0x100; i++)
     {
-        *((u8*)(gNewShadowRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x60) = i;
-        *((u8*)(gNewShadowRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x68) = i;
-        *((u8*)(gNewShadowRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x70) = i;
-        *((u8*)(gNewShadowRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x78) = i;
+        int t;
+        t = gNewShadowRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x60) = i;
+        t = gNewShadowRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x68) = i;
+        t = gNewShadowRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x70) = i;
+        t = gNewShadowRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x78) = i;
     }
     DCFlushRange((void*)(gNewShadowRampTexture + 0x60), *(int*)(gNewShadowRampTexture + 0x44));
 
     gNewShadowInverseRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x100; i++)
     {
-        *((u8*)(gNewShadowInverseRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x60) = (u8)(255 - i);
-        *((u8*)(gNewShadowInverseRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x68) = (u8)(255 - i);
-        *((u8*)(gNewShadowInverseRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x70) = (u8)(255 - i);
-        *((u8*)(gNewShadowInverseRampTexture + (i & 7) + (i >> 3) * 0x20) + 0x78) = (u8)(255 - i);
+        int t;
+        t = gNewShadowInverseRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x60) = (u8)(255 - i);
+        t = gNewShadowInverseRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x68) = (u8)(255 - i);
+        t = gNewShadowInverseRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x70) = (u8)(255 - i);
+        t = gNewShadowInverseRampTexture + (i & 7);
+        t += (i >> 3) * 0x20;
+        *(u8*)(t + 0x78) = (u8)(255 - i);
     }
     DCFlushRange((void*)(gNewShadowInverseRampTexture + 0x60), *(int*)(gNewShadowInverseRampTexture + 0x44));
 
