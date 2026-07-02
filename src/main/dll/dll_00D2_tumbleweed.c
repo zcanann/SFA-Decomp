@@ -335,13 +335,13 @@ void tumbleweed_updateStateMachine(int obj)
                 u32 dist;
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~8);
                 dist = ((BackpackState*)aux)->distToTarget;
-                if ((f32)dist < lbl_803E2FA4 && dist != 0)
+                if ((f32)dist < 150.0f && dist != 0)
                 {
                     f32 k;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (lbl_803E2FA8 * ((
-                        f32)dist - lbl_803E2FA4));
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (lbl_803E2FA8 * ((
-                        f32)(u32)((BackpackState*)aux)->distToTarget - lbl_803E2FA4));
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (15.0f * ((
+                        f32)dist - 150.0f));
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (15.0f * ((
+                        f32)(u32)((BackpackState*)aux)->distToTarget - 150.0f));
                     k = lbl_803E2FAC;
                     ((BackpackState*)aux)->recoilVelX = k * ((GameObject*)obj)->anim.velocityX;
                     ((BackpackState*)aux)->recoilVelZ = k * ((GameObject*)obj)->anim.velocityZ;
@@ -671,11 +671,11 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         d = sqrtf(dx * dx + dz * dz);
         *(s16*)&((BackpackState*)aux)->distToTarget = d;
         dist = ((BackpackState*)aux)->distToTarget;
-        if ((f32)dist > lbl_803E2FC4)
+        if ((f32)dist > 20.0f)
         {
             f32 k;
-            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (lbl_803E2FC4 * dist);
-            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (lbl_803E2FC4 * (f32)(u32)(
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - dx / (20.0f * dist);
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - dz / (20.0f * (f32)(u32)(
                 (BackpackState*)aux)->distToTarget);
             k = lbl_803E2FAC;
             ((BackpackState*)aux)->recoilVelX = k * ((GameObject*)obj)->anim.velocityX;
