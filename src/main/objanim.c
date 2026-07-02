@@ -126,6 +126,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
 }
 
 #pragma peephole off
+#pragma opt_common_subs off
 int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle,
                               ObjAnimEventList* events)
 {
@@ -314,6 +315,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 
     return wrapped;
 }
+#pragma opt_common_subs reset
+
 
 #pragma scheduling on
 #pragma peephole on
