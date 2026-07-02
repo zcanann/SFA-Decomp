@@ -32,15 +32,15 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
- * the respawn byte (unk19) and the return-home word (unk1C); the descriptor
+ * the respawn byte (respawnByte) and the return-home word (returnHome); the descriptor
  * fns match the barrel by generatorLinkId. unk1E is the adjacent placement
  * word other call sites reference raw. */
 typedef struct GunpowderbarrelPlacement
 {
     u8 pad0[0x19 - 0x0];
-    s8 unk19;
+    s8 respawnByte;
     s16 generatorLinkId;
-    s16 unk1C;
+    s16 returnHome;
     s16 unk1E;
 } GunpowderbarrelPlacement;
 
@@ -609,9 +609,9 @@ void gunpowderbarrel_init(int obj, u8* def)
     {
         GunpowderbarrelPlacement* placement = (GunpowderbarrelPlacement*)def;
         u8 v;
-        v = (placement->unk19 >= 1) ? 0 : 1;
+        v = (placement->respawnByte >= 1) ? 0 : 1;
         ((GpbConfigFlags*)&state->configFlags)->respawns = v;
-        v = (placement->unk1C == 0) ? 0 : 1;
+        v = (placement->returnHome == 0) ? 0 : 1;
         ((GpbConfigFlags*)&state->configFlags)->returnHome = v;
     }
     ObjHits_EnableObject(obj);
