@@ -19,6 +19,8 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/obj_placement.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 extern f32 gObjFxCrystalAmpTbl[];
 extern s16 gObjFxCrystalSpinSpeed[4];
 extern u8 gObjFxLightColorTbl[];
@@ -1038,7 +1040,7 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void
 
     if (light != NULL)
     {
-        modelLightStruct_setLightKind(light, 2);
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(light, ((GameObject*)obj)->anim.worldPosX,
                                      ((GameObject*)obj)->anim.worldPosY + zoff,
                                      ((GameObject*)obj)->anim.worldPosZ);
@@ -1169,7 +1171,7 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
 
     if (light != NULL)
     {
-        modelLightStruct_setLightKind(light, 2);
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
                                      lbl_803DF384 + ((GameObject*)origin)->anim.localPosY,
                                      ((GameObject*)origin)->anim.localPosZ);
