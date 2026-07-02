@@ -40,6 +40,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define PAD_BUTTON_A 0x100
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -937,7 +938,7 @@ void smallbasket_update(int obj)
                 {
                     setAButtonIcon(4);
                 }
-                if ((getButtonsJustPressed(0) & 0x100) != 0)
+                if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
                 {
                     if (fn_80295BF0(player) != 0)
                     {
