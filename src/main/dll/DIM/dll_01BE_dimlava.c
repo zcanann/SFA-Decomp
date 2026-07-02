@@ -59,6 +59,8 @@ extern void warpToMap(int idx, s8 transType);
 #include "main/engine_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Lavaball1bePlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -256,7 +258,7 @@ void lavaball1be_init(s16* obj, u8* p)
         *(int*)&state->targetObj = ObjList_FindObjectById(state->linkedId);
         state->flags |= LAVA1BE_FLAG_INACTIVE;
         ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->objectFlags |= 0x2000;
+        ((GameObject*)obj)->objectFlags |= DIMLAVA_OBJFLAG_HITDETECT_DISABLED;
         state->light = objCreateLight(obj, 1);
         light = state->light;
         if (light != NULL)
