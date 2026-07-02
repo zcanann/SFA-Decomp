@@ -343,7 +343,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_80259288(2);
     {
         extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
-        FUN_8025ca38(0, lbl_803DF684, lbl_803DF684, lbl_803DF684, lbl_803DF684, *(ObjPrintGXColor*)&DAT_803dc0c8);
+        FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&DAT_803dc0c8);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
