@@ -358,6 +358,7 @@ void padUpdate(void)
 {
     u32* padStateBlock;
     PadStatusLite* readPad;
+    PadStatusLite* rp;
     PadStatusLite* statuses;
     PadStatusLite* prevPad;
     s8* prevStickY;
@@ -412,6 +413,7 @@ void padUpdate(void)
     joypadDisabled = 0;
 
     i = 0;
+    rp = readPad;
     prevStickY = (s8*)&gPadPrevStickY;
     prevStickX = (s8*)&gPadPrevStickX;
     repeatY = (s8*)&gPadRepeatY;
@@ -431,7 +433,7 @@ void padUpdate(void)
 
     for (; i < 4; i++)
     {
-        if (readPad->error == PAD_ERR_NO_CONTROLLER)
+        if (rp->error == PAD_ERR_NO_CONTROLLER)
         {
             *prevStickY = 0;
             *prevStickX = 0;
@@ -450,29 +452,29 @@ void padUpdate(void)
             memset(statuses, 0, sizeof(PadStatusLite));
             memset((u8*)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
             gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
-            readPad->error = PAD_ERR_NO_CONTROLLER;
+            rp->error = PAD_ERR_NO_CONTROLLER;
         }
-        else if ((u8)(readPad->error + 3) <= 1 || lbl_803DCCA5 == 0)
+        else if ((u8)(rp->error + 3) <= 1 || lbl_803DCCA5 == 0)
         {
-            memcpy(readPad, prevPad, sizeof(PadStatusLite));
+            memcpy(rp, prevPad, sizeof(PadStatusLite));
             useprev = 1;
         }
         else
         {
-            *curBtn = readPad->buttons;
-            if (readPad->substickY < -40)
+            *curBtn = rp->buttons;
+            if (rp->substickY < -40)
             {
                 *curBtn |= 0x20000LL;
             }
-            if (readPad->substickY > 40)
+            if (rp->substickY > 40)
             {
                 *curBtn |= 0x10000LL;
             }
-            if (readPad->substickX < -40)
+            if (rp->substickX < -40)
             {
                 *curBtn |= 0x40000LL;
             }
-            if (readPad->substickX > 40)
+            if (rp->substickX > 40)
             {
                 *curBtn |= 0x80000LL;
             }
@@ -481,11 +483,11 @@ void padUpdate(void)
             *heldRaw = *curBtn;
 
             *triggers = 0;
-            if (readPad->triggerRight > 10)
+            if (rp->triggerRight > 10)
             {
                 *triggers |= 0x20;
             }
-            if (readPad->triggerLeft > 10)
+            if (rp->triggerLeft > 10)
             {
                 *triggers |= 0x40;
             }
@@ -493,8 +495,8 @@ void padUpdate(void)
             *triggersReleased = *prevTriggers & (*triggers ^ *prevTriggers);
             *prevTriggers = *triggers;
 
-            sx = readPad->stickX;
-            sy = readPad->stickY;
+            sx = rp->stickX;
+            sy = rp->stickY;
             *analogX = 0;
             *analogY = 0;
             if (sx < -35 && *prevStickX >= -35)
@@ -556,7 +558,7 @@ void padUpdate(void)
             *buttonMask = -1;
         }
 
-        readPad++;
+        rp++;
         prevStickY++;
         prevStickX++;
         repeatY++;
