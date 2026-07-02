@@ -9,6 +9,14 @@
 
 #define PAD_CHAN0_BIT 0x80000000
 
+typedef struct PadStateBlock {
+    u32 held[4];        // 0x00
+    u32 buttons[4];     // 0x10
+    u32 released[4];    // 0x20
+    u32 pressed[4];     // 0x30
+    PadStatusLite status[8]; // 0x40
+} PadStateBlock;
+
 void doNothing_endOfFrame(void)
 {
 }
@@ -258,6 +266,7 @@ u32 getButtonsHeld(int port)
 
 int initControllers(void)
 {
+    PadStateBlock* base;
     u8* prevStickY;
     u8* prevStickX;
     u8* repeatY;
@@ -275,7 +284,7 @@ int initControllers(void)
     PadStatusLite* statuses;
     s32 i;
 
-    heldButtons = gPadStateBlock;
+    base = (PadStateBlock*)gPadStateBlock;
     gPadResetMask = 0xF0000000;
     PADInit();
     PADRecalibrate(gPadResetMask);
@@ -291,14 +300,15 @@ int initControllers(void)
     repeatX = &gPadRepeatX;
     analogY = &gPadAnalogY;
     analogX = &gPadAnalogX;
-    buttonsPressed = gPadStateBlock + 4;
-    buttonsReleased = gPadStateBlock + 8;
-    controlStick = gPadStateBlock + 12;
+    heldButtons = base->held;
+    buttonsPressed = base->buttons;
+    buttonsReleased = base->released;
+    controlStick = base->pressed;
     prevTriggers = &gPadPrevTriggers;
     triggers = &gPadTriggers;
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
-    statuses = (PadStatusLite*)((u8*)gPadStateBlock + 0x40);
+    statuses = base->status;
 
     for (; i < 4; i++)
     {
@@ -317,7 +327,7 @@ int initControllers(void)
         *triggersReleased = 0;
         *triggersPressed = 0;
         memset(statuses, 0, sizeof(PadStatusLite));
-        memset((u8*)gPadStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
+        memset((i + 4) * 0xc + 0x40 + (u8*)base, 0, sizeof(PadStatusLite));
 
         prevStickY++;
         prevStickX++;
