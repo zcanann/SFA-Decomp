@@ -1540,8 +1540,8 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
     float phase;
     int adjacentWindow[4];
     int candidates[4];
-    u32 mask;
-    int count;
+    u32 mask[1];
+    int count[1];
     int n;
     int k;
 
@@ -1558,20 +1558,20 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
             return curve;
         }
 
-        count = 0;
-        mask = 1;
+        count[0] = 0;
+        mask[0] = 1;
         for (k = 0; k < 4; k++)
         {
             n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
-            if (n > -1 && ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && n != 0)
+            if (n > -1 && ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask[0]) == 0 && n != 0)
             {
-                candidates[count++] = n;
+                candidates[count[0]++] = n;
             }
-            mask <<= 1;
+            mask[0] <<= 1;
         }
-        if (count != 0)
+        if (count[0] != 0)
         {
-            linkId = candidates[randomGetRange(0, count - 1)];
+            linkId = candidates[randomGetRange(0, count[0] - 1)];
         }
         else
         {
