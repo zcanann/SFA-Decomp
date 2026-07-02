@@ -9,6 +9,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+#define DRCAGEWITH_OBJFLAG_FREED 0x40
+
 typedef struct DrcagewithPlacement
 {
     u8 pad0[0x5 - 0x0];
@@ -156,7 +158,7 @@ void drcagewith_hitDetect(int obj)
                 ((DrcagewithState*)state)->spawnedObject->unkF4 = 1;
             }
             if (*(void**)&((DrcagewithState*)state)->linkedObject != NULL &&
-                (((GameObject*)((DrcagewithState*)state)->linkedObject)->objectFlags & 0x40) != 0)
+                (((GameObject*)((DrcagewithState*)state)->linkedObject)->objectFlags & DRCAGEWITH_OBJFLAG_FREED) != 0)
             {
                 ((DrcagewithState*)state)->linkedObject = 0;
             }
