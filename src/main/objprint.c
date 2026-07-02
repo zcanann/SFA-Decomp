@@ -20,6 +20,36 @@
 #define OBJPRINT_MODEL_COUNT(model) (((ObjDef *)(model))->modelCount)
 #define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
 
+typedef struct
+{
+    s16 v[9];
+} ObjJointPose18;
+
+static inline s16* objFindJointVecByKey(int obj, int key)
+{
+    int i;
+    int k;
+    ObjDef* table;
+    s16* found;
+
+    found = NULL;
+    table = ((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
+        i = 0;
+        for (k = 0; k < (s32)(u32)table->jointCount; k++)
+        {
+            if ((int)*(u8*)(*(int*)&table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
+                (int)*(u8*)(*(int*)&table->jointData + i) == key)
+            {
+                found = (s16*)&((ObjJointPose18*)((GameObject*)obj)->anim.jointPoseData)[k];
+            }
+            i = i + table->modelCount + 1;
+        }
+    }
+    return found;
+}
+
 extern bool FUN_800067f0();
 extern u32 FUN_8000681c();
 extern double FUN_80006a30();
@@ -1423,32 +1453,9 @@ int fn_800399C0(s16* curve, s16* state)
 
 void fn_8003A168(int obj, int state)
 {
-    s16* found = NULL;
-    int* table;
-    int k;
-    int n;
-    int i;
-    int j;
+    s16* found;
 
-    table = *(int**)(obj + 0x50);
-    if (table != NULL)
-    {
-        int bank;
-        i = 0;
-        j = 0;
-        n = (s32)(u32) * (u8*)((char*)table + 0x5a);
-        for (k = 0; k < n; k++)
-        {
-            bank = *(int*)&((ObjDef*)table)->jointData;
-            if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(bank + i) == 0)
-            {
-                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
-            }
-            i = i + ((ObjDef*)table)->modelCount + 1;
-            j += 0x12;
-        }
-    }
+    found = objFindJointVecByKey(obj, 0);
     if (found == NULL) return;
     if (found[0] != 0)
     {
@@ -1464,35 +1471,11 @@ void fn_8003A168(int obj, int state)
 void objModelClearVecFn_8003aa40(int obj)
 {
     s16* found;
-    int* table;
-    int k;
-    int n;
-    int i;
-    int j;
-    int bank;
     int slot;
 
     for (slot = 0; slot < 0x16; slot++)
     {
-        found = NULL;
-        table = (void*)((GameObject*)obj)->anim.modelInstance;
-        if (table != NULL)
-        {
-            i = 0;
-            j = 0;
-            n = (s32)(u32)((ObjDef*)table)->jointCount;
-            for (k = 0; k < n; k++)
-            {
-                bank = *(int*)&((ObjDef*)table)->jointData;
-                if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(bank + i) == slot)
-                {
-                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-                }
-                i = i + ((ObjDef*)table)->modelCount + 1;
-                j += 0x12;
-            }
-        }
+        found = objFindJointVecByKey(obj, slot);
         if (found != NULL)
         {
             found[0] = 0;
@@ -1505,36 +1488,11 @@ void objModelClearVecFn_8003aa40(int obj)
 void fn_8003AC14(int obj, int* keys, int count)
 {
     s16* found;
-    int* table;
-    int k;
-    int n;
-    int i;
-    int j;
     int idx;
 
     for (idx = 0; idx < count; idx++)
     {
-        int key = *keys;
-        found = NULL;
-        table = (void*)((GameObject*)obj)->anim.modelInstance;
-        if (table != NULL)
-        {
-            int bank;
-            i = 0;
-            j = 0;
-            n = (s32)(u32)((ObjDef*)table)->jointCount;
-            for (k = 0; k < n; k++)
-            {
-                bank = *(int*)&((ObjDef*)table)->jointData;
-                if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(bank + i) == key)
-                {
-                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-                }
-                i = i + ((ObjDef*)table)->modelCount + 1;
-                j += 0x12;
-            }
-        }
+        found = objFindJointVecByKey(obj, *keys);
         if (found != NULL)
         {
             found[1] = (s16)(found[1] * 3 >> 2);
@@ -1548,37 +1506,11 @@ void fn_8003AC14(int obj, int* keys, int count)
 void objFn_8003acfc(int obj, int* keys, int count, int out)
 {
     s16* found;
-    int* table;
-    int k;
-    int n;
-    int i;
-    int j;
     int idx;
-    int bank;
-    int key;
 
     for (idx = 0; idx < count;)
     {
-        key = *keys;
-        found = NULL;
-        table = (void*)((GameObject*)obj)->anim.modelInstance;
-        if (table != NULL)
-        {
-            i = 0;
-            j = 0;
-            n = (s32)(u32)((ObjDef*)table)->jointCount;
-            for (k = 0; k < n; k++)
-            {
-                bank = *(int*)&((ObjDef*)table)->jointData;
-                if ((int)*(u8*)(bank + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(bank + i) == key)
-                {
-                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-                }
-                i = i + ((ObjDef*)table)->modelCount + 1;
-                j += 0x12;
-            }
-        }
+        found = objFindJointVecByKey(obj, *keys);
         if (found != NULL)
         {
             *(s16*)(out + 0x16) = found[1];
@@ -1593,35 +1525,12 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
 void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 {
     s16* found;
-    int* table;
     int idx;
-    int k;
-    int n;
-    int i;
-    int j;
     int v;
 
     for (idx = 0; idx < count; idx++)
     {
-        int key = *keys;
-        found = NULL;
-        table = (void*)((GameObject*)obj)->anim.modelInstance;
-        if (table != NULL)
-        {
-            i = 0;
-            j = 0;
-            n = (s32)(u32)((ObjDef*)table)->jointCount;
-            for (k = 0; k < n; k++)
-            {
-                if ((int)*(u8*)(*(int*)&((ObjDef*)table)->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                    (int)*(u8*)(*(int*)&((ObjDef*)table)->jointData + i) == key)
-                {
-                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
-                }
-                i = i + ((ObjDef*)table)->modelCount + 1;
-                j += 0x12;
-            }
-        }
+        found = objFindJointVecByKey(obj, *keys);
         if (found != NULL)
         {
             v = found[0];
@@ -1755,41 +1664,11 @@ void objAudioFn_800393f8(u32 p1, int p2, u16 p3, int p4, int p5, u8 p6)
     *(f32*)((char*)p2 + 4) = lbl_803DE99C;
 }
 
-typedef struct
-{
-    s16 v[9];
-} ObjJointPose18;
-
-static inline s16* objFindSilentJointVec(int obj)
-{
-    int i;
-    int k;
-    ObjDef* table;
-    s16* found;
-
-    found = NULL;
-    table = ((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
-    {
-        i = 0;
-        for (k = 0; k < (s32)(u32)table->jointCount; k++)
-        {
-            if ((int)*(u8*)(*(int*)&table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(*(int*)&table->jointData + i) == 0)
-            {
-                found = (s16*)&((ObjJointPose18*)((GameObject*)obj)->anim.jointPoseData)[k];
-            }
-            i = i + table->modelCount + 1;
-        }
-    }
-    return found;
-}
-
 void fn_8003B500(int obj, int p4)
 {
     s16* found;
 
-    found = objFindSilentJointVec(obj);
+    found = objFindJointVecByKey(obj, 0);
     if (found != NULL)
     {
         if (found[0] != 0)
