@@ -4603,7 +4603,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         for (k2 = 0; k2 < objCount; k2++)
         {
             int cur = *objs;
-            if ((*(int (*)(int, int))*(int*)((char*)*(int*)(cur + 0x68) + 0x20))(cur, obj) !=
+            if ((*(int (*)(int, int))*(int*)((char*)*(int*)*(int*)(cur + 0x68) + 0x20))(cur, obj) !=
                 0)
             {
                 ((PlayerState*)state)->focusObject = cur;
