@@ -43,7 +43,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80316728;
     void* mbuf = base;
-    f32 c94, ca0, c9c, c98, c7c, c78, ca4, zero;
+    f32 zero;
     f32 zoff;
     f32 v60 = lbl_803E1060;
     f32 v64 = lbl_803E1064;
@@ -59,13 +59,6 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     zoff = lbl_803E106C + s;
     e = buf.entries;
     zero = lbl_803E1074;
-    c78 = lbl_803E1078;
-    c7c = lbl_803E107C;
-    c98 = lbl_803E1098;
-    c9c = lbl_803E109C;
-    ca0 = lbl_803E10A0;
-    c94 = lbl_803E1094;
-    ca4 = lbl_803E10A4;
     for (; i < 2; i++)
     {
         if (i == 1)
@@ -86,7 +79,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         e[1].mode = 0x80;
         e[1].x = zero;
         e[1].y = (f32) * (s16*)(sourceObj + 2);
-        e[1].z = c78 + ((f32) * (s16*)(sourceObj + 0) - c7c);
+        e[1].z = 16383.0f + ((f32) * (s16*)(sourceObj + 0) - 16128.0f);
         p = &e[2];
         if (i == 0)
         {
@@ -164,16 +157,16 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         p[1].flags = 0x15;
         p[1].tex = base + 0x1b0;
         p[1].mode = 4;
-        p[1].x = c98;
+        p[1].x = 255.0f;
         p[1].y = zero;
         p[1].z = zero;
         p[2].layer = 1;
         p[2].flags = 0x15;
         p[2].tex = base + 0x1b0;
         p[2].mode = 2;
-        p[2].x = c9c;
-        p[2].y = c9c;
-        p[2].z = ca0;
+        p[2].x = 6.0f;
+        p[2].y = 6.0f;
+        p[2].z = 300.0f;
         p[3].layer = 1;
         p[3].flags = 0x15;
         p[3].tex = base + 0x1b0;
@@ -185,7 +178,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         p[4].flags = 0x15;
         p[4].tex = base + 0x1b0;
         p[4].mode = 4;
-        p[4].x = c98;
+        p[4].x = 255.0f;
         p[4].y = zero;
         p[4].z = zero;
         p[5].layer = 2;
@@ -213,9 +206,9 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         p[8].flags = 0x15;
         p[8].tex = base + 0x1b0;
         p[8].mode = 2;
-        p[8].x = c94;
-        p[8].y = c94;
-        p[8].z = c94;
+        p[8].x = 0.1f;
+        p[8].y = 0.1f;
+        p[8].z = 0.1f;
         buf.v58 = 0;
         buf.ctx = sourceObj;
         buf.v44 = variant;
@@ -225,7 +218,7 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         buf.col[0] = zero;
         buf.col[1] = zero;
         buf.col[2] = zero;
-        buf.scale = ca4;
+        buf.scale = 6.4f;
         buf.v40 = 2;
         buf.v3c = 7;
         buf.v59 = 0xe;
