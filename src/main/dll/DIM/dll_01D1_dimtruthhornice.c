@@ -42,6 +42,8 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIMTRUTHHORNICE_OBJFLAG_HIDDEN 0x4000
+
 typedef struct DimtruthhorniceObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -98,7 +100,7 @@ void dimtruthhornice_init(int* obj, int* def)
     TruthHornIceState* state = ((GameObject*)obj)->extra;
     state->hitsLeft = (s8)((DimtruthhorniceObjectDef*)def)->hitsLeft;
     state->gameBit = ((DimtruthhorniceObjectDef*)def)->gameBit;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMTRUTHHORNICE_OBJFLAG_HIDDEN);
     {
         s16 slot = state->gameBit;
         if (slot != -1 && GameBit_Get(slot) != 0u)
