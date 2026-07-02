@@ -6,6 +6,8 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
@@ -212,7 +214,7 @@ void CameraModeCombat_update(short* cam)
         else
         {
             tgt = (GameObject*)((CameraObject*)cam)->targetObj;
-            if (tgt == NULL || (tgt->objectFlags & 0x40) || (*(u8*)&tgt->anim.resetHitboxMode & 0x28))
+            if (tgt == NULL || (tgt->objectFlags & CAMERAMODECOMBAT_OBJFLAG_FREED) || (*(u8*)&tgt->anim.resetHitboxMode & 0x28))
             {
                 if (tgt != NULL)
                 {
