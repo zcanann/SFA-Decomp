@@ -352,7 +352,12 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8* initials)
     return -1;
 }
 
-int gplayNewGame(char* name, int slot)
+/* K&R definition: the header prototype passes slot as int (callers emit no
+   narrowing), but the retail body treated slot as s8 -- the raw stb into
+   gSaveGameCurrentSlot with the extsb only at the compare proves it. */
+int gplayNewGame(name, slot)
+char* name;
+s8 slot;
 {
     SaveGameDefaultPosition defaultPos;
     int i;
@@ -446,7 +451,7 @@ int gplayNewGame(char* name, int slot)
     }
 
     memcpy(lbl_803DD498, gSaveGameData, SAVEGAME_ACTIVE_SIZE);
-    if ((s8)slot != -1)
+    if (slot != -1)
     {
         gSaveGameCurrentSlot = slot;
         if (name != NULL)
