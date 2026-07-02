@@ -345,6 +345,7 @@ extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern int* gModelAnimOffsetTable;
 
+#pragma opt_propagation off
 int modelGetAmapSize(int a, int b, int c)
 {
     int size;
@@ -358,7 +359,11 @@ int modelGetAmapSize(int a, int b, int c)
     }
     else
     {
-        size = c * 4;
+        {
+            int t;
+            t = c * 4;
+            size = t;
+        }
         while (size & 7)
         {
             size++;
@@ -368,6 +373,7 @@ int modelGetAmapSize(int a, int b, int c)
     }
     return size;
 }
+#pragma opt_propagation reset
 
 
 extern int gModelTabEntryCount;
