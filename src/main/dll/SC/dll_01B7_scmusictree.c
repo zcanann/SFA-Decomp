@@ -9,6 +9,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* placement mapIds: striking the three totem trees sets the combo bits
    sclevelcontrol watches; the three "gate" trees gate their bits on
    GAMEBIT_MUSICTREE_GATE. */
@@ -418,7 +420,7 @@ void sc_musictree_init(int obj, SCMusicTreeSetup* setup)
     ((GameObject*)obj)->anim.rotX = (s16)((u32)setup->yawByte << 8);
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E55B8 * setup->scale;
     ((GameObject*)obj)->unkF8 = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED);
     ratio = (f32)(s32)
     randomGetRange(1, 99) / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
