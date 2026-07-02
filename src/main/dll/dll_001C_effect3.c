@@ -1377,6 +1377,7 @@ extern f32 lbl_803DFA78;
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                    u8 modelId, void* extraArgsIn)
 {
@@ -1948,4 +1949,6 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
     return spawnResult;
 }
+#pragma opt_common_subs reset
+
 #undef FILL350
