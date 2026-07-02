@@ -48,7 +48,7 @@ typedef struct
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
         *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
-        *(u8 *)((st) + 0xd) = 0xFF; \
+        { s8 mm; mm = -1; *(s8 *)((st) + 0xd) = mm; } \
     }
 
 extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
@@ -92,6 +92,7 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
 
+#pragma opt_propagation off
 void fn_8013F100(int obj, register int state)
 {
     int status;
@@ -323,13 +324,23 @@ void fn_8013F100(int obj, register int state)
             {
                 *(u8*)(status + 2) += 1;
             }
-            *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
+            {
+                u32 m;
+                u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                m = ~TRICKY_STATE_RESET_FLAG_10;
+                *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+            }
             ((TrickyState*)state)->substate = 7;
             targetPos = ((TrickyState*)state)->followObj + 24;
             if (((TrickyState*)state)->unk28 != targetPos)
             {
                 ((TrickyState*)state)->unk28 = targetPos;
-                TRICKY_CLEAR_TARGET_DIRTY_U32(state);
+                {
+                    u32 m;
+                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
         }
@@ -387,7 +398,12 @@ void fn_8013F100(int obj, register int state)
             if (((TrickyState*)state)->unk28 != targetPos)
             {
                 ((TrickyState*)state)->unk28 = targetPos;
-                TRICKY_CLEAR_TARGET_DIRTY_U32(state);
+                {
+                    u32 m;
+                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
             ((TrickyState*)state)->substate = 5;
@@ -436,6 +452,7 @@ void fn_8013F100(int obj, register int state)
     }
 }
 
+#pragma opt_propagation reset
 void fn_8013F9E4(int obj, int state)
 {
     int extra;
@@ -509,6 +526,7 @@ void fn_8013F9E4(int obj, int state)
     }
 }
 
+#pragma opt_propagation off
 void fn_8013FBE4(int obj, register int state)
 {
     int inWater;
@@ -545,7 +563,12 @@ void fn_8013FBE4(int obj, register int state)
                 ((TrickyState*)state)->unk28 != (u8*)(state + 0x704))
             {
                 ((TrickyState*)state)->unk28 = (u8*)(state + 0x704);
-                TRICKY_CLEAR_TARGET_DIRTY(state);
+                {
+                    u32 m;
+                    u32 f2 = *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET);
+                    m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    *(u32*)(state + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;
+                }
                 *(short*)&((TrickyState*)state)->unkD2 = 0;
             }
             dx = *targetPos - ((GameObject*)obj)->anim.worldPosX;
@@ -605,6 +628,7 @@ void fn_8013FBE4(int obj, register int state)
     }
 }
 
+#pragma opt_propagation reset
 void fn_8013FEC0(int obj, int state)
 {
     int inWater;
