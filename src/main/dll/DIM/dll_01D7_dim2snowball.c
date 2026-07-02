@@ -46,6 +46,8 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dim2snowballObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -146,7 +148,7 @@ void dim2snowball_init(int* obj, int* def)
         }
     }
     state->targetObj = (int*)ObjList_FindObjectById(state->targetId);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dll_1CF_init(int* obj, int* def);
