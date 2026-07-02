@@ -5939,14 +5939,13 @@ int fn_8029EBCC(int obj, int state)
     }
     if (inner->aimInputZ > lbl_803E7EA4)
     {
-        ((void (*)(int, int, f32, int))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x441, lbl_803E7EA4,
-                                                                            (int)(lbl_803E7FAC * inner->aimInputZ));
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, 0x441,
+                                            (int)(lbl_803E7FAC * inner->aimInputZ));
     }
     else
     {
-        ((void (*)(int, int, int, f32))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x440,
-                                                                            (int)(lbl_803E7FAC * -inner->aimInputZ),
-                                                                            lbl_803E7FAC);
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, 0x440,
+                                            (int)(lbl_803E7FAC * -inner->aimInputZ));
     }
     inner->headPitch =
         (f32)inner->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
