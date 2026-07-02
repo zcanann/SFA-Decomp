@@ -31,6 +31,8 @@
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
+
 typedef struct MinimapRow
 {
     s16 x0, x1, z0, z1, y0, y1;
@@ -294,7 +296,7 @@ int Minimap_update(void)
         if ((*gCameraInterface)->getMode() == 0x44 ||
             (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
-            (((GameObject*)player)->objectFlags & 0x1000) != 0 ||
+            (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
             objIsCurModelNotZero((int)player) == 0 ||
             pauseMenuState != 0 || lbl_803DD75B != 0)
         {
@@ -817,7 +819,7 @@ void fn_8013396C(void)
     if ((void*)player == NULL ||
         (*gCameraInterface)->getMode() == 0x44 ||
         Camera_GetViewportYOffset() != 0 ||
-        (((GameObject*)player)->objectFlags & 0x1000) != 0 ||
+        (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
         objIsCurModelNotZero(player) == 0 ||
         pauseMenuState != 0)
     {
