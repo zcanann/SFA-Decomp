@@ -273,13 +273,14 @@ u32 mapLoadDataFile(int mapId, int fileId)
         }
         if (c == 0)
         {
-            lbl_803DCC92 = tmp = 1;
+            lbl_803DCC92 = 1;
             if (o25 == adj)
             {
                 tmp = 0;
             }
             else if (o47 == adj)
             {
+                tmp = 1;
             }
             else
             {
