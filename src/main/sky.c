@@ -2032,62 +2032,69 @@ void sky2_update(int a, int b, u8* cfg)
 
 void fn_8008C9F4(u8* cfg, u8 flags)
 {
-    int b1;
     int i;
     u8* p2;
+    int z[2];
 
-    b1 = (((Sky2Config*)cfg)->flags & 0x80) ? 1 : 0;
-    *(int*)((&gSky2State)[b1]) = 0;
-    (&gSky2State)[b1][0x317] = 1;
+    if (((Sky2Config*)cfg)->flags & 0x80)
+    {
+        z[1] = 1;
+    }
+    else
+    {
+        z[1] = (z[0] = 0);
+    }
+    *(int*)((&gSky2State)[z[1]]) = z[0];
+    (&gSky2State)[z[1]][0x317] = 1;
     for (i = 0; i < 0x21; i++)
     {
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x178) = lbl_803DF108;
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x178) = lbl_803DF108;
     }
     for (i = 0; i < 0x21; i++)
     {
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x70) = lbl_803DF108;
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x70) = lbl_803DF108;
     }
     for (i = 0; i < 0x16; i++)
     {
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x2ac) = lbl_803DF108;
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x2ac) = lbl_803DF108;
     }
     for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
     {
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x1fc) = lbl_803DF10C;
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x228) = lbl_803DF110;
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x1fc) = lbl_803DF10C;
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x228) = lbl_803DF110;
     }
     for (i = 0; i < SKY_CONFIG_FIELD_COUNT; i++)
     {
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0xf4) = (f32)(u32)
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0xf4) = (f32)(u32)
         cfg[gSkyConfigFieldIndices[i] + 0xc];
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x120) = (f32)(u32)
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x120) = (f32)(u32)
         cfg[gSkyConfigFieldIndices[i] + 0x14];
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x14c) = (f32)(u32)
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x14c) = (f32)(u32)
         cfg[gSkyConfigFieldIndices[i] + 0x1c];
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x254) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x3e);
-        *(f32*)((&gSky2State)[b1] + i * 4 + 0x280) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x2e);
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x254) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x3e);
+        *(f32*)((&gSky2State)[z[1]] + i * 4 + 0x280) = (f32)(u32) * (u16*)(cfg + gSkyConfigFieldIndices[i] * 2 + 0x2e);
     }
-    *(u16*)((&gSky2State)[b1] + 4) = ((Sky2Config*)cfg)->flags;
-    *(u16*)((&gSky2State)[b1] + 6) = ((Sky2Config*)cfg)->flags2;
-    *(f32*)((&gSky2State)[b1] + 0x64) = lbl_803DF108;
-    *(f32*)((&gSky2State)[b1] + 0x68) = lbl_803DF108;
-    *(s8*)((&gSky2State)[b1] + 0x314) = -1;
-    *(f32*)((&gSky2State)[b1] + 0x6c) = lbl_803DF108;
+    *(u16*)((&gSky2State)[z[1]] + 4) = ((Sky2Config*)cfg)->flags;
+    *(u16*)((&gSky2State)[z[1]] + 6) = ((Sky2Config*)cfg)->flags2;
+    *(f32*)((&gSky2State)[z[1]] + 0x64) = lbl_803DF108;
+    *(f32*)((&gSky2State)[z[1]] + 0x68) = lbl_803DF108;
+    *(s8*)((&gSky2State)[z[1]] + 0x314) = -1;
+    *(f32*)((&gSky2State)[z[1]] + 0x6c) = lbl_803DF108;
     if (((Sky2Config*)cfg)->unk2A == 0)
     {
         ((Sky2Config*)cfg)->unk2A = 1;
     }
     if (((Sky2Config*)cfg)->unk2A != 0)
     {
-        *(int*)((&gSky2State)[b1] + 0x3c) = ((Sky2Config*)cfg)->unk2A;
-        *(int*)((&gSky2State)[b1] + 0x48) = 1;
-        *(int*)((&gSky2State)[b1] + 8) = ((Sky2Config*)cfg)->skyTexId0;
-        *(f32*)((&gSky2State)[b1] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2A;
+        *(int*)((&gSky2State)[z[1]] + 0x3c) = ((Sky2Config*)cfg)->unk2A;
+        *(int*)((&gSky2State)[z[1]] + 0x48) = 1;
+        *(int*)((&gSky2State)[z[1]] + 8) = ((Sky2Config*)cfg)->skyTexId0;
+        *(f32*)((&gSky2State)[z[1]] + 0x5c) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2A;
     }
     else
     {
-        *(int*)((&gSky2State)[b1] + 0x3c) = 0;
-        *(f32*)((&gSky2State)[b1] + 0x5c) = lbl_803DF114;
+        *(int*)((&gSky2State)[z[1]] + 0x3c) = 0;
+        *(f32*)((&gSky2State)[z[1]] + 0x5c) = lbl_803DF114;
     }
     if (((Sky2Config*)cfg)->unk2C == 0)
     {
@@ -2095,18 +2102,18 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     }
     if (((Sky2Config*)cfg)->unk2C != 0)
     {
-        *(int*)((&gSky2State)[b1] + 0x40) = ((Sky2Config*)cfg)->unk2C;
-        *(f32*)((&gSky2State)[b1] + 0x58) =
+        *(int*)((&gSky2State)[z[1]] + 0x40) = ((Sky2Config*)cfg)->unk2C;
+        *(f32*)((&gSky2State)[z[1]] + 0x58) =
             lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)((Sky2Config*)cfg)->unk2C / lbl_803DF120));
-        *(int*)((&gSky2State)[b1] + 0xc) = 0x5dc;
-        *(f32*)((&gSky2State)[b1] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2C;
+        *(int*)((&gSky2State)[z[1]] + 0xc) = 0x5dc;
+        *(f32*)((&gSky2State)[z[1]] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->unk2C;
     }
     else
     {
-        *(int*)((&gSky2State)[b1] + 0x40) = 0;
-        *(f32*)((&gSky2State)[b1] + 0x60) = lbl_803DF114;
+        *(int*)((&gSky2State)[z[1]] + 0x40) = 0;
+        *(f32*)((&gSky2State)[z[1]] + 0x60) = lbl_803DF114;
     }
-    *(int*)((&gSky2State)[b1] + 0x44) = 0;
+    *(int*)((&gSky2State)[z[1]] + 0x44) = 0;
 }
 
 #pragma opt_common_subs on
