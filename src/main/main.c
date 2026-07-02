@@ -8,6 +8,9 @@
 #include "main/resource.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define MAIN_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MAIN_OBJFLAG_RENDERED 0x800
+
 extern u32 FUN_80017ac8();
 extern ModgfxInterface** gModgfxInterface;
 extern u32 DAT_803de944;
@@ -355,7 +358,7 @@ void fn_801FD6B4(int obj)
     if (c > lbl_803E6184 && c < lbl_803E6188)
     {
         parm.value = *(f32*)(extra + 8);
-        if (((GameObject*)obj)->objectFlags & 0x800)
+        if (((GameObject*)obj)->objectFlags & MAIN_OBJFLAG_RENDERED)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x3a2, &parm, 2, -1, NULL);
         }
@@ -455,7 +458,7 @@ void vfplavastar_init(int obj, int def)
     randomGetRange(10, 0x19);
     state->effectTimer = 0x14;
     ((GameObject*)obj)->anim.localPosY = mapData->base.posY + (f32)(int)mapData->heightOffset;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= MAIN_OBJFLAG_HITDETECT_DISABLED;
     state->delayRangeMin = (f32)(int)
     randomGetRange(0x1e, 0x3c);
     state->delayRangeMax = (f32)(int)
