@@ -2862,10 +2862,10 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             t1 = t1 / denom;
             t2 = (nB - root) / denom;
             if (t1 < __AR_Callback) t1 = lbl_803DECC0;
-            if (t2 < __AR_Callback) t2 = lbl_803DECC0;
+            if (t2 < *(f32*)&__AR_Callback) t2 = lbl_803DECC0;
             if (t2 < t1) t1 = t2;
             t = t1;
-            if (t >= __AR_Callback && t <= lbl_803DECC4)
+            if (t >= *(volatile f32*)&__AR_Callback && t <= lbl_803DECC4)
             {
                 lbl_803DCF58 = t;
                 if (flag != 0)
