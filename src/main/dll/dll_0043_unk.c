@@ -25,6 +25,9 @@
 #include "main/audio/sfx.h"
 #include "main/mm.h"
 #include "main/dll/modgfx.h"
+
+#define PAD_TRIGGER_Z 0x10
+
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 extern f32 timeDelta;
@@ -89,7 +92,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
             goto done;
         }
-        if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
             (objFn_802962b4((int)target) != 0))
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
