@@ -442,13 +442,13 @@ int Minimap_update(void)
                     frac = gMinimapZoom * (uq - (f32)u);
                     uq = oy / gMinimapZoom;
                     vv = uq;
+                    fv = gMinimapZoom * (uq - vv);
                     ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
                     cwRect = col;
                     hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
-                    fv = gMinimapZoom * (uq - vv);
                     drawPartialTexture(minimapTexture,
                                        (gMinimapF50 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv,
