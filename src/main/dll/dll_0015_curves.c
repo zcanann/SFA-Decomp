@@ -886,8 +886,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
-    int iv[2];
-    int pointIndex;
+    int iv[3];
     u8* worldBase;
 
     f32* localPoint;
@@ -916,25 +915,25 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         iv[0] = 0;
-        worldBase = (u8*)collision;
-        pointIndex = iv[0];
         iv[1] = iv[0];
-        while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
+        worldBase = (u8*)collision;
+        iv[2] = iv[0];
+        while (iv[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + iv[1]);
+            localPoint = (f32*)((u8*)collision->localPointPositions + iv[2]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   (f32*)(worldBase + 228),
                                   &collision->localPointWorld[0][iv[0] + 1],
                                   &collision->localPointWorld[0][iv[0] + 2]);
             worldBase += 0xc;
-            iv[1] += 0xc;
+            iv[2] += 0xc;
             iv[0] += 3;
-            pointIndex++;
+            iv[1]++;
         }
-        pointIndex = 0;
+        iv[1] = 0;
         worldBase = (u8*)collision;
         one = lbl_803E068C;
-        for (; pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); pointIndex++)
+        for (; iv[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); iv[1]++)
         {
             *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
             *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
@@ -948,10 +947,8 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
 void dll_15_func0A(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
-    int worldIdx;
-    int pointIndex;
     u8* worldBase;
-    int pointOffset;
+    int zz[3];
     f32* localPoint;
     f32 one;
     CurvesTransformScratch transform;
@@ -978,24 +975,26 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        pointOffset = pointIndex = worldIdx = 0;
+        zz[0] = 0;
+        zz[1] = zz[0];
         worldBase = (u8*)collision;
-        while (pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
+        zz[2] = zz[0];
+        while (zz[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + pointOffset);
+            localPoint = (f32*)((u8*)collision->localPointPositions + zz[2]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   (f32*)(worldBase + 228),
-                                  &collision->localPointWorld[0][worldIdx + 1],
-                                  &collision->localPointWorld[0][worldIdx + 2]);
+                                  &collision->localPointWorld[0][zz[0] + 1],
+                                  &collision->localPointWorld[0][zz[0] + 2]);
             worldBase += 0xc;
-            pointOffset += 0xc;
-            worldIdx += 3;
-            pointIndex++;
+            zz[2] += 0xc;
+            zz[0] += 3;
+            zz[1]++;
         }
-        pointIndex = 0;
+        zz[0] = 0;
         worldBase = (u8*)collision;
         one = lbl_803E068C;
-        for (; pointIndex < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); pointIndex++)
+        for (; zz[0] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); zz[0]++)
         {
             *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
             *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
