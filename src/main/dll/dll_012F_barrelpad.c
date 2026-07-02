@@ -3,11 +3,13 @@
  * arced-burst particle effects when the barrel's seqId indicates an
  * active launch (0x79) or a secondary launch state (0x748). init reads
  * rotation and rootMotionScale from the placement record and enables the
- * object in the engine (objectFlags |= 0x2000). This TU also contains
+ * object in the engine (objectFlags |= BARRELPAD_OBJFLAG_HITDETECT_DISABLED). This TU also contains
  * the cf_doorlight object (DLL 0x131).
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define BARRELPAD_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
@@ -91,5 +93,5 @@ void barrelpad_init(s16* obj, u8* def)
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= BARRELPAD_OBJFLAG_HITDETECT_DISABLED;
 }
