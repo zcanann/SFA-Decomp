@@ -1595,11 +1595,11 @@ int fn_802A5384(int obj, int state)
         ((PlayerState*)inner)->yawRate = 0;
     }
     {
-        t = ((((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C < (t = lbl_803E7EA4))
-                ? t
+        t = ((((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C < lbl_803E7EA4)
+                ? lbl_803E7EA4
                 : (((((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C >
-                       (t = lbl_803E7EE0))
-                       ? t
+                       lbl_803E7EE0)
+                       ? lbl_803E7EE0
                        : (((PlayerState*)state)->baddie.inputMagnitude - lbl_803E7F14) / lbl_803E7F2C);
     }
     ((PlayerState*)inner)->currentSpeed =
