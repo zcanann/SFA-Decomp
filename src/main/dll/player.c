@@ -6276,6 +6276,7 @@ extern f32 lbl_803E7FDC;
 extern f32 lbl_803E7FE0;
 extern f32 lbl_803E7FE4;
 
+#pragma opt_common_subs off
 int fn_8029DB70(int obj, int state, f32 fv)
 {
     int prev;
@@ -6289,8 +6290,8 @@ int fn_8029DB70(int obj, int state, f32 fv)
     f32 t2;
     f32 xc;
     f32 yc;
-    f32 yT;
     f32 xT;
+    f32 yT;
     f32 yOut;
     ColPair col;
 
@@ -6478,8 +6479,8 @@ int fn_8029DB70(int obj, int state, f32 fv)
             }
             else
             {
-                int* tblB = tbl->moveB;
-                if (((GameObject*)obj)->anim.currentMove != tblB[inner->stickDirection] ||
+                int* tblB;
+                if (((GameObject*)obj)->anim.currentMove != (tblB = tbl->moveB)[inner->stickDirection] ||
                     ((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7FE4)
                 {
                     ((PlayerState*)state)->baddie.moveSpeed =
@@ -6547,14 +6548,19 @@ int fn_8029DB70(int obj, int state, f32 fv)
         ((void (*)(f32, f32, f32, void*, f32*, void*, int))Obj_TransformLocalPointToWorld)(
             inner->unk664, inner->unk668,
             inner->unk66C, (void*)(obj + 0xc), &yOut, (void*)(obj + 0x14), sub);
-        ((GameObject*)obj)->anim.localPosX =
-            lbl_803E7FB8 * inner->surfaceNormalX + ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosZ =
-            lbl_803E7FB8 * inner->surfaceNormalZ + ((GameObject*)obj)->anim.localPosZ;
+        {
+            f32 k = lbl_803E7FB8;
+            ((GameObject*)obj)->anim.localPosX =
+                k * inner->surfaceNormalX + ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)obj)->anim.localPosZ =
+                k * inner->surfaceNormalZ + ((GameObject*)obj)->anim.localPosZ;
+        }
     }
     ((ByteFlags*)((char*)inner + 0x3f3))->b01 = ((ByteFlags*)((char*)inner + 0x3f3))->b08;
     return 0;
 }
+
+#pragma opt_common_subs reset
 
 extern f32 lbl_803E8034;
 extern f32 lbl_803E803C;
