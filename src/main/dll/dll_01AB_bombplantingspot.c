@@ -5,6 +5,8 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 
+#define BOMBPLANTINGSPOT_OBJFLAG_HIDDEN 0x4000
+
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(int* obj);
 
@@ -62,6 +64,6 @@ void bombplantingspot_update(void* obj)
 
 void bombplantingspot_init(void* obj, BombPlantingSpotMapData* mapData)
 {
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= BOMBPLANTINGSPOT_OBJFLAG_HIDDEN;
     ((GameObject*)obj)->anim.rotX = (s16)(mapData->yawByte << 8);
 }
