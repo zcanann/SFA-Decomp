@@ -320,22 +320,27 @@ void trickyDigTunnel(u8* obj, u8* state)
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
             ((TrickyState*)state)->stateFlags &= ~0x40000LL;
-            ((TrickyState*)state)->unkD = -1;
+            {
+            s8 mm;
+            mm = -1;
+            ((TrickyState*)state)->unkD = mm;
+        }
         }
         break;
     }
 }
 
+#pragma opt_propagation off
 void trickyFn_80141fec(u8* obj, u8* state)
 {
     u32 sfxTable;
+    u16 id;
     u8* ptr;
     u8* pc;
     int ret;
     f32 spd;
     f32 d;
     f32 z;
-    u16 id;
 
     sfxTable = gTrickySubstateSfxIdPairA;
     pc = ((TrickyState*)state)->followObj;
@@ -362,7 +367,12 @@ void trickyFn_80141fec(u8* obj, u8* state)
                 if (((TrickyState*)state)->unk28 != ptr)
                 {
                     ((TrickyState*)state)->unk28 = ptr;
-                    *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
+                    {
+                        u32 m;
+                        u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                        m = ~0x400;
+                        *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                    }
                     ((TrickyState*)state)->unkD2 = 0;
                 }
             }
@@ -388,7 +398,11 @@ void trickyFn_80141fec(u8* obj, u8* state)
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
             ((TrickyState*)state)->stateFlags &= ~0x40000LL;
-            ((TrickyState*)state)->unkD = -1;
+            {
+            s8 mm;
+            mm = -1;
+            ((TrickyState*)state)->unkD = mm;
+        }
         }
         break;
     case 2:
@@ -457,7 +471,11 @@ void trickyFn_80141fec(u8* obj, u8* state)
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
             ((TrickyState*)state)->stateFlags &= ~0x40000LL;
-            ((TrickyState*)state)->unkD = -1;
+            {
+            s8 mm;
+            mm = -1;
+            ((TrickyState*)state)->unkD = mm;
+        }
             id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
             ptr = ((GameObject*)obj)->extra;
             if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
@@ -485,6 +503,8 @@ typedef struct
     u8 rest : 5;
 } FlagByte728;
 
+#pragma opt_propagation off
+#pragma opt_propagation reset
 void trickyFn_80142524(u8* obj, u8* state)
 {
     u8* base;
@@ -515,7 +535,12 @@ void trickyFn_80142524(u8* obj, u8* state)
                         if (((TrickyState*)other)->unk28 != target + 0x18)
                         {
                             ((TrickyState*)other)->unk28 = target + 0x18;
-                            *(s32*)&((TrickyState*)other)->stateFlags &= ~0x400LL;
+                            {
+                                u32 m;
+                                u32 f2 = *(u32*)&((TrickyState*)other)->stateFlags;
+                                m = ~0x400;
+                                *(u32*)&((TrickyState*)other)->stateFlags = f2 & m;
+                            }
                             ((TrickyState*)other)->unkD2 = 0;
                         }
                         other[0xa] = 0;
@@ -609,7 +634,11 @@ void trickyFn_80142524(u8* obj, u8* state)
         ((TrickyState*)state)->stateFlags &= ~0x10000LL;
         ((TrickyState*)state)->stateFlags &= ~0x20000LL;
         ((TrickyState*)state)->stateFlags &= ~0x40000LL;
-        ((TrickyState*)state)->unkD = -1;
+        {
+            s8 mm;
+            mm = -1;
+            ((TrickyState*)state)->unkD = mm;
+        }
         ((GameObject*)obj)->anim.localPosX = *(f32*)(found + 0xc);
         ((GameObject*)obj)->anim.localPosY = *(f32*)(found + 0x10);
         ((GameObject*)obj)->anim.localPosZ = *(f32*)(found + 0x14);
@@ -636,8 +665,8 @@ void trickyFn_80142524(u8* obj, u8* state)
             ((TrickyState*)state)->unk71C = lbl_803E23DC;
         }
         fn_80144B50(obj, state);
-        ptr = base + 0x6c;
-        if ((*(int (**)(u8*, u8*))(ptr + state[0xa] * 4))(obj, state) == 0)
+        {
+        if ((*(int (**)(u8*, u8*))(base + state[0xa] * 4 + 0x6c))(obj, state) == 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
@@ -666,9 +695,11 @@ void trickyFn_80142524(u8* obj, u8* state)
                 objAnimFn_8013a3f0((int)obj, 0x25, lbl_803E2518, 0);
             }
         }
+        }
     }
 }
 
+#pragma opt_propagation reset
 int trickyFn_80142a14(int obj, int state)
 {
     int tex;
@@ -1065,12 +1096,13 @@ u32 trickyFn_80143388(int obj, int* trickyState)
 }
 #pragma optimization_level reset
 
+#pragma opt_propagation off
 int trickyFn_801434b0(int obj, int* trickyState)
 {
     char bval;
     short move;
     float fval;
-    int b;
+    int b[1];
     int val;
     u8 fxBuf[24];
     int ia;
@@ -1111,7 +1143,8 @@ int trickyFn_801434b0(int obj, int* trickyState)
         }
         for (val = 0; val < *(char*)((int)trickyState + 0x827); val++)
         {
-            bval = *(char*)((int)trickyState + (b = val + 0x81f));
+            b[0] = val + 0x81f;
+            bval = *((char*)trickyState + b[0]);
             if (bval == '\0')
             {
                 objAudioFn_800393f8(obj, (void*)(trickyState + 0xea), 0x390, 0x500, -1, 0);
@@ -1141,21 +1174,21 @@ int trickyFn_801434b0(int obj, int* trickyState)
         {
             if (lbl_803E23DC == *(float*)(trickyState + 0xab))
             {
-                b = 0;
+                b[0] = 0;
             }
             else if (lbl_803E2410 == *(float*)(trickyState + 0xac))
             {
-                b = 1;
+                b[0] = 1;
             }
             else if (*(float*)(trickyState + 0xad) - *(float*)(trickyState + 0xac) > lbl_803E2414)
             {
-                b = 1;
+                b[0] = 1;
             }
             else
             {
-                b = 0;
+                b[0] = 0;
             }
-            if (b != 0)
+            if (b[0] != 0)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 *(float*)(trickyState + 0x1e7) = lbl_803E2440;
@@ -1167,7 +1200,12 @@ int trickyFn_801434b0(int obj, int* trickyState)
                 objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
                 trickyDebugPrint(lbl_8031D478);
             }
-            trickyState[0x15] = trickyState[0x15] & ~0x10LL;
+            {
+                u32 m;
+                u32 f2 = *(u32*)&trickyState[0x15];
+                m = ~0x10;
+                *(u32*)&trickyState[0x15] = f2 & m;
+            }
             *(u8*)((int)trickyState + 10) = 0;
         }
         break;
@@ -1183,6 +1221,7 @@ typedef struct TrickyPackedSlots
     u8 d : 2;
 } TrickyPackedSlots;
 
+#pragma opt_propagation reset
 int trickyFoodFn_801437d4(int obj, int* state)
 {
     s8 slots[4];
@@ -1320,6 +1359,7 @@ u32 trickyFn_80143b78(int obj, int* trickyState)
     return 0;
 }
 
+#pragma opt_propagation off
 int trickyFn_80143c04(int obj, int state)
 {
     int tex;
@@ -1334,12 +1374,21 @@ int trickyFn_80143c04(int obj, int state)
     if (*(u32*)&((TrickyState*)state)->unk28 != followBase)
     {
         *(int*)&((TrickyState*)state)->unk28 = followBase;
-        *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+        {
+            u32 m;
+            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            m = ~0x400;
+            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+        }
         *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
     {
-        ((TrickyState*)state)->unkD = -1;
+        {
+            s8 mm;
+            mm = -1;
+            ((TrickyState*)state)->unkD = mm;
+        }
         threshold = lbl_803E24C8;
     }
     else
@@ -1398,6 +1447,7 @@ int trickyFn_80143c04(int obj, int state)
     return 1;
 }
 
+#pragma opt_propagation reset
 u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
@@ -1519,6 +1569,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
     return 0;
 }
 
+#pragma opt_propagation off
 void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
@@ -1549,8 +1600,12 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != state + 0x72c)
         {
             ((TrickyState*)state)->unk28 = state + 0x72c;
-            sv = ((TrickyState*)state)->stateFlags;
-            ((TrickyState*)state)->stateFlags = sv & ~0x400LL;
+            {
+                u32 m;
+                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                m = ~0x400;
+                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            }
             ((TrickyState*)state)->unkD2 = 0;
         }
         ((FlagByte728*)(state + 0x728))->bf5 = 0;
@@ -1566,8 +1621,12 @@ void objAnimFn_801441c0(u8* obj, u8* state)
         if (((TrickyState*)state)->unk28 != state + 0x72c)
         {
             ((TrickyState*)state)->unk28 = state + 0x72c;
-            sv = ((TrickyState*)state)->stateFlags;
-            ((TrickyState*)state)->stateFlags = sv & ~0x400LL;
+            {
+                u32 m;
+                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                m = ~0x400;
+                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            }
             ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 8;
@@ -1594,6 +1653,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     }
 }
 
+#pragma opt_propagation reset
 void tricky_startRandomIdleMove(int obj, int trickyState)
 {
     int val;
