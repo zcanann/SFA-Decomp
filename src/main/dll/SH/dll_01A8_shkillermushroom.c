@@ -179,6 +179,7 @@ typedef struct
 
 /* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,
  * hit reaction, pop and respawn. */
+#pragma opt_common_subs off
 void enemymushroom_update(int* obj)
 {
     extern f32 Vec_distance(f32* a, f32* b);
@@ -470,3 +471,5 @@ void enemymushroom_update(int* obj)
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x2);
     }
 }
+#pragma opt_common_subs reset
+
