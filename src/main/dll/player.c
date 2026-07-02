@@ -16774,6 +16774,11 @@ void fn_802ADE80(int obj, int inner, int state)
     f32 waterZ;
     struct
     {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    struct
+    {
         u8 pad[6];
         u16 mode;
         f32 scale;
@@ -16781,15 +16786,10 @@ void fn_802ADE80(int obj, int inner, int state)
         f32 y;
         f32 z;
     } pfx;
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } v;
     f32 mtx[20];
     f32 angle;
     int playEffect;
-    int loopCount;
+    u8 loopCount;
     int i;
 
     angle = ((PlayerState*)inner)->waterSurfaceY;
@@ -16818,24 +16818,22 @@ void fn_802ADE80(int obj, int inner, int state)
     }
     ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
     {
-        f32 dt = timeDelta;
         f32 cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
         f32 a = -waterZ * sinv - waterX * cosv;
-        ((PlayerState*)inner)->waterCurrentVelB =
-            dt * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB)) +
-            ((PlayerState*)inner)->waterCurrentVelB;
-        ((PlayerState*)inner)->waterCurrentVelA =
-            dt * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA)) +
-            ((PlayerState*)inner)->waterCurrentVelA;
+        ((PlayerState*)inner)->waterCurrentVelB +=
+            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB));
+        ((PlayerState*)inner)->waterCurrentVelA +=
+            timeDelta * (lbl_803E7EFC * (a - ((PlayerState*)inner)->waterCurrentVelA));
     }
     playEffect = 0;
     if (((PlayerState*)state)->baddie.controlMode == 1)
     {
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
-            Sfx_PlayAtPositionFromObject(obj, 0xe, ((GameObject*)obj)->anim.localPosX,
-                                         ((PlayerState*)inner)->waterSurfaceY, ((GameObject*)obj)->anim.localPosZ);
+            ((void (*)(int, f32, f32, f32, int))Sfx_PlayAtPositionFromObject)(
+                obj, ((GameObject*)obj)->anim.localPosX, ((PlayerState*)inner)->waterSurfaceY,
+                ((GameObject*)obj)->anim.localPosZ, 0xe);
         }
         if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
@@ -16849,8 +16847,9 @@ void fn_802ADE80(int obj, int inner, int state)
     {
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
-            Sfx_PlayAtPositionFromObject(obj, 0xf, ((GameObject*)obj)->anim.localPosX,
-                                         ((PlayerState*)inner)->waterSurfaceY, ((GameObject*)obj)->anim.localPosZ);
+            ((void (*)(int, f32, f32, f32, int))Sfx_PlayAtPositionFromObject)(
+                obj, ((GameObject*)obj)->anim.localPosX, ((PlayerState*)inner)->waterSurfaceY,
+                ((GameObject*)obj)->anim.localPosZ, 0xf);
         }
         if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
@@ -16891,16 +16890,19 @@ void fn_802ADE80(int obj, int inner, int state)
         {
             u16 ang = ((PlayerState*)inner)->targetYaw -
                 getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
-            (*gWaterfxInterface)->spawnSimpleRipple(
-                ang, tx, ((PlayerState*)inner)->waterSurfaceY, tz, lbl_803E7EA4);
+            ((void (*)(f32, f32, f32, s16, f32))(*gWaterfxInterface)->spawnSimpleRipple)(
+                tx, ((PlayerState*)inner)->waterSurfaceY, tz, ang, lbl_803E7EA4);
         }
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
     loopCount = (((PlayerState*)inner)->waterSurfaceY - v.mat[2] > lbl_803E7F10) ? 1 : 0;
     {
-        f32 div0 = lbl_803E7FA4;
-        f32 zero = lbl_803E7EA4;
-        f32 div1 = lbl_803E808C;
+        f32 div0;
+        f32 zero;
+        f32 div1;
+        div0 = lbl_803E7FA4;
+        div1 = lbl_803E808C;
+        zero = lbl_803E7EA4;
         for (i = 0; i < loopCount; i++)
         {
             pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / div0;
