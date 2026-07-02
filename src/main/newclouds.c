@@ -10,6 +10,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXEnum.h"
 #include "dolphin/os/OSCache.h"
 #include "main/sky_state.h"
 #include "sfa_light_decls.h"
@@ -560,11 +561,11 @@ void lightningRender(void* state)
         _gxSetTevColor2(0x80, 0x80, 0xff,
                         (int)((lbl_803DF1D4 * (b - a)) / half));
     }
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
@@ -763,11 +764,11 @@ void drawSkyStars(void)
         alpha = 0xff;
         div = 1;
     }
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     textureSetupFn_800799c0();
     fn_800790AC();
     textRenderSetupFn_80079804();
@@ -2521,7 +2522,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     GXLoadPosMtxImm(mtxT, 0);
     texIdx = 0;
     selectTexture(((NewCloud*)p)->cloudType == 0 ? gNewCloudLayerTextures[0] : lbl_803DD1C4, 0);
-    GXSetCullMode(0);
+    GXSetCullMode(GX_CULL_NONE);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
@@ -2536,14 +2537,14 @@ int snowPrintSnowCloud(int arg, int cloudId)
     }
     gxBlendFn_80078b4c();
     GXClearVtxDesc();
-    GXSetVtxDesc(0, 1);
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCurrentMtx(0);
     GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xd, 1);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     hudHidden = getHudHiddenFrameCount();
     driftX = gSnowFlakeSize * (((NewCloud*)p)->curPosX - ((NewCloud*)p)->lastPosX);
     stepX = (driftX < lbl_803DF214 * ((NewCloud*)p)->flakeMinX)
