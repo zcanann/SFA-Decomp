@@ -15944,13 +15944,15 @@ void fn_802AE650(int obj, int state, int p3)
     }
 }
 
+#pragma opt_propagation off
 void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
 {
-    int slot = Camera_GetCurrentViewSlot();
+    int slot = 1;
     int setup;
     f32 x1, y1, z1, x0, y0, z0;
     f32 dx, dy, dz, len;
 
+    Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked() != 0)
     {
         Sfx_PlayFromObject(0, SFXmammoth_suck);
@@ -15987,6 +15989,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
         }
     }
 }
+#pragma opt_propagation reset
 
 void fn_802AED2C(int obj, int state, int p3)
 {
