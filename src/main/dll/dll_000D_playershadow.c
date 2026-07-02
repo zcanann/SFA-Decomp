@@ -1415,9 +1415,9 @@ void fn_800A3AF0(void* table, int count, f32 a, f32 b, void* ctx)
             dx = dx * sc;
             dy = dy * sc;
             dz = dz * sc;
-            data.x = lbl_803DF46C;
-            data.y = lbl_803DF46C;
-            data.z = lbl_803DF46C;
+            data.x = *(f32*)&lbl_803DF46C;
+            data.y = *(f32*)&lbl_803DF46C;
+            data.z = *(f32*)&lbl_803DF46C;
             data.scale = lbl_803DF470;
             data.unk4 = 0;
             data.unk2 = 0;
