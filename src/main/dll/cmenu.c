@@ -127,7 +127,7 @@ extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
 
-int cMenuSetItems(s16* itemsIn, char useTricky)
+int cMenuSetItems(s16* items, char useTricky)
 {
     s16* w2;
     s16* stP;
@@ -141,7 +141,6 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     u8* base;
     s16* dst;
     u8* flP;
-    s16* items;
     int halfOff;
     s16* idsW2;
     int count;
@@ -151,7 +150,6 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
     int i;
     s16 saved[CMENU_ITEM_SLOT_COUNT];
 
-    items = itemsIn;
     base = lbl_803A87F0;
     ids = (s16*)(base + 0x948);
     w1 = ids;
@@ -200,11 +198,11 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
                         *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
                         if (src[2] < 0 || GameBit_Get(src[2]) == 0)
                         {
-                            *(u8*)(base + count + 0x488) = 1;
+                            *(u8*)(count + 0x488 + base) = 1;
                         }
                         else
                         {
-                            *(u8*)(base + count + 0x488) = 0;
+                            *(u8*)(count + 0x488 + base) = 0;
                         }
                         count++;
                         wordOff += 4;
@@ -228,11 +226,11 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
                     *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
                     if (src[2] < 0 || GameBit_Get(src[2]) == 0)
                     {
-                        *(u8*)(base + count + 0x488) = 1;
+                        *(u8*)(count + 0x488 + base) = 1;
                     }
                     else
                     {
-                        *(u8*)(base + count + 0x488) = 0;
+                        *(u8*)(count + 0x488 + base) = 0;
                     }
                     count++;
                     wordOff += 4;
