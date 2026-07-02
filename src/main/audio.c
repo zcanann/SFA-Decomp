@@ -2005,6 +2005,7 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
     }
 }
 
+#pragma opt_propagation off
 void streamsLoadedCallback(int status, void* fileInfo)
 {
     u32 saved;
@@ -2025,7 +2026,12 @@ void streamsLoadedCallback(int status, void* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        *(s32*)&gAudioPendingLoadFlags &= ~(u64)0x4;
+        {
+            u32 m;
+            u32 f2 = gAudioPendingLoadFlags;
+            m = ~0x4;
+            gAudioPendingLoadFlags = f2 & m;
+        }
         gAudioCompletedLoadFlags |= 0x4;
         s = gStreamsData;
         count = gStreamsCount;
@@ -2037,6 +2043,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
     }
 }
 
+#pragma opt_propagation reset
 void fn_80008F38(void* addr, u32 dest, u32 size)
 {
     int idx;
