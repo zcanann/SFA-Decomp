@@ -281,7 +281,6 @@ void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
 void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data)
 {
     f32 floorY[2];
-    f32 d1;
 
     floorY[0] = lbl_803E43F0;
     obj->angleX = data->initialAngleX;
@@ -289,11 +288,11 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     obj->angleZ = data->initialAngleZ;
 
     obj->velocityX = (f32)(s32)
-    data->initialVelocityX / (d1 = lbl_803E4400);
+    data->initialVelocityX / 100.0f;
     obj->velocityY = (f32)(s32)
-    data->initialVelocityY / d1;
+    data->initialVelocityY / 100.0f;
     obj->velocityZ = (f32)(s32)
-    data->initialVelocityZ / d1;
+    data->initialVelocityZ / 100.0f;
     state->spinX = (f32)(s32)
     data->spinX;
     state->spinY = (f32)(s32)
@@ -316,17 +315,17 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     }
 
     state->spinVelocityX = (f32)(s32)
-    data->spinVelocityX / (d1 = lbl_803E4404);
+    data->spinVelocityX / 10.0f;
     state->spinVelocityY = (f32)(s32)
-    data->spinVelocityY / d1;
+    data->spinVelocityY / 10.0f;
     state->spinVelocityZ = (f32)(s32)
-    data->spinVelocityZ / d1;
+    data->spinVelocityZ / 10.0f;
     state->accelerationX = (f32)(s32)
-    data->accelerationX / (d1 = lbl_803E4408);
+    data->accelerationX / 1000.0f;
     state->accelerationY = (f32)(s32)
-    data->accelerationY / d1;
+    data->accelerationY / 1000.0f;
     state->accelerationZ = (f32)(s32)
-    data->accelerationZ / d1;
+    data->accelerationZ / 1000.0f;
 
     state->elapsedFrames = 0;
     if (*(u16*)&data->lifetimeFrames != 0)
