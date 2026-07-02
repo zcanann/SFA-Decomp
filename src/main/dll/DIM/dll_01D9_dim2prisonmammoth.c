@@ -11,6 +11,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dim2prisonmammothPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -226,7 +228,7 @@ void dim2prisonmammoth_init(int obj, int params)
     }
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
 }
 
 int fn_802BC3F0(int obj, int state, ObjAnimUpdateState* animUpdate)
