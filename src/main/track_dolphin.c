@@ -2039,6 +2039,7 @@ int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
     return 0;
 }
 
+#pragma dont_inline on
 int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
 {
     void** arr;
@@ -2052,13 +2053,13 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
     if (n != 0)
     {
         cur = val - *(f32*)arr[0];
-        cur = cur >= __AR_Callback ? cur : -cur;
+        if (cur >= __AR_Callback) {} else { cur = -cur; }
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
             cur = val - *(f32*)arr[i];
-            cur = cur >= __AR_Callback ? cur : -cur;
+            cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
                 best = cur;
@@ -2071,6 +2072,7 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
     *out = __AR_Callback;
     return 1;
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
@@ -4227,11 +4229,11 @@ void gxErrorFn_80060b40(void)
 }
 
 extern f32 lbl_8038D77C[];
-extern const f32 lbl_803DECA0;
-extern const f32 lbl_803DECA4;
-extern const f32 lbl_803DECA8;
-extern const f32 lbl_803DECAC;
-extern void fn_8006D5E8(void);
+extern const f32 __AR_FreeBlocks;
+extern const f32 __AR_StackPointer;
+extern const f32 __AR_ExpansionSize;
+extern const f32 __AR_InternalSize;
+extern void allocLotsOfTextures(void);
 
 void initTextures(void)
 {
@@ -4276,19 +4278,19 @@ void initTextures(void)
     b[21] = lbl_803DEC68;
     b[22] = __AR_init_flag;
     b[23] = lbl_803DEC68;
-    a[12] = lbl_803DECA0;
+    a[12] = __AR_FreeBlocks;
     a[13] = lbl_803DEC58;
-    a[14] = lbl_803DECA4;
-    a[15] = lbl_803DECA0;
-    a[16] = lbl_803DECA8;
-    a[17] = lbl_803DECA4;
-    a[18] = lbl_803DECAC;
-    a[19] = lbl_803DECA8;
-    a[20] = lbl_803DECA4;
-    a[21] = lbl_803DECAC;
+    a[14] = __AR_StackPointer;
+    a[15] = __AR_FreeBlocks;
+    a[16] = __AR_ExpansionSize;
+    a[17] = __AR_StackPointer;
+    a[18] = __AR_InternalSize;
+    a[19] = __AR_ExpansionSize;
+    a[20] = __AR_StackPointer;
+    a[21] = __AR_InternalSize;
     a[22] = lbl_803DEC58;
-    a[23] = lbl_803DECA4;
-    fn_8006D5E8();
+    a[23] = __AR_StackPointer;
+    allocLotsOfTextures();
 }
 
 extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, int i, int self, f32 f);
