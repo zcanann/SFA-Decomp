@@ -32,6 +32,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 
+#define DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct Dim2iciclePlacement
 {
     u8 pad0[0x1 - 0x0];
@@ -88,7 +90,7 @@ void dim2icicle_init(int obj, s8* p)
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dim2icicle_update(int obj)
