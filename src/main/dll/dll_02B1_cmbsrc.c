@@ -555,11 +555,11 @@ void cmbsrc_init(int obj, u8* setup)
             modelLightStruct_setLightKind(state->light, 2);
             if (cmbsrc->objAnim.seqId == CMBSRC_SEQ_THUSTER_SOURCE)
             {
-                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E7360, lbl_803E7360);
+                modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
             }
             else
             {
-                modelLightStruct_setPosition(state->light, lbl_803E7360, lbl_803E73A8, *(f32*)&lbl_803E7360);
+                modelLightStruct_setPosition(state->light, 0.0f, 7.0f, 0.0f);
             }
             modelLightStruct_setDiffuseColor(state->light,
                                              (c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30])[mapData->colorIndex * 3],
@@ -568,27 +568,27 @@ void cmbsrc_init(int obj, u8* setup)
             modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3],
                                               c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0xff);
             {
-                f32 attn = mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? lbl_803E73AC : lbl_803E73B0;
+                f32 attn = mapData->behaviorFlags & CMBSRC_BEHAVIOR_WIDE_ATTENUATION ? 520.0f : 130.0f;
                 int n = (int)(attn * cmbsrc->objAnim.rootMotionScale);
-                modelLightStruct_setDistanceAttenuation(state->light, n, lbl_803E73B4 + n);
+                modelLightStruct_setDistanceAttenuation(state->light, n, 40.0f + n);
             }
             if (state->flags & CMBSRC_STATE_THORNTAIL_GATE)
             {
                 if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                 {
-                    modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
+                    modelLightStruct_setEnabled(state->light, 1, 2.0f);
                 }
                 else
                 {
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E7374);
+                    modelLightStruct_setEnabled(state->light, 0, 2.0f);
                     state->active = 0;
                 }
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
             modelLightStruct_setDiffuseTargetColor(state->light,
-                                                   (int)(lbl_803E7368 * (f32)(u32)c0[mapData->colorIndex * 3]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)c1[mapData->colorIndex * 3]),
-                                                   (int)(lbl_803E7368 * (f32)(u32)c2[mapData->colorIndex * 3]),
+                                                   (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
+                                                   (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
+                                                   (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]),
                                                    0xff);
             if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT)
             {
@@ -600,32 +600,32 @@ void cmbsrc_init(int obj, u8* setup)
                 {
                     modelLightStruct_setupGlow(state->light, 0, c0[mapData->colorIndex * 3],
                                                c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0x87,
-                                               lbl_803E73B8 * cmbsrc->objAnim.rootMotionScale);
+                                               300.0f * cmbsrc->objAnim.rootMotionScale);
                 }
                 else
                 {
                     modelLightStruct_setupGlow(state->light, 0, c0[mapData->colorIndex * 3],
                                                c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0x87,
-                                               lbl_803E7370 * cmbsrc->objAnim.rootMotionScale);
+                                               220.0f * cmbsrc->objAnim.rootMotionScale);
                 }
             }
             {
                 int m = mapData->glowProjectionMode & 0x3;
                 if (m == 0)
                 {
-                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E73BC);
+                    modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
                 }
                 else if (m == 1)
                 {
-                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7384);
+                    modelLightStruct_setGlowProjectionRadius(state->light, 10.0f);
                 }
                 else if (m == 2)
                 {
-                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E73C0);
+                    modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
                 }
                 else
                 {
-                    modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7360);
+                    modelLightStruct_setGlowProjectionRadius(state->light, 0.0f);
                 }
             }
             if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_DISABLE_FIELD4D)
@@ -642,7 +642,7 @@ void cmbsrc_init(int obj, u8* setup)
     {
         state->hitFlags.disabled = 1;
         ObjHitbox_SetSphereRadius(obj,
-                                  (int)(lbl_803E7374 *
+                                  (int)(2.0f *
                                       (mapData->radius * (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->
                                           colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
@@ -673,6 +673,6 @@ void cmbsrc_init(int obj, u8* setup)
         }
     }
     state->colorCycleTimer = randomGetRange(0, 0x64);
-    state->radius = lbl_803E7374 * mapData->radius;
+    state->radius = 2.0f * mapData->radius;
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
