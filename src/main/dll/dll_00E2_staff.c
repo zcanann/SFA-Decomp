@@ -1480,10 +1480,11 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
     int ang;
 
     obj = (u8*)objArg;
-    if (*(int**)(swipe + 0x48) != NULL)
-    switch (swipe[0xbc])
+    if (*(int**)(swipe + 0x48) == NULL || swipe[0xbc] != 0)
     {
-    case 0:
+        return;
+    }
+    {
         ang = ((GameObject*)obj)->anim.rotX;
         if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
         {
@@ -1690,9 +1691,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         *(f32*)(swipe + 0x90) = ((GameObject*)obj)->anim.worldPosY;
         *(f32*)(swipe + 0x94) = ((GameObject*)obj)->anim.worldPosZ;
         *(f32*)(swipe + 0x98) = *(f32*)(model2 + 4);
-        break;
-    default:
-        break;
     }
 }
 
