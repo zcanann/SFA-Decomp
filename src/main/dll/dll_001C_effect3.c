@@ -1386,7 +1386,7 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     s16* extraArgs = extraArgsIn;
 
     if (sourceObj == 0) return -1;
-    if ((spawnFlags & 0x200000) != 0)
+    if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
     {
         if (spawnParams == 0) return -1;
         cfg.sourcePosY = spawnParams->posX;
@@ -1930,7 +1930,7 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)
     {
-        if ((spawnFlags & 0x200000) != 0)
+        if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
         {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosY;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosZ;
