@@ -8,6 +8,10 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/maketex.h"
+
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+
 extern int getTableFileEntry(int fileId, int index, int* out);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
@@ -2937,7 +2941,7 @@ int ObjSeq_update(u8* obj, f32 t)
             switch (op)
             {
             case 0x12:
-                if ((getButtonsJustPressed(0) & 0x100) != 0)
+                if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
                 {
                     pressed = 1;
                 }
@@ -2947,7 +2951,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 }
                 break;
             case 0x13:
-                if ((getButtonsJustPressed(0) & 0x200) != 0)
+                if ((getButtonsJustPressed(0) & PAD_BUTTON_B) != 0)
                 {
                     pressed = 1;
                 }
