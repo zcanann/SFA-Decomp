@@ -1733,7 +1733,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->durationTimer = ((AndrossState*)state)->durationTimer - lbl_803E74DC;
             if (((AndrossState*)state)->durationTimer < lbl_803E74D4)
             {
-                *(char*)&((AndrossState*)state)->actionToggle = *(char*)&((AndrossState*)state)->actionToggle + '\x01';
+                ((AndrossState*)state)->actionToggle += 1;
                 if (((AndrossState*)state)->actionToggle > 3)
                 {
                     ((AndrossState*)state)->fightPhase = 5;
