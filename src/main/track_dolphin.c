@@ -22,6 +22,7 @@
 #define GX_CULL_NONE 0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK 2
+#define GX_LEQUAL 3
 #define GX_COLOR0A0 4
 #define GX_COLOR1A1 5
 #define GX_COLOR_NULL 0xff
@@ -3755,7 +3756,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_KONST, GX_CA_TEXA, GX_CA_ZERO);
             GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
             GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
-            gxSetZMode_(1, 3, 0);
+            gxSetZMode_(1, GX_LEQUAL, 0);
             GXSetCullMode(GX_CULL_NONE);
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
