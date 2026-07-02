@@ -6149,11 +6149,11 @@ int mapUnload(int mapId, int flags)
             }
             {
                 int idx = e[0];
-                if (MAPTBLP(idx, -0x6A28) != NULL)
+                if (*(int**)(hi + idx * 4 + -0x6A28) != NULL)
                 {
                     s16 v;
                     if (f80
-                        || ((flags & e[1]) && mapId == MAPTBL16(idx, -0x68C8))
+                        || ((flags & e[1]) && mapId == *(s16*)(hi + idx * 2 + -0x68C8))
                         || (f10 && mapId != MAPTBL16(idx, -0x68C8))
                         || (f20 && mapId == MAPTBL16(idx, -0x68C8)))
                     {
