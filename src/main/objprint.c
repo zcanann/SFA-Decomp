@@ -1944,7 +1944,7 @@ void fn_8003A230(int obj, void* state, f32 val)
 extern int getAngle(float y, float x);
 extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(int obj, int target, int state, s16 maxAngle)
+void fn_8003B0D0(int obj, int target, int state, int maxAngle)
 {
     s16* found;
 
@@ -1956,7 +1956,7 @@ void fn_8003B0D0(int obj, int target, int state, s16 maxAngle)
                                                         ((GameObject*)obj)->anim.localPosZ -
                                                             *(f32*)((char*)target + 0x14)) -
                                           ((GameObject*)obj)->anim.rotX);
-        maxAngle = (s16)(int)(gObjPrintDegToAngle * maxAngle);
+        maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
         if (*(s16*)((char*)state + 0x14) > maxAngle)
         {
             *(s16*)((char*)state + 0x14) = maxAngle;
