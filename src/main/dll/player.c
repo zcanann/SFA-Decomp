@@ -5798,6 +5798,7 @@ int fn_8029EBCC(int obj, int state)
     PlayerState* inner = ((GameObject*)obj)->extra;
     void* sub;
     f32 v7b8, v7bc;
+    f32 k;
     int res, halfW, halfH;
 
     *(u32*)&inner->flags360 &= ~2LL;
@@ -5914,8 +5915,9 @@ int fn_8029EBCC(int obj, int state)
     }
     else
     {
-        ((void (*)(int, int, f32, int))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x440, lbl_803E7FAC,
-                                                                            (int)(lbl_803E7FAC * -inner->aimInputZ));
+        ((void (*)(int, int, int, f32))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x440,
+                                                                            (int)(lbl_803E7FAC * -inner->aimInputZ),
+                                                                            lbl_803E7FAC);
     }
     inner->headPitch =
         (f32)inner->headPitch * powfBitEstimate(lbl_803E7FF4, timeDelta);
@@ -5929,10 +5931,10 @@ int fn_8029EBCC(int obj, int state)
     res = getScreenResolution();
     halfW = res >> 17;
     halfH = (int)(u16)res >> 1;
-    inner->aimScreenY = lbl_803E7E98 * (v7b8 * (f32)halfH) + (f32)halfH;
+    inner->aimScreenY = (k = lbl_803E7E98) * (v7b8 * (f32)halfH) + (f32)halfH;
     if (v7bc < lbl_803E7EA4)
     {
-        inner->aimScreenX = lbl_803E7E98 * (v7bc * (f32)halfW) + (f32)halfW;
+        inner->aimScreenX = k * (v7bc * (f32)halfW) + (f32)halfW;
     }
     else
     {
@@ -6910,8 +6912,8 @@ int fn_802AD2F4(int obj, int inner, int state)
                     playerDie(obj);
                 }
             }
-            (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2,
-                timeDelta);
+            (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state,
+                timeDelta, 2);
             ((PlayerState*)inner)->emissionState = 4;
             break;
         }
@@ -6929,8 +6931,8 @@ int fn_802AD2F4(int obj, int inner, int state)
             ((PlayerState*)inner)->staffHoldFrames = 0;
             return 1;
         }
-        (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 2,
-                                                                             timeDelta);
+        (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state,
+                                                                             timeDelta, 2);
         ((PlayerState*)inner)->emissionState = 4;
         break;
     default:
@@ -7078,11 +7080,11 @@ int fn_802AD2F4(int obj, int inner, int state)
     if (((PlayerState*)inner)->fallSeverity == 0 &&
         ((ByteFlags*)((char*)inner + 0x3f4))->b10 == 0)
     {
-        f32 a = lbl_803E7FBC;
-        f32 b = lbl_803E7E98;
+        f32 a;
+        f32 b;
         f32 c;
-        ((PlayerState*)inner)->targetYawSmoothRate = a;
-        ((PlayerState*)inner)->targetYawRateLimit = b;
+        ((PlayerState*)inner)->targetYawSmoothRate = (a = lbl_803E7FBC);
+        ((PlayerState*)inner)->targetYawRateLimit = (b = lbl_803E7E98);
         ((PlayerState*)inner)->yawSmoothRate = a;
         ((PlayerState*)inner)->yawRateLimit = b;
         c = lbl_803E7F14;
@@ -7091,10 +7093,10 @@ int fn_802AD2F4(int obj, int inner, int state)
     }
     else
     {
-        f32 a = lbl_803E7FBC;
-        f32 b = lbl_803E7EA4;
-        ((PlayerState*)inner)->targetYawSmoothRate = a;
-        ((PlayerState*)inner)->targetYawRateLimit = b;
+        f32 a;
+        f32 b;
+        ((PlayerState*)inner)->targetYawSmoothRate = (a = lbl_803E7FBC);
+        ((PlayerState*)inner)->targetYawRateLimit = (b = lbl_803E7EA4);
         ((PlayerState*)inner)->yawSmoothRate = a;
         ((PlayerState*)inner)->yawRateLimit = b;
         ((PlayerState*)inner)->targetAnimSpeed = b;
