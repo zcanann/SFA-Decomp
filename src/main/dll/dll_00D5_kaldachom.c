@@ -26,6 +26,8 @@
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define KALDACHOM_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
@@ -514,7 +516,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
     randomGetRange(0, 499);
     control->unk3C = lbl_803E3060;
     control->spawnedDustObj = NULL;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | KALDACHOM_OBJFLAG_HITDETECT_DISABLED;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32) * (s8*)(data + 0x28) / lbl_803E30A4;
     ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E30CC * ((GameObject*)obj)->anim.rootMotionScale));
     if (skip_alloc == 0)
