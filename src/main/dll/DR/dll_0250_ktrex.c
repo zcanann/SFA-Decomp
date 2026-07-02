@@ -915,10 +915,11 @@ int ktrex_stateHandlerB02(int obj, int runtime)
 
 void ktrex_init(int obj, char* arg, int flag)
 {
+    int* base = (int*)lbl_8032A510;
     int* pA;
+    int iv;
     int* pB;
     int* pC;
-    int* base = (int*)lbl_8032A510;
     KTRexRuntime* rt;
     int i;
     ObjfsaRomCurveDef* cp;
@@ -950,32 +951,35 @@ void ktrex_init(int obj, char* arg, int flag)
     yaw = (s16)((s8)arg[0x2a] << 8);
     ((GameObject*)obj)->anim.rotX = yaw;
     ((KTRexArenaState*)gKTRexState)->homeYaw = yaw;
+    i = 0;
     pA = base + 0x4c / 4;
+    iv = 0;
     pB = base + 0x3c / 4;
     pC = base + 0x6c / 4;
     base = base + 0x5c / 4;
-    for (i = 0; i < 4; i++)
+    for (; i < 4; i++)
     {
         cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pA);
         if (cp != NULL)
         {
-            ((KTRexArenaState*)gKTRexState)->laneAX[i] = cp->x;
-            ((KTRexArenaState*)gKTRexState)->laneAY[i] = cp->y;
-            ((KTRexArenaState*)gKTRexState)->laneAZ[i] = cp->z;
+            *(f32*)((char*)gKTRexState + iv + 0x10) = cp->x;
+            *(f32*)((char*)gKTRexState + iv + 0x20) = cp->y;
+            *(f32*)((char*)gKTRexState + iv + 0x30) = cp->z;
             cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pB);
-            ((KTRexArenaState*)gKTRexState)->laneBX[i] = cp->x;
-            ((KTRexArenaState*)gKTRexState)->laneBY[i] = cp->y;
-            ((KTRexArenaState*)gKTRexState)->laneBZ[i] = cp->z;
+            *(f32*)((char*)gKTRexState + iv + 0x40) = cp->x;
+            *(f32*)((char*)gKTRexState + iv + 0x50) = cp->y;
+            *(f32*)((char*)gKTRexState + iv + 0x60) = cp->z;
             cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*pC);
-            ((KTRexArenaState*)gKTRexState)->laneCX[i] = cp->x;
-            ((KTRexArenaState*)gKTRexState)->laneCY[i] = cp->y;
-            ((KTRexArenaState*)gKTRexState)->laneCZ[i] = cp->z;
+            *(f32*)((char*)gKTRexState + iv + 0x70) = cp->x;
+            *(f32*)((char*)gKTRexState + iv + 0x80) = cp->y;
+            *(f32*)((char*)gKTRexState + iv + 0x90) = cp->z;
             cp = (ObjfsaRomCurveDef*)(*gRomCurveInterface)->getById(*base);
-            ((KTRexArenaState*)gKTRexState)->laneDX[i] = cp->x;
-            ((KTRexArenaState*)gKTRexState)->laneDY[i] = cp->y;
-            ((KTRexArenaState*)gKTRexState)->laneDZ[i] = cp->z;
+            *(f32*)((char*)gKTRexState + iv + 0xa0) = cp->x;
+            *(f32*)((char*)gKTRexState + iv + 0xb0) = cp->y;
+            *(f32*)((char*)gKTRexState + iv + 0xc0) = cp->z;
         }
         pA++;
+        iv += 4;
         pB++;
         pC++;
         base++;
