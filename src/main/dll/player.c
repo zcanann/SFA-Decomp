@@ -8836,7 +8836,8 @@ static inline void Player_ApplyStatusDamage(int obj, int param)
 {
     int in2 = *(int*)&((GameObject*)obj)->extra;
     s8* pc = *(s8**)((char*)in2 + 0x35c);
-    int v = pc[0] - param;
+    int v = pc[0];
+    v -= param;
     if (v < 0)
     {
         v = 0;
@@ -9017,9 +9018,11 @@ void fn_802B249C(int obj, int inner, int state)
                     }
                     else
                     {
+                        f32 k;
+                        f32 lim;
                         f32 r = *(f32*)(p + 8) / *(f32*)(*(int*)(p + 0x50) + 4);
-                        f32 k = lbl_803E7F68;
-                        f32 lim = lbl_803E7F30;
+                        lim = lbl_803E7F30;
+                        k = lbl_803E7F68;
                         while (r * (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale) >
                             lim)
                         {
@@ -9035,9 +9038,11 @@ void fn_802B249C(int obj, int inner, int state)
                 }
                 else
                 {
+                    f32 k;
+                    f32 lim;
                     f32 r = *(f32*)(p + 8) / *(f32*)(*(int*)(p + 0x50) + 4);
-                    f32 k = lbl_803E7F68;
-                    f32 lim = lbl_803E7F30;
+                    lim = lbl_803E7F30;
+                    k = lbl_803E7F68;
                     while (r * (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale) > lim)
                     {
                         *(f32*)(p + 8) = *(f32*)(p + 8) * k;
