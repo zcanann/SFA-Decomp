@@ -207,18 +207,18 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
 
-        if (titleScreenCamProgress < (bf0 = *(f32*)&lbl_803E1BF0))
+        if (titleScreenCamProgress < 0.5f)
         {
-            v = bf0 *
-                ((lbl_803E1BF4 * titleScreenCamProgress) * (lbl_803E1BF4 * titleScreenCamProgress));
+            v = 0.5f *
+                ((2.0f * titleScreenCamProgress) * (2.0f * titleScreenCamProgress));
         }
         else
         {
-            f32 w = -(lbl_803E1BF4 * (titleScreenCamProgress - bf0) - lbl_803E1BE0);
+            f32 w = -(2.0f * (titleScreenCamProgress - 0.5f) - 1.0f);
             w = w * w;
-            v = bf0 * (lbl_803E1BE0 - w) + bf0;
+            v = (1.0f - w) * 0.5f + 0.5f;
         }
-        v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
+        v = v * ((-1.0f * v) * v) + (0.5f * v + (1.5f * v) * v);
 
         camera->anim.localPosX =
             v * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.x) + gCamTitleStartPose.x;
