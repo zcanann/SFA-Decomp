@@ -2459,7 +2459,7 @@ void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
             }
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
-            a = (s16)(s32)(gObjPrintDegToAngle * a);
+            a = (s16)(gObjPrintDegToAngle * a);
             p[0] = p3;
             ap[0] = ang;
             prodB = gObjPrintDegToAngle * b;
