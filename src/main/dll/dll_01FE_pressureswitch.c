@@ -169,7 +169,7 @@ void pressureswitch_update(int obj)
     extern f32 lbl_803E5D6C;
     extern f32 gPressureSwitchRiseSpeed;
     extern f32 gPressureSwitchPressSpeed;
-    int off;
+    int off[1];
     PressureswitchPlacement* t;
     GameObject* self;
     PressureSwitchState* sub;
@@ -201,8 +201,8 @@ void pressureswitch_update(int obj)
         sub->holdTimer = 0;
         sub->chimeLatch = 0;
     }
-    off = 0;
-    ((PressureSwitchFlags*)&sub->flags)->active = off;
+    off[0] = 0;
+    ((PressureSwitchFlags*)&sub->flags)->active = off[0];
     if (PSW_CONTACT_LIST(obj) != NULL &&
         PSW_CONTACT_LIST(obj)->count > 0)
     {
@@ -211,7 +211,7 @@ void pressureswitch_update(int obj)
         thr = lbl_803E5D60;
         for (; i < (list = PSW_CONTACT_LIST(obj))->count; i++)
         {
-            GameObject* ent = *(GameObject**)((char*)list + off + 256);
+            GameObject* ent = *(GameObject**)((char*)list + off[0] + 256);
             if (ent->anim.seqId == PSWITCH_TRIGGER_SEQ_ID)
             {
                 ((PressureSwitchFlags*)&sub->flags)->active = 1;
@@ -228,7 +228,7 @@ void pressureswitch_update(int obj)
                 }
                 sub->chimeLatch = 1;
             }
-            off += 4;
+            off[0] += 4;
         }
     }
     else
