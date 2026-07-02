@@ -352,25 +352,28 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
     lbl_803DD0E0 = w;
 }
 
-int fn_8007FE04(int* arr, int* count_ptr, int target)
+static inline int maketex_indexOf(int* p, int n, int target)
 {
     int i;
-    int* p;
-    int n;
     int j;
-    n = *count_ptr;
-    p = arr;
     i = 0;
     for (j = 0; j < n; j++)
     {
         if (*p++ == target)
         {
-            goto found;
+            return i;
         }
         i++;
     }
-    i = -1;
-found:
+    return -1;
+}
+
+int fn_8007FE04(int* arr, int* count_ptr, int target)
+{
+    int i;
+    int n;
+    n = *count_ptr;
+    i = maketex_indexOf(arr, n, target);
     if (i == -1) return -1;
     arr[i] = arr[n - 1];
     (*count_ptr)--;
