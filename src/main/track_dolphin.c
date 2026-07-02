@@ -4320,10 +4320,13 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         }
         if (hit == 0)
         {
-            f32 ex = ((GameObject*)o)->anim.localPosX - w1[0];
-            f32 ey = ((GameObject*)o)->anim.localPosY - w1[1];
-            f32 ez = ((GameObject*)o)->anim.localPosZ - w1[2];
-            if (ey * ey + ex * ex + ez * ez < rad) hit = 1;
+            dx = ((GameObject*)o)->anim.localPosX - w1[0];
+            dy = ((GameObject*)o)->anim.localPosY - w1[1];
+            dz = ((GameObject*)o)->anim.localPosZ - w1[2];
+            {
+                f32 ddy = dy * dy;
+                if (ddy + dx * dx + dz * dz < rad) hit = 1;
+            }
         }
         if (hit == 0) continue;
         if ((u8)slot != 0xff)
@@ -4407,9 +4410,9 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34));
         *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
         *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
-        *(f32*)((char*)out + 0x38) = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14) -
-            *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4);
-        if (*(int*)out != 0)
+        *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
+            *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
+        if (*(u32*)out != 0)
         {
             Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
                                            *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
@@ -4440,8 +4443,8 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
         *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
         *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
-        *(f32*)((char*)out + 0x28) = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14) -
-            *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4);
+        *(f32*)((char*)out + 0x28) = -(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4) +
+            *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
     }
     if (lbl_803DCF4C != 0)
     {
