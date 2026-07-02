@@ -13,6 +13,9 @@
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
 
+#define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMLAVABALL_OBJFLAG_HIDDEN 0x4000
+
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -174,7 +177,7 @@ void lavaball1bf_init(s16* obj, u8* p)
     {
         inner->soloLatch = 1;
     }
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DIMLAVABALL_OBJFLAG_HIDDEN | DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void lavaball1bf_free(int obj, int mode)
