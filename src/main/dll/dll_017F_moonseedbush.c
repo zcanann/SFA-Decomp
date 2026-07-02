@@ -21,6 +21,8 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern f32 lbl_803E44D0;
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
@@ -143,7 +145,7 @@ void MoonSeedBush_init(int obj, int data)
     state->flags = 1;
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = MoonSeedBush_SeqFn;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
     ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
     if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E44D8)
     {
