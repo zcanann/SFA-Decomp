@@ -27,8 +27,8 @@
 #include "string.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_Y 0x800
+#define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SIDEKICKBALL_OBJFLAG_PARENT_SLACK 0x1000
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
@@ -165,7 +165,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 
     getYButtonItem(&yItem);
     btns = getButtonsJustPressed(0);
-    if ((btns & PAD_BUTTON_A) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & PAD_BUTTON_Y) != 0))
+    if ((btns & 0x100) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & 0x800) != 0))
     {
         if (fn_80295BF0(player) != 0)
         {
@@ -253,7 +253,7 @@ void sidekickball_update(u8* self)
     player = Obj_GetPlayerObject();
     other = getTrickyObject();
     if (player == NULL
-        || (((GameObject*)player)->objectFlags & 0x1000) != 0
+        || (((GameObject*)player)->objectFlags & SIDEKICKBALL_OBJFLAG_PARENT_SLACK) != 0
         || other == NULL
         || (otherStatusZeroWord = __cntlzw((u32)((GameObject*)other)->objectFlags),
             otherStatusMask = otherStatusZeroWord >> 5,
@@ -514,7 +514,7 @@ void sidekickball_init(int obj)
     Obj_GetPlayerObject(); /* result discarded; the call is emitted in the target */
     ((SidekickBallState*)state)->ballMode = SIDEKICK_BALL_IDLE; /* explicit post-memset store in target */
     ((TFrameAnimatorState*)state)->fadeTimer = lbl_803E369C;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED;
     objDef = *(int*)&((GameObject*)obj)->anim.hitReactState;
     ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
     (*gPathControlInterface)->init(state, 0, 0x40007, 1);
