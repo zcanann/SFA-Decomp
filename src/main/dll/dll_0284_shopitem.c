@@ -74,6 +74,7 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 #define GX_BL_ONE 1
 #define GX_BL_SRCALPHA 4
 #define GX_LO_NOOP 5
+#define GX_LEQUAL 3
 #define GX_ALWAYS 7
 #define GX_AOP_AND 0
 
@@ -219,7 +220,7 @@ void fn_801E832C(int obj)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     }
-    gxSetZMode_(1, 3, 0);
+    gxSetZMode_(1, GX_LEQUAL, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
