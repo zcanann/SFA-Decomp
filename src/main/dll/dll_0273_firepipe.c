@@ -32,6 +32,8 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/sfa_shared_decls.h"
+
+#define FIREPIPE_OBJFLAG_RENDERED 0x800
 extern void modelLightStruct_freeSlot(int p);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
@@ -280,7 +282,7 @@ void firepipe_updateState(FirePipeObject* obj)
 
     if (flags->emitting != 0)
     {
-        if (((((GameObject*)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL))
+        if (((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_RENDERED) != 0) || (obj->callback != NULL))
         {
             fn_80098B18(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, 0);
         }
