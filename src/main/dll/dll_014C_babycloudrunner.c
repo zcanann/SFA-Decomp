@@ -21,6 +21,8 @@
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+
+#define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 extern u64 FUN_80006824();
 extern u32 FUN_80017690();
 extern u32 FUN_80017698();
@@ -745,7 +747,7 @@ int babycloudrunner_func0B(void* p)
     {
         if (sub->runnerState == 3)
         {
-            if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
+            if ((((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
             {
                 flag = 1;
             }
@@ -929,7 +931,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         int found = 0;
         if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32)def2->innerRadius
             && sub2->runnerState == 3
-            && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
+            && (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
         {
             found = 1;
         }
@@ -1172,7 +1174,7 @@ void babycloudrunner_update(int* obj)
                     found = 0;
                     if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)def2->innerRadius
                         && sub2->runnerState == 3
-                        && (((GameObject*)obj)->objectFlags & 0x1000) == 0)
+                        && (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
                     {
                         found = 1;
                     }
