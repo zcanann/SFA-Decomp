@@ -17,6 +17,7 @@
 
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
+#define MODEL_LIGHT_KIND_POINT 2
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
@@ -190,7 +191,7 @@ void dimbossfire_update(int obj)
                 state->light = light;
                 if ((void*)state->light != NULL)
                 {
-                    modelLightStruct_setLightKind(state->light, 2);
+                    modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
                     lightSetFieldBC_8001db14(state->light, 1);
                     if (placement->flameColor != 0)
                     {
