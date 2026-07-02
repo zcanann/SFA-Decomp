@@ -2703,12 +2703,19 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
-        char* base = (char*)((GameObject*)staff)->extra;
-        int i = 0;
-        int k = 1;
-        int off = 0x18;
-        char* q = base;
-        f32* vp = va;
+        int k;
+        char* q;
+        f32* vp;
+        int i;
+        char* base;
+        int off;
+
+        base = (char*)((GameObject*)staff)->extra;
+        i = 0;
+        k = 1;
+        off = 0x18;
+        q = base;
+        vp = va;
 
         while (i < *(s16*)(base + 0xb0))
         {
