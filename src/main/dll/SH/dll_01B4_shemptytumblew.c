@@ -9,6 +9,8 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 
+#define SHEMPTYTUMBLEW_OBJFLAG_HIDDEN 0x4000
+
 extern f32 lbl_803DDC00;
 extern void ObjHitbox_SetCapsuleBounds();
 extern f32 lbl_803E5540;
@@ -44,5 +46,5 @@ void sh_emptytumblew_init(s16* obj, ShEmptyTumblewPlacement* def)
     ((GameObject*)obj)->anim.rootMotionScale = def->scale;
     scale = ((GameObject*)obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale), (int)(lbl_803E5548 * scale));
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= SHEMPTYTUMBLEW_OBJFLAG_HIDDEN;
 }
