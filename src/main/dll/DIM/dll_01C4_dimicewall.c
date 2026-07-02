@@ -11,6 +11,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define DIMICEWALL_OBJFLAG_HIDDEN 0x4000
+
 #define DIMICEWALL_MAPID_NO_SFX 7433
 
 typedef struct DimicewallPlacement
@@ -42,7 +44,7 @@ void dimicewall_init(int obj, s8* p)
         ((DimicewallState*)inner)->shattered = GameBit_Get(((DimicewallPlacement*)p)->shatterGameBit);
     }
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }
 
 void dimgate_init(int obj, s8* p_unused_passthrough);
