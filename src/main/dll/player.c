@@ -4128,9 +4128,11 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
         s8 kind;
         u8 padC[2];
     } SweepHit;
+    extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj,
+                                  int p7, int p8, int p9, int p10);
     f32* dir;
-    f32 nearDist;
     int objCount;
+    f32 nearDist;
     f32 rot[3];
     f32 vec[3];
     f32 start[3];
@@ -4326,7 +4328,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             end[1] = ((GameObject*)obj)->anim.localPosY;
             end[2] = ((GameObject*)obj)->anim.localPosZ;
         }
-        hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+        hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         if (flagA != 0 && hit != 0)
         {
             ((PlayerState*)state)->probeHitDist = buf.dist;
@@ -4394,7 +4396,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
                 end[1] = ((GameObject*)obj)->anim.localPosY;
                 end[2] = ((GameObject*)obj)->anim.localPosZ;
             }
-            hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff,
+            hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff,
                                      10);
         }
         if (hit == 0)
@@ -4579,7 +4581,7 @@ s8 fn_802A74A4(int obj, int state, int state2, void* out, f32 fv, u32 mask)
             }
             if (buf.kind == 0xd)
             {
-                if (((PlayerState*)state2)->baddie.animSpeedA <= lbl_803E80A0)
+                if (!(((PlayerState*)state2)->baddie.animSpeedA > lbl_803E80A0))
                 {
                     continue;
                 }
