@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define MAGICDUST_OBJFLAG_HITDETECT_DISABLED 0x2000
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -441,7 +442,7 @@ void magicdust_init(int obj, int placement)
         (*gPathControlInterface)->setup((void*)state, 1, lbl_80320CB8, (void*)(state + 0x268), pathArgs);
         (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
     }
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | MAGICDUST_OBJFLAG_HITDETECT_DISABLED;
     if ((((MagicDustState*)state)->flags27A & 1) != 0)
     {
         ((MagicDustState*)state)->burstTimer = lbl_803E34FC;
