@@ -11100,7 +11100,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
                 ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
-                ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x14, 2, 0xffffffff);
+                ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
+                    obj, 0, 0x14, 2, 0xffffffff, pos[0], pos[1], pos[2]);
             }
             break;
         case 8:
@@ -11114,8 +11115,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 {
                     ((PlayerState*)state)->periodicHitTimer -= 0x78;
                     ObjPath_GetPointWorldPosition(obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
-                    ObjHits_RecordPositionHit(pos[0], pos[1], pos[2], obj, 0, 0x16, 2,
-                                              0xffffffff);
+                    ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
+                        obj, 0, 0x16, 2, 0xffffffff, pos[0], pos[1], pos[2]);
                 }
             }
             break;
