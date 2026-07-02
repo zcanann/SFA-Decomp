@@ -6259,10 +6259,8 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     int e1 = 0;
     int e2 = 0;
     int count = 0;
-    int v;
     int* p1;
     int* p2;
-    int* dst;
     int* src1 = MAPTBLP(id, -0x6A28);
     if (src1 == NULL || MAPTBLP(idx, -0x6A28) == NULL)
     {
@@ -6275,7 +6273,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             e2 = 1;
         }
     }
-    p1 = src1;
+    p1 = (int*)(u32)src1;
     p2 = MAPTBLP(idx, -0x6A28);
     if (tbl == (u32*)(base + 0x170e0))
     {
@@ -6308,7 +6306,8 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     if (tbl == (u32*)(base + 0x10200) || tbl == (u32*)(base + 0xc200))
     {
         int* w1 = p1;
-        dst = (int*)tbl;
+        int* dst = (int*)tbl;
+        int v;
         for (; count > 0; count--)
         {
             if (!e1 && *w1 == -1)
@@ -6349,8 +6348,9 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     else if (tbl == (u32*)(base + 0xa200))
     {
         int* w1 = p1;
+        int* dst = (int*)tbl;
         int* w2 = p2;
-        dst = (int*)tbl;
+        int v;
         for (; count > 0; count--)
         {
             if (!e1 && (v = *w1, v != -1) && (v & 0x10000000))
@@ -6400,8 +6400,8 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     else if (tbl == (u32*)(base + 0x8200))
     {
         int* w1 = p1;
-        int* w2 = p2;
-        dst = (int*)tbl;
+        int* dst = (int*)tbl;
+        int v;
         for (; count > 0; count--)
         {
             if (!e1 && *w1 == -1)
@@ -6409,7 +6409,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
                 *dst = 0;
                 e1 = 1;
             }
-            else if (!e2 && *w2 == -1)
+            else if (!e2 && *p2 == -1)
             {
                 *dst = 0;
                 e2 = 1;
@@ -6418,7 +6418,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             {
                 *dst = v;
             }
-            else if (!e2 && (v = *w2, v != -1) && (v & 0x80000000))
+            else if (!e2 && (v = *p2, v != -1) && (v & 0x80000000))
             {
                 *dst = (v & 0x7fffffff) | 0x20000000;
             }
@@ -6426,9 +6426,9 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             {
                 *dst = *w1;
             }
-            else if (!e2 && *w2 != 0)
+            else if (!e2 && *p2 != 0)
             {
-                *dst = *w2;
+                *dst = *p2;
             }
             else
             {
@@ -6436,15 +6436,15 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             }
             w1++;
             dst++;
-            w2++;
+            p2++;
             i++;
         }
     }
     else if (tbl == (u32*)(base + 0x2c0))
     {
         int* w1 = p1;
-        int* w2 = p2;
-        dst = (int*)tbl;
+        int* dst = (int*)tbl;
+        int v;
         for (; count > 0; count--)
         {
             if (!e1 && *w1 == -1)
@@ -6452,7 +6452,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
                 *dst = 0;
                 e1 = 1;
             }
-            else if (!e2 && *w2 == -1)
+            else if (!e2 && *p2 == -1)
             {
                 *dst = 0;
                 e2 = 1;
@@ -6461,7 +6461,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             {
                 *dst = v;
             }
-            else if (!e2 && (v = *w2, v != -1) && (v & 0x80000000))
+            else if (!e2 && (v = *p2, v != -1) && (v & 0x80000000))
             {
                 *dst = (v & 0x7fffffff) | 0x20000000;
             }
@@ -6469,9 +6469,9 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             {
                 *dst = *w1;
             }
-            else if (!e2 && *w2 != 0)
+            else if (!e2 && *p2 != 0)
             {
-                *dst = *w2;
+                *dst = *p2;
             }
             else
             {
@@ -6479,7 +6479,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             }
             w1++;
             dst++;
-            w2++;
+            p2++;
             i++;
         }
     }
@@ -6487,7 +6487,8 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     {
         int* w1 = p1;
         int* w2 = p2;
-        dst = (int*)tbl;
+        int* dst = (int*)tbl;
+        int v;
         for (; count > 0; count--)
         {
             if (!e1 && *w1 == -1)
@@ -6518,10 +6519,10 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
             {
                 *dst = 0;
             }
-            i++;
             w1++;
             w2++;
             dst++;
+            i++;
         }
     }
     tbl[i - 1] = 0xffffffff;
