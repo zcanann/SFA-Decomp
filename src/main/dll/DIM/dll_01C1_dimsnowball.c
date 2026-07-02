@@ -56,6 +56,9 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
 
+#define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
+#define DIMSNOWBALL_OBJFLAG_FREED 0x40
+
 typedef struct DimsnowballState
 {
     u8 pad0[0xC - 0x0];
@@ -95,7 +98,7 @@ void dimsnowball_hitDetect(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
     GameObject* target = (GameObject*)state[0];
-    if ((target->objectFlags & 0x40) == 0) return;
+    if ((target->objectFlags & DIMSNOWBALL_OBJFLAG_FREED) == 0) return;
     state[0] = 0;
 }
 
@@ -176,7 +179,7 @@ void dimsnowball_update(int obj)
         sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
             (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)->anim.
                 velocityY * ((GameObject*)obj)->anim.velocityY));
-        if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+        if ((((GameObject*)player)->objectFlags & DIMSNOWBALL_OBJFLAG_PARENT_SLACK) == 0)
         {
             Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
         }
