@@ -29,7 +29,7 @@
 #include "string.h"
 #include "main/vecmath.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
-extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
+extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
@@ -109,10 +109,11 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
     camObj = (int)camera->anim.targetObj;
     if ((flags & 1) != 0)
     {
-        *(float*)(cameraAddr + 0x74) = 4.0f;
+        float range = lbl_803E1688;
+        *(float*)(cameraAddr + 0x74) = range;
         *(s8*)(cameraAddr + 0x84) = -1;
         *(s8*)(cameraAddr + 0x88) = collisionFlag;
-        res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
+        res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, range, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
         camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;
         pos[1] = camera->anim.worldPosY;
