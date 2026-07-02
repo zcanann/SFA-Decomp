@@ -2582,11 +2582,11 @@ int ObjSeq_update(u8* obj, f32 t)
     int slot;
     int i;
     int k;
+    int targetFrame;
     int stop;
     int opcode;
     int found;
     int pressed;
-    int targetFrame;
     int restart;
     int aInt;
     f32 val;
@@ -2641,8 +2641,8 @@ int ObjSeq_update(u8* obj, f32 t)
         ((ObjSeqState*)seq)->curFrame = ((f32*)(base + 0x3894))[slot];
     }
 
-    p = seq + 6;
     i = 3;
+    p = seq + 6;
     while (p -= 2, i-- != 0)
     {
         if (*(s16*)(p + 0x30) > 0)
@@ -2810,9 +2810,10 @@ int ObjSeq_update(u8* obj, f32 t)
             {
                 if ((s8)((ObjSeqState*)seq)->unk78 == 1 && (s8)((ObjSeqState*)seq)->unk7B == 0 && action != NULL)
                 {
+                    f32 dx = px - prevX;
                     f32 dz = pz - prevZ;
                     if (ObjAnim_SampleRootCurvePhase(
-                        sqrtf(dz * dz + (px - prevX) * (px - prevX)),
+                        sqrtf(dx * dx + dz * dz),
                         (ObjAnimComponent*)activeObj, &scratch[1]) == 0)
                     {
                         i = ((ObjSeqState*)seq)->curFrame - 1;
@@ -2847,7 +2848,8 @@ int ObjSeq_update(u8* obj, f32 t)
                         {
                             rate = lbl_803DEFC8;
                         }
-                        ((ObjSeqState*)seq)->fade = ((ObjSeqState*)seq)->fade - lbl_803DEFC8 / rate;
+                        val = *(f32*)&lbl_803DEFC8 / rate;
+                        ((ObjSeqState*)seq)->fade = ((ObjSeqState*)seq)->fade - val;
                         if (((ObjSeqState*)seq)->fade < lbl_803DEFB0)
                         {
                             ((ObjSeqState*)seq)->fade = lbl_803DEFB0;
@@ -2857,15 +2859,16 @@ int ObjSeq_update(u8* obj, f32 t)
                 else
                 {
                     ((GameObject*)activeObj)->anim.currentMoveProgress += scratch[1];
-                    while (((GameObject*)activeObj)->anim.currentMoveProgress > lbl_803DEFC8)
+                    rate = lbl_803DEFC8;
+                    while (((GameObject*)activeObj)->anim.currentMoveProgress > rate)
                     {
-                        ((GameObject*)activeObj)->anim.currentMoveProgress =
-                            ((GameObject*)activeObj)->anim.currentMoveProgress - lbl_803DEFC8;
+                        ((GameObject*)activeObj)->anim.currentMoveProgress -= rate;
                     }
-                    while (((GameObject*)activeObj)->anim.currentMoveProgress < lbl_803DEFB0)
+                    fval = lbl_803DEFB0;
+                    val = lbl_803DEFC8;
+                    while (((GameObject*)activeObj)->anim.currentMoveProgress < fval)
                     {
-                        ((GameObject*)activeObj)->anim.currentMoveProgress =
-                            ((GameObject*)activeObj)->anim.currentMoveProgress + lbl_803DEFC8;
+                        ((GameObject*)activeObj)->anim.currentMoveProgress += val;
                     }
                 }
             }
@@ -2903,12 +2906,15 @@ int ObjSeq_update(u8* obj, f32 t)
                         {
                             targetFrame = ((ObjSeqState*)seq)->curFrame;
                         }
-                        activeObj = *(u8**)((GameObject*)obj)->extra;
-                        if (activeObj == NULL)
                         {
-                            activeObj = obj;
+                            u8* t = *(u8**)((GameObject*)obj)->extra;
+                            if (t == NULL)
+                            {
+                                t = obj;
+                            }
+                            action = ObjSeq_GetActiveModel(t);
+                            activeObj = t;
                         }
-                        action = ObjSeq_GetActiveModel(activeObj);
                     }
                     else
                     {
@@ -2920,12 +2926,14 @@ int ObjSeq_update(u8* obj, f32 t)
 
         for (k = 0; k < 10; k++)
         {
-            opcode = ((ObjSeqState*)seq)->conditionOpcodes[k];
-            if (opcode == 0)
+            u8 op;
+            aInt = k + 300;
+            op = seq[aInt];
+            if (op == 0)
             {
                 continue;
             }
-            switch (opcode)
+            switch (op)
             {
             case 0x12:
                 if ((getButtonsJustPressed(0) & 0x100) != 0)
@@ -2947,9 +2955,6 @@ int ObjSeq_update(u8* obj, f32 t)
                     pressed = 0;
                 }
                 break;
-            case 0x1a:
-                pressed = isTalkingToNpc() == 0;
-                break;
             case 0x14:
             case 0x15:
             case 0x16:
@@ -2965,6 +2970,9 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     pressed = 0;
                 }
+                break;
+            case 0x1a:
+                pressed = isTalkingToNpc() == 0;
                 break;
             default:
                 pressed = 0;
@@ -3037,12 +3045,15 @@ int ObjSeq_update(u8* obj, f32 t)
             {
                 k = lbl_803DD0C0;
             }
-            activeObj = *(u8**)((GameObject*)obj)->extra;
-            if (activeObj == NULL)
             {
-                activeObj = obj;
+                u8* t = *(u8**)((GameObject*)obj)->extra;
+                if (t == NULL)
+                {
+                    t = obj;
+                }
+                action = ObjSeq_GetActiveModel(t);
+                activeObj = t;
             }
-            action = ObjSeq_GetActiveModel(activeObj);
         }
 
         if (gObjSeqStreamStopped != 0)
@@ -3053,13 +3064,16 @@ int ObjSeq_update(u8* obj, f32 t)
 
         if ((s8)gObjSeqStop != 0)
         {
-            activeObj = *(u8**)((GameObject*)obj)->extra;
-            if (activeObj == NULL)
             {
-                activeObj = obj;
+                u8* t = *(u8**)((GameObject*)obj)->extra;
+                if (t == NULL)
+                {
+                    t = obj;
+                }
+                action = ObjSeq_GetActiveModel(t);
+                activeObj = t;
+                animatedObjFreeAndSavePlayerPos(obj, t, seq);
             }
-            action = ObjSeq_GetActiveModel(activeObj);
-            animatedObjFreeAndSavePlayerPos(obj, activeObj, seq);
         }
         else
         {
