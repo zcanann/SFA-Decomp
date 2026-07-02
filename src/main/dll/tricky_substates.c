@@ -830,6 +830,7 @@ skip:
     return 0;
 }
 
+#pragma opt_propagation off
 int trickyFn_80142eb0(int obj, int state)
 {
     short move;
@@ -903,7 +904,12 @@ int trickyFn_80142eb0(int obj, int state)
             {
                 objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
                 trickyDebugPrint(lbl_8031D478);
-                *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x10LL;
+            }
+            {
+                u32 m;
+                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                m = ~0x10;
+                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->substate = 0;
         }
@@ -912,6 +918,7 @@ int trickyFn_80142eb0(int obj, int state)
     return 1;
 }
 
+#pragma opt_propagation reset
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
