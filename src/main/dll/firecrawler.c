@@ -260,10 +260,10 @@ void firecrawler_spawnFirepipe(int* obj)
     {
         child = Obj_AllocObjectSetup(0x24, 0x710);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
-        *((u8*)child + 0x4) = 1;
-        *((u8*)child + 0x5) = 4;
-        *((u8*)child + 0x6) = 0xff;
-        *((u8*)child + 0x7) = 0xff;
+        ((ObjPlacement*)child)->color[0] = 1;
+        ((ObjPlacement*)child)->color[1] = 4;
+        ((ObjPlacement*)child)->color[2] = 0xff;
+        ((ObjPlacement*)child)->color[3] = 0xff;
         *((u8*)child + 0x18) = 0;
         *((u8*)child + 0x19) = 0;
         *(s16*)((char*)child + 0x1a) = 0;
@@ -752,9 +752,9 @@ void fn_8015A52C(s16* obj)
         ((GameObject*)setup)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)setup)->anim.localPosX = lbl_803E2C98 + ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)setup)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)((char*)setup + 4) = 1;
-        *(u8*)((char*)setup + 5) = 4;
-        *(u8*)((char*)setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 4;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         setup = Obj_SetupObject(setup, 5, -1, -1, 0);
         if (setup != NULL)
         {
