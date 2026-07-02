@@ -2703,12 +2703,12 @@ void modelInitBones(f32 scale, void* model)
 
     sc = scale;
     hdr = *(u8**)m;
-    if (!(!*(u16*)(hdr + 2) & 0x1000))
+    if ((!*(u16*)(hdr + 2) & 0x1000) || (*(u8*)(hdr + 0xf3) == 0))
     {
-        if (*(u8*)(hdr + 0xf3) == 0)
-        {
-        }
-        else if ((src = *(f32**)(hdr + 0x18)) != NULL && (tbl = *(u8**)(m + 0x14)) != NULL)
+        return;
+    }
+    {
+        if ((src = *(f32**)(hdr + 0x18)) != NULL && (tbl = *(u8**)(m + 0x14)) != NULL)
         {
             **(f32**)(tbl + 4) = src[0] * sc;
             if (**(f32**)(tbl + 4) == lbl_803DE88C)
