@@ -1231,7 +1231,7 @@ void titleScreenDrawFn_80093db4(void)
             v[2] = (int)
             randomGetRange(-5000, 5000);
         }
-        while (lbl_803DF28C == v[0] && lbl_803DF28C == v[1] && lbl_803DF28C == v[2]);
+        while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
         PSVECNormalize(v, v);
         PSVECScale(v, v, gNewCloudStarRadius);
         cp[0] = v[0];
@@ -1262,7 +1262,7 @@ void titleScreenDrawFn_80093db4(void)
                     v[2] = (int)
                     randomGetRange(-5000, 5000);
                 }
-                while (lbl_803DF28C == v[0] && lbl_803DF28C == v[1] && lbl_803DF28C == v[2]);
+                while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
                 PSVECNormalize(v, v);
                 PSVECScale(v, v, gNewCloudStarRadius);
             }
