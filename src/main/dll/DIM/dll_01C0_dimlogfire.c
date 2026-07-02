@@ -18,6 +18,8 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIMboulder.h"
 
+#define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
@@ -323,7 +325,7 @@ void dimlogfire_init(int obj, int def)
         state->mode = 1;
         state->dousedLatch = 1;
     }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED;
     state->flickerTimerA = lbl_803E482C;
     state->flickerTimerB = lbl_803E4820;
     if (*(int**)&state->light == NULL)
