@@ -12,6 +12,8 @@
 #include "main/objhits.h"
 #include "main/sfa_shared_decls.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 typedef struct Dimbossgut2State
 {
     u8 pad0[0x4 - 0x0];
@@ -346,7 +348,7 @@ void dimbossgut2_init(int obj, int def, int p3)
     ((Dimbossgut2Curve*)p)->light = (int)objCreateLight(obj, 1);
     if ((void*)((Dimbossgut2Curve*)p)->light != NULL)
     {
-        modelLightStruct_setLightKind(((Dimbossgut2Curve*)p)->light, 2);
+        modelLightStruct_setLightKind(((Dimbossgut2Curve*)p)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((Dimbossgut2Curve*)p)->light, 0, 255, 0, 0);
         lightSetFieldBC_8001db14(((Dimbossgut2Curve*)p)->light, 1);
         modelLightStruct_setDistanceAttenuation(((Dimbossgut2Curve*)p)->light, lbl_803E4D2C, lbl_803E4CE0);
