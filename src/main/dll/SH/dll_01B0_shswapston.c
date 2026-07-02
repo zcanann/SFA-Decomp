@@ -17,6 +17,8 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define PAD_BUTTON_B 0x200
+
 typedef struct WarpstoneUpdateMenuAnimObjState
 {
     u8 pad0[0x8 - 0x0];
@@ -219,7 +221,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
         break;
 
     case 0x19:
-        if ((getButtonsJustPressed(0) & 0x200) != 0)
+        if ((getButtonsJustPressed(0) & PAD_BUTTON_B) != 0)
         {
             unlockLevel(0, 0, 1);
             mapUnload(mapGetDirIdx(0x42), 0x20000000);
