@@ -569,7 +569,7 @@ void lightningRender(void* state)
     fn_800788DC();
     fn_8006C51C(&tex);
     selectTexture(tex, 0);
-    GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, color);
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
     GXSetCurrentMtx(0);
