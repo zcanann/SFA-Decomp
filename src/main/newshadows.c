@@ -2798,7 +2798,7 @@ void renderShadows(void)
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
             C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, FinishQueue_803DED6C);
-            GXSetProjection(mOrtho, 1);
+            GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho((f32*)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
             {
