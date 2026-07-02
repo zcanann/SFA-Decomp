@@ -797,12 +797,12 @@ void pushable_init(s16* obj, char* def)
                 f32 vx = vtx[0];
                 f32 vz = vtx[2];
 
-                for (; j < *(s8*)&state->pointCount; j++)
+                for (; j < state->pointCount; j++)
                 {
                     if (vx == state->cornerLocal[j].x && vz == state->cornerLocal[j].z)
                     {
                         found = 1;
-                        j = *(s8*)&state->pointCount;
+                        j = state->pointCount;
                     }
                 }
                 if (found == 0)
@@ -825,15 +825,14 @@ void pushable_init(s16* obj, char* def)
         mtx = (f32*)(mi + ((*(u8*)(mi + 0x10c) + 2) << 4) * 4);
     }
     {
-        f32 zero;
-        for (i = 0, zero = lbl_803E3528; i < state->pointCount; i++)
+        for (i = 0; i < state->pointCount; i++)
         {
             f32 v;
             state->probeLocal[i].x = state->cornerLocal[i].x;
             state->probeLocal[i].y = state->cornerLocal[i].y;
             state->probeLocal[i].z = state->cornerLocal[i].z;
             v = state->probeLocal[i].x;
-            if (v < zero)
+            if (v < 0.0f)
             {
                 state->probeLocal[i].x = v + lbl_803E358C;
             }
@@ -842,7 +841,7 @@ void pushable_init(s16* obj, char* def)
                 state->probeLocal[i].x = v - lbl_803E358C;
             }
             v = state->probeLocal[i].z;
-            if (v < zero)
+            if (v < 0.0f)
             {
                 state->probeLocal[i].z = v + lbl_803E358C;
             }
@@ -851,7 +850,7 @@ void pushable_init(s16* obj, char* def)
                 state->probeLocal[i].z = v - lbl_803E358C;
             }
             v = state->cornerLocal[i].x;
-            if (v < zero)
+            if (v < 0.0f)
             {
                 state->cornerLocal[i].x = v + lbl_803E3588;
             }
@@ -861,7 +860,7 @@ void pushable_init(s16* obj, char* def)
                 state->cornerIdxPosX = i;
             }
             v = state->cornerLocal[i].z;
-            if (v < zero)
+            if (v < 0.0f)
             {
                 state->cornerLocal[i].z = v + lbl_803E3588;
             }
