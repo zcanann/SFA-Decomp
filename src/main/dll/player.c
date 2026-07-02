@@ -2695,10 +2695,12 @@ extern f32 lbl_803E7FF8;
 extern f32 lbl_803E8000;
 extern f32 lbl_803E8004;
 
+#pragma opt_common_subs off
 int fn_802A0680(int obj, int state)
 {
     extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj,
                                   int p7, int p8, int p9, int p10);
+    int mask;
     int jt;
     int inner;
     int b6;
@@ -2706,7 +2708,6 @@ int fn_802A0680(int obj, int state)
     int b8;
     int b9;
     int dir;
-    int mask;
     s16 i;
     f32 oldSpd;
     f32 dx;
@@ -2788,8 +2789,14 @@ int fn_802A0680(int obj, int state)
                 {
                     ((GameObject*)obj)->anim.localPosX = pnt[0];
                     ((GameObject*)obj)->anim.localPosZ = pnt[2];
-                    ((PlayerState*)inner)->spanTopY = hit.gt * (hit.gb - hit.ga) + hit.ga;
-                    ((PlayerState*)inner)->spanBottomY = hit.gt * (hit.fz1 - hit.fz0) + hit.fz0;
+                    {
+                        f32 ga = hit.ga;
+                        ((PlayerState*)inner)->spanTopY = hit.gt * (hit.gb - ga) + ga;
+                    }
+                    {
+                        f32 fz0 = hit.fz0;
+                        ((PlayerState*)inner)->spanBottomY = hit.gt * (hit.fz1 - fz0) + fz0;
+                    }
                     ((PlayerState*)inner)->groundNormalX = hit.nx;
                     ((PlayerState*)inner)->groundNormalY = hit.ny;
                     ((PlayerState*)inner)->groundNormalZ = hit.nz;
@@ -3099,9 +3106,12 @@ int fn_802A0680(int obj, int state)
     }
 store_ph:
     ((PlayerState*)state)->baddie.moveSpeed = ph;
-    if (gPlayerPrevMoveId != gPlayerCurrentMoveId)
     {
-        ObjAnim_SetCurrentMove(obj, lbl_80332F48[gPlayerCurrentMoveId], 0.0f, 1);
+        s16 cur;
+        if (gPlayerPrevMoveId != (cur = gPlayerCurrentMoveId))
+        {
+            ObjAnim_SetCurrentMove(obj, lbl_80332F48[cur], 0.0f, 1);
+        }
     }
     {
         f32 sp = ((GameObject*)obj)->anim.currentMoveProgress;
@@ -3113,6 +3123,7 @@ store_ph:
     fn_802AB5A4(obj, inner, 5);
     return 0;
 }
+#pragma opt_common_subs reset
 
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
 {
