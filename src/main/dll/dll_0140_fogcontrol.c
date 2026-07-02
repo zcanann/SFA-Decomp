@@ -18,6 +18,8 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
+#define FOGCONTROL_OBJFLAG_HIDDEN 0x4000
+
 /* FogcontrolPlacement::flags (low byte, offset 0x1A) */
 #define FOG_FLAG_MODE 0x01      /* enableHeavyFog mode arg */
 #define FOG_FLAG_FAST_IN 0x02   /* ramp-in uses lbl_803E4068 (else ...406C) */
@@ -94,7 +96,7 @@ void fogcontrol_init(int obj, FogcontrolPlacement* placement)
     f32 t;
 
     st = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | FOGCONTROL_OBJFLAG_HIDDEN);
     st->on = 0;
     st->full = 0;
     st->blend = lbl_803E4070;
