@@ -10,6 +10,8 @@
 #include "main/audio/sfx.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470
+#define DIMBARRIER_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMBARRIER_OBJFLAG_HIDDEN 0x4000
 
 typedef struct DimbarrierPlacement
 {
@@ -58,7 +60,7 @@ void dimbarrier_init(int obj, s8* p)
 {
     char* inner;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DIMBARRIER_OBJFLAG_HIDDEN | DIMBARRIER_OBJFLAG_HITDETECT_DISABLED);
     inner = ((GameObject*)obj)->extra;
     inner[3] = 1;
     inner[2] = 0;
