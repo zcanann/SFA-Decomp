@@ -804,7 +804,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 {
                     if (tableA[hit - 2] != -1)
                     {
-                        (*(void (**)(u8*, u8*))(*(int*)gPlayerInterface + 20))(obj, baddieState);
+                        (*(void (**)(u8*, u8*, int))(*(int*)gPlayerInterface + 20))(obj, baddieState, tableA[hit - 2]);
                         ((BaddieState*)baddieState)->substate = substate;
                     }
                 }
