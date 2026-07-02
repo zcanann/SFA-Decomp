@@ -1608,22 +1608,9 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
     int linkId;
     int c2;
     int candidates[4];
-    u32 mask;
     int count;
-    int n;
-    int k;
 
-    count = 0;
-    mask = 1;
-    for (k = 0; k < 4; k++)
-    {
-        n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
-        if (n > -1 && (((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && n != 0)
-        {
-            candidates[count++] = n;
-        }
-        mask <<= 1;
-    }
+    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)curve, candidates);
     if (count != 0)
     {
         linkId = candidates[randomGetRange(0, count - 1)];

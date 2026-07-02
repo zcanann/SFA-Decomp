@@ -2246,17 +2246,13 @@ extern f32 lbl_803DE850;
 #pragma dont_inline on
 void fn_80026928(int* obj, int b, int* desc)
 {
-    int off4;
-    int off54;
     int i;
 
     i = 0;
-    off4 = 0;
-    off54 = off4;
     for (; i < desc[2]; i++)
     {
-        int e = *(int*)(*(int*)desc[1] + off4);
-        int dst = *desc + off54;
+        int e = *(int*)(*(int*)desc[1] + i * 4);
+        int dst = *desc + i * 0x54;
         int idx;
         u8* hdr;
         u32 n;
@@ -2317,8 +2313,6 @@ void fn_80026928(int* obj, int b, int* desc)
         }
         *(f32*)(dst + 8) = *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0x2c);
 
-        off4 += 4;
-        off54 += 0x54;
     }
     {
         int e2;
