@@ -2212,26 +2212,30 @@ void loadTextureFiles(void)
     p = getCurrentDataFile(0x24);
     gRcpTexBankTable[0] = p;
     if (gRcpTexBankTable != NULL)
+        goto countBank0;
+    goto doneBank0;
+countBank0:
+    while (*p != -1)
     {
-        while (*p != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[0] = n - 1;
+        p++;
+        n++;
     }
+    gRcpTexBankCount[0] = n - 1;
+doneBank0:
     n = 0;
     p = getCurrentDataFile(0x21);
     gRcpTexBankTable[1] = p;
     if (gRcpTexBankTable != NULL)
+        goto countBank1;
+    goto doneBank1;
+countBank1:
+    while (*p != -1)
     {
-        while (*p != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[1] = n - 1;
+        p++;
+        n++;
     }
+    gRcpTexBankCount[1] = n - 1;
+doneBank1:
     n = 0;
     p = getCurrentDataFile(0x50);
     gRcpTexBankTable[2] = p;
@@ -2771,56 +2775,65 @@ extern void tex0GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip,
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 
-void* textureLoad(int texId, u8 flag)
+#pragma opt_propagation off
+void* textureLoad(int texId, u8 flagIn)
 {
+    int restore;
+    int disabled;
+    u8 flag;
+    int file;
+    int bank;
+    int id16;
+    u32 size;
+    u8* buf;
+    u8* first;
     u8* prev;
     int slot;
     LoadedTextureEntry* entry;
     u8* walk;
-    u8* tex;
     int word;
+    int wordSaved;
+    int wordHeld;
     int orig;
     int packed;
-    int restore;
-    int disabled;
-    u32 size;
-    int file;
-    int bank;
     u16 m;
-    int id16;
     int base19;
     int mips;
     int k;
     int sz2;
-    u8* first;
-    u8* buf;
     int n;
     int* p;
     int sizeOut;
     int frameOut;
 
+    flag = flagIn;
     restore = 1;
     disabled = 0;
     if (texId < 0)
     {
         n = -texId;
-        if ((n & 0x8000) && (n & 0x7fff) == 0x82e)
+        if (n & 0x8000)
         {
-            OSReport(&sDebugIntLineFormat);
+            slot = n & 0x7fff;
+            if (slot == 0x82e)
+            {
+                OSReport(&sDebugIntLineFormat);
+            }
         }
     }
     n = 0;
+    entry = gLoadedTextures;
     for (; n < gLoadedTextureCount; n++)
     {
-        if (gLoadedTextures[n].key == texId)
+        if (entry[n].key == texId)
         {
-            tex = gLoadedTextures[n].texture;
-            ((Texture*)tex)->refCount += 1;
+            buf = gLoadedTextures[n].texture;
+            ((Texture*)buf)->refCount += 1;
             if (flag != 0 && gLoadedTextures[n].flag != 0)
             {
                 return (void*)(n + 1);
             }
-            return tex;
+            return buf;
         }
     }
     if (getLoadedFileFlags(0) != 0)
@@ -2872,28 +2885,33 @@ resolved:
     p = getCurrentDataFile(0x24);
     gRcpTexBankTable[0] = p;
     if (gRcpTexBankTable != NULL)
+        goto countBank0;
+    goto doneBank0;
+countBank0:
+    while (*p != -1)
     {
-        while (*p != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[0] = n - 1;
+        p++;
+        n++;
     }
+    gRcpTexBankCount[0] = n - 1;
+doneBank0:
     n = 0;
     p = getCurrentDataFile(0x21);
     gRcpTexBankTable[1] = p;
     if (gRcpTexBankTable != NULL)
+        goto countBank1;
+    goto doneBank1;
+countBank1:
+    while (*p != -1)
     {
-        while (*p != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[1] = n - 1;
+        p++;
+        n++;
     }
+    gRcpTexBankCount[1] = n - 1;
+doneBank1:
     word = gRcpTexBankTable[bank][id16];
     mips = (word >> 24) & 0x3f;
+    wordSaved = word;
     if (mips == 1)
     {
         if (bank == 0)
@@ -2934,23 +2952,24 @@ resolved:
     first = NULL;
     prev = NULL;
     k = 0;
+    wordHeld = wordSaved;
     packed = mips << 8;
-    base19 = (word & 0xffffff) << 1;
+    base19 = (wordSaved & 0xffffff) << 1;
     for (; k < mips; k++)
     {
         if (mips > 1)
         {
             if (bank == 0)
             {
-                tex0GetFrame(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                tex0GetFrame(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
             else if (bank == 2)
             {
-                texPreGetMipmap(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                texPreGetMipmap(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
             else
             {
-                tex1GetFrame(word, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
+                tex1GetFrame(wordHeld, id16, &sizeOut, &frameOut, k, gRcpTexHeaderBuffer, 1);
             }
         }
         size = sizeOut;
@@ -2987,29 +3006,32 @@ resolved:
         }
         if (frameOut != -1 && buf == NULL)
         {
-            if (k != 0)
+            if (k == 0)
+            {
+                gRcpTexAllocFailed = 1;
+                if (getLoadedFileFlags(0) != 0)
+                {
+                    if (disabled == 1)
+                    {
+                        OSRestoreInterrupts(restore);
+                    }
+                }
+                else if (disabled == 1)
+                {
+                    OSRestoreInterrupts(restore);
+                }
+                if (flag != 0)
+                {
+                    return (void*)1;
+                }
+                return gLoadedTextures[0].texture;
+            }
+            else
             {
                 *(u16*)(first + 0x10) = packed;
                 k = mips;
                 continue;
             }
-            gRcpTexAllocFailed = 1;
-            if (getLoadedFileFlags(0) != 0)
-            {
-                if (disabled == 1)
-                {
-                    OSRestoreInterrupts(restore);
-                }
-            }
-            else if (disabled == 1)
-            {
-                OSRestoreInterrupts(restore);
-            }
-            if (flag != 0)
-            {
-                return (void*)1;
-            }
-            return gLoadedTextures[0].texture;
         }
         if (frameOut == -1)
         {
@@ -3051,9 +3073,9 @@ resolved:
     *(u32*)(first + 0x4c) = size;
     slot = 0;
     entry = gLoadedTextures;
-    for (; slot < gLoadedTextureCount; slot++, entry++)
+    for (; slot < gLoadedTextureCount; slot++)
     {
-        if (entry->key == -1)
+        if (entry[slot].key == -1)
         {
             break;
         }
@@ -3107,3 +3129,4 @@ resolved:
     }
     return first;
 }
+#pragma opt_propagation reset
