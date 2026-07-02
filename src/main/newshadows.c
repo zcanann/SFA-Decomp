@@ -462,7 +462,7 @@ void newshadows_captureProjectedShadow(u16* object)
         ((GameObject*)object)->anim.rootMotionScale = (float)savedScale;
         renderState = FUN_80017a54((int)object);
         *(u16*)(renderState + 0x18) = *(u16*)(renderState + 0x18) & ~0x8;
-        gxSetZMode_(1, 3, 1);
+        gxSetZMode_(1, GX_LEQUAL, 1);
         FUN_80259400(0x100, 0xb0, 0x80, 0x80);
         FUN_80259504(0x80, 0x80, 0x2a, 0);
         FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60, 1);
@@ -848,7 +848,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     FUN_8003b7dc(obj);
                     if (*(char*)(queueEntry + 2) == '\x02')
                     {
-                        gxSetZMode_(1, 3, 1);
+                        gxSetZMode_(1, GX_LEQUAL, 1);
                         dVar23 = (double)lbl_803DF9A8;
                         FUN_80247a7c(dVar23, dVar23, dVar23, (float*)(&DAT_8038fd48 + slotOff));
                         (&DAT_8038fd50)[slotByte * 0x1a] = lbl_803DF9F0;
@@ -867,7 +867,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     {
                         if (dirShadowCount == 0)
                         {
-                            gxSetZMode_(1, 3, 1);
+                            gxSetZMode_(1, GX_LEQUAL, 1);
                             FUN_80259400(0, 0, texSize, texSize);
                             FUN_80259504((u16)baseTexSize, (u16)baseTexSize, 0x20, 1);
                             FUN_80259c0c(*entryPtr + 0x60, 1);
@@ -916,7 +916,7 @@ void newshadows_renderQueuedShadowCasters(void)
         }
         if (1 < dirShadowCount)
         {
-            gxSetZMode_(1, 3, 1);
+            gxSetZMode_(1, GX_LEQUAL, 1);
             FUN_80259858('\0', (u8*)(DAT_803dd970 + 0x1a), '\0', (u8*)(DAT_803dd970 + 0x32));
             FUN_80259400(0, 0, 0x100, 0x100);
             FUN_80259504(0x100, 0x100, 0x28, 0);
@@ -2504,7 +2504,7 @@ void shadowRenderFn_8006b558(int* obj)
         ((GameObject*)obj)->anim.rootMotionScale = saved;
         model = Obj_GetActiveModel(obj);
         *(u16*)((char*)model + 0x18) &= ~0x8;
-        gxSetZMode_(1, 3, 1);
+        gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), GX_TRUE);
@@ -2814,7 +2814,7 @@ void renderShadows(void)
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
                     if (*(u8*)(casterPtr + 8) == 2)
                     {
-                        gxSetZMode_(1, 3, 1);
+                        gxSetZMode_(1, GX_LEQUAL, 1);
                         PSMTXScale((f32*)(castSlot + 0x30), lbl_803DED28, lbl_803DED28, lbl_803DED28);
                         *(f32*)(castSlot + 0x38) = lbl_803DED70;
                         *(f32*)(castSlot + 0x3c) = lbl_803DED74;
@@ -2831,7 +2831,7 @@ void renderShadows(void)
                     {
                         if ((u8)texIdx == 0)
                         {
-                            gxSetZMode_(1, 3, 1);
+                            gxSetZMode_(1, GX_LEQUAL, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
                             GXSetTexCopyDst(w, w, GX_CTF_R4, GX_TRUE);
                             GXCopyTex((void*)(*(int*)texSlot + 0x60), GX_TRUE);
@@ -2884,7 +2884,7 @@ void renderShadows(void)
     }
     if ((u8)texIdx > 1)
     {
-        gxSetZMode_(1, 3, 1);
+        gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
         GXSetTexCopyDst(0x100, 0x100, GX_CTF_R8, GX_FALSE);
