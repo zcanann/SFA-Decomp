@@ -3176,7 +3176,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     }
     GXSetCullMode(GX_CULL_BACK);
     {
-        GXSetFog(GX_FOG_NONE, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -3489,7 +3489,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetCullMode(GX_CULL_BACK);
     if ((*(u16*)(*model + 2) & 0x100) != 0)
     {
-        GXSetFog(GX_FOG_NONE, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
     }
     else
     {
