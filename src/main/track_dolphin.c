@@ -1234,6 +1234,31 @@ typedef struct TrackTriangle
     u8 edgeOutBits;   /* 0x4b per-edge outside bits from last query */
 } TrackTriangle;
 
+/* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
+ * map block (blk+0x50 table).  Holds the first index into the block's 8-byte
+ * MapTriIndex list plus s16 bounds; the list is closed by the NEXT group's
+ * firstTri, so walkers read group[1].firstTri as their end bound. */
+typedef struct MapTriGroup
+{
+    u16 firstTri;     /* 0x00 first MapTriIndex this group owns */
+    s16 minX;         /* 0x02 bounds in block-local units */
+    s16 maxX;         /* 0x04 */
+    s16 minY;         /* 0x06 */
+    s16 maxY;         /* 0x08 */
+    s16 minZ;         /* 0x0a */
+    s16 maxZ;         /* 0x0c */
+    u8 pad0E[2];      /* 0x0e */
+    u32 flags;        /* 0x10 surface kind/filter bits */
+} MapTriGroup;
+
+/* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
+ * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
+typedef struct MapTriIndex
+{
+    u16 vert[3];      /* 0x00 vertex pool indices */
+    u16 cellMask;     /* 0x06 low byte = x cells, high byte = z cells */
+} MapTriIndex;
+
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
 {
@@ -4931,7 +4956,7 @@ u8 doEdges;
         mask16 = (s16)mask;
         for (; (u32)tri < triEnd; tri += 0x14)
         {
-            u32 tf = *(u32*)(tri + 0x10);
+            u32 tf = ((MapTriGroup*)tri)->flags;
             u8 type;
             int yoff;
             int t0, vEnd;
@@ -4952,17 +4977,17 @@ u8 doEdges;
                 type = 2;
             }
             yoff = *(s16*)(blk + 0x8e);
-            if (*(s16*)(tri + 6) + yoff > y1) continue;
-            if (*(s16*)(tri + 8) + yoff < y0) continue;
-            if (*(s16*)(tri + 2) > relx1) continue;
-            if (*(s16*)(tri + 4) < relx0) continue;
-            if (*(s16*)(tri + 0xa) > relz1) continue;
-            if (*(s16*)(tri + 0xc) < relz0) continue;
+            if (((MapTriGroup*)tri)->minY + yoff > y1) continue;
+            if (((MapTriGroup*)tri)->maxY + yoff < y0) continue;
+            if (((MapTriGroup*)tri)->minX > relx1) continue;
+            if (((MapTriGroup*)tri)->maxX < relx0) continue;
+            if (((MapTriGroup*)tri)->minZ > relz1) continue;
+            if (((MapTriGroup*)tri)->maxZ < relz0) continue;
             if (tf & 4) type |= 8;
             typeb = fn_80060668((int*)tri);
-            t0 = *(u16*)tri;
+            t0 = ((MapTriGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
-            vEnd = *(u16*)(tri + 0x14);
+            vEnd = ((MapTriGroup*)tri)[1].firstTri;
             for (; t0 < vEnd; t0++, vq += 8)
             {
                 s16* vp;
@@ -4974,24 +4999,24 @@ u8 doEdges;
                 int j;
                 f32 mag;
 
-                if ((mask16 & *(u16*)(vq + 6) & 0xff) == 0) continue;
-                if ((mask16 & *(u16*)(vq + 6) & 0xff00) == 0) continue;
-                vp = (s16*)(vb + *(u16*)vq * 6);
+                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff) == 0) continue;
+                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff00) == 0) continue;
+                vp = (s16*)(vb + ((MapTriIndex*)vq)->vert[0] * 6);
                 minX = vp[0] >> 3;
                 maxX = minX;
                 minY = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
                 maxY = minY;
                 minZ = vp[2] >> 3;
                 maxZ = minZ;
-                *(s16*)(cur + 0x10) = minX + dxoff;
-                *(s16*)(cur + 0x16) = minY;
-                *(s16*)(cur + 0x1c) = minZ + dzoff;
-                v0[0] = __OSs16tof32((s16*)(cur + 0x10));
-                v0[1] = __OSs16tof32((s16*)(cur + 0x16));
-                v0[2] = __OSs16tof32((s16*)(cur + 0x1c));
+                ((TrackTriangle*)cur)->vx[0] = minX + dxoff;
+                ((TrackTriangle*)cur)->vy[0] = minY;
+                ((TrackTriangle*)cur)->vz[0] = minZ + dzoff;
+                v0[0] = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
+                v0[1] = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
+                v0[2] = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
                 maxYi = 0;
                 minYi = 0;
-                tw = (u16*)(vq + 2);
+                tw = &((MapTriIndex*)vq)->vert[1];
                 vo = (u8*)(cur + 2);
                 vf = verts;
                 for (j = 1; j < 3; j++)
@@ -5053,7 +5078,7 @@ u8 doEdges;
                 {
                     if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
                 }
-                *(f32*)cur = -PSVECDotProduct((f32*)(cur + 4), v0);
+                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((f32*)(cur + 4), v0);
                 if (doEdges)
                 {
                     int k22, deg, j2;
@@ -5090,7 +5115,7 @@ u8 doEdges;
                     if (deg) continue;
                 }
                 {
-                    u32 tf2 = *(u32*)(tri + 0x10);
+                    u32 tf2 = ((MapTriGroup*)tri)->flags;
                     u8 t2;
                     if (tf2 & 8)
                     {
@@ -5101,9 +5126,9 @@ u8 doEdges;
                         t2 = typeb;
                     }
                     if (tf2 & 0x20) type |= 0x40;
-                    *(s8*)(cur + 0x48) = t2;
-                    *(u8*)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
-                    *(s8*)(cur + 0x49) = type;
+                    *(s8*)&((TrackTriangle*)cur)->surfaceType = t2;
+                    ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
+                    ((TrackTriangle*)cur)->flags = type;
                     cur += 0x4c;
                     if ((u32)cur >= gTrackTriangleBufferEnd)
                     {
