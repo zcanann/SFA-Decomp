@@ -9,6 +9,10 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -144,13 +148,13 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     switch ((int)((Dll197State*)st)->menuState)
     {
     case 7:
-        if ((getButtonsHeld(0) & 0x100) != 0u)
+        if ((getButtonsHeld(0) & PAD_BUTTON_A) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State*)st)->menuState = 8;
             ((Dll197State*)st)->unk2 = 0;
         }
-        else if ((getButtonsHeld(0) & 0x200) != 0u)
+        else if ((getButtonsHeld(0) & PAD_BUTTON_B) != 0u)
         {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State*)st)->menuState = 7;
