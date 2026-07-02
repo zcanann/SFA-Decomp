@@ -523,6 +523,11 @@ static inline f32 clampNeg(f32 v, f32 lo, f32 hi)
     return (v < lo) ? lo : ((v > hi) ? hi : v);
 }
 
+static inline f32 arwarwing_readTriggerL(void)
+{
+    return -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
+}
+
 void arwarwing_readControls(int obj, int state)
 {
     ArwingState* aw = (ArwingState*)state;
