@@ -1403,13 +1403,14 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (lbl_803E74D4 * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        ref = *state;
-        velCalc3.x = (((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)ref)->lightAnchorObj) *
-            lbl_803DC468;
-        velCalc3.y = (((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)ref)->effectHandle) * lbl_803DC468;
-        velCalc3.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC468;
+        fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
+        velCalc3.x = fc * lbl_803DC468;
+        fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
+        velCalc3.y = fc * lbl_803DC468;
+        fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+        velCalc3.z = fc * lbl_803DC468;
         velArg3 = velCalc3;
-        arwarwing_setVelocity(ref, (int)&velArg3);
+        arwarwing_setVelocity(*state, (int)&velArg3);
         fval = (lbl_803E74EC < -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E74B0 * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E74EC;
         ((AndrossState*)state)->unkA8 = fval;
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E74DC)
@@ -1708,8 +1709,8 @@ void andross_update(int obj)
             ((AndrossState*)state)->springDamping = gAndrossSpringDamping;
         }
         ((AndrossState*)state)->fadeAlpha = ((AndrossState*)state)->fadeAlpha + gAndrossFadeAlphaStep;
-        fval = ((AndrossState*)state)->fadeAlpha;
-        fval = (gAndrossFadeAlphaMax < fval) ? gAndrossFadeAlphaMax : fval;
+        fval = (gAndrossFadeAlphaMax < ((AndrossState*)state)->fadeAlpha) ? gAndrossFadeAlphaMax :
+            ((AndrossState*)state)->fadeAlpha;
         ((AndrossState*)state)->fadeAlpha = fval;
         for (ref = 0; (u8)ref < 6; ref = ref + 1)
         {
@@ -1815,14 +1816,14 @@ void andross_update(int obj)
         }
         if (*(u8*)(state + 0x2e) != 0)
         {
-            ref = *state;
-            velCalc2.x = (((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)ref)->lightAnchorObj) *
-                lbl_803DC488;
-            velCalc2.y = (((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)ref)->effectHandle) *
-                lbl_803DC488;
-            velCalc2.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC488;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
+            velCalc2.x = fc * lbl_803DC488;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
+            velCalc2.y = fc * lbl_803DC488;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            velCalc2.z = fc * lbl_803DC488;
             velArg2 = velCalc2;
-            arwarwing_setVelocity(ref, (int)&velArg2);
+            arwarwing_setVelocity(*state, (int)&velArg2);
             fval = (lbl_803E7538 < -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8)) ? -(lbl_803E753C * timeDelta - ((AndrossState*)state)->unkA8) : lbl_803E7538;
             ((AndrossState*)state)->unkA8 = fval;
         }
@@ -1933,14 +1934,14 @@ void andross_update(int obj)
             ((AndrossState*)state)->cachedPosX = ((GameObject*)obj)->anim.localPosX;
             ((AndrossState*)state)->cachedPosY = ((GameObject*)obj)->anim.localPosY - gAndrossCachedPosOffsetY;
             ((AndrossState*)state)->cachedPosZ = ((GameObject*)obj)->anim.localPosZ - gAndrossCachedPosOffsetZ;
-            ref = *state;
-            velCalc1.x = (((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)ref)->lightAnchorObj) *
-                lbl_803DC494;
-            velCalc1.y = (((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)ref)->effectHandle) *
-                lbl_803DC494;
-            velCalc1.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC494;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
+            velCalc1.x = fc * lbl_803DC494;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
+            velCalc1.y = fc * lbl_803DC494;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            velCalc1.z = fc * lbl_803DC494;
             velArg1 = velCalc1;
-            arwarwing_setVelocity(ref, (int)&velArg1);
+            arwarwing_setVelocity(*state, (int)&velArg1);
         }
         else
         {
@@ -1973,14 +1974,14 @@ void andross_update(int obj)
         }
         if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803DC4A0)
         {
-            ref = *state;
-            velCalc0.x = (((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)ref)->lightAnchorObj) *
-                lbl_803DC4A4;
-            velCalc0.y = (((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)ref)->effectHandle) *
-                lbl_803DC4A4;
-            velCalc0.z = (((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)ref)->unk14) * lbl_803DC4A4;
+            fc = ((AndrossState*)state)->cachedPosX - *(float*)&((AndrossState*)*state)->lightAnchorObj;
+            velCalc0.x = fc * lbl_803DC4A4;
+            fc = ((AndrossState*)state)->cachedPosY - *(float*)&((AndrossState*)*state)->effectHandle;
+            velCalc0.y = fc * lbl_803DC4A4;
+            fc = ((AndrossState*)state)->cachedPosZ - *(float*)&((AndrossState*)*state)->unk14;
+            velCalc0.z = fc * lbl_803DC4A4;
             velArg0 = velCalc0;
-            arwarwing_setVelocity(ref, (int)&velArg0);
+            arwarwing_setVelocity(*state, (int)&velArg0);
         }
         else
         {
