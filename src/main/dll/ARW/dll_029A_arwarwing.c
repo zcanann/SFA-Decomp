@@ -33,6 +33,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define ARWARWING_OBJFLAG_PARENT_SLACK 0x1000
+
 /* ArwingState.flags477 bits */
 #define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
 #define ARWING_FLAG_ROLL_LEFT  0x2   /* barrel-rolling left */
@@ -160,7 +162,7 @@ void arwarwing_hitDetect(int obj)
     f32 pos[3];
     f32 mtx[16];
 
-    if ((((GameObject*)obj)->objectFlags & 0x1000) != 0 && state->aimSnapshotValid != 0)
+    if ((((GameObject*)obj)->objectFlags & ARWARWING_OBJFLAG_PARENT_SLACK) != 0 && state->aimSnapshotValid != 0)
     {
         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
         PSMTXMultVec(mtx, &state->aimOffsetX, pos);
