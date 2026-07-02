@@ -26,6 +26,7 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -432,7 +433,7 @@ void fn_8015383C(int obj, int state)
     vec[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
     vec[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
     if (PSVECMag(vec) < lbl_803E2900
-        && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & 0x1000) == 0)
+        && (((GameObject*)((BaddieState*)state)->trackedObj)->objectFlags & MAGICPLANT_OBJFLAG_PARENT_SLACK) == 0)
     {
         worldPos[0] = ((GameObject*)obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + ((GameObject*)obj)->anim.localPosY;
