@@ -8,6 +8,9 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
 #include "main/sky_interface.h"
+
+#define TUMBLEWEED_OBJFLAG_RENDERED 0x800
+
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
 
@@ -597,7 +600,7 @@ void tumbleweed_updateEffects(int obj)
     }
 
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
-        (((GameObject*)obj)->objectFlags & 0x800) != 0)
+        (((GameObject*)obj)->objectFlags & TUMBLEWEED_OBJFLAG_RENDERED) != 0)
     {
         ObjHits_SetHitVolumeSlot((u32)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         if ((int)(u8)(++state->hitPulseCounter) % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
