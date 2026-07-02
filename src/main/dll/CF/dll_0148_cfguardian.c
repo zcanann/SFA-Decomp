@@ -26,6 +26,8 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 
+#define PAD_BUTTON_A 0x100
+
 /* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
 typedef struct
 {
@@ -821,7 +823,7 @@ int cfguardian_updateMain(int obj)
     dll_2E_func03(obj, sub);
     if (ObjTrigger_IsSet(obj) != 0)
     {
-        buttonDisable(0, 0x100);
+        buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isEventReady(0x2e8) != 0)
         {
             GameBit_Set(0x4ab, 1);
