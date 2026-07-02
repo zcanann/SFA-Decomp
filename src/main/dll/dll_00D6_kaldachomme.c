@@ -18,6 +18,8 @@
 #include "main/dll/xyzanimator.h"
 #include "main/obj_placement.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define KALDACHOMME_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
 extern f32 lbl_803E30D8;
@@ -189,7 +191,7 @@ void kaldachompme_init(int obj, int params)
     ((GameObject*)obj)->anim.rotZ = (s16)(placement->yawBits << 8);
     ((GameObject*)obj)->anim.rotY = (s16)(placement->pitchBits << 8);
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rollBits << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | KALDACHOMME_OBJFLAG_HITDETECT_DISABLED);
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E30D4, 0);
 }
 
