@@ -107,7 +107,7 @@ void arwproximit_update(int obj)
                 state->light = objCreateLight(obj, 1);
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setLightKind(state->light, 2);
+                    modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
                     modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8,
                                                  lbl_803E71F0);
                     modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0);
