@@ -24,6 +24,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define MODEL_LIGHT_KIND_POINT 2
+
 #define BOSSDRAKOR_OBJFLAG_RENDERED 0x800
 
 void bossdrakor_release(void)
@@ -142,7 +144,7 @@ void bossdrakor_update(int obj)
         ((BossDrakorState*)state)->lightObj = objCreateLight(0, 1);
         if (*(void* *)&((BossDrakorState*)state)->lightObj != NULL)
         {
-            modelLightStruct_setLightKind(((BossDrakorState*)state)->lightObj, 2);
+            modelLightStruct_setLightKind(((BossDrakorState*)state)->lightObj, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0xff, 0xff);
             modelLightStruct_setSpecularColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0xff, 0xff);
             modelLightStruct_setupGlow(((BossDrakorState*)state)->lightObj, 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
