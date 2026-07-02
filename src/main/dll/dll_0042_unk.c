@@ -687,6 +687,7 @@ void CameraModeNormal_free(CameraObject* camera)
     gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
 }
 
+#pragma opt_common_subs off
 void camstatic_update(CameraObject* camera)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
@@ -798,15 +799,17 @@ void camstatic_update(CameraObject* camera)
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         }
     }
-    if (gCamcontrolModeSettings->clampFlags.b7 != 0)
     {
-        if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->cameraCollisionActive != 0))
+        CamcontrolModeSettings* cs = gCamcontrolModeSettings;
+        if (cs->clampFlags.b7 != 0)
         {
-            gCamcontrolModeSettings->wallAvoidanceTimer += 1;
+        if ((cs->targetActionFlags == 1) || (camera->cameraCollisionActive != 0))
+        {
+            cs->wallAvoidanceTimer += 1;
         }
         else
         {
-            gCamcontrolModeSettings->wallAvoidanceTimer = 0;
+            cs->wallAvoidanceTimer = 0;
         }
         if (10 < gCamcontrolModeSettings->wallAvoidanceTimer)
         {
@@ -827,6 +830,7 @@ void camstatic_update(CameraObject* camera)
             camera->probePosZ = camera->anim.worldPosZ;
             gCamcontrolModeSettings->wallAvoidanceTimer = 0;
         }
+    }
     }
     if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
     {
@@ -887,6 +891,8 @@ void camstatic_update(CameraObject* camera)
                                    &camera->anim.localPosY, &camera->anim.localPosZ,
                                    (u32)camera->anim.parent);
 }
+#pragma opt_common_subs reset
+
 
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
 {
