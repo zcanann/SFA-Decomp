@@ -118,7 +118,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     int v;
     int inWater;
     u16 id;
-    f32 vz, vx, spd, z;
+    f32 vz, vx, spd, z, vxx;
 
     base = lbl_8031D2E8;
     sfxTable = gTrickySubstateSfxIdPairB;
@@ -211,9 +211,10 @@ void trickyDigTunnel(u8* obj, u8* state)
         ((GameObject*)obj)->anim.localPosZ = ((TrickyState*)state)->dirZ * spd + *(f32*)(((TrickyState*)state)->unk700 +
             0x10);
         vx = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x2c);
+        vxx = vx * vx;
         vz = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x30);
         spd = vz * vz;
-        if (vx * vx + spd > lbl_803E23EC)
+        if (vxx + spd > lbl_803E23EC)
         {
             trickyTurnTowardYaw(obj, getAngle(-vx, -vz));
         }
