@@ -13,6 +13,8 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 
+#define FLAMEBLAST_OBJFLAG_RENDERED 0x800
+
 typedef struct FlameblastState
 {
     f32 timer;          /* 0x00: per-frame flight timer */
@@ -132,7 +134,7 @@ int fn_8017805C(int* obj, FlameblastState* state)
     vec.dir[1] = tricky[1];
     vec.dir[0] = tricky[0] + fn_80138F90();
     vecRotateZXY(&vec, &((GameObject*)obj)->anim.velocityX);
-    if ((((GameObject*)tricky)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)tricky)->objectFlags & FLAMEBLAST_OBJFLAG_RENDERED) != 0)
     {
         origin = trickyGetQueuedPathParticlePos(tricky);
     }
