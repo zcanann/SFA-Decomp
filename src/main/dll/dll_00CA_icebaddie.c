@@ -1220,10 +1220,10 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
         *(f32*)((char*)alloc + 8) = ((GroundBaddieState*)state)->baddie.posX;
         *(f32*)((char*)alloc + 12) = ((GroundBaddieState*)state)->baddie.posY;
         *(f32*)&((ObjDef*)alloc)->jointData = ((GroundBaddieState*)state)->baddie.posZ;
-        *(u8*)((char*)alloc + 4) = 1;
-        *(u8*)((char*)alloc + 5) = 1;
-        *(u8*)((char*)alloc + 6) = 255;
-        *(u8*)((char*)alloc + 7) = 255;
+        ((ObjPlacement*)alloc)->color[0] = 1;
+        ((ObjPlacement*)alloc)->color[1] = 1;
+        ((ObjPlacement*)alloc)->color[2] = 255;
+        ((ObjPlacement*)alloc)->color[3] = 255;
         *(s16*)((char*)alloc + 30) = -1;
         *(s16*)((char*)alloc + 32) = -1;
         new_obj = Obj_SetupObject(alloc, 5, -1, -1, NULL);
