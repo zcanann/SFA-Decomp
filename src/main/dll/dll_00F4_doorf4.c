@@ -32,7 +32,7 @@ typedef struct DoorF4State
     f32 openRange; /* per-type approach distance */
     int gameBitA; /* params+0x1E; open latch */
     int gameBitB; /* per-type (68/152/-1) secondary gate */
-    int unk18; /* params+0x20 */
+    int gameBitC; /* params+0x20; near-side GameBit id copy (write-only cache) */
     u16 sfxOpen; /* 830 for types 318/890 */
     u16 sfxClose; /* 831 */
     u8 active; /* gamebit-derived open state */
@@ -186,7 +186,7 @@ void doorf4_init(int* obj, int* params)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     ((GameObject*)obj)->objectFlags |= 0x6000;
     state->gameBitA = def->gameBitA;
-    state->unk18 = def->gameBitC;
+    state->gameBitC = def->gameBitC;
     state->openRange = lbl_803E3654;
 
     type = ((GameObject*)obj)->anim.seqId;
