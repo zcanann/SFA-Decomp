@@ -2142,13 +2142,14 @@ void loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 len
         }
         break;
     case 0x51:
-        if (MLDF_PTR(0x52) != 0)
+        hi = MLDF_PTR(0x52);
+        if (hi != 0)
         {
             fileId = 0x51;
             if (sizeOut != NULL)
             {
-                *sizeOut = (((u32*)(MLDF_PTR(0x52) + 4))[entryIndex] & 0xfffffff) -
-                    (((u32*)MLDF_PTR(0x52))[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)(hi + 4))[entryIndex] & 0xfffffff) -
+                    (((u32*)hi)[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags = offsetFlags & 0xfffffff;
