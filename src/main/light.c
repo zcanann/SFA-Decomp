@@ -851,6 +851,10 @@ void vfpplatform_update(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     VfpPlatformState* state = ((GameObject*)obj)->extra;
+    int xi;
+    int yi;
+    int txi;
+    int tyi;
     u8 s3 = state->axisMode;
     if (s3 == 10)
     {
@@ -861,10 +865,10 @@ void vfpplatform_update(int obj)
     }
     else
     {
-        int xi = ((GameObject*)obj)->anim.localPosX;
-        int yi = ((GameObject*)obj)->anim.localPosZ;
-        int txi = ((ObjPlacement*)params)->posX;
-        int tyi = ((ObjPlacement*)params)->posZ;
+        xi = ((GameObject*)obj)->anim.localPosX;
+        yi = ((GameObject*)obj)->anim.localPosZ;
+        txi = ((ObjPlacement*)params)->posX;
+        tyi = ((ObjPlacement*)params)->posZ;
         if (s3 != 99)
         {
             if (((GameObject*)obj)->anim.seqId == 960)
@@ -996,30 +1000,24 @@ void vfpplatform_update(int obj)
                     }
                     break;
                 case 5:
-                    if (s3 == 3)
+                    if (s3 == 3 && xi < txi + 60)
                     {
-                        if (xi < txi + 60)
+                        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosX >= txi + 60)
                         {
-                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosX >= txi + 60)
-                            {
-                                ((GameObject*)obj)->anim.localPosX = (txi + 60);
-                                state->state = 1;
-                                state->timer = 200;
-                            }
+                            ((GameObject*)obj)->anim.localPosX = (txi + 60);
+                            state->state = 1;
+                            state->timer = 200;
                         }
                     }
-                    else
+                    else if (yi < tyi + 60)
                     {
-                        if (yi < tyi + 60)
+                        ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
+                        if ((int)((GameObject*)obj)->anim.localPosZ >= tyi + 60)
                         {
-                            ((GameObject*)obj)->anim.localPosZ = *(volatile f32*)&((GameObject*)obj)->anim.localPosZ + timeDelta;
-                            if ((int)((GameObject*)obj)->anim.localPosZ >= tyi + 60)
-                            {
-                                ((GameObject*)obj)->anim.localPosZ = (tyi + 60);
-                                state->state = 1;
-                                state->timer = 200;
-                            }
+                            ((GameObject*)obj)->anim.localPosZ = (tyi + 60);
+                            state->state = 1;
+                            state->timer = 200;
                         }
                     }
                     break;
