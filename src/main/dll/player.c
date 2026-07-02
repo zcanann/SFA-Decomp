@@ -7402,15 +7402,15 @@ void playerUpdate(int obj)
                 else
                 {
                     int ok;
-                    if (*(void**)((char*)inner + 0x7f8) == NULL && hov != 0 &&
-                        ((ByteFlags*)((char*)inner + 0x3f0))->b20 == 0 &&
-                        ((ByteFlags*)((char*)inner + 0x3f0))->b10 == 0)
+                    if (*(void**)((char*)inner + 0x7f8) != NULL || hov == 0 ||
+                        ((ByteFlags*)((char*)inner + 0x3f0))->b20 != 0 ||
+                        ((ByteFlags*)((char*)inner + 0x3f0))->b10 != 0)
                     {
-                        ok = 1;
+                        ok = 0;
                     }
                     else
                     {
-                        ok = 0;
+                        ok = 1;
                     }
                     if (ok)
                     {
