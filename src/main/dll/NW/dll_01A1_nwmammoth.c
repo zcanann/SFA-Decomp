@@ -11,6 +11,8 @@
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
+#define NWMAMMOTH_OBJFLAG_RENDERED 0x800
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 FUN_8003a1c4();
@@ -283,7 +285,7 @@ int fn_801CE078(int* obj, u8* st)
             state->partfxTimer = t;
             if (t <= lbl_803E520C)
             {
-                if (((GameObject*)obj)->objectFlags & 0x800)
+                if (((GameObject*)obj)->objectFlags & NWMAMMOTH_OBJFLAG_RENDERED)
                 {
                     blk.pos[0] = state->spawnPosX;
                     blk.pos[1] = state->spawnPosY;
@@ -592,7 +594,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         state->stateIndex = 0x13;
         break;
     case 0x11:
-        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
+        if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK) && state->airMeterValue >= gNwMammothAirMeterFull)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -603,7 +605,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
         break;
     case 0x12:
-        if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000))
+        if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK))
         {
             if ((*gScreenTransitionInterface)->isFinished() != 0)
             {
