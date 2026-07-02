@@ -797,25 +797,26 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     {
         HeapItem* b0;
         HeapItem* b1;
+        HeapItem* w;
         OSReport(msg + 0x54c, tag, region, type, size);
         b0 = (HeapItem*)gMmRegionTable[0].start;
-        it = b0;
-        while (it->next != -1)
+        w = b0;
+        while (w->next != -1)
         {
-            it = &b0[it->next];
-            if (it->size > t28 && it->type == 0)
+            w = &b0[w->next];
+            if (w->size > t28 && w->type == 0)
             {
-                t28 = it->size;
+                t28 = w->size;
             }
         }
         b1 = (HeapItem*)gMmRegionTable[1].start;
-        it = b1;
-        while (it->next != -1)
+        w = b1;
+        while (w->next != -1)
         {
-            it = &b1[it->next];
-            if (it->size > t27 && it->type == 0)
+            w = &b1[w->next];
+            if (w->size > t27 && w->type == 0)
             {
-                t27 = it->size;
+                t27 = w->size;
             }
         }
         reportAllocFail(
