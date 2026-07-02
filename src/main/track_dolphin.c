@@ -1528,6 +1528,22 @@ extern s16 gIntersectLineCount;
 extern int lbl_803DCF34;
 extern void memcpy(void* dst, void* src, int n);
 
+/* IntersectLine -- 0x10-byte water/track intersection line record built into
+ * the scratch pool at lbl_803DCF34 (cap 0x5dc) and later compacted into the
+ * owning object's sorted table.  kind's low 6 bits are the sort/group key;
+ * a kind of 0x14 marks a consumed scratch entry. */
+typedef struct IntersectLine
+{
+    u8 end0;       /* 0x0 per-endpoint byte from the source segment */
+    u8 end1;       /* 0x1 */
+    u8 flags;      /* 0x2 bit 0x10 is toggled on import */
+    s8 kind;       /* 0x3 low 6 bits group key; 0x14 = consumed */
+    s16 pt[2];     /* 0x4 indices into the shared point pool */
+    s16 adj[2];    /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
+    s16 param;     /* 0xc s16 payload from the source segment */
+    u8 pad0E[2];   /* 0xe */
+} IntersectLine;
+
 void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
@@ -1543,28 +1559,28 @@ void intersectModLineBuild(int* obj)
     segCount = *(u8*)((char*)obj + 0x5c);
     for (seg = 0, sp = *(u8**)&((GameObject*)obj)->anim.parent; seg < segCount; sp += 0x14, seg++)
     {
-        u8* line;
+        IntersectLine* line;
         int i;
         if (gIntersectLineCount >= 0x5dc) break;
-        line = (u8*)lbl_803DCF34 + gIntersectLineCount * 0x10;
-        line[0] = sp[0xc];
-        line[1] = sp[0xd];
-        line[3] = sp[0xf];
-        if ((*(s8*)(line + 3) & 0x3f) == 0x11)
+        line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
+        line->end0 = sp[0xc];
+        line->end1 = sp[0xd];
+        *(u8*)&line->kind = sp[0xf];
+        if ((line->kind & 0x3f) == 0x11)
         {
-            *(s8*)(line + 3) &= ~0x3f;
-            *(s8*)(line + 3) |= 2;
+            line->kind &= ~0x3f;
+            line->kind |= 2;
         }
-        line[2] = sp[0xe];
-        *(s8*)(line + 2) ^= 0x10;
-        *(s16*)(line + 0xc) = *(s16*)(sp + 0x10);
+        line->flags = sp[0xe];
+        *(s8*)&line->flags ^= 0x10;
+        line->param = *(s16*)(sp + 0x10);
         for (i = 0; i < 2; i++)
         {
             f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
             f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
             f32 z = (f32)(s16) * (s16*)(sp + i * 2 + 8);
             if (gIntersectPointCount < 0x6a4)
-                *(s16*)(line + 4 + i * 2) = insertPoint(gIntersectLineCount, link, x, y, z);
+                line->pt[i] = insertPoint(gIntersectLineCount, link, x, y, z);
         }
         gIntersectLineCount++;
     }
@@ -1572,26 +1588,26 @@ void intersectModLineBuild(int* obj)
         int off;
         for (li = 0, off = li; li < gIntersectLineCount; off += 0x10, li++)
         {
-            u8* L = (u8*)lbl_803DCF34 + off;
-            int t0 = *(s16*)(L + 4) * 2;
+            IntersectLine* L = (IntersectLine*)((u8*)lbl_803DCF34 + off);
+            int t0 = L->pt[0] * 2;
             s16* e0 = &link[t0];
             s16* e1;
             if (e0[0] > -1 && e0[0] != li)
-                *(s16*)(L + 8) = e0[0];
+                L->adj[0] = e0[0];
             else if (e0[1] > -1 && e0[1] != li)
-                *(s16*)(L + 8) = e0[1];
+                L->adj[0] = e0[1];
             else
-                *(s16*)(L + 8) = -1;
+                L->adj[0] = -1;
             {
-                int t1 = *(s16*)(L + 6) * 2;
+                int t1 = L->pt[1] * 2;
                 e1 = &link[t1];
             }
             if (e1[0] > -1 && e1[0] != li)
-                *(s16*)(L + 0xa) = e1[0];
+                L->adj[1] = e1[0];
             else if (e1[1] > -1 && e1[1] != li)
-                *(s16*)(L + 0xa) = e1[1];
+                L->adj[1] = e1[1];
             else
-                *(s16*)(L + 0xa) = -1;
+                L->adj[1] = -1;
         }
     }
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0)
@@ -1643,12 +1659,12 @@ void intersectModLineBuild(int* obj)
             int n;
             for (n = 0; n < gIntersectLineCount; n++)
             {
-                if ((s8)((u8*)lbl_803DCF34)[n * 0x10 + 3] != 0x14)
+                if (((IntersectLine*)lbl_803DCF34)[n].kind != 0x14)
                 {
-                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8))
-                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 8) = li;
-                    if ((s16)best == *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa))
-                        *(s16*)((u8*)lbl_803DCF34 + n * 0x10 + 0xa) = li;
+                    if ((s16)best == ((IntersectLine*)lbl_803DCF34)[n].adj[0])
+                        ((IntersectLine*)lbl_803DCF34)[n].adj[0] = li;
+                    if ((s16)best == ((IntersectLine*)lbl_803DCF34)[n].adj[1])
+                        ((IntersectLine*)lbl_803DCF34)[n].adj[1] = li;
                 }
             }
         }
@@ -1738,38 +1754,38 @@ void fn_80065574(int matchVal, int obj, int flag)
     int count;
     int i;
     int base;
-    char* e;
+    IntersectLine* e;
     if ((u32)obj != 0)
     {
         base = *(int*)&((GameObject*)obj)->anim.modelInstance;
-        e = *(char**)(base + 0x34);
+        e = *(IntersectLine**)(base + 0x34);
         count = *(u8*)(base + 0x5c);
     }
     else
     {
-        e = (char*)lbl_803DCF34;
+        e = (IntersectLine*)lbl_803DCF34;
         count = gIntersectLineCount;
     }
     if (flag != 0)
     {
         for (i = 0; i < count; i++)
         {
-            if (*(s16*)(e + 0xc) == matchVal)
+            if (e->param == matchVal)
             {
-                *(s8*)(e + 3) = (s8)(*(u8*)(e + 3) & ~0x40);
+                e->kind = (s8)(*(u8*)&e->kind & ~0x40);
             }
-            e += 0x10;
+            e++;
         }
     }
     else
     {
         for (i = 0; i < count; i++)
         {
-            if (*(s16*)(e + 0xc) == matchVal)
+            if (e->param == matchVal)
             {
-                *(s8*)(e + 3) = (s8)(*(u8*)(e + 3) | 0x40);
+                e->kind = (s8)(*(u8*)&e->kind | 0x40);
             }
-            e += 0x10;
+            e++;
         }
     }
 }
@@ -4674,9 +4690,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
             if (tMinZ > z1) continue;
             if (tMaxZ < z0) continue;
 
-            xs = (s16*)(cur + 0x10);
-            ys = (s16*)(cur + 0x16);
-            zs = (s16*)(cur + 0x1c);
+            xs = ((TrackTriangle*)cur)->vx;
+            ys = ((TrackTriangle*)cur)->vy;
+            zs = ((TrackTriangle*)cur)->vz;
 
             nxi = ys[0] * (zs[1] - zs[2]) + (ys[1] * (zs[2] - zs[0]) + ys[2] * (zs[0] - zs[1]));
             fnx = nxi;
@@ -4701,7 +4717,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                 if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
             }
 
-            *(f32*)(cur + 0) = -(*(f32*)(cur + 0xc) * zs[0]
+            ((TrackTriangle*)cur)->planeD = -(*(f32*)(cur + 0xc) * zs[0]
                 + (*(f32*)(cur + 4) * xs[0] + *(f32*)(cur + 8) * ys[0]));
 
             {
@@ -4746,10 +4762,10 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
                 if (deg) continue;
             }
 
-            *(s8*)(cur + 0x48) = (u8)fn_80060668((int*)blk);
-            *(u8*)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
-            *(s8*)(cur + 0x49) = 10;
-            *(s8*)(cur + 0x49) |= 8;
+            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)fn_80060668((int*)blk);
+            ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
+            ((TrackTriangle*)cur)->flags = 10;
+            ((TrackTriangle*)cur)->flags |= 8;
             cur += 0x4c;
             if ((u32)cur >= gTrackTriangleBufferEnd)
             {
@@ -5212,27 +5228,27 @@ void trackIntersect(void)
                         if (gIntersectLineCount < 0x5dc)
                         {
                             s16* tp = (s16*)(*(int*)(blk + 0x70) + toff);
-                            u8* rec = (u8*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
+                            IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
                             f32 fx, fz;
                             u8* rp;
                             s16* q;
                             int k;
-                            rec[0] = *((u8*)tp + 0xc);
-                            rec[1] = *((u8*)tp + 0xd);
-                            rec[3] = *((u8*)tp + 0xf);
-                            if (((s8)rec[3] & 0x3f) == 0x11)
+                            rec->end0 = *((u8*)tp + 0xc);
+                            rec->end1 = *((u8*)tp + 0xd);
+                            *(u8*)&rec->kind = *((u8*)tp + 0xf);
+                            if ((rec->kind & 0x3f) == 0x11)
                             {
-                                *(s8*)(rec + 3) = rec[3] & ~0x3f;
-                                *(s8*)(rec + 3) = rec[3] | 2;
+                                rec->kind = *(u8*)&rec->kind & ~0x3f;
+                                rec->kind = *(u8*)&rec->kind | 2;
                             }
-                            rec[2] = *((u8*)tp + 0xe);
-                            *(s8*)(rec + 2) = rec[2] ^ 0x10;
-                            *(s16*)(rec + 0xc) = tp[8];
+                            rec->flags = *((u8*)tp + 0xe);
+                            *(s8*)&rec->flags = rec->flags ^ 0x10;
+                            rec->param = tp[8];
                             fx = fx0 + playerMapOffsetX;
                             fz = fz0 + playerMapOffsetZ;
                             k = 0;
                             q = tp;
-                            rp = rec;
+                            rp = (u8*)rec;
                             for (; k < 2; k++, q++, rp += 2)
                             {
                                 f32 x = fx + q[0];
@@ -5243,7 +5259,7 @@ void trackIntersect(void)
                                     *(s16*)(rp + 4) = insertPoint(gIntersectLineCount, edges, x, y, z);
                                 }
                             }
-                            counts[(s8)rec[3] & 0x3f]++;
+                            counts[rec->kind & 0x3f]++;
                             gIntersectLineCount++;
                         }
                     }
@@ -5254,44 +5270,44 @@ void trackIntersect(void)
 
     for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 0x10)
     {
-        u8* rec = (u8*)(lbl_803DCF34 + off);
-        int idx = *(s16*)(rec + 4) * 2;
+        IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + off);
+        int idx = rec->pt[0] * 2;
         s16* e0 = &edges[idx];
         s16* e1;
         s16 v = e0[0];
         if (v > -1 && v != i)
         {
-            *(s16*)(rec + 8) = v;
+            rec->adj[0] = v;
         }
         else
         {
             v = e0[1];
             if (v > -1 && v != i)
             {
-                *(s16*)(rec + 8) = v;
+                rec->adj[0] = v;
             }
             else
             {
-                *(s16*)(rec + 8) = -1;
+                rec->adj[0] = -1;
             }
         }
-        idx = *(s16*)(rec + 6) * 2;
+        idx = rec->pt[1] * 2;
         e1 = &edges[idx];
         v = e1[0];
         if (v > -1 && v != i)
         {
-            *(s16*)(rec + 0xa) = v;
+            rec->adj[1] = v;
         }
         else
         {
             v = e1[1];
             if (v > -1 && v != i)
             {
-                *(s16*)(rec + 0xa) = v;
+                rec->adj[1] = v;
             }
             else
             {
-                *(s16*)(rec + 0xa) = -1;
+                rec->adj[1] = -1;
             }
         }
     }
