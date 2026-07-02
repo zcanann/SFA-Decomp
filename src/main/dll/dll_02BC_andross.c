@@ -365,7 +365,7 @@ void andross_update(int obj)
      */
     for (work = 0; (u8)work < 4; work = work + 1)
     {
-        val = (u8)work;
+        val = work & 0xff;
         if (*(void**)((int)state + val * 4 + 0x18) == NULL)
         {
             *(int*)((int)state + val * 4 + 0x18) = ObjList_FindObjectById(gAndrossSpawnObjectIds[val]);
