@@ -20,6 +20,9 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_shared_decls.h"
+
+#define PAD_BUTTON_A 0x100
+
 extern int Obj_GetPlayerObject(void);
 extern int playerGetMoney(int player);
 extern void playerAddMoney(int obj, int amount);
@@ -78,7 +81,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 
     player = Obj_GetPlayerObject();
     r = getButtonsJustPressed(0);
-    if ((r & 0x100) == 0)
+    if ((r & PAD_BUTTON_A) == 0)
     {
         r = 0;
     }
