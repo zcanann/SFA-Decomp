@@ -2703,17 +2703,20 @@ void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
 
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 
+#pragma opt_propagation off
 int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8, int p9)
 {
     int j;
     f32 lm[12];
+    int grp;
     u8* d = fn_80069944((u32*)&j);
     u8* end = d + j * 0x18;
     int total;
-    int grp = 0;
-    int outOff = 0;
+    int outOff;
 
-    j = 0;
+    grp = 0;
+    outOff = 0;
+    j = grp;
     total = 0;
     p9 = p9 ? 4 : 8;
     for (; d < end; d += 0x18)
@@ -2817,6 +2820,7 @@ int fn_80060C14(int* obj, int p4, void* p5, int p6, int p7, f32 a, f32 b, int p8
     }
     return grp;
 }
+#pragma opt_propagation reset
 
 extern const f32 lbl_803DECB8;
 extern const f32 lbl_803DECBC;
