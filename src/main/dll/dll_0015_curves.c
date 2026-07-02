@@ -658,10 +658,9 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     u32 flags;
     f32* localPoint;
     f32* targetRow;
-    int radiusOffset;
+    int zoff[2];
     int pointIndex;
     int mode;
-    int localOffset;
     f32 zero;
     f32 averageScale;
     f32 tempX;
@@ -670,7 +669,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     f32 matrix[16];
 
     pointCount = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
-    collision->localPointHitMask = radiusOffset = 0;
+    collision->localPointHitMask = zoff[0] = 0;
     pointIndex = 0;
     while (pointIndex < pointCount)
     {
@@ -684,7 +683,7 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
         }
         collision->localPointHitMask |= objBboxFn_800640cc(
             collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
-            *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
+            *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode,
             collision->localHitPlanes, obj, collision->primaryHitType, -1, 0,
             (s8)collision->activeTimer) << pointIndex;
         flags = collision->flags;
@@ -700,11 +699,11 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
             }
             objBboxFn_800640cc(collision->localPointTarget[pointIndex],
                                collision->localPointWorld[pointIndex],
-                               *(f32*)((u8*)collision->localPointRadii + radiusOffset), mode,
+                               *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode,
                                collision->localHitPlanes, obj, collision->secondaryHitType, -1, 0,
                                (s8)collision->activeTimer);
         }
-        radiusOffset += sizeof(f32);
+        zoff[0] += sizeof(f32);
         pointIndex++;
     }
     if (pointCount > 1)
@@ -749,17 +748,17 @@ buildTransform:
     transform.y = ((GameObject*)obj)->anim.localPosY;
     transform.z = ((GameObject*)obj)->anim.localPosZ;
     setMatrixFromObjectPos(matrix, &transform);
-    pointIndex = 0;
+    zoff[0] = 0;
     targetRow = (f32*)collision;
-    localOffset = pointIndex;
-    for (; pointIndex < pointCount * 3; pointIndex += 3)
+    zoff[1] = zoff[0];
+    for (; zoff[0] < pointCount * 3; zoff[0] += 3)
     {
         targetRow[69] = targetRow[57];
         targetRow[71] = targetRow[59];
-        localPoint = (f32*)((u8*)collision->localPointPositions + localOffset);
+        localPoint = (f32*)((u8*)collision->localPointPositions + zoff[1]);
         Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2], &tempX,
-                              &collision->localPointTarget[0][pointIndex + 1], &tempZ);
-        localOffset += 0xc;
+                              &collision->localPointTarget[0][zoff[0] + 1], &tempZ);
+        zoff[1] += 0xc;
         targetRow += 3;
     }
 }
