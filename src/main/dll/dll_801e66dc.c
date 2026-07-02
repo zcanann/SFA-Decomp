@@ -15,6 +15,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
+#define DLL801E66DC_OBJFLAG_RENDERED 0x800
+
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
 extern int Stack_IsEmpty(int stack);          /* voxmaps.c */
@@ -36,7 +38,7 @@ int fn_801E66EC(int arg1, int arg2)
 
     if (*(s8*)(arg2 + 0x27a) != 0)
     {
-        if ((obj->objectFlags & 0x800) != 0)
+        if ((obj->objectFlags & DLL801E66DC_OBJFLAG_RENDERED) != 0)
         {
             (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 2031, &spawnParam, 80, NULL);
         }
