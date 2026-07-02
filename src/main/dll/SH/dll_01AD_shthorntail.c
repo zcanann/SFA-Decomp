@@ -8,6 +8,8 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
+
+#define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern u32 ObjTrigger_IsSet(int obj);
 extern void characterDoEyeAnims(int obj, int p2);
@@ -389,7 +391,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     {
         if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
-            if ((obj->objectFlags & 0x800) != 0)
+            if ((obj->objectFlags & SHTHORNTAIL_OBJFLAG_RENDERED) != 0)
             {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
