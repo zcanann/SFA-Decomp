@@ -2283,7 +2283,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
                         u8* idPtr = (u8*)&hb + pointCount;
                         f32 offX = playerMapOffsetX;
                         f32 offZ = playerMapOffsetZ;
-                        for (; (u16)bits != 0; bits = (u16)((u16)bits << 4))
+                        for (; (u16)bits != 0; bits = (u16)((bits & 0xffff) << 4))
                         {
                             sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
                             if (pointCount < 4)
