@@ -1228,146 +1228,174 @@ void setGQR6_2(int a, int b, int c, int d)
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
 
-typedef struct ModelBoneDelta
-{
-    int x;
-    int y;
-    int z;
-    u8* p;
-} ModelBoneDelta;
+/* Hand-written assembly in the retail game: modelBoneTransforms_next is a
+   private subroutine of modelApplyBoneTransform with a custom calling
+   convention no C signature can express -- it takes the delta-stream cursor
+   in r20 (advanced in place), returns the unpacked x/y/z deltas in
+   r10/r12/r15, and clobbers only r21/r22, letting the caller keep its own
+   incoming arguments live in the volatile argument registers across the
+   calls. modelApplyBoneTransform itself is EABI-conformant externally.
 
+   Behavior: interpolates two per-vertex s16 delta streams (a = *pd, b = *pe)
+   with weights (0x10000 - f) and f, adds the result to the source vertex
+   stream p (6-byte x/y/z records), and writes n blended vertices to out.
+   Each stream record is a u16 header: low 13 bits = vertex index, top three
+   bits flag which of x/y/z deltas follow (MODEL_BONEXFORM_HAS_*).
+   Vertices before both streams' next index are copied through unchanged. */
 #pragma peephole on
 #pragma dont_inline on
-ModelBoneDelta modelBoneTransforms_next(u8* p)
+asm void modelBoneTransforms_next(void)
 {
-    ModelBoneDelta r;
-    u16 flags;
-
-    flags = *(u16*)p;
-    p += 2;
-    r.x = 0;
-    if (flags & MODEL_BONEXFORM_HAS_X)
-    {
-        r.x = *(s16*)p;
-        p += 2;
-    }
-    r.y = 0;
-    if (flags & MODEL_BONEXFORM_HAS_Y)
-    {
-        r.y = *(s16*)p;
-        p += 2;
-    }
-    r.z = 0;
-    if (flags & MODEL_BONEXFORM_HAS_Z)
-    {
-        r.z = *(s16*)p;
-        p += 2;
-    }
-    r.p = p;
-    return r;
+    nofralloc
+    lhz r21, 0(r20)
+    addi r20, r20, 2
+    andi. r22, r21, MODEL_BONEXFORM_HAS_X
+    li r10, 0
+    beq lbl_BTN_y
+    lha r10, 0(r20)
+    addi r20, r20, 2
+lbl_BTN_y:
+    andi. r22, r21, MODEL_BONEXFORM_HAS_Y
+    li r12, 0
+    beq lbl_BTN_z
+    lha r12, 0(r20)
+    addi r20, r20, 2
+lbl_BTN_z:
+    andi. r22, r21, MODEL_BONEXFORM_HAS_Z
+    li r15, 0
+    beqlr
+    lha r15, 0(r20)
+    addi r20, r20, 2
+    blr
 }
 
-void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
+asm void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
 {
-    u8* a;
-    u8* b;
-    int i;
-    int wHi;
-    int aIdx;
-    int bIdx;
-    int ax, ay, az;
-    int bx, by, bz;
-    ModelBoneDelta da;
-    ModelBoneDelta db;
-
-    a = *pd;
-    b = *pe;
-    i = 0;
-    wHi = 0x10000 - f;
-    while (1)
-    {
-        aIdx = (*(s16*)a & 0x1fff) - pos;
-        bIdx = (*(s16*)b & 0x1fff) - pos;
-        while (1)
-        {
-            if (i >= n)
-            {
-                *pd = a;
-                *pe = b;
-                return;
-            }
-            if (i >= aIdx)
-            {
-                break;
-            }
-            if (i >= bIdx)
-            {
-                goto onlyB;
-            }
-            *(int*)out = *(int*)p;
-            i++;
-            *(s16*)(out + 4) = *(s16*)(p + 4);
-            p += 6;
-            out += 6;
-        }
-        if (i == bIdx)
-        {
-            db = modelBoneTransforms_next(b);
-            b = db.p;
-            bx = db.x;
-            by = db.y;
-            bz = db.z;
-            da = modelBoneTransforms_next(a);
-            a = da.p;
-            ax = da.x;
-            ay = da.y;
-            az = da.z;
-            ax = (u32)(ax * wHi + bx * f) >> 16;
-            ay = (u32)(ay * wHi + by * f) >> 16;
-            az = (u32)(az * wHi + bz * f) >> 16;
-        }
-        else
-        {
-            da = modelBoneTransforms_next(a);
-            a = da.p;
-            ax = da.x;
-            ay = da.y;
-            az = da.z;
-            ax = (u32)(ax * wHi) >> 16;
-            ay = (u32)(ay * wHi) >> 16;
-            az = (u32)(az * wHi) >> 16;
-            goto store;
-        }
-    store:
-        ax += *(s16*)(p + 0);
-        ay += *(s16*)&((ModelFileHeader*)p)->flags;
-        az += *(s16*)(p + 4);
-        *(s16*)(out + 0) = ax;
-        *(s16*)(out + 2) = ay;
-        *(s16*)(out + 4) = az;
-        p += 6;
-        out += 6;
-        i++;
-        continue;
-    onlyB:
-        db = modelBoneTransforms_next(b);
-        b = db.p;
-        bx = db.x;
-        by = db.y;
-        bz = db.z;
-        bx = (u32)(bx * f) >> 16;
-        by = (u32)(by * f) >> 16;
-        bz = (u32)(bz * f) >> 16;
-        bx += *(s16*)(p + 0);
-        by += *(s16*)&((ModelFileHeader*)p)->flags;
-        bz += *(s16*)(p + 4);
-        *(s16*)(out + 0) = bx;
-        *(s16*)(out + 2) = by;
-        *(s16*)(out + 4) = bz;
-        p += 6;
-        out += 6;
-        i++;
-    }
+    // clang-format off
+    nofralloc
+    mflr r0
+    stwu r1, -80(r1)
+    stw r0, 84(r1)
+    stmw r14, 8(r1)
+    lwz r23, 0(r6)      // a = *pd
+    lwz r24, 0(r7)      // b = *pe
+    li r25, 0           // i = 0
+    lis r17, 1
+    subf r17, r8, r17   // wHi = 0x10000 - f
+lbl_ABT_top:
+    lha r18, 0(r23)
+    lha r19, 0(r24)
+    andi. r18, r18, 0x1fff
+    andi. r19, r19, 0x1fff
+    subf r18, r9, r18   // aIdx = (*a & 0x1fff) - pos
+    subf r19, r9, r19   // bIdx = (*b & 0x1fff) - pos
+lbl_ABT_copy:
+    cmpw r25, r5
+    bge lbl_ABT_done
+    cmpw r25, r18
+    bge lbl_ABT_a
+    cmpw r25, r19
+    bge lbl_ABT_bOnly
+    lwz r20, 0(r3)      // copy an untouched 6-byte vertex
+    lha r22, 4(r3)
+    addi r3, r3, 6
+    stw r20, 0(r4)
+    addi r25, r25, 1
+    sth r22, 4(r4)
+    addi r4, r4, 6
+    b lbl_ABT_copy
+lbl_ABT_a:
+    cmpw r25, r19
+    bne lbl_ABT_aOnly
+    mr r20, r24         // both streams hit: blend a and b deltas
+    bl modelBoneTransforms_next
+    mr r24, r20
+    mr r11, r10
+    mr r14, r12
+    mr r16, r15
+    mr r20, r23
+    bl modelBoneTransforms_next
+    mr r23, r20
+    mullw r10, r10, r17
+    mullw r12, r12, r17
+    mullw r15, r15, r17
+    mullw r11, r11, r8
+    mullw r14, r14, r8
+    mullw r16, r16, r8
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b lbl_ABT_top
+lbl_ABT_aOnly:
+    mr r20, r23         // only stream a hits: weight by wHi
+    bl modelBoneTransforms_next
+    mr r23, r20
+    mullw r10, r10, r17
+    mullw r12, r12, r17
+    mullw r15, r15, r17
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b lbl_ABT_top
+lbl_ABT_bOnly:
+    mr r20, r24         // only stream b hits: weight by f
+    bl modelBoneTransforms_next
+    mr r24, r20
+    mullw r10, r10, r8
+    mullw r12, r12, r8
+    mullw r15, r15, r8
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b lbl_ABT_top
+lbl_ABT_done:
+    stw r23, 0(r6)      // *pd = a
+    stw r24, 0(r7)      // *pe = b
+    lwz r0, 84(r1)
+    mtlr r0
+    lmw r14, 8(r1)
+    addi r1, r1, 80
+    blr
+    // clang-format on
 }
 #pragma dont_inline reset
 #pragma peephole off
