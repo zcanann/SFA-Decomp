@@ -70,3 +70,16 @@ desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
   web directly), i.e. CExpr/CFunc assignment lowering, not any RA pass. Next read:
   the assignment lowering call path into 0x43629f (who requests the temp for a
   decl-init of an address constant, and under what condition it is skipped).
+
+## Update (decode session 4): the class is not compiler-version dependent
+- Compiled dll_94 with GC 1.3/1.3.2/1.3.2r/2.0/2.0p1/2.5 (same flags): EVERY version
+  emits `lis; addi r0; mr rHOME` for the cross-BB address init. Our own build of the
+  same construct with a same-BB first use (dll_93) emits the direct `addi r31` — so
+  the front-end always makes the temp and only the in-BB fold deletes it.
+- Since no MWCC emits the retail shape for this source+CFG, either (a) the retail
+  source used a construct we have not conceived, or (b) the retail DLL POST-PROCESSING
+  (the DLL-format converter/linker) RELAXED `lis rX; addi r0,rX,lo; mr rD,r0` into
+  `lis rX; addi rD,rX,lo` — a classic address-materialization relaxation, consistent
+  with the class appearing exactly and only at relocated address materializations.
+  Checking the DLL conversion tooling for a relaxation pass is the next (and likely
+  final) step for this class; if confirmed, the fix is in tools/configure, not source.
