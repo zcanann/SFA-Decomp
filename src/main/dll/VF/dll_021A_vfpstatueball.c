@@ -16,6 +16,8 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+#define VFPSTATUEBALL_OBJFLAG_HIDDEN 0x4000
+
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
 typedef struct VfpStatueBallPlacement
@@ -181,7 +183,7 @@ void vfpstatueball_init(int* obj, u8* init)
     VfpStatueBallState* state = ((GameObject*)obj)->extra;
     state->gameBit = setup->gameBit;
     state->timer = 0x19;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
+    ((GameObject*)obj)->objectFlags |= VFPSTATUEBALL_OBJFLAG_HIDDEN;
     if (setup->variant > 2)
     {
         setup->variant = 2;
