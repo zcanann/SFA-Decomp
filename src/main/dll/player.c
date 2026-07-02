@@ -13270,7 +13270,6 @@ void fn_802AABE4(int obj)
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
                            OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
-#pragma opt_propagation reset
 
 void fn_802B4A9C(int obj, int inner, int inner2)
 {
@@ -15350,7 +15349,12 @@ int fn_8029FA24(int obj, int state, f32 fv)
     f32 j1[3];
     f32 wpos[3];
 
-    inner->flags360 &= ~0x2LL;
+    {
+        u32 m;
+        u32 f2 = *(u32*)&inner->flags360;
+        m = ~0x2;
+        *(u32*)&inner->flags360 = f2 & m;
+    }
     inner->flags360 |= 0x2000;
     *(int*)((char*)state + 0x4) |= 0x100000;
     {
@@ -15495,6 +15499,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma opt_propagation reset
 void fn_802ABFBC(int obj, int state, int inner)
 {
     void* sub;
