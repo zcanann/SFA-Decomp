@@ -523,15 +523,15 @@ void drakorhoverpad_updateMain(int obj)
         ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadUpdateMainState*)p)->unk114 + (((
             DrakorHoverpadUpdateMainState*)p)->verticalVel + wobbleY);
         absV = ((DrakorHoverpadUpdateMainState*)p)->verticalVel;
-        absV = (absV >= lbl_803E6A3C) ? absV : -absV;
-        if (absV < limit)
+        absH = (absV >= lbl_803E6A3C) ? absV : -absV;
+        if (absH < limit)
         {
             ((DrakorHoverpadUpdateMainState*)p)->verticalVel = *(f32*)p;
         }
         else
         {
-            ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadUpdateMainState*)p)->verticalVel +
-                ((((DrakorHoverpadUpdateMainState*)p)->verticalVel > *(f32*)p) ? -limit : limit);
+            ((DrakorHoverpadUpdateMainState*)p)->verticalVel +=
+                (absV > *(f32*)p) ? -limit : limit;
         }
         ObjHits_SetHitVolumeSlot(obj, 8, 1, 0);
     }
