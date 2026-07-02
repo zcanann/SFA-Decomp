@@ -14,6 +14,9 @@
 #include "main/model_light.h"
 #include "main/obj_placement.h"
 #include "main/sfa_shared_decls.h"
+
+#define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
+#define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 extern void ObjHitbox_SetSphereRadius(int objPtr, s16 radius);
 extern u32 ObjHits_SetHitVolumeSlot();
 extern u32 ObjHits_EnableObject();
@@ -153,7 +156,7 @@ void dimbossfire_update(int obj)
             ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
             ObjHitbox_SetSphereRadius(obj, 0xf);
             ObjHits_EnableObject(obj);
-            if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+            if ((((GameObject*)obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
             {
                 ref = 0;
                 do
@@ -171,7 +174,7 @@ void dimbossfire_update(int obj)
                 while (ref < 0x32);
             }
             ref = Obj_GetPlayerObject();
-            if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & 0x1000) == 0))
+            if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & DIMBOSSFIRE_OBJFLAG_PARENT_SLACK) == 0))
             {
                 playerDist = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
                 if (playerDist <= lbl_803E4DA4)
