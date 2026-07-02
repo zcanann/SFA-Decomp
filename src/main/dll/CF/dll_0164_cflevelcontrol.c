@@ -16,6 +16,8 @@
 #include "main/audio/sfx.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+#define CFLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
+
 typedef struct CflevelcontrolState
 {
     u8 pad0[0x8 - 0x0];
@@ -181,7 +183,7 @@ void cflevelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 
-    if (GameBit_Get(0x94f) != 0 && (((GameObject*)player)->objectFlags & 0x1000) == 0)
+    if (GameBit_Get(0x94f) != 0 && (((GameObject*)player)->objectFlags & CFLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         GameBit_Set(0x94e, 0);
     }
