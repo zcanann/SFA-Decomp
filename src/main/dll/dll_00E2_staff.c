@@ -1120,10 +1120,10 @@ void superQuakeFn_8016d9fc(f32* pos)
         v.h1 = 0;
         (*gPartfxInterface)->spawnObject(player, 0x565, &v, 0x200000, -1, NULL);
         setup = Obj_AllocObjectSetup(36, 0x63c);
-        *((u8*)setup + 4) = 1;
-        *((u8*)setup + 6) = 0xff;
-        *((u8*)setup + 5) = 2;
-        *((u8*)setup + 7) = 0xff;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[1] = 2;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
         ((ObjPlacement*)setup)->posX = *(f32*)(gStaffQuakeSpellState + 0);
         ((ObjPlacement*)setup)->posY = *(f32*)(gStaffQuakeSpellState + 4);
         ((ObjPlacement*)setup)->posZ = *(f32*)(gStaffQuakeSpellState + 8);
