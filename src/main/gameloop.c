@@ -230,7 +230,6 @@ void* getCache(void);
 
 extern void gameTextLoadDir(int dirId);
 
-#pragma peephole off
 void cutsceneExit(void)
 {
     hudHiddenFrameCount = 0;
@@ -264,7 +263,6 @@ extern void fileLoadToBuffer(int id, void* buf);
 extern void* textureLoad(int texId, u8 flag);
 
 #pragma scheduling on
-#pragma peephole on
 #pragma scheduling off
 #pragma peephole off
 void loadAsset(void* reqVoid)
@@ -446,7 +444,6 @@ extern u8* gGameBitSaveData;
 #define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
 
 #pragma dont_inline off
-#pragma scheduling off
 u32 GameBit_Get(int eventId)
 {
     s16 id = (s16)eventId & 0xfff;
@@ -511,7 +508,6 @@ u32 GameBit_Get(int eventId)
     }
     return result;
 }
-#pragma scheduling reset
 
 
 extern void gameBitFn_800ea2e0(u8 id);
@@ -727,7 +723,6 @@ extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
 #pragma dont_inline off
-#pragma peephole off
 void init(void)
 {
     u8 audioDone;
@@ -1321,7 +1316,6 @@ extern int lbl_803DB428;
 extern int lbl_803DB42C;
 extern void* gameTextGetStr(int textId);
 
-#pragma peephole off
 #pragma optimization_level 2
 void askProgressiveScanMode(void)
 {
