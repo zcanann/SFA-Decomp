@@ -686,7 +686,8 @@ void dll_63_func00_nop(void)
 {
 }
 
-void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+#pragma inline_max_size(4000)
+static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     struct
     {
@@ -706,12 +707,12 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         u8 pad1[2];
         GfxCmd entries[32];
     } buf;
-    GfxCmd* e;
-    GfxCmd* entries;
-    u8* base = (u8*)(int)lbl_80312BD8;
-    s16* p;
-    int i;
     u32 flag;
+    int i;
+    s16* p;
+    GfxCmd* entries;
+    GfxCmd* e;
+    u8* base = (u8*)(int)lbl_80312BD8;
     if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
@@ -968,4 +969,11 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
+    base++;
 }
+
+void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+{
+    dll_63_func03Body(sourceObj, variant, posSource, flags);
+}
+#pragma inline_max_size reset
