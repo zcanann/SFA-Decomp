@@ -2095,7 +2095,6 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
     return 0;
 }
 
-#pragma peephole off
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
     if (state->reverse != 0)
@@ -2154,7 +2153,6 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
     return 0;
 }
 
-#pragma peephole off
 void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
 {
     int count;
