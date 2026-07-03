@@ -12,8 +12,8 @@
 extern f32 Vec_distance(void* posA, void* posB);
 
 extern void Obj_RemoveFromUpdateList(void* obj);
-extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
-                                 u32 param_5, double scale);
+extern void objRenderFn_8003b8f4(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4,
+                                 u32 fwdArg5, double scale);
 
 
 extern s16 lbl_803DC228;
