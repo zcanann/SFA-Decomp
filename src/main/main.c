@@ -215,7 +215,6 @@ int vfplavastar_getExtraSize(void) { return sizeof(VfpLavaStarState); }
 int vfplavastar_getObjectTypeId(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return sizeof(LaserState); }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
-int dbegg_getExtraSize(void);
 
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
@@ -238,8 +237,6 @@ int fn_801FD4A8(void* obj, int x)
     return 0;
 }
 #pragma peephole on
-
-int dbegg_setScale(int obj);
 
 void vfplavastar_initialise(void)
 {
