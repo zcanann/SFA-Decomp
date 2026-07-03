@@ -165,7 +165,6 @@ void CameraModeShipBattle_init(void)
     return;
 }
 
-void CameraModeCombat_release(void);
 
 void CameraModeShipBattle_copyToCurrent_nop(void)
 {
@@ -179,7 +178,6 @@ void CameraModeShipBattle_initialise(void)
 {
 }
 
-void CameraModeClimb_copyToCurrent_nop(void);
 
 void CameraModeShipBattle_free(void)
 {
@@ -187,4 +185,3 @@ void CameraModeShipBattle_free(void)
     gCamShipBattleState = 0;
 }
 
-void CameraModeClimb_free(void);
