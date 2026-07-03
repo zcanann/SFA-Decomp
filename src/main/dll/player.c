@@ -9260,13 +9260,13 @@ void fn_80296C84(int obj)
     }
     else
     {
-        int hi = *(s8 volatile*)((char*)deref + 1);
+        int hi = *(s8*)(deref + 1);
         if (v > hi)
         {
             v = hi;
         }
     }
-    *(s8*)((char*)*(int volatile*)((char*)inner + 0x35C)) = (s8)v;
+    *(s8*)((char*)*(int*)((char*)inner + 0x35C)) = (s8)v;
     Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
     ((ByteFlags*)((char*)inner + 0x3f3))->b04 = 1;
     inner->knockbackTimer = lbl_803E7EA4;
