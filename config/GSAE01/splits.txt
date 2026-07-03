@@ -156,7 +156,7 @@ main/sky.c:
 
 main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
-	.data       start:0x8030F5F0 end:0x8030F670
+	.data       start:0x8030F5F0 end:0x8030F770
 	.bss        start:0x8039A818 end:0x8039AB28
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
