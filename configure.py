@@ -1345,7 +1345,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_01CE_dll1ce.c"),
             Object(NonMatching, "main/dll/DIM/dll_01CC_dimmagicbridge.c"),
             Object(NonMatching, "main/dll/DIM/dll_01CD_dimlevelcontrol.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/dll_01CF_dll1cf.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_01CF_dll1cf.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_01D0_dimtricky.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_01D1_dimtruthhornice.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_01D5_dim2conveyor.c", cflags=cflags_dll_noopt),

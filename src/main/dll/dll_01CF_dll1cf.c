@@ -17,6 +17,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -96,3 +97,20 @@ void dll_1CF_release(void)
 void dll_1CF_initialise(void)
 {
 }
+
+ObjectDescriptor dll_1CF = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1CF_initialise,
+    (ObjectDescriptorCallback)dll_1CF_release,
+    0,
+    (ObjectDescriptorCallback)dll_1CF_init,
+    (ObjectDescriptorCallback)dll_1CF_update,
+    (ObjectDescriptorCallback)dll_1CF_hitDetect,
+    (ObjectDescriptorCallback)dll_1CF_render,
+    (ObjectDescriptorCallback)dll_1CF_free,
+    (ObjectDescriptorCallback)dll_1CF_getObjectTypeId,
+    dll_1CF_getExtraSize,
+};

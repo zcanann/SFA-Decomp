@@ -1680,6 +1680,7 @@ main/dll/DIM/dll_01CD_dimlevelcontrol.c:
 
 main/dll/dll_01CF_dll1cf.c:
 	.text       start:0x801B6B44 end:0x801B6C2C
+	.data       start:0x80325670 end:0x803256A8
 
 main/dll/DIM/dll_01D0_dimtricky.c:
 	.text       start:0x801B6C2C end:0x801B6D40
