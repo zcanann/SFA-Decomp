@@ -1352,9 +1352,9 @@ void pauseMenuFn_8012b77c(void)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
-    int t;
-    int a;
-    int u;
+    int ty;
+    int av;
+    int uv;
     int i;
     s8 idx;
     s8 j;
@@ -1373,10 +1373,10 @@ void boxDrawFn_8012975c(void)
     {
         i = idx;
         drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
-                    (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), t, (u8)a,
-                          (u16)u, 0x18, 0x34, 1);
+                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha),
+                    (u16)(uv = i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av,
+                          (u16)uv, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
     }
@@ -1387,10 +1387,10 @@ void boxDrawFn_8012975c(void)
     {
         i = idx;
         drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
-                    (u16)(u = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), t, (u8)a,
-                          (u16)u, 0x18, 0x34, 1);
+                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha),
+                    (u16)(uv = i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av,
+                          (u16)uv, 0x18, 0x34, 1);
         idx = (i + 3) & 0x1f;
         alpha -= 0x55;
     }
@@ -1814,26 +1814,26 @@ void pauseMenuRunSubmenu(int p1)
         }
         if (lbl_803DD764 > lbl_803E1E3C)
         {
-            u8 a1;
-            u8 a2;
-            int v1;
-            int v2;
-            padGetAnalogInput(0, &a1, &a2);
-            v2 = a2;
-            if ((s8)v2 == 1)
+            u8 analogX;
+            u8 analogY;
+            int navX;
+            int navY;
+            padGetAnalogInput(0, &analogX, &analogY);
+            navY = analogY;
+            if ((s8)navY == 1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[0];
             }
-            if ((s8)v2 == -1)
+            if ((s8)navY == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[1];
             }
-            v1 = a1;
-            if ((s8)v1 == -1 && sel == -1)
+            navX = analogX;
+            if ((s8)navX == -1 && sel == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[2];
             }
-            if ((s8)v1 == 1 && sel == -1)
+            if ((s8)navX == 1 && sel == -1)
             {
                 sel = lbl_803DD824[lbl_803DD7D8].nav[3];
             }
@@ -2603,21 +2603,21 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             k = lbl_803E204C;
             for (row = 0; row < 0x96; row += 4)
             {
-                int a2, b2, r1, r2, raw;
+                int alpha0, alpha1, jitter1, jitter0, rawAlpha;
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + iv[1])) + s;
-                raw = (int)((f32)alpha * (lbl_803E2050 + s));
-                a2 = raw < 0 ? 0 : raw;
-                r1 = randomGetRange(0, 0x1e) << 1;
-                r2 = randomGetRange(0, 0x1e) << 1;
+                rawAlpha = (int)((f32)alpha * (lbl_803E2050 + s));
+                alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
+                jitter1 = randomGetRange(0, 0x1e) << 1;
+                jitter0 = randomGetRange(0, 0x1e) << 1;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x32),
-                                   (u8)(a2 > 0xff ? 0xff : a2), 0x100, 0x82, 2, r2, r1);
-                raw = (int)((f32)alpha * (lbl_803E2010 + s));
-                b2 = raw < 0 ? 0 : raw;
-                r1 = randomGetRange(0, 0x1e) << 1;
-                r2 = randomGetRange(0, 0x1e) << 1;
+                                   (u8)(alpha0 > 0xff ? 0xff : alpha0), 0x100, 0x82, 2, jitter0, jitter1);
+                rawAlpha = (int)((f32)alpha * (lbl_803E2010 + s));
+                alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
+                jitter1 = randomGetRange(0, 0x1e) << 1;
+                jitter0 = randomGetRange(0, 0x1e) << 1;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x34),
-                                   (u8)(b2 > 0xff ? 0xff : b2), 0x100, 0x82, 2, r2, r1);
+                                   (u8)(alpha1 > 0xff ? 0xff : alpha1), 0x100, 0x82, 2, jitter0, jitter1);
                 iv[0] += 0x3520;
                 iv[1] += 0x1f40;
             }
@@ -4043,12 +4043,12 @@ void GameUI_hudDraw(int a, int b, int c)
             if (fn_8029605C(player, &sx, &sy) != 0)
             {
                 void* tex;
-                f32 f3, x, y;
+                f32 scale, x, y;
                 textureAnimFn_80053f2c(gGameUiBlinkTexture, &lbl_803DD82C, &lbl_803DD828);
                 tex = gGameUiBlinkTexture;
-                f3 = lbl_803E1E70;
-                x = sx - f3 * (f32)(u32) * (u16*)((char*)tex + 0xa);
-                y = sy - f3 * (f32)(u32) * (u16*)((char*)tex + 0xc);
+                scale = lbl_803E1E70;
+                x = sx - scale * (f32)(u32) * (u16*)((char*)tex + 0xa);
+                y = sy - scale * (f32)(u32) * (u16*)((char*)tex + 0xc);
                 drawTexture(tex, x, y, 0x96, 0x100);
             }
             hudDrawFn_80121440(a, b, c);
