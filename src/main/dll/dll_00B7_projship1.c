@@ -25,3 +25,5 @@ void projship1_release(void)
 void projship1_initialise(void)
 {
 }
+
+char sProjship1DoNoLongerSupported[] = "<projship1 Do>No Longer supported \n";

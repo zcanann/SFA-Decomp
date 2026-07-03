@@ -27,3 +27,5 @@ void projwallpower_release(void)
 void projwallpower_initialise(void)
 {
 }
+
+char sProjwallpowerDoNoLongerSupported[] = "<projwallpower Do>No Longer supported \n";

@@ -23,3 +23,5 @@ void projquakeshock_release(void)
 void projquakeshock_initialise(void)
 {
 }
+
+char sProjquakeshockDoNoLongerSupported[] = "<projquakeshock Do>No Longer supported \n";

@@ -22,3 +22,5 @@ void projmagicemmit1_release(void)
 void projmagicemmit1_initialise(void)
 {
 }
+
+char sProjmagicemmit1DoNoLongerSupported[] = "<projmagicemmit1 Do>No Longer supported \n";

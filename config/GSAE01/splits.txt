@@ -596,6 +596,7 @@ main/dll/dll_00AC_projmagicstream.c:
 
 main/dll/dll_00AD_projmagicemmit1.c:
 	.text       start:0x801005C0 end:0x801005F8
+	.data       start:0x80319430 end:0x80319460
 
 main/dll/dll_00AE_projroombeam.c:
 	.text       start:0x801005F8 end:0x80100630
@@ -624,6 +625,7 @@ main/dll/dll_00B9_projlightning7.c:
 
 main/dll/dll_00BA_projlightning6.c:
 	.text       start:0x80100780 end:0x801007B8
+	.data       start:0x803196A8 end:0x803196D8
 
 main/dll/dll_00B4_projenergise1.c:
 	.text       start:0x801007B8 end:0x801007F0
@@ -641,12 +643,15 @@ main/dll/dll_00B6_projsquirt1.c:
 
 main/dll/dll_00B7_projship1.c:
 	.text       start:0x80100898 end:0x801008D0
+	.data       start:0x80319818 end:0x80319840
 
 main/dll/dll_00BB_projwallpower.c:
 	.text       start:0x801008D0 end:0x80100908
+	.data       start:0x80319860 end:0x80319888
 
 main/dll/dll_00BC_projquakeshock.c:
 	.text       start:0x80100908 end:0x80100940
+	.data       start:0x803198A8 end:0x803198D8
 
 main/dll/dll_00BD_projsunshock.c:
 	.text       start:0x80100940 end:0x80100978
@@ -662,6 +667,7 @@ main/dll/dll_00C0_projcore2.c:
 
 main/dll/dll_00C1_projcore3.c:
 	.text       start:0x80100A20 end:0x80100A58
+	.data       start:0x80319A18 end:0x80319A40
 
 main/dll/dll_00C2_projdfp1r.c:
 	.text       start:0x80100A58 end:0x80100A90
