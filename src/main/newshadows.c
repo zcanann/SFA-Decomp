@@ -1800,6 +1800,8 @@ extern float fn_802943F4(float x);
 extern float floor(float);
 extern const f32 __PADFixBits;
 extern const f32 Yachuff_803DEDE0;
+extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
+extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
 extern f32 gNewShadowPlacements[];
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 
@@ -1815,21 +1817,21 @@ void initFn_8006d020(void)
     f32* e;
     int tex;
     int placed;
+    int count;
     u8 collide;
-    f32 padFix;
 
     saved = testAndSet_onlyUseHeap3(1);
-    placed = 0;
     attempts = 0;
+    placed = 0;
     e = gNewShadowPlacements;
     while (placed < 0x32 && attempts < 10000u)
     {
         f32 *p1, *p2, *p4;
         e[0] = (f32)(int)
         randomGetRange(8, 0x10);
-        e[3] = 0.01f * (f32)(int)
+        e[3] = Vdchuff_803DEDD8 * (f32)(int)
         randomGetRange(5, 10);
-        e[4] = e[3] * (0.01f * (f32)(int)
+        e[4] = e[3] * (Vdchuff_803DEDD8 * (f32)(int)
         randomGetRange(0x14, 0x32)
         )
         ;
@@ -1840,13 +1842,13 @@ void initFn_8006d020(void)
         do
         {
             f32* o;
-            *p1 = 0.001f * (f32)(int)
+            *p1 = Vdchuff_803DEDDC * (f32)(int)
             randomGetRange(0, 999);
-            *p2 = 0.001f * (f32)(int)
+            *p2 = Vdchuff_803DEDDC * (f32)(int)
             randomGetRange(0, 999);
+            o = gNewShadowPlacements;
             collide = 0;
             j = 0;
-            o = gNewShadowPlacements;
             while (j < placed && !collide)
             {
                 f32 mx, mz, tmp, d;
@@ -1862,8 +1864,8 @@ void initFn_8006d020(void)
                 if (tmp < mz) mz = tmp;
                 d = sqrtf(mx * mx + mz * mz);
                 if (d < *p4 + o[3]) collide = 1;
-                j++;
                 o += 5;
+                j++;
             }
             attempts++;
         }
@@ -1872,25 +1874,32 @@ void initFn_8006d020(void)
         placed++;
     }
 
-    padFix = __PADFixBits;
+    count = placed;
+    tex = 0;
     th = (int*)gNewShadowNoiseTexFrames;
-    for (tex = 0; tex < 0x10; th++, tex++)
+    for (; tex < 0x10; th++, tex++)
     {
         *th = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
         for (row = 0; row < 0x40; row++)
         {
-            for (col = 0; col < 0x40; col++)
+            int rowoff, lowoff;
+            col = 0;
+            rowoff = (row >> 2) * 0x20;
+            lowoff = (row & 3) * 2;
+            for (; col < 0x40; col++)
             {
                 f32 o1, o2;
                 int hi, lo;
-                char* dst = (char*)(*th + (row & 3) * 2 + (row >> 2) * 0x20
-                    + (col & 3) * 8 + (col >> 2) * 0x200);
-                fn_8006CD20(gNewShadowPlacements, placed, &o1, &o2,
+                int dst = *th + lowoff;
+                dst += rowoff;
+                dst += (col & 3) * 8;
+                dst += (col >> 2) * 0x200;
+                fn_8006CD20(gNewShadowPlacements, count, &o1, &o2,
                             row * Yachuff_803DEDE0,
                             col * Yachuff_803DEDE0,
                             tex);
-                hi = (int)(padFix * o2);
-                lo = (int)(padFix * o1);
+                hi = (int)(__PADFixBits * o2);
+                lo = (int)(__PADFixBits * o1);
                 *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }
@@ -1900,28 +1909,35 @@ void initFn_8006d020(void)
     gNewShadowCausticTexture = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++)
     {
-        f32 rv = 0.0981875f * row;
-        for (col = 0; col < 0x40; col++)
+        int rowoff, lowoff;
+        f32 rv;
+        col = 0;
+        rowoff = (row >> 2) * 0x20;
+        lowoff = (row & 3) * 2;
+        rv = Yachuff_803DEDE4 * row;
+        for (; col < 0x40; col++)
         {
-            f32 cv, n1, n2, prod, fa, fb;
+            f32 cv, n1, n2, prod, fa;
             int hi, lo;
-            char* dst = (char*)(gNewShadowCausticTexture + (row & 3) * 2 + (row >> 2) * 0x20
-                + (col & 3) * 8 + (col >> 2) * 0x200);
-            cv = 0.39275f * col;
+            int dst = gNewShadowCausticTexture + lowoff;
+            dst += rowoff;
+            dst += (col & 3) * 8;
+            dst += (col >> 2) * 0x200;
+            cv = Yachuff_803DEDE8 * col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
-            fb = 127.0f * prod + 127.0f;
-            fa = 127.0f * n1 + 127.0f;
+            prod = Vdchuff_803DEDC0 * prod + Vdchuff_803DEDC0;
+            fa = Vdchuff_803DEDC0 * n1 + Vdchuff_803DEDC0;
             lo = fa;
-            hi = fb;
+            hi = prod;
             *(u16*)(dst + 0x60) = (u16)(lo | ((hi & 0xffff) << 8));
         }
     }
     DCFlushRange((void*)(gNewShadowCausticTexture + 0x60), *(u32*)(gNewShadowCausticTexture + 0x44));
 
-    gNewShadowReflectionScrollX = 0.0f;
-    gNewShadowReflectionScrollY = 0.0f;
+    gNewShadowReflectionScrollX = lbl_803DED28;
+    gNewShadowReflectionScrollY = lbl_803DED28;
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma opt_common_subs reset
