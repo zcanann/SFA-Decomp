@@ -57,3 +57,16 @@ Recovered-but-parked source structures (verified against target shape):
   reproduces fsubs f31 seed + fadds accumulate; adopt once f2/f3 flips.
 - inpInit zero-fill: CTR-4 loop, 2x16 stw groups with kept +64 bumps and a
   live counter joined to the zero-constant web (class-A join).
+
+Additional verified-but-parked reconstructions (register-rotation gated):
+- Lightfoot_UpdateButtonTimingChallenge: `w` is u16-typed (readback gains the
+  target's clrlwi r26 def-mask) but adopting it rotates the whole saved bank
+  by one (v/params shift); pair with the rotation fix.
+- DRlaserturret_handlePromptChoice: both diff sites imply one extra live
+  volatile web in the target (countValue web r4 spanning to the vtable-chain
+  site); the occupying web is unidentified — first target for the val-pointer
+  correlation workflow.
+- RomCurveInterp: magic-double web (idx 35, nadj 8, shared with the two scale
+  conversions) must be created before the while-loop's times load (idx 34);
+  creation point is constant-pool materialization, not statement order —
+  needs the vreg-numbering disasm (IroLinearForm band).
