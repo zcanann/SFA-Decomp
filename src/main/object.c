@@ -79,7 +79,6 @@ extern char sObjUnknownTypeUsingDummyObjectWarning[];
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
 
-
 extern void modelInitBones(f32 scale, void* model);
 extern int shadowInit(void* obj, int cursor, int arg);
 extern void debugPrintf(char* fmt, ...);
@@ -100,7 +99,6 @@ extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
 extern u32 gObjUpdateFlags;
-
 
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
@@ -131,48 +129,6 @@ extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
-
-u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u32
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
-{
-    return 0;
-}
-
-u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
-{
-    return 0;
-}
-
-u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-)
-{
-    return 0;
-}
-
 void doNothing_afterRenderObject(void)
 {
 }
@@ -425,8 +381,6 @@ int objGetFlagsE5_2(u8* obj)
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE;
 }
 
-
-
 int roundUpTo32(int x);
 
 #pragma scheduling off
@@ -482,7 +436,6 @@ void fn_8002B860(void* v)
     gObjPtrTableCount = i + 1;
     gObjPtrTable[i] = (int)v;
 }
-
 
 #pragma peephole off
 void* getTablesBinEntry(int i)
@@ -2617,7 +2570,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     }
     return roundUpTo32(size);
 }
-
 
 void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
 
