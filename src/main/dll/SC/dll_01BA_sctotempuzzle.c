@@ -30,6 +30,9 @@
 #define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
 
+#define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN 0x4000
+#define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct SCTotemPuzzleState
 {
     u8 pad00[0xc];
@@ -404,5 +407,5 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     }
     state->peerPhaseOffset = lbl_803E55FC;
     obj->animEventCallback = fn_801DD170;
-    obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
+    obj->objectFlags = (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));
 }
