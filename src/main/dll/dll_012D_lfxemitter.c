@@ -7,13 +7,8 @@
 #include "main/objlib.h"
 #include "main/mm.h"
 #include "main/dll/objfsa.h"
-extern u32 FUN_80006b0c();
-extern u32 FUN_80006b14();
-extern u32 FUN_80017748();
 extern void Obj_FreeObject(int obj);
 
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e4af8;
@@ -197,7 +192,6 @@ void lfxemitter_free(LfxEmitterObject* obj)
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
 
-void fxemit_release(void);
 
 void lfxemitter_render(void)
 {
