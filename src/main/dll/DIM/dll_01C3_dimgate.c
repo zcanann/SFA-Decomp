@@ -43,12 +43,10 @@ void dimgate_initialise(void)
 {
 }
 
-void dimbarrier_free(void);
 
 int dimgate_SeqFn(void) { return 0x0; }
 int dimgate_getExtraSize(void) { return 0x1; }
 int dimgate_getObjectTypeId(void) { return 0x0; }
-int dimicewall_getExtraSize(void);
 
 void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -56,7 +54,6 @@ void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4878);
 }
 
-void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimgate_init(int obj, s8* p_unused_passthrough)
 {
@@ -78,7 +75,6 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
     ((GameObject*)obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void dimbarrier_init(int obj, s8* p);
 
 void dimgate_update(int obj)
 {
