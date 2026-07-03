@@ -39,55 +39,6 @@ extern f32 gExplodedGroundFriction;
 extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
 
-void FUN_801a4520(int obj)
-{
-    int placement;
-
-    if (((GameObject*)obj)->unkF4 == 0)
-    {
-        placement = *(int*)&((GameObject*)obj)->anim.placementData;
-        if ((*(short*)(placement + 0x1c) != 0) && (**(u8**)&((GameObject*)obj)->extra >> 5 != 0))
-        {
-            (*gObjectTriggerInterface)->preempt(obj, *(s16*)(placement + 0x1c));
-        }
-        placement = (int)*(char*)(placement + 0x1e);
-        if (placement != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence(placement, (void*)obj, -1);
-        }
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    return;
-}
-
-void FUN_801a45cc(short* unused1, int unused2)
-{
-}
-
-u32
-FUN_801a4810(u64 unused1, u64 arg2, u64 arg3, u64 arg4,
-             u64 arg5, u64 arg6, u64 arg7, u64 arg8,
-             u32 unused9, u32 unused10, ObjAnimUpdateState* animUpdate)
-{
-    u32 handle;
-    int i;
-    u64 obj;
-
-    for (i = 0; i < (int)(u32)animUpdate->eventCount; i = i + 1)
-    {
-        if (animUpdate->eventIds[i] == 1)
-        {
-            FUN_80017698(0xdcb, 1);
-            obj = FUN_80017698(0x4a3, 0);
-            FUN_80041ff8(obj, arg2, arg3, arg4, arg5, arg6, arg7, arg8, 0x2b);
-            FUN_80042b9c(0, 0, 1);
-            handle = FUN_80044404(0x2b);
-            FUN_80042bec(handle, 0);
-        }
-    }
-    return 0;
-}
-
 void exploded_free(void)
 {
 }
