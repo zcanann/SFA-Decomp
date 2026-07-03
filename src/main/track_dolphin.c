@@ -5929,7 +5929,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 mag;
     TrackBlockDescriptor* desc;
     TrackTriangle* tri;
-    int objmtx;
+    u32 objmtx;
     u8 bounces;
     u8 found;
     s16 hit;
@@ -6246,7 +6246,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     norm4[3] = plane[3];
                     typeb = tri->surfaceType;
                     typeb2 = *(u8*)&tri->flags;
-                    objmtx = *(int*)desc;
+                    objmtx = *(u32*)desc;
                     svWorld[0] = ws[0];
                     svWorld[1] = ws[1];
                     svWorld[2] = ws[2];
@@ -6322,13 +6322,13 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         {
             if (norm4[1] >= __AR_Size || norm4[1] <= lbl_803DECEC)
             {
-                retHi = retHi | curBit;
+                retHi |= curBit;
             }
             ep1[0] = cur[0];
             ep2[1] = cur[1];
             ep2[2] = cur[2];
-            *(s16*)((u8*)slots + 0x6c) = *(s16*)((u8*)slots + 0x6c) + 1;
-            retLo = retLo | curBit;
+            (*(s16*)((u8*)slots + 0x6c))++;
+            retLo |= curBit;
         }
         curBit = (u8)(curBit << 1);
         slotp += 4;
