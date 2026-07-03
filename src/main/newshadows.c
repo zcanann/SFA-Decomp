@@ -1037,8 +1037,6 @@ void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void newshadows_getShadowTexture(int* textureOut)
 {
     *textureOut = DAT_803ddc30;
@@ -1086,8 +1084,6 @@ void newshadows_getShadowNoiseTexture(int* textureOut)
     return;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006b03c(int object, u32* groupOut, u32* scaleOut, int* offsetXOut, int* offsetYOut)
 {
     ObjModelState* modelState = ((GameObject*)object)->anim.modelState;
@@ -1098,15 +1094,11 @@ void FUN_8006b03c(int object, u32* groupOut, u32* scaleOut, int* offsetXOut, int
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 double newshadows_getShadowNoiseScale(void)
 {
     return (double)lbl_803DDC24;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
     if (((Texture*)DAT_803ddbfc)->preloaded == '\0')
@@ -1120,8 +1112,6 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int newshadows_getShadowRenderTexture(void)
 {
     return DAT_803ddbfc;
@@ -1137,8 +1127,6 @@ int newshadows_getRadialFalloffTexture(void)
     return DAT_803ddc10;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void newshadows_bindShadowCaptureTexture(int textureSlot)
 {
     if (((Texture*)DAT_803ddc64)->preloaded == '\0')
@@ -1261,8 +1249,6 @@ void newshadows_updateFrameState(void)
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
 {
     *xOffsetOut = lbl_803DDC2C;
@@ -1277,8 +1263,6 @@ void newshadows_freeShadowDirectionTexture(void)
     return;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void newshadows_buildShadowDirectionTexture(void)
 {
     float intensity;
@@ -2430,7 +2414,6 @@ extern u8 isHeavyFogEnabled(void);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 * a, f32 * b);
 extern u16 lbl_803DCFA0;
-#pragma peephole off
 void maybeHudFn_8006c91c(void)
 {
     f32 hi, lo;
