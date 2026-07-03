@@ -1822,6 +1822,12 @@ extern const f32 lbl_803DF27C;
 #undef NC_CLOUD
 #define NC_CLOUD ((u8 *)gNewClouds[*(u16 *)(params + 0x26)])
 
+/*
+ * `params` kept as raw u8* here (not CloudSpawnParams*): the NC_CLOUD macro
+ * and env slot writes index it as `params + 0x26` / `params + 0x26 * 0xc`
+ * byte arithmetic; retyping shifts the index/CSE codegen. `env` is the
+ * cross-TU saveGameGetEnvState() blob (would need a shared header).
+ */
 void newclouds_update(u8* objA, u8* objB, u8* params)
 {
     u8* env;
