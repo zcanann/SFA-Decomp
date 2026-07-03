@@ -192,10 +192,10 @@ extern u8 gMmRegionCount;
 typedef struct
 {
     int numSlots;
-    int f4;
+    int slotCount;
     u8* start;
     int size;
-    int f10;
+    int usedBytes;
 } MmRegion;
 
 MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
@@ -208,9 +208,9 @@ typedef struct
     s16 prev;
     s16 next;
     s16 stack;
-    int f10;
-    int f14;
-    int f18;
+    int tag;
+    int allocTick;
+    int allocId;
 } HeapItem;
 
 int mmGetRegionForPtr(u8* ptr)
@@ -237,10 +237,10 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     HeapItem* slot;
     int freePtr;
     gMmRegionTable[regIdx].numSlots = numSlots;
-    gMmRegionTable[regIdx].f4 = 0;
+    gMmRegionTable[regIdx].slotCount = 0;
     gMmRegionTable[regIdx].start = buf;
     gMmRegionTable[regIdx].size = size;
-    gMmRegionTable[regIdx].f10 = 0;
+    gMmRegionTable[regIdx].usedBytes = 0;
     slot = (HeapItem*)gMmRegionTable[regIdx].start;
     for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
     {
@@ -261,7 +261,7 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     slot->type = 0;
     slot->prev = -1;
     slot->next = -1;
-    gMmRegionTable[regIdx].f4++;
+    gMmRegionTable[regIdx].slotCount++;
     return gMmRegionTable[regIdx].start;
 }
 
@@ -530,10 +530,10 @@ void mmFreeTick(int arg)
                  gMmRegion1Used, g->regions[1].size,
                  gMmRegion2Used, g->regions[2].size,
                  gMmRegion3Used, g->regions[3].size,
-                 g->regions[0].f4, g->regions[0].numSlots,
-                 g->regions[1].f4, g->regions[1].numSlots,
-                 g->regions[2].f4, g->regions[2].numSlots,
-                 g->regions[3].f4, g->regions[3].numSlots);
+                 g->regions[0].slotCount, g->regions[0].numSlots,
+                 g->regions[1].slotCount, g->regions[1].numSlots,
+                 g->regions[2].slotCount, g->regions[2].numSlots,
+                 g->regions[3].slotCount, g->regions[3].numSlots);
     }
 }
 
@@ -660,15 +660,15 @@ int printHeapStats(void)
              gMmRegion1Used, gMmRegionTable[1].size,
              gMmRegion2Used, gMmRegionTable[2].size,
              gMmRegion3Used, gMmRegionTable[3].size,
-             gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
-             gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
-             gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
-             gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
+             gMmRegionTable[0].slotCount, gMmRegionTable[0].numSlots,
+             gMmRegionTable[1].slotCount, gMmRegionTable[1].numSlots,
+             gMmRegionTable[2].slotCount, gMmRegionTable[2].numSlots,
+             gMmRegionTable[3].slotCount, gMmRegionTable[3].numSlots);
     return gMmRegion0Used + (gMmRegion1Used + gMmRegion2Used + gMmRegion3Used);
 }
 
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag);
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag);
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 extern int gMmRegion0SpawnEnabled;
 extern int gMmNextAllocId;
@@ -682,16 +682,16 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     int idx;
     HeapItem* base;
     int bestSize;
-    int t28;
+    int largestFree0;
     HeapItem* res;
-    int t27;
+    int largestFree1;
     int largest;
 
     largest = 0;
-    t28 = 0;
-    t27 = 0;
+    largestFree0 = 0;
+    largestFree1 = 0;
 
-    if (gMmRegionTable[region].f4 + 1 == gMmRegionTable[region].numSlots)
+    if (gMmRegionTable[region].slotCount + 1 == gMmRegionTable[region].numSlots)
     {
         OSReport(msg + 0x4b8, tag, region);
         return 0;
@@ -768,8 +768,8 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 
     if (bestIdx != -1)
     {
-        gMmRegionTable[region].f10 += size;
-        if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size)
+        gMmRegionTable[region].usedBytes += size;
+        if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
         {
             OSReport(msg + 0x50c);
         }
@@ -786,7 +786,7 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
         {
             OSReport(msg + 0x53c);
         }
-        res->f18 = gMmNextAllocId++;
+        res->allocId = gMmNextAllocId++;
         gMmOpCount++;
         return (int)res->key;
     }
@@ -802,9 +802,9 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
         while (w->next != -1)
         {
             w = &b0[w->next];
-            if (w->size > t28 && w->type == 0)
+            if (w->size > largestFree0 && w->type == 0)
             {
-                t28 = w->size;
+                largestFree0 = w->size;
             }
         }
         b1 = (HeapItem*)gMmRegionTable[1].start;
@@ -812,9 +812,9 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
         while (w->next != -1)
         {
             w = &b1[w->next];
-            if (w->size > t27 && w->type == 0)
+            if (w->size > largestFree1 && w->type == 0)
             {
-                t27 = w->size;
+                largestFree1 = w->size;
             }
         }
         reportAllocFail(
@@ -826,12 +826,12 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
             gMmRegionTable[2].size / 1024 - gMmRegion2Used / 1024,
             lbl_803DCC7C,
             gMmTickCount,
-            size, t28, t27);
+            size, largestFree0, largestFree1);
     }
     return 0;
 }
 
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag)
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
 {
     int ni;
     HeapItem* base;
@@ -844,11 +844,11 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = size;
-    base[idx].f10 = f10val;
+    base[idx].tag = itemTag;
     if (oldSize > size)
     {
         s16 oldNext;
-        ni = base[gMmRegionTable[region].f4++].stack;
+        ni = base[gMmRegionTable[region].slotCount++].stack;
         base[idx].type = newType;
         while ((oldSize - size) % 32 != 0)
         {
@@ -862,8 +862,8 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
             OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
         }
         base[ni].size = size;
-        base[ni].f10 = f10val;
-        base[ni].f14 = gMmTickCount;
+        base[ni].tag = itemTag;
+        base[ni].allocTick = gMmTickCount;
         oldNext = base[idx].next;
         base[ni].next = oldNext;
         base[ni].prev = idx;
@@ -877,7 +877,7 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     return idx;
 }
 
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag)
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag)
 {
     int oldSize;
     int ni;
@@ -886,11 +886,11 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = newSize;
-    base[idx].f10 = f10val;
+    base[idx].tag = itemTag;
     if (oldSize > newSize)
     {
         s16 oldNext;
-        ni = base[gMmRegionTable[region].f4++].stack;
+        ni = base[gMmRegionTable[region].slotCount++].stack;
         base[ni].key = (char*)base[idx].key + newSize;
         if ((int)base[ni].key % 32 != 0)
         {
@@ -906,7 +906,7 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
         {
             base[oldNext].prev = ni;
         }
-        base[idx].f14 = gMmTickCount;
+        base[idx].allocTick = gMmTickCount;
         return ni;
     }
     return idx;
@@ -923,8 +923,8 @@ void heapFree(int region, int idx)
     prev = base[idx].prev;
     base[idx].type = 0;
     gMmOpCount++;
-    gMmRegionTable[region].f10 -= base[idx].size;
-    if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size)
+    gMmRegionTable[region].usedBytes -= base[idx].size;
+    if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
     {
         OSReport(sMmFreeMemoryUsageCorruptedError);
     }
@@ -938,7 +938,7 @@ void heapFree(int region, int idx)
         {
             base[nn].prev = idx;
         }
-        base[--gMmRegionTable[region].f4].stack = next;
+        base[--gMmRegionTable[region].slotCount].stack = next;
     }
     if (prev != -1 && base[prev].type == 0)
     {
@@ -950,7 +950,7 @@ void heapFree(int region, int idx)
         {
             base[in].prev = prev;
         }
-        base[--gMmRegionTable[region].f4].stack = idx;
+        base[--gMmRegionTable[region].slotCount].stack = idx;
     }
 }
 
