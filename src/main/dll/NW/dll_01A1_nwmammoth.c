@@ -197,9 +197,9 @@ int fn_801CE078(int* obj, u8* st)
     NwMammothState* state = (NwMammothState*)st;
 
     cv = (u8)(*gSkyInterface)->getSunPosition(&sunTime);
-    if (*(s8*)(st + 0x45b) != 0)
+    if (state->animEvents.triggerCount != 0)
     {
-        snd = *(s8*)(st + 0x453) == 0;
+        snd = state->animEvents.triggeredIds[0] == 0;
     }
     else
     {
