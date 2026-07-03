@@ -120,7 +120,6 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
     (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, gRollingBarrelCurveInitData, tmp, -1);
 }
 
-#pragma peephole off
 void RollingBarrel_update(int obj)
 {
     RollingBarrelState* state;
@@ -291,7 +290,6 @@ void RollingBarrel_update(int obj)
     }
 }
 
-#pragma peephole off
 void fn_801A5D88(int obj, int explosionVariant)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
