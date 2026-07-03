@@ -739,8 +739,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 #pragma opt_common_subs reset
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
