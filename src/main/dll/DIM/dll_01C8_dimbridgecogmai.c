@@ -23,6 +23,7 @@
 
 #define DIMBRIDGECOGMAI_OBJFLAG_HIDDEN 0x4000
 #define DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED 0x8000
 
 typedef struct DimbridgecogmaiObjectDef
 {
@@ -77,7 +78,7 @@ void dimbridgecogmai_init(int* obj, int* def)
     ObjGroup_AddObject((u32)obj, DIMBRIDGECOG_GROUP);
     if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef*)def)->watchGameBit) != 0)
     {
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMBRIDGECOGMAI_OBJFLAG_HIDDEN | DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED));
 }
@@ -111,7 +112,7 @@ void dimbridgecogmai_update(int* obj)
             case COGBIT_PANEL_A:
                 if (GameBit_Get(COGBIT_PANEL_B) != 0)
                 {
-                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
                     code = -1;
                     callArg = 0;
                 }
@@ -128,7 +129,7 @@ void dimbridgecogmai_update(int* obj)
                 bits |= GameBit_Get(COGBIT_SLOT_2) << 2;
                 if (bits == 7)
                 {
-                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+                    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIMBRIDGECOGMAI_OBJFLAG_UPDATE_DISABLED);
                     code = -1;
                     callArg = 2;
                 }
