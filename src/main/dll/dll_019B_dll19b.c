@@ -21,7 +21,7 @@ extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
-extern char sShrineTimeFormat[];
+char sShrineTimeFormat[] = "time %d\n";
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;
