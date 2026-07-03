@@ -4532,3 +4532,6 @@ void GameUI_initialise(void)
     yButtonState = 0;
     airMeter = 0;
 }
+
+/* .bss glue 0x803A89B0 */
+u8 hudTextures[0x198];
