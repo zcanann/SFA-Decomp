@@ -293,7 +293,6 @@ void imicemountain_updateEventState(int* obj)
 
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma peephole off
 void imicemountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
