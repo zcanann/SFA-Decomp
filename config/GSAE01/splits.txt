@@ -1855,7 +1855,7 @@ main/dll/dll_801d0828.c:
 
 main/dll/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
-	.data       start:0x80326C4C end:0x80326C78
+	.data       start:0x80326BE8 end:0x80326C78
 
 main/dll/DIM/dim_boss.c:
 	.text       start:0x801D1BFC end:0x801D1BFC

@@ -10,6 +10,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN 0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
 #define EDIBLEMUSHROOM_OBJFLAG_RENDERED 0x800
@@ -767,3 +768,25 @@ void ediblemushroom_init(int obj, int aux)
         ((EdibleMushroomState*)state)->collectedGameBitId = 0xc1;
     }
 }
+
+f32 gEdibleMushroomAnimEventTable[] =
+{
+    0.005f, 0.01f, 0.005f, 0.01f, 0.01f, 0.015f, 0.005f, 0.01f, 0.005f, 0.012f, 0.0f
+};
+
+ObjectDescriptor gEdibleMushroomObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ediblemushroom_init,
+    (ObjectDescriptorCallback)ediblemushroom_update,
+    (ObjectDescriptorCallback)ediblemushroom_hitDetect,
+    0,
+    (ObjectDescriptorCallback)ediblemushroom_free,
+    0,
+    ediblemushroom_getExtraSize,
+};
