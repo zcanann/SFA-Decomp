@@ -68,6 +68,9 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 #define DOORMSG_PARTNER_CLOSE 0x30005
 #define DOORMSG_PARTNER_OPEN 0x30006
 
+#define DOORF4_OBJFLAG_HIDDEN 0x4000
+#define DOORF4_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject();
 extern int ObjMsg_Peek();
@@ -184,7 +187,7 @@ void doorf4_init(int* obj, int* params)
     ((GameObject*)obj)->anim.rotX = (s16)((s8)def->yawByte << 8);
     ((GameObject*)obj)->animEventCallback = doorf4_SeqFn;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (DOORF4_OBJFLAG_HIDDEN | DOORF4_OBJFLAG_HITDETECT_DISABLED);
     state->gameBitA = def->gameBitA;
     state->gameBitC = def->gameBitC;
     state->openRange = lbl_803E3654;
