@@ -65,8 +65,6 @@ typedef enum Dim2lavacontrolPhase
     DIM2LAVACONTROL_PHASE_TRIGGERED = 1, /* unlock bit set; control latched */
 } Dim2lavacontrolPhase;
 
-#pragma scheduling on
-#pragma peephole on
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);
@@ -77,8 +75,6 @@ extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e
 
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 
-#pragma scheduling off
-#pragma peephole off
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
