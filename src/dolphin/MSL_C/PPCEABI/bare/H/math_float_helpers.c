@@ -92,7 +92,7 @@ float exp2f(float x)
 
 float expf(float x)
 {
-    return exp2f(lbl_803E7998 * *(volatile float*)&x);
+    return exp2f(lbl_803E7998 * *(float*)&x);
 }
 
 float fastCastS16ToFloat(s16* p)
