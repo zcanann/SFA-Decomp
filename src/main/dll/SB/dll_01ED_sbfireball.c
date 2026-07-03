@@ -72,11 +72,6 @@ void SB_FireBall_hitDetect(int* obj)
     }
 }
 
-void FUN_801e55c0(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
-                  u64 arg6, u64 arg7, u64 arg8, u16* setup, int obj)
-{
-}
-
 void SB_FireBall_release(void)
 {
 }
