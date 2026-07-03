@@ -16,6 +16,7 @@
 #include "main/dll/landedArwing.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/player_control_interface.h"
 
@@ -241,3 +242,30 @@ update_action:
     state->scriptTimer -= framesThisStep;
     return 0;
 }
+
+void dll_D3_initialise(void);
+void dll_D3_release_nop(void);
+void dll_D3_init(int obj, int def, int flag);
+void dll_D3_update(int* obj);
+void dll_D3_hitDetect_nop(void);
+void dll_D3_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_D3_free(int obj);
+int dll_D3_getObjectTypeId(void);
+int dll_D3_getExtraSize_ret_1188(void);
+
+ObjectDescriptor dll_D3 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_D3_initialise,
+    (ObjectDescriptorCallback)dll_D3_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_D3_init,
+    (ObjectDescriptorCallback)dll_D3_update,
+    (ObjectDescriptorCallback)dll_D3_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_D3_render,
+    (ObjectDescriptorCallback)dll_D3_free,
+    (ObjectDescriptorCallback)dll_D3_getObjectTypeId,
+    dll_D3_getExtraSize_ret_1188,
+};

@@ -1157,7 +1157,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_00CF_cannonclaw.c"),
             Object(NonMatching, "main/dll/dll_00D1_tumbleweedbush.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00D2_tumbleweed.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/backpack.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/backpack.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/landedarwing.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00D3_staffAction.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00D4_skeetlawall.c", cflags=cflags_dll_noopt),
