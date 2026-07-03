@@ -255,6 +255,8 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
     }
     bitReader[4] = bitPos + 8;
+    /* extract this cursor's 8-bit field (LSB-first: shift out the bits already
+     * consumed within the byte, then mask the width) -> bounds-record index */
     rec = (int)((MapBlockBoundsRec*)*(int*)(blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x4000) != 0)
