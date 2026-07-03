@@ -313,7 +313,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
         Baddie_SetMove((int*)obj, st, 5, lbl_803E2CB8, 0, 0);
     }
     r = randomGetRange(0, 3);
-    *((u8*)st + 0x33a) = base[r];
+    ((BaddieState*)st)->seqEntryIndex = base[r];
     ((BaddieState*)st)->reactionFlags |= 0x8;
     if (sub > (int)((BaddieState*)st)->hitCounter)
     {
@@ -340,16 +340,16 @@ void snowworm_applyReactionState(int* obj, int* st)
         s16 a = ((GameObject*)obj)->anim.currentMove;
         if (a == 7)
         {
-            *((u8*)st + 0x33a) = 1;
+            ((BaddieState*)st)->seqEntryIndex = 1;
         }
         else if (a != 0)
         {
-            *((u8*)st + 0x33a) = 0;
+            ((BaddieState*)st)->seqEntryIndex = 0;
         }
         {
             u8* bbase = t1;
             f32* fbase = (f32*)t1;
-            u32 idx2 = *((u8*)st + 0x33a);
+            u32 idx2 = ((BaddieState*)st)->seqEntryIndex;
             u32 off = idx2 * 0xc;
             Baddie_SetMove(obj, st, bbase[off + 8],
                         *(f32*)((char*)fbase + off), 0, 0);
@@ -448,7 +448,7 @@ void crawler_initTailModel(int* obj, int* st)
     {
         f32* fbase = (f32*)gCrawlerSeqTable;
         u8* bbase = gCrawlerSeqTable;
-        u32 idx = *((u8*)st + 0x33a);
+        u32 idx = ((BaddieState*)st)->seqEntryIndex;
         u32 off = idx * 0xc;
         Baddie_SetMove(obj, st, bbase[off + 8],
                     *(f32*)((char*)fbase + off), 0, 0);
@@ -535,6 +535,8 @@ void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
 void crawler_initVariant(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = lbl_803E2CC0;
+    /* 0x33b: crawler variant selector (shares slot with BaddieState.inWhirlpoolGroup);
+     * kept raw - single site, member spelling off u8* st is byte-risky. */
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
     ((BaddieState*)st)->unk2A8 = lbl_803E2CC4;
     *(u32*)&((BaddieState*)st)->unk2E4 = 0x42003;
@@ -550,7 +552,7 @@ void crawler_initVariant(int* obj, int* st)
         *((u8*)st + 0x322) = 7;
         ((BaddieState*)st)->unk31C = d;
     }
-    *((u8*)st + 0x33a) = 1;
+    ((BaddieState*)st)->seqEntryIndex = 1;
     ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
 }
 
