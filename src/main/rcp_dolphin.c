@@ -2850,9 +2850,9 @@ void* textureLoad(int texId, u8 flagIn)
     }
     n = 0;
     entry = gLoadedTextures;
-    for (; n < gLoadedTextureCount; n++)
+    for (; n < gLoadedTextureCount; n++, entry++)
     {
-        if (entry[n].key == texId)
+        if (texId == entry->key)
         {
             buf = gLoadedTextures[n].texture;
             ((Texture*)buf)->refCount += 1;
@@ -3100,9 +3100,9 @@ doneBank1:
     *(u32*)(firstTex + 0x4c) = size;
     slot = 0;
     entry = gLoadedTextures;
-    for (; slot < gLoadedTextureCount; slot++)
+    for (; slot < gLoadedTextureCount; slot++, entry++)
     {
-        if (entry[slot].key == -1)
+        if (entry->key == -1)
         {
             break;
         }
