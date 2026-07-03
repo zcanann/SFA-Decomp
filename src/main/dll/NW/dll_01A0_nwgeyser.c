@@ -43,9 +43,12 @@ void fn_801CDF94(int obj, int state, int flag);
 #define SFX_GEYSER_LOOP_A 0x372
 #define SFX_GEYSER_LOOP_B 0x373
 
+#define NWGEYSER_OBJFLAG_HIDDEN 0x4000
+#define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 void nw_geyser_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWGEYSER_OBJFLAG_HIDDEN | NWGEYSER_OBJFLAG_HITDETECT_DISABLED));
     ((GameObject*)obj)->animEventCallback = NW_geyser_SeqFn;
 }
 
