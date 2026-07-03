@@ -591,9 +591,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     ((ObjPlacement*)setup)->posX = ((BossDrakorState*)state)->homePosX;
                     ((ObjPlacement*)setup)->posY = ((BossDrakorState*)state)->homePosY;
                     ((ObjPlacement*)setup)->posZ = ((BossDrakorState*)state)->homePosZ;
-                    *(s16*)(setup + 0x1a) = 0x3c;
-                    *(s16*)(setup + 0x1c) = lbl_803DC194;
-                    *(s8*)(setup + 0x19) = lbl_803DC190;
+                    ((BossdrakorPlacement*)setup)->airMeterMax = 0x3c;
+                    ((BossdrakorPlacement*)setup)->unk1C = lbl_803DC194;
+                    ((BossdrakorPlacement*)setup)->unk19 = lbl_803DC190;
                     loadObjectAtObject(obj, setup);
                     Sfx_PlayFromObject(obj, SFXTRIG__UNK);
                 }
