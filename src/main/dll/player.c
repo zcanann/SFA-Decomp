@@ -6334,6 +6334,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     f32 yOut;
     ColPair col;
 
+
     col = *(ColPair*)&lbl_803E7E78;
     setAButtonIcon(0xf);
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -6580,7 +6581,7 @@ int fn_8029DB70(int obj, int state, f32 fv)
     }
     if (camCall != 0)
     {
-        (*(void (*)(int, int, int, f32))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, 3, fv);
+        (*(void (*)(int, int, f32, int))(*(int*)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
     }
     if (doXform != 0)
     {
