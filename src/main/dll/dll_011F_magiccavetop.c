@@ -9,6 +9,9 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/sfa_shared_decls.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MAGICCAVETOP_OBJFLAG_HIDDEN 0x4000
+#define MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct MagiccavetopPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -87,7 +90,7 @@ void magiccavetop_init(int* obj, s8* def)
 {
     MagiccavetopState* state = ((GameObject*)obj)->extra;
     int* refs;
-    ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | (MAGICCAVETOP_OBJFLAG_HIDDEN | MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED));
     if (GameBit_Get(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
     {
         state->fadeTimer = gMagicCaveTopFadeMax;
