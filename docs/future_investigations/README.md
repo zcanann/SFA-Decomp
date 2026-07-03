@@ -9,3 +9,4 @@ it becomes reachable.
 | file | needs | one-line question |
 |---|---|---|
 | `dragon_rock_firecrawler_lifeforce_door.md` | reach Dragon Rock (final dungeon) | do all 3 nearby fire crawlers count for the 2-kill life-force door, or do specific ones have different `deathGamebit`s? |
+| `sfx_trigger_computed_ids.md` | table dumps / live debugger | 20 SFX call sites whose trigger id is computed (table/field/level-data) — name the source tables, confirm the rest live |
