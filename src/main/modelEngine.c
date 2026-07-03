@@ -626,3 +626,10 @@ void gameTimerRun(void)
         }
     }
 }
+
+s32 gModelEngineUiDllResourceIds[] =
+{
+    -1, 16, 50, 51, 52, 53,
+    54, 55, 56, 57, -1, -1,
+    58, -1, 63, 64, 65, -1,
+};
