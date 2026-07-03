@@ -153,7 +153,6 @@ void WeirdUnusedMenu_release(void)
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }
 
-#pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {
     gWeirdMenuTextureA = textureLoadAsset(0x31e);
