@@ -3002,6 +3002,8 @@ void pauseMenuFn_80129ee0(void)
                     prev = lbl_803DBA64;
                     switch ((s8)prev)
                     {
+                    case 0:
+                        break;
                     case 1:
                         pauseMenuSetupTitle(0x2b1, prev, 2, 3);
                         pauseMenuState = 5;
