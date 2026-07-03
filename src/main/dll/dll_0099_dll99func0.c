@@ -70,11 +70,11 @@ void dll_99_func00_nop(void)
 {
 }
 
-void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
+#pragma inline_max_size(2000)
+static inline void dll_99_func03Body(u8* table, int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* entry;
-    u8* table = lbl_80317AF8;
     f32 scale = lbl_803E1340;
     if (extraArgs != NULL)
     {
@@ -203,5 +203,12 @@ void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, table, 4, table + 0x3c, 0x3c, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 6, table, 4, table + 0x3c, 0x3c, 0);    table++;
 }
+
+void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
+{
+    dll_99_func03Body(lbl_80317AF8, sourceObj, variant, posSource, flags, arg5, extraArgs);
+}
+#pragma inline_max_size reset
+

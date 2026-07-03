@@ -68,12 +68,12 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5,
-                   f32* extraArgs)
+#pragma inline_max_size(2000)
+static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource,
+                                     u32 flags, int arg5, f32* extraArgs)
 {
     GfxBuf buf;
     GfxCmd* e;
-    u8* base = lbl_80317488;
     f32 s = lbl_803E1268;
     if (extraArgs != NULL)
     {
@@ -203,4 +203,12 @@ void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, 0x3c, 0);
+    base++;
 }
+
+void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5,
+                   f32* extraArgs)
+{
+    dll_94_func03Body(lbl_80317488, sourceObj, variant, posSource, flags, arg5, extraArgs);
+}
+#pragma inline_max_size reset
