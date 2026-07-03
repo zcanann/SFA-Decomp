@@ -276,21 +276,28 @@ u8 shop_getItemMinPrice(int p, int idx)
     return 0;
 }
 
-void shop_init(int obj, int objDef)
+#pragma inline_max_size(1000)
+static inline void shop_initBody(int obj, int objDef)
 {
-    int i;
     u8* item;
+    int i;
 
     ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex = -1;
     ObjGroup_AddObject(obj, 9);
-    for (i = 0; i < SHOP_ITEM_ROW_COUNT; i++)
+    for (i = 0, item = lbl_80327FD0; i < SHOP_ITEM_ROW_COUNT; i++)
     {
-        item = &lbl_80327FD0[i * 0xc];
         item[5] = item[randomGetRange(0, 2) + 1];
+        item += 0xc;
     }
     Music_Trigger(MUSICTRIG_communicator, 1);
     ((GameObject*)obj)->unkF8 = 0;
     GameBit_Set(0xefe, 1);
+}
+#pragma inline_max_size reset
+
+void shop_init(int obj, int objDef)
+{
+    shop_initBody(obj, objDef);
 }
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
