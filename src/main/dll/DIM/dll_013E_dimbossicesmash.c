@@ -68,10 +68,8 @@ void dimbossicesmash_initialise(void)
 {
 }
 
-void texframeanimator_free(void);
 
 int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
-int texframeanimator_getExtraSize(void);
 
 void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -79,7 +77,6 @@ void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4048);
 }
 
-void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((GameObject*)obj)->anim.placementData + 0x18) << 11) | 0x400; }
 
@@ -88,7 +85,6 @@ void dimbossicesmash_free(int* obj)
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void fogcontrol_free(int* obj);
 
 /* gate on the trigger gamebit, integrate velocity/rotation with per-axis gravity
  * clamps, run the path-control hooks with surface bounce, fade alpha over
