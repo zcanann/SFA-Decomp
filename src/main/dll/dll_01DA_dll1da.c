@@ -76,10 +76,6 @@ typedef struct
     int pad[8];
 } RockHitInfo;
 
-#pragma scheduling on
-#pragma peephole on
-#pragma scheduling off
-#pragma peephole off
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 void dll_1DA_update(int obj)
@@ -168,8 +164,6 @@ void dll_1DA_update(int obj)
     saveGame_saveObjectPos(obj);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dll_1DA_init(void* obj)
 {
     *(*(f32**)&((GameObject*)obj)->extra) = ((GameObject*)obj)->anim.localPosY;
