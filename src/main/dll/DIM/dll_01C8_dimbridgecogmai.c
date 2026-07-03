@@ -21,6 +21,9 @@
 
 #define DIMBRIDGECOG_GROUP 0xf
 
+#define DIMBRIDGECOGMAI_OBJFLAG_HIDDEN 0x4000
+#define DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct DimbridgecogmaiObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -76,7 +79,7 @@ void dimbridgecogmai_init(int* obj, int* def)
     {
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMBRIDGECOGMAI_OBJFLAG_HIDDEN | DIMBRIDGECOGMAI_OBJFLAG_HITDETECT_DISABLED));
 }
 
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
