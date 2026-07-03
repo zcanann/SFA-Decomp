@@ -4,15 +4,11 @@
 #include "main/dll/dll_0016_screentransition.h"
 extern u32 DAT_803de0af;
 
-void Checkpoint_release(void);
-
 extern u8 gScreenTransitionDone;
 u8 screenTransition_func07(void) { return gScreenTransitionDone; }
 
 extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
-
-int Dummy04_func03_ret_m1(void);
 
 extern u8 screenTransitionPause;
 #pragma peephole off
@@ -78,8 +74,6 @@ void screenTransition_Do(int duration, int type)
     gScreenTransitionDelay = 0;
 }
 #pragma opt_common_subs reset
-
-void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 
 #pragma peephole reset
 #pragma scheduling reset
