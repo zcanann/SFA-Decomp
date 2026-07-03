@@ -6,9 +6,10 @@
 void synthRecycleVoiceCallbacks(SynthVoice* voice)
 {
     SynthCallbackLink* callback;
+
     s32 listIndex;
 
-    for (listIndex = 0; listIndex < 3; listIndex++)
+    for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++)
     {
         if ((callback = voice->callbackLists[listIndex]) != 0)
         {
@@ -26,6 +27,23 @@ void synthRecycleVoiceCallbacks(SynthVoice* voice)
             gSynthFreeCallbacks = voice->callbackLists[listIndex];
             voice->callbackLists[listIndex] = 0;
         }
+    }
+
+    if ((callback = voice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]) != 0)
+    {
+        while (callback->next != 0)
+        {
+            callback = callback->next;
+        }
+
+        if (gSynthFreeCallbacks != 0)
+        {
+            callback->next = gSynthFreeCallbacks;
+            gSynthFreeCallbacks->prev = callback;
+        }
+
+        gSynthFreeCallbacks = voice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
+        voice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = 0;
     }
 }
 
