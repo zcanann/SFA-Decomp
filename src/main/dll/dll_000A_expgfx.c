@@ -3266,6 +3266,7 @@ void expgfx_release(void)
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_factor_limit 1
 #pragma ppc_unroll_instructions_limit 120
+#pragma opt_propagation off
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3280,9 +3281,9 @@ void expgfx_initialise(void)
     poolActiveMasks = runtime->poolActiveMasks;
     poolActiveCounts = runtime->poolActiveCounts;
     poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    poolIndex = 0;
     for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--)
     {
+        poolIndex = 0;
         *poolActiveMasks = poolIndex;
         *poolActiveCounts = poolIndex;
         *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
@@ -3325,6 +3326,7 @@ void expgfx_initialise(void)
     memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
     return;
 }
+#pragma opt_propagation reset
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
 #pragma ppc_unroll_instructions_limit 120
