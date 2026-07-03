@@ -13677,8 +13677,8 @@ void fn_802AA8D0(int obj)
         f32 y;
         f32 z;
     } buf;
-    f32 base = lbl_803E80C4;
     f32 dy;
+    f32 base = lbl_803E80C4;
     int i;
 
     dy = base - inner->unk7D0;
