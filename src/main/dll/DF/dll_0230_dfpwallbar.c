@@ -19,7 +19,7 @@ typedef struct ChukaPlacement
     f32 unk10;
     s32 unk14;
     s8 rotXByte; /* 0x18 high byte of initial rotX (<<8) */
-    u8 unk19;
+    u8 modeIndex; /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
     s16 rotZInit; /* 0x1A initial rotZ */
     s16 barHeight; /* 0x1C model-scale height divisor (rootMotionScale) */
     s16 unk1E;
@@ -213,7 +213,7 @@ void chuka_init(int obj, int params)
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = chuka_SeqFn;
     state->startY = ((GameObject*)obj)->anim.localPosY;
-    state->modeIndex = placement->unk19;
+    state->modeIndex = placement->modeIndex;
 
     if (placement->barHeight != 0)
     {
