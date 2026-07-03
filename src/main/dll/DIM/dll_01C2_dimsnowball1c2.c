@@ -66,10 +66,8 @@ void dimsnowball1c2_initialise(void)
 {
 }
 
-void dimgate_free(void);
 
 int dimsnowball1c2_getObjectTypeId(void) { return 0x0; }
-int dimgate_SeqFn(void);
 
 void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -77,7 +75,6 @@ void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4860);
 }
 
-void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimsnowball1c2_init(int obj, u8* p)
 {
@@ -90,7 +87,6 @@ void dimsnowball1c2_init(int obj, u8* p)
     ((GameObject*)obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void dimicewall_init(int obj, s8* p);
 
 void dimsnowball1c2_update(int* obj)
 {
