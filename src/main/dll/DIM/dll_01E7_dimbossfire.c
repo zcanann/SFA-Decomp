@@ -98,11 +98,9 @@ void dimbossfire_free(int obj)
 
 void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-int dimbossgut2_setScale(void);
 int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
-void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimbossfire_update(int obj)
 {
