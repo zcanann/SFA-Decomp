@@ -5898,6 +5898,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 edge1[4];
     f32 edge0[4];
     f32 rdata[3];
+    f32* rdatap = rdata;
     f32 evec[3];
     f32 vb[3];
     f32 va[3];
@@ -5958,8 +5959,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         radius = *(f32*)(slotp + 0x40);
         type = *((u8*)slots + i + 0x54);
         maxStep = radius + lbl_803DB660;
-        rdata[0] = radius;
-        rdata[1] = radius * radius;
+        rdatap[0] = radius;
+        rdatap[1] = radius * radius;
         bounces = 0;
         negStep = -maxStep;
         do
@@ -6100,7 +6101,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
                         PSVECSubtract(vbp, va, evecp);
-                        rdata[2] = Vec3_Normalize(evecp);
+                        rdatap[2] = Vec3_Normalize(evecp);
                         if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane, &frac))
                         {
                             hit = 1;
@@ -6126,7 +6127,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
-                        rr = *(volatile f32*)&rdata[1];
+                        rr = rdatap[1];
                         PSVECSubtract(va, ws, tmp1);
                         dotv = PSVECDotProduct(tmp1, dir);
                         sq = PSVECSquareMag(tmp1);
@@ -6178,7 +6179,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        rr2 = *(volatile f32*)&rdata[1];
+                        rr2 = rdatap[1];
                         PSVECSubtract(vbp, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
