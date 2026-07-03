@@ -382,7 +382,6 @@ int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void);
 
-#pragma scheduling off
 #pragma peephole off
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -392,7 +391,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#pragma scheduling on
 #pragma peephole on
 void dll_1CE_free(void)
 {
