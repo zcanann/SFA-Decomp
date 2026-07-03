@@ -720,7 +720,8 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-void nw_mammoth_update(NwMammothObject* obj, int unused)
+#pragma inline_max_size(4000)
+static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
 {
     extern void fn_801CE2BC(int obj, void* state, void* objDef); /* #57 */
     extern void fn_801CEA14(int obj, void* state, void* objDef); /* #57 */
@@ -729,15 +730,15 @@ void nw_mammoth_update(NwMammothObject* obj, int unused)
     extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2); /* #57 */
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry * reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
-    NwMammothTables* table = (NwMammothTables*)gNwMammothTables;
-    NwMammothState* state;
-    NwMammothMapData* mapData;
-    u8 stateIndex;
-    u8 stateFlags;
-    ObjHitReactEntry* hitReactEntries;
-    int currentMove;
-    f32 stepScale;
     int triggerIndex;
+    f32 stepScale;
+    int currentMove;
+    ObjHitReactEntry* hitReactEntries;
+    u8 stateFlags;
+    u8 stateIndex;
+    NwMammothMapData* mapData;
+    NwMammothState* state;
+    NwMammothTables* table = (NwMammothTables*)gNwMammothTables;
 
     (void)unused;
     state = obj->state;
@@ -859,6 +860,12 @@ void nw_mammoth_update(NwMammothObject* obj, int unused)
         (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
     }
 }
+
+void nw_mammoth_update(NwMammothObject* obj, int unused)
+{
+    nw_mammoth_updateBody(obj, unused);
+}
+#pragma inline_max_size reset
 
 void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
