@@ -1249,4 +1249,4 @@ void SaveGame_updateTransientMapBits(void)
     }
 }
 
-void* fn_800E888C(u8 a, u8 b) { return saveData + a * 40 + b * 8 + 28; }
+void* fn_800E888C(u8 fileIdx, u8 rank) { return &((SaveScoreFile*)(saveData + fileIdx * SAVE_SCORE_FILE_STRIDE))->entries[rank]; }
