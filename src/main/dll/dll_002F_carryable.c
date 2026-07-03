@@ -161,7 +161,7 @@ int Carryable_updateHeld(u8* obj)
         int v = 0;
         t = (void*)*(u8**)(obj + 0x78);
         if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6
-            && (buttonGetDisabled(0) & 0x100) == 0
+            && (buttonGetDisabled(0) & PAD_BUTTON_A) == 0
             && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0
             && ((GameObject*)obj)->unkF8 == 0)
         {
