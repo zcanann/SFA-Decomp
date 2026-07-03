@@ -294,4 +294,3 @@ void SB_ShipHead_init(int obj)
     state->swayA = state->swayA + lbl_803E5838;
 }
 
-void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
