@@ -784,8 +784,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 void staffSetGlow(int* obj, u8 a, u8 b);
 
 int* fn_801702D4(int* obj, f32 fv)
