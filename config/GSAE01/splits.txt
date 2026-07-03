@@ -459,6 +459,7 @@ main/dll/dll_0082_dll82func0.c:
 
 main/dll/dll_0083_dll83func0.c:
 	.text       start:0x800F6534 end:0x800F6988
+	.data       start:0x80315998 end:0x80315CA8
 
 main/dll/dll_0084_dll84func0.c:
 	.text       start:0x800F6988 end:0x800F6DDC
