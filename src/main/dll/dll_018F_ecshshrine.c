@@ -122,8 +122,6 @@ typedef struct MmShrineAnimEvents
     u8 eventCount;
 } MmShrineAnimEvents;
 
-#pragma scheduling off
-#pragma peephole off
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
     extern int getAngle(float y, float x);
