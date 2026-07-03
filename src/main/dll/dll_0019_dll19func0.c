@@ -115,92 +115,6 @@ extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
-void FUN_8010de18_v11_drift(u32 unused1, u32 unused2, float* outPosY, float* outPosZ)
-{
-    float distBias;
-    float* params;
-    int target;
-    double dist;
-    double zTerm;
-    double aimZ;
-    double xTerm;
-    double aimX;
-    u64 ctx;
-
-    ctx = FUN_8028683c();
-    params = DAT_803de1fc;
-    target = (int)((u64)ctx >> 0x20);
-    xTerm = (double)(*(float*)(target + 0x18) - *DAT_803de1fc);
-    zTerm = (double)(*(float*)(target + 0x20) - DAT_803de1fc[2]);
-    dist = FUN_80293900((double)(float)(xTerm * xTerm + (double)(float)(zTerm * zTerm)));
-    FUN_80017730();
-    aimX = (double)((float)(xTerm * (double)DAT_803de1fc[0x11]) + *params);
-    aimZ = (double)((float)(zTerm * (double)DAT_803de1fc[0x11]) + params[2]);
-    zTerm = (double)FUN_80293f90();
-    xTerm = (double)FUN_80294964();
-    if (dist < (double)DAT_803de1fc[0x10])
-    {
-        dist = (double)DAT_803de1fc[0x10];
-    }
-    distBias = DAT_803de1fc[4];
-    *(float*)ctx = (float)(zTerm * (double)(float)(dist + (double)distBias) + aimX);
-    *outPosY = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - params[1]) -
-        (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
-    *outPosZ = (float)(xTerm * (double)(float)(dist + (double)distBias) + aimZ);
-    FUN_80286888();
-    return;
-}
-
-void FUN_801115e0(u64 arg1, double arg2, double arg3, u64 arg4,
-                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
-                  int obj, int state)
-{
-    u32 spawnActive;
-    u16* spawnArgs;
-    u32 childObj;
-    u32 in_r8;
-    u32 in_r9;
-    u32 in_r10;
-    u16 nameTail;
-    u32 name0;
-    u32 name4;
-    u16 name8;
-
-    name0 = DAT_802c2910;
-    name4 = DAT_802c2914;
-    name8 = DAT_802c2918;
-    if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
-        (((GameObject*)obj)->anim.alpha != 0))
-    {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
-        {
-            arg1 = FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                                   *(int*)&((GameObject*)obj)->childObjs[0]);
-            *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
-        }
-        spawnActive = FUN_80017ae8();
-        if ((spawnActive & 0xff) == 0)
-        {
-            *(u8*)(state + 0x409) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)(state + 0x407))
-            {
-                spawnArgs = FUN_80017aa4(0x18, (&nameTail)[*(char*)(state + 0x407)]);
-                childObj = FUN_80017ae4(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, spawnArgs,
-                                     4, 0xff, 0xffffffff, *(u32**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
-                                     in_r10);
-                *(u32*)&((GameObject*)obj)->childObjs[0] = childObj;
-                *(u16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0xb0) = ((GameObject*)obj)->objectFlags &
-                    7;
-            }
-            *(u8*)(state + 0x409) = *(u8*)(state + 0x407);
-        }
-    }
-    return;
-}
-
 void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
@@ -215,21 +129,9 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-void fn_801101E4(void)
-{
-}
-
 void CameraModeCloudRunner_release(void);
 
-void fn_80110C80(void)
-{
-}
-
 void CameraModePerv_release(void);
-
-void fn_80110EC0(void)
-{
-}
 
 void CameraModeArwing_release(void);
 
@@ -295,13 +197,6 @@ void dll_19_func12(int* obj, int* state, u8 flag)
         mm_free(*(u32*)((char*)state + 988));
         *(int*)((char*)state + 988) = 0;
     }
-}
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
 }
 
 void CameraModeCloudRunner_free(void);
