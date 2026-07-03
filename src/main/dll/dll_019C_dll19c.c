@@ -42,11 +42,9 @@ void dll_19C_initialise(void)
 {
 }
 
-void dll_19D_render(void);
 
 int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
-int dll_19D_getExtraSize(void);
 
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -106,7 +104,6 @@ void dll_19C_update(int* obj)
     }
 }
 
-void dll_19B_init(u8* obj, u8* params);
 
 /*
  * Function: dll_19C_init
