@@ -182,13 +182,9 @@ void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
     return;
 }
 
-void SaveGame_func08_nop(void);
-
 void screens_release(void)
 {
 }
-
-void Carryable_release(void);
 
 enum
 {
@@ -202,8 +198,6 @@ u8 getNextTaskHintText(void)
     return p[5];
 }
 
-void SaveGame_gplayClearRestartPoint(void);
-
 void screens_initialise(void)
 {
     lbl_803DD4AC = (u32) - 1;
@@ -212,14 +206,10 @@ void screens_initialise(void)
     lbl_803DD4A8 = 0;
 }
 
-void updateSavedHealth(void);
-
 void* saveGameGetCurHint(void)
 {
     return gameTextGet((s32) * (u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
 }
-
-u32 SaveGame_mapGetObjGroups(int idx);
 
 void loadTaskTexts(void)
 {
@@ -368,8 +358,6 @@ void gameBitFn_800ea2e0(u8 id)
     }
 }
 
-void* fn_800E888C(u8 a, u8 b);
-
 void screens_remove(void)
 {
     if (lbl_803DD4A0 != 0)
@@ -422,5 +410,3 @@ void screens_show(int id)
     }
     lbl_803DD4A8 = 1;
 }
-
-void dll_60_func03(u8* sourceObj, int variant, u8* posSource, u32 flags);
