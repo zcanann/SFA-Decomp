@@ -157,7 +157,7 @@ void appleontree_handleCollectableHit(int obj)
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject(obj, SFXen_waterblock_stop);
         state = *(int*)&((GameObject*)obj)->extra;
-        if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+        if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
         {
             Obj_FreeObject(obj);
         }
@@ -229,7 +229,7 @@ void fn_8017D854(int obj, int msg)
                     (f32*)(state + 0x30), 0) == 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+        if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
         {
             Obj_FreeObject(obj);
         }
@@ -285,7 +285,7 @@ void fn_8017D854(int obj, int msg)
         if (((AppleOnTreeState*)state)->unk30 <= lbl_803E37D4)
         {
             state = *(int*)&((GameObject*)obj)->extra;
-            if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+            if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
                 Obj_FreeObject(obj);
             }
@@ -585,7 +585,7 @@ void appleontree_update(int objArg)
                     itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
                     Sfx_PlayFromObject((int)obj, SFXen_waterblock_stop);
                     val = *(int*)&((GameObject*)obj)->extra;
-                    if (((GameObject*)obj)->anim.flags & 0x2000)
+                    if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                     {
                         Obj_FreeObject((int)obj);
                     }
@@ -794,7 +794,7 @@ void appleontree_update(int objArg)
             if (fb > lbl_803E3810)
             {
                 placement = *(int*)&((GameObject*)obj)->extra;
-                if (((GameObject*)obj)->anim.flags & 0x2000)
+                if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {
                     Obj_FreeObject((int)obj);
                 }
@@ -813,7 +813,7 @@ void appleontree_update(int objArg)
             if (fb > frac)
             {
                 placement = *(int*)&((GameObject*)obj)->extra;
-                if (((GameObject*)obj)->anim.flags & 0x2000)
+                if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
                 {
                     Obj_FreeObject((int)obj);
                 }
