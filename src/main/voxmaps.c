@@ -1052,8 +1052,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             else
             {
                 int dx, dz, d2;
-                state->nodeCount += 1;
-                node = &state->nodes[count];
+                node = &state->nodes[state->nodeCount++];
                 node->x = out[0];
                 node->z = out[1];
                 node->y = out[2];
