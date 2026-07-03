@@ -4,48 +4,6 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"
 #include "sfa_light_decls.h"
-
-u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u32
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
-{
-    return 0;
-}
-
-u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
-{
-    return 0;
-}
-
-u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-)
-{
-    return 0;
-}
-
 int roundUpTo4(int x)
 {
     int r = x & 3;
@@ -175,7 +133,6 @@ void mm_free(void* p)
     }
 }
 
-
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 
 void AtomicSList_Push(void** list, void* node)
@@ -264,7 +221,6 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     gMmRegionTable[regIdx].slotCount++;
     return gMmRegionTable[regIdx].start;
 }
-
 
 extern void heapFree(int region, int slotIdx);
 extern char sMmFreeInvalidLocationError[];
@@ -606,8 +562,6 @@ int mmAllocateFromFBMemoryStore(int handle, int size)
     }
     return 0;
 }
-
-
 
 extern void* OSAllocFromHeap(int heap, int size);
 extern int __OSCurrHeap;
