@@ -56,18 +56,6 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void fn_801101E4(void)
-{
-}
-
-void fn_80110C80(void)
-{
-}
-
-void fn_80110EC0(void)
-{
-}
-
 void CameraModeCrawl_init(void)
 {
     if (lbl_803DD598 == NULL)
@@ -85,13 +73,6 @@ void CameraModeCrawl_free(void)
     extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD598);
     lbl_803DD598 = NULL;
-}
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
 }
 
 #pragma dont_inline on
