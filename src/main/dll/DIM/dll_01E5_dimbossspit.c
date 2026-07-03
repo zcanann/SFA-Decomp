@@ -279,7 +279,6 @@ void DIMbossspit_init(int obj)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }
 
-void dimbossgut2_func11(void);
 
 void DIMbossspit_hitDetect(void)
 {
@@ -293,8 +292,6 @@ void DIMbossspit_initialise(void)
 {
 }
 
-void magicmaker_free(void);
 
 int DIMbossspit_getExtraSize(void) { return 0x8; }
 int DIMbossspit_getObjectTypeId(void) { return 0x0; }
-int magicmaker_getExtraSize(void);
