@@ -23,6 +23,7 @@
 #include "main/sfa_shared_decls.h"
 
 #define SHOPITEM_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define PAD_BUTTON_A 0x100
 
 typedef struct ShopSparkleSpawn
 {
@@ -355,7 +356,7 @@ void shopitem_update(int obj)
                 {
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 }
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
             }
             switch (((GameObject*)obj)->anim.seqId)
             {
