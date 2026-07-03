@@ -3275,7 +3275,7 @@ void fn_8004B394(void)
     return;
 }
 
-u32 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, u8 flag)
+u32 FUN_80046cd0(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {
     u16 tag;
     short count;
@@ -3335,8 +3335,8 @@ u32 FUN_80046cd0(int* queue, int startNode, int targetPos, int param_4, u8 flag)
     }
     queue[6] = startNode;
     queue[3] = targetPos;
-    queue[4] = param_4;
-    *(u8*)(queue + 10) = flag & 1;
+    queue[4] = pathId;
+    *(u8*)(queue + 10) = routeFlags & 1;
     queue[9] = 10000;
     count = *(short*)(queue + 8);
     if (count == 0xfe)
@@ -7008,10 +7008,10 @@ void loadDataFiles(int arg)
         }
         lbl_803DCC78--;
     }
-    /* banked residual: retail runs this scan as a counted mtctr/bdnz loop
-       (subfic 87-i trip count); the do-while shape emits cmpwi/blt */
-    i = 0;
-    do
+    /* banked 2-instr residual: retail strength-reduces this scan to a counted
+       mtctr/bdnz loop (subfic 87-i trip); MWCC won't emit the counted form for
+       this body (indexed loads + calls), so ours keeps the cmpwi 87/ble tail */
+    for (i = 0; i <= 0x57; i++)
     {
         if (lbl_8035EF48[i] != -1)
         {
@@ -7026,9 +7026,7 @@ void loadDataFiles(int arg)
             }
             lbl_803DCC70 = 0;
         }
-        i++;
     }
-    while (i <= 0x57);
     loadTableFiles();
 }
 
