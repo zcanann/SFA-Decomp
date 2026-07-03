@@ -84,8 +84,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 
 int link_levcontrol_getExtraSize(void) { return sizeof(LinkLevControlState); }
 
-#pragma scheduling off
-#pragma peephole off
 void link_levcontrol_free(int obj)
 {
     switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
