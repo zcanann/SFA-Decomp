@@ -752,7 +752,6 @@ void collectible_updateLooseMotion(int* obj)
 
 #pragma opt_common_subs reset
 
-#pragma scheduling off
 void collectible_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -760,7 +759,6 @@ void collectible_free(int obj)
     return;
 }
 
-#pragma scheduling on
 int collectible_getExtraSize(void)
 {
     return 0x2b8;
@@ -775,8 +773,6 @@ void collectible_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
