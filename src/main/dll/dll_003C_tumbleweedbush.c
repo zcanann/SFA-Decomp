@@ -581,7 +581,7 @@ u32 Link_update(void)
                 result = 1;
             }
         }
-        else if ((int)(buttons & 0x200) != 0)
+        else if ((int)(buttons & PAD_BUTTON_B) != 0)
         {
             buttonDisable(0, PAD_BUTTON_B);
             result = 0;
