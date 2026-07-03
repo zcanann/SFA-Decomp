@@ -8,6 +8,7 @@
  */
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/object_descriptor.h"
 extern int ObjTrigger_IsSet();
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
@@ -77,3 +78,20 @@ void cctestinfot_update(int *obj)
         }
     }
 }
+
+ObjectDescriptor gCCTestInfotObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)cctestinfot_init,
+    (ObjectDescriptorCallback)cctestinfot_update,
+    0,
+    0,
+    0,
+    0,
+    cctestinfot_getExtraSize,
+};
