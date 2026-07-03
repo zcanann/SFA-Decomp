@@ -280,7 +280,6 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
     return p;
 }
 
-#pragma scheduling off
 int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
@@ -320,7 +319,6 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
         return base[(src->bit >> 3) + 1];
     }
 }
-#pragma scheduling reset
 
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
