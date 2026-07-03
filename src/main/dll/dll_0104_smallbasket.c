@@ -897,7 +897,7 @@ void smallbasket_update(int obj)
             if (((CfperchState*)state)->carryState == 0)
             {
                 flag = 0;
-                if (((buttonGetDisabled(0) & 0x100) == 0) && (((GameObject*)obj)->unkF8 == 0) &&
+                if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && (((GameObject*)obj)->unkF8 == 0) &&
                     (ObjTrigger_IsSet(obj) != 0))
                 {
                     ((CfperchState*)state)->unk0 = -0x8000;
@@ -943,7 +943,7 @@ void smallbasket_update(int obj)
                     if (fn_80295BF0(player) != 0)
                     {
                         ((CfperchState*)state)->carryAttached = 0;
-                        buttonDisable(0, 0x100);
+                        buttonDisable(0, PAD_BUTTON_A);
                     }
                     else
                     {
