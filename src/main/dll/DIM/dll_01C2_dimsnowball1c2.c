@@ -26,7 +26,7 @@ typedef struct Dimsnowball1c2Placement
     u8 colorB; /* 0x6 -> spawn setup head.unk04[2] */
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
     u8 pad8[0x14 - 0x8];
-    s32 unk14;
+    s32 mapId;
     s16 unk18; /* init: copied to extra (DimicewallState.unk2 + word 0) */
     u8 unk1A;
     u8 unk1B;
@@ -112,7 +112,7 @@ void dimsnowball1c2_update(int* obj)
                 np->posX = ((GameObject*)obj)->anim.localPosX;
                 np->posY = ((GameObject*)obj)->anim.localPosY;
                 np->posZ = ((GameObject*)obj)->anim.localPosZ;
-                np->mapId = def->unk14;
+                np->mapId = def->mapId;
                 {
                     int t1c = def->unk1C;
                     *(s8*)((char*)np + 0x18) = t1c;
