@@ -215,7 +215,6 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
 
-void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
 
 void CameraModeStatic_copyToCurrent_nop(void)
 {
@@ -229,7 +228,6 @@ void CameraModeStatic_initialise(void)
 {
 }
 
-void CameraModeDebug_free(void);
 
 void CameraModeStatic_free(void)
 {
