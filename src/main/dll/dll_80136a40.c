@@ -227,7 +227,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
  * spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
-#pragma scheduling off
 #pragma peephole off
 void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 {
@@ -456,7 +455,6 @@ void debugPrintf(char* fmt, ...)
     }
 }
 
-#pragma scheduling on
 void fn_80137948(char* fmt, ...)
 {
 }
@@ -519,17 +517,13 @@ void fn_801375A0(void)
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58. */
 struct Bits58 { u8 _pad[0x58]; u8 b7:1; u8 b6:1; u8 lo:6; };
-#pragma scheduling off
-#pragma peephole off
 void fn_80138908(u8* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }
-#pragma peephole on
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
-#pragma scheduling off
 void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 {
     gErrExceptionType = a;
@@ -888,7 +882,6 @@ void fn_80137A00(int x, int y, u8* grid, int unused)
 }
 #pragma opt_strength_reduction reset
 
-#pragma peephole off
 void debugPrintfxy(int x, int y, char* fmt, ...)
 {
     int xx;
@@ -944,7 +937,6 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
     }
 }
 
-#pragma peephole on
 int fn_80136A40(int p1, int c)
 {
     u8* tbl;
