@@ -5415,8 +5415,6 @@ extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
 #pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void fn_8004DA54(char* p1)
 {
@@ -5579,8 +5577,6 @@ void fn_8004DA54(char* p1)
     lbl_803DCD6C = 0x1d;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct
 {
@@ -6752,7 +6748,6 @@ extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 
-#pragma scheduling off
 #pragma opt_common_subs off
 void fn_8004D230(void)
 {
@@ -6863,14 +6858,12 @@ void fn_8004D230(void)
 }
 
 #pragma opt_common_subs reset
-#pragma scheduling reset
 
 extern int lbl_803DCD84;
 extern f32 bootThisDol_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 
-#pragma scheduling off
 #pragma opt_common_subs off
 void fn_8004CE0C(void* viewMtx)
 {
@@ -6971,7 +6964,6 @@ void fn_8004CE0C(void* viewMtx)
 }
 
 #pragma opt_common_subs reset
-#pragma scheduling reset
 
 extern void printHeapStats(int a);
 extern void defragMemory(int mode);
@@ -7591,8 +7583,6 @@ void videoSwapFrameBuffers(void)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void videoFn_800499e8(void)
 {
     char peek[12];
@@ -7641,8 +7631,6 @@ void videoFn_800499e8(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole off
 void logGpuHang(void)
