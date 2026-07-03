@@ -53,6 +53,15 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
+typedef struct WispEventRow {
+    f32 blend;    /* +0x0 */
+    u32 flags;    /* +0x4 (low byte = move flags) */
+    u8 moveId;    /* +0x8 */
+    u8 pad9[3];
+} WispEventRow;
+STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
+STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
+
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void doRumble(f32 duration);
@@ -480,7 +489,7 @@ void fn_8014FF58(int unused, char* p)
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 {
     u8* base = lbl_8031DD30;
-    u8* eventRows;
+    WispEventRow* eventRows;
     u8 eventIndex;
     int ei;
     int flag20;
@@ -490,11 +499,11 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
     f32 blendScale;
     f32 blendTimer;
     int eventTableIndex;
-    u8* row;
+    WispEventRow* row;
     u32 sf2;
 
     sequenceIndex = ((BaddieState*)state)->inWhirlpoolGroup;
-    eventRows = *(u8**)(base + sequenceIndex * 0x28 + 0x1444);
+    eventRows = *(WispEventRow**)(base + sequenceIndex * 0x28 + 0x1444);
     stateFlags = ((BaddieState*)state)->controlFlags;
     if ((stateFlags & 0x4000) != 0)
     {
@@ -555,7 +564,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         }
     }
     if ((((u8)allowNewEvent != 0 && *(u8*)(state + 0x2f1) != 0 &&
-                eventRows[eventIndex * 0xc + 8] != 0) ||
+                eventRows[eventIndex].moveId != 0) ||
             (*(u8*)(state + 0x2f1) & 0x20) != 0) &&
         !(*(u8*)(state + 0x33c) == eventIndex && lbl_803E2740 != *(f32*)(state + 0x32c)))
     {
@@ -563,16 +572,16 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         if ((sf2 & 0x800080) != 0 || (*(u8*)(state + 0x2f1) & 0x20) != 0)
         {
             blendTimer = lbl_803E274C *
-                (blendScale * *(f32*)(row = eventRows + eventIndex * 0xc));
+                (blendScale * (row = &eventRows[eventIndex])->blend);
             *(f32*)(state + 0x330) = blendTimer;
             *(f32*)(state + 0x32c) = blendTimer;
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | 0x40;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) | 0x80;
             *(u8*)(state + 0x2f3) = 0;
             *(u8*)(state + 0x2f4) = 0;
-            Baddie_SetMove(obj, state, row[8], blendScale * *(f32*)row, 0, *(u32*)(row + 4) & 0xff);
+            Baddie_SetMove(obj, state, row->moveId, blendScale * row->blend, 0, row->flags & 0xff);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj, *(f32*)(base + row[8] * 4));
+                (ObjAnimComponent*)obj, *(f32*)(base + row->moveId * 4));
             *(u8*)(state + 0x33c) = eventIndex;
             return 1;
         }
@@ -592,13 +601,13 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         }
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            eventTableIndex = *(u8*)(state + 0x33c) * 0xc;
-            Baddie_SetMove(obj, state, eventRows[eventTableIndex + 8],
-                        *(f32*)(eventRows + *(u8*)(state + 0x33c) * 0xc), 0,
-                        *(u32*)(eventRows + eventTableIndex + 4) & 0xff);
+            eventTableIndex = *(u8*)(state + 0x33c);
+            Baddie_SetMove(obj, state, eventRows[eventTableIndex].moveId,
+                        eventRows[*(u8*)(state + 0x33c)].blend, 0,
+                        eventRows[eventTableIndex].flags & 0xff);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj,
-                *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4));
+                *(f32*)(base + eventRows[*(u8*)(state + 0x33c)].moveId * 4));
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
         if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
