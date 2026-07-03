@@ -2293,9 +2293,9 @@ void fn_80128470(int alpha)
         GridEntry* e;
         f32 scale = (f32)(lbl_803E2108 * (e = &lbl_803DD824[lbl_803DD7D8])->f10);
         int w = lbl_803E1F34;
-        int cw = (int)(scale * (f32) * (u8*)((char*)e + 0x8));
-        int ch = (int)(scale * (f32) * (u8*)((char*)e + 0x9));
-        int vx = *(u16*)((char*)e + 0x2) + *(s8*)((char*)e + 0xb);
+        int cw = (int)(scale * (f32)e->trailX);
+        int ch = (int)(scale * (f32)e->trailY);
+        int vx = e->x + *(s8*)((char*)e + 0xb);
         u16 w16;
         s16 alpha;
         int x1 = (int)
@@ -2304,7 +2304,7 @@ void fn_80128470(int alpha)
         )
         ;
         s16 x2 = (s16)((u8)cw + vx);
-        int vy = *(u16*)((char*)e + 0x4);
+        int vy = e->y;
         int y1 = (int)
         ((f32)(u32)
         vy - lbl_803E2114 - (f32)(u8)
@@ -4134,13 +4134,13 @@ void GameUI_update(void)
                             }
                         case 0:
                             if (trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) != 0 ||
-                                trickyBitFn_801241cc(*(int*)((u8*)gCMenuSections + 0x10), 0) == 0)
+                                trickyBitFn_801241cc(*(int*)&gCMenuSections[1], 0) == 0)
                             {
                                 gCMenuButtons |= 0x80000;
                                 break;
                             }
                         case 1:
-                            if (trickyBitFn_801241cc(*(int*)((u8*)gCMenuSections + 0x10), 0) != 0 ||
+                            if (trickyBitFn_801241cc(*(int*)&gCMenuSections[1], 0) != 0 ||
                                 trickyBitFn_801241cc(*(int*)&gCMenuSections[0], 0) == 0)
                             {
                                 gCMenuButtons |= 0x40000;
