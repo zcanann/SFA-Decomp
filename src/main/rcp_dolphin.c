@@ -2148,7 +2148,7 @@ typedef struct RcpDistortSlot
     int model;     // 0x04
     int unk8;      // 0x08
     u8 colR;       // 0x0c
-    u8 unkD;       // 0x0d
+    u8 colG;       // 0x0d
     u8 colB;       // 0x0e
     u8 unkF;       // 0x0f
     f32 params[2]; // 0x10
@@ -2195,7 +2195,7 @@ void initFn_800534f8(void)
         strength = *(f32*)(cfg + j * 8 + 4);
         slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
         slot->colR = 0xff;
-        slot->unkD = 0xff;
+        slot->colG = 0xff;
         slot->colB = 0xff;
         falloff = radiusScale / powfCoreHighPrecision(*(f32*)(cfg + j * 8), gRcpDistortPowExp);
         slot = (RcpDistortSlot*)(gRcpDistortSlots + gRcpDistortSlotIndex * 0x1c);
