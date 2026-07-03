@@ -19,6 +19,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 
+#define SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
+
 
 extern f32 gKillerMushroomRiseStepEpsilon;
 extern const f32 lbl_803E52FC;
@@ -214,7 +216,7 @@ void enemymushroom_update(int* obj)
         return;
     }
 
-    if (((GameObject*)player)->objectFlags & 0x1000)
+    if (((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK)
     {
         return;
     }
@@ -234,7 +236,7 @@ void enemymushroom_update(int* obj)
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <= ((
                     EnemyMushroomState*)state)->hitRadius &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
-                !(((GameObject*)player)->objectFlags & 0x1000))
+                !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= 0x1;
@@ -294,7 +296,7 @@ void enemymushroom_update(int* obj)
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <= ((
                     EnemyMushroomState*)state)->hitRadius &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
-                !(((GameObject*)player)->objectFlags & 0x1000))
+                !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= 0x1;
