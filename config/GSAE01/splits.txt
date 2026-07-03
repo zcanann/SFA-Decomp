@@ -2023,6 +2023,7 @@ main/dll/SP/dll_0287_spscarab.c:
 
 main/dll/SP/dll_0288_spdrape.c:
 	.text       start:0x801E9328 end:0x801E97DC
+	.data       start:0x80328450 end:0x80328488
 
 main/dll/SP/dll_0289_spitembeam.c:
 	.text       start:0x801E97DC end:0x801E991C
