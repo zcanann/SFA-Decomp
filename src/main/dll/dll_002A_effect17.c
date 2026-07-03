@@ -92,8 +92,6 @@ void Effect17_func05(void)
     gEffect17SinValueB = mathSinf(gEffect17Pi * (f32)(s16)gEffect17SinPhaseB / gEffect17AngleScale);
 }
 
-void Effect18_func05(void);
-
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                     u8 modelId, s16* extraArgs)
 {
@@ -358,8 +356,6 @@ int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     return spawnResult;
 }
 
-int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
-
 void Effect17_func03_nop(void)
 {
 }
@@ -371,8 +367,6 @@ void Effect17_release(void)
 void Effect17_initialise(void)
 {
 }
-
-void Effect18_func03_nop(void);
 
 #pragma dont_inline reset
 #pragma dont_inline reset
