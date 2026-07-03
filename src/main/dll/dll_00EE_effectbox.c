@@ -47,6 +47,9 @@ typedef struct EffectboxPlacement
 #define EFFECTBOX_TARGET_TRICKY 1 /* getTrickyObject */
 #define EFFECTBOX_TARGET_GROUP 2  /* every object in object group 5 */
 
+#define EFFECTBOX_OBJFLAG_HIDDEN 0x4000
+#define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int effectbox_getExtraSize(void) { return 0x0; }
 int effectbox_getObjectTypeId(void) { return 0x0; }
 
@@ -185,7 +188,7 @@ void effectbox_init(int obj, EffectboxPlacement* def)
     {
         ((GameObject*)obj)->unkF8 = -1;
     }
-    flags = (u32)((GameObject*)obj)->objectFlags | 0x6000;
+    flags = (u32)((GameObject*)obj)->objectFlags | (EFFECTBOX_OBJFLAG_HIDDEN | EFFECTBOX_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->objectFlags = flags;
 }
 
