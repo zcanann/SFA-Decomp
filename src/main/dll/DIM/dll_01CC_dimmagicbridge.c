@@ -215,7 +215,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 }
 #pragma dont_inline reset
 
-#pragma peephole off
 int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int j;
