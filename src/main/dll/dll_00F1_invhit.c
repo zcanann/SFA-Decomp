@@ -303,9 +303,12 @@ void invhit_update(int* obj)
                 (*gPartfxInterface)->spawnObject(obj, 0x56, NULL, 0, -1,
                                                  NULL);
             }
-            cnt = (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            {
+                s8 tmp = (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
-            i = 0;
+                i = 0;
+                cnt = tmp;
+            }
             thr = lbl_803E35F4;
             for (; i < cnt; i++)
             {
