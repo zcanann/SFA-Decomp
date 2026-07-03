@@ -231,6 +231,9 @@ void bombplant_init(void* obj, void* param, int flag);
 #define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
 #define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
 
+#define BOMBPLANTSPORE_OBJFLAG_HIDDEN 0x4000
+#define BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct BombPlantSporeStateFlags {
     u8 hitSurface : 1;
     u8 waitingForDetonateAck : 1;
@@ -428,7 +431,7 @@ void bombplantspore_init(void* obj, void* param2)
     state = ((GameObject*)obj)->extra;
     events[0] = 5;
     state->fuseTimer = lbl_803E53F0;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (BOMBPLANTSPORE_OBJFLAG_HIDDEN | BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->anim.velocityY = lbl_803E53F4;
     ObjHits_DisableObject((u32)obj);
     state->spinAngle = randomGetRange(0, 0xffff);
