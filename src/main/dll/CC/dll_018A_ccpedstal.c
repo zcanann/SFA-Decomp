@@ -41,12 +41,8 @@ STATIC_ASSERT(offsetof(CcpedstalState, gameBit) == 0x4);
 STATIC_ASSERT(offsetof(CcpedstalState, markFlags) == 0x6);
 STATIC_ASSERT(sizeof(CcpedstalState) == 0x8);
 
-#pragma scheduling on
-#pragma peephole on
 int ccpedstal_getExtraSize(void) { return sizeof(CcpedstalState); }
 
-#pragma scheduling off
-#pragma peephole off
 void ccpedstal_init(int* obj, u8* params)
 {
     CcpedstalState* state = ((GameObject*)obj)->extra;
