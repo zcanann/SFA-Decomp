@@ -84,7 +84,6 @@ typedef struct
     f32 z;
 } CupVec3;
 
-#pragma peephole off
 void ecsh_cup_update(short* obj)
 {
     f32 dist;
@@ -257,13 +256,10 @@ void ecsh_cup_update(short* obj)
     }
 }
 
-#pragma scheduling on
 void ecsh_cup_release(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ecsh_cup_init(int obj, int def)
 {
  /* #57 */
@@ -300,14 +296,10 @@ void ecsh_cup_init(int obj, int def)
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void ecsh_cup_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801C8B68(int obj)
 {
     register int self = obj;
