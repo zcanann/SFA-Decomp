@@ -11,6 +11,9 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 
+#define SHTRICKY_OBJFLAG_HIDDEN 0x4000
+#define SHTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int sh_tricky_getExtraSize(void)
 {
     return 1;
@@ -73,5 +76,5 @@ void sh_tricky_init(int* obj)
     {
         *state = 0;
     }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SHTRICKY_OBJFLAG_HIDDEN | SHTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
