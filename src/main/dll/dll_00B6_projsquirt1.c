@@ -10,6 +10,8 @@
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
+char sProjsquirt1DoNoLongerSupported[] = "<projsquirt1 Do>No Longer supported \n";
+
 int projsquirt1_doUnsupported(void)
 {
     OSReport(sProjsquirt1DoNoLongerSupported);
