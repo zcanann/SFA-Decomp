@@ -470,7 +470,7 @@ u32 GameBit_Get(int eventId)
 
 
 extern void gameBitFn_800ea2e0(u8 id);
-extern char sGameBitSetDuringSaveLoadWarning[];
+char sGameBitSetDuringSaveLoadWarning[204] = "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #pragma optimization_level 3
 void GameBit_Set(int eventId, int value)
@@ -666,7 +666,7 @@ extern void* gRenderModeObj;
 extern u8 gGameLoopProgressiveMode;
 u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];
-extern char sMainFinishedInitMessage[];
+char sMainFinishedInitMessage[15] = "finished init\n";
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
