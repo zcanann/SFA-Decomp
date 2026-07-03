@@ -502,32 +502,42 @@ void waterfx_run(void)
     }
 }
 
-void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval)
+/*
+ * Per-frame water-impact entry from a limb-bearing object. For every set bit
+ * in limbMask it spawns a ripple at the corresponding impact position (and, in
+ * shallow water when the object is moving fast enough, a splash burst), then
+ * records that impact for waterfx_consumePendingImpactNearPoint to query.
+ *
+ * objHeader+0x00 holds the s16 heading used as the ripple rotation; objHeader
+ * +0x10 is the object's Y (water plane) height. surface+0x1b4 is the local
+ * water-surface height at the impact. impactPositions is one vec3 per limb.
+ */
+void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
 {
-    u8* q = p6;
-    f32* v = vecs;
-    while (mask != 0)
+    u8* surf = surface;
+    f32* pos = impactPositions;
+    while (limbMask != 0)
     {
-        if (mask & 1)
+        if (limbMask & 1)
         {
-            f32 vx = v[0];
-            f32 vz = v[2];
-            if (*(f32*)(q + 0x1b4) < lbl_803DF338)
+            f32 px = pos[0];
+            f32 pz = pos[2];
+            if (*(f32*)(surf + 0x1b4) < lbl_803DF338)
             {
-                if (fval > lbl_803DF33C)
+                if (speed > lbl_803DF33C)
                 {
-                    waterfx_spawnSplashBurst(p3, vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, lbl_803DF300);
+                    waterfx_spawnSplashBurst(objHeader, px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, lbl_803DF300);
                 }
             }
             gWaterfxRippleScale = lbl_803DF318;
-            waterfx_spawnRipple(vx, *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4), vz, *(s16*)p3, lbl_803DF300, 4);
-            gWaterfxPendingImpactPosition[0] = vx;
-            gWaterfxPendingImpactPosition[1] = *(f32*)(p3 + 0x10) + *(f32*)(q + 0x1b4);
-            gWaterfxPendingImpactPosition[2] = vz;
+            waterfx_spawnRipple(px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, *(s16*)objHeader, lbl_803DF300, 4);
+            gWaterfxPendingImpactPosition[0] = px;
+            gWaterfxPendingImpactPosition[1] = *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4);
+            gWaterfxPendingImpactPosition[2] = pz;
             gWaterfxPendingImpactPositionValid = 1;
         }
-        mask >>= 1;
-        v += 3;
+        limbMask >>= 1;
+        pos += 3;
     }
 }
 
@@ -691,6 +701,15 @@ void waterfx_initialise(void)
     waterfx_drawFn_800953fc();
 }
 
+/*
+ * Renders one splash burst as a ring of 8 expanding, fading sprite bands.
+ * For each of the 8 bands it builds a model-view matrix (scaled by the burst
+ * radius, bulged outward and lifted by a parabolic 'fade' arc, translated to
+ * the impact point and multiplied by the camera view), loads it as a posmtx,
+ * and writes that band's per-vertex alpha into the color array (s->pad18).
+ * The completed geometry is drawn twice (front then back cull) via the shared
+ * display list.
+ */
 void fn_80095164(WaterParticle* s)
 {
     f32 mtxD[12];
@@ -698,13 +717,13 @@ void fn_80095164(WaterParticle* s)
     f32 mtxB[12];
     f32 mtxC[12];
     int mtxIdx;
-    u8* p;
+    u8* colorOut;
     int i;
 
     PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
     i = 0;
     mtxIdx = 0;
-    p = (u8*)s;
+    colorOut = (u8*)s;
     for (; i < 8; i++)
     {
         f32 h = s->f10;
@@ -736,9 +755,9 @@ void fn_80095164(WaterParticle* s)
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
         GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(p + 0x18) = (u8)(int)(lbl_803DF304 * t);
+        *(u32*)(colorOut + 0x18) = (u8)(int)(lbl_803DF304 * t);
         mtxIdx += 3;
-        p += 4;
+        colorOut += 4;
     }
     DCStoreRange(s->pad18, 32);
     GXSetArray(11, s->pad18, 4);
