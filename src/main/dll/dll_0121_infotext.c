@@ -6,13 +6,16 @@ extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
 
+#define INFOTEXT_OBJFLAG_HIDDEN 0x4000
+#define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void);
 
 void infotext_init(int obj, s8* def)
 {
     u32 v;
-    v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
+    v = (u32)((GameObject*)obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->objectFlags = v;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
     objSetHintTextIdx(obj, (u8)def[0x19]);
