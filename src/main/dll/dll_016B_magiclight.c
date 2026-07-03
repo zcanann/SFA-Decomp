@@ -74,15 +74,15 @@ extern f32 lbl_803E4738;
 
 extern void Music_Trigger(int id, int arg);
 
-void FUN_801ac248(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  int param_9)
+void FUN_801ac248(u64 arg1, double arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
+                  int obj)
 {
 }
 
 u32
-FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj)
+FUN_801ad984(u64 arg1, u64 arg2, double arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8, int obj)
 {
     int lookupBase;
     u32 in_r9;
@@ -103,22 +103,22 @@ FUN_801ad984(u64 param_1, u64 param_2, double param_3, u64 param_4,
                 (*(char*)((int)state + 0xb) != '\0'))
             {
                 *(u8*)((int)state + 0xb) = 0;
-                getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
+                getLActions(dist, value, arg3, arg4, arg5, arg6, arg7, arg8, obj, obj,
                             (u32) * (u16*)(state + 2), 0, 0, 0, in_r9, in_r10);
             }
         }
         else
         {
             *(u8*)((int)state + 0xb) = 1;
-            getLActions(dist, value, param_3, param_4, param_5, param_6, param_7, param_8, obj, obj,
+            getLActions(dist, value, arg3, arg4, arg5, arg6, arg7, arg8, obj, obj,
                         (u32) * (u16*)((int)state + 6), 0, 0, 0, in_r9, in_r10);
         }
     }
     return 0;
 }
 
-void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
-                  u32 param_5, u32 param_6, char visible, int alpha, int enabled)
+void FUN_801adca0(u16* dst, u16* src, u32 arg3, u32 arg4,
+                  u32 arg5, u32 arg6, char visible, int alpha, int enabled)
 {
     u8 savedAlpha;
     u32 posZ;
@@ -130,7 +130,7 @@ void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
         savedAlpha = *(u8*)((int)src + 0x37);
         *(char*)((int)src + 0x37) = alpha;
         (**(VtableFn**)(**(int**)(src + 0x34) + 0x10))
-            (src, param_3, param_4, param_5, param_6, 0xffffffff);
+            (src, arg3, arg4, arg5, arg6, 0xffffffff);
         *(u8*)((int)src + 0x37) = savedAlpha;
     }
     *(u32*)(dst + 0x46) = *(u32*)(dst + 0xc);
@@ -156,10 +156,10 @@ void FUN_801adca0(u16* dst, u16* src, u32 param_3, u32 param_4,
 }
 
 u32
-FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* animUpdate, u32 param_12, u32* param_13, u32 param_14, u32 param_15
-             , u32 param_16)
+FUN_801addec(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, u32 arg10
+             , ObjAnimUpdateState* animUpdate, u32 arg12, u32* arg13, u32 arg14, u32 arg15
+             , u32 arg16)
 {
     u32 active;
     u16* setup;
@@ -187,7 +187,7 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     {
         if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+            arg1 = FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                                    *(int*)&((GameObject*)obj)->childObjs[0]);
             *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
             ((GameObject*)obj)->childCount = 0;
@@ -202,10 +202,10 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             if (0 < *(char*)((int)extra + 0x21))
             {
                 setup = FUN_80017aa4(0x18, (&setupTable)[*(char*)((int)extra + 0x21)]);
-                param_12 = 0xffffffff;
-                param_13 = *(u32**)&((GameObject*)obj)->anim.parent;
-                spawned = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, setup,
-                                     4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
+                arg12 = 0xffffffff;
+                arg13 = *(u32**)&((GameObject*)obj)->anim.parent;
+                spawned = FUN_80017ae4(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, setup,
+                                     4, 0xff, 0xffffffff, arg13, arg14, arg15, arg16);
                 *(u32*)&((GameObject*)obj)->childObjs[0] = spawned;
                 ((GameObject*)obj)->childCount = 1;
             }
@@ -228,8 +228,8 @@ FUN_801addec(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         extra[3] = extra[6];
         extra[4] = extra[7];
         (**(VtableFn**)(**(int**)(linkedObj + 0x68) + 0x3c))(linkedObj, 2);
-        FUN_800305f8((double)lbl_803E53E0, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0x100, 1, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)lbl_803E53E0, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                     obj, 0x100, 1, arg12, arg13, arg14, arg15, arg16);
         modelState = (int)((GameObject*)obj)->anim.modelState;
         if (modelState != 0)
         {
