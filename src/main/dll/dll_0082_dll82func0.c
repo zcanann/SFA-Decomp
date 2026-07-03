@@ -189,5 +189,3 @@ void dll_82_func01_nop(void)
 void dll_82_func00_nop(void)
 {
 }
-
-void dll_83_func01_nop(void);
