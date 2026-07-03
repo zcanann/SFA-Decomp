@@ -3508,7 +3508,7 @@ typedef union
     f32 f32;
 } ObjWGPipe;
 
-extern volatile ObjWGPipe GXWGFifo : (0xCC008000);
+extern ObjWGPipe GXWGFifo : (0xCC008000);
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);

@@ -1039,7 +1039,7 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma opt_common_subs reset
 
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
+GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
 {

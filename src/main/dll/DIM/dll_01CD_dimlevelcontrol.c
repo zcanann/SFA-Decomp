@@ -80,7 +80,7 @@ void dim_levelcontrol_free(int p1)
 #pragma dont_inline on
 #pragma dont_inline reset
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);
 
 #pragma peephole off
 static inline int* DIM2snowball_GetActiveModel(void* obj)

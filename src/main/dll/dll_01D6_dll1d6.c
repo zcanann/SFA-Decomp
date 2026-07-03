@@ -71,7 +71,7 @@ extern u8 framesThisStep;
 
 extern f32 timeDelta;
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);
 
 /* segment pragma-stack balance (re-split): */
 

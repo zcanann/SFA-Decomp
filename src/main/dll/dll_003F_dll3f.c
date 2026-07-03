@@ -106,4 +106,4 @@ void dll_3F_initialise(void)
     lbl_803DD960 = textureLoadAsset(0x47A);
 }
 
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
+PPCWGPipe GXWGFifo : (0xCC008000);

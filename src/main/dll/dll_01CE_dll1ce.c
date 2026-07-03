@@ -523,4 +523,4 @@ void dll_1CE_update(int* obj)
 }
 #pragma opt_strength_reduction reset
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);

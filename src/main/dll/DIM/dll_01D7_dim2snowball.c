@@ -37,7 +37,7 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"

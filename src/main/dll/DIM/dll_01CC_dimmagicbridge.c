@@ -256,7 +256,7 @@ int dimmagicbridge_flameSeqFn(int obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {

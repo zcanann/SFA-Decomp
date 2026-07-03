@@ -2594,7 +2594,7 @@ typedef union
     f32 f32;
 } WGPipe;
 
-volatile WGPipe wgfifo : (0xCC008000);
+WGPipe wgfifo : (0xCC008000);
 
 static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
 {

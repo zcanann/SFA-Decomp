@@ -774,7 +774,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
     }
 }
 
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
+PPCWGPipe GXWGFifo : (0xCC008000);
 
 typedef struct
 {

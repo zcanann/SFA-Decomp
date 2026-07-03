@@ -29,7 +29,7 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-volatile FbWGPipe GXWGFifo : (0xCC008000);
+FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/game_object.h"
 #include "main/gamebits.h"

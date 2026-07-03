@@ -836,7 +836,7 @@ typedef union PPCWGPipe2
     f64 f64;
 } PPCWGPipe2;
 
-volatile PPCWGPipe2 GXWGFifo : (0xCC008000);
+PPCWGPipe2 GXWGFifo : (0xCC008000);
 
 
 extern void PSVECScale(f32* in, f32* out, f32 scale);

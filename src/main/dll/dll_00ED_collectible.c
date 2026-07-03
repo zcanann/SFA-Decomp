@@ -583,7 +583,7 @@ int collectible_modelMtxFn(int* obj)
     return ((CollectibleState*)inner)->hitRegionId;
 }
 
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
+GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 #pragma opt_common_subs off
 

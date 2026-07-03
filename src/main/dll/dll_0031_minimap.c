@@ -763,7 +763,7 @@ u8 fn_801334E0(void)
     return act;
 }
 
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
+PPCWGPipe GXWGFifo : (0xCC008000);
 
 void fn_8013351C(void)
 {
