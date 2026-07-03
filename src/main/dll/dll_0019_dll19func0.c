@@ -37,10 +37,6 @@ typedef struct Dll19Placement
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
 
-extern int FUN_80017730();
-extern void* FUN_80017aa4();
-extern u32 FUN_80017ae4();
-extern u32 FUN_80017ae8();
 extern void ObjHits_DisableObject(u32 objPtr);
 extern void ObjHits_EnableObject(u32 objPtr);
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -49,17 +45,8 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern int ObjMsg_Pop();
 extern u32 ObjMsg_SendToObject();
 extern u32 ObjMsg_AllocQueue();
-extern u64 FUN_8028683c();
-extern u32 FUN_80286888();
-extern double FUN_80293900();
-extern u32 FUN_80293f90();
-extern u32 FUN_80294964();
-extern u32 DAT_802c2910;
-extern u32 DAT_802c2914;
-extern u32 DAT_802c2918;
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
 
