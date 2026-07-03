@@ -625,9 +625,9 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 
 static void heapSiftUp(CurveHeapNode* q, int i)
 {
-    int parent;
     u16 key = q[i].priority;
     u16 val = q[i].value;
+    int parent;
     q[0].priority = 0xFFFF;
     while (q[(parent = i >> 1)].priority <= key)
     {
@@ -883,23 +883,26 @@ searched:
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
         q = state->queue;
-        for (slot = 0; slot <= state->queueCount; slot++)
         {
-            if ((u16)foundIdx == q[slot].value)
+            s16 qcnt = state->queueCount;
+            for (slot = 0; slot <= qcnt; slot++)
             {
-                foundSlot = slot;
-                slot = state->queueCount + 1;
+                if ((u16)foundIdx == q[slot].value)
+                {
+                    foundSlot = slot;
+                    slot = state->queueCount + 1;
+                }
             }
-        }
-        oldp = q[foundSlot].priority;
-        q[foundSlot].priority = key;
-        if (key < oldp)
-        {
-            CurveHeap_SiftDown(q, state->queueCount, foundSlot);
-        }
-        else if (key > oldp)
-        {
-            heapSiftUp(q, foundSlot);
+            oldp = q[foundSlot].priority;
+            q[foundSlot].priority = key;
+            if (key < oldp)
+            {
+                CurveHeap_SiftDown(q, qcnt, foundSlot);
+            }
+            else if (key > oldp)
+            {
+                heapSiftUp(q, foundSlot);
+            }
         }
         return;
     }
