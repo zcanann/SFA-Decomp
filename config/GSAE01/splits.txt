@@ -1644,7 +1644,7 @@ main/dll/DIM/dll_01C0_dimlogfire.c:
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
-	.data       start:0x80323BC0 end:0x80325360
+	.data       start:0x80323778 end:0x803237B0
 	.sdata2     start:0x803E4858 end:0x803E4860
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
