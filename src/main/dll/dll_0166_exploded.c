@@ -21,11 +21,6 @@ extern void Model_GetVertexPosition(int model, int i, f32* out);
 #define EXPLODED_PHASE_IDLE 0   /* settled; no physics */
 #define EXPLODED_PHASE_ACTIVE 1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
-extern u64 FUN_80017698();
-extern u32 FUN_80041ff8();
-extern u32 FUN_80042b9c();
-extern u32 FUN_80042bec();
-extern u32 FUN_80044404();
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
 extern f32 lbl_803E4428;
