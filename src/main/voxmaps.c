@@ -212,21 +212,26 @@ void voxmaps_resetLoadedMaps(void)
     void** mapBuffer;
     int* blockId;
     int* timer;
+    u8* slotInUse;
     VoxMapSlotOrigin* slotOrigin;
     int i;
 
-    for (slotOrigin = gVoxMaps.slotOrigin, i = 0, mapBuffer = gVoxMaps.mapBuffer, blockId = gVoxMaps.blockId, timer = gVoxMaps.timer; i < VOXMAP_SLOT_COUNT; i++)
+    for (slotOrigin = gVoxMaps.slotOrigin, i = 0, mapBuffer = gVoxMaps.mapBuffer, blockId = gVoxMaps.blockId, timer = gVoxMaps.timer, slotInUse = gVoxMapsSlotInUse; i < VOXMAP_SLOT_COUNT; i++)
     {
-        if (mapBuffer[i] != NULL)
+        if (*mapBuffer != NULL)
         {
-            mm_free(mapBuffer[i]);
-            mapBuffer[i] = NULL;
+            mm_free(*mapBuffer);
+            *mapBuffer = NULL;
         }
-        blockId[i] = -2;
-        timer[i] = 0x40000000;
-        gVoxMapsSlotInUse[i] = 0;
+        *blockId = -2;
+        *timer = 0x40000000;
+        *slotInUse = 0;
         slotOrigin->gridX = 0;
         slotOrigin->gridZ = 0;
+        mapBuffer++;
+        blockId++;
+        timer++;
+        slotInUse++;
         slotOrigin++;
     }
 }
