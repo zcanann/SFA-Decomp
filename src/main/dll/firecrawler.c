@@ -200,7 +200,17 @@ extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
  * than a shared-header field.
  */
 typedef struct FCVars {
-    u8 pad000[0x310];
+    u8 pad000[0x2a0];
+    u16 moveTableIndex; /* 0x2a0: reaction/move sub-table index (*0xc stride) */
+    u8 pad2a2[0x2a4 - 0x2a2];
+    u16 projectileTimer;/* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
+    u8 pad2a6[0x2ec - 0x2a6];
+    u16 hitCountScalar; /* 0x2ec: hit-count scalar folded into emergeTimer */
+    u8 pad2ee[0x2f1 - 0x2ee];
+    u8 hitConfigFlags;  /* 0x2f1: bit 0x40 = group-0 hit-immunity config */
+    u8 pad2f2[0x2f8 - 0x2f2];
+    u16 moveEventMask;  /* 0x2f8: per-frame move-progress event bitmask (bit 1<<i) */
+    u8 pad2fa[0x310 - 0x2fa];
     f32 pathSpeed;      /* 0x310: per-frame curve-advance speed */
     u8 pad314[0x323 - 0x314];
     u8 moveStartFlags;  /* 0x323: bit 8 = move suppresses target-facing */
@@ -218,6 +228,11 @@ typedef struct FCVars {
     void *linkedObj;    /* 0x340: linked/tracked object pointer (HagabonMK2, hoodedZyck) */
 } FCVars;
 
+STATIC_ASSERT(offsetof(FCVars, moveTableIndex) == 0x2a0);
+STATIC_ASSERT(offsetof(FCVars, projectileTimer) == 0x2a4);
+STATIC_ASSERT(offsetof(FCVars, hitCountScalar) == 0x2ec);
+STATIC_ASSERT(offsetof(FCVars, hitConfigFlags) == 0x2f1);
+STATIC_ASSERT(offsetof(FCVars, moveEventMask) == 0x2f8);
 STATIC_ASSERT(offsetof(FCVars, pathSpeed) == 0x310);
 STATIC_ASSERT(offsetof(FCVars, moveStartFlags) == 0x323);
 STATIC_ASSERT(offsetof(FCVars, engineTimer) == 0x324);
@@ -289,7 +304,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
         ((BaddieState*)st)->reactionFlags |= 0x20;
         return;
     }
-    if (*(u16*)((char*)st + 0x2a0) > 3)
+    if (((FCVars*)st)->moveTableIndex > 3)
     {
         Baddie_SetMove((int*)obj, st, 6, lbl_803E2CB8, 0, 0);
     }
@@ -349,20 +364,20 @@ void crawler_playReactionEffects(int* obj, int* st)
     switch (((GameObject*)obj)->anim.currentMove)
     {
     case 2:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_blooplaugh3, 2);
         }
         flag = 1;
         break;
     case 3:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_haga_death);
         }
         break;
     case 4:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2CBC)
             {
@@ -375,26 +390,26 @@ void crawler_playReactionEffects(int* obj, int* st)
         }
         break;
     case 5:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
         }
         break;
     case 6:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
         }
         break;
     case 7:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         }
         flag = 1;
         break;
     case 9:
-        if (*(u16*)((char*)st + 0x2f8) != 0)
+        if (((FCVars*)st)->moveEventMask != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh2);
         }
@@ -438,7 +453,7 @@ void crawler_initTailModel(int* obj, int* st)
         Baddie_SetMove(obj, st, bbase[off + 8],
                     *(f32*)((char*)fbase + off), 0, 0);
     }
-    *(f32*)((char*)st + 0x328) = lbl_803E2C58;
+    ((FCVars*)st)->emergeTimer = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
     ((FireCrawlerState*)st)->tailModelChain = ObjModelChain_Alloc(gCrawlerModelChainIds, 5);
     ObjModelChain_SetOrigin(((FireCrawlerState*)st)->tailModelChain, lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
@@ -479,8 +494,8 @@ void crawler_initScaledVariant(int* obj, int* st)
         ((BaddieState*)st)->unk31C = d2;
     }
     ((FCVars*)st)->turnDelta = 0;
-    *(f32*)((char*)st + 0x324) = lbl_803E2B74;
-    *(f32*)((char*)st + 0x328) = base_v;
+    ((FCVars*)st)->engineTimer = lbl_803E2B74;
+    ((FCVars*)st)->emergeTimer = base_v;
     ((GameObject*)obj)->anim.alpha = 0;
     ((BaddieState*)st)->pathStep = lbl_803E2B78 * ratio;
     ((BaddieState*)st)->reactionFlags = 0;
@@ -571,7 +586,7 @@ void fn_80157CDC(int obj, int state)
 
     for (i = 0; i <= 12; i++)
     {
-        if ((*(u16*)(state + 0x2f8) & (1 << i)) != 0)
+        if ((((FCVars*)state)->moveEventMask & (1 << i)) != 0)
         {
             CrawlerSubDesc* sub = &entry[i];
             if (sub->sfxId != 0)
@@ -678,7 +693,7 @@ void crawler_initModelVariant(s16* obj, u8* state)
         *(u32*)&((BaddieState*)state)->unk2E4 |= 0xc00;
         break;
     }
-    ((BaddieState*)state)->unk308 = lbl_803E2BD4;
+    *(f32*)(state + 0x308) = lbl_803E2BD4;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2BFC;
     ((BaddieState*)state)->unk304 = lbl_803E2C00;
     ((BaddieState*)state)->pathStep = ((BaddieState*)state)->pathStep * lbl_803E2C04;
@@ -765,7 +780,7 @@ void fn_80157B58(int* obj, u8* state)
         child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
         if ((u32)child != 0)
         {
-            f32 dur = lbl_803E2B84 * ((f32) * (u16*)(state + 0x2a4) / ((BaddieState*)state)->unk2A8);
+            f32 dur = lbl_803E2B84 * ((f32) ((FCVars*)state)->projectileTimer / ((BaddieState*)state)->unk2A8);
             ((GameObject*)child)->anim.velocityX =
                 (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX - ((GameObject*)setup)->anim.rootMotionScale)
                 / dur;
@@ -823,7 +838,7 @@ void snowworm_update(int* obj, u8* state)
         {
             ((BaddieState*)state)->seqEntryIndex = gSnowwormSeqIndexReset[((FCVars*)state)->turnDelta];
         }
-        if (*(u16*)(state + 0x2a0) < 4)
+        if (((FCVars*)state)->moveTableIndex < 4)
         {
             i = ((BaddieState*)state)->seqEntryIndex * 0xc;
             Baddie_SetMove(obj, state, (tbl + i)[8], *(f32*)((int)tbl + i), 0, 0);
@@ -1054,10 +1069,10 @@ void crawler_update(int* obj, u8* state)
         }
         else
         {
-            i = *(u16*)(state + 0x2a0) * 0xc;
+            i = ((FCVars*)state)->moveTableIndex * 0xc;
             if (*(u8*)(t7 + i + 8) == 0)
             {
-                if (*(u16*)(state + 0x2a4) >= 0x50)
+                if (((FCVars*)state)->projectileTimer >= 0x50)
                 {
                     ((BaddieState*)state)->seqEntryIndex = 0;
                 }
@@ -1308,6 +1323,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         tgtA[0] = -(lbl_803E2B38 * sinA - ((GameObject*)obj)->anim.localPosX);
         tgtA[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
+        /* 0x261 = BaddieState.contactSfxFlags; kept raw - typed member as a
+         * call arg shifts arg emission bytes here. */
         noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
         ang = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                        ((GameObject*)obj)->anim.localPosZ - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ) &
@@ -1437,7 +1454,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
     {
         return;
     }
-    if ((((FCVars*)state)->flagsC & 4) != 0 || (idx == 0 && (*(u8*)(state + 0x2f1) & 0x40) != 0))
+    if ((((FCVars*)state)->flagsC & 4) != 0 || (idx == 0 && (((FCVars*)state)->hitConfigFlags & 0x40) != 0))
     {
         if (cmd == 0x11)
         {
@@ -1545,7 +1562,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
         {
-            ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32) * (u16*)(state + 0x2ec);
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB0 * (f32) ((FCVars*)state)->hitCountScalar;
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
@@ -1573,7 +1590,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         if (v == 1)
         {
-            ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32) * (u16*)(state + 0x2ec);
+            ((FCVars*)state)->emergeTimer = lbl_803E2BB4 * (f32) ((FCVars*)state)->hitCountScalar;
             if (((GameObject*)obj)->anim.seqId == 0x6a2)
             {
                 if (gCrawlerHitSfxTimer <= lbl_803E2BA8 && attacker != NULL)
@@ -1763,7 +1780,9 @@ void crawler_updateC(s16* obj, u8* state)
                 }
                 t = (((BaddieState*)state)->pathStep * scale - ((FCVars*)state)->pathSpeed) / lbl_803E2B84;
                 a = diff >= lbl_803E2BA8 ? diff : -diff;
-                ((BaddieState*)state)->unk308 = t * (lbl_803E2BA4 - a / lbl_803E2BCC);
+                /* 0x308 = BaddieState.unk308; kept raw here - the typed
+                 * member spelling shifts bytes off the u8* state param. */
+                *(f32*)(state + 0x308) = t * (lbl_803E2BA4 - a / lbl_803E2BCC);
                 if (*(f32*)(state + 0x308) < lbl_803E2BD4)
                 {
                     *(f32*)(state + 0x308) = lbl_803E2BD4;
@@ -1830,7 +1849,7 @@ void crawler_updateC(s16* obj, u8* state)
                             else
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
-                                ((BaddieState*)state)->unk308 = lbl_803E2BDC;
+                                *(f32*)(state + 0x308) = lbl_803E2BDC;
                                 ObjAnim_SetCurrentMove((int)obj, *(u8*)(t0 + 8), lbl_803E2BA8, 0);
                                 ((FCVars*)state)->pathSpeed = lbl_803E2BA8;
                             }
@@ -1947,7 +1966,7 @@ void crawler_updateB(s16* obj, u8* state)
                     if (oct < 3 || oct > 4)
                     {
                         u8 mv;
-                        i = *(u16*)(state + 0x2a0) * 0xc;
+                        i = ((FCVars*)state)->moveTableIndex * 0xc;
                         mv = *(u8*)((char*)tC + i + 8);
                         if (mv == 0)
                         {
@@ -2003,7 +2022,7 @@ void crawler_updateB(s16* obj, u8* state)
                 if ((((BaddieState*)state)->controlFlags & *(u32*)((char*)t4 + i2 + 4)) != 0)
                 {
                     u8 mv;
-                    i = *(u16*)(state + 0x2a0) * 0xc;
+                    i = ((FCVars*)state)->moveTableIndex * 0xc;
                     mv = *(u8*)((char*)tC + i + 8);
                     if (mv == 0)
                     {
@@ -2019,7 +2038,7 @@ void crawler_updateB(s16* obj, u8* state)
                 else
                 {
                     u8 mv;
-                    i = *(u16*)(state + 0x2a0) * 0xc;
+                    i = ((FCVars*)state)->moveTableIndex * 0xc;
                     mv = *(u8*)((char*)tC + i + 8);
                     if (mv == 0)
                     {
