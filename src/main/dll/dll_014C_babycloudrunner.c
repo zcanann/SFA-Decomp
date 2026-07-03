@@ -799,7 +799,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 #pragma scheduling on
-#pragma peephole on
 void babycloudrunner_hitDetect(void)
 {
 }
