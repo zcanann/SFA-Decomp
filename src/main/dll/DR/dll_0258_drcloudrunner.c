@@ -20,6 +20,7 @@
  */
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -1334,3 +1335,36 @@ u8 gDRCloudRunnerMoveParamTable[] =
     0x3C, 0xA3, 0xD7, 0x0A, 0x3C, 0xA3, 0xD7, 0x0A, 0x3D, 0x23, 0xD7, 0x0A,
     0x3C, 0x23, 0xD7, 0x0A,
 };
+
+ObjectDescriptor24 gDR_CloudRunnerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)DR_CloudRunner_initialise,
+    (ObjectDescriptorCallback)DR_CloudRunner_release,
+    0,
+    (ObjectDescriptorCallback)DR_CloudRunner_init,
+    (ObjectDescriptorCallback)DR_CloudRunner_update,
+    (ObjectDescriptorCallback)DR_CloudRunner_hitDetect,
+    (ObjectDescriptorCallback)DR_CloudRunner_render,
+    (ObjectDescriptorCallback)DR_CloudRunner_free,
+    (ObjectDescriptorCallback)DR_CloudRunner_getObjectTypeId,
+    DR_CloudRunner_getExtraSize,
+    (ObjectDescriptorCallback)DR_CloudRunner_setScale,
+    (ObjectDescriptorCallback)DR_CloudRunner_func11,
+    (ObjectDescriptorCallback)DR_CloudRunner_modelMtxFn,
+    (ObjectDescriptorCallback)DR_CloudRunner_render2,
+    (ObjectDescriptorCallback)DR_CloudRunner_func14,
+    (ObjectDescriptorCallback)DR_CloudRunner_func15,
+    (ObjectDescriptorCallback)DR_CloudRunner_func16,
+    (ObjectDescriptorCallback)DR_CloudRunner_func17,
+    (ObjectDescriptorCallback)DR_CloudRunner_func18,
+    (ObjectDescriptorCallback)DR_CloudRunner_func19,
+    (ObjectDescriptorCallback)DR_CloudRunner_func20,
+    (ObjectDescriptorCallback)DR_CloudRunner_func21,
+    (ObjectDescriptorCallback)DR_CloudRunner_func22,
+    (ObjectDescriptorCallback)DR_CloudRunner_func23,
+};
+
+char sOnCloudFormat[] = "ON CLOUD=%d\n";

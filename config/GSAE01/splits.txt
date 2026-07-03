@@ -3604,4 +3604,4 @@ main/dll/DR/dll_0257_drearthwarrior.c:
 
 main/dll/DR/dll_0258_drcloudrunner.c:
 	.text       start:0x802BF0C8 end:0x802C187C
-	.data       start:0x803356F0 end:0x803357C0
+	.data       start:0x803356F0 end:0x8033583D
