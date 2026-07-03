@@ -903,6 +903,19 @@ void StaticCamera_init(int* obj, int* params, int flag);
 
 extern int mmAlloc(int size, int a, int b);
 extern f32 lbl_803E3328;
+typedef struct StaffQuakeSpellState
+{
+    f32 posX;        /* 0x00 */
+    f32 posY;        /* 0x04 */
+    f32 posZ;        /* 0x08 */
+    f32 scale;       /* 0x0C: torus scale (PSMTXScale + hitbox radius) */
+    f32 radius;      /* 0x10: GXDrawTorus radius */
+    f32 heightScale; /* 0x14: y-axis scale multiplier */
+    f32 fade;        /* 0x18: fade/alpha driver (quakeSpellTextureFn arg, anim.alpha) */
+    int* object;     /* 0x1C: spawned quake-spell object */
+    u8 active;       /* 0x20: spell active flag */
+} StaffQuakeSpellState;
+
 extern u8 gStaffQuakeSpellState[];
 
 void staff_init(int* obj)
@@ -927,8 +940,8 @@ void staff_init(int* obj)
         p->idx = -1;
         p++;
     }
-    gStaffQuakeSpellState[0x20] = 0;
-    *(int*)(gStaffQuakeSpellState + 0x1c) = 0;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->active = 0;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = 0;
 }
 
 extern f32 lbl_803E32B4;
@@ -1046,19 +1059,19 @@ void quakeSpellTextureFn_8016dbf4(void)
     f32 mTrans[12];
     f32 mView[12];
 
-    if (gStaffQuakeSpellState[0x20] != 0)
+    if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->active != 0)
     {
         f32 s;
         f32 z;
-        quakeSpellTextureFn_8007366c((int)*(f32*)(gStaffQuakeSpellState + 0x18));
+        quakeSpellTextureFn_8007366c((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade);
         memcpy(mView, Camera_GetViewMatrix(), 0x30);
         PSMTXRotRad(mRot, 'x', gStaffHalfPi);
-        s = *(f32*)(gStaffQuakeSpellState + 0xc);
-        PSMTXScale(mScale, s, s * *(f32*)(gStaffQuakeSpellState + 0x14), s);
+        s = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->scale;
+        PSMTXScale(mScale, s, s * ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale, s);
         PSMTXConcat(mScale, mRot, mScale);
-        PSMTXTrans(mTrans, *(f32*)(gStaffQuakeSpellState + 0) - playerMapOffsetX,
-                   *(f32*)(gStaffQuakeSpellState + 4),
-                   *(f32*)(gStaffQuakeSpellState + 8) - playerMapOffsetZ);
+        PSMTXTrans(mTrans, ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX - playerMapOffsetX,
+                   ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY,
+                   ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ - playerMapOffsetZ);
         PSMTXConcat(mView, mTrans, mView);
         PSMTXConcat(mView, mScale, mResult);
         GXLoadPosMtxImm(mResult, 0);
@@ -1068,7 +1081,7 @@ void quakeSpellTextureFn_8016dbf4(void)
         mResult[7] = z;
         mResult[11] = z;
         GXLoadTexMtxImm(mResult, 30, 0);
-        GXDrawTorus(*(f32*)(gStaffQuakeSpellState + 0x10), 10, 20);
+        GXDrawTorus(((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius, 10, 20);
     }
 }
 
@@ -1091,28 +1104,28 @@ void superQuakeFn_8016d9fc(f32* pos)
     extern void Obj_FreeObject(int* obj); /* #57 */
     int* player;
 
-    if (gStaffQuakeSpellState[0x20] != 0)
+    if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->active != 0)
     {
-        Obj_FreeObject(*(int**)(gStaffQuakeSpellState + 0x1c));
-        *(int**)(gStaffQuakeSpellState + 0x1c) = NULL;
+        Obj_FreeObject(((StaffQuakeSpellState*)gStaffQuakeSpellState)->object);
+        ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = NULL;
     }
-    *(f32*)(gStaffQuakeSpellState + 0) = pos[0];
-    *(f32*)(gStaffQuakeSpellState + 4) = lbl_803E32A8 + pos[1];
-    *(f32*)(gStaffQuakeSpellState + 8) = pos[2];
-    *(f32*)(gStaffQuakeSpellState + 0x18) = lbl_803E32F4;
-    *(f32*)(gStaffQuakeSpellState + 0xc) = lbl_803E3288;
-    *(f32*)(gStaffQuakeSpellState + 0x10) = lbl_803E3290;
-    *(f32*)(gStaffQuakeSpellState + 0x14) = lbl_803E3288;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX = pos[0];
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY = lbl_803E32A8 + pos[1];
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ = pos[2];
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = lbl_803E32F4;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->scale = lbl_803E3288;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = lbl_803E3290;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = lbl_803E3288;
     CameraShake_Start(lbl_803E32F8, lbl_803E32A8, lbl_803E32FC);
     player = Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
         QuakePartVec v;
         void* setup;
-        gStaffQuakeSpellState[0x20] = 1;
-        v.x = *(f32*)(gStaffQuakeSpellState + 0);
-        v.y = *(f32*)(gStaffQuakeSpellState + 4);
-        v.z = *(f32*)(gStaffQuakeSpellState + 8);
+        ((StaffQuakeSpellState*)gStaffQuakeSpellState)->active = 1;
+        v.x = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX;
+        v.y = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
+        v.z = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
         v.scale = lbl_803E3288;
         v.h0 = 0;
         v.h2 = 0;
@@ -1123,19 +1136,19 @@ void superQuakeFn_8016d9fc(f32* pos)
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[1] = 2;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        ((ObjPlacement*)setup)->posX = *(f32*)(gStaffQuakeSpellState + 0);
-        ((ObjPlacement*)setup)->posY = *(f32*)(gStaffQuakeSpellState + 4);
-        ((ObjPlacement*)setup)->posZ = *(f32*)(gStaffQuakeSpellState + 8);
-        *(int**)(gStaffQuakeSpellState + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
+        ((ObjPlacement*)setup)->posX = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX;
+        ((ObjPlacement*)setup)->posY = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
+        ((ObjPlacement*)setup)->posZ = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
+        ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
                                                         ((GameObject*)player)->anim.parent);
         if (GameBit_Get(0xc55) != 0)
         {
-            ((ObjAnimComponent*)*(int*)(gStaffQuakeSpellState + 0x1c))->bankIndex = 1;
+            ((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->bankIndex = 1;
         }
-        ObjHitbox_SetSphereRadius(*(int*)(gStaffQuakeSpellState + 0x1c), 1);
-        ObjHits_SetHitVolumeSlot(*(int*)(gStaffQuakeSpellState + 0x1c), 17, 5, 0);
-        *(f32*)(*(int*)(gStaffQuakeSpellState + 0x1c) + 8) = lbl_803E32D0;
-        ((GameObject*)*(int*)(gStaffQuakeSpellState + 0x1c))->anim.alpha = 0xff;
+        ObjHitbox_SetSphereRadius((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 1);
+        ObjHits_SetHitVolumeSlot((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object, 17, 5, 0);
+        *(f32*)((int)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object + 8) = lbl_803E32D0;
+        ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.alpha = 0xff;
     }
 }
 
@@ -1425,25 +1438,25 @@ void staff_update(int* obj)
     objGetAnimState80A(*(int*)&((GameObject*)obj)->ownerObj);
     state[0xb9] = 0;
     {
-        u8* q = gStaffQuakeSpellState;
-        if (q[0x20] != 0)
+        StaffQuakeSpellState* q = (StaffQuakeSpellState*)gStaffQuakeSpellState;
+        if (q->active != 0)
         {
-            f32 sc = *(f32*)(q + 0xc) + lbl_803E32E0;
+            f32 sc = q->scale + lbl_803E32E0;
             f32 w;
-            *(f32*)(q + 0xc) = sc;
-            ObjHitbox_SetSphereRadius(*(int*)(q + 0x1c), sc);
-            ObjHits_SetHitVolumeSlot(*(int*)(q + 0x1c), 17, 5, 0);
-            w = *(f32*)(gStaffQuakeSpellState + 0x18) + lbl_803E32E4;
-            *(f32*)(gStaffQuakeSpellState + 0x18) = w;
-            *(f32*)(gStaffQuakeSpellState + 0x10) = *(f32*)(gStaffQuakeSpellState + 0x10) * lbl_803E32E8;
-            *(f32*)(gStaffQuakeSpellState + 0x14) = *(f32*)(gStaffQuakeSpellState + 0x14) * lbl_803E32EC;
-            ((GameObject*)*(int*)(q + 0x1c))->anim.alpha = w;
-            *(f32*)(*(int*)(q + 0x1c) + 8) += lbl_803E32F0;
-            if (*(f32*)(gStaffQuakeSpellState + 0x18) < lbl_803E3288)
+            q->scale = sc;
+            ObjHitbox_SetSphereRadius((int)q->object, sc);
+            ObjHits_SetHitVolumeSlot((int)q->object, 17, 5, 0);
+            w = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + lbl_803E32E4;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = w;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * lbl_803E32E8;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * lbl_803E32EC;
+            ((GameObject*)q->object)->anim.alpha = w;
+            *(f32*)((int)q->object + 8) += lbl_803E32F0;
+            if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < lbl_803E3288)
             {
-                q[0x20] = 0;
-                Obj_FreeObject(*(int**)(q + 0x1c));
-                *(int**)(q + 0x1c) = NULL;
+                q->active = 0;
+                Obj_FreeObject(q->object);
+                q->object = NULL;
             }
         }
     }
