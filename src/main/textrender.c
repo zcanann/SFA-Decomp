@@ -11,19 +11,19 @@
 extern int saveFileStruct_isCheatActive(u8 idx);
 
 u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_80017460(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
+             u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9
+             , int arg10, u32 arg11, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15, u32 arg16)
 {
     return 0;
 }
 
 u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_80017468(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
+             u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9
+             , u32 arg10, u32 arg11, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15, u32 arg16)
 {
     return 0;
 }
@@ -911,23 +911,23 @@ void* gameTextGet(int textId)
 
 u32
 #pragma scheduling on
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
+FUN_80017500(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
+             u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, int arg9)
 {
     return 0;
 }
 
 u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
+FUN_8001786c(u64 fwdArg1, double fwdArg2, double fwdArg3, u64 fwdArg4, u64 fwdArg5,
+             u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9,
+             u32 arg10, u32 arg11, u32 arg12)
 {
     return 0;
 }
 
 u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
+FUN_80017998(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3, u64 fwdArg4,
+             u64 fwdArg5, u64 fwdArg6, u64 fwdArg7, u64 fwdArg8, u32 arg9
 )
 {
     return 0;
