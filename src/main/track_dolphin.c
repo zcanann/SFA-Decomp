@@ -5351,7 +5351,7 @@ void trackIntersect(void)
 
     for (i = 0x46; i != 0; i--)
     {
-        counts[i - 1] = counts[i - 1] + counts[i];
+        counts[i - 1] += counts[i];
     }
 
     for (i = 0, off = 0; i < gIntersectLineCount; i++, off += 0x10)
