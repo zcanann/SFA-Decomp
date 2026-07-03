@@ -1494,6 +1494,7 @@ main/dll/MMP/dll_017E_mmplevelcontrol.c:
 
 main/dll/dll_017F_moonseedbush.c:
 	.text       start:0x801A6C28 end:0x801A6F4C
+	.data       start:0x80323198 end:0x803231D0
 
 main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8

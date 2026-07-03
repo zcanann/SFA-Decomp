@@ -21,6 +21,7 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/object_descriptor.h"
 
 #define MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern f32 lbl_803E44D0;
@@ -39,9 +40,6 @@ typedef struct MoonSeedBushPlacement
     u8 scaleByte;       /* 0x21: model scale param */
     u8 pad22[0x28 - 0x22];
 } MoonSeedBushPlacement;
-
-/* gMoonSeedBushObjDescriptor (.data:0x80323198) lives in a companion
-   data partition, not this text-only TU (see splits.txt). */
 
 /* sequence event opcodes consumed by MoonSeedBush_SeqFn */
 #define MOONSEEDBUSH_SEQEV_PLANT 1
@@ -163,3 +161,20 @@ void MoonSeedBush_init(int obj, int data)
     }
 }
 #pragma reset
+
+ObjectDescriptor gMoonSeedBushObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)MoonSeedBush_initialise,
+    (ObjectDescriptorCallback)MoonSeedBush_release,
+    0,
+    (ObjectDescriptorCallback)MoonSeedBush_init,
+    (ObjectDescriptorCallback)MoonSeedBush_update,
+    (ObjectDescriptorCallback)MoonSeedBush_hitDetect,
+    (ObjectDescriptorCallback)MoonSeedBush_render,
+    (ObjectDescriptorCallback)MoonSeedBush_free,
+    (ObjectDescriptorCallback)MoonSeedBush_getObjectTypeId,
+    MoonSeedBush_getExtraSize,
+};
