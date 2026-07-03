@@ -203,19 +203,19 @@ typedef struct ShieldState
     f32 fadeTarget; /* 0x8 */
     f32 fadeRate; /* 0xC */
     s32 fadeMax; /* 0x10: divisor for alpha (fadeValue/fadeMax) */
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x5C - 0x54];
-    u8 flags0;
-    u8 flags1;
-    u8 flags2;
-    u8 flags3;
+    /* Per-segment parameters for the four ring segments, laid out
+     * structure-of-arrays (each array indexed by segment 0..3). */
+    f32 segScale[4]; /* 0x14: per-segment scale (feeds anim.rootMotionScale) */
+    f32 segAlpha[4]; /* 0x24: per-segment alpha factor (feeds anim.alpha) */
+    s16 segPhase[4]; /* 0x34: fcos16 wobble phase, advanced by segRate*dt */
+    s16 segSeed[4]; /* 0x3C: random per-segment cosine seed */
+    s16 segRotX[4]; /* 0x44: per-segment X rotation */
+    s16 segRotY[4]; /* 0x4C: per-segment Y rotation */
+    s16 segRotZ[4]; /* 0x54: per-segment Z rotation */
+    u8 flags0; /* 0x5C: segment-0 "fully faded" bit0 */
+    u8 flags1; /* 0x5D */
+    u8 flags2; /* 0x5E */
+    u8 flags3; /* 0x5F */
     u8 pad60[0x6A - 0x60];
     s16 unk6A;
     u8 pad6C[0x6E - 0x6C];
@@ -234,6 +234,17 @@ typedef struct ShieldState
     s16 unk114;
     s16 unk116;
 } ShieldState;
+
+STATIC_ASSERT(offsetof(ShieldState, fadeValue) == 0x04);
+STATIC_ASSERT(offsetof(ShieldState, fadeMax) == 0x10);
+STATIC_ASSERT(offsetof(ShieldState, segScale) == 0x14);
+STATIC_ASSERT(offsetof(ShieldState, segAlpha) == 0x24);
+STATIC_ASSERT(offsetof(ShieldState, segPhase) == 0x34);
+STATIC_ASSERT(offsetof(ShieldState, segSeed) == 0x3C);
+STATIC_ASSERT(offsetof(ShieldState, segRotX) == 0x44);
+STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
+STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
+STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern f32 lbl_803E3420;
