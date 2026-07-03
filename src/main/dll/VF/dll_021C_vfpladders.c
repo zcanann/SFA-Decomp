@@ -16,6 +16,9 @@
 #define VFPLADDERS_TRIGGER_SEQID 0x548
 #define VFPLADDERS_DROP_DELAY 0x5a /* frames between trigger and drop */
 
+#define VFPLADDERS_OBJFLAG_HIDDEN 0x4000
+#define VFPLADDERS_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 enum
 {
     VFPLADDERS_PHASE_WAIT = 0,
@@ -139,7 +142,7 @@ void vfpladders_init(int* obj, u8* init)
     ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
     state->triggerGameBit = setup->triggerGameBit;
     state->baseGameBit = setup->baseGameBit;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (VFPLADDERS_OBJFLAG_HIDDEN | VFPLADDERS_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->animEventCallback = vfpladders_SeqFn;
 }
 
