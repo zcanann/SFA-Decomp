@@ -1352,7 +1352,7 @@ void hudDrawFn_80121440(void)
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         if (!(base->magicCur > lbl_803E1F9C && base->magicCur < lbl_803E1FA8 &&
                 ((int)base->magicCur & 8)) &&
-            !(base->scarabCur > lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 &&
+            !(base->scarabCur > *(f32*)&lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 &&
                 ((int)base->scarabCur & 8)) &&
             !(cell == 0 && (void*)fn_802972A8(player) != NULL))
         {
@@ -1392,17 +1392,16 @@ void hudDrawFn_80121440(void)
         if (!(base->trickyCur > lbl_803E1F9C && base->trickyCur < lbl_803E1FA8 &&
             ((int)base->trickyCur & 8)))
         {
-            drawTexture(base->icon314, lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
+            drawTexture(base->icon314, *(f32*)&lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
         }
         for (i = 0; (u8)i < 0x14u; i += 4)
         {
             int b98 = base->scarabCount;
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0)
             {
-                int yo = ((u8)i * 0xf) / 4;
-                drawScaledTexture(base->icon31c, (f32)(int)(yo + 0x40), lbl_803E1FB4,
+                drawScaledTexture(base->icon31c, (f32)(int)(((u8)i * 0xf) / 4 + 0x40), lbl_803E1FB4,
                                   alpha, 0x100, 6, 0x12, 0);
-                drawPartialTexture(base->icon318, (f32)(int)(yo + 0x46), lbl_803E1FB4,
+                drawPartialTexture(base->icon318, (f32)(int)(((u8)i * 0xf) / 4 + 0x46), lbl_803E1FB4,
                                    alpha, 0x100, 7, 0x12, 6, 0);
             }
             else
