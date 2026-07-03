@@ -271,7 +271,7 @@ typedef struct LinkMenuItemDA
 #pragma peephole off
 void Link_render(void)
 {
-    extern LinkMenuItemDA gTumbleweedBushItems[40]; /* #57 */
+    extern LinkMenuItemDB gTumbleweedBushItems[40]; /* #57 */
     extern s8 gTumbleweedBushItemCount; /* #57 */
     LinkMenuItemDA* item;
     int i;
@@ -290,7 +290,7 @@ void Link_render(void)
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
-        item = &gTumbleweedBushItems[i];
+        item = (LinkMenuItemDA*)&gTumbleweedBushItems[i];
         drawItem = item;
 
         if ((item->flags & LINK_FLAG_HIDDEN) == 0)
@@ -307,7 +307,7 @@ void Link_render(void)
             {
                 if (item->state != -1)
                 {
-                    drawItem = &gTumbleweedBushItems[item->state];
+                    drawItem = (LinkMenuItemDA*)&gTumbleweedBushItems[item->state];
                 }
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_SLOTS) != 0)
@@ -939,3 +939,5 @@ void linkDrawFn_80130484(void)
     }
 }
 #pragma peephole reset
+
+LinkMenuItemDB gTumbleweedBushItems[40];
