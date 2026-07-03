@@ -302,12 +302,12 @@ void snowclaw_updateMountAttack(int obj, int mount)
             if (turnSign == 0)
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F4;
-                Sfx_PlayFromObject(obj, 0x2e3);
+                Sfx_PlayFromObject(obj, SFXswapstone_handhit);
             }
             else
             {
                 ((SnowclawState*)inner)->unk30 = lbl_803E66F8;
-                Sfx_PlayFromObject(obj, 0x2e2);
+                Sfx_PlayFromObject(obj, SFXswapstone_breatheout);
             }
             if (turnSign != 0)
             {
@@ -652,7 +652,7 @@ void snowclaw_update(int obj)
 
     if (randFn_80080100(0x12c) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x2e5);
+        Sfx_PlayFromObject(obj, SFXswapstone_yawn);
     }
 
     if (*(s8*)&((SnowclawState*)inner)->health < 4)
