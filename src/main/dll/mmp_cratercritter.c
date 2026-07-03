@@ -43,11 +43,11 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         z = lbl_803E23DC;
         ((TrickyState*)state)->unk71C = z;
         ((TrickyState*)state)->unk720 = z;
-        *(u32*)&((TrickyState*)state)->stateFlags &= ~0x10LL;
-        *(u32*)&((TrickyState*)state)->stateFlags &= ~0x10000LL;
-        *(u32*)&((TrickyState*)state)->stateFlags &= ~0x20000LL;
-        *(u32*)&((TrickyState*)state)->stateFlags &= ~0x40000LL;
-        ((TrickyState*)state)->unkD = -1;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x10000u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x20000u;
+        *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & (u64)~0x40000u;
+        *(s8*)&((TrickyState*)state)->unkD = -1;
         return;
     }
 
