@@ -24,6 +24,9 @@ enum
 #define SPITEMBEAM_SCROLL_STEP 8
 #define SPITEMBEAM_SCROLL_WRAP 0x400
 
+#define SPITEMBEAM_OBJFLAG_HIDDEN 0x4000
+#define SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 extern f32 lbl_803E5AD8;
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 
@@ -38,7 +41,7 @@ STATIC_ASSERT(sizeof(SpitembeamPlacement) == 0x20);
 
 void spitembeam_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (SPITEMBEAM_OBJFLAG_HIDDEN | SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED));
 }
 
 void spitembeam_free(void)
