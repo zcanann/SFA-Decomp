@@ -1735,7 +1735,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
 
 /* EN v1.0 0x8012B978  size: 1292b  Pause-menu submenu driver: input nav,
  * voiceover scheduling, selection SFX, and title refresh. */
-void pauseMenuRunSubmenu(u8 p1)
+void pauseMenuRunSubmenu(int p1)
 {
     int sel = -1;
     u8 valid = 0;
@@ -1895,7 +1895,7 @@ void pauseMenuRunSubmenu(u8 p1)
             pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 2, 0);
             return;
         }
-        if (sel >= 0 || p1 != 0 ||
+        if (sel >= 0 || (u8)p1 != 0 ||
             (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
         {
             if (lbl_803DD824[lbl_803DD7D8].f18 != 0)
