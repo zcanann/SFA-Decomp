@@ -52,7 +52,6 @@ void gpsh_shrine_hitDetect(void)
 {
 }
 
-int ecsh_creator_getExtraSize(void);
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
