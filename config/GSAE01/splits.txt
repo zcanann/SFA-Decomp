@@ -2492,6 +2492,7 @@ main/dll/dll_02AE_waterflowwe.c:
 
 main/dll/dll_02AF_tree.c:
 	.text       start:0x802356CC end:0x80236154
+	.data       start:0x8032BBE0 end:0x8032BC90
 
 main/dll/dll_02B0_brokenpipe.c:
 	.text       start:0x80236154 end:0x80236298
