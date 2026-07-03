@@ -208,41 +208,42 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void mcmdVarCalculation(McmdVoiceState* state, McmdCommandArgs* args, u8 op)
 {
-    s32 t;
-    s16 s1;
-    s16 s2;
+    s32 result;
+    s16 lhs;
+    s16 rhs;
 
-    s1 = varGet32(state, args->flags >> 0x18, (u8)args->value);
+    lhs = varGet32(state, args->flags >> 0x18, (u8)args->value);
     if (op == 4)
     {
-        s2 = args->value >> 8;
+        rhs = args->value >> 8;
     }
     else
     {
-        s2 = varGet32(state, (args->value >> 8) & 0xff, (args->value >> 0x10) & 0xff);
+        rhs = varGet32(state, (args->value >> 8) & 0xff, (args->value >> 0x10) & 0xff);
     }
 
     switch (op)
     {
     case 4:
     case 0:
-        t = s1 + s2;
+        result = lhs + rhs;
         break;
     case 1:
-        t = s1 - s2;
+        result = lhs - rhs;
         break;
     case 2:
-        t = s1 * s2;
+        result = lhs * rhs;
         break;
     case 3:
-        t = s2 != 0 ? s1 / s2 : 0;
+        result = rhs != 0 ? lhs / rhs : 0;
         break;
     }
 
     {
         u8 d1 = (args->flags >> 8) & 0xff;
         u8 d2 = (args->flags >> 0x10) & 0xff;
-        varSet32(state, d1, d2, (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
+        varSet32(state, d1, d2,
+                 (s16)(result < -0x8000 ? -0x8000 : result > 0x7fff ? 0x7fff : result));
     }
 }
 
