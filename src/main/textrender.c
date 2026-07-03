@@ -1363,7 +1363,6 @@ extern void* gSubtitleBoxTextures[];
 void* gSubtitleLineTable[0x100];
 extern int gSubtitleBlockCount;
 
-#pragma peephole off
 #pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
 {
@@ -1390,7 +1389,6 @@ void gameTextInitFn_8001bd14(void)
     }
 }
 #pragma opt_unroll_loops on
-#pragma peephole reset
 
 #pragma dont_inline on
 void subtitleFn_8001b700(void)
@@ -2333,7 +2331,6 @@ typedef struct GameTextCharset
 } GameTextCharset;
 
 #pragma dont_inline off
-#pragma peephole off
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
@@ -2505,7 +2502,6 @@ extern u8 lbl_803DC968;
 extern u16 gGameTextSjisGlyphTable[];
 extern int lbl_803DB3C4;
 
-#pragma peephole off
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_instructions_limit 16
 void gameTextLoadGraphicsFn_8001a918(void)
@@ -2791,7 +2787,6 @@ extern int gGameTextBoxColorB;
 extern int gGameTextBoxColorA;
 extern void* gGameTextBoxEdgeTexture;
 
-#pragma peephole on
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
     int x;
@@ -2833,7 +2828,6 @@ extern u16 lbl_802CA100[];
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
-#pragma scheduling off
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
 {
@@ -2986,7 +2980,6 @@ void gameTextInitFn_8001c794(void)
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
 #pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DE730;
 extern f32 gSubtitleNoTimeSentinel;
