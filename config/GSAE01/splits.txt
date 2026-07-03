@@ -261,7 +261,7 @@ main/dll/dll_0012_unk.c:
 
 main/dll/dll_0014_unk.c:
 	.text       start:0x800D9EE8 end:0x800E5434
-	.bss        start:0x8039CAE8 end:0x803A17E8
+	.bss        start:0x8039CAE8 end:0x803A2C38
 
 main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
@@ -821,6 +821,7 @@ main/dll/pausemenu.c:
 
 main/dll/dll_0000_gameui.c:
 	.text       start:0x80128120 end:0x8012FECC
+	.bss        start:0x803A8B48 end:0x803A9364
 
 main/dll/dll_003B_menu.c:
 	.text       start:0x8012FECC end:0x80130124

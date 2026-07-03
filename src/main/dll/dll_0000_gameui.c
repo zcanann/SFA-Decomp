@@ -231,7 +231,7 @@ extern f32 lbl_803E2068;
 extern f32 lbl_803E2174;
 extern u8 lbl_803DD7D6;
 extern int lbl_803DD8E0;
-extern s16 lbl_803A8B48[];
+s16 lbl_803A8B48[0x98];
 extern GridEntry lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlaySelectedItemSfx(u8 * player);
@@ -373,8 +373,8 @@ extern u8 gGameUiHelpTextPending;
 extern s16 gGameUiHelpTextId;
 extern u8 gGameUiUnusedHudSetting;
 extern u8 gameUiResourcesLoaded;
-extern u8 gCMenuItemEnabledTable[];
-extern int gCMenuItemTargetTable[];
+u8 gCMenuItemEnabledTable[0x3C0];
+int gCMenuItemTargetTable[0xBA];
 extern void* gTrickyHudCachedIconTexture;
 extern s16 gTrickyHudCachedIconIndex;
 extern void* gGameUiBlinkTexture;
@@ -400,7 +400,7 @@ extern int getHudHiddenFrameCount(void);
 
 
 extern u8 shouldOpenCMenu;
-extern int lbl_803A9320[];
+int lbl_803A9320[0x11];
 extern s16 gMinimapInfoTextXCommitted;
 extern s16 gMinimapInfoTextYCommitted;
 extern s16 lbl_803DBA6E;
