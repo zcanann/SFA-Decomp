@@ -46,7 +46,6 @@ void texframeanimator_initialise(void)
 {
 }
 
-void fogcontrol_hitDetect(void);
 
 typedef struct TexFrameAnimatorState
 {
@@ -141,10 +140,8 @@ void texframeanimator_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | TEXFRAMEANIMATOR_OBJFLAG_HIDDEN);
 }
 
-int explodeanimator_getExtraSize(void);
 int texframeanimator_getExtraSize(void) { return 0x18; }
 int texframeanimator_getObjectTypeId(void) { return 0x0; }
-int fogcontrol_getExtraSize(void);
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -152,6 +149,5 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4060);
 }
 
-void explodeanimator_free(int x);
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
