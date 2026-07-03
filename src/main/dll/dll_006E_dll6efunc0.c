@@ -193,8 +193,6 @@ void loadSaveSettings(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
     FUN_8000676c((u32)gGameplayPreviewColorBlue, 10, 0, 0, 1);
 }
 
-void SaveGame_func08_nop(void);
-
 void dll_6E_func01_nop(void)
 {
 }
@@ -202,8 +200,6 @@ void dll_6E_func01_nop(void)
 void dll_6E_func00_nop(void)
 {
 }
-
-void dll_6F_func01_nop(void);
 
 void dll_6E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
