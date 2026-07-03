@@ -80,8 +80,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     kaldachompme_getExtraSize,
 };
 
-#pragma scheduling off
-#pragma peephole off
 void kaldachompspit_hitDetect(void)
 {
 }
