@@ -26,6 +26,7 @@ enum
 
 #define SPITEMBEAM_OBJFLAG_HIDDEN 0x4000
 #define SPITEMBEAM_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define SPITEMBEAM_OBJFLAG_UPDATE_DISABLED 0x8000
 
 extern f32 lbl_803E5AD8;
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
@@ -86,7 +87,7 @@ void spitembeam_update(int* obj)
                 shop, ((SpitembeamPlacement*)def)->itemIndex) != 0)
         {
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | SPITEMBEAM_OBJFLAG_UPDATE_DISABLED);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
