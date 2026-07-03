@@ -511,7 +511,7 @@ int Tricky_updateSideCommandPrompts(int obj)
     u32 promptTable[4];
 
     objVal = obj;
-    state = *(int*)(objVal + 0xb8);
+    state = *(int*)&((GameObject*)objVal)->extra;
     cond = false;
     promptA = false;
     promptB = false;
@@ -592,9 +592,9 @@ int Tricky_updateSideCommandPrompts(int obj)
             {
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
-                ref = *(int*)(objVal + 0xb8);
+                ref = *(int*)&((GameObject*)objVal)->extra;
                 if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) &&
-                    (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                    (((((GameObject*)objVal)->anim.currentMove >= 0x30 || (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                         !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                 {
                     objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
@@ -636,7 +636,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     bitVal = 0xffffffff;
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
-                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
+                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7B0, *(u8*)(state + 0x7bc) >> 4 & 3);
             }
@@ -658,17 +658,17 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     if (promptB)
                     {
-                        refB = *(int*)(objVal + 0xb8);
+                        refB = *(int*)&((GameObject*)objVal)->extra;
                         if (((*(u8*)(refB + 0x58) >> 6 & 1) == 0u) &&
-                            (((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                            (((((GameObject*)objVal)->anim.currentMove >= 0x30 || (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                                 !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                         {
                             objAudioFn_800393f8(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
                     }
                     else if ((((promptC) &&
-                                (refC = *(int*)(objVal + 0xb8), (*(u8*)(refC + 0x58) >> 6 & 1) == 0u)) &&
-                            ((*(short*)(objVal + 0xa0) >= 0x30 || (*(short*)(objVal + 0xa0) < 0x29)))) &&
+                                (refC = *(int*)&((GameObject*)objVal)->extra, (*(u8*)(refC + 0x58) >> 6 & 1) == 0u)) &&
+                            ((((GameObject*)objVal)->anim.currentMove >= 0x30 || (((GameObject*)objVal)->anim.currentMove < 0x29)))) &&
                         !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
                     {
                         objAudioFn_800393f8(objVal, (void*)(refC + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
@@ -711,7 +711,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     bitVal = 0xffffffff;
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
-                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
+                spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)&((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7A8, *(u8*)(state + 0x7bc) >> 6 & 3);
             }
