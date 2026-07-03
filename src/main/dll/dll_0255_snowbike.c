@@ -700,7 +700,6 @@ void SnowBike_initialise(void)
     }
 }
 
-void SB_CloudRunner_onSeqFree(int* obj);
 
 typedef struct
 {
