@@ -19,6 +19,8 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_80220608_shared.h"
 
+#define PAD_BUTTON_A 0x100
+
 typedef struct IntVec3
 {
     int unk0;
@@ -78,7 +80,7 @@ void fn_801F20D4(int obj)
     {
         GameBit_Set(763, 1);
         *(u8*)&((Dll200State*)sub)->counter27 = 0;
-        buttonDisable(0, 256);
+        buttonDisable(0, PAD_BUTTON_A);
     }
     else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
     {
@@ -86,7 +88,7 @@ void fn_801F20D4(int obj)
         {
             GameBit_Set(784, 1);
             *(u8*)&((Dll200State*)sub)->counter27 += 1;
-            buttonDisable(0, 256);
+            buttonDisable(0, PAD_BUTTON_A);
         }
     }
 }
@@ -116,7 +118,7 @@ void fn_801F27E4(int obj)
         {
             GameBit_Set(208, 1);
             ((Dll200State*)sub)->latch24 = 1;
-            buttonDisable(0, 256);
+            buttonDisable(0, PAD_BUTTON_A);
         }
     }
     else
@@ -129,7 +131,7 @@ void fn_801F27E4(int obj)
             {
                 ((Dll200State*)sub)->mode25 = 2;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                buttonDisable(0, 256);
+                buttonDisable(0, PAD_BUTTON_A);
             }
             else
             {
@@ -137,7 +139,7 @@ void fn_801F27E4(int obj)
                 {
                     ((Dll200State*)sub)->mode25 = 1;
                     (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                    buttonDisable(0, 256);
+                    buttonDisable(0, PAD_BUTTON_A);
                 }
             }
         }
@@ -384,7 +386,7 @@ void fn_801F2290(int obj)
             GameBit_Set(0x4d1, 1);
             b->counter27 += 1;
             GameBit_Set(0x310, 1);
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
         }
     }
     else
