@@ -203,7 +203,6 @@ void treasurechest_initialise(void)
 {
 }
 
-void magiccavebottom_free(int obj);
 
 void treasurechest_init(int* obj)
 {
