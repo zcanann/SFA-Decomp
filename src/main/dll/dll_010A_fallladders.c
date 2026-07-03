@@ -30,6 +30,9 @@
 /* sequence id during which the object reacts to the two game bits */
 #define FALLLADDERS_SEQ_ID 0x548
 
+#define FALLLADDERS_OBJFLAG_HIDDEN 0x4000
+#define FALLLADDERS_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct FallLaddersObjectDef
 {
     ObjPlacement base;
@@ -159,7 +162,7 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
     state->upperGameBit = def->upperGameBit;
     state->lowerGameBit = def->lowerGameBit;
     state->restYOffset = (f32)(s32)def->restYOffset;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (FALLLADDERS_OBJFLAG_HIDDEN | FALLLADDERS_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->animEventCallback = Fall_Ladders_SeqFn;
     ((GameObject*)obj)->anim.localPosY = def->base.posY + state->restYOffset;
     Obj_SetActiveModelIndex(obj, def->modelIndex);
