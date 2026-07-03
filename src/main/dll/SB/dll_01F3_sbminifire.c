@@ -63,12 +63,6 @@ extern f32 lbl_803E5934;
 extern f32 lbl_803E5938;
 extern f32 lbl_803E593C;
 
-void FUN_801e55c0(u64 arg1, double arg2, double arg3, u64 arg4,
-                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
-                  u16* setup, int obj)
-{
-}
-
 void SB_FireBall_release(void);
 
 void SB_MiniFire_hitDetect(void)
