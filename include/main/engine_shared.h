@@ -318,7 +318,9 @@ typedef struct {
 } TaskTextEntry;
 typedef struct MusicTrackSlot {
     s16 id;
-    u8 pad2[6];
+    u8 unk2;
+    u8 unk3;
+    char* name;
     int offset;
     int size;
 } MusicTrackSlot;
@@ -845,7 +847,7 @@ extern u32 mmSetFreeDelay(u32 delay);
 extern u8 testAndSet_onlyUseHeap3(int arg);
 extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
 extern void fn_80008F38(void *addr, u32 dest, u32 size);
-extern s16 sMusicTrackTable[];
+extern MusicTrackSlot sMusicTrackTable[];
 extern char sPoolDataMLoadedCallbackLoadError[];
 extern char sPoolDataSLoadedCallbackLoadError[];
 extern char sProjectDataMLoadedCallbackLoadError[];

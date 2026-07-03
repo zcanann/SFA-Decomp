@@ -3021,3 +3021,208 @@ int audioInit(void)
     }
     return 0;
 }
+
+extern char sMusicTrackNameAmbIngaeRain[];
+extern char sMusicTrackNameAmbMoonlink[];
+extern char sMusicTrackNameAndrossTune[];
+extern char sMusicTrackNameArwingCrash[];
+extern char sMusicTrackNameCCVisit1[];
+extern char sMusicTrackNameDIMCaves[];
+extern char sMusicTrackNameTTHFight[];
+extern char sMusicTrackNameCRFBridge[];
+extern char sMusicTrackNameCRFSuspense[];
+extern char sMusicTrackNameCRFSwim[];
+extern char sMusicTrackNameCRFTreasure[];
+extern char sMusicTrackNameDarkIceLava[];
+extern char sMusicTrackNameKrazoaDocks[];
+extern char sMusicTrackNameKrazoaShrine[];
+extern char sMusicTrackNameLFVSwamp[];
+extern char sMusicTrackNameSlowMotion[];
+extern char sMusicTrackNameAmbLavapits[];
+extern char sMusicTrackNameBackOfCloudrunner[];
+extern char sMusicTrackNameBarren[];
+extern char sMusicTrackNameBarrels[];
+extern char sMusicTrackNameBlizzard[];
+extern char sMusicTrackNameBloop[];
+extern char sMusicTrackNameCapeclawSeaside[];
+extern char sMusicTrackNameCaveTrade[];
+extern char sMusicTrackNameCclawCaves[];
+extern char sMusicTrackNameCclawGasroom[];
+extern char sMusicTrackNameCitytombs[];
+extern char sMusicTrackNameCldRnrDungeon[];
+extern char sMusicTrackNameCldRnrTune1[];
+extern char sMusicTrackNameCldRnrWalkabout[];
+extern char sMusicTrackNameCommunicator[];
+extern char sMusicTrackNameCrunDungeon[];
+extern char sMusicTrackNameDarkIceBoss1[];
+extern char sMusicTrackNameDIMCavern[];
+extern char sMusicTrackNameDIMDay[];
+extern char sMusicTrackNameDIMMines[];
+extern char sMusicTrackNameDIMSnow[];
+extern char sMusicTrackNameDIMCnBlt[];
+extern char sMusicTrackNameDownthewell[];
+extern char sMusicTrackNameDrako1[];
+extern char sMusicTrackNameDrako2[];
+extern char sMusicTrackNameDrako3[];
+extern char sMusicTrackNameEwtChase[];
+extern char sMusicTrackNameEwtLink[];
+extern char sMusicTrackNameEwtOutside[];
+extern char sMusicTrackNameGalleonBattle[];
+extern char sMusicTrackNameGalleonDocks[];
+extern char sMusicTrackNameGalleonOutside[];
+extern char sMusicTrackNameGalleonStorm[];
+extern char sMusicTrackNameGreatfoxInt[];
+extern char sMusicTrackNameGuardTheme[];
+extern char sMusicTrackNameIceWalkaround[];
+extern char sMusicTrackNameInsideGalleon[];
+extern char sMusicTrackNameInsideWarlock[];
+extern char sMusicTrackNameKpanomaly[];
+extern char sMusicTrackNameKptext[];
+extern char sMusicTrackNameKpwin[];
+extern char sMusicTrackNameLVFTracking[];
+extern char sMusicTrackNameMammothWalk[];
+extern char sMusicTrackNameMenuPage[];
+extern char sMusicTrackNameMinecaves[];
+extern char sMusicTrackNameMmpassalien[];
+extern char sMusicTrackNameMoundMusic[];
+extern char sMusicTrackNameNewIceRace[];
+extern char sMusicTrackNameNewstorm[];
+extern char sMusicTrackNameNightjungle[];
+extern char sMusicTrackNameOptionsPage[];
+extern char sMusicTrackNamePU1Mysterious[];
+extern char sMusicTrackNamePU2Heroic[];
+extern char sMusicTrackNamePU3Adventure[];
+extern char sMusicTrackNameSeqSwaphol1[];
+extern char sMusicTrackNameSforestday[];
+extern char sMusicTrackNameSlope[];
+extern char sMusicTrackNameStarfoxArea6[];
+extern char sMusicTrackNameStarfoxMap[];
+extern char sMusicTrackNameStarfoxRwing1[];
+extern char sMusicTrackNameSwapholNight[];
+extern char sMusicTrackNameSwapstoneCircle[];
+extern char sMusicTrackNameTeleport[];
+extern char sMusicTrackNameTestOfCombat[];
+extern char sMusicTrackNameTestOfFear[];
+extern char sMusicTrackNameTestOfMagic[];
+extern char sMusicTrackNameTestOfSacrifice[];
+extern char sMusicTrackNameTestOfSkill[];
+extern char sMusicTrackNameTestOfStrength[];
+extern char sMusicTrackNameTrex2a[];
+extern char sMusicTrackNameTrexChase[];
+extern char sMusicTrackNameTrexHit[];
+extern char sMusicTrackNameTTHNight[];
+extern char sMusicTrackNameUnderwater[];
+extern char sMusicTrackNameVfpWalkabout[];
+extern char sMusicTrackNameVolcanoFp[];
+extern char sMusicTrackNameWarlockmagic[];
+extern char sMusicTrackNameWcityDay[];
+extern char sMusicTrackNameWindydocks[];
+extern char sMusicTrackNameLFVStrength[];
+extern char sMusicTrackNameWLCChase[];
+extern char sMusicTrackNameWLCCorridors[];
+extern char sMusicTrackNameWLCPuzzle[];
+extern char sMusicTrackNameWLCChambers[];
+
+MusicTrackSlot sMusicTrackTable[] =
+{
+    { 99, 54, 0, sMusicTrackNameAmbIngaeRain, 0, 0 },
+    { 98, 53, 0, sMusicTrackNameAmbMoonlink, 0, 0 },
+    { 72, 0, 0, sMusicTrackNameAndrossTune, 0, 0 },
+    { 38, 0, 0, sMusicTrackNameArwingCrash, 0, 0 },
+    { 53, 0, 0, sMusicTrackNameCCVisit1, 0, 0 },
+    { 54, 0, 0, sMusicTrackNameDIMCaves, 0, 0 },
+    { 55, 0, 0, sMusicTrackNameTTHFight, 0, 0 },
+    { 42, 0, 0, sMusicTrackNameCRFBridge, 0, 0 },
+    { 41, 0, 0, sMusicTrackNameCRFSuspense, 0, 0 },
+    { 43, 0, 0, sMusicTrackNameCRFSwim, 0, 0 },
+    { 45, 0, 0, sMusicTrackNameCRFTreasure, 0, 0 },
+    { 37, 0, 0, sMusicTrackNameDarkIceLava, 0, 0 },
+    { 39, 0, 0, sMusicTrackNameKrazoaDocks, 0, 0 },
+    { 40, 0, 0, sMusicTrackNameKrazoaShrine, 0, 0 },
+    { 44, 0, 0, sMusicTrackNameLFVSwamp, 0, 0 },
+    { 46, 0, 0, sMusicTrackNameSlowMotion, 0, 0 },
+    { 91, 42, 0, sMusicTrackNameAmbLavapits, 0, 0 },
+    { 13, 0, 0, sMusicTrackNameBackOfCloudrunner, 0, 0 },
+    { 81, 25, 0, sMusicTrackNameBarren, 0, 0 },
+    { 65, 0, 0, sMusicTrackNameBarrels, 0, 0 },
+    { 74, 18, 0, sMusicTrackNameBlizzard, 0, 0 },
+    { 71, 0, 0, sMusicTrackNameBloop, 0, 0 },
+    { 92, 43, 0, sMusicTrackNameCapeclawSeaside, 0, 0 },
+    { 34, 0, 0, sMusicTrackNameCaveTrade, 0, 0 },
+    { 96, 50, 0, sMusicTrackNameCclawCaves, 0, 0 },
+    { 97, 51, 0, sMusicTrackNameCclawGasroom, 0, 0 },
+    { 79, 23, 0, sMusicTrackNameCitytombs, 0, 0 },
+    { 16, 0, 0, sMusicTrackNameCldRnrDungeon, 0, 0 },
+    { 15, 0, 0, sMusicTrackNameCldRnrTune1, 0, 0 },
+    { 14, 0, 0, sMusicTrackNameCldRnrWalkabout, 0, 0 },
+    { 22, 0, 0, sMusicTrackNameCommunicator, 0, 0 },
+    { 87, 31, 0, sMusicTrackNameCrunDungeon, 0, 0 },
+    { 26, 0, 0, sMusicTrackNameDarkIceBoss1, 0, 0 },
+    { 59, 0, 0, sMusicTrackNameDIMCavern, 0, 0 },
+    { 69, 0, 0, sMusicTrackNameDIMDay, 0, 0 },
+    { 64, 0, 0, sMusicTrackNameDIMMines, 0, 0 },
+    { 52, 0, 0, sMusicTrackNameDIMSnow, 0, 0 },
+    { 60, 0, 0, sMusicTrackNameDIMCnBlt, 0, 0 },
+    { 85, 29, 0, sMusicTrackNameDownthewell, 0, 0 },
+    { 25, 0, 0, sMusicTrackNameDrako1, 0, 0 },
+    { 24, 0, 0, sMusicTrackNameDrako2, 0, 0 },
+    { 23, 0, 0, sMusicTrackNameDrako3, 0, 0 },
+    { 3, 0, 0, sMusicTrackNameEwtChase, 0, 0 },
+    { 10, 0, 0, sMusicTrackNameEwtLink, 0, 0 },
+    { 28, 0, 0, sMusicTrackNameEwtOutside, 0, 0 },
+    { 33, 0, 0, sMusicTrackNameGalleonBattle, 0, 0 },
+    { 11, 0, 0, sMusicTrackNameGalleonDocks, 0, 0 },
+    { 94, 45, 0, sMusicTrackNameGalleonOutside, 0, 0 },
+    { 89, 39, 0, sMusicTrackNameGalleonStorm, 0, 0 },
+    { 95, 49, 0, sMusicTrackNameGreatfoxInt, 0, 0 },
+    { 20, 0, 0, sMusicTrackNameGuardTheme, 0, 0 },
+    { 17, 0, 0, sMusicTrackNameIceWalkaround, 0, 0 },
+    { 93, 44, 0, sMusicTrackNameInsideGalleon, 0, 0 },
+    { 12, 0, 0, sMusicTrackNameInsideWarlock, 0, 0 },
+    { 73, 0, 0, sMusicTrackNameKpanomaly, 0, 0 },
+    { 67, 0, 0, sMusicTrackNameKptext, 0, 0 },
+    { 68, 0, 0, sMusicTrackNameKpwin, 0, 0 },
+    { 56, 0, 0, sMusicTrackNameLVFTracking, 0, 0 },
+    { 18, 0, 0, sMusicTrackNameMammothWalk, 0, 0 },
+    { 19, 0, 0, sMusicTrackNameMenuPage, 0, 0 },
+    { 75, 19, 0, sMusicTrackNameMinecaves, 0, 0 },
+    { 80, 24, 0, sMusicTrackNameMmpassalien, 0, 0 },
+    { 57, 0, 0, sMusicTrackNameMoundMusic, 0, 0 },
+    { 36, 0, 0, sMusicTrackNameNewIceRace, 0, 0 },
+    { 77, 21, 0, sMusicTrackNameNewstorm, 0, 0 },
+    { 76, 20, 0, sMusicTrackNameNightjungle, 0, 0 },
+    { 29, 0, 0, sMusicTrackNameOptionsPage, 0, 0 },
+    { 61, 0, 0, sMusicTrackNamePU1Mysterious, 0, 0 },
+    { 62, 0, 0, sMusicTrackNamePU2Heroic, 0, 0 },
+    { 63, 0, 0, sMusicTrackNamePU3Adventure, 0, 0 },
+    { 88, 32, 0, sMusicTrackNameSeqSwaphol1, 0, 0 },
+    { 84, 28, 0, sMusicTrackNameSforestday, 0, 0 },
+    { 66, 0, 0, sMusicTrackNameSlope, 0, 0 },
+    { 2, 0, 0, sMusicTrackNameStarfoxArea6, 0, 0 },
+    { 0, 0, 0, sMusicTrackNameStarfoxMap, 0, 0 },
+    { 1, 0, 0, sMusicTrackNameStarfoxRwing1, 0, 0 },
+    { 90, 40, 0, sMusicTrackNameSwapholNight, 0, 0 },
+    { 21, 0, 0, sMusicTrackNameSwapstoneCircle, 0, 0 },
+    { 70, 0, 0, sMusicTrackNameTeleport, 0, 0 },
+    { 4, 0, 0, sMusicTrackNameTestOfCombat, 0, 0 },
+    { 5, 0, 0, sMusicTrackNameTestOfFear, 0, 0 },
+    { 6, 0, 0, sMusicTrackNameTestOfMagic, 0, 0 },
+    { 7, 0, 0, sMusicTrackNameTestOfSacrifice, 0, 0 },
+    { 8, 0, 0, sMusicTrackNameTestOfSkill, 0, 0 },
+    { 9, 0, 0, sMusicTrackNameTestOfStrength, 0, 0 },
+    { 30, 0, 0, sMusicTrackNameTrex2a, 0, 0 },
+    { 32, 0, 0, sMusicTrackNameTrexChase, 0, 0 },
+    { 31, 0, 0, sMusicTrackNameTrexHit, 0, 0 },
+    { 58, 0, 0, sMusicTrackNameTTHNight, 0, 0 },
+    { 86, 30, 0, sMusicTrackNameUnderwater, 0, 0 },
+    { 27, 0, 0, sMusicTrackNameVfpWalkabout, 0, 0 },
+    { 35, 0, 0, sMusicTrackNameVolcanoFp, 0, 0 },
+    { 78, 22, 0, sMusicTrackNameWarlockmagic, 0, 0 },
+    { 82, 26, 0, sMusicTrackNameWcityDay, 0, 0 },
+    { 83, 27, 0, sMusicTrackNameWindydocks, 0, 0 },
+    { 47, 0, 0, sMusicTrackNameLFVStrength, 0, 0 },
+    { 48, 0, 0, sMusicTrackNameWLCChase, 0, 0 },
+    { 49, 0, 0, sMusicTrackNameWLCCorridors, 0, 0 },
+    { 50, 0, 0, sMusicTrackNameWLCPuzzle, 0, 0 },
+    { 51, 0, 0, sMusicTrackNameWLCChambers, 0, 0 },
+};
