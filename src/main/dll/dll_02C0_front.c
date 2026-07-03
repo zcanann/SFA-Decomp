@@ -274,40 +274,6 @@ extern void gameTimerRun(void* obj);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-/* The trailing sprintf into buf is dead (the formatted string is
- * never displayed). */
-void fn_80133F70(void* obj)
-{
-    char buf[12];
-    f32 threshold;
-    int a;
-    int b;
-    int c;
-    void* player;
-    void* nearest;
-
-    threshold = lbl_803E22A0;
-    a = 0;
-    b = 0;
-    c = 0;
-    if (gameTimerIsRunning())
-    {
-        gameTimerRun(obj);
-    }
-    player = Obj_GetPlayerObject();
-    nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
-    if (nearest != NULL)
-    {
-        ((void (*)(void*, int*, int*, int*))(*((GameObject*)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
-    }
-    b = c - (b - a);
-    if (b < 0)
-    {
-        b = 0;
-    }
-    sprintf(buf, lbl_803DBBF0, b);
-}
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* Obj_GetActiveModel(u8* obj);
 
