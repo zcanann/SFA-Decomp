@@ -53,6 +53,7 @@ main/textrender.c:
 
 main/modellight.c:
 	.text       start:0x8001CB3C end:0x8001F54C
+	.bss        start:0x8033BE60 end:0x8033BF88
 
 main/gameloop.c:
 	.text       start:0x8001F54C end:0x80021370
@@ -67,6 +68,7 @@ main/mm.c:
 
 main/model.c:
 	.text       start:0x8002430C end:0x8002A5D4
+	.bss        start:0x80340740 end:0x803408A8
 
 main/object.c:
 	.text       start:0x8002A5D4 end:0x8002EB54

@@ -132,7 +132,7 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
 }
 
 extern u8 gModelLightCount;
-extern void* gModelLightList[];
+void* gModelLightList[0x32];
 
 extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8 * lt_obj, f32 * k0, f32 * k1, f32 * k2);
@@ -752,7 +752,7 @@ typedef struct
     int matSrc;
 } ModelLightChannelState;
 
-extern ModelLightChannelState gModelLightChannelStates[];
+ModelLightChannelState gModelLightChannelStates[0x60 / sizeof(ModelLightChannelState)];
 
 
 void modelLightChannel_configure(int i, int a, int b)

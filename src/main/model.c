@@ -817,8 +817,8 @@ void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* a
     return out;
 }
 
-extern u8* gModelCacheBuffersA[];
-extern u8* gModelCacheBuffersB[];
+u8* gModelCacheBuffersA[4];
+u8* gModelCacheBuffersB[6];
 
 #pragma dont_inline on
 void ObjModel_InitScratchBuffers(void)
@@ -1416,7 +1416,7 @@ lbl_ABT_done:
 
 extern void debugPrintf(char* fmt, ...);
 extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
-extern u8 gModelJointScratchBuffer[];
+u8 gModelJointScratchBuffer[0x140];
 
 void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 {
