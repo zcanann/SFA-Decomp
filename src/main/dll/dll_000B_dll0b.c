@@ -2576,7 +2576,6 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 animate:
     {
         int k4 = k * 4;
-        int ofs = k4 + 0xb0;
         char* kb = (char*)state + k4;
         *(f32*)(kb + 0xb0) =
             *(f32*)(kb + 0xb0) +
@@ -2592,7 +2591,7 @@ animate:
         {
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + ofs);
+                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + k4 + 0xb0);
                 bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] =
                     bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
             }
