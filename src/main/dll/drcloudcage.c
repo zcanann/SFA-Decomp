@@ -128,6 +128,49 @@ typedef struct DRCloudCageObjPos
 } DRCloudCageObjPos;
 STATIC_ASSERT(sizeof(DRCloudCageObjPos) == 0x18);
 
+/*
+ * DRCloudCageState - file-local overlay of the DR_CloudRunner cage object's
+ * extra block (obj+0xB8). Only the scalar fields this DLL reads/writes are
+ * named; the rest is padding. state is passed as a raw int handle, so it is
+ * cast to this type per-access (byte-neutral) rather than retyped as a
+ * pointer, which would perturb cross-function base CSE.
+ */
+typedef struct DRCloudCageState
+{
+    u8 pad00[0x18];
+    f32 distFar;              /* 0x18: d >= distFar clamps result to valFar */
+    f32 distNear;             /* 0x1C: d <= distNear clamps result to valNear */
+    f32 valFar;               /* 0x20 */
+    f32 valNear;              /* 0x24 */
+    u8 pad28[0x3F4 - 0x28];
+    f32 channel4Vol;          /* 0x3F4: sfx channel 4 volume accumulator */
+    f32 channel2Vol;          /* 0x3F8: sfx channel 2 volume accumulator */
+    u8 pad3FC[0x410 - 0x3FC];
+    s32 rotZOffset;           /* 0x410: added to obj rotZ before matrix build */
+    u8 pad414[0x424 - 0x414];
+    f32 distanceGate;         /* 0x424: distance below which wind/engine sfx play */
+    DRCloudCageStateFlags stateFlags; /* 0x428: bit0 hidden */
+    u8 pad429[0x434 - 0x429];
+    u8 routeGateActive;       /* 0x434: 0 => route-distance gate applies */
+    u8 pad435[0x440 - 0x435];
+    u16 windSfxId;            /* 0x440: channel-4 wind sfx id */
+    u8 pad442[0x4B4 - 0x442];
+    u8 trailColorByte;        /* 0x4B4: stored into each new trail point pair */
+    u8 pad4B5[0x51C - 0x4B5];
+    f32 lastSpawnPosX;        /* 0x51C: obj world position at last trail spawn */
+    f32 lastSpawnPosY;        /* 0x520 */
+    f32 lastSpawnPosZ;        /* 0x524 */
+} DRCloudCageState;
+STATIC_ASSERT(offsetof(DRCloudCageState, distFar) == 0x18);
+STATIC_ASSERT(offsetof(DRCloudCageState, channel4Vol) == 0x3F4);
+STATIC_ASSERT(offsetof(DRCloudCageState, rotZOffset) == 0x410);
+STATIC_ASSERT(offsetof(DRCloudCageState, distanceGate) == 0x424);
+STATIC_ASSERT(offsetof(DRCloudCageState, stateFlags) == 0x428);
+STATIC_ASSERT(offsetof(DRCloudCageState, routeGateActive) == 0x434);
+STATIC_ASSERT(offsetof(DRCloudCageState, windSfxId) == 0x440);
+STATIC_ASSERT(offsetof(DRCloudCageState, trailColorByte) == 0x4B4);
+STATIC_ASSERT(offsetof(DRCloudCageState, lastSpawnPosX) == 0x51C);
+
 void fn_801E9C00(int obj, int state)
 {
     f32 endZ;
@@ -233,6 +276,10 @@ void fn_801E9C00(int obj, int state)
                 }
             }
 
+            /* The three active head-trail pointer slots (0x510/0x514/0x518)
+             * stay raw: the spawn loop below walks them via a running `slot`
+             * base (slot += 4), so naming them as fixed struct fields shifts
+             * the walker's addressing/CSE. */
             if ((trail != *(DRCloudCageTrail**)(state + 0x510)) &&
                 (trail != *(DRCloudCageTrail**)(state + 0x514)) &&
                 (trail != *(DRCloudCageTrail**)(state + 0x518)) &&
@@ -265,7 +312,7 @@ void fn_801E9C00(int obj, int state)
         transform.z = ((GameObject*)obj)->anim.worldPosZ;
         transform.rotX = ((GameObject*)obj)->anim.rotX;
         transform.rotY = ((GameObject*)obj)->anim.rotY;
-        transform.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + *(s32*)(state + 0x410));
+        transform.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + ((DRCloudCageState*)state)->rotZOffset);
         transform.scale = scaleV;
         setMatrixFromObjectPos(matrix, &transform);
 
@@ -304,7 +351,7 @@ void fn_801E9C00(int obj, int state)
             }
         }
 
-        if (!((DRCloudCageStateFlags*)(state + 0x428))->hidden && hitDetected)
+        if (!((DRCloudCageState*)state)->stateFlags.hidden && hitDetected)
         {
             selectedTrail = *(DRCloudCageTrail**)(slot + 0x510);
             if (selectedTrail == NULL)
@@ -347,12 +394,12 @@ void fn_801E9C00(int obj, int state)
             selectedTrail->points[0].endZ = endZ;
             selectedTrail->points[0].startAlpha = 0xff;
             selectedTrail->points[0].endAlpha = 0xff;
-            selectedTrail->points[0].pad0E = *(u8*)(state + 0x4b4);
-            selectedTrail->points[0].pad1E = *(u8*)(state + 0x4b4);
+            selectedTrail->points[0].pad0E = ((DRCloudCageState*)state)->trailColorByte;
+            selectedTrail->points[0].pad1E = ((DRCloudCageState*)state)->trailColorByte;
             selectedTrail->count += 2;
-            *(f32*)(state + 0x51c) = ((GameObject*)obj)->anim.worldPosX;
-            *(f32*)(state + 0x520) = ((GameObject*)obj)->anim.worldPosY;
-            *(f32*)(state + 0x524) = ((GameObject*)obj)->anim.worldPosZ;
+            ((DRCloudCageState*)state)->lastSpawnPosX = ((GameObject*)obj)->anim.worldPosX;
+            ((DRCloudCageState*)state)->lastSpawnPosY = ((GameObject*)obj)->anim.worldPosY;
+            ((DRCloudCageState*)state)->lastSpawnPosZ = ((GameObject*)obj)->anim.worldPosZ;
         }
         else
         {
@@ -399,7 +446,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             {
                 gDrCloudCageWindVolume = lbl_803E5B14;
             }
-            if (*(f32*)(state + 0x424) < lbl_803E5B18)
+            if (((DRCloudCageState*)state)->distanceGate < lbl_803E5B18)
             {
                 vol = (int)(lbl_803E5B1C * clamped);
                 if (vol < 0)
@@ -422,7 +469,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
     {
         if (Sfx_IsPlayingFromObjectChannel(obj, 1))
         {
-            if (*(f32*)(state + 0x424) < lbl_803E5B18)
+            if (((DRCloudCageState*)state)->distanceGate < lbl_803E5B18)
             {
                 d = 0.0f;
                 if (d != clamped)
@@ -454,58 +501,58 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
     }
     if (channelFlags & 4)
     {
-        Sfx_PlayFromObject(obj, *(u16*)(state + 0x440));
+        Sfx_PlayFromObject(obj, ((DRCloudCageState*)state)->windSfxId);
         Sfx_PlayFromObject(obj, SFXsp_htop_hurry2);
         if (intensity > 5)
         {
-            *(f32*)(state + 0x3f8) = *(f32*)(state + 0x3f8) + timeDelta;
+            ((DRCloudCageState*)state)->channel2Vol = ((DRCloudCageState*)state)->channel2Vol + timeDelta;
         }
         else
         {
-            if (*(f32*)(state + 0x3f8) > lbl_803E5B10)
+            if (((DRCloudCageState*)state)->channel2Vol > lbl_803E5B10)
             {
-                *(f32*)(state + 0x3f8) = -(lbl_803E5B2C * timeDelta - *(f32*)(state + 0x3f8));
+                ((DRCloudCageState*)state)->channel2Vol = -(lbl_803E5B2C * timeDelta - ((DRCloudCageState*)state)->channel2Vol);
             }
         }
-        if (*(f32*)(state + 0x3f8) > *(f32*)&lbl_803E5B08)
+        if (((DRCloudCageState*)state)->channel2Vol > *(f32*)&lbl_803E5B08)
         {
-            *(f32*)(state + 0x3f8) = lbl_803E5B08;
+            ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B08;
         }
-        if (*(f32*)(state + 0x3f8) < *(f32*)&lbl_803E5B30)
+        if (((DRCloudCageState*)state)->channel2Vol < *(f32*)&lbl_803E5B30)
         {
-            *(f32*)(state + 0x3f8) = lbl_803E5B30;
+            ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B30;
         }
-        v = *(f32*)(state + 0x3f8);
+        v = ((DRCloudCageState*)state)->channel2Vol;
         Sfx_SetObjectChannelVolume(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
-            *(f32*)(state + 0x3f4) = lbl_803E5B3C + intensity;
+            ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B3C + intensity;
         }
         else
         {
-            if (*(f32*)(state + 0x3f4) > lbl_803E5B3C)
+            if (((DRCloudCageState*)state)->channel4Vol > lbl_803E5B3C)
             {
-                *(f32*)(state + 0x3f4) = -(lbl_803E5AF8 * timeDelta - *(f32*)(state + 0x3f4));
+                ((DRCloudCageState*)state)->channel4Vol = -(lbl_803E5AF8 * timeDelta - ((DRCloudCageState*)state)->channel4Vol);
             }
         }
-        if (*(f32*)(state + 0x3f4) > *(f32*)&lbl_803E5B40)
+        if (((DRCloudCageState*)state)->channel4Vol > *(f32*)&lbl_803E5B40)
         {
-            *(f32*)(state + 0x3f4) = lbl_803E5B40;
+            ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B40;
         }
-        if (*(f32*)(state + 0x3f4) < *(f32*)&lbl_803E5B44)
+        if (((DRCloudCageState*)state)->channel4Vol < *(f32*)&lbl_803E5B44)
         {
-            *(f32*)(state + 0x3f4) = lbl_803E5B44;
+            ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B44;
         }
-        v = *(f32*)(state + 0x3f4);
+        v = ((DRCloudCageState*)state)->channel4Vol;
         Sfx_SetObjectChannelVolume(obj, 4, (int)v, v / lbl_803E5B48);
         pulse.unkC = lbl_803E5B4C;
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
         pulse.unk8 = lbl_803E5AE8;
-        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, *(f32*)(state + 0x3f4) / lbl_803E5B58,
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
         pulse.unkC = lbl_803E5B5C;
-        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, *(f32*)(state + 0x3f4) / lbl_803E5B58,
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
     }
     fn_801E9C00(obj, state);
@@ -531,6 +578,10 @@ f32 fn_801EA678(int obj, int state)
         }
         else
         {
+            /* state+0x28 is the CheckpointRankItem passed to getRouteRank;
+             * its linkDepth (+0x1C = 0x44) and routeProgress (+0xC = 0x34) are
+             * read here. These stay raw: spelling them as nested-struct members
+             * (rankItem.linkDepth / rankItem.routeProgress) shifts codegen. */
             templateMetric = lbl_803E5B48 * (f32) * (s32*)((u8*)lbl_803AD088 + 0x1c) +
                 lbl_803E5B48 * *(f32*)((u8*)lbl_803AD088 + 0xc);
             stateMetric = lbl_803E5B48 * (f32) * (s32*)(state + 0x44) +
@@ -538,22 +589,22 @@ f32 fn_801EA678(int obj, int state)
             d = templateMetric - stateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
         }
-        if (d <= *(f32*)(state + 0x1c))
+        if (d <= ((DRCloudCageState*)state)->distNear)
         {
-            result = *(f32*)(state + 0x24);
+            result = ((DRCloudCageState*)state)->valNear;
         }
-        else if (d >= *(f32*)(state + 0x18))
+        else if (d >= ((DRCloudCageState*)state)->distFar)
         {
-            result = *(f32*)(state + 0x20);
+            result = ((DRCloudCageState*)state)->valFar;
         }
         else
         {
-            f32 ratio = (d - *(f32*)(state + 0x1c)) /
-                    (*(f32*)(state + 0x18) - *(f32*)(state + 0x1c));
-            d = *(f32*)((u8*)state + 0x24);
-            result = ratio * (*(f32*)(state + 0x20) - d) + d;
+            f32 ratio = (d - ((DRCloudCageState*)state)->distNear) /
+                    (((DRCloudCageState*)state)->distFar - ((DRCloudCageState*)state)->distNear);
+            d = ((DRCloudCageState*)state)->valNear;
+            result = ratio * (((DRCloudCageState*)state)->valFar - d) + d;
         }
-        if (*(u8*)(state + 0x434) == 0)
+        if (((DRCloudCageState*)state)->routeGateActive == 0)
         {
             d = stateMetric - templateMetric;
             d = (d >= lbl_803E5AE8) ? d : -d;
