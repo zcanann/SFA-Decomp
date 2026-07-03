@@ -164,6 +164,10 @@ void fn_801EAE4C(short* obj, int stateRaw)
                 angDelta = angDelta + 0xffff;
             }
             absDelta = ((int)angDelta >= 0) ? angDelta : -angDelta;
+            /* Branchless "absDelta <= lbl_803DC0DC": the sign bit (>>0x1f) of
+             * ((x>>1) - (x & absDelta)), x = absDelta ^ lbl_803DC0DC, is 0
+             * exactly when absDelta does not exceed the threshold. Advance the
+             * path progress forward while within tolerance, else back it off. */
             if ((int)((u32)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) ==
                 0)
             {
