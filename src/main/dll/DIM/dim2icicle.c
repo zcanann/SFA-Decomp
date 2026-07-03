@@ -72,8 +72,6 @@ typedef struct IcicleFxPos {
     f32 z;
 } IcicleFxPos;
 
-#pragma scheduling off
-#pragma peephole off
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
   DIMbossTopState *topState;
