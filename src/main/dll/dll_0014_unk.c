@@ -2851,7 +2851,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
     startNumer = -((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z));
     startPhase = tangentDx * segmentDx + tangentDz * segmentDz;
-    if ((*(volatile f32 *)&gFloatZero) != startPhase)
+    if (gFloatZero != startPhase)
     {
         startPhase =
             -(startNumer + ((tangentDx * x) + (tangentDz * z))) / startPhase;
@@ -2880,14 +2880,14 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
 
     endNumer = -((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z));
     endPhase = nextTangentDx * nextSegmentDx + nextTangentDz * nextSegmentDz;
-    if ((*(volatile f32 *)&gFloatZero) != endPhase)
+    if (gFloatZero != endPhase)
     {
         endPhase =
             -(endNumer + ((nextTangentDx * x) + (nextTangentDz * z))) / endPhase;
     }
 
     phase = -startPhase / (endPhase - startPhase);
-    if ((phase >= (*(volatile f32 *)&gFloatZero)) && (phase < gFloatOne))
+    if ((phase >= *(volatile f32 *)&gFloatZero) && (phase < gFloatOne))
     {
         f32 projX;
         f32 projY;
@@ -3516,7 +3516,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                         segment.endZ = linkedCurve->z;
                         distance = RomCurve_distanceToSegment(pointX, pointY, pointZ, &segment);
                         absBestDistance = (bestDistance < *(f32*)&gFloatZero) ? -bestDistance : bestDistance;
-                        absDistance = (distance < *(volatile f32*)&gFloatZero) ? -distance : distance;
+                        absDistance = (distance < gFloatZero) ? -distance : distance;
                         if (absDistance < absBestDistance)
                         {
                             gRomCurveLastFindStart = curve;
