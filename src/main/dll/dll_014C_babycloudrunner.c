@@ -23,39 +23,16 @@
 #include "main/sfa_shared_decls.h"
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
-extern u64 FUN_80006824();
-extern u32 FUN_80017690();
-extern u32 FUN_80017698();
-extern u32 FUN_80017748();
 extern int randomGetRange(int lo, int hi);
-extern u32 FUN_80017a88();
-extern int FUN_80017a98();
-extern u32 FUN_8002f6ac();
-extern int FUN_8002fc3c();
-extern u32 FUN_800305f8();
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern u32 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int Obj_GetYawDeltaToObject();
 extern u32 objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-extern u32 FUN_8006f7a0();
-extern int FUN_8007f924();
-extern u32 FUN_800e8630();
-extern int FUN_801149b8();
-extern int FUN_8020a468();
-extern u64 FUN_8028683c();
-extern u64 FUN_80286840();
-extern u32 FUN_80286888();
-extern u32 FUN_8028688c();
-extern double FUN_80293900();
-extern u32 FUN_80294d40();
 extern u32 DAT_802c2a58;
 extern u32 DAT_802c2a5c;
 extern u32 DAT_802c2a60;
@@ -261,7 +238,6 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 #pragma peephole on
-void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
@@ -366,7 +342,6 @@ int babycloudrunner_func0B(void* p)
     return 0;
 }
 #pragma peephole reset
-void windlift_hitDetect(void);
 
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
@@ -406,14 +381,12 @@ void babycloudrunner_initialise(void)
 {
 }
 
-void cfprisonguard_free(void);
 
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
 
 int babycloudrunner_getObjectTypeId(void) { return 0; }
 
-void spiritdoorspirit_init(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
@@ -423,7 +396,6 @@ int babycloudrunner_setScale(int* obj)
     return !(state->flags22C & 1);
 }
 
-void cfperch_init(int* obj);
 
 void babycloudrunner_free(int* obj)
 {
@@ -431,7 +403,6 @@ void babycloudrunner_free(int* obj)
     ObjGroup_RemoveObject(obj, 3);
 }
 
-void gcrobotlightbea_init(int* obj);
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX
