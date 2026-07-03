@@ -230,8 +230,6 @@ void dll_90_func03(int sourceObj, int variant, int posSource, u32 flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)gDll90EffectResourceBlock, 0x10, base + 0xb4, 0x45, 0);
 }
 
-void dll_91_func01_nop(void);
-
 void dll_90_func01_nop(void)
 {
 }
