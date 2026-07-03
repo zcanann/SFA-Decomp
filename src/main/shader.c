@@ -638,6 +638,16 @@ void* fn_80059334(int a, int b)
 extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
+/* 16-byte texture-scroll table entry (array at lbl_803DCE68, 0x3a slots). */
+typedef struct TexScrollEntry
+{
+    f32 offsetX; /* 0x00 */
+    f32 offsetY; /* 0x04 */
+    s16 xStep;   /* 0x08 */
+    s16 yStep;   /* 0x0a */
+    u8 refCount; /* 0x0c */
+} TexScrollEntry;
+
 void mapTextureScrollGetOffset(int idx, float* outX, float* outY)
 {
     f32 divisor;
@@ -840,9 +850,9 @@ void gameTextLoadForMap_800571f0(u8 force)
 
 void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {
-    int base = lbl_803DCE68 + idx * 16;
-    *(s16*)(base + 8) = (s16)((xStep << 16) / (texWidthFixed >> 6));
-    *(s16*)(base + 10) = (s16)((yStep << 16) / (texHeightFixed >> 6));
+    TexScrollEntry* e = (TexScrollEntry*)lbl_803DCE68 + idx;
+    e->xStep = (s16)((xStep << 16) / (texWidthFixed >> 6));
+    e->yStep = (s16)((yStep << 16) / (texHeightFixed >> 6));
 }
 
 extern s8 lbl_803DB624;
