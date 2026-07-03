@@ -10,7 +10,6 @@ extern f32 lbl_803E3C84;
 #define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 int infotext_getExtraSize(void) { return 0x4; }
-int cctestinfot_getExtraSize(void);
 
 void infotext_init(int obj, s8* def)
 {
@@ -21,7 +20,6 @@ void infotext_init(int obj, s8* def)
     objSetHintTextIdx(obj, (u8)def[0x19]);
 }
 
-void cctestinfot_init(int obj, s8* def);
 
 void infotext_update(int obj)
 {
