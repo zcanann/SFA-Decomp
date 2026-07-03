@@ -40,6 +40,7 @@ main/pad.c:
 
 main/fileio.c:
 	.text       start:0x80015624 end:0x80015BC8
+	.data       start:0x802C6E60 end:0x802C6E94
 
 main/gametext.c:
 	.text       start:0x80015BC8 end:0x800173E4
@@ -207,9 +208,11 @@ main/dll/dll_0022_effect9.c:
 
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
+	.data       start:0x80310C88 end:0x80310D1C
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
+	.data       start:0x80310D48 end:0x80310D7C
 
 main/dll/dll_0025_effect12.c:
 	.text       start:0x800C56E0 end:0x800C65B4
@@ -243,6 +246,7 @@ main/dll/dll_002C_effect19.c:
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
+	.data       start:0x80311128 end:0x803112E4
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
@@ -886,6 +890,7 @@ main/dll/animobjd2.c:
 
 main/dll/weapone6.c:
 	.text       start:0x8013F100 end:0x8013FFB8
+	.data       start:0x8031D910 end:0x8031D930
 
 main/dll/tricky_flameguard.c:
 	.text       start:0x8013FFB8 end:0x80141290
@@ -923,6 +928,7 @@ main/dll/seqobj11e.c:
 
 main/dll/magicplant.c:
 	.text       start:0x80152EC0 end:0x801540A0
+	.data       start:0x8031F2D8 end:0x8031F2F8
 
 main/dll/fall_ladders.c:
 	.text       start:0x801540A0 end:0x80154870
@@ -1177,6 +1183,7 @@ main/dll/dll_0104_smallbasket.c:
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
+	.data       start:0x80321728 end:0x80321750
 
 main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868
@@ -1354,6 +1361,7 @@ main/dll/dll_0145_cloudprisoncontrol.c:
 
 main/dll/CF/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784
+	.data       start:0x803229E0 end:0x80322A48
 
 main/dll/CF/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578
@@ -1690,6 +1698,7 @@ main/dll/DF/dll_017B_dfshlaserbeam.c:
 
 main/dll/dll_018C_mmshshrine.c:
 	.text       start:0x801C4B10 end:0x801C53A0
+	.data       start:0x80326128 end:0x80326168
 
 main/dll/dll_018D_mmshscales.c:
 	.text       start:0x801C53A0 end:0x801C578C
@@ -1699,12 +1708,14 @@ main/dll/dll_018E_mmshwaterspike.c:
 
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C
+	.data       start:0x8032629C end:0x80326324
 
 main/dll/dll_0191_ecshcreator.c:
 	.text       start:0x801C6E0C end:0x801C70F0
 
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
+	.data       start:0x80326398 end:0x803263B8
 
 main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
@@ -1729,6 +1740,7 @@ main/dll/NW/dll_0198_nwshlevcon.c:
 
 main/dll/dll_0199_dll199.c:
 	.text       start:0x801CA9C0 end:0x801CB7A8
+	.data       start:0x80326588 end:0x803265DC
 
 main/dll/dll_019A_dll19a.c:
 	.text       start:0x801CB7A8 end:0x801CBA98
@@ -1775,6 +1787,7 @@ main/dll/dll_801d0828.c:
 
 main/dll/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
+	.data       start:0x80326C4C end:0x80326C78
 
 main/dll/DIM/dim_boss.c:
 	.text       start:0x801D1BFC end:0x801D1BFC
@@ -1803,9 +1816,11 @@ main/dll/SH/shthorntail_ai.c:
 
 main/dll/SH/shthorntail.c:
 	.text       start:0x801D5174 end:0x801D58E4
+	.data       start:0x803274BC end:0x8032753C
 
 main/dll/SH/dll_01AD_shthorntail.c:
 	.text       start:0x801D58E4 end:0x801D6914
+	.data       start:0x8032753C end:0x80327560
 
 main/dll/scchieflightfoot.c:
 	.text       start:0x801D6914 end:0x801D6C04
@@ -1819,12 +1834,14 @@ main/dll/SH/dll_01B0_shswapston.c:
 
 main/dll/SH/dll_01AE_shlevelcontrol.c:
 	.text       start:0x801D7BA8 end:0x801D981C
+	.data       start:0x80327764 end:0x803277A8
 
 main/dll/SH/dll_01AF_shswaplift.c:
 	.text       start:0x801D981C end:0x801D9B1C
 
 main/dll/SH/dll_01B1_shstaff.c:
 	.text       start:0x801D9B1C end:0x801DA8C4
+	.data       start:0x80327818 end:0x8032784C
 
 main/dll/SH/dll_01B2_shstaffhaze.c:
 	.text       start:0x801DA8C4 end:0x801DA954
