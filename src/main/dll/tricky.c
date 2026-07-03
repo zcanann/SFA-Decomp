@@ -1061,6 +1061,7 @@ void hudDrawAirMeter(void)
         }
     case 1:
         {
+            int base;
             int off;
             int by;
             int cy;
@@ -1079,7 +1080,7 @@ void hudDrawAirMeter(void)
                 break;
             }
             {
-                int base = 0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1);
+                base = 0x1a4 - ((u32)*(u16*)((char*)m[0xc] + 0xc) >> 1);
                 base += lbl_803DBAEC;
                 drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
                             (f32)(int)(base + (lbl_803DD7F8 + (s8)off)),
