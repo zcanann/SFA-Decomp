@@ -548,3 +548,8 @@ void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].priority = priority;
     heap[index].value = value;
 }
+
+char sCurvesSetupMoveNetworkCurveTooFewControlPoints[] = "curvesSetupMoveNetworkCurve: There must be at least four control points\n";
+char sCurvesSetupMoveNetworkCurveBadControlPointCount[] = "curvesSetupMoveNetworkCurve: There must be a multiple of four control points for bezier or hermite curves\n";
+char sCurvesMoveTooFewControlPoints[] = "curvesMove: There must be at least four control points\n";
+char sCurvesMoveBadControlPointCount[] = "curvesMove: There must be a multiple of four control points for bezier or hermite curves\n";

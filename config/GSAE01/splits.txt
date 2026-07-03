@@ -28,6 +28,7 @@ main/camera.c:
 
 main/curves.c:
 	.text       start:0x8000FE8C end:0x80010FF4
+	.data       start:0x802C6010 end:0x802C6160
 
 main/voxmaps.c:
 	.text       start:0x80010FF4 end:0x800139E8
