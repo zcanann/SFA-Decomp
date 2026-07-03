@@ -312,7 +312,7 @@ void drakormissile_update(int obj)
                 result |= 1;
             }
         }
-        if ((void*)hitObj != NULL && *(s16*)((char*)hitObj + 0x46) == DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        if ((void*)hitObj != NULL && ((GameObject*)hitObj)->anim.seqId == DRAKORMISSILE_IGNORE_OBJECT_TYPE)
         {
             result = 0;
         }
