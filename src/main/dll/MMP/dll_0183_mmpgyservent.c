@@ -16,6 +16,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MMPGYSERVENT_OBJFLAG_HIDDEN 0x4000
+#define MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct MmpGyserventPlacement
 {
     u8 pad0[0x1E - 0x0];
@@ -77,7 +80,7 @@ void mmp_gyservent_update(int obj)
 
 void mmp_gyservent_init(int obj)
 {
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
     *(u32*)&((GameObject*)obj)->unkF4 = randomGetRange(0xa, 0xc8);
     ((GameObject*)obj)->anim.alpha = 0;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
