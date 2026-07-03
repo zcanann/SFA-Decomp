@@ -33,26 +33,9 @@ u32 lbl_80332C78[] = {
     0x3956A4B8, 0x37D5E715,
 };
 
-static inline float bit_float(u32 bits)
-{
-    return *(float*)&bits;
-}
-
 static inline u32 float_bits(float value)
 {
     return *(u32*)&value;
-}
-
-#define bit_float(bits) (*(float*)&(bits))
-
-static inline float int_float(s32 value)
-{
-    return (float)value;
-}
-
-static inline float int_float_wide(s32 value)
-{
-    return (float)value;
 }
 
 static inline int classify_float(float value)
@@ -86,93 +69,96 @@ static inline int classify_float(float value)
     return 4;
 }
 
+typedef union {
+    float f;
+    long i;
+} float_word;
+
 static inline float log2_kernel(float x, float* table)
 {
+    float_word value;
     u32 bits;
     u32 fraction;
     u32 index;
     int exponent;
     float result;
-    u32 log_c0_bits;
-    u32 log_c1_bits;
+    float_word high;
+    float_word coef0;
+    float_word coef1;
+    float_word full;
 
-    bits = float_bits(x);
+    value.f = x;
+    coef0.i = lbl_803DC658;
+    bits = value.i;
+    coef1.i = lbl_803DC65C;
     exponent = (bits >> 23) - 0x80;
     fraction = bits;
     fraction &= 0x007FFFFF;
     index = fraction >> 16;
-    log_c0_bits = lbl_803DC658;
-    log_c1_bits = lbl_803DC65C;
 
     if ((bits & 0xFFFF) != 0) {
-        u32 high_bits;
-        u32 full_bits;
         float delta;
         float delta2;
-        float log_c0;
-        float log_c1;
 
-        high_bits = (bits & 0x007F0000) | 0x3F800000;
-        full_bits = fraction | 0x3F800000;
+        high.i = (bits & 0x007F0000) | 0x3F800000;
+        full.i = fraction | 0x3F800000;
 
         if ((bits & 0x00008000) != 0) {
             ++index;
-            high_bits += 0x10000;
+            high.i += 0x10000;
         }
 
-        log_c0 = bit_float(log_c0_bits);
-        log_c1 = bit_float(log_c1_bits);
-        delta = (bit_float(full_bits) - bit_float(high_bits)) * __one_over_F[index];
+        delta = full.f - high.f;
+        delta *= __one_over_F[index];
         delta2 = delta * delta;
-        result = delta * log_c1 + log_c0;
+        result = delta * coef1.f + coef0.f;
         result = delta2 * result;
         result = lbl_803DC650[1] * delta + result;
         result = lbl_803DC650[0] * delta + result;
         result = delta + result;
         result = table[index] + result;
-        result = (int_float_wide(exponent) + lbl_803E7E54) + result;
+        result = ((float)exponent + lbl_803E7E54) + result;
         return result;
     }
 
-    return (int_float_wide(exponent) + lbl_803E7E54) + table[index];
+    return ((float)exponent + lbl_803E7E54) + table[index];
 }
-
-#undef bit_float
 
 static inline float exp2_kernel(float x, float* table)
 {
-    int exponent;
-    u32 bits;
+    float_word scale;
     float fraction;
-    float scale;
     float poly;
 
-    exponent = x;
-    fraction = x - int_float(exponent);
+    scale.i = x;
+    fraction = x - (float)scale.i;
 
-    if (exponent > 128) {
+    if (scale.i > 128) {
         return lbl_803DC64C;
     }
 
-    if (exponent < -127) {
+    if (scale.i < -127) {
         return lbl_803E7E50;
     }
 
-    bits = exponent + 127;
-    bits <<= 23;
-    scale = bit_float(bits);
+    scale.i += 127;
+    scale.i <<= 23;
 
-    poly = fraction * table[137] + table[136];
-    poly = fraction * poly + table[135];
-    poly = fraction * poly + table[134];
-    poly = fraction * poly + table[133];
-    poly = fraction * poly + table[132];
-    poly = fraction * poly + table[131];
-    poly = fraction * poly + table[130];
-    poly = fraction * poly + table[129];
+    poly = fraction
+         * (fraction
+                * (fraction
+                       * (fraction
+                              * (fraction
+                                     * (fraction * (fraction * (fraction * table[137] + table[136]) + table[135])
+                                            + table[134])
+                                     + table[133])
+                              + table[132])
+                       + table[131])
+                + table[130])
+         + table[129];
     poly = fraction * poly;
 
-    return scale * (lbl_803E7E58 + poly);
+    return scale.f * (poly + lbl_803E7E58);
 }
 
 #define float_bits(value) (*(u32*)&(value))
@@ -180,30 +166,31 @@ static inline float exp2_kernel(float x, float* table)
 #pragma optimization_level 2
 float powf(float x, float y)
 {
-    float log_value;
+    float xx;
     float* table;
     int int_y;
 
+    xx = x;
     table = (float*)lbl_80332C78;
 
-    if (x > lbl_803E7E50) {
-        log_value = log2_kernel(x, table);
-        return exp2_kernel(y * log_value, table);
+    if (xx > lbl_803E7E50) {
+        y *= log2_kernel(xx, table);
+        return exp2_kernel(y, table);
     }
 
-    if (x < lbl_803E7E50) {
+    if (xx < lbl_803E7E50) {
         int_y = y;
-        if (y - int_float(int_y) != lbl_803E7E50) {
+        if (y - (float)int_y != lbl_803E7E50) {
             return lbl_803DC648;
         }
 
         if (int_y % 2 != 0) {
-            log_value = log2_kernel(-x, table);
-            return -exp2_kernel(y * log_value, table);
+            y *= log2_kernel(-xx, table);
+            return -exp2_kernel(y, table);
         }
 
-        log_value = log2_kernel(-x, table);
-        return exp2_kernel(y * log_value, table);
+        y *= log2_kernel(-xx, table);
+        return exp2_kernel(y, table);
     }
 
     if (classify_float(x) != 1) {
