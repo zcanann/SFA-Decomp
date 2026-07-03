@@ -388,6 +388,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
     int step2;
     int v;
     s16 d;
+    /* Partfx spawn parameter block (breath/steam emitted from the neck bone). */
     struct
     {
         u8 pad[6];
