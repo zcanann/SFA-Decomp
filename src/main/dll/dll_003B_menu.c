@@ -19,6 +19,9 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_shared_decls.h"
+
+#define PAD_BUTTON_B 0x200
+
 extern s8 lbl_803DD8F0;   /* item count */
 extern s16 lbl_803DD8F2;  /* accumulated item width */
 extern s8 lbl_803DD8F4;   /* cancel result id */
@@ -83,7 +86,7 @@ int Menu_func08(int* sel)
         {
             return lbl_803DD8F5;
         }
-        if ((input & 0x200) != 0)
+        if ((input & PAD_BUTTON_B) != 0)
         {
             return lbl_803DD8F4;
         }
