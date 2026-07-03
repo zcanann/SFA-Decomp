@@ -21,50 +21,7 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-
-u16*
-FUN_80017460(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , int param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
-u16*
-FUN_80017468(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-             , u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
-{
-    return 0;
-}
-
 extern f32 timeDelta;
-
-u32
-FUN_80017500(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int param_9)
-{
-    return 0;
-}
-
-u32
-FUN_8001786c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12)
-{
-    return 0;
-}
-
-u8*
-FUN_80017998(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 param_9
-)
-{
-    return 0;
-}
-
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 
@@ -272,7 +229,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
     }
 }
 
-
 extern int textureLoad(int id, int flag);
 
 asm
@@ -374,7 +330,6 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
     return size;
 }
 #pragma opt_propagation reset
-
 
 extern int gModelTabEntryCount;
 extern void* gModelAnimFlagsTable;
@@ -808,7 +763,6 @@ void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
     }
 }
 
-
 void memcpyToCache(void* dst, void* src, u32 count);
 
 void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
@@ -1100,7 +1054,6 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
     }
 }
 
-
 #pragma scheduling off
 void* ObjModel_LoadAnimData(u8* p, int b, int c)
 {
@@ -1165,7 +1118,6 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
     return header;
 }
-
 
 extern void model_adjustModelList(void* list, int index);
 extern void model_findIdxInModelList(void* list, void* header, int* outIndex);
@@ -2155,7 +2107,6 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     return 0;
 }
-
 
 #pragma opt_loop_invariants on
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
