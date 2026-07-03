@@ -115,7 +115,7 @@ extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
-void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* outPosY, float* outPosZ)
+void FUN_8010de18_v11_drift(u32 unused1, u32 unused2, float* outPosY, float* outPosZ)
 {
     float distBias;
     float* params;
@@ -151,8 +151,8 @@ void FUN_8010de18_v11_drift(u32 param_1, u32 param_2, float* outPosY, float* out
     return;
 }
 
-void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_801115e0(u64 arg1, double arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   int obj, int state)
 {
     u32 spawnActive;
@@ -174,7 +174,7 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
     {
         if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
         {
-            param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+            arg1 = FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                                    *(int*)&((GameObject*)obj)->childObjs[0]);
             *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
         }
@@ -188,7 +188,7 @@ void FUN_801115e0(u64 param_1, double param_2, double param_3, u64 param_4,
             if (0 < *(char*)(state + 0x407))
             {
                 spawnArgs = FUN_80017aa4(0x18, (&nameTail)[*(char*)(state + 0x407)]);
-                childObj = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, spawnArgs,
+                childObj = FUN_80017ae4(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, spawnArgs,
                                      4, 0xff, 0xffffffff, *(u32**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
                                      in_r10);
                 *(u32*)&((GameObject*)obj)->childObjs[0] = childObj;

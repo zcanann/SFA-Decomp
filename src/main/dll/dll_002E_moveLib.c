@@ -217,10 +217,10 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     return ret;
 }
 
-void FUN_801149b8(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u32 param_9, u32 param_10, float* param_11, short param_12,
-                  u16 param_13, u32 param_14, u32 param_15, u32 param_16)
+void FUN_801149b8(u64 unused1, double unused2, double unused3, u64 unused4,
+                  u64 unused5, u64 unused6, u64 unused7, u64 unused8,
+                  u32 unused9, u32 unused10, float* unused11, short unused12,
+                  u16 unused13, u32 unused14, u32 unused15, u32 unused16)
 {
 }
 

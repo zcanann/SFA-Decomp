@@ -96,8 +96,8 @@ extern f32 lbl_803E27E8;
 #pragma scheduling on
 #pragma peephole on
 
-void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
+void FUN_80151844(u64 unused1, u64 unused2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
                   short* obj, int state)
 {
     short angleDelta;
@@ -163,8 +163,8 @@ void FUN_80151844(u64 param_1, u64 param_2, double param_3, u64 param_4,
     *(u8*)(state + 0x2f3) = entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 0xb];
     *(u8*)(state + 0x2f4) = entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 0xc];
     entryOff = (u32) * (u8*)(state + 0x33a) * 0x10;
-    FUN_8014d4c8((double)*(float*)(entry + entryOff), speed, param_3, param_4, param_5, param_6, param_7,
-                 param_8, obj, state, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
+    FUN_8014d4c8((double)*(float*)(entry + entryOff), speed, arg3, arg4, arg5, arg6, arg7,
+                 arg8, obj, state, (u32)(u8)entry[entryOff + 8], 0, 3, in_r8, in_r9, in_r10);
     FUN_800305c4((double)*(float*)(&DAT_8031e980 +
                      (u32)(u8)entry[(u32) * (u8*)(state + 0x33a) * 0x10 + 8] *
                  4), obj
