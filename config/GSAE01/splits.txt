@@ -557,6 +557,7 @@ main/dll/dll_009E_dll9efunc0.c:
 
 main/dll/dll_009F_dll9ffunc0.c:
 	.text       start:0x800FDE18 end:0x800FE240
+	.data       start:0x80318488 end:0x80318690
 	.sdata2     start:0x803E1480 end:0x803E1488
 
 main/dll/dll_00A0_dlla0func0.c:
