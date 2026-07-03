@@ -137,7 +137,6 @@ void CameraModeDebug_initialise_nop(void)
 {
 }
 
-void CameraModeStatic_copyToCurrent_nop(void);
 
 void CameraModeDebug_free(void)
 {
@@ -145,4 +144,3 @@ void CameraModeDebug_free(void)
     gCamDebugState = 0;
 }
 
-void CameraModeStatic_free(void);
