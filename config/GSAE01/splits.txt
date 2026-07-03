@@ -2051,6 +2051,7 @@ main/dll/WM/dll_01FD_wmlasertarget.c:
 
 main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
+	.data       start:0x80328898 end:0x803289EC
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
