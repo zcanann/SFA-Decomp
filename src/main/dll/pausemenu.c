@@ -17,6 +17,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/model.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
@@ -146,7 +147,7 @@ void fn_80127F24(s32 alpha);
 void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 {
     int* player;
-    int* model;
+    ObjModel* model;
     s32 alpha;
     s32 x;
     s32 idx;
@@ -193,7 +194,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         y = (s32)((f32)(s16)alpha * lbl_803DD850);
         {
             f64 tmp = (double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C);
@@ -207,7 +208,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                             0xff, (u8)((s16)y / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16*)((u8*)model + 0x18) &= ~0x8;
+            model->bufferFlags &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
@@ -233,7 +234,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
             fn_80128470(y);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16*)((u8*)model + 0x18) &= ~0x8;
+            model->bufferFlags &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
@@ -259,7 +260,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         if (gameTextFn_80019c00() != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
@@ -268,7 +269,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16*)((u8*)model + 0x18) &= ~0x8;
+            model->bufferFlags &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
@@ -279,7 +280,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         {
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16*)((u8*)model + 0x18) &= ~0x8;
+            model->bufferFlags &= ~0x8;
             gameTextSetDrawFunc(pauseMenuTextDrawFn);
             lbl_803DBA8A = 0xc0;
             lbl_803DBA8C = lbl_803E20A0;
@@ -343,7 +344,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         if (gameTextFn_80019c00() != lbl_803E1E3C)
         {
             rnd1 = randomGetRange(0, 0x1e) * 2;
@@ -352,7 +353,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16*)((u8*)model + 0x18) &= ~0x8;
+            model->bufferFlags &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
@@ -433,7 +434,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                 gameTextSetDrawFunc(0);
                 model = Obj_GetActiveModel(lbl_803DD860[1]);
                 objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-                *(u16*)((u8*)model + 0x18) &= ~0x8;
+                model->bufferFlags &= ~0x8;
                 Camera_SetCurrentViewIndex(0);
                 Camera_UpdateViewMatrices();
                 Camera_SetFovY(lbl_803DD7FC);
@@ -454,7 +455,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
                     *(u16*)&lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         lbl_803DBA8A = 0x100;
@@ -510,7 +511,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         gameTextSetDrawFunc(0);
         model = Obj_GetActiveModel(lbl_803DD860[1]);
         objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         Camera_SetCurrentViewIndex(0);
         Camera_UpdateViewMatrices();
         Camera_SetFovY(lbl_803DD7FC);
@@ -528,7 +529,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     s32 ty1;
     s32 i;
     s32 j;
-    int* model;
+    ObjModel* model;
     int* info;
 
     pauseMenuDoSave();
@@ -543,7 +544,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
     fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, *(u16*)&lbl_803DD754);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-    *(u16*)((u8*)model + 0x18) &= ~0x8;
+    model->bufferFlags &= ~0x8;
 
     if (gameTextFn_80019c00() != lbl_803E1E3C)
     {
@@ -553,7 +554,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
                         0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
         model = Obj_GetActiveModel(lbl_803DD860[1]);
         objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        model->bufferFlags &= ~0x8;
         Camera_SetCurrentViewIndex(0);
         Camera_UpdateViewMatrices();
         Camera_SetFovY(lbl_803DD7FC);
@@ -720,7 +721,7 @@ void pauseMenuDrawStatus_801274a0(int* arg1)
 
     model = Obj_GetActiveModel(lbl_803DD860[1]);
     objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-    *(u16*)((u8*)model + 0x18) &= ~0x8;
+    model->bufferFlags &= ~0x8;
     Camera_SetCurrentViewIndex(0);
     Camera_UpdateViewMatrices();
     Camera_SetFovY(lbl_803DD7FC);
