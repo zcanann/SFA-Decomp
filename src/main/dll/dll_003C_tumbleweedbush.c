@@ -62,6 +62,7 @@ extern void padGetAnalogInput(int pad, s8* x, s8* y);
 extern void padClearAnalogInputY(int port);
 extern void padClearAnalogInputX(int port);
 extern void buttonDisable(int port, u32 mask);
+#define PAD_BUTTON_B 0x200
 
 
 extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
@@ -582,7 +583,7 @@ u32 Link_update(void)
         }
         else if ((int)(buttons & 0x200) != 0)
         {
-            buttonDisable(0, 0x200);
+            buttonDisable(0, PAD_BUTTON_B);
             result = 0;
         }
     }
