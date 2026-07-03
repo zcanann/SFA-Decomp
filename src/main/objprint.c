@@ -766,6 +766,19 @@ void FUN_8003ad08(int obj, u32* keys, int count, int out)
     return;
 }
 
+/*
+ * Head/pitch tracking step reached through the profiler thunk pair
+ * (FUN_8028683c re-fetches the real obj/target args, packed hi:obj / lo:target).
+ * Walks the joint-binding table for the head joint (key 0), then drives the
+ * two angle deltas in local_88[] toward the target with per-frame clamps.
+ *
+ * in_f28..in_ps31_1 are uninitialised incoming FP/paired-single registers the
+ * caller left live; the compiler spills them to the local_8..cvtHi0 slots.
+ * They carry no value here - the reads/spills are a register-homing artifact
+ * and are load-bearing for the byte match, so they are kept verbatim.
+ * Likewise the local_XX 0x43300000/int-to-double conversion temporaries are
+ * the magic-constant f64 conversion scratch and must stay as raw locals.
+ */
 void FUN_8003add8(u32 unusedObj, u32 unusedTarget, int state, u32 maxAngle, u32 flag,
                   u32 minRange)
 {
@@ -1106,21 +1119,23 @@ void FUN_8003b444(short* obj, char* ctx)
     return;
 }
 
-void FUN_8003b540(u8 param_1, u8 param_2, u8 param_3, u8 param_4)
+/* Stores an override tint (r,g,b + a byte) and raises its enable flag. */
+void FUN_8003b540(u8 red, u8 green, u8 blue, u8 alpha)
 {
-    DAT_803dd88d = param_1;
-    DAT_803dd88c = param_2;
-    DAT_803dd88b = param_3;
+    DAT_803dd88d = red;
+    DAT_803dd88c = green;
+    DAT_803dd88b = blue;
     DAT_803dd889 = 1;
-    DAT_803dd88a = param_4;
+    DAT_803dd88a = alpha;
     return;
 }
 
-void FUN_8003b56c(u16 param_1, u16 param_2, u16 param_3)
+/* Stores a 3-component u16 override triple and raises its enable flag. */
+void FUN_8003b56c(u16 x, u16 y, u16 z)
 {
-    DAT_803dd898 = param_1;
-    DAT_803dd896 = param_2;
-    DAT_803dd894 = param_3;
+    DAT_803dd898 = x;
+    DAT_803dd896 = y;
+    DAT_803dd894 = z;
     DAT_803dd888 = 1;
     return;
 }
@@ -1135,9 +1150,9 @@ void FUN_8003b818(int obj)
     return;
 }
 
-void FUN_8003b870(u32 param_1)
+void FUN_8003b870(u32 value)
 {
-    DAT_803dd890 = param_1;
+    DAT_803dd890 = value;
     return;
 }
 
