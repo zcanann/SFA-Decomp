@@ -19,36 +19,15 @@ int sh_staff_getExtraSize(void) { return 0x74; }
 void sh_staff_free(int* obj, int p2)
 {
     int* state = ((GameObject*)obj)->extra;
-    char* p;
-    int idx;
+    int* child;
+    int i;
 
     if (p2 != 0) return;
 
-    for (idx = 0; idx < 8; idx += 4)
+    i = 0;
+    for (; i < 10; i++)
     {
-        int* child;
-        p = (char*)state + idx * 5;
-        child = *(int**)(p + 56);
-        if (child != NULL)
-        {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-        child = *(int**)(p + 60);
-        if (child != NULL)
-        {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-        child = *(int**)(p + 64);
-        if (child != NULL)
-        {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-        child = *(int**)(p + 68);
-        if (child != NULL)
-        {
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-        child = *(int**)(p + 72);
+        child = *(int**)((char*)state + i * 4 + 56);
         if (child != NULL)
         {
             ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
