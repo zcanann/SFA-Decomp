@@ -13,6 +13,8 @@
 #include "main/gamebits.h"
 #include "main/pi_dolphin.h"
 #include "main/sfa_shared_decls.h"
+
+u32 gDIMbossAnimController[0x189];
 extern void Music_Trigger(int id, int arg);
 
 

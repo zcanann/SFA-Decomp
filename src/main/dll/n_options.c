@@ -64,7 +64,7 @@ extern u32 lbl_803DD670;       /* previous/pending DMA source addr */
 extern u32 lbl_803DD674;       /* queued next DMA source addr */
 extern u32 lbl_803DD678;       /* AI DMA double-buffer index */
 extern f32 lbl_803E1D50;       /* playback time accumulator */
-extern char lbl_803A57C0[0x50C]; /* AI DMA double buffer */
+char lbl_803A57C0[0x50C]; /* AI DMA double buffer */
 extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
 #define MOVIE_VOLUME_MAX 0x7f

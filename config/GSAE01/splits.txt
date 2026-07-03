@@ -761,6 +761,7 @@ dolphin/ax/AX.c:
 
 main/dll/n_options.c:
 	.text       start:0x80117668 end:0x8011846C
+	.bss        start:0x803A57C0 end:0x803A5CCC
 
 main/dll/dll_3e.c:
 	.text       start:0x8011846C end:0x80118C88
@@ -1616,6 +1617,7 @@ main/dll/DIM/dim2icicle.c:
 main/dll/DIM/dll_01E0_dimboss.c:
 	.text       start:0x801BCB34 end:0x801BDBE0
 	.data       start:0x80325B04 end:0x80325B44
+	.bss        start:0x803AC9DC end:0x803AD000
 
 main/dll/DIM/dll_01E1_dimbossgut.c:
 	.text       start:0x801BDBE0 end:0x801BDCF8
