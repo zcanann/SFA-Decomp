@@ -345,12 +345,12 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern int* gModelAnimOffsetTable;
 
 #pragma opt_propagation off
-int modelGetAmapSize(int animId, int amapFlag, int jointCount)
+int modelGetAmapSize(int animId, int amapFlag, int animCount)
 {
     int size;
     if (amapFlag != 0)
     {
-        size = jointCount * 2 + 8;
+        size = animCount * 2 + 8;
         while (size & 7)
         {
             size++;
@@ -360,7 +360,7 @@ int modelGetAmapSize(int animId, int amapFlag, int jointCount)
     {
         {
             int words;
-            words = jointCount * 4;
+            words = animCount * 4;
             size = words;
         }
         while (size & 7)
@@ -479,37 +479,37 @@ void ObjModel_RelocateModelData(u8* m)
 extern int getTableFileEntry(int fileId, int index, int* out);
 /* defined in pi_dolphin.c with 5 params; the retail caller here emits a
    6th arg (the model id) -- keep the caller-side arity */
-extern void loadModelsBin(int fileOffset, int* jointCount, int* headerSize, int* amapFlag, int* dataLen, int id);
+extern void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
 #pragma dont_inline on
 void* ObjModel_LoadModelData(int id)
 {
-    int fileOffset, dataLen, jointCount, headerSize, amapFlag;
+    int fileOffset, dataLen, animCount, headerSize, amapFlag;
     int amapSize;
     void* model;
     if (getTableFileEntry(0x2a, id, &fileOffset) == 0)
     {
         return NULL;
     }
-    loadModelsBin(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
+    loadModelsBin(fileOffset, &animCount, &headerSize, &amapFlag, &dataLen, id);
     headerSize = roundUpTo8(headerSize);
     headerSize += 0xb0;
-    amapSize = modelGetAmapSize(id, amapFlag, jointCount);
+    amapSize = modelGetAmapSize(id, amapFlag, animCount);
     model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(0x2b, model, fileOffset, dataLen, 0, id, 0);
-    *(s16*)((u8*)model + 0x84) = headerSize;
-    *(u16*)((u8*)model + 0x4) = id;
-    *(u16*)((u8*)model + 0xec) = jointCount;
-    *(u16*)((u8*)model + 0x2) &= ~0x40;
-    *(u8*)model = 1;
-    if (*(u16*)((u8*)model + 0xec) == 0)
+    ((ModelFileHeader*)model)->unk84 = headerSize;
+    *(u16*)((u8*)model + 0x4) = id; /* modelId (in unk04) */
+    ((ModelFileHeader*)model)->animationCount = animCount;
+    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
+    ((ModelFileHeader*)model)->refCount = 1;
+    if (((ModelFileHeader*)model)->animationCount == 0)
     {
-        *(u16*)((u8*)model + 0x2) |= 2;
+        ((ModelFileHeader*)model)->flags |= 2;
     }
     if (amapFlag != 0)
     {
-        *(u16*)((u8*)model + 0x2) |= 0x40;
+        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_VERTEX_ANIM_AREA;
     }
     return model;
 }
@@ -1154,7 +1154,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
             off += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations(header, realId, header + *(int*)((u8*)header + 0xc));
+        modelLoadAnimations(header, realId, header + ((ModelFileHeader*)header)->dataSize);
         modelInitModelList(gModelList, realId, &header);
     }
     else
@@ -1204,9 +1204,9 @@ void ObjModel_Release(u8* model)
     {
         mm_free(((ObjModel*)model)->renderAttachment);
     }
-    if (--*(u8*)header == 0)
+    if (--((ModelFileHeader*)header)->refCount == 0)
     {
-        model_adjustModelList(gModelList, *(u16*)(header + 0x4));
+        model_adjustModelList(gModelList, *(u16*)(header + 0x4)); /* modelId */
         z[0] = 0;
         for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
         {
@@ -1446,6 +1446,9 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
         }
         else
         {
+            /* hdr + 0x68 / 0x64 are ModelFileHeader animationDataSection /
+               animationModelPtrs; the typed member spelling shifts bytes in
+               this loop (alias/CSE class) -- keep the raw derefs here */
             blendSrc = *(u8**)(hdr + 0x68) + *(u16*)(animChan + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
             blendDst = *(u8**)(*(u8**)(hdr + 0x64) + *(u16*)(animChan + 0x44) * 4);
         }
@@ -1717,7 +1720,7 @@ void modelAnimResetState(void* m, void* data)
         }
         else
         {
-            mdl = *(u8**)(*(u8**)(hdr + 0x64) + channel->moveCacheSlot * 4);
+            mdl = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + channel->moveCacheSlot * 4);
         }
         channel->moveFrameData = (ObjAnimFrameCommand*)(mdl + 6);
         channel->frameType = (s8)(*(u8*)(mdl + 1) & 0xf0);
@@ -1769,8 +1772,8 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
     }
     else
     {
-        rowA = *(u8**)(hdr + 0x68) + *(u16*)(channel + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
-        rowB = *(u8**)(hdr + 0x68) + *(u16*)(channel + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowA = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowB = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
     }
     objAnim = (ObjAnimComponent*)obj;
     modelDef = objAnim->modelInstance;
@@ -2783,29 +2786,29 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
     int off;
     int i;
 
-    if (p[0x1a] != 0)
+    if (((ObjModelChain*)p)->enabled != 0)
     {
         i = 0;
         off = 0;
-        for (; i < *(int*)(p + 4); i++)
+        for (; i < ((ObjModelChain*)p)->count; i++)
         {
-            if (*(u8*)(p + 0x19) == 0)
+            if (((ObjModelChain*)p)->unk19 == 0)
             {
-                fn_80026928(a, b, (int*)(*(int*)p + off));
+                fn_80026928(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelAnimFn_80026790((u8*)a, b, p, (u8*)(*(int*)p + off));
-                fn_80026308(a, b, p, (u8*)(*(int*)p + off), d, i);
+                modelAnimFn_80026790((u8*)a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
+                fn_80026308(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
             }
             else
             {
-                fn_80025F38(a, b, p, (u8*)(*(int*)p + off));
+                fn_80025F38(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
             }
             off += 0xc;
         }
-        *(u8*)(p + 0x18) = 1;
-        *(u8*)(p + 0x19) = 1;
+        ((ObjModelChain*)p)->updateFlag = 1;
+        ((ObjModelChain*)p)->unk19 = 1;
     }
 }
 #pragma peephole reset
@@ -3593,7 +3596,7 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     else
     {
         u16* p = &ch->moveCacheSlot;
-        anim = ((u8**)*(int*)(*(u8**)model + 0x64))[p[idx]];
+        anim = ((u8**)((ModelFileHeader*)*(u8**)model)->animationModelPtrs)[p[idx]];
     }
     ch->framePhase = t * ch->frameLength;
     {
