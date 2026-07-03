@@ -823,7 +823,6 @@ void fn_8015039C(int obj, int animState)
     }
 }
 
-#pragma scheduling off
 #pragma optimization_level 2
 void fn_801504BC(int obj, int delta)
 {
@@ -834,4 +833,3 @@ void fn_801504BC(int obj, int delta)
     inner[0x33e] = 1;
 }
 #pragma optimization_level reset
-#pragma scheduling reset
