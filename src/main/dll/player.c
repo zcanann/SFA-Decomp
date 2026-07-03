@@ -9529,7 +9529,7 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     else
     {
         ((int (*)(int, int, u8, f32))Object_ObjAnimSetMove)(obj, a, mf, lbl_803E7EA4);
-        Object_ObjAnimAdvanceMove(f, lbl_803E7EA4, obj, NULL);
+        ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, f, lbl_803E7EA4, 0);
         ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     v1 = *(f32*)((char*)buf1 + ((u8)n << 2));
