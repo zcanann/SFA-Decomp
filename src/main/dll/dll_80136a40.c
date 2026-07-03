@@ -411,38 +411,6 @@ int fn_80138920(u8* obj, int sfxId, int vol)
     return 1;
 }
 
-void fn_80133F70(void* obj)
-{
-    char buf[12];
-    f32 threshold;
-    int a;
-    int b;
-    int c;
-    void* player;
-    void* nearest;
-
-    threshold = lbl_803E22A0;
-    a = 0;
-    b = 0;
-    c = 0;
-    if (gameTimerIsRunning())
-    {
-        gameTimerRun(obj);
-    }
-    player = Obj_GetPlayerObject();
-    nearest = (void*)ObjGroup_FindNearestObject(9, player, &threshold);
-    if (nearest != NULL)
-    {
-        ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
-    }
-    b = c - (b - a);
-    if (b < 0)
-    {
-        b = 0;
-    }
-    sprintf(buf, lbl_803DBBF0, b);
-}
-
 #pragma peephole on
 void debugPrintf(char* fmt, ...)
 {
