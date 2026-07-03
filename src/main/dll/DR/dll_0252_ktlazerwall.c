@@ -148,7 +148,6 @@ void ktlazerwall_update(int obj)
     }
 }
 
-#pragma scheduling off
 void ktlazerwall_render(int obj)
 {
     char* extra = ((GameObject*)obj)->extra;
@@ -181,4 +180,3 @@ void ktlazerwall_render(int obj)
         }
     }
 }
-#pragma scheduling reset
