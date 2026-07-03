@@ -97,6 +97,17 @@ extern f32 lbl_803E273C;
 extern char lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
 
+/*
+ * HagabonAnimState - file-local overlay naming the PER-FAMILY anim-control
+ * scratch that baddie_state.h leaves raw for the hagabon/swarmbaddie fighter
+ * driven by FUN_8014ffa8 / fn_8014FFB4. moveEventFlags(0x2F8) is the u16
+ * per-frame move-progress event bitmask read by fn_8015039C to fire SFX.
+ */
+typedef struct HagabonAnimState {
+    u8 pad00[0x2F8];
+    u16 moveEventFlags; /* 0x2F8 move-progress event bits (0x200/0x40/0x1000/1/0x80) */
+} HagabonAnimState;
+
 void wispbaddie_hitDetect(void)
 {
 }
@@ -774,7 +785,7 @@ void fn_8015039C(int obj, int animState)
     f32 distance;
     f32 rumbleFalloff;
 
-    if ((*(u16*)(animState + 0x2f8) & 0x200) != 0)
+    if ((((HagabonAnimState*)animState)->moveEventFlags & 0x200) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
@@ -792,19 +803,19 @@ void fn_8015039C(int obj, int animState)
                                     lbl_803E2764);
         }
     }
-    if ((*(u16*)(animState + 0x2f8) & 0x40) != 0)
+    if ((((HagabonAnimState*)animState)->moveEventFlags & 0x40) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_spotfox01);
     }
-    if ((*(u16*)(animState + 0x2f8) & 0x1000) != 0)
+    if ((((HagabonAnimState*)animState)->moveEventFlags & 0x1000) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_scream1);
     }
-    if ((*(u16*)(animState + 0x2f8) & 1) != 0)
+    if ((((HagabonAnimState*)animState)->moveEventFlags & 1) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_pullup2);
     }
-    if ((*(u16*)(animState + 0x2f8) & 0x80) != 0)
+    if ((((HagabonAnimState*)animState)->moveEventFlags & 0x80) != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_death01);
     }
