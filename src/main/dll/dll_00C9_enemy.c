@@ -1708,7 +1708,8 @@ void fn_8014BC98(int* node, int* sub)
     GameObject* target = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
     {
-        volatile f32 d[3];
+        f32 d[3];
+        f32* dp = d;
         int raw;
         s32 delta;
         f32 dist;
@@ -1716,17 +1717,17 @@ void fn_8014BC98(int* node, int* sub)
 
         if ((((TrickyState*)sub)->controlFlags & 0x8000) != 0)
         {
-            d[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
-            d[1] = lbl_803E2574;
-            d[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
+            dp[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
+            dp[1] = lbl_803E2574;
+            dp[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
         }
         else
         {
-            d[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
-            d[1] = ((GameObject*)node)->anim.worldPosY - target->anim.worldPosY;
-            d[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
+            dp[0] = ((GameObject*)node)->anim.worldPosX - target->anim.worldPosX;
+            dp[1] = ((GameObject*)node)->anim.worldPosY - target->anim.worldPosY;
+            dp[2] = ((GameObject*)node)->anim.worldPosZ - target->anim.worldPosZ;
         }
-        ua = getAngle(-d[0], -d[2]);
+        ua = getAngle(-dp[0], -dp[2]);
         if (*(int**)&((GameObject*)node)->anim.parent != NULL)
         {
             raw = (s16)(((GameObject*)node)->anim.rotX + **(s16**)&((GameObject*)node)->anim.parent);
@@ -1747,11 +1748,11 @@ void fn_8014BC98(int* node, int* sub)
             f32 sqZ;
             f32 sqY;
             f32 t;
-            t = d[2];
+            t = dp[2];
             sqZ = t * t;
-            t = d[0];
+            t = dp[0];
             sqX = t * t;
-            t = d[1];
+            t = dp[1];
             sqY = t * t;
             dist = sqrtf(sqZ + (sqX + sqY));
         }
