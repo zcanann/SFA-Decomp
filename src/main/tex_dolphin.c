@@ -774,29 +774,32 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         (texId = Shader_getLayer(shader, 1), (((TexLayer*)texId)->typeBits & 0x7f) == 9u))
     {
         layer = (int*)Shader_getLayer(shader, 0);
-        if ((layerByte = ((TexLayer*)layer)->overrideByte) != '\0')
         {
-            int layerTexId = *layer;
-            TexOverride* base;
-            overrideIdx = 0;
-            base = (TexOverride*)lbl_803DCE6C;
-            ovr = base;
-            for (remain = 0x50; remain != 0; remain--)
+            u8 ovrByte;
+            if ((ovrByte = ((TexLayer*)layer)->overrideByte) != '\0')
             {
-                if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
-                    ((int)layerByte == ovr->layerByte))
+                int layerTexId = *layer;
+                TexOverride* base;
+                overrideIdx = 0;
+                base = (TexOverride*)lbl_803DCE6C;
+                ovr = base;
+                for (remain = 0x50; remain != 0; remain--)
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
-                    goto layer0_done;
+                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                        ((int)ovrByte == ovr->layerByte))
+                    {
+                        texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                        goto layer0_done;
+                    }
+                    ovr = ovr + 1;
+                    overrideIdx = overrideIdx + 1;
                 }
-                ovr = ovr + 1;
-                overrideIdx = overrideIdx + 1;
+                texId = layerTexId;
             }
-            texId = layerTexId;
-        }
-        else
-        {
-            texId = *layer;
+            else
+            {
+                texId = *layer;
+            }
         }
     layer0_done:
         if (((TexLayer*)layer)->mtxIndex != 0xff)
@@ -818,29 +821,32 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             fn_8004D928();
         }
         layer = (int*)Shader_getLayer(shader, 1);
-        if ((layerByte = ((TexLayer*)layer)->overrideByte) != '\0')
         {
-            int layerTexId = *layer;
-            TexOverride* base;
-            overrideIdx = 0;
-            base = (TexOverride*)lbl_803DCE6C;
-            ovr = base;
-            for (remain = 0x50; remain != 0; remain--)
+            u8 ovrByte;
+            if ((ovrByte = ((TexLayer*)layer)->overrideByte) != '\0')
             {
-                if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
-                    ((int)layerByte == ovr->layerByte))
+                int layerTexId = *layer;
+                TexOverride* base;
+                overrideIdx = 0;
+                base = (TexOverride*)lbl_803DCE6C;
+                ovr = base;
+                for (remain = 0x50; remain != 0; remain--)
                 {
-                    texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
-                    goto layer1_done;
+                    if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                        ((int)ovrByte == ovr->layerByte))
+                    {
+                        texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                        goto layer1_done;
+                    }
+                    ovr = ovr + 1;
+                    overrideIdx = overrideIdx + 1;
                 }
-                ovr = ovr + 1;
-                overrideIdx = overrideIdx + 1;
+                texId = layerTexId;
             }
-            texId = layerTexId;
-        }
-        else
-        {
-            texId = *layer;
+            else
+            {
+                texId = *layer;
+            }
         }
     layer1_done:
         if (((TexLayer*)layer)->mtxIndex != 0xff)
@@ -868,48 +874,50 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
             {
                 int layerTexId = *layer;
                 u8 ovrLayerByte;
-                if ((ovrLayerByte = ((TexLayer*)layer)->overrideByte) != '\0')
                 {
-                    TexOverride* base;
-                    overrideIdx = 0;
-                    base = (TexOverride*)lbl_803DCE6C;
-                    ovr = base;
-                    for (remain = 0x50; remain != 0; remain--)
+                    if ((ovrLayerByte = ((TexLayer*)layer)->overrideByte) != '\0')
                     {
-                        if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
-                            ((int)ovrLayerByte == ovr->layerByte))
+                        TexOverride* base;
+                        overrideIdx = 0;
+                        base = (TexOverride*)lbl_803DCE6C;
+                        ovr = base;
+                        for (remain = 0x50; remain != 0; remain--)
                         {
-                            texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
-                            goto layerN_done;
+                            if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
+                                ((int)ovrLayerByte == ovr->layerByte))
+                            {
+                                texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                                goto layerN_done;
+                            }
+                            ovr = ovr + 1;
+                            overrideIdx = overrideIdx + 1;
                         }
-                        ovr = ovr + 1;
-                        overrideIdx = overrideIdx + 1;
                     }
-                }
-                texId = layerTexId;
-            layerN_done:
-                if (((TexLayer*)layer)->mtxIndex != 0xff)
-                {
-                    float* mvec;
-                    int mtxOff = (u32)((TexLayer*)layer)->mtxIndex * 0x10;
-                    mvec = (float*)(lbl_803DCE68 + mtxOff);
-                    ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                        mvec[0] / lbl_803DEBC8, (f32*)texMatrix,
-                        mvec[1] / lbl_803DEBC8, lbl_803DEBCC);
-                    texMtx = (float*)texMatrix;
-                }
-                else
-                {
-                    texMtx = (float*)0x0;
-                }
-                layerByte = ((TexLayer*)layer)->typeBits & 0x7f;
-                if ((SHADER_FLAGS(shader) & 0x40000) != 0)
-                {
-                    fn_80051528(texId, texMtx);
-                }
-                else
-                {
-                    fn_80051868(texId, texMtx, layerByte);
+                    texId = layerTexId;
+                layerN_done:
+                    if (((TexLayer*)layer)->mtxIndex != 0xff)
+                    {
+                        float* mvec;
+                        int mtxOff = (u32)((TexLayer*)layer)->mtxIndex * 0x10;
+                        mvec = (float*)(lbl_803DCE68 + mtxOff);
+                        ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
+                            mvec[0] / lbl_803DEBC8, (f32*)texMatrix,
+                            mvec[1] / lbl_803DEBC8, lbl_803DEBCC);
+                        texMtx = (float*)texMatrix;
+                    }
+                    else
+                    {
+                        texMtx = (float*)0x0;
+                    }
+                    layerByte = ((TexLayer*)layer)->typeBits & 0x7f;
+                    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
+                    {
+                        fn_80051528(texId, texMtx);
+                    }
+                    else
+                    {
+                        fn_80051868(texId, texMtx, layerByte);
+                    }
                 }
             }
             else
