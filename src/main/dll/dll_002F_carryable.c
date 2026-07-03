@@ -166,7 +166,7 @@ int Carryable_updateHeld(u8* obj)
             && ((GameObject*)obj)->unkF8 == 0)
         {
             *(s16*)held = 0;
-            buttonDisable(0, 0x100);
+            buttonDisable(0, PAD_BUTTON_A);
             v = 1;
         }
         ((CarryableUpdateHeldState*)held)->carryState = v;
@@ -244,7 +244,7 @@ int Carryable_updateHeld(u8* obj)
             }
             else
             {
-                buttonDisable(0, 0x100);
+                buttonDisable(0, PAD_BUTTON_A);
                 ((CarryableUpdateHeldState*)held)->isHeld = 0;
             }
         }
