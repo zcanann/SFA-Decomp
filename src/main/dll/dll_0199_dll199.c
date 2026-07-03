@@ -39,7 +39,6 @@ void dll_199_hitDetect(void)
 {
 }
 
-int nwsh_levcon_getExtraSize(void);
 int dll_199_getExtraSize(void) { return 0x14; }
 int dll_199_getObjectTypeId(void) { return 0x0; }
 
