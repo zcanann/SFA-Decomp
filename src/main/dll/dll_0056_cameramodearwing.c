@@ -81,18 +81,6 @@ void CameraModeForceBehind_func05_nop(void)
 {
 }
 
-void fn_801101E4(void)
-{
-}
-
-void fn_80110C80(void)
-{
-}
-
-void fn_80110EC0(void)
-{
-}
-
 void CameraModeArwing_release(void)
 {
 }
@@ -169,13 +157,6 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)a4)->anim.worldPosZ + *(f32*)(base + 56);
 }
 #pragma opt_common_subs reset
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
-}
 
 #pragma dont_inline on
 #pragma dont_inline reset
