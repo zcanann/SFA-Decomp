@@ -1063,6 +1063,7 @@ main/dll/dll_00F5_sidekickball.c:
 
 main/dll/dll_00F6_area.c:
 	.text       start:0x8017A00C end:0x8017A048
+	.data       start:0x80320F98 end:0x80320FD0
 
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
@@ -1116,6 +1117,7 @@ main/dll/dll_00FE_magicplant.c:
 
 main/dll/dll_0100_trickywarp.c:
 	.text       start:0x8017FF0C end:0x8018023C
+	.data       start:0x80321568 end:0x803216B8
 
 main/dll/dll_0101_trickyguard.c:
 	.text       start:0x8018023C end:0x80180338
@@ -1477,6 +1479,8 @@ main/dll/DIM/dll_01C0_dimlogfire.c:
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
+	.data       start:0x80323778 end:0x803237B0
+	.sdata2     start:0x803E4858 end:0x803E4860
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
@@ -1827,6 +1831,7 @@ main/dll/dll_0142_felevcontrol.c:
 
 main/dll/dll_0144_dll144.c:
 	.text       start:0x801DF9AC end:0x801DFA28
+	.data       start:0x80327B70 end:0x80327BA8
 
 main/dll/dbprotection.c:
 	.text       start:0x801DFA28 end:0x801E1588
