@@ -33,92 +33,6 @@ extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-void FUN_8010de18_v11_drift(u32 unused1, u32 unused2, float* outPosY, float* outPosZ)
-{
-    float bias;
-    float* config;
-    int target;
-    double dist;
-    double cosA;
-    double offZ;
-    double dx;
-    double offX;
-    u64 result;
-
-    result = FUN_8028683c();
-    config = DAT_803de1fc;
-    target = (int)((u64)result >> 0x20);
-    dx = (double)(*(float*)(target + 0x18) - *DAT_803de1fc);
-    cosA = (double)(*(float*)(target + 0x20) - DAT_803de1fc[2]);
-    dist = FUN_80293900((double)(float)(dx * dx + (double)(float)(cosA * cosA)));
-    FUN_80017730();
-    offX = (double)((float)(dx * (double)DAT_803de1fc[0x11]) + *config);
-    offZ = (double)((float)(cosA * (double)DAT_803de1fc[0x11]) + config[2]);
-    cosA = (double)FUN_80293f90();
-    dx = (double)FUN_80294964();
-    if (dist < (double)DAT_803de1fc[0x10])
-    {
-        dist = (double)DAT_803de1fc[0x10];
-    }
-    bias = DAT_803de1fc[4];
-    *(float*)result = (float)(cosA * (double)(float)(dist + (double)bias) + offX);
-    *outPosY = -(lbl_803E2658 * ((lbl_803E265C + *(float*)(target + 0x1c)) - config[1]) -
-        (*(float*)(target + 0x1c) + DAT_803de1fc[0xc]));
-    *outPosZ = (float)(dx * (double)(float)(dist + (double)bias) + offZ);
-    FUN_80286888();
-    return;
-}
-
-void FUN_801115e0(u64 arg1, double arg2, double arg3, u64 arg4,
-                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
-                  int obj, int state)
-{
-    u32 active;
-    u16* model;
-    u32 newChild;
-    u32 in_r8;
-    u32 in_r9;
-    u32 in_r10;
-    u16 nameTail;
-    u32 name0;
-    u32 name4;
-    u16 name8;
-
-    name0 = DAT_802c2910;
-    name4 = DAT_802c2914;
-    name8 = DAT_802c2918;
-    if ((*(char*)(state + 0x407) != *(char*)(state + 0x409)) &&
-        (((GameObject*)obj)->anim.alpha != 0))
-    {
-        if (*(int*)&((GameObject*)obj)->childObjs[0] != 0)
-        {
-            arg1 = FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                                   *(int*)&((GameObject*)obj)->childObjs[0]);
-            *(u32*)&((GameObject*)obj)->childObjs[0] = 0;
-        }
-        active = FUN_80017ae8();
-        if ((active & 0xff) == 0)
-        {
-            *(u8*)(state + 0x409) = 0;
-        }
-        else
-        {
-            if (0 < *(char*)(state + 0x407))
-            {
-                model = FUN_80017aa4(0x18, (&nameTail)[*(char*)(state + 0x407)]);
-                newChild = FUN_80017ae4(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, model,
-                                     4, 0xff, 0xffffffff, *(u32**)&((GameObject*)obj)->anim.parent, in_r8, in_r9,
-                                     in_r10);
-                *(u32*)&((GameObject*)obj)->childObjs[0] = newChild;
-                *(u16*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0xb0) = ((GameObject*)obj)->objectFlags &
-                    7;
-            }
-            *(u8*)(state + 0x409) = *(u8*)(state + 0x407);
-        }
-    }
-    return;
-}
-
 void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
@@ -147,21 +61,9 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-void fn_801101E4(void)
-{
-}
-
 void CameraModeCloudRunner_release(void);
 
-void fn_80110C80(void)
-{
-}
-
 void CameraModePerv_release(void);
-
-void fn_80110EC0(void)
-{
-}
 
 void CameraModeArwing_release(void);
 
@@ -227,13 +129,6 @@ void dll_4F_func05(void)
 }
 
 void CameraModeCrawl_free(void);
-
-void fn_801101E8(void)
-{
-    extern void mm_free(u32); /* #57 */
-    mm_free((u32)lbl_803DD5B8);
-    lbl_803DD5B8 = NULL;
-}
 
 void CameraModeCloudRunner_free(void);
 
