@@ -60,8 +60,6 @@ typedef struct CloudRunnerObjectPos
     f32 z;
 } CloudRunnerObjectPos;
 
-#pragma scheduling off
-#pragma peephole off
 void CameraModeForceBehind_func06_nop(void)
 {
 }
