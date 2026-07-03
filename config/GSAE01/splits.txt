@@ -1763,6 +1763,7 @@ main/dll/dll_018D_mmshscales.c:
 
 main/dll/dll_018E_mmshwaterspike.c:
 	.text       start:0x801C578C end:0x801C5990
+	.data       start:0x803261D8 end:0x80326208
 
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C

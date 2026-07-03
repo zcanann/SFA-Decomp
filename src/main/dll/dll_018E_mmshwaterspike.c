@@ -142,3 +142,5 @@ void mmsh_waterspike_init(int obj, s16* def)
     packedEventIds |= lowEventId;
     *(u32*)&((GameObject*)obj)->unkF8 = packedEventIds;
 }
+
+char sWaterSpikeInvalidXyzAnimIdWarning[] = "WARNING Water Spike [%d] as invalid xyzAnim ID\n";
