@@ -3105,6 +3105,7 @@ main/audio/inp_ctrl.c:
 	extab       start:0x80005B10 end:0x80005B50
 	extabindex  start:0x80006428 end:0x80006488
 	.text       start:0x802827C8 end:0x80282FE0
+	.data       start:0x80330028 end:0x80330840
 
 main/audio/hw_init.c:
 	extab       start:0x80005B50 end:0x80005B70
