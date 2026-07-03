@@ -115,7 +115,7 @@ extern void fn_80296B70(int arg);
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 extern char sFrontendFoxName;
-extern char sSaveGameBinPathFormat[];
+char sSaveGameBinPathFormat[] = "/savegame/save%d.bin";
 
 #pragma dont_inline on
 void saveSelectOpenFile(int sel, int slot)
