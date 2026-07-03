@@ -33,7 +33,7 @@ typedef struct LightfootSub
     s32 unk4;
     u8 pad8[0xC - 0x8];
     f32 animTimer;
-    f32 unk10;
+    f32 lifeTimer; /* 0x10 counts down by timeDelta; Obj_FreeObject when it reaches the terminal value */
     f32 unk14;
     u8 pad18[0x24 - 0x18];
     u16 unk24;
@@ -125,10 +125,10 @@ void lightfoot_update(int obj)
     f32 limit;
     f32 fv;
 
-    fv = ((LightfootSub*)anim)->unk10;
+    fv = ((LightfootSub*)anim)->lifeTimer;
     if (fv != (limit = lbl_803E8180)) {
-        ((LightfootSub*)anim)->unk10 = fv - timeDelta;
-        if (((LightfootSub*)anim)->unk10 <= limit) {
+        ((LightfootSub*)anim)->lifeTimer = fv - timeDelta;
+        if (((LightfootSub*)anim)->lifeTimer <= limit) {
             Obj_FreeObject(obj);
         }
     }
