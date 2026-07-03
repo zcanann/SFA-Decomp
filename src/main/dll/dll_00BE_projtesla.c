@@ -21,3 +21,5 @@ void projtesla_release(void)
 void projtesla_initialise(void)
 {
 }
+
+char sProjteslaDoNoLongerSupported[] = "<projtesla Do>No Longer supported \n";
