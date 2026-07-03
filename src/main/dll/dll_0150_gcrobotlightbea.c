@@ -154,8 +154,8 @@ void FUN_8019b1d8(u32 unused1, u32 unused2, u16* sfxIds)
  * the heading (self+0) toward it by a dt-scaled yaw step, kicks the fly move
  * 0x1a, and returns 0 (still travelling). */
 u32
-FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
-             u32 param_6, u32 param_7, u32 param_8, u32 param_9)
+FUN_8019b2e0(double dt, short* self, short* target, float* arg4, u32 arg5,
+             u32 arg6, u32 arg7, u32 arg8, u32 arg9)
 {
     int newYaw;
     short yawDelta;
@@ -223,9 +223,9 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
             if (self[0x50] != 0x1a)
             {
                 FUN_800305f8((double)lbl_803E4DA8, dirY, dirZ, dirX, fpSlot5, fpSlot6, fpSlot7, fpSlot8, self, 0x1a, 0
-                             , param_5, param_6, param_7, param_8, param_9);
+                             , arg5, arg6, arg7, arg8, arg9);
             }
-            FUN_8002f6ac(dt, self, param_4);
+            FUN_8002f6ac(dt, self, arg4);
             result = 0;
         }
         else
@@ -237,10 +237,10 @@ FUN_8019b2e0(double dt, short* self, short* target, float* param_4, u32 param_5,
 }
 
 u32
-FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, short* param_9,
-             u32 param_10, u32 param_11, float* param_12, int param_13, u32 param_14
-             , u32 param_15, u32 param_16)
+FUN_8019b650(u64 unused1, double unused2, double unused3, double unused4, u64 unused5,
+             u64 unused6, u64 unused7, u64 unused8, short* unused9,
+             u32 unused10, u32 unused11, float* unused12, int unused13, u32 unused14
+             , u32 unused15, u32 unused16)
 {
     return 0;
 }
@@ -249,10 +249,10 @@ FUN_8019b650(u64 param_1, double param_2, double param_3, double param_4, u64 pa
  * state byte at extra+0x2a0 (== 6 -> alt), run the move; on completion, if the
  * anim raised trigger-command 2, spawn a follow-up. */
 u32
-FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_8019b658(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, u32 arg10
+             , ObjAnimUpdateState* animUpdate, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     u32 result;
     int moveResult;
@@ -285,9 +285,9 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         }
         moveResult = FUN_8007f924((int)animUpdate);
         if ((moveResult == 0x283) ||
-            (moveResult = FUN_801149b8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj
-                                  , animUpdate, state, (short)*moveTable, moveTable[1], param_14, param_15,
-                                  param_16), moveResult == 0))
+            (moveResult = FUN_801149b8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, obj
+                                  , animUpdate, state, (short)*moveTable, moveTable[1], arg14, arg15,
+                                  arg16), moveResult == 0))
         {
             if (animUpdate->triggerCommand == 2)
             {
@@ -310,10 +310,10 @@ FUN_8019b658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * anim clock (animUpdate+0x58) has passed 0xaf; then, over the anim event list,
  * fire gamebit 0x4e0 once states 0x54/0x55/0x56 are all set. */
 u32
-FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, u32 obj
-             , u32 param_10, ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8019c318(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8, u32 obj
+             , u32 arg10, ObjAnimUpdateState* animUpdate, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15, u32 arg16)
 {
     int hasMsg;
     u32 alive;
@@ -330,30 +330,30 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
         {
             if ((*state == 0x54) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                    0x110001, obj, 0, param_13, param_14, param_15, param_16);
+                ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, msgData[0],
+                                    0x110001, obj, 0, arg13, arg14, arg15, arg16);
             }
         }
         else if ((int)msgId < 0x110001)
         {
             if (msgId == 0xa0005)
             {
-                param_1 = FUN_80017698((int)*state, 1);
+                arg1 = FUN_80017698((int)*state, 1);
             }
         }
         else if (msgId == 0x110003)
         {
             if ((*state == 0x56) && (0xaf < *(short*)((char*)animUpdate + 0x58)))
             {
-                ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                    0x110003, obj, 0, param_13, param_14, param_15, param_16);
+                ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, msgData[0],
+                                    0x110003, obj, 0, arg13, arg14, arg15, arg16);
             }
         }
         else if ((((int)msgId < 0x110003) && (*state == 0x55)) &&
             (0xaf < *(short*)((char*)animUpdate + 0x58)))
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, msgData[0],
-                                0x110002, obj, 0, param_13, param_14, param_15, param_16);
+            ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, msgData[0],
+                                0x110002, obj, 0, arg13, arg14, arg15, arg16);
         }
     }
     for (hasMsg = 0; hasMsg < (int)(u32)animUpdate->eventCount; hasMsg = hasMsg + 1)
@@ -372,10 +372,10 @@ FUN_8019c318(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
  * from that velocity, and plays the spit sfx once when the dive move passes its
  * progress threshold (spitFlags bit6 latch at extra+0x244). */
 u32
-FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 obj,
-             u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8019d238(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, u32 obj,
+             u32 arg10, u32 arg11, u32 arg12, u32 arg13,
+             u32 arg14, u32 arg15, u32 arg16)
 {
     int state;
     double clampedSpeed;
@@ -383,21 +383,21 @@ FUN_8019d238(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((GameObject*)obj)->anim.currentMove != 5) && (((GameObject*)obj)->anim.currentMove != 0xd))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg2, arg3, arg4, arg5,
+                     arg6, arg7,
+                     arg8, obj, 0xd, 0, arg12, arg13, arg14, arg15, arg16);
     }
     if ((((GameObject*)obj)->anim.currentMove == 5) && (lbl_803E4EC4 < ((GameObject*)obj)->anim.velocityY))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 0xd, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg2, arg3, arg4, arg5,
+                     arg6, arg7,
+                     arg8, obj, 0xd, 0, arg12, arg13, arg14, arg15, arg16);
     }
     if ((((GameObject*)obj)->anim.currentMove == 0xd) && (((GameObject*)obj)->anim.velocityY < lbl_803E4EB0))
     {
-        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, param_2, param_3, param_4, param_5,
-                     param_6, param_7,
-                     param_8, obj, 5, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)((GameObject*)obj)->anim.currentMoveProgress, arg2, arg3, arg4, arg5,
+                     arg6, arg7,
+                     arg8, obj, 5, 0, arg12, arg13, arg14, arg15, arg16);
     }
     clampedSpeed = (double)((((GameObject*)obj)->anim.velocityY * lbl_803E4EC0 + lbl_803E4EC8) * lbl_803E4ECC);
     if (clampedSpeed < (double)lbl_803E4EB0)
