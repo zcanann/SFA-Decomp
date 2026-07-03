@@ -49,7 +49,14 @@ typedef struct
 
 extern u8 gWarpStoneUiMenuItemTemplates[];
 u8 gWarpStoneUiMenuItems[0x168];
-extern WarpstoneEntry gWarpStoneUiEntryTable[];
+WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
+    {0x0ABA, 1, 0},
+    {0x0ABD, 4, 0},
+    {0x0ABE, 5, 0},
+    {0x0ABF, 6, 0},
+    {0x0AC0, 7, 0},
+    {0x0AC1, 8, 0},
+};
 int gWarpStoneUiSelectedIndices[0x6];
 extern int* gTitleMenuLinkInterface;
 

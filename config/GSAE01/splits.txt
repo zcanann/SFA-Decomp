@@ -408,6 +408,7 @@ main/dll/dll_0074_dll74func0.c:
 
 main/dll/dll_0075_dll75func0.c:
 	.text       start:0x800F2694 end:0x800F2A8C
+	.data       start:0x80314920 end:0x80314930
 
 main/dll/dll_0076_dll76func0.c:
 	.text       start:0x800F2A8C end:0x800F2CEC
@@ -907,7 +908,7 @@ main/dll/dll_0040_credits.c:
 
 main/dll/dll_0041_warpstoneui.c:
 	.text       start:0x801343CC end:0x80134870
-	.data       start:0x8031CC50 end:0x8031CDB8
+	.data       start:0x8031CC38 end:0x8031CDB8
 	.bss        start:0x803A9DD0 end:0x803A9F50
 
 main/dll/dll_02C0_front.c:
@@ -917,7 +918,7 @@ main/dll/dll_02C0_front.c:
 
 main/dll/dll_80136a40.c:
 	.text       start:0x80136A40 end:0x8013939C
-	.data       start:0x8031D060 end:0x8031D2A4
+	.data       start:0x8031CFA0 end:0x8031D2A4
 	.bss        start:0x803AA018 end:0x803AC428
 
 main/dll/skeetla.c:
@@ -1509,6 +1510,7 @@ main/dll/dll_017F_moonseedbush.c:
 
 main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
+	.data       start:0x803231D0 end:0x803231E0
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
@@ -1865,13 +1867,14 @@ main/dll/dll_801d0828.c:
 
 main/dll/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
-	.data       start:0x80326BE8 end:0x80326C78
+	.data       start:0x80326BD0 end:0x80326C78
 
 main/dll/DIM/dim_boss.c:
 	.text       start:0x801D1BFC end:0x801D1BFC
 
 main/dll/SH/dll_01A8_shkillermushroom.c:
 	.text       start:0x801D1BFC end:0x801D286C
+	.data       start:0x80326C78 end:0x80326CBC
 
 main/dll/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
@@ -1889,6 +1892,7 @@ main/dll/dll_801d4198.c:
 
 main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.text       start:0x801D4364 end:0x801D4CD0
+	.data       start:0x80326E18 end:0x80326E38
 
 main/dll/SH/shthorntail_ai.c:
 	.text       start:0x801D4CD0 end:0x801D5174
@@ -1950,6 +1954,7 @@ main/dll/dll_801dd170.c:
 
 main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28
+	.data       start:0x80327A18 end:0x80327A24
 
 main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
@@ -2304,7 +2309,7 @@ main/dfppowersl.c:
 
 main/dll/dll_024D_bossdrakor.c:
 	.text       start:0x8020A1C8 end:0x8020BAB4
-	.data       start:0x80329FB8 end:0x8032A038
+	.data       start:0x80329F90 end:0x8032A038
 
 main/dll/dll_024E_drakordthornbush.c:
 	.text       start:0x8020BAB4 end:0x8020C278
@@ -2319,7 +2324,7 @@ main/worldplanet_lighting.c:
 
 main/worldplanet.c:
 	.text       start:0x8020C964 end:0x8020D9E4
-	.data       start:0x8032A178 end:0x8032A1B4
+	.data       start:0x8032A178 end:0x8032A1C8
 
 main/worldobj.c:
 	.text       start:0x8020D9E4 end:0x8020F214

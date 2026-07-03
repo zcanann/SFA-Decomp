@@ -18,7 +18,7 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern s16 gModgfxFxHwTuning[8];
+s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
 extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;

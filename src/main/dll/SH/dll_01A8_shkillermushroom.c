@@ -41,8 +41,10 @@ extern void Obj_StartModelFadeIn(int* obj, int frames);
 extern void Obj_ResetModelColorState(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 
-extern s16 gKillerMushroomStateAnimMoves[];
-extern f32 gKillerMushroomStateAnimRates[];
+s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
+f32 gKillerMushroomStateAnimRates[11] = {
+    0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
+};
 extern f32 lbl_803E5314;
 extern f32 gKillerMushroomInflateRadiusRate;
 extern f32 gKillerMushroomMaxHitRadius;

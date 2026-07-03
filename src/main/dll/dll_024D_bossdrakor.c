@@ -938,3 +938,6 @@ int gBossDrakorTurnMoveStates[32] = {
     6, 7, 7, 1, 1, 3, 11, 1045220557,
     1045220557, 1045220557, 1034147594, 1031127695, 1031127695, 50, 100, 200,
 };
+
+int gBossDrakorMoveStateTable[5] = {1, 2, 3, 4, 5};
+int gBossDrakorMoveSpeedTable[5] = {400, 400, 400, 600, 600};

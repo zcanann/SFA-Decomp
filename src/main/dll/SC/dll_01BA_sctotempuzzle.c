@@ -220,7 +220,7 @@ extern const f32 lbl_803E5620;
 extern f32 gTotemPuzzleAngleWrap;
 extern f32 lbl_803E5628;
 
-extern s16 gTotemPuzzleStepAngles[];
+s16 gTotemPuzzleStepAngles[6] = {-8192, 0, 8192, 16384, 24576, -32768};
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);

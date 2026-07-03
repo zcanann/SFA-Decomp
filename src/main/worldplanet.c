@@ -17,7 +17,7 @@
 extern void objRenderFn_8003b8f4(double scale);
 extern f32 lbl_803E6618;
 extern int unlockLevel(s32 val, int idx, int flag);
-extern int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT];
+int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT] = {1019, 1018, 2659, 1020, 1017};
 extern u8 gWorldPlanetHintFlagTable[8];
 extern u8 gWorldPlanetDefaultSelectOrder[8];
 extern int gWorldPlanetSavedSelection;

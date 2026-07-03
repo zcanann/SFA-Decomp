@@ -45,7 +45,7 @@ extern f32 lbl_803E52D0;
 extern f32 lbl_803E52D4;
 extern f32 lbl_803E52D8;
 extern f32 lbl_803E52DC;
-extern s16 gEdibleMushroomMoveIdTable[];
+s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
 extern f32 gEdibleMushroomAnimEventTable[];
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
