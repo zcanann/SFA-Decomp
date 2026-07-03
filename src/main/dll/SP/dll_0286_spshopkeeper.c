@@ -92,8 +92,6 @@ extern void warpToMap(int idx, s8 transType);
 extern void playerAddMoney(void* player, int amount);
 extern f32 lbl_803E5A24;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801E7DC8(int p1, int p2, int count)
 {
     extern u8 Obj_IsLoadingLocked(void);
