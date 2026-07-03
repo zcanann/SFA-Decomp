@@ -147,8 +147,8 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f)
 
 int drshackle_func0B(int obj)
 {
-    int p = *(int*)&((GameObject*)obj)->anim.placementData;
-    return ((DrshacklePlacement*)p)->unk19;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    return ((DrshacklePlacement*)placement)->unk19;
 }
 
 void drshackle_free(int obj)
@@ -158,42 +158,42 @@ void drshackle_free(int obj)
 
 void drshackle_init(int obj, char* arg)
 {
-    char* p = ((GameObject*)obj)->extra;
+    char* state = ((GameObject*)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
-    ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
-    ((DrshackleState*)p)->pathPointA = arg[0x18] % 2;
+    ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)arg)->activeGameBit) == 0);
+    ((DrshackleState*)state)->pathPointA = arg[0x18] % 2;
     ((GameObject*)obj)->animEventCallback = drshackle_toggleEventCallback;
     if (((DrshacklePlacement*)arg)->quarterTurns == 1)
     {
-        ((DrshackleState*)p)->slotCount = 2;
-        ((DrshackleState*)p)->pathPointB = 1 - ((DrshackleState*)p)->pathPointA;
+        ((DrshackleState*)state)->slotCount = 2;
+        ((DrshackleState*)state)->pathPointB = 1 - ((DrshackleState*)state)->pathPointA;
     }
     else
     {
-        ((DrshackleState*)p)->slotCount = 1;
+        ((DrshackleState*)state)->slotCount = 1;
     }
 }
 
 int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    char* p = ((GameObject*)obj)->extra;
-    void* q = *(void**)p;
+    char* state = ((GameObject*)obj)->extra;
+    void* placement = *(void**)state;
     int i;
-    if (q != 0)
+    if (placement != 0)
     {
-        ((DrshacklePlacement*)q)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((DrshacklePlacement*)q)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((DrshacklePlacement*)q)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((DrshacklePlacement*)placement)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((DrshacklePlacement*)placement)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((DrshacklePlacement*)placement)->posZ = ((GameObject*)obj)->anim.localPosZ;
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            ((BitFlags8*)(p + 0x1a))->b0 = 0;
+            ((BitFlags8*)(state + 0x1a))->b0 = 0;
             break;
         case 2:
-            ((BitFlags8*)(p + 0x1a))->b0 = 1;
+            ((BitFlags8*)(state + 0x1a))->b0 = 1;
             break;
         }
     }
@@ -203,17 +203,17 @@ int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState* animU
 void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     int* ptr;
-    u8* p = ((GameObject*)obj)->extra;
+    u8* state = ((GameObject*)obj)->extra;
     int i;
-    if (((BitFlags8*)(p + 0x1a))->b0 == 0 && visible != 0)
+    if (((BitFlags8*)(state + 0x1a))->b0 == 0 && visible != 0)
     {
         objRenderFn_8003b8f4((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
-        for (i = 0; i < ((DrshackleState*)p)->slotCount; i++)
+        for (i = 0; i < ((DrshackleState*)state)->slotCount; i++)
         {
-            int* entry = ((int**)p)[i];
+            int* entry = ((int**)state)[i];
             if (entry != 0)
             {
-                ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32*)((char*)entry + 0xc),
+                ObjPath_GetPointWorldPosition(obj, state[i + 0x1b], (f32*)((char*)entry + 0xc),
                                               (f32*)((char*)entry + 0x10), (f32*)((char*)entry + 0x14), 0);
             }
         }
@@ -222,44 +222,44 @@ void drshackle_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 
 void drshackle_update(int obj)
 {
-    char* p = ((GameObject*)obj)->extra;
-    int q = *(int*)&((GameObject*)obj)->anim.placementData;
+    char* state = ((GameObject*)obj)->extra;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
     int count;
     int sub;
     int j;
     int* list;
-    if (((DrshacklePlacement*)q)->pathObjGroupBase != 0 && *(void**)p == 0)
+    if (((DrshacklePlacement*)placement)->pathObjGroupBase != 0 && *(void**)state == 0)
     {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0)
         {
             sub = *(int*)(*list + 0x4c);
-            for (j = 0; j < ((DrshackleState*)p)->slotCount; j++)
+            for (j = 0; j < ((DrshackleState*)state)->slotCount; j++)
             {
-                if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)q)->pathObjGroupBase + j * 4)
+                if (*(u8*)(sub + 0x18) == ((DrshacklePlacement*)placement)->pathObjGroupBase + j * 4)
                 {
-                    ((DrshackleState*)p)->pathSlots[j] = *list;
+                    ((DrshackleState*)state)->pathSlots[j] = *list;
                     (*gObjectTriggerInterface)
-                        ->runSequence(0, (void*)((DrshackleState*)p)->pathSlots[j], -1);
+                        ->runSequence(0, (void*)((DrshackleState*)state)->pathSlots[j], -1);
                 }
             }
             list++;
         }
     }
-    if (((BitFlags8*)(p + 0x1a))->b0 != 0)
+    if (((BitFlags8*)(state + 0x1a))->b0 != 0)
     {
-        ((BitFlags8*)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)q)->activeGameBit) == 0);
+        ((BitFlags8*)(state + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement*)placement)->activeGameBit) == 0);
     }
 }
 
 void drshackle_hitDetect(unsigned long obj)
 {
-    char* p = ((GameObject*)obj)->extra;
-    if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(p + 0x1a))->b0 != 0)
+    char* state = ((GameObject*)obj)->extra;
+    if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8*)(state + 0x1a))->b0 != 0)
     {
         f32 vec[3];
         int n;
-        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, (f32*)(p + 0x8), vec);
+        PSVECSubtract(&((GameObject*)obj)->anim.localPosX, (f32*)(state + 0x8), vec);
         n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
         if ((int)randomGetRange(0, (n < 1) ? 1 : ((n > 0xc8) ? 0xc8 : n)) == 0)
         {
