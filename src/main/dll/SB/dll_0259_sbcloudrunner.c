@@ -118,8 +118,6 @@ extern u32 ObjGroup_AddObject();
 
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
-extern u32 FUN_80293f90();
-extern u32 FUN_80294964();
 extern u32 *DAT_803dd6e4;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6908;
@@ -189,7 +187,6 @@ void SB_CloudRunner_initialise(void)
 {
 }
 
-void WM_ObjCreator_free(void);
 
 int fn_801EEDAC(void) { return 0x0; }
 int fn_801EEDD8(void) { return 0x2; }
@@ -199,7 +196,6 @@ int fn_801EEE2C(void) { return 0x0; }
 int fn_801EEE34(void) { return 0x0; }
 int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_getObjectTypeId(void) { return SBCLOUDRUNNER_OBJ_TYPE; }
-int WM_ObjCreator_getExtraSize(void);
 
 f32 fn_801EEDB4(int unused, f32 *p)
 {
