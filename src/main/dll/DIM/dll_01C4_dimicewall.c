@@ -33,7 +33,6 @@ extern f32 lbl_803E4880;
 extern f32 lbl_803E4884;
 
 int dimicewall_getExtraSize(void) { return 0x2; }
-int dimbarrier_getExtraSize(void);
 
 void dimicewall_init(int obj, s8* p)
 {
@@ -47,7 +46,6 @@ void dimicewall_init(int obj, s8* p)
     ((GameObject*)obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }
 
-void dimgate_init(int obj, s8* p_unused_passthrough);
 
 int fn_801B17F4(int obj, int delta)
 {
@@ -56,7 +54,6 @@ int fn_801B17F4(int obj, int delta)
     return inner[0] <= 0;
 }
 
-void dimgate_update(int* obj);
 
 void dimicewall_update(int* obj)
 {
