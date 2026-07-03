@@ -478,7 +478,9 @@ void ObjModel_RelocateModelData(u8* m)
 }
 
 extern int getTableFileEntry(int fileId, int index, int* out);
-extern void loadModelsBin();
+/* defined in pi_dolphin.c with 5 params; the retail caller here emits a
+   6th arg (the model id) -- keep the caller-side arity */
+extern void loadModelsBin(int fileOffset, int* jointCount, int* headerSize, int* amapFlag, int* dataLen, int id);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
 #pragma dont_inline on
@@ -491,7 +493,7 @@ void* ObjModel_LoadModelData(int id)
     {
         return NULL;
     }
-    ((void (*)(int, int*, int*, int*, int*, int))loadModelsBin)(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
+    loadModelsBin(fileOffset, &jointCount, &headerSize, &amapFlag, &dataLen, id);
     headerSize = roundUpTo8(headerSize);
     headerSize += 0xb0;
     amapSize = modelGetAmapSize(id, amapFlag, jointCount);
@@ -1482,7 +1484,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 
 #pragma ppc_unroll_factor_limit 8
 #pragma ppc_unroll_instructions_limit 256
-void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, int flags, f32 blend)
+void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
     /* channel points at an ObjAnimState. stk is an on-stack working copy of
        one (spelled as raw bytes: the retail frame reserves only 0x64 bytes,
@@ -2819,7 +2821,9 @@ typedef struct
 
 extern void modelRenderInstrsState_init(MRIState* state, u8* data, int bits, int bits2);
 extern u8* modelRenderFn_80006744(u8* p, int count, MRIState* state, int stride);
-extern u8* fn_80006B1C(MRIState* src, MRIState* dst, int count, int gap);
+/* defined in render.c as (..., int gap, u8 bitWidth) returning int; the
+   retail caller here passes/receives through int/u8* -- keep that view */
+extern u8* fn_80006B1C(MRIState* src, MRIState* dst, int count, int gap, int bitWidth);
 
 #pragma peephole off
 void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
@@ -2854,8 +2858,7 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
         {
             if (t < 0)
             {
-                srcBits = ((u8 *(*)(void*, void*, int, int, int))
-                    fn_80006B1C)(&srcState, &dstState, dst[7], vertBits, t);
+                srcBits = fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
             }
             else
             {
@@ -2899,9 +2902,8 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     }
     if (*(u16*)(*(u8**)model + 2) & 8)
     {
-        ((void (*)(u8*, u8*, u8*, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8**)(model + 0x2c),
-                                                                      ((GameObject*)obj)->anim.currentMoveProgress,
-                                                                      0x7f);
+        modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x2c),
+                                 ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
     }
     else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & 8)
     {
@@ -2917,15 +2919,14 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     }
     else
     {
-        ((void (*)(u8*, u8*, u8*, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8**)(model + 0x2c),
-                                                                      ((GameObject*)obj)->anim.currentMoveProgress,
-                                                                      0x7f);
+        modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x2c),
+                                 ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
         ch2 = ((ObjModel*)model)->animStateB;
         if (ch2 != NULL && ((GameObject*)obj)->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x30), blend);
-            ((void (*)(u8*, u8*, u8*, f32, int))modelWalkAnimFn_800248b8)(
-                dst, model, *(u8**)(model + 0x30), ((GameObject*)obj)->anim.activeMoveProgress, -1);
+            modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x30),
+                                     ((GameObject*)obj)->anim.activeMoveProgress, -1);
         }
     }
 }
