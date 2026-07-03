@@ -740,10 +740,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
         if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
             eventTableIndex = *(u8*)(state + 0x33c) * 0xc;
-            row = eventRows + eventTableIndex;
-            Baddie_SetMove(obj, state, row[8],
+            Baddie_SetMove(obj, state, eventRows[eventTableIndex + 8],
                         *(f32*)(eventRows + *(u8*)(state + 0x33c) * 0xc), 0,
-                        *(u32*)(row + 4) & 0xff);
+                        *(u32*)(eventRows + eventTableIndex + 4) & 0xff);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj,
                 *(f32*)(base + eventRows[*(u8*)(state + 0x33c) * 0xc + 8] * 4));
