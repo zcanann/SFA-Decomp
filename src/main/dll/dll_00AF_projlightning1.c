@@ -26,3 +26,5 @@ void projlightning1_release(void)
 void projlightning1_initialise(void)
 {
 }
+
+char sProjlightning1DoNoLongerSupported[] = "<projlightning1 Do>No Longer supported \n";
