@@ -1574,7 +1574,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_0294_wctemple.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0299.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WC/dll_0295_wcapertures.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/WC/dll_0296_wctempledia.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/WC/dll_0296_wctempledia.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WC/dll_0297_wctemplebri.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WC/dll_0298_wcfloortile.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/ARW/dll_029A_arwarwing.c"),

@@ -2528,6 +2528,7 @@ main/dll/WC/dll_0295_wcapertures.c:
 
 main/dll/WC/dll_0296_wctempledia.c:
 	.text       start:0x802293F8 end:0x8022999C
+	.data       start:0x8032B348 end:0x8032B360
 	.sdata2     start:0x803E6E50 end:0x803E6E58
 
 main/dll/WC/dll_0297_wctemplebri.c:

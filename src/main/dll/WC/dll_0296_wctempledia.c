@@ -261,3 +261,6 @@ void wctempledia_release(void)
 void wctempledia_initialise(void)
 {
 }
+
+f32 gWcTempleDiaTargetSpeedTableA[] = {64.0f, 128.0f, 256.0f};
+f32 gWcTempleDiaTargetSpeedTableB[] = {-64.0f, -128.0f, -256.0f};
