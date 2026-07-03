@@ -2943,12 +2943,15 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle = (ExpgfxResourceHandle*)runtime->resourceTable[resourceTableIndex].resource;
-        if (resourceHandle == NULL)
+        if (resourceHandle != NULL)
         {
-            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
-            return EXPGFX_INVALID_POOL_INDEX;
+            if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW)
+            {
+                expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+                return EXPGFX_INVALID_POOL_INDEX;
+            }
         }
-        if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW)
+        else
         {
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
