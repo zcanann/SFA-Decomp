@@ -697,6 +697,7 @@ main/dll/dll_0032_titlescreeninit.c:
 
 main/dll/dll_0033_nrareware.c:
 	.text       start:0x80115F20 end:0x8011611C
+	.data       start:0x8031A1C8 end:0x8031A1D4
 
 main/dll/dll_0034_titlemenu.c:
 	.text       start:0x8011611C end:0x8011730C
@@ -1736,6 +1737,7 @@ main/dll/scchieflightfoot.c:
 
 main/dll/sclantern.c:
 	.text       start:0x801D6C04 end:0x801D6D98
+	.data       start:0x80327598 end:0x803275C0
 
 main/dll/SH/dll_01B0_shswapston.c:
 	.text       start:0x801D6D98 end:0x801D7BA8
@@ -1766,6 +1768,7 @@ main/dll/SC/dll_01B7_scmusictree.c:
 
 main/dll/SC/dll_01B8_sctotempole.c:
 	.text       start:0x801DC8D4 end:0x801DCC70
+	.data       start:0x803279A8 end:0x803279E0
 
 main/dll/SC/dll_01B9_sccloudrunnera.c:
 	.text       start:0x801DCC70 end:0x801DD170
@@ -2082,6 +2085,7 @@ main/dll/DF/dll_0233_dfpstatue1.c:
 
 main/dll/DF/dll_0234_dfpperchsw.c:
 	.text       start:0x8020848C end:0x80208508
+	.data       start:0x80329AD8 end:0x80329B71
 
 main/dll/DF/dll_0235_dfptargetblock.c:
 	.text       start:0x80208508 end:0x80208FDC
