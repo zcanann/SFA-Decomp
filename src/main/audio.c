@@ -3022,6 +3022,19 @@ int audioInit(void)
     return 0;
 }
 
+char sSampleBufferSLoadedCallbackLoadError[] = "sampleBufferSLoadedCallback load error\n";
+char sSampleDirectorySLoadedCallbackLoadError[] = "sampleDirectorySLoadedCallback load error\n";
+char sProjectDataSLoadedCallbackLoadError[] = "projectDataSLoadedCallback load error\n";
+char sPoolDataSLoadedCallbackLoadError[] = "poolDataSLoadedCallback load error\n";
+char sSampleBufferMLoadedCallbackLoadError[] = "sampleBufferMLoadedCallback load error\n";
+char sSampleDirectoryMLoadedCallbackLoadError[] = "sampleDirectoryMLoadedCallback load error\n";
+char sProjectDataMLoadedCallbackLoadError[] = "projectDataMLoadedCallback load error\n";
+char sPoolDataMLoadedCallbackLoadError[] = "poolDataMLoadedCallback load error\n";
+char sStreamsLoadedCallbackLoadError[] = "streamsLoadedCallback load error\n";
+char sSfxTriggersLoadedCallbackLoadError[] = "sfxTriggersLoadedCallback load error\n";
+char sMusicTriggersLoadedCallbackLoadError[356] =
+    "musicTriggersLoadedCallback load error\n\0/audio/data/Music.bin\0\0\0/audio/data/Sfx.bin\0/audio/data/Streams.bin\0audioInit: sndIsInstalled() returned FALSE!\n\0\0\0\0/audio/starfoxm.poo\0/audio/starfoxm.pro\0/audio/starfoxm.sdi\0/audio/starfoxm.sam\0/audio/starfoxs.poo\0/audio/starfoxs.pro\0/audio/starfoxs.sdi\0/audio/starfoxs.sam\0sndPushGroup failed on group %d\n";
+
 char sMusicTrackNameAmbIngaeRain[] = "amb_ingae_rain";
 char sMusicTrackNameAmbMoonlink[] = "amb_moonlink";
 char sMusicTrackNameAndrossTune[] = "Andross tune";
