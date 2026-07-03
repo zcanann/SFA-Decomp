@@ -326,22 +326,22 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 #pragma peephole off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
 {
-    int* enemy;
+    GameObject* enemy;
     f32 dx;
     f32 dz;
     int diff;
-    enemy = (int*)((BaddieState*)ctx)->targetObj;
+    enemy = (GameObject*)((BaddieState*)ctx)->targetObj;
     if (enemy != 0)
     {
-        if ((u32)enemy[0x30 / 4] == obj[0x30 / 4])
+        if ((u32)enemy->anim.parent == (u32)((GameObject*)obj)->anim.parent)
         {
-            dx = *(f32*)((char*)enemy + 0xc) - ((GameObject*)obj)->anim.localPosX;
-            dz = *(f32*)((char*)enemy + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            dx = enemy->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            dz = enemy->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
         }
         else
         {
-            dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)((char*)enemy + 0x18);
-            dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)((char*)enemy + 0x20);
+            dx = ((GameObject*)obj)->anim.worldPosX - enemy->anim.worldPosX;
+            dz = ((GameObject*)obj)->anim.worldPosZ - enemy->anim.worldPosZ;
         }
         diff = (u16)getAngle(-dx, -dz) - (u16)((GameObject*)obj)->anim.rotX;
         if (diff > 0x8000)
@@ -473,8 +473,8 @@ void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
     f32 dx;
     f32 dz;
     f32 mag;
-    dx = *(f32*)((char*)a + 0xc) - px;
-    dz = *(f32*)((char*)a + 0x14) - pz;
+    dx = ((GameObject*)a)->anim.localPosX - px;
+    dz = ((GameObject*)a)->anim.localPosZ - pz;
     mag = sqrtf(dx * dx + dz * dz);
     *(f32*)((char*)ctx + 0x2bc) = mag;
     if (lbl_803E0570 != mag)
@@ -718,9 +718,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             *(u8*)(state + 0x34c) = 0;
             ((BaddieState*)state)->moveEventFlags = 0;
             *(s16*)(state + 0x278) = 0;
-            if (*(void**)(pos + 0x54) != NULL)
+            if (((GameObject*)pos)->anim.hitReactState != NULL)
             {
-                *(u8*)((char*)*(void**)(pos + 0x54) + 0x70) = 0;
+                *(u8*)((char*)((GameObject*)pos)->anim.hitReactState + 0x70) = 0;
             }
         }
         else if (result < 0)
@@ -743,9 +743,9 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 *(u8*)(state + 0x34c) = 0;
                 ((BaddieState*)state)->moveEventFlags = 0;
                 *(s16*)(state + 0x278) = 0;
-                if (*(void**)(pos + 0x54) != NULL)
+                if (((GameObject*)pos)->anim.hitReactState != NULL)
                 {
-                    *(u8*)((char*)*(void**)(pos + 0x54) + 0x70) = 0;
+                    *(u8*)((char*)((GameObject*)pos)->anim.hitReactState + 0x70) = 0;
                 }
             }
             done = 1;
@@ -791,10 +791,10 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
     {
         f32 t;
 
-        t = (f32)(int) * (s16*)(pos + 2) * dt;
-        *(s16*)(pos + 2) -= (s16)(t * lbl_803E05C0);
-        t = (f32)(int) * (s16*)(pos + 4) * dt;
-        *(s16*)(pos + 4) -= (s16)(t * lbl_803E05C0);
+        t = (f32)(int)((GameObject*)pos)->anim.rotY * dt;
+        ((GameObject*)pos)->anim.rotY -= (s16)(t * lbl_803E05C0);
+        t = (f32)(int)((GameObject*)pos)->anim.rotZ * dt;
+        ((GameObject*)pos)->anim.rotZ -= (s16)(t * lbl_803E05C0);
     }
 }
 
@@ -831,8 +831,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     attachment = *(int*)&((BaddieState*)state)->targetObj;
     if ((void*)attachment != NULL)
     {
-        dx = *(f32*)(attachment + 0xc) - *(f32*)(pos + 0xc);
-        dz = *(f32*)(attachment + 0x14) - *(f32*)(pos + 0x14);
+        dx = ((GameObject*)attachment)->anim.localPosX - ((GameObject*)pos)->anim.localPosX;
+        dz = ((GameObject*)attachment)->anim.localPosZ - ((GameObject*)pos)->anim.localPosZ;
         ((BaddieState*)state)->targetDistance = sqrtf(dx * dx + dz * dz);
     }
     else
@@ -840,7 +840,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         ((BaddieState*)state)->targetDistance = lbl_803E0570;
     }
 
-    pathObj = *(void**)(pos + 0xc0);
+    pathObj = ((GameObject*)pos)->pendingParentObj;
     if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
         fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
@@ -855,9 +855,9 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if (*(void**)(state + 0x27c) != NULL)
     {
-        localTransform.rotX = *(s16*)(pos + 0);
-        localTransform.rotY = *(s16*)(pos + 2);
-        localTransform.rotZ = *(s16*)(pos + 4);
+        localTransform.rotX = ((GameObject*)pos)->anim.rotX;
+        localTransform.rotY = ((GameObject*)pos)->anim.rotY;
+        localTransform.rotZ = ((GameObject*)pos)->anim.rotZ;
         localTransform.scale = lbl_803E0588;
         localTransform.x = lbl_803E0570;
         localTransform.y = lbl_803E0570;
@@ -895,10 +895,10 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         *(s16*)(state + 0x338) = 10000;
     }
 
-    gPlayerMoveOverridePosX = *(f32*)(pos + 0xc);
-    gPlayerMoveOverridePosZ = *(f32*)(pos + 0x14);
-    mapBlock = objPosToMapBlockIdx(*(f32*)(pos + 0x18), *(f32*)(pos + 0x1c), *(f32*)(pos + 0x20));
-    if (mapBlock == -1 && *(void**)(pos + 0x30) == NULL)
+    gPlayerMoveOverridePosX = ((GameObject*)pos)->anim.localPosX;
+    gPlayerMoveOverridePosZ = ((GameObject*)pos)->anim.localPosZ;
+    mapBlock = objPosToMapBlockIdx(((GameObject*)pos)->anim.worldPosX, ((GameObject*)pos)->anim.worldPosY, ((GameObject*)pos)->anim.worldPosZ);
+    if (mapBlock == -1 && ((GameObject*)pos)->anim.parent == NULL)
     {
         *(u32*)state |= 0x200000;
         keepPathControls = 0;
@@ -912,13 +912,13 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     overrideObj = playerOverride;
     if ((void*)overrideObj != NULL)
     {
-        dx = *(f32*)(overrideObj + 0xc) - gPlayerMoveOverridePosX;
-        dz = *(f32*)(overrideObj + 0x14) - gPlayerMoveOverridePosZ;
+        dx = ((GameObject*)overrideObj)->anim.localPosX - gPlayerMoveOverridePosX;
+        dz = ((GameObject*)overrideObj)->anim.localPosZ - gPlayerMoveOverridePosZ;
         dist = sqrtf(dx * dx + dz * dz);
         if (dist < lbl_803E05BC)
         {
-            ldx = *(f32*)(pos + 0xc) - gPlayerMoveOverridePosX;
-            ldz = *(f32*)(pos + 0x14) - gPlayerMoveOverridePosZ;
+            ldx = ((GameObject*)pos)->anim.localPosX - gPlayerMoveOverridePosX;
+            ldz = ((GameObject*)pos)->anim.localPosZ - gPlayerMoveOverridePosZ;
             limit = sqrtf(ldx * ldx + ldz * ldz);
             if (limit < lbl_803E05B4)
             {
@@ -927,8 +927,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
             if (dist < lbl_803E0588)
             {
-                *(f32*)(pos + 0xc) = *(f32*)(overrideObj + 0xc);
-                *(f32*)(pos + 0x14) = *(f32*)(overrideObj + 0x14);
+                ((GameObject*)pos)->anim.localPosX = ((GameObject*)overrideObj)->anim.localPosX;
+                ((GameObject*)pos)->anim.localPosZ = ((GameObject*)overrideObj)->anim.localPosZ;
             }
             else
             {
@@ -938,8 +938,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
                 }
                 dx = dx / dist;
                 dz = dz / dist;
-                *(f32*)(pos + 0xc) = dx * limit + gPlayerMoveOverridePosX;
-                *(f32*)(pos + 0x14) = dz * limit + gPlayerMoveOverridePosZ;
+                ((GameObject*)pos)->anim.localPosX = dx * limit + gPlayerMoveOverridePosX;
+                ((GameObject*)pos)->anim.localPosZ = dz * limit + gPlayerMoveOverridePosZ;
             }
         }
     }
@@ -965,8 +965,8 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         {
             if (((s32) * (s8*)(state + 0x264) & 2) != 0 || *(u8*)(state + 0x262) != 0)
             {
-                *(f32*)(pos + 0x24) = (*(f32*)(pos + 0xc) - *(f32*)(*(int*)(pos + 0x54) + 0x10)) / dt;
-                *(f32*)(pos + 0x2c) = (*(f32*)(pos + 0x14) - *(f32*)(*(int*)(pos + 0x54) + 0x18)) / dt;
+                ((GameObject*)pos)->anim.velocityX = (((GameObject*)pos)->anim.localPosX - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x10)) / dt;
+                ((GameObject*)pos)->anim.velocityZ = (((GameObject*)pos)->anim.localPosZ - *(f32*)((int)((GameObject*)pos)->anim.hitReactState + 0x18)) / dt;
             }
             *(u32*)state &= 0xff7fffff;
         }
@@ -978,8 +978,8 @@ void player_updateVel(char* p, char* obj, int unused)
     float fcos, fsin;
     if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
     {
-        fcos = mathSinf(gPlayerMovePi * (float)(s32) * (s16*)p / gPlayerMoveHalfCircleAngle);
-        fsin = mathCosf(gPlayerMovePi * (float)(s32) * (s16*)p / gPlayerMoveHalfCircleAngle);
+        fcos = mathSinf(gPlayerMovePi * (float)(s32)((GameObject*)p)->anim.rotX / gPlayerMoveHalfCircleAngle);
+        fsin = mathCosf(gPlayerMovePi * (float)(s32)((GameObject*)p)->anim.rotX / gPlayerMoveHalfCircleAngle);
         if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
         {
             ((BaddieState*)obj)->animSpeedA = -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
@@ -1026,7 +1026,7 @@ end:
     *(u8*)((char*)p + 0x34c) = 0;
     ((BaddieState*)p)->moveEventFlags = 0;
     *(s16*)((char*)p + 0x278) = 0;
-    q = *(void**)((char*)ctx + 0x54);
+    q = ((GameObject*)ctx)->anim.hitReactState;
     if (q != 0) *(u8*)((char*)q + 0x70) = 0;
 }
 
