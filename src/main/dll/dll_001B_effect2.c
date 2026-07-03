@@ -2601,3 +2601,28 @@ EmitterCfg gEffect2VelocityRangeTable =
     0xFF,
     { 0x00, 0x00 },
 };
+
+/* --- effect2 .data reconstruction (absorbed 0x80310604-0x80310670) --- */
+extern void partfx_initialise();
+extern void partfx_release();
+extern void partfx_onMapSetup();
+extern void partfx_spawnObject();
+extern void partfx_updateFrameState();
+extern void Effect1_initialise();
+extern void Effect1_release();
+extern void Effect1_func03_nop();
+extern void Effect1_func04();
+extern void Effect1_func05();
+
+void* lbl_80310604[10] = {
+    (void*)0, (void*)0, (void*)0, (void*)0x50000,
+    (void*)partfx_initialise, (void*)partfx_release, (void*)0,
+    (void*)partfx_onMapSetup, (void*)partfx_spawnObject, (void*)partfx_updateFrameState
+};
+char sModgfxAlphaDebugFormat[10] = "alpha %d\n";
+void* lbl_80310638[10] = {
+    (void*)0, (void*)0, (void*)0, (void*)0x50000,
+    (void*)Effect1_initialise, (void*)Effect1_release, (void*)0,
+    (void*)Effect1_func03_nop, (void*)Effect1_func04, (void*)Effect1_func05
+};
+s32 gEffect2TextureIdTable[4] = { 0xDF, 0x1FC, 0x200, 0x1FB };
