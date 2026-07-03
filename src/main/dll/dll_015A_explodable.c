@@ -41,8 +41,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 int explodable_getExtraSize(void) { return 0x6e8; }
 
 extern void Obj_FreeObject(int obj);
-#pragma scheduling off
-#pragma peephole off
 void explodable_free(int obj, int flag)
 {
     int state;
@@ -65,7 +63,6 @@ void explodable_free(int obj, int flag)
         }
     }
 }
-#pragma reset
 
 void explodable_update(int obj)
 {
