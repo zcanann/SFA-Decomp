@@ -1262,8 +1262,6 @@ void Effect1_initialise(void)
 {
 }
 
-void Effect2_func03_nop(void);
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -2687,5 +2685,3 @@ int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL320
-
-void Effect9_func05(void);
