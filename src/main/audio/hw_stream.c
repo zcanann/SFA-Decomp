@@ -64,25 +64,18 @@ int hwChangeStudio(int slot)
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback,
               u32 callbackArg)
 {
-    int uploadDest;
-    int uploadSize;
-    u32 uploadCallbackArg;
-    u32 uploadCallback;
-    u32 size;
     int offset;
+    u8* addr;
     u8 stack[8];
 
-    uploadDest = dest;
-    uploadSize = byteCount;
-    uploadCallback = callback;
-    uploadCallbackArg = callbackArg;
+    addr = (u8*)dest;
     offset = aramGetStreamBufferAddress(stream, stack);
-    uploadSize += streamPos & 0x1f;
+    byteCount += streamPos & 0x1f;
     streamPos &= 0xffffffe0;
-    size = (uploadSize + 0x1f) & ~0x1f;
-    uploadDest += streamPos;
-    DCStoreRange((void*)uploadDest, size);
-    aramUploadData(uploadDest, offset + streamPos, size, 1, uploadCallback, uploadCallbackArg);
+    byteCount = (byteCount + 0x1f) & ~0x1f;
+    addr += streamPos;
+    DCStoreRange(addr, byteCount);
+    aramUploadData((int)addr, offset + streamPos, byteCount, 1, callback, callbackArg);
 }
 
 void hwFlushStream(int stream)
