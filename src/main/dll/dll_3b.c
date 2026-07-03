@@ -23,6 +23,12 @@
 /* THP frame-component type id for the audio track (vs 0 = video). */
 #define THP_FRAME_COMP_AUDIO 1
 
+/*
+ * Per-frame layout in a read buffer: an 8-byte frame header, then one u32
+ * component size per component, then the component payloads back-to-back.
+ */
+#define THP_FRAME_HEADER_SIZE 8
+
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 
@@ -57,8 +63,10 @@ void AttractMovieAudio_Decode(void* readBufferArg)
     u32 track;
 
     readBuffer = (AttractMovieReadBuffer*)readBufferArg;
-    audioFrameSizes = (u32*)(readBuffer->ptr + 8);
-    audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
+    audioFrameSizes = (u32*)(readBuffer->ptr + THP_FRAME_HEADER_SIZE);
+    audioFrame = readBuffer->ptr +
+                 (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) +
+                 THP_FRAME_HEADER_SIZE;
     {
         AttractMovieAudioBuffer* received;
         OSReceiveMessage(&lbl_803A4480, &received, OS_MESSAGE_BLOCK);
