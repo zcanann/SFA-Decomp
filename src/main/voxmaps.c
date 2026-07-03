@@ -1167,7 +1167,8 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     int z6lo;
     int z6hi;
     int bitmapCol;
-    u8 buf[12];
+    u8 buf[3][4];
+    u8* p;
     int sumA, sumB;
     int adj, blocked;
     int voxXand7;
@@ -1233,7 +1234,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
         {
             z6lo = voxZ6 & 3;
             z6hi = z6lo + 1;
-            for (row = 0, bitmapCol = (voxZ << 1) + (voxX >> 3); row < 3; row++)
+            for (row = 0, p = &buf[0][0], bitmapCol = (voxZ << 1) + (voxX >> 3); row < 3; row++)
             {
                 int y = row + cur.y;
                 y -= 1;
@@ -1252,18 +1253,19 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 if (((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1u) != 0u)
                 {
                     node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
-                    buf[row * 4 + 0] = (node[z6lo] >> shiftLo) & 3;
-                    buf[row * 4 + 1] = (node[z6lo] >> shiftHi) & 3;
-                    buf[row * 4 + 2] = (node[z6hi] >> shiftLo) & 3;
-                    buf[row * 4 + 3] = (node[z6hi] >> shiftHi) & 3;
+                    p[0] = (node[z6lo] >> shiftLo) & 3;
+                    p[1] = (node[z6lo] >> shiftHi) & 3;
+                    p[2] = (node[z6hi] >> shiftLo) & 3;
+                    p[3] = (node[z6hi] >> shiftHi) & 3;
                 }
                 else
                 {
-                    buf[row * 4 + 0] = 0;
-                    buf[row * 4 + 1] = 0;
-                    buf[row * 4 + 2] = 0;
-                    buf[row * 4 + 3] = 0;
+                    p[0] = 0;
+                    p[1] = 0;
+                    p[2] = 0;
+                    p[3] = 0;
                 }
+                p += 4;
             }
 
             i = 1;
@@ -1272,13 +1274,13 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 next = i + 1;
                 blocked = 0;
                 adj = i;
-                if ((buf[i * 4] & 2) || (buf[i * 4 + 1] & 2) || (buf[i * 4 + 2] & 2) || (buf[i * 4 + 3] & 2))
+                if ((buf[i][0] & 2) || (buf[i][1] & 2) || (buf[i][2] & 2) || (buf[i][3] & 2))
                 {
                     blocked = 1;
                 }
                 if (!blocked)
                 {
-                    if ((buf[next * 4] & 2) || (buf[next * 4 + 1] & 2) || (buf[next * 4 + 2] & 2) || (buf[next * 4 + 3]
+                    if ((buf[next][0] & 2) || (buf[next][1] & 2) || (buf[next][2] & 2) || (buf[next][3]
                         & 2))
                     {
                         blocked = 1;
@@ -1286,14 +1288,14 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 }
                 if (!blocked)
                 {
-                    sumA = *(u8*)&buf[i * 4];
-                    sumB = *(u8*)&buf[next * 4];
-                    sumA += buf[i * 4 + 1];
-                    sumB += buf[next * 4 + 1];
-                    sumA += buf[i * 4 + 2];
-                    sumB += buf[next * 4 + 2];
-                    sumA += buf[i * 4 + 3];
-                    sumB += buf[next * 4 + 3];
+                    sumA = *(u8*)&buf[i][0];
+                    sumB = *(u8*)&buf[next][0];
+                    sumA += buf[i][1];
+                    sumB += buf[next][1];
+                    sumA += buf[i][2];
+                    sumB += buf[next][2];
+                    sumA += buf[i][3];
+                    sumB += buf[next][3];
                     if (next == 2 && sumB == 0)
                     {
                         blocked = 1;
