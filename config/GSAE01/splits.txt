@@ -212,7 +212,7 @@ main/dll/dll_001A_effect1.c:
 
 main/dll/dll_001B_effect2.c:
 	.text       start:0x800B319C end:0x800B6EF8
-	.data       start:0x80310560 end:0x80310604
+	.data       start:0x80310560 end:0x80310670
 
 main/dll/dll_001C_effect3.c:
 	.text       start:0x800B6EF8 end:0x800B8D7C
@@ -298,7 +298,7 @@ main/dll/dll_0012_unk.c:
 
 main/dll/dll_0014_unk.c:
 	.text       start:0x800D9EE8 end:0x800E5434
-	.data       start:0x80311518 end:0x803115F8
+	.data       start:0x80311518 end:0x803116E0
 	.bss        start:0x8039CAE8 end:0x803A2C38
 
 main/dll/dll_0015_curves.c:
@@ -1203,7 +1203,7 @@ main/dll/dll_0112_seqobject.c:
 
 main/dll/dll_0113_seqobj2.c:
 	.text       start:0x8017C7A4 end:0x8017CBDC
-	.data       start:0x803211A0 end:0x80321208
+	.data       start:0x803211A0 end:0x803213F0
 
 main/dll/IM/dll_0114_immultiseq.c:
 	.text       start:0x8017CBDC end:0x8017CF90
@@ -2125,7 +2125,7 @@ main/dll/WM/dll_01FD_wmlasertarget.c:
 
 main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
-	.data       start:0x80328898 end:0x803289EC
+	.data       start:0x80328898 end:0x80328A30
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
