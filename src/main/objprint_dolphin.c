@@ -3135,7 +3135,8 @@ typedef struct
 
 #pragma optimization_level 2
 #pragma inline_max_size(4000)
-static inline void modelLoadMtxsToGxBody(int obj, int* model, MtxBitStream* bs, f32* mtx)
+#pragma dont_inline on
+void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = getCache();
     if (lbl_803DCC48 == 1)
@@ -3204,11 +3205,7 @@ static inline void modelLoadMtxsToGxBody(int obj, int* model, MtxBitStream* bs, 
         }
     }
 }
-
-void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
-{
-    modelLoadMtxsToGxBody(obj, model, bs, mtx);
-}
+#pragma dont_inline reset
 #pragma inline_max_size reset
 #pragma optimization_level reset
 extern void GXClearVtxDesc(void);
