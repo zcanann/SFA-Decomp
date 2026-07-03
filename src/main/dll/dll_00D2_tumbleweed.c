@@ -27,7 +27,6 @@ extern const f32 lbl_803E2F88;
 extern const f32 lbl_803E2F98;
 extern const f32 lbl_803E2F9C;
 
-#pragma peephole off
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern const f32 lbl_803E2FC8;
 extern const f32 lbl_803E2FCC;
@@ -154,7 +153,6 @@ void tumbleweed_updateRollingMotion(int obj, int state)
     return;
 }
 
-#pragma peephole off
 void tumbleweed_func0F(int obj, int value)
 {
     *(int*)&((BackpackState*)((GameObject*)obj)->extra)->targetObj = value;
