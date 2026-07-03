@@ -44,7 +44,6 @@ void dimbarrier_initialise(void)
 {
 }
 
-int dimsnowball1c2_getObjectTypeId(void);
 int dimbarrier_getExtraSize(void) { return 0x4; }
 int dimbarrier_getObjectTypeId(void) { return 0x0; }
 
@@ -54,7 +53,6 @@ void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4898);
 }
 
-void dimsnowball1c2_init(int obj, u8* p);
 
 void dimbarrier_init(int obj, s8* p)
 {
@@ -75,7 +73,6 @@ void dimbarrier_init(int obj, s8* p)
     }
 }
 
-int fn_801B17F4(int obj, int delta);
 
 void dimbarrier_update(int obj)
 {
