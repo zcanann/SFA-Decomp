@@ -75,7 +75,7 @@ extern s8 lbl_803DD6CF;
 extern u8 lbl_803DD6C4;
 extern void* lbl_8031A804[4];
 extern void* lbl_803A8680[4];
-extern SaveSelectPanel gSaveSelectPanels[8];
+extern SaveSelectPanel gSaveSelectPanels[];
 extern u8 lbl_8031A7F8[];
 extern s16 gSaveSelectTextureIds;
 extern void gplaySaveGame();
@@ -798,3 +798,17 @@ void SaveSelectScreen_initialise(void)
 void SaveSelectScreen_frameEnd_nop(void)
 {
 }
+
+extern TitleMenuTextEntry lbl_8031A4B0[];
+extern TitleMenuTextEntry lbl_8031A564[];
+extern TitleMenuTextEntry lbl_8031A618[];
+extern TitleMenuTextEntry lbl_8031A5DC[];
+extern TitleMenuTextEntry lbl_8031A654[];
+
+SaveSelectPanel gSaveSelectPanels[] = {
+    { lbl_8031A4B0, 3, 0, 0x0379, 0x0367, { 2, 0 } },
+    { lbl_8031A564, 2, 0, 0x0379, 0x0367, { 2, 0 } },
+    { lbl_8031A618, 1, 0, 0x037A, 0xFFFF, { 2, 0 } },
+    { lbl_8031A5DC, 1, 0, 0x0379, 0x0367, { 2, 0 } },
+    { lbl_8031A654, 6, 0, 0x0450, 0x0367, { 2, 0 } },
+};

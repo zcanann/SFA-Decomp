@@ -819,6 +819,7 @@ main/dll/dll_43.c:
 
 main/dll/dll_0035_saveselectscreen.c:
 	.text       start:0x8011A0DC end:0x8011B5D4
+	.data       start:0x8031A7BC end:0x8031A7F8
 
 main/dll/dll_0036_entersavenamescreen.c:
 	.text       start:0x8011B5D4 end:0x8011BFC8
