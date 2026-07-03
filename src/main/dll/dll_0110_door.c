@@ -68,7 +68,6 @@ extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 
 int Door_getExtraSize(void) { return 0x8; }
-int mmp_bridge_getExtraSize(void);
 
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 
@@ -162,7 +161,6 @@ void Door_update(int obj)
     }
 }
 
-void mmp_bridge_update(int* obj);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
