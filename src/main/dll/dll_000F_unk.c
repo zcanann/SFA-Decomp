@@ -297,9 +297,12 @@ void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
     }
 }
 
-void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
+void player_doProjGfx(int* p1, int p2, int resIdBase, int count, int p5, int mode)
 {
-    void* res = Resource_Acquire((u16)(p3 + 0x58), 1);
+    /* res: acquired projectile-gfx resource; its vtable slot [+4] is the
+     * per-instance spawn entry, dispatched `count` times with a mode-selected
+     * flag (1/2/4). */
+    void* res = Resource_Acquire((u16)(resIdBase + 0x58), 1);
     while (count != 0)
     {
         if (mode == 0)
