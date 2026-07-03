@@ -4,10 +4,10 @@
 typedef struct DSPStrings {
     char initMsg[0x20];
     char buildDate[0xC];
-    char buildTime[0x9];
+    char buildTime[0xC];
 } DSPStrings;
 
-extern const DSPStrings sDSPStrings;
+extern DSPStrings sDSPStrings;
 #define DSP_INIT_BUILD_DATE_MSG sDSPStrings.initMsg
 #define BUILD_DATE sDSPStrings.buildDate
 #define BUILD_TIME sDSPStrings.buildTime
@@ -102,3 +102,9 @@ DSPTaskInfo* DSPAddTask(DSPTaskInfo* task) {
 
     return task;
 }
+
+DSPStrings sDSPStrings = {
+    "DSPInit(): Build Date: %s %s\n",
+    "Dec 17 2001",
+    "18:25:00",
+};
