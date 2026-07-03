@@ -2515,7 +2515,7 @@ typedef struct ObjHitBufs
 } ObjHitBufs;
 
 #pragma dont_inline off
-void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
+void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
     extern f32 lbl_803DCED0;
     extern f32 lbl_803DCECC;
@@ -2538,16 +2538,16 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
     ObjHitBufs* st;
 
     hitSample = NULL;
-    hitReact = *(u8**)(e + 0x54);
+    hitReact = *(u8**)(obj + 0x54);
     if (hitReact != NULL)
     {
-        if (*(u8*)(*(u8**)(e + 0x50) + 0x66) != 0)
+        if (*(u8*)(*(u8**)(obj + 0x50) + 0x66) != 0)
         {
             sampleCount = (int)*(s16*)(hitReact + 4) >> 2;
             if (sampleCount > 0)
             {
                 samples = *(u8**)(hitReact + 8);
-                idx = (int)(((GameObject*)e)->anim.currentMoveProgress * sampleCount);
+                idx = (int)(((GameObject*)obj)->anim.currentMoveProgress * sampleCount);
                 if (idx >= sampleCount)
                 {
                     idx = sampleCount - 1;
@@ -2561,35 +2561,35 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
         }
     }
 
-    if (*(u8**)(c + 0x54) != NULL)
+    if (*(u8**)(prevObj + 0x54) != NULL)
     {
-        *(u8*)(*(u8**)(c + 0x54) + 0xaf) -= 1;
-        if (*(s8*)(*(u8**)(c + 0x54) + 0xaf) < 0)
+        *(u8*)(*(u8**)(prevObj + 0x54) + 0xaf) -= 1;
+        if (*(s8*)(*(u8**)(prevObj + 0x54) + 0xaf) < 0)
         {
-            *(u8*)(*(u8**)(c + 0x54) + 0xaf) = 0;
+            *(u8*)(*(u8**)(prevObj + 0x54) + 0xaf) = 0;
         }
-        *(u32*)(*(u8**)(c + 0x54) + 0x4c) = *(u32*)(*(u8**)(c + 0x54) + 0x48);
-        *(void**)(*(u8**)(c + 0x54) + 0x48) = hitSample;
+        *(u32*)(*(u8**)(prevObj + 0x54) + 0x4c) = *(u32*)(*(u8**)(prevObj + 0x54) + 0x48);
+        *(void**)(*(u8**)(prevObj + 0x54) + 0x48) = hitSample;
     }
 
-    st = (ObjHitBufs*)a;
-    *(u16*)(a + 0x18) ^= 4;
-    bufSel = (*(u16*)(a + 0x18) >> 2) & 1;
+    st = (ObjHitBufs*)hitState;
+    *(u16*)(hitState + 0x18) ^= 4;
+    bufSel = (*(u16*)(hitState + 0x18) >> 2) & 1;
     st->cur = st->bufs[bufSel];
-    mtx = d;
+    mtx = boneMtx;
     i = 0;
     off[0] = 0;
     off[1] = off[0];
     prevSphere = st->bufs[bufSel ^ 1];
-    for (; i < *(u8*)(b + 0xf7); i++)
+    for (; i < *(u8*)(hdrOwner + 0xf7); i++)
     {
-        if (d == NULL)
+        if (boneMtx == NULL)
         {
-            idx = *(s16*)(*(u8**)(b + 0x58) + off[0]);
-            cnt = *(u8*)(*(u8**)a + 0xf3);
+            idx = *(s16*)(*(u8**)(hdrOwner + 0x58) + off[0]);
+            cnt = *(u8*)(*(u8**)hitState + 0xf3);
             if (cnt != 0)
             {
-                lim = cnt + *(u8*)(*(u8**)a + 0xf4);
+                lim = cnt + *(u8*)(*(u8**)hitState + 0xf4);
             }
             else
             {
@@ -2599,24 +2599,24 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             {
                 idx = 0;
             }
-            mtx = (u8*)((int*)a)[(*(u16*)(a + 0x18) & 1) + 3] + idx * 0x40;
+            mtx = (u8*)((int*)hitState)[(*(u16*)(hitState + 0x18) & 1) + 3] + idx * 0x40;
         }
-        if (i == 0 && e != c)
+        if (i == 0 && obj != prevObj)
         {
             zero = lbl_803DE828;
             vec[0] = zero;
             vec[1] = zero;
             vec[2] = zero;
             PSMTXMultVec((f32*)mtx, vec, vec);
-            ((GameObject*)c)->anim.localPosX = vec[0] + playerMapOffsetX;
-            ((GameObject*)c)->anim.localPosY = vec[1];
-            ((GameObject*)c)->anim.localPosZ = vec[2] + playerMapOffsetZ;
-            Obj_GetWorldPosition((u32)c, (f32 *)(c + 0x18), (f32 *)(c + 0x1c), (f32 *)(c + 0x20));
+            ((GameObject*)prevObj)->anim.localPosX = vec[0] + playerMapOffsetX;
+            ((GameObject*)prevObj)->anim.localPosY = vec[1];
+            ((GameObject*)prevObj)->anim.localPosZ = vec[2] + playerMapOffsetZ;
+            Obj_GetWorldPosition((u32)prevObj, (f32 *)(prevObj + 0x18), (f32 *)(prevObj + 0x1c), (f32 *)(prevObj + 0x20));
         }
-        vec[0] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 8);
-        vec[1] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 0xc);
-        vec[2] = *(f32*)(*(u8**)(b + 0x58) + off[0] + 0x10);
-        *(f32*)(st->cur + off[1]) = *(f32*)(*(u8**)(b + 0x58) + off[0] + 4) * (motionScale = ((GameObject*)e)->anim.rootMotionScale);
+        vec[0] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 8);
+        vec[1] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0xc);
+        vec[2] = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0x10);
+        *(f32*)(st->cur + off[1]) = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 4) * (motionScale = ((GameObject*)obj)->anim.rootMotionScale);
         PSMTXMultVec((f32*)mtx, vec, (f32*)(st->cur + (off[1] + 4)));
         *(f32*)(prevSphere + 4) = (lbl_803DCED0 + *(f32*)(prevSphere + 4)) - playerMapOffsetX;
         *(f32*)(prevSphere + 0xc) = (lbl_803DCECC + *(f32*)(prevSphere + 0xc)) - playerMapOffsetZ;
@@ -2715,62 +2715,66 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
     }
 }
 
-void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f)
+/* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
+   two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
+   worker chunks in via copyToCache while the previous chunk is being processed,
+   then writing transformed verts (6 bytes each) back to dstVtx. */
+void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* targetA, void* targetB, int blendScale)
 {
     extern u16 gModelCopyChunkWordLimit;
-    extern void modelApplyBoneTransform(void* p, void* out, u16 n, void** pd, void** pe, int f, u16 pos);
-    u16 pos;
+    extern void modelApplyBoneTransform(void* in, void* out, u16 n, void** pTargetA, void** pTargetB, int blendScale, u16 pos);
+    u16 vtxPos;
     u16 chunk;
     u16 words;
     u16 nextChunk;
     u16 nextWords;
-    u16 buf;
+    u16 bufIdx;
     u8* cache;
-    u16 t;
+    u16 curBuf;
     u8* out;
-    u8* ptr;
+    u8* in;
     int sync;
 
     cache = getCache();
-    pos = 0;
-    if (c > gModelCopyChunkWordLimit)
+    vtxPos = 0;
+    if (vtxCount > gModelCopyChunkWordLimit)
     {
         chunk = gModelCopyChunkWordLimit;
     }
     else
     {
-        chunk = c;
+        chunk = vtxCount;
     }
     words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
-    copyToCache(cache, (void*)a, words);
-    buf = 0;
+    copyToCache(cache, (void*)srcVtx, words);
+    bufIdx = 0;
     sync = 0;
-    while (c != 0)
+    while (vtxCount != 0)
     {
-        c -= chunk;
-        if (c != 0)
+        vtxCount -= chunk;
+        if (vtxCount != 0)
         {
-            if (c > gModelCopyChunkWordLimit)
+            if (vtxCount > gModelCopyChunkWordLimit)
             {
                 nextChunk = gModelCopyChunkWordLimit;
             }
             else
             {
-                nextChunk = c;
+                nextChunk = vtxCount;
             }
             nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
-            copyToCache(cache + (buf ^ 1) * 0x2000, (u8*)a + (pos + gModelCopyChunkWordLimit) * 6, nextWords);
+            copyToCache(cache + (bufIdx ^ 1) * 0x2000, (u8*)srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
             sync = 1;
         }
         cacheQueueWait(sync);
-        t = buf;
-        ptr = cache + t * 0x2000;
-        out = ptr + 0x1000;
-        modelApplyBoneTransform(ptr, out, chunk, &d, &e, f, pos);
-        memcpyToCache((u8*)b + pos * 6, out, words);
-        pos += chunk;
+        curBuf = bufIdx;
+        in = cache + curBuf * 0x2000;
+        out = in + 0x1000;
+        modelApplyBoneTransform(in, out, chunk, &targetA, &targetB, blendScale, vtxPos);
+        memcpyToCache((u8*)dstVtx + vtxPos * 6, out, words);
+        vtxPos += chunk;
         sync = 1;
-        buf = t ^ 1;
+        bufIdx = curBuf ^ 1;
         chunk = nextChunk;
         words = nextWords;
     }
