@@ -217,7 +217,7 @@ typedef struct StaffDoGrowShrinkAnimState
     f32 unk28;
     f32 unk2C;
     u8 pad30[0x50 - 0x30];
-    f32 unk50;
+    f32 growShrinkAnimRate;
     u8 pad54[0x70 - 0x54];
     u8 unk70;
     u8 pad71[0xAA - 0x71];
@@ -764,11 +764,11 @@ void objSetAnimField48to0(int* obj)
 void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
 
 #pragma dont_inline on
-void staffSetGlow(int* obj, u8 a, u8 b)
+void staffSetGlow(int* obj, u8 attackType, u8 enable)
 {
     u8* state = (u8*)(int*)((GameObject*)obj)->extra;
-    state[0xbb] = a;
-    state[0xba] = b;
+    state[0xbb] = attackType;
+    state[0xba] = enable;
 }
 #pragma dont_inline reset
 
@@ -914,7 +914,7 @@ void staff_init(int* obj)
     int i;
     ((StaffDoGrowShrinkAnimState*)state)->unkAA = 1;
     ((StaffDoGrowShrinkAnimState*)state)->unkB0 = 2;
-    ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3328;
+    ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = lbl_803E3328;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
@@ -943,32 +943,32 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
     int* state = ((GameObject*)obj)->extra;
     if (grow != 0)
     {
-        if (((StaffDoGrowShrinkAnimState*)state)->unk50 < lbl_803E32B4)
+        if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate < lbl_803E32B4)
         {
             Sfx_PlayFromObject(obj, SFXsc_text_appears_lp);
         }
         if (flag2 == 0)
         {
-            ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3320;
+            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = lbl_803E3320;
         }
         else
         {
-            ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3288;
+            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = lbl_803E3288;
         }
     }
     else
     {
-        if (((StaffDoGrowShrinkAnimState*)state)->unk50 > lbl_803E32B4)
+        if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate > lbl_803E32B4)
         {
             Sfx_PlayFromObject(obj, SFXsc_nolock);
         }
         if (flag2 == 0)
         {
-            ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3324;
+            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = lbl_803E3324;
         }
         else
         {
-            ((StaffDoGrowShrinkAnimState*)state)->unk50 = lbl_803E3328;
+            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = lbl_803E3328;
         }
     }
 }
