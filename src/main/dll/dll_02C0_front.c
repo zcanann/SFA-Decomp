@@ -325,7 +325,6 @@ void titleScreenPositionElements(f32 a, f32 b)
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
-#pragma scheduling off
 void titleScreenFn_801368a4(s8 arg)
 {
     s8 cur;
@@ -351,7 +350,6 @@ extern f32 timeDelta;
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch showCredits = 1 and zero five halfword/byte counters. */
-#pragma scheduling off
 void creditsStart(void)
 {
     showCredits = 1;
@@ -364,7 +362,6 @@ void creditsStart(void)
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
-#pragma scheduling on
 int gameTextFn_80134be8(void)
 {
     int x = getCurUiDll();
