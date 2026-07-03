@@ -13,13 +13,13 @@ end
 break *0x50899e
 commands 3
 silent
-printf "A cls=%d idx=%d nadj=%d reg=%d\n", *(char*)0x5ea299, *(unsigned short*)($ebx+0x10), *(short*)($ebx+0x18), $ecx
+printf "A cls=%d idx=%d nadj=%d reg=%d val=%08x\n", *(char*)0x5ea299, *(unsigned short*)($ebx+0x10), *(short*)($ebx+0x18), $ecx, *(unsigned int*)($ebx+0x04)
 continue
 end
 break *0x5089c4
 commands 4
 silent
-printf "F idx=%d nadj=%d reg=%d\n", *(unsigned short*)($ebx+0x10), *(short*)($ebx+0x18), $eax
+printf "F idx=%d nadj=%d reg=%d val=%08x\n", *(unsigned short*)($ebx+0x10), *(short*)($ebx+0x18), $eax, *(unsigned int*)($ebx+0x04)
 continue
 end
 continue
