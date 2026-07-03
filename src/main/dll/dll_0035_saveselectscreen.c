@@ -87,7 +87,7 @@ extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern int gSaveSelectInfoStartSlot;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
-extern int saveSelect_getInfo(void);
+extern int saveSelect_getInfo(void* outPtr);
 
 
 extern void titleScreenPositionElements(f32 a, f32 b);
@@ -320,14 +320,16 @@ void saveSelectGoToChapterSelect(void)
 }
 
 #pragma dont_inline on
+#pragma opt_dead_assignments off
 void saveSelectFn_8011a70c(void)
 {
     int i;
-    saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
+    FrontendSaveSlot* slots = saveFileSelect_saveSlotsBase;
+    saveFileSelect_saveSlots = slots;
     gSaveSelectInfoStartSlot = 0;
     if (lbl_803DB424 != 0)
     {
-        saveSelect_getInfo();
+        saveSelect_getInfo(slots);
         if (lbl_803DB424 != 0)
         {
             gSaveSelectInfoStartSlot = 3;
@@ -354,6 +356,7 @@ void saveSelectFn_8011a70c(void)
         }
     }
 }
+#pragma opt_dead_assignments reset
 #pragma dont_inline reset
 #pragma dont_inline on
 void saveSelectGoToChooseSlot(int arg)
