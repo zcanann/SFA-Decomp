@@ -68,7 +68,6 @@ void dimbridgecogmai_release(void)
 {
 }
 
-int dimdismountpoint_getObjectTypeId(void);
 
 void dimbridgecogmai_init(int* obj, int* def)
 {
