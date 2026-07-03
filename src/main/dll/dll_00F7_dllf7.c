@@ -761,8 +761,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DllF7State* state = ((GameObject*)obj)->extra;
