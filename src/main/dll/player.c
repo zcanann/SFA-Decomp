@@ -1305,8 +1305,9 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
         any;
         sumS = sumS / (f32)(int)
         any;
+        k = lbl_803E7F6C;
         inner->avoidVelX =
-            inner->avoidVelX - (k = lbl_803E7F6C) * sumC;
+            inner->avoidVelX - k * sumC;
         inner->avoidVelZ =
             inner->avoidVelZ - k * sumS;
         {
