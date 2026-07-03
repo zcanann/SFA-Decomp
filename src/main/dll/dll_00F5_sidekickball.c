@@ -285,7 +285,7 @@ void sidekickball_update(u8* self)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         gotHit = 0;
-        if ((buttonGetDisabled(0) & PAD_BUTTON_A) == 0u
+        if ((buttonGetDisabled(0) & 0x100) == 0u
             && ((GameObject*)self)->unkF8 == 0
             && ObjTrigger_IsSet(self) != 0)
         {

@@ -284,7 +284,7 @@ void dimcannon_update(int* obj)
                 ((DimCannonState*)state)->shutdownTimer = 0;
                 focusObj = obj;
                 (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
-                buttonDisable(0, PAD_BUTTON_A);
+                buttonDisable(0, 0x100);
                 ((DimCannonState*)state)->fireState = 3;
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
@@ -470,7 +470,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             if ((getButtonsHeld(0) & 0x100) && ((DimCannonState*)state)->aimYaw <= 0)
             {
-                buttonDisable(0, PAD_BUTTON_A);
+                buttonDisable(0, 0x100);
                 if (Player_GetCurrentMagic((int)player) >= 1)
                 {
                     ((DimCannonState*)state)->airMeterCharge += framesThisStep;
@@ -500,7 +500,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             {
                 if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
                 {
-                    buttonDisable(0, PAD_BUTTON_A);
+                    buttonDisable(0, 0x100);
                     playerAddRemoveMagic(player, -1);
                     ((DimCannonState*)state)->fireRequested = 1;
                     ((DimCannonState*)state)->airMeterCharge = 0;
@@ -526,7 +526,7 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
             }
             if (done != 0 || (getButtonsJustPressed(0) & 0x200))
             {
-                buttonDisable(0, PAD_BUTTON_B);
+                buttonDisable(0, 0x200);
                 hudFn_8011f38c(0);
                 (*gGameUIInterface)->airMeterSetShutdown();
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
