@@ -405,7 +405,6 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     arwarwing_clampToFlightBounds(obj, state);
 }
 
-#pragma peephole off
 void arwarwing_updateBombFire(int obj, int state)
 {
     ArwingState* arwing = (ArwingState*)state;
@@ -443,7 +442,6 @@ void arwarwing_updateBombFire(int obj, int state)
     }
 }
 
-#pragma peephole off
 void arwarwing_spawnBomb(int obj, int state, int side)
 {
     ArwingState* arwing = (ArwingState*)state;
@@ -598,7 +596,6 @@ void arwarwing_readControls(int obj, int state)
     }
 }
 
-#pragma peephole off
 #pragma dont_inline on
 void arwarwing_updateBarrelRoll(int obj, int state)
 {
