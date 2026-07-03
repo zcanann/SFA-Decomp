@@ -3813,3 +3813,5 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
     }
 }
+
+char sModelAnimationBufferOverflowWarning[] = "Warning: Model animation buffer overflow!! size=%d\n";

@@ -78,6 +78,7 @@ main/mm.c:
 
 main/model.c:
 	.text       start:0x8002430C end:0x8002A5D4
+	.data       start:0x802CABC4 end:0x802CABF8
 	.bss        start:0x80340740 end:0x803408A8
 
 main/object.c:
