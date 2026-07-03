@@ -3111,7 +3111,7 @@ extern s32 lbl_803DCC48;
 extern char* getCache(void);
 extern void cacheQueueWait(int);
 extern void GXLoadPosMtxImm(f32* m, int id);
-extern u8 gObjGxPosMtxIdTable[];
+u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
 
 /*
  * Bit-cursor over the model's render-instruction stream
@@ -4411,7 +4411,7 @@ extern f32 gObjShadowDist;
 extern u8 lbl_803DCC35;
 extern u8 lbl_803DCC20;
 extern u8 lbl_803DCC3E;
-extern u8 gObjGxTexMtxIdTable[];
+u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
 extern void modelInitBoneMtxs(int* am, f32* out);
 extern void model_multMtxs(int* am, f32* wm);
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);

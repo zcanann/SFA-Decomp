@@ -1531,7 +1531,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 }
 #pragma dont_inline reset
 
-extern char sTrackIntersectFuncOverflowFormat[];
+char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 extern void debugPrintf(char* fmt, ...);
 extern s16 gIntersectLineCount;
 extern int lbl_803DCF34;
@@ -4370,7 +4370,7 @@ void initTextures(void)
 
 
 extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, int i, int self, f32 f);
-extern char sTrackNoFreeLastLineError[];
+char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 extern u8 lbl_803DCF4C;
 
 void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, int slot, u8 arg8)
@@ -5883,7 +5883,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
 
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
-extern char sTrackHitOverflowError[];
+char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 extern void fn_80137948(char* fmt, ...);
 
 #pragma opt_strength_reduction off

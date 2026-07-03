@@ -75,7 +75,7 @@ extern void objLoadPlayerFromSave(u8 * obj);
 extern s16 gObjPartitionPivot;
 extern int gObjSeqToObjIdMax;
 extern s16* gObjSeqToObjIdTable;
-extern char sObjUnknownTypeUsingDummyObjectWarning[];
+char sObjUnknownTypeUsingDummyObjectWarning[] = "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
 
@@ -94,7 +94,7 @@ extern void fn_80059A50(int arg);
 extern void* textureFn_8006c5c4(void);
 extern u8* gObjFileRefCount;
 extern u8* gObjFileBufferTable;
-extern char sObjFreeObjdefError[];
+char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
@@ -103,7 +103,12 @@ extern u32 gObjUpdateFlags;
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 
-extern u8 gObjCameraSetupBlock[];
+u8 gObjCameraSetupBlock[32] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xFF, 0x3C, 0x00, 0x5A, 0x00, 0x55, 0x1E, 0x14,
+};
 extern s16 gObjPlayerSpawnIdTable[2];
 extern f32 lbl_803DE8BC;
 extern f32 gObjPi;
@@ -118,7 +123,7 @@ extern void AudioStream_StopAll(void);
 extern int gObjDefCaptureMode;
 extern int lbl_803DCB8C;
 extern void mapLoadForObject(int id, void* obj);
-extern char sObjFreeNonExistentObjectWarning[];
+char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
 extern void* lbl_803DCB90;
 extern void* lbl_803DCBC0;
 extern int* gObjFileOffsetTable;

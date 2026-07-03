@@ -706,7 +706,10 @@ extern void fn_800790AC(void);
 extern void GXSetPointSize(int size, int fmt);
 extern int gNewCloudStarFogColor;
 extern u8 gNewCloudStarAlphaRanges[8];
-extern u8 gNewCloudStarColorRanges[];
+u8 gNewCloudStarColorRanges[24] = {
+    0xD0, 0xFF, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0xD0, 0xFF,
+    0xD0, 0xFF, 0xA0, 0xD0, 0x80, 0xA0, 0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF,
+};
 u16 gNewCloudStarDisplayListSizes[0x5C];
 void* gNewCloudStarDisplayLists[0x5C];
 extern char* gNewCloudStarTextureA;
