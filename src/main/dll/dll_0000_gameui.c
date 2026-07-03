@@ -337,7 +337,7 @@ extern u8 lbl_803DD758;
 extern int lbl_803DD730;
 extern void* lbl_803DD7C8;
 extern f32 lbl_803DD7DC;
-extern int lbl_803DD7A4;
+extern u16* lbl_803DD7A4;
 extern int gGameUiCurHintTextMap;
 extern int lbl_803DD8DC;
 extern f32 lbl_803DD820;
@@ -3287,9 +3287,9 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD770 = 0;
                 lbl_803DD772 = 0;
                 pauseMenuFn_8012b77c();
-                if (lbl_803DD7A4 == 0 || *(u16*)lbl_803DD7A4 == 0xffff)
+                if (lbl_803DD7A4 == 0 || *lbl_803DD7A4 == 0xffff)
                 {
-                    lbl_803DD7A4 = (int)saveGameGetCurHint();
+                    lbl_803DD7A4 = saveGameGetCurHint();
                 }
             }
             else
@@ -3412,11 +3412,11 @@ void pauseMenuFn_80129ee0(void)
                     {
                         for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
                         {
-                            if (!GameBit_Get(tbl->tokens[lbl_803DD756].bitA))
+                            if (!GameBit_Get(*(s16*)((u8*)&tbl->tokens[0].bitA + lbl_803DD756 * 8)))
                             {
                                 break;
                             }
-                            if (GameBit_Get(tbl->tokens[lbl_803DD756].bitB) == 0)
+                            if (GameBit_Get(*(s16*)((u8*)&tbl->tokens[0].bitB + lbl_803DD756 * 8)) == 0)
                             {
                                 if (have >= tbl->tokens[lbl_803DD756].thresh)
                                 {
@@ -3428,7 +3428,7 @@ void pauseMenuFn_80129ee0(void)
                                 }
                                 break;
                             }
-                            lbl_803DD756 = (s16)(lbl_803DD756 + 1);
+                            lbl_803DD756++;
                         }
                     }
                 }
@@ -3436,7 +3436,8 @@ void pauseMenuFn_80129ee0(void)
                 {
                     if (lbl_803DD758 == 2)
                     {
-                        GameBit_Set(0x3f5, have - tbl->tokens[lbl_803DD756].thresh);
+                        int rem = have - tbl->tokens[lbl_803DD756].thresh;
+                        GameBit_Set(0x3f5, rem);
                         GameBit_Set(tbl->tokens[lbl_803DD756].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
