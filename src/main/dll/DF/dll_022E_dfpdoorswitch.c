@@ -29,3 +29,5 @@ int doorswitch_getObjectTypeId(void) { return 0x0; }
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+
+char sDoorswitchInitNoLongerSupported[] = "<doorswitch Init>No Longer supported \n";

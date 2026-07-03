@@ -83,8 +83,8 @@ extern f32 lbl_803E4C4C;
 extern f32 lbl_803E4C50;
 extern f32 lbl_803E4C54;
 extern f32 lbl_803E4C78;
-extern char sDIMBossFreeingAssetsForDIMBoss[];
-extern char sDIMBossLoadingAssetsForDIMTop[];
+char sDIMBossFreeingAssetsForDIMBoss[] = "<DIMBoss.c> freeing assets for DIMBoss\n";
+char sDIMBossLoadingAssetsForDIMTop[] = "<DIMBoss.c> loading assets for DIMTop\n";
 
 #define DIMBOSS_BONE_PARTICLE_EFFECT_800 0x800
 #define DIMBOSS_BONE_PARTICLE_EFFECT_7FF 0x7FF

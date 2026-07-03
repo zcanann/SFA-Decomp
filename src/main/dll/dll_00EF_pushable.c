@@ -59,7 +59,7 @@ extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 
-extern char sPushPullObjectHitpointOverflow[];
+char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 extern int arrayIndexOf(int* arr, int count, int target);
 extern void fn_8007FE04(int* array, int* count, int value);
 extern f32 gPushableU16ScaleDenom;
