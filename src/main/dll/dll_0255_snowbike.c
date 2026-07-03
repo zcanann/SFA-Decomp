@@ -589,9 +589,9 @@ void SnowBike_hitDetect(int obj)
     {
         k = lbl_803E5C00;
         OSReport(&sSnowBikeVelDebugFmt, mag);
-        if (*(s16*)(state->linkedObj + 0x46) == 909
-            || *(s16*)(state->linkedObj + 0x46) == 910
-            || *(s16*)(state->linkedObj + 0x46) == 1236)
+        if (((GameObject*)state->linkedObj)->anim.seqId == 909
+            || ((GameObject*)state->linkedObj)->anim.seqId == 910
+            || ((GameObject*)state->linkedObj)->anim.seqId == 1236)
         {
             k = lbl_803E5B88;
         }
