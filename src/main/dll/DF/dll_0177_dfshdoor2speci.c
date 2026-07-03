@@ -92,15 +92,11 @@ int dfsh_door2speci_getExtraSize(void)
     return sizeof(DFDoorSpeciExtra);
 }
 
-#pragma scheduling on
-#pragma peephole on
 int dfsh_door2speci_getObjectTypeId(void)
 {
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dfsh_door2speci_free(void)
 {
 }
