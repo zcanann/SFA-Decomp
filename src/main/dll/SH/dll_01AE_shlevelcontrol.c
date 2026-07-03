@@ -434,30 +434,6 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801d8480(u32 p1, u32 p2, short clearIfSetBit, short clearIfClearBit, short eventBit,
-                  int* textId)
-{
-
-    extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit, int setBit, int textId);
-
-    u32 bitValue;
-    u32 eventId;
-    u64 latchState;
-
-    latchState = FUN_80286838();
-    eventId = eventBit;
-    bitValue = GameBit_Get(eventId);
-    bitValue = countLeadingZeros(bitValue);
-    GameBit_Set(eventId, bitValue >> 5);
-    SCGameBitLatch_Update((int)((u64)latchState >> 0x20), latchState, clearIfSetBit, clearIfClearBit,
-                          eventBit, (int)textId);
-    bitValue = GameBit_Get(eventId);
-    bitValue = countLeadingZeros(bitValue);
-    GameBit_Set(eventId, bitValue >> 5);
-    FUN_80286884();
-    return;
-}
-
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
 #define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
