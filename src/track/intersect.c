@@ -125,6 +125,8 @@ extern u8 lbl_8030E8B0[];
 
 
 
+/* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
+ * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
 #pragma opt_common_subs off
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
 {
@@ -6317,7 +6319,7 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * lbl_803DD044) into the caller-supplied destination.
  */
-int saveCb_8007e748(int param_1, int param_2, void* dst)
+int saveCb_8007e748(int saveId, int size, void* dst)
 {
     extern char* lbl_803DD044;
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
