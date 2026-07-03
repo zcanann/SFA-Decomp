@@ -167,7 +167,6 @@ void wcpushblock_hitDetect(void)
 {
 }
 
-#pragma peephole off
 void wcpushblock_init(int obj, int setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -185,7 +184,6 @@ void wcpushblock_init(int obj, int setup)
     state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
 
-#pragma peephole off
 void wcpushblock_release(void)
 {
 }
