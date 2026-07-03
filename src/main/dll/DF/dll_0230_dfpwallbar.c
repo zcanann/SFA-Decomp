@@ -247,3 +247,7 @@ void chuka_release(void)
 void chuka_initialise(void)
 {
 }
+
+u8 gChukaModeTable[9] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
+};

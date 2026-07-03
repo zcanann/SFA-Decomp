@@ -3308,3 +3308,7 @@ f32 gSkyMoonDirection[] = {
     80.0f, 100.0f, 125.0f, 100.0f, 80.0f,
     255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
 };
+
+f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
+
+u8 gSkyConfigFieldIndices[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0};

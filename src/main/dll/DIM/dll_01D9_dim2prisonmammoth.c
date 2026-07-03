@@ -304,3 +304,7 @@ void dim2prisonmammoth_update(int obj)
         obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
+
+ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
+    {730, 885, 48, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.012f, {0, 0, 0, 0}},
+};

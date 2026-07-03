@@ -2157,3 +2157,11 @@ void enemy_init(int obj, u8* setup, int flag)
         ((EnemyState*)state)->sightRange = enemySightRange;
     }
 }
+
+u32 gEnemySelfAngleFlagClearMask[] = {
+    0x40000, 0x80000, 0x80000, 0x10000, 0x10000, 0x20000, 0x20000, 0x40000,
+};
+
+u32 gEnemyTargetAngleFlagClearMask[] = {
+    0x10000, 0x20000, 0x20000, 0x40000, 0x40000, 0x80000, 0x80000, 0x10000,
+};

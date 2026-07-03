@@ -636,3 +636,7 @@ IcicleEntry gDim2IcicleMeltEntries[] = {
     { 150.0f, 2431 },
     { 90.0f, 2432 },
 };
+
+int gDim2IcicleSequenceSfx[] = {
+    0x17B, 0x17B, 0x17C, 0x17C,
+};

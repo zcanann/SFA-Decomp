@@ -117,7 +117,7 @@ main/pi_dolphin.c:
 
 main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980
-	.data       start:0x8030CF04 end:0x8030D024
+	.data       start:0x8030CF04 end:0x8030D068
 	.bss        start:0x803779C0 end:0x8037E0C0
 
 main/shader.c:
@@ -154,7 +154,7 @@ main/objseq.c:
 
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18
-	.data       start:0x8030F2D4 end:0x8030F414
+	.data       start:0x8030F2C8 end:0x8030F500
 
 main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
@@ -959,6 +959,7 @@ main/dll/dll_00C4_tricky.c:
 
 main/dll/dll_00C9_enemy.c:
 	.text       start:0x8014A9F0 end:0x8014E1DC
+	.data       start:0x8031DBF0 end:0x8031DC30
 
 main/dll/dll_00DF_hagabon.c:
 	.text       start:0x8014E1DC end:0x8014EE8C
@@ -1698,7 +1699,7 @@ main/dll/DIM/dim2lift.c:
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
-	.data       start:0x803259E0 end:0x80325AA0
+	.data       start:0x803259E0 end:0x80325AC8
 
 main/dll/DIM/dll_01E0_dimboss.c:
 	.text       start:0x801BCB34 end:0x801BDBE0
@@ -1785,7 +1786,7 @@ main/dll/dll_018E_mmshwaterspike.c:
 
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C
-	.data       start:0x8032629C end:0x80326324
+	.data       start:0x80326208 end:0x80326324
 
 main/dll/dll_0191_ecshcreator.c:
 	.text       start:0x801C6E0C end:0x801C70F0
@@ -2247,6 +2248,7 @@ main/dll/DF/dll_022B_dfptorch.c:
 
 main/dll/DF/dll_0230_dfpwallbar.c:
 	.text       start:0x80205F40 end:0x80206474
+	.data       start:0x803299D8 end:0x80329A20
 
 main/dll/DF/dll_022F_dfpfloorbar.c:
 	.text       start:0x80206474 end:0x80206968
@@ -3602,6 +3604,7 @@ main/dll/DIM/dll_0256_dimsnowhorn1.c:
 
 main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
 	.text       start:0x802BC0D0 end:0x802BC7C0
+	.data       start:0x803351A8 end:0x803351F8
 
 main/dll/DR/dll_0257_drearthwarrior.c:
 	.text       start:0x802BC7C0 end:0x802BF0C8

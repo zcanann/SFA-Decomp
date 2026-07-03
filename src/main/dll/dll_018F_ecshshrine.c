@@ -868,3 +868,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     }
     GameBit_Set(0xefa, 1);
 }
+
+s16 gEcShShrineCupSlotMap[] = {
+    0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
+};
