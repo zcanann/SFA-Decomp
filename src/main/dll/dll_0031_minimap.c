@@ -700,8 +700,6 @@ void fn_80133718(void)
     viewFn_80129c74();
 }
 
-#pragma scheduling off
-#pragma peephole off
 static inline void Minimap_freeObjectSlots(void** slots, int count)
 {
     u8 z[1];
@@ -728,16 +726,13 @@ void Minimap_release(void)
     minimapTexture = NULL;
     lbl_803DD940 = NULL;
 }
-#pragma peephole on
 
-#pragma scheduling off
 void Minimap_initialise(void)
 {
     lbl_803DD940 = textureLoadAsset(0xBE5);
     lbl_803DD938 = 340;
 }
 
-#pragma scheduling on
 void fn_80133934(void)
 {
     if (minimapTexture != NULL)
