@@ -3269,14 +3269,14 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     int coord;
     int texTbl;
     int texCnt;
-    int t150;
+    int texRef4;
     f32 sx;
     f32 sy;
-    int stk348;
+    int projFlagOut1;
     u8* rop;
     f32 fz;
     int stage;
-    int t160;
+    int projBlendMode;
     u8 fancy;
 
     s10 = lbl_803DE9F4;
@@ -3362,10 +3362,10 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     if (lbl_803DCC5C != 0)
     {
-        int stk364;
-        int t170;
-        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &t170, &stk364);
-        if (t170 != 0)
+        int projModeOut0;
+        int projDisabled;
+        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &projDisabled, &projModeOut0);
+        if (projDisabled != 0)
         {
             goto notfancy;
         }
@@ -3390,16 +3390,16 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
             GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR1A1);
         }
         selectTexture(modelLightStruct_getProjectionTexture(lbl_803DCC64), 5);
-        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &stk348, &t160);
-        if (t160 == 2)
+        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &projFlagOut1, &projBlendMode);
+        if (projBlendMode == 2)
         {
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
         }
-        else if (t160 == 3)
+        else if (projBlendMode == 3)
         {
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_C1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
         }
-        else if (t160 == 1)
+        else if (projBlendMode == 1)
         {
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1);
         }
@@ -3412,7 +3412,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, GX_CC_C1);
         }
         GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        if (t160 == 1)
+        if (projBlendMode == 1)
         {
             GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
         }
@@ -3430,8 +3430,8 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         stage = 2;
         coord = 1;
     }
-    getTextureFn_8006c5e4(&t150);
-    selectTexture((void*)t150, 4);
+    getTextureFn_8006c5e4(&texRef4);
+    selectTexture((void*)texRef4, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
     mtxR[0] = lbl_803DEA1C;
