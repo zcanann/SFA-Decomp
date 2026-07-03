@@ -10,6 +10,9 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
+
+#define CCQUEEN_OBJFLAG_UPDATE_DISABLED 0x8000
+
 extern u32 ObjHits_DisableObject();
 extern u32 dll_2E_func03();
 extern void dll_2E_func06(int* obj, void* state, int flags);
@@ -80,7 +83,7 @@ void ccqueen_update(int* obj)
     if (GameBit_Get(GAMEBIT_QUEEN_RETIRED) != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCQUEEN_OBJFLAG_UPDATE_DISABLED);
         ObjHits_DisableObject(obj);
     }
     else
