@@ -27,6 +27,8 @@
 #include "string.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_Y 0x800
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
@@ -163,7 +165,7 @@ void trickyBallFn_801793b8(int obj, u8* paramsRaw)
 
     getYButtonItem(&yItem);
     btns = getButtonsJustPressed(0);
-    if ((btns & 0x100) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & 0x800) != 0))
+    if ((btns & PAD_BUTTON_A) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & PAD_BUTTON_Y) != 0))
     {
         if (fn_80295BF0(player) != 0)
         {
