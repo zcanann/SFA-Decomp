@@ -636,8 +636,9 @@ void FUN_80053754(void)
 {
 }
 
-void FUN_80053758(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+/* Debug/effect draw stub, retail build compiles the body out (all args unused). */
+void FUN_80053758(u64 arg0, u64 arg1, u64 arg2, u64 arg3,
+                  u64 arg4, u64 arg5, u64 arg6, u64 arg7)
 {
 }
 
@@ -669,11 +670,15 @@ void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5,
     return;
 }
 
+/* Guarded forwarder to the engine draw (FUN_8001763c): skips the draw while the
+ * "file loading" flag (0x100000) is set, otherwise passes the transform/geometry
+ * block (arg0..arg7) plus the draw flags through, capturing a result handle.
+ * Note drawFlag1 is intentionally not forwarded. */
 u32
-FUN_8005398c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 param_9,
-             u32 param_10, u32 param_11, u32 param_12, u32 param_13,
-             u32 param_14, u32 param_15, u32 param_16)
+FUN_8005398c(u64 arg0, double arg1, double arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u32 drawFlag0,
+             u32 drawFlag1, u32 drawFlag2, u32 drawFlag3, u32 drawFlag4,
+             u32 drawFlag5, u32 drawFlag6, u32 drawFlag7)
 {
     u32 fileFlags;
     u32 result[5];
@@ -682,8 +687,8 @@ FUN_8005398c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     fileFlags = FUN_80042838();
     if ((fileFlags & 0x100000) == 0)
     {
-        FUN_8001763c(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, result, param_9,
-                     param_11, param_12, param_13, param_14, param_15, param_16);
+        FUN_8001763c(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, result, drawFlag0,
+                     drawFlag2, drawFlag3, drawFlag4, drawFlag5, drawFlag6, drawFlag7);
     }
     else
     {
@@ -719,10 +724,12 @@ void FUN_80053bb0(double red, double green, double blue, u8 flag4, u8 flag5)
     return;
 }
 
-void FUN_80053c98(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  int param_9, char param_10, u32 param_11, u32 param_12,
-                  u32 param_13, u32 param_14, u32 param_15, u32 param_16)
+/* Effect/light draw stub, retail build compiles the body out (all args unused).
+ * Called from light.c with a transform block plus draw flags. */
+void FUN_80053c98(u64 arg0, double arg1, double arg2, u64 arg3,
+                  u64 arg4, u64 arg5, u64 arg6, u64 arg7,
+                  int drawFlag0, char drawFlag1, u32 drawFlag2, u32 drawFlag3,
+                  u32 drawFlag4, u32 drawFlag5, u32 drawFlag6, u32 drawFlag7)
 {
 }
 
