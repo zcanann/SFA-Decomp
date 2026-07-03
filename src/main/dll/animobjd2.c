@@ -29,7 +29,18 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/obj_placement.h"
 #define ANIMOBJD2_OBJFLAG_FREED 0x40
+
+/* Spawn-setup buffer seeded in the substate-3 drip burst (defNo 0x4f0).
+ * Reuses ObjPlacement's color head and adds the class-specific index at
+ * 0x1a; store widths per target asm (stb color, sth index). */
+typedef struct AnimObjD2DripSetup
+{
+    ObjPlacement head; /* 0x00: color[0..1] written */
+    u8 pad18[0x1a - 0x18];
+    s16 index;         /* 0x1a */
+} AnimObjD2DripSetup;
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern float fsin16Precise(int angle);
@@ -391,9 +402,9 @@ void fn_8013E0D0(int* obj, u8* st)
                     for (; i < 7; i++)
                     {
                         int o = Obj_AllocObjectSetup(0x24, 0x4f0);
-                        *(u8*)(o + 4) = 2;
-                        *(u8*)(o + 5) = 1;
-                        *(s16*)(o + 0x1a) = i;
+                        ((AnimObjD2DripSetup*)o)->head.color[0] = 2;
+                        ((AnimObjD2DripSetup*)o)->head.color[1] = 1;
+                        ((AnimObjD2DripSetup*)o)->index = i;
                         *(int*)(p + 0x700) = Obj_SetupObject(o, 5, gobj->anim.mapEventSlot, -1,
                                                              *(int*)&gobj->anim.parent);
                         p += 4;
