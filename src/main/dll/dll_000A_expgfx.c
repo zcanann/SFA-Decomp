@@ -31,6 +31,20 @@
 #define GX_QUADS 0x80
 #define GX_VTXFMT4 4
 
+typedef union ExpgfxWGPipe
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s8 s8;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+    f64 f64;
+} ExpgfxWGPipe;
+
+ExpgfxWGPipe GXWGFifo : (0xCC008000);
+
 extern s16 renderModeSetOrGet(int mode);
 extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
@@ -2506,23 +2520,23 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 alpha = (int)((f32)(s32)alpha * ((-viewProjW) - lbl_803DF414) /
                     ((-lbl_803DB790) - lbl_803DF414));
             }
-            *(volatile f32*)0xCC008000 = outX;
-            *(volatile f32*)0xCC008000 = outY;
-            *(volatile f32*)0xCC008000 = outZ;
+            GXWGFifo.f32 = outX;
+            GXWGFifo.f32 = outY;
+            GXWGFifo.f32 = outZ;
             {
                 u8 colorR = ((u8*)slot)[12];
                 u8 colorG = ((u8*)slot)[13];
                 u8 colorB = ((u8*)slot)[14];
-                *(volatile u8*)0xCC008000 = colorR;
-                *(volatile u8*)0xCC008000 = colorG;
-                *(volatile u8*)0xCC008000 = colorB;
+                GXWGFifo.u8 = colorR;
+                GXWGFifo.u8 = colorG;
+                GXWGFifo.u8 = colorB;
             }
-            *(volatile u8*)0xCC008000 = alpha;
+            GXWGFifo.u8 = alpha;
             {
                 s16 texU = vtxStream[4];
                 s16 texV = vtxStream[5];
-                *(volatile s16*)0xCC008000 = texU;
-                *(volatile s16*)0xCC008000 = texV;
+                GXWGFifo.s16 = texU;
+                GXWGFifo.s16 = texV;
             }
             vtxStream += 8;
         }
