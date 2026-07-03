@@ -2814,17 +2814,17 @@ extern u8 lbl_803DCDED;
 #pragma opt_strength_reduction off
 void doPendingMapLoads(void)
 {
-    s16* p5;
+    s16* cellCursor;
     u8 waited;
     int slot;
-    s16* p7;
+    s16* rowCursor;
     int gx, gz;
     int row;
     int layer;
     int cell;
     int i;
     char* base;
-    s16* p13;
+    s16* recsCursor;
     int col;
     int doLoad;
     int cnt;
@@ -2834,7 +2834,7 @@ void doPendingMapLoads(void)
     int* aBase;
     int* cBase;
     s16 recs[1200];
-    int oa[4], ob[4], oc[4], od[4];
+    int rectA[4], rectB[4], rectC[4], rectD[4];
 
     base = lbl_8037E0C0;
     waited = 0;
@@ -2898,7 +2898,7 @@ void doPendingMapLoads(void)
                     int* cp2 = cBase;
                     int k8;
                     s8 c;
-                    p13 = recs;
+                    recsCursor = recs;
                     for (layer = 0; layer < 5; layer++)
                     {
                         s16* ent = (s16*)*bp2;
@@ -2906,23 +2906,23 @@ void doPendingMapLoads(void)
                         lbl_803DCE88 = *cp2;
                         cell = 0;
                         row = 0;
-                        p7 = p13;
+                        rowCursor = recsCursor;
                         for (row = 0; row < 16; row++)
                         {
                             col = 0;
-                            p5 = p7;
+                            cellCursor = rowCursor;
                             for (k8 = 0; k8 < 8; k8++)
                             {
                                 c = g[0];
                                 if (c > -1)
                                 {
-                                    p5[0] = lbl_803DCDD0 + col;
-                                    p5[1] = lbl_803DCDD4 + row;
-                                    p5[3] = layer;
-                                    p5[2] = c;
-                                    p5 += 4;
-                                    p7 += 4;
-                                    p13 += 4;
+                                    cellCursor[0] = lbl_803DCDD0 + col;
+                                    cellCursor[1] = lbl_803DCDD4 + row;
+                                    cellCursor[3] = layer;
+                                    cellCursor[2] = c;
+                                    cellCursor += 4;
+                                    rowCursor += 4;
+                                    recsCursor += 4;
                                     cnt++;
                                 }
                                 g[0] = -2;
@@ -2936,13 +2936,13 @@ void doPendingMapLoads(void)
                                 c = g[1];
                                 if (c > -1)
                                 {
-                                    p5[0] = lbl_803DCDD0 + col;
-                                    p5[1] = lbl_803DCDD4 + row;
-                                    p5[3] = layer;
-                                    p5[2] = c;
-                                    p5 += 4;
-                                    p7 += 4;
-                                    p13 += 4;
+                                    cellCursor[0] = lbl_803DCDD0 + col;
+                                    cellCursor[1] = lbl_803DCDD4 + row;
+                                    cellCursor[3] = layer;
+                                    cellCursor[2] = c;
+                                    cellCursor += 4;
+                                    rowCursor += 4;
+                                    recsCursor += 4;
                                     cnt++;
                                 }
                                 g[1] = -2;
@@ -3104,41 +3104,41 @@ void doPendingMapLoads(void)
                                 char* g3;
                                 int zz, xx;
                                 s8 cnt2;
-                                mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, oa, ob, oc, od,
+                                mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, rectA, rectB, rectC, rectD,
                                                layer, 0, slot);
                                 g3 = (char*)*ap3;
                                 lbl_803DCE88 = *cp3;
-                                for (zz = oa[2]; zz <= oa[3]; zz++)
+                                for (zz = rectA[2]; zz <= rectA[3]; zz++)
                                 {
-                                    char* gp = g3 + oa[0] + (zz + 7) * 16;
-                                    for (xx = oa[0]; xx <= oa[1]; xx++)
+                                    char* gp = g3 + rectA[0] + (zz + 7) * 16;
+                                    for (xx = rectA[0]; xx <= rectA[1]; xx++)
                                     {
                                         gp[7] = -3;
                                         gp++;
                                     }
                                 }
-                                for (zz = ob[2]; zz <= ob[3]; zz++)
+                                for (zz = rectB[2]; zz <= rectB[3]; zz++)
                                 {
-                                    char* gp = g3 + ob[0] + (zz + 7) * 16;
-                                    for (xx = ob[0]; xx <= ob[1]; xx++)
+                                    char* gp = g3 + rectB[0] + (zz + 7) * 16;
+                                    for (xx = rectB[0]; xx <= rectB[1]; xx++)
                                     {
                                         gp[7] = -3;
                                         gp++;
                                     }
                                 }
-                                for (zz = oc[2]; zz <= oc[3]; zz++)
+                                for (zz = rectC[2]; zz <= rectC[3]; zz++)
                                 {
-                                    char* gp = g3 + oc[0] + (zz + 7) * 16;
-                                    for (xx = oc[0]; xx <= oc[1]; xx++)
+                                    char* gp = g3 + rectC[0] + (zz + 7) * 16;
+                                    for (xx = rectC[0]; xx <= rectC[1]; xx++)
                                     {
                                         gp[7] = -3;
                                         gp++;
                                     }
                                 }
-                                for (zz = od[2]; zz <= od[3]; zz++)
+                                for (zz = rectD[2]; zz <= rectD[3]; zz++)
                                 {
-                                    char* gp = g3 + od[0] + (zz + 7) * 16;
-                                    for (xx = od[0]; xx <= od[1]; xx++)
+                                    char* gp = g3 + rectD[0] + (zz + 7) * 16;
+                                    for (xx = rectD[0]; xx <= rectD[1]; xx++)
                                     {
                                         gp[7] = -3;
                                         gp++;
