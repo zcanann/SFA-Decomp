@@ -2100,8 +2100,8 @@ void renderSceneGeometry(int* p1, s8* order)
     int box1[4];
     int box2[4];
     int box3[4];
-    void** lt;
-    int* lt2;
+    void** layerTablePtr;
+    int* layerFlagPtr;
     int idx;
     int y, x0;
     int k;
@@ -2110,19 +2110,19 @@ void renderSceneGeometry(int* p1, s8* order)
     int layer;
     u8* blk;
     s8* table;
-    f32 ws;
+    f32 worldSize;
     f32 rowF, colF;
     int cell;
     u8* p;
 
     layer = 4;
-    lt = &gMapBlockLayerTables[4];
-    lt2 = &lbl_8038228C[4];
-    ws = gMapBlockWorldSize;
+    layerTablePtr = &gMapBlockLayerTables[4];
+    layerFlagPtr = &lbl_8038228C[4];
+    worldSize = gMapBlockWorldSize;
     do
     {
-        table = (s8*)*lt;
-        lbl_803DCE88 = *lt2;
+        table = (s8*)*layerTablePtr;
+        lbl_803DCE88 = *layerFlagPtr;
         mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, box0, box1, box2, box3, layer, 1,
                        lbl_803DCEC0);
         p = map;
@@ -2170,7 +2170,7 @@ void renderSceneGeometry(int* p1, s8* order)
         for (oi = 0; oi < 16; oi++)
         {
             row = order[oi];
-            rowF = ws * (f32)row;
+            rowF = worldSize * (f32)row;
             for (ii = 0; ii < 16; ii++)
             {
                 col = order[ii];
@@ -2200,8 +2200,8 @@ void renderSceneGeometry(int* p1, s8* order)
             next:;
             }
         }
-        lt--;
-        lt2--;
+        layerTablePtr--;
+        layerFlagPtr--;
         layer--;
     }
     while (layer >= 0);
@@ -2620,31 +2620,34 @@ static inline void GXTexCoord2s16(const s16 s, const s16 t)
 static inline void GXPosition1x8(const u8 x) { wgfifo.u8 = x; }
 
 #pragma peephole on
-void drawFn_8005cf8c(int verts, u8* indices, int count)
+void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount)
 {
-    s16* p;
-    int q, r;
-    int i, j;
+    s16* posPtr;
+    int clrPtr, texPtr;
+    int tri, vtx;
 
+    /* Emit triCount triangles as GX_TRIANGLES; each vertex is 16 bytes:
+       s16 pos[3] @0x0, u8 color[4] @0xc, s16 texcoord[2] @0x8. */
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXBegin(GX_TRIANGLES, GX_VTXFMT0, count * 3 & 0xffff);
-    for (i = 0; i < count; i++)
+    GXBegin(GX_TRIANGLES, GX_VTXFMT0, triCount * 3 & 0xffff);
+    for (tri = 0; tri < triCount; tri++)
     {
-        for (j = 0; j < 3; j++)
+        for (vtx = 0; vtx < 3; vtx++)
         {
             GXPosition1x8(0);
-            p = (s16*)(verts + indices[j + 1] * 0x10);
-            GXPosition3s16(p[0], p[1], p[2]);
-            q = verts + indices[j + 1] * 0x10;
-            GXColor4u8(*(u8*)(q + 0xc), *(u8*)(q + 0xd), *(u8*)(q + 0xe), *(u8*)(q + 0xf));
-            r = verts + indices[j + 1] * 0x10;
-            GXTexCoord2s16(*(s16*)(r + 8), *(s16*)(r + 10));
+            posPtr = (s16*)(vertexBase + triList[vtx + 1] * 0x10);
+            GXPosition3s16(posPtr[0], posPtr[1], posPtr[2]);
+            clrPtr = vertexBase + triList[vtx + 1] * 0x10;
+            GXColor4u8(*(u8*)(clrPtr + 0xc), *(u8*)(clrPtr + 0xd), *(u8*)(clrPtr + 0xe),
+                       *(u8*)(clrPtr + 0xf));
+            texPtr = vertexBase + triList[vtx + 1] * 0x10;
+            GXTexCoord2s16(*(s16*)(texPtr + 8), *(s16*)(texPtr + 10));
         }
-        indices = indices + 0x10;
+        triList = triList + 0x10;
     }
 }
 
@@ -2662,10 +2665,10 @@ void updateEnvironment(int mode)
 {
     if (mode == 0)
     {
-        char* e;
+        char* entry;
         void* tex;
-        int i, offs, k;
-        f32 dy;
+        int i, byteOffset, k;
+        f32 deltaY;
 
         envFxFn_80088884();
         (*gCloudActionInterface)->scrollTexture();
@@ -2674,32 +2677,32 @@ void updateEnvironment(int mode)
         (*gNewCloudsInterface)->run();
 
         i = 0;
-        offs = i;
+        byteOffset = i;
         do
         {
-            e = (char*)lbl_803DCE6C + offs;
-            if (*(s16*)(e + 12) != 0 && (tex = *(void**)e) != NULL &&
+            entry = (char*)lbl_803DCE6C + byteOffset;
+            if (*(s16*)(entry + 12) != 0 && (tex = *(void**)entry) != NULL &&
                 *(u16*)((char*)tex + 0x10) != 0x100 && *(u16*)((char*)tex + 0x14) != 0)
             {
-                textureAnimFn_80053f2c(tex, e + 8, e + 4);
+                textureAnimFn_80053f2c(tex, entry + 8, entry + 4);
             }
-            offs += 0x10;
+            byteOffset += 0x10;
             i++;
         }
         while (i < 80);
 
         i = 0;
-        offs = i;
+        byteOffset = i;
         for (; i < 58; i++)
         {
-            e = (char*)lbl_803DCE68 + offs;
-            if (*(u8*)(e + 12) != 0)
+            entry = (char*)lbl_803DCE68 + byteOffset;
+            if (*(u8*)(entry + 12) != 0)
             {
-                dy = (f32) * (s16*)(e + 10) * timeDelta;
-                *(f32*)e = *(f32*)e + (f32) * (s16*)(e + 8) * timeDelta;
-                *(f32*)(e + 4) = *(f32*)(e + 4) + dy;
+                deltaY = (f32) * (s16*)(entry + 10) * timeDelta;
+                *(f32*)entry = *(f32*)entry + (f32) * (s16*)(entry + 8) * timeDelta;
+                *(f32*)(entry + 4) = *(f32*)(entry + 4) + deltaY;
             }
-            offs += 0x10;
+            byteOffset += 0x10;
         }
 
         loadNextMap();
