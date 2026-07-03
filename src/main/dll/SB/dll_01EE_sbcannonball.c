@@ -62,7 +62,6 @@ void SB_CannonBall_initialise(void)
 {
 }
 
-void SB_ShipGun_init(GameObject* obj);
 
 int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
@@ -78,7 +77,6 @@ void SB_CannonBall_free(GameObject* obj)
     }
 }
 
-int SB_FireBall_getExtraSize(void);
 
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -86,7 +84,6 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E58B0);
 }
 
-void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void SB_CannonBall_update(GameObject* obj)
 {
