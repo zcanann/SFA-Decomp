@@ -82,8 +82,6 @@ void player_clearXZvel(int* obj, int* state)
     ((BaddieState*)state)->animSpeedB = z;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
     register int flags;
@@ -279,7 +277,6 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 }
 #pragma opt_common_subs reset
 
-#pragma peephole reset
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
 {
     while (count != 0 && p1 != NULL)
@@ -323,7 +320,6 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 }
 
 #pragma opt_common_subs off
-#pragma peephole off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
 {
     GameObject* enemy;
@@ -649,8 +645,6 @@ void player_setScale(short* moveState, u32* obj, f32 dt, int flags)
     gPlayerMoveAdvanced = 1;
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 void player_release(void)
 {
 }
@@ -661,8 +655,6 @@ void player_initialise(void)
 
 void player_setOverride(u32 x) { playerOverride = x; }
 
-#pragma scheduling off
-#pragma peephole off
 void player_init(int unused, void* obj, int a, int b)
 {
     memset(obj, 0, 0x35c);
