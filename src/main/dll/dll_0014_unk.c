@@ -4330,3 +4330,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef
     return 0;
 }
 #pragma opt_common_subs reset
+
+char sObjfsaMissingPatchExitPoint0[] = "Unable to find exit point 0 on patch between walkgroup %d and %d\n";
+char sObjfsaMissingPatchExitPoint1[] = "Unable to find exit point 1 on patch between walkgroup %d and %d\n";
