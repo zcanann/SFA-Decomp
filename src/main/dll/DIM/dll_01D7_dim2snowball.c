@@ -99,7 +99,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1CF_free(void);
 
 void dim2snowball_free(void)
 {
@@ -117,11 +116,9 @@ void dim2snowball_initialise(void)
 {
 }
 
-void dim2pathgenerator_free(void);
 
 int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_getObjectTypeId(void) { return 0x0; }
-int dim2pathgenerator_getExtraSize(void);
 
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -149,7 +146,6 @@ void dim2snowball_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void dll_1CF_init(int* obj, int* def);
 
 void dim2snowball_update(int* obj)
 {
