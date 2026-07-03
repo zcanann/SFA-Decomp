@@ -1093,7 +1093,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/frontend_control.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_43.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0035_saveselectscreen.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/dll_0036_entersavenamescreen.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_0036_entersavenamescreen.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_48.c"),
             Object(NonMatching, "main/dll/dll_49.c"),
             Object(NonMatching, "main/dll/dll_4b.c"),
