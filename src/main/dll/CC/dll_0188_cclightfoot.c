@@ -47,12 +47,8 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
-#pragma scheduling on
-#pragma peephole on
 int cclightfoot_getExtraSize(void) { return 0x18; }
 
-#pragma scheduling off
-#pragma peephole off
 void cclightfoot_init(int* obj, int* def)
 {
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
@@ -83,7 +79,6 @@ extern f32 lbl_803E4678;
 extern f32 lbl_803E467C;
 
 #pragma dont_inline on
-#pragma scheduling on
 void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 {
     s16 move;
@@ -119,7 +114,6 @@ void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 
 extern f32 lbl_803E4670;
 
-#pragma scheduling off
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern u32 ObjLink_DetachChild();
