@@ -82,7 +82,6 @@ void wcbouncycra_hitDetect(void)
 {
 }
 
-#pragma scheduling off
 void wcbouncycra_update(int obj)
 {
     WCBouncyCrateState* state = ((GameObject*)obj)->extra;
@@ -146,7 +145,6 @@ void wcbouncycra_update(int obj)
     }
 }
 
-#pragma scheduling reset
 void wcbouncycra_init(int obj, int setup)
 {
     WCBouncyCrateState* state = ((GameObject*)obj)->extra;
@@ -163,7 +161,6 @@ void wcbouncycra_initialise(void)
 {
 }
 
-#pragma scheduling off
 int wcblock_isPlayerAwayFromStoredCell(int obj, int stateArg, int player)
 {
     WCBlockState* state = (WCBlockState*)stateArg;
