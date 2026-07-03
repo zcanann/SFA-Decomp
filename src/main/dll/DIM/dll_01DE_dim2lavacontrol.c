@@ -22,7 +22,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-static inline int* DIM2snowball_GetActiveModel(void* obj);
 
 extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
