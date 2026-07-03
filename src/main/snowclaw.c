@@ -57,6 +57,17 @@ typedef struct
     u32 w[4];
 } SnowClawPulse4;
 
+/* Spawn-setup buffer for the snowclaw drop-bomb child (obj id 0x5ff):
+ * ObjPlacement head (pos/color) plus the class-specific aim/launch fields the
+ * parent seeds at +0x18 (see the target stb/sth). */
+typedef struct SnowClawBombSetup
+{
+    ObjPlacement head; /* 0x00: pos/color/mapId */
+    s8 aimYaw;         /* 0x18 */
+    s8 unk19;          /* 0x19 */
+    s16 launchAngle;   /* 0x1a */
+} SnowClawBombSetup;
+
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
 extern int fn_802972A8(int obj);
@@ -212,21 +223,21 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c)
         ((ObjPlacement*)obj2)->color[2] = 0xff;
         ((ObjPlacement*)obj2)->color[1] = 1;
         ((ObjPlacement*)obj2)->color[3] = 0xff;
-        *(s8*)(obj2 + 0x19) = b;
-        ((ObjPlacement*)obj2)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)obj2)->posY = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)obj2)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s8*)(obj2 + 0x18) = (s8)(u8)((((getAngle(
+        ((SnowClawBombSetup*)obj2)->unk19 = b;
+        ((SnowClawBombSetup*)obj2)->head.posX = ((GameObject*)obj)->anim.localPosX;
+        ((SnowClawBombSetup*)obj2)->head.posY = lbl_803E66E0 + ((GameObject*)obj)->anim.localPosY;
+        ((SnowClawBombSetup*)obj2)->head.posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((SnowClawBombSetup*)obj2)->aimYaw = (s8)(u8)((((getAngle(
             ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX,
             ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) & 0xffff) >> 8) + 0x8000) >> 8);
         Sfx_PlayFromObject(obj, SFXswapstone_mumble);
         switch ((u8)b)
         {
         case 0:
-            *(s16*)(obj2 + 0x1a) = gSnowClawDropBombAngle;
+            ((SnowClawBombSetup*)obj2)->launchAngle = gSnowClawDropBombAngle;
             break;
         case 1:
-            *(s16*)(obj2 + 0x1a) = (s16)(getAngle(
+            ((SnowClawBombSetup*)obj2)->launchAngle = (s16)(getAngle(
                 ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX,
                 ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) + 0x8000);
             break;
