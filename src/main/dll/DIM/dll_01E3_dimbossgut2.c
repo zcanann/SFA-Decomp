@@ -373,9 +373,7 @@ void dimbossgut2_initialise(void)
 {
 }
 
-void DIMbossspit_hitDetect(void);
 
 int dimbossgut2_setScale(void) { return 0x0; }
 int dimbossgut2_getExtraSize(void) { return 0x42c; }
 int dimbossgut2_getObjectTypeId(void) { return 0x49; }
-int DIMbossspit_getExtraSize(void);
