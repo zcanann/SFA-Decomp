@@ -44,6 +44,22 @@
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
+/* Spawn-setup record smallbasket hands to Obj_SetupObject for its thrown
+   debris/pickup children. Embeds the common ObjPlacement head (pos + mapId)
+   and carries the class-specific tuning fields from 0x18 on. */
+typedef struct SmallBasketThrowSetup
+{
+    ObjPlacement head;   /* 0x00 */
+    s8 yawByte;          /* 0x18 */
+    u8 pad19;
+    s16 field1A;         /* 0x1A */
+    s16 field1C;         /* 0x1C init -1 */
+    u8 pad1E[6];
+    s16 field24;         /* 0x24 init -1 */
+    u8 pad26[6];
+    s16 field2C;         /* 0x2C init -1 */
+} SmallBasketThrowSetup;
+
 /* mirrors CfperchState for the fields used here, but unk6/unk9 are s8 (not u8)
    - the sign-checked reads in smallbasket_update treat them as signed. */
 /* engine/runtime symbols (game bits, object spawn/group, hit-detect, sky,
@@ -218,7 +234,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)(setup + 0x1a) = 0x190;
+        ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
         spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
@@ -278,11 +294,11 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         break;
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
-        *(s8*)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
+        ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)(setup + 0x1a) = 0x190;
+        ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
         spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
@@ -342,11 +358,11 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         break;
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
-        *(s8*)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
+        ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)(setup + 0x1a) = 0x7d0;
+        ((SmallBasketThrowSetup*)setup)->field1A = 0x7d0;
         spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
@@ -415,8 +431,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             setup = Obj_AllocObjectSetup(0x30, 0x3cd);
         }
         setup[0x1a] = 0x14;
-        *(s16*)(setup + 0x2c) = -1;
-        *(s16*)(setup + 0x1c) = -1;
+        ((SmallBasketThrowSetup*)setup)->field2C = -1;
+        ((SmallBasketThrowSetup*)setup)->field1C = -1;
         if ((s8)data[9] != 0)
         {
             ((ObjPlacement*)setup)->posX =
@@ -433,7 +449,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((ObjPlacement*)setup)->posY = lbl_803E3960 + ((GameObject*)obj)->anim.localPosY;
             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         }
-        *(s16*)(setup + 0x24) = -1;
+        ((SmallBasketThrowSetup*)setup)->field24 = -1;
         spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
