@@ -68,6 +68,16 @@ typedef struct ObjPrintGXColor
     u8 r, g, b, a;
 } ObjPrintGXColor;
 
+/*
+ * One render op ("shader") record from the model file's renderOps array,
+ * bound by opcode 1 of the render-instruction stream.  Layer records
+ * (Shader_getLayer) precede these fields; byte 0x41 holds the layer count
+ * and byte 0x40 the layer blend flags (0x10 = additive path).
+ * flags (+0x3C) bits seen in this file: 8 = backface cull, 0x100 = extra
+ * projected-texture pass, 0x400 = alpha-test opaque, 0x200 = fuzz overlay
+ * eligible, 0x20000 = water/caustic hook, 0x100000 = decal second layer,
+ * 0x40000000 = force blend.
+ */
 typedef struct ObjModelRenderOp
 {
     u8 pad0[0x18 - 0x0];
@@ -364,11 +374,11 @@ void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
     int cache;
     float* srcMtx;
     u32 idx;
-    u32 cmd;
+    u32 cursor;
     u8* cmdPtr;
     float* dstMtx;
     int tmp;
-    u8* tag;
+    u8* posMtxIds;
     u64 ctx;
     float localMtx[22];
 
@@ -390,15 +400,15 @@ void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
         }
         DAT_803dd8c8 = 2;
     }
-    cmd = cmdStream[4];
-    cmdByte0 = *(u8*)(*cmdStream + ((int)cmd >> 3));
-    tmp = *cmdStream + ((int)cmd >> 3);
+    cursor = cmdStream[4];
+    cmdByte0 = *(u8*)(*cmdStream + ((int)cursor >> 3));
+    tmp = *cmdStream + ((int)cursor >> 3);
     cmdByte1 = *(u8*)(tmp + 1);
     cmdByte2 = *(u8*)(tmp + 2);
-    cmdStream[4] = cmd + 4;
-    tag = &DAT_802cbaa8;
+    cmdStream[4] = cursor + 4;
+    posMtxIds = &DAT_802cbaa8;
     for (tmp = 0;
-         tmp < (int)((u32)(((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cmd & 7)) & 0xf);
+         tmp < (int)((u32)(((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cursor & 7)) & 0xf);
          tmp = tmp + 1)
     {
         idx = cmdStream[4];
@@ -410,35 +420,42 @@ void FUN_8003df64(u32 obj, u32 owner, int* cmdStream, float* outMtx)
         idx = (u32)(((u32)(((u32)(u8)(b2) << 16) | (u16)(((u16)(((u16)(u8)(b1) << 8) | (u8)(b0)))))) >> (idx & 7)) & 0xff;
         if (DAT_803dd8c8 == 2)
         {
-            FUN_8025d80c((float*)(cache + idx * 0x30), (u32) * tag);
+            FUN_8025d80c((float*)(cache + idx * 0x30), (u32) * posMtxIds);
         }
         else
         {
             srcMtx = (float*)FUN_80017970((int*)ctx, idx);
             FUN_80247618(outMtx, srcMtx, localMtx);
-            FUN_8025d80c(localMtx, (u32) * tag);
+            FUN_8025d80c(localMtx, (u32) * posMtxIds);
         }
-        tag = tag + 1;
+        posMtxIds = posMtxIds + 1;
     }
     FUN_80286880();
     return;
 }
 
+/*
+ * Legacy shader-layer walker (duplicate export of the modelRenderFn_8003e98c
+ * shape, kept for cross-TU linkage).  Conversion constraint: the raw
+ * *(int*)(*(int*)&anim.modelInstance + 0xc) / + 0x59 spellings here and in
+ * fn_8003EEEC (textureSlotDefs / textureSlotCount) are load-bearing -
+ * retyping them as ObjDef field chains shifts the emitted object bytes.
+ */
 char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                  int extraFlags)
 {
     char brightness;
-    bool singleHit;
-    u8 hitCount;
+    bool singleOpaque;
+    u8 opaqueCount;
     u32 boneCount;
-    int modelData;
-    u32* entry;
-    u32* prevEntry;
+    int objPtr;
+    u32* layer;
+    u32* prevLayer;
     u32 texId;
-    int boneEntry;
-    char* desc;
-    float* uvPtr;
-    int boneIndex;
+    int slotDefPtr;
+    char* shader;
+    float* uvMtxPtr;
+    int slotIdx;
     int i;
     double u;
     double v;
@@ -454,61 +471,61 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
     u32 convLo1;
 
     ctx = FUN_80286820();
-    modelData = (int)((u64)ctx >> 0x20);
-    desc = (char*)(u32)ctx;
-    singleHit = true;
+    objPtr = (int)((u64)ctx >> 0x20);
+    shader = (char*)(u32)ctx;
+    singleOpaque = true;
     if ((*node != 0) || (node[1] != 0))
     {
-        hitCount = 0;
-        for (i = 0; i < (int)(u32)(u8)desc[0x41];
+        opaqueCount = 0;
+        for (i = 0; i < (int)(u32)(u8)shader[0x41];
         i = i + 1
         )
         {
-            boneEntry = FUN_800480a0((int)desc, i);
-            if ((*(u8*)(boneEntry + 4) & 0x80) != 0)
+            slotDefPtr = FUN_800480a0((int)shader, i);
+            if ((*(u8*)(slotDefPtr + 4) & 0x80) != 0)
             {
-                hitCount = hitCount + 1;
+                opaqueCount = opaqueCount + 1;
             }
         }
-        if (1 < hitCount)
+        if (1 < opaqueCount)
         {
-            singleHit = false;
+            singleOpaque = false;
         }
     }
-    prevEntry = 0x0;
+    prevLayer = 0x0;
     i = 0;
     do
     {
-        if ((int)(u32)(u8)desc[0x41] <= i
+        if ((int)(u32)(u8)shader[0x41] <= i
         )
         {
             FUN_8028686c();
             return '\0';
         }
-        entry = (u32*)FUN_800480a0((int)desc, i);
-        if ((*(u8*)(entry + 1) & 0x80) == phaseMask)
+        layer = (u32*)FUN_800480a0((int)shader, i);
+        if ((*(u8*)(layer + 1) & 0x80) == phaseMask)
         {
-            if (((*(u32*)(desc + 0x3c) & 0x100000) != 0) && (i == 1))
+            if (((*(u32*)(shader + 0x3c) & 0x100000) != 0) && (i == 1))
             {
                 FUN_8004bc68(*node != 0);
                 FUN_8028686c();
                 return '\x01';
             }
             brightness = (char)
-            ((*(u8*)(modelData + 0x37) + 1) * (u32)(u8)
-            desc[0xc] >> 8
+            ((*(u8*)(objPtr + 0x37) + 1) * (u32)(u8)
+            shader[0xc] >> 8
             )
             ;
-            if (*entry == 0)
+            if (*layer == 0)
             {
-                r = desc[4];
-                g = desc[5];
-                b = desc[6];
-                if ((*node == 0) && (((*desc != -1 || (desc[1] != -1)) || (desc[2] != -1))))
+                r = shader[4];
+                g = shader[5];
+                b = shader[6];
+                if ((*node == 0) && (((*shader != -1 || (shader[1] != -1)) || (shader[2] != -1))))
                 {
                     if (useDecal == 0)
                     {
-                        if ((desc[0x40] & 0x10U) == 0)
+                        if ((shader[0x40] & 0x10U) == 0)
                         {
                             a = brightness;
                             FUN_80052500(&r);
@@ -538,35 +555,35 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
             }
             else
             {
-                texId = FUN_80053078(*entry);
-                if (*(char*)((int)entry + 5) == '\0')
+                texId = FUN_80053078(*layer);
+                if (*(char*)((int)layer + 5) == '\0')
                 {
-                    uvPtr = (float*)0x0;
+                    uvMtxPtr = (float*)0x0;
                 }
                 else
                 {
-                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
-                    boneIndex = 0;
-                    for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
+                    slotDefPtr = *(int*)(*(int*)&((GameObject*)objPtr)->anim.modelInstance + 0xc);
+                    slotIdx = 0;
+                    for (boneCount = ((GameObject*)objPtr)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
                     {
-                        if (*(char*)((int)entry + 5) == ((ObjTextureSlotDef*)boneEntry)->materialIndex)
+                        if (*(char*)((int)layer + 5) == ((ObjTextureSlotDef*)slotDefPtr)->materialIndex)
                         {
-                            texId = FUN_8005375c(texId, ((GameObject*)modelData)->anim.textureSlots[boneIndex].textureId);
+                            texId = FUN_8005375c(texId, ((GameObject*)objPtr)->anim.textureSlots[slotIdx].textureId);
                             break;
                         }
-                        boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
-                        boneIndex = boneIndex + 1;
+                        slotDefPtr = (int)((ObjTextureSlotDef*)slotDefPtr + 1);
+                        slotIdx = slotIdx + 1;
                     }
-                    boneEntry = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
-                    boneIndex = 0;
-                    for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
+                    slotDefPtr = *(int*)(*(int*)&((GameObject*)objPtr)->anim.modelInstance + 0xc);
+                    slotIdx = 0;
+                    for (boneCount = ((GameObject*)objPtr)->anim.modelInstance->textureSlotCount; boneCount != 0;
                          boneCount = boneCount - 1)
                     {
-                        if (*(char*)((int)entry + 5) == ((ObjTextureSlotDef*)boneEntry)->materialIndex)
+                        if (*(char*)((int)layer + 5) == ((ObjTextureSlotDef*)slotDefPtr)->materialIndex)
                         {
                             ObjTextureRuntimeSlot* slot =
-                                &((GameObject*)modelData)->anim.textureSlots[boneIndex];
+                                &((GameObject*)objPtr)->anim.textureSlots[slotIdx];
                             convLo0 = slot->offsetS ^ 0x80000000;
                             convHi0 = 0x43300000;
                             u = (double)(lbl_803DF6C8 *
@@ -577,18 +594,18 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                                 (float)((double)(u32)convLo1));
                             goto LAB_8003eca4;
                         }
-                        boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
-                        boneIndex = boneIndex + 1;
+                        slotDefPtr = (int)((ObjTextureSlotDef*)slotDefPtr + 1);
+                        slotIdx = slotIdx + 1;
                     }
                     u = (double)lbl_803DF684;
                     v = u;
                 LAB_8003eca4:
                     FUN_80247a48(u, v, (double)lbl_803DF684, uvMtx);
-                    uvPtr = uvMtx;
+                    uvMtxPtr = uvMtx;
                 }
                 if (i == 0)
                 {
-                    if ((((*node == 0) && (node[1] == 0)) && (extraFlags == 0)) || (!singleHit))
+                    if ((((*node == 0) && (node[1] == 0)) && (extraFlags == 0)) || (!singleOpaque))
                     {
                         boneCount = 0;
                         a = brightness;
@@ -601,23 +618,23 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                 }
                 else
                 {
-                    boneCount = *(u8*)(prevEntry + 1) & 0x7f;
+                    boneCount = *(u8*)(prevLayer + 1) & 0x7f;
                     a = -1;
                 }
                 r = -1;
                 g = -1;
                 b = -1;
-                if ((*node == 0) && (((*desc != -1 || (desc[1] != -1)) || (desc[2] != -1))))
+                if ((*node == 0) && (((*shader != -1 || (shader[1] != -1)) || (shader[2] != -1))))
                 {
                     if (useDecal == 0)
                     {
-                        if ((desc[0x40] & 0x10U) == 0)
+                        if ((shader[0x40] & 0x10U) == 0)
                         {
-                            FUN_80051d64(texId, uvPtr, boneCount, &r);
+                            FUN_80051d64(texId, uvMtxPtr, boneCount, &r);
                         }
                         else
                         {
-                            FUN_80051868(texId, uvPtr, boneCount);
+                            FUN_80051868(texId, uvMtxPtr, boneCount);
                             if (a != -1)
                             {
                                 FUN_80052778(&r);
@@ -627,25 +644,25 @@ char fn_8003EA84(u32 obj, u32 owner, int* node, u32 phaseMask, int useDecal,
                     else
                     {
                         *(char*)((int)&DAT_803dd8d4 + 3) = a;
-                        if ((desc[0x40] & 0x10U) == 0)
+                        if ((shader[0x40] & 0x10U) == 0)
                         {
-                            FUN_80051fc4(texId, uvPtr, boneCount, &DAT_803dd8d4,
+                            FUN_80051fc4(texId, uvMtxPtr, boneCount, &DAT_803dd8d4,
                                          (u32) * (u8*)(node + 2), 1);
                         }
                         else
                         {
-                            FUN_80051b04(texId, uvPtr, boneCount, &DAT_803dd8d4);
+                            FUN_80051b04(texId, uvMtxPtr, boneCount, &DAT_803dd8d4);
                         }
                     }
                 }
                 else
                 {
-                    FUN_80051fc4(texId, uvPtr, boneCount, &r, (u32) * (u8*)(node + 2), 1);
+                    FUN_80051fc4(texId, uvMtxPtr, boneCount, &r, (u32) * (u8*)(node + 2), 1);
                 }
             }
         }
         i = i + 1;
-        prevEntry = entry;
+        prevLayer = layer;
     }
     while (true);
 }
@@ -657,21 +674,21 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     u8 renderFlags;
     u8 cmdByte0;
     bool needsAlpha;
-    u16* modelData;
-    int subNode;
+    u16* objPtr;
+    int op;
     VtableFn* callback;
     char callbackResult;
-    int* hitList;
-    u32* decalEntry;
+    int* refs;
+    u32* decalLayer;
     float* projMtx;
-    int obj;
+    int hdr;
     int lightCount;
     int lightSlot;
     u32 cmd;
     int light;
     int lightIdx;
     u8* lightFlags;
-    u32 texMaterial;
+    u32 envTex;
     int* lightId;
     double u;
     double v;
@@ -692,43 +709,43 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     u32 convLo1;
 
     ctx = FUN_80286820();
-    modelData = (u16*)((u64)ctx >> 0x20);
-    obj = (int)(u32)ctx;
+    objPtr = (u16*)((u64)ctx >> 0x20);
+    hdr = (int)(u32)ctx;
     needsAlpha = false;
     cmd = cmdStream[4];
     cmdByte0 = *(u8*)(*cmdStream + ((int)cmd >> 3));
-    subNode = *cmdStream + ((int)cmd >> 3);
-    cmdByte1 = *(u8*)(subNode + 1);
-    cmdByte2 = *(u8*)(subNode + 2);
+    op = *cmdStream + ((int)cmd >> 3);
+    cmdByte1 = *(u8*)(op + 1);
+    cmdByte2 = *(u8*)(op + 2);
     cmdStream[4] = cmd + 6;
     cmd = (((u32)(((u32)(u8)(cmdByte2) << 16) | (u16)(((u16)(((u16)(u8)(cmdByte1) << 8) | (u8)(cmdByte0)))))) >> (cmd & 7)) & 0x3f;
     callback = (VtableFn*)FUN_8001795c((int)node);
-    if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(modelData, node, cmd), callbackResult == '\0'))
+    if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(objPtr, node, cmd), callbackResult == '\0'))
     {
-        subNode = FUN_8001792c(*node, cmd);
-        hitList = (int*)FUN_80017978((int)node, cmd);
+        op = FUN_8001792c(*node, cmd);
+        refs = (int*)FUN_80017978((int)node, cmd);
         FUN_80052904();
-        texMaterial = 0;
-        if (((*hitList != 0) || (hitList[1] != 0)) && (*(u32*)(subNode + 0x34) != 0))
+        envTex = 0;
+        if (((*refs != 0) || (refs[1] != 0)) && (*(u32*)(op + 0x34) != 0))
         {
-            texMaterial = FUN_80053078(*(u32*)(subNode + 0x34));
+            envTex = FUN_80053078(*(u32*)(op + 0x34));
             lightCount = DAT_803dd8dc + 1;
-            if (*hitList != 0)
+            if (*refs != 0)
             {
                 lightCount = DAT_803dd8dc + 2;
             }
-            if (hitList[1] != 0)
+            if (refs[1] != 0)
             {
                 lightCount = lightCount + 1;
             }
-            texMaterial = FUN_8004b960(texMaterial, lightCount, (u32) * (u8*)(subNode + 0x42), *(u32*)(subNode + 0x24));
-            texMaterial = texMaterial & 0xff;
+            envTex = FUN_8004b960(envTex, lightCount, (u32) * (u8*)(op + 0x42), *(u32*)(op + 0x24));
+            envTex = envTex & 0xff;
         }
-        if (*hitList != 0)
+        if (*refs != 0)
         {
-            FUN_8004c174(*hitList, *(char*)((int)modelData + 0xf1));
+            FUN_8004c174(*refs, *(char*)((int)objPtr + 0xf1));
         }
-        if (hitList[1] == 0)
+        if (refs[1] == 0)
         {
             envColor = DAT_803dc0cc;
             FUN_8025c428(3, (u8*)&envColor);
@@ -736,23 +753,23 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
         else
         {
             alphaColor = DAT_803dd8d4 & 0xffffff00;
-            if (*(int*)(subNode + 0x1c) != 0)
+            if (*(int*)(op + 0x1c) != 0)
             {
-                alphaColor = ((u32)(((u32)(0xffffff) << 8) | (u8)(*(u8*)(subNode + 0x22))));
+                alphaColor = ((u32)(((u32)(0xffffff) << 8) | (u8)(*(u8*)(op + 0x22))));
             }
             matColor = alphaColor;
             FUN_8025c428(3, (u8*)&matColor);
-            FUN_8004bf28(hitList[1], *hitList != 0, (u32) * (u8*)(subNode + 0x20));
+            FUN_8004bf28(refs[1], *refs != 0, (u32) * (u8*)(op + 0x20));
             if ((char)alphaColor != '\0')
             {
-                FUN_8004be30(*hitList != 0);
+                FUN_8004be30(*refs != 0);
             }
         }
         lightCount = DAT_803dd8dc;
         if (DAT_803dd8cc == '\0')
         {
-            renderFlags = OBJPRINT_MODEL_DEF(modelData)->renderFlags;
-            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc) == (float*)0x0))
+            renderFlags = OBJPRINT_MODEL_DEF(objPtr)->renderFlags;
+            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)&((GameObject*)objPtr)->anim.modelState + 0xc) == (float*)0x0))
             {
                 if ((renderFlags & 0x10) == 0)
                 {
@@ -786,7 +803,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             }
             else
             {
-                FUN_8004afc0(*(float**)(*(int*)&((GameObject*)modelData)->anim.modelState + 0xc));
+                FUN_8004afc0(*(float**)(*(int*)&((GameObject*)objPtr)->anim.modelState + 0xc));
                 lightCount = 0;
             }
         }
@@ -796,36 +813,36 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             needsAlpha = true;
             lightCount = 0;
         }
-        if (texMaterial != 0)
+        if (envTex != 0)
         {
-            FUN_8004b8cc(texMaterial);
+            FUN_8004b8cc(envTex);
         }
-        if (((*(u32*)(subNode + 0x18) != 0) && (*(int*)(subNode + 0x1c) == 0)) && (hitList[1] != 0))
+        if (((*(u32*)(op + 0x18) != 0) && (*(int*)(op + 0x1c) == 0)) && (refs[1] != 0))
         {
-            FUN_80053078(*(u32*)(subNode + 0x18));
+            FUN_80053078(*(u32*)(op + 0x18));
             FUN_8004bd68();
         }
         lightIdx = 0;
-        if (((*(u16*)(obj + 0xe2) & 2) != 0) && ((*(u8*)(obj + 0x24) & 2) == 0))
+        if (((*(u16*)(hdr + 0xe2) & 2) != 0) && ((*(u8*)(hdr + 0x24) & 2) == 0))
         {
             lightIdx = 1;
         }
-        callbackResult = fn_8003EA84((u32)(u32)modelData, (u32)subNode, hitList, 0x80, lightIdx, lightCount);
+        callbackResult = fn_8003EA84((u32)(u32)objPtr, (u32)op, refs, 0x80, lightIdx, lightCount);
         if (callbackResult == '\0')
         {
-            FUN_8004bc68(*hitList != 0);
+            FUN_8004bc68(*refs != 0);
         }
-        if ((*(u32*)(subNode + 0x3c) & 0x100000) != 0)
+        if ((*(u32*)(op + 0x3c) & 0x100000) != 0)
         {
-            decalEntry = (u32*)FUN_800480a0(subNode, 1);
-            light = *(int*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0xc);
+            decalLayer = (u32*)FUN_800480a0(op, 1);
+            light = *(int*)(*(int*)&((GameObject*)objPtr)->anim.modelInstance + 0xc);
             lightSlot = 0;
-            for (texMaterial = (u32) * (u8*)(*(int*)&((GameObject*)modelData)->anim.modelInstance + 0x59); texMaterial != 0;
-                 texMaterial = texMaterial - 1)
+            for (envTex = (u32) * (u8*)(*(int*)&((GameObject*)objPtr)->anim.modelInstance + 0x59); envTex != 0;
+                 envTex = envTex - 1)
             {
-                if (*(char*)((int)decalEntry + 5) == *(char*)(light + 1))
+                if (*(char*)((int)decalLayer + 5) == *(char*)(light + 1))
                 {
-                    light = *(int*)(modelData + 0x38) + lightSlot * 0x10;
+                    light = *(int*)(objPtr + 0x38) + lightSlot * 0x10;
                     convLo0 = (int)*(short*)(light + 8) ^ 0x80000000;
                     convHi0 = 0x43300000;
                     u = (double)(lbl_803DF6C8 *
@@ -843,35 +860,35 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             v = u;
         LAB_8003f328:
             FUN_80247a48(u, v, (double)lbl_803DF684, decalMtx);
-            FUN_80053078(*decalEntry);
+            FUN_80053078(*decalLayer);
             FUN_80048178();
         }
-        fn_8003EA84((u32)(u32)modelData, (u32)subNode, hitList, 0, lightIdx, lightCount);
+        fn_8003EA84((u32)(u32)objPtr, (u32)op, refs, 0, lightIdx, lightCount);
         callbackResult = FUN_80048094();
-        if ((callbackResult != '\0') && ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x100) == 0))
+        if ((callbackResult != '\0') && ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 0x100) == 0))
         {
             trackIntersect_getColorRgb((u8*)&litColor);
             FUN_80049910(&litColor);
         }
-        if ((*(u32*)(subNode + 0x3c) & 0x100) != 0)
+        if ((*(u32*)(op + 0x3c) & 0x100) != 0)
         {
             projMtx = (float*)FUN_80006974();
-            FUN_80017a50(modelData, localMtx, '\0');
+            FUN_80017a50(objPtr, localMtx, '\0');
             FUN_80247618(projMtx, localMtx, viewMtx);
             FUN_80247618((float*)&DAT_80397450, viewMtx, worldMtx);
             FUN_8025d8c4(worldMtx, 0x24, 0);
             FUN_80049260();
         }
-        if ((OBJPRINT_MODEL_DEF(modelData)->renderFlags & 0x10) != 0)
+        if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & 0x10) != 0)
         {
-            FUN_80048f00(subNode);
+            FUN_80048f00(op);
         }
-        if (((*(u8*)((int)modelData + 0xe5) & 2) != 0) || ((*(u8*)((int)modelData + 0xe5) & 0x10) != 0))
+        if (((*(u8*)((int)objPtr + 0xe5) & 2) != 0) || ((*(u8*)((int)objPtr + 0xe5) & 0x10) != 0))
         {
-            alphaColor = *(u32*)(modelData + 0x76);
+            alphaColor = *(u32*)(objPtr + 0x76);
             FUN_8005264c((char*)&alphaColor);
         }
-        if ((*(u32*)(subNode + 0x3c) & 0x20000) != 0)
+        if ((*(u32*)(op + 0x3c) & 0x20000) != 0)
         {
             PlayControl();
         }
@@ -880,13 +897,13 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
         if (callback == (VtableFn*)0x0)
         {
             cmd = 1;
-            if (((*(char*)((int)modelData + 0x37) != -1) || ((*(u32*)(subNode + 0x3c) & 0x40000000) != 0))
+            if (((*(char*)((int)objPtr + 0x37) != -1) || ((*(u32*)(op + 0x3c) & 0x40000000) != 0))
                 || (needsAlpha))
             {
                 FUN_8025cce8(1, 4, 5, 5);
-                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 0x400) == 0)
                 {
-                    if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x2000) == 0)
+                    if ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 0x2000) == 0)
                     {
                         gxSetZMode_(1, 3, 0);
                         FUN_8025c754(7, 0, 0, 7, 0);
@@ -904,10 +921,10 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
                     FUN_8025c754(7, 0, 0, 7, 0);
                 }
             }
-            else if ((*(u32*)(subNode + 0x3c) & 0x400) == 0)
+            else if ((*(u32*)(op + 0x3c) & 0x400) == 0)
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -920,7 +937,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
             else
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(u16 *)&((GameObject *)obj)->anim.rotY & 0x400) == 0)
+                if ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -930,7 +947,7 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
                 }
                 FUN_8025c754(4, 0x40, 0, 4, 0x40);
             }
-            if ((*(u32*)(subNode + 0x3c) & 0x400) != 0)
+            if ((*(u32*)(op + 0x3c) & 0x400) != 0)
             {
                 cmd = 0;
             }
@@ -938,9 +955,9 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
         }
         else
         {
-            (*callback)(modelData, node, cmd);
+            (*callback)(objPtr, node, cmd);
         }
-        if ((*(u32*)(subNode + 0x3c) & 8) == 0)
+        if ((*(u32*)(op + 0x3c) & 8) == 0)
         {
             FUN_80259288(0);
         }
@@ -953,10 +970,10 @@ void fn_8003EEEC(u32 objArg, u32 owner, int* node, int* cmdStream)
     return;
 }
 
-void fn_8003F8EC(u32 objArg, u32 owner, int obj)
+void fn_8003F8EC(u32 objArg, u32 owner, int hdr)
 {
-    u16* modelData;
-    int* renderNode;
+    u16* objPtr;
+    int* am;
     float* mtx;
     VtableFn* callback;
     char callbackResult;
@@ -972,11 +989,11 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     float worldMtx[12];
     float localMtx[22];
 
-    modelData = (u16*)FUN_80286840();
-    renderNode = (int*)FUN_80017a54((int)modelData);
+    objPtr = (u16*)FUN_80286840();
+    am = (int*)FUN_80017a54((int)objPtr);
     if (gCMenuButtons == 0)
     {
-        FUN_80017a50(modelData, localMtx, '\0');
+        FUN_80017a50(objPtr, localMtx, '\0');
     }
     else
     {
@@ -985,46 +1002,46 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     }
     mtx = (float*)FUN_80006974();
     FUN_80247618(mtx, localMtx, worldMtx);
-    if ((*(u16*)(renderNode + 6) & 8) == 0)
+    if ((*(u16*)(am + 6) & 8) == 0)
     {
-        *(u8*)(renderNode + 0x18) = 0;
-        if (((*(short*)(obj + 0xec) == 0) || ((*(u16 *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
-            (*(char*)(obj + 0xf3) == '\0'))
+        *(u8*)(am + 0x18) = 0;
+        if (((*(short*)(hdr + 0xec) == 0) || ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 2) != 0)) ||
+            (*(char*)(hdr + 0xf3) == '\0'))
         {
-            FUN_8001796c((int)renderNode);
-            mtx = (float*)FUN_80017970(renderNode, 0);
+            FUN_8001796c((int)am);
+            mtx = (float*)FUN_80017970(am, 0);
             FUN_802475e4((float*)&DAT_802cbac0, mtx);
             DAT_803dd8c8 = 3;
         }
-        else if (gCMenuItemCount == obj)
+        else if (gCMenuItemCount == hdr)
         {
             DAT_803dd8c8 = 1;
         }
         else
         {
-            FUN_80017988(renderNode, obj, modelData, &DAT_802cbac0);
-            FUN_8003c10c(obj, renderNode);
+            FUN_80017988(am, hdr, objPtr, &DAT_802cbac0);
+            FUN_8003c10c(hdr, am);
         }
-        cmdOffset = *(int*)(modelData + 0x2a);
+        cmdOffset = *(int*)(objPtr + 0x2a);
         if (cmdOffset != 0)
         {
             *(char*)(cmdOffset + 0xaf) = *(char*)(cmdOffset + 0xaf) + -1;
-            if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
+            if (*(char*)(*(int*)(objPtr + 0x2a) + 0xaf) < '\0')
             {
-                *(u8*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
+                *(u8*)(*(int*)(objPtr + 0x2a) + 0xaf) = 0;
             }
         }
-        *(u16*)(renderNode + 6) = *(u16*)(renderNode + 6) | 8;
+        *(u16*)(am + 6) = *(u16*)(am + 6) | 8;
     }
-    texId = (u32) * (u16*)(obj + 0xd8) << 3;
-    FUN_80006adc(cmdDesc, *(u32*)(obj + 0xd4), texId, texId);
-    if ((*(u16*)(obj + 0xe2) & 2) == 0)
+    texId = (u32) * (u16*)(hdr + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(u32*)(hdr + 0xd4), texId, texId);
+    if ((*(u16*)(hdr + 0xe2) & 2) == 0)
     {
         color = 0xffffff00;
     }
     else if (DAT_803dd8a8 == '\0')
     {
-        FUN_80080f88((u32) * (u8*)(modelData + 0x79), (u8*)&color, (u8*)((int)&color + 1),
+        FUN_80080f88((u32) * (u8*)(objPtr + 0x79), (u8*)&color, (u8*)((int)&color + 1),
                      (u8*)((int)&color + 2));
     }
     else
@@ -1035,16 +1052,16 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
         color = color << 8;
         DAT_803dd8a8 = '\0';
     }
-    *(u8*)((int)&color + 3) = *(u8*)((int)modelData + 0x37);
-    callback = (VtableFn*)FUN_8001795c((int)renderNode);
+    *(u8*)((int)&color + 3) = *(u8*)((int)objPtr + 0x37);
+    callback = (VtableFn*)FUN_8001795c((int)am);
     if ((DAT_803dd8aa == '\0') || (callback != (VtableFn*)0x0))
     {
         FUN_800069d4();
-        if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(modelData, renderNode, 0), callbackResult == '\0'))
+        if ((callback == (VtableFn*)0x0) || (callbackResult = (*callback)(objPtr, am, 0), callbackResult == '\0'))
         {
             trackIntersect_drawColorBand();
             FUN_80052904();
-            texId = FUN_80053078(*(u32*)(*(int*)(obj + 0x38) + 0x24));
+            texId = FUN_80053078(*(u32*)(*(int*)(hdr + 0x38) + 0x24));
             FUN_80051fc4(texId, 0, 0, &color, 0, 0);
             callbackResult = FUN_80048094();
             if (callbackResult != '\0')
@@ -1062,7 +1079,7 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
     }
     else
     {
-        texId = FUN_80053078(*(u32*)(*(int*)(obj + 0x38) + 0x24));
+        texId = FUN_80053078(*(u32*)(*(int*)(hdr + 0x38) + 0x24));
         if (gCMenuScriptedInput != texId)
         {
             gCMenuScriptedInput = texId;
@@ -1078,23 +1095,23 @@ void fn_8003F8EC(u32 objArg, u32 owner, int obj)
             sSnowBikeVelDebugFmt = color;
         }
     }
-    if (gCMenuItemCount != obj)
+    if (gCMenuItemCount != hdr)
     {
-        FUN_802585d8(9, renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7], 6);
-        FUN_802585d8(0xd, *(u32*)(obj + 0x34), 4);
-        gCMenuItemCount = obj;
+        FUN_802585d8(9, am[(*(u16*)(am + 6) >> 1 & 1) + 7], 6);
+        FUN_802585d8(0xd, *(u32*)(hdr + 0x34), 4);
+        gCMenuItemCount = hdr;
     }
-    FUN_8003f3b4((u32)(u32)modelData, (u32)obj, *(int*)(obj + 0x38));
+    FUN_8003f3b4((u32)(u32)objPtr, (u32)hdr, *(int*)(hdr + 0x38));
     cmdCursor = cmdCursor + 4;
-    FUN_8003e358(obj, *(u32*)(obj + 0x38), cmdDesc);
+    FUN_8003e358(hdr, *(u32*)(hdr + 0x38), cmdDesc);
     cmdCursor = cmdCursor + 4;
-    FUN_8003df64((u32)obj, (u32)renderNode, cmdDesc, worldMtx);
+    FUN_8003df64((u32)hdr, (u32)am, cmdDesc, worldMtx);
     texId = cmdCursor + 4;
     cmdOffset = texId >> 3;
     cmdPtr = cmdDesc[0] + cmdOffset;
     cmdCursor = cmdCursor + 0xc;
     texEntry = (u32*)
-        FUN_80017914(obj, (((u32)(((u32)(u8)(*(u8*)(cmdPtr + 2)) << 16) | (u16)(((u16)(((u16)(u8)(*(u8*)(cmdPtr + 1)) << 8) | (u8)(*(u8*)(cmdDesc[0] + cmdOffset))))))) >>
+        FUN_80017914(hdr, (((u32)(((u32)(u8)(*(u8*)(cmdPtr + 2)) << 16) | (u16)(((u16)(((u16)(u8)(*(u8*)(cmdPtr + 1)) << 8) | (u8)(*(u8*)(cmdDesc[0] + cmdOffset))))))) >>
                          (texId & 7)) & 0xff);
     FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
     FUN_8028688c();
@@ -1117,17 +1134,17 @@ void FUN_8003f9f8(void)
     sSnowBikeVelDebugFmt = 0;
 }
 
-void fn_8003FDA8(u32 objArg, u32 owner, int obj)
+void fn_8003FDA8(u32 objArg, u32 owner, int hdr)
 {
     bool done;
     u32 opcode;
     u32 nextCursor;
-    u16* childNode;
-    u16* modelData;
-    int* renderNode;
+    u16* ownerIter;
+    u16* objPtr;
+    int* am;
     float* viewMtx;
     float* jointMtx;
-    u16* leafNode;
+    u16* rootObj;
     u32* texEntry;
     int node;
     u32 fadeLevel;
@@ -1146,102 +1163,102 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
     float worldMtx[25];
 
     ctx = FUN_80286838();
-    modelData = (u16*)((u64)ctx >> 0x20);
-    renderNode = (int*)FUN_80017a54((int)modelData);
+    objPtr = (u16*)((u64)ctx >> 0x20);
+    am = (int*)FUN_80017a54((int)objPtr);
     viewMtx = (float*)FUN_80006974();
     if (gCMenuButtons == 0)
     {
-        FUN_80017a50(modelData, localMtx, '\0');
+        FUN_80017a50(objPtr, localMtx, '\0');
     }
     else
     {
         FUN_802475e4((float*)gCMenuButtons, localMtx);
         gCMenuButtons = 0;
     }
-    if ((*(u16*)(renderNode + 6) & 8) == 0)
+    if ((*(u16*)(am + 6) & 8) == 0)
     {
         done = false;
-        *(u8*)(renderNode + 0x18) = 0;
-        FUN_80017968((int)renderNode);
-        if (((*(short*)(obj + 0xec) == 0) || ((*(u16 *)&((GameObject *)obj)->anim.rotY & 2) != 0)) ||
-            (*(char*)(obj + 0xf3) == '\0'))
+        *(u8*)(am + 0x18) = 0;
+        FUN_80017968((int)am);
+        if (((*(short*)(hdr + 0xec) == 0) || ((*(u16 *)&((GameObject *)hdr)->anim.rotY & 2) != 0)) ||
+            (*(char*)(hdr + 0xf3) == '\0'))
         {
-            FUN_8001796c((int)renderNode);
-            jointMtx = (float*)FUN_80017970(renderNode, 0);
+            FUN_8001796c((int)am);
+            jointMtx = (float*)FUN_80017970(am, 0);
             FUN_802475e4(localMtx, jointMtx);
         }
         else
         {
-            done = *(int *)&((GameObject *)obj)->anim.targetObj == 0;
+            done = *(int *)&((GameObject *)hdr)->anim.targetObj == 0;
             if (done)
             {
-                FUN_80017988(renderNode, obj, modelData, localMtx);
+                FUN_80017988(am, hdr, objPtr, localMtx);
             }
             else
             {
                 FUN_802475b8(prevMtx);
-                FUN_80017988(renderNode, obj, modelData, prevMtx);
-                FUN_800178d0(renderNode, localMtx, (float*)&DAT_80343a70);
+                FUN_80017988(am, hdr, objPtr, prevMtx);
+                FUN_800178d0(am, localMtx, (float*)&DAT_80343a70);
             }
             done = !done;
-            if ((*(VtableFn**)(modelData + 0x84) != (VtableFn*)0x0) && ((u16*)(u32)ctx == modelData))
+            if ((*(VtableFn**)(objPtr + 0x84) != (VtableFn*)0x0) && ((u16*)(u32)ctx == objPtr))
             {
-                (**(VtableFn**)(modelData + 0x84))(modelData, renderNode, localMtx);
+                (**(VtableFn**)(objPtr + 0x84))(objPtr, am, localMtx);
             }
         }
-        if (*(char*)(obj + 0xf9) != '\0')
+        if (*(char*)(hdr + 0xf9) != '\0')
         {
             FUN_800178d4();
         }
         if (done)
         {
-            if (*(char*)(renderNode + 0x18) == '\0')
+            if (*(char*)(am + 0x18) == '\0')
             {
-                node = *(int *)&((GameObject *)obj)->anim.velocityY;
+                node = *(int *)&((GameObject *)hdr)->anim.velocityY;
             }
             else
             {
-                node = renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7];
+                node = am[(*(u16*)(am + 6) >> 1 & 1) + 7];
             }
-            FUN_800179cc(&DAT_80343a70, obj + 0x88, node, renderNode[0x10],
-                         renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7]);
-            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int *)&((GameObject *)obj)->anim.velocityZ, renderNode[0x11],
-                         *(u8*)(obj + 0x24) & 8);
+            FUN_800179cc(&DAT_80343a70, hdr + 0x88, node, am[0x10],
+                         am[(*(u16*)(am + 6) >> 1 & 1) + 7]);
+            FUN_800179c8(&DAT_80343a70, hdr + 0xac, *(int *)&((GameObject *)hdr)->anim.velocityZ, am[0x11],
+                         *(u8*)(hdr + 0x24) & 8);
         }
-        if (*(char*)(obj + 0xf7) == '\0')
+        if (*(char*)(hdr + 0xf7) == '\0')
         {
-            node = *(int*)(modelData + 0x2a);
+            node = *(int*)(objPtr + 0x2a);
             if (node != 0)
             {
                 *(char*)(node + 0xaf) = *(char*)(node + 0xaf) + -1;
-                if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
+                if (*(char*)(*(int*)(objPtr + 0x2a) + 0xaf) < '\0')
                 {
-                    *(u8*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
+                    *(u8*)(*(int*)(objPtr + 0x2a) + 0xaf) = 0;
                 }
             }
         }
         else
         {
-            FUN_800178f0(renderNode, obj, modelData, (float*)0x0, (int)(u16*)(u32)ctx);
+            FUN_800178f0(am, hdr, objPtr, (float*)0x0, (int)(u16*)(u32)ctx);
         }
-        *(u16*)(renderNode + 6) = *(u16*)(renderNode + 6) | 8;
+        *(u16*)(am + 6) = *(u16*)(am + 6) | 8;
     }
-    FUN_8003c10c(obj, renderNode);
-    fadeLevel = (u32) * (u16*)(obj + 0xd8) << 3;
-    FUN_80006adc(cmdDesc, *(u32*)(obj + 0xd4), fadeLevel, fadeLevel);
-    childNode = modelData;
-    if (*(int *)&((GameObject *)obj)->anim.targetObj != 0)
+    FUN_8003c10c(hdr, am);
+    fadeLevel = (u32) * (u16*)(hdr + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(u32*)(hdr + 0xd4), fadeLevel, fadeLevel);
+    ownerIter = objPtr;
+    if (*(int *)&((GameObject *)hdr)->anim.targetObj != 0)
     {
         FUN_80247618(viewMtx, localMtx, worldMtx);
         FUN_8025d80c(worldMtx, DAT_802cbab1);
     }
     do
     {
-        leafNode = childNode;
-        childNode = *(u16**)(leafNode + 0x62);
+        rootObj = ownerIter;
+        ownerIter = *(u16**)(rootObj + 0x62);
     }
-    while (childNode != (u16*)0x0);
-    fadeLevel = (u32) * (u8*)(*(int*)(*(int*)(leafNode + 0x32) + 0xc) + 0x65);
+    while (ownerIter != (u16*)0x0);
+    fadeLevel = (u32) * (u8*)(*(int*)(*(int*)(rootObj + 0x32) + 0xc) + 0x65);
     if (fadeLevel == 0xff)
     {
         matColor = DAT_803dc0c8;
@@ -1281,7 +1298,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
     FUN_8025c754(7, 0, 0, 7, 0);
     FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
     FUN_8025a5bc(1);
-    if ((OBJPRINT_MODEL_DEF(modelData)->renderFlags & 4) == 0)
+    if ((OBJPRINT_MODEL_DEF(objPtr)->renderFlags & 4) == 0)
     {
         gxSetZMode_(0, 3, 0);
         FUN_80259288(0);
@@ -1291,7 +1308,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
         gxSetZMode_(1, 3, 1);
         FUN_80259288(1);
     }
-    FUN_802585d8(9, renderNode[(*(u16*)(renderNode + 6) >> 1 & 1) + 7], 6);
+    FUN_802585d8(9, am[(*(u16*)(am + 6) >> 1 & 1) + 7], 6);
     done = false;
     fadeLevel = cmdCursor;
     while (cmdCursor = fadeLevel, !done)
@@ -1303,7 +1320,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
         {
             cmdCursor = nextCursor;
             FUN_80257b5c();
-            if (1 < *(u8*)(obj + 0xf3))
+            if (1 < *(u8*)(hdr + 0xf3))
             {
                 FUN_802570dc(0, 1);
             }
@@ -1335,7 +1352,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
             {
                 cmdPtr = (u8*)(cmdDesc[0] + ((int)nextCursor >> 3));
                 cmdCursor = cmdCursor + 10;
-                subNode = FUN_8001792c(obj,
+                subNode = FUN_8001792c(hdr,
                                       (((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >>
                                           (nextCursor & 7)) & 0x3f);
                 fadeLevel = cmdCursor;
@@ -1345,7 +1362,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
                 cmdPtr = (u8*)(cmdDesc[0] + ((int)nextCursor >> 3));
                 cmdCursor = cmdCursor + 0xc;
                 texEntry = (u32*)
-                    FUN_80017914(obj, (u32) * (u8*)(obj + 0xf5) +
+                    FUN_80017914(hdr, (u32) * (u8*)(hdr + 0xf5) +
                                  ((((u32)(((u32)(u8)(cmdPtr[2]) << 16) | (u16)(((u16)(((u16)(u8)(cmdPtr[1]) << 8) | (u8)(*cmdPtr)))))) >>
                                      (nextCursor & 7)) & 0xff));
                 FUN_8025d63c(*texEntry, (u32) * (u16*)(texEntry + 1));
@@ -1359,7 +1376,7 @@ void fn_8003FDA8(u32 objArg, u32 owner, int obj)
         else if (opcode == 4)
         {
             cmdCursor = nextCursor;
-            FUN_8003df64((u32)obj, (u32)renderNode, cmdDesc, viewMtx);
+            FUN_8003df64((u32)hdr, (u32)am, cmdDesc, viewMtx);
             fadeLevel = cmdCursor;
         }
     }
@@ -1542,13 +1559,13 @@ void FUN_800406cc(int obj)
 void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
 {
     u16* child;
-    int* parentNode;
+    int* parentAm;
     float* jointMtx;
     u16* cam;
     u16* parent;
     int jointIdx;
-    int bonePtr;
-    int boneOff;
+    int entPtr;
+    int entOff;
     double in_f30;
     double dz;
     double in_f31;
@@ -1563,9 +1580,9 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     u16 rotY;
     u16 rotZ;
     float tmpHeight;
-    u32 boneWord0;
-    u32 boneWord1;
-    u32 boneWord2;
+    u32 entPosX;
+    u32 entPosY;
+    u32 entPosZ;
     float rot[3];
     float posX;
     u32 posY;
@@ -1590,13 +1607,13 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
     else
     {
         FUN_80017a54((int)child);
-        parentNode = (int*)FUN_80017a54((int)parent);
-        boneOff = ((u16)child[0x58] & 7) * 0x18;
-        bonePtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
-        jointIdx = (int)*(char*)(bonePtr + ((GameObject*)parent)->anim.bankIndex + 0x12);
-        boneWord0 = *(u32*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff);
-        boneWord1 = *(u32*)(bonePtr + 4);
-        boneWord2 = *(u32*)(bonePtr + 8);
+        parentAm = (int*)FUN_80017a54((int)parent);
+        entOff = ((u16)child[0x58] & 7) * 0x18;
+        entPtr = *(int*)(*(int*)(parent + 0x28) + 0x2c) + entOff;
+        jointIdx = (int)*(char*)(entPtr + ((GameObject*)parent)->anim.bankIndex + 0x12);
+        entPosX = *(u32*)(*(int*)(*(int*)(parent + 0x28) + 0x2c) + entOff);
+        entPosY = *(u32*)(entPtr + 4);
+        entPosZ = *(u32*)(entPtr + 8);
         if (jointIdx == -1)
         {
             FUN_80017a50(parent, jointMtxBuf, '\0');
@@ -1604,15 +1621,15 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
         }
         else
         {
-            jointMtx = (float*)FUN_80017970(parentNode, jointIdx);
+            jointMtx = (float*)FUN_80017970(parentAm, jointIdx);
         }
         if ((OBJPRINT_MODEL_DEF(child)->renderFlags & 8) == 0)
         {
             tmpHeight = lbl_803DF69C;
-            boneOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + boneOff;
-            rotX = *(u16*)(boneOff + 0xc);
-            rotY = *(u16*)(boneOff + 0xe);
-            rotZ = *(u16*)(boneOff + 0x10);
+            entOff = *(int*)(*(int*)(parent + 0x28) + 0x2c) + entOff;
+            rotX = *(u16*)(entOff + 0xc);
+            rotY = *(u16*)(entOff + 0xe);
+            rotZ = *(u16*)(entOff + 0x10);
             FUN_80017700(&rotX, rot);
             FUN_80247618(jointMtx, rot, rot);
         }
@@ -1622,11 +1639,11 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
             tmpHeight = *(float*)(child + 4);
             dx = (double)(*(float*)(child + 6) - *(float*)(cam + 6));
             dz = (double)(*(float*)(child + 10) - *(float*)(cam + 10));
-            boneOff = FUN_80017730();
-            rotX = boneOff + 0x8000;
+            entOff = FUN_80017730();
+            rotX = entOff + 0x8000;
             FUN_80293900((double)(float)(dx * dx + (double)(float)(dz * dz)));
-            boneOff = FUN_80017730();
-            rotY = (u16)boneOff;
+            entOff = FUN_80017730();
+            rotY = (u16)entOff;
             rotZ = cam[2];
             FUN_80017700(&rotX, rot);
             posTmpX = posX;
@@ -1680,7 +1697,7 @@ void FUN_80040784(u32 obj, u32 owner, u32 shadowFlag)
 void FUN_80040a88(int obj)
 {
     short seqId;
-    int* renderNode;
+    int* am;
     int model;
     int sub;
     u32 shadowColor;
@@ -1696,14 +1713,14 @@ void FUN_80040a88(int obj)
     u32 d1[2];
     s64 shadowWidth;
 
-    renderNode = (int*)FUN_80017a54(obj);
+    am = (int*)FUN_80017a54(obj);
     if (lbl_803DF684 == ((GameObject*)obj)->anim.rootMotionScale)
     {
         gCMenuButtons = 0;
     }
     else
     {
-        model = *renderNode;
+        model = *am;
         if ((*(u16*)(model + 2) & 0x8000) == 0)
         {
             sub = obj;
@@ -3096,6 +3113,19 @@ extern void cacheQueueWait(int);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern u8 gObjGxPosMtxIdTable[];
 
+/*
+ * Bit-cursor over the model's render-instruction stream
+ * (ModelFileHeader.instrs, bit length at header +0xD8 * 8).  Every reader
+ * fetches 3 bytes little-endian around the cursor and shifts by (pos & 7).
+ * Stream grammar (4-bit opcodes):
+ *   1 = bind render op: 6-bit renderOps index (shader state setup)
+ *   2 = draw: 8-bit display-list index -> GXCallDisplayList
+ *   3 = vertex descriptor block: 1-bit pos/nrm/clr/tex size selectors
+ *   4 = load matrices: 4-bit count, then 8-bit joint-matrix indices
+ *   5 = end of stream
+ * The legacy FUN_8003df64/fn_8003EEEC/fn_8003F8EC/fn_8003FDA8 bodies walk
+ * the same stream through a raw int[5] (data at [0], cursor at [4]).
+ */
 typedef struct
 {
     u8* data;
@@ -4369,7 +4399,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
-extern u16 lbl_803DEA4A[3];
 extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
