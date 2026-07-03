@@ -23,6 +23,7 @@
 
 #define PAD_TRIGGER_Z 0x20
 #define PAD_TRIGGER_R 0x40
+#define PAD_BUTTON_B 0x200
 
 typedef struct WcFloorTileState
 {
@@ -426,7 +427,7 @@ void arwarwing_updateBombFire(int obj, int state)
             }
         }
     }
-    if (arwing->inputFlags & 0x200)
+    if (arwing->inputFlags & PAD_BUTTON_B)
     {
         if ((s8)arwing->bombVolleyMode == 1)
         {
