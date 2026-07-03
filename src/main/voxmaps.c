@@ -644,7 +644,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     int foundIdx;
     int savedFlag;
     int foundSlot;
-    int xbit2;
+    int shiftLo;
     CurveHeapNode* q;
     RouteNode* n;
     u8 occ[3][4];
@@ -655,11 +655,11 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     int oldp;
     int dx;
     int dz;
-    int xbit2p;
-    int zlo;
-    int zlo1;
+    int shiftHi;
+    int z6lo;
+    int z6hi;
     u8* p;
-    int col;
+    int bitmapCol;
     int blocked;
     int voxX;
     int voxZ;
@@ -672,7 +672,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     int sumCur;
     int i;
     int slot;
-    int y;
+    int ySlot;
 
     VoxActiveMap* map;
 
@@ -719,35 +719,35 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     voxX = (dx & 0x3f) >> 2;
     voxZ = (dz & 0x3f) >> 2;
     shift = voxX & 7;
-    xbit2 = (dx & 3) << 1;
-    xbit2p = xbit2 + 2;
-    zlo = dz & 3;
-    zlo1 = zlo + 1;
-    col = (voxZ << 1) + (voxX >> 3);
+    shiftLo = (dx & 3) << 1;
+    shiftHi = shiftLo + 2;
+    z6lo = dz & 3;
+    z6hi = z6lo + 1;
+    bitmapCol = (voxZ << 1) + (voxX >> 3);
 
     for (i = 0, p = &occ[0][0]; i < 3; i++)
     {
-        y = i + box[1];
-        y = y - 1;
-        if (y < map->minY)
+        ySlot = i + box[1];
+        ySlot = ySlot - 1;
+        if (ySlot < map->minY)
         {
-            y = 0;
+            ySlot = 0;
         }
-        else if (y >= map->maxY)
+        else if (ySlot >= map->maxY)
         {
-            y = (map->maxY - 1) - map->minY;
+            ySlot = (map->maxY - 1) - map->minY;
         }
         else
         {
-            y = y - map->minY;
+            ySlot = ySlot - map->minY;
         }
-        if (((map->bitmap[(y << 5) | col] >> shift) & 1) != 0u)
+        if (((map->bitmap[(ySlot << 5) | bitmapCol] >> shift) & 1) != 0u)
         {
-            u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, y, voxZ);
-            p[0] = (node[zlo] >> xbit2) & 3;
-            p[1] = (node[zlo] >> xbit2p) & 3;
-            p[2] = (node[zlo1] >> xbit2) & 3;
-            p[3] = (node[zlo1] >> xbit2p) & 3;
+            u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, ySlot, voxZ);
+            p[0] = (node[z6lo] >> shiftLo) & 3;
+            p[1] = (node[z6lo] >> shiftHi) & 3;
+            p[2] = (node[z6hi] >> shiftLo) & 3;
+            p[3] = (node[z6hi] >> shiftHi) & 3;
         }
         else
         {
