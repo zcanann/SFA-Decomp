@@ -25,6 +25,9 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 #define DIMWOODDOOR2_KEY_MOVE_A    0x18f
 #define DIMWOODDOOR2_KEY_MOVE_B    0x1d6
 
+#define DIMWOODDOOR2_OBJFLAG_HIDDEN 0x4000
+#define DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -75,7 +78,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
     sub = ((GameObject*)obj)->extra;
     sub->burnState = 3;
     fz = lbl_803E49D4;
