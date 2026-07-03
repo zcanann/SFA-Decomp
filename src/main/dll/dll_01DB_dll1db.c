@@ -91,8 +91,6 @@ typedef struct Dll1DBState
 
 STATIC_ASSERT(sizeof(Dll1DBState) == 0x8);
 
-#pragma scheduling off
-#pragma peephole off
 void dll_1DB_free(void)
 {
 }
