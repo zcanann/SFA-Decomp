@@ -244,8 +244,6 @@ void campfire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void kt_torch_free(void);
 
 int campfire_getExtraSize(void) { return 0x14; }
 int campfire_getObjectTypeId(void) { return 0x1; }
-int kt_torch_getExtraSize(void);
