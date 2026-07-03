@@ -90,7 +90,6 @@ extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void Music_Trigger(int id, int arg);
 
-void SB_FireBall_release(void);
 
 void shop_hitDetect(void)
 {
@@ -107,7 +106,6 @@ void shop_initialise(void)
 int SB_CloudBall_getExtraSize(void);
 int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
-int fn_801E66DC(void);
 
 s32 shop_getStateField1(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex; }
 s32 shop_setScale(int* obj) { return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0; }
@@ -121,7 +119,6 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
  * definition so future hunters can fill bodies one at a time. */
-void Flag_init(int* obj, int* def);
 
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
