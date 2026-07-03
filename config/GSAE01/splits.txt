@@ -175,6 +175,7 @@ main/dll/dll_000D_playershadow.c:
 
 main/dll/dll_0018_boneparticleeffect.c:
 	.text       start:0x800A4338 end:0x800A4DF4
+	.data       start:0x8030FFE8 end:0x80310528
 
 main/dll/dll_000E_partfx.c:
 	.text       start:0x800A4DF4 end:0x800AF688
@@ -857,6 +858,7 @@ main/dll/dll_003F_dll3f.c:
 
 main/dll/dll_0040_credits.c:
 	.text       start:0x80134098 end:0x801343CC
+	.data       start:0x8031C620 end:0x8031CC10
 
 main/dll/dll_0041_warpstoneui.c:
 	.text       start:0x801343CC end:0x80134870
