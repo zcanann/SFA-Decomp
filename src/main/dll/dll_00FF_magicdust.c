@@ -251,7 +251,7 @@ void magicdust_update(int obj)
                     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * lbl_803E34D8;
                 }
                 ref = ((MagicDustState*)state)->bounceCount + 1;
-                ((MagicDustState*)state)->bounceCount = ref;
+                ((MagicDustState*)state)->bounceCount++;
                 if (5 < (u8)ref)
                 {
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 2;
