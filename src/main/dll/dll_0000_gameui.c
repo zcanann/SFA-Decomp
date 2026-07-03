@@ -1398,39 +1398,43 @@ void boxDrawFn_8012975c(void)
 
 /* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
  * lights the task-progress pips according to the current hint text level. */
-void fn_80128120(int unused, int p2)
+/* Draws the pause-menu task-hint panel: the framed backing (corners/edges via
+ * pauseMenuDrawElement/drawFn_8011eb3c) plus a six-segment progress bar whose
+ * lit-segment count scales with the current task-hint text level. `alpha` is
+ * the fade level threaded through every draw call. */
+void fn_80128120(int unused, int alpha)
 {
-    s16 n = 0xc8 - lbl_803DD75C;
-    int v;
-    u8 level;
+    s16 yPos = 0xc8 - lbl_803DD75C;
+    int hintText;
+    u8 litSegments;
     s8 i;
 
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, n, p2, lbl_803E1F34, 0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, n, p2, lbl_803E1F34, 0x1c, 0x1e, 1);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 2);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, n, p2, lbl_803E1F34, 0x1c, 0x1e, 3);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, n, p2, lbl_803E1F34, 0x8, 0x20, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, n, p2, lbl_803E1F34, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, n, p2, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, yPos, alpha, lbl_803E1F34, 0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 1);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 2);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e, 3);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, yPos, alpha, lbl_803E1F34, 0x8, 0x20, 0);
+    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, yPos, alpha, lbl_803E1F34, 0x8, 0x20, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, yPos, alpha, lbl_803E1F34, 0);
 
-    v = (u16)getNextTaskHintText();
-    if (v > 0xb3) level = 6;
-    else if (v > 0xb0) level = 5;
-    else if (v > 0x8a) level = 4;
-    else if (v > 0x71) level = 3;
-    else if (v > 0x48) level = 2;
-    else if (v > 0x8) level = 1;
-    else level = 0;
+    hintText = (u16)getNextTaskHintText();
+    if (hintText > 0xb3) litSegments = 6;
+    else if (hintText > 0xb0) litSegments = 5;
+    else if (hintText > 0x8a) litSegments = 4;
+    else if (hintText > 0x71) litSegments = 3;
+    else if (hintText > 0x48) litSegments = 2;
+    else if (hintText > 0x8) litSegments = 1;
+    else litSegments = 0;
 
     for (i = 0; i < GAMEUI_HINT_BAR_SEGMENT_COUNT; i++)
     {
         int t = 0x11;
-        if (i >= level) t = -1;
+        if (i >= litSegments) t = -1;
         lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
     }
 }
@@ -2300,9 +2304,9 @@ void fn_80128A7C(u8 i, int p2, int p3);
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
 #pragma opt_common_subs off
-void fn_80128470(int p1)
+void fn_80128470(int alpha)
 {
-    int sp1;
+    int alpha16;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
@@ -2315,7 +2319,7 @@ void fn_80128470(int p1)
         {
             if (i != lbl_803DD7D8)
             {
-                fn_80128A7C((u8)i, p1, 0);
+                fn_80128A7C((u8)i, alpha, 0);
             }
             off += 0x20;
             i++;
@@ -2335,20 +2339,20 @@ void fn_80128470(int p1)
         {
             if (j != lbl_803DD7D8)
             {
-                fn_80128A7C((u8)j, p1, 0);
+                fn_80128A7C((u8)j, alpha, 0);
             }
         }
     }
-    fn_80128A7C((u8)lbl_803DD7D8, p1, 0);
+    fn_80128A7C((u8)lbl_803DD7D8, alpha, 0);
     {
         f32 base = lbl_803DBAC0;
         f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
         f32 amp = base * s + base;
-        fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)p1), 4);
+        fn_80128A7C((u8)lbl_803DD7D8, (int)(amp * (f32)(s16)alpha), 4);
     }
-    sp1 = (s16)p1;
+    alpha16 = (s16)alpha;
     {
-        int n = sp1 * (0x200 - lbl_803DD75C);
+        int n = alpha16 * (0x200 - lbl_803DD75C);
         gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
     }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
@@ -2366,7 +2370,7 @@ void fn_80128470(int p1)
     if (lbl_803DD75C != 0)
     {
         s16 tx;
-        int n = sp1 * lbl_803DD75C;
+        int n = alpha16 * lbl_803DD75C;
         gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818)
@@ -2412,7 +2416,7 @@ void fn_80128470(int p1)
         {
             ph = (s16)(ph ^ 0x3f);
         }
-        alpha = (s16)(ph * (sp1 * 0xc0 / 0x100 + 0x40) / 31);
+        alpha = (s16)(ph * (alpha16 * 0xc0 / 0x100 + 0x40) / 31);
         tex = (HudTextures*)hudTextures;
         pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1,
                              0x100, (u8)alpha, (w16 = w), 0);
