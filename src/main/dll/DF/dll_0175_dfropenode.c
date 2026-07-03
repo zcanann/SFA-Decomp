@@ -223,8 +223,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)
 {
     DFropenodeExtra* p = ((GameObject*)obj)->extra;
@@ -234,8 +232,6 @@ void dfropenode_setScale(int* obj, f32* out)
     out[3] = p->planeDistance;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
 {
     extern int getAngle(float y, float x);
