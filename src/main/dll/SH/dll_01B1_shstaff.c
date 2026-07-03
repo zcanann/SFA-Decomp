@@ -408,15 +408,13 @@ extern f32 lbl_803E550C;
 extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
-#pragma opt_dead_assignments off
-#pragma opt_propagation off
+#pragma dont_inline on
 #pragma opt_strength_reduction on
 void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
 {
     int player;
     void* child;
     int i;
-    int zero;
 
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
@@ -427,42 +425,13 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     {
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
+        for (i = 0; i < 10; i++)
         {
-            char* p = (char*)state;
-            zero = 0;
-            for (i = 0; i < 8; i += 4)
-            {
-            child = *(void**)(p + 56);
+            child = *(void**)((char*)state + i * 4 + 56);
             if (child != NULL)
             {
                 ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)(p + 56) = zero;
-            }
-            child = *(void**)(p + 60);
-            if (child != NULL)
-            {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)(p + 60) = zero;
-            }
-            child = *(void**)(p + 64);
-            if (child != NULL)
-            {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)(p + 64) = zero;
-            }
-            child = *(void**)(p + 68);
-            if (child != NULL)
-            {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)(p + 68) = zero;
-            }
-            child = *(void**)(p + 72);
-            if (child != NULL)
-            {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)(p + 72) = zero;
-            }
-            p += 20;
+                *(int*)((char*)state + i * 4 + 56) = 0;
             }
         }
     }
@@ -470,8 +439,7 @@ void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren)
     state->phase = 6;
 }
 #pragma opt_strength_reduction reset
-#pragma opt_propagation reset
-#pragma opt_dead_assignments reset
+#pragma dont_inline reset
 
 void sh_staff_update(int obj)
 {
