@@ -382,4 +382,3 @@ void WM_Galleon_initialise(void)
 {
 }
 
-int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
