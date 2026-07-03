@@ -216,3 +216,6 @@ void dll_8E_func01_nop(void)
 void dll_8E_func00_nop(void)
 {
 }
+
+u8 gDll8EEffectVtxColorTable[32] = { 0, 0, 0, 230, 5, 20, 0, 0, 0, 31, 0, 0, 255, 26, 5, 20, 0, 31, 0, 31, 0, 0, 0, 0, 0, 0, 0, 15, 0, 16, 0, 0 };
+u8 gDll8EEffectHwParams[16] = { 0, 0, 0, 140, 0, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
