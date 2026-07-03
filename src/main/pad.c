@@ -598,3 +598,5 @@ void padUpdate(void)
     lbl_803DCCA5 = 0;
 }
 #pragma opt_common_subs reset
+
+u32 gPadButtonMask[4] = { 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };

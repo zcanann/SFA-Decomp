@@ -41,6 +41,7 @@ main/modelEngine.c:
 
 main/pad.c:
 	.text       start:0x80014A28 end:0x80015624
+	.data       start:0x802C6E50 end:0x802C6E60
 	.bss        start:0x803398B0 end:0x80339950
 
 main/fileio.c:
