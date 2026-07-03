@@ -685,8 +685,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
         }
         else
         {
-            state->nodeCount++;
-            n = &state->nodes[idx];
+            n = &state->nodes[state->nodeCount++];
             n->x = box[0];
             n->z = box[1];
             n->y = box[2];
@@ -914,8 +913,7 @@ searched:
     }
     else
     {
-        n = &state->nodes[state->nodeCount];
-        state->nodeCount++;
+        n = &state->nodes[state->nodeCount++];
         n->x = box[0];
         n->z = box[1];
         n->y = box[2];
