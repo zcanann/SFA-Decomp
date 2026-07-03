@@ -115,8 +115,6 @@ extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
 extern u8 framesThisStep;
 
-void CameraModeNpcSpeak_release(void);
-
 #pragma scheduling off
 #pragma peephole off
 void CameraModeForceBehind_func06_nop(void)
@@ -126,14 +124,6 @@ void CameraModeForceBehind_func06_nop(void)
 void CameraModeForceBehind_func05_nop(void)
 {
 }
-
-void CameraModeForceBehind_release(void);
-
-void CameraModeCloudRunner_release(void);
-
-void CameraModePerv_release(void);
-
-void CameraModeArwing_release(void);
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -198,8 +188,6 @@ void dll_19_func12(int* obj, int* state, u8 flag)
         *(int*)((char*)state + 988) = 0;
     }
 }
-
-void CameraModeCloudRunner_free(void);
 
 void dll_19_func11(void)
 {
