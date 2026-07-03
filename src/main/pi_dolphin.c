@@ -8326,3 +8326,350 @@ u32 lbl_8035F0A8[0x58];
 int lbl_8035F208[0x78];
 u32 lbl_8035F3E8[0x58];
 s16 gObjMapBlockInfo[0x9C];
+
+extern char sResourceFileNameAudioBin[];
+extern char sResourceFileNameSfxTab[];
+extern char sResourceFileNameSfxBin[];
+extern char sResourceFileNameAmbientTab[];
+extern char sResourceFileNameAmbientBin[];
+extern char sResourceFileNameMusicTab[];
+extern char sResourceFileNameMusicBin[];
+extern char sResourceFileNameMpegTab[];
+extern char sResourceFileNameMpegBin[];
+extern char sResourceFileNameMusicactBin[];
+extern char sResourceFileNameCamactioBin[];
+extern char sResourceFileNameLactionsBin[];
+extern char sResourceFileNameAnimcurvBin[];
+extern char sResourceFileNameAnimcurvTab[];
+extern char sResourceFileNameObjseq2cTab[];
+extern char sResourceFileNameFontsBin[];
+extern char sResourceFileNameCachefonBin[];
+extern char sResourceFileNameGametextBin[];
+extern char sResourceFileNameGametextTab[];
+extern char sResourceFileNameGlobalmaBin[];
+extern char sResourceFileNameTablesBin[];
+extern char sResourceFileNameTablesTab[];
+extern char sResourceFileNameScreensBin[];
+extern char sResourceFileNameScreensTab[];
+extern char sResourceFileNameVoxmapTab[];
+extern char sResourceFileNameVoxmapBin[];
+extern char sResourceFileNameWarptabBin[];
+extern char sResourceFileNameMapsBin[];
+extern char sResourceFileNameMapsTab[];
+extern char sResourceFileNameMapinfoBin[];
+extern char sResourceFileNameTex1Bin[];
+extern char sResourceFileNameTex1Tab[];
+extern char sResourceFileNameTextableBin[];
+extern char sResourceFileNameTex0Bin[];
+extern char sResourceFileNameTex0Tab[];
+extern char sResourceFileNameBlocksBin[];
+extern char sResourceFileNameBlocksTab[];
+extern char sResourceFileNameTrkblkTab[];
+extern char sResourceFileNameHitsBin[];
+extern char sResourceFileNameHitsTab[];
+extern char sResourceFileNameModelsTab[];
+extern char sResourceFileNameModelsBin[];
+extern char sResourceFileNameModelindBin[];
+extern char sResourceFileNameModanimTab[];
+extern char sResourceFileNameModanimBin[];
+extern char sResourceFileNameAnimTab[];
+extern char sResourceFileNameAnimBin[];
+extern char sResourceFileNameAmapTab[];
+extern char sResourceFileNameAmapBin[];
+extern char sResourceFileNameBittableBin[];
+extern char sResourceFileNameWeapondaBin[];
+extern char sResourceFileNameVoxobjTab[];
+extern char sResourceFileNameVoxobjBin[];
+extern char sResourceFileNameModlinesBin[];
+extern char sResourceFileNameModlinesTab[];
+extern char sResourceFileNameSavegameBin[];
+extern char sResourceFileNameSavegameTab[];
+extern char sResourceFileNameObjseqBin[];
+extern char sResourceFileNameObjseqTab[];
+extern char sResourceFileNameObjectsTab[];
+extern char sResourceFileNameObjectsBin[];
+extern char sResourceFileNameObjindexBin[];
+extern char sResourceFileNameObjeventBin[];
+extern char sResourceFileNameObjhitsBin[];
+extern char sResourceFileNameDllsBin[];
+extern char sResourceFileNameDllsTab[];
+extern char sResourceFileNameDllsimpoBin[];
+extern char sResourceFileNameTexpreBin[];
+extern char sResourceFileNameTexpreTab[];
+extern char sResourceFileNamePreanimBin[];
+extern char sResourceFileNamePreanimTab[];
+extern char sResourceFileNameEnvfxactBin[];
+extern char sResourceFileNameNull[];
+
+char* sResourceFileNameTable[90] = {
+    sResourceFileNameAudioTab, sResourceFileNameAudioBin, sResourceFileNameSfxTab, sResourceFileNameSfxBin,
+    sResourceFileNameAmbientTab, sResourceFileNameAmbientBin, sResourceFileNameMusicTab, sResourceFileNameMusicBin,
+    sResourceFileNameMpegTab, sResourceFileNameMpegBin, sResourceFileNameMusicactBin, sResourceFileNameCamactioBin,
+    sResourceFileNameLactionsBin, sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab, sResourceFileNameObjseq2cTab,
+    sResourceFileNameFontsBin, sResourceFileNameCachefonBin, sResourceFileNameCachefonBin, sResourceFileNameGametextBin,
+    sResourceFileNameGametextTab, sResourceFileNameGlobalmaBin, sResourceFileNameTablesBin, sResourceFileNameTablesTab,
+    sResourceFileNameScreensBin, sResourceFileNameScreensTab, sResourceFileNameVoxmapTab, sResourceFileNameVoxmapBin,
+    sResourceFileNameWarptabBin, sResourceFileNameMapsBin, sResourceFileNameMapsTab, sResourceFileNameMapinfoBin,
+    sResourceFileNameTex1Bin, sResourceFileNameTex1Tab, sResourceFileNameTextableBin, sResourceFileNameTex0Bin,
+    sResourceFileNameTex0Tab, sResourceFileNameBlocksBin, sResourceFileNameBlocksTab, sResourceFileNameTrkblkTab,
+    sResourceFileNameHitsBin, sResourceFileNameHitsTab, sResourceFileNameModelsTab, sResourceFileNameModelsBin,
+    sResourceFileNameModelindBin, sResourceFileNameModanimTab, sResourceFileNameModanimBin, sResourceFileNameAnimTab,
+    sResourceFileNameAnimBin, sResourceFileNameAmapTab, sResourceFileNameAmapBin, sResourceFileNameBittableBin,
+    sResourceFileNameWeapondaBin, sResourceFileNameVoxobjTab, sResourceFileNameVoxobjBin, sResourceFileNameModlinesBin,
+    sResourceFileNameModlinesTab, sResourceFileNameSavegameBin, sResourceFileNameSavegameTab, sResourceFileNameObjseqBin,
+    sResourceFileNameObjseqTab, sResourceFileNameObjectsTab, sResourceFileNameObjectsBin, sResourceFileNameObjindexBin,
+    sResourceFileNameObjeventBin, sResourceFileNameObjhitsBin, sResourceFileNameDllsBin, sResourceFileNameDllsTab,
+    sResourceFileNameDllsimpoBin, sResourceFileNameModelsTab, sResourceFileNameModelsBin, sResourceFileNameBlocksBin,
+    sResourceFileNameBlocksTab, sResourceFileNameAnimTab, sResourceFileNameAnimBin, sResourceFileNameTex1Bin,
+    sResourceFileNameTex1Tab, sResourceFileNameTex0Bin, sResourceFileNameTex0Tab, sResourceFileNameTexpreBin,
+    sResourceFileNameTexpreTab, sResourceFileNamePreanimBin, sResourceFileNamePreanimTab, sResourceFileNameVoxmapTab,
+    sResourceFileNameVoxmapBin, sResourceFileNameAnimcurvBin, sResourceFileNameAnimcurvTab, sResourceFileNameEnvfxactBin,
+    sResourceFileNameNull, sResourceFileNameNull,
+};
+
+extern char sMapFileNameFrontend[];
+extern char sMapFileNameFrontend2[];
+extern char sMapFileNameDragrock[];
+extern char sMapFileNameKrazoapalace[];
+extern char sMapFileNameTemple[];
+extern char sMapFileNameHightop[];
+extern char sMapFileNameDiscovery[];
+extern char sMapFileNameHollow[];
+extern char sMapFileNameHollow2[];
+extern char sMapFileNameMazecave[];
+extern char sMapFileNameWastes[];
+extern char sMapFileNameWarlock[];
+extern char sMapFileNameFortress[];
+extern char sMapFileNameWallcity[];
+extern char sMapFileNameSwapcircle[];
+extern char sMapFileNameCloudtreasure[];
+extern char sMapFileNameClouddungeon[];
+extern char sMapFileNameCloudtrap[];
+extern char sMapFileNameMoonpass[];
+extern char sMapFileNameSnowmines[];
+extern char sMapFileNameKrashrin2[];
+extern char sMapFileNameKraztest[];
+extern char sMapFileNameKrazchamber[];
+extern char sMapFileNameNewicemount[];
+extern char sMapFileNameNewicemount2[];
+extern char sMapFileNameNewicemount3[];
+extern char sMapFileNameAnimtest[];
+extern char sMapFileNameSnowmines2[];
+extern char sMapFileNameSnowmines3[];
+extern char sMapFileNameCapeclaw[];
+extern char sMapFileNameInsidegal[];
+extern char sMapFileNameDfshrine[];
+extern char sMapFileNameMmshrine[];
+extern char sMapFileNameEcshrine[];
+extern char sMapFileNameGpshrine[];
+extern char sMapFileNameDiamondbay[];
+extern char sMapFileNameEarthwalker[];
+extern char sMapFileNameWillow[];
+extern char sMapFileNameArwing[];
+extern char sMapFileNameDbshrine[];
+extern char sMapFileNameNwshrine[];
+extern char sMapFileNameCcshrine[];
+extern char sMapFileNameWgshrine[];
+extern char sMapFileNameCloudrace[];
+extern char sMapFileNameFinalboss[];
+extern char sMapFileNameWminsert[];
+extern char sMapFileNameSnowmines4[];
+extern char sMapFileNameSnowmines5[];
+extern char sMapFileNameTrexboss[];
+extern char sMapFileNameMikelava[];
+extern char sMapFileNameDfptop[];
+extern char sMapFileNameSwapstore[];
+extern char sMapFileNameDragbot[];
+extern char sMapFileNameKamdrag[];
+extern char sMapFileNameMagicave[];
+extern char sMapFileNameDuster[];
+extern char sMapFileNameLinkb[];
+extern char sMapFileNameCloudjoin[];
+extern char sMapFileNameArwingtoplanet[];
+extern char sMapFileNameArwingdarkice[];
+extern char sMapFileNameArwingcloud[];
+extern char sMapFileNameArwingcity[];
+extern char sMapFileNameArwingdragon[];
+extern char sMapFileNameGamefront[];
+extern char sMapFileNameLinklevel[];
+extern char sMapFileNameGreatfox[];
+extern char sMapFileNameLinka[];
+extern char sMapFileNameLinkc[];
+extern char sMapFileNameLinkd[];
+extern char sMapFileNameLinke[];
+extern char sMapFileNameLinkf[];
+extern char sMapFileNameLinkg[];
+extern char sMapFileNameLinkh[];
+extern char sMapFileNameLinkj[];
+extern char sMapFileNameLinki[];
+extern char sMapFileNameDfpodium[];
+extern char sMapFileNameDfcradle[];
+extern char sMapFileNameDfcavehatch1[];
+extern char sMapFileNameDfcavehatch2[];
+extern char sMapFileNameScstatue[];
+extern char sMapFileNameGalleonship[];
+extern char sMapFileNameCfgalleon[];
+extern char sMapFileNameCfgangplank[];
+extern char sMapFileNameNwtreebridge[];
+extern char sMapFileNameCfdungeonblock[];
+extern char sMapFileNameCloudrunnermap[];
+extern char sMapFileNameCcbridge[];
+extern char sMapFileNameCfcolumn[];
+extern char sMapFileNameNwboulder[];
+extern char sMapFileNameCfprisondoor[];
+extern char sMapFileNameCfprisoncage[];
+extern char sMapFileNameNwtreebridge2[];
+extern char sMapFileNameDim2iceblock1[];
+extern char sMapFileNameDimpushblock[];
+extern char sMapFileNameDim2iceblock2[];
+extern char sMapFileNameDimhornplinth[];
+extern char sMapFileNameNwshcolpush[];
+extern char sMapFileNameDim2lift[];
+extern char sMapFileNameDim2icefloe[];
+extern char sMapFileNameDim2icefloe1[];
+extern char sMapFileNameDim2icefloe2[];
+extern char sMapFileNameCfliftplat[];
+extern char sMapFileNameImspacecraft[];
+extern char sMapFileNameDimbossgut[];
+extern char sMapFileNameWmcolrise[];
+extern char sMapFileNameVfpslide1[];
+extern char sMapFileNameVfpslide2[];
+extern char sMapFileNameDrpushcart[];
+extern char sMapFileNameDrliftplat[];
+extern char sMapFileNameDim2stonepillar[];
+extern char sMapFileNameBossdrakorflatr[];
+extern char sMapFileNameWcbouncycrate[];
+extern char sMapFileNameWcpushblock[];
+extern char sMapFileNameWctemplelift[];
+extern char sMapFileNameKamColumn[];
+extern char sMapFileNameDbstepstone[];
+extern char sMapFileNameVfppushblock[];
+
+char* sMapFileNameTable[117] = {
+    sMapFileNameFrontend, sMapFileNameFrontend2, sMapFileNameDragrock, sMapFileNameKrazoapalace,
+    sMapFileNameTemple, sMapFileNameHightop, sMapFileNameDiscovery, sMapFileNameHollow,
+    sMapFileNameHollow2, sMapFileNameMazecave, sMapFileNameWastes, sMapFileNameWarlock,
+    sMapFileNameFortress, sMapFileNameWallcity, sMapFileNameSwapcircle, sMapFileNameCloudtreasure,
+    sMapFileNameClouddungeon, sMapFileNameCloudtrap, sMapFileNameMoonpass, sMapFileNameSnowmines,
+    sMapFileNameKrashrin2, sMapFileNameKraztest, sMapFileNameKrazchamber, sMapFileNameNewicemount,
+    sMapFileNameNewicemount2, sMapFileNameNewicemount3, sMapFileNameAnimtest, sMapFileNameSnowmines2,
+    sMapFileNameSnowmines3, sMapFileNameCapeclaw, sMapFileNameInsidegal, sMapFileNameDfshrine,
+    sMapFileNameMmshrine, sMapFileNameEcshrine, sMapFileNameGpshrine, sMapFileNameDiamondbay,
+    sMapFileNameEarthwalker, sMapFileNameWillow, sMapFileNameArwing, sMapFileNameDbshrine,
+    sMapFileNameNwshrine, sMapFileNameCcshrine, sMapFileNameWgshrine, sMapFileNameCloudrace,
+    sMapFileNameFinalboss, sMapFileNameWminsert, sMapFileNameSnowmines4, sMapFileNameSnowmines5,
+    sMapFileNameTrexboss, sMapFileNameMikelava, sMapFileNameDfptop, sMapFileNameSwapstore,
+    sMapFileNameDragbot, sMapFileNameKamdrag, sMapFileNameMagicave, sMapFileNameDuster,
+    sMapFileNameLinkb, sMapFileNameCloudjoin, sMapFileNameArwingtoplanet, sMapFileNameArwingdarkice,
+    sMapFileNameArwingcloud, sMapFileNameArwingcity, sMapFileNameArwingdragon, sMapFileNameGamefront,
+    sMapFileNameLinklevel, sMapFileNameGreatfox, sMapFileNameLinka, sMapFileNameLinkc,
+    sMapFileNameLinkd, sMapFileNameLinke, sMapFileNameLinkf, sMapFileNameLinkg,
+    sMapFileNameLinkh, sMapFileNameLinkj, sMapFileNameLinki, sMapFileNameDfpodium,
+    sMapFileNameDfcradle, sMapFileNameDfcavehatch1, sMapFileNameDfcavehatch2, sMapFileNameScstatue,
+    sMapFileNameGalleonship, sMapFileNameCfgalleon, sMapFileNameCfgangplank, sMapFileNameNwtreebridge,
+    sMapFileNameCfdungeonblock, sMapFileNameCloudrunnermap, sMapFileNameCcbridge, sMapFileNameCfcolumn,
+    sMapFileNameNwboulder, sMapFileNameCfprisondoor, sMapFileNameCfprisoncage, sMapFileNameNwtreebridge2,
+    sMapFileNameDim2iceblock1, sMapFileNameDimpushblock, sMapFileNameDim2iceblock2, sMapFileNameDimhornplinth,
+    sMapFileNameNwshcolpush, sMapFileNameDim2lift, sMapFileNameDim2icefloe, sMapFileNameDim2icefloe1,
+    sMapFileNameDim2icefloe2, sMapFileNameCfliftplat, sMapFileNameImspacecraft, sMapFileNameDimbossgut,
+    sMapFileNameWmcolrise, sMapFileNameVfpslide1, sMapFileNameVfpslide2, sMapFileNameDrpushcart,
+    sMapFileNameDrliftplat, sMapFileNameDim2stonepillar, sMapFileNameBossdrakorflatr, sMapFileNameWcbouncycrate,
+    sMapFileNameWcpushblock, sMapFileNameWctemplelift, sMapFileNameKamColumn, sMapFileNameDbstepstone,
+    sMapFileNameVfppushblock,
+};
+
+char sMapFileNameFrontend[] = "frontend";
+char sMapFileNameFrontend2[] = "frontend2";
+char sMapFileNameDragrock[] = "dragrock";
+char sMapFileNameKrazoapalace[] = "krazoapalace";
+char sMapFileNameDiscovery[] = "discovery";
+char sMapFileNameMazecave[] = "mazecave";
+char sMapFileNameFortress[] = "fortress";
+char sMapFileNameWallcity[] = "wallcity";
+char sMapFileNameSwapcircle[] = "swapcircle";
+char sMapFileNameCloudtreasure[] = "cloudtreasure";
+char sMapFileNameClouddungeon[] = "clouddungeon";
+char sMapFileNameCloudtrap[] = "cloudtrap";
+char sMapFileNameMoonpass[] = "moonpass";
+char sMapFileNameSnowmines[] = "snowmines";
+char sMapFileNameKrashrin2[] = "krashrin2";
+char sMapFileNameKraztest[] = "kraztest";
+char sMapFileNameKrazchamber[] = "krazchamber";
+char sMapFileNameNewicemount[] = "newicemount";
+char sMapFileNameNewicemount2[] = "newicemount2";
+char sMapFileNameNewicemount3[] = "newicemount3";
+char sMapFileNameAnimtest[] = "animtest";
+char sMapFileNameSnowmines2[] = "snowmines2";
+char sMapFileNameSnowmines3[] = "snowmines3";
+char sMapFileNameCapeclaw[] = "capeclaw";
+char sMapFileNameInsidegal[] = "insidegal";
+char sMapFileNameDfshrine[] = "dfshrine";
+char sMapFileNameMmshrine[] = "mmshrine";
+char sMapFileNameEcshrine[] = "ecshrine";
+char sMapFileNameGpshrine[] = "gpshrine";
+char sMapFileNameDiamondbay[] = "diamondbay";
+char sMapFileNameEarthwalker[] = "earthwalker";
+char sMapFileNameDbshrine[] = "dbshrine";
+char sMapFileNameNwshrine[] = "nwshrine";
+char sMapFileNameCcshrine[] = "ccshrine";
+char sMapFileNameWgshrine[] = "wgshrine";
+char sMapFileNameCloudrace[] = "cloudrace";
+char sMapFileNameFinalboss[] = "finalboss";
+char sMapFileNameWminsert[] = "wminsert";
+char sMapFileNameSnowmines4[] = "snowmines4";
+char sMapFileNameSnowmines5[] = "snowmines5";
+char sMapFileNameTrexboss[] = "trexboss";
+char sMapFileNameMikelava[] = "mikelava";
+char sMapFileNameSwapstore[] = "swapstore";
+char sMapFileNameMagicave[] = "magicave";
+char sMapFileNameCloudjoin[] = "cloudjoin";
+char sMapFileNameArwingtoplanet[] = "arwingtoplanet";
+char sMapFileNameArwingdarkice[] = "arwingdarkice";
+char sMapFileNameArwingcloud[] = "arwingcloud";
+char sMapFileNameArwingcity[] = "arwingcity";
+char sMapFileNameArwingdragon[] = "arwingdragon";
+char sMapFileNameGamefront[] = "gamefront";
+char sMapFileNameLinklevel[] = "linklevel";
+char sMapFileNameGreatfox[] = "greatfox";
+char sMapFileNameDfpodium[] = "dfpodium";
+char sMapFileNameDfcradle[] = "dfcradle";
+char sMapFileNameDfcavehatch1[] = "dfcavehatch1";
+char sMapFileNameDfcavehatch2[] = "dfcavehatch2";
+char sMapFileNameScstatue[] = "scstatue";
+char sMapFileNameGalleonship[] = "galleonship";
+char sMapFileNameCfgalleon[] = "cfgalleon";
+char sMapFileNameCfgangplank[] = "cfgangplank";
+char sMapFileNameNwtreebridge[] = "nwtreebridge";
+char sMapFileNameCfdungeonblock[] = "cfdungeonblock";
+char sMapFileNameCloudrunnermap[] = "cloudrunnermap";
+char sMapFileNameCcbridge[] = "ccbridge";
+char sMapFileNameCfcolumn[] = "cfcolumn";
+char sMapFileNameNwboulder[] = "nwboulder";
+char sMapFileNameCfprisondoor[] = "cfprisondoor";
+char sMapFileNameCfprisoncage[] = "cfprisoncage";
+char sMapFileNameNwtreebridge2[] = "nwtreebridge2";
+char sMapFileNameDim2iceblock1[] = "dim2iceblock1";
+char sMapFileNameDimpushblock[] = "dimpushblock";
+char sMapFileNameDim2iceblock2[] = "dim2iceblock2";
+char sMapFileNameDimhornplinth[] = "dimhornplinth";
+char sMapFileNameNwshcolpush[] = "nwshcolpush";
+char sMapFileNameDim2lift[] = "dim2lift";
+char sMapFileNameDim2icefloe[] = "dim2icefloe";
+char sMapFileNameDim2icefloe1[] = "dim2icefloe1";
+char sMapFileNameDim2icefloe2[] = "dim2icefloe2";
+char sMapFileNameCfliftplat[] = "cfliftplat";
+char sMapFileNameImspacecraft[] = "imspacecraft";
+char sMapFileNameDimbossgut[] = "dimbossgut";
+char sMapFileNameWmcolrise[] = "wmcolrise";
+char sMapFileNameVfpslide1[] = "vfpslide1";
+char sMapFileNameVfpslide2[] = "vfpslide2";
+char sMapFileNameDrpushcart[] = "drpushcart";
+char sMapFileNameDrliftplat[] = "drliftplat";
+char sMapFileNameDim2stonepillar[] = "dim2stonepillar";
+char sMapFileNameBossdrakorflatr[] = "bossdrakorflatr";
+char sMapFileNameWcbouncycrate[] = "wcbouncycrate";
+char sMapFileNameWcpushblock[] = "wcpushblock";
+char sMapFileNameWctemplelift[] = "wctemplelift";
+char sMapFileNameKamColumn[] = "KamColumn";
+char sMapFileNameDbstepstone[] = "dbstepstone";
+char sMapFileNameVfppushblock[] = "vfppushblock";

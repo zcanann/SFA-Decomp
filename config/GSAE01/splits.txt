@@ -100,6 +100,7 @@ main/objprint_dolphin.c:
 
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
+	.data       start:0x802CB2F4 end:0x802CBB14
 	.bss        start:0x8035EF48 end:0x803779A0
 
 main/rcp_dolphin.c:
