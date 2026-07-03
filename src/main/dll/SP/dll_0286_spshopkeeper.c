@@ -166,7 +166,6 @@ void shopkeeper_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int fn_801E86F4(int obj, int p2, ObjSeqState* seq);
 
 void shopkeeper_hitDetect(void)
 {
@@ -176,11 +175,9 @@ void shopkeeper_release(void)
 {
 }
 
-void shopitem_hitDetect(void);
 
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
 int shopkeeper_getObjectTypeId(void) { return 0x0; }
-int shopitem_getExtraSize(void);
 
 void shopkeeper_initialise(void)
 {
