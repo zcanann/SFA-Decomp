@@ -1460,7 +1460,7 @@ void fn_8006C4C0(int* p1, int* p2, int* p3)
     *p3 = 8;
 }
 
-extern u8 gNewShadowNoiseTexFrames[0x40];
+extern int gNewShadowNoiseTexFrames[0x10];
 
 void textureFn_8006c4e0(int* p1, int* p2)
 {
@@ -1815,8 +1815,8 @@ void initFn_8006d020(void)
     int* th;
     int j;
     f32* e;
-    int tex;
     int placed;
+    int tex;
     int count;
     u8 collide;
 
@@ -1876,7 +1876,7 @@ void initFn_8006d020(void)
 
     count = placed;
     tex = 0;
-    th = (int*)gNewShadowNoiseTexFrames;
+    th = gNewShadowNoiseTexFrames;
     for (; tex < 0x10; th++, tex++)
     {
         *th = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
