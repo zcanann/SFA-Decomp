@@ -637,20 +637,23 @@ void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag)
     dst[2] += playerMapOffsetZ;
 }
 
+/* rotation(s16)+scale+position transform block consumed by mtxRotateByVec3s */
+typedef struct ObjLocalTransform
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjLocalTransform;
+
 void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 {
     f32 rotated[3];
-    struct
-    {
-        s16 rotX;
-        s16 rotY;
-        s16 rotZ;
-        s16 pad;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } inverse;
+    ObjLocalTransform inverse;
     union
     {
         f32 m[16];
@@ -659,12 +662,12 @@ void objWorldToLocalPos(f32* out, u8* transform, f32* in)
     f32 transposed[16];
 #define rotMtx rotU.m
 
-    inverse.x = -*(f32*)(transform + 0xc);
-    inverse.y = -*(f32*)(transform + 0x10);
-    inverse.z = -*(f32*)(transform + 0x14);
-    inverse.rotX = -*(s16*)(transform + 0);
-    inverse.rotY = -*(s16*)(transform + 2);
-    inverse.rotZ = -*(s16*)(transform + 4);
+    inverse.x = -((ObjLocalTransform*)transform)->x;
+    inverse.y = -((ObjLocalTransform*)transform)->y;
+    inverse.z = -((ObjLocalTransform*)transform)->z;
+    inverse.rotX = -((ObjLocalTransform*)transform)->rotX;
+    inverse.rotY = -((ObjLocalTransform*)transform)->rotY;
+    inverse.rotZ = -((ObjLocalTransform*)transform)->rotZ;
     inverse.scale = lbl_803DE890;
     mtxRotateByVec3s(rotMtx, &inverse);
     mtx44Transpose(rotMtx, transposed);
@@ -858,7 +861,7 @@ void* loadObjectAtObject(u8* src, int arg1)
     void* obj;
     int type;
     int objF30;
-    objF30 = *(int*)(src + 0x30);
+    objF30 = (int)((ObjAnimComponent*)src)->parent;
     type = ((ObjAnimComponent*)src)->mapEventSlot;
     if (getLoadedFileFlags(0) & 0x100000)
     {
