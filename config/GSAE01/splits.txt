@@ -2244,6 +2244,7 @@ main/dfppowersl.c:
 
 main/dll/dll_024D_bossdrakor.c:
 	.text       start:0x8020A1C8 end:0x8020BAB4
+	.data       start:0x80329FB8 end:0x8032A038
 
 main/dll/dll_024E_drakordthornbush.c:
 	.text       start:0x8020BAB4 end:0x8020C278
