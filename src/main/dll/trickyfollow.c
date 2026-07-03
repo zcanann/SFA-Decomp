@@ -73,6 +73,33 @@ extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
+/* A plain XYZ point; recovered file-locally for the patch-target scratch slot
+ * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
+typedef struct TrickyPoint3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} TrickyPoint3;
+
+/*
+ * File-local overlay for the parabolic-jump scratch block that the leap
+ * substates (case 9 seed / case 10 arc step) stash in TrickyState's unnamed
+ * pad64 region (0x64..0x84). It is not named in the shared tricky_state.h, so
+ * it is recovered here as a typed view over (state + 0x64).
+ */
+typedef struct TrickyJumpArc
+{
+    f32 duration;  /* 0x64: horizontal distance / lbl_803E24A4 */
+    f32 time;      /* 0x68: elapsed arc time (init 0, += timeDelta) */
+    f32 riseCoeff; /* 0x6C: linear vertical coefficient */
+    f32 baseY;     /* 0x70: launch worldPosY */
+    f32 baseX;     /* 0x74: launch worldPosX */
+    f32 baseZ;     /* 0x78: launch worldPosZ */
+    f32 landX;     /* 0x7C: landing node rootMotionScale (X) */
+    f32 landZ;     /* 0x80: landing node localPosY (Z) */
+} TrickyJumpArc;
+
 static u8* trickyfollow_validateRouteNode(u8* node)
 {
     if (node == NULL)
@@ -207,9 +234,9 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             if (wgi.mask & mask)
             {
                 *(s16*)(state + 0x98 + i * 2) = wgi.patch[i];
-                *(f32*)(state + 0xa0 + i * 0xc) = *(f32*)target;
-                *(f32*)(state + 0xa4 + i * 0xc) = *(f32*)(target + 4);
-                *(f32*)(state + 0xa8 + i * 0xc) = *(f32*)(target + 8);
+                *(f32*)(state + 0xa0 + i * 0xc) = ((TrickyPoint3*)target)->x;
+                *(f32*)(state + 0xa4 + i * 0xc) = ((TrickyPoint3*)target)->y;
+                *(f32*)(state + 0xa8 + i * 0xc) = ((TrickyPoint3*)target)->z;
             }
             mask = mask << 1;
         }
@@ -229,9 +256,9 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                 if ((prod == wgi.patch[i]) && (((1 << i) & wgi.mask) != 0))
                 {
                     *(s16*)&((TrickyState*)state)->unkD2 = link;
-                    *(f32*)(state + 0xd4) = *(f32*)target;
-                    *(f32*)(state + 0xd8) = *(f32*)(target + 4);
-                    *(f32*)(state + 0xdc) = *(f32*)(target + 8);
+                    ((TrickyPoint3*)(state + 0xd4))->x = ((TrickyPoint3*)target)->x;
+                    ((TrickyPoint3*)(state + 0xd4))->y = ((TrickyPoint3*)target)->y;
+                    ((TrickyPoint3*)(state + 0xd4))->z = ((TrickyPoint3*)target)->z;
                 }
             }
         }
@@ -259,8 +286,8 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     }
     if (*(s16*)&((TrickyState*)state)->unkD2 != 0)
     {
-        trickyDebugPrint(strs + 0x328, *(f32*)(state + 0xd4), *(f32*)(state + 0xd8),
-                         *(f32*)(state + 0xdc));
+        trickyDebugPrint(strs + 0x328, ((TrickyPoint3*)(state + 0xd4))->x,
+                         ((TrickyPoint3*)(state + 0xd4))->y, ((TrickyPoint3*)(state + 0xd4))->z);
     }
     tp = getPatchGroup((f32*)target, ((TrickyState*)state)->unkD0) & 0xffff;
     trickyPatch = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->unkD0) & 0xffff;
@@ -1004,24 +1031,25 @@ state_selected:
         {
             f32 dx;
             f32 dz;
+            TrickyJumpArc* arc = (TrickyJumpArc*)(state + 0x64);
             node = route->nodeA0;
             dx = ((GameObject*)node)->anim.rootMotionScale - ((GameObject*)obj)->anim.worldPosX;
             dz = ((GameObject*)node)->anim.localPosY - ((GameObject*)obj)->anim.worldPosZ;
             sqx = dx * dx;
             sqz = dz * dz;
             len = sqrtf(sqx + sqz);
-            *(f32*)(state + 0x64) = len / lbl_803E24A4;
-            *(f32*)(state + 0x68) = lbl_803E23DC;
-            *(f32*)(state + 0x74) = ((GameObject*)obj)->anim.worldPosX;
-            *(f32*)(state + 0x70) = ((GameObject*)obj)->anim.worldPosY;
-            *(f32*)(state + 0x78) = ((GameObject*)obj)->anim.worldPosZ;
-            *(f32*)(state + 0x7c) = ((GameObject*)node)->anim.rootMotionScale;
-            *(f32*)(state + 0x80) = ((GameObject*)node)->anim.localPosY;
-            k = *(f32*)(state + 0x64);
-            *(f32*)(state + 0x6c) =
+            arc->duration = len / lbl_803E24A4;
+            arc->time = lbl_803E23DC;
+            arc->baseX = ((GameObject*)obj)->anim.worldPosX;
+            arc->baseY = ((GameObject*)obj)->anim.worldPosY;
+            arc->baseZ = ((GameObject*)obj)->anim.worldPosZ;
+            arc->landX = ((GameObject*)node)->anim.rootMotionScale;
+            arc->landZ = ((GameObject*)node)->anim.localPosY;
+            k = arc->duration;
+            arc->riseCoeff =
                 -(gTrickyFollowArcCoefficient * k * k - (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) / k;
             objAnimFn_8013a3f0(obj, 0x16, lbl_803E23DC, 0x4000000);
-            ((TrickyState*)state)->unk3C = *(f32*)(state + 0x68) / *(f32*)(state + 0x64);
+            ((TrickyState*)state)->unk3C = arc->time / arc->duration;
             ((TrickyState*)state)->speed = lbl_803E24A4;
             ((TrickyState*)state)->unk09 = 10;
             if (route->reverse != 0)
@@ -1041,9 +1069,11 @@ state_selected:
         }
         break;
     case 10:
+    {
+        TrickyJumpArc* arc = (TrickyJumpArc*)(state + 0x64);
         trickyDebugPrint(strs + 0x4b8);
-        *(f32*)(state + 0x68) = *(f32*)(state + 0x68) + timeDelta;
-        if (*(f32*)(state + 0x68) >= *(f32*)(state + 0x64))
+        arc->time = arc->time + timeDelta;
+        if (arc->time >= arc->duration)
         {
             ((GameObject*)obj)->anim.localPosY = *(f32*)((u8*)route->nodeA0 + 0xc);
             ((TrickyState*)state)->unk3C = lbl_803E23E8;
@@ -1051,26 +1081,26 @@ state_selected:
         }
         else
         {
-            f32 baseX = *(f32*)(state + 0x74);
+            f32 baseX = arc->baseX;
             f32 baseZ;
             ((GameObject*)obj)->anim.localPosX =
-                (*(f32*)(state + 0x7c) - baseX) *
-                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) + baseX;
-            k = *(f32*)(state + 0x68);
+                (arc->landX - baseX) *
+                (arc->time / arc->duration) + baseX;
+            k = arc->time;
             ((GameObject*)obj)->anim.localPosY =
-                gTrickyFollowArcCoefficient * k * k + (*(f32*)(state + 0x6c) * k + *(f32*)(state + 0x70));
-            baseZ = *(f32*)(state + 0x78);
+                gTrickyFollowArcCoefficient * k * k + (arc->riseCoeff * k + arc->baseY);
+            baseZ = arc->baseZ;
             ((GameObject*)obj)->anim.localPosZ =
-                (*(f32*)(state + 0x80) - baseZ) *
-                (*(f32*)(state + 0x68) / *(f32*)(state + 0x64)) + baseZ;
-            v = *(f32*)(state + 0x64);
+                (arc->landZ - baseZ) *
+                (arc->time / arc->duration) + baseZ;
+            v = arc->duration;
             if (v <= lbl_803E24B4)
             {
-                ((TrickyState*)state)->unk3C = *(f32*)(state + 0x68) / v;
+                ((TrickyState*)state)->unk3C = arc->time / v;
             }
             else
             {
-                k = *(f32*)(state + 0x68);
+                k = arc->time;
                 if (k <= lbl_803E24B8)
                 {
                     ((TrickyState*)state)->unk3C = k / lbl_803E24B4;
@@ -1090,6 +1120,7 @@ state_selected:
             ((TrickyState*)state)->unk353 = 0;
         }
         break;
+    }
     case 0xb:
         trickyDebugPrint(strs + 0x4c4);
         v = lbl_803E2420 * timeDelta + velBefore;
