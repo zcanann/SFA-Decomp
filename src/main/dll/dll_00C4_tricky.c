@@ -203,10 +203,10 @@ extern f32 lbl_803E3244;
 
 void FUN_80144e40(int obj, int state)
 {
-    float heightVal;
+    float waterHeight;
     int scratch;
     bool cond;
-    u32 bit;
+    u32 swimCmdEnabled;
     int hit[3];
 
     ((TrickyState*)state)->unk720 = ((TrickyState*)state)->unk720 - lbl_803DC074;
@@ -218,10 +218,10 @@ void FUN_80144e40(int obj, int state)
     if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
         (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
     {
-        heightVal = ((TrickyState*)state)->unk720;
-        if (lbl_803E306C < heightVal)
+        waterHeight = ((TrickyState*)state)->unk720;
+        if (lbl_803E306C < waterHeight)
         {
-            ((TrickyState*)state)->unk720 = heightVal + lbl_803E30D0;
+            ((TrickyState*)state)->unk720 = waterHeight + lbl_803E30D0;
             if (*(char*)(state + 10) != '\v')
             {
                 if ((((TrickyState*)state)->stateFlags & 0x10) == 0)
@@ -251,8 +251,8 @@ void FUN_80144e40(int obj, int state)
                 else
                 {
                     ((TrickyState*)state)->unk720 = ((TrickyState*)state)->unk720 * lbl_803E3138;
-                    bit = FUN_80017690(0x245);
-                    if (bit != 0)
+                    swimCmdEnabled = FUN_80017690(0x245);
+                    if (swimCmdEnabled != 0)
                     {
                         if (lbl_803E306C == ((TrickyState*)state)->waterLevel)
                         {
@@ -289,7 +289,7 @@ void FUN_80144e40(int obj, int state)
         }
         else
         {
-            ((TrickyState*)state)->unk720 = heightVal + lbl_803E317C;
+            ((TrickyState*)state)->unk720 = waterHeight + lbl_803E317C;
             scratch = *(int*)&((GameObject*)obj)->extra;
             if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
                     ((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove <
@@ -2977,26 +2977,26 @@ void Tricky_func11(int* obj)
 
 int Tricky_func13(int* obj)
 {
-    u8 v = *((u8*)obj[0xb8 / 4] + 8);
-    if (v == 8 || v == 0xe) return 1;
+    u8 mode = *((u8*)obj[0xb8 / 4] + 8);
+    if (mode == 8 || mode == 0xe) return 1;
     return 0;
 }
 
 int Tricky_func12(int* obj)
 {
-    u8 v;
-    int r;
-    v = *((u8*)obj[0xb8 / 4] + 8);
-    switch (v)
+    u8 mode;
+    int result;
+    mode = *((u8*)obj[0xb8 / 4] + 8);
+    switch (mode)
     {
     case 5:
-        r = 1;
+        result = 1;
         break;
     default:
-        r = 0;
+        result = 0;
         break;
     }
-    return r;
+    return result;
 }
 
 #pragma opt_propagation off
