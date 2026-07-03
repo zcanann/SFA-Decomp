@@ -831,16 +831,12 @@ double FUN_8014cbcc(int obj)
     return ratio;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void FUN_8014ccac(int obj, u32 value)
 {
     *(u32*)&((EnemyState*)((GameObject*)obj)->extra)->trackedObj = value;
     return;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014ccb8(double maxMagnitude, double tolerance, double turnScale, int target, int state,
                   float* dir, char clampToGround)
 {
