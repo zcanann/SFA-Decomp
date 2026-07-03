@@ -613,7 +613,7 @@ void fn_8014FEF8(int p1, int* p2, int p3, int code)
 
 void fn_8014FF24(int a, int b)
 {
-    f32* p = *(f32**)((char*)b + 0x29c);
+    f32* p = (f32*)((BaddieState*)b)->trackedObj;
     fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
 }
 
