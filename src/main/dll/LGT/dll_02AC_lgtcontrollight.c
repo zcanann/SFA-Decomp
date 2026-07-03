@@ -77,8 +77,8 @@ void controllight_init(int obj, int setup)
 #pragma optimization_level 1
 void controllight_update(int obj)
 {
-
-    ControlLightState* state = ((GameObject*)obj)->extra;
+    GameObject* self = (GameObject*)obj;
+    ControlLightState* state = self->extra;
     u32 bit = GameBit_Get(state->gameBit) & 0xff;
 
     if (bit != state->lastBit)
@@ -87,7 +87,6 @@ void controllight_update(int obj)
         {
         case CONTROLLIGHT_MODE_DIRECT:
             {
-                extern void pointlight_setEffectState(int obj, u32 enabled); /* #57 */
                 f32 radius = state->radius;
                 int count;
                 int i;
@@ -96,7 +95,7 @@ void controllight_update(int obj)
                 for (i = 0, p = objs; i < count; i++)
                 {
                     GameObject* lightObj = *p;
-                    if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
+                    if (Vec_distance((int)&self->anim.worldPosX,
                                      (int)&lightObj->anim.worldPosX) < radius)
                     {
                         pointlight_setEffectState((int)lightObj, bit);
@@ -118,7 +117,7 @@ void controllight_update(int obj)
                 for (; i < count; i++)
                 {
                     GameObject* lightObj = *p;
-                    if (Vec_distance((int)&((GameObject*)obj)->anim.worldPosX,
+                    if (Vec_distance((int)&self->anim.worldPosX,
                                      (int)&lightObj->anim.worldPosX) < radius)
                     {
                         pointlight_setEffectState((int)lightObj, (u8)invBit);
