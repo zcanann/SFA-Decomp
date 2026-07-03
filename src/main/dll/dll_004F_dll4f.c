@@ -219,9 +219,6 @@ void dll_4F_update(int* obj)
 
 void CameraModeCrawl_init(void);
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
 void dll_4F_func05(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -239,9 +236,6 @@ void fn_801101E8(void)
 }
 
 void CameraModeCloudRunner_free(void);
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
