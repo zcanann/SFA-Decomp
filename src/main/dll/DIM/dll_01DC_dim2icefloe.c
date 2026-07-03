@@ -47,8 +47,6 @@ typedef struct Dim2IceFloePlacement
 STATIC_ASSERT(offsetof(Dim2IceFloePlacement, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(Dim2IceFloePlacement, curveStep) == 0x1c);
 
-#pragma scheduling on
-#pragma peephole on
 extern void fn_80296D20(void* player, int obj);
 extern f32 lbl_803E4B34;
 extern f32 gDim2IceFloeSinkSpeed;
@@ -60,8 +58,6 @@ extern f32 lbl_803E4B54;
 extern f32 lbl_803E4B58;
 extern f32 lbl_803E4B30;
 
-#pragma scheduling off
-#pragma peephole off
 void dim2icefloe_free(void)
 {
 }
