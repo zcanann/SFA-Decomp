@@ -41,6 +41,8 @@
 #include "main/dll/firecrawler.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#define FIRECRAWLER_OBJFLAG_RENDERED 0x800
+#define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -604,7 +606,7 @@ void fn_80157CDC(int obj, int state)
             if (sub->rumbleAmt != 0)
             {
                 void* player = Obj_GetPlayerObject();
-                if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
+                if ((((GameObject*)player)->objectFlags & FIRECRAWLER_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     f32 dist = Vec_distance(obj + 0x18, (int)player + 0x18);
                     if (dist <= lbl_803E2B80)
@@ -1161,7 +1163,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     sp.z = lbl_803E2C30;
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & FIRECRAWLER_OBJFLAG_RENDERED) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
         if (((FireCrawlerState*)state)->engineLight == NULL)
@@ -2121,7 +2123,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     sp.z = lbl_803E2C30;
     sp.vol = lbl_803E2C24;
     sp.sfxId = 0x605;
-    if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
+    if ((((GameObject*)obj)->objectFlags & FIRECRAWLER_OBJFLAG_RENDERED) != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
         if (((FireCrawlerState*)state)->engineLight == NULL)
