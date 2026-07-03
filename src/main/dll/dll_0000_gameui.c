@@ -2352,13 +2352,16 @@ void fn_80128470(int p1)
         gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
     }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
-    if ((int)pauseMenuState < 0xb && (int)pauseMenuState >= 8)
+    switch ((int)pauseMenuState)
     {
+    case 8:
+    case 9:
+    case 10:
         gameTextFn_80016810(0x3e8, 0xc8, 0x154);
-    }
-    else
-    {
+        break;
+    default:
         gameTextFn_80016810(0x3dd, 0xc8, 0x154);
+        break;
     }
     if (lbl_803DD75C != 0)
     {
