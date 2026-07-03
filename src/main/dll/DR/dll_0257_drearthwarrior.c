@@ -631,10 +631,10 @@ int fn_802BC830(int obj, int p2, int p3)
 #pragma opt_common_subs off
 void fn_802BCA10(int obj, int sub, int state)
 {
-    s16* vec0;
-    s16* vec9;
     int v;
     int d;
+    s16* vec0;
+    s16* vec9;
     v = ((EarthWarriorSub*)sub)->unk480 << 1;
     if (v < -0x41)
     {
@@ -652,21 +652,14 @@ void fn_802BCA10(int obj, int sub, int state)
     d -= (u16)((EarthWarriorSub*)sub)->unk4D4;
     if (d > 0x8000)
     {
-        d -= 0xffff;
+        d = d - 0xffff;
     }
     if (d < -0x8000)
     {
-        d += 0xffff;
+        d = d + 0xffff;
     }
     d = (int)((f32)d * lbl_803E8324);
-    if (d < -0x16c)
-    {
-        d = -0x16c;
-    }
-    else if (d > 0x16c)
-    {
-        d = 0x16c;
-    }
+    d = (d < -0x16c) ? -0x16c : ((d > 0x16c) ? 0x16c : d);
     ((EarthWarriorSub*)sub)->unk4D4 = d * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->unk4D4;
     ((EarthWarriorSub*)sub)->unk4D2 = ((EarthWarriorSub*)sub)->unk4D4 / 2;
     {
@@ -677,11 +670,11 @@ void fn_802BCA10(int obj, int sub, int state)
     }
     if (d > 0x8000)
     {
-        d -= 0xffff;
+        d = d - 0xffff;
     }
     if (d < -0x8000)
     {
-        d += 0xffff;
+        d = d + 0xffff;
     }
     ((EarthWarriorSub*)sub)->unk4D6 += d;
     vec0 = objModelGetVecFn_800395d8(obj, 0);
