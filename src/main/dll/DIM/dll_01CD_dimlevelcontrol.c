@@ -71,7 +71,6 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A20);
 }
 
-#pragma peephole on
 void dim_levelcontrol_free(int p1)
 {
     extern void Music_Trigger(int id, int arg);
@@ -85,7 +84,6 @@ void dim_levelcontrol_free(int p1)
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
-#pragma peephole off
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -247,8 +245,6 @@ void dim_levelcontrol_update(int obj)
 
 void dll_1CF_free(void);
 
-#pragma scheduling off
-#pragma peephole off
 void dim_levelcontrol_init(int obj)
 {
     DimLevelControlState* st;
