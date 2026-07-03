@@ -660,7 +660,6 @@ void sfxplayer_free(int obj, int arg1)
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
-void TrickyCurve_render(void);
 
 void sfxplayer_render(void)
 {
@@ -670,7 +669,6 @@ void sfxplayer_hitDetect(void)
 {
 }
 
-int TrickyCurve_getExtraSize(void);
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
