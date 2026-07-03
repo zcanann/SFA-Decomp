@@ -2627,3 +2627,5 @@ void ObjHits_Update(int objectCount)
     gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
     gObjHitsActiveHitVolumeObjects[++slotIndex] = 0;
 }
+
+char sObjHitsTooManyHitSpheresWarning[] = "HIT VOLUMES: an object has too many hit spheres\n";

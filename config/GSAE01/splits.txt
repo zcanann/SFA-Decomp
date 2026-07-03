@@ -91,6 +91,7 @@ main/objanim.c:
 
 main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
+	.data       start:0x802CADB4 end:0x802CADE8
 	.bss        start:0x803408F8 end:0x803428F8
 
 main/objHitReact.c:
