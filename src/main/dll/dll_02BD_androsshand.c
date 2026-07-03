@@ -61,6 +61,16 @@ typedef struct AndrossHandState
     u8 pad2A[2];
 } AndrossHandState;
 
+/* Spawn-setup buffer for an Andross-hand shot: ObjPlacement head (pos/color)
+ * plus the class-specific yaw/pitch/flag bytes the parent seeds at +0x18. */
+typedef struct AndrossHandShotSetup
+{
+    ObjPlacement head; /* 0x00: pos/color/mapId */
+    u8 flag18;         /* 0x18 */
+    u8 pitch;          /* 0x19 */
+    u8 yaw;            /* 0x1a */
+} AndrossHandShotSetup;
+
 STATIC_ASSERT(offsetof(AndrossHandState, animSpeed) == 0x14);
 STATIC_ASSERT(offsetof(AndrossHandState, shotTimer) == 0x20);
 STATIC_ASSERT(offsetof(AndrossHandState, handState) == 0x23);
@@ -466,14 +476,14 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         yaw = (u16)getAngle(dx, dz) + 0x8000;
         gAndrossHandShotPitch = (u16)getAngle(pt[1] - ((GameObject*)state->arwingObj)->anim.localPosY, dist) >> 8;
         setup = Obj_AllocObjectSetup(0x20, 0x7e4);
-        ((ObjPlacement*)setup)->posX = pt[0];
-        ((ObjPlacement*)setup)->posY = pt[1];
-        ((ObjPlacement*)setup)->posZ = pt[2];
-        *(u8*)(setup + 0x1a) = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
-        *(u8*)(setup + 0x19) = gAndrossHandShotPitch;
-        *(u8*)(setup + 0x18) = 0;
-        *(u8*)(setup + 4) = 1;
-        *(u8*)(setup + 5) = 1;
+        ((AndrossHandShotSetup*)setup)->head.posX = pt[0];
+        ((AndrossHandShotSetup*)setup)->head.posY = pt[1];
+        ((AndrossHandShotSetup*)setup)->head.posZ = pt[2];
+        ((AndrossHandShotSetup*)setup)->yaw = (((GameObject*)obj)->anim.rotX + yaw) >> 8;
+        ((AndrossHandShotSetup*)setup)->pitch = gAndrossHandShotPitch;
+        ((AndrossHandShotSetup*)setup)->flag18 = 0;
+        ((AndrossHandShotSetup*)setup)->head.color[0] = 1;
+        ((AndrossHandShotSetup*)setup)->head.color[1] = 1;
         obj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
         if ((void*)obj != NULL)
         {
