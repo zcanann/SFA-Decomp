@@ -117,8 +117,6 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-#pragma scheduling on
-#pragma peephole on
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -146,8 +144,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-#pragma scheduling off
-#pragma peephole off
 void lavaball1be_hitDetect(void)
 {
 }
