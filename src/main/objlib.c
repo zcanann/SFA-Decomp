@@ -831,7 +831,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
         }
         contactOffset = contactOffset + 4;
     }
-    storeState = *(volatile int*)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
+    storeState = *(int*)((u8*)obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
     contactObjectIndex = (*(char*)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET))++;
     *(int*)(storeState + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET +
         contactObjectIndex * 4) = contactObj;
