@@ -2843,7 +2843,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     tangentDx = gFloatHalf * (tangentDx + segmentDx);
     tangentDz = gFloatHalf * (tangentDz + segmentDz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
-    if ((*(volatile f32 *)&gFloatZero) != tangentLen)
+    if ((*(f32*)&gFloatZero) != tangentLen)
     {
         tangentDx = tangentDx / tangentLen;
         tangentDz = tangentDz / tangentLen;
@@ -2872,7 +2872,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     nextTangentDx = gFloatHalf * (nextTangentDx + nextSegmentDx);
     nextTangentDz = gFloatHalf * (nextTangentDz + nextSegmentDz);
     nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
-    if ((*(volatile f32 *)&gFloatZero) != nextTangentLen)
+    if ((*(f32*)&gFloatZero) != nextTangentLen)
     {
         nextTangentDx = nextTangentDx / nextTangentLen;
         nextTangentDz = nextTangentDz / nextTangentLen;
@@ -2899,7 +2899,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
                   nextSegmentDz * nextSegmentDz);
         lateralX = nextSegmentDx;
         lateralZ = nextSegmentDz;
-        if (segmentLen > (*(volatile f32 *)&gFloatZero))
+        if (segmentLen > (*(f32*)&gFloatZero))
         {
             lateralX = -nextSegmentDx * (gFloatOne / segmentLen);
             lateralZ = -nextSegmentDz * (gFloatOne / segmentLen);
@@ -3515,7 +3515,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
                         segment.endY = linkedCurve->y;
                         segment.endZ = linkedCurve->z;
                         distance = RomCurve_distanceToSegment(pointX, pointY, pointZ, &segment);
-                        absBestDistance = (bestDistance < *(volatile f32*)&gFloatZero) ? -bestDistance : bestDistance;
+                        absBestDistance = (bestDistance < *(f32*)&gFloatZero) ? -bestDistance : bestDistance;
                         absDistance = (distance < *(volatile f32*)&gFloatZero) ? -distance : distance;
                         if (absDistance < absBestDistance)
                         {
