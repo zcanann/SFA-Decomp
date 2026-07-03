@@ -145,7 +145,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
 void shopkeeper_free(int obj)
 {
-    Stack_Free(*(u32*)(*(int*)&((GameObject*)obj)->extra + 0x9b0));
+    Stack_Free(((ShopkeeperState*)((GameObject*)obj)->extra)->msgStack);
     return;
 }
 
