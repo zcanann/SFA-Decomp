@@ -615,3 +615,10 @@ int DIMbossAnim_updatePlayerHitReaction(int obj, int runtime)
     DIM2icicle_updateHitResponse(obj, runtime);
     return 0;
 }
+
+f32 gDim2LiftMoveSpeedByDir[16] = {
+    0.007f, 0.025f, 0.029f, 0.05f,
+    0.011f, 0.014f, 0.016f, 0.018f,
+    0.018f, 0.016f, 0.014f, 0.011f,
+    0.05f, 0.029f, 0.025f, 0.007f,
+};

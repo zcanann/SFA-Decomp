@@ -1668,6 +1668,7 @@ main/dll/dll_801b9ecc.c:
 
 main/dll/DIM/dim2lift.c:
 	.text       start:0x801BA224 end:0x801BB598
+	.data       start:0x803259A0 end:0x803259E0
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
