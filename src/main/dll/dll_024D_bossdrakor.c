@@ -73,7 +73,7 @@ typedef struct BossDrakorState
     f32 unk184;
     f32 unk188;
     f32 textTimer;
-    u8 unk190;
+    u8 repeatCount;
     u8 pad191[3];
     int curveFollowState;
     u8 pad198[4];
@@ -135,7 +135,7 @@ void bossdrakor_update(int obj)
         ((GameObject*)obj)->anim.localPosZ = ((BossDrakorState*)state)->savedPosZ;
         ((GameObject*)obj)->anim.localPosY = ((BossDrakorState*)state)->savedPosY;
         ((DrakorFlags*)((char*)state + 0x198))->b20 = 1;
-        ((BossDrakorState*)state)->unk190 = 0;
+        ((BossDrakorState*)state)->repeatCount = 0;
         state2 = *(int*)&((GameObject*)obj)->extra;
         ((DrakorFlags*)((char*)state2 + 0x198))->b20 = 1;
         (*gGameUIInterface)->initAirMeter(((BossDrakorState*)state2)->airMeterHandle, 0x63e);
@@ -712,10 +712,10 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
     case 17:
     case 18:
     case 19:
-        ((BossDrakorState*)state)->unk190++;
-        if (((BossDrakorState*)state)->unk190 > action - 0xd)
+        ((BossDrakorState*)state)->repeatCount++;
+        if (((BossDrakorState*)state)->repeatCount > action - 0xd)
         {
-            ((BossDrakorState*)state)->unk190 = 0;
+            ((BossDrakorState*)state)->repeatCount = 0;
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
         break;
