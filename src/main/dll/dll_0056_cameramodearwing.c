@@ -232,22 +232,22 @@ void CameraModeArwing_update(u8* obj)
         d -= (u16)((GameObject*)obj)->anim.rotX;
         if (d > 0x8000)
         {
-            d -= 0xffff;
+            d = d - 0xffff;
         }
         if (d < -0x8000)
         {
-            d += 0xffff;
+            d = d + 0xffff;
         }
         step = (s32)((f32)d * timeDelta);
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
-            d -= 0xffff;
+            d = d - 0xffff;
         }
         if (d < -0x8000)
         {
-            d += 0xffff;
+            d = d + 0xffff;
         }
         step = (s32)((f32)d * timeDelta);
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
@@ -266,33 +266,33 @@ void CameraModeArwing_update(u8* obj)
         roll0 = roll0 - (u16)((GameObject*)obj)->anim.rotZ;
         if (roll0 > 0x8000)
         {
-            roll0 -= 0xffff;
+            roll0 = roll0 - 0xffff;
         }
         if (roll0 < -0x8000)
         {
-            roll0 += 0xffff;
+            roll0 = roll0 + 0xffff;
         }
         step = (f32)roll0 * timeDelta;
         ((GameObject*)obj)->anim.rotZ = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotZ;
         yaw0 = yaw0 - (u16)((GameObject*)obj)->anim.rotX;
         if (yaw0 > 0x8000)
         {
-            yaw0 -= 0xffff;
+            yaw0 = yaw0 - 0xffff;
         }
         if (yaw0 < -0x8000)
         {
-            yaw0 += 0xffff;
+            yaw0 = yaw0 + 0xffff;
         }
         step = (f32)yaw0 * timeDelta;
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
         d = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
         if (d > 0x8000)
         {
-            d -= 0xffff;
+            d = d - 0xffff;
         }
         if (d < -0x8000)
         {
-            d += 0xffff;
+            d = d + 0xffff;
         }
         step = (f32)d * timeDelta;
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
