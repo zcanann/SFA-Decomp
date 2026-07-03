@@ -2346,9 +2346,9 @@ void skyFn_8008a04c(void)
     u8* color;
     int part4;
     int i;
-    int c1;
+    int rawR;
     int blue;
-    int t2;
+    int rawG;
     int cC;
     int cB;
     int cA;
@@ -2415,40 +2415,40 @@ void skyFn_8008a04c(void)
                 cB = Curve_EvalLinear(pB, frac, 0);
                 cC = Curve_EvalLinear(pC, frac, 0);
             }
-            c1 = Curve_EvalCatmullRom(gSkyState + iofs + part4 + 0x20, frac, 0);
-            t2 = Curve_EvalCatmullRom(gSkyState + iofs + idx7 + 0x20, frac, 0);
+            rawR = Curve_EvalCatmullRom(gSkyState + iofs + part4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRom(gSkyState + iofs + idx7 + 0x20, frac, 0);
             blue = Curve_EvalCatmullRom(gSkyState + iofs + idx14 + 0x20, frac, 0);
             p = gSkyState + iofs;
             blend = *(f32*)&((GameObject*)p)->extra;
             if (blend != zero)
             {
-                c1 = (int)(blend * ((f32)p[0x74] - c1) + c1);
-                t2 = (int)(blend * ((f32)p[0x75] - t2) + t2);
+                rawR = (int)(blend * ((f32)p[0x74] - rawR) + rawR);
+                rawG = (int)(blend * ((f32)p[0x75] - rawG) + rawG);
                 blue = (int)(blend * ((f32)p[0x76] - blue) + blue);
             }
-            if (c1 < 0)
+            if (rawR < 0)
             {
                 red = 0;
             }
-            else if (c1 > 0xff)
+            else if (rawR > 0xff)
             {
                 red = 0xff;
             }
             else
             {
-                red = c1;
+                red = rawR;
             }
-            if (t2 < 0)
+            if (rawG < 0)
             {
                 green = 0;
             }
-            else if (t2 > 0xff)
+            else if (rawG > 0xff)
             {
                 green = 0xff;
             }
             else
             {
-                green = t2;
+                green = rawG;
             }
             if (blue < 0)
             {
@@ -2930,16 +2930,16 @@ void skyFn_8008aee8(void)
     u8* player;
     int cell;
     u8* tbl;
-    u8* p;
-    u8* lc;
-    u8* ac;
+    u8* channel;
+    u8* lightColor;
+    u8* ambientColor;
     int idxA;
     int idxB;
-    int a;
-    int b;
-    int hw;
-    u32 res;
-    int tmp;
+    int gradA;
+    int gradB;
+    int texW;
+    u32 screenRes;
+    int texHandle;
     f32 frac;
     f32 t;
     f32 tc;
@@ -3032,38 +3032,38 @@ void skyFn_8008aee8(void)
         blend = ((SkyTimeBlend*)sky)->blend;
         if (blend != pEXIInputFlag)
         {
-            tmp = sky[((SkyTimeBlend*)sky)->texSel + 2];
-            fn_80069B1C((void*)sky[4], (void*)tmp, blend, (void*)tmp);
+            texHandle = sky[((SkyTimeBlend*)sky)->texSel + 2];
+            fn_80069B1C((void*)sky[4], (void*)texHandle, blend, (void*)texHandle);
         }
         sky = *(int**)&gSkyState;
         idxA = (s16)(sky[((SkyTimeBlend*)sky)->phase + 0x87] - 0xc38) * 6;
         tbl = gSkyColorBlendTable;
-        a = tbl[idxA];
+        gradA = tbl[idxA];
         idxB = (s16)(sky[(((SkyTimeBlend*)sky)->phase + 1) % 8 + 0x87] - 0xc38) * 6;
-        b = tbl[idxB];
-        gSkyCurrentLightColor = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
-        p = tbl + 1;
-        a = p[idxA];
-        b = p[idxB];
-        lc = &gSkyCurrentLightColor;
-        lc[1] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
-        p = tbl + 2;
-        a = p[idxA];
-        b = p[idxB];
-        lc[2] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
-        p = tbl + 3;
-        a = p[idxA];
-        b = p[idxB];
-        gSkyCurrentAmbientColor = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
-        p = tbl + 4;
-        a = p[idxA];
-        b = p[idxB];
-        ac = &gSkyCurrentAmbientColor;
-        ac[1] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
-        p = tbl + 5;
-        a = p[idxA];
-        b = p[idxB];
-        ac[2] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        gradB = tbl[idxB];
+        gSkyCurrentLightColor = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        channel = tbl + 1;
+        gradA = channel[idxA];
+        gradB = channel[idxB];
+        lightColor = &gSkyCurrentLightColor;
+        lightColor[1] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        channel = tbl + 2;
+        gradA = channel[idxA];
+        gradB = channel[idxB];
+        lightColor[2] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        channel = tbl + 3;
+        gradA = channel[idxA];
+        gradB = channel[idxB];
+        gSkyCurrentAmbientColor = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        channel = tbl + 4;
+        gradA = channel[idxA];
+        gradB = channel[idxB];
+        ambientColor = &gSkyCurrentAmbientColor;
+        ambientColor[1] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        channel = tbl + 5;
+        gradA = channel[idxA];
+        gradB = channel[idxB];
+        ambientColor[2] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         texC = (u8*)sky[((SkyTimeBlend*)sky)->texSel + 2];
         cam = Camera_GetCurrentViewSlot();
         frac = Camera_GetFovY() * lbl_803DF068;
@@ -3090,15 +3090,15 @@ void skyFn_8008aee8(void)
         GXSetNumChans(0);
         GXSetNumTexGens(1);
         GXSetNumTevStages(1);
-        res = getScreenResolution();
+        screenRes = getScreenResolution();
         sinProd *= lbl_803DF0B8;
-        hw = *(u16*)(texC + 0xc);
+        texW = *(u16*)(texC + 0xc);
         v = angle / (lbl_803DF0EC * (f32)(u32)
-        hw
+        texW
         )
         ;
-        skyDrawFn_80075d5c(pEXIInputFlag, v, EXIInputFlag, v - sinProd / (f32)(u32)hw, 0, 0,
-                           (res & 0xffff) << 2, (res >> 16) << 2, -0x18f);
+        skyDrawFn_80075d5c(pEXIInputFlag, v, EXIInputFlag, v - sinProd / (f32)(u32)texW, 0, 0,
+                           (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, -0x18f);
     }
 }
 #pragma opt_common_subs reset
