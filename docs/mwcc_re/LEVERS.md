@@ -175,6 +175,35 @@ The pipeline per register class is: build interference graph → coalesce copies
    (0x50815d) skips GPR operands r2 (SDA2) and r13 (SDA), and r0-as-literal-zero.
    Don't expect deps or register pressure from SDA-based accesses.
 
+## Conversion staging temps (stack frame / slot layout)
+9. **Int→float and float→int staging temps (8-byte `stw/stw/lfd` and
+   `stfd/lwz` slots) are allocated fresh per conversion and NEVER freed by
+   default** — slots ascend, frames grow, and no retail function reuses a
+   staging slot unless the original source triggered freeing (below). A
+   mismatch that is ONLY `stwu -N` + shifted `stw r0,K(r1)`/`lfd`/`stfd`
+   offsets (instruction stream otherwise identical) is this lever, not a
+   missing local.
+   - **Free trigger (validated by probe grid + 2 full matches):** a compound
+     assignment on a local inside a branch (`if (d > 0x8000) d -= 0xffff;`),
+     or an `if/else if` chain that reassigns a variable which later feeds an
+     int→float conversion. Either switches the temp pool into freeing mode:
+     all earlier conversion temps are released and reused **LIFO** (slots
+     descend on the next statement, frame shrinks).
+   - **Fresh spelling:** `d = d - 0xffff;` for in-branch clamps, and a
+     ternary (`d = (d < -K) ? -K : ((d > K) ? K : d);`) for the else-if
+     clamp. Statement-level compounds on integer loads (`a -= (u16)s16field`)
+     are inert; a compound whose RHS contains a conversion temp (u16 cast of
+     an f32 field) is a trigger.
+   - **Both directions occur in retail:** most targets are fresh (respell
+     compounds/else-ifs to explicit/ternary: DR_CloudRunner_stateHandler04,
+     arwarwing_updateFlightPhysics 100%; fn_802ABFBC, fn_802BCA10,
+     CameraModeArwing_update improved), but some targets DO reuse slots
+     (fn_802ABAE8, fn_802AC32C: original kept the compound spelling — mixed,
+     per-site work; check the target's slot sequence first: ascending = fresh,
+     descending-reuse = compound).
+   - The same mechanism shows up in FPR temp choice (a freed f0 reused where
+     the target picks the next fresh fN) — same triggers apply.
+
 ## Inlining (CInline.c)
 10. **A call is auto-inlined (`-inline auto`) iff: callee body is available in
    THIS TU + ≤30 statements + ≤1024 cost units + not `dont_inline` + not recursive**
