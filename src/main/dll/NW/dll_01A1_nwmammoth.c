@@ -83,37 +83,6 @@ extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 gNwMammothDefaultAnimStepScale;
 
-void FUN_801ce078(u16* model, int state)
-{
-}
-
-void FUN_801ce340(short* model, int state, int enable)
-{
-    if (((enable == 0) || (*(int*)(state + 0x28) == 0)) ||
-        (lbl_803E5EAC <= *(float*)(state + 0x18)))
-    {
-        *(u8*)(state + 0x40c) = 0;
-    }
-    else
-    {
-        *(u8*)(state + 0x40c) = 1;
-        *(u32*)(state + 0x410) = *(u32*)(*(int*)(state + 0x28) + 0xc);
-        *(u32*)(state + 0x414) = *(u32*)(*(int*)(state + 0x28) + 0x10);
-        *(u32*)(state + 0x418) = *(u32*)(*(int*)(state + 0x28) + 0x14);
-    }
-    if (((&DAT_803274f4)[*(u8*)(state + 0x408)] & 2) == 0)
-    {
-        fn_8003A328((double)lbl_803E5EA4, model, (char*)(state + 0x40c));
-        FUN_8003b280((int)model, state + 0x40c);
-    }
-    else
-    {
-        FUN_8003a1c4((int)model, state + 0x40c);
-        FUN_8003b1a4((int)model, state + 0x40c);
-    }
-    return;
-}
-
 int nw_mammoth_getExtraSize(void)
 {
     return 0x48c;
