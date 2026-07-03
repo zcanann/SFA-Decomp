@@ -3349,3 +3349,11 @@ void expgfx_initialise(void)
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
 #pragma ppc_unroll_instructions_limit 120
+
+/* .bss block 0x8039AB58-0x8039BE98 */
+u8 gExpgfxRuntimeData[0x980];
+ExpgfxTableEntry gExpgfxTableEntries[0x550 / sizeof(ExpgfxTableEntry)];
+u32 gExpgfxTrackedPoolSourceIds[0x50];
+ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[0xB0 / sizeof(ExpgfxTrackedSourceFrameMask)];
+u32 gExpgfxSlotActiveMasks[0x50];
+u32 gExpgfxSlotPoolBases[0x50];
