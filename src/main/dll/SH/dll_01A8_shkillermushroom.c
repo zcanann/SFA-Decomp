@@ -188,15 +188,16 @@ typedef struct
 void enemymushroom_update(int* obj)
 {
     extern f32 Vec_distance(f32* a, f32* b);
+    char* state;
     u8* player;
     int* src;
-    char* state = ((GameObject*)obj)->extra;
     MushHitInfo hv;
     int hitObject;
     int hitSphereIndex;
     u32 hitVolume;
     int hitType;
 
+    state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     src = *(int**)&((GameObject*)obj)->anim.placementData;
     ObjHits_ClearHitVolumes((int)obj);
