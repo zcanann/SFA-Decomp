@@ -14762,6 +14762,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     f32* pl;
     f32* dp;
     char* cp;
+    f32* px2;
     f32* py2;
     f32* pz2;
     int inner;
@@ -14842,6 +14843,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         dp = dists;
         cp = cam;
         b6b8 = &lbl_803DC6B8;
+        px2 = &x2;
         py2 = &y2;
         pz2 = &z2;
         thresh = lbl_803E7E98;
@@ -14875,7 +14877,7 @@ int fn_802A87CC(int obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                         ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
                             &x1, &y1, &z1, parent);
                         ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))
-                            Obj_TransformLocalPointToWorld)(x2, y2, z2, &x2, py2, pz2, parent);
+                            Obj_TransformLocalPointToWorld)(x2, y2, z2, px2, py2, pz2, parent);
                     }
                     {
                         f32 dz = z2 - z1;
