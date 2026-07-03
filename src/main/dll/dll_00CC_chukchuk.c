@@ -318,3 +318,5 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
+
+u8 lbl_8031FF80[] = { 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0 };
