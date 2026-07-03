@@ -197,7 +197,6 @@ void MMP_levelcontrol_initialise(void)
 {
 }
 
-#pragma scheduling off
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
