@@ -2937,24 +2937,10 @@ int ObjSeq_update(u8* obj, f32 t)
             switch (op)
             {
             case 0x12:
-                if ((getButtonsJustPressed(0) & 0x100) != 0)
-                {
-                    pressed = 1;
-                }
-                else
-                {
-                    pressed = 0;
-                }
+                pressed = (getButtonsJustPressed(0) & 0x100) != 0;
                 break;
             case 0x13:
-                if ((getButtonsJustPressed(0) & 0x200) != 0)
-                {
-                    pressed = 1;
-                }
-                else
-                {
-                    pressed = 0;
-                }
+                pressed = (getButtonsJustPressed(0) & 0x200) != 0;
                 break;
             case 0x14:
             case 0x15:
