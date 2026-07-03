@@ -1697,8 +1697,9 @@ void crawler_updateC(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = 0;
     }
 
-    if (((FCVars*)state)->emergeTimer != (cap = lbl_803E2BA8) && ((FCVars*)state)->reactStep != 0)
+    if (((FCVars*)state)->emergeTimer != *(f32*)&lbl_803E2BA8 && ((FCVars*)state)->reactStep != 0)
     {
+        cap = lbl_803E2BA8;
         ((FCVars*)state)->emergeTimer = ((FCVars*)state)->emergeTimer - timeDelta;
         if (((FCVars*)state)->emergeTimer <= cap)
         {
@@ -2109,8 +2110,9 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     f32 dv[3];
     int i;
 
-    if (((FCVars*)state)->warpTimer != (cap = lbl_803E2C30))
+    if (((FCVars*)state)->warpTimer != *(f32*)&lbl_803E2C30)
     {
+        cap = lbl_803E2C30;
         ((FCVars*)state)->warpTimer = ((FCVars*)state)->warpTimer - timeDelta;
         if (((FCVars*)state)->warpTimer <= cap)
         {
