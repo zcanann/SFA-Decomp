@@ -1098,6 +1098,17 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     setMapBlockFlag();
 }
 
+/* 16-byte texture-override table entry (array at lbl_803DCE6C, 80 slots). */
+typedef struct TexOverrideEntry
+{
+    u32 key;    /* 0x00 */
+    int data0;  /* 0x04 */
+    int data1;  /* 0x08 */
+    s16 refs;   /* 0x0c */
+    u8 type;    /* 0x0e */
+    u8 pad;     /* 0x0f */
+} TexOverrideEntry;
+
 #pragma dont_inline on
 void mapTextureOverrideRelease(int key, int type)
 {
@@ -1108,18 +1119,18 @@ void mapTextureOverrideRelease(int key, int type)
     for (i = 0; i < 80; i++)
     {
         off = i * 0x10;
-        entryKey = *(u32*)(lbl_803DCE6C + off);
+        entryKey = ((TexOverrideEntry*)lbl_803DCE6C)[i].key;
         if (entryKey == key &&
-            *(u8*)(lbl_803DCE6C + off + 0xe) == type &&
-            *(s16*)(lbl_803DCE6C + off + 0xc) > 0)
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0)
         {
-            *(s16*)(lbl_803DCE6C + off + 0xc) -= 1;
-            if (*(s16*)(lbl_803DCE6C + off + 0xc) == 0)
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs -= 1;
+            if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs == 0)
             {
-                *(int*)(lbl_803DCE6C + off + 4) = 0;
-                *(u8*)(lbl_803DCE6C + off + 0xe) = 0;
-                *(int*)(lbl_803DCE6C + off) = 0;
-                *(int*)(lbl_803DCE6C + off + 8) = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].type = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].key = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].data1 = 0;
             }
         }
     }
@@ -1134,11 +1145,11 @@ void mapTextureOverrideSetValue(int type, u32 key, int value)
     for (i = 0; i < 80; i++)
     {
         off = i * 0x10;
-        if (*(s16*)(lbl_803DCE6C + off + 0xc) > 0 &&
-            *(void**)(lbl_803DCE6C + off) == (void*)key &&
-            type == *(u8*)(lbl_803DCE6C + off + 0xe))
+        if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0 &&
+            (void*)((TexOverrideEntry*)lbl_803DCE6C)[i].key == (void*)key &&
+            type == ((TexOverrideEntry*)lbl_803DCE6C)[i].type)
         {
-            *(int*)(lbl_803DCE6C + off + 4) = value;
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = value;
         }
     }
 }
@@ -1434,16 +1445,6 @@ void playerUpdateFn_8005649c(void)
 }
 
 extern char sTrackGlobalTexanimOverflowError[];
-
-typedef struct TexOverrideEntry
-{
-    u32 key;
-    int data0;
-    int data1;
-    s16 refs;
-    u8 type;
-    u8 pad;
-} TexOverrideEntry;
 
 int mapTextureOverrideAcquire(int key, int value, int type)
 {
