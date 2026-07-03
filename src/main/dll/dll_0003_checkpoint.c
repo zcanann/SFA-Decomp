@@ -111,6 +111,13 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
 
     if (mode == 1)
     {
+        /* The literal 2.0f / 3.1415927f / 32768.0f / 0.0f below emit local
+         * .sdata2 pool doubles; the retail build shared them with the named
+         * sdata2 globals of equal value (lbl_803E04E4/E8, gCheckpointPi,
+         * gCheckpointAngleToRadians). That merge is a linker data-placement
+         * (SDA/symbols) artifact, NOT source-forceable: rewriting these as the
+         * named externs regresses (they are f32/lfs while the int->float bias
+         * needs an f64 conversion double). Keep the literals. */
         f32 prodA;
         f32 prodB;
         f32 prodC;
