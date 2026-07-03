@@ -645,7 +645,7 @@ void dbegg_update(int obj)
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
     int player;
-    int blob;
+    int eggState;
     int d2;
     int b2;
     int i;
@@ -654,20 +654,20 @@ void dbegg_update(int obj)
     f32 v;
     f32 fx;
     f32 fz;
-    f32 b3[3];
+    f32 flockVel[3];
     f32 d[3];
-    int buf2[2];
+    int curvePair[2];
     f32 h;
 
     player = Obj_GetPlayerObject();
-    blob = *(int*)&((GameObject*)obj)->extra;
-    *(DbEggIntPair*)buf2 = *(DbEggIntPair*)&lbl_803E61C0;
+    eggState = *(int*)&((GameObject*)obj)->extra;
+    *(DbEggIntPair*)curvePair = *(DbEggIntPair*)&lbl_803E61C0;
     if (objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                             ((GameObject*)obj)->anim.localPosZ) != -1)
     {
         dbegg_processMessages(obj);
         hitState->flags &= ~0x400;
-        switch (((DbEggState*)blob)->mode)
+        switch (((DbEggState*)eggState)->mode)
         {
         case DBEGG_MODE_FALLING:
             if (((GameObject*)obj)->unkF8 == 0)
@@ -676,20 +676,20 @@ void dbegg_update(int obj)
             }
             if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
             {
-                ((DbEggState*)blob)->mode = DBEGG_MODE_DRIFTING;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_DRIFTING;
                 break;
             }
             v = h;
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220)
             {
-                if (((DbEggState*)blob)->flags119 & 0x10)
+                if (((DbEggState*)eggState)->flags119 & 0x10)
                 {
-                    ((DbEggState*)blob)->mode = DBEGG_MODE_HOMING;
+                    ((DbEggState*)eggState)->mode = DBEGG_MODE_HOMING;
                 }
                 else
                 {
-                    ((DbEggState*)blob)->mode = DBEGG_MODE_SETTLED;
+                    ((DbEggState*)eggState)->mode = DBEGG_MODE_SETTLED;
                 }
                 fz = lbl_803E61C8;
                 ((GameObject*)obj)->anim.velocityX = lbl_803E61C8;
@@ -725,7 +725,7 @@ void dbegg_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_DRIFTING:
-            if (((DbEggState*)blob)->flags119 & 4)
+            if (((DbEggState*)eggState)->flags119 & 4)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + (((DbeggPlacement*)data)->
@@ -736,18 +736,18 @@ void dbegg_update(int obj)
                     targetPosZ - ((GameObject*)obj)->anim.localPosZ) / fz;
                 if (GameBit_Get(0x44d) != 0)
                 {
-                    ((DbEggState*)blob)->mode = DBEGG_MODE_CURVE_INIT;
+                    ((DbEggState*)eggState)->mode = DBEGG_MODE_CURVE_INIT;
                 }
             }
             hitState->flags |= 0x400;
             fz = lbl_803E61C8;
-            b3[0] = lbl_803E61C8;
-            b3[1] = fz;
-            b3[2] = fz;
-            fn_801FE774(obj, b3);
-            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + b3[0];
-            ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + b3[1];
-            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + b3[2];
+            flockVel[0] = lbl_803E61C8;
+            flockVel[1] = fz;
+            flockVel[2] = fz;
+            fn_801FE774(obj, flockVel);
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX + flockVel[0];
+            ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + flockVel[1];
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ + flockVel[2];
             if (fn_801FE560(obj, &h, ((GameObject*)obj)->anim.velocityX * timeDelta,
                             ((GameObject*)obj)->anim.velocityZ * timeDelta, 1) != 0)
             {
@@ -756,7 +756,7 @@ void dbegg_update(int obj)
                 fn_801FE560(obj, &h, ((GameObject*)obj)->anim.velocityX * timeDelta,
                             ((GameObject*)obj)->anim.velocityZ * timeDelta, 1);
             }
-            h = h + ((DbEggState*)blob)->waterOffset;
+            h = h + ((DbEggState*)eggState)->waterOffset;
             if (oneOverTimeDelta != lbl_803E61C8)
             {
                 ((GameObject*)obj)->anim.velocityY = h * (lbl_803E6238 * oneOverTimeDelta);
@@ -777,18 +777,18 @@ void dbegg_update(int obj)
                 {
                     ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
                         ((GameObject*)obj)->anim.localPosX,
-                        ((GameObject*)obj)->anim.localPosY - ((DbEggState*)blob)->waterOffset,
+                        ((GameObject*)obj)->anim.localPosY - ((DbEggState*)eggState)->waterOffset,
                         ((GameObject*)obj)->anim.localPosZ, ((GameObject*)obj)->anim.rotX, randomGetRange(1, 10), 1);
                 }
             }
             if (GameBit_Get(0x426) != 0)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ((DbEggState*)blob)->waterOffset = ((DbEggState*)blob)->waterOffset - lbl_803E623C * timeDelta;
-                if (((DbEggState*)blob)->waterOffset < lbl_803E61EC)
+                ((DbEggState*)eggState)->waterOffset = ((DbEggState*)eggState)->waterOffset - lbl_803E623C * timeDelta;
+                if (((DbEggState*)eggState)->waterOffset < lbl_803E61EC)
                 {
                     GameBit_Set(0x428, GameBit_Get(0x428) + 1);
-                    ((DbEggState*)blob)->mode = DBEGG_MODE_SINKING;
+                    ((DbEggState*)eggState)->mode = DBEGG_MODE_SINKING;
                     fz = lbl_803E61C8;
                     ((GameObject*)obj)->anim.velocityY = lbl_803E61C8;
                     ((GameObject*)obj)->anim.velocityX = fz;
@@ -796,7 +796,7 @@ void dbegg_update(int obj)
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
             }
-            else if (((DbEggState*)blob)->flags119 & 2)
+            else if (((DbEggState*)eggState)->flags119 & 2)
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
@@ -805,7 +805,7 @@ void dbegg_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
-            if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (((DbEggState*)blob)->flags119 & 2) == 0)
+            if (Vec_xzDistance(obj + 0x18, data + 8) > lbl_803E6240 && (((DbEggState*)eggState)->flags119 & 2) == 0)
             {
                 playerObj = Obj_GetPlayerObject();
                 b2 = *(int*)&((GameObject*)obj)->extra;
@@ -824,7 +824,7 @@ void dbegg_update(int obj)
             }
             else if (getButtonsJustPressed(0) & 0x100)
             {
-                ((DbEggState*)blob)->mode = DBEGG_MODE_FALLING;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
             else
@@ -843,7 +843,7 @@ void dbegg_update(int obj)
             v = v >= lbl_803E61C8 ? v : -v;
             if (v < lbl_803E6220)
             {
-                ((DbEggState*)blob)->mode = DBEGG_MODE_RESPAWN_WAIT;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_RESPAWN_WAIT;
                 fz = lbl_803E61C8;
                 ((GameObject*)obj)->anim.velocityX = lbl_803E61C8;
                 ((GameObject*)obj)->anim.velocityZ = fz;
@@ -862,7 +862,7 @@ void dbegg_update(int obj)
         case DBEGG_MODE_RESPAWN_WAIT:
             if (GameBit_Get(0x42a) != 0)
             {
-                dbegg_setupFromDef(obj, (int*)blob);
+                dbegg_setupFromDef(obj, (int*)eggState);
             }
             else if (randomGetRange(0, 10) == 0)
             {
@@ -870,38 +870,38 @@ void dbegg_update(int obj)
             }
             break;
         case DBEGG_MODE_CURVE_INIT:
-            if ((*gRomCurveInterface)->initCurve(&((DbEggState*)blob)->curve, (void*)obj, lbl_803E624C,
-                                                 buf2, 2) != 0)
+            if ((*gRomCurveInterface)->initCurve(&((DbEggState*)eggState)->curve, (void*)obj, lbl_803E624C,
+                                                 curvePair, 2) != 0)
             {
-                ((DbEggState*)blob)->mode = DBEGG_MODE_FALLING;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
             }
             else
             {
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ((DbEggState*)blob)->mode = DBEGG_MODE_CURVE_FOLLOW;
-                n = ((DbEggState*)blob)->flags119;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_CURVE_FOLLOW;
+                n = ((DbEggState*)eggState)->flags119;
                 if (n & 4)
                 {
-                    ((DbEggState*)blob)->flags119 = n & ~4;
+                    ((DbEggState*)eggState)->flags119 = n & ~4;
                 }
             }
             break;
         case DBEGG_MODE_CURVE_FOLLOW:
-            if (Curve_AdvanceAlongPath(&((DbEggState*)blob)->curve, lbl_803E6250) != 0 ||
-                ((DbEggState*)blob)->curve.atSegmentEnd != 0)
+            if (Curve_AdvanceAlongPath(&((DbEggState*)eggState)->curve, lbl_803E6250) != 0 ||
+                ((DbEggState*)eggState)->curve.atSegmentEnd != 0)
             {
-                if ((*gRomCurveInterface)->goNextPoint((RomCurveWalker*)(blob + 4)) != 0)
+                if ((*gRomCurveInterface)->goNextPoint((RomCurveWalker*)(eggState + 4)) != 0)
                 {
-                    ((DbEggState*)blob)->mode = DBEGG_MODE_FALLING;
+                    ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
                 }
             }
             else
             {
-                ((GameObject*)obj)->anim.velocityX = ((DbEggState*)blob)->curve.posX - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityX = ((DbEggState*)eggState)->curve.posX - ((GameObject*)obj)->anim.
                     localPosX;
-                ((GameObject*)obj)->anim.velocityY = ((DbEggState*)blob)->curve.posY - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityY = ((DbEggState*)eggState)->curve.posY - ((GameObject*)obj)->anim.
                     localPosY;
-                ((GameObject*)obj)->anim.velocityZ = ((DbEggState*)blob)->curve.posZ - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityZ = ((DbEggState*)eggState)->curve.posZ - ((GameObject*)obj)->anim.
                     localPosZ;
                 fx = sqrtf(
                     ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ + (((GameObject*)obj)->anim.
@@ -930,7 +930,7 @@ void dbegg_update(int obj)
             if (GameBit_Get(((DbeggPlacement*)data)->activateGameBit) != 0)
             {
                 ObjGroup_AddObject(obj, 0x24);
-                ((DbEggState*)blob)->mode = DBEGG_MODE_FALLING;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
             }
             break;
         case DBEGG_MODE_HOMING:
@@ -952,7 +952,7 @@ void dbegg_update(int obj)
             if (fx + fz < lbl_803E625C)
             {
                 ObjHits_EnableObject(obj);
-                ((DbEggState*)blob)->mode = DBEGG_MODE_SETTLED;
+                ((DbEggState*)eggState)->mode = DBEGG_MODE_SETTLED;
                 ((GameObject*)obj)->anim.localPosX = ((DbeggPlacement*)data)->targetPosX;
                 ((GameObject*)obj)->anim.localPosY = ((DbeggPlacement*)data)->targetPosY;
                 ((GameObject*)obj)->anim.localPosZ = ((DbeggPlacement*)data)->targetPosZ;
@@ -969,13 +969,13 @@ void dbegg_update(int obj)
             }
             break;
         }
-        if (((DbEggState*)blob)->flags119 & 8)
+        if (((DbEggState*)eggState)->flags119 & 8)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             ObjHits_DisableObject(obj);
             if (GameBit_Get(((DbeggPlacement*)data)->triggerGameBit) != 0)
             {
-                ((DbEggState*)blob)->flags119 &= ~9;
+                ((DbEggState*)eggState)->flags119 &= ~9;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_EnableObject(obj);
             }
@@ -986,7 +986,7 @@ void dbegg_update(int obj)
             {
                 if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E6264)
                 {
-                    if ((((DbEggState*)blob)->flags119 & 1) == 0)
+                    if ((((DbEggState*)eggState)->flags119 & 1) == 0)
                     {
                         playerObj = Obj_GetPlayerObject();
                         b2 = *(int*)&((GameObject*)obj)->extra;
@@ -1009,7 +1009,7 @@ void dbegg_update(int obj)
                         if (v < lbl_803E6268)
                         {
                             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                            ((DbEggState*)blob)->mode = DBEGG_MODE_PICKUP_PROMPT;
+                            ((DbEggState*)eggState)->mode = DBEGG_MODE_PICKUP_PROMPT;
                             hitState->flags &= ~1;
                         }
                     }
