@@ -212,9 +212,6 @@ void dll_54_func05(void)
     gCameraModeNpcSpeakState = NULL;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 void dll_54_update(u8* obj)
 {
     CameraObject* camera = (CameraObject*)obj;
