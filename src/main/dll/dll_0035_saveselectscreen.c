@@ -29,6 +29,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
+
 typedef struct SaveSelectPanel
 {
     TitleMenuTextEntry* entries;
@@ -643,11 +646,11 @@ int SaveSelectScreen_run(void)
     if (gSaveSelectPanelIndex == 3)
     {
         btn = getButtonsJustPressed(0);
-        if (btn & 0x100)
+        if (btn & PAD_BUTTON_A)
         {
             saveSelectGoToChapterSelect();
         }
-        else if (btn & 0x200)
+        else if (btn & PAD_BUTTON_B)
         {
             (*gScreenTransitionInterface)->start(0x14, 5);
             lbl_803DD6CF = 0x23;
