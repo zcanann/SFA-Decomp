@@ -13,7 +13,7 @@ typedef struct UARTInlineBuffer {
 extern UARTInlineBuffer lbl_803D8888;
 extern u8 lbl_803D99A4[0x110C];
 
-extern DBCommTable gDBCommTable;
+DBCommTable gDBCommTable = {};
 
 void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx);
 
