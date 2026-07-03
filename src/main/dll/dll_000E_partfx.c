@@ -1737,6 +1737,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
     int intVal;
     s16 i;
     int variant;
+    u32 variantU;
     f32 srcPosX;
     f32 srcPosY;
     f32 srcPosZ;
@@ -4895,8 +4896,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.renderFlags = 0x4000800;
         if (extraArgs != NULL)
         {
-            variant = *(u8*)extraArgs;
-            if (variant == '\x01')
+            variantU = *(u8*)extraArgs;
+            if (variantU == '\x01')
             {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
@@ -4906,7 +4907,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.colorWord2 = 0xffff;
                 cfg.renderFlags |= 0x20;
             }
-            else if (variant == '\x02')
+            else if (variantU == '\x02')
             {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
@@ -4918,7 +4919,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.scale = cfg.scale * lbl_803DF6DC;
                 cfg.lifetimeFrames = intVal + 0xc;
             }
-            else if (variant == '\x03')
+            else if (variantU == '\x03')
             {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
@@ -4930,7 +4931,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.scale = cfg.scale * lbl_803DF6E0;
                 cfg.lifetimeFrames = intVal + 0x19;
             }
-            else if (variant == '\x04')
+            else if (variantU == '\x04')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -4941,7 +4942,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\x05')
+            else if (variantU == '\x05')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -4952,7 +4953,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\x06')
+            else if (variantU == '\x06')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -4963,7 +4964,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\a')
+            else if (variantU == '\a')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -4974,7 +4975,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags |= 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\b')
+            else if (variantU == '\b')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -5019,8 +5020,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.behaviorFlags = 0x480110;
         if (extraArgs != NULL)
         {
-            variant = *(u8*)extraArgs;
-            if (variant == '\x01')
+            variantU = *(u8*)extraArgs;
+            if (variantU == '\x01')
             {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
@@ -5030,7 +5031,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.colorWord2 = 0xffff;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
             }
-            else if (variant == '\x02')
+            else if (variantU == '\x02')
             {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
@@ -5041,7 +5042,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6DC;
             }
-            else if (variant == '\x03')
+            else if (variantU == '\x03')
             {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
@@ -5075,8 +5076,8 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0x7d;
         if (extraArgs != NULL)
         {
-            variant = *(u8*)extraArgs;
-            if (variant == '\x01')
+            variantU = *(u8*)extraArgs;
+            if (variantU == '\x01')
             {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
@@ -5087,7 +5088,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6F4;
             }
-            else if (variant == '\x02')
+            else if (variantU == '\x02')
             {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
@@ -5097,7 +5098,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.colorWord2 = 0x2603;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
             }
-            else if (variant == '\x03')
+            else if (variantU == '\x03')
             {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
@@ -5108,7 +5109,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6F8;
             }
-            else if (variant == '\x04')
+            else if (variantU == '\x04')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -5119,7 +5120,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\x05')
+            else if (variantU == '\x05')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -5130,7 +5131,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\x06')
+            else if (variantU == '\x06')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -5141,7 +5142,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\a')
+            else if (variantU == '\a')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
@@ -5152,7 +5153,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (variant == '\b')
+            else if (variantU == '\b')
             {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
