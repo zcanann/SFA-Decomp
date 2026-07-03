@@ -3201,7 +3201,7 @@ void pauseMenuFn_80129ee0(void)
                 {
                     lbl_803DD824 = tbl->gridD70;
                 }
-                pauseMenuRunSubmenu(0);
+                pauseMenuRunSubmenu(lbl_803DD7C4);
                 {
                     u8 i = 0;
                     int k = 0;
