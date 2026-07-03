@@ -200,7 +200,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
             }
             Sfx_PlayFromObject(0, sfxTab[sfx]);
         } else {
-            Sfx_PlayAtPositionFromObject(vec[0], vec[1], vec[2], (u32)obj, sfxTab[sfx]);
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)((u32)obj, vec[0], vec[1], vec[2], sfxTab[sfx]);
         }
     }
     if (i == 5) {
