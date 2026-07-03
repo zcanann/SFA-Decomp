@@ -97,6 +97,7 @@ main/objHitReact.c:
 
 main/objlib.c:
 	.text       start:0x800358D4 end:0x80038F38
+	.data       start:0x802CAE48 end:0x802CAE84
 	.bss        start:0x803428F8 end:0x80342E10
 
 main/objprint.c:

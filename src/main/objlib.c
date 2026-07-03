@@ -2389,3 +2389,5 @@ void fn_80038F1C(int a, u8 b)
     if ((int)(u8)a != 0) return;
     lbl_803DCC00.highBit = b;
 }
+
+char sObjMsgOverflowInObjectWarning[] = "objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n";
