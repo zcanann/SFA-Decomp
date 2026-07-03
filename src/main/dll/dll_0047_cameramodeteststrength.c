@@ -9,7 +9,7 @@
 #include "main/pad.h"
 #include "main/dll/CAM/dll_5B.h"
 #include "main/dll/fx_800944A0_shared.h"
-extern f32 Curve_EvalLinear(float* param_2, f32 param_1, float* param_3);
+extern f32 Curve_EvalLinear(float* values, f32 t, float* outTangent);
 extern f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 
 extern CamCannonState* lbl_803DD560;
