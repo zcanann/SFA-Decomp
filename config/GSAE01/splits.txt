@@ -507,6 +507,7 @@ main/dll/dll_008F_dll8ffunc0.c:
 
 main/dll/dll_0090_dll90func0.c:
 	.text       start:0x800FA16C end:0x800FA5D8
+	.data       start:0x80316E30 end:0x80316FD4
 
 main/dll/dll_0091_dll91func0.c:
 	.text       start:0x800FA5D8 end:0x800FA9F8
