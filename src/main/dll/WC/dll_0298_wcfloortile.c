@@ -273,8 +273,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
             arwing->velZ * timeDelta);
 
     diff = arwing->rotXTarget - (u16)arwing->rotXCur;
-    if (diff > 0x8000) diff -= 0xffff;
-    if (diff < -0x8000) diff += 0xffff;
+    if (diff > 0x8000) diff = diff - 0xffff;
+    if (diff < -0x8000) diff = diff + 0xffff;
     iv = (int)(f32)((int)((f32)diff * arwing->rotXGain) - arwing->rotXRate);
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
     arwing->rotXRate = (int)((f32)iv * timeDelta + (f32)((ArwingState*)arwing)->rotXRate);
@@ -282,8 +282,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
         (int)((f32)arwing->rotXRate * timeDelta + arwing->rotXCur);
 
     diff = arwing->rotYTarget - (u16)arwing->rotYCur;
-    if (diff > 0x8000) diff -= 0xffff;
-    if (diff < -0x8000) diff += 0xffff;
+    if (diff > 0x8000) diff = diff - 0xffff;
+    if (diff < -0x8000) diff = diff + 0xffff;
     iv = (int)(f32)((int)((f32)diff * arwing->rotYGain) - arwing->rotYRate);
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
     arwing->rotYRate = (int)((f32)iv * timeDelta + (f32)((ArwingState*)arwing)->rotYRate);
@@ -291,8 +291,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
         (int)((f32)arwing->rotYRate * timeDelta + arwing->rotYCur);
 
     diff = arwing->rotZTarget - (u16)arwing->rotZCur;
-    if (diff > 0x8000) diff -= 0xffff;
-    if (diff < -0x8000) diff += 0xffff;
+    if (diff > 0x8000) diff = diff - 0xffff;
+    if (diff < -0x8000) diff = diff + 0xffff;
     iv = (int)((f32)(int)((f32)diff * arwing->rotZGain) - arwing->rotZRate);
     iv = (iv < -0x64) ? -0x64 : ((iv > 0x64) ? 0x64 : iv);
     arwing->rotZRate = iv * timeDelta + ((ArwingState*)arwing)->rotZRate;
@@ -302,8 +302,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     if (arwing->mode == 0)
     {
         diff = arwing->rotZTrimTarget - (u16)arwing->rotZTrimCur;
-        if (diff > 0x8000) diff -= 0xffff;
-        if (diff < -0x8000) diff += 0xffff;
+        if (diff > 0x8000) diff = diff - 0xffff;
+        if (diff < -0x8000) diff = diff + 0xffff;
         arwing->rotZTrimCur =
             (int)(timeDelta * ((f32)diff * arwing->rotZTrimGain) + (f32)((ArwingState*)arwing)->rotZTrimCur);
         if ((f32)arwing->rotZTrimCur > arwing->rotZBlendThreshold ||
