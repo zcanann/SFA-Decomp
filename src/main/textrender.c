@@ -370,7 +370,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             u0 = lbl_803DE714 * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
-        if (fy0 < *(volatile f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
+        if (fy0 < *(f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
         {
             v0 = lbl_803DE714 * -fy0 + v0;
             fy0 = lbl_803DE704;
@@ -702,7 +702,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -733,7 +733,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -750,7 +750,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(volatile int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
