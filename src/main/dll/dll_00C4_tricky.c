@@ -209,22 +209,22 @@ void FUN_80144e40(int obj, int state)
     u32 bit;
     int hit[3];
 
-    *(float*)(state + 0x720) = *(float*)(state + 0x720) - lbl_803DC074;
-    if (*(float*)(state + 0x720) < lbl_803E306C)
+    ((TrickyState*)state)->unk720 = ((TrickyState*)state)->unk720 - lbl_803DC074;
+    if (((TrickyState*)state)->unk720 < lbl_803E306C)
     {
-        *(float*)(state + 0x720) = lbl_803E306C;
+        ((TrickyState*)state)->unk720 = lbl_803E306C;
     }
     scratch = ObjHits_GetPriorityHit(obj, hit, 0x0, 0x0);
     if (((scratch != 0) && (*(int*)(hit[0] + 0xc4) != 0)) &&
         (*(short*)(*(int*)(hit[0] + 0xc4) + 0x44) == 1))
     {
-        heightVal = *(float*)(state + 0x720);
+        heightVal = ((TrickyState*)state)->unk720;
         if (lbl_803E306C < heightVal)
         {
-            *(float*)(state + 0x720) = heightVal + lbl_803E30D0;
+            ((TrickyState*)state)->unk720 = heightVal + lbl_803E30D0;
             if (*(char*)(state + 10) != '\v')
             {
-                if ((*(u32*)(state + 0x54) & 0x10) == 0)
+                if ((((TrickyState*)state)->stateFlags & 0x10) == 0)
                 {
                     scratch = *(int*)&((GameObject*)obj)->extra;
                     if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
@@ -235,9 +235,9 @@ void FUN_80144e40(int obj, int state)
                         FUN_80039468(obj, scratch + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
                     *(u8*)(state + 10) = 10;
-                    *(u32*)(state + 0x54) = *(u32*)(state + 0x54) | 0x10;
+                    ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x10;
                 }
-                else if (*(float*)(state + 0x720) <= lbl_803E31C4)
+                else if (((TrickyState*)state)->unk720 <= lbl_803E31C4)
                 {
                     scratch = *(int*)&((GameObject*)obj)->extra;
                     if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
@@ -250,19 +250,19 @@ void FUN_80144e40(int obj, int state)
                 }
                 else
                 {
-                    *(float*)(state + 0x720) = *(float*)(state + 0x720) * lbl_803E3138;
+                    ((TrickyState*)state)->unk720 = ((TrickyState*)state)->unk720 * lbl_803E3138;
                     bit = FUN_80017690(0x245);
                     if (bit != 0)
                     {
-                        if (lbl_803E306C == *(float*)(state + 0x2ac))
+                        if (lbl_803E306C == ((TrickyState*)state)->waterLevel)
                         {
                             cond = false;
                         }
-                        else if (lbl_803E30A0 == *(float*)(state + 0x2b0))
+                        else if (lbl_803E30A0 == ((TrickyState*)state)->unk2B0)
                         {
                             cond = true;
                         }
-                        else if (*(float*)(state + 0x2b4) - *(float*)(state + 0x2b0) <= lbl_803E30A4)
+                        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 <= lbl_803E30A4)
                         {
                             cond = false;
                         }
@@ -289,7 +289,7 @@ void FUN_80144e40(int obj, int state)
         }
         else
         {
-            *(float*)(state + 0x720) = heightVal + lbl_803E317C;
+            ((TrickyState*)state)->unk720 = heightVal + lbl_803E317C;
             scratch = *(int*)&((GameObject*)obj)->extra;
             if ((((*(u8*)(scratch + 0x58) >> 6 & 1) == 0) &&
                     ((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove <
@@ -431,8 +431,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7A8);
-    objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7B0);
+    objAnimFreeChildren(obj, state, (int*)(state + 0x7a8)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren(obj, state, (int*)(state + 0x7b0)); /* raw: arrow form shifts bytes */
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
     fn_80138D7C(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
@@ -637,7 +637,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
                 spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
-                *(u32*)(state + 0x7b0) = spawnedObj;
+                *(u32*)(state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7B0, *(u8*)(state + 0x7bc) >> 4 & 3);
             }
         }
@@ -646,7 +646,7 @@ int Tricky_updateSideCommandPrompts(int obj)
             *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
             if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
             {
-                objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
+                objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0)); /* raw: arrow form shifts bytes */
             }
         }
         if ((promptA) && ((((TrickyState*)state)->stateFlags & 0x200) == 0))
@@ -712,7 +712,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 }
                 ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
                 spawnedObj = Obj_SetupObject((int)setup, 4, -1, 0xffffffff, *(int*)(objVal + 0x30));
-                *(u32*)(state + 0x7a8) = spawnedObj;
+                *(u32*)(state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->unk7A8, *(u8*)(state + 0x7bc) >> 6 & 3);
             }
         }
@@ -721,7 +721,7 @@ int Tricky_updateSideCommandPrompts(int obj)
             *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
             if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
             {
-                objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8));
+                objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8)); /* raw: arrow form shifts bytes */
             }
         }
         return commandMask;
@@ -771,8 +771,8 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         }
     }
     doNothing_onTrickyFree();
-    objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7A8);
-    objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->unk7B0);
+    objAnimFreeChildren(obj, state, (int*)(state + 0x7a8)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren(obj, state, (int*)(state + 0x7b0)); /* raw: arrow form shifts bytes */
     objAnimFreeChildren(obj, state, (int*)&((TrickyState*)state)->child);
     if (*(void**)&((TrickyState*)state)->unk7CC != NULL)
     {
