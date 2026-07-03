@@ -401,21 +401,19 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
 {
-    u32 i;
-    int off;
     u32 kg;
+    u32 i;
     u32 kill;
     McmdVoiceState* voice;
 
-    off = 0;
     state->keyGroup = 0;
     kg = (args->flags >> 8) & 0xff;
     kill = ((args->flags >> 0x10) & 0xff) != 0;
     if (kg != 0)
     {
-        for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++)
+        for (i = 0; i < lbl_803BD150[0x210]; i++)
         {
-            voice = (McmdVoiceState*)(synthVoice + off);
+            voice = (McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE);
             if (voice->macroBase != 0 && (MAC_CFLAGS(voice) & MAC_FLAG64(0, 2)) == 0 &&
                 kg == voice->keyGroup)
             {
