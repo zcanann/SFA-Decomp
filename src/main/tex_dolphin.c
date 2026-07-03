@@ -86,6 +86,13 @@ typedef struct MapBlockBoundsRec
     u8 pad19[0x1C - 0x19];
 } MapBlockBoundsRec;
 
+/*
+ * TexShadowRow - 0x10-stride rows of the pending-shadow queue at the head of
+ * lbl_8037E0C0 (indexed by lbl_803DCE30, bumped after each fn_8005D3B4 push).
+ * mapBlockRender_callList writes type (4/5 = object shadow, 6 = indirect
+ * lightmap) through a byte-offset launder off &row->type - the launder is
+ * load-bearing (#112: keeps the field offset as a store displacement).
+ */
 typedef struct TexShadowRow
 {
     int unk0;

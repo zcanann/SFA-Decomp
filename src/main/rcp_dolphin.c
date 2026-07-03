@@ -200,7 +200,7 @@ void FUN_80051fc4(u32 unused1, u32 unused2, int blendMode, char* blendSrc, u32 c
     FUN_8025be80(gDebugFixedWidthMode);
     FUN_8025c828(gDebugFixedWidthMode, gDebugPrintOriginY, gDebugDrawPass, 0xff);
     FUN_8025c65c(gDebugFixedWidthMode, 0, 1);
-    colorOff = (colorIndex & 0xff) * 0xc;
+    colorOff = (colorIndex & 0xff) * 0xc; /* DAT_8030dac4/c8/cc: 3 u32 columns of a 0xc-stride color table */
     FUN_8025c6b4(1, *(u32*)(&DAT_8030dac4 + colorOff), *(int*)(&DAT_8030dac8 + colorOff),
                  *(u32*)(&DAT_8030dacc + colorOff), 3);
     if ((float*)mtxPair == (float*)0x0)
@@ -2657,6 +2657,9 @@ void texRestructRefs(int mode)
     u32 size;
     int d;
 
+    /* gLoadedTextures walks below keep the byte-offset (off += 16) launder
+     * form - plain gLoadedTextures[i].field indexing diverges (induction-var
+     * shape). */
     strs = (char*)(int)sRcpTexRestructStrings;
     done = 0;
     pass = 0;
