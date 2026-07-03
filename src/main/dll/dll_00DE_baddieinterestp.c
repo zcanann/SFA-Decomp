@@ -717,8 +717,6 @@ void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3220);
 }
 
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 void gcbaddieshield_update(int* obj);
 
 
