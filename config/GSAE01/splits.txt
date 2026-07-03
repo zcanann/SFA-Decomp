@@ -1387,7 +1387,7 @@ main/dll/dll_0145_cloudprisoncontrol.c:
 
 main/dll/CF/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784
-	.data       start:0x803229E0 end:0x80322A48
+	.data       start:0x8032284C end:0x80322A48
 
 main/dll/CF/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578

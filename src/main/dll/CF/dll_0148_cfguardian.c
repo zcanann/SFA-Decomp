@@ -23,6 +23,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/player_status.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 
@@ -166,12 +167,12 @@ extern u32 GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
-extern u8 gCfGuardianSeqStreamTable[];        /* chatter sequence-stream table, 0xf states */
+extern int gCfGuardianSeqStreamTable[][2];    /* chatter sequence-stream table, 0xf states */
 extern void dll_2E_func0A(int a, int* obj);
 extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
 extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
-extern void objSeqInitFn_80080078(u8* p, int n);
+extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
@@ -1024,3 +1025,77 @@ void cfguardian_release(void)
 void cfguardian_initialise(void)
 {
 }
+
+extern u8 lbl_80322798[];
+extern u8 lbl_803227A4[];
+extern u8 lbl_803227B0[];
+extern u8 lbl_803227BC[];
+extern u8 lbl_803227C8[];
+extern u8 lbl_803227D4[];
+extern u8 lbl_803227E0[];
+extern u8 lbl_803227EC[];
+extern u8 lbl_803227F8[];
+extern u8 lbl_80322804[];
+extern u8 lbl_80322810[];
+extern u8 lbl_8032281C[];
+extern u8 lbl_80322828[];
+extern u8 lbl_80322834[];
+extern u8 lbl_80322840[];
+
+int gCfGuardianSeqStreamTable[33][2] = {
+    { 0, (int)&lbl_80322798 },
+    { 1, (int)&lbl_803227A4 },
+    { 2, (int)&lbl_803227B0 },
+    { 3, (int)&lbl_803227BC },
+    { 4, (int)&lbl_803227C8 },
+    { 5, (int)&lbl_803227D4 },
+    { 6, (int)&lbl_803227E0 },
+    { 7, (int)&lbl_803227EC },
+    { 8, (int)&lbl_803227F8 },
+    { 9, (int)&lbl_80322804 },
+    { 10, (int)&lbl_80322810 },
+    { 12, (int)&lbl_8032281C },
+    { 13, (int)&lbl_80322828 },
+    { 14, (int)&lbl_80322834 },
+    { 15, (int)&lbl_80322840 },
+    { 0, 8 },
+    { 1, 8 },
+    { 2, 8 },
+    { 3, 10 },
+    { 4, 10 },
+    { 5, 10 },
+    { 6, 11 },
+    { 7, 11 },
+    { 8, 12 },
+    { 9, 12 },
+    { 10, -1 },
+    { 12, -1 },
+    { 13, -1 },
+    { 14, -1 },
+    { 15, -1 },
+    { 0, 0 },
+    { 0, 18 },
+    { 14, 10 },
+};
+
+int gCfGuardianIdleMoveTable[20] = {
+    -1, 0, 26, 0, 0, -1, -1, 26, 14, 14, 26, 26, 0, 0, -1, 10, 11, 12, 13, 14
+};
+
+ObjectDescriptor11 gCFGuardianObjDescriptor = {
+    0,
+    0,
+    0,
+    0xA0000,
+    (ObjectDescriptorCallback)cfguardian_initialise,
+    (ObjectDescriptorCallback)cfguardian_release,
+    0,
+    (ObjectDescriptorCallback)cfguardian_init,
+    (ObjectDescriptorCallback)cfguardian_update,
+    (ObjectDescriptorCallback)cfguardian_hitDetect,
+    (ObjectDescriptorCallback)cfguardian_render,
+    (ObjectDescriptorCallback)cfguardian_free,
+    (ObjectDescriptorCallback)cfguardian_getObjectTypeId,
+    (ObjectDescriptorCallback)cfguardian_getExtraSize,
+    (ObjectDescriptorCallback)cfguardian_setScale,
+};
