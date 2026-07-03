@@ -15,6 +15,9 @@
 #define BRIDGE_TEX_OFFSET_START 0x800
 #define BRIDGE_TEX_OFFSET_MAX 0x131f
 
+#define MMPBRIDGE_OBJFLAG_HIDDEN 0x4000
+#define MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 typedef struct MmpBridgePlacement
 {
     u8 pad0[0x18];
@@ -57,7 +60,7 @@ void mmp_bridge_init(int* obj)
         tex->offsetS = BRIDGE_TEX_OFFSET_START;
     }
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
     ObjHits_DisableObject((int)obj);
     if (GameBit_Get(placement->enableBit) != 0)
     {
