@@ -26,9 +26,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/object_transform.h"
 
-#pragma scheduling on
-#pragma peephole on
-
 extern CameraModeCrawlState* lbl_803DD598;
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
