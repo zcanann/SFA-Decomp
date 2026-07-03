@@ -663,7 +663,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014c78c(u32 param_1, u32 param_2, int maxCount, int* out)
+void FUN_8014c78c(u32 unused1, u32 unused2, int maxCount, int* out)
 {
     extern double FUN_80293900();
     u16 selfAngle;
@@ -856,8 +856,8 @@ void FUN_8014ccb8(double maxMagnitude, double tolerance, double turnScale, int t
     float vec1Y;
     float vec1Z;
     float afStack_a4[13];
-    u32 local_70;
-    u32 uStack_6c;
+    u32 biasHi;
+    u32 biasLo;
 
     mag1 = SeekTwiceBeforeRead((float*)(state + 0x2b8));
     if (mag1 <= (double)lbl_803E31FC)
@@ -894,9 +894,9 @@ void FUN_8014ccb8(double maxMagnitude, double tolerance, double turnScale, int t
     {
         FUN_80247f90(&vec1X, &vec2X);
         cross = (double)FUN_80292754();
-        uStack_6c = ((u32)(u8)((turnScale < cross) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
-        local_70 = 0x43300000;
-        if (ABS((double)(float)((double)(u32)uStack_6c)) !=
+        biasLo = ((u32)(u8)((turnScale < cross) << 2) << 0x1c) >> 0x1e ^ 0x80000000;
+        biasHi = 0x43300000;
+        if (ABS((double)(float)((double)(u32)biasLo)) !=
             (double)lbl_803E31FC)
         {
             scale = lbl_803E3258;
@@ -1886,7 +1886,7 @@ void FUN_8014d164(double pitchFactor, double rollFactor, u16* angles, int state,
     return;
 }
 
-void FUN_8014d3d0(short* angle, u32 param_2, u32 denom, short bias)
+void FUN_8014d3d0(short* angle, u32 unused2, u32 denom, short bias)
 {
     float step;
     short delta;
@@ -1912,26 +1912,26 @@ void FUN_8014d3d0(short* angle, u32 param_2, u32 denom, short bias)
     return;
 }
 
-void FUN_8014d4c8(double param_1, double param_2, double param_3, u64 param_4, u64 param_5
-                  , u64 param_6, u64 param_7, u64 param_8, int obj, int state,
-                  u32 param_11, u32 param_12, u32 animFlag, u32 param_14,
-                  u32 param_15, u32 param_16)
+void FUN_8014d4c8(double arg1, double arg2, double arg3, u64 arg4, u64 arg5
+                  , u64 arg6, u64 arg7, u64 arg8, int obj, int state,
+                  u32 arg11, u32 arg12, u32 animFlag, u32 arg14,
+                  u32 arg15, u32 arg16)
 {
     ObjHitsPriorityState* hitState;
 
-    if ((double)lbl_803E31FC == param_1)
+    if ((double)lbl_803E31FC == arg1)
     {
         ((BaddieState*)state)->unk308 = lbl_803E3208;
     }
     else
     {
-        param_2 = (double)lbl_803E3200;
+        arg2 = (double)lbl_803E3200;
         ((BaddieState*)state)->unk308 =
-            (float)(param_2 / (double)(float)((double)lbl_803E3204 * param_1));
+            (float)(arg2 / (double)(float)((double)lbl_803E3204 * arg1));
     }
     *(char*)(state + 0x323) = animFlag;
-    FUN_800305f8((double)lbl_803E31FC, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                 obj, param_11 & 0xff, param_12, param_12, animFlag, param_14, param_15, param_16);
+    FUN_800305f8((double)lbl_803E31FC, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                 obj, arg11 & 0xff, arg12, arg12, animFlag, arg14, arg15, arg16);
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
