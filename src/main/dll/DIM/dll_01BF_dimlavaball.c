@@ -130,7 +130,6 @@ void lavaball1bf_initialise(void)
 
 int lavaball1bf_getExtraSize(void) { return 0x1c; }
 int lavaball1bf_getObjectTypeId(void) { return 0x0; }
-int dimlogfire_getExtraSize(void);
 
 void lavaball1bf_func11(int* obj)
 {
