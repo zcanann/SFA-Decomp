@@ -483,4 +483,3 @@ void CameraModeTestStrength_initialise(void)
 {
 }
 
-void CameraModeCombat_copyToCurrent_nop(void);
