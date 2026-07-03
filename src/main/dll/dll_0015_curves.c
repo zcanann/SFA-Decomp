@@ -951,7 +951,11 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
 {
     u32 flags;
     u8* worldBase;
-    int zz[3];
+    /* Parallel loop counters kept in one array so the codegen matches:
+     * [0] = worldIdx (component index into localPointWorld, steps by 3),
+     * [1] = point loop counter (steps by 1),
+     * [2] = byteOff (offset into localPointPositions, steps by 0xc). */
+    int loopIdx[3];
     f32* localPoint;
     f32 one;
     CurvesTransformScratch transform;
@@ -978,26 +982,26 @@ void dll_15_func0A(int obj, CurvesCollisionState* collision)
         transform.y = ((GameObject*)obj)->anim.localPosY;
         transform.z = ((GameObject*)obj)->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
-        zz[0] = 0;
-        zz[1] = zz[0];
+        loopIdx[0] = 0;
+        loopIdx[1] = loopIdx[0];
         worldBase = (u8*)collision;
-        zz[2] = zz[0];
-        while (zz[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
+        loopIdx[2] = loopIdx[0];
+        while (loopIdx[1] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
         {
-            localPoint = (f32*)((u8*)collision->localPointPositions + zz[2]);
+            localPoint = (f32*)((u8*)collision->localPointPositions + loopIdx[2]);
             Matrix_TransformPoint(matrix, localPoint[0], localPoint[1], localPoint[2],
                                   (f32*)(worldBase + 228),
-                                  &collision->localPointWorld[0][zz[0] + 1],
-                                  &collision->localPointWorld[0][zz[0] + 2]);
+                                  &collision->localPointWorld[0][loopIdx[0] + 1],
+                                  &collision->localPointWorld[0][loopIdx[0] + 2]);
             worldBase += 0xc;
-            zz[2] += 0xc;
-            zz[0] += 3;
-            zz[1]++;
+            loopIdx[2] += 0xc;
+            loopIdx[0] += 3;
+            loopIdx[1]++;
         }
-        zz[0] = 0;
+        loopIdx[0] = 0;
         worldBase = (u8*)collision;
         one = lbl_803E068C;
-        for (; zz[0] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); zz[0]++)
+        for (; loopIdx[0] < (collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); loopIdx[0]++)
         {
             *(f32*)(worldBase + 276) = *(f32*)(worldBase + 228);
             *(f32*)(worldBase + 280) = one + *(f32*)(worldBase + 232);
