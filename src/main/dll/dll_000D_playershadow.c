@@ -713,9 +713,9 @@ void modgfx_restoreActiveVertexState(int stateArg)
     return;
 }
 
-void modgfx_releaseActiveEffectsByType(u64 param_1, u64 param_2, u64 param_3,
-                                       u64 param_4, u64 param_5, u64 param_6,
-                                       u64 param_7, u64 param_8, short effectType,
+void modgfx_releaseActiveEffectsByType(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3,
+                                       u64 fwdArg4, u64 fwdArg5, u64 fwdArg6,
+                                       u64 fwdArg7, u64 fwdArg8, short effectType,
                                        int releaseAll)
 {
     ModgfxActiveEffect* activeEffect;
@@ -732,11 +732,11 @@ void modgfx_releaseActiveEffectsByType(u64 param_1, u64 param_2, u64 param_3,
         {
             if (activeEffect->releaseTransformSource != 0)
             {
-                param_1 = FUN_80017814(activeEffect->releaseTransformSource);
+                fwdArg1 = FUN_80017814(activeEffect->releaseTransformSource);
             }
             if (activeEffect->instanceHandle != 0)
             {
-                FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                FUN_80017ac8(fwdArg1, fwdArg2, fwdArg3, fwdArg4, fwdArg5, fwdArg6, fwdArg7, fwdArg8,
                              activeEffect->instanceHandle);
             }
             activeEffect->state = 0;
@@ -748,7 +748,7 @@ void modgfx_releaseActiveEffectsByType(u64 param_1, u64 param_2, u64 param_3,
             {
                 activeEffect->sharedResourceHandle = 0;
             }
-            param_1 = FUN_80017814(activeEffect);
+            fwdArg1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
         i = i + 1;
@@ -757,9 +757,9 @@ void modgfx_releaseActiveEffectsByType(u64 param_1, u64 param_2, u64 param_3,
     return;
 }
 
-void modgfx_releaseActiveEffectsByOwner(u64 param_1, u64 param_2, u64 param_3,
-                                        u64 param_4, u64 param_5, u64 param_6,
-                                        u64 param_7, u64 param_8, int ownerToken)
+void modgfx_releaseActiveEffectsByOwner(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3,
+                                        u64 fwdArg4, u64 fwdArg5, u64 fwdArg6,
+                                        u64 fwdArg7, u64 fwdArg8, int ownerToken)
 {
     ModgfxActiveEffect* activeEffect;
     ModgfxActiveEffect** activeEffects;
@@ -774,7 +774,7 @@ void modgfx_releaseActiveEffectsByOwner(u64 param_1, u64 param_2, u64 param_3,
         {
             if (activeEffect->instanceHandle != 0)
             {
-                FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                FUN_80017ac8(fwdArg1, fwdArg2, fwdArg3, fwdArg4, fwdArg5, fwdArg6, fwdArg7, fwdArg8,
                              activeEffect->instanceHandle);
             }
             activeEffect->state = 0;
@@ -786,7 +786,7 @@ void modgfx_releaseActiveEffectsByOwner(u64 param_1, u64 param_2, u64 param_3,
             {
                 activeEffect->sharedResourceHandle = 0;
             }
-            param_1 = FUN_80017814(activeEffect);
+            fwdArg1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
         i = i + 1;
@@ -795,23 +795,23 @@ void modgfx_releaseActiveEffectsByOwner(u64 param_1, u64 param_2, u64 param_3,
     return;
 }
 
-void modgfx_releaseAllActiveEffects(u64 param_1, u64 param_2, u64 param_3,
-                                    u64 param_4, u64 param_5, u64 param_6,
-                                    u64 param_7, u64 param_8)
+void modgfx_releaseAllActiveEffects(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3,
+                                    u64 fwdArg4, u64 fwdArg5, u64 fwdArg6,
+                                    u64 fwdArg7, u64 fwdArg8)
 {
-    modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    modgfx_releaseActiveEffectsByType(fwdArg1, fwdArg2, fwdArg3, fwdArg4, fwdArg5, fwdArg6, fwdArg7, fwdArg8,
                                       0, 1);
     return;
 }
 
-void modgfx_resetActiveEffectRegistry(u64 param_1, u64 param_2, u64 param_3,
-                                      u64 param_4, u64 param_5, u64 param_6,
-                                      u64 param_7, u64 param_8)
+void modgfx_resetActiveEffectRegistry(u64 fwdArg1, u64 fwdArg2, u64 fwdArg3,
+                                      u64 fwdArg4, u64 fwdArg5, u64 fwdArg6,
+                                      u64 fwdArg7, u64 fwdArg8)
 {
     ModgfxActiveEffect** activeEffects;
     int i;
 
-    modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    modgfx_releaseActiveEffectsByType(fwdArg1, fwdArg2, fwdArg3, fwdArg4, fwdArg5, fwdArg6, fwdArg7, fwdArg8,
                                       0, 1);
     activeEffects = modgfx_getActiveEffectRegistry();
     for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i = i + 1)
