@@ -69,6 +69,23 @@ typedef struct Lavaball1bfPlacement
     u8 pad26[0x28 - 0x26];
 } Lavaball1bfPlacement;
 
+/* 0x24-byte Obj_AllocObjectSetup(0x24, 0x18D) buffer built in
+ * lavaball1bf_update to launch the 0x18D lava-ball sub-object. */
+typedef struct Lavaball18dSetup
+{
+    ObjPlacement head; /* 0x00..0x17 */
+    s8 unk18;          /* 0x18: copied from placement[0x1C] */
+    u8 pad19;
+    s16 unk1A;         /* 0x1A: copied from placement[0x1A] */
+    s16 unk1C;         /* 0x1C: copied from placement[0x1B] */
+    u8 pad1E[0x24 - 0x1E];
+} Lavaball18dSetup;
+
+STATIC_ASSERT(offsetof(Lavaball18dSetup, unk18) == 0x18);
+STATIC_ASSERT(offsetof(Lavaball18dSetup, unk1A) == 0x1A);
+STATIC_ASSERT(offsetof(Lavaball18dSetup, unk1C) == 0x1C);
+STATIC_ASSERT(sizeof(Lavaball18dSetup) == 0x24);
+
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
@@ -212,19 +229,19 @@ void lavaball1bf_update(int* obj)
     if (*(void**)&state->spawnedObj == NULL && Obj_IsLoadingLocked() != 0)
     {
         int s = Obj_AllocObjectSetup(0x24, 0x18d);
-        ObjPlacement* sp = (ObjPlacement*)s;
+        Lavaball18dSetup* sp = (Lavaball18dSetup*)s;
         *(u8*)(s + 2) = 9;
-        sp->color[0] = 2;
-        sp->color[2] = 0xff;
-        sp->color[1] = 4;
-        sp->color[3] = 0x50;
-        sp->posX = ((GameObject*)obj)->anim.localPosX;
-        sp->posY = ((GameObject*)obj)->anim.localPosY;
-        sp->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s8*)(s + 0x18) = setup[0x1c];
-        *(s16*)(s + 0x1a) = setup[0x1a];
-        *(s16*)(s + 0x1c) = setup[0x1b];
-        sp->mapId = ((ObjPlacement*)setup)->mapId;
+        sp->head.color[0] = 2;
+        sp->head.color[2] = 0xff;
+        sp->head.color[1] = 4;
+        sp->head.color[3] = 0x50;
+        sp->head.posX = ((GameObject*)obj)->anim.localPosX;
+        sp->head.posY = ((GameObject*)obj)->anim.localPosY;
+        sp->head.posZ = ((GameObject*)obj)->anim.localPosZ;
+        sp->unk18 = setup[0x1c];
+        sp->unk1A = setup[0x1a];
+        sp->unk1C = setup[0x1b];
+        sp->head.mapId = ((ObjPlacement*)setup)->mapId;
         *(int*)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(
             s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
