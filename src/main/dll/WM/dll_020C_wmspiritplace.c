@@ -75,6 +75,9 @@ enum
 /* state->fxFlags: spawn the spirit particle fx each SeqFn tick */
 #define WMSPIRITPLACE_FX_ACTIVE 0x1
 
+#define WMSPIRITPLACE_OBJFLAG_HIDDEN 0x4000
+#define WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 /* sequence event opcodes consumed by wmspiritplace_SeqFn */
 enum
 {
@@ -572,7 +575,7 @@ void wmspiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
     state->promptGameBit = placement->promptGameBit;
     state->setupParam = placement->setupParam;
     state->sequenceStarted = 0;
-    obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
+    obj->objectFlags = (u16)(obj->objectFlags | (WMSPIRITPLACE_OBJFLAG_HIDDEN | WMSPIRITPLACE_OBJFLAG_HITDETECT_DISABLED));
     state->mapEventMode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
 
     if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_2)
