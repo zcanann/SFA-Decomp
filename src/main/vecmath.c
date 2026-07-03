@@ -26,48 +26,6 @@ extern f32 gVecMathPi;
 extern f32 lbl_803DE7EC;
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-
-u16*
-FUN_80017460(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
-             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
-             , int unused10, u32 unused11, u32 unused12, u32 unused13,
-             u32 unused14, u32 unused15, u32 unused16)
-{
-    return 0;
-}
-
-u16*
-FUN_80017468(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
-             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
-             , u32 unused10, u32 unused11, u32 unused12, u32 unused13,
-             u32 unused14, u32 unused15, u32 unused16)
-{
-    return 0;
-}
-
-u32
-FUN_80017500(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
-             u64 unused5, u64 unused6, u64 unused7, u64 unused8, int unused9)
-{
-    return 0;
-}
-
-u32
-FUN_8001786c(u64 unused1, double unused2, double unused3, u64 unused4, u64 unused5,
-             u64 unused6, u64 unused7, u64 unused8, u32 unused9,
-             u32 unused10, u32 unused11, u32 unused12)
-{
-    return 0;
-}
-
-u8*
-FUN_80017998(u64 unused1, u64 unused2, u64 unused3, u64 unused4,
-             u64 unused5, u64 unused6, u64 unused7, u64 unused8, u32 unused9
-)
-{
-    return 0;
-}
-
 #pragma scheduling off
 #pragma peephole off
 f32 getXZDistance(f32* a, f32* b)
