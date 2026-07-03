@@ -931,13 +931,6 @@ void modgfx_resetActiveEffectRegistry(u64 argReg1, u64 argReg2, u64 argReg3,
 }
 
 u32
-FUN_800a2a98(int sourceObj, int effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
-             u8 modelId)
-{
-    return 0;
-}
-
-u32
 projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState,
                           u32 spawnFlags, u8 modelId, u16* extraArgs)
 {
@@ -1259,20 +1252,6 @@ projgfx_spawnPresetEffect(int sourceObj, u32 effectId, ExpgfxAttachedSourceState
         spawnResult = (*gExpgfxInterface)->spawnEffect(cfgHead, -1, effectId, 0);
     }
     return spawnResult;
-}
-
-u32
-FUN_800a3828(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
-             u8 modelId)
-{
-    return 0;
-}
-
-u32
-FUN_800a3924(int sourceObj, u32 effectId, ExpgfxAttachedSourceState* sourceState, u32 spawnFlags,
-             u8 modelId)
-{
-    return 0;
 }
 
 void boneParticleEffect_func08_nop(void)
