@@ -108,7 +108,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern u32 FUN_800067c0();
 extern const f32 lbl_803E4A78;
 extern u8 gDll1D6SlotInUse;
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
@@ -130,7 +129,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 
 #pragma scheduling on
 #pragma peephole on
-void dll_1CF_free(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -146,11 +144,9 @@ void dll_1D6_initialise(void)
 {
 }
 
-void dim2snowball_free(void);
 
 int dll_1D6_getExtraSize(void) { return 0x20; }
 int dll_1D6_getObjectTypeId(void) { return 0x0; }
-int dim2snowball_getExtraSize(void);
 
 void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -159,7 +155,6 @@ void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78);
 }
 
-void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -176,7 +171,6 @@ void dll_1D6_free(int* obj)
     (&gDll1D6SlotInUse)[state->slot] = 0;
 }
 
-void dim2pathgenerator_init(int* obj, int* def);
 
 void dll_1D6_init(int* obj, u8* params)
 {
