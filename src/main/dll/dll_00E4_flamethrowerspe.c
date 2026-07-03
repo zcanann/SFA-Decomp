@@ -164,7 +164,7 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 typedef struct FlamethrowerspeState
 {
     u8 pad0[0x4 - 0x0];
-    f32 unk4;
+    f32 lifeTimer;
     f32 sizeScale;
     f32 sphereRadius;
     s32 phase;
@@ -1593,7 +1593,7 @@ void flamethrowerspe_init(int* obj, int* params)
     extern void storeZeroToFloatParam(f32* p); /* #57 */
     extern u64 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
-    storeZeroToFloatParam(&((FlamethrowerspeState*)state)->unk4);
+    storeZeroToFloatParam(&((FlamethrowerspeState*)state)->lifeTimer);
     {
         f32 r = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
         ((FlamethrowerspeState*)state)->sizeScale = r * lbl_803DBD60;
@@ -1631,11 +1631,11 @@ void flamethrowerspe_update(int* obj)
         ;
         vecRotateZXY(obj, &((GameObject*)obj)->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
-        s16toFloat(&((FlamethrowerspeState*)state)->unk4, lbl_803DBD64);
+        s16toFloat(&((FlamethrowerspeState*)state)->lifeTimer, lbl_803DBD64);
         ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_ACTIVE;
         break;
     case FLAMETHROWERSPE_PHASE_ACTIVE:
-        if (timerCountDown(&((FlamethrowerspeState*)state)->unk4) != 0)
+        if (timerCountDown(&((FlamethrowerspeState*)state)->lifeTimer) != 0)
         {
             ObjHits_DisableObject(obj);
             firepipe_releaseEffectObject(obj);
@@ -1649,7 +1649,7 @@ void flamethrowerspe_update(int* obj)
                     ((GameObject*)obj)->anim.velocityZ * dt);
         }
         ObjHitbox_SetSphereRadius(obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
-                                      (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->unk4) / lbl_803DBD64)));
+                                      (((f32)lbl_803DBD64 - ((FlamethrowerspeState*)state)->lifeTimer) / lbl_803DBD64)));
         break;
     }
 }
