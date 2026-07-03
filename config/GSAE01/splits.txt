@@ -3502,7 +3502,7 @@ dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 
 main/dll/player.c:
 	.text       start:0x80295334 end:0x802B8A58
-	.data       start:0x80333714 end:0x80334A54
+	.data       start:0x80332FC0 end:0x80334ABC
 
 main/dll/dll_01B5_lightfoot.c:
 	.text       start:0x802B8A58 end:0x802B9780
