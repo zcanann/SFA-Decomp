@@ -20,6 +20,9 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#define MMPASTEROIDRE_OBJFLAG_HIDDEN 0x4000
+#define MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED 0x2000
+
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 
@@ -132,7 +135,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void mmp_asteroid_re_init(int obj)
 {
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
     ((GameObject*)obj)->animEventCallback = fn_801A6F4C;
     state->eventFlags = 0;
     state->intensity = GameBit_Get(0x88C);
