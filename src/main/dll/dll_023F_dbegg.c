@@ -537,10 +537,10 @@ void fn_801FE774(int obj, f32* vel)
 
 u32
 #pragma peephole off
-FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, u32 obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     int control;
 
@@ -550,8 +550,8 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        arg1 = FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7,
+                               arg8, obj, 0x11, 0, arg12, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
@@ -560,8 +560,8 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         ((DbStealerwormControl*)control)->unk1C = 0x24;
         ((DbStealerwormControl*)control)->unk2C = 0;
-        ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            ((DbStealerwormControl*)control)->linkedObj, 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+        ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            ((DbStealerwormControl*)control)->linkedObj, 0x11, obj, 0x12, arg13, arg14, arg15, arg16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)

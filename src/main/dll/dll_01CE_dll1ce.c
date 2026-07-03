@@ -111,7 +111,7 @@ void FUN_801b3de4(u32 obj, u32 variant)
     return;
 }
 
-void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
+void FUN_801b40f0(u64 unused1, double posX, double posY, double posZ)
 {
     u8 slotIdx;
     char stateByte;
@@ -132,10 +132,10 @@ void FUN_801b40f0(u64 param_1, double param_2, double param_3, double param_4)
     slotIdx = *(u8*)(state + 0xa58);
     *(u8*)(state + 0xa58) = slotIdx + 1;
     slotOff = slotIdx * 0x30;
-    *(float*)(state + slotOff) = (float)param_2;
+    *(float*)(state + slotOff) = (float)posX;
     slot = state + slotOff;
-    *(float*)(slot + 4) = (float)param_3;
-    *(float*)(slot + 8) = (float)param_4;
+    *(float*)(slot + 4) = (float)posY;
+    *(float*)(slot + 8) = (float)posZ;
     *(float*)(slot + 0x18) = lbl_803E55C4;
     *(u32*)(slot + 0xc) = *(u32*)(state + 0x18);
     *(float*)(slot + 0x1c) = (float)extraout_f1;
