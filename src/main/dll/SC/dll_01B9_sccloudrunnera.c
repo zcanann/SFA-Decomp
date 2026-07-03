@@ -237,4 +237,3 @@ void sc_cloudrunnera_initialise(void)
 {
 }
 
-int fn_801DD170(void);
