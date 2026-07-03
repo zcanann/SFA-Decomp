@@ -81,5 +81,3 @@ void dll_8A_func01_nop(void)
 void dll_8A_func00_nop(void)
 {
 }
-
-void dll_8B_func01_nop(void);
