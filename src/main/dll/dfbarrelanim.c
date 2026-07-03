@@ -56,9 +56,10 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     {
         s32 nodesSize = count * sizeof(DFRopeNode);
         s32 allocSize = sizeof(DFRope) + nodesSize + (count - 1) * sizeof(DFRopeLink);
-        rope = (DFRope*)mmAlloc(allocSize, 0xFF, 0);
-        rope->nodes = (DFRopeNode*)((u8*)rope + sizeof(DFRope));
-        rope->links = (DFRopeLink*)((u8*)rope + nodesSize + sizeof(DFRope));
+        u8* base = (u8*)mmAlloc(allocSize, 0xFF, 0);
+        rope = (DFRope*)base;
+        rope->nodes = (DFRopeNode*)(base + sizeof(DFRope));
+        rope->links = (DFRopeLink*)(base + nodesSize + sizeof(DFRope));
     }
     rope->count = count;
     rope->totalLength = length;
@@ -82,8 +83,7 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     rope->inverseTicks = lbl_803E4E0C / tickScale;
 
     nodes = rope->nodes;
-    node = nodes;
-    for (i = 0; i < count; node++, i++)
+    for (i = 0, node = nodes; i < count; node++, i++)
     {
         node->pos[0] = i * dx + rope->start[0];
         node->pos[1] = i * dy + rope->start[1];
