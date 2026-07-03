@@ -1919,7 +1919,7 @@ void cMenuRun(void)
     s16* cursor;
     u8* player;
     int flags;
-    s8 isTricky;
+    int isTricky;
     u16 btn16;
     u32 btn;
 
@@ -2186,7 +2186,7 @@ void cMenuRun(void)
                                     gYButtonActiveBit = gCMenuSelActiveBit;
                                     gYButtonUsedBit = gCMenuSelUsedBit;
                                     gYButtonIconAnim = lbl_803DBA84;
-                                    if (isTricky == 0)
+                                    if ((s8)isTricky == 0)
                                     {
                                         if ((s8)cMenuState == 4)
                                         {
@@ -2205,7 +2205,7 @@ void cMenuRun(void)
                                 }
                             }
                             buttonDisable(0, 0x900);
-                            if (isTricky == 0)
+                            if ((s8)isTricky == 0)
                             {
                                 if (hud->enabled[gCMenuSelIndex] != 0)
                                 {
