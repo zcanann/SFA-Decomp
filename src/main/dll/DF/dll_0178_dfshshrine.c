@@ -543,7 +543,6 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
     GameBit_Set(0xefa, 1);
 }
 
-void SpiritPrize_hitDetect(void);
 
 u16 gDfShShrineRewardTable[50] = {
     246, 2997, 247, 2998, 248, 249, 250, 251, 2995, 2996,
