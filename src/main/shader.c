@@ -34,7 +34,7 @@ extern u32 DAT_803885a0;
 extern u32 DAT_803885a4;
 extern u32 DAT_803885a8;
 extern u32* DAT_803dd6ec;
-extern u32* DAT_803dd71c;
+extern u32* gWeirdMenuTextureA;
 extern u32 DAT_803dda61;
 extern u32 DAT_803dda6c;
 extern u32 DAT_803ddae8;
@@ -323,7 +323,7 @@ void FUN_80056cfc(void)
                 {
                     if (tag == 0x6e)
                     {
-                        (**(VtableFn**)(*DAT_803dd71c + 8))(cur);
+                        (**(VtableFn**)(*gWeirdMenuTextureA + 8))(cur);
                     }
                     else
                     {
@@ -346,7 +346,7 @@ void FUN_80056cfc(void)
             {
                 if (*cur == 0x6e)
                 {
-                    (**(VtableFn**)(*DAT_803dd71c + 0xc))(cur);
+                    (**(VtableFn**)(*gWeirdMenuTextureA + 0xc))(cur);
                 }
                 if (*cur == 5)
                 {
