@@ -2796,15 +2796,15 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_800443fc(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void FUN_800443fc(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
 }
 
-void FUN_80044400(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u32 param_9, u32 param_10, u32 param_11, u32 param_12, u32* param_13,
-                  int param_14, u32 param_15, u32 param_16)
+void FUN_80044400(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
+                  u32 arg9, u32 arg10, u32 arg11, u32 arg12, u32* arg13,
+                  int arg14, u32 arg15, u32 arg16)
 {
 }
 
@@ -2817,8 +2817,8 @@ u32 FUN_80044404(int idx)
     return (&DAT_802cc8a8)[idx];
 }
 
-void FUN_80044424(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8)
+void FUN_80044424(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8)
 {
 }
 
@@ -2876,53 +2876,53 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_80045328(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u32 param_9, u32 param_10, u32 param_11, u32 param_12,
-                  u32 param_13, u32 param_14, u32 param_15, u32 param_16)
+void FUN_80045328(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
+                  u32 arg9, u32 arg10, u32 srcOffset, u32 size,
+                  u32 cfg13, u32 cfg14, u32 cfg15, u32 cfg16)
 {
     u32 aligned;
     int resIdx;
     u32 scratch;
     u32 dst;
-    u64 extraout_f1;
+    u64 srcFp;
     u64 src;
     u64 pairWord;
-    int aiStack_58[22];
+    int fileCtx[22];
 
     pairWord = FUN_80286840();
     resIdx = (int)(pairWord >> 0x20);
     dst = pairWord;
-    if (param_12 != 0)
+    if (size != 0)
     {
         if ((&DAT_80360048)[resIdx] == 0)
         {
-            src = extraout_f1;
-            FUN_80249300(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         sResourceFileNameTable[resIdx], aiStack_58);
-            if (((pairWord & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
+            src = srcFp;
+            FUN_80249300(srcFp, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                         sResourceFileNameTable[resIdx], fileCtx);
+            if (((pairWord & 0x1f) == 0) && ((size & 0x1f) == 0))
             {
-                FUN_802420b0(dst, param_12);
-                FUN_80006c30(src, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, dst,
-                             param_12, param_11, param_13, param_14, param_15, param_16);
+                FUN_802420b0(dst, size);
+                FUN_80006c30(src, arg2, arg3, arg4, arg5, arg6, arg7, arg8, fileCtx, dst,
+                             size, srcOffset, cfg13, cfg14, cfg15, cfg16);
             }
             else
             {
-                aligned = param_12 + 0x1f & ~0x1f;
+                aligned = size + 0x1f & ~0x1f;
                 scratch = FUN_80017830(aligned, 0x7d7d7d7d);
                 FUN_802420b0(scratch, aligned);
-                FUN_80006c30(src, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, scratch,
-                             aligned, param_11, param_13, param_14, param_15, param_16);
-                FUN_80003494(dst, scratch, param_12);
+                FUN_80006c30(src, arg2, arg3, arg4, arg5, arg6, arg7, arg8, fileCtx, scratch,
+                             aligned, srcOffset, cfg13, cfg14, cfg15, cfg16);
+                FUN_80003494(dst, scratch, size);
                 FUN_80017814(scratch);
             }
-            FUN_802493c8(aiStack_58);
-            FUN_80242114(dst, param_12);
+            FUN_802493c8(fileCtx);
+            FUN_80242114(dst, size);
         }
         else
         {
-            FUN_80003494(dst, (&DAT_80360048)[resIdx] + param_11, param_12);
-            FUN_80242114(dst, param_12);
+            FUN_80003494(dst, (&DAT_80360048)[resIdx] + srcOffset, size);
+            FUN_80242114(dst, size);
         }
     }
     FUN_8028688c();
@@ -2948,26 +2948,26 @@ u32 FUN_80045c4c(char tick)
     u32 one;
     u32* matPtr;
     u64 pairWord;
-    u32 mat0;
-    u32 uStack_24;
-    u32 local_20;
-    u32 local_1c;
-    u32 local_18;
+    u32 arrowMtx;
+    u32 arrowScratch;
+    u32 drawParam0;
+    u32 drawParam1;
+    u32 drawParam2;
 
     one = 1;
     gxSetZMode_(1, GX_LEQUAL, 1);
     pairWord = FUN_8025ce2c(1);
     FUN_80258a04((int)((u64)pairWord >> 0x20), pairWord, one);
-    matPtr = &mat0;
-    FUN_80256b2c(gMinimapArrowScale1, &uStack_24, matPtr);
-    local_20 = mat0;
-    local_1c = 0;
-    local_18 = gMinimapArrowScale2;
+    matPtr = &arrowMtx;
+    FUN_80256b2c(gMinimapArrowScale1, &arrowScratch, matPtr);
+    drawParam0 = arrowMtx;
+    drawParam1 = 0;
+    drawParam2 = gMinimapArrowScale2;
     FUN_80243e74();
-    FUN_80006aa8((short*)&DAT_80360390,  & local_20);
+    FUN_80006aa8((short*)&DAT_80360390,  & drawParam0);
     if (DAT_803dd927 == '\0')
     {
-        FUN_80256c08(mat0);
+        FUN_80256c08(arrowMtx);
         DAT_803dd927 = '\x01';
     }
     FUN_80243e9c();
@@ -3521,16 +3521,16 @@ void FUN_80048000(void)
     return;
 }
 
-void FUN_8004800c(double param_1, double param_2, double param_3, double param_4, double param_5,
-                  u8 param_6)
+void FUN_8004800c(double nearZ, double farZ, double aspect, double offset, double noiseScale,
+                  u8 mode)
 {
     gTitleScreenCreditDelay = 1;
-    lbl_803DD9C4 = (float)param_1;
-    lbl_803DD9C0 = (float)param_2;
-    lbl_803DD9BC = (float)param_3;
-    lbl_803DD9B8 = (float)param_4;
-    lbl_803DD9B4 = (float)param_5;
-    DAT_803dd9b1 = param_6;
+    lbl_803DD9C4 = (float)nearZ;
+    lbl_803DD9C0 = (float)farZ;
+    lbl_803DD9BC = (float)aspect;
+    lbl_803DD9B8 = (float)offset;
+    lbl_803DD9B4 = (float)noiseScale;
+    DAT_803dd9b1 = mode;
     return;
 }
 
@@ -3569,71 +3569,71 @@ void FUN_80049910(u32* obj)
     float noiseScrollX;
     int noiseTex;
     int blankShadowTex;
-    float local_ec;
-    u32 local_e8;
-    u32 local_e4;
-    u32 local_e0;
-    u32 local_dc;
-    u32 local_d8;
-    float afStack_d4[12];
-    float local_a4;
-    float local_a0;
-    float local_9c;
-    float local_98;
-    float local_94;
-    float local_90;
-    float local_8c;
-    float local_88;
-    float local_84;
-    float local_80;
-    float local_7c;
-    float local_78;
-    float local_74;
-    float local_70;
-    float local_6c;
-    float local_68;
-    float local_64;
-    float local_60;
-    float local_5c;
-    float local_58;
-    float local_54;
-    float local_50;
-    float local_4c;
-    float local_48;
-    float local_44;
-    float local_40;
-    float local_3c;
-    float local_38;
-    float local_34;
-    float local_30;
-    float local_2c;
-    float local_28;
-    float local_24;
-    float local_20;
-    float local_1c;
-    float local_18;
+    float sunGlareDir;
+    u32 sunGlareParam1;
+    u32 sunGlareParam2;
+    u32 sunGlareSun;
+    u32 sunGlareParam3;
+    u32 sunGlareParam4;
+    float scratchMtx[12];
+    float noiseMtxV_00;
+    float noiseMtxV_01;
+    float noiseMtxV_02;
+    float noiseMtxV_03;
+    float noiseMtxV_10;
+    float noiseMtxV_11;
+    float noiseMtxV_12;
+    float noiseMtxV_13;
+    float noiseMtxV_20;
+    float noiseMtxV_21;
+    float noiseMtxV_22;
+    float noiseMtxV_23;
+    float noiseMtxU_00;
+    float noiseMtxU_01;
+    float noiseMtxU_02;
+    float noiseMtxU_03;
+    float noiseMtxU_10;
+    float noiseMtxU_11;
+    float noiseMtxU_12;
+    float noiseMtxU_13;
+    float noiseMtxU_20;
+    float noiseMtxU_21;
+    float noiseMtxU_22;
+    float noiseMtxU_23;
+    float texMtx_00;
+    float texMtx_01;
+    float texMtx_02;
+    float texMtx_03;
+    float texMtx_10;
+    float texMtx_11;
+    float texMtx_12;
+    float texMtx_13;
+    float texMtx_20;
+    float texMtx_21;
+    float texMtx_22;
+    float texMtx_23;
 
-    local_ec = gWmSunGlareDir;
-    local_e8 = DAT_802c24ec;
-    local_e4 = DAT_802c24f0;
-    local_e0 = gWmSunGlareSun;
-    local_dc = DAT_802c24f8;
-    local_d8 = DAT_802c24fc;
+    sunGlareDir = gWmSunGlareDir;
+    sunGlareParam1 = DAT_802c24ec;
+    sunGlareParam2 = DAT_802c24f0;
+    sunGlareSun = gWmSunGlareSun;
+    sunGlareParam3 = DAT_802c24f8;
+    sunGlareParam4 = DAT_802c24fc;
     viewMtx = (float*)FUN_8000697c();
-    local_44 = lbl_803DF74C;
-    local_40 = lbl_803DF74C;
-    local_3c = lbl_803DF744 / lbl_803DD9BC;
-    local_38 = lbl_803DD9B8;
+    texMtx_00 = lbl_803DF74C;
+    texMtx_01 = lbl_803DF74C;
+    texMtx_02 = lbl_803DF744 / lbl_803DD9BC;
+    texMtx_03 = lbl_803DD9B8;
     scaleZ = lbl_803DF744 / (lbl_803DD9C4 - lbl_803DD9C0);
-    local_34 = scaleZ * viewMtx[4];
-    local_30 = scaleZ * viewMtx[5];
-    local_2c = scaleZ * viewMtx[6];
-    local_28 = scaleZ * viewMtx[7] + -lbl_803DD9C4 * scaleZ;
-    local_24 = lbl_803DF74C;
-    local_20 = lbl_803DF74C;
-    local_1c = lbl_803DF74C;
-    local_18 = lbl_803DF748;
-    FUN_8025d8c4(&local_44, gDebugPrintOriginX, 0);
+    texMtx_10 = scaleZ * viewMtx[4];
+    texMtx_11 = scaleZ * viewMtx[5];
+    texMtx_12 = scaleZ * viewMtx[6];
+    texMtx_13 = scaleZ * viewMtx[7] + -lbl_803DD9C4 * scaleZ;
+    texMtx_20 = lbl_803DF74C;
+    texMtx_21 = lbl_803DF74C;
+    texMtx_22 = lbl_803DF74C;
+    texMtx_23 = lbl_803DF748;
+    FUN_8025d8c4(&texMtx_00, gDebugPrintOriginX, 0);
     FUN_80258674(gDebugPrintOriginY, 0, 0, 0, 0, gDebugPrintOriginX);
     objHeader = *obj;
     FUN_8025c510(gDebugScreenHeight, (u8*)&objHeader);
@@ -3672,44 +3672,44 @@ void FUN_80049910(u32* obj)
         newshadows_getShadowNoiseScroll(&noiseScrollX, &noiseScrollY);
         noiseScrollY = noiseScrollY * lbl_803DF760;
         noiseScrollX = noiseScrollX * lbl_803DF788;
-        FUN_8025b9e8(2, &local_ec, -2);
+        FUN_8025b9e8(2, &sunGlareDir, -2);
         FUN_8025bd1c(gDebugMarginBottom, gDebugPrintOriginY + 1, gDebugDrawPass + 1);
-        local_74 = lbl_803DD9B4;
-        local_70 = lbl_803DF74C;
-        local_6c = lbl_803DF74C;
-        local_68 = lbl_803DDA58 * lbl_803DD9B4 + noiseScrollX;
-        local_64 = lbl_803DF74C;
-        local_60 = lbl_803DD9B4;
-        local_5c = lbl_803DF74C;
-        local_58 = lbl_803DF74C;
-        local_54 = lbl_803DF74C;
-        local_50 = lbl_803DF74C;
-        local_4c = lbl_803DF74C;
-        local_48 = lbl_803DF748;
-        PSVECDotProduct((double)lbl_803DF7A8, afStack_d4, 0x7a);
-        FUN_80247618(afStack_d4, &local_74, &local_74);
-        FUN_80247618(&local_74, viewMtx, &local_74);
-        FUN_8025d8c4(&local_74, gDebugPrintOriginX + 3, 0);
+        noiseMtxU_00 = lbl_803DD9B4;
+        noiseMtxU_01 = lbl_803DF74C;
+        noiseMtxU_02 = lbl_803DF74C;
+        noiseMtxU_03 = lbl_803DDA58 * lbl_803DD9B4 + noiseScrollX;
+        noiseMtxU_10 = lbl_803DF74C;
+        noiseMtxU_11 = lbl_803DD9B4;
+        noiseMtxU_12 = lbl_803DF74C;
+        noiseMtxU_13 = lbl_803DF74C;
+        noiseMtxU_20 = lbl_803DF74C;
+        noiseMtxU_21 = lbl_803DF74C;
+        noiseMtxU_22 = lbl_803DF74C;
+        noiseMtxU_23 = lbl_803DF748;
+        PSVECDotProduct((double)lbl_803DF7A8, scratchMtx, 0x7a);
+        FUN_80247618(scratchMtx, &noiseMtxU_00, &noiseMtxU_00);
+        FUN_80247618(&noiseMtxU_00, viewMtx, &noiseMtxU_00);
+        FUN_8025d8c4(&noiseMtxU_00, gDebugPrintOriginX + 3, 0);
         FUN_80258674(gDebugPrintOriginY + 1, 0, 0, 0, 0, gDebugPrintOriginX + 3);
         FUN_8025b94c(gDebugFixedWidthMode, gDebugMarginBottom, 0, 2, 2, 6, 6, 0, 0, 0);
         FUN_8025bb48(gDebugMarginBottom, 0, 0);
         FUN_8025bd1c(gDebugMarginBottom + 1, gDebugPrintOriginY + 2, gDebugDrawPass + 1);
-        local_a4 = lbl_803DF74C;
-        local_a0 = lbl_803DF74C;
-        local_9c = lbl_803DD9B4;
-        local_98 = lbl_803DDA5C * lbl_803DD9B4 + noiseScrollY;
-        local_94 = lbl_803DF74C;
-        local_90 = lbl_803DD9B4;
-        local_8c = lbl_803DF74C;
-        local_88 = lbl_803DF74C;
-        local_84 = lbl_803DF74C;
-        local_80 = lbl_803DF74C;
-        local_7c = lbl_803DF74C;
-        local_78 = lbl_803DF748;
-        PSVECDotProduct((double)lbl_803DF7AC, afStack_d4, 0x78);
-        FUN_80247618(afStack_d4, &local_a4, &local_a4);
-        FUN_80247618(&local_a4, viewMtx, &local_a4);
-        FUN_8025d8c4(&local_a4, gDebugPrintOriginX + 6, 0);
+        noiseMtxV_00 = lbl_803DF74C;
+        noiseMtxV_01 = lbl_803DF74C;
+        noiseMtxV_02 = lbl_803DD9B4;
+        noiseMtxV_03 = lbl_803DDA5C * lbl_803DD9B4 + noiseScrollY;
+        noiseMtxV_10 = lbl_803DF74C;
+        noiseMtxV_11 = lbl_803DD9B4;
+        noiseMtxV_12 = lbl_803DF74C;
+        noiseMtxV_13 = lbl_803DF74C;
+        noiseMtxV_20 = lbl_803DF74C;
+        noiseMtxV_21 = lbl_803DF74C;
+        noiseMtxV_22 = lbl_803DF74C;
+        noiseMtxV_23 = lbl_803DF748;
+        PSVECDotProduct((double)lbl_803DF7AC, scratchMtx, 0x78);
+        FUN_80247618(scratchMtx, &noiseMtxV_00, &noiseMtxV_00);
+        FUN_80247618(&noiseMtxV_00, viewMtx, &noiseMtxV_00);
+        FUN_8025d8c4(&noiseMtxV_00, gDebugPrintOriginX + 6, 0);
         FUN_80258674(gDebugPrintOriginY + 2, 0, 0, 0, 0, gDebugPrintOriginX + 6);
         FUN_8025b94c(gDebugFixedWidthMode + 1, gDebugMarginBottom + 1, 0, 2, 2, 0, 0, 1, 0, 0);
         FUN_8025bb48(gDebugMarginBottom + 1, 0, 0);
