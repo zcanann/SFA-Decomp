@@ -114,7 +114,7 @@ extern u32 DAT_803a45f3;
 extern u32 DAT_803a4e78;
 extern u32 DAT_803dc4f0;
 extern u32* DAT_803dd6d0;
-extern u32* DAT_803dd6e8;
+extern u32* gEnterSaveNameTotalWidth;
 extern u32 DAT_803de100;
 extern u32 DAT_803de104;
 extern u32 DAT_803de10c;
@@ -174,7 +174,7 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
-    (**(VtableFn**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
+    (**(VtableFn**)(*gEnterSaveNameTotalWidth + 0x50))(DAT_803a3e27);
     (**(VtableFn**)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
     FUN_8000676c((u32)gGameplayPreviewColorGreen, 10, 0, 1, 0);
     FUN_8000676c((u32)gGameplayPreviewColorRed, 10, 1, 0, 0);
