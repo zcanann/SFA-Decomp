@@ -841,3 +841,10 @@ void explosion_initialise(void)
 
 #pragma scheduling on
 #pragma peephole on
+
+f32 gExplosionSpreadDirs[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    -1.0f, 0.0f, 0.0f,
+    0.0f, -1.0f, 0.0f,
+};
