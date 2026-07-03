@@ -465,7 +465,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
 void camMoveFn_80104040(CameraObject* camera, GameObject* target)
 {
     float path[39];
-    float endPts[39];
+    float endPts[13][3];
     u8 box[112];
     float radii[13];
     u32 bounds[6];
@@ -485,8 +485,8 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     f32 cosv;
     f32 t;
     f32 z;
-    u8 trace;
     u32 blocked;
+    u8 trace;
     s16 spin;
 
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
@@ -541,12 +541,12 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     while (i <= 0xc);
     for (j = 0; j <= 0xc; j++)
     {
-        endPts[j * 3] = prev[0];
-        endPts[j * 3 + 1] = prev[1];
-        endPts[j * 3 + 2] = prev[2];
-        radii[j] = lbl_803E16A0;
+        endPts[j][0] = prev[0];
+        endPts[j][1] = prev[1];
+        endPts[j][2] = prev[2];
+        radii[j] = *(f32*)&lbl_803E16A0;
     }
-    hitDetect_calcSweptSphereBounds(bounds, (float*)path, endPts, radii, 0xd);
+    hitDetect_calcSweptSphereBounds(bounds, (float*)path, (float*)endPts, radii, 0xd);
     hitDetectFn_800691c0(0, bounds, 0x248, 1);
     trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, NULL, box, 7,
                                  '\0', '\0', lbl_803E16A0);
@@ -555,8 +555,9 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     {
         blocked = 1;
     }
-    cameraMtxVar57->collisionBlocked = blocked;
-    if (blocked != 0)
+    trace = blocked;
+    cameraMtxVar57->collisionBlocked = trace;
+    if (trace != 0)
     {
         cameraMtxVar57->wallAvoidanceFlags.b7 = 0;
         if (cameraFn_80103b40((short*)camera, outA, outB, target->anim.rotX) == 0)
