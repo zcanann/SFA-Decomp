@@ -34,9 +34,9 @@ typedef struct
     u16 u;       /* 0x04 */
     u16 v;       /* 0x06 */
     s8 offsetX;  /* 0x08 */
-    s8 advance;  /* 0x09 */
+    s8 advanceX; /* 0x09 */
     s8 offsetY;  /* 0x0a */
-    s8 f0b;      /* 0x0b */
+    s8 advanceY; /* 0x0b */
     u8 width;    /* 0x0c */
     u8 height;   /* 0x0d */
     u8 lang;     /* 0x0e */
@@ -344,7 +344,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         }
         if (ch == 0x20)
         {
-            x = lbl_803DC9A0 * (f32)(g->width + (g->advance + g->offsetX)) + x;
+            x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
             x = x + spaceExtra;
             continue;
         }
@@ -407,8 +407,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             if (g->lang == 5)
             {
-                int iw = g->width + (g->advance + g->offsetX);
-                int ih = g->height + (g->f0b + g->offsetY);
+                int iw = g->width + (g->advanceX + g->offsetX);
+                int ih = g->height + (g->advanceY + g->offsetY);
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 gxSetScissorRect(0, 0, *(s16*)(winBase + 0xfd4), *(s16*)(winBase + 0xfd6),
                                  *(s16*)(winBase + 0xfd4) + *(u16*)(winBase + 0xfc8),
@@ -499,7 +499,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
         if ((int)g->lang != 5)
         {
-            x = lbl_803DC9A0 * (f32)(g->width + (g->advance + g->offsetX)) + x;
+            x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
         }
     }
 }
@@ -616,7 +616,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         {
             continue;
         }
-        width = scale * (f32)(g->advance + (g->width + g->offsetX)) + width;
+        width = scale * (f32)(g->advanceX + (g->width + g->offsetX)) + width;
     }
 
     if (outW != NULL)
