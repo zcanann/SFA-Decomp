@@ -2289,7 +2289,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     int curve;
     u32 linked;
     int myId;
-    int npi;
     int iter;
     int pi;
     u32 gi;
@@ -2457,7 +2456,6 @@ void walkgroupFindExitPointFn_800dc398(void)
                             found++;
                         }
 
-                        npi = gObjfsaPatchCount;
                         if (wg->patchIndices[slot] == 0)
                         {
                             back = 0;
@@ -2470,10 +2468,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 back = 4;
                             }
                             wg->patchIndices[slot] = gObjfsaPatchCount;
-                            np = &patchBase[npi];
+                            np = &patchBase[gObjfsaPatchCount];
                             np->groupId = pairId;
-                            pairs[npi * 2] = *(u8*)(curve + 3);
-                            pairs[npi * 2 + 1] = *(u8*)(linked + 3);
+                            pairs[gObjfsaPatchCount * 2] = *(u8*)(curve + 3);
+                            pairs[gObjfsaPatchCount * 2 + 1] = *(u8*)(linked + 3);
 
                             x0 = OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
                             z0 = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10);
@@ -2495,8 +2493,8 @@ void walkgroupFindExitPointFn_800dc398(void)
 
                             x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
                             z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
-                            (*np).exit1X = (s16)((x2 + x3) * lbl_803E0608);
-                            (*np).exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+                            OBJFSA_NEWPATCH.exit1X = (s16)((x2 + x3) * lbl_803E0608);
+                            OBJFSA_NEWPATCH.exit1Z = (s16)((z2 + z3) * lbl_803E0608);
 
                             dxn = z3 - z2;
                             dzn = x2 - x3;
