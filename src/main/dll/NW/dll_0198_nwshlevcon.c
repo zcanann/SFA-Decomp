@@ -25,8 +25,6 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern void fn_80296518(void* player, int a, int b);
 
-#pragma scheduling off
-#pragma peephole off
 void nwsh_levcon_hitDetect(void)
 {
 }
