@@ -105,6 +105,17 @@ extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
 
 #pragma opt_propagation off
+static inline void trickyPlayWhineSfx(u32 id, u8* obj)
+{
+    u8* ptr = ((GameObject*)obj)->extra;
+    if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+        && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+        && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+    {
+        objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
+    }
+}
+
 void trickyDigTunnel(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -343,7 +354,6 @@ void trickyDigTunnel(u8* obj, u8* state)
 void trickyFn_80141fec(u8* obj, u8* state)
 {
     u32 sfxTable;
-    u16 id;
     u8* ptr;
     u8* pc;
     int ret;
@@ -421,7 +431,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             state[0xa] = 3;
             *(f32*)&((TrickyState*)state)->unk700 = lbl_803E23DC;
             Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
-            objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
+            objAnimFn_8013a3f0((int)(u32)obj, 0xe, lbl_803E2510, 0x4000000);
         }
         break;
     case 3:
@@ -456,13 +466,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             ((TrickyState*)state)->unk710 = (f32)(int)
             randomGetRange(0x28, 0x50);
             ((TrickyState*)state)->unk710 *= lbl_803E2424;
-            ptr = ((GameObject*)obj)->extra;
-            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
-            {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
-            }
+            trickyPlayWhineSfx(0x360, obj);
         }
         spd = ((f32 (**)(u8*, u8*))(**(u8***)(pc + 0x68)))[8](pc, obj);
         ((GameObject*)obj)->anim.localPosX = *(f32*)&((TrickyState*)state)->unk704 - ((TrickyState*)state)->dirX * spd;
@@ -485,14 +489,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             mm = -1;
             ((TrickyState*)state)->unkD = mm;
         }
-            id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
-            ptr = ((GameObject*)obj)->extra;
-            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
-            {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
-            }
+            trickyPlayWhineSfx(*(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2), obj);
         }
         break;
     }
