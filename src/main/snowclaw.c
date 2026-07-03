@@ -87,7 +87,7 @@ extern void ObjLink_DetachChild(int obj, int* child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
 
 
-extern u32 gSnowClawHurtSfxTable[8];
+u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 extern u8 framesThisStep;
 extern f32 lbl_803E6720;
 extern f32 lbl_803E6724;
@@ -817,3 +817,5 @@ u8 gSnowClawMoveTable[] = {
     0x00, 0x00, 0x01, 0x70, 0x00, 0x00, 0x01, 0x6F,
     0x00, 0x00, 0x03, 0xE8, 0x00, 0x00, 0x03, 0xEA,
 };
+
+s32 lbl_8032A340[4] = {150, 200, 300, 400};
