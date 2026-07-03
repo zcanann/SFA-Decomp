@@ -182,11 +182,19 @@ void loadSaveSettings(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     return;
 }
 
+/* Returns the saved-game task-hint state block (history[0..4]/current[5]/count[6]). */
 u8* FUN_800e82d8(void)
 {
     return (u8*)&DAT_803a4460;
 }
 
+/*
+ * Record a moved game-object's placement so its position survives a reload.
+ * Scans the placement-record table at &DAT_803a3f08 (9 rows of stride 0x70,
+ * each holding up to 7 placement-ids at row+0x168..+0x1c8, stride 0x10) for a
+ * free/matching slot, then stores the object's placement-id and world XYZ into
+ * the parallel arrays (&DAT_803a4070..407c) and back into the placement data.
+ */
 void FUN_800e8630(int obj)
 {
     int placementId;
@@ -254,6 +262,14 @@ u8 FUN_800e8b98(void)
     return DAT_803de100;
 }
 
+/*
+ * Gameplay-preview / new-game boot: zero-fills the gameplay config block,
+ * seeds the default preview settings (colour indices 0xc, alpha 0xff, name
+ * "FOX"...), enables the initial set of map acts via FUN_800e95e8, records the
+ * preview colour, copies the profile name into DAT_803a3f24, and hands the
+ * config off to FUN_80072564. taskInfo packs the current task id (low byte)
+ * and its name pointer (high word) from FUN_80286840.
+ */
 void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
                   u64 param_5, u64 param_6, u64 param_7, u64 param_8)
 {
@@ -364,6 +380,14 @@ void FUN_800e8f58(u64 param_1, double param_2, u64 param_3, u64 param_4,
     return;
 }
 
+/*
+ * Set or clear a map-act (event) flag. param_1/param_2 identify the act; the
+ * (map,bit) pair is resolved through FUN_80286830 and the &DAT_80312460 event
+ * table. setMode: 1 set, 0 clear, -1 force-set, -2 clear-without-history.
+ * Setting propagates the bit into the six parallel group-status words
+ * (&DAT_803a3c1c); clearing also records the (map,bit) into the recently-
+ * cleared history ring at &DAT_803a3be0 unless keepTransient was requested.
+ */
 void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
 {
     bool keepTransient;
@@ -542,6 +566,14 @@ void FUN_800e95e8(u32 param_1, u32 param_2, int setMode)
     return;
 }
 
+/*
+ * Save/apply the gameplay-preview settings block (0x884 bytes) and push the
+ * cached preview colour (index DAT_803a3f28 into the &DAT_803a458c/4590/4594
+ * RGB arrays plus the &DAT_803a4599 alpha) down to the renderer. Marks the
+ * screen state (DAT_803de100) as active (2). The in_rN / in_fN locals are the
+ * decompiler's placeholders for the argument registers the tail calls forward
+ * untouched.
+ */
 void FUN_800e9e9c(void)
 {
     u32 colorIdx;
@@ -608,6 +640,14 @@ u8 FUN_800ea9ac(void)
     return state[5];
 }
 
+/*
+ * Raw (non-inlined) twin of gameBitFn_800ea2e0: mark a completed task id.
+ * On the first call (count==0) it back-fills the game bits for every entry the
+ * hint-slot map (&DAT_80312632) leaves unmapped, then sets this task's bit
+ * (bank (id>>5)+0x12f). If newly set, it bumps the count (capped at 5), shifts
+ * the 5-entry history down and stores id at [0], and advances the "current"
+ * cursor [5] past any already-completed tasks.
+ */
 void FUN_800ea9b8(void)
 {
     u32 id;
