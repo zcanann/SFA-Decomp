@@ -1114,13 +1114,6 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
     return 0;
 }
 
-#define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
-    neighborId = *(s32 *)(curve + (off));                                         \
-    if (neighborId > -1 && (((*(s8 *)(curve + 0x1b) & (mask)) != 0) == (wantSet)) && \
-        neighborId != -1) {                                                       \
-        candidateIds[candidateCount++] = neighborId;                              \
-    }
-
 #define ROMCURVE_REFRESH_CONTROL(secondOff)                                       \
     *(f32 *)(stateBytes + 0xb8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x8);    \
     *(f32 *)(stateBytes + 0xbc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x8); \
