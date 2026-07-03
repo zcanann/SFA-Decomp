@@ -51,6 +51,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 
 main/textrender.c:
 	.text       start:0x80017434 end:0x8001CB3C
+	.data       start:0x802C8D40 end:0x802CA100
 	.bss        start:0x80339980 end:0x8033BE40
 
 main/modellight.c:
