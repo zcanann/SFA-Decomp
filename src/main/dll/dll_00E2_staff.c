@@ -754,8 +754,6 @@ s16 staff_getHitReactValue(int* obj) { return ((StaffState*)(int*)((GameObject*)
 s32 staff_func16(int* obj) { return ((StaffState*)(int*)((GameObject*)obj)->extra)->swipeTextureIndex; }
 
 extern f32 lbl_803E3420;
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 void objSetAnimField48to0(int* obj)
 {
     s32 v = 0x0;
