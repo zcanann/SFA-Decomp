@@ -43,6 +43,21 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define FIRECRAWLER_OBJFLAG_RENDERED 0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
+
+/* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
+ * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
+typedef struct FirepipeSetup
+{
+    ObjPlacement head; /* 0x00 */
+    u8 unk18;          /* 0x18 */
+    u8 unk19;          /* 0x19 */
+    s16 unk1A;         /* 0x1a */
+    s16 unk1C;         /* 0x1c */
+    s16 unk1E;         /* 0x1e */
+    s16 unk20;         /* 0x20 */
+    u8 unk22;          /* 0x22 */
+    u8 unk23;          /* 0x23 */
+} FirepipeSetup;
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -262,18 +277,18 @@ void firecrawler_spawnFirepipe(int* obj)
     {
         child = Obj_AllocObjectSetup(0x24, 0x710);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
-        ((ObjPlacement*)child)->color[0] = 1;
-        ((ObjPlacement*)child)->color[1] = 4;
-        ((ObjPlacement*)child)->color[2] = 0xff;
-        ((ObjPlacement*)child)->color[3] = 0xff;
-        *((u8*)child + 0x18) = 0;
-        *((u8*)child + 0x19) = 0;
-        *(s16*)((char*)child + 0x1a) = 0;
-        *(s16*)((char*)child + 0x1c) = 0xa;
-        *(s16*)((char*)child + 0x1e) = 0;
-        *(s16*)((char*)child + 0x20) = 0;
-        *((u8*)child + 0x22) = 3;
-        *((u8*)child + 0x23) = 0;
+        ((FirepipeSetup*)child)->head.color[0] = 1;
+        ((FirepipeSetup*)child)->head.color[1] = 4;
+        ((FirepipeSetup*)child)->head.color[2] = 0xff;
+        ((FirepipeSetup*)child)->head.color[3] = 0xff;
+        ((FirepipeSetup*)child)->unk18 = 0;
+        ((FirepipeSetup*)child)->unk19 = 0;
+        ((FirepipeSetup*)child)->unk1A = 0;
+        ((FirepipeSetup*)child)->unk1C = 0xa;
+        ((FirepipeSetup*)child)->unk1E = 0;
+        ((FirepipeSetup*)child)->unk20 = 0;
+        ((FirepipeSetup*)child)->unk22 = 3;
+        ((FirepipeSetup*)child)->unk23 = 0;
         child = Obj_SetupObject(child, 5, -1, -1, 0);
         if (child != 0)
         {
