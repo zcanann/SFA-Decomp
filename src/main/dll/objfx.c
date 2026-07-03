@@ -21,6 +21,32 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
+/*
+ * Setup buffer the explosion spawners (DIMexplosionFn_8009a96c / spawnExplosion)
+ * fill from Obj_AllocObjectSetup (0x24 bytes, def id 0x253). Embeds the common
+ * ObjPlacement head (the spawn position is stored into the head's posX/posY/posZ
+ * slots via a GameObject anim view); 0x19/0x1a/0x1c carry this class's own slots.
+ * The class byte at 0x18 is left unwritten. Field names beyond the head are
+ * generic (provenance is the raw store offsets). Only unk19 is accessed through
+ * this struct; the 0x1a scaled value (an f32->s16 truncation) and the 0x1c s16
+ * flag word (seeded from a flag arg then OR'd with 0x4/0x8/0x10/0x20) stay raw
+ * pointer stores because routing them through struct members reorders the DLL's
+ * shared float-conversion pool (byte-affecting). The struct still documents the
+ * full recovered layout.
+ */
+typedef struct ExplosionSetup {
+    ObjPlacement head; /* 0x00: common placement head (position via GameObject anim view) */
+    u8 pad18;          /* 0x18: class byte (unwritten here) */
+    s8 unk19;          /* 0x19 */
+    u8 pad1A[0x1C - 0x1A]; /* 0x1A: scaled s16 value, written raw (see note) */
+    s16 flags;         /* 0x1C: flag word, written raw (see note) */
+    u8 pad1E[0x24 - 0x1E];
+} ExplosionSetup;
+
+STATIC_ASSERT(offsetof(ExplosionSetup, unk19) == 0x19);
+STATIC_ASSERT(offsetof(ExplosionSetup, flags) == 0x1C);
+STATIC_ASSERT(sizeof(ExplosionSetup) == 0x24);
+
 extern f32 gObjFxCrystalAmpTbl[];
 extern s16 gObjFxCrystalSpinSpeed[4];
 extern u8 gObjFxLightColorTbl[];
@@ -1224,7 +1250,7 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         ((GameObject*)obj)->anim.rootMotionScale = vx;
         ((GameObject*)obj)->anim.localPosX = vy;
         ((GameObject*)obj)->anim.localPosY = vz;
-        *(s8*)(obj + 0x19) = a;
+        ((ExplosionSetup*)obj)->unk19 = a;
         *(s16*)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16*)(obj + 0x1c) = f1cinit;
         if (flag4 != 0)
@@ -1275,7 +1301,7 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         ((GameObject*)obj)->anim.rootMotionScale = ((ObjAnimComponent*)src)->worldPosX;
         ((GameObject*)obj)->anim.localPosX = ((ObjAnimComponent*)src)->worldPosY;
         ((GameObject*)obj)->anim.localPosY = ((ObjAnimComponent*)src)->worldPosZ;
-        *(s8*)(obj + 0x19) = a;
+        ((ExplosionSetup*)obj)->unk19 = a;
         *(s16*)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16*)(obj + 0x1c) = f1cinit;
         if (flag4 != 0)
