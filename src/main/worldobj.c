@@ -739,3 +739,5 @@ GreatFoxFxEntry gGreatFoxEffects[] =
     { -2.812f, -1.008f, -0.955f, 0.01f, 0x07, 0x20, { 0x00, 0x00 } },
     { 0.0f, 0.405f, 2.952f, 0.01f, 0x08, 0x40, { 0x00, 0x00 } },
 };
+
+f32 gWorldObjAdvanceMoveTable[4] = { 0.02f, 0.01f, 0.01f, 0.02f };

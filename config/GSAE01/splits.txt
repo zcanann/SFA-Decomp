@@ -79,7 +79,7 @@ main/mm.c:
 
 main/model.c:
 	.text       start:0x8002430C end:0x8002A5D4
-	.data       start:0x802CABC4 end:0x802CABF8
+	.data       start:0x802CABB8 end:0x802CABF8
 	.bss        start:0x80340740 end:0x803408A8
 
 main/object.c:
@@ -786,6 +786,7 @@ main/dll/dll_0019_dll19func0.c:
 
 main/dll/dll_002E_moveLib.c:
 	.text       start:0x80113F8C end:0x801159E4
+	.data       start:0x8031A0E0 end:0x8031A0F4
 
 main/dll/dll_0032_titlescreeninit.c:
 	.text       start:0x801159E4 end:0x80115F20
@@ -2082,7 +2083,7 @@ main/dll/drpickup.c:
 
 main/dll/dll_0255_snowbike.c:
 	.text       start:0x801EC7A0 end:0x801EE088
-	.data       start:0x8032855C end:0x80328590
+	.data       start:0x8032855C end:0x803285A8
 
 main/dll/bwalphaanim.c:
 	.text       start:0x801EE088 end:0x801EE0C0
@@ -2337,7 +2338,7 @@ main/worldplanet.c:
 
 main/worldobj.c:
 	.text       start:0x8020D9E4 end:0x8020F214
-	.data       start:0x8032A210 end:0x8032A2D8
+	.data       start:0x8032A200 end:0x8032A2D8
 
 main/snowclaw.c:
 	.text       start:0x8020F214 end:0x802106C0
@@ -2452,6 +2453,7 @@ main/dll/DR/dll_0283_drbarrelgr.c:
 
 main/dll/WC/dll_028A_wcearthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
+	.data       start:0x8032AEC0 end:0x8032AED4
 
 main/dll/dll_028B.c:
 	.text       start:0x80223D18 end:0x8022408C
@@ -2616,6 +2618,7 @@ main/dll/dll_02BC_andross.c:
 
 main/dll/dll_02BD_androsshand.c:
 	.text       start:0x8023F05C end:0x8023FC8C
+	.data       start:0x8032C270 end:0x8032C28C
 
 main/dll/dll_02BE_androssbrain.c:
 	.text       start:0x8023FC8C end:0x80240010

@@ -578,3 +578,8 @@ void earthwalker_init(int obj, int setup)
     }
     ewState->lastTriggeredState = -1;
 }
+
+#include "main/objHitReact.h"
+ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {
+    { 575, 706, -1, { 0xFF, 0xFF }, 0, { 0, 0, 0 }, 0.01f, { 0, 0, 0, 0 } }
+};

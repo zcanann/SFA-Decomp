@@ -3815,3 +3815,5 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
 }
 
 char sModelAnimationBufferOverflowWarning[] = "Warning: Model animation buffer overflow!! size=%d\n";
+
+f32 gModelJitterAxis[3] = { 1.0f, 0.0f, 0.0f };

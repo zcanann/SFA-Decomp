@@ -482,3 +482,5 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         }
     }
 }
+
+f32 gAndrossHandMoveAnimSpeeds[7] = { 0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f };
