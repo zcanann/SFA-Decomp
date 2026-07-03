@@ -15591,7 +15591,6 @@ void fn_802ABFBC(int obj, int state, int inner)
     if (sub != NULL && *(u8*)(*(int*)((char*)sub + 0x50) + 0x58) != 0)
     {
         int d;
-        int adj;
 
         ObjPath_GetPointWorldPosition(obj, 5, &x1, &y1, &z1, 0);
         if (objModelGetVecFn_800395d8((int)sub, 0) != 0)
@@ -15609,25 +15608,24 @@ void fn_802ABFBC(int obj, int state, int inner)
         dz = pos2[2] - z1;
 
         d = getAngle(-dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
-        d -= (u16)((PlayerState*)inner)->headYaw;
-        if (d > 0x8000) d -= 0xffff;
-        if (d < -0x8000) d += 0xffff;
-        adj = (int)((f32)d * lbl_803E7EB4);
+        d = d - (u16)((PlayerState*)inner)->headYaw;
+        if (d > 0x8000) d = d - 0xffff;
+        if (d < -0x8000) d = d + 0xffff;
+        d = (f32)d * lbl_803E7EB4;
         ((PlayerState*)inner)->headYaw =
-            (f32)adj * timeDelta + (f32) * (s16*)((int)inner + 0x4d6);
+            (f32)d * timeDelta + (f32) * (s16*)((int)inner + 0x4d6);
 
         d = getAngle(-dx, -dz) & 0xffff;
-        d -= (u16)((PlayerState*)inner)->targetYaw;
-        if (d > 0x8000) d -= 0xffff;
-        if (d < -0x8000) d += 0xffff;
-        if (d < -0x1c70) d = -0x1c70;
-        else if (d > 0x1c70) d = 0x1c70;
-        d -= (u16)((PlayerState*)inner)->bodyLeanAngle;
-        if (d > 0x8000) d -= 0xffff;
-        if (d < -0x8000) d += 0xffff;
-        adj = (int)((f32)d * lbl_803E7EB4);
+        d = d - (u16)((PlayerState*)inner)->targetYaw;
+        if (d > 0x8000) d = d - 0xffff;
+        if (d < -0x8000) d = d + 0xffff;
+        d = (d < -0x1c70) ? -0x1c70 : ((d > 0x1c70) ? 0x1c70 : d);
+        d = d - (u16)((PlayerState*)inner)->bodyLeanAngle;
+        if (d > 0x8000) d = d - 0xffff;
+        if (d < -0x8000) d = d + 0xffff;
+        d = (f32)d * lbl_803E7EB4;
         ((PlayerState*)inner)->bodyLeanAngle =
-            (f32)adj * timeDelta + (f32) * (s16*)((int)inner + 0x4d4);
+            (f32)d * timeDelta + (f32) * (s16*)((int)inner + 0x4d4);
         ((PlayerState*)inner)->bodyLeanHalf = ((PlayerState*)inner)->bodyLeanAngle / 2;
     }
     else
