@@ -79,10 +79,8 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1CF_free(void);
 
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
-int dim2conveyor_getExtraSize(void);
 
 int fn_801B6D40(int* obj, int v)
 {
@@ -91,7 +89,6 @@ int fn_801B6D40(int* obj, int v)
     return *(s8*)(state + 2) <= 0;
 }
 
-u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4);
 
 void dimtruthhornice_init(int* obj, int* def)
 {
@@ -110,7 +107,6 @@ void dimtruthhornice_init(int* obj, int* def)
     }
 }
 
-void dim2snowball_init(int* obj, int* def);
 
 void dimtruthhornice_update(int* obj)
 {
