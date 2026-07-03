@@ -1283,7 +1283,7 @@ int mapProcessRomList(int slot)
     entry = &slots[i];
     entry->romlist = (void*)rl;
     *(int*)(slot * 4 + 0x83A8 + (char*)base) = rl;
-    *(s16*)((char*)&slots[i] + 4) = slot;
+    *(s16*)((char*)base + (0x4190 + i * 8)) = slot;
     lbl_803DCEA0 = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
