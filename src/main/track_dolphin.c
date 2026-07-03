@@ -353,7 +353,10 @@ void renderMapBlock(int* o, u8 type)
         u32 word;
         int op;
         int pos = state[4];
-        u8* bp = (u8*)((pos >> 3) + state[0]);
+        int t = pos >> 3;
+        u8* bp;
+        t = state[0] + t;
+        bp = (u8*)t;
         word = bp[0];
         word |= bp[1] << 8;
         word |= bp[2] << 16;
