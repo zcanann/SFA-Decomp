@@ -30,6 +30,8 @@
 #include "main/audio/sfx_ids.h"
 
 #include "main/dll/ARW/arwing_state.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 /* ArwingState.flags477 bits */
 #define ARWING_FLAG_ACTIVE     0x1   /* Arwing is active / engaged */
@@ -774,7 +776,7 @@ void arwarwing_updateRollAndEngine(int obj, int state)
     {
         if ((((ArwingState*)state)->inputFlags & 0xc00) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x381);
+            Sfx_PlayFromObject(obj, SFXTRIG_generic_pickup);
         }
         ((ArwingState*)state)->rollCooldown -= timeDelta;
         if (((ArwingState*)state)->rollCooldown <= lbl_803E6ECC)
@@ -1110,12 +1112,12 @@ void arwarwing_handlePathDamage(int obj, int state)
             else
                 ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
             ((ArwingState*)state)->modeTimer = lbl_803E6F30;
-            Sfx_PlayFromObject(obj, 0x380);
-            Music_Trigger(0xd6, 1);
+            Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
+            Music_Trigger(MUSICTRIG_dark_ice_boss_1, 1);
         }
         else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
         {
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
         Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
         ((Arw339Flags*)&((ArwingState*)state)->flags339)->scoreFlag = 1;
@@ -1191,15 +1193,15 @@ void arwarwing_handleObjectDamage(int obj, int state)
             GameBit_Set(0xe74, 1);
         ((ArwingState*)state)->mode = ARWING_MODE_DEAD;
         ((ArwingState*)state)->modeTimer = lbl_803E6F30;
-        Sfx_PlayFromObject(obj, 0x380);
-        Music_Trigger(0xd6, 1);
+        Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
+        Music_Trigger(MUSICTRIG_dark_ice_boss_1, 1);
         unlockLevel(0, 0, 1);
         loadMapAndParent(0x29);
         lockLevel(mapGetDirIdx(0x29), 0);
     }
     else if ((s8)((ArwingState*)((GameObject*)obj)->extra)->shield <= 3)
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
     }
 }
 #pragma scheduling reset

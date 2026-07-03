@@ -10,6 +10,7 @@
 #include "main/worldplanet.h"
 #include "main/pad.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -397,7 +398,7 @@ void worldplanet_update(int obj)
                 {
                     objId = tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
-                    Sfx_PlayFromObject(0, 0x97);
+                    Sfx_PlayFromObject(0, SFXTRIG_crf_babyambi3);
                 }
                 gWorldPlanetPathProgress = lbl_803E65F8;
                 {
@@ -510,7 +511,7 @@ void worldplanet_update(int obj)
                     if (gWorldPlanetSelectConfirmTimer <= 1)
                     {
                         gWorldPlanetSelectConfirmTimer = 0;
-                        Sfx_PlayFromObject(0, 0x98);
+                        Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
                         (*gCameraInterface)->setFocus((void*)objId, 0x50);
                         state->selectionLocked = 1;
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
@@ -540,7 +541,7 @@ void worldplanet_update(int obj)
                 if ((buttons & PAD_BUTTON_B) != 0)
                 {
                     AudioStream_StopCurrent();
-                    Sfx_PlayFromObject(0, 0x99);
+                    Sfx_PlayFromObject(0, SFXTRIG_wmap_greatfox_lp);
                     streamFn_8000a380(2, 2, 1000);
                     (*gCameraInterface)->setFocus((void*)obj, 0x50);
                     state->selectionLocked = 0;
@@ -555,7 +556,7 @@ void worldplanet_update(int obj)
                     (*gScreenTransitionInterface)->start(4, 1);
                     streamFn_8000a380(3, 1, 0);
                     AudioStream_StopCurrent();
-                    Sfx_PlayFromObject(0, 0x98);
+                    Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
                     setShowWorldMapHud(0);
                     gWorldPlanetExitWarpTimer = 5;
                     lbl_803DDD10 = 0;
@@ -589,7 +590,7 @@ void worldplanet_update(int obj)
                 }
                 if (state->orbitSoundFrameCount > 2)
                 {
-                    Sfx_KeepAliveLoopedObjectSound((u32)p, 0x96);
+                    Sfx_KeepAliveLoopedObjectSound((u32)p, SFXTRIG_crf_babyambi2);
                 }
                 *(f32*)(p + 6) = r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosX;

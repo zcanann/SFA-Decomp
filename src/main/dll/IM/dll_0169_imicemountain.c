@@ -20,6 +20,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/music_trigger_ids.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -337,7 +338,7 @@ void imicemountain_update(int* obj)
             extra->musicTrack = -1;
             if ((extra->latchFlags & 8) != 0)
             {
-                Music_Trigger(26, 0);
+                Music_Trigger(MUSICTRIG_galleon_docks, 0);
             }
         }
     }
@@ -348,7 +349,7 @@ void imicemountain_update(int* obj)
             extra->musicTrack = 26;
             if ((extra->latchFlags & 8) != 0)
             {
-                Music_Trigger(26, 1);
+                Music_Trigger(MUSICTRIG_galleon_docks, 1);
             }
         }
     }

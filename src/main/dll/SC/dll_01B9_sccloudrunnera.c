@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern u8 Obj_IsLoadingLocked(void);
@@ -155,7 +156,7 @@ void sc_cloudrunnera_update(int obj)
                                          *(int*)&((GameObject*)obj)->anim.parent);
                 ((GameObject*)newObj)->anim.flags = (s16)(((GameObject*)newObj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 ObjLink_AttachChild(obj, newObj, 0);
-                Sfx_PlayFromObject(obj, 0x10f);
+                Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c);
                 break;
             }
         case 1:

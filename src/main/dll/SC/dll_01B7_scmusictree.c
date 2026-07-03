@@ -7,6 +7,7 @@
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* placement mapIds: striking the three totem trees sets the combo bits
    sclevelcontrol watches; the three "gate" trees gate their bits on
@@ -201,18 +202,18 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
     switch (id)
     {
     case SC_MUSICTREE_MAP_TOTEM_1:
-        Sfx_PlayFromObject(p1, 299);
-        Sfx_PlayFromObject(p1, 298);
+        Sfx_PlayFromObject(p1, SFXTRIG_sdrstp_c);
+        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
         GameBit_Set(GAMEBIT_TOTEM_COMBO_1, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_2:
-        Sfx_PlayFromObject(p1, 300);
-        Sfx_PlayFromObject(p1, 298);
+        Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c);
+        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
         GameBit_Set(GAMEBIT_TOTEM_COMBO_2, 1);
         break;
     case SC_MUSICTREE_MAP_TOTEM_3:
-        Sfx_PlayFromObject(p1, 0x12d);
-        Sfx_PlayFromObject(p1, 298);
+        Sfx_PlayFromObject(p1, SFXTRIG_en_sdrstp_c_12d);
+        Sfx_PlayFromObject(p1, SFXTRIG_gland2_c);
         GameBit_Set(GAMEBIT_TOTEM_COMBO_3, 1);
         break;
     case SC_MUSICTREE_MAP_GATE_1:
@@ -328,8 +329,8 @@ void sc_musictree_update(int obj)
     }
     else
     {
-        Sfx_PlayFromObject(obj, 0x129);
-        Sfx_PlayFromObject(obj, 0x12a);
+        Sfx_PlayFromObject(obj, SFXTRIG_swdtest222);
+        Sfx_PlayFromObject(obj, SFXTRIG_gland2_c);
     }
     {
         f32 zero = lbl_803E5590;

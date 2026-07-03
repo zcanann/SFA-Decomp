@@ -23,6 +23,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
@@ -232,7 +233,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     Vec_distance((int)&((GameObject*)obj)->anim.worldPosX, (int)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX);
     if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xb54, lbl_803E83F8, lbl_803E840C))
     {
-        Sfx_PlayFromObject(obj, 0x464);
+        Sfx_PlayFromObject(obj, SFXTRIG_lfoot_taunt);
     }
     if ((u32)GameBit_Get(((DRCloudRunnerPlacement*)q)->enableGameBit) != 0)
     {
@@ -706,7 +707,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
             ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
     if (((ByteFlags*)&inner->flagsBC0)->b80 == 0 && (*(int*)&((CloudRunnerState*)baddie)->baddie.unk31C & 0x200))
     {
-        Sfx_PlayFromObject(obj, 0x11d);
+        Sfx_PlayFromObject(obj, SFXTRIG_sliftloop11);
         ((ByteFlags*)&inner->flagsBC0)->b80 = 1;
         speed = lbl_803E83A4;
         needMove = 1;
@@ -1006,7 +1007,7 @@ void DR_CloudRunner_hitDetect(int obj)
             inner->airTimeRemaining = 1;
             (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, (int)inner, 7);
         }
-        Sfx_PlayFromObject(obj, 0x11f);
+        Sfx_PlayFromObject(obj, SFXTRIG_gscsc);
     }
 }
 

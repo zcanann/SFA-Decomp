@@ -19,6 +19,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/gameloop.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct ShBeaconPlacement
 {
@@ -172,7 +173,7 @@ void sh_beacon_update(int obj)
     case SH_BEACON_MODE_LIT:
         if ((((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping) == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, 0x9e);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             ((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping = 1;
         }
         if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
@@ -241,11 +242,11 @@ void sh_beacon_update(int obj)
             GameBit_Set(((ShBeaconPlacement*)def)->litGameBit, 1);
             if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0))
             {
-                Sfx_PlayFromObject(0, 0x7e);
+                Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             }
             else
             {
-                Sfx_PlayFromObject(0, 0x409);
+                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
             }
         }
     }

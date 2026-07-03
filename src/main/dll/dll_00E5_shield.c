@@ -38,6 +38,7 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00E5_shield.h"
 #include "main/dll/dll_00F7_dllf7.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -355,8 +356,8 @@ void shield_free(int obj)
         ModelLightStruct_free(state[0]);
         state[0] = NULL;
     }
-    Sfx_StopFromObject(obj, 0x42C);
-    Sfx_StopFromObject(obj, 0x42D);
+    Sfx_StopFromObject(obj, SFXTRIG_lrope_powerup);
+    Sfx_StopFromObject(obj, SFXTRIG_lockon3_on);
 }
 
 int animatedobj_getExtraSize(void);
@@ -865,7 +866,7 @@ void shield_update(int* obj)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(192, 255);
     }
-    Sfx_SetObjectSfxVolume((s16*)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
+    Sfx_SetObjectSfxVolume((s16*)obj, SFXTRIG_lockon3_on, (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
     if (((GameObject*)obj)->anim.alpha != 0)
     {
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -1117,8 +1118,8 @@ void staffFn_80170380(int* obj, int cmd)
         }
         ((ShieldState*)state)->unk8 = lbl_803E33AC;
         ((ShieldState*)state)->unkC = lbl_803E33B4;
-        Sfx_StopFromObject((int)obj, 0x42c);
-        Sfx_StopFromObject((int)obj, 0x42d);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
     case 1:
         if (lbl_803E33AC == ((ShieldState*)state)->unk8)
@@ -1186,8 +1187,8 @@ void staffFn_80170380(int* obj, int cmd)
                     t1 += 1;
                 }
             }
-            Sfx_PlayFromObject(obj, 0x42c);
-            Sfx_PlayFromObject(obj, 0x42d);
+            Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
         }
         break;
     case 2:
@@ -1205,8 +1206,8 @@ void staffFn_80170380(int* obj, int cmd)
         {
             modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
         }
-        Sfx_StopFromObject((int)obj, 0x42c);
-        Sfx_StopFromObject((int)obj, 0x42d);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
     case 3:
         if (glow != NULL)
@@ -1266,15 +1267,15 @@ void staffFn_80170380(int* obj, int cmd)
                 t1 += 1;
             }
         }
-        Sfx_PlayFromObject(obj, 0x42d);
-        Sfx_PlayFromObject(obj, 0x42c);
+        Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
         break;
     case 5:
         ((ShieldState*)state)->unk8 = lbl_803E33AC;
         ((ShieldState*)state)->unkC = lbl_803E33B4;
         *(f32*)&((ShieldState*)state)->unk10 = lbl_803E33CC;
-        Sfx_StopFromObject((int)obj, 0x42c);
-        Sfx_StopFromObject((int)obj, 0x42d);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
         break;
     case 4:
         {
@@ -1316,8 +1317,8 @@ void staffFn_80170380(int* obj, int cmd)
                     t1 += 1;
                 }
             }
-            Sfx_PlayFromObject(obj, 0x42d);
-            Sfx_PlayFromObject(obj, 0x42c);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
+            Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
             break;
         }
     case 6:

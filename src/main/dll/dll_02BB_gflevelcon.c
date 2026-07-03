@@ -17,6 +17,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* sequence event opcodes consumed by gf_levelcon_handleScriptEvents */
 #define GFLEVELCON_SEQEV_NONE 0
@@ -456,9 +457,9 @@ void fn_8023A3E4(int objArg, int hitState)
                 hp[0xAE] -= 1;
                 (s + hitType)[0xB2] = 6;
                 if ((s + hitType)[0xAE] != 0)
-                    Sfx_PlayFromObject(obj, 0x484);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff);
                 else
-                    Sfx_PlayFromObject(obj, 0x485);
+                    Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11);
                 switch (hitType)
                 {
                 case 0:

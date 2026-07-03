@@ -17,6 +17,7 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 extern u32 fn_80174BFC();
@@ -88,7 +89,7 @@ int fn_80174438(int obj, PushableState* state)
         Sfx_StopObjectChannel(obj, 8);
         return 0;
     }
-    Sfx_PlayFromObject(obj, 0x66);
+    Sfx_PlayFromObject(obj, SFXTRIG_treedrum16);
     state->flags |= 2;
     if ((state->flags & 4) == 0)
     {
@@ -101,7 +102,7 @@ int fn_80174438(int obj, PushableState* state)
         ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - lbl_803E3530);
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
         ((GameObject*)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement*)def)->posZ);
-        Sfx_PlayFromObject(obj, 0x68);
+        Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
     }
     if (GameBit_Get(0xa1a) != 0)
     {
@@ -208,7 +209,7 @@ int fn_80174668(int obj, PushableState* state)
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             Resource_Release(tex);
-            Sfx_PlayFromObject(obj, 0x65);
+            Sfx_PlayFromObject(obj, SFXTRIG_espar5_c);
         }
         else
         {

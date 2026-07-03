@@ -18,6 +18,7 @@
 #include "main/dll/DIM/dll_01C6_dimcannon.h"
 #include "main/dll/dll_801b1d84.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u64 ObjGroup_RemoveObject();
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 
@@ -449,13 +450,13 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                     }
                 }
                 *(s16*)((int)vec + 0x2) = (s16)(*(s16*)((int)vec + 0x2) + delta);
-                Sfx_KeepAliveLoopedObjectSound((u32)obj, 0x1ff);
+                Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_gal_sailflap2);
             }
             else
             {
                 if (((DimCannonState*)state)->prevAimDelta != 0)
                 {
-                    Sfx_PlayFromObject((u32)obj, 0x1fe);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_cnplarlp);
                 }
             }
             ((DimCannonState*)state)->prevAimDelta = delta;
@@ -475,13 +476,13 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                     ((DimCannonState*)state)->airMeterCharge += framesThisStep;
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 2) == 0)
                     {
-                        Sfx_PlayFromObject((u32)obj, 0x201);
-                        Sfx_PlayFromObject((u32)obj, 0x202);
+                        Sfx_PlayFromObject((u32)obj, SFXTRIG_gal_sailflap1);
+                        Sfx_PlayFromObject((u32)obj, SFXTRIG_tr_cnplarlp);
                     }
                 }
                 else
                 {
-                    Sfx_PlayFromObject((u32)obj, 0x40c);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_staff_swipes_long);
                 }
             }
             else

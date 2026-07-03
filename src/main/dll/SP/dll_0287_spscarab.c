@@ -16,6 +16,7 @@
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
 #include "main/engine_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
@@ -75,7 +76,7 @@ void spscarab_hitDetect(void)
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_getObjectTypeId(void) { return 0x0; }
 
-void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
+void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, SFXTRIG_scarab_runloop); }
 
 void spscarab_update(int obj)
 {
@@ -186,7 +187,7 @@ void spscarab_init(int obj, int def)
     ((SpscarabState*)p_b8)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 
-    Sfx_AddLoopedObjectSound(obj, 0x406);
+    Sfx_AddLoopedObjectSound(obj, SFXTRIG_scarab_runloop);
     model = Obj_GetActiveModel(obj);
 
     switch ((s8) * (u8*)(def + 0x19))

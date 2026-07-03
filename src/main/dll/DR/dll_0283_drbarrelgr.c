@@ -14,6 +14,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct DrbarrelgrPlacement
 {
@@ -151,7 +152,7 @@ void drbarrelgr_update(int obj)
         return;
     }
     flags->bit40 = 1;
-    Sfx_KeepAliveLoopedObjectSound(obj, 958);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bcrek1_c);
 
     switch (((DrbarrelgrState*)state)->mode)
     {
@@ -169,7 +170,7 @@ void drbarrelgr_update(int obj)
                 if (voxmaps_traceWorldLine((void*)&((GameObject*)obj)->anim.localPosX, vec) != 0 &&
                     gunpowderbarrel_canBeGrabbed(nearest) != 0)
                 {
-                    Sfx_PlayFromObject(obj, 959);
+                    Sfx_PlayFromObject(obj, SFXTRIG_jbike_snowspray);
                     newMode = 4;
                     ((DrbarrelgrState*)state)->heldBarrel = nearest;
                 }
@@ -209,7 +210,7 @@ void drbarrelgr_update(int obj)
                           (void*)&((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosX) < lbl_803E6CA0 ||
             ((GameObject*)((DrbarrelgrState*)state)->heldBarrel)->anim.localPosY > ((DrbarrelgrState*)state)->grabY)
         {
-            Sfx_PlayFromObject((int)(GameObject*)obj, 960);
+            Sfx_PlayFromObject((int)(GameObject*)obj, SFXTRIG_jbike_boost);
             gunpowderbarrel_setHeldState(((DrbarrelgrState*)state)->heldBarrel);
             newMode = ((DrbarrelgrState*)state)->prevMode;
             flags->bit80 = 1;

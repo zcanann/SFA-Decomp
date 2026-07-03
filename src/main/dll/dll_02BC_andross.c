@@ -21,6 +21,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/dll/dll_02BC_andross.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
@@ -725,7 +727,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->targetPosY = (gAndrossSwayAmplitudeY * fc +
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x467);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_roar1);
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
         {
@@ -1001,7 +1003,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->fightPhase++;
             if (((AndrossState*)state)->fightPhase < 5)
             {
-                Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
+                Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
                 ((AndrossState*)state)->actionState = 0x16;
                 ((AndrossState*)state)->targetRotX = 0x8000;
             }
@@ -1178,7 +1180,7 @@ void andross_update(int obj)
             (float)(((AndrossState*)state)->homePosY + fb));
         ((AndrossState*)state)->targetPosZ = ((AndrossState*)state)->homePosZ;
         fn_8023A6A4((int)state, lbl_803DC440, lbl_803DC444, lbl_803DC448);
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x466);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
         if ((((AndrossState*)state)->actionTimer != 0) &&
             (((AndrossState*)state)->actionTimer -= framesThisStep,
                 ((AndrossState*)state)->actionTimer <= 0))
@@ -1241,7 +1243,7 @@ void andross_update(int obj)
             ((AndrossState*)state)->actionTimer = lbl_803DC460;
             ((AndrossState*)state)->durationTimer = lbl_803E74D4;
         }
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x466);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
         if (((AndrossState*)state)->fightPhase == 5)
         {
             for (ref = 0; (u8)ref < 6; ref = ref + 1)
@@ -1421,7 +1423,7 @@ void andross_update(int obj)
     case 0x11:
         if (moveChanged)
         {
-            Sfx_PlayFromObject(obj, 0x468);
+            Sfx_PlayFromObject(obj, SFXTRIG_and_falcoflyby);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x15, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[21];
@@ -1531,7 +1533,7 @@ void andross_update(int obj)
             }
             ((AndrossState*)state)->actionTimer = 0xffff;
         }
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x469);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_spitout);
         if ((((AndrossState*)state)->fightPhase == 5) && (((AndrossState*)state)->actionToggle == 0))
         {
             for (ref = 0; (u8)ref < 6; ref = ref + 1)
@@ -1662,7 +1664,7 @@ void andross_update(int obj)
     case 0x1a:
         if (moveChanged)
         {
-            Sfx_PlayFromObject(obj, 0x4a6);
+            Sfx_PlayFromObject(obj, SFXTRIG__UNK_832);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 4, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[4];
@@ -1772,7 +1774,7 @@ void andross_update(int obj)
             unlockLevel(0, 0, 1);
             objId = mapGetDirIdx(0xb);
             mapUnload(objId, 0x20000000);
-            Music_Trigger(0xf3, 0);
+            Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
         fc = ((AndrossState*)state)->fadeAlpha;
         work = *(int*)Obj_GetActiveModel(obj);
@@ -1797,7 +1799,7 @@ void andross_update(int obj)
             ((GameObject*)obj)->anim.velocityX = lbl_803E74D4;
             ((GameObject*)obj)->anim.velocityY = fval;
             ((GameObject*)obj)->anim.velocityZ = fval;
-            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
         }
         ((AndrossState*)state)->actionTimer -= framesThisStep;
         if (((AndrossState*)state)->actionTimer < 0)
@@ -1808,7 +1810,7 @@ void andross_update(int obj)
     case 0x16:
         if (moveChanged)
         {
-            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
             ref = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E74D4, 0);
             ((AndrossState*)ref)->animSpeed = lbl_8032C098[0];
@@ -1856,7 +1858,7 @@ void andross_update(int obj)
         found = *(int*)(((AndrossState*)state)->handObjB + 0xb8);
         if (moveChanged)
         {
-            Sfx_PlayFromObject(obj, 0x470);
+            Sfx_PlayFromObject(obj, SFXTRIG_drak_roar1);
             work = *(int*)&((GameObject*)obj)->extra;
             ObjAnim_SetCurrentMove(obj, 0x16, lbl_803E74D4, 0);
             *(f32*)(work + 100) = lbl_8032C098[22];
@@ -1885,13 +1887,13 @@ void andross_update(int obj)
         if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7568) &&
             ((((AndrossState*)state)->soundEventFlags >> 6 & 1) == 0u))
         {
-            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? 0x471 : 0x472);
+            Sfx_PlayFromObject(obj, randomGetRange(0, 1) != 0 ? SFXTRIG_and_ring_lp : SFXTRIG_and_chompf);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f40 = 1;
         }
         if ((((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte*)&((AndrossState*)state)
             ->soundEventFlags)->f80 == 0))
         {
-            Sfx_PlayFromObject(obj, 0x46d);
+            Sfx_PlayFromObject(obj, SFXTRIG_and_laugh);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f80 = 1;
         }
         bval = *(char*)&((AndrossState*)ref)->unk23;
@@ -1925,7 +1927,7 @@ void andross_update(int obj)
         ((AndrossState*)state)->soundTimer = ((AndrossState*)state)->soundTimer + timeDelta;
         if ((((AndrossState*)state)->soundTimer > lbl_803E7578) && ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u))
         {
-            Sfx_PlayFromObject(obj, 0x46f);
+            Sfx_PlayFromObject(obj, SFXTRIG_drak_pain1);
             ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
         }
         if (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803DC490)
@@ -2003,7 +2005,7 @@ void andross_update(int obj)
             arwarwing_setVelocity(*state, (int)&thrustAArg);
             if ((((AndrossState*)state)->soundEventFlags >> 5 & 1) == 0u)
             {
-                Sfx_PlayFromObject(obj, 0x46f);
+                Sfx_PlayFromObject(obj, SFXTRIG_drak_pain1);
                 ((AndrossFlagByte*)&((AndrossState*)state)->soundEventFlags)->f20 = 1;
             }
         }

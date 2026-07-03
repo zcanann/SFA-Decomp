@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "main/objhits.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
@@ -96,7 +97,7 @@ void dll_197_update(int obj)
     }
     else if (distance < lbl_803E5138 && state->active != 0)
     {
-        Sfx_PlayFromObject(obj, 0x72);
+        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     }
 
     objUpdateOpacity(obj);
@@ -150,7 +151,7 @@ void dll_197_update(int obj)
     if (state->active != 0 && state->sparkTimer <= 0 && state->sparkArmed != 0)
     {
         state->sparkArmed = 0;
-        Sfx_PlayFromObject(obj, 0x80);
+        Sfx_PlayFromObject(obj, SFXTRIG_cvdrip1c);
     }
 
     if (state->active == state->previousActive)

@@ -14,6 +14,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* Andross body object id, located once and cached in androssObj. */
 #define ANDROSS_OBJ_ID 0x47b77
@@ -212,7 +213,7 @@ void androsshand_update(int obj)
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75E0 && state->soundGate == 0)
         {
             state->soundGate = 1;
-            Sfx_PlayFromObject(obj, 0x471);
+            Sfx_PlayFromObject(obj, SFXTRIG_and_ring_lp);
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -261,12 +262,12 @@ void androsshand_update(int obj)
             state->soundGate == 0)
         {
             state->soundGate = 1;
-            Sfx_PlayFromObject(obj, 0x472);
+            Sfx_PlayFromObject(obj, SFXTRIG_and_chompf);
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75F8 && state->soundGate != 0)
         {
             state->soundGate = 0;
-            Sfx_PlayFromObject(obj, 0x473);
+            Sfx_PlayFromObject(obj, SFXTRIG_rockshat16);
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75B0)
         {
@@ -293,7 +294,7 @@ void androsshand_update(int obj)
         }
         else
         {
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x467);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_roar1);
             state->animSpeed = lbl_803E75F0;
             if (state->shotTimer < 0)
             {
@@ -397,12 +398,12 @@ void androsshand_handleDamage(int obj, int hand)
             state->health -= 1;
             state->hitCooldown = 6;
             state->zSpringVelocity = lbl_803DC508;
-            Sfx_PlayFromObject(obj, 0x484);
+            Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff);
             if (state->health == 0)
             {
                 state->handState = ANDROSSHAND_STATE_DEAD;
                 andross_setPartSignal(state->androssObj, 1);
-                Sfx_PlayFromObject(obj, 0x485);
+                Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11);
                 ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
                 DIMexplosionFn_8009a96c(obj, x, y, z, lbl_803E75A8, 1, 1, 1, 1, 0, 1, 0);
             }

@@ -34,6 +34,7 @@
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -625,11 +626,11 @@ void collectible_applyPickup(int* obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 90:
-            Sfx_PlayFromObject(obj, 73);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             itemPickupDoParticleFx(obj, lbl_803E3454, 2, 40);
             break;
         case 793:
-            Sfx_PlayFromObject(obj, 362);
+            Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
             GameBit_Set(1001, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
@@ -643,15 +644,15 @@ void collectible_applyPickup(int* obj)
                 }
                 GameBit_Set(2154, c);
                 itemPickupDoParticleFx(obj, lbl_803E3454, 6, 40);
-                Sfx_PlayFromObject(obj, 73);
+                Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 break;
             }
         case 34:
-            Sfx_PlayFromObject(obj, 73);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         default:
-            Sfx_PlayFromObject(obj, 88);
+            Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         }
@@ -660,23 +661,23 @@ void collectible_applyPickup(int* obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 11:
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), 73);
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
             itemPickupDoParticleFx(obj, lbl_803E3454, 3, 40);
             break;
         case 973:
             playerAddHealth(Obj_GetPlayerObject(), 2);
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), 73);
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             itemPickupDoParticleFx(obj, lbl_803E3454, 1, 40);
             break;
         default:
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), 88);
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_cam90_c);
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         }
         break;
     default:
-        Sfx_PlayFromObject(obj, 88);
+        Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
         itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
         break;
     }

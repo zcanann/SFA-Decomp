@@ -42,6 +42,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern int ObjTrigger_IsSet();
 
@@ -370,7 +371,7 @@ void cclightfoot_update(int obj)
         {
             state->sfxTimer = (f32)(int)
             randomGetRange(0xb4, 0x12c);
-            Sfx_PlayFromObject(obj, 0x134);
+            Sfx_PlayFromObject(obj, SFXTRIG_trwhin4);
         }
     }
     switch (state->state)
@@ -579,7 +580,7 @@ void cclightfoot_update(int obj)
                 objfx_spawnHitEmitterAtPos(hitPos, 8, 0xff, 0xff, 0x78);
                 objLightFn_8009a1dc((void*)obj, lbl_803E4694, hitPos, 4, 0);
             }
-            Sfx_PlayFromObject(obj, 0x129);
+            Sfx_PlayFromObject(obj, SFXTRIG_swdtest222);
         }
     }
     else

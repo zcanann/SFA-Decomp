@@ -11,6 +11,7 @@
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "dolphin/os/OSFastCast.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define GX_BM_NONE 0
 #define GX_BM_BLEND 1
@@ -1192,7 +1193,7 @@ foundFirst:
                             if (srcObj != NULL &&
                                 coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10)
                             {
-                                Sfx_PlayFromObject((u32)srcObj, 0x285);
+                                Sfx_PlayFromObject((u32)srcObj, SFXTRIG_blkscrp6);
                             }
                             slot->soundHandle = -1;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT | 0LL;

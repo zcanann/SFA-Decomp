@@ -16,6 +16,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern f32 lbl_803E4FF8;
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
@@ -141,7 +142,7 @@ void ecsh_creator_update(GameObject* obj)
         res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 0, 0, 1, -1, 0);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 1, 0, 1, -1, 0);
-        Sfx_PlayFromObject((s16*)obj, 0x16d);
+        Sfx_PlayFromObject((s16*)obj, SFXTRIG_wp_hitpos_6);
         Resource_Release(res);
         state->active = 1;
         obj->unkF8 = 1;

@@ -21,6 +21,8 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 void bossdrakor_release(void)
 {
@@ -274,10 +276,10 @@ void bossdrakor_update(int obj)
         switch (p[0x13])
         {
         case 0:
-            Sfx_PlayFromObject(obj, 0x481);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
             break;
         case 7:
-            Sfx_PlayFromObject(obj, 0x481);
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
             break;
         }
         p++;
@@ -564,8 +566,8 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                             drakormissile_startActiveLaunch(missile);
                             storeZeroToFloatParam(&((BossDrakorState*)state)->unk18);
                             s16toFloat((void*)&((BossDrakorState*)state)->unk18, 0x1e);
-                            Sfx_PlayFromObject(obj, 0x477);
-                            Sfx_PlayFromObject(obj, 0x3c8);
+                            Sfx_PlayFromObject(obj, SFXTRIG__UNK);
+                            Sfx_PlayFromObject(obj, SFXTRIG_cahit2_c);
                         }
                     }
                 }
@@ -588,7 +590,7 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     *(s16*)(setup + 0x1c) = lbl_803DC194;
                     *(s8*)(setup + 0x19) = lbl_803DC190;
                     loadObjectAtObject(obj, setup);
-                    Sfx_PlayFromObject(obj, 0x477);
+                    Sfx_PlayFromObject(obj, SFXTRIG__UNK);
                 }
             }
             break;
@@ -608,8 +610,8 @@ void bossdrakor_free(int obj)
     {
         ModelLightStruct_free(((BossDrakorState*)inner)->lightObj);
     }
-    Music_Trigger(0x26, 0);
-    Music_Trigger(0x96, 0);
+    Music_Trigger(MUSICTRIG_LVF_Tracking, 0);
+    Music_Trigger(MUSICTRIG_citytombs, 0);
 }
 
 void bossdrakor_handleActionEvent(int obj, int state, int action)
@@ -761,12 +763,12 @@ void bossdrakor_hitDetect(int obj)
             if (((BossDrakorState*)inner)->hitSfxCooldown <= lbl_803E6510)
             {
                 ((BossDrakorState*)inner)->hitSfxCooldown = lbl_803E6558;
-                Sfx_PlayFromObject(obj, 0x478);
+                Sfx_PlayFromObject(obj, SFXTRIG__UNK_var);
             }
             if (((BossDrakorState*)inner)->hurtSfxCooldown <= lbl_803E6510)
             {
                 ((BossDrakorState*)inner)->hurtSfxCooldown = lbl_803E6520;
-                Sfx_PlayFromObject(obj, 0x4af);
+                Sfx_PlayFromObject(obj, SFXTRIG_mpwru1);
             }
             shakeInit = lbl_803E6518;
             ((BossDrakorState*)inner)->shakeVel = shakeInit;
@@ -778,7 +780,7 @@ void bossdrakor_hitDetect(int obj)
             if (((BossDrakorState*)inner)->hurtSfxCooldown < lbl_803E6510)
             {
                 ((BossDrakorState*)inner)->hurtSfxCooldown = lbl_803E6520;
-                Sfx_PlayFromObject(obj, 0x4b0);
+                Sfx_PlayFromObject(obj, SFXTRIG_sc_npu_216);
             }
         }
     }
@@ -876,8 +878,8 @@ void bossdrakor_init(int obj, BossdrakorPlacement* init)
     ObjGroup_AddObject(obj, 0x45);
     storeZeroToFloatParam(&((BossDrakorState*)inner)->unk18);
     ((GameObject*)obj)->animEventCallback = bossdrakor_animEventCallback;
-    Music_Trigger(0x26, 1);
-    Music_Trigger(0x96, 1);
+    Music_Trigger(MUSICTRIG_LVF_Tracking, 1);
+    Music_Trigger(MUSICTRIG_citytombs, 1);
     ((BossDrakorState*)inner)->lightObj = 0;
 }
 

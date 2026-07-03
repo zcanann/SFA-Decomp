@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/objfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void ObjHits_ClearHitVolumes(int objPtr);
 extern void ObjHits_DisableObject(u32 objPtr);
@@ -90,9 +91,9 @@ void fn_801814D0(int obj, int arg, u8* state)
                 if (hitType != 5)
                 {
                     objLightFn_8009a1dc((void*)obj, lbl_803E3934, &effectPos, 4, 0);
-                    if (Sfx_IsPlayingFromObject(0, 0x37e) == 0)
+                    if (Sfx_IsPlayingFromObject(0, SFXTRIG_staff_rocket_powerup) == 0)
                     {
-                        Sfx_PlayFromObject(obj, 0x37e);
+                        Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_powerup);
                     }
                     return;
                 }

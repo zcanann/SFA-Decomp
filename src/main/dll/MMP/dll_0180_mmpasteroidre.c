@@ -18,6 +18,7 @@
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
@@ -183,7 +184,7 @@ void mmp_asteroid_re_update(int obj)
             state->intensity = GameBit_Get(0x88C);
         }
         state->phase = 2;
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x107);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_lwfl1_c);
         {
             int vol = state->intensity * 0x20 + 0x20;
             if (vol > 0x7F)

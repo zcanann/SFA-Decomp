@@ -16,6 +16,7 @@
 #include "main/gamebits.h"
 #include "main/lightmap.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/music_trigger_ids.h"
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int arg);
 
@@ -55,7 +56,7 @@ void MMP_levelcontrol_free(int obj)
 {
     lbl_803DDB28 = lbl_803E44C0;
     lbl_803DDB2C = 0;
-    Music_Trigger(0xd5, 0);
+    Music_Trigger(MUSICTRIG_WLC_Puzzle, 0);
 }
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -160,7 +161,7 @@ void MMP_levelcontrol_update(int obj)
             }
             ((GameObject*)obj)->unkF8 = 0;
         }
-        Music_Trigger(0x31, 1);
+        Music_Trigger(MUSICTRIG_Barrels, 1);
         ((GameObject*)obj)->unkF4 = 0;
     }
 
@@ -212,10 +213,10 @@ void MMP_levelcontrol_init(int obj)
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = lbl_803E44C8;
     lbl_803DDB2C = 0;
-    Music_Trigger(0xCC, 0);
-    Music_Trigger(0xDB, 0);
-    Music_Trigger(0xF2, 0);
-    Music_Trigger(0xCE, 0);
-    Music_Trigger(0xC2, 0);
+    Music_Trigger(MUSICTRIG_wind_ambi, 0);
+    Music_Trigger(MUSICTRIG_mammoth_walk_db, 0);
+    Music_Trigger(MUSICTRIG_LVF_Tracking_f2, 0);
+    Music_Trigger(MUSICTRIG_CRF_Swim, 0);
+    Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
     GameBit_Set(0xDCF, 0);
 }

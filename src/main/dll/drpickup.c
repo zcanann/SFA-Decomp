@@ -1,6 +1,7 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/camera_interface.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void PSVECAdd(const void* a, const void* b, void* ab);
@@ -49,7 +50,7 @@ void fn_801EC1AC(int obj, int state)
 
     if ((origBit4 == 0) && (flags->b4 != 0))
     {
-        Sfx_PlayFromObject(obj, 0x45f);
+        Sfx_PlayFromObject(obj, SFXTRIG_bblast16);
     }
 
     target = lbl_803E5AE8;

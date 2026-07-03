@@ -21,6 +21,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct FlammablevineObjectDef
 {
@@ -120,7 +121,7 @@ void flammablevine_hitDetect(int obj)
             if (((FlammablevineObjectDef*)def)->burnedBit != -1)
             {
                 GameBit_Set(((FlammablevineObjectDef*)def)->burnedBit, 1);
-                Sfx_PlayFromObject(0, 0x409);
+                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
             }
             state->burnTimer = gFlammableVineBurnDuration;
             state->flags = state->flags | 1;

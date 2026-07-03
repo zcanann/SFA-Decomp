@@ -40,6 +40,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct DimtruthhorniceObjectDef
 {
@@ -151,7 +152,7 @@ void dimtruthhornice_update(int* obj)
                 int i;
                 extra->phase = TRUTHHORNICE_PHASE_SHATTERED;
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-                Sfx_PlayFromObject((int)obj, 1147);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
                 for (i = 30; i != 0; i--)
                 {
                     desc[3] = 0.1f * (f32)(int)

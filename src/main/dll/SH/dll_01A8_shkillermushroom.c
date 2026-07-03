@@ -16,6 +16,7 @@
 #include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 
 
@@ -207,7 +208,7 @@ void enemymushroom_update(int* obj)
             hv.x += playerMapOffsetX;
             hv.z += playerMapOffsetZ;
             objLightFn_8009a1dc(obj, lbl_803E5314, &hv, 1, 0);
-            Sfx_PlayFromObject(obj, 0x47b);
+            Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
             Obj_ResetModelColorState(obj);
         }
         return;
@@ -221,7 +222,7 @@ void enemymushroom_update(int* obj)
     switch (((EnemyMushroomState*)state)->stateId)
     {
     case 6:
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
         ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x4);
         ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomInflateRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
         if (((EnemyMushroomState*)state)->hitRadius > *(f32*)&gKillerMushroomMaxHitRadius)
@@ -287,7 +288,7 @@ void enemymushroom_update(int* obj)
     case 4:
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         ((EnemyMushroomState*)state)->hitRadius = gKillerMushroomChaseRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
         if (!(((EnemyMushroomState*)state)->stateFlags & 0x1))
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <= ((
@@ -364,7 +365,7 @@ void enemymushroom_update(int* obj)
         {
             ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
         }
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x9b);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_cagelp_c);
         {
             f32 nv = ((EnemyMushroomState*)state)->timer - timeDelta;
             ((EnemyMushroomState*)state)->timer = nv;
@@ -417,7 +418,7 @@ void enemymushroom_update(int* obj)
                     ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x1);
                     ((EnemyMushroomState*)state)->stateId = 3;
                     ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
-                    Sfx_PlayFromObject(obj, 0x48e);
+                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_haga_talk3);
                 }
             }
         }
@@ -440,7 +441,7 @@ void enemymushroom_update(int* obj)
             {
                 if (((EnemyMushroomState*)state)->stateId != 9)
                 {
-                    Sfx_PlayFromObject(obj, 0x9d);
+                    Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
                 }
                 ((EnemyMushroomState*)state)->stateFlags = (u8)(((EnemyMushroomState*)state)->stateFlags & ~0x1);
                 if (((EnemymushroomPlacement*)src)->popGameBit != -1)

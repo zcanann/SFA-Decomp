@@ -10,6 +10,7 @@
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct LanternFireFlyPlacement
 {
@@ -277,7 +278,7 @@ void LanternFireFly_update(int obj)
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x43b);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_pk_lightcritter_lp);
         if ((f32)state->timer > lbl_803DBDD8)
         {
             if (state->stateId == 1 || state->stateId == 4)
@@ -315,7 +316,7 @@ void LanternFireFly_update(int obj)
 
             atten = state->timer *
                 mathSinf((gLanternFireflyPi * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
-            Sfx_KeepAliveLoopedObjectSound(0, 0x460);
+            Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }
     }

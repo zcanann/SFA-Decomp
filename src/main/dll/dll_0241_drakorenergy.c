@@ -19,6 +19,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void objRenderFn_8003b8f4(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
@@ -201,7 +202,7 @@ void drakorenergy_update(int obj)
         if (dist < lbl_803DC168)
         {
             playerAddHealth(player, gDrakorEnergyHealAmount);
-            Sfx_PlayFromObject(obj, 0x49);
+            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             ((DrakorEnergyState*)blob)->mode = DRAKORENERGY_MODE_COLLECTED;
         }
         else

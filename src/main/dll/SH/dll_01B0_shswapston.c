@@ -15,6 +15,7 @@
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct WarpstoneUpdateMenuAnimObjState
 {
@@ -154,7 +155,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
             WARPSTONE_MAP_EVENT_SET(0x42, 1);
-            Sfx_PlayFromObject(0, 0x418);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
         }
         break;
@@ -162,7 +163,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
     case 0x15:
         if (vertical > 0 && lbl_803DC050 == 0)
         {
-            Sfx_PlayFromObject(0, 0x418);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
         }
         break;
@@ -189,7 +190,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            Sfx_PlayFromObject(0, 0x418);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
         }
         break;
@@ -199,7 +200,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             int hasSpirit = playerHasKrazoaSpirit(1, 0);
             if (horizontal > 0 && hasSpirit == 0)
             {
-                Sfx_PlayFromObject(0, 0x418);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
                 return 1;
             }
             break;
@@ -212,7 +213,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             loadMapAndParent(9);
             lockLevel(mapGetDirIdx(9), 0);
             lockLevel(mapGetDirIdx(7), 1);
-            Sfx_PlayFromObject(0, 0x418);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
         }
         break;
@@ -223,7 +224,7 @@ int warpstone_handleMenuOptionInput(u32 p1, u32 p2, int option)
             unlockLevel(0, 0, 1);
             mapUnload(mapGetDirIdx(0x42), 0x20000000);
             mapUnload(mapGetDirIdx(0x17), 0x20000000);
-            Sfx_PlayFromObject(0, 0x419);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
             return 1;
         }
         break;
@@ -548,17 +549,17 @@ void warpstone_update(int obj)
         {
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, 0, lbl_803E5460, 0);
-            Sfx_StopFromObject(obj, 0x2f1);
+            Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
         }
         else if (randFn_80080100(lbl_803DC048) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x416);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, 0x1b, lbl_803E5460, 0);
         }
         else if (randFn_80080100(lbl_803DC04C) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x2f1);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
             ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                 (obj, 0x1a, lbl_803E5460, 0);
         }
@@ -582,7 +583,7 @@ void warpstone_update(int obj)
     case 0x19:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
         {
-            Sfx_PlayFromObject(obj, 0x2f1);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
@@ -597,14 +598,14 @@ void warpstone_update(int obj)
     case 0x1a:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54A8)
         {
-            Sfx_PlayFromObject(obj, 0x417);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_yawn);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;
     case 0x1b:
         if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E54AC)
         {
-            Sfx_PlayFromObject(obj, 0x2f4);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
         }
         break;

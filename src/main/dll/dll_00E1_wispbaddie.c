@@ -12,6 +12,7 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803DC074;
 
@@ -290,7 +291,7 @@ void wispbaddie_update(int obj)
             state->flags = (u8)(f & ~2);
             state->flags = (u8)(state->flags | 4);
         }
-        Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, 0x23c);
+        Sfx_PlayAtPositionFromObject(obj, hitZ, dy, dz, SFXTRIG_robolaser16);
     }
 
     particleParam = 4;
@@ -348,7 +349,7 @@ void wispbaddie_update(int obj)
         state->cryTimer -= timeDelta;
         if (state->cryTimer < lbl_803E2714)
         {
-            Sfx_PlayFromObject(obj, 0x23d);
+            Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
             state->cryTimer = (f32)(int)randomGetRange(0x3c, 0x78);
         }
         state->particleId = 0x338;
@@ -776,7 +777,7 @@ void fn_8015039C(int obj, int animState)
 
     if ((*(u16*)(animState + 0x2f8) & 0x200) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x383);
+        Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
         if ((player->objectFlags & 0x1000) == 0)
         {
@@ -794,19 +795,19 @@ void fn_8015039C(int obj, int animState)
     }
     if ((*(u16*)(animState + 0x2f8) & 0x40) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x19);
+        Sfx_PlayFromObject(obj, SFXTRIG_spotfox01);
     }
     if ((*(u16*)(animState + 0x2f8) & 0x1000) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x257);
+        Sfx_PlayFromObject(obj, SFXTRIG_scream1);
     }
     if ((*(u16*)(animState + 0x2f8) & 1) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x12);
+        Sfx_PlayFromObject(obj, SFXTRIG_pullup2);
     }
     if ((*(u16*)(animState + 0x2f8) & 0x80) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x15);
+        Sfx_PlayFromObject(obj, SFXTRIG_death01);
     }
 }
 

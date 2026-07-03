@@ -15,6 +15,7 @@
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -449,7 +450,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     }
     if (hit) {
       if (gDim2IcicleHitCooldown == 0) {
-        Sfx_PlayFromObject(obj, 0x4b2);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_npu_216_4b2);
         base = (IcicleHitEntry *)DIM2Icicle_GetActiveModel((void *)obj)[0x14];
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->x = playerMapOffsetX + base[hitType].px;
         ((IcicleHitFx *)gDim2IcicleHitFxBuffer)->y = base[hitType].py;
@@ -497,7 +498,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
       ((BaddieState *)playerObj)->moveDone = 0;
       *(s8 *)(playerObj + 0x34f) = hitResult;
       ((BaddieState *)playerObj)->hitPoints -= 1;
-      Sfx_PlayFromObject(obj, 0x4b1);
+      Sfx_PlayFromObject(obj, SFXTRIG_wp_mpwru1);
       if (*(s8 *)&((BaddieState *)playerObj)->hitPoints <= 0) {
         ((BaddieState *)playerObj)->hitPoints = 0;
         ((BaddieState *)playerObj)->hasTarget = 0;

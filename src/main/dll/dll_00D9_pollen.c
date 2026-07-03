@@ -22,6 +22,7 @@
 #include "main/objlib.h"
 #include "main/engine_shared.h"
 #include "main/dll/genprops.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
@@ -303,7 +304,7 @@ void pollen_update(int obj)
         if (prev >= lbl_803E313C && ((GameObject*)obj)->anim.velocityY <= lbl_803E313C)
         {
             fn_8016A660(obj);
-            Sfx_PlayFromObject(obj, 0xb7);
+            Sfx_PlayFromObject(obj, SFXTRIG_majring2);
             ((GameObject*)obj)->anim.alpha = 0;
         }
         objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,

@@ -35,6 +35,7 @@
 #include "main/game_object.h"
 #include "main/dll/earthwalker_state.h"
 #include "main/dll/baddie_state.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 int earthwalker_getExtraSize(void) { return 0x660; }
 
@@ -111,7 +112,7 @@ void earthwalker_update(int obj)
     if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 &&
         ewState->animPhase == 1)
     {
-        Sfx_PlayFromObject(obj, 0x3e6);
+        Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
 
     characterDoEyeAnims(obj, (int)ewState->eyeAnimState);

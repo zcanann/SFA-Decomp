@@ -6,6 +6,7 @@
 #include "main/objtexture.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct DoorObjectDef
 {
@@ -202,7 +203,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
-                Sfx_PlayFromObject(obj, 0x4b);
+                Sfx_PlayFromObject(obj, SFXTRIG_littletink22);
             }
             state->flags |= 1;
         }
@@ -210,7 +211,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
-                Sfx_PlayFromObject(obj, 0x4b);
+                Sfx_PlayFromObject(obj, SFXTRIG_littletink22);
             }
             state->flags |= 2;
         }

@@ -20,6 +20,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 int cnthitobjec_getExtraSize(void) { return sizeof(CntHitObjectState); }
 
@@ -89,7 +90,7 @@ void cnthitobjec_hitDetect(int obj)
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
         Obj_SetModelColorFadeRecursive(obj, 30, 200, 0, 0, 1);
-        Sfx_PlayFromObject(obj, 1174); /* hit */
+        Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff_496); /* hit */
     }
     if (state->remainingHealth <= 0)
     {
@@ -115,7 +116,7 @@ void cnthitobjec_hitDetect(int obj)
             }
             if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
             {
-                Sfx_PlayFromObject(obj, 1175); /* destroy */
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c); /* destroy */
             }
         }
     }

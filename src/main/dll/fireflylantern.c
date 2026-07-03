@@ -23,6 +23,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_GetPlayerObject(void);
@@ -75,7 +76,7 @@ void fn_80154870(int obj, int* state)
     curve = (RomCurveWalker*)*state;
     if (state[0xb7] & 0x80000000U)
     {
-        Sfx_PlayFromObject((u32)obj, 0x4c0);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_windlift_loop);
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || curve->atSegmentEnd != 0) &&

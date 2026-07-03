@@ -7,6 +7,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct MagiccavetopPlacement
 {
@@ -325,7 +326,7 @@ void magiccavetop_update(int* obj)
     {
         if (lbl_803E3C38 == sub->fadeTimer)
         {
-            Sfx_PlayFromObject(obj, 0x4a2);
+            Sfx_PlayFromObject(obj, SFXTRIG_door_creak);
         }
         sub->fadeTimer += timeDelta;
         if (sub->fadeTimer > gMagicCaveTopFadeMax)

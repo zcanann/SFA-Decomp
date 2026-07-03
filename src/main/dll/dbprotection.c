@@ -30,6 +30,7 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -581,7 +582,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->phaseCounter = 5;
             ((SBGalleonState*)state)->headingLatch = 200;
             sfxObj = fn_801E2570();
-            Sfx_StopFromObject(sfxObj, 0x2C6);
+            Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
             Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
             GameBit_Set(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }

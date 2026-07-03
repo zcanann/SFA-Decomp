@@ -9,6 +9,7 @@
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE   0x13  /* puzzle-target object group for nearest-object search */
 #define GAMEBIT_SNOWHORN_RIDING    0x3e3 /* set while Fox is mounted on the SnowHorn */
@@ -266,7 +267,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
         ((ObjHitsPriorityState*)sub)->flags |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E8238;
-        Sfx_PlayFromObject(obj, 0x3b3);
+        Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew2);
     }
     if ((((ObjHitsPriorityState*)sub)->flags & 0x200) && (((ObjHitsPriorityState*)sub)->contactFlags & 2))
     {
@@ -465,7 +466,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x43a);
+            Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
         }
     }
     return 0;
@@ -649,7 +650,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
                 if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd08,
                                                    lbl_803E8294, lbl_803E8284) != 0)
                 {
-                    Sfx_PlayFromObject(obj, 0x375);
+                    Sfx_PlayFromObject(obj, SFXTRIG_thorntail_chew1);
                 }
             }
             break;
@@ -679,7 +680,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     {
         if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x43a);
+            Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
         }
     }
     *(int*)((char*)state + 0) |= 0x200000;

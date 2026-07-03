@@ -5,6 +5,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/engine_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderFn_8003b8f4(void* obj, u32 param_2, u32 param_3, u32 param_4,
                                  u32 param_5, double scale);
@@ -318,7 +319,7 @@ void proximitymine_update(ProximityMineObject* obj)
             {
                 if ((state->effectHandle->visible != 0) && (state->effectVisible == 0))
                 {
-                    Sfx_PlayFromObject((u32)obj, 0x42e);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_gal_prophitbird);
                 }
                 state->effectVisible = state->effectHandle->visible;
             }

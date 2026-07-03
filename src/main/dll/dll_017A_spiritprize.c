@@ -15,6 +15,7 @@
 #include "main/engine_shared.h"
 #include "main/objlib.h"
 #include "main/lightmap.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void ModelLightStruct_free(void* light);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
@@ -260,7 +261,7 @@ void SpiritPrize_update(int obj)
         if (((GameObject*)obj)->anim.mapEventSlot == -1 &&
             ((void*)player == NULL || coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xb))
         {
-            Sfx_PlayFromObject(obj, 0x4a0);
+            Sfx_PlayFromObject(obj, SFXTRIG_pda);
         }
     }
 }

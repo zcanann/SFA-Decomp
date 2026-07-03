@@ -11,6 +11,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern f32 fn_8001461C(void);
 extern int lbl_803DC068;    /* tracking-test record-time GameBit id table */
@@ -116,7 +117,7 @@ void sc_totempole_update(int obj)
     {
         if (state->currentState != 0)
         {
-            Sfx_PlayFromObject(obj, 0x3ad);
+            Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
             state->animSpeed = lbl_803E55D4;
             playedFanfare = 0;
             if (GameBit_Get(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
@@ -124,7 +125,7 @@ void sc_totempole_update(int obj)
                 GameBit_Get(SC_TOTEMPOLE_GAMEBIT_RIGHT) != 0 &&
                 GameBit_Get(SC_TOTEMPOLE_GAMEBIT_REAR) != 0)
             {
-                Sfx_PlayFromObject(0, 0x7e);
+                Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                 playedFanfare = 1;
                 objects = ObjList_GetObjects(&i, &objCount);
                 for (; i < objCount; i++)
@@ -143,12 +144,12 @@ void sc_totempole_update(int obj)
             }
             if (!playedFanfare)
             {
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
         else
         {
-            Sfx_PlayFromObject(obj, 0x3ad);
+            Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
             state->animSpeed = lbl_803E55DC;
         }
     }

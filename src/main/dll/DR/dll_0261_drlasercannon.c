@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define DR_LASERCANNON_EXTRA_SIZE 0x1ac
 
@@ -427,11 +428,11 @@ void drlasercannon_hitDetect(int obj)
         state->health -= hitVolume;
         Obj_SpawnHitLightAndFade(obj, &hitPosX, lbl_803E68F0);
         fn_8009A8C8(obj, lbl_803E68F4);
-        Sfx_PlayFromObject(obj, 0x3cc);
+        Sfx_PlayFromObject(obj, SFXTRIG_ar_awghitobj16);
         if (state->health <= 0)
         {
             tricky = getTrickyObject();
-            Sfx_PlayFromObject(obj, 0x4b6);
+            Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_4b6);
             spawnExplosion(obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;
             GameBit_Set(setup->destroyedGameBit, 1);

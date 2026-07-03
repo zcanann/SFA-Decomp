@@ -22,6 +22,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/lightmap.h"
 #include "sfa_light_decls.h"
+#include "main/audio/music_trigger_ids.h"
 
 /* Area cells handled by this controller (GameObject::anim.mapEventSlot). */
 enum
@@ -88,11 +89,11 @@ void link_levcontrol_free(int obj)
     switch ((s32)((GameObject*)obj)->anim.mapEventSlot)
     {
     case AREA_CELL_45:
-        Music_Trigger(0xda, 0);
+        Music_Trigger(MUSICTRIG_underwater, 0);
         break;
     case AREA_CELL_48:
     case AREA_CELL_49:
-        Music_Trigger(0x36, 0);
+        Music_Trigger(MUSICTRIG_Teleport, 0);
         break;
     }
 }
@@ -132,7 +133,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
             if (state->musicTrack != 0x2d)
             {
                 state->musicTrack = 0x2d;
-                Music_Trigger(0x2d, 1);
+                Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
             }
         }
         else
@@ -140,7 +141,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
             if (state->musicTrack != 0x33)
             {
                 state->musicTrack = 0x33;
-                Music_Trigger(0x33, 1);
+                Music_Trigger(MUSICTRIG_KP_Text, 1);
             }
         }
         break;
@@ -152,7 +153,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                 if (state->musicTrack != 0x95)
                 {
                     state->musicTrack = 0x95;
-                    Music_Trigger(0x95, 1);
+                    Music_Trigger(MUSICTRIG_mmpassalien, 1);
                 }
             }
             else if ((*gSkyInterface)->getSunPosition(0) != 0)
@@ -160,7 +161,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                 if (state->musicTrack != 0x2d)
                 {
                     state->musicTrack = 0x2d;
-                    Music_Trigger(0x2d, 1);
+                    Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
                 }
             }
             else
@@ -168,7 +169,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                 if (state->musicTrack != 0x33)
                 {
                     state->musicTrack = 0x33;
-                    Music_Trigger(0x33, 1);
+                    Music_Trigger(MUSICTRIG_KP_Text, 1);
                 }
             }
         }
@@ -192,11 +193,11 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         {
             envFxActFn_800887f8(0x1f);
         }
-        Music_Trigger(0xc2, 0);
-        Music_Trigger(0xce, 0);
-        Music_Trigger(0xcc, 0);
-        Music_Trigger(0xdb, 0);
-        Music_Trigger(0xf2, 0);
+        Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
+        Music_Trigger(MUSICTRIG_CRF_Swim, 0);
+        Music_Trigger(MUSICTRIG_wind_ambi, 0);
+        Music_Trigger(MUSICTRIG_mammoth_walk_db, 0);
+        Music_Trigger(MUSICTRIG_LVF_Tracking_f2, 0);
         break;
     case AREA_CELL_45:
         skyFn_80088c94(7, 0);
@@ -204,17 +205,17 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         getEnvfxAct(0, 0, 0x13e, 0);
         getEnvfxAct(0, 0, 0x140, 0);
         getEnvfxAct(0, 0, 0x13f, 0);
-        Music_Trigger(0xda, 1);
+        Music_Trigger(MUSICTRIG_underwater, 1);
         break;
     case AREA_CELL_49:
-        Music_Trigger(0x36, 1);
+        Music_Trigger(MUSICTRIG_Teleport, 1);
         break;
     case AREA_CELL_48:
-        Music_Trigger(0xc8, 0);
+        Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
         break;
     case AREA_CELL_46:
-        Music_Trigger(0xe1, 0);
-        Music_Trigger(0x96, 1);
+        Music_Trigger(MUSICTRIG_ice_race, 0);
+        Music_Trigger(MUSICTRIG_citytombs, 1);
         break;
     }
 }

@@ -13,6 +13,7 @@
 #include "main/sky_state.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern f32 sqrtf(f32 x);
 extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;
@@ -408,7 +409,7 @@ void dfropenode_render(int obj, int p2, int p3)
         oldAlpha = objAnim->alpha;
         if (oldAlpha == 0x46)
         {
-            Sfx_PlayFromObject(obj, 0x476);
+            Sfx_PlayFromObject(obj, SFXTRIG_ocean_beamlp);
         }
         fadeAlpha = oldAlpha - framesThisStep;
         if (fadeAlpha <= 0)
@@ -422,7 +423,7 @@ void dfropenode_render(int obj, int p2, int p3)
     {
         if (objAnim->alpha == 0)
         {
-            Sfx_PlayFromObject(obj, 0x475);
+            Sfx_PlayFromObject(obj, SFXTRIG_tile_buzzlp);
         }
         if (objAnim->alpha < 0x46)
         {
@@ -483,7 +484,7 @@ void dfropenode_render(int obj, int p2, int p3)
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x480);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_waterblock_wave);
             gxBlendFn_80078b4c();
             {
                 int alpha;

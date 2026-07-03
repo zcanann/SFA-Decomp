@@ -21,6 +21,7 @@
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -264,7 +265,7 @@ void MoonSeedPlantingSpot_update(int obj)
                     {
                         ((MoonSeedPlantingSpotState*)ex)->burstTimer = lbl_803E45F8;
                         ((MoonSeedPlantingSpotState*)ex)->flags |= MSPLANTING_FLAG_BURST;
-                        Sfx_PlayFromObject(obj, 0x438);
+                        Sfx_PlayFromObject(obj, SFXTRIG_pk_moonseed_rattle);
                     }
                     else
                     {

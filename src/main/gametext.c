@@ -1,4 +1,5 @@
 #include "main/engine_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 int isSpace(u32 c)
 {
@@ -737,14 +738,14 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     }
     if (lbl_803DE700 == lbl_803DC994)
     {
-        Sfx_PlayFromObject(0, 0x397);
+        Sfx_PlayFromObject(0, SFXTRIG_clock_loop);
     }
     lbl_803DC99C = 1;
     lbl_803DC998 = 0;
     lbl_803DC994 = timeDelta * lbl_803DB3D0 + lbl_803DC994;
     if (lbl_803DC994 >= (f32)(charCount - 2))
     {
-        Sfx_StopFromObject(0, 0x397);
+        Sfx_StopFromObject(0, SFXTRIG_clock_loop);
     }
     if (state->fC != 0)
     {

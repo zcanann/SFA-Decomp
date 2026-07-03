@@ -19,6 +19,7 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -336,7 +337,7 @@ void crrockfall_update(int* obj)
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, 955);
+                    Sfx_PlayFromObject(obj, SFXTRIG_jbike_bombbeep);
                     spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale,
                                    1, 1, 0, 1, 1, 1, 1);
                 }

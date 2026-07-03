@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie/trickyfollow.h"
 #include "main/engine_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct TrickyGrowlState
 {
@@ -137,8 +138,8 @@ void trickyGrowl(void* obj, void* trickyState)
                         setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                         ((GameObject*)obj)->anim.parent);
                 }
-                Sfx_PlayFromObject((u32)obj, 0x3db);
-                Sfx_AddLoopedObjectSound((u32)obj, 0x3dc);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_en_cvdrip1c_3db);
+                Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
             }
             (*(u8*)((TrickyState*)trickyState)->progressPtr)--;
             objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
@@ -157,7 +158,7 @@ void trickyGrowl(void* obj, void* trickyState)
             {
                 objSetAnimSpeedTo1(slot2[0x700 / 4]);
             }
-            Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
+            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
             digState = ((GameObject*)obj)->extra;
             if (((((TrickyGrowlState*)digState)->unk58 >> 6) & 1) == 0u)
             {

@@ -14,6 +14,7 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/music_trigger_ids.h"
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern void Music_Trigger(int id, int arg);
@@ -49,7 +50,7 @@ void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void nwsh_levcon_free(int obj)
 {
-    Music_Trigger(6, 0);
+    Music_Trigger(MUSICTRIG_ewt_chase, 0);
     GameBit_Set(0xefd, 0);
 }
 
@@ -72,7 +73,7 @@ void nwsh_levcon_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
-    Music_Trigger(6, 1);
+    Music_Trigger(MUSICTRIG_ewt_chase, 1);
     ((GameObject*)obj)->unkF4 = 1;
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);

@@ -14,6 +14,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/dll_0106_scarab.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -155,7 +156,7 @@ void scarab_update(int obj)
             return;
         }
     }
-    Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, 0x406, 3);
+    Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, SFXTRIG_scarab_runloop, 3);
     mode = ((ScarabState*)state)->mode;
     if (mode == 0)
     {

@@ -9,6 +9,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 enum
 {
@@ -169,11 +170,11 @@ void androssbrain_update(int obj)
                 {
                     state->brainState = BRAIN_DEFEATED;
                     andross_setPartSignal((int)state->andross, ANDROSS_SIGNAL_BRAIN_HIT);
-                    Sfx_PlayFromObject(obj, 0x485);
+                    Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11);
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, 0x484);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff);
                 }
             }
         }

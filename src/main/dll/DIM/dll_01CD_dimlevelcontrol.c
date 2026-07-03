@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
+#include "main/audio/music_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -71,8 +72,8 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dim_levelcontrol_free(int p1)
 {
     extern void Music_Trigger(int id, int arg);
-    Music_Trigger(0xa1, 0);
-    Music_Trigger(0xed, 0);
+    Music_Trigger(MUSICTRIG_drako_1, 0);
+    Music_Trigger(MUSICTRIG_citytombs_ed, 0);
     timeOfDayFn_80055000();
 }
 

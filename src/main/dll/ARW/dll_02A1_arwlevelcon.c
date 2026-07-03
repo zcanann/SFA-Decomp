@@ -13,6 +13,7 @@
  */
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/audio/music_trigger_ids.h"
 
 
 typedef struct ARWLevelConSetup
@@ -56,11 +57,11 @@ void arwlevelcon_commitRingChoice(int obj)
 
     if (state->alternateRoute != 0)
     {
-        Music_Trigger(0xf3, 1);
+        Music_Trigger(MUSICTRIG_Mound_Music, 1);
     }
     else
     {
-        Music_Trigger(2, 1);
+        Music_Trigger(MUSICTRIG_starfox_rwing_1, 1);
     }
     arwingHudSetVisible(1);
 }
@@ -190,8 +191,8 @@ void arwlevelcon_update(int obj)
                 GameBit_Set(0x9d7, 1);
             }
             state->ringChoiceTriggered = 1;
-            Music_Trigger(2, 0);
-            Music_Trigger(0xf3, 0);
+            Music_Trigger(MUSICTRIG_starfox_rwing_1, 0);
+            Music_Trigger(MUSICTRIG_Mound_Music, 0);
         }
     }
 }

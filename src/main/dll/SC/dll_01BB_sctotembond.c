@@ -27,6 +27,7 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/music_trigger_ids.h"
 extern f32 timeDelta;
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -204,7 +205,7 @@ void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void sc_totembond_free(int obj)
 {
-    Music_Trigger(240, 0);
+    Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
     fn_8011F6D4(0);
 }
 
@@ -236,7 +237,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
         hudFn_8011f38c(1);
         (*gScreenTransitionInterface)->step(0x1e, 1);
         state->spawnTimer = lbl_803E563C;
-        Music_Trigger(0xf0, 1);
+        Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
     }
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_ORBS_ACTIVE) != 0)
@@ -264,7 +265,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 hudFn_8011f38c(0);
                 GameBit_Set(0x2bc, 1);
                 state->eventFlags = 0;
-                Music_Trigger(0xf0, 0);
+                Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
                 return;
             }
         }

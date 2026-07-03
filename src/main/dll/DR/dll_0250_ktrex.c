@@ -2,6 +2,8 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 #define KTREX_LIGHTNING_COUNT 5
 
@@ -358,9 +360,9 @@ void ktrex_free(int obj)
         }
     }
     gKTRexResource = NULL;
-    Music_Trigger(0x28, 0);
-    Music_Trigger(0x93, 0);
-    Music_Trigger(0x94, 0);
+    Music_Trigger(MUSICTRIG_mammoth_walk, 0);
+    Music_Trigger(MUSICTRIG_menu_page, 0);
+    Music_Trigger(MUSICTRIG_guard_theme, 0);
 }
 
 int ktrex_shouldAdvanceArenaPhase(void)
@@ -587,7 +589,7 @@ void ktrex_update(int obj)
     runtime = gKTRexRuntime;
     if (((GameObject*)obj)->unkF8 == 1)
     {
-        Music_Trigger(40, 1);
+        Music_Trigger(MUSICTRIG_mammoth_walk, 1);
         ((GameObject*)obj)->unkF8 = 2;
         ((KTRexRuntime*)runtime)->unk270 = 11;
         ((KTRexRuntime*)runtime)->unk27B = 1;
@@ -731,7 +733,7 @@ int ktrex_stateHandlerB06(int obj, int runtime)
     if ((s8)((KTRexRuntime*)runtime)->moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove(obj, 11, lbl_803E67B8, 0);
-        Sfx_PlayFromObject(obj, 1108);
+        Sfx_PlayFromObject(obj, SFXTRIG_rexelctro11);
         ((KTRexRuntime*)runtime)->curvePhase = lbl_803E680C;
         z = lbl_803E67B8;
         ((KTRexRuntime*)runtime)->unk280 = z;
@@ -1489,9 +1491,9 @@ int ktrex_stateHandlerA07(int obj, int runtime)
         GameBit_Set(1394, ((KTRexArenaState*)gKTRexState)->phaseCounter);
         ((KTRexArenaState*)gKTRexState)->timerFA |= 0x10;
         ((KTRexArenaState*)gKTRexState)->timerFA &= ~8;
-        Music_Trigger(148, 0);
-        Music_Trigger(40, 0);
-        Music_Trigger(147, 1);
+        Music_Trigger(MUSICTRIG_guard_theme, 0);
+        Music_Trigger(MUSICTRIG_mammoth_walk, 0);
+        Music_Trigger(MUSICTRIG_menu_page, 1);
     }
     else if ((s8)((KTRexRuntime*)runtime)->moveDone != 0 || (((KTRexArenaState*)gKTRexState)->timerFA & 8) != 0)
     {
@@ -1686,8 +1688,8 @@ int ktrex_stateHandlerA09(int obj, int runtime)
     {
         ((KTRexArenaState*)gKTRexState)->lastPhase = (((KTRexArenaState*)gKTRexState)->timerFA >> 1) & 3;
         ((KTRexArenaState*)gKTRexState)->stateTimer = lbl_803E67D8;
-        Music_Trigger(147, 0);
-        Music_Trigger(148, 1);
+        Music_Trigger(MUSICTRIG_menu_page, 0);
+        Music_Trigger(MUSICTRIG_guard_theme, 1);
         return 11;
     }
     return 0;
@@ -1840,9 +1842,9 @@ int ktrex_stateHandlerA01(int obj, int runtime)
         if (((KTRexArenaState*)gKTRexState)->stateTimer <= lbl_803E67B8)
         {
             Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
-            Music_Trigger(40, 0);
-            Music_Trigger(147, 0);
-            Music_Trigger(148, 0);
+            Music_Trigger(MUSICTRIG_mammoth_walk, 0);
+            Music_Trigger(MUSICTRIG_menu_page, 0);
+            Music_Trigger(MUSICTRIG_guard_theme, 0);
             ((ObjAnimComponent*)obj)->bankIndex = 1;
             GameBit_Set(1380, 1);
             GameBit_Set(874, 0);

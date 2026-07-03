@@ -19,6 +19,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/object.h"
 #include "main/track_dolphin.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* GameObject::colorFadeFlags bits (freeze / color-fade state machine) */
 #define OBJ_COLOR_FADE_FLAG_FROZEN 0x1     /* freeze render attachment active (objIsFrozen) */
@@ -1802,7 +1803,7 @@ void Obj_UpdateObject(u8* obj)
             cb(obj, 0x7fb, NULL, 0x50, NULL);
             cb = (*gBoneParticleEffectInterface)->spawnEffect;
             cb(obj, 0x7fc, NULL, 0x32, NULL);
-            Sfx_PlayFromObject((u32)obj, 0x47b);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_bounce1);
         }
     }
     if ((((GameObject*)obj)->objectFlags & 0x8000) == 0)

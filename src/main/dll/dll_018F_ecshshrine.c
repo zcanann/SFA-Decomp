@@ -45,6 +45,8 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 typedef struct EcshIntPair
 {
@@ -358,10 +360,10 @@ void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void ecsh_shrine_free(int* obj)
 {
     int* inner = ((GameObject*)obj)->extra;
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(0x08, 0);
-    Music_Trigger(0x0d, 0);
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
+    Music_Trigger(MUSICTRIG_krazoa_doors_open, 0);
     if (*(void**)inner != NULL)
     {
         ModelLightStruct_free(*(void**)inner);
@@ -485,7 +487,7 @@ void ecsh_shrine_update(s16* obj)
             *(f32*)(sub + 0x10) = fv;
             if (fv <= z)
             {
-                Sfx_PlayFromObject(obj, 0x343);
+                Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
                 *(f32*)(sub + 0x10) = (f32)(int)
                 randomGetRange(500, 1000);
             }
@@ -494,7 +496,7 @@ void ecsh_shrine_update(s16* obj)
                 sub[0x2f] = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                Music_Trigger(0xd8, 1);
+                Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 {
                     f32 fz = lbl_803E4FCC;
                     ps->cupPos[0] = fz;
@@ -525,7 +527,7 @@ void ecsh_shrine_update(s16* obj)
                 sub[0x2f] = 2;
                 ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
                 ((EcshShrineState*)sub)->animState = 6;
-                Sfx_PlayFromObject(obj, 0x16f);
+                Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                 ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
                 GameBit_Set(0xb9d, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
@@ -552,7 +554,7 @@ void ecsh_shrine_update(s16* obj)
                 {
                     if ((int)randomGetRange(0, 10) > 7)
                     {
-                        Sfx_PlayFromObject(obj, 0x345);
+                        Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice_var);
                     }
                     sub[0x31] = 1;
                 }
@@ -585,7 +587,7 @@ void ecsh_shrine_update(s16* obj)
                     ((EcshShrineState*)sub)->shuffleCount -= 1;
                     if (((EcshShrineState*)sub)->shuffleCount <= 0)
                     {
-                        Sfx_PlayFromObject(0, 0x3a8);
+                        Sfx_PlayFromObject(0, SFXTRIG_commsbleep);
                         ((EcshShrineState*)sub)->animState = 5;
                         if (sub[0x2f] == 3)
                         {
@@ -605,7 +607,7 @@ void ecsh_shrine_update(s16* obj)
                         sub[0x31] = 0;
                         *(f32*)(sub + 0x14) = (f32)(int)
                         randomGetRange(0x28, 0x3c);
-                        Sfx_PlayFromObject(obj, 0x344);
+                        Sfx_PlayFromObject(obj, SFXTRIG_spirit_basketspin);
                         ((EcshShrineState*)sub)->animState = 0;
                         ((EcshShrineState*)sub)->animTimer = lbl_803E4FE0;
                         if (sub[0x2f] == 3)
@@ -711,13 +713,13 @@ void ecsh_shrine_update(s16* obj)
                     ((EcshShrineState*)sub)->animTimer = fv;
                     break;
                 case 5:
-                    Sfx_KeepAliveLoopedObjectSound(0, 0x3a8);
+                    Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_commsbleep);
                     if (((EcshShrineState*)sub)->matchFlag == 0)
                     {
                         (*gScreenTransitionInterface)->start(0x1e, 1);
                         ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FE8;
                         ((EcshShrineState*)sub)->animState = 7;
-                        Sfx_PlayFromObject(obj, 0x16f);
+                        Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         sub[0x2f] = 10;
                     }
                     else if (((EcshShrineState*)sub)->matchFlag == 1)
@@ -732,7 +734,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
                             ((EcshShrineState*)sub)->shuffleCount = 7;
                             ((EcshShrineState*)sub)->matchFlag = -1;
-                            Sfx_PlayFromObject(obj, 0x170);
+                            Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         }
                         else if (sub[0x2f] == 4)
@@ -745,7 +747,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
                             ((EcshShrineState*)sub)->shuffleCount = 9;
                             ((EcshShrineState*)sub)->matchFlag = -1;
-                            Sfx_PlayFromObject(obj, 0x170);
+                            Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         }
                         else
@@ -756,8 +758,8 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animState = 3;
                             ((EcshShrineState*)sub)->matchFlag = 0;
                             ((EcshShrineState*)sub)->animState = 7;
-                            Sfx_PlayFromObject(obj, 0x7e);
-                            Sfx_PlayFromObject(obj, 0x16f);
+                            Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
+                            Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         }
                     }
                     else
@@ -769,7 +771,7 @@ void ecsh_shrine_update(s16* obj)
                             (*gScreenTransitionInterface)->start(0x1e, 1);
                             ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FE8;
                             ((EcshShrineState*)sub)->animState = 7;
-                            Sfx_PlayFromObject(obj, 0x16f);
+                            Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         }
                     }
                     break;

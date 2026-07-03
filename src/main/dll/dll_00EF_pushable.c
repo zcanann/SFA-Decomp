@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 
@@ -715,7 +716,7 @@ void pushable_update(int* obj)
     case 0x108:
         if (lbl_803E3528 == state->prevWaterDepth && state->waterDepth > lbl_803E3528)
         {
-            Sfx_PlayFromObject(obj, 0x68);
+            Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
             GameBit_Set(0x272, 1);
         }
         if (GameBit_Get(0x272) != 0)
@@ -1415,7 +1416,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             f32 f6 = ((GameObject*)obj)->anim.localPosZ - state->posHistZ[4];
             if (f5 * f5 + f6 * f6 > lbl_803E3588 && (state->flags & 0x20) != 0)
             {
-                Sfx_PlayFromObject(obj, 100);
+                Sfx_PlayFromObject(obj, SFXTRIG_birdymornin11);
                 state->flags = state->flags & ~0x20;
             }
         }

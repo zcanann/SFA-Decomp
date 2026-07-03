@@ -29,6 +29,7 @@
 #include "main/objlib.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* Barrel placement data block (obj group 0x3a link id at 0x1A). init reads
  * the respawn byte (unk19) and the return-home word (unk1C); the descriptor
@@ -567,7 +568,7 @@ void gunpowderbarrel_hitDetect(int obj)
     {
         if (PSVECMag(&state->throwVelX) > lbl_803DBE84)
         {
-            Sfx_PlayFromObject((u32)obj, 0x446);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_statue_waterfall);
         }
         state->impactSoundCooldown = lbl_803E42C0;
     }
@@ -1140,7 +1141,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     }
     if (rate >= lbl_803E42DC)
     {
-        Sfx_PlayFromObject((u32)obj, 0xd2);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_putdown);
         rate = lbl_803E42DC;
         ((GameObject*)obj)->anim.velocityY = dy2;
         ((GameObject*)near)->anim.localPosX += lbl_803E42E8;

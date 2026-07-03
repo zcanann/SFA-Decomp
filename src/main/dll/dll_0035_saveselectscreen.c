@@ -26,6 +26,8 @@
 #include "main/audio/sfx.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 typedef struct SaveSelectPanel
 {
@@ -127,12 +129,12 @@ void saveSelectOpenFile(int sel, int slot)
             ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](gSaveSelectMenuItem);
             gSaveSelectMenuItem = NULL;
         }
-        Sfx_PlayFromObject(0, 0x419);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
         saveSelectGoToChooseSlot(0);
     }
     else
     {
-        Sfx_PlayFromObject(0, 0x418);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
         if (gSaveSelectMenuItemActive == 0)
         {
             if (slot == 0)
@@ -209,7 +211,7 @@ void saveFileSelect_init(int sel, int slot)
             }
             else
             {
-                Sfx_PlayFromObject(0, 0x418);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
                 if ((s8)gSaveSelectPanelIndex != -1)
                 {
                     ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
@@ -303,7 +305,7 @@ void saveSelectGoToChapterSelect(void)
     else
     {
         lbl_803DD6CD = 1;
-        Sfx_PlayFromObject(0, 0x418);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
         (*gScreenTransitionInterface)->start(20, 1);
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
@@ -605,8 +607,8 @@ int SaveSelectScreen_run(void)
                 prev = mmSetFreeDelay(0);
                 mapUnload(0x3d, 0x20000000);
                 mmSetFreeDelay(prev);
-                Music_Trigger(0xbe, 0);
-                Music_Trigger(0xc1, 0);
+                Music_Trigger(MUSICTRIG_cldrnr_tune1_be, 0);
+                Music_Trigger(MUSICTRIG_windydocks, 0);
                 if (lbl_803DD6C4 != 0)
                 {
                     gplayNewGame(&sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
@@ -658,7 +660,7 @@ int SaveSelectScreen_run(void)
         slot = ((int (**)(void))gTitleMenuLinkInterface->vtable)[5]();
         if (slot != gSaveSelectLastSlot)
         {
-            Sfx_PlayFromObject(0, 0xfc);
+            Sfx_PlayFromObject(0, SFXTRIG_warningloop);
         }
         gSaveSelectLastSlot = slot;
         if (gSaveSelectMenuItem != NULL)
@@ -678,7 +680,7 @@ int SaveSelectScreen_run(void)
             case 2:
                 if (sel == 0)
                 {
-                    Sfx_PlayFromObject(0, 0x419);
+                    Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
                     saveFileSelect_currentSlotIndex = slot;
                     if (gSaveSelectPanelIndex != -1)
                     {

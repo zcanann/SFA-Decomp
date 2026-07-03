@@ -9,6 +9,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u32 ObjHits_ClearHitVolumes();
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -197,7 +198,7 @@ int bombplant_SeqFn(int* obj)
     {
         int* base;
         u8 flags;
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
         base = *(int**)&((GameObject*)obj)->anim.placementData;
         flags = ((EnemyMushroomState*)state)->flags;
         if (flags & 0x2)
@@ -389,7 +390,7 @@ void bombplant_update(void* obj)
         break;
 
     case 0:
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
     default:
         param = ((GameObject*)obj)->anim.placementData;
         if ((((BombPlantState*)state)->flags & 0x2) != 0)

@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -99,7 +100,7 @@ void magicdust_update(int obj)
             itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
             ObjHits_DisableObject(obj);
             Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
-            Sfx_StopFromObject(obj, 0x56);
+            Sfx_StopFromObject(obj, SFXTRIG_rfall5_c);
             playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~5;
             ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
@@ -291,7 +292,7 @@ void magicdust_update(int obj)
                     itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
                     ObjHits_DisableObject(obj);
                     Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
-                    Sfx_StopFromObject(obj, 0x56);
+                    Sfx_StopFromObject(obj, SFXTRIG_rfall5_c);
                     playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & ~5;
                     ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;

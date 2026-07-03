@@ -44,6 +44,7 @@ extern void objRenderFn_8003b8f4(int* obj);
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/objlib.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -1783,7 +1784,7 @@ int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t)
 
     sub->flags14 |= 2;
     sub->flags15 &= ~4;
-    Sfx_KeepAliveLoopedObjectSound(obj, 0x441);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_vambat_death);
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
         ObjHits_EnableObject(obj);
@@ -1824,14 +1825,14 @@ int dbstealerworm_stateHandlerA07(int obj, int baddie, f32 t)
         frac = blob->aggression / lbl_803E62C4;
         if (RandomTimer_UpdateRangeTrigger(&sub->randomTimer4C, lbl_803E62C8, lbl_803E632C) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x43f);
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_weev);
         }
     }
     else
     {
         if (RandomTimer_UpdateRangeTrigger(&sub->randomTimer48, lbl_803E62C8, lbl_803E632C) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x440);
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie);
         }
         if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
         {

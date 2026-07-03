@@ -9,6 +9,7 @@
 #include "main/dll/crate2.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern u32 sfxplayer_updateState(int obj, u32 unused, int animUpdate);
 extern f32 timeDelta;
@@ -37,7 +38,7 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
     if (state->loopSfxStopTimer != 0)
     {
         state->loopSfxStopTimer = (s16)((float)state->loopSfxStopTimer - timeDelta);
-        Sfx_KeepAliveLoopedObjectSound((int)obj, 0x458);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_treadlpc);
         if (state->loopSfxStopTimer <= 0)
         {
             state->loopSfxStopTimer = 0;

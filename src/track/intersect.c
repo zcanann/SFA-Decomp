@@ -17,6 +17,7 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/pi_dolphin.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* Model render-op record (0x44 stride at ModelFileHeader.renderOps);
  * only the fields evidenced in this TU are typed. */
@@ -195,7 +196,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
         }
         if (obj == Obj_GetPlayerObject()) {
             if (*(s16 *)(*(u32 *)&((GameObject *)obj)->extra + 0x81a) == 1) {
-                Sfx_PlayFromObject(0, 0x3c2);
+                Sfx_PlayFromObject(0, SFXTRIG_foot_ice_scuff);
             }
             Sfx_PlayFromObject(0, sfxTab[sfx]);
         } else {

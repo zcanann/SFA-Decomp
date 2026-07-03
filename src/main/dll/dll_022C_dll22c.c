@@ -39,6 +39,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -230,7 +231,7 @@ void fn_80204BF8(int obj)
                     blob->mode = DLL22C_MODE_DESCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
-                        Sfx_PlayFromObject(obj, 0x1cb);
+                        Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
                         blob->sfxLatch = 1;
                     }
                 }
@@ -239,7 +240,7 @@ void fn_80204BF8(int obj)
                     blob->mode = DLL22C_MODE_ASCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
-                        Sfx_PlayFromObject(obj, 0x1cb);
+                        Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
                         blob->sfxLatch = 1;
                     }
                 }

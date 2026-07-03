@@ -16,6 +16,7 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 #include "main/lightmap.h"
+#include "main/audio/music_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -92,11 +93,11 @@ void sc_levelcontrol_free(int obj)
 {
     gameTimerStop();
     disableHeavyFog();
-    Music_Trigger(196, 0);
-    Music_Trigger(54, 0);
-    Music_Trigger(239, 0);
-    Music_Trigger(34, 0);
-    Music_Trigger(199, 0);
+    Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
+    Music_Trigger(MUSICTRIG_Teleport, 0);
+    Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
+    Music_Trigger(MUSICTRIG_fox_arwing, 0);
+    Music_Trigger(MUSICTRIG_trex_chase, 0);
 }
 
 int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -137,7 +138,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdate
             ((ScLevelControlState*)state)->timer10 = lbl_803E5550;
             ((ScLevelControlState*)state)->mode = 0;
             Sfx_PlayFromObject(0, 0x10a);
-            Music_Trigger(0xef, 0);
+            Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         }
     }
     return 0;
@@ -160,19 +161,19 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
         GameBit_Set(0x4bd, 0);
         GameBit_Set(0x85, 0);
         gameTimerInit(0x1d, 0x96);
-        Music_Trigger(0xef, 1);
+        Music_Trigger(MUSICTRIG_CRF_Suspense, 1);
         timerSetToCountUp();
     }
     else if (v == 3)
     {
         gameTimerInit(0x1d, 0x3c);
         ((ScLevelControlState*)state)->mode = 0;
-        Music_Trigger(199, 1);
+        Music_Trigger(MUSICTRIG_trex_chase, 1);
         timerSetToCountUp();
     }
     else if (v == 6)
     {
-        Music_Trigger(0xef, 0);
+        Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         ((ScLevelControlState*)state)->mode = 0;
         ((ScLevelControlState*)state)->fadeTimer = lbl_803E5550;
         gameTimerStop();
@@ -180,7 +181,7 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     else if (v == 4)
     {
         ((ScLevelControlState*)state)->mode = 0;
-        Music_Trigger(199, 0);
+        Music_Trigger(MUSICTRIG_trex_chase, 0);
         gameTimerStop();
     }
 }
@@ -520,7 +521,7 @@ void sc_levelcontrol_update(int obj)
                 ((ScLevelControlState*)state2)->timer10 = lbl_803E5550;
                 ((ScLevelControlState*)state2)->mode = 0;
                 Sfx_PlayFromObject(0, 0x10a);
-                Music_Trigger(0xef, 0);
+                Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
             }
         }
     }
@@ -539,12 +540,12 @@ void sc_levelcontrol_update(int obj)
         if (((ScLevelControlState*)state)->musicTrack != 0x2d)
         {
             ((ScLevelControlState*)state)->musicTrack = 0x2d;
-            Music_Trigger(0x2d, 1);
+            Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
         }
         if (((ScLevelControlState*)state)->ambientMusicTrack != -1)
         {
             ((ScLevelControlState*)state)->ambientMusicTrack = -1;
-            Music_Trigger(0x22, 0);
+            Music_Trigger(MUSICTRIG_fox_arwing, 0);
         }
     }
     else
@@ -552,12 +553,12 @@ void sc_levelcontrol_update(int obj)
         if (((ScLevelControlState*)state)->musicTrack != 0x33)
         {
             ((ScLevelControlState*)state)->musicTrack = 0x33;
-            Music_Trigger(0x33, 1);
+            Music_Trigger(MUSICTRIG_KP_Text, 1);
         }
         if (((ScLevelControlState*)state)->ambientMusicTrack != 0x22)
         {
             ((ScLevelControlState*)state)->ambientMusicTrack = 0x22;
-            Music_Trigger(0x22, 1);
+            Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
     }
     SCGameBitLatch_Update(state + 0x18, 1, -1, -1, 0xe1e, 0x36);

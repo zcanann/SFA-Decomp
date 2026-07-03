@@ -33,6 +33,7 @@
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E294C;
@@ -181,12 +182,12 @@ void fn_80154584(int obj, int p)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
-                Sfx_PlayFromObject(obj, 0x24b);
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
                 ((BaddieState*)p)->unk308 = lbl_803E29D0;
             }
             else
             {
-                Sfx_PlayFromObject(obj, 0x24c);
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
                 ((BaddieState*)p)->unk308 = lbl_803E29D4;
             }
         }

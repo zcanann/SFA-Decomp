@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* 0x2C-byte Obj_AllocObjectSetup(0x2C, 0xD4) buffer composed in
  * hightop_takeHit when the air meter empties (death follow-up spawn). */
@@ -750,7 +751,7 @@ void hightop_update(int obj)
         if (((HighTopRuntime*)p)->unkC38 > *(f32*)&gHighTopAirMeterSfxInterval)
         {
             ((HighTopRuntime*)p)->unkC38 -= gHighTopAirMeterSfxInterval;
-            Sfx_PlayFromObject((u32)obj, 0x47f);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_hightop_fstep);
         }
     }
 }

@@ -13,6 +13,8 @@
 #include "main/gamebits.h"
 #include "main/objlib.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 extern void objRenderFn_8003b8f4(int* obj);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
@@ -221,9 +223,9 @@ void dfsh_shrine_free(int obj)
     }
     gameTimerStop();
     unlockLevel(mapGetDirIdx(0x1f), 1, 0);
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(8, 0);
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     GameBit_Set(0xefa, 0);
     GameBit_Set(0xcbb, 1);
 }
@@ -361,7 +363,7 @@ void dfsh_shrine_update(int objArg)
             state->idleChimeTimer = t;
             if (t <= lbl_803E4E8C)
             {
-                Sfx_PlayFromObject((int)obj, 0x343);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_spirit_voice);
                 state->idleChimeTimer = (f32)(s32)
                 randomGetRange(500, 1000);
             }
@@ -370,7 +372,7 @@ void dfsh_shrine_update(int objArg)
         {
             GameBit_Set(0x589, 0);
             state->mode = 5;
-            Music_Trigger(0xd8, 1);
+            Music_Trigger(MUSICTRIG_DIM_Snow, 1);
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             GameBit_Set(0x129, 0);
         }

@@ -25,6 +25,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* sequence id during which the object reacts to the two game bits */
 #define FALLLADDERS_SEQ_ID 0x548
@@ -119,7 +120,7 @@ void Fall_Ladders_update(int obj)
             state->motionState = 1;
             if (state->playStartSound != 0)
             {
-                Sfx_PlayFromObject(obj, 0x4bc);
+                Sfx_PlayFromObject(obj, SFXTRIG_totem_slide);
                 state->playStartSound = 0;
             }
             state->delay = 0;

@@ -37,6 +37,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
 
@@ -971,7 +972,7 @@ void smallbasket_update(int obj)
                             blk.h0 = blk.h0 + **(s16**)(player + 0x30);
                         }
                         vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
-                        Sfx_PlayFromObject(obj, 0x6b);
+                        Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw);
                     }
                     else if (fn_802966B4(player) != 0)
                     {
@@ -999,7 +1000,7 @@ void smallbasket_update(int obj)
                         blk.h1 = 0;
                         blk.h0 = ((GameObject*)player)->anim.rotX;
                         vecRotateZXY(&blk, &((GameObject*)obj)->anim.velocityX);
-                        Sfx_PlayFromObject(obj, 0x6b);
+                        Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw);
                         ((CfperchState*)state)->carryAttached = 0;
                         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                     }
@@ -1095,7 +1096,7 @@ void smallbasket_update(int obj)
             }
             else if (((u8)(k - 1) <= 1) || (k == 3))
             {
-                Sfx_PlayFromObject(obj, 0x6d);
+                Sfx_PlayFromObject(obj, SFXTRIG_vineclimb116);
                 ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }

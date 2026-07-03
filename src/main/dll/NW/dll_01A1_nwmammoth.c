@@ -10,6 +10,7 @@
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u32 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern u32 FUN_8003a1c4();
@@ -270,7 +271,7 @@ int fn_801CE078(int* obj, u8* st)
     case 0x15:
         if (snd != 0)
         {
-            Sfx_PlayFromObject((u32)obj, 0x14c);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_sa_off);
         }
         state->stateTimer -= timeDelta;
         if (cv == 0 && state->stateTimer <= lbl_803E520C)
@@ -432,7 +433,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         state->sfxTimer += timeDelta;
         if (state->sfxTimer > gNwMammothSfxInterval)
         {
-            Sfx_PlayFromObject((u32)obj, 0x150);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
         if (state->playerDistanceSq < (f32)(s32)(objDef[0xc] * objDef[0xc]))
@@ -450,7 +451,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         state->sfxTimer += timeDelta;
         if (state->sfxTimer > gNwMammothSfxInterval)
         {
-            Sfx_PlayFromObject((u32)obj, 0x150);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
         if (ObjTrigger_IsSet(obj) != 0)
@@ -533,7 +534,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                         {
                             if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                             {
-                                Sfx_PlayFromObject((u32)obj, 0x38a);
+                                Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_snowstep);
                             }
                             if ((**(int (**)(int*))((char*)(*(int**)*(int*)((char*)tw2 + 0x68)) + 0x30))(tw2) == 0)
                             {
@@ -556,7 +557,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     case 0xe:
         if (getXZDistance(st + 0xc, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) < gNwMammothCaptureDist)
         {
-            Sfx_PlayFromObject((u32)obj, 0x38b);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
             fn_80163980(*(int*)&state->trackedObject);
             state->stateIndex = 0xf;
         }
@@ -593,7 +594,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     case 0x11:
         if (!(((GameObject*)state->playerObject)->objectFlags & 0x1000) && state->airMeterValue >= gNwMammothAirMeterFull)
         {
-            Sfx_PlayFromObject((u32)obj, 0x109);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, 1);
             state->stateIndex = 0x12;
             GameBit_Set(0xd32, 0);

@@ -14,6 +14,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct MmpGyserventPlacement
 {
@@ -70,7 +71,7 @@ void mmp_gyservent_update(int obj)
     else
     {
         (*gPartfxInterface)->spawnObject((void*)obj, 0x724, NULL, 2, -1, NULL);
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_450);
     }
 }
 

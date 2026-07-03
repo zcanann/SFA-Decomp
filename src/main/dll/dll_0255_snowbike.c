@@ -9,6 +9,7 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/mm.h"
 #include "main/pad.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct SnowBikeMountState
 {
@@ -574,8 +575,8 @@ void SnowBike_hitDetect(int obj)
             }
             if (Sfx_IsPlayingFromObjectChannel(obj, 32) == 0)
             {
-                Sfx_PlayFromObject(obj, 956);
-                Sfx_SetObjectSfxVolume(obj, 956, vol, lbl_803E5B28);
+                Sfx_PlayFromObject(obj, SFXTRIG_tr_jbike_bombbeep);
+                Sfx_SetObjectSfxVolume(obj, SFXTRIG_tr_jbike_bombbeep, vol, lbl_803E5B28);
             }
         }
     }

@@ -13,6 +13,8 @@
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/lightmap.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 extern u32 ObjMsg_SendToObject();
 extern void fn_802960E8(void* playerObj, int p2);
@@ -59,7 +61,7 @@ void fn_80204320(int obj)
         if (GameBit_Get(1589) != 0 && sub->sfxLatch == 0)
         {
             s16 i;
-            Sfx_PlayFromObject(0, 1095);
+            Sfx_PlayFromObject(0, SFXTRIG_statue_wave);
             for (i = 0; i < 6; i++)
             {
                 lbl_80329848[i] = (s16)randomGetRange(1, 4);
@@ -161,8 +163,8 @@ void dfplevelcontrol_init(int obj, int param2)
     }
     if ((u32)GameBit_Get(0xdce) != 0)
     {
-        Music_Trigger(0x37, 0);
-        Music_Trigger(0xe4, 0);
+        Music_Trigger(MUSICTRIG_blizzard, 0);
+        Music_Trigger(MUSICTRIG_trex_hit, 0);
     }
 }
 

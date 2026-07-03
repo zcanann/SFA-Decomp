@@ -24,6 +24,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern int randomGetRange(int lo, int hi);
 extern int Obj_AllocObjectSetup();
@@ -294,7 +295,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
                     fn_802961FC(playerObj, 2);
                     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 5);
                     objLightFn_8009a1dc((void*)obj, lbl_803E30BC, gKaldachomHitLightWork, 4, 0);
-                    Sfx_PlayFromObject(obj, 0x255);
+                    Sfx_PlayFromObject(obj, SFXTRIG_swdout1);
                 }
             }
             else
@@ -307,7 +308,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
                     ((GroundBaddieState*)state)->baddie.substate = 1;
                     objLightFn_8009a1dc((void*)obj, lbl_803E30BC, gKaldachomHitLightWork, 1, 0);
                     Sfx_PlayFromObject(obj, SFXen_blkscrp6);
-                    Sfx_PlayFromObject(obj, 0x3ac);
+                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_call3);
                 }
             }
         }

@@ -8,6 +8,7 @@ extern f32 timeDelta;
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void ModelLightStruct_free(void* effect);
 
 
@@ -88,7 +89,7 @@ void campfire_update(int obj)
         mode = 0;
         if (state->sfxPlaying == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, 0x9e);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 1;
         }
     }
@@ -113,7 +114,7 @@ void campfire_update(int obj)
         flag = 0;
         if (state->sfxPlaying != 0)
         {
-            Sfx_RemoveLoopedObjectSound(obj, 0x9e);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 0;
         }
     }

@@ -24,6 +24,7 @@
 #include "main/gamebits.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u8 lbl_8031DD30[];   /* per-anim move-progress floats, indexed anim*4 */
 
 /* per-family table-of-tables row (0x28 bytes); holds pointers to the
@@ -130,8 +131,8 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
             if (msgId != 0x1a && ((GameObject*)attacker)->anim.seqId != 0x6d &&
                 ((GameObject*)attacker)->anim.seqId != 0x754)
             {
-                Sfx_PlayFromObject(obj, 0x255);
-                Sfx_PlayFromObject(obj, 0x16);
+                Sfx_PlayFromObject(obj, SFXTRIG_swdout1);
+                Sfx_PlayFromObject(obj, SFXTRIG_gethit02);
             }
             ((BaddieState*)state)->reactionFlags |= 0x10;
             {
@@ -245,16 +246,16 @@ int fn_801504F8(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int d
         }
         if (((BaddieState*)state)->hitCounter == 0)
         {
-            Sfx_PlayFromObject(obj, 0x13);
+            Sfx_PlayFromObject(obj, SFXTRIG_land);
         }
         else
         {
-            Sfx_PlayFromObject(obj, 0x14);
+            Sfx_PlayFromObject(obj, SFXTRIG_attack);
         }
         if (msgId != 0x1a && msgId != 0x1f && ((GameObject*)attacker)->anim.seqId != 0x6d &&
             ((GameObject*)attacker)->anim.seqId != 0x754)
         {
-            Sfx_PlayFromObject(obj, 0x22);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest);
         }
     }
     return ret;

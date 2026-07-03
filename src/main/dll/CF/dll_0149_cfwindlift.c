@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
+#include "main/audio/music_trigger_ids.h"
 
 #define WINDLIFT_SLOTS 14   /* max tracked lift slots */
 
@@ -333,7 +334,7 @@ void windlift_free(int* obj)
     void* p = Obj_GetPlayerObject();
     if (p == NULL || Player_GetLiftVelocityY((int)p) == lbl_803E416C)
     {
-        Music_Trigger(189, 0);
+        Music_Trigger(MUSICTRIG_DIM_Cavern, 0);
     }
     ObjGroup_RemoveObject(obj, 73);
 }
@@ -407,7 +408,7 @@ void windlift_update(int* obj)
             if (!sub->musicOn)
             {
                 sub->musicOn = 1;
-                Music_Trigger(0xbd, 1);
+                Music_Trigger(MUSICTRIG_DIM_Cavern, 1);
             }
             if (player != NULL)
             {
@@ -418,7 +419,7 @@ void windlift_update(int* obj)
         {
             if (sub->musicOn)
             {
-                Music_Trigger(0xbd, 0);
+                Music_Trigger(MUSICTRIG_DIM_Cavern, 0);
                 sub->musicOn = 0;
             }
             if ((sub->slots[0].b10 & 0xe0) != 0)

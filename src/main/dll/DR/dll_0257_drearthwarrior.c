@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct DREarthWarriorPlacement
 {
@@ -753,7 +754,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int state)
         hitState->suppressOutgoingHits = 0;
         ObjAnim_SetCurrentMove(obj, 0x14, lbl_803E8304, 0);
         ((EarthWarriorState*)state)->baddie.moveDone = 0;
-        Sfx_PlayFromObject(obj, 0x121);
+        Sfx_PlayFromObject(obj, SFXTRIG_earthhuff);
     }
     *(int*)state |= 0x800000;
     *(s16*)((char*)state + 0x278) = 0;
@@ -1178,7 +1179,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             {
                 doRumble((f32)(int)randomGetRange(2, 5));
                 inner->sub.footstepCooldown = lbl_803E8370;
-                Sfx_PlayFromObject(obj, 0x404);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle4);
             }
             if (*(u8*)((char*)(char*)inner + 0x262) != 0 ||
                 (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8))

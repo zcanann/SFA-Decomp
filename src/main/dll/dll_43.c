@@ -19,6 +19,7 @@
 #include "main/dll/dll_43.h"
 #include "main/screen_transition.h"
 #include "main/dll/dll_0035_saveselectscreen.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 
 
@@ -35,7 +36,7 @@ void saveSelectSetSlot(int slot, int value)
     {
         if (lbl_803DB424 != 0)
         {
-            Sfx_PlayFromObject(0, 0x419); /* back sfx (unnamed in sfx_ids.h) */
+            Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down); /* back sfx (unnamed in sfx_ids.h) */
             saveSelectGoToChooseSlot(0);
         }
         else
@@ -49,7 +50,7 @@ void saveSelectSetSlot(int slot, int value)
     else
     {
         lbl_803DD6CD = 1;
-        Sfx_PlayFromObject(0, 0x418); /* confirm sfx (unnamed in sfx_ids.h) */
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up); /* confirm sfx (unnamed in sfx_ids.h) */
         (*gScreenTransitionInterface)->start(0x14, 1);
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
         ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);

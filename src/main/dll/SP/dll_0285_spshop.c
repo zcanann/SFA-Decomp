@@ -11,6 +11,7 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/music_trigger_ids.h"
 
 typedef struct ShopBuyItemState
 {
@@ -195,7 +196,7 @@ void shop_free(int* obj)
 {
     skyFn_80088c94(7, 0);
     ObjGroup_RemoveObject(obj, 9);
-    Music_Trigger(144, 0);
+    Music_Trigger(MUSICTRIG_communicator, 0);
     GameBit_Set(3838, 0);
 }
 
@@ -287,7 +288,7 @@ void shop_init(int obj, int objDef)
         item = &lbl_80327FD0[i * 0xc];
         item[5] = item[randomGetRange(0, 2) + 1];
     }
-    Music_Trigger(0x90, 1);
+    Music_Trigger(MUSICTRIG_communicator, 1);
     ((GameObject*)obj)->unkF8 = 0;
     GameBit_Set(0xefe, 1);
 }

@@ -57,6 +57,7 @@ extern void warpToMap(int idx, s8 transType);
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/engine_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct Lavaball1bePlacement
 {
@@ -321,7 +322,7 @@ void lavaball1be_update(s16* obj)
             {
                 if (!(state->flags & LAVA1BE_FLAG_FALLING))
                 {
-                    Sfx_PlayFromObject((int*)obj, 0x3dd);
+                    Sfx_PlayFromObject((int*)obj, SFXTRIG_en_cvdrip1c_3dd);
                     state->flags |= LAVA1BE_FLAG_FALLING;
                 }
             }

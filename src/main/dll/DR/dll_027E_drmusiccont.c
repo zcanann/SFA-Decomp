@@ -15,6 +15,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct DrmusiccontState
 {
@@ -154,7 +155,7 @@ void drmusiccont_update(int obj)
             ((DrmusiccontState*)state)->stingerTimer = st - timeDelta;
             if (((DrmusiccontState*)state)->stingerTimer <= zero)
             {
-                Sfx_PlayFromObject(0, 0x4bd); /* sfx id */
+                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_4bd); /* sfx id */
             }
         }
     }

@@ -34,6 +34,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/seqObj11E.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u32 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 
@@ -598,7 +599,7 @@ void fn_80152040(int* obj, u8* state)
             if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 && animTbl[((BaddieState*)state)->seqEntryIndex
                 * 12] != 4)
             {
-                Sfx_PlayFromObject((u32)obj, 0x4a8);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
             fn_8014D08C(obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
                         *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);

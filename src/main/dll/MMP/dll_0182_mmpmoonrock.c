@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/dll/MMP/dll_0182_mmpmoonrock.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
@@ -449,7 +450,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
                     }
                     if (b == 0)
                     {
-                        Sfx_PlayFromObject(0, g1 < 3 ? 0x109 : 0x7E);
+                        Sfx_PlayFromObject(0, g1 < 3 ? SFXTRIG_menuups16k : SFXTRIG_mpick1_b);
                         GameBit_Set(0x9AE, 1);
                     }
                     state->flags |= 0x400;
@@ -654,7 +655,7 @@ void mmp_moonrock_update(int obj)
     {
         state->raised = 0;
     }
-    Sfx_PlayFromObject(obj, 0x108);
+    Sfx_PlayFromObject(obj, SFXTRIG_en_diallp_c);
     Sfx_SetObjectChannelVolume(obj, 0x40, state->raised * 0x20 + 0x20, lbl_803E4588);
     {
         f32 speed = ((GameObject*)obj)->anim.velocityY;

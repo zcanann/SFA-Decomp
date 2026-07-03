@@ -28,6 +28,7 @@
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
 extern float fsin16Precise(int angle);
@@ -397,8 +398,8 @@ void fn_8013E0D0(int* obj, u8* st)
                         p += 4;
                     }
                 }
-                Sfx_PlayFromObject((int*)gobj, 0x3db);
-                Sfx_AddLoopedObjectSound((int*)gobj, 0x3dc);
+                Sfx_PlayFromObject((int*)gobj, SFXTRIG_en_cvdrip1c_3db);
+                Sfx_AddLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;
             t->substate = 4;
@@ -423,7 +424,7 @@ void fn_8013E0D0(int* obj, u8* st)
                         p += 4;
                     }
                 }
-                Sfx_RemoveLoopedObjectSound((int*)gobj, 0x3dc);
+                Sfx_RemoveLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
                 TRICKY_BARK((int*)gobj, 0x29d, 0);
                 *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10LL;
                 t->substate = 0;

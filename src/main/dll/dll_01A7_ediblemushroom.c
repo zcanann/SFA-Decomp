@@ -9,6 +9,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
@@ -139,7 +140,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         fn_801D129C(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
                 }
                 ((EdibleMushroomState*)state)->animState = 1;
-                Sfx_PlayFromObject((u32)obj, 0xa0);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
                 ((GameObject*)obj)->anim.rotX = (s16)(((EdibleMushroomState*)state)->moveAngle - 0x4000);
             }
             else if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x1f])
@@ -210,7 +211,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             }
             else if (((EdibleMushroomState*)state)->currentTargetDistance < other[0x19])
             {
-                Sfx_PlayFromObject((u32)obj, 0xa0);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
                 if (speed >= lbl_803E5298)
                 {
                     if (((EdibleMushroomState*)state)->flags & 2)
@@ -322,13 +323,13 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                                                                     ((EdibleMushroomState*)state)->lungeRange);
             }
             ((EdibleMushroomState*)state)->animState = 1;
-            Sfx_PlayFromObject((u32)obj, 0xa0);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
             ((GameObject*)obj)->anim.rotX = (s16)(((EdibleMushroomState*)state)->moveAngle - 0x4000);
         }
         break;
     case 9:
         ObjHits_ClearSourceMask((int)obj, 1);
-        Sfx_KeepAliveLoopedObjectSound((u32)obj, 0x9b);
+        Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_cagelp_c);
         if (((EdibleMushroomState*)state)->burrowAttackTimer <= lbl_803E5288)
         {
             ((EdibleMushroomState*)state)->burrowAttackTimer = (f32)(int)

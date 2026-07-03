@@ -19,6 +19,7 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* object def numbers selecting the two thornbush variants (anim.seqId) */
 #define THORNBUSH_SEQ_LIGHTNING 0x709
@@ -136,7 +137,7 @@ void drakord_thornbush_update(int obj)
     }
     else
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x479);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_drak_pain2);
         if (((DrakorFlags*)((char*)inner + 0x79))->b80)
         {
             ((DrakorFlags*)((char*)inner + 0x79))->b80 = 0;
@@ -215,7 +216,7 @@ void drakord_thornbush_hitDetect(int obj)
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, 0x496);
+                    Sfx_PlayFromObject(obj, SFXTRIG_wmap_nameoff_496);
                 }
             }
         }
@@ -233,7 +234,7 @@ void drakord_thornbush_hitDetect(int obj)
                 spawnExplosion((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0, 0, 0, 1, 1);
                 break;
             case THORNBUSH_SEQ_LIGHTNING:
-                Sfx_PlayFromObject(obj, 0x2f9);
+                Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
                 spawnExplosion((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1, 1, 0, 1,
                                0);
                 ((void (*)(int, int, int, f32, int))Obj_UpdateLightningCluster)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);

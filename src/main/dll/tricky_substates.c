@@ -26,6 +26,7 @@
 #include "main/sky_interface.h"
 #include "main/gameplay_runtime.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
@@ -184,7 +185,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             + 8);
         ((TrickyState*)state)->dirZ = *(f32*)(((TrickyState*)state)->unk704 + 0x10) - *(f32*)(((TrickyState*)state)->
             unk700 + 0x10);
-        Sfx_AddLoopedObjectSound((u32)obj, 0x13d);
+        Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
         *(f32*)&((TrickyState*)state)->unk70C = (f32)(int)
         randomGetRange(0x14, 0xb4);
         state[0xa] = 4;
@@ -238,7 +239,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                 idx++;
             }
             **(u8**)state -= 4;
-            Sfx_RemoveLoopedObjectSound((u32)obj, 0x13d);
+            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
             state[0xa] = 5;
             id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
             ptr = ((GameObject*)obj)->extra;
@@ -391,7 +392,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
                 *(f32*)&((TrickyState*)state)->unk700 = lbl_803E23DC;
                 ((TrickyState*)state)->unk710 = (f32)(int)
                 randomGetRange(0x28, 0x50);
-                Sfx_AddLoopedObjectSound((u32)obj, 0x13d);
+                Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
                 objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
             }
         }
@@ -419,7 +420,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
             ((TrickyState*)state)->stateFlags |= 0x10;
             state[0xa] = 3;
             *(f32*)&((TrickyState*)state)->unk700 = lbl_803E23DC;
-            Sfx_AddLoopedObjectSound((u32)obj, 0x13d);
+            Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
             objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
         }
         break;
@@ -468,7 +469,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         ((GameObject*)obj)->anim.localPosZ = *(f32*)&((TrickyState*)state)->unk708 - ((TrickyState*)state)->dirZ * spd;
         if (((u8 (**)(u8*))(**(u8***)(pc + 0x68)))[9](pc) != 0)
         {
-            Sfx_RemoveLoopedObjectSound((u32)obj, 0x13d);
+            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
             **(u8**)state -= 4;
             state[0x8] = 1;
             state[0xa] = 0;
@@ -778,8 +779,8 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                     *(u8**)(p + 0x700) = Obj_SetupObject(e, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                          ((GameObject*)obj)->anim.parent);
                 }
-                Sfx_PlayFromObject((int)obj, 0x3db);
-                Sfx_AddLoopedObjectSound((u32)obj, 0x3dc);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_3db);
+                Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
             }
         }
         else
@@ -792,7 +793,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                 {
                     objSetAnimSpeedTo1(*(u8**)(q + 0x700));
                 }
-                Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
+                Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
                 ptr = ((GameObject*)obj)->extra;
                 if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
                     && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)

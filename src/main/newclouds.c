@@ -13,6 +13,8 @@
 #include "dolphin/os/OSCache.h"
 #include "main/sky_state.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 
 typedef struct LightningEffect
 {
@@ -203,7 +205,7 @@ void newclouds_onMapSetup(void)
     lbl_803DD19A = 0;
     lbl_803DB768 = b;
     gNewCloudBlizzardActivePrev = 0;
-    Music_Trigger(235, 0);
+    Music_Trigger(MUSICTRIG_crun_dungeon, 0);
 }
 
 extern void setTextColor(int unused, int a, int b, int c, int d);
@@ -1497,7 +1499,7 @@ void snowReposSnowCloud(int cloudId)
         lbl_803DD19C = lightningCreate(from, to, gNewCloudLightningRadius, lbl_803DF1BC, 0xf, 0xc0, 0);
         {
             extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-            Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], 0x2c9);
+            Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], SFXTRIG_barrelgrabber_suck);
         }
         fl = ((NewCloud*)gNewClouds[cloudId])->unk144B;
         if (fl & 8)
@@ -2392,11 +2394,11 @@ void dll_07_func06(void)
     }
     if (gNewCloudBlizzardActive != 0 && gNewCloudBlizzardActivePrev == 0)
     {
-        Music_Trigger(0xeb, 1);
+        Music_Trigger(MUSICTRIG_crun_dungeon, 1);
     }
     else if (gNewCloudBlizzardActive == 0 && gNewCloudBlizzardActivePrev != 0)
     {
-        Music_Trigger(0xeb, 0);
+        Music_Trigger(MUSICTRIG_crun_dungeon, 0);
     }
 }
 #pragma opt_propagation reset

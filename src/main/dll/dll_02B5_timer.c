@@ -14,6 +14,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define TIMER_MODE_GLOBAL 1
 #define TIMER_MODE_EFFECT 2
@@ -255,7 +256,7 @@ tail:
             {
                 if (scroll == 1 && scroll != flags->flag20)
                 {
-                    Sfx_PlayFromObject(obj, 986);
+                    Sfx_PlayFromObject(obj, SFXTRIG_barrel_timerbeep);
                 }
                 modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, lbl_803E741C);
             }

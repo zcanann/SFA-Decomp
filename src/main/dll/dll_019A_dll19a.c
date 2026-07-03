@@ -5,6 +5,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct Dll19APlacement
 {
@@ -82,7 +83,7 @@ void dll_19A_update(int obj)
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 1, 0, 1, 0xffffffff, 0);
-            Sfx_PlayFromObject(obj, 0xaf);
+            Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
             Resource_Release(res);
             state[1] = 1;
             ((GameObject*)obj)->unkF8 = 1;

@@ -13,6 +13,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct CfForceFieldFlags
 {
@@ -180,10 +181,10 @@ void cfforcefield_update(u8* obj)
             else if (GameBit_Get(data->collapseEvent) != 0)
             {
                 s16toFloat(&state->timer, CFFORCEFIELD_COLLAPSE_FRAMES);
-                Sfx_PlayFromObject((int)obj, 0x366); /* field power-down */
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_littletink22); /* field power-down */
                 if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId != CFFORCEFIELD_MAP_SILENT_COLLAPSE)
                 {
-                    Sfx_PlayFromObject((int)obj, 0x409); /* collapse jingle */
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_sc_menuups16k_409); /* collapse jingle */
                 }
             }
         }

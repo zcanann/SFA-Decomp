@@ -5,6 +5,7 @@
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int randomGetRange(int lo, int hi);
@@ -196,7 +197,7 @@ void RollingBarrel_update(int obj)
                 if (blocked == 0 &&
                     state->verticalSpeed * state->verticalSpeed > lbl_803E446C)
                 {
-                    Sfx_PlayFromObjectLimited(obj, 0x41e, 6);
+                    Sfx_PlayFromObjectLimited(obj, SFXTRIG_mfin2_c, 6);
                 }
                 state->verticalSpeed *= gRollingBarrelBounceFactor;
                 ((GameObject*)obj)->anim.localPosY = lbl_803E44A4 * floor_y - ((GameObject*)obj)->anim.localPosY;

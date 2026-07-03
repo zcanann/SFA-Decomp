@@ -16,6 +16,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct CfccratePlacement
 {
@@ -234,7 +235,7 @@ void cfccrate_update(int obj)
             ObjTextureRuntimeSlot* p = objFindTexture((void*)obj, 0, 0);
             if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (p->textureId == 0))
             {
-                Sfx_PlayFromObject(obj, 0x3c4);
+                Sfx_PlayFromObject(obj, SFXTRIG_en_littletink22_3c4);
                 p->textureId = 0x100;
             }
             break;

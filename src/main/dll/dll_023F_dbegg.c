@@ -45,6 +45,7 @@
 #include "main/pad.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -943,7 +944,7 @@ void dbegg_update(int obj)
             d[0] = ((GameObject*)obj)->anim.localPosX - ((DbeggPlacement*)data)->targetPosX;
             d[1] = ((GameObject*)obj)->anim.localPosY - ((DbeggPlacement*)data)->targetPosY;
             d[2] = ((GameObject*)obj)->anim.localPosZ - ((DbeggPlacement*)data)->targetPosZ;
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x442);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eba_smallswipe1);
             fz = *(f32*)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
             fx = *(f32*)((int)d + 0);

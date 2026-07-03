@@ -17,6 +17,7 @@
 #include "main/gamebits.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 extern int ObjTrigger_IsSetById();
 
@@ -230,7 +231,7 @@ void sh_queenearthwalker_update(void* obj)
     if (RandomTimer_UpdateRangeTrigger(&((QueenEarthWalkerState*)state)->attackTimer, gQueenEarthWalkerAttackTimerMin,
                                        gQueenEarthWalkerAttackTimerMax) != 0)
     {
-        Sfx_PlayFromObject(obj, 0x410);
+        Sfx_PlayFromObject(obj, SFXTRIG_thorntail);
     }
 }
 

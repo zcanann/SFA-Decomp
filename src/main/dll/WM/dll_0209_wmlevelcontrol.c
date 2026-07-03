@@ -17,6 +17,7 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/music_trigger_ids.h"
 
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
@@ -202,7 +203,7 @@ int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 void wmlevelcontrol_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, 9);
-    Music_Trigger(0xa8, 0);
+    Music_Trigger(MUSICTRIG_drako_3, 0);
     GameBit_Set(0xa7f, 0);
     GameBit_Set(0x372, 1);
     GameBit_Set(0x390, 1);

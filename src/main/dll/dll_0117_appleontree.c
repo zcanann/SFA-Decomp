@@ -14,6 +14,7 @@
 #include "main/dll/dll_00FC_babycloudrunner.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0117_appleontree.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 extern u32 ObjMsg_SendToObject();
 extern f32 Vec_distance(f32* a, f32* b);
@@ -361,7 +362,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((AppleOnTreeState*)state)->bounceVel = -((AppleOnTreeState*)state)->unk28;
                 if ((((AppleOnTreeState*)state)->flags & 8) == 0)
                 {
-                    Sfx_PlayFromObject(p, 0x407);
+                    Sfx_PlayFromObject(p, SFXTRIG_pk_fruit_lands);
                     ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 8);
                 }
                 return 1;

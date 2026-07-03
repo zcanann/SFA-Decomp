@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* indices into a swing-direction move table (gSpDrapeSwingLeftMoveTable / gSpDrapeSwingRightMoveTable) */
 enum
@@ -104,7 +105,7 @@ void spdrape_update(int obj)
     case 0: /* idle: rustle, and swing open when the player is near */
         if ((s16)(((SpdrapeState*)state)->sfxTimer -= framesThisStep) <= 0)
         {
-            Sfx_PlayFromObject(obj, 0x13f);
+            Sfx_PlayFromObject(obj, SFXTRIG_propsp_6);
             ((SpdrapeState*)state)->sfxTimer = randomGetRange(0xb4, 0x12c);
         }
         if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < gSpDrapeNearRadiusSq)
@@ -122,7 +123,7 @@ void spdrape_update(int obj)
             }
             ObjAnim_SetCurrentMove(obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
             *state = lbl_803E5AA8;
-            Sfx_PlayFromObject(obj, 0x140);
+            Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
             Camera_GetCurrentViewSlot();
         }
         break;
@@ -133,7 +134,7 @@ void spdrape_update(int obj)
             if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
             {
                 ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
-                Sfx_PlayFromObject(obj, 0x140);
+                Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
                 *state = lbl_803E5AB0;
             }
             else
@@ -145,12 +146,12 @@ void spdrape_update(int obj)
         break;
     case 2: /* held open: flutter, close when the player leaves */
     case 5:
-        Sfx_PlayFromObject(obj, 0x141);
+        Sfx_PlayFromObject(obj, SFXTRIG_wickhit16);
         if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) > gSpDrapeLeaveRadius)
         {
             ObjAnim_SetCurrentMove(obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE], lbl_803E5AA0, 0);
             Sfx_StopObjectChannel(obj, 0x40);
-            Sfx_PlayFromObject(obj, 0x140);
+            Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
             *state = lbl_803E5AB0;
         }
         break;
@@ -171,7 +172,7 @@ void spdrape_update(int obj)
                 }
             }
             ObjAnim_SetCurrentMove(obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
-            Sfx_PlayFromObject(obj, 0x140);
+            Sfx_PlayFromObject(obj, SFXTRIG_cagesqk11);
             *state = lbl_803E5AA8;
         }
         else if (((SpdrapeState*)state)->moveActive != 0)

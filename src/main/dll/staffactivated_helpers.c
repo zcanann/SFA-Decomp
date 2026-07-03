@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 
 
@@ -66,7 +67,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
         }
         if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800)
         {
-            Sfx_PlayFromObject(obj, 0x374);
+            Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt);
         }
         if (state->liftHeight < 0)
         {
@@ -93,7 +94,7 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
         (prevHeight >= 0x40 && state->liftHeight < 0x40))
     {
-        Sfx_PlayFromObject(obj, 0x374);
+        Sfx_PlayFromObject(obj, SFXTRIG_mammoth_grunt);
     }
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                               &state->hitCooldown);

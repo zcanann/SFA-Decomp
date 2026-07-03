@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/dll/xyzanimator.h"
 #include "main/objhits.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 extern void queueGlowRender(void* light);
 extern int Obj_FreeObject(int obj);
@@ -249,7 +250,7 @@ void kaldachompspit_burst(int obj)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
         }
-        Sfx_PlayFromObject(obj, 0x279);
+        Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
     }
 }
 
@@ -261,7 +262,7 @@ void kaldachompspit_init(int obj)
     ((GameObject*)obj)->unkF4 = 400;
     ObjHits_DisableObject((u32)obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, 0x278);
+    Sfx_PlayFromObject(obj, SFXTRIG_whiz3_c);
     ((GameObject*)obj)->objectFlags |= 0x2000;
     if (*(void**)extra == NULL)
     {

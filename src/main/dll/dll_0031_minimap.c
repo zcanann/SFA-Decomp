@@ -29,6 +29,7 @@
 #include "main/objlib.h"
 #include "main/sfa_extern_decls.h"
 #include "main/lightmap.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct MinimapRow
 {
@@ -679,7 +680,7 @@ void fn_80133718(void)
     {
         if ((s8) * (u8*)((char*)lbl_803DBBC8[1] + 173) == 0)
         {
-            Sfx_PlayFromObject(0, 1009);
+            Sfx_PlayFromObject(0, SFXTRIG_and_suck_lp);
         }
     }
     *(s8*)((char*)lbl_803DBBC8[1] + 173) = b;
@@ -822,7 +823,7 @@ void fn_8013396C(void)
     {
         if (gMinimapZoomSfxActive != 0)
         {
-            Sfx_StopFromObject(0, 0x3f0);
+            Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
             gMinimapZoomSfxActive = 0;
         }
     }
@@ -851,7 +852,7 @@ void fn_8013396C(void)
         {
             if (gMinimapZoomSfxActive != 0)
             {
-                Sfx_StopFromObject(0, 0x3f0);
+                Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                 gMinimapZoomSfxActive = 0;
             }
         }
@@ -930,7 +931,7 @@ void fn_8013396C(void)
                 {
                     if (gMinimapZoomSfxActive == 0)
                     {
-                        Sfx_PlayFromObject(0, 0x3f0);
+                        Sfx_PlayFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                         gMinimapZoomSfxActive = 1;
                     }
                 }
@@ -938,7 +939,7 @@ void fn_8013396C(void)
                 {
                     if (gMinimapZoomSfxActive != 0)
                     {
-                        Sfx_StopFromObject(0, 0x3f0);
+                        Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                         gMinimapZoomSfxActive = 0;
                     }
                 }
@@ -946,7 +947,7 @@ void fn_8013396C(void)
             case 1:
                 if (gMinimapZoomSfxActive != 0)
                 {
-                    Sfx_StopFromObject(0, 0x3f0);
+                    Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
                 lbl_803DD934 = ObjGroup_FindNearestObject(0x4f, player, &dist);
@@ -983,7 +984,7 @@ void fn_8013396C(void)
             case 2:
                 if (gMinimapZoomSfxActive != 0)
                 {
-                    Sfx_StopFromObject(0, 0x3f0);
+                    Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
                 v2 = lbl_803DBA6E;

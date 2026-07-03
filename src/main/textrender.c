@@ -7,6 +7,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/sfa_extern_decls.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int saveFileStruct_isCheatActive(u8 idx);
 
 u16*
@@ -1914,7 +1915,7 @@ void gameTextRun(void)
 
     if (lbl_803DC99C == 0)
     {
-        Sfx_StopFromObject(0, 0x397);
+        Sfx_StopFromObject(0, SFXTRIG_clock_loop);
     }
     lbl_803DC9C8 = 0;
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;

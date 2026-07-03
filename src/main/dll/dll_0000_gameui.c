@@ -42,6 +42,8 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 extern void saveGame_save();
 extern u8 lbl_803DE3D9;
 extern u16 lbl_803DE3F4;
@@ -842,7 +844,7 @@ void timeListFn_8012be84(void)
         cutsceneFadeInOut(0);
         (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
-        Sfx_PlayFromObject(0, 0x418);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
     }
     if ((buttons & 0x200) != 0)
     {
@@ -851,7 +853,7 @@ void timeListFn_8012be84(void)
         cutsceneFadeInOut(0);
         (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
-        Sfx_PlayFromObject(0, 0x419);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
     }
 }
 #pragma dont_inline reset
@@ -906,7 +908,7 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
     {
         if (gHighScoreActiveTableId == -1)
         {
-            Music_Trigger(0x23, 1);
+            Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
             cutsceneFadeInOut(1);
             setTimeStop(0xff);
         }
@@ -951,7 +953,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
  * lbl_803DD784/_786/_78C, asks the global tag system to register tag
  * id 0xf via padFn_80014b18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
  * the object handle from Obj_GetPlayerObject was non-null, then plays the
- * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
+ * scene-down trio: Music_Trigger(MUSICTRIG_cldrnr_tune1, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
  */
 #pragma dont_inline on
@@ -984,8 +986,8 @@ void pauseMenuInit(void)
     {
         Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
     }
-    Music_Trigger(0x23, 1);
-    Sfx_PlayFromObject(0, 0x3e5);
+    Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
+    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_sidekick_up);
     Sfx_PlayFromObject(0, SFXsp_snrin2_c);
 }
 #pragma dont_inline reset
@@ -1253,7 +1255,7 @@ int pauseMenuGridFn_8012b4c4(void)
         lbl_803DD7BC = dir;
         lbl_803DD7C0 = (f32)(dir * 0x320);
         lbl_803DD7D8 = 0;
-        Sfx_PlayFromObject(0, 0x100);
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
     }
 
     if (lbl_803DD7C0 > 0.0f)
@@ -1745,7 +1747,7 @@ void pauseMenuRunSubmenu(u8 p1)
         int v;
         if (btn & 0x300)
         {
-            Sfx_PlayFromObject(0, 0x41c);
+            Sfx_PlayFromObject(0, SFXTRIG_menu_fend_back);
             buttonDisable(0, 0x300);
             lbl_803DD75E = -0x28;
         }
@@ -1835,7 +1837,7 @@ void pauseMenuRunSubmenu(u8 p1)
         if (sel >= 0)
         {
             s16 id;
-            Sfx_PlayFromObject(0, 0x405);
+            Sfx_PlayFromObject(0, SFXTRIG_pda_fper_move);
             lbl_803DD7D8 = sel;
             id = lbl_803DD824[sel].id;
             if (id < 0x4d && id >= 0x4b)
@@ -1863,7 +1865,7 @@ void pauseMenuRunSubmenu(u8 p1)
         {
             if (valid != 0)
             {
-                Sfx_PlayFromObject(0, 0x41b);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_fend_forward);
                 switch (pauseMenuState)
                 {
                 case 3:
@@ -1962,10 +1964,10 @@ void cMenuRun(void)
     case 0:
         break;
     case 1:
-        Sfx_PlayFromObject(0, 0xfd);
+        Sfx_PlayFromObject(0, SFXTRIG_noboost);
         break;
     case 2:
-        Sfx_PlayFromObject(0, 0xfb);
+        Sfx_PlayFromObject(0, SFXTRIG_npu_116);
         break;
     }
     gCMenuActivatedId = -1;
@@ -2064,7 +2066,7 @@ void cMenuRun(void)
                 {
                     if ((s8)lbl_803DBA65 == 0)
                     {
-                        Sfx_PlayFromObject(0, 0xfc);
+                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
                     }
                     gCMenuScrollVel = 1;
                     goto scrolled;
@@ -2078,7 +2080,7 @@ void cMenuRun(void)
                 {
                     if ((s8)lbl_803DBA65 == 0)
                     {
-                        Sfx_PlayFromObject(0, 0xfc);
+                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
                     }
                     gCMenuScrollVel = -1;
                 }
@@ -2152,7 +2154,7 @@ void cMenuRun(void)
                 }
                 else if ((int)gCMenuButtons & 0x200)
                 {
-                    Sfx_PlayFromObject(0, 0x37c);
+                    Sfx_PlayFromObject(0, SFXTRIG_laser_pickup);
                     cMenuOpen = 0;
                 }
                 else
@@ -2174,7 +2176,7 @@ void cMenuRun(void)
                                 }
                                 else
                                 {
-                                    Sfx_PlayFromObject(0, 0x408);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menu_spin);
                                     yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
                                     yButtonItem = cMenuSelectedItem;
                                     gYButtonActiveBit = gCMenuSelActiveBit;
@@ -2210,13 +2212,13 @@ void cMenuRun(void)
                                         gCMenuCloseSfx = hud->closeMode[gCMenuSelIndex];
                                         cMenuOpen = 0;
                                     }
-                                    Sfx_PlayFromObject(0, 0xf7);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_inventory_up);
                                 }
                                 else
                                 {
                                     gCMenuActivatedId = -1;
                                     gCMenuCloseSfx = 0;
-                                    Sfx_PlayFromObject(0, 0xfd);
+                                    Sfx_PlayFromObject(0, SFXTRIG_noboost);
                                 }
                             }
                             else
@@ -2235,7 +2237,7 @@ void cMenuRun(void)
                                 {
                                     gCMenuActivatedId = -1;
                                     gCMenuCloseSfx = 0;
-                                    Sfx_PlayFromObject(0, 0xfd);
+                                    Sfx_PlayFromObject(0, SFXTRIG_noboost);
                                 }
                             }
                         }
@@ -2881,7 +2883,7 @@ void pauseMenuFn_80129ee0(void)
                         {
                             lbl_803DD772 = 0;
                             lbl_803DD770 = 1;
-                            Sfx_PlayFromObject(0, 0x38d);
+                            Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                         }
                         else if ((nv >= 0xa && tm < 0xa) || (nv >= 0x708 && tm < 0x708))
                         {
@@ -2897,7 +2899,7 @@ void pauseMenuFn_80129ee0(void)
                     if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
                     {
                         lbl_803DD7DC = 0.0f;
-                        Sfx_PlayFromObject(0, 0x38d);
+                        Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                     }
                     lbl_803DD770 = (s16)(lbl_803DD770 + framesThisStep);
                     if (lbl_803DD770 > 0xff)
@@ -2942,7 +2944,7 @@ void pauseMenuFn_80129ee0(void)
                         }
                         if ((s8)lbl_803DBA64 != prev)
                         {
-                            Sfx_PlayFromObject(0, 0x37b);
+                            Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
                         }
                     }
                     if ((s8)lbl_803DBA64 >= 1 && lbl_803DBA64 < 4)
@@ -2976,7 +2978,7 @@ void pauseMenuFn_80129ee0(void)
                 if (b2 & 0x100)
                 {
                     u8 prev;
-                    Sfx_PlayFromObject(0, 0x98);
+                    Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
                     buttonDisable(0, 0x100);
                     lbl_803DD7BC = 0.0f;
                     lbl_803DD7C0 = 0.0f;
@@ -3030,8 +3032,8 @@ void pauseMenuFn_80129ee0(void)
                 fn_8012C000();
                 if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
                 {
-                    Sfx_PlayFromObject(0, 0x100);
-                    Sfx_PlayFromObject(0, 0x3f2);
+                    Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
+                    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_weapons_up);
                     pauseMenuFrameCounter = 0x3c;
                     gameTextLoadForMap_800571f0(1);
                     cutsceneFadeInOut(0);
@@ -3073,7 +3075,7 @@ void pauseMenuFn_80129ee0(void)
                             hud->anims[k] = 0;
                         }
                     }
-                    Music_Trigger(0x23, 0);
+                    Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
                     pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
                 }
                 else
@@ -3292,7 +3294,7 @@ void pauseMenuFn_80129ee0(void)
                 pauseMenuFn_8012b77c();
                 if ((btn & 0x100) && lbl_803DD764 > lbl_803E2160)
                 {
-                    Sfx_PlayFromObject(0, 0x418);
+                    Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
                     buttonDisable(0, 0x100);
                     lbl_803DD764 = lbl_803E2168;
                 }
@@ -3317,7 +3319,7 @@ void pauseMenuFn_80129ee0(void)
                     lbl_803DD764 = lbl_803E1E60;
                     break;
                 case 0xa:
-                    Music_Trigger(0x23, 0);
+                    Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
                     if ((*gMapEventInterface)->getRestartGameNotCleared() != 0)
                     {
                         (*gMapEventInterface)->gotoRestartPoint();
@@ -4092,7 +4094,7 @@ void GameUI_update(void)
             buttonDisable(0, 0x100);
             gHighScoreActiveTableId = -1;
             cutsceneFadeInOut(0);
-            Music_Trigger(0x23, 0);
+            Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
         }
     }
 
@@ -4340,11 +4342,11 @@ void GameUI_update(void)
         {
             if (*(s8*)&cMenuOpen == 0)
             {
-                Sfx_PlayFromObject(0, 0xf5);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_fox_exit);
             }
             else
             {
-                Sfx_PlayFromObject(0, 0x37b);
+                Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
             }
             cMenuOpen = 1;
             cMenuState = shouldOpenCMenu;

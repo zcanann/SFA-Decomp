@@ -14,6 +14,7 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
@@ -342,7 +343,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 objSetAnimSpeedTo1(*(int*)(slot + 0x700));
             }
-            Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -351,7 +352,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 objAudioFn_800393f8(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
             }
         }
-        Sfx_RemoveLoopedObjectSound(obj, 0x13d);
+        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x200;
         if ((animUpdate->hitVolumePair & 3) == 0)
         {
@@ -376,7 +377,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     objSetAnimSpeedTo1(*(int*)(slot + 0x700));
                 }
-                Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 slot = *(int*)&((GameObject*)obj)->extra;
                 if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -397,8 +398,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     *(int*)(p + 0x700) = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                             *(int*)&((GameObject*)obj)->anim.parent);
                 }
-                Sfx_PlayFromObject(obj, 0x3db);
-                Sfx_AddLoopedObjectSound(obj, 0x3dc);
+                Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             }
             break;
         case 2:
@@ -760,7 +761,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
             i = i + 1;
         }
         while (i < 7);
-        Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
         childSlot = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -1028,10 +1029,10 @@ void Tricky_update(int obj)
                     i = i + 1;
                 }
                 while (i < 7);
-                Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 TRICKY_VOICE(obj, st, 0x29d, 0);
             }
-            Sfx_RemoveLoopedObjectSound(obj, 0x13d);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         }
         TRICKY_RESET_COMMAND(state);
         *(int*)&((TrickyState*)state)->followObj = 0;
@@ -1717,7 +1718,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
             hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 4;
-        Sfx_PlayFromObjectLimited(obj, 1099, 2);
+        Sfx_PlayFromObjectLimited(obj, SFXTRIG_holorays16, 2);
         ObjHits_EnableObject(obj);
     }
     if ((((TrickyState*)state)->flags2DC & 0x40000000) != 0)
@@ -2155,7 +2156,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
                     *(u16*)&((TrickyState*)state)->unk2B0 = 0;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 & ~0x20LL;
                     ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 0x200;
-                    Sfx_PlayFromObject(obj, 0x47b);
+                    Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
                 }
                 else
                 {
@@ -2362,7 +2363,7 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
         {
             if (((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter == 0)
             {
-                Sfx_PlayFromObject(obj, 0x47a);
+                Sfx_PlayFromObject(obj, SFXTRIG_fox_kick2);
                 ((FrozenByte2F6*)((TrickyState*)state)->pad2F6)->fadeCounter = 0x1f;
             }
             Obj_StartModelFadeIn(obj, 0x12c);

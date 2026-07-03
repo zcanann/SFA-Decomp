@@ -39,6 +39,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/firecrawler.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
@@ -193,7 +194,7 @@ void crawler_nop(void)
 {
 }
 
-void hagabonMK2_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
+void hagabonMK2_stopLoopSfx(int x) { Sfx_StopFromObject(x, SFXTRIG_baddie_rach_death); }
 
 void firecrawler_spawnFirepipe(int* obj)
 {
@@ -268,7 +269,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
     }
     if (((BaddieState*)st)->hitCounter == 0)
     {
-        Sfx_PlayFromObject(obj, 0x49e);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_eggsnatch_carry2);
     }
     if (cmd == 0x1a) return;
     Sfx_PlayFromObject(obj, SFXen_blkscrp6);
@@ -309,14 +310,14 @@ void crawler_playReactionEffects(int* obj, int* st)
     case 2:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObjectLimited((u32)obj, 0x49b, 2);
+            Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_blooplaugh3, 2);
         }
         flag = 1;
         break;
     case 3:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject((int)obj, 0x498);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_haga_death);
         }
         break;
     case 4:
@@ -324,7 +325,7 @@ void crawler_playReactionEffects(int* obj, int* st)
         {
             if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2CBC)
             {
-                Sfx_PlayFromObject((int)obj, 0x499);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh1);
             }
             else
             {
@@ -335,26 +336,26 @@ void crawler_playReactionEffects(int* obj, int* st)
     case 5:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject((int)obj, 0x49d);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
         }
         break;
     case 6:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject((int)obj, 0x49d);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
         }
         break;
     case 7:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObjectLimited((u32)obj, 0x49c, 2);
+            Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         }
         flag = 1;
         break;
     case 9:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject((int)obj, 0x49a);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh2);
         }
         break;
     }
@@ -469,8 +470,8 @@ void crawler_handleHitStateEvent(int obj, int* st, int unused, int cmd)
     else
     {
         ((BaddieState*)st)->reactionFlags |= 0x8;
-        Sfx_StopFromObject(objI, 0x3e8);
-        Sfx_PlayFromObject(obj, 0x3ea);
+        Sfx_StopFromObject(objI, SFXTRIG_baddie_rach_death);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_eba_leavesopen);
         *(s16*)&((BaddieState*)st)->hitCounter = 0;
     }
 }
@@ -739,7 +740,7 @@ void fn_80157B58(int* obj, u8* state)
                 (((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ - ((GameObject*)setup)->anim.localPosY) /
                 dur;
         }
-        Sfx_PlayFromObject((int)obj, 0x4ae);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_4ae);
     }
 }
 
@@ -1178,21 +1179,21 @@ void hagabonMK2_update(s16* obj, u8* state)
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
-        Sfx_PlayFromObject((int)obj, 0x3e8);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = *(f32*)(state + 0x324);
-            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / *(f32*)&lbl_803E2C70);
         }
     }
     else
     {
-        Sfx_StopFromObject((int)obj, 0x3e8);
+        Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
     if (*(void**)(state + 0x340) != NULL
         && (*(s16*)(*(int*)(state + 0x340) + 0x46) == 0x1f || *(s16*)(*(int*)(state + 0x340) + 0x46) == 0))
     {
-        Sfx_PlayFromObject((int)obj, 0x23d);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
     }
 }
 
@@ -1407,11 +1408,11 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, 0x36e);
+                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, 0x22);
+                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
                     break;
                 }
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
@@ -1419,7 +1420,7 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
         }
         else
         {
-            Sfx_PlayFromObject(obj, 0x23e);
+            Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
         }
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
         return;
@@ -1461,20 +1462,20 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, 0x36e);
+                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, 0x22);
+                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
                     break;
                 }
-                Sfx_PlayFromObject(obj, 0x4aa);
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
         {
-            Sfx_PlayFromObject(obj, 0x23f);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }
         if (damage > ((BaddieState*)state)->hitCounter)
         {
@@ -1511,20 +1512,20 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
                     case 0x416:
-                        Sfx_PlayFromObject(obj, 0x36e);
+                        Sfx_PlayFromObject(obj, SFXTRIG_snort);
                         break;
                     case 0:
                     case 0x69:
-                        Sfx_PlayFromObject(obj, 0x22);
+                        Sfx_PlayFromObject(obj, SFXTRIG_stftest);
                         break;
                     }
-                    Sfx_PlayFromObject(obj, 0x4aa);
+                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
                     gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
             {
-                Sfx_PlayFromObject(obj, 0x23f);
+                Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
             }
             return;
         }
@@ -1538,20 +1539,20 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                     switch (((GameObject*)attacker)->anim.seqId)
                     {
                     case 0x416:
-                        Sfx_PlayFromObject(obj, 0x36e);
+                        Sfx_PlayFromObject(obj, SFXTRIG_snort);
                         break;
                     case 0:
                     case 0x69:
-                        Sfx_PlayFromObject(obj, 0x22);
+                        Sfx_PlayFromObject(obj, SFXTRIG_stftest);
                         break;
                     }
-                    Sfx_PlayFromObject(obj, 0x4aa);
+                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
                     gCrawlerHitSfxTimer = lbl_803E2BAC;
                 }
             }
             else
             {
-                Sfx_PlayFromObject(obj, 0x23e);
+                Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
             }
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
         }
@@ -1567,20 +1568,20 @@ void crawler_onHit(int obj, u8* state, u8* attacker, int cmd, int p5, int damage
                 switch (((GameObject*)attacker)->anim.seqId)
                 {
                 case 0x416:
-                    Sfx_PlayFromObject(obj, 0x36e);
+                    Sfx_PlayFromObject(obj, SFXTRIG_snort);
                     break;
                 case 0:
                 case 0x69:
-                    Sfx_PlayFromObject(obj, 0x22);
+                    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
                     break;
                 }
-                Sfx_PlayFromObject(obj, 0x4aa);
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_var);
                 gCrawlerHitSfxTimer = lbl_803E2BAC;
             }
         }
         else
         {
-            Sfx_PlayFromObject(obj, 0x23e);
+            Sfx_PlayFromObject(obj, SFXTRIG_swd_var);
         }
     }
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
@@ -1845,7 +1846,7 @@ void crawler_updateB(s16* obj, u8* state)
         ((BaddieState*)state)->seqEntryIndex = 0;
         if (((GameObject*)obj)->anim.seqId == 0x6a2)
         {
-            Sfx_PlayFromObject((int)obj, 0x4a9);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch_var);
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
                 firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
@@ -2091,7 +2092,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
         ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].mode;
         *(f32*)(state + 0x328) = lbl_803E2C38;
-        Sfx_StopFromObject((int)obj, 1000);
+        Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
 
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
@@ -2185,22 +2186,22 @@ void hagabonMK2_updateB(s16* obj, u8* state)
 
     if (randomGetRange(0, 0x2ee) == 0)
     {
-        Sfx_PlayFromObject((int)obj, 0x3e9);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eba);
     }
 
     if (*(f32*)(state + 0x324) > lbl_803E2C30)
     {
         extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfx, int vol, f32 v);
-        Sfx_PlayFromObject((int)obj, 0x3e8);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = *(f32*)(state + 0x324);
-            Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death, (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
                                    t / lbl_803E2C70);
         }
     }
     else
     {
-        Sfx_StopFromObject((int)obj, 0x3e8);
+        Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
 
     {
@@ -2208,7 +2209,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         if (*(void**)(state + 0x340) != NULL
             && ((t = *(s16*)(*(int*)(state + 0x340) + 0x46)) == 0x1f || t == 0))
         {
-            Sfx_PlayFromObject((int)obj, 0x23d);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_fball2_c);
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/audio/music_trigger_ids.h"
 
 void wclevelcont_func16(s16 value, s16* outRow, s16* outCol)
 {
@@ -210,12 +211,12 @@ void wclevelcont_syncProgressBits(int stateArg)
         if (state->thorntailMusicId != 0x2d)
         {
             state->thorntailMusicId = 0x2d;
-            Music_Trigger(0x2d, 1);
+            Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
         }
         if (state->ambientMusicId != -1)
         {
             state->ambientMusicId = 0xffff;
-            Music_Trigger(0x22, 0);
+            Music_Trigger(MUSICTRIG_fox_arwing, 0);
         }
     }
     else
@@ -223,12 +224,12 @@ void wclevelcont_syncProgressBits(int stateArg)
         if (state->thorntailMusicId != 0x39)
         {
             state->thorntailMusicId = 0x39;
-            Music_Trigger(0x39, 1);
+            Music_Trigger(MUSICTRIG_nightjungle, 1);
         }
         if (state->ambientMusicId != 0x22)
         {
             state->ambientMusicId = 0x22;
-            Music_Trigger(0x22, 1);
+            Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
     }
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);

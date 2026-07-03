@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/dll/CC/dll_0186_ccgasventcontrol.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define CCGASVENT_GROUP 0x3f
 #define GAMEBIT_GAS_ACTIVE 0x1c0       /* gas filling the room */
@@ -180,13 +181,13 @@ void ccgasventcontrol_update(int obj)
             }
             if (b != ((CcgasventcontrolState*)ex)->ventCount)
             {
-                Sfx_PlayFromObject(0, 0x409);
+                Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                 ((CcgasventcontrolState*)ex)->ventCount = b;
             }
         }
         else
         {
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             (*gGameUIInterface)->airMeterSetShutdown();
             GameBit_Set(GAMEBIT_GAS_PUZZLE_DONE, 1);
             GameBit_Set(0x620, 0);
@@ -237,16 +238,16 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     {
         if (((CcgasventcontrolState*)extra)->soundActive == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, 0x223);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
             ((CcgasventcontrolState*)extra)->soundActive = 1;
         }
-        Sfx_SetObjectSfxVolume(obj, 0x223, (u8)(count * 0xf + 0x28), lbl_803E461C);
+        Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_diallp_c_223, (u8)(count * 0xf + 0x28), lbl_803E461C);
     }
     else
     {
         if (((CcgasventcontrolState*)extra)->soundActive != 0)
         {
-            Sfx_RemoveLoopedObjectSound(obj, 0x223);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
             ((CcgasventcontrolState*)extra)->soundActive = 0;
         }
     }

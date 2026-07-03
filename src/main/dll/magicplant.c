@@ -25,6 +25,7 @@ void fn_8014D08C(int obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern const f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
 extern f32 lbl_803E28D0;
@@ -374,7 +375,7 @@ void fn_80153640(int obj, int state)
             }
             *(int*)&((GameObject*)newObj)->ownerObj = obj;
         }
-        Sfx_PlayFromObject(obj, 0x49a);
+        Sfx_PlayFromObject(obj, SFXTRIG_baddie_blooplaugh2);
     }
 }
 #pragma dont_inline reset
@@ -463,7 +464,7 @@ void fn_8015383C(int obj, int state)
     flagByte = ((BaddieState*)state)->inWhirlpoolGroup;
     if ((flagByte & 0x40) == 0)
     {
-        Sfx_PlayFromObjectLimited(obj, 0x49b, 2);
+        Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_blooplaugh3, 2);
         Baddie_SetMove(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState*)state)->inWhirlpoolGroup = (u8)((((BaddieState*)state)->inWhirlpoolGroup) | 0x40);
         ((BaddieState*)state)->seqEntryIndex = 0;
@@ -502,7 +503,7 @@ void fn_8015383C(int obj, int state)
             }
             else if (mode == 4)
             {
-                Sfx_PlayFromObject(obj, 0x357);
+                Sfx_PlayFromObject(obj, SFXTRIG_newtricky_01j);
             }
         }
         Baddie_SetMove(obj, state, mode, lbl_803E2910, 0, 0);
@@ -533,7 +534,7 @@ void fn_80153BFC(int obj, int state)
     ((BaddieState*)state)->inWhirlpoolGroup = ((BaddieState*)state)->inWhirlpoolGroup & 0xbf;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && ((GameObject*)obj)->anim.currentMove != 1)
     {
-        Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
+        Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
     }
     fn_8015355C(obj, state);

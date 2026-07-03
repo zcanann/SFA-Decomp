@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/audio/music_trigger_ids.h"
 
 #define DBSH_SHRINE_STATE_WAITING 0
 #define DBSH_SHRINE_STATE_RISING 1
@@ -140,10 +141,10 @@ void dbsh_shrine_free(int obj)
     }
     gameTimerStop();
     ObjGroup_RemoveObject(obj, 0xb);
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(8, 0);
-    Music_Trigger(0xe, 0);
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
+    Music_Trigger(MUSICTRIG_test_of_fear, 0);
     GameBit_Set(DBSH_SHRINE_GB_ACTIVE, 0);
     GameBit_Set(DBSH_SHRINE_GB_SCENE_BLOCK, 1);
 }
@@ -230,7 +231,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
             GameBit_Set(DBSH_SHRINE_GB_APPROACH, 1);
             obj->triggerRadius = 0x7fff;
             OBJECT_TRIGGER_REFRESH(0, obj, -1);
-            Music_Trigger(0xd8, 1);
+            Music_Trigger(MUSICTRIG_DIM_Snow, 1);
         }
         break;
     case DBSH_SHRINE_STATE_RISING:

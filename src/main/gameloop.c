@@ -27,6 +27,7 @@
 #include "main/pi_dolphin.h"
 #include "main/rcp_dolphin.h"
 #include "main/lightmap.h"
+#include "main/audio/music_trigger_ids.h"
 extern u64 camcontrol_playTargetTypeSfx();
 extern u64 runLoadingScreens();
 
@@ -654,8 +655,8 @@ void mapLoadByCoords(int arg)
     gGameLoopPlayerTrailIndex = 0;
     gGameLoopReloadRequested = 1;
     gGameLoopMusicActive = 0;
-    Music_Trigger(0xc9, 0);
-    Music_Trigger(0xd0, 0);
+    Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
+    Music_Trigger(MUSICTRIG_galleon_battle, 0);
     gGameLoopMusicFadeTimer = lbl_803DE7B4;
 }
 
@@ -1014,8 +1015,8 @@ void gameUpdate(void)
             gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer - timeDelta;
             if (gGameLoopMusicFadeTimer <= lbl_803DE7B0)
             {
-                Music_Trigger(0xc9, 0);
-                Music_Trigger(0xd0, 0);
+                Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
+                Music_Trigger(MUSICTRIG_galleon_battle, 0);
                 gGameLoopMusicActive = 0;
             }
         }

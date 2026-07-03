@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern f32 timeDelta;
 extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -99,7 +100,7 @@ void ccsharpclawpad_update(int obj)
             lbl_803E46C4
             && playerIsDisguised((int)player) != 0)
         {
-            Sfx_PlayFromObject(obj, 0x109);
+            Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
             GameBit_Set(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }

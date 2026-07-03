@@ -19,6 +19,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* The glow-light object referenced by LightSourceState.light is a shared
    ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
@@ -143,7 +144,7 @@ void lightsource_update(int obj)
                 {
                     GameBit_Set(b->gameBit, 1);
                 }
-                Sfx_PlayFromObject(obj, 0x80);
+                Sfx_PlayFromObject(obj, SFXTRIG_cvdrip1c);
             }
             else
             {
@@ -215,7 +216,7 @@ void lightsource_update(int obj)
         {
             if (!((LightSourceFlagByte*)&b->loopFlags)->looped)
             {
-                Sfx_AddLoopedObjectSound(obj, 0x72);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_mushdizzylp12);
                 ((LightSourceFlagByte*)&b->loopFlags)->looped = 1;
             }
         }
@@ -223,7 +224,7 @@ void lightsource_update(int obj)
         {
             if (((LightSourceFlagByte*)&b->loopFlags)->looped)
             {
-                Sfx_RemoveLoopedObjectSound(obj, 0x72);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_mushdizzylp12);
                 ((LightSourceFlagByte*)&b->loopFlags)->looped = 0;
             }
         }

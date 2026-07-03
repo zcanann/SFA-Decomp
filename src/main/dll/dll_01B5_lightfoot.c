@@ -15,6 +15,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct LightfootState
 {
@@ -168,7 +169,7 @@ void lightfoot_update(int obj)
                     }
                     else
                     {
-                        Sfx_PlayFromObject(0, 0x409);
+                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
                 ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA);
@@ -201,7 +202,7 @@ void lightfoot_update(int obj)
                     }
                     else
                     {
-                        Sfx_PlayFromObject(0, 0x409);
+                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
                 ((GameObject*)obj)->unkF4 = GameBit_Get(((GroundBaddieState*)inner)->gameBitA);
@@ -269,7 +270,7 @@ void lightfoot_update(int obj)
             snd[0] = lbl_803E8180;
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
             ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(obj, lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, 3, p30, 0, snd);
         }
         ((LightfootSub*)anim)->unk14 -= timeDelta;

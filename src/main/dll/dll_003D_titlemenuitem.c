@@ -20,6 +20,7 @@
 #include "main/pad.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
@@ -240,7 +241,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         {
             lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
                 lbl_803DD918);
-            Sfx_KeepAliveLoopedObjectSound(0, 0x3b9);
+            Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep);
         }
         else
         {
@@ -261,7 +262,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             {
                 previewVolume = 0x7f;
             }
-            Sfx_SetObjectSfxVolume(0, 0x3b9, previewVolume, lbl_803E21F8);
+            Sfx_SetObjectSfxVolume(0, SFXTRIG_pda_compassbeep, previewVolume, lbl_803E21F8);
         }
         break;
     default:

@@ -20,6 +20,7 @@
 #include "main/objfx.h"
 #include "main/dll/dll_00FD.h"
 #include "main/mm.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 
 extern void* Obj_GetPlayerObject(void);
@@ -122,7 +123,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
         case 0:
             break;
         default:
-            Sfx_PlayFromObject(obj, 0x5c);
+            Sfx_PlayFromObject(obj, SFXTRIG_ladderslide16);
             stateParam->mode = MAGICPLANT_MODE_HIT_REACT;
             stateParam->animStepScale = lbl_803E3884;
             ObjAnim_SetCurrentMove(obj, 3, lbl_803E385C, 0);
@@ -176,7 +177,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* statePar
     {
         if (distance < lbl_803E3894)
         {
-            Sfx_PlayFromObject(obj, 0x5d);
+            Sfx_PlayFromObject(obj, SFXTRIG_neonbuzzlp16);
         }
     }
     else if (distance > lbl_803E3898)
@@ -261,7 +262,7 @@ void MagicPlant_update(int obj)
             hitPos[0] += playerMapOffsetX;
             hitPos[2] += playerMapOffsetZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E3888, lightPos, 1, 0);
-            Sfx_PlayFromObject(obj, 0x47b);
+            Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
             Obj_ResetModelColorState(obj);
         }
         return;

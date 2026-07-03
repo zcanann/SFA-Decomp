@@ -11,6 +11,7 @@
 #include "main/objhits.h"
 #include "main/camera.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void objRenderFn_8003b8f4(f32);
 extern f32 sqrtf(f32 x);
 extern int randomGetRange(int lo, int hi);
@@ -199,7 +200,7 @@ void DFP_Torch_update(int obj)
     TorchPrm prm;
 
     prm = *(TorchPrm*)gDfpTorchEffectParams;
-    Sfx_PlayFromObject(obj, 0x72);
+    Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     objUpdateOpacity(obj);
     switch (state->mode)
     {
@@ -231,7 +232,7 @@ void DFP_Torch_update(int obj)
         if (state->lit != 0 && state->flickerTimer <= 0 && state->sfxPending != 0)
         {
             state->sfxPending = 0;
-            Sfx_PlayFromObject(obj, 0x80);
+            Sfx_PlayFromObject(obj, SFXTRIG_cvdrip1c);
         }
         if (state->lit != state->prevLit)
         {

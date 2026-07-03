@@ -24,6 +24,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define GCMENU_ITEM_ICON_COUNT 7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
@@ -550,7 +551,7 @@ void pauseMenuDrawStatus(void)
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) &&
         (objIsCurModelNotZero(player) != 0) && (GameBit_Get(0xEB1) != 0))
     {
-        Sfx_KeepAliveLoopedObjectSound(0, 0x3F0);
+        Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
     ((PauseMenuHud*)base)->magicLatch = statuses[2];
     ((PauseMenuHud*)base)->maxMagicLatch = statuses[8];
@@ -684,7 +685,7 @@ void pauseMenuDrawStatus(void)
                 switch (ji)
                 {
                 case 3:
-                    Sfx_PlayFromObject(0, 0x38D);
+                    Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                     dp = ((int*)(base + 0xB74)) + ji;
                     cur = *dp;
                     sv = *(int*)((u8*)statuses + off);

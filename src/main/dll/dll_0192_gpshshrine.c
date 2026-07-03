@@ -10,6 +10,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 extern int randomGetRange(int lo, int hi);
 extern u64 ObjGroup_RemoveObject();
 
@@ -67,10 +69,10 @@ void gpsh_shrine_free(int* obj)
     }
     gameTimerStop();
     ObjGroup_RemoveObject(obj, 0xb);
-    Music_Trigger(0xd8, 0);
-    Music_Trigger(0xd9, 0);
-    Music_Trigger(8, 0);
-    Music_Trigger(0xb, 0);
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
+    Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
     GameBit_Set(0xefa, 0);
     GameBit_Set(0xcbb, GameBit_Get(0xc91) == 0);
 }
@@ -336,7 +338,7 @@ void gpsh_shrine_update(int obj)
                 ((GpshShrineState*)data)->sfxTimer = t;
                 if (t <= k)
                 {
-                    Sfx_PlayFromObject(obj, 0x343);
+                    Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
                     ((GpshShrineState*)data)->sfxTimer = (f32)(int)
                     randomGetRange(500, 1000);
                 }
@@ -347,7 +349,7 @@ void gpsh_shrine_update(int obj)
                     GameBit_Set(0x5af, 0);
                     GameBit_Set(0xdd2, 1);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                    Music_Trigger(0xd8, 1);
+                    Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 }
                 break;
             case 5:

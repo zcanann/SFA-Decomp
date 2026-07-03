@@ -65,6 +65,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/dll/DR/shstaff_state.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct ShStaffPlacement
 {
@@ -582,7 +583,7 @@ end:
         state->sfxTimer = lbl_803E54D4;
         if (state->phase == 1)
         {
-            Sfx_PlayFromObject(obj, 0x3fe);
+            Sfx_PlayFromObject(obj, SFXTRIG_pk_staff_fizz);
         }
     }
 }

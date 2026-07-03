@@ -30,6 +30,7 @@
 #include "main/dll/player_objects.h"
 #include "main/rcp_dolphin.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /* ViewfinderState.mode state machine (see file header) */
 #define VIEWFINDER_MODE_ENTER_BLEND 0
@@ -160,13 +161,13 @@ void firstPersonDoControls(s16* obj)
             if ((fovTarget == ((CameraObject*)obj)->fov) &&
                 (lbl_803DD548->flags.zoomSfxPlaying))
             {
-                Sfx_StopFromObject(0, 0x3d8);
+                Sfx_StopFromObject(0, SFXTRIG_and_swipe1);
                 lbl_803DD548->flags.zoomSfxPlaying = 0;
             }
             if ((fovTarget != ((CameraObject*)obj)->fov) &&
                 (!lbl_803DD548->flags.zoomSfxPlaying))
             {
-                Sfx_PlayFromObject(0, 0x3d8);
+                Sfx_PlayFromObject(0, SFXTRIG_and_swipe1);
                 lbl_803DD548->flags.zoomSfxPlaying = 1;
             }
         }
@@ -302,7 +303,7 @@ void CameraModeViewfinder_free(int camObj)
             }
         }
     }
-    Sfx_StopFromObject(0, 0x3d8);
+    Sfx_StopFromObject(0, SFXTRIG_and_swipe1);
     mm_free(lbl_803DD548);
     lbl_803DD548 = NULL;
     viewFinderSetZoom(lbl_803E17E0);
@@ -375,7 +376,7 @@ void CameraModeViewfinder_update(s16* obj)
             lbl_803DD548->mode = VIEWFINDER_MODE_FADE_BACK;
             if (lbl_803DD548->flags.sfxEnabled)
             {
-                Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? 0x3f5 : 0x3f3);
+                Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? SFXTRIG_and_missilelaunch : SFXTRIG_shop_pricedown);
             }
         }
         ((CameraObject*)obj)->unk13E = 1;
@@ -602,7 +603,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     {
         lbl_803DD548->mode = VIEWFINDER_MODE_ENTER_BLEND;
         lbl_803DD548->flags.sfxEnabled = 1;
-        Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? 0x3f4 : 0x28b);
+        Sfx_PlayFromObject(0, lbl_803DD548->flags.zoomHudEnabled ? SFXTRIG_and_swipe2 : SFXTRIG_shop_priceup);
     }
     lbl_803DD548->flags.zoomSfxPlaying = 0;
     lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;

@@ -11,6 +11,7 @@
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void titleScreenShowCopyright(u8 arg);
@@ -532,7 +533,7 @@ int TitleMenu_run(void)
     else if (gTitleMenuPreviousSelection != gTitleMenuSelection)
     {
         TitleMenu_SetMenuState(gTitleMenuSelection, 1);
-        Sfx_PlayFromObject(0, 0x37b);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
         gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
         gTitleMenuPreviousSelection = gTitleMenuSelection;
         titleScreenFn_80130464(0);

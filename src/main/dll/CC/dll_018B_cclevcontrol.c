@@ -18,6 +18,8 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/music_trigger_ids.h"
 extern void objRenderFn_8003b8f4(f32);
 extern f32 timeDelta;
 
@@ -46,7 +48,7 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 void cclevcontrol_free(void)
 {
     envFxActFn_800887f8(0);
-    Music_Trigger(0xc8, 0);
+    Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
 }
 
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -105,7 +107,7 @@ void cclevcontrol_update(int obj)
             state[2] = -1;
             if (state[1] & 0x20)
             {
-                Music_Trigger(0xc8, 0);
+                Music_Trigger(MUSICTRIG_Arwing_Crash, 0);
             }
         }
     }
@@ -116,7 +118,7 @@ void cclevcontrol_update(int obj)
             state[2] = 0xc8;
             if (state[1] & 0x20)
             {
-                Music_Trigger(0xc8, 1);
+                Music_Trigger(MUSICTRIG_Arwing_Crash, 1);
             }
         }
     }
@@ -168,7 +170,7 @@ void cclevcontrol_update(int obj)
     collectBitB = GameBit_Get(0xaf7);
     if (collectBitB + collectBitA == 4 && GameBit_Get(0xf26) == 0)
     {
-        Sfx_PlayFromObject(obj, 0x7e);
+        Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
         GameBit_Set(0xf26, 1);
     }
 }

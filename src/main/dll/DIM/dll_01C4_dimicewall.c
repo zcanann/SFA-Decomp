@@ -9,6 +9,7 @@
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define DIMICEWALL_MAPID_NO_SFX 7433
 
@@ -94,7 +95,7 @@ void dimicewall_update(int* obj)
             }
             if ((u32)((DimicewallPlacement*)def)->mapId != DIMICEWALL_MAPID_NO_SFX)
             {
-                Sfx_PlayFromObject((int)obj, 1147);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
             }
             ((DimicewallState*)extra)->shattered = 1;
             if (((DimicewallPlacement*)def)->shatterGameBit != -1)

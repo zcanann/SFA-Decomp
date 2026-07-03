@@ -29,6 +29,7 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 void mikabomb_hitDetect(void);
 
@@ -836,7 +837,7 @@ void dll_F7_update(int* obj)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
-            Sfx_PlayAtPositionFromObject(obj, blk.x, blk.y, blk.z, 72);
+            Sfx_PlayAtPositionFromObject(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
             state->bounceOffset = lbl_803E3404;
             state->bounceVelocity = lbl_803E3408;
@@ -859,7 +860,7 @@ void dll_F7_update(int* obj)
         }
         state->byte9 = 1;
         state->byte8 = 0;
-        Sfx_PlayFromObject(obj, 74);
+        Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
         if ((int)((DllF7Placement*)params)->completeGameBit != -1)
         {

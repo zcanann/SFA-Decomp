@@ -26,6 +26,7 @@
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "main/sfa_shared_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -241,7 +242,7 @@ void fn_801EB0D4(u32 obj, int stateRaw)
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
-                Sfx_KeepAliveLoopedObjectSound((u32)obj, 0x44e);
+                Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_ar_bomb_pickup);
             }
             (*gGameUIInterface)->runAirMeter((s32)st->airMeterCurrent);
         }
@@ -520,12 +521,12 @@ void fn_801EB940(short* obj, int stateRaw)
                 doRumble(st->impactShakeTimer * fa);
                 Camera_EnableViewYOffset();
                 CameraShake_SetAllMagnitudes(st->impactShakeTimer / lbl_803E5BC0);
-                Sfx_PlayFromObject((u32)obj, 0x3bc);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_tr_jbike_bombbeep);
                 fb = (lbl_803E5B40 < lbl_803E5BC4 * st->impactShakeTimer)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->impactShakeTimer;
                 {
-                    Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, fb, lbl_803E5B20);
+                    Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_tr_jbike_bombbeep, fb, lbl_803E5B20);
                 }
             }
         }

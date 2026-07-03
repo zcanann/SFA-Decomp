@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/audio/music_trigger_ids.h"
 extern int ObjTrigger_IsSet();
 extern void objRenderFn_80041018(int obj);
 extern void envFxActFn_800887f8(u8 value);
@@ -21,7 +22,7 @@ void magiccavebottom_free(int obj)
 
     (void)obj;
     GameBit_Set(0xefb, 0);
-    Music_Trigger(0x2f, 0);
+    Music_Trigger(MUSICTRIG_PU3_Adventure, 0);
 }
 
 void treasurechest_init(int* obj);
@@ -52,7 +53,7 @@ void magiccavebottom_update(int* obj)
         }
         break;
     case 1:
-        Music_Trigger(0x2f, 1);
+        Music_Trigger(MUSICTRIG_PU3_Adventure, 1);
         *sub = 2;
         break;
     case 2:

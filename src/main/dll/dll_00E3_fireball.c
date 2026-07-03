@@ -27,6 +27,7 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 #define FIREBALL_ROT_COUNT 5
 extern int randomGetRange(int lo, int hi);
@@ -968,11 +969,11 @@ void fireball_update(int* obj)
         {
             if (hitState->contactHitVolume != 14)
             {
-                Sfx_PlayFromObject(obj, 179);
+                Sfx_PlayFromObject(obj, SFXTRIG_npu_216);
             }
             else
             {
-                Sfx_PlayFromObject(obj, 186);
+                Sfx_PlayFromObject(obj, SFXTRIG_foot_water_walk_1);
                 (*gWaterfxInterface)->spawnSplashBurst(
                     obj, ((GameObject*)obj)->anim.localPosX,
                     ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,

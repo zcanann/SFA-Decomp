@@ -44,6 +44,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct Dim2snowballObjectDef
 {
@@ -322,5 +323,5 @@ void dim2snowball_update(int* obj)
             *(int*)&((ObjHitsPriorityState*)m)->skeletonHitMask = 16;
         }
     }
-    Sfx_KeepAliveLoopedObjectSound(obj, 1171);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_firlp6);
 }

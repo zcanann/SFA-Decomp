@@ -9,6 +9,7 @@
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct Dim2prisonmammothPlacement
 {
@@ -207,7 +208,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int state)
     }
     if (RandomTimer_UpdateRangeTrigger((void*)(inner + 0x600), lbl_803E82C8, lbl_803E82CC))
     {
-        Sfx_PlayFromObject(obj, 0x43a);
+        Sfx_PlayFromObject(obj, SFXTRIG_hightop_call1);
     }
     return 0;
 }

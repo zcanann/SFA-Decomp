@@ -32,6 +32,7 @@ extern void objRenderFn_8003b8f4(f32);
 extern int getSaveGameLoadStatus(void);
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/music_trigger_ids.h"
 
 typedef struct Dim2lavacontrolPlacement
 {
@@ -105,7 +106,7 @@ void dim2lavacontrol_setScale(void* obj)
 void dim2lavacontrol_free(void)
 {
     fn_8004C1E4(0xC0, lbl_803E4B90);
-    Music_Trigger(0xC4, 0);
+    Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
     timeOfDayFn_80055000();
 }
 
@@ -153,7 +154,7 @@ void dim2lavacontrol_init(int obj, int param2)
         ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
         fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
     }
-    Music_Trigger(0xdd, 1);
+    Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
     envFxActFn_800887f8(0);
 }
 
@@ -214,7 +215,7 @@ void dim2lavacontrol_update(int obj)
         {
             Music_Trigger(*(int*)&((GameObject*)obj)->anim.localPosX, 0);
             *(int*)&((GameObject*)obj)->anim.localPosX = 0xe0;
-            Music_Trigger(0xe0, 1);
+            Music_Trigger(MUSICTRIG_WLC_Puzzle_e0, 1);
         }
     }
     else
@@ -224,7 +225,7 @@ void dim2lavacontrol_update(int obj)
         {
             Music_Trigger(*(int*)&((GameObject*)obj)->anim.localPosX, 0);
             *(int*)&((GameObject*)obj)->anim.localPosX = 0xd7;
-            Music_Trigger(0xd7, 1);
+            Music_Trigger(MUSICTRIG_WLC_Chambers, 1);
         }
     }
     SCGameBitLatch_Update((char*)obj + 8, 1, -1, -1, 0xd99, 0xde);

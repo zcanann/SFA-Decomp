@@ -26,6 +26,7 @@
 #include "string.h"
 #include "main/audio/sfx.h"
 #include "sfa_light_decls.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
@@ -171,11 +172,11 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
         {
             if (c == 2)
             {
-                Sfx_PlayFromObject(obj, 0x4bf);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4bf);
             }
             else if (c == 3)
             {
-                Sfx_PlayFromObject(obj, 0x4c2);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4c2);
             }
             else
             {
@@ -190,10 +191,10 @@ void explosion_spawnFlame(int obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
                 else if (m < 0x3f)
                 {
                 playLimited:
-                    Sfx_PlayFromObjectLimited(obj, 0x4b8, 2);
+                    Sfx_PlayFromObjectLimited(obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
                     goto done;
                 }
-                Sfx_PlayFromObject(obj, 0x203);
+                Sfx_PlayFromObject(obj, SFXTRIG_sexpl2_c);
             done:;
             }
         }

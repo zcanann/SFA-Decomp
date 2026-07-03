@@ -21,6 +21,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 typedef struct PressureswitchPlacement
 {
@@ -224,7 +225,7 @@ void pressureswitch_update(int obj)
             {
                 if (far == 0)
                 {
-                    Sfx_PlayFromObject(obj, 0x7e);
+                    Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
                 }
                 sub->chimeLatch = 1;
             }
@@ -328,7 +329,7 @@ void pressureswitch_update(int obj)
     }
     if (played != 0)
     {
-        Sfx_PlayFromObject(obj, 0x7f);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_treedrum16);
     }
     else
     {

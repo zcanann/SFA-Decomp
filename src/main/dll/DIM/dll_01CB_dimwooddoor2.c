@@ -17,6 +17,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -136,7 +137,7 @@ void dimwooddoor2_update(int* obj)
             sub->riseSpeed = lbl_803E49E4;
             sub->burnState = 0;
             GameBit_Set(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
-            Sfx_PlayFromObject((int)obj, 0x3e1);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c);
         }
     }
 }

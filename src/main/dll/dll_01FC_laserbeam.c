@@ -25,6 +25,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void textureFree(u8* tex);
 extern ModgfxInterface** gModgfxInterface;
 
@@ -402,7 +403,7 @@ void LaserBeam_update(int obj2)
                         }
                         Sfx_PlayAtPositionFromObject(obj2, ((GameObject*)player)->anim.localPosX,
                                                      ((GameObject*)obj2)->anim.localPosY,
-                                                     ((GameObject*)player)->anim.localPosZ, 0x1c9);
+                                                     ((GameObject*)player)->anim.localPosZ, SFXTRIG_wp_fball2_c_1c9);
                         if (*(s16*)(*(char**)&((GameObject*)player)->extra + 0x81a) == 0)
                         {
                             sfx = 31;

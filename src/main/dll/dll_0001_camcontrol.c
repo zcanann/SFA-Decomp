@@ -34,6 +34,7 @@
 #include "main/voxmaps.h"
 #include "string.h"
 #include "main/dll/dll_0105_largecrate.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(int p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 extern f32 fn_8014C5D0(register int obj); /* target reticle distance for the enemy objType group */
@@ -90,13 +91,13 @@ void camcontrol_updateTargetFeedback(void)
         targetKind = CAMCONTROL_CAMERA->targetKind;
         if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON)
         {
-            Sfx_PlayFromObject(0, 0x3ff);
+            Sfx_PlayFromObject(0, SFXTRIG_headcam_out);
             objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 2);
         }
         else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
             (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B))
         {
-            Sfx_PlayFromObject(0, 0x402);
+            Sfx_PlayFromObject(0, SFXTRIG_lockon2_on);
             objShowButtonGlow(reticle, gCamcontrolNormalizedMax, 3);
         }
         else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED)
@@ -167,12 +168,12 @@ void camcontrol_updateTargetFeedback(void)
             targetKind = CAMCONTROL_CAMERA->targetKind;
             if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON)
             {
-                Sfx_PlayFromObject(0, 0x400);
+                Sfx_PlayFromObject(0, SFXTRIG_strafe_active);
             }
             else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
                 (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B))
             {
-                Sfx_PlayFromObject(0, 0x401);
+                Sfx_PlayFromObject(0, SFXTRIG_lockon2_off);
             }
             else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED)
             {

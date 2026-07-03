@@ -37,6 +37,7 @@
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern u32 FUN_8003b818();
 
 void mikabomb_hitDetect(void);
@@ -1190,7 +1191,7 @@ void staff_hitDetectGeometry(int* obj)
         if (idx == 14)
         {
             Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
-                                         hitState->contactPosZ, 186);
+                                         hitState->contactPosZ, SFXTRIG_foot_water_walk_1);
             (*gWaterfxInterface)->spawnSplashBurst(
                 obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, lbl_803E32B4);
             ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(

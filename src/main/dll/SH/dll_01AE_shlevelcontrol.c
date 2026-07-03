@@ -21,6 +21,7 @@
 #include "main/dll/SP/SPshopkeeper.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/audio/music_trigger_ids.h"
 extern void envFxActFn_800887f8(u8 value);
 extern int mapUnload(int mapId, int flags);
 extern u64 FUN_80286838();
@@ -217,8 +218,8 @@ void SH_LevelControl_setMusic(short* obj)
             obj[8] = 0x2d;
             if ((*(int*)obj & 1) != 0)
             {
-                Music_Trigger(0x39, 0);
-                Music_Trigger(0x2d, 1);
+                Music_Trigger(MUSICTRIG_nightjungle, 0);
+                Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
             }
         }
         if (obj[9] == 0xc2 || obj[9] == -1)
@@ -226,8 +227,8 @@ void SH_LevelControl_setMusic(short* obj)
             obj[9] = 0xce;
             if ((*(int*)obj & 2) != 0)
             {
-                Music_Trigger(0xc2, 0);
-                Music_Trigger(0xce, 1);
+                Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
+                Music_Trigger(MUSICTRIG_CRF_Swim, 1);
             }
         }
     }
@@ -238,8 +239,8 @@ void SH_LevelControl_setMusic(short* obj)
             obj[8] = 0x39;
             if ((*(int*)obj & 1) != 0)
             {
-                Music_Trigger(0x2d, 0);
-                Music_Trigger(0x39, 1);
+                Music_Trigger(MUSICTRIG_PU1_Mysterious, 0);
+                Music_Trigger(MUSICTRIG_nightjungle, 1);
             }
         }
         if (obj[9] == 0xce || obj[9] == -1)
@@ -247,8 +248,8 @@ void SH_LevelControl_setMusic(short* obj)
             obj[9] = 0xc2;
             if ((*(int*)obj & 2) != 0)
             {
-                Music_Trigger(0xce, 0);
-                Music_Trigger(0xc2, 1);
+                Music_Trigger(MUSICTRIG_CRF_Swim, 0);
+                Music_Trigger(MUSICTRIG_cldrnr_walkabout, 1);
             }
         }
     }
@@ -989,13 +990,13 @@ void sh_levelcontrol_init(int obj)
     ((ShLevelcontrolState*)state)->mapAct = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
 
     ((ShLevelcontrolState*)state)->musicLatch = -1;
-    Music_Trigger(34, 0);
-    Music_Trigger(49, 0);
-    Music_Trigger(178, 0);
-    Music_Trigger(196, 0);
-    Music_Trigger(166, 0);
-    Music_Trigger(172, 0);
-    Music_Trigger(168, 0);
+    Music_Trigger(MUSICTRIG_fox_arwing, 0);
+    Music_Trigger(MUSICTRIG_Barrels, 0);
+    Music_Trigger(MUSICTRIG_PU3_Adventure_b2, 0);
+    Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
+    Music_Trigger(MUSICTRIG_wcity_day, 0);
+    Music_Trigger(MUSICTRIG_trex_boss_1, 0);
+    Music_Trigger(MUSICTRIG_drako_3, 0);
     GameBit_Set(3213, 1);
 
     if (GameBit_Get(319) == 0)

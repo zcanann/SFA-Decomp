@@ -7,6 +7,7 @@
 #include "main/light.h"
 #include "main/objlib.h"
 #include "main/resource.h"
+#include "main/audio/sfx_trigger_ids.h"
 
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
@@ -494,7 +495,7 @@ void vfpdoorswitch_update(int obj)
     if (GameBit_Get(state->gameBitId) == 0) return;
     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
-    Sfx_PlayFromObject(obj, 0x494);
+    Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
     Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
 }
@@ -531,7 +532,7 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
         {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
-            Sfx_PlayFromObject(obj, 0x494);
+            Sfx_PlayFromObject(obj, SFXTRIG_gate_stops);
             state->activated = 1;
         }
     }

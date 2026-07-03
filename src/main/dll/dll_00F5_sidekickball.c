@@ -26,6 +26,7 @@
 #include "main/dll/dll_00F5_sidekickball.h"
 #include "string.h"
 #include "main/audio/sfx.h"
+#include "main/audio/sfx_trigger_ids.h"
 extern void objRenderFn_8003b8f4(f32);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
@@ -455,7 +456,7 @@ u8 trickyBallMove(u8* obj)
         speed = sqrtf(reflectedX * reflectedX + reflectedY * reflectedY + reflectedZ * reflectedZ);
         if (speed > lbl_803E36CC)
         {
-            Sfx_PlayFromObject((int)obj, 0x16c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baptr1_c);
         }
         if (lbl_803E369C != speed)
         {
