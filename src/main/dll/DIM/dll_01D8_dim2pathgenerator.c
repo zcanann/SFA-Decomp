@@ -92,7 +92,7 @@ typedef struct Dim2pathgeneratorPlacement
     u8 colorB; /* 0x6 -> spawn setup head.unk04[2] */
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] (forced 0xff) */
     u8 pad8[0x14 - 0x8];
-    s32 unk14;
+    s32 mapId;
     s16 spawnPeriod; /* 0x18 */
     s16 unk1A;
     s16 unk1C;
@@ -257,7 +257,7 @@ void dim2pathgenerator_update(int* obj)
             ((Dim2SpawnSetup*)p)->posX = ((Dim2PathGeneratorState*)extra)->originX;
             ((Dim2SpawnSetup*)p)->posY = ((Dim2PathGeneratorState*)extra)->originY;
             ((Dim2SpawnSetup*)p)->posZ = ((Dim2PathGeneratorState*)extra)->originZ;
-            ((Dim2SpawnSetup*)p)->mapId = ((Dim2pathgeneratorPlacement*)def)->unk14;
+            ((Dim2SpawnSetup*)p)->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
             (*(void (**)(int*, int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], p, 1);
             ObjGroup_RemoveObject(objs[i], OBJ_GROUP_SNOWBALL_POOL);
             o2 = ObjGroup_GetObjects(OBJ_GROUP_SNOWBALL_POOL, &count);
@@ -283,7 +283,7 @@ void dim2pathgenerator_update(int* obj)
         ((Dim2SpawnSetup*)np)->unk18 = (s8) * (u8*)((char*)def + 0x1c);
         ((Dim2SpawnSetup*)np)->unk1A = *(u8*)((char*)def + 0x1a);
         ((Dim2SpawnSetup*)np)->unk1C = *(u8*)((char*)def + 0x1b);
-        ((Dim2SpawnSetup*)np)->mapId = ((Dim2pathgeneratorPlacement*)def)->unk14;
+        ((Dim2SpawnSetup*)np)->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
         Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
         ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
