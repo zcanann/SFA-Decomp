@@ -120,10 +120,10 @@ extern int dbstealerworm_stateHandlerA02();
  * control-record grab flags, plays the run-toward move (0x11), stores the
  * grabbed target into the control record and queues a 0x11 message to it. */
 u32
-FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, u32 obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     DbStealerwormControl* control;
 
@@ -133,8 +133,8 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        arg1 = FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7,
+                               arg8, obj, 0x11, 0, arg12, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
@@ -143,8 +143,8 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         control->linkedObj = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
         control->unk1C = 0x24;
         control->unk2C = 0;
-        ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                            control->linkedObj, 0x11, obj, 0x12, param_13, param_14, param_15, param_16);
+        ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            control->linkedObj, 0x11, obj, 0x12, arg13, arg14, arg15, arg16);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
@@ -159,10 +159,10 @@ FUN_80200558(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * (or the target has dropped below), either queues a 0xe "arrived" message if
  * within range, else queues the 9/7 "still travelling" message pair. */
 u32
-FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80200740(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     float divisor;
     u32 queueFull;
@@ -192,8 +192,8 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 0x11, 0, param_12, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                     obj, 0x11, 0, arg12, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 0x1f;
@@ -250,10 +250,10 @@ FUN_80200740(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * plays a random spit sfx (hurt-dependent range), and flushes the pending
  * control-record message. */
 u32
-FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, u32 obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80201260(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, u32 obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     int hurt;
     u32 busy;
@@ -266,8 +266,8 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     control = (DbStealerwormControl*)*(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
     if (*(char*)(state + 0x27a) != '\0')
     {
-        param_1 = FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7,
-                               param_8, obj, 0, 0, param_12, param_13, param_14, param_15, param_16);
+        arg1 = FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7,
+                               arg8, obj, 0, 0, arg12, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     if (*(char*)(state + 0x27a) != '\0')
@@ -275,8 +275,8 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         ((GroundBaddieState*)state)->baddie.targetObj = 0;
         if (control->linkedObj != 0)
         {
-            ObjMsg_SendToObject(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                                control->linkedObj, 0x11, obj, 0x10, param_13, param_14, param_15, param_16);
+            ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                                control->linkedObj, 0x11, obj, 0x10, arg13, arg14, arg15, arg16);
             control->linkedObj = 0;
         }
         hurt = FUN_80017a98();
@@ -316,10 +316,10 @@ FUN_80201260(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * attack move, sets the control grab flag; if the baddie's 0x314 bit0 latch is
  * set, clears it and raises control flag bit0 (one-shot). */
 u32
-FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_802014c8(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     u32 animId;
     int extra;
@@ -335,8 +335,8 @@ FUN_802014c8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 10, 0, animId, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                     obj, 10, 0, animId, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 1;
@@ -359,10 +359,10 @@ int dbstealerworm_stateHandlerA09(int obj, int p);
 /* dbstealerworm state handler: enter move 5 (hit-enabled variant, no control
  * record touched). */
 u32
-FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80201658(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     u32 animId;
 
@@ -375,8 +375,8 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F8C;
     if (*(char*)(state + 0x27a) != '\0')
     {
-        FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                     obj, 5, 0, animId, param_13, param_14, param_15, param_16);
+        FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                     obj, 5, 0, animId, arg13, arg14, arg15, arg16);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.unk34D = 1;
@@ -387,10 +387,10 @@ FUN_80201658(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * move speed from the baddie's damage counter (extra+0x406), and raises the
  * control grab flag. */
 u32
-FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, int state,
-             u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_802017a0(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, int state,
+             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     u32 pick;
     u32 animId;
@@ -412,15 +412,15 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
         {
             if (*(char*)(state + 0x27a) != '\0')
             {
-                FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                             obj, 7, 0, animId, param_13, param_14, param_15, param_16);
+                FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                             obj, 7, 0, animId, arg13, arg14, arg15, arg16);
                 ((GroundBaddieState*)state)->baddie.moveDone = 0;
             }
         }
         else if (*(char*)(state + 0x27a) != '\0')
         {
-            FUN_800305f8((double)lbl_803E6F40, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
-                         obj, 6, 0, animId, param_13, param_14, param_15, param_16);
+            FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                         obj, 6, 0, animId, arg13, arg14, arg15, arg16);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
         }
         ((GroundBaddieState*)state)->baddie.unk34D = 1;
@@ -442,7 +442,7 @@ FUN_802017a0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
  * until the scaled range error clears a threshold, then nudges the baddie turn
  * accumulator (state+0x280) toward the yaw-error-derived rate and returns 0. */
 u32
-FUN_80202004(double rangeThreshold, double turnGain, u64 param_3, double rangeScale, u16* obj,
+FUN_80202004(double rangeThreshold, double turnGain, u64 unused3, double rangeScale, u16* obj,
              int target)
 {
     int yawDelta;
@@ -495,7 +495,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2);
  * range AND the vertical gap is tiny (already on top of the target). Otherwise
  * nudges the baddie turn accumulator toward the yaw-error rate. */
 u32
-FUN_80202130(double rangeThreshold, double turnGain, u64 param_3, double rangeScale, u16* obj,
+FUN_80202130(double rangeThreshold, double turnGain, u64 unused3, double rangeScale, u16* obj,
              int target)
 {
     int yawDelta;
