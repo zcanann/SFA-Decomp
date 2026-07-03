@@ -1829,7 +1829,7 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, PartFxSpawnParams* spawn
         return (*(int (**)())(*(int*)gPartfxResourceModule16 + 8))(sourceObj, effectIdArg, spawnParams, spawnFlags,
                                                                    modelIdArg, extraArgsArg);
     }
-    if ((effectId - 0x84U < 2) || ((0x89 < effectId && (effectId < 200))))
+    if ((effectId - 0x84U <= 1) || ((0x89 < effectId && (effectId < 200))))
     {
         gPartfxResourceTimeouts[6] = 2000;
         if (gPartfxResourceModule06 == NULL)
