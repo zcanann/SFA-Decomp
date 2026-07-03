@@ -15,6 +15,8 @@
 #include "main/gamebits.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK 0x1000
+#define NWTRICKY_OBJFLAG_HIDDEN 0x4000
+#define NWTRICKY_OBJFLAG_HITDETECT_DISABLED 0x2000
 extern f32 timeDelta;
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(int* obj, int* target);
@@ -184,5 +186,5 @@ void nw_tricky_update(int* obj)
 void nw_tricky_init(int* obj)
 {
     ((GameObject*)obj)->animEventCallback = nw_tricky_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
