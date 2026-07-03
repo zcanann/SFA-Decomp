@@ -72,9 +72,9 @@ extern f32 gSbCloudBallVelocityScale;
 extern f32 gSbCloudBallTrailVelScale;
 extern f32 gSbCloudBallTrailParticleScale;
 
-void FUN_801e55c0(u64 param_1, double param_2, double param_3, u64 param_4,
-                  u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                  u16* param_9, int param_10)
+void FUN_801e55c0(u64 arg1, double arg2, double arg3, u64 arg4,
+                  u64 arg5, u64 arg6, u64 arg7, u64 arg8,
+                  u16* setup, int obj)
 {
 }
 

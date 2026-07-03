@@ -41,8 +41,8 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 /* Ghidra-split phantom retained to keep the unit's function set (and thus
    the linked layout) aligned with v1.0; body is empty in retail. */
-void FUN_801e55c0(u32 param_1, double param_2, double param_3, u32 param_4, u32 param_5,
-                  u32 param_6, u32 param_7, u32 param_8, u16* param_9, int param_10)
+void FUN_801e55c0(u32 arg1, double arg2, double arg3, u32 arg4, u32 arg5,
+                  u32 arg6, u32 arg7, u32 arg8, u16* setup, int obj)
 {
 }
 
