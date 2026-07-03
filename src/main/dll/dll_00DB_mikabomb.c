@@ -737,8 +737,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
