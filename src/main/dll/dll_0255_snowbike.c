@@ -712,18 +712,22 @@ typedef struct
     u8 b01 : 1;
 } SnowBikeFlags;
 
-void SnowBike_init(int obj, u8* params, int flag)
+#pragma inline_max_size(4000)
+static inline void SnowBike_initBody(int obj, u8* params, int flag)
 {
     extern void fn_801EC928(int obj, u8* state); /* #57 */
-    char* base = lbl_803284E0;
-    u32 pathParam = lbl_803E5AE0;
-    u8* state = ((GameObject*)obj)->extra;
-    u8* alloc;
-    u8* path;
-    int i;
-    s16 rot;
-    f32 fz;
     f32 fv;
+    f32 fz;
+    s16 rot;
+    int i;
+    u8* path;
+    u8* alloc;
+    u32 pathParam;
+    u8* state;
+    char* base = lbl_803284E0;
+
+    pathParam = lbl_803E5AE0;
+    state = ((GameObject*)obj)->extra;
 
     if (((GameObject*)obj)->anim.mapEventSlot == 0x13)
     {
@@ -857,7 +861,7 @@ void SnowBike_init(int obj, u8* params, int flag)
     fv = ((SnowBikeState*)state)->velLimitZ;
     ((SnowBikeState*)state)->distanceScaleLimit = fv;
     ((SnowBikeState*)state)->baseVelLimitZ = fv;
-    ((SnowBikeState*)state)->unk060 = &base[((SnowBikeState*)state)->bikeType * 6 + 0xa4];
+    ((SnowBikeState*)state)->unk060 = (char*)((int)base + 0xa4 + ((SnowBikeState*)state)->bikeType * 6);
     if (((SnowBikeState*)state)->bikeType == 0)
     {
         if (!((SnowBikeFlags*)(state + 0x428))->b02)
@@ -887,6 +891,12 @@ void SnowBike_init(int obj, u8* params, int flag)
     path[0x264] = lbl_803E5C68 + lbl_803DC0B8;
     (*gPathControlInterface)->attachObject((void*)obj, path);
 }
+
+void SnowBike_init(int obj, u8* params, int flag)
+{
+    SnowBike_initBody(obj, params, flag);
+}
+#pragma inline_max_size reset
 
 typedef struct
 {
