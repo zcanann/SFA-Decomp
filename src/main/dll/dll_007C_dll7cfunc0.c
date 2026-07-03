@@ -292,5 +292,3 @@ void dll_7C_func01_nop(void)
 void dll_7C_func00_nop(void)
 {
 }
-
-void dll_7D_func01_nop(void);
