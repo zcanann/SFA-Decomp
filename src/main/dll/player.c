@@ -16139,6 +16139,7 @@ int Lightfoot_UpdateTargetAnimationCycle(int obj, int state, f32 fv)
 
 int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
 {
+    int q;
     EmitCtrlTbl* t = (EmitCtrlTbl*)lbl_80334EE8;
     int inner = *(int*)&((GameObject*)obj)->extra;
     int data = *(int*)((char*)inner + 0x40c);
@@ -16191,7 +16192,6 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 || *(s8*)&((PlayerState*)state)->baddie.moveJustStartedA !=
         0)
     {
-        int q;
         if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
         {
             int i;
