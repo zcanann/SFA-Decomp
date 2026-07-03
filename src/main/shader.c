@@ -2812,6 +2812,7 @@ extern s16 lbl_803DCE70;
 extern u8 lbl_803DCDED;
 
 #pragma opt_strength_reduction off
+#pragma opt_propagation off
 void doPendingMapLoads(void)
 {
     s16* cellCursor;
@@ -3270,6 +3271,7 @@ void doPendingMapLoads(void)
         }
     }
 }
+#pragma opt_propagation reset
 #pragma opt_strength_reduction reset
 
 extern s16 lbl_803DCE90;
