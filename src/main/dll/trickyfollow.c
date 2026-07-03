@@ -966,8 +966,8 @@ state_selected:
         }
         ((TrickyState*)state)->speed = v;
         {
-            f32 dx;
             f32 dz;
+            f32 dx;
             dx = ((GameObject*)((GameObject*)obj)->extra)->anim.velocityZ;
             sqx = dx * dx;
             dz = *(f32*)&((GameObject*)((GameObject*)obj)->extra)->anim.parent;
