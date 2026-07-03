@@ -102,3 +102,28 @@ desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
   CFunc lowers differently from statement-position assignments (the 0x4f7e14 paths),
   e.g. a local whose initializer is lowered during function-entry object setup
   rather than as a body statement.
+
+## SOLVED (session 6): the direct form comes from an INLINED HELPER PARAMETER
+- Proven on staff_initialise (dll_00E2, now 100%): move the entry-position code into
+  a `static inline` helper taking the pointer as a PARAMETER and call it with the
+  address constant: `static inline void body(s16* p, ...) {...}` +
+  `body((s16*)lbl_803208A0, ...)`. After CInline, the argument's address
+  materialization IS the parameter web's single def — `lis rX; addi rHOME,rX,lo`
+  direct, across any number of BB boundaries. Decl-init (`s16* p = (s16*)lbl;`) and
+  a pointer-RETURNING inline helper were also tested: both still produce temp+mr —
+  only the parameter path skips the pooled CodeGen temp.
+- Corollaries from the same session (all probe-validated on staff_initialise):
+  * A flat N-trip walker loop auto-unrolled by factor F leaves the ORIGINAL counter
+    as `li rC,0` + a merged `addi rC,rC,F-1` bump inside the ctr body (35-trip,
+    unroll 7 -> kept `addi r5,r5,6`). Writing the hand-unrolled nest eliminates the
+    counter; write the FLAT loop and let IroUnrollLoop do it.
+  * Passing the counter as a call argument (`i = 0; body(tbl, i)`) both orders the
+    entry as `li rC,0` BEFORE the lis/addi and keeps the caller's `i` web spanning
+    the whole inlined body — which blocks the const-fold of a later SR derived-IV
+    init (`mr rOFF,rIV` survives instead of `li rOFF,0`). Param order (ptr, int)
+    sets the volatile homes (ptr=r4, int=r5 here); (int, ptr) swaps them.
+- ACTION for the banked functions (dll_92/94/97/99_func03, dll_63_func03,
+  SnowBike_init, nw_mammoth_update, renderParticles, shield_update,
+  subtitleBuildLineTable, optionsMenu_openGeneralPanel, movieLoad): wrap the
+  function body (or its head) in a `static inline` helper receiving the table
+  address as a parameter.

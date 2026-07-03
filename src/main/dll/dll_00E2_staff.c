@@ -1001,40 +1001,36 @@ extern s16 sStaffSwipeTextureIdTable[4];
 extern s16* gStaffSwipeTextureIds;
 extern void* textureLoad(int texId, u8 flag);
 
-void staff_initialise(void)
+static inline void staff_initialiseBody(s16* p, int i)
 {
-    s16* p;
-    int n;
-    int j;
-    int off;
-    void** tex;
-    int i;
-    p = (s16*)lbl_803208A0;
-    for (n = 0; n < 30; n += 6)
+    for (; i < 35; i++)
     {
-        for (j = 0; j < 7; j++)
+        if (*p == 0)
         {
-            if (*p == 0)
-            {
-                *p = 0xc3;
-            }
-            p++;
+            *p = 0xc3;
         }
+        p++;
     }
     gStaffSwipeTextureIds = sStaffSwipeTextureIdTable;
     if (gStaffSwipeTextures[0] == NULL)
     {
-        for (i = 0, off = i, tex = gStaffSwipeTextures; i < 2; i++)
+        for (i = 0; i < 2; i++)
         {
-            *tex = textureLoad(*(s16*)((u8*)gStaffSwipeTextureIds + off), 0);
-            off += 2;
-            tex++;
+            gStaffSwipeTextures[i] = textureLoad(gStaffSwipeTextureIds[i], 0);
         }
     }
     if (gStaffSwipeResource == NULL)
     {
         gStaffSwipeResource = Resource_Acquire(90, 1);
     }
+}
+
+void staff_initialise(void)
+{
+    int i;
+
+    i = 0;
+    staff_initialiseBody((s16*)lbl_803208A0, i);
 }
 
 extern void quakeSpellTextureFn_8007366c(int param);
