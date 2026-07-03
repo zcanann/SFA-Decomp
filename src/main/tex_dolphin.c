@@ -395,10 +395,10 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
 
     {
         MapBlockBoundsRec* b = (MapBlockBoundsRec*)bounds;
-        f32 fz = *(volatile f32*)&playerMapOffsetZ;
+        f32 fz = *(f32*)&playerMapOffsetZ;
         f32 fldZ = *(float*)((int)blockXform + 0x38);
         f32 fldY = *(float*)((int)blockXform + 0x28);
-        f32 fx = *(volatile f32*)&playerMapOffsetX;
+        f32 fx = *(f32*)&playerMapOffsetX;
         f32 fldX = *(float*)((int)blockXform + 0x18);
         f32 ax0 = (f32)(b->minX >> 3) + fldX;
         f32 az0 = (f32)(b->minZ >> 3) + fldZ;

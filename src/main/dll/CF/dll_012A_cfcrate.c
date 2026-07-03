@@ -335,7 +335,7 @@ void cfccrate_update(int obj)
                 state->proximityLatch = 0;
                 getLActions(obj, obj, 0x5c, 0, 0, 0);
             }
-            else if ((dist > *(volatile f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
+            else if ((dist > *(f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
             {
                 state->proximityLatch = 1;
                 getLActions(obj, obj, 0x5d, 0, 0, 0);

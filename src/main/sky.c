@@ -1366,7 +1366,7 @@ void sky2_run(void)
             {
                 r = lbl_803DF108;
             }
-            if (g > *(volatile f32*)&lbl_803DF118)
+            if (g > *(f32*)&lbl_803DF118)
             {
                 g = lbl_803DF118;
             }
