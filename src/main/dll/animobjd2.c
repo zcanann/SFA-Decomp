@@ -271,7 +271,7 @@ void fn_8013E0D0(int* obj, u8* st)
                         *(int*)&t->unk728 = 0;
                         if (Obj_IsLoadingLocked() != 0)
                         {
-                            *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_4;
+                            t->stateFlags |= TRICKY_STATE_FLAG_4;
                             TRICKY_RESET((u8*)t);
                             if (t->child == NULL)
                             {
@@ -369,7 +369,7 @@ void fn_8013E0D0(int* obj, u8* st)
             if (go != 0 && ok != 1)
             {
                 objAnimFn_8013a3f0((int*)gobj, 0x34, lbl_803E2444, 0x4000000);
-                *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) |= 0x10;
+                t->stateFlags |= 0x10;
                 t->substate = 3;
                 *(int*)&t->unk728 = 0;
             }
@@ -384,7 +384,7 @@ void fn_8013E0D0(int* obj, u8* st)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_800;
+                t->stateFlags |= TRICKY_STATE_FLAG_800;
                 {
                     int i = 0;
                     u8* p = (u8*)t;
@@ -410,11 +410,11 @@ void fn_8013E0D0(int* obj, u8* st)
         {
             u32 fl;
             trickyDebugPrint(str + 0x5e4);
-            fl = *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET);
+            fl = t->stateFlags;
             if (fl & TRICKY_STATE_FLAG_8000000)
             {
-                *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) = fl & ~0x800LL;
-                *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_FLAG_1000;
+                t->stateFlags = fl & ~0x800LL;
+                t->stateFlags |= TRICKY_STATE_FLAG_1000;
                 {
                     u8* p;
                     int i = 0;
@@ -427,7 +427,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 }
                 Sfx_RemoveLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
                 TRICKY_BARK((int*)gobj, 0x29d, 0);
-                *(u32*)((u8*)t + TRICKY_STATE_FLAGS_OFFSET) &= ~0x10LL;
+                t->stateFlags &= ~0x10LL;
                 t->substate = 0;
             }
             break;
