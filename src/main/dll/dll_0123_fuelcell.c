@@ -58,7 +58,6 @@ extern f32 lbl_803E3CF4;
 extern f32 lbl_803E3CF8;
 
 int fuelcell_getExtraSize(void) { return 0x60; }
-int deathseq_getExtraSize(void);
 
 typedef struct
 {
