@@ -77,9 +77,8 @@ extern f32 lbl_803E298C;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801540A0(int obj, void* pp)
+void fn_801540A0(int obj, int p)
 {
-    int p = (int)pp;
     u8 done;
 
     *(f32*)(p + 0x32c) = lbl_803E294C;
