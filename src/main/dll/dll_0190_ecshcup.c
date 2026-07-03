@@ -356,11 +356,11 @@ void fn_801C8B68(int obj)
         float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
         float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
         int ang = (u16)getAngle(dx, dz);
-        delta = ang - (int)(u16)*(volatile s16*)&((GameObject*)self)->anim.rotX;
+        delta = ang - (int)(u16)((GameObject*)self)->anim.rotX;
         if (delta > 0x8000) delta -= 0xffff;
         if (delta < -0x8000) delta += 0xffff;
         ((GameObject*)self)->anim.rotX = (short)(
-            (int)((GameObject*)self)->anim.rotX
+            (int)*(s16*)(int)(GameObject*)self
             + (int)((f32)delta * timeDelta / lbl_803E50C0));
     }
     dist = Vec_xzDistance((f32*)((u8*)self + 24), &player->anim.worldPosX);
