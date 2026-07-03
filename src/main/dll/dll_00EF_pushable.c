@@ -515,10 +515,10 @@ static inline int* Transporter_GetActiveModel(void* obj)
 }
 
 u32
-FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5,
-             u64 param_6, u64 param_7, u64 param_8, int obj, u32 param_10
-             , ObjAnimUpdateState* animUpdate, u32 param_12, u32 param_13, u32 param_14,
-             u32 param_15, u32 param_16)
+FUN_80176920(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
+             u64 arg6, u64 arg7, u64 arg8, int obj, u32 arg10
+             , ObjAnimUpdateState* animUpdate, u32 arg12, u32 arg13, u32 arg14,
+             u32 arg15, u32 arg16)
 {
     int actionId;
 
@@ -526,8 +526,8 @@ FUN_80176920(u64 param_1, double param_2, double param_3, u64 param_4, u64 param
             (animUpdate->triggerCommand == 1)) &&
         (actionId = (int)*(char*)(*(int*)(obj + 0x4c) + 0x1a), -1 < actionId))
     {
-        FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, actionId, '\x01',
-                     animUpdate, param_12, param_13, param_14, param_15, param_16);
+        FUN_80053c98(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, actionId, '\x01',
+                     animUpdate, arg12, arg13, arg14, arg15, arg16);
         animUpdate->triggerCommand = 0;
     }
     return 0;
@@ -540,8 +540,8 @@ void FUN_801778d0(int obj)
 }
 
 u32
-FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
-             u64 param_5, u64 param_6, u64 param_7, u64 param_8, int obj,
+FUN_801778e0(u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+             u64 arg5, u64 arg6, u64 arg7, u64 arg8, int obj,
              int state)
 {
     float scale;
@@ -596,7 +596,7 @@ FUN_801778e0(u64 param_1, u64 param_2, u64 param_3, u64 param_4,
     }
     else
     {
-        FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, obj);
+        FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, obj);
         result = 0;
     }
     return result;
