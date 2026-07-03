@@ -319,7 +319,6 @@ void vfpflamepoint_update(int obj)
     }
 }
 
-#pragma peephole off
 void fn_801FD6B4(int obj)
 {
     u8* extra;
@@ -398,7 +397,6 @@ void fn_801FD6B4(int obj)
     }
 }
 
-#pragma peephole off
 void VFP_lavapool_init(int obj, int def)
 {
     int extra;
