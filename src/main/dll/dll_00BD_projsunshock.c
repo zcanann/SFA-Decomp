@@ -22,3 +22,5 @@ void projsunshock_release(void)
 void projsunshock_initialise(void)
 {
 }
+
+char sProjsunshockDoNoLongerSupported[] = "<projsunshock Do>No Longer supported \n";
