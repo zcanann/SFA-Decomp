@@ -209,4 +209,3 @@ void SB_Propeller_hitDetect(GameObject* obj)
     o->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
-void SB_ShipGun_free(GameObject* obj);
