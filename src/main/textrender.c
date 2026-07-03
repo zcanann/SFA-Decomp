@@ -3248,3 +3248,10 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
         return (SubtitleCmd*)buf;
     }
 }
+
+/* .bss block 0x80339980-0x8033AF40 */
+u8 gGameTextBase[0x20];
+u8 lbl_803399A0[0x20];
+u8 lbl_803399C0[0x280];
+u32 lbl_80339C40[0x240];
+GameTextSlot lbl_8033A540[0xA00 / sizeof(GameTextSlot)];
