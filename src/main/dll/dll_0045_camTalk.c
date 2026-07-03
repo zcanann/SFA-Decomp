@@ -14,7 +14,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern CameraModeBikeState* gCamTalkBikeState;
 
-static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
 extern void vecRotateZXY(void* params, void* outVec);
 extern u32 setMatrixFromObjectPos();
