@@ -102,6 +102,8 @@ void EnterSaveNameScreen_frameEnd(void)
 #define ENTER_SAVE_NAME_SFX_CONFIRM 0x418
 #define ENTER_SAVE_NAME_SFX_DELETE 0x419
 #define ENTER_SAVE_NAME_SFX_TYPE 0x41A
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
 
 u32
 EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 param_5
@@ -236,7 +238,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
     {
         buttons = getButtonsJustPressed(0);
         buttonDisable(0, buttons);
-        if (buttons & 0x100)
+        if (buttons & PAD_BUTTON_A)
         {
             if ((gEnterSaveNameSelectedIndex <= 0x25) && (gEnterSaveNameLength < ENTER_SAVE_NAME_MAX_LENGTH))
             {
@@ -272,7 +274,7 @@ EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 
                 lbl_803DD6EC = 2;
             }
         }
-        else if (buttons & 0x200)
+        else if (buttons & PAD_BUTTON_B)
         {
             gEnterSaveNameAutoScrolling = 0;
             Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_DELETE);
