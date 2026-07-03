@@ -98,7 +98,7 @@ extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern void textureFree(int texture);
 extern int textureLoadAsset(int id);
-extern void fn_8005D118(int a, int b, int c, int d, int e);
+extern void setTextColor(int unused, int a, int b, int c, int d);
 extern int gCMenuItemCount;
 extern s16 gCMenuSelIndex;
 extern s8 gCMenuCurSection;
@@ -1192,7 +1192,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             gameTextSetCharset(prevCharset, 3);
         }
     }
-    fn_8005D118(0, 0xFF, 0xFF, 0xFF, 0xFF);
+    setTextColor(0, 0xFF, 0xFF, 0xFF, 0xFF);
 }
 
 void cMenuUpdateAnims(void)
