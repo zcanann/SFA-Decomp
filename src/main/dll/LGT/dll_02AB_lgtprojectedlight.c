@@ -118,7 +118,6 @@ void projectedlight_update(int obj)
         (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)((GameObject*)obj)->anim.rotZ);
 }
 
-#pragma scheduling off
 #pragma opt_common_subs off
 void projectedlight_init(int obj, int setup)
 {
@@ -215,7 +214,6 @@ void projectedlight_init(int obj, int setup)
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling reset
 
 void projectedlight_release(void)
 {
