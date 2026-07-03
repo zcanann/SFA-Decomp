@@ -406,7 +406,7 @@ config.libs = [
     DolphinLib(
         "db",
         [
-            Object(MatchingFor("GSAE01"), "dolphin/db/db.c"),
+            Object(NonMatching, "dolphin/db/db.c"),
         ],
     ),
     DolphinLib(

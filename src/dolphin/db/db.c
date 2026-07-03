@@ -2,7 +2,7 @@
 #include <dolphin/os.h>
 
 extern int DBVerbose;
-extern const char sDBExceptionDestinationMessage[];
+char sDBExceptionDestinationMessage[] = "DBExceptionDestination\n";
 
 void DBInit(void) {
   __DBInterface = (DBInterface*)OSPhysicalToCached(OS_DBINTERFACE_ADDR);
