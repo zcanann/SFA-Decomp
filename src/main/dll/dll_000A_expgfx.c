@@ -138,7 +138,7 @@ static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
     return &gExpgfxTableEntries[tableIndex];
 }
 
-static inline u8 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot)
+static inline u32 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot)
 {
     return ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
 }
@@ -253,20 +253,20 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 #pragma opt_propagation reset
 
 #pragma opt_propagation off
-void expgfxRemoveAll(void)
+#pragma inline_max_size(4000)
+static inline void expgfxRemoveAllBody(void)
 {
-    ExpgfxRuntimeDataLayout* runtime;
-    u32* slotPoolBases;
-    u32* poolActiveMasks;
-    s8* poolActiveCountPtrs;
-    s16* poolSlotTypeIds;
-    u16* refCountPtr;
     ExpgfxTableEntry* expTabEntry;
-    u32 activeBit;
-    u32 inactiveBitMask;
-    int poolIndex;
-    int slotIndex;
+    u16* refCountPtr;
     ExpgfxSlot* slot;
+    int slotIndex;
+    int poolIndex;
+    u32 activeBit;
+    s16* poolSlotTypeIds;
+    s8* poolActiveCountPtrs;
+    u32* poolActiveMasks;
+    u32* slotPoolBases;
+    ExpgfxRuntimeDataLayout* runtime;
 
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
@@ -311,7 +311,7 @@ void expgfxRemoveAll(void)
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
                 {
                     u32 currentMaskValue = *poolActiveMasks;
-                    inactiveBitMask = ~activeBit;
+                    u32 inactiveBitMask = ~activeBit;
                     *poolActiveMasks = currentMaskValue & inactiveBitMask;
                 }
             }
@@ -330,6 +330,14 @@ void expgfxRemoveAll(void)
         poolIndex++;
     }
 }
+
+#pragma inline_max_size reset
+void expgfxRemoveAll(void)
+{
+    expgfxRemoveAllBody();
+}
+#pragma dont_inline on
+#pragma dont_inline reset
 #pragma opt_propagation reset
 
 #pragma ppc_unroll_speculative on
@@ -3188,6 +3196,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_factor_limit 1
 #pragma ppc_unroll_instructions_limit 120
+#pragma dont_inline on
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3251,10 +3260,12 @@ void expgfx_onMapSetup(void)
     }
     gExpgfxTextureFreeInProgress = 0;
 }
+#pragma dont_inline reset
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
 #pragma ppc_unroll_instructions_limit 120
 
+#pragma dont_inline on
 void expgfx_release(void)
 {
     int poolIndex;
@@ -3269,6 +3280,7 @@ void expgfx_release(void)
     while (poolIndex < EXPGFX_POOL_COUNT);
     return;
 }
+#pragma dont_inline reset
 
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_factor_limit 1
