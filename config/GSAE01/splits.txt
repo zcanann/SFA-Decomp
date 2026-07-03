@@ -63,6 +63,7 @@ main/modellight.c:
 
 main/gameloop.c:
 	.text       start:0x8001F54C end:0x80021370
+	.data       start:0x802CA460 end:0x802CA4B0
 	.bss        start:0x8033BF88 end:0x8033C7A0
 
 main/vecmath.c:

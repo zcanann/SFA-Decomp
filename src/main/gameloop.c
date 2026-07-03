@@ -1552,3 +1552,5 @@ void checkReset(void)
         break;
     }
 }
+
+char sGameLoopResetMessages[0x50] = "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
