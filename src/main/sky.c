@@ -2787,16 +2787,16 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         gSkySunDirection[0] = vec[0];
         gSkySunDirection[1] = vec[1];
         gSkySunDirection[2] = vec[2];
-        *(f32*)(gSkySunObject + 0xc) = *(f32*)(cam + 0x22) + (f32)(s16)(int)
+        ((GameObject*)gSkySunObject)->anim.localPosX = *(f32*)(cam + 0x22) + (f32)(s16)(int)
         vec[0];
-        *(f32*)(gSkySunObject + 0x10) = *(f32*)(cam + 0x24) + (f32)(s16)(int)
+        ((GameObject*)gSkySunObject)->anim.localPosY = *(f32*)(cam + 0x24) + (f32)(s16)(int)
         vec[1];
-        *(f32*)(gSkySunObject + 0x14) = *(f32*)(cam + 0x26) + (f32)(s16)(int)
+        ((GameObject*)gSkySunObject)->anim.localPosZ = *(f32*)(cam + 0x26) + (f32)(s16)(int)
         vec[2];
-        *(f32*)(gSkySunObject + 8) = gSkySunMoonScale * scale;
+        ((GameObject*)gSkySunObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
         *(s16*)gSkySunObject = 0x10000 - cam[0];
-        *(s16*)(gSkySunObject + 2) = cam[1];
-        *(s16*)(gSkySunObject + 4) = 0;
+        ((GameObject*)gSkySunObject)->anim.rotY = cam[1];
+        ((GameObject*)gSkySunObject)->anim.rotZ = 0;
         gSkySunObject[0x37] = *(s16*)&gSkySunAlpha;
         time2 = ((SkyState*)gSkyState)->timeOfDay;
         if (time2 >= lbl_803DF088)
