@@ -2483,7 +2483,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             s8 fi;
             s8 li_;
             u8 lv;
-            int n, t;
+            int taskCount, taskPartial;
             int hint;
             {
                 u8* base;
@@ -2505,32 +2505,32 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 tmp = -1;
             haveIdx2:
                 fi = (s8)tmp;
-                n = GameBit_Get(0x63c);
-                t = GameBit_Get(0x4e9);
-                n += GameBit_Get(0x5f3);
-                n += GameBit_Get(0x5f4);
-                n = t + n;
+                taskCount = GameBit_Get(0x63c);
+                taskPartial = GameBit_Get(0x4e9);
+                taskCount += GameBit_Get(0x5f3);
+                taskCount += GameBit_Get(0x5f4);
+                taskCount = taskPartial + taskCount;
                 if (GameBit_Get(0x123))
                 {
-                    n++;
+                    taskCount++;
                 }
                 if (GameBit_Get(0x2e8))
                 {
-                    n++;
+                    taskCount++;
                 }
                 if (GameBit_Get(0x83b))
                 {
-                    n++;
+                    taskCount++;
                 }
                 if (GameBit_Get(0x83c))
                 {
-                    n++;
+                    taskCount++;
                 }
-                if (n >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[0];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[1];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[2];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[3];
-                else if (n >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[4];
+                if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[0];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[1];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[2];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[3];
+                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18)) tmp = (s8)gGameUiTaskHintCandidates[4];
                 else tmp = -1;
                 li_ = (s8)tmp;
             }
@@ -4095,11 +4095,11 @@ void GameUI_update(void)
 {
     u8* player = Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
-    u8 r29v;
+    u8 sectionTarget;
     s16 cx;
     s16 angDelta;
-    u8 f26 = 0;
-    u8 f25 = 1;
+    u8 trickyProximity = 0;
+    u8 allowCStickTarget = 1;
     int flags;
 
     gCMenuButtons = getButtonsJustPressed(0);
@@ -4153,7 +4153,7 @@ void GameUI_update(void)
             (((GameObject*)player)->objectFlags & 0x1000) != 0 || shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0)
         {
-            f25 = 0;
+            allowCStickTarget = 0;
             gCMenuButtons |= 0x200;
             gCMenuButtons &= ~0xf0000;
         }
@@ -4182,7 +4182,7 @@ void GameUI_update(void)
             GameBit_Set(0x9d5, 0);
         }
 
-        if (f25 != 0)
+        if (allowCStickTarget != 0)
         {
             int cxa, cya;
             if ((s8)padGetCX(0) < 0) cxa = -padGetCX(0);
@@ -4215,7 +4215,7 @@ void GameUI_update(void)
                         lbl_803E21D0)
                     {
                         gCMenuButtons |= 0x80000;
-                        f26 = 1;
+                        trickyProximity = 1;
                     }
                     else if (tricky != 0 && GameBit_Get(0x4e4) && cameraGetTargetType() == 8)
                     {
@@ -4290,7 +4290,7 @@ void GameUI_update(void)
                     lbl_803DD8B7 = 0;
                     gCMenuCurSection = 0;
                     fn_8012FA70(0, 0);
-                    if (f26 != 0) fn_8012F9B4(0, 0xc1, 0);
+                    if (trickyProximity != 0) fn_8012F9B4(0, 0xc1, 0);
                     goto afterDispatch;
                 }
             }
@@ -4344,21 +4344,21 @@ void GameUI_update(void)
                     {
                     case 4:
                         lbl_803DD79E = 0x5555;
-                        r29v = 1;
+                        sectionTarget = 1;
                         break;
                     case 3:
                         lbl_803DD79E = -0x5556;
-                        r29v = 0;
+                        sectionTarget = 0;
                         break;
                     case 2:
                         lbl_803DD79E = 0;
-                        r29v = 2;
+                        sectionTarget = 2;
                         break;
                     }
                     if ((u8)next != (s8)st)
                     {
                         *(s8*)&shouldOpenCMenu = (s8)next;
-                        lbl_803DD8B7 = r29v;
+                        lbl_803DD8B7 = sectionTarget;
                     }
                     goto afterDispatch;
                 }
