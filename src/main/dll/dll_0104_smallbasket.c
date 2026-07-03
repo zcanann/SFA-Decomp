@@ -790,8 +790,8 @@ void smallbasket_update(int obj)
     int state;
     int playerState;
     int flag;
-    s8 c;
-    u8 k;
+    s8 contactFlags;
+    u8 subtype;
     int level;
     f32 zf;
     f32 animSpeed;
@@ -1033,8 +1033,8 @@ void smallbasket_update(int obj)
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
                 anim.localPosZ;
             smallbasket_resolveCollision(obj);
-            c = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
-            if ((c != 0) && (*(s8*)&((CfperchState*)state)->throwState == 1))
+            contactFlags = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
+            if ((contactFlags != 0) && (*(s8*)&((CfperchState*)state)->throwState == 1))
             {
                 blk.fy = ((GameObject*)obj)->anim.localPosX;
                 blk.fz = ((GameObject*)obj)->anim.localPosY;
@@ -1052,7 +1052,7 @@ void smallbasket_update(int obj)
                 ((GameObject*)obj)->anim.velocityZ = zf;
                 ObjHits_ClearHitVolumes(obj);
             }
-            else if ((c != 0) && (*(s8*)&((CfperchState*)state)->throwState == 2))
+            else if ((contactFlags != 0) && (*(s8*)&((CfperchState*)state)->throwState == 2))
             {
                 zf = lbl_803E3938;
                 ((GameObject*)obj)->anim.velocityX = zf;
@@ -1088,13 +1088,13 @@ void smallbasket_update(int obj)
         }
         if ((((CfperchState*)state)->randomTimer <= 0) && (((CfperchState*)state)->carryState != 0))
         {
-            k = ((CfperchState*)state)->subtype;
-            if ((k == 5) || (k == 6))
+            subtype = ((CfperchState*)state)->subtype;
+            if ((subtype == 5) || (subtype == 6))
             {
                 Sfx_PlayFromObject(obj, 0x6c);
                 ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
-            else if (((u8)(k - 1) <= 1) || (k == 3))
+            else if (((u8)(subtype - 1) <= 1) || (subtype == 3))
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_vineclimb116);
                 ((CfperchState*)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
