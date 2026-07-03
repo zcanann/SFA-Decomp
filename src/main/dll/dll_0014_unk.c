@@ -1197,14 +1197,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
                 candA[countA++] = nid;
             }
         }
-        if (countA != 0)
-        {
-            neighborId = candA[randomGetRange(0, countA - 1)];
-        }
-        else
-        {
-            neighborId = -1;
-        }
+        neighborId = countA != 0 ? candA[randomGetRange(0, countA - 1)] : -1;
     }
     else
     {
@@ -1224,14 +1217,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
                 candB[countB++] = nid;
             }
         }
-        if (countB != 0)
-        {
-            neighborId = candB[randomGetRange(0, countB - 1)];
-        }
-        else
-        {
-            neighborId = -1;
-        }
+        neighborId = countB != 0 ? candB[randomGetRange(0, countB - 1)] : -1;
     }
 
     if (neighborId == -1)
