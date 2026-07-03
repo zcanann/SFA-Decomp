@@ -490,12 +490,12 @@ u32 FUN_8006069c(void)
     return 0;
 }
 
-void FUN_8006070c(u64 param_1, double param_2, u32 param_3, u32 param_4,
-                  int param_5, float* param_6, u32 param_7, u32 param_8, int param_9)
+void FUN_8006070c(u64 a, double b, u32 c, u32 d,
+                  int e, float* f, u32 g, u32 h, int i)
 {
 }
 
-void FUN_80060a64(u16* param_1, int param_2)
+void FUN_80060a64(u16* a, int b)
 {
 }
 
@@ -727,8 +727,8 @@ int FUN_80062010(double x, double y, double z, u16 tag, int linkArr)
     return DAT_803ddbdc + -1;
 }
 
-void FUN_800620e8(u32 param_1, u32 param_2, float* param_3, int* param_4, int* param_5,
-                  u32 param_6, u32 param_7, u32 param_8, u8 param_9)
+void FUN_800620e8(u32 a, u32 b, float* c, int* d, int* e,
+                  u32 f, u32 g, u32 h, u8 i)
 {
 }
 
@@ -792,37 +792,41 @@ u32 FUN_80063298(void)
 }
 
 u32
-FUN_800632d8(u64 param_1, double param_2, double param_3, u32 param_4, float* param_5,
-             u32 param_6)
+FUN_800632d8(u64 a, double b, double c, u32 d, float* e,
+             u32 f)
 {
     return 0;
 }
 
 u32
-FUN_800632e0(u64 param_1, double param_2, double param_3, u32 param_4, float* param_5,
-             u32* param_6, u32 param_7)
+FUN_800632e0(u64 a, double b, double c, u32 d, float* e,
+             u32* f, u32 g)
 {
     return 0;
 }
 
 u32
-FUN_800632e8(u64 param_1, double param_2, double param_3, u32 param_4, float* param_5,
-             u32 param_6)
+FUN_800632e8(u64 a, double b, double c, u32 d, float* e,
+             u32 f)
 {
     return 0;
 }
 
-void FUN_800632f4(u64 param_1, double param_2, double param_3, u32 param_4,
-                  u32 param_5, int param_6, u32 param_7)
+void FUN_800632f4(u64 a, double b, double c, u32 d,
+                  u32 e, int f, u32 g)
 {
 }
 
+/* FUN_800632f8 -- resolve a collision contact against a surface plane:
+ * given a segment start (a) and its current/output point (b), slide/project b
+ * out of the plane according to the surface type.  Byte-identical twin of
+ * fn_800660C8 (same math, different call site). */
 u32
-FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, float* param_5,
-             float* param_6, u8 param_7)
+FUN_800632f8(double penetration, double planeConst, float* a, float* b, float* dest,
+             float* plane, u8 type)
 {
-    float scratch1;
-    float scratch2;
+    float dE;
+    float dS;
     float t;
     double len;
     double dist;
@@ -833,108 +837,108 @@ FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, flo
     float dy;
     float dz;
 
-    if (param_7 == 3)
+    if (type == 3)
     {
-        *param_4 = *param_5;
-        param_4[1] = param_5[1];
-        param_4[2] = param_5[2];
-        dx = *param_4 - *param_3;
-        dy = param_4[1] - param_3[1];
-        dz = param_4[2] - param_3[2];
+        *b = *dest;
+        b[1] = dest[1];
+        b[2] = dest[2];
+        dx = *b - *a;
+        dy = b[1] - a[1];
+        dz = b[2] - a[2];
         FUN_80017784(&dx);
-        scratch1 = (float)((double)(param_6[3] +
-                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1])
-            - param_2);
-        scratch2 = (float)((double)(param_6[3] +
-                param_3[2] * param_6[2] + *param_3 * *param_6 + param_3[1] * param_6[1])
-            - param_2);
+        dE = (float)((double)(plane[3] +
+                b[2] * plane[2] + *b * *plane + b[1] * plane[1])
+            - planeConst);
+        dS = (float)((double)(plane[3] +
+                a[2] * plane[2] + *a * *plane + a[1] * plane[1])
+            - planeConst);
         t = lbl_803DF934;
-        if (scratch2 != scratch1)
+        if (dS != dE)
         {
-            t = scratch2 / (scratch2 - scratch1);
+            t = dS / (dS - dE);
         }
-        scratch1 = param_3[1];
-        scratch2 = param_3[2];
-        *param_4 = (*param_4 - *param_3) * t;
-        param_4[1] = (param_4[1] - scratch1) * t;
-        param_4[2] = (param_4[2] - scratch2) * t;
-        *param_4 = *param_4 + *param_3;
-        param_4[1] = param_4[1] + param_3[1];
-        param_4[2] = param_4[2] + param_3[2];
+        dE = a[1];
+        dS = a[2];
+        *b = (*b - *a) * t;
+        b[1] = (b[1] - dE) * t;
+        b[2] = (b[2] - dS) * t;
+        *b = *b + *a;
+        b[1] = b[1] + a[1];
+        b[2] = b[2] + a[2];
         return 1;
     }
-    if ((lbl_803DF930 <= param_6[1]) || (param_6[1] <= lbl_803DF96C))
+    if ((lbl_803DF930 <= plane[1]) || (plane[1] <= lbl_803DF96C))
     {
-        if ((param_7 != 8) && ((7 < param_7 || (param_7 != 5))))
+        if ((type != 8) && ((7 < type || (type != 5))))
         {
-            scratch1 = param_6[2];
-            scratch2 = *param_6;
-            dist = (double)(float)(param_2 -
-                (double)(param_6[3] +
-                    param_4[2] * scratch1 + *param_4 * scratch2 + param_4[1] * param_6[1]
+            dE = plane[2];
+            dS = *plane;
+            dist = (double)(float)(planeConst -
+                (double)(plane[3] +
+                    b[2] * dE + *b * dS + b[1] * plane[1]
                 ));
             if (dist <= (double)lbl_803DF934)
             {
                 return 1;
             }
-            FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
+            FUN_80293900((double)(dS * dS + dE * dE));
             FUN_80292b48();
             len = (double)FUN_802947f8();
-            param_4[1] = param_4[1] + (float)(dist / len);
+            b[1] = b[1] + (float)(dist / len);
             return 1;
         }
-        *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
-        param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
-        param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-        scratch1 = (float)(param_2 -
-            (double)(param_6[3] +
-                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
-        *param_4 = scratch1 * *param_6 + *param_4;
-        param_4[1] = scratch1 * param_6[1] + param_4[1];
-        param_4[2] = scratch1 * param_6[2] + param_4[2];
+        *b = -(float)(penetration * (double)*plane - (double)*b);
+        b[1] = -(float)(penetration * (double)plane[1] - (double)b[1]);
+        b[2] = -(float)(penetration * (double)plane[2] - (double)b[2]);
+        dE = (float)(planeConst -
+            (double)(plane[3] +
+                b[2] * plane[2] + *b * *plane + b[1] * plane[1]));
+        *b = dE * *plane + *b;
+        b[1] = dE * plane[1] + b[1];
+        b[2] = dE * plane[2] + b[2];
         return 1;
     }
-    if (param_7 == 8)
+    if (type == 8)
     {
     LAB_800663f8:
-        scratch1 = param_6[2];
-        scratch2 = *param_6;
-        dist = (double)(float)(param_2 -
-            (double)(param_6[3] +
-                param_4[2] * scratch1 + *param_4 * scratch2 + param_4[1] * param_6[1]));
+        dE = plane[2];
+        dS = *plane;
+        dist = (double)(float)(planeConst -
+            (double)(plane[3] +
+                b[2] * dE + *b * dS + b[1] * plane[1]));
         if ((double)lbl_803DF934 < dist)
         {
-            FUN_80293900((double)(scratch2 * scratch2 + scratch1 * scratch1));
+            FUN_80293900((double)(dS * dS + dE * dE));
             FUN_80292b48();
             len = (double)FUN_802949e8();
             if ((double)lbl_803DF934 != len)
             {
                 dist = (double)(float)(dist / len);
             }
-            normX = *param_6;
+            normX = *plane;
             normY = lbl_803DF934;
-            normZ = param_6[2];
+            normZ = plane[2];
             FUN_80017784(&normX);
-            *param_4 = (float)(dist * (double)normX + (double)*param_4);
-            param_4[2] = (float)(dist * (double)normZ + (double)param_4[2]);
+            *b = (float)(dist * (double)normX + (double)*b);
+            b[2] = (float)(dist * (double)normZ + (double)b[2]);
         }
     }
     else
     {
-        if (param_7 < 8)
+        if (type < 8)
         {
-            if (param_7 == 1) goto LAB_800663f8;
+            if (type == 1) goto LAB_800663f8;
         }
-        else if (param_7 == 10) goto LAB_800663f8;
-        *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
-        param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
-        param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-        scratch1 = (float)(param_2 -
-            (double)(param_6[3] +
-                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
-        *param_4 = scratch1 * *param_6 + *param_4;
-        param_4[1] = scratch1 * param_6[1] + param_4[1];
-        param_4[2] = scratch1 * param_6[2] + param_4[2];
+        else if (type == 10) goto LAB_800663f8;
+        *b = -(float)(penetration * (double)*plane - (double)*b);
+        b[1] = -(float)(penetration * (double)plane[1] - (double)b[1]);
+        b[2] = -(float)(penetration * (double)plane[2] - (double)b[2]);
+        dE = (float)(planeConst -
+            (double)(plane[3] +
+                b[2] * plane[2] + *b * *plane + b[1] * plane[1]));
+        *b = dE * *plane + *b;
+        b[1] = dE * plane[1] + b[1];
+        b[2] = dE * plane[2] + b[2];
     }
     return 1;
 }
@@ -943,7 +947,7 @@ void FUN_80063a68(void)
 {
 }
 
-void FUN_80063a74(u32 param_1, u32 param_2, u32 param_3, char param_4)
+void FUN_80063a74(u32 a, u32 b, u32 c, char d)
 {
 }
 
@@ -3580,7 +3584,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
-u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
+u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, void* results)
 {
     void** pp;
     f32* fp;
@@ -3634,7 +3638,7 @@ u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, v
         hitCount = hitDetect_800667ec(0,
                                (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
                                (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c),
-                               param_2, param_3, count, results, 0);
+                               startPos, endPos, count, results, 0);
     }
 
     fp = results;
