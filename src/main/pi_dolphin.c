@@ -8321,3 +8321,10 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
     return 0;
 }
 #pragma optimize_for_size reset
+
+/* .bss glue 0x8035EF48-0x8035F680 */
+int lbl_8035EF48[0x58];
+u32 lbl_8035F0A8[0x58];
+int lbl_8035F208[0x78];
+u32 lbl_8035F3E8[0x58];
+s16 gObjMapBlockInfo[0x9C];

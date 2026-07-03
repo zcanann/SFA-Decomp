@@ -3458,3 +3458,7 @@ BlockEntry gShaderRomListSlots[8];
 u8 lbl_8038228C[0x14];
 int lbl_803822A0[5];
 int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
+
+/* .bss glue 0x80386468-0x803868D8 */
+void* gLoadedRomListPages[0x78];
+u8 lbl_80386648[0x290];

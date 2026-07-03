@@ -96,7 +96,7 @@ main/objprint_dolphin.c:
 
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
-	.bss        start:0x8035F680 end:0x803779A0
+	.bss        start:0x8035EF48 end:0x803779A0
 
 main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980
@@ -104,7 +104,7 @@ main/rcp_dolphin.c:
 
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
-	.bss        start:0x8037E0C0 end:0x80386468
+	.bss        start:0x8037E0C0 end:0x803868D8
 
 main/lightmap.c:
 	.text       start:0x8005AB70 end:0x8005DF5C
