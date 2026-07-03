@@ -153,30 +153,45 @@ extern f32 lbl_803E2018;
  * as a raw u8* base here). Only the pure-constant scalar fields are named; the
  * indexed/per-slot arrays in this region are left as raw casts. The lower
  * offsets (<0x244) are modeled file-locally elsewhere (CMenuHud in
- * dll_0000_gameui.c). */
+ * dll_0000_gameui.c).
+ *
+ * The 0xAFC..0xBA7 region is a set of 13 parallel per-item arrays indexed by
+ * HUD item slot (0..12); pauseMenuDrawStatus walks them via raw casts:
+ *   elemOpacity[13] @ 0xAFC (f32)  - per-item fade opacity
+ *   prevValue[13]   @ 0xB30 (int)  - value latched last time it changed
+ *   gotFlags[13]    @ 0xB64 (u8)   - "new-item got" bit already set flag
+ *   displayValue[13]@ 0xB74 (int)  - value currently shown/animating
+ * The named scalars below are individual elements of those arrays, e.g.
+ * magicValue == prevValue[2], maxMagicValue == prevValue[8],
+ * magicLatch == displayValue[2], maxMagicLatch == displayValue[8],
+ * magicCur == elemOpacity[1], and healthAnim/keyAnim/... == elemOpacity[4/10/..].
+ * They are kept as separate fields here because the compiler emits the
+ * constant-index accesses via SDA/scalar addressing, distinct from the
+ * runtime-indexed array walks. The 0x1C0 region is the HUD icon-texture handle
+ * table (int[]); texHandle @ 0x244 is entry 0x21 of it. */
 typedef struct PauseMenuHud
 {
     u8 _pad0[0x244];
-    int texHandle;       /* 0x244 */
+    int texHandle;       /* 0x244  == iconTex[0x21] */
     u8 _pad248[0xB00 - 0x248];
-    f32 magicCur;        /* 0xB00 */
+    f32 magicCur;        /* 0xB00  == elemOpacity[1] */
     u8 _padB04[0xB08 - 0xB04];
-    f32 moneyAnim;       /* 0xB08 */
-    f32 healthAnim;      /* 0xB0C */
+    f32 moneyAnim;       /* 0xB08  == elemOpacity[3] */
+    f32 healthAnim;      /* 0xB0C  == elemOpacity[4] */
     u8 _padB10[0xB24 - 0xB10];
-    f32 keyAnim;         /* 0xB24 */
-    f32 scarabAnim;      /* 0xB28 */
-    f32 spiritAnim;      /* 0xB2C */
+    f32 keyAnim;         /* 0xB24  == elemOpacity[10] */
+    f32 scarabAnim;      /* 0xB28  == elemOpacity[11] */
+    f32 spiritAnim;      /* 0xB2C  == elemOpacity[12] */
     u8 _padB30[0xB38 - 0xB30];
-    int magicValue;      /* 0xB38 */
+    int magicValue;      /* 0xB38  == prevValue[2] */
     u8 _padB3C[0xB50 - 0xB3C];
-    int maxMagicValue;   /* 0xB50 */
+    int maxMagicValue;   /* 0xB50  == prevValue[8] */
     u8 _padB54[0xB58 - 0xB54];
-    int spiritBitState;  /* 0xB58 */
+    int spiritBitState;  /* 0xB58  == prevValue[10] */
     u8 _padB5C[0xB7C - 0xB5C];
-    int magicLatch;      /* 0xB7C */
+    int magicLatch;      /* 0xB7C  == displayValue[2] */
     u8 _padB80[0xB94 - 0xB80];
-    int maxMagicLatch;   /* 0xB94 */
+    int maxMagicLatch;   /* 0xB94  == displayValue[8] */
 } PauseMenuHud;
 
 STATIC_ASSERT(offsetof(PauseMenuHud, texHandle) == 0x244);
