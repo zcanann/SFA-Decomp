@@ -76,7 +76,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1CF_free(void);
 
 void dim2conveyor_hitDetect(void)
 {
@@ -90,11 +89,9 @@ void dim2conveyor_initialise(void)
 {
 }
 
-void dll_1D6_hitDetect(void);
 
 int dim2conveyor_getExtraSize(void) { return 0x14; }
 int dim2conveyor_getObjectTypeId(void) { return 0x0; }
-int dll_1D6_getExtraSize(void);
 
 void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -103,7 +100,6 @@ void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58);
 }
 
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, OBJ_GROUP_CONVEYORS); }
 
