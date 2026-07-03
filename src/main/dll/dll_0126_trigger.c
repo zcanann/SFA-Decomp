@@ -147,8 +147,6 @@ extern void objSeqMoveFn_80199188(int obj, int target);
 extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
 extern u8 framesThisStep;
 
-#pragma scheduling off
-#pragma peephole off
 void Trigger_render(void)
 {
 }
