@@ -667,6 +667,7 @@ main/dll/dll_00BF_projcore1.c:
 
 main/dll/dll_00C0_projcore2.c:
 	.text       start:0x801009E8 end:0x80100A20
+	.data       start:0x803199D0 end:0x803199F8
 
 main/dll/dll_00C1_projcore3.c:
 	.text       start:0x80100A20 end:0x80100A58
