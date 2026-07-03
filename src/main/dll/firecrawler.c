@@ -78,10 +78,10 @@ extern f32 lbl_803E2C8C;
 extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
-extern u8 gCrawlerModelChainIds[];
+extern void* gCrawlerModelChainIds[];
 extern void* gCrawlerDescriptorTable[];
 extern f32 lbl_803E2CBC;
-extern u8 gCrawlerReactionTables[];
+extern u8* gCrawlerReactionTables[];
 
 extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
@@ -292,7 +292,7 @@ void crawler_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int 
     {
         u8* bbase;
         u32 idx;
-        bbase = gCrawlerReactionTables;
+        bbase = (u8*)gCrawlerReactionTables;
         idx = ((FCVars*)st)->turnDelta;
         bbase = bbase + idx * 8;
         base = *(u8**)(bbase + 4);
@@ -2312,4 +2312,38 @@ void* gCrawlerDescriptorTable[24] = {
     lbl_8031F7AC, lbl_8031F86C, lbl_8031F7D0, lbl_8031F8BC,
     lbl_8031F958, lbl_8031FA18, lbl_8031F9E8, lbl_8031F988,
     lbl_8031FA3C, lbl_8031FAA8, lbl_8031FA78, lbl_8031F65C,
+};
+
+u8 gCrawlerSpeedThresholds[] = {
+    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
+    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
+    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17,
+    0x00, 0x00, 0x00, 0x00,
+};
+
+u8 gCrawlerSeqTable[] = {
+    0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
+    0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x00,
+    0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
+    0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04, 0x04, 0x00,
+    0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x05, 0x00,
+    0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
+};
+
+extern u8 lbl_803DBD00[];
+extern u8 lbl_803DBD08[];
+extern u8 lbl_803DBD10[];
+extern u8 lbl_803DBD18[];
+extern u8 lbl_803DBD20[];
+extern u8 lbl_803DBD34[];
+extern u8 lbl_803DBD38[];
+extern u8 lbl_8031FC40[];
+extern u8 lbl_8031FCE8[];
+
+void* gCrawlerModelChainIds[] = {
+    lbl_803DBD00, lbl_803DBD08, lbl_803DBD10, lbl_803DBD18, lbl_803DBD20,
+};
+
+u8* gCrawlerReactionTables[] = {
+    lbl_8031FC40, lbl_803DBD34, lbl_8031FCE8, lbl_803DBD38,
 };

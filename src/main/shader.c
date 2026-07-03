@@ -3496,3 +3496,11 @@ f32 sAabbCornerDirections[24] = {
     -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
     1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
 };
+
+char sTrackGlobalTexanimOverflowError[] = "TRACK ERROR: Global texanim overflow\n";
+
+char sTrackLoadBlockOverrunError[] = "trackLoadBlockEnd: track block overrun\n";
+
+char sTrackPiLockedFormat[] = "track piLocked %x\n";
+
+char sTrackCellCoordFormat[] = " cellx %i celly %i cellz %i ";

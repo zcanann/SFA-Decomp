@@ -3405,3 +3405,13 @@ u8 gExpgfxStaticPoolFrameFlags[112] = {
 };
 
 char sExpgfxMismatchInAddRemove[] = "expgfx.c: mismatch in add/remove in exptab\n";
+
+char sExpgfxNoTexture[11] = "notexture \n";
+
+char sExpgfxAddToTableUsageOverflow[] = "expgfx.c: addToTable usage overflow\n";
+
+char sExpgfxExpTabIsFull[] = "expgfx.c: exptab is FULL\n";
+
+char sExpgfxInvalidTabIndex[] = "expgfx.c: invalid tabindex\n";
+
+char sExpgfxScaleOverflow[] = "expgfx.c: scale overflow\n";

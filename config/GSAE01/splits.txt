@@ -122,7 +122,7 @@ main/rcp_dolphin.c:
 
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
-	.data       start:0x8030E4B0 end:0x8030E634
+	.data       start:0x8030E4B0 end:0x8030E868
 	.bss        start:0x8037E0C0 end:0x803868D8
 
 main/lightmap.c:
@@ -184,7 +184,7 @@ main/dll/expgfxresource.c:
 
 main/dll/dll_000A_expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FFF0
-	.data       start:0x8030F898 end:0x8030FC1C
+	.data       start:0x8030F898 end:0x8030FCA8
 	.bss        start:0x8039AB58 end:0x8039BE98
 
 main/dll/dll_000B_dll0b.c:
@@ -999,7 +999,7 @@ main/dll/duster.c:
 
 main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
-	.data       start:0x8031FAE8 end:0x8031FB48
+	.data       start:0x8031FAE8 end:0x8031FD58
 
 main/dll/dll_00CA_icebaddie.c:
 	.text       start:0x8015AD60 end:0x8015DAE8
@@ -1168,6 +1168,7 @@ main/dll/dll_00F4_doorf4.c:
 
 main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
+	.data       start:0x80320F30 end:0x80320F98
 
 main/dll/dll_00F6_area.c:
 	.text       start:0x8017A00C end:0x8017A048
@@ -1291,7 +1292,7 @@ main/dll/dll_011A_decoration11a.c:
 
 main/dll/dll_011B_landedarwing.c:
 	.text       start:0x801889C8 end:0x801899B4
-	.data       start:0x80321A88 end:0x80321C24
+	.data       start:0x80321A28 end:0x80321C24
 
 main/dll/staffactivated_helpers.c:
 	.text       start:0x801899B4 end:0x80189F5C
@@ -2391,7 +2392,7 @@ main/dll/dll_0263_gmmazewell.c:
 
 main/dll/dll_0266_kytesmum.c:
 	.text       start:0x80218EE8 end:0x80219A88
-	.data       start:0x8032A7C0 end:0x8032A7FC
+	.data       start:0x8032A7C0 end:0x8032A878
 
 main/dll/DR/dll_0265_drcreator.c:
 	.text       start:0x80219A88 end:0x8021A008

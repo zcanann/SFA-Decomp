@@ -687,3 +687,11 @@ void landed_arwing_updateDamageTexture(int obj, LandedArwingState* state)
         }
     }
 }
+
+LandedArwingFxPoint gLandedArwingPathFxTable[] = {
+    {0.1f, 1, 7, 0x20, 0},
+    {0.1f, 2, 7, 0x20, 0},
+    {0.1f, 3, 8, 0x20, 0},
+    {0.1f, 4, 9, 0x20, 0},
+    {0.1f, 5, 6, 0x10, 0},
+};

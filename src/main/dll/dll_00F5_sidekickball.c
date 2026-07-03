@@ -550,3 +550,9 @@ ObjectDescriptor gAreaObjDescriptor = {
     (ObjectDescriptorCallback)area_getObjectTypeId,
     area_getExtraSize,
 };
+
+u8 gSidekickBallPathPointData[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
+
+char sSidekickBallDotFormat[] = " dot %f ";
