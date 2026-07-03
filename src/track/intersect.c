@@ -125,6 +125,7 @@ extern u8 lbl_8030E8B0[];
 
 
 
+#pragma opt_common_subs off
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
 {
     Vec v;
@@ -245,6 +246,8 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
         j++;
     }
 }
+
+#pragma opt_common_subs reset
 
 /* EN v1.0 Size: 256b. Per-iteration byte decrement of two parallel
  * arrays. */
