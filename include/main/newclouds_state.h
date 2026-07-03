@@ -34,10 +34,10 @@ typedef struct SnowFlake {
     f32 z;
     f32 fallSpeed;
     u16 angle;
-    u16 unk12;
+    u16 quadIndex;
     s8 size;
     s8 spin;
-    u8 unk16;
+    u8 texLayer;
     u8 unk17;
 } SnowFlake;
 
@@ -86,23 +86,23 @@ typedef struct NewCloud {
     f32 driftOffset;
     f32 driftRate;
     s16 lightningTimer;
-    u8 unk144A;
+    u8 flags144A;
     u8 unk144B;
     u8 unk144C;
-    u8 unk144D;
+    u8 stationary;
     u8 unk144E;
-    u8 unk144F;
+    u8 finished;
     u8 unk1450;
-    u8 unk1451;
-    u8 unk1452;
-    u8 unk1453;
+    u8 spinEnabled;
+    u8 followCamera;
+    u8 posInitialized;
 } NewCloud;
 
 STATIC_ASSERT(offsetof(NewCloud, flakeMinX) == 0x1378);
 STATIC_ASSERT(offsetof(NewCloud, cloudType) == 0x13F4);
 STATIC_ASSERT(offsetof(NewCloud, lightningTimer) == 0x1448);
-STATIC_ASSERT(offsetof(NewCloud, unk144A) == 0x144A);
-STATIC_ASSERT(offsetof(NewCloud, unk1453) == 0x1453);
+STATIC_ASSERT(offsetof(NewCloud, flags144A) == 0x144A);
+STATIC_ASSERT(offsetof(NewCloud, posInitialized) == 0x1453);
 STATIC_ASSERT(sizeof(NewCloud) == 0x1454);
 
 /*
@@ -126,7 +126,7 @@ typedef struct CloudSpawnParams {
     u8 unk5A;           /* 0x5A */
     u8 unk5B;           /* 0x5B */
     u8 cloudType;       /* 0x5C */
-    u8 unk144DInit;     /* 0x5D */
+    u8 stationaryInit;     /* 0x5D */
 } CloudSpawnParams;
 
 STATIC_ASSERT(offsetof(CloudSpawnParams, windCount) == 0x24);
