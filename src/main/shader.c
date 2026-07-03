@@ -1743,6 +1743,8 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
     u32 v, v2;
     int cellVal;
 
+    /* ptr0 = romlist-page handle (offsets 0x0/0xc/0x14/0x2c/0x30/0x34): kept as
+       raw int-base derefs; casting to a struct ptr shifts the -O4,p base CSE. */
     if (idx == -1)
     {
         o0[0] = -1;
