@@ -106,8 +106,8 @@ void EnterSaveNameScreen_frameEnd(void)
 #define PAD_BUTTON_B 0x200
 
 u32
-EnterSaveNameScreen_run(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 param_5
-                        , u32 param_6, u32 param_7, u32 param_8)
+EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
+                        , u32 arg6, u32 arg7, u32 arg8)
 {
     extern char gEnterSaveNameBuffer;
     extern s32 gEnterSaveNameSelectedIndex;
